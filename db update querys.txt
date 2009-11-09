@@ -1,0 +1,534 @@
+update smg_charges set invoicedate = null
+where invoicedate = '0000-00-00'
+
+update smg_charges set date = null
+where invoicedate = '0000-00-00'
+
+update smg_credit set date= null
+where date= '0000-00-00'
+
+update smg_document_tracking 
+set date_submitted = null
+where date_submitted = '1111-11-11 11:11:11'
+
+
+update smg_document_tracking 
+set date_ra_approved = null
+where date_ra_approved = '1111-11-11 11:11:11'
+
+
+update smg_document_tracking 
+set date_rd_approved = null
+where date_rd_approved = '1111-11-11 11:11:11'
+
+update smg_document_tracking 
+set ny_accepted = null
+where ny_accepted = '1111-11-11 11:11:11'
+
+update smg_document_tracking 
+set date_rejected = null
+where date_rejected = '1111-11-11 11:11:11'
+
+update smg_flight_info
+set dep_date = null
+where dep_date = '0000-00-00'
+
+update smg_flight_info
+set dep_time = null
+where dep_time = '00:00:00'
+
+update smg_flight_info
+set arrival_time = null
+where arrival_time = '00:00:00'
+
+update smg_help_desk
+set date = null
+where date = '0000-00-00'
+
+update smg_help_desk_items
+set date = null
+where date = '0000-00-00'
+
+update smg_host_children
+set birthdate = null
+where birthdate = '0000-00-00'
+
+update smg_hostdocshistory
+set date_pis_received = null
+where date_pis_received = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_full_host_app_date = null
+where doc_full_host_app_date = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_letter_rec_date = null
+where doc_letter_rec_date = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_rules_rec_date = null
+where doc_rules_rec_date = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_photos_rec_date = null
+where doc_photos_rec_date = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_school_accept_date = null
+where doc_school_accept_date = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_school_profile_rec = null
+where doc_school_profile_rec = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_conf_host_rec = null
+where doc_conf_host_rec = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_ref_form_1 = null
+where doc_ref_form_1 = '0000-00-00'
+
+update smg_hostdocshistory
+set doc_ref_form_2 = null
+where doc_ref_form_2 = '0000-00-00'
+
+update smg_hosthistory
+set dateofchange = null
+where dateofchange = '0000-00-00'
+
+update smg_hosts
+set dateprocessed = null
+where dateprocessed = '0000-00-00 00:0:00'
+
+update smg_hosts
+set applicationsent = null
+where applicationsent = '0000-00-00 00:0:00'
+
+update smg_hosts
+set applicationapproved = null
+where applicationapproved = '0000-00-00 00:0:00'
+
+update smg_hosts
+set home_first_call= null
+where home_first_call = 0000-00-00
+
+update smg_hosts
+set home_last_visit= null
+where home_last_visit = 0000-00-00
+
+update smg_hosts
+set host_start_date= null
+where host_start_date = 0000-00-00
+
+update smg_hosts
+set host_end_date= null
+where host_end_date = 0000-00-00
+
+update smg_invoices
+set datecancel = null
+where datecancel = '0000-00-00'
+
+update smg_invoice
+set date = null
+where date = 0000-00-00
+
+update smg_news_messages
+set startdate = null
+where startdate = '0000-00-00 00:00:00'
+
+update smg_payment_received
+set date= null
+where date = '0000-00-00'
+
+update smg_prdates
+set hipdate1= null
+where hipdate1= '0000-00-00'
+
+update smg_prdates
+set hipdate2= null
+where hipdate2= '0000-00-00'
+
+update smg_prdates
+set hipdate3= null
+where hipdate3= '0000-00-00'
+
+update smg_prdates
+set sipdate1= null
+where sipdate1= '0000-00-00'
+
+update smg_prdates
+set sipdate2= null
+where sipdate2= '0000-00-00'
+
+update smg_prdates
+set sipdate3= null
+where sipdate3= '0000-00-00'
+
+update smg_prdates
+set hbtdate1= null
+where hbtdate1= '0000-00-00'
+
+update smg_prdates
+set hbtdate2= null
+where hbtdate2= '0000-00-00'
+
+update smg_prdates
+set hbtdate3= null
+where hbtdate3= '0000-00-00'
+
+update smg_prdates
+set sbtdate1= null
+where sbtdate1= '0000-00-00'
+
+update smg_prdates
+set sbtdate2= null
+where sbtdate2= '0000-00-00'
+
+update smg_prdates
+set sbtdate3= null
+where sbtdate3= '0000-00-00'
+
+update smg_prquestion_details
+set date= null
+where date= '0000-00-00 00:00:00'
+
+update smg_rep_payments
+set date= null
+where date= '0000-00-00'
+
+update smg_schools
+set begins= null
+where begins = '0000-00-00'
+
+update smg_schools
+set semesterends= null
+where semesterends= '0000-00-00'
+
+update smg_schools
+set semesterbegins= null
+where semesterbegins= '0000-00-00'
+
+update smg_schools
+set ends= null
+where ends= '0000-00-00'
+
+update smg_schools
+set enrollment= null
+where enrollment= '0000-00-00'
+
+update smg_sevis
+set datecreated= null
+where datecreated= '0000-00-00 00:00:00'
+
+update smg_sevisfee
+set datecreated= null
+where datecreated= '0000-00-00 00:00:00'
+
+update smg_student_siblings
+set birthdate = null
+where birthdate= '0000-00-00'
+
+update smg_students
+set date_host_fam_approved= null
+where date_host_fam_approved = '0000-00-00'
+
+update smg_students
+set dob= null
+where dob = '0000-00-00'
+
+update smg_students
+set dateapplication= null
+where dateapplication = '0000-00-00 00:00:00'
+
+update smg_students
+set dateplaced= null
+where dateplaced= '0000-00-00 00:00:00'
+
+update smg_students
+set applicationsent= null
+where applicationsent= '0000-00-00 00:00:00'
+
+update smg_students
+set applicationapproved= null
+where applicationapproved= '0000-00-00 00:00:00'
+
+update smg_students
+set weekday_curfew= null
+where weekday_curfew= '00:00:00'
+
+update smg_students
+set weekend_curfew= null
+where weekend_curfew= '00:00:00'
+
+update smg_students
+set insurance= null
+where insurance= '0000-00-00'
+
+update smg_students
+set canceldate= null
+where canceldate= '0000-00-00'
+
+update smg_students
+set cancelinsurancedate= null
+where cancelinsurancedate= '0000-00-00'
+
+update smg_students
+set dblplace_doc_host= null
+where dblplace_doc_host= '0000-00-00'
+
+update smg_students
+set dblplace_doc_stu= null
+where dblplace_doc_stu= '0000-00-00'
+
+update smg_students
+set dblplace_doc_fam= null
+where dblplace_doc_fam= '0000-00-00'
+
+update smg_students
+set dblplace_doc_school= null
+where dblplace_doc_school= '0000-00-00'
+
+update smg_students
+set dblplace_doc_dpt= null
+where dblplace_doc_dpt= '0000-00-00'
+
+update smg_students
+set stu_arrival_orientation= null
+where stu_arrival_orientation= '0000-00-00'
+
+update smg_students
+set host_arrival_orientation= null
+where host_arrival_orientation= '0000-00-00'
+
+update smg_students
+set date_pis_received= null
+where date_pis_received= '0000-00-00'
+
+update smg_students
+set doc_full_host_app_date= null
+where doc_full_host_app_date= '0000-00-00'
+
+update smg_students
+set doc_letter_rec_date= null
+where doc_letter_rec_date= '0000-00-00'
+
+update smg_students
+set doc_rules_rec_date= null
+where doc_rules_rec_date= '0000-00-00'
+
+update smg_students
+set doc_photos_rec_date= null
+where doc_photos_rec_date= '0000-00-00'
+
+update smg_students
+set doc_school_accept_date= null
+where doc_school_accept_date= '0000-00-00'
+
+update smg_students
+set doc_school_profile_rec= null
+where doc_school_profile_rec= '0000-00-00'
+
+update smg_students
+set doc_conf_host_rec= null
+where doc_conf_host_rec= '0000-00-00'
+
+update smg_students
+set doc_ref_form_1= null
+where doc_ref_form_1= '0000-00-00'
+
+update smg_students
+set doc_ref_form_1= null
+where doc_ref_form_1= '0000-00-00'
+
+update smg_students
+set insurance_correction_Date= null
+where insurance_correction_Date= '0000-00-00'
+
+update smg_students
+set insurance_early_Date= null
+where insurance_early_Date= '0000-00-00'
+
+update smg_students
+set insurance_extended_Date= null
+where insurance_extended_Date= '0000-00-00'
+
+update smg_students
+set insurance_prog_end_Date= null
+where insurance_prog_end_Date= '0000-00-00'
+
+update smg_students
+set flight_Arrival_Date= null
+where flight_arrival_Date= '0000-00-00'
+
+update smg_students
+set flight_Arrival_time= null
+where flight_arrival_time= '00:00:00'
+
+update smg_students
+set flight_Arrival_changed_Date= null
+where flight_arrival_changed_date= '0000-00-00'
+
+
+update smg_students
+set flight_arrival_changed_Date= null
+where flight_Arrival_changed_date= '2000-00-01'
+
+update smg_students
+set flight_departure_Date= null
+where flight_departure_date= '0000-00-00'
+
+update smg_students
+set flight_departure_time= null
+where flight_departure_time= '00:00:00'
+
+update smg_students
+set visa_date= null
+where visa_date= '0000-00-00'
+
+update smg_students
+set program_payment= null
+where program_payment= '0000-00-00'
+
+update smg_students
+set application_fee= null
+where application_fee= '0000-00-00'
+
+update smg_students
+set insurance_fee= null
+where insurance_fee= '0000-00-00'
+
+update smg_students
+set sevis_fee_paid_date= null
+where sevis_fee_paid_Date= '0000-00-00'
+
+update smg_students
+set verification_Received= null
+where verification_Received= '0000-00-00'
+
+ update smg_useraccess
+set dateentered= null
+where dateentered = '0000-00-00'
+
+ update smg_users
+set datecreated= null
+where datecreated = '0000-00-00'
+
+
+ update smg_users
+set date_Contract_received= null
+where date_Contract_received= '0000-00-00'
+
+
+ update smg_users
+set datecancelled = null
+where datecancelled = '0000-00-00 00:00:00'
+
+
+ update smg_users
+set lastlogin= null
+where lastlogin= '1111-11-11 11:11:11'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
