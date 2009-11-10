@@ -1,0 +1,46 @@
+<!----<table cellspacing="0" cellpadding="0" border="0" div align="center" >
+	<tr>
+		<td><DIV ALIGN="center"><font face="Arial,Helvetica,sans-serif" size="+6" COLOR="red"><b>Nebraska</b></font></FONT></td>
+	</tr>
+	<tr>
+		<td><DIV ALIGN="center"><font face="Arial,Helvetica,sans-serif" size="+1"><b><font color="white">FIVE-TIME NATIONAL FOOTBALL CHAMPS</b><br><font face="Arial,Helvetica,sans-serif" size="2" style="font-size:12pt">"Not the victory but the action. Not the goal but the game.<br>In the deed the glory."</font>
+
+
+
+</TD>
+</TR>
+</TABLE>---->
+<center>
+<img src="http://ooz.net/~raul/giraffe-peek.jpg" width="400" height="242" alt="" border="0"><br>
+Other pic sites<br> <A HREF="http://rahlpics.ooz.net">Dad & Janet</a> | <a href="http://bybeepics.ooz.net/">Mike & Kristin Bybee</a> | <a href="http://jonrahl.ooz.net/">Jon Rahl</a>| <a href="http://luckythedog.net/">Eric & Jamie Denning</a> <br> <a href="http://young.phrop.com">Cami & Byron Young</a> | <a href="http://rorpics.ooz.net">Dick & Julie Rahl</a> | <a href="http://www.PictureTrail.com/grannyjay">Janelle & Leroy Fisher</a> | <a href="http://pgkohler.ooz.net/">Paul & Lois Koehler</a> <br><br>
+
+body { background-color: black; color: red; }
+a, a:visited { color: #ffffff; }
+a:hover { color: #DF8585; }
+.emphasis { color: #F30201; }
+table.nav_bar { background-color: #650806; border: 1px solid #CF0B0A; }
+td.album_item_title, .head1 { color: #BDBFBD; }
+td.album_item, td.photo_item, td.photo_info, a.album_item, a.photo_item { color: #BDBFBD; }
+img.album_item,  img.photo_item, img.photo { border: 1px solid #CF0B0A; }
+img.album_item:hover, img.photo_item:hover { border: 1px ridge #00ff00; }
+table.photo_comment { border: 1px solid #002a97; }
+tr.photo_comment_header { background-color: #000020; }
+
+'************* Code Start **************
+' This code was originally written by Erika Yoxall.
+' It is not to be altered or distributed,
+' except as part of an application.
+' You are free to use it in any application,
+' provided the copyright notice is left unchanged.
+'
+' Code Courtesy of
+' Erika Yoxall
+'
+Sub Zip_OnExit(Cancel As Integer)
+Dim varState, varCity As Variant
+    varState = DLookup("State", "tblZipCode", "ZipCode =[Zip] ")
+    varCity = DLookup("City", "tblZipCode", "ZipCode =[Zip] ")
+    If (Not IsNull(varState)) Then Me![State] = varState
+    If (Not IsNull(varCity)) Then Me![City] = varCity
+End Sub
+'************* Code End **************
