@@ -5,15 +5,20 @@
 
 	<!--- Added by Marcus Melo 10/13/2009 --->
 
+    <!--- Param URL variable --->
+	<cfparam name="URL.init" default="0">
+
 	<!--- Param Client Variables --->
 	<cfparam name="CLIENT.companyID" default="0">
 	<cfparam name="CLIENT.userID" default="0">
+    <cfparam name="CLIENT.studentID" default="0">  
+    <cfparam name="CLIENT.regionID" default="0">  
 	<cfparam name="CLIENT.name" default=""> 
     <cfparam name="CLIENT.userType" default="9">   
-    <cfparam name="CLIENT.companyName" default="">   
-    
-    <!--- Param URL variable --->
-	<cfparam name="URL.init" default="0">
+    <cfparam name="CLIENT.companyName" default="">  
+    <cfparam name="CLIENT.parentCompany" default="">   
+    <cfparam name="CLIENT.company_submitting" default="">  
+    <cfparam name="CLIENT.lastLogin" default="">  
 
 	<cfscript>
         // Check if we need to initialize Application scope

@@ -1,3 +1,62 @@
+<!--- Kill Extra Output --->
+<cfsilent>
+	
+    <!--- Param URL variables --->
+	<cfparam name="url.curdoc" default="initial_welcome">
+    <cfparam name="url.menu" default="">
+    <cfparam name="url.submenu" default="">
+    <cfparam name="url.action" default="">
+	
+    <cfscript>
+		// check to make sure we have a valid companyID
+		if ( NOT VAL(CLIENT.companyID) ) {
+			CLIENT.companyID = 5;
+		}	
+	</cfscript>
+
+    <cfquery name="get_messages" datasource="#application.dsn#">
+        SELECT 
+        	*
+        FROM 
+        	smg_news_messages
+        WHERE 
+        	messagetype IN ('alert','update')
+        AND 
+        	expires > #now()# 
+        AND 
+        	startdate < #now()#
+        AND 
+        	lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
+        AND 
+        	(
+            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+            OR 
+            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            )
+        ORDER BY 
+        	startdate DESC
+    </cfquery>
+    
+    <cfquery name="alert_messages" dbtype="query">
+        SELECT 
+        	*
+        FROM 
+        	get_messages
+        WHERE 
+        	messagetype = <cfqueryparam cfsqltype="cf_sql_varchar" value="alert">
+    </cfquery>
+    
+    <cfquery name="update_messages" dbtype="query">
+        SELECT 
+        	*
+        FROM 
+        	get_messages 
+        WHERE 
+        	messagetype = <cfqueryparam cfsqltype="cf_sql_varchar" value="update">
+    </cfquery>
+
+</cfsilent>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -6,6 +65,16 @@
 <title>EXITS</title>
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" href="smg.css" type="text/css">
+<link rel="stylesheet" href="linked/css/datePicker.css" type="text/css">
+<!-- jQuery -->
+<script src="linked/js/jquery.js" type="text/javascript"></script>
+<!-- Coldfusion functions for jquery -->
+<script src="linked/js/jquery.cfjs.js" type="text/javascript"></script>
+<!-- required plugins -->
+<script src="linked/js/date.js " type="text/javascript"></script>
+<!-- jquery.datePicker.js -->
+<script src="linked/js/jquery.datePicker.js " type="text/javascript"></script>
+
 
 <style type="text/css">
 <!--
@@ -16,41 +85,12 @@
 .sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionSubHead			{font-size:11px;font-weight:bold;}
-
 -->
 </style>
 
 </head>
 <body>
 
-<cfparam name="url.curdoc" default="initial_welcome">
-<cfparam name="url.menu" default="">
-<cfparam name="url.submenu" default="">
-<cfparam name="url.action" default="">
-
-<cfif client.companyid eq 0>
-	<cfset client.companyid = 5>
-</cfif>
-
-<cfquery name="get_messages" datasource="#application.dsn#">
-    SELECT *
-    FROM smg_news_messages
-    WHERE messagetype IN ('alert','update')
-    AND expires > #now()# and startdate < #now()#
-    AND lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
-    AND (companyid = 0 OR companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">)
-    ORDER BY startdate DESC
-</cfquery>
-<cfquery name="alert_messages" dbtype="query">
-    SELECT *
-    FROM get_messages
-    WHERE messagetype = 'alert'
-</cfquery>
-<cfquery name="update_messages" dbtype="query">
-    SELECT *
-    FROM get_messages 
-    WHERE messagetype = 'update'
-</cfquery>
 <!----
 <div id="top"><cfoutput><img src="pics/logos/#original_company_info.companyshort#_logo.gif"  alt="" border="0" align="right"><h2>#original_company_info.companyname#</cfoutput> <Cfif client.usertype lte 4> <font size=-2>[ <a href="stats/default.htm">stats</a> ]</font></Cfif></h2>
 <Cfif isdefined('client.name')><cfoutput>#client.name#</cfoutput> [<a href="index.cfm">Home</a>] [ <a href="logout.cfm">Logout</a> ] <cfif #Len(client.companies)# gt 1>[ <Cfoutput><A href="change_company_view.cfm?curdoc=#url.curdoc#">Change Company</A></Cfoutput> ]</cfif> <cfelse>[ <as href="loginform.cfm">Login</a> ]</Cfif> </div>
@@ -164,7 +204,7 @@
                     	where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
                     </cfif>
                 </cfquery>
-                <cfif logo.logo EQ ''>
+                <cfif NOT LEN(logo.logo)>
                     <!--- SMG LOGO --->
                     <img src="pics/logos/smg_clear.gif">
                 <cfelse>
