@@ -1,0 +1,56 @@
+SVN
+
+https://smggroup.svn.cvsdude.com/smg/www
+
+---------------------------------------- 
+
+Database
+
+Name mysql
+
+Database smg
+
+Server 216.160.230.67
+
+Port 3306
+
+---------------------------------------- 
+
+Apache httpd.conf file
+
+<Directory "C:\Sites">
+
+  Order Deny,Allow
+
+  Allow from all
+
+</Directory>
+
+---------------------------------------- 
+
+Apache Vhosts file
+
+<VirtualHost *:80>
+
+   DocumentRoot "C:\Program Files\Apache Software Foundation\Apache2.2\htdocs"
+
+   ServerName localhost
+
+</VirtualHost>
+
+ 
+<VirtualHost *:80>
+
+    DocumentRoot C:\Sites\www\smg
+
+    ServerName smg.local
+
+</VirtualHost>
+
+---------------------------------------- 
+
+Windows\System32\Drivers\Hosts
+
+127.0.0.1       localhost
+
+127.0.0.1       smg.local
