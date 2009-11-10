@@ -1,2 +1,0 @@
-<!----students letter---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page3.pdf.url.xmltext#'  method="get" path="/var/www/html/student-management/nsmg/uploadedfiles/xml_app/" file="stu_letter#client.studentid#.jpg" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
