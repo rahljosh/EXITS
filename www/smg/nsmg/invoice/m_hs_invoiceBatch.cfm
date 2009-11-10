@@ -799,7 +799,7 @@ WHERE sc.invoiceid > #variables.lastOldInvoice#
 		
     </cfloop>
 				
-	<cfmail from="#variables.emailFrom#" to="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# invoices - please find attached." type="html">
+	<cfmail from="#variables.emailFrom#" to="#getAgentInfo.billing_email#" subject="#getAgentInfo.businessname#: #variables.compName# invoices - please find attached." type="html">
 	
 <small>
 Dear Partner
