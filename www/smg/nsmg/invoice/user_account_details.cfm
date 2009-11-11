@@ -815,7 +815,7 @@ ORDER BY creditid DESC
 
 <cfform method="post">
 	<cfinput name="emailDoc" value="2" type="hidden">
-<table width=1000% cellpadding=0 cellspacing=0 border=0 height=24>
+<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 						<tr valign=middle height=24>
 							<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 							<td width=26 background="pics/header_background.gif"></td>
