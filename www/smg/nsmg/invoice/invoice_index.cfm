@@ -146,12 +146,9 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
 
 <!----Retrive list of reps---->
 <cfquery name="get_int_Reps" datasource="MySQL">
-select  distinct smg_users.userid, smg_users.firstname, smg_users.lastname, smg_users.businessname, smg_users.userid
+select  distinct smg_users.userid, smg_users.firstname, smg_users.lastname, smg_users.businessname, smg_users.userid, smg_users.usertype
 from smg_users
-
-left join user_access_rights on user_access_rights.userid = smg_users.userid
-
-where user_access_rights.usertype = 8
+where smg_users.usertype = 8
 <!---  <cfif client.companyid eq 10>
 and user_access_rights.companyid = 10
 </cfif> --->
