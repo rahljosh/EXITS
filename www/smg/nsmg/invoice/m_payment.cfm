@@ -59,6 +59,21 @@
 
 .style1 {color: #FF0000}
 </style>
+<link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css">
+<!-- jQuery -->
+<script src="../linked/js/jquery.js" type="text/javascript"></script>
+<!-- Coldfusion functions for jquery -->
+<script src="../linked/js/jquery.cfjs.js" type="text/javascript"></script>
+<!-- required plugins -->
+<script src="../linked/js/date.js " type="text/javascript"></script>
+<!-- jquery.datePicker.js -->
+<script src="../linked/js/jquery.datePicker.js " type="text/javascript"></script>
+
+<script type="text/javascript" language="javascript">
+	$(function() {
+		$('.date-pick').datePicker({startDate:'01/01/2009'});
+	});	
+</script>
 </head>
 
 <!--- CHECK INVOICE RIGHTS  --->
@@ -82,9 +97,10 @@ ORDER BY businessname
 
 <cfif form.amount_received EQ #variables.totalReceived#>
 	<cfform name="one" method="post">
+		</br></br></br>
 		<table>
 			<tr>
-				<h3>Select International Agent</h3>
+				<h3><font color="#0000A0" face="Arial, Helvetica, sans-serif">Select International Agent</font></h3>
 			</tr>
 			<tr>
 			<select name="chooseAgent" size="1" onChange="javaScript:this.form.submit();">
@@ -161,7 +177,7 @@ ORDER BY businessname
 						Date Received:
 						</td>
 						<td>
-						<input type="text" name="date_received"></td><td> <font size=-2>(for apply credit, leave blank)</font>
+						<input type="text" name="date_received" class="date-pick"></td><td> <font size=-2>(for apply credit, leave blank)</font>
 						</td>
 					</tr>
 					<tr>

@@ -1,3 +1,5 @@
+<cfsetting requesttimeout="99999">
+
 <cfif IsDefined('form.intrep') AND form.intrep NEQ "All">
 	<cfquery name="get_candidates_into" datasource="MySql">
 		SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.placedby, extra_candidates.sex, extra_candidates.hostcompanyid, extra_hostcompany.name, smg_programs.startdate, smg_programs.enddate, extra_candidates.ds2019, extra_candidates.wat_vacation_Start, extra_candidates.wat_vacation_end, extra_candidates.dob, extra_candidates.candidateid, extra_candidates.intrep, extra_candidates.wat_placement, extra_candidates.candidateid, extra_candidates.status
@@ -71,6 +73,7 @@ function test(){
 			SELECT userid as intrep, businessname
 			FROM smg_users
 			WHERE usertype = 8
+			AND businessname != ' '
 			ORDER BY businessname	
 		</cfquery>
       </span>
@@ -133,68 +136,109 @@ function test(){
 		
 	<cfelse>
 
-				
-<table width=99% cellpadding="4" cellspacing=0 align='center'>
-
-	<cfset into =  1 >
+	<cfset into =  0 >
+	<cfparam name="variables.intoPlacement" default="0">
+	<cfparam name="variables.selfPlacement" default="0">
+	<cfparam name="variables.grandTotal" default="0">
+	
 	<!---- All Participants ---->
 	<cfif form.intrep EQ "All">
-	<tr>
-      <Th align="left" bgcolor="4F8EA4" class="style2">Student</Th>
-      <th align="left" bgcolor="4F8EA4" class="style2">Sex</th>
-      <th align="left" bgcolor="4F8EA4" class="style2">Placement Info</th>
-      <th align="left" bgcolor="4F8EA4" class="style2">DS2019</th>
-	  <th align="left" bgcolor="4F8EA4" class="style2">Option</th>
-	  <th align="left" bgcolor="4F8EA4" class="style2">Int. Rep.</th>
-    </tr>
-		<cfquery name="get_candidates_into" datasource="MySql">
-		SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.placedby, extra_candidates.sex, extra_candidates.hostcompanyid, extra_hostcompany.name, smg_programs.startdate, smg_programs.enddate, extra_candidates.ds2019, extra_candidates.wat_vacation_Start, extra_candidates.wat_vacation_end, extra_candidates.dob, extra_candidates.candidateid, extra_candidates.intrep, extra_candidates.wat_placement, extra_candidates.candidateid, extra_candidates.status, smg_users.businessname
-		FROM extra_candidates
-		LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
-		INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
-		INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
-		WHERE extra_candidates.programid = #form.program#  
-		AND extra_candidates.status = 'canceled'
-		AND extra_candidates.wat_placement = 'INTO-Placement'
-		ORDER BY smg_users.businessname
-	</cfquery>
-	<cfquery name="get_candidates_self" datasource="MySql">
-	  SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.candidateid, extra_candidates.placedby, extra_candidates.sex, extra_candidates.hostcompanyid, extra_hostcompany.name, smg_programs.startdate, smg_programs.enddate, extra_candidates.ds2019, extra_candidates.wat_vacation_Start, extra_candidates.wat_vacation_end, extra_candidates.status, extra_candidates.wat_placement, smg_users.businessname
-	  FROM extra_candidates
-	  LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
-	  INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
-	  INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
-	  WHERE extra_candidates.programid = #form.program#  and extra_candidates.status = 'canceled'
-	  AND extra_candidates.wat_placement = 'Self-Placement'
-	  ORDER BY smg_users.businessname
-	</cfquery>
-	<cfset total = #get_candidates_self.recordcount# + #get_candidates_into.recordcount#>
-		<cfloop query="get_candidates_into">
-		<tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
-			<td><span class="style1">#firstname# #lastname# (#candidateid#)</span></td>
-			<td><span class="style1">#sex#</span></td>
-			<td><span class="style1">#name#</span></td>
-			<td><span class="style1">#ds2019#</span></td>
-			<td><span class="style1">#wat_placement# </span></td>
-			<td class="style1">#businessname#</td>
-		</tr>
-		<cfset into = into + 1 >
-		</cfloop>
+	
+		<cfquery name="getWatAgents" datasource="MySQL">
+		SELECT userid, businessname
+		FROM smg_users
+		WHERE usertype =8
+		AND userid
+		IN (
 		
-		<cfloop query="get_candidates_self">
-		<tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
-			<td><span class="style1">#firstname# #lastname# (#candidateid#)</span></td>
-			<td><span class="style1">#sex#</span></td>
-			<td><span class="style1">#name#</span></td>
-			<td><span class="style1">#ds2019#</span></td>
-			<td><span class="style1">#wat_placement# </span></td>
-			<td class="style1">#businessname#</td>
-		</tr>
-		<cfset into = into + 1 >
-		</cfloop>
+		SELECT DISTINCT(intrep)
+		FROM extra_candidates
+		WHERE programid = #form.program#
+		AND status = 'canceled'
+		)
+		ORDER BY businessname
+		</cfquery>
+	
+	<cfloop query="getWatAgents">
+	
+		<cfquery name="get_candidates_into" datasource="MySql">
+			SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.placedby, extra_candidates.sex, extra_candidates.hostcompanyid, extra_hostcompany.name, smg_programs.startdate, smg_programs.enddate, extra_candidates.ds2019, extra_candidates.wat_vacation_Start, extra_candidates.wat_vacation_end, extra_candidates.dob, extra_candidates.candidateid, extra_candidates.intrep, extra_candidates.wat_placement, extra_candidates.candidateid, extra_candidates.status, smg_users.businessname
+			FROM extra_candidates
+			LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
+			INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
+			INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
+			WHERE extra_candidates.programid = #form.program#  
+			AND extra_candidates.status = 'canceled'
+			AND extra_candidates.wat_placement = 'INTO-Placement'
+			AND extra_candidates.intrep = #getWatAgents.userid#
+			ORDER BY smg_users.businessname, extra_candidates.wat_placement
+		</cfquery>
+		<cfquery name="get_candidates_self" datasource="MySql">
+		  SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.candidateid, extra_candidates.placedby, extra_candidates.sex, extra_candidates.hostcompanyid, extra_hostcompany.name, smg_programs.startdate, smg_programs.enddate, extra_candidates.ds2019, extra_candidates.wat_vacation_Start, extra_candidates.wat_vacation_end, extra_candidates.status, extra_candidates.wat_placement, smg_users.businessname
+		  FROM extra_candidates
+		  LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
+		  INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
+		  INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
+		  WHERE extra_candidates.programid = #form.program#  and extra_candidates.status = 'canceled'
+		  AND extra_candidates.wat_placement = 'Self-Placement'
+		  AND extra_candidates.intrep = #getWatAgents.userid#
+		  ORDER BY smg_users.businessname
+		</cfquery>
+
+		<cfset totalPerAgent = #get_candidates_self.recordcount# + #get_candidates_into.recordcount#>
+		<cfset intoPlacement = #variables.intoPlacement# + #get_candidates_into.recordcount#>
+		<cfset selfPlacement = #variables.selfPlacement# + #get_candidates_self.recordcount#>
+		<cfset grandTotal = #variables.grandTotal# + #variables.totalPerAgent#>
+				
+		<table width=99% cellpadding="4" cellspacing=0 align='center'>
+			<tr>
+				<td><small><strong>#businessname# - Total Candidates: #variables.totalPerAgent#</strong> (#get_candidates_into.recordcount# INTO, #get_candidates_self.recordcount# Self)</small></td>
+			</tr>
+			<tr>
+			  <Th align="left" bgcolor="4F8EA4" class="style2">Student</Th>
+			  <th align="left" bgcolor="4F8EA4" class="style2">Sex</th>
+			  <th align="left" bgcolor="4F8EA4" class="style2">Placement Info</th>
+			  <th align="left" bgcolor="4F8EA4" class="style2">DS2019</th>
+			  <th align="left" bgcolor="4F8EA4" class="style2">Option</th>
+			  <th align="left" bgcolor="4F8EA4" class="style2">Int. Rep.</th>
+			</tr>
+				
+			<cfloop query="get_candidates_into">
+			<tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
+				<td><span class="style1">#firstname# #lastname# (#candidateid#)</span></td>
+				<td><span class="style1">#sex#</span></td>
+				<td><span class="style1">#name#</span></td>
+				<td><span class="style1">#ds2019#</span></td>
+				<td><span class="style1">#wat_placement# </span></td>
+				<td class="style1">#businessname#</td>
+			</tr>
+			<cfset into = into + 1 >
+			</cfloop>
+
+			<cfloop query="get_candidates_self">
+			<tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
+				<td><span class="style1">#firstname# #lastname# (#candidateid#)</span></td>
+				<td><span class="style1">#sex#</span></td>
+				<td><span class="style1">#name#</span></td>
+				<td><span class="style1">#ds2019#</span></td>
+				<td><span class="style1">#wat_placement# </span></td>
+				<td class="style1">#businessname#</td>
+			</tr>
+			<cfset into = into + 1 >
+			</cfloop>
+		</table>		
+		<br/><br/>
+	</cfloop>
+		
 	<!---- Per Int. Rep. ---->
 	<cfelse>
-	<cfset total = #get_candidates_self.recordcount# + #get_candidates_into.recordcount#>
+	
+	<cfset totalPerAgent = #get_candidates_self.recordcount# + #get_candidates_into.recordcount#>
+	<cfset intoPlacement = #variables.intoPlacement# + #get_candidates_into.recordcount#>
+	<cfset selfPlacement = #variables.selfPlacement# + #get_candidates_self.recordcount#>
+	<cfset grandTotal = #variables.grandTotal# + #variables.totalPerAgent#>
+	
+	<table width=99% cellpadding="4" cellspacing=0 align='center'>
 	<tr>
       <Th align="left" bgcolor="4F8EA4" class="style2">Student</Th>
       <th align="left" bgcolor="4F8EA4" class="style2">Sex</th>
@@ -223,16 +267,14 @@ function test(){
 		</tr>
 		<cfset into = into + 1 >
 		</cfloop>
+		</table>
 	</cfif>
 
-				
-</table>
-
 <br>
-<div class="style1"><strong>&nbsp; &nbsp; INTO-Placement:</strong> #get_candidates_into.recordcount#</div>	
-<div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #get_candidates_self.recordcount#</div>
+<div class="style1"><strong>&nbsp; &nbsp; INTO-Placement:</strong> #variables.intoPlacement#</div>	
+<div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #variables.selfPlacement#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
-<div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #total#</div>
+<div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #variables.grandTotal#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
 
 <br />
@@ -241,4 +283,5 @@ function test(){
 			  
 </cfif>
 </cfif>
+
 </cfoutput>

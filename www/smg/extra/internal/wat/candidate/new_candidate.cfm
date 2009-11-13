@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <title>New Candidate</title>
 
+
 </head>
 
 <body>
@@ -71,7 +72,7 @@
 											</tr>
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>Date of Birth:</b></font></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" name="dob" size="18" maxlength="20" required="yes" validate="date" message="Date of Birth (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></td>
+												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" class="date-pick" name="dob" size="18" maxlength="20" required="yes" validate="date" message="Date of Birth (MM/DD/YYYY)"><br/><font size="1">(mm/dd/yyyy)</font></td>
 											</tr>
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>City of Birth:</b></font></td>
@@ -265,11 +266,11 @@
 											</tr>
 											<tr>
 												<td align="left" class="style1"><font size="1"><b>Start Date:</b></font></td>
-												<td colspan="2" class="style1"><cfinput type="text" name="wat_vacation_start" size="18" maxlength="20" validate="date" message="Earliest Arrival must be MM/DD/YYYY"><font size="1"> (mm/dd/yyyy)</font></td>
+												<td colspan="2" class="style1"><cfinput type="text" class="date-pick" name="wat_vacation_start" size="18" maxlength="20" validate="date" message="Earliest Arrival must be MM/DD/YYYY"><font size="1"> (mm/dd/yyyy)</font></td>
 											</tr>
 											<tr>
 												<td align="left" class="style1"><font size="1"><b>End Date:</b></font></td>
-												<td colspan="2" class="style1"><cfinput type="text" name="wat_vacation_end" size="18" maxlength="20" validate="date" message="Earliest Arrival must be MM/DD/YYYY"><font size="1"> (mm/dd/yyyy)</font></td>
+												<td colspan="2" class="style1"><cfinput type="text" class="date-pick" name="wat_vacation_end" size="18" maxlength="20" validate="date" message="Earliest Arrival must be MM/DD/YYYY"><font size="1"> (mm/dd/yyyy)</font></td>
 											</tr>
 										</table>	
 										
@@ -392,13 +393,13 @@
 											
 							<tr>
 								<td class="style1" bordercolor="FFFFFF" align="left"><font size="1"><b>Start Date:</b></font></td>
-								<td class="style1" bordercolor="FFFFFF" colspan="3"> <cfinput type="text" name="startdate" size=20 maxlength="50" validate="date" message="Start Date of the Program (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font>
+								<td class="style1" bordercolor="FFFFFF" colspan="3"> <cfinput type="text" class="date-pick" name="startdate" size=20 maxlength="50" validate="date" message="Start Date of the Program (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font>
 								</td>
 				</tr>
 				<tr>
 								<td class="style1" bordercolor="FFFFFF" align="left"><font size="1"><b>End Date:</b></font></td>
 								<td class="style1" bordercolor="FFFFFF" colspan="3">
-								<cfinput type="text" name="enddate" size=20 maxlength="50"  validate="date" message="End Date of the Program (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font>
+								<cfinput type="text" class="date-pick" name="enddate" size=20 maxlength="50"  validate="date" message="End Date of the Program (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font>
 						
 								<!--- <cfif get_candidate_unqid.enddate LTE get_candidate_unqid.wat_vacation_date>#get_candidate_unqid.enddate# <cfelse> Date incorrect</cfif> --->
 											</td>

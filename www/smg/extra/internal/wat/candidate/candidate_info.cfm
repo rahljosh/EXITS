@@ -311,7 +311,7 @@ function cancelation() {
 										<td><cfinput type="text" class="style1" name="middlename" size=32 value="#middlename#" maxlength="200"></td>
 									<tr>
 										<td align="left" class="style1"><div align="right"><b>Date of Birth:&nbsp;</b></div></td>
-										<td align="left" class="style1"><cfinput type="text" name="dob" class="style1" size=15 value="#dateformat (dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)">&nbsp; <b>Sex:</b> <span class="style1">
+										<td align="left" class="style1"><cfinput type="text" class="date-pick" name="dob" size=15 value="#dateformat (dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)">&nbsp; <b>Sex:</b> <span class="style1">
 										<input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif sex Eq 'M'>checked="checked"</cfif>>Male &nbsp; &nbsp;
 										<input type="radio" name="sex" value="F" required="yes" message="You must specify the candidate's sex." <cfif sex Eq 'F'>checked="checked"</cfif>>Female </span></td>
 									</tr> 
@@ -509,11 +509,11 @@ function cancelation() {
 									</tr>
 									<tr>
 										<td width="23%" class="style1" align="right"><b>Start Date:</b></td>
-										<td class="style1"><cfif edit EQ 'no'>#dateformat (wat_vacation_start, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="wat_vacation_start" size=20 value="#dateformat (wat_vacation_start, 'mm/dd/yyyy')#" maxlength="50"  validate="date" message="Official Vacation - First Date (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></cfif></td>
+										<td class="style1"><cfif edit EQ 'no'>#dateformat (wat_vacation_start, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="wat_vacation_start" size=20 value="#dateformat (wat_vacation_start, 'mm/dd/yyyy')#" maxlength="50"  validate="date" message="Official Vacation - First Date (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></cfif></td>
 									</tr>
 									<tr>
 										<td class="style1" align="right"><b>End Date:</b></td>
-										<td class="style1"><cfif edit EQ 'no'>#dateformat (wat_vacation_end, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="wat_vacation_end" size=20 value="#dateformat (wat_vacation_end, 'mm/dd/yyyy')#" maxlength="50" validate="date" message="Official Vacation - Last Date (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></cfif></td>
+										<td class="style1"><cfif edit EQ 'no'>#dateformat (wat_vacation_end, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="wat_vacation_end" size=20 value="#dateformat (wat_vacation_end, 'mm/dd/yyyy')#" maxlength="50" validate="date" message="Official Vacation - Last Date (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></cfif></td>
 									</tr>
 								</table>	
 								
@@ -702,11 +702,11 @@ function cancelation() {
 									</tr></cfif>
 									<tr>
 										<td class="style1" align="right"><b>Start Date:</b></td>
-										<td class="style1"><cfif edit EQ 'no'>#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="host_startdate" size=20 value="#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#" maxlength="50"  validate="date" message="Host Company - Start Date (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></cfif></td>
+										<td class="style1"><cfif edit EQ 'no'>#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="host_startdate" size=20 value="#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#" maxlength="50"  validate="date" message="Host Company - Start Date (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></cfif></td>
 									</tr>
 									<tr>
 										<td class="style1" align="right"><b>End Date:</b></td>
-										<td class="style1"><cfif edit EQ 'no'>#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="host_enddate" size=20 value="#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#" maxlength="50" validate="date" message="Host Company - End Date (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></cfif></td>
+										<td class="style1"><cfif edit EQ 'no'>#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="host_enddate" size=20 value="#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#" maxlength="50" validate="date" message="Host Company - End Date (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></cfif></td>
 									</tr>								
 								</table>	
 								
@@ -818,11 +818,11 @@ function cancelation() {
 									<cfelse>
 									<tr>
 										<td class="style1" bordercolor="FFFFFF" align="right"><b>Start Date:</b></td>
-										<td class="style1" bordercolor="FFFFFF" colspan="3"> <cfinput type="text" class="style1" name="program_startdate" size=20 value="#dateformat (startdate, 'mm/dd/yyyy')#" maxlength="50"  validate="date" message="Start Date of the Program (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></td>
+										<td class="style1" bordercolor="FFFFFF" colspan="3"> <cfinput type="text" class="date-pick" name="program_startdate" size=20 value="#dateformat (startdate, 'mm/dd/yyyy')#" maxlength="50"  validate="date" message="Start Date of the Program (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></td>
 									</tr>
 									<tr>
 										<td class="style1" bordercolor="FFFFFF" align="right"><b>End Date:</b></td>
-										<td class="style1" bordercolor="FFFFFF" colspan="3"><cfinput type="text" class="style1" name="program_enddate" size=20 value="#dateformat (enddate, 'mm/dd/yyyy')#" maxlength="50"  validate="date" message="End Date of the Program (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></td>
+										<td class="style1" bordercolor="FFFFFF" colspan="3"><cfinput type="text" class="date-pick" name="program_enddate" size=20 value="#dateformat (enddate, 'mm/dd/yyyy')#" maxlength="50"  validate="date" message="End Date of the Program (MM/DD/YYYY)"><font size="1"> (mm/dd/yyyy)</font></td>
 									</tr>
 								
 									</cfif>
@@ -861,7 +861,7 @@ function cancelation() {
 													<td class="style1" width="35%" align="right">
 														<strong>Date:</strong>
 													</td>
-													<td class="style1"><cfif edit EQ 'no'>#DateFormat(verification_received, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="verification_received" size=12 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" maxlength="100"></cfif>
+													<td class="style1"><cfif edit EQ 'no'>#DateFormat(verification_received, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="verification_received" size=12 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" maxlength="100"></cfif>
 													</td>
 												</tr>
 												<tr>

@@ -122,7 +122,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 											</tr>
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" width="35%" align="right"><b>Date of Birth:</b></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" name="dob" size=15 maxlength="100" validate="date" message="Date of Birth MM/DD/YYYY"> mm/dd/yyyy</td>
+												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" class="date-pick" name="dob" size=15 maxlength="100" validate="date" message="Date of Birth MM/DD/YYYY"> <br/>mm/dd/yyyy</td>
 											</tr>
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" width="35%" align="right"><b>Place of Birth:</b></td>
@@ -354,10 +354,16 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 											</tr>		
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" align="right"><b>Start:</b></td>
-												<td class="style1" bordercolor="FFFFFF"><cfinput type="text" name="startdate" size=10 maxlength="35"  validate="date" message="Start MM/DD/YYYY"></td>
-												<td class="style1" bordercolor="FFFFFF" align="right"><b>End:</b></td>
-												<td class="style1" bordercolor="FFFFFF"><cfinput type="text" name="enddate" size=10 maxlength="35" validate="date" message="End Date MM/DD/YYYY"></td>
+												<td class="style1" bordercolor="FFFFFF"><cfinput type="text" class="date-pick" name="startdate" size=10 maxlength="10"  validate="date" message="Start MM/DD/YYYY"><font size="1">mm/dd/yyyy</font></td>
+												<td class="style1" bordercolor="FFFFFF" align="right"></td>
+												<td class="style1" bordercolor="FFFFFF"></td>
 											</tr>	
+											<tr>
+												<td class="style1" bordercolor="FFFFFF" align="right"><b>End:</b></td>
+												<td class="style1" bordercolor="FFFFFF"><cfinput type="text" class="date-pick" name="enddate" size=10 maxlength="10" validate="date" message="End Date MM/DD/YYYY"><font size="1">mm/dd/yyyy</font></td>
+												<td class="style1" bordercolor="FFFFFF" align="right"></td>
+												<td class="style1" bordercolor="FFFFFF"></td>
+											</tr>
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" align="right"><b>Remarks:</b></td>
 												<td class="style1" bordercolor="FFFFFF" colspan="3"><cftextarea name="remarks" cols="25" rows="3"></cftextarea></td>
