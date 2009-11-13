@@ -64,6 +64,7 @@ SELECT sc.invoiceid, spc.*, SUM(amountapplied) AS amountapplied, spr.date_applie
 	from smg_payment_charges spc
 	LEFT JOIN smg_payment_received spr ON spr.paymentid = spc.paymentid
 	where spr.paymentref  = '#url.ref#'
+	AND agentid = '#url.userid#'
 	</cfquery>
 	<cfset amount_received = amount_received + payment_details_applied.amountapplied>
 <!--- </Cfloop> --->
@@ -73,7 +74,7 @@ SELECT sc.invoiceid, spc.*, SUM(amountapplied) AS amountapplied, spr.date_applie
 	FROM smg_payment_received
 	WHERE paymentref = '#url.ref#' 
 		 AND agentid = '#url.userid#'
-	
+	GROUP BY agentid, paymentref
 	<!--- WHERE paymentref = <cfqueryparam value="#url.ref#" cfsqltype="cf_sql_integer"> 
 		 AND agentid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer"> --->
 </Cfquery>
@@ -127,7 +128,8 @@ WHERE userid = #url.userid#
 			from smg_payment_charges spc
 			LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
 			LEFT JOIN smg_payment_received spr ON spr.paymentid = spc.paymentid
-			where paymentref = '#url.ref#' 
+			where paymentref = '#url.ref#'
+			and sc.agentid = #url.userid#
 			GROUP BY spc.paymentid, sc.invoiceid
 		</cfquery>
 		

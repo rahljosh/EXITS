@@ -337,15 +337,15 @@ ORDER BY businessname
 		<cfabort>
 	</cfif>
 	
-	<cfif client.companyid LT 5>
+	<!--- <cfif client.companyid LT 5>
 		<cfset compId = 1>
 		<cfelse>
 			<cfset compId = #client.companyid#>
-	</cfif>
+	</cfif> --->
 	
 	<cfquery name="payment_Details" datasource="MySQL">
-	insert into smg_payment_received (date, date_applied, paymentref, paymenttype, totalreceived, agentid, companyid)
-					values(#CreateODBCDate(form.date_received)#, #CreateODBCDate(now())#, '#form.pay_ref#', '#form.payment_method#', #form.amount_received#, #form.agentId#, #variables.compId#)
+	insert into smg_payment_received (date, date_applied, paymentref, paymenttype, totalreceived, agentid<!--- , companyid --->)
+					values(#CreateODBCDate(form.date_received)#, #CreateODBCDate(now())#, '#form.pay_ref#', '#form.payment_method#', #form.amount_received#, #form.agentId#<!--- , #variables.compId# --->)
 	</cfquery>
 	
 	<cfquery name="paymentid" datasource="mysql">
