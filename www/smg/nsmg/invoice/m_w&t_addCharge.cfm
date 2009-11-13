@@ -28,7 +28,7 @@ INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
 AND sp.type = 11
 AND sp.enddate >= '#variables.todaysDate#'
-AND e.active = 1
+AND e.status = 1
 AND e.verification_received NOT LIKE ' '
 AND e.candidateid NOT IN (SELECT sc.stuid
                         FROM smg_charges sc
@@ -46,7 +46,7 @@ INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
 AND sp.type = 11
 AND sp.enddate >= '#variables.todaysDate#'
-AND e.active = 1
+AND e.status = 1
 AND e.verification_received NOT LIKE ' '
 AND e.candidateid NOT IN (SELECT sc.stuid
                         FROM smg_charges sc
@@ -64,7 +64,7 @@ INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
 AND sp.type = 11
 AND sp.enddate >= '#variables.todaysDate#'
-AND e.active = 1
+AND e.status = 1
 AND e.verification_received NOT LIKE ' '
 AND e.candidateid NOT IN (SELECT sc.stuid
                         FROM smg_charges sc
@@ -82,7 +82,7 @@ INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
 AND sp.type = 11
 AND sp.enddate >= '#variables.todaysDate#'
-AND e.active = 1
+AND e.status = 1
 AND e.verification_received NOT LIKE ' '
 AND e.candidateid NOT IN (SELECT sc.stuid
                         FROM smg_charges sc
