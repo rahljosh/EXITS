@@ -342,7 +342,7 @@
 			 				<tr><td align="center" colspan="2"><cfif dob EQ ''>n/a<cfelse>#dateformat (dob, 'mm/dd/yyyy')# - #datediff('yyyy',dob,now())# year old #sex# </cfif></td></tr> 
 							<tr><td width="80">Intl. Rep. : </td>
 								<td><select name="intrep" <cfif FORM.edit EQ 'no'>disabled</cfif> >
-                                        <option value="0"></option>		
+                                        <option value="0" selected></option>		
                                         <cfloop query="qIntRepsList">
                                         	<option value="#qIntRepsList.userid#" <cfif qIntRepsList.userid EQ qStudentInfo.intrep> selected </cfif> >
 												<cfif len(businessname) gt 50>#Left(businessname, 47)#...<cfelse>#businessname#</cfif>

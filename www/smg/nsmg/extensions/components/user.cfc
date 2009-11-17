@@ -41,8 +41,14 @@
                 	AND	
                     	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
                 </cfif>
-                ORDER BY 
-                    lastName
+                
+				<cfif VAL(ARGUMENTS.usertype)>
+                    ORDER BY 
+                        businessName                
+                <cfelse>
+                    ORDER BY 
+                        lastName
+                </cfif>
 		</cfquery>
 		   
 		<cfreturn qGetUsers>
