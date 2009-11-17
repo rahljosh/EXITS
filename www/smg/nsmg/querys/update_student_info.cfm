@@ -220,8 +220,8 @@
     <cfif VAL(qStudentInfo.programid)>
     
     	<cfscript>			
-			if ( IsValid("email", APPCFC.User.getUsers(userID=CLIENT.userID).email) ) {
-				userCopyEmail = APPCFC.User.getUsers(userID=CLIENT.userID).email;				
+			if ( IsValid("email", APPCFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
+				userCopyEmail = APPCFC.USER.getUserByID(userID=CLIENT.userID).email;				
 			} else {
 				userCopyEmail = APPLICATION.EMAIL.finance;	
 			}
@@ -248,7 +248,7 @@
                             </p> 
 
                             <p>
-                                Intl. Agent: #APPCFC.User.getUsers(userID=qStudentInfo.intRep).businessName#
+                                Intl. Agent: #APPCFC.USER.getUserByID(userID=qStudentInfo.intRep).businessName#
                             </p>
 
                             <p>
@@ -272,8 +272,8 @@
 
                             <p>
                                 Assigned By: 
-                                #APPCFC.User.getUsers(userID=CLIENT.userID).firstName# #APPCFC.User.getUsers(userID=CLIENT.userID).lastName# (###CLIENT.userID#)
-                                <a href="mailto:#APPCFC.User.getUsers(userID=CLIENT.userID).email#">#APPCFC.User.getUsers(userID=CLIENT.userID).email#</a>
+                                #APPCFC.USER.getUserByID(userID=CLIENT.userID).firstName# #APPCFC.USER.getUserByID(userID=CLIENT.userID).lastName# (###CLIENT.userID#)
+                                <a href="mailto:#APPCFC.USER.getUserByID(userID=CLIENT.userID).email#">#APPCFC.USER.getUserByID(userID=CLIENT.userID).email#</a>
                             </p>
                             
                             <p>

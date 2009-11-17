@@ -24,7 +24,7 @@
 	</cffunction>
 
 	
-	<cffunction name="getUsers" access="public" returntype="query" output="false" hint="Gets a list of users, if userID is passed gets a user by ID">
+	<cffunction name="getUsers" access="public" returntype="query" output="false" hint="Gets a list of users, if usertype is passed gets users by usertype">
     	<cfargument name="userID" default="0" hint="userID is not required">
     	<cfargument name="usertype" default="0" hint="usertype is not required">
               
@@ -37,10 +37,6 @@
                     smg_users
                 WHERE
                 	1 = 1
-				<cfif VAL(ARGUMENTS.userID)>
-                	AND	
-                    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-                </cfif>
 				<cfif VAL(ARGUMENTS.usertype)>
                 	AND	
                     	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
@@ -50,6 +46,26 @@
 		</cfquery>
 		   
 		<cfreturn qGetUsers>
+	</cffunction>
+
+
+	<cffunction name="getUserByID" access="public" returntype="query" output="false" hint="Gets a user by ID">
+    	<cfargument name="userID" default="0" hint="userID is not required">
+              
+        <cfquery 
+			name="qGetUserByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					*
+                FROM 
+                    smg_users
+                WHERE	
+                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                ORDER BY 
+                    lastName
+		</cfquery>
+		   
+		<cfreturn qGetUserByID>
 	</cffunction>
 
 

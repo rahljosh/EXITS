@@ -1214,7 +1214,7 @@
                                 #qGetTraining.notes#
                             </td>
                             <td>
-                                #APPCFC.USER.getUsers(userID=qGetTraining.officeUserID).firstName# #APPCFC.USER.getUsers(userID=qGetTraining.officeUserID).lastName#
+                                #APPCFC.USER.getUserByID(userID=qGetTraining.officeUserID).firstName# #APPCFC.USER.getUserByID(userID=qGetTraining.officeUserID).lastName#
                             </td>  
                             <td>
                                 #DateFormat(qGetTraining.dateCreated, 'mm/dd/yyyy')#

@@ -25,13 +25,13 @@
 		qStudentInfo = AppCFC.STUDENT.getStudents(studentID=studentID); 
 
 		// Get Super Rep
-		qGetSuperRep = APPCFC.USER.getUsers(userID=qStudentInfo.arearepid);
+		qGetSuperRep = APPCFC.USER.getUserByID(userID=qStudentInfo.arearepid);
 
 		// Get Place Rep
-		qGetPlaceRep = APPCFC.USER.getUsers(userID=qStudentInfo.placerepid);
+		qGetPlaceRep = APPCFC.USER.getUserByID(userID=qStudentInfo.placerepid);
 
 		// Get Super Rep
-		qEnteredBy = APPCFC.USER.getUsers(userID=qStudentInfo.entered_by);
+		qEnteredBy = APPCFC.USER.getUserByID(userID=qStudentInfo.entered_by);
 		
 		// Get Student Company Assigned
 		qAssignedCompany = AppCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID);
@@ -52,7 +52,7 @@
 		qIntRepsList = APPCFC.USER.getUsers(usertype=8);
 
 		// Check User Compliance Access
-		qUserCompliance = APPCFC.USER.getUsers(userID=CLIENT.userid);
+		qUserCompliance = APPCFC.USER.getUserByID(userID=CLIENT.userid);
 
 		// Get Company Information
 		qCompanyShort = AppCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
@@ -72,7 +72,7 @@
 			qGetFacilitator.lastname = "";
 		} else {
 			// Get Facilitator for this Region
-			qGetFacilitator = APPCFC.USER.getUsers(userID=qGetRegionAssigned.regionfacilitator);
+			qGetFacilitator = APPCFC.USER.getUserByID(userID=qGetRegionAssigned.regionfacilitator);
 		}
 	</cfscript>
    
@@ -346,7 +346,7 @@
 								<td><select name="intrep" <cfif FORM.edit EQ 'no'>disabled</cfif> >
 									<option value="0"></option>		
 									<cfloop query="qIntRepsList">
-									<cfif qIntAgent.userid is qIntRepsList.userid><option value="#qIntRepsList.userid#" selected>#qIntRepsList.businessname# </option><cfelse>
+									<cfif qIntAgent.userid EQ qStudentInfo.intrep><option value="#qIntRepsList.userid#" selected>#qIntRepsList.businessname# </option><cfelse>
 									<option value="#userid#"><cfif #len(businessname)# gt 50>#Left(businessname, 47)#...<cfelse>#businessname#</cfif></option></cfif>
 									</cfloop>
 									</select>
