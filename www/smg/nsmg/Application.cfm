@@ -19,7 +19,8 @@
     <cfparam name="CLIENT.parentCompany" default="">   
     <cfparam name="CLIENT.company_submitting" default="">  
     <cfparam name="CLIENT.lastLogin" default="">  
-
+	<cfparam name="CLIENT.programManager" default="">
+    
 	<cfscript>
         // Check if we need to initialize Application scope
 		if ( VAL(URL.init) ) {
