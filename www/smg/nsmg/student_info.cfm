@@ -429,27 +429,30 @@
 			<div id="subMenuLinks">  
 				<!----All Users---->
 				<a href="javascript:OpenPlaceMan('forms/place_menu.cfm?studentID=#qStudentInfo.studentID#' , 'Settings', 'height=400, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes');">Placement Management</a>
-				<!----For Testing Purposes---->
 	
 				<!--- OFFICE USERS ONLY --->
-				<cfif CLIENT.usertype LTE '4'> 
-					<a href="" onClick="javascript:win=window.open('insurance2/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance</a> 	<!----
-					<a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> 	---->	
+				<cfif CLIENT.usertype LTE 4> 
+					<a href="" onClick="javascript:win=window.open('insurance2/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance</a> 	
+					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
 					<a href="" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Rep. Payments</a> 					
 					<a href="" onClick="javascript: win=window.open('forms/missing_documents.cfm', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
-					<a href="" onClick="javascript: win=window.open('forms/notes.cfm', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif qStudentInfo.notes NEQ ''><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 		
+					<a href="" onClick="javascript: win=window.open('forms/notes.cfm', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif LEN(qStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 		
 				</cfif> 
 				<!--- OFFICE - MANAGERS ONLY --->
-				<cfif CLIENT.usertype LTE '5'> 
-					<a href="" onClick="javascript: win=window.open('forms/profile_adjustments.cfm', 'Settings', 'height=500, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Profile Adjustments</a>
-				</cfif> 				
+				<cfif CLIENT.usertype LTE 5> 
+					<a href="" onClick="javascript: win=window.open('forms/profile_adjustments.cfm', 'Settings', 'height=500, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Profile Adjustments</a>		
+                	<!--- Remove this after approval --->
+					<cfif CLIENT.usertype LTE 4>
+                    <a href="" onClick="javascript: win=window.open('forms/project_help.cfm?studentID=#studentID#', 'Settings', 'height=250, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif LEN(qStudentInfo.date_project_help_completed)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Project Help</A>
+                	</cfif>
+                </cfif> 				
 				<!----All Users---->				
-				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif virtual_folder.recordcount><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>		
+				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(virtual_folder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>		
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qStudentInfo.studentID#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
 				<a href="" onClick="javascript: win=window.open('forms/flight_info.cfm', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
 				<a href="" onClick="javascript: win=window.open('forms/double_place_docs.cfm', 'Settings', 'height=380, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Double Place Docs</a>
 				<!---- GLOBAL OR COMPLIANCE USERS ---->
-				<cfif CLIENT.usertype EQ '1' OR qUserCompliance.compliance EQ '1'>
+				<cfif CLIENT.usertype EQ 1 OR qUserCompliance.compliance EQ 1>
 				<a href="" onClick="javascript: win=window.open('compliance/student_checklist.cfm?unqid=#qStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Compliance</a>
 				</cfif>
 			</div>
@@ -653,7 +656,7 @@
 				<tr>
 					<td width="10"><cfif qIntAgent.insurance_typeid LTE '1'><input type="checkbox" name="insurance_check" value="0" disabled><cfelse><input type="checkbox" name="insurance_check" value="1" checked disabled></cfif></td>
 					<td align="left" colspan="2"><cfif qIntAgent.insurance_typeid EQ '0'> <font color="FF0000">Insurance Information is missing</font>
-						<cfelseif qIntAgent.insurance_typeid EQ '1'> Does not take Insurance Provided by #qCompanyShort.companyshort#
+						<cfelseif qIntAgent.insurance_typeid EQ 1> Does not take Insurance Provided by #qCompanyShort.companyshort#
 						<cfelse> Takes Insurance Provided by #qCompanyShort.companyshort# </cfif>
 					</td>
 				</tr>
@@ -662,7 +665,7 @@
 					<td>Policy Type :</td>
 					<td><cfif qIntAgent.insurance_typeid EQ '0'>
 							<font color="FF0000">Missing Policy Type</font>
-						<cfelseif qIntAgent.insurance_typeid EQ '1'> n/a
+						<cfelseif qIntAgent.insurance_typeid EQ 1> n/a
 						<cfelse> #qIntAgent.type#	</cfif>		
 					</td>
 				</tr>
@@ -670,7 +673,7 @@
 					<td><Cfif insurance is ''><input type="checkbox" name="insured_date" value="0" disabled><Cfelse><input type="checkbox" name="insured_date" value="1" checked disabled></cfif></td>
 					<td>Insured Date :</td>
 					<td>
-					<cfif qIntAgent.insurance_typeid EQ '1'> 
+					<cfif qIntAgent.insurance_typeid EQ 1> 
 						n/a
 						<cfelse>
 							
@@ -708,7 +711,7 @@
 					<td>&nbsp;</td>
 					<td>Direct Placement &nbsp; 
 						<cfif direct_placement EQ '0'><input type="radio" name="direct_placement" value="0" checked="yes" <cfif FORM.edit EQ 'no'>disabled</cfif>>No<cfelse><input type="radio" name="direct_placement" value="0" <cfif FORM.edit EQ 'no'>disabled</cfif>>No</cfif> &nbsp; 
-						<cfif direct_placement EQ '1'><input type="radio" name="direct_placement" value="1" checked="yes" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes<cfelse><input type="radio" name="direct_placement" value="1" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes</cfif>													
+						<cfif direct_placement EQ 1><input type="radio" name="direct_placement" value="1" checked="yes" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes<cfelse><input type="radio" name="direct_placement" value="1" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes</cfif>													
 					</td>
 				</tr>
 				<tr>
@@ -762,7 +765,7 @@
 							<font color="FF0000">SEVIS Fee Information is missing</font>
 						<cfelseif qIntAgent.accepts_sevis_fee EQ '0'>
 							Intl. Agent does not accept SEVIS Fee
-						<cfelseif qIntAgent.accepts_sevis_fee EQ '1'>
+						<cfelseif qIntAgent.accepts_sevis_fee EQ 1>
 							Intl. Agent Accepts SEVIS Fee
 						</cfif>
 					</td>
@@ -773,7 +776,7 @@
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td>Fee Status: &nbsp; <cfif qIntAgent.accepts_sevis_fee NEQ '1' AND sevis_fee_paid_date EQ ''>n/a<cfelseif sevis_fee_paid_date NEQ ''>Paid  on: &nbsp; #DateFormat(sevis_fee_paid_date, 'mm/dd/yyyy')# <cfelse> Unpaid </cfif></td>
+					<td>Fee Status: &nbsp; <cfif qIntAgent.accepts_sevis_fee NEQ 1 AND sevis_fee_paid_date EQ ''>n/a<cfelseif sevis_fee_paid_date NEQ ''>Paid  on: &nbsp; #DateFormat(sevis_fee_paid_date, 'mm/dd/yyyy')# <cfelse> Unpaid </cfif></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
