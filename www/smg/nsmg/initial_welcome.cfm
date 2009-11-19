@@ -54,7 +54,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                     <tr height=24>
                         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
-                        <td background="pics/header_background.gif"><h2>Activities Relating to Today <cfif isDefined('client.parentcompany')>from SMG</cfif></h2></td>
+                        <td background="pics/header_background.gif"><h2>Activities Relating to Today</h2></td>
                         <td background="pics/header_background.gif" width=16></td>
                         <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
