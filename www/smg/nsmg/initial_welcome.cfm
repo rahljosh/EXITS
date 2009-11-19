@@ -45,7 +45,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
         </tr>
     </table>
     
-    <table width=100%>
+    <table width=100%> 
         <tr>
             <td width=40% valign="top">
             
