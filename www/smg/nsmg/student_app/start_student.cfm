@@ -67,7 +67,7 @@ function checkEmail() {
 
 <!--- DEFAULT APPLICATION DAYS --->
 <cfset appdays = 15> 
-<cfset remainingdays = 15>
+<cfset remainingdays = 90> <!--- Updated from 30 to 90 days - Marcus Melo - 11/20/2009 --->
 
 <!---
 <cfset maxdeadline = #DateDiff('d', now(), deadline)#>
@@ -181,7 +181,7 @@ function checkEmail() {
 			<br>Extend Deadline by:
 			<cfif remainingdays GT 1>
 				<select name="extdeadline">
-				<cfloop index=i from=0 to="#remainingdays#" step="1">
+				<cfloop index="i" from="0" to="#remainingdays#" step="5">
 					<option value="#i#">#i#</option>
 				</cfloop>
 				</select>

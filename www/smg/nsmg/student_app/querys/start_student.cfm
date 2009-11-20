@@ -14,8 +14,8 @@
 
 <!----set fields that arn't used for rep to fill out app to null---->
 <cfif url.r is 'y'>
-	<cfset form.email1 = ''>
-	<cfset form.phone = ''>
+	<cfset FORM.email1 = ''>
+	<cfset FORM.phone = ''>
 </cfif>
 
 <!--- MAIN OFFICE ---->
@@ -44,7 +44,7 @@
 </cfif>
 
 <!--- CHECK DATA --->
-<cfif form.firstname EQ '' OR form.familylastname EQ ''>
+<cfif FORM.firstname EQ '' OR FORM.familylastname EQ ''>
 	<br><br>
 	<table width=90% cellpadding=0 cellspacing=0 border=0 align="center">
 	<tr>
@@ -88,7 +88,7 @@
 	<cfquery name="check_username" datasource="MySql">
 		SELECT email
 		FROM smg_students
-		WHERE email = '#form.email1#'
+		WHERE email = '#FORM.email1#'
 	</cfquery>
 	<cfif check_username.recordcount NEQ '0'>
 		<br><br>
@@ -109,8 +109,8 @@
 				<table width=670 cellpadding=0 cellspacing=0 border=0 align="center">
 					<tr><td><h2>Sorry, this student account could not be created.</h2><br></td></tr>
 					<tr><td>
-						<b>Student's name: #form.firstname# #form.familylastname#</b><br><br>
-						The email address <b>#form.email1#</b> has been in use by another student account.<br><br>
+						<b>Student's name: #FORM.firstname# #FORM.familylastname#</b><br><br>
+						The email address <b>#FORM.email1#</b> has been in use by another student account.<br><br>
 						You <b>must</b> enter a different e-mail address in order to create an account for your student.<br><br>
 						Please click on the back button below, change the e-mail address and try again.<br><br><br><br>
 						<div align="center"><input name="back" type="image" src="../../pics/back.gif" align="middle" border=0 onClick="history.back()"></div><br><br>
@@ -132,22 +132,57 @@
 		<cfabort>
 	</cfif>
 </cfif>
-<cfset expiration_date = '#DateFormat(DateAdd('d','#extdeadline#','#form.expiration_date#'), 'yyyy-mm-dd')# #TimeFormat(DateAdd('d','#extdeadline#','#form.expiration_date#'), 'HH:mm:ss')#'>
+<cfset expiration_date = '#DateFormat(DateAdd('d','#extdeadline#','#FORM.expiration_date#'), 'yyyy-mm-dd')# #TimeFormat(DateAdd('d','#extdeadline#','#FORM.expiration_date#'), 'HH:mm:ss')#'>
 
 <!----Insert basic student info into student table---->
 <cfquery name="start_student" datasource="MySQL">
-	INSERT INTO smg_students 
-		(uniqueid, familylastname, firstname, middlename, email, phone, app_indicated_program, app_additional_program, randid, intrep, branchid,  
-		app_sent_student, app_current_status, application_expires)
-	VALUES ('#uniqueid#','#form.familylastname#', '#form.firstname#', '#form.middlename#', '#form.email1#', '#form.phone#',
-			'#form.program#', '#form.add_program#', '#randid#', '#get_intrepid#', '#get_branchid#', #CreateODBCDate(now())#, '#cs#', '#expiration_date#')
+	INSERT INTO 
+    	smg_students 
+	(
+    	uniqueid, 
+        familylastname, 
+        firstname, 
+        middlename, 
+        email, 
+        phone, 
+        app_indicated_program, 
+        app_additional_program, 
+        randid, 
+        intrep, 
+        branchid,  
+		app_sent_student, 
+        app_current_status, 
+        application_expires
+    )
+	VALUES 
+    (
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#uniqueid#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(FORM.familylastname)#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(FORM.firstname)#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(FORM.middlename)#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email1#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.add_program)#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#randid#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#get_intrepid#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#get_branchid#">, 
+        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(cs)#">, 
+        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#expiration_date#">
+	)
 </cfquery>
 
 <!----Retrieve the students ID number---->
 <cfquery name="get_student_id" datasource="MySQL">
-	SELECT studentid, branchid, intrep
-	FROM smg_students 
-	WHERE uniqueid = '#uniqueid#'
+	SELECT 
+    	studentid, 
+        branchid, 
+        intrep
+	FROM 
+    	smg_students 
+	WHERE 
+    	uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#uniqueid#">
 </cfquery>
 
 <cfif url.r is 'n'>
@@ -190,7 +225,7 @@
 	</cfquery>
 
 	<cfoutput>
-	<cfmail to="#Form.email1#" from="support@student-management.com" Subject="SMG Exchange Application" type="html">
+	<cfmail to="#FORM.email1#" from="support@student-management.com" Subject="SMG Exchange Application" type="html">
 	<style type="text/css">
 	.thin-border{ border: 1px solid ##000000;}
 	</style>
@@ -200,7 +235,7 @@
 		</tr>
 		<tr>
 			<td>
-			#form.firstname#-
+			#FORM.firstname#-
 			<br><br>
 			An account has been created for you on the Student Management Groups EXITS system.  
 			Using EXITS you will be able to apply for your exchange program and view the status of your application as it is processed. 
@@ -255,7 +290,7 @@
 <cfoutput>
 <script language="JavaScript">
 <!-- 
-alert("You have successfully created this account for #form.firstname# #form.familylastname#. Thank You.");
+alert("You have successfully created this account for #FORM.firstname# #FORM.familylastname#. Thank You.");
 <cfif url.r is 'y'>
 	location.replace("../rep_start_app.cfm");
 <cfelse>
