@@ -156,12 +156,12 @@ ORDER BY candidateid
             <td colspan="4"></td>
         </tr>
     </table> 
-
-    <cfinput type="hidden" name="agentId" value="#url.userid#">
-    <cfinput type="hidden" name="programId" value="#getTraineeCand.programid#">
-    <cfinput type="hidden" name="programName" value="#getTraineeCand.programname#">
     
     <cfoutput query="getTraineeCand">
+	
+		<cfinput type="hidden" name="agentId" value="#url.userid#">
+		<cfinput type="hidden" name="programId" value="#getTraineeCand.programid#">
+		<cfinput type="hidden" name="programName" value="#getTraineeCand.programname#">
     
         <table class="frame" width="500">            
             <!--- default values for form variables to execute INSERT SQL --->

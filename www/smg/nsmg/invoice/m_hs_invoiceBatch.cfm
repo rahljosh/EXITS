@@ -690,6 +690,13 @@ colspan="2" align="center"><span class="style11">Problem</span></td>
           
 </cfoutput>
 
+</table>
+
+<br/><br/>
+
+</body>
+</html>
+
 <!--- start emailing intl agents --->
 
 <cfif directoryExists("/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf")>
@@ -713,33 +720,7 @@ WHERE sc.invoiceid > #variables.lastOldInvoice#
 GROUP BY agentid, testCompid
 </cfquery>
 
-<!--- create invoice pdfs --->
-<!--- <cfquery name="getNewInvs" datasource="MySQL">
-SELECT DISTINCT(sc.invoiceid) AS invoiceId, companyid
-FROM smg_charges sc
-WHERE sc.invoiceid > #variables.lastOldInvoice#
-</cfquery>
 
-<cfloop query="getNewInvs">
-
-	<cfswitch expression="#getNewInvs.companyid#">
-		<cfcase value="10">
-			<cfset compName = "case">
-		</cfcase>	
-		<cfdefaultcase>
-			<cfset compName = "ise">
-		</cfdefaultcase>
-	</cfswitch>
-	
-	<cfset url.id = #getNewInvs.invoiceId#>
-	
-	<cfdocument format="PDF" filename="#getDirectoryFromPath(expandPath("*.*"))#uploadedfiles/invoices_pdf/#variables.compName#_#getNewInvs.invoiceId#.pdf" overwrite="yes">
-	
-		<cfinclude template="invoice_view.cfm">
-	
-	</cfdocument>
-	
-</cfloop> ---><!--- END: create invoice pdfs --->
 
 <cfloop query="getAgentIds">
 
@@ -799,7 +780,7 @@ WHERE sc.invoiceid > #variables.lastOldInvoice#
 		
     </cfloop>
 				
-	<cfmail from="#variables.emailFrom#" to="#getAgentInfo.billing_email#" subject="#getAgentInfo.businessname#: #variables.compName# invoices - please find attached." type="html">
+	<cfmail from="#variables.emailFrom#" to="#variables.emailFrom#" bcc="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# invoices - please find attached." type="html">
 	
 <small>
 Dear Partner
@@ -836,10 +817,3 @@ visit our web site at www.student-management.com
 	
 </cfloop> <!--- end of loop query="getAgentIds" --->
 <!--- end of emailing intl agents --->
-   
-</table>
-
-<br/><br/>
-
-</body>
-</html>
