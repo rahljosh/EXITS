@@ -1,0 +1,1 @@
+<BODY onLoad="setTimeout(window.close, 1)">

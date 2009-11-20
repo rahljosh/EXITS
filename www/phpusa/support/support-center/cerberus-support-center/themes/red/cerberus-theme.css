@@ -1,0 +1,143 @@
+<!--
+/* Various widget box styles ---------------------------------------- */
+#box {
+	border: 1px solid #4E6704;
+	background-color: #EFEFEF;
+}
+/* Widget box titles along the left side menus (primary) */
+.boxtitle {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-image: url(boxtitle_bg.gif);
+	line-height: 22px;
+	padding-left: 6px;
+	background-color: #CE0F0F;
+	background-repeat: repeat-x;
+}
+/* Default widget boxes */
+.box_content_cell { background-color: #EEEEEE; }
+td.box_content_text {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	color: #666666;
+}
+
+/* The main menu box */
+.box_menu_cell { background-color: #EEEEEE; }
+a.menuitem {color: #666666; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: normal; }
+a.menuitem:hover {background: #FFF2F2; border: 1px solid #CC0101; color: #666666; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: none; font-weight: normal; }
+
+
+/* General use styles ----------------------------------------------- */
+.black_heading {color: #000000; font-size: 11px; font-family: Tahoma, Verdana, Arial; line-height: 17px; text-decoration: none; font-weight: bold; }
+.white_heading {color: #FFFFFF; font-size: 11px; font-family: Verdana, Arial, Helvetica, sans-serif; line-height: 17px; text-decoration: none; font-weight: bold; }
+.white_back { background-color: #FFFFFF; }
+.success { color: #009900; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; font-weight: bold; }
+.fail { color: #FF0000; font-size: 10px; font-weight: bold; background-color: #FFFF99; }
+.required_asterisk {color: #ff0000; }
+
+/* The default push-button */
+input.button_style { border-left: solid 1px #336699; border-top: solid 1px #336699; border-right: solid 1px #666666; border-bottom: solid 1px #666666; font-family: Tahoma, Arial, Helvetica; font-weight: bold; font-size: 8pt; color: #FFFFFF; background-color: #CC0000; }
+input {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 11px;
+	color: #333333;
+}
+
+
+/* Table styles ----------------------------------------------------- */
+.main_table { background-color: #BABABA; }
+.table_header_cell {
+	line-height: 17px;
+	background-image: url(boxtitle2_bg.gif);
+	font-size: 11px;
+	font-weight: bold;
+	color: #333333;
+	padding-left: 8px;
+	background-color: #FFFFFF;
+	background-repeat: repeat-x;
+}
+
+/* Default hyperlink styles ----------------------------------------- */
+a.url:link {color: #666666; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: normal; }
+a.url:visited {color: #666666; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: normal; }
+a.url:hover {color: #CC0000; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: none; font-weight: normal; }
+a.url:active {color: #CC0000; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: none; font-weight: normal; }
+
+a.url_lg:link {	font-family: Tahoma, Verdana, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: #666666; text-decoration: underline; }
+a.url_lg:visited { font-family: Tahoma, Verdana, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: #666666; text-decoration: underline; }
+a.url_lg:hover { font-family: Tahoma, Verdana, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: #CC0000; text-decoration: none; }
+a.url_lg:active { font-family: Tahoma, Verdana, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: #CC0000; text-decoration: none; }
+
+
+/* Support Center Home Page styles --- */
+.home_input {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 10px;
+	color: #333333;	
+	background-color: #FFFFFF;
+	border-top: 1px solid #999999;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	border-left: 1px solid #999999;
+	padding: 2px;
+}
+.home_button {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: 10px;
+	color: #666666;
+	width: 150px;
+	background-color: #FFFFFF;
+	border-top: 1px solid #CCCCCC;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #666666;
+	border-left: 1px solid #CCCCCC;
+	padding: 2px;
+}
+
+.menubox_border_idle { background-color: #CCCCCC; }
+.menubox_border_active { background-color: #0790DC; }
+.menubox_idle { background-color: #FFFFFF; }
+.menubox_active { background-color: #E9F7FE; }
+.menubox { background-color: #FFFFFF; }
+.menubox:hover { background-color: #E9F7FE; }
+
+
+/* Knowledgebase-related styles ------------------------------------- */
+.kb_article_title {color: #333333; font-size: 14px; font-family: Verdana, Tahoma, Helvetica, sans-serif; line-height: 17px; font-weight: bold; }
+.kb_alt_bg_1 { background: #FFFFFF; }
+.kb_alt_bg_2 { background: #FFF2F2; }
+a.kb_parent {color: #333333; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: bold; }
+a.kb_parent:hover {color: #333333; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: bold; }
+a.kb_parent:link {color: #333333; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: bold; }
+a.kb_parent:visited {color: #333333; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: bold; }
+a.kb_category {color: #666666; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: normal; }
+a.kb_category:hover {color: #666666; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: normal; }
+a.kb_category:link {color: #666666; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: normal; }
+a.kb_category:visited {color: #666666; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: normal; }
+
+/* Most Viewed Articles section */
+.kb_most_diag {	background-image: url(diag.gif); }
+.kb_most_viewed_articles { font-family: Tahoma, Verdana, Arial; font-size: 11px; background-color: #CC0101; padding-left: 6px; font-weight: bold; color: #FFFFFF; }
+.kb_most_viewed_views { font-family: Tahoma, Verdana, Arial; font-size: 11px; background-color: #FE4949; font-weight: bold;	color: #FFFFFF;	text-align: center; }
+
+
+/* Open/Track Ticket styles ----------------------------------------- */
+.agent_reply { color: #EE0000; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; font-weight: bold; }
+.ticket_subject_text {color: #333333; font-size: 14px; font-family: Verdana, Tahoma, Helvetica, sans-serif; line-height: 17px; font-weight: bold; }
+.ticket_body_text { color: #111111; font-size: 11px; font-family: Verdana, Helvetica, sans-serif; line-height: 17px}
+a.ticket_link {color: #CC0000; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: underline; font-weight: normal; }
+a.ticket_link:hover {color: #CC0000; font-size: 11px; font-family: Tahoma, Verdana, Helvetica, sans-serif; line-height: 17px; text-decoration: none; font-weight: normal; }
+
+
+/* WGM styles ------------------------------------------------------- */
+.wgm_take_control_slogan {
+	text-transform: uppercase;
+	letter-spacing: 0.2em;
+	font-family: "Trebuchet MS";
+	font-size: 10px;
+}
+
+-->
