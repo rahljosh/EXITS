@@ -1,0 +1,171 @@
+body {
+	background: #0078a9;
+	margin-left: 5px;
+	margin-top: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: large;
+	color:#003366;
+}
+
+td,th {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: x-small;
+}
+
+underline{border-bottom: 1px}
+
+a:link, a:visited{
+	color: #08368F;
+	text-decoration: none;
+}
+
+a:hover{
+	text-decoration: underline;
+}
+
+.box{border-top: 1px dashed #9a9a9a; border-right: 1px dashed #9a9a9a; border-left: 1px dashed #9a9a9a; border-bottom: 1px dashed #9a9a9a; background: #FFFFFF;}
+
+/******************update styles********************/
+.updates{
+	color: #FFFAFA;
+	 font-size:12px;
+}
+ .updates h3{
+ 	color: #FFFAFA;
+
+  font-size:12px;
+}
+
+/***********Student Info Menu*******************/
+#subMenuLinks{
+	margin: 0px;
+	padding: 0px;
+}
+
+#subMenuLinks h3{
+	padding: 10px 0px 2px 10px;
+	border-bottom: 1px solid #D0D0D0;
+}
+
+#subMenuLinks a:link, #subMenuLinks a:visited {
+	display: block;
+	border-top: 1px solid #D0D0D0;
+	
+	font-weight: bold;
+	padding: 3px 0px 3px 10px;
+	color: #ffffff;
+	background-color: #16294e;
+}
+
+#subMenuLinks a:hover{
+	border-top: 1px solid #D0D0D0;
+	background-color: #E3E3E3;/*#DDEEFF;*/
+	background-image: none;
+	font-weight: bold;
+	text-decoration: none;
+	color: #201D3E ;
+}
+
+#greyed_text {
+	font-size:small;
+	color:#a8a8a8;
+}
+
+.label{
+	text-align:right;
+}
+
+.redtext {
+	color: #FF0000;
+}
+
+.get_attention{
+	background-color:#C2D1EF;
+	width:100%;
+	letter-spacing:2;
+}
+.upper{text-transform:uppercase;}
+/****Table specs****/
+	.vline { BACKGROUND-IMAGE: url(pics/table-borders/left-vert-line.gif); BACKGROUND-REPEAT: repeat-y }
+	.grouptopleft { BACKGROUND-POSITION: 50% bottom; BACKGROUND-IMAGE: url(pics/table-borders/topleft.gif); BACKGROUND-REPEAT: no-repeat }
+	.groupTop { BACKGROUND-POSITION: 50% bottom; BACKGROUND-IMAGE: url(pics/table-borders/top.gif); BACKGROUND-REPEAT: repeat-x }
+	.groupTopRight { BACKGROUND-POSITION: left bottom; BACKGROUND-IMAGE: url(pics/table-borders/topright.gif); BACKGROUND-REPEAT: no-repeat }
+	.groupLeft { BACKGROUND-POSITION-X: right; BACKGROUND-IMAGE: url(pics/table-borders/left-vert-line.gif); BACKGROUND-REPEAT: repeat-y }
+	.groupRight { BACKGROUND-IMAGE: url(pics/table-borders/right.gif); BACKGROUND-REPEAT: repeat-y }
+	.groupBottomLeft { BACKGROUND-POSITION: right top; BACKGROUND-IMAGE: url(pics/table-borders/bottomleft.gif); BACKGROUND-REPEAT: no-repeat }
+	.groupBottom { BACKGROUND-POSITION: 50% top; BACKGROUND-IMAGE: url(pics/table-borders/bottom.gif); BACKGROUND-REPEAT: repeat-x }
+	.groupBottomRight { BACKGROUND-POSITION: left top; BACKGROUND-IMAGE: url(pics/table-borders/bottomright.gif); BACKGROUND-REPEAT: no-repeat }
+	.footer { BACKGROUND-IMAGE: url(pics/table-borders/FooterBackground.gif); BACKGROUND-REPEAT: repeat-x; BACKGROUND-COLOR: #bf0301 }
+	.errMessageGradientStyle { BACKGROUND-IMAGE: url(pics/red-error-backgradient.gif); BACKGROUND-REPEAT: repeat-x }
+	.normRegistrationHeader { BACKGROUND-IMAGE: url(pics/norm-backimage.gif); BACKGROUND-REPEAT: repeat-x }
+	.orangeLine { BACKGROUND-POSITION: left 50%; BACKGROUND-IMAGE: url(pics/orange_gradiant.gif); BACKGROUND-REPEAT: repeat-x; BACKGROUND-COLOR: #ff7e0d }
+	.redLine { BACKGROUND-POSITION: left 50%; BACKGROUND-IMAGE: url(pics/red_background.gif); BACKGROUND-REPEAT: repeat-x; BACKGROUND-COLOR: #000000 }
+	
+
+/****Other info****/
+.ft { BORDER-RIGHT: #ffffff 1px solid; FONT-SIZE: 9px; BORDER-LEFT: #ffffff 1px solid; COLOR: #ffffff; BACKGROUND-REPEAT: repeat-x; HEIGHT: 27px }
+#ftTxt { PADDING-LEFT: 5px; FONT-SIZE: 11px; PADDING-TOP: 5px; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; TEXT-ALIGN: left }
+A:link {COLOR: #D6081D }
+A:visited {COLOR: #333333 }
+A:hover {COLOR: #D6081D }
+A.lg:link { COLOR: #ff888b }
+A.lg:visited { COLOR: #ff888b }
+A.lg:hover { COLOR: #ffd5d6 }
+TD { FONT-SIZE: 11px; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif }
+.body { MARGIN: 0px; BACKGROUND-COLOR: #ffffff }
+.buttonAvialability { FONT-SIZE: 11px; WIDTH: 95px; _width:95px; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif }
+.groupCaption { PADDING-RIGHT: 5px; PADDING-LEFT: 5px; FONT-WEIGHT: normal; PADDING-BOTTOM: 5px; COLOR: #afa581; PADDING-TOP: 5px }
+.helpmsg { COLOR: #676767 }
+.errContainer { DISPLAY: none; MARGIN: 0px 10% }
+.errmsg { FONT-SIZE: 9px; COLOR: #ff6600 }
+.normalInput { padding-left:3px; padding-right:3px; BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; FONT-WEIGHT: normal; FONT-SIZE: 11px; BORDER-LEFT: #999999 1px solid; WIDTH: 245px; _width: 245px; BORDER-BOTTOM: #999999 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: white }
+.dropdown { BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; FONT-WEIGHT: normal; FONT-SIZE: 11px; BORDER-LEFT: #999999 1px solid; WIDTH: 245px; _width: 245px; BORDER-BOTTOM: #999999 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: white }
+.errorInput { padding-left:3px; padding-right:3px; BORDER-RIGHT: #FE6500 1px solid; BORDER-TOP: #FE6500 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 11px; BORDER-LEFT: #FE6500 1px solid; WIDTH: 245px; _width: 245px; BORDER-BOTTOM: #FE6500 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: #feff99; }
+.birthdayInput{	padding-left:3px; padding-right:3px; border-right: #999999 1px solid; border-top: #999999 1px solid;	font-weight: normal; font-size: 11px; border-left: #999999 1px solid; width: 30px; _width: 30px; color: black; border-bottom: #999999 1px solid; font-family: tahoma, arial, verdana, helvetica, sans-serif; height: 20px; background-color: white; } 
+.normalLabel { FONT-WEIGHT: bold; COLOR: #000000 }
+.plainLabel { FONT-WEIGHT: normal; COLOR: #000000 }
+.errorLabel { FONT-WEIGHT: bold; COLOR: #FE6500 }
+.errorDropdown { BORDER-RIGHT: #fe6500 1px solid; BORDER-TOP: #fe6500 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 11px; BORDER-LEFT: #fe6500 1px solid; WIDTH: 245px; _width: 245px; BORDER-BOTTOM: #fe6500 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: #feff99; }
+.errorMessage { DISPLAY: none; FONT-SIZE: 9px; COLOR: #ff6600;}
+.reqField { FONT-WEIGHT: bold; COLOR: #D7031C }
+.invisible {display: none; }
+TABLE#pwOuterTable { BORDER-RIGHT: silver 1px solid; BORDER-TOP: silver 1px solid; FONT-SIZE: 75%; BORDER-LEFT: silver 1px solid; BORDER-BOTTOM: silver 1px solid; width:245px; _width:245px }
+TABLE#pwTable { BORDER-RIGHT: silver 1px solid; BORDER-TOP: silver 1px solid; FONT-SIZE: 75%; BORDER-LEFT: silver 1px solid; BORDER-BOTTOM: silver 1px solid }
+TD#pwweak { BORDER-RIGHT: silver 1px solid; COLOR: silver; BACKGROUND-COLOR: white }
+TD#pwmedium { BORDER-RIGHT: silver 1px solid; COLOR: silver; BACKGROUND-COLOR: white }
+TD#pwstrong { COLOR: silver; BACKGROUND-COLOR: white }
+TD#label { width: 185px; _width:185px }
+TD#input { width: 245px; _width:245px }
+
+
+.normalInputTitle { BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; FONT-WEIGHT: normal; FONT-SIZE: 11px; BORDER-LEFT: #999999 1px solid; WIDTH: 100px; _width: 100px; BORDER-BOTTOM: #999999 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: white }
+.errorInputTitle { BORDER-RIGHT: #fe6500 1px solid; BORDER-TOP: #fe6500 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 11px; BORDER-LEFT: #fe6500 1px solid; WIDTH: 100px; _width: 100px; BORDER-BOTTOM: #fe6500 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: #feff99; }
+.normalInputDayMonth { padding-left:3px; padding-right:3px; BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; FONT-WEIGHT: normal; FONT-SIZE: 11px; BORDER-LEFT: #999999 1px solid; WIDTH: 30px; _width: 30px; BORDER-BOTTOM: #999999 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: white }
+.errorInputDayMonth { padding-left:3px; padding-right:3px; BORDER-RIGHT: #fe6500 1px solid; BORDER-TOP: #fe6500 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 11px; BORDER-LEFT: #fe6500 1px solid; WIDTH: 30px; _width: 30px; BORDER-BOTTOM: #fe6500 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: #feff99; }
+.normalInputYear { padding-left:3px; padding-right:3px; BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; FONT-WEIGHT: normal; FONT-SIZE: 11px; BORDER-LEFT: #999999 1px solid; WIDTH: 40px; _width: 40px; BORDER-BOTTOM: #999999 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: white }
+.errorInputYear { padding-left:3px; padding-right:3px; BORDER-RIGHT: #fe6500 1px solid; BORDER-TOP: #fe6500 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 11px; BORDER-LEFT: #fe6500 1px solid; WIDTH: 40px; _width: 40px; BORDER-BOTTOM: #fe6500 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: #feff99; }
+.normalInputUsername { padding-left:3px; padding-right:3px; BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; FONT-WEIGHT: normal; FONT-SIZE: 11px; BORDER-LEFT: #999999 1px solid; WIDTH: 140px; _width: 140px; BORDER-BOTTOM: #999999 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: white }
+.errorInputUsername { padding-left:3px; padding-right:3px; BORDER-RIGHT: #fe6500 1px solid; BORDER-TOP: #fe6500 1px solid; FONT-WEIGHT: bold; FONT-SIZE: 11px; BORDER-LEFT: #fe6500 1px solid; WIDTH: 140px; _width: 140px; BORDER-BOTTOM: #fe6500 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: #feff99; }
+.hyperlink { cursor:pointer; COLOR: #D6081D; text-decoration:underline; }
+.hyperlink:hover { cursor:pointer; COLOR: #ffd5d6; text-decoration:underline; }
+.regContainer { border-left: #333333 1px solid;border-right: #333333 1px solid;border-bottom: #333333 1px solid; background-color:White; width:759px; _width:759px;}
+
+/** Printable page **/
+.printableCaption { PADDING-RIGHT: 5px; PADDING-LEFT: 5px; FONT-WEIGHT: bold; FONT-SIZE: 12px; PADDING-BOTTOM: 5px; COLOR: #0033cc; PADDING-TOP: 5px }
+.message {color:white; padding-left:20px }
+.details {padding-left:20px}
+.username {font-weight:bold; color: green }
+.accountNumber {font-weight:bold; color:blue }
+.accountCurrency {font-weight:bold; color:red }
+
+
+.strike{text-decoration:line-through;}
+
+
+
+/*****Pulled from and edited****/
+.normalPhone { padding-left:3px; padding-right:3px; BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 1px solid; FONT-WEIGHT: normal; FONT-SIZE: 11px; BORDER-LEFT: #999999 1px solid; WIDTH: 100px; _width: 100px; BORDER-BOTTOM: #999999 1px solid; FONT-FAMILY: tahoma, arial, verdana, helvetica, sans-serif; HEIGHT: 20px; BACKGROUND-COLOR: white }
+
+background;

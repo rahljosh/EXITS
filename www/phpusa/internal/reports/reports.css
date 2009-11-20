@@ -1,0 +1,63 @@
+body {
+		margin:10px 10px 0px 10px;
+		padding:0px;
+		background-attachment: fixed;
+		background-position: top;
+		background-repeat: repeat-x;
+		font-family: Arial,sans-serif;
+		font-size:10pt;
+				
+}
+
+a:link, a:visited{
+	color: #5E748C;
+	text-decoration: none;
+}
+
+a:hover{
+	text-decoration: underline;
+}
+
+.application_section_header{
+	border-bottom: 1px dashed Gray;
+	text-transform: uppercase;
+	letter-spacing: 5px;
+	width:100%;
+	text-align:center;
+	font:Arial, Helvetica, sans-serif;
+	font-size:18px;
+	font-weight: bold;
+	text-decoration:underline;
+	background: #C2D1EF;
+}
+
+.profile_section_header {
+	border-bottom: 1px dashed Gray;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	width:100%;
+	text-align:center;
+	background: #C2D1EF;
+	font-size: x-small;
+}
+
+.sub_profile_section_header {
+	border-bottom: 1px dashed Gray;
+	width:100%;
+	text-align:center;
+	background: #C2D1EF;
+	font-size: x-small;
+}
+
+.style1 {
+	font-size:14px;
+	text-align: justify;
+}
+
+.style2 {
+	font-size: 14px;
+	font-style: normal;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-decoration: underline;
+}

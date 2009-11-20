@@ -1,0 +1,151 @@
+=====================================================
+Cerberus Helpdesk(tm) - Support Center (public tool)
+(c) Copyright 2005, WebGroup Media LLC.
+http://www.webgroupmedia.com/
+http://www.cerberusweb.com/
+-----------------------------------------------------
+
+=====================================================
+INSTALLATION
+=====================================================
+
+1. Untar the cerberus-support-center-3.x.x.tar.gz file.  This will create a 
+directory called 'support-center'.  Move this file into your webserver
+path under the web site you want to have the public tool displayed to
+your customers.
+
+--
+
+2. Edit the support-center/cerberus-support-center/config.php file and set the
+following values:
+
+DB_*  - your database connection details to the cerberus-gui database
+
+SMTP_HOST - the host you'll be sending mail through
+
+PROFILE_ID - the profile ID you set up in the cerberus-gui [Configuration] area
+under 'Public GUI Profiles'.
+
+WEB_URL - the browser url to the support-center
+
+--
+
+3. Set the permissions on the support-center files.  You can do this 
+recursively on most Unix systems with the following command:
+
+chmod -R a+r support-center/
+
+--
+
+4. You should be all set!  If you open up the support-center/ directory in your
+browser, you should be able to browse your public knowledgebase articles from
+the Cerberus GUI.
+
+
+=====================================================
+RUNNING IN STANDALONE
+=====================================================
+
+If you choose to run the Support Center in standalone mode, meaning it's not 
+embedded in one of your existing websites, you can modify the index.php file
+included in the support-center/ directory.
+
+Simply move the entire support-center directory into your webserver path 
+under any website.
+
+
+=====================================================
+EMBEDDING THE SUPPORT CENTER IN YOUR WEBSITE
+=====================================================
+
+WebGroup Media has embeded the Support Center into the Cerberus Helpdesk site:
+http://www.cerberusweb.com/support.php
+
+If you'd like to embed the Support Center into your existing website, you'll
+need to follow these simple steps.
+
+--
+
+1. Move the 'cerberus-support-center' directory out of 'support-center' and 
+into the website where you want to embed the tool.
+
+--
+
+2. Open the 'index.php' file in the 'support-center' directory and find the
+three (3) sections marked "COPY:".  They are:
+
+i. The session system include around line 3.
+ii. The stylesheet link around line 12.
+iii. The Support Center include around line 35.
+
+--
+
+3. You'll need to decide what page on your existing website you want to embed
+the Support Center on.  For this example, we'll assume the page is named
+support.php
+
+--
+
+4. Add the session system (i) to the top of support.php -- you can simply copy
+the entire PHP block from our example index.php file.  Make sure you get 
+everything between the php tags: <?php ...(code is here)... ?>
+
+--
+
+5. Move the stylesheet link (ii) into the <HEAD>...</HEAD> html block of the 
+support.php page.
+
+-- 
+
+6. Move the Support Center (iii) include into exact position in your 
+support.php page's HTML where you want it to be displayed.  It will create a 
+770 pixel width table.  If you need to change those dimensions, you can edit
+the cerberus-support-center/main.php file.
+
+--
+
+7. Once you've moved i, ii and iii above into your existing website, the 
+Support Center should be embedded and operational.
+
+
+=====================================================
+CUSTOMIZING
+=====================================================
+
+As with most of WebGroup Media's tools, the Support Center source code has been
+provided.  You are free to make any modifications you need, provided you follow
+the basic tenets of the Cerberus Public License, which are fairly simple:
+
+- You're free to share changes, but don't encrypt the source.
+- You may not sell/share/give-away any components of the Support Center for use
+in any capacity outside those which relate directly to Cerberus Helpdesk.
+
+You'll probably want to include your own company logo in the header of the 
+Support Center, as well as modify the cerberus-support-center/themes/* 
+stylesheet to match your company color scheme.
+
+Happy customizing!
+
+We'd love to see what you come up with.  Be sure to drop us a note at:
+cerberus@webgroupmedia.com
+
+To let us know how you're utilizing the Support Center.  You can also discuss 
+Support Center installation/customization/modifications/suggestions on the
+Cerberus Helpdesk forums.  A link is provided below.
+
+=====================================================
+SUPPORT
+=====================================================
+
+For support, visit our community forums at:
+http://forum.cerberusweb.com/
+
+
+=====================================================
+THANKS!
+=====================================================
+Thanks for using Cerberus Helpdesk!
+
+-the Cerberus Helpdesk Team
+WebGroup Media, LLC.
+http://www.cerberusweb.com/
