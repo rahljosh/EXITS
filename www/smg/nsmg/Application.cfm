@@ -74,6 +74,7 @@
 		APPLICATION.EMAIL = StructNew();		
 		APPLICATION.EMAIL.support = 'support@student-management.com';
 		APPLICATION.EMAIL.finance = 'marcel@student-management.com';
+		APPLICATION.EMAIL.errors = 'errors@student-management.com';
 		// Set a short name for the CFCs
 		AppEmail = APPLICATION.EMAIL;
 		

@@ -71,16 +71,16 @@
 				<cfset deadline = '04/15/07 23:59:59'>
 				<cfset maxdeadline = #DateDiff('d', now(), deadline)#>
 				--->
-				<cfset maxdeadline = 15>
+				<cfset maxdeadline = 90>
 				<cfset expdate = #DateAdd('d', maxdeadline, now())#>
 				
-				This application has expired. You can re-activate it by extending the application deadline below in 30 days.  
+				This application has expired. You can re-activate it by extending the application deadline below in 90 days.  
 				At this time you can extend the deadline up to #DateFormat(expdate, 'mm/dd/yyyy')#.<br><br>
 
 				Extend Deadline by: 
 				<cfif maxdeadline GT 1>
 					<select name="extdeadline">
-						<cfloop index=i from=0 to="#maxdeadline#" step="1">
+						<cfloop index="i" from="5" to="#maxdeadline#" step="5">
 							<option value=#i#>#i#</option>
 						</cfloop>
 					</select>
