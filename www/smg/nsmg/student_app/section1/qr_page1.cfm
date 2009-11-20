@@ -51,34 +51,13 @@
 	<cfabort>
 </cfif>
 
-<!--- REMOVE FOREIGN ACCENT --->
-<cfquery name="get_accent" datasource="MySql">
-	SELECT accentid, accent, no_accent
-	FROM smg_foreign_accents 
-</cfquery>
-
-<!--- COPIED TO smg_foreign_accents --->
-<!---
-  list1 = "Â,Á,À,Ã,Ä,â,á,à,ã,ä,É,Ê,é,ê,Í,Ì,í,ì,Ô,Ó,Õ,Ö,ô,ó,õ,ö,Ú,Ü,Û,ú,ü,û,Ç,ç,Ñ,ñ,S,Z,Ø,ø,å,',æ,Å,ß,Š";
-  list2 = "A,A,A,A,A,a,a,a,a,a,E,E,e,e,I,I,i,i,O,O,O,O,o,o,o,o,U,U,U,u,u,u,C,c,N,n,S,Z,O,o,a, ,e,A,s,S";
---->
-
-<cfscript>
-function removeAccent( p_string ) {
-  var list1 = "#get_accent.accent#";
-  var list2 = "#get_accent.no_accent#";
-  var v_string = ReplaceList(p_string, list1, list2) ; 
- return( v_string );
-}
-</cfscript>
-
 <cftransaction action="begin" isolation="serializable">
 	
 	<cfquery name="update_student" datasource="MySql">
 		UPDATE smg_students
-		SET	familylastname = '#removeAccent(form.familylastname)#',
-			firstname = '#removeAccent(form.firstname)#',
-			middlename = '#removeAccent(form.middlename)#',
+		SET	familylastname = '#APPLICATION.CFC.UDF.removeAccent(form.familylastname)#',
+			firstname = '#APPLICATION.CFC.UDF.removeAccent(form.firstname)#',
+			middlename = '#APPLICATION.CFC.UDF.removeAccent(form.middlename)#',
 			app_indicated_program = <cfif form.app_indicated_program EQ '0'>null,<cfelse>'#form.app_indicated_program#',</cfif>  
 			app_additional_program = <cfif form.app_additional_program EQ '0'>null,<cfelse> '#form.app_additional_program#',</cfif>  
 			address = '#form.address#',
@@ -90,14 +69,14 @@ function removeAccent( p_string ) {
 			email = '#form.email#',
 			<cfif IsDefined('form.sex')>sex = '#form.sex#',</cfif> 
 			<cfif form.dob is ''>dob = null,<cfelse>dob = #CreateODBCDate(form.dob)#,</cfif>
-			citybirth = '#removeAccent(form.citybirth)#',
+			citybirth = '#APPLICATION.CFC.UDF.removeAccent(form.citybirth)#',
 			countrybirth = '#form.countrybirth#',
 			countrycitizen = '#form.countrycitizen#',
 			countryresident = '#form.countryresident#',
 			religiousaffiliation = '#form.religiousaffiliation#',
 			passportnumber = '#form.passportnumber#',
 			<!--- father --->
-			fathersname = '#removeAccent(form.fathersname)#',
+			fathersname = '#APPLICATION.CFC.UDF.removeAccent(form.fathersname)#',
 			fatheraddress = '#form.fatheraddress#',
 			fathercountry = '#form.fathercountry#',
 			<cfif form.fatherbirth is ''>fatherbirth = '0',<cfelse>fatherbirth = '#form.fatherbirth#',</cfif>
@@ -106,7 +85,7 @@ function removeAccent( p_string ) {
 			fathercompany = '#form.fathercompany#',
 			fatherworkposition = '#form.fatherworkposition#',
 			<!--- mother --->
-			mothersname = '#removeAccent(form.mothersname)#',
+			mothersname = '#APPLICATION.CFC.UDF.removeAccent(form.mothersname)#',
 			motheraddress = '#form.motheraddress#',
 			mothercountry = '#form.mothercountry#',
 			<cfif form.motherbirth is ''>motherbirth = '0',<cfelse>motherbirth = '#form.motherbirth#',</cfif>
@@ -115,7 +94,7 @@ function removeAccent( p_string ) {
 			mothercompany = '#form.mothercompany#',
 			motherworkposition = '#form.motherworkposition#',
 			<!--- emergency information --->
-			emergency_name = '#removeAccent(form.emergency_name)#',
+			emergency_name = '#APPLICATION.CFC.UDF.removeAccent(form.emergency_name)#',
 			emergency_address = '#form.emergency_address#',
 			emergency_phone = '#form.emergency_phone#',
 			emergency_country = '#form.emergency_country#'
@@ -153,17 +132,6 @@ function removeAccent( p_string ) {
 <cfif client.usertype EQ '1'>
 	<cfoutput>
 	
-	<!---
-	<cfscript>
-	function removeAccent( p_string ) {
-	  var list1 = "#get_accent.accent#";
-	  var list2 = "#get_accent.no_accent#";
-	  var v_string = ReplaceList(p_string, list1, list2) ; 
-	 return( v_string );
-	}
-	</cfscript>
-	--->
-	
 	<cfquery name="get_students" datasource="MYSql">
 		SELECT studentid, firstname, middlename, familylastname, citybirth
 		FROM smg_students
@@ -176,10 +144,10 @@ function removeAccent( p_string ) {
 		
 		<cfquery name="update" datasource="MySql">
 			UPDATE smg_students
-			SET firstname = '#removeAccent(firstname)#',
-				middlename = '#removeAccent(middlename)#',
-				familylastname = '#removeAccent(familylastname)#',
-				citybirth = '#removeAccent(citybirth)#'
+			SET firstname = '#APPLICATION.CFC.UDF.removeAccent(firstname)#',
+				middlename = '#APPLICATION.CFC.UDF.removeAccent(middlename)#',
+				familylastname = '#APPLICATION.CFC.UDF.removeAccent(familylastname)#',
+				citybirth = '#APPLICATION.CFC.UDF.removeAccent(citybirth)#'
 			WHERE studentid = '#get_students.studentid#'
 			LIMIT 1
 		</cfquery>

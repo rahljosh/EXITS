@@ -43,4 +43,22 @@
 	</cffunction>
 
 
+	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents from a string">
+    	<cfargument name="varString" hint="String">
+
+		<cfscript>
+			// Declare Lists
+ 		    var list1 = "Â,Á,À,Ã,Ä,â,á,à,ã,ä,É,Ê,é,ê,Í,Ì,í,ì,Ô,Ó,Õ,Ö,ô,ó,õ,ö,Ú,Ü,Û,ú,ü,û,Ç,ç,Ñ,ñ,S,Z,Ø,ø,å,',æ,Å,ß,Š";
+			var list2 = "A,A,A,A,A,a,a,a,a,a,E,E,e,e,I,I,i,i,O,O,O,O,o,o,o,o,U,U,U,u,u,u,C,c,N,n,S,Z,O,o,a, ,e,A,s,S";
+
+			// Remove Accent - replaceList
+			var newString = replaceList(ARGUMENTS.varString, list1, list2) ; 
+	
+			// Return String
+			return(newString);
+        </cfscript>
+		   
+	</cffunction>
+
+
 </cfcomponent>
