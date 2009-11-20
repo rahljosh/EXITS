@@ -99,7 +99,7 @@ relatively correct Internet Explorer behavior. --->
 					<table border="0" width="100%">
 					<tr>
 						<td width="25%" align="center">
-						<img src="../../pics/logos/#stu_companyid#.gif"  border="0">
+						<img src="../../pics/logos/#stu_companyid#_small.gif"  border="0">
 						</td>
 						<td width="75%" align="center"> 
 						<p class="style5">&nbsp;</p>
