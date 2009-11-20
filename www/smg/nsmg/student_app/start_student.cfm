@@ -181,7 +181,7 @@ function checkEmail() {
 			<br>Extend Deadline by:
 			<cfif remainingdays GT 1>
 				<select name="extdeadline">
-				<cfloop index="i" from="0" to="#remainingdays#" step="5">
+				<cfloop index="i" from="5" to="#remainingdays#" step="5">
 					<option value="#i#">#i#</option>
 				</cfloop>
 				</select>
