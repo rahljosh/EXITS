@@ -46,25 +46,4 @@
 	</cffunction>
 
 
-	<cffunction name="setProjectHelpDate" access="public" returntype="void" output="false" hint="Updates Project Help Date">
-    	<cfargument name="studentID" hint="studentID is required">
-        <cfargument name="dateProjectHelp" hint="Date is required">
-              
-        <cfquery 
-			datasource="#APPLICATION.dsn#">
-                UPDATE
-                	smg_students
-                SET	
-                	<cfif IsDate(ARGUMENTS.dateProjectHelp)>
-	                    date_project_help_completed = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.dateProjectHelp)#">
-                    <cfelse>
-                    	date_project_help_completed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                    </cfif>
-                WHERE
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-		</cfquery>
-		   
-	</cffunction>
-
-
 </cfcomponent>

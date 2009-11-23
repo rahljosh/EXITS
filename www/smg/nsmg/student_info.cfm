@@ -441,10 +441,6 @@
 				<!--- OFFICE - MANAGERS ONLY --->
 				<cfif CLIENT.usertype LTE 5> 
 					<a href="" onClick="javascript: win=window.open('forms/profile_adjustments.cfm', 'Settings', 'height=500, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Profile Adjustments</a>		
-                	<!--- Remove this after approval --->
-					<cfif CLIENT.usertype LTE 4>
-                    <a href="" onClick="javascript: win=window.open('forms/project_help.cfm?studentID=#studentID#', 'Settings', 'height=250, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif LEN(qStudentInfo.date_project_help_completed)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Project Help</A>
-                	</cfif>
                 </cfif> 				
 				<!----All Users---->				
 				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(virtual_folder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>		
