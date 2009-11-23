@@ -83,18 +83,18 @@
 			datasource="#APPLICATION.dsn#">
                 SELECT
 					id,
-                    userID,
-                    officeUserID,
+                    user_id,
+                    office_user_id,
                     notes,
-                    dateTrained,
-                    dateCreated,
-                    dateUpdated
+                    date_trained,
+                    date_created,
+                    date_updated
                 FROM 
                     smg_users_training
                 WHERE
-                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
                 ORDER BY 
-                    dateCreated
+                    date_created
 		</cfquery>
 		   
 		<cfreturn qGetTraining>
@@ -113,12 +113,12 @@
                 INSERT INTO
                 	smg_users_training
                 (
-                    userID,
-                    officeUserID,
+                    user_id,
+                    office_user_id,
                     notes,
-                    dateTrained,
-                    dateCreated,
-                    dateUpdated
+                    date_trained,
+                    date_created,
+                    date_updated
                 )
                 VALUES
                 (
