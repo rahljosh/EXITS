@@ -174,7 +174,10 @@ function NextPage() {
 				
 			</table>
 			<img src="pics/usa-map.gif"><br>
+			<!--- Removed as per Brian House Request - 11/20/2009 --->
+            <!---
 			<a href="?curdoc=section4/page20&id=4&p=20">Regional Choices</a> are still available starting at $300<br><Br>
+			--->
 			<input type="radio" name="state_select" value="yes" onClick="hideAll(); changeDiv('1','block'); DataChanged();" <cfif check_state.recordcount GT '0' AND check_state.state1 GT '0'>checked</cfif> >Yes, submit my choices as indicated below. 
 			<input type="radio" name="state_select" value="no" onClick="hideAll(); changeDiv('2','block'); DataChanged();" <cfif check_state.recordcount NEQ '0' AND check_state.state1 EQ '0'>checked</cfif> >No, I am not interested in a state choice.
 			<div id ="1" style="display:none"><br>
