@@ -3,6 +3,17 @@
 <cfparam name="application.support_email" default="support@student-management.com">
 <cfparam name="application.site_url" default="http://www.student-management.com">
 
+<!--- Added by Marcus Melo - 11/20/2009 --->
+<cfscript>
+	/***** Create APPLICATION.EMAIL structure *****/
+	APPLICATION.EMAIL = StructNew();		
+	APPLICATION.EMAIL.support = 'support@student-management.com';
+	APPLICATION.EMAIL.finance = 'marcel@student-management.com';
+	APPLICATION.EMAIL.errors = 'errors@student-management.com';
+	// Set a short name for the CFCs
+	AppEmail = APPLICATION.EMAIL;
+</cfscript>
+
 
 <!--- always allow logout. --->
 <cfif not findNoCase("../logout.cfm", getBaseTemplatePath())>

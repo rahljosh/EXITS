@@ -40,7 +40,7 @@
 </table>
 
 <!---	
-<CFMAIL TO="support@student-management.com" FROM="support@student-management.com"
+<CFMAIL TO="#APPLICATION.EMAIL.errors#" FROM="#APPLICATION.EMAIL.support#"
 	 SUBJECT="Virtual Folder Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#"> 
 	   There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#.
 	   On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#

@@ -51,7 +51,7 @@
 	</tr>
 </table>
 
-<CFMAIL TO="support@student-management.com" FROM="support@student-management.com"
+<CFMAIL TO="#APPLICATION.EMAIL.errors#" FROM="#APPLICATION.EMAIL.support#"
 	 SUBJECT="Online App - Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#" type="html"> 
 	   There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#<br>
 	   On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#<Br>
