@@ -1179,8 +1179,8 @@
                                              </td>
                                         </tr>
                                     	<tr>
-                                        	<td>
-                                            	&nbsp;                                            	
+                                        	<td>&nbsp;
+                                            	                                            	
                                              </td>
                                              <td>
                                              	<input name="Submit" type="image" src="pics/submit.gif" border=0 alt="submit">
@@ -1208,16 +1208,16 @@
                     <cfloop query="qGetTraining">
                         <tr>
                             <td>
-                                #DateFormat(qGetTraining.dateTrained, 'mm/dd/yyyy')#
+                                #DateFormat(qGetTraining.date_trained, 'mm/dd/yyyy')#
                             </td>
                             <td>
                                 #qGetTraining.notes#
                             </td>
                             <td>
-                                #APPCFC.USER.getUserByID(userID=qGetTraining.officeUserID).firstName# #APPCFC.USER.getUserByID(userID=qGetTraining.officeUserID).lastName#
+                                #APPCFC.USER.getUserByID(userID=qGetTraining.office_user_id).firstName# #APPCFC.USER.getUserByID(userID=qGetTraining.office_user_id).lastName#
                             </td>  
                             <td>
-                                #DateFormat(qGetTraining.dateCreated, 'mm/dd/yyyy')#
+                                #DateFormat(qGetTraining.date_created, 'mm/dd/yyyy')#
                             </td>
                         </tr>                        
                     </cfloop> 
