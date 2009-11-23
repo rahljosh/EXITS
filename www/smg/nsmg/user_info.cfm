@@ -10,7 +10,7 @@
     <!--- Param FORM variables --->
     <cfparam name="FORM.errors" default="">
     <cfparam name="FORM.submitted" default="0">
-    <cfparam name="FORM.webEx_dateTrained" default="">
+    <cfparam name="FORM.webEx_dateTrained" default="#DateFormat(now(), 'mm/dd/yyyy')#">
     <cfparam name="FORM.webEx_notes" default="">
 
     <cfscript>
@@ -1179,8 +1179,8 @@
                                              </td>
                                         </tr>
                                     	<tr>
-                                        	<td>
-                                            	&nbsp;
+                                        	<td>&nbsp;
+                                            	
                                              </td>
                                              <td>
                                              	<input name="Submit" type="image" src="pics/submit.gif" border=0 alt="submit">
