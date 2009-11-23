@@ -1171,7 +1171,7 @@
                                              </td>
                                         </tr>
                                     	<tr>
-                                        	<td>
+                                        	<td valign="top">
                                             	<label for="webEx_notes">Notes:</label>
                                              </td>
                                              <td>
@@ -1179,8 +1179,8 @@
                                              </td>
                                         </tr>
                                     	<tr>
-                                        	<td>&nbsp;
-                                            	
+                                        	<td>
+                                            	&nbsp;                                            	
                                              </td>
                                              <td>
                                              	<input name="Submit" type="image" src="pics/submit.gif" border=0 alt="submit">
