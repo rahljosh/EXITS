@@ -109,7 +109,7 @@ A system error has occured. ID:<cfset errorid='#client.userid#-#dateformat(now()
 </table>
 
 	
-<CFMAIL TO="support@student-management.com" FROM="#client.email#"
+<CFMAIL TO="#APPLICATION.EMAIL.errors#" FROM="#client.email#"
 	 SUBJECT="General Site Error ID: #errorid#" type="html"> 
 	   Date: #DateFormat(now(), 'mm/dd/yyyy')# <br>
 	   Time: #TimeFormat(now(), 'hh:mm tt')#<br>
