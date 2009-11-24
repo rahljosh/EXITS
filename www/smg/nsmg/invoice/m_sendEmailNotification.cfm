@@ -214,6 +214,9 @@ END) AS testCompId
                             <cfcase value="7,8">
                                 <cfset company = 'CSB'>
                             </cfcase>
+                            <cfcase value="10">
+                                <cfset company = 'CASE'>
+                            </cfcase>
                         </cfswitch>
             
                         <tr <cfif getInvoicesCreditNotes.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
