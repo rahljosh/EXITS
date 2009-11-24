@@ -45,7 +45,7 @@
 		qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=hostID);
 
 		// Gets Host Mother CBC
-		qGetCBCMother = APPLICATION.CFC.CBC.getCBCHost(
+		qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(
 			hostID=hostID, 
 			cbcType='mother'
 		);
@@ -54,7 +54,7 @@
 		qGetMotherSeason = APPLICATION.CFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMother.seasonID));
 		
 		// Gets Host Father CBC
-		qGetCBCFather = APPLICATION.CFC.CBC.getCBCHost(
+		qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(
 			hostID=hostID, 
 			cbcType='father'
 		);
@@ -172,7 +172,7 @@
 			errorCount = 0;
 			
 			// Get CBCs Host Parents
-            qGetCBCHost = APPLICATION.CFC.CBC.getHostNewCBC(
+            qGetCBCHost = APPLICATION.CFC.CBC.getCBCHost(
                 companyID=CLIENT.companyID,
 				hostID=FORM.hostID,
 				userType='mother,father'
@@ -502,7 +502,7 @@ function OpenWindow(url) {
 					family_ID = qGetHostMembers.childID;
 					
 					// Gets Host Member CBC
-					qGetCBCMember = APPLICATION.CFC.CBC.getCBCHost(
+					qGetCBCMember = APPLICATION.CFC.CBC.getCBCHostByID(
 						hostID=hostID,
 						familyMemberID=family_ID,
 						cbcType='member'

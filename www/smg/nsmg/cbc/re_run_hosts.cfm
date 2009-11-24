@@ -67,7 +67,7 @@
 
 <table width="600" align="center" cellpadding="2" frame="below">
 	<tr bgcolor="##CCCCCC"><td colspan="4"><b>CBC ran before #back_date#</b></td></tr>
-	<tr bgcolor="##CCCCCC"><td><b>Host</b></td><td><b>CBC Sent Date</b></td><th>Season</th><th>Company</th></tr>
+	<tr bgcolor="##CCCCCC"><td><b>Host</b></td><td><b>CBC Sent Date</b></td><th>Last Season</th><th>Current Season</th><th>Company</th></tr>
 
 	<cfloop query="qGetHosts">
 	
@@ -119,6 +119,7 @@
 				<td>###hostid# - #familylastname#</td>
 				<td align="center">#DateFormat(qCheckLastHostCBC.date_sent, 'mm/dd/yy')#</td>
 				<td align="center">#qCheckLastHostCBC.season#</td>
+				<td align="center">#FORM.seasonid#</td>
 				<td align="center">#qCheckLastHostCBC.companyshort#</td>				
 			</tr>
 			

@@ -47,7 +47,7 @@
 	</cffunction>
 
     
-	<cffunction name="getCBCHost" access="public" returntype="query" output="false" hint="Returns CBC records for a mother, father or family member">
+	<cffunction name="getCBCHostByID" access="public" returntype="query" output="false" hint="Returns CBC records for a mother, father or family member">
 		<cfargument name="hostID" required="yes" hint="Host ID is required">
         <cfargument name="familyMemberID" default="0" hint="Family Member ID is not required">
         <cfargument name="cbcType" required="yes" hint="cbcType is required (mother, father or member)">
@@ -312,8 +312,6 @@
                 	cbc.date_sent IS NULL 
                 AND 
                     requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-				AND 
-                	ssn != <cfqueryparam cfsqltype="cf_sql_varchar" value="">                
 			
                 <!--- Check if we are running Case's CBC --->
                 <cfif VAL(ARGUMENTS.companyID) AND ARGUMENTS.companyID EQ 10>
