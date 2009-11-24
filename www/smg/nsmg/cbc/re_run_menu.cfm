@@ -1,21 +1,25 @@
+<!--- Kill Extra Output --->
+<cfsilent>
+
+    <cfinclude template="../querys/get_programs.cfm">
+    
+    <cfquery name="get_seasons" datasource="MySql">
+        SELECT seasonid, season
+        FROM smg_seasons
+        WHERE active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    </cfquery>
+    
+</cfsilent>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>CBC Menu = Re-Run CBCs</title>
+<title>CBC Menu - Re-Run CBCs</title>
 </head>
 
 <body>
-
-<cfinclude template="../querys/get_programs.cfm">
-
-<cfquery name="get_seasons" datasource="MySql">
-	SELECT seasonid, season
-	FROM smg_seasons
-	WHERE active = '1'
-		AND seasonid >= '4'
-</cfquery>
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
@@ -37,7 +41,7 @@
 			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
 				<tr><th colspan="2" bgcolor="e2efc7">Check CBCS for All Active Users</th></tr>
 				<tr>
-					<td>
+					<td colspan="2">
 						This feature checks CBCS ran for users and members before #DateFormat(DateAdd('yyyy', -1, now()),'mm-dd-yyyy')# and 
 						creates a new set of record for the following season in order to send a new batch.
 					</td>
