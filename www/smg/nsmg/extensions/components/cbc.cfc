@@ -203,7 +203,7 @@
 
 	<!--- CBC Batch Functions --->
 
-	<cffunction name="getHostNewCBC" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run">
+	<cffunction name="getCBCHost" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run">
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
         <cfargument name="userType" type="string" default="" hint="UserType is not required. List (mother,father or only one value)">
