@@ -20,5 +20,5 @@
 	WHERE flightid = <cfqueryparam value="#url.flightid#" cfsqltype="cf_sql_integer">
 	LIMIT 1
 	</cfquery>
-	<cflocation url="../flight_info/flight_info.cfm" addtoken="no">
+	<cflocation url="../flight_info/flight_info.cfm?candidateid=#url.candidateid#" addtoken="no">
 </cfif>
