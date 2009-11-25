@@ -52,31 +52,31 @@
 											</tr>
 											
 											<tr>
-											  <td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>Last Name:</b></font></td>
-											  <td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" name="lastname" size="32" maxlength="100" required="yes" message="Last Name!"></td>
+											  <td class="style1" width="35%" align="left"><font size="1"><b>Last Name:</b></font></td>
+											  <td class="style1" width="65%"><cfinput type="text" name="lastname" size="32" maxlength="100" required="yes" message="Last Name!"></td>
 											</tr>
 											<tr>
-												<td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>First Name:</b></font></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" name="firstname" size="32" maxlength="100" required="yes" message="First Name!"></td>
+												<td class="style1" width="35%" align="left"><font size="1"><b>First Name:</b></font></td>
+												<td class="style1" width="65%"><cfinput type="text" name="firstname" size="32" maxlength="100" required="yes" message="First Name!"></td>
 											</tr>
 											<tr>
-												<td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>Middle Name:</b></font></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" name="middlename" size="32" maxlength="100"></td>
+												<td class="style1" width="35%" align="left"><font size="1"><b>Middle Name:</b></font></td>
+												<td class="style1" width="65%"><cfinput type="text" name="middlename" size="32" maxlength="100"></td>
 											</tr>
 										
 											<tr>
-												<td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>Sex:</b></font></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%">
+												<td class="style1" width="35%" align="left"><font size="1"><b>Sex:</b></font></td>
+												<td class="style1" width="65%">
 													<cfinput type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex."><font size="1"> Male</font>
-						              <cfinput type="radio" name="sex" value="F" required="yes" message="You must specify the candidate's sex."> <font size="1">Female</font>												</td>
+						              				<cfinput type="radio" name="sex" value="F" required="yes" message="You must specify the candidate's sex."> <font size="1">Female</font>												</td>
 											</tr>
 											<tr>
-												<td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>Date of Birth:</b></font></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" class="date-pick" name="dob" size="18" maxlength="20" required="yes" validate="date" message="Date of Birth (MM/DD/YYYY)"><br/><font size="1">(mm/dd/yyyy)</font></td>
+												<td class="style1" align="left"><font size="1"><b>Date of Birth:</b></font></td>
+												<td class="style1"><cfinput type="text" class="date-pick" name="dob" maxlength="20" required="yes" validate="date" message="Date of Birth (MM/DD/YYYY)"> <font size="1">(mm/dd/yyyy)</font> </td>
 											</tr>
 											<tr>
-												<td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>City of Birth:</b></font></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" name="birth_city" size=32 maxlength="100"></td>
+												<td class="style1" width="35%" align="left"><font size="1"><b>City of Birth:</b></font></td>
+												<td class="style1" width="65%"><cfinput type="text" name="birth_city" size=32 maxlength="100"></td>
 											</tr>
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" align="left"><font size="1"><b>Country of Birth:</b></font></td>
@@ -146,8 +146,8 @@
 													</table>												</td>					
 											</tr>
 											<tr>
-												<td class="style1" bordercolor="FFFFFF" width="35%" align="left"><font size="1"><b>Social Security Number:</b></font></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" name="ssn" size=32 maxlength="15"></td>
+												<td class="style1" width="35%" align="left"><font size="1"><b>Social Security Number:</b></font></td>
+												<td class="style1" width="65%"><cfinput type="text" name="ssn" size=32 maxlength="15"></td>
 											</tr>
 											<tr>
 											  <td align="left" bordercolor="FFFFFF" class="style1"><font size="1"><b>English Assessment:</b></font><br>
@@ -266,11 +266,11 @@
 											</tr>
 											<tr>
 												<td align="left" class="style1"><font size="1"><b>Start Date:</b></font></td>
-												<td colspan="2" class="style1"><cfinput type="text" class="date-pick" name="wat_vacation_start" size="18" maxlength="20" validate="date" message="Earliest Arrival must be MM/DD/YYYY"><font size="1"> (mm/dd/yyyy)</font></td>
+												<td colspan="2" class="style1"><cfinput type="text" class="date-pick" name="wat_vacation_start" size="18" maxlength="20" validate="date" message="Earliest Arrival must be MM/DD/YYYY"> <font size="1">(mm/dd/yyyy)</font></td>
 											</tr>
 											<tr>
 												<td align="left" class="style1"><font size="1"><b>End Date:</b></font></td>
-												<td colspan="2" class="style1"><cfinput type="text" class="date-pick" name="wat_vacation_end" size="18" maxlength="20" validate="date" message="Earliest Arrival must be MM/DD/YYYY"><font size="1"> (mm/dd/yyyy)</font></td>
+												<td colspan="2" class="style1"><cfinput type="text" class="date-pick" name="wat_vacation_end" size="18" maxlength="20" validate="date" message="Earliest Arrival must be MM/DD/YYYY"> <font size="1">(mm/dd/yyyy)</font></td>
 											</tr>
 										</table>	
 										
