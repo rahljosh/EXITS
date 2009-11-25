@@ -349,7 +349,7 @@
 											</tr>
 											<tr>
 												<td align="center" class="style1"><b>Date of Birth:</b></td>
-												<td class="style1"><cfinput type="text" class="date-pick" name="dob" size=12 value="#dateformat (dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">&nbsp; <b>Sex:</b> <span class="style1">
+												<td class="style1"><cfinput type="text" name="dob" class="style1" size=12 value="#dateformat (dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">&nbsp; <b>Sex:</b> <span class="style1">
 													<input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif sex Eq 'M'>checked="checked"</cfif>>Male &nbsp; &nbsp;
 												  <input type="radio" name="sex" value="F" required="yes" message="You must specify the candidate's sex." <cfif sex Eq 'F'>checked="checked"</cfif>>Female </span></td>
 											</tr> 
@@ -831,14 +831,16 @@
 											<td colspan="2" class="style1" align="left"><b>Placement Date:</b> #dateformat (candidate_place_company.placement_date, 'mm/dd/yyyy')#</td>
 										</tr>
 
+
+
 											</cfif>
 										<tr>
 											<td class="style1" align="right"><b>Start Date:</b></td>
-											<td class="style1"><cfif FORM.edit EQ 'no'>#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" name="host_startdate" class="date-pick" size=30 value="#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#" maxlength="50"></cfif></td>
+											<td class="style1"><cfif FORM.edit EQ 'no'>#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" name="host_startdate" class="style1" size=30 value="#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#" maxlength="50"></cfif></td>
 										</tr>
 										<tr>
 											<td class="style1" align="right"><b>End Date:</b></td>
-											<td class="style1"><cfif FORM.edit EQ 'no'>#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" name="host_enddate" class="date-pick" size=30 value="#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#" maxlength="50"></cfif></td>
+											<td class="style1"><cfif FORM.edit EQ 'no'>#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" name="host_enddate" class="style1" size=30 value="#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#" maxlength="50"></cfif></td>
 										</tr>
 										<tr>
 											<td colspan="2" class="style1" align="left"><b>Confirmation Received:</b> <cfif FORM.edit EQ 'no'><cfif candidate_place_company.confirmation_received EQ '1'>Yes</cfif><cfif candidate_place_company.confirmation_received EQ '0'>No</cfif>
@@ -884,25 +886,16 @@
 											<td class="style1" align="right"><b>Reason:</b></td>
 											<td class="style1" colspan="3"><cfinput type="text" class="style1" size="35" name="reason"></td>
 										</tr>
-										<tr>
-											<td class="style1" bordercolor="FFFFFF" align="right"><b>Earliest Arri:</b></td>
-											<td class="style1" bordercolor="FFFFFF" colspan="3"><cfif FORM.edit EQ 'no'>#dateformat (earliestarrival, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="earliestarrival" size=35 value="#dateformat (earliestarrival, 'mm/dd/yyyy')#" maxlength="35"  validate="date" message="Earlisest Arrival (MM/DD/YYYY)"></cfif></td>
-										</tr>		
+												
 										<tr>
 											<td class="style1" bordercolor="FFFFFF" align="right"><b>Start:</b></td>
-											<td class="style1" bordercolor="FFFFFF"><cfif FORM.edit EQ 'no'>#dateformat (startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="startdate" size=10 value="#dateformat (startdate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Start Date (MM/DD/YYYY)"></cfif></td>
-											<td class="style1" bordercolor="FFFFFF" align="right"></td>
-											<td class="style1" bordercolor="FFFFFF"></td>
-										</tr>
-										<tr>
+											<td class="style1" bordercolor="FFFFFF"><cfif FORM.edit EQ 'no'>#dateformat (startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="startdate" size=10 value="#dateformat (startdate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Start Date (MM/DD/YYYY)"></cfif></td>
 											<td class="style1" bordercolor="FFFFFF" align="right"><b>End:</b></td>
-											<td class="style1" bordercolor="FFFFFF"><cfif FORM.edit EQ 'no'>#dateformat (enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="enddate" size=10 value="#dateformat (enddate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="End Date(MM/DD/YYYY)"></cfif></td>
-											<td class="style1" bordercolor="FFFFFF" align="right"></td>
-											<td class="style1" bordercolor="FFFFFF"></td>
+											<td class="style1" bordercolor="FFFFFF"><cfif FORM.edit EQ 'no'>#dateformat (enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="enddate" size=10 value="#dateformat (enddate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="End Date(MM/DD/YYYY)"></cfif></td>
 										</tr>
 										<tr>
 											<td class="style1" bordercolor="FFFFFF" align="right"><b>Arrival Date:</b></td>
-											<td class="style1" bordercolor="FFFFFF" colspan="3"><cfif FORM.edit EQ 'no'>#dateformat (arrivaldate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="arrivaldate" size=35 value="#dateformat (arrivaldate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Arrival Date(MM/DD/YYYY)"></cfif></td>
+											<td class="style1" bordercolor="FFFFFF" colspan="3"><cfif FORM.edit EQ 'no'>#dateformat (arrivaldate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="arrivaldate" size=35 value="#dateformat (arrivaldate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Arrival Date(MM/DD/YYYY)"></cfif></td>
 										</tr>	
 										<tr>
 											<td class="style1" bordercolor="FFFFFF" align="right"><b>Remarks:</b></td>
@@ -984,7 +977,7 @@
 												<cfif edit EQ 'no'>                                                	                                                    
                                                     #DateFormat(verification_received, 'mm/dd/yyyy')#
                                                 <cfelse>
-                                                    <cfinput type="text" name="verification_received" id="verification_received" size=12 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" maxlength="100">
+                                                    <cfinput type="text" class="style1" name="verification_received" id="verification_received" size=12 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" maxlength="100">
                                                 </cfif>
                                             </td>
                                         </tr>
@@ -1067,14 +1060,9 @@
 									  </tr>
 										<tr>
 											<td class="style1" align="right"><b>Start:</b></td>
-											<td class="style1" colspan="3"><cfif FORM.edit EQ 'no'>#DateFormat(ds2019_startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="ds2019_startdate" size=10 value="#DateFormat(ds2019_startdate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 Start Date (MM/DD/YYYY)"></cfif></td>
-											<td class="style1" align="right"></td>
-											<td class="style1"></td>
-										</tr>
+											<td class="style1"><cfif FORM.edit EQ 'no'>#DateFormat(ds2019_startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="ds2019_startdate" size=20 value="#DateFormat(ds2019_startdate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 Start Date (MM/DD/YYYY)"></cfif></td>
 											<td class="style1" align="right"><b>End:</b></td>
-											<td class="style1" colspan="3"><cfif FORM.edit EQ 'no'>#DateFormat(ds2019_enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="date-pick" name="ds2019_enddate" size=10 value="#DateFormat(ds2019_enddate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 End Date(MM/DD/YYYY)"></cfif></td>
-											<td class="style1" align="right"></td>
-											<td class="style1"></td>
+											<td class="style1"><cfif FORM.edit EQ 'no'>#DateFormat(ds2019_enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="ds2019_enddate" size=20 value="#DateFormat(ds2019_enddate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 End Date(MM/DD/YYYY)"></cfif></td>
 										</tr>
 									</table>
 									
@@ -1083,7 +1071,29 @@
 						</table>
 						
 						<br>
-						
+						<table cellpadding=5 cellspacing=5 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+							<tr>
+								<td bordercolor="FFFFFF">
+								
+									<table width="100%" cellpadding=3 cellspacing=0 border=0>
+										<tr bgcolor="C2D1EF">
+											<td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Flight Info</td>
+										</tr>	
+                                        
+										<!--- Verification Received --->
+                                        <tr>
+                                        	<td>Depart Home</td><td>Date Here</td>
+                                        </tr>
+                                        <tr>
+                                        	<td>Depart US</td><td>Date Here</td>
+                                        
+                                        <tr>
+                                        <Td align="Center" colspan=2><a href="" onClick="javascript: win=window.open('flight_info/flight_info.cfm?candidateid=#get_candidate_unqid.candidateid#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">View / Edit  Itinerary</A></Td>
+										</tr>
+									
+								</td>	
+							</tr>
+						</table>
                                    <!----Arrival Verification Info Form---->
 								
 
