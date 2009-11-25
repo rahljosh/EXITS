@@ -1086,7 +1086,7 @@
                                         where candidateid = #get_candidate_unqid.candidateid#
                                         and flight_type = 'arrival'
                                         </cfquery>
-                                         <cfdump var="#departure_date#">
+                                         
                                        
                                         <cfif departure_date.flight_seg is not ''>
 										<cfquery name="dep_Date_info" datasource="mysql">
@@ -1095,7 +1095,7 @@
                                         where flightid = #departure_date.flight_seg#
                                         </cfquery>
                                         </cfif>
-                                       <!----
+                                      
                                       
                                          <cfquery name="arr_date" datasource="mysql">
                                         select min(flightid) as flight_seg
@@ -1103,21 +1103,21 @@
                                         where candidateid = #get_candidate_unqid.candidateid#
                                         and flight_type = 'departure'
                                         </cfquery>
-                                        #arr_date.recordcount#
-                                        <cfif arr_date.recordcount gt 0>
+                                        
+                                         <cfif arr_date.flight_seg is not ''>
 										<cfquery name="arr_date_info" datasource="mysql">
                                         select *
                                         from extra_flight_info
                                         where flightid = #arr_date.flight_seg#
                                         </cfquery>
                                         </cfif>
-										---->
+										
                                     	<!--- Verification Received --->
                                         <tr>
-                                        	<td>Depart Home</td><td></td>
+                                        	<td>Depart Home</td><td><cfif departure_date.flight_seg is not ''>#DateFormat(dep_Date_info.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif> </td>
                                         </tr>
                                         <tr>
-                                        	<td>Depart US</td><td><</td>
+                                        	<td>Depart US</td><td><cfif arr_date.flight_seg is not ''>#DateFormat(arr_date_info.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif></td>
                                         
                                         <tr>
                                         <Td align="Center" colspan=2><a href="" onClick="javascript: win=window.open('flight_info/flight_info.cfm?candidateid=#get_candidate_unqid.candidateid#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">View / Edit  Itinerary</A></Td>
