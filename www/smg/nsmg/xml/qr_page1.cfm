@@ -57,7 +57,12 @@
 		<cfelse>
 			<cfset ind_religious_part = 'little interest'>
 		</cfif>	
-		
+		<!----Religious Affiliation---->
+        <cfquery name="religion" datasource="mysql">
+        select religionid
+        from smg_religions 
+        where religionname = '#StudentXMLFile.applications.application[i].page2.religion.religiousaffiliation.XmlText#'
+        </cfquery>		
 		<!----Years Studied English---->
 		<cfset countEnglish = ArrayLen(#StudentXMLFile.applications.application[i].page2.languages.language#)>
 		<cfloop index="yreng" from="1" to="#countEnglish#">
@@ -66,6 +71,8 @@
 			</cfif>
 		</cfloop>
 <!----Actual insert query---->
+
+
 <cfquery name="update_student" datasource="MySql">
 UPDATE smg_students
 	SET	familylastname = '#removeAccent(StudentXMLFile.applications.application[i].page1.student.lastname.XmlText)#',
@@ -89,8 +96,11 @@ UPDATE smg_students
 		countrybirth = #c_birth.countryid#,
 		countrycitizen = #c_citizen.countryid#,
 		countryresident = #c_resident.countryid#,
-		<!----
-		religiousaffiliation = '#form.religiousaffiliation#',
+		
+        <cfif religion.recordcount gt 0>
+		religiousaffiliation = #religion.religionid#,
+        </cfif>
+        <!----
 		passportnumber = '#form.passportnumber#',
 		---->
 		<!--- father ---->
@@ -134,6 +144,10 @@ UPDATE smg_students
 		dateapplication = #now()#,
 		app_interview_other =  'None',
 		privateschool = 0,
+        <cfif #StudentXMLFile.applications.application[i].page2.musicalinstrument.XmlText# is not ''>
+        app_play_instrument = '#StudentXMLFile.applications.application[i].page2.musicalinstrument.XmlText#',
+        </cfif>
+        band = <cfif #StudentXMLFile.applications.application[i].page2.musicalinstrument.XmlText# is ''>'no'<cfelse>'yes'</cfif>,
 		chores_list = '#StudentXMLFile.applications.application[i].page2.householdresponsibilities.XmlText#',
 		yearsenglish = <cfif yrs_study_english is not ''> #yrs_study_english#<cfelse>null</cfif>,
 		religious_participation = '#ind_religious_part#',

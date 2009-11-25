@@ -58,12 +58,12 @@
 				eating_disorders = <cfif #StudentXMLFile.applications.application[i].page9.disorders.type[dis].flag.xmltext# is 'yes'>1<cfelse>0</cfif>,
 			</cfif>		
 		</cfloop>
-			other_allergies_list = '#StudentXMLFile.applications.application[i].page9.allergystatement.specificpollens.xmltext#' 							'#StudentXMLFile.applications.application[i].page9.ohterallergies.animals.xmltext#',
-			allergic_to_pets =  <cfif StudentXMLFile.applications.application[i].page9.ohterallergies.toanimals.xmltext EQ 'Yes'>1<cfelse>0</cfif>,
+			other_allergies_list = '#StudentXMLFile.applications.application[i].page9.allergystatement.specificpollens.xmltext#'' , ' 							'#StudentXMLFile.applications.application[i].page9.ohterallergies.specificsubstances.xmltext#',
+			allergic_to_pets =  <cfif StudentXMLFile.applications.application[i].page2.animals.allergictoanimals.xmltext EQ 'NO'>0<cfelse>1</cfif>,
 			been_hospitalized = <cfif StudentXMLFile.applications.application[i].page9.medicalcare.hospitalized.xmltext EQ 'Yes'>1<cfelse>0</cfif>,
-			hospitalized_reason = '#StudentXMLFile.applications.application[i].page9.ohterallergies.animals.xmltext#',
+			hospitalized_reason = '#StudentXMLFile.applications.application[i].page9.medicalcare.whyhospitalized.xmltext#',
 			allergic_to_other_drugs = <cfif #StudentXMLFile.applications.application[i].page9.medicalcare.whyhospitalized.xmltext# EQ 'Yes'>1<cfelse>0</cfif>,
-			pets_list = '#StudentXMLFile.applications.application[i].page9.ohterallergies.animals.xmltext#',
+			pets_list = '#StudentXMLFile.applications.application[i].page2.animals.allergictoanimals.xmltext#',
 			clinical_blood_standing = '#StudentXMLFile.applications.application[i].page9.bloodpressure.xmltext#'
 			WHERE healthid = #get_health_id.healthid#  
 		</cfquery>
@@ -119,3 +119,9 @@
 			---->
 		WHERE healthid = #get_health_id.healthid# 
 		</cfquery>
+		<cfquery name="update_students_all" datasource="mysql">
+        update smg_students 
+        set animal_allergies = <cfif StudentXMLFile.applications.application[i].page2.animals.allergictoanimals.xmltext EQ 'NO'>'no'<cfelse>'yes'</cfif>,
+			app_allergic_animal = '#StudentXMLFile.applications.application[i].page2.animals.allergictoanimals.xmltext#'
+            where studentid = #client.studentid#
+        </cfquery>
