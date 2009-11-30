@@ -23,7 +23,7 @@ INNER JOIN smg_companies c ON c.companyid = s.companyid
 INNER JOIN smg_users u ON u.userid = s.createdby
 WHERE type = 'host_update'
 <cfif url.all is 'no'>AND s.companyid = #client.companyid#<cfelse></cfif>
-ORDER BY c.companyshort, datecreated
+ORDER BY c.companyshort, datecreated DESC
 </cfquery>
 
 <cfset batch_type = 'host_update'>
