@@ -223,7 +223,7 @@
         missing_documents = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.missing_documents#">,	  
         programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">,	
         hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyid#">,		  		
-        earliestarrival = <cfif LEN(FORM.earliestarrival)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.earliestarrival)#"> <cfelse> NULL </cfif>, 
+        <!--- earliestarrival = <cfif LEN(FORM.earliestarrival)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.earliestarrival)#"> <cfelse> NULL </cfif>,  --->
         arrivaldate = <cfif LEN(FORM.arrivaldate)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.arrivaldate)#"> <cfelse> NULL </cfif>,
         startdate = <cfif LEN(FORM.startdate)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.startdate)#"> <cfelse> NULL </cfif>, 
         enddate = <cfif LEN(FORM.enddate)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.enddate)#"> <cfelse> NULL </cfif>, 
