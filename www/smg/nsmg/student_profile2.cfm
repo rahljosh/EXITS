@@ -153,7 +153,7 @@ Order by birthdate
 	<hr width=80% align="center">
 	<td bgcolor="F3F3F3" valign="top" width=133><div align="left">
 		<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
-		<cfdirectory directory="#nsmg_directory#" name="file" filter="#client.studentid#.*">
+		<cfdirectory action="list" directory="#nsmg_directory#" name="file" filter="#client.studentid#.*">
 		<cfif file.recordcount>
 			<img src="uploadedfiles/web-students/#file.name#" width="135">
 		<cfelse>
@@ -179,7 +179,7 @@ Order by birthdate
 	<br>
 	<table cellpadding=0 cellspacing=0 border=0 width=65% style="font-size:13px">
 		<tr><td align="center" width="360">
-				<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/students" name="stuletter" filter="#get_student_info.studentid#.*">
+				<cfdirectory action="list" directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/students" name="stuletter" filter="#get_student_info.studentid#.*">
 				<cfif Right(stuletter.name, 3) EQ 'jpg' OR Right(stuletter.name, 3) EQ 'gif'>
 					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentid=#get_student_info.studentid#&letter=students');">Students Letter</a>
 				<cfelseif stuletter.recordcount>
@@ -190,7 +190,7 @@ Order by birthdate
 					Students Letter n/a					
 				</cfif>
 				&nbsp - &nbsp 
-				<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/parents" name="paletter" filter="#get_student_info.studentid#.*">
+				<cfdirectory action="list" directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/parents" name="paletter" filter="#get_student_info.studentid#.*">
 				<cfif Right(paletter.name, 3) EQ 'jpg' OR Right(paletter.name, 3) EQ 'gif'>
 					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentid=#get_student_info.studentid#&letter=parents');">Parents Letter</a>
 				<cfelseif paletter.recordcount>

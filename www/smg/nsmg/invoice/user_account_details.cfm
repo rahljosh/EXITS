@@ -950,7 +950,7 @@ ORDER BY creditid DESC
 	<cfabort>
 </cfif>
 
-<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" action="create">
+<cfdirectory action="create" directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" mode="777">
 
 <cfquery name="getAgentInfo" datasource="MySQL">
 SELECT *

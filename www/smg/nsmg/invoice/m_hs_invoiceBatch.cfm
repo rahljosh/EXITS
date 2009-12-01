@@ -703,7 +703,7 @@ colspan="2" align="center"><span class="style11">Problem</span></td>
 	<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" action="delete" recurse="yes">
 </cfif>
 
-<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" action="create">
+<cfdirectory action="create" directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" mode="777">
 
 
 <cfquery name="getAgentIds" datasource="MySQL">
