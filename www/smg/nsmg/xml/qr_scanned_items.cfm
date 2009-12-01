@@ -88,7 +88,7 @@ Starting Student Picture Transfer...
 <cfset count_fam_pictures = ArrayLen(#StudentXMLFile.applications.application[i].page4_5.images.image#)>
 
 <!----Create Directory to write images to---->
-<cfdirectory action="create" directory='/var/www/html/student-management/nsmg/uploadedfiles/online_app/picture_album/#client.studentid#/'>
+<cfdirectory action="create" directory='/var/www/html/student-management/nsmg/uploadedfiles/online_app/picture_album/#client.studentid#/' mode="777">
 
 <!----Loop through list and write pictures to fam album---->
 <cfloop index="fampic" from="1" to="#count_fam_pictures#">
