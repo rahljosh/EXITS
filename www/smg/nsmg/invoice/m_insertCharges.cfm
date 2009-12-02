@@ -13,7 +13,7 @@ FROM smg_charges
                 INSERT INTO smg_charges
                     (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
                 VALUES
-                    (#form.agentId#, #studentId#, #variables.invoiceNumber#, #form.programId#, '#form.programName#', '#EVALUATE('form.' & '#studentId#' & 'typeProgramFee')#', #Now()#, #EVALUATE('form.' & '#studentId#' & 'programFeeAmount')#, #EVALUATE('form.' & '#studentId#' & 'programFeeAmount')#, #client.userid#, #Now()#, #client.companyid#)
+                    (#EVALUATE('form.' & 'agentId' & '#studentId#')#, #studentId#, #variables.invoiceNumber#, #EVALUATE('form.' & 'programId' & '#studentId#')#, '#EVALUATE('form.' & 'programName' & '#studentId#')#', '#EVALUATE('form.' & '#studentId#' & 'typeProgramFee')#', #Now()#, #EVALUATE('form.' & '#studentId#' & 'programFeeAmount')#, #EVALUATE('form.' & '#studentId#' & 'programFeeAmount')#, #client.userid#, #Now()#, #client.companyid#)
              </cfquery>
          </cfif>
          
@@ -22,7 +22,7 @@ FROM smg_charges
                 INSERT INTO smg_charges
                     (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
                 VALUES
-                    (#form.agentId#, #studentId#, #variables.invoiceNumber#, #form.programId#, '#form.programName#', '#EVALUATE('form.' & '#studentId#' & 'typeInsurance')#', #Now()#, #EVALUATE('form.' & '#studentId#' & 'insuranceAmount')#, #EVALUATE('form.' & '#studentId#' & 'insuranceAmount')#, #client.userid#, #Now()#, #client.companyid#)
+                    (#EVALUATE('form.' & 'agentId' & '#studentId#')#, #studentId#, #variables.invoiceNumber#, #EVALUATE('form.' & 'programId' & '#studentId#')#, '#EVALUATE('form.' & 'programName' & '#studentId#')#', '#EVALUATE('form.' & '#studentId#' & 'typeInsurance')#', #Now()#, #EVALUATE('form.' & '#studentId#' & 'insuranceAmount')#, #EVALUATE('form.' & '#studentId#' & 'insuranceAmount')#, #client.userid#, #Now()#, #client.companyid#)
              </cfquery>
          </cfif>
          
@@ -31,7 +31,7 @@ FROM smg_charges
                 INSERT INTO smg_charges
                     (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
                 VALUES
-                    (#form.agentId#, #studentId#, #variables.invoiceNumber#, #form.programId#, '#form.programName#', '#EVALUATE('form.' & '#studentId#' & 'typePlacementFee')#', #Now()#, #EVALUATE('form.' & '#studentId#' & 'placementFeeAmount')#, #EVALUATE('form.' & '#studentId#' & 'placementFeeAmount')#, #client.userid#, #Now()#, #client.companyid#)
+                    (#EVALUATE('form.' & 'agentId' & '#studentId#')#, #studentId#, #variables.invoiceNumber#, #EVALUATE('form.' & 'programId' & '#studentId#')#, '#EVALUATE('form.' & 'programName' & '#studentId#')#', '#EVALUATE('form.' & '#studentId#' & 'typePlacementFee')#', #Now()#, #EVALUATE('form.' & '#studentId#' & 'placementFeeAmount')#, #EVALUATE('form.' & '#studentId#' & 'placementFeeAmount')#, #client.userid#, #Now()#, #client.companyid#)
              </cfquery>
          </cfif>
          
@@ -40,7 +40,7 @@ FROM smg_charges
                 INSERT INTO smg_charges
                     (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
                 VALUES
-                    (#form.agentId#, #studentId#, #variables.invoiceNumber#, #form.programId#, '#form.programName#', '#EVALUATE('form.' & '#studentId#' & 'typeSevisFee')#', #Now()#, #EVALUATE('form.' & '#studentId#' & 'sevisAmount')#, #EVALUATE('form.' & '#studentId#' & 'sevisAmount')#, #client.userid#, #Now()#, #client.companyid#)
+                    (#EVALUATE('form.' & 'agentId' & '#studentId#')#, #studentId#, #variables.invoiceNumber#, #EVALUATE('form.' & 'programId' & '#studentId#')#, '#EVALUATE('form.' & 'programName' & '#studentId#')#', '#EVALUATE('form.' & '#studentId#' & 'typeSevisFee')#', #Now()#, #EVALUATE('form.' & '#studentId#' & 'sevisAmount')#, #EVALUATE('form.' & '#studentId#' & 'sevisAmount')#, #client.userid#, #Now()#, #client.companyid#)
              </cfquery>
          </cfif>
          
@@ -49,7 +49,7 @@ FROM smg_charges
             INSERT INTO smg_charges
             (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
             VALUES
-            (#form.agentId#, #studentId#, #variables.invoiceNumber#, #form.programId#, '#form.programName#', '#EVALUATE('form.' &  'sevisFee' & '#studentId#')#', #Now()#, #EVALUATE('form.' & 'sevisAmount' & '#studentId#')#, #EVALUATE('form.' & 'sevisAmount' & '#studentId#')#, #client.userid#, #Now()#, #client.companyid#)
+            (#EVALUATE('form.' & 'agentId' & '#studentId#')#, #studentId#, #variables.invoiceNumber#, #EVALUATE('form.' & 'programId' & '#studentId#')#, '#EVALUATE('form.' & 'programName' & '#studentId#')#', '#EVALUATE('form.' &  'sevisFee' & '#studentId#')#', #Now()#, #EVALUATE('form.' & 'sevisAmount' & '#studentId#')#, #EVALUATE('form.' & 'sevisAmount' & '#studentId#')#, #client.userid#, #Now()#, #client.companyid#)
             </cfquery>
         </cfif>
          
