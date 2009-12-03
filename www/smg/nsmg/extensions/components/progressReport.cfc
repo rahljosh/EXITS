@@ -53,15 +53,60 @@
                     pr.fk_intrep_user,
                     pr.fk_host,
                     pr.fk_program,
+                    <!--- Student --->
                     s.studentID,
-                    s.companyID,
-                    s.regionAssigned,
                     s.firstName,  
-                    s.familyLastName           
+                    s.familyLastName,
+                    <!--- Company --->
+                    c.companyID,
+                    <!--- Program --->
+                    p.programID,
+                    p.programName,
+                    <!--- Host Family --->
+                    h.hostID,
+                    h.fatherfirstname as hostFatherName,
+                    h.motherfirstname as hostMotherName,
+                    h.familylastname as hostLastName,
+                    <!--- Int Rep --->
+                    intRep.userID as intRepUserID,
+                    intRep.businessName as intRepBusinessName,                    
+                    <!--- Facilitator --->
+                    fac.userID as facUserID,
+                    fac.firstName as facFirstName,
+                    fac.lastName as facLastName,
+                    <!--- Super Rep --->
+                    super.userID as superUserID,
+                    super.firstName as superFirstName,
+                    super.lastName as superLastName,
+                    <!--- Regional Advisor --->
+                    adv.userID as advisorUserID,
+                    adv.firstName as advisorFirstName,
+                    adv.lastName as advisorLastName,
+                    <!--- Regional Director --->
+                    dir.userID as directorUserID,
+                    dir.firstName as directorFirstName,
+                    dir.lastName as directorLastName
                 FROM 
                 	progress_reports pr
                 INNER JOIN
                 	smg_students s ON s.studentID = pr.fk_student
+                INNER JOIN
+                	smg_companies c ON c.companyID = s.companyID                    
+                INNER JOIN
+                	smg_programs p ON p.programID = pr.fk_program
+                INNER JOIN
+                	smg_hosts h ON h.hostID = pr.fk_host                
+				INNER JOIN
+                	smg_users intRep ON intRep.userID = pr.fk_intrep_user
+                INNER JOIN
+                	smg_users fac ON fac.userID = pr.fk_ny_user
+                LEFT OUTER JOIN
+                	smg_users super ON super.userID = pr.fk_sr_user
+                LEFT OUTER JOIN
+                	smg_users adv ON adv.userID = pr.fk_ra_user
+                LEFT OUTER JOIN
+                	smg_users dir ON dir.userID = pr.fk_rd_user
+                
                 WHERE 
                 	pr.pr_ny_approved_date IS NOT NULL
 
