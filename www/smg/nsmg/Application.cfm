@@ -7,6 +7,7 @@
 
     <!--- Param URL variable --->
 	<cfparam name="URL.init" default="0">
+    <cfparam name="URL.init2" default="0">
 
 	<!--- Param Client Variables --->
 	<cfparam name="CLIENT.companyID" default="0">
@@ -37,37 +38,37 @@
 		APPLICATION.CFC = StructNew();
 		
 		// Store the initialized UDF Library object in the Application scope
-		APPLICATION.CFC.UDF = CreateCFC("UDF").Init();
+		APPLICATION.CFC.UDF = CreateCFC("udf").Init();
 		
 		// Store Application.IsServerLocal - This needs be declare before CFC component
 		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 
 		// Store the initialized CBC object in the Application scope
-		APPLICATION.CFC.CBC = CreateCFC("CBC").Init();
+		APPLICATION.CFC.CBC = CreateCFC("cbc").Init();
 
 		// Store the initialized Company object in the Application scope
-		APPLICATION.CFC.Company = CreateCFC("Company").Init();
+		APPLICATION.CFC.Company = CreateCFC("company").Init();
 
 		// Store the initialized Host object in the Application scope
-		APPLICATION.CFC.Host = CreateCFC("Host").Init();
+		APPLICATION.CFC.Host = CreateCFC("host").Init();
 
 		// Store the initialized Program object in the Application scope
-		APPLICATION.CFC.Program = CreateCFC("Program").Init();
+		APPLICATION.CFC.Program = CreateCFC("program").Init();
 
-		// Store the initialized Program object in the Application scope
-		APPLICATION.CFC.ProgressReport = CreateCFC("ProgressReport").Init();
-
+		// Store the initialized Progress Report object in the Application scope
+		APPLICATION.CFC.ProgressReport = CreateCFC("progressReport").Init();
+		
 		// Store the initialized Region object in the Application scope
-		APPLICATION.CFC.Region = CreateCFC("Region").Init();
+		APPLICATION.CFC.Region = CreateCFC("region").Init();
 
 		// Store the initialized School object in the Application scope
-		APPLICATION.CFC.School = CreateCFC("School").Init();
+		APPLICATION.CFC.School = CreateCFC("school").Init();
 
 		// Store the initialized Student object in the Application scope
-		APPLICATION.CFC.Student = CreateCFC("Student").Init();
+		APPLICATION.CFC.Student = CreateCFC("student").Init();
 
 		// Store the initialized User object in the Application scope
-		APPLICATION.CFC.User = CreateCFC("User").Init();
+		APPLICATION.CFC.User = CreateCFC("user").Init();
 
 		// Set a short name for the CFCs
 		AppCFC = APPLICATION.CFC;
