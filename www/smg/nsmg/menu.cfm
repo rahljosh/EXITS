@@ -41,8 +41,12 @@
         
         <li><a href="index.cfm?curdoc=helpdesk/help_desk_list">Support</a></li>
         
+        
+        <cfif client.companyid lte 5>
         <li><a href="/smgstore/index.htm" target="_blank">Store</a></li>
-    
+    	<cfelseif client.companyid eq 10>
+         <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+        </cfif>
     </ul>
 
 <!--- INTL BRANCHES --->
@@ -70,7 +74,11 @@
         
         <li><a href="index.cfm?curdoc=helpdesk/help_desk_list">Support</a></li>
         
+          <cfif client.companyid lte 5>
         <li><a href="/smgstore/index.htm" target="_blank">Store</a></li>
+    	<cfelseif client.companyid eq 10>
+         <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+        </cfif>
     
     </ul>
 
@@ -232,7 +240,11 @@
 
         </cfswitch>
         
+         <cfif client.companyid lte 5>
         <li><a href="/smgstore/index.htm" target="_blank">Store</a></li>
+    	<cfelseif client.companyid eq 10>
+         <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+        </cfif>
     
     </ul>
 
