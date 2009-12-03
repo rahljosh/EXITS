@@ -1,3 +1,5 @@
+<!--- PS: Any changes made here should be also be made to extensions/customtags/progressreport.cfm which is used to print bulk reports --->
+
 <cfparam name="form.pr_action" default="">
 <cfswitch expression="#form.pr_action#">
 <!--- delete contact date. --->

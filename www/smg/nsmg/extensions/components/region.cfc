@@ -59,4 +59,68 @@
 		<cfreturn qGetRegions>
 	</cffunction>
 
+
+	<cffunction name="getUserRegions" access="public" returntype="query" output="false" hint="Gets a list of regions, if regionID is passed gets a region by ID">
+        <cfargument name="companyID" type="numeric" hint="companyID is required">
+        <cfargument name="userID" type="numeric" hint="userID is required">
+        <cfargument name="usertype" type="numeric" hint="usertype is required">
+        
+        <!--- Office Users --->
+        <cfif VAL(ARGUMENTS.usertype) LTE 4>
+              
+            <cfquery 
+                name="qGetUserRegions" 
+                datasource="#APPLICATION.dsn#">
+                    SELECT 
+                    	r.regionID, 
+                        r.regionname, 
+                        c.companyshort
+                    FROM 
+                    	smg_regions r
+                    INNER JOIN 
+                    	smg_companies c ON r.company = c.companyID
+                    WHERE 
+                    	r.subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    <cfif VAL(ARGUMENTS.companyID) NEQ 5>
+                        AND 
+                        	c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                    </cfif>
+                    ORDER BY 
+                    	companyshort, 
+                        regionname
+            </cfquery>
+
+		<cfelse>
+        
+            <cfquery 
+                name="qGetUserRegions" 
+                datasource="#APPLICATION.dsn#">
+                    SELECT 
+                    	uar.regionID, 
+                        uar.usertype,
+                        r.regionname                         
+                    FROM 
+                    	user_access_rights uar
+                    INNER JOIN 
+                    	smg_regions r ON r.regionID = uar.regionID
+                    WHERE 
+                    	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#"> 
+                    AND 
+                    	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                    AND 
+                    	(
+                        	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
+                        OR 
+                        	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
+                        )
+                    ORDER BY 
+                    	default_region DESC, 
+                        regionname
+            </cfquery>
+        
+        </cfif>
+               
+		<cfreturn qGetUserRegions>
+	</cffunction>
+
 </cfcomponent>
