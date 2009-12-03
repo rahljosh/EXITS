@@ -54,6 +54,9 @@
 		// Store the initialized Program object in the Application scope
 		APPLICATION.CFC.Program = CreateCFC("Program").Init();
 
+		// Store the initialized Program object in the Application scope
+		APPLICATION.CFC.ProgressReport = CreateCFC("ProgressReport").Init();
+
 		// Store the initialized Region object in the Application scope
 		APPLICATION.CFC.Region = CreateCFC("Region").Init();
 
