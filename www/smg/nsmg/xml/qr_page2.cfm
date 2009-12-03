@@ -1,7 +1,7 @@
 		             
-         <cfoutput>
-       
-         </cfoutput>
+   <cfif isDefined('#StudentXMLFile.applications.application[i].page1.family.siblings.brothersister#')>
+   no siblings
+        <cfelse>
         	<cfif #Len(StudentXMLFile.applications.application[i].page1.family.siblings)#  gt 10>
 			<cfloop From = "1" To = "#ArrayLen(StudentXMLFile.applications.application[i].page1.family.siblings.brothersister)#" Index = "x">
           
@@ -16,4 +16,5 @@
 				
 			</cfloop>
 			</cfif>
+     </cfif>
 			
