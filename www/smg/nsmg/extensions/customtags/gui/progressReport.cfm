@@ -16,6 +16,8 @@
 <!--- Kill extra output --->
 <cfsilent>
 
+	<cfsetting requesttimeout="9999">
+
 	<!--- Param tag attributes --->
 	<cfparam 
 		name="ATTRIBUTES.prQuery"
@@ -77,7 +79,7 @@
             // Get Regional Director
             qGetIntlRep = APPLICATION.CFC.user.getUserByID(VAL(ATTRIBUTES.prQuery.fk_intrep_user));
         </cfscript>
-    
+       
         <table cellpadding="2" cellspacing="0" width="800px" align="center" style="margin-top:15px;">      
             <tr>
                 <td rowspan="10" valign="top" width="200px" align="center">
@@ -188,19 +190,19 @@
                 </th>
             </tr>
             <tr align="center">
-                <cfif VAL(qGetDates.recordCount)>
+                <cfif NOT VAL(qGetDates.recordCount)>
                     <td colspan="4">
                         There are no contact dates yet.
                     </td>
                 <cfelse>
                     <tr align="left">
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Contact</th>
-                        <th>Comments</th>
+                        <th style="padding-left:15px;" width="85px">Date</th>
+                        <th width="100px">Type</th>
+                        <th width="100px">Contact</th>
+                        <th width="400px">Comments</th>
                     </tr>
                     <cfloop query="qGetDates">
-                        <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
+                        <tr bgcolor="###iif(currentRow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                             <td style="padding-left:15px;">#dateFormat(prdate_date, 'mm/dd/yyyy')#</td>
                             <td nowrap="nowrap">#prdate_type_name#</td>
                             <td nowrap="nowrap">#prdate_contact_name#</td>
@@ -232,9 +234,12 @@
             </cfloop>
         </table>
     
-        <!--- Line Break --->
-        <div style="page-break-after:always;"></div><br>
-		
+    		
+		<cfif ATTRIBUTES.prQuery.currentRow NEQ ATTRIBUTES.prQuery.recordCount>           
+			<!--- Add Line Break --->
+            <div style="page-break-after:always;"></div><br>
+		</cfif>
+        
    	</cfloop>
 	
     </cfoutput>

@@ -13,6 +13,8 @@
 <!--- Kill extra output ---->
 <cfsilent>
 	
+    <cfsetting requesttimeout="9999">
+    
     <!--- Param Form Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.regionID" default="">
@@ -62,13 +64,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Progress Reports</title>
-<link rel="stylesheet" href="../smg.css" type="text/css">
 
-<script type="text/javascript" language="javascript">
-	$(function() {
-		$('.date-pick').datePicker({startDate:'01/01/2009'});
-	});	
-</script>
+<cfif VAL(FORM.displayReport)>
+	<!--- Get stylesheets for the report ---->
+    <link rel="stylesheet" href="../smg.css" type="text/css">
+<cfelse>
+	<!--- Use datePicker in the form --->
+	<script type="text/javascript" language="javascript">
+        $(function() {
+            $('.date-pick').datePicker({startDate:'01/01/2009'});
+        });	
+    </script>
+</cfif>
 
 </head>
 
@@ -126,7 +133,7 @@
                 <select name="regionID" multiple="multiple" size="6">
                     <cfloop query="qGetRegions">
                         <option value="#regionID#">
-                            #regionname#
+                            #regionname# &nbsp; 
                         </option>
                     </cfloop>
                 </select>
