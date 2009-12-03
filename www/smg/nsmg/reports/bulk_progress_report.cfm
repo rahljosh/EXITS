@@ -49,9 +49,7 @@
 
 			// There are no errors
 			if ( NOT VAL(ArrayLen(Errors.Messages)) ) {
-				// Get Approved Reports
-				qApprovedReports = APPCFC.progressReport.getApprovedReports(regionIDs=FORM.regionID,approvedFrom=FORM.dateFrom,approvedTo=FORM.dateTo);
-				// Display Report
+				// Display Reports
 				FORM.displayReport = 1;
 			}
 		}
@@ -104,12 +102,13 @@
 <cfelseif VAL(FORM.displayReport)>
 	<!--- Display Reports --->
     
-	<!--- Call Progress Report CustomTag and pass the query --->
+	<!--- Call Progress Report CustomTag and pass the form variables --->
     <gui:progressReport
-        prQuery="#qApprovedReports#"
-        reportMode="print"
+        regionID="#FORM.regionID#"
+        dateFrom="#FORM.dateFrom#"
+        dateTo="#FORM.dateTo#"
         />
-
+    
 <cfelse>
 	<!--- DISPLAY FORM --->
     <table width="50%" cellpadding="0" cellspacing="0" border="0" height="24">

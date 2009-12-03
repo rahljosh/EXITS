@@ -20,16 +20,28 @@
 
 	<!--- Param tag attributes --->
 	<cfparam 
-		name="ATTRIBUTES.prQuery"
-		type="query"
+		name="ATTRIBUTES.regionID"
+		type="string"
+        default=""
 		/>
 
 	<cfparam 
-		name="ATTRIBUTES.reportMode"
+		name="ATTRIBUTES.dateFrom"
 		type="string"
-        default="print"
+        default=""
 		/>
 
+	<cfparam 
+		name="ATTRIBUTES.dateTo"
+		type="string"
+        default=""
+		/>
+
+	<cfscript>
+		// Get Approved Reports
+		qApprovedReports = APPLICATION.CFC.progressReport.getApprovedReports(regionIDs=ATTRIBUTES.regionID,approvedFrom=ATTRIBUTES.dateFrom,approvedTo=ATTRIBUTES.dateTo);
+	</cfscript>
+        
 </cfsilent>
 
 <!--- 
@@ -40,7 +52,7 @@
 
 	<cfoutput>
 
-	<cfif NOT VAL(ATTRIBUTES.prQuery.recordCount)>
+	<cfif NOT VAL(qApprovedReports.recordCount)>
         <table cellpadding="2" cellspacing="0" width="800px">
             <tr>
                 <td>There are no progress reports that match your criteria.</th>
@@ -49,49 +61,28 @@
 		<cfabort>                
     </cfif>
 
-    <cfloop query="ATTRIBUTES.prQuery">
+    <cfloop query="qApprovedReports">
         
         <cfscript>           
-            //Get Program Info
-            qGetProgram = APPLICATION.CFC.program.getPrograms(ProgramID=ATTRIBUTES.prQuery.fk_program);
-            
             // Get Progress Report Dates
-            qGetDates = APPLICATION.CFC.progressReport.getPRDates(prID=ATTRIBUTES.prQuery.pr_ID);
+            qGetDates = APPLICATION.CFC.progressReport.getPRDates(prID=qApprovedReports.pr_ID);
     
             // Get Progress Report Questions
-            qGetQuestions = APPLICATION.CFC.progressReport.getPRQuestions(prID=ATTRIBUTES.prQuery.pr_ID);
-    
-            // Get Host Family
-            qGetHost = APPLICATION.CFC.host.getHosts(hostID=ATTRIBUTES.prQuery.fk_host);
-    
-            // Get Facilitator
-            qGetFacilitator = APPLICATION.CFC.user.getUserByID(VAL(ATTRIBUTES.prQuery.fk_ny_user));
-    
-            // Get Super Rep
-            qGetRep = APPLICATION.CFC.user.getUserByID(VAL(ATTRIBUTES.prQuery.fk_sr_user));
-    
-            // Get Advisor for Rep
-            qGetAdvisor = APPLICATION.CFC.user.getUserByID(VAL(ATTRIBUTES.prQuery.fk_ra_user));
-        
-            // Get Regional Director
-            qGetRegionalDirector = APPLICATION.CFC.user.getUserByID(VAL(ATTRIBUTES.prQuery.fk_rd_user));
-    
-            // Get Regional Director
-            qGetIntlRep = APPLICATION.CFC.user.getUserByID(VAL(ATTRIBUTES.prQuery.fk_intrep_user));
+            qGetQuestions = APPLICATION.CFC.progressReport.getPRQuestions(prID=qApprovedReports.pr_ID);
         </cfscript>
        
         <table cellpadding="2" cellspacing="0" width="800px" align="center" style="margin-top:15px;">      
             <tr>
                 <td rowspan="10" valign="top" width="200px" align="center">
                     <!--- Logo --->
-                    <img src="../pics/logos/#ATTRIBUTES.prQuery.companyID#.gif" align="middle">
+                    <img src="../pics/logos/#qApprovedReports.companyID#.gif" align="middle">
                 </td>
                 <td valign="top" align="center">	
                     <h2>Student Progress Report</h2> <br />
                     
-                    <h2>Student: #ATTRIBUTES.prQuery.firstname# #ATTRIBUTES.prQuery.familylastname# (#ATTRIBUTES.prQuery.studentid#)</h2>
+                    <h2>Student: #qApprovedReports.firstName# #qApprovedReports.familyLastName# (#qApprovedReports.studentID#)</h2>
 
-                    <cfswitch expression="#ATTRIBUTES.prQuery.pr_month_of_report#">
+                    <cfswitch expression="#qApprovedReports.pr_month_of_report#">
                         <cfcase value="10">
                             <h2>
                                 Phase 1<br>
@@ -138,42 +129,42 @@
                         </tr>
                         <tr>
                             <th align="right" width="30%">Program Name:</th>
-                            <td>#qGetProgram.programname# (#qGetProgram.programid#)</td>
+                            <td>#qApprovedReports.programName# (#qApprovedReports.programID#)</td>
                         </tr>
                         <tr>
                             <th align="right">Supervising Representative:</th>
-                            <td>#qGetRep.firstname# #qGetRep.lastname# (#qGetRep.userID#)</td>
+                            <td>#qApprovedReports.superFirstName# #qApprovedReports.superLastName# (#qApprovedReports.superUserID#)</td>
                         </tr>
                         <tr>
                             <th align="right">Regional Advisor:</th>
                             <td>
-                                <cfif NOT VAL(ATTRIBUTES.prQuery.fk_ra_user)>
+                                <cfif NOT VAL(qApprovedReports.advisorUserID)>
                                     Reports Directly to Regional Director
                                 <cfelse>
-                                    #qGetRegionalDirector.firstname# #qGetRegionalDirector.lastname# (#qGetRegionalDirector.userID#)
+                                    #qApprovedReports.advisorFirstName# #qApprovedReports.advisorLastName# (#qApprovedReports.advisorUserID#)
                                 </cfif>
                             </td>
                         </tr>
                         <tr>
                             <th align="right">Regional Director:</th>
-                            <td>#qGetRegionalDirector.firstname# #qGetRegionalDirector.lastname# (#qGetRegionalDirector.userID#)</td>
+                            <td>#qApprovedReports.directorFirstName# #qApprovedReports.directorLastName# (#qApprovedReports.directorUserID#)</td>
                         </tr>
                         <tr>
                             <th align="right">Facilitator:</th>
-                            <td>#qGetFacilitator.firstname# #qGetFacilitator.lastname# (#qGetFacilitator.userID#)</td>
+                            <td>#qApprovedReports.facFirstName# #qApprovedReports.facLastName# (#qApprovedReports.facUserID#)</td>
                         </tr>
                         <tr>
                             <th align="right">Host Family:</th>
                             <td>
-                                #qGetHost.fatherfirstname#
-                                <cfif LEN(qGetHost.fatherfirstname) AND LEN(qGetHost.motherfirstname)>&amp;</cfif>
-                                #qGetHost.motherfirstname#
-                                #qGetHost.familylastname# (#qGetHost.hostID#)
+                                #qApprovedReports.hostFatherName#
+                                <cfif LEN(qApprovedReports.hostFatherName) AND LEN(qApprovedReports.hostMotherName)>&amp;</cfif>
+                                #qApprovedReports.hostMotherName#
+                                #qApprovedReports.hostLastName# (#qApprovedReports.hostID#)
                             </td>
                         </tr>
                         <tr>
                             <th align="right">International Agent:</th>
-                            <td>#qGetIntlRep.businessname# (#qGetIntlRep.userID#)</td>
+                            <td>#qApprovedReports.intRepBusinessname# (#qApprovedReports.intRepUserID#)</td>
                         </tr>
                     </table>                            
                     
@@ -203,10 +194,10 @@
                     </tr>
                     <cfloop query="qGetDates">
                         <tr bgcolor="###iif(currentRow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
-                            <td style="padding-left:15px;">#dateFormat(prdate_date, 'mm/dd/yyyy')#</td>
-                            <td nowrap="nowrap">#prdate_type_name#</td>
-                            <td nowrap="nowrap">#prdate_contact_name#</td>
-                            <td><font size="1">#replaceList(prdate_comments, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</font></td>
+                            <td style="padding-left:15px;">#dateFormat(qGetDates.prdate_date, 'mm/dd/yyyy')#</td>
+                            <td nowrap="nowrap">#qGetDates.prdate_type_name#</td>
+                            <td nowrap="nowrap">#qGetDates.prdate_contact_name#</td>
+                            <td><font size="1">#replaceList(qGetDates.prdate_comments, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</font></td>
                         </tr>
                     </cfloop>
                 </cfif>    
@@ -224,7 +215,7 @@
                     <th align="left" style="padding-left:15px;">#qGetQuestions.text#</th>
                 </tr>
                 <tr>
-                    <td style="padding-left:15px;">#replaceList(x_pr_question_response, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</td>
+                    <td style="padding-left:15px;">#replaceList(qGetQuestions.x_pr_question_response, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</td>
                 </tr>
                 <cfif qGetQuestions.currentRow NEQ qGetQuestions.RecordCount>
                     <tr>
@@ -235,7 +226,7 @@
         </table>
     
     		
-		<cfif ATTRIBUTES.prQuery.currentRow NEQ ATTRIBUTES.prQuery.recordCount>           
+		<cfif qApprovedReports.currentRow NEQ qApprovedReports.recordCount>           
 			<!--- Add Line Break --->
             <div style="page-break-after:always;"></div><br>
 		</cfif>
