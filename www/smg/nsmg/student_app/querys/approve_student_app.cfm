@@ -146,7 +146,7 @@
 	<meta http-equiv="refresh" content="3;url=close_window.cfm">
 	<body onLoad="opener.location.reload()"> 
 	<table align="center">
-		<tr><td><img src="../pics/top-email.gif"></td></tr>
+		<tr><td></td></tr>
 		<tr><td>This application has been approved. This window should close automatically.</td></tr>
 	</table>
 </cftransaction>
