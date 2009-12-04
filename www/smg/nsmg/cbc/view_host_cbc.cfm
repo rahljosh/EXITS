@@ -43,7 +43,7 @@
 
 <cfelse>
 	
-    <!--- <cftry> --->
+    <cftry>
 
         <cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file#" variable="rec_xml">
     
@@ -62,7 +62,6 @@
             );												   
         </cfscript>
 	
-    <!---
         <cfcatch type="any">
         	<p>
 	        	/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file# file could not be found.
@@ -70,7 +69,6 @@
         </cfcatch>
     
     </cftry>
-	--->
 
 </cfif>
 
