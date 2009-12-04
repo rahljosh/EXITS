@@ -104,10 +104,9 @@
 				<tr align="left">
 					<TD width="15%">Usertype :</td>
 					<TD><cfselect name="usertype">			
-						<option value=0>Select an usertype</option>
-						<option value="1">Office</option>
-						<option value="2">Reps (Man., Adv. and Area)</option>
-						<option value="3">Reps Family</option>
+						<option value="">Select a usertype</option>
+						<option value="users">Office & Reps</option>
+						<option value="members">Reps Family Members</option>
 						</cfselect>
 					</td>
 				</tr>

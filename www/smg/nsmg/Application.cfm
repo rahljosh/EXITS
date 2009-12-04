@@ -26,7 +26,7 @@
         // Check if we need to initialize Application scope
 		if ( VAL(URL.init) ) {
 			// Clear the Application structure	
-			StructClear(APPLICATION);	
+			StructClear(APPLICATION.CFC);	
 		}
 		
 		// Create a function that let us create CFCs from any location
