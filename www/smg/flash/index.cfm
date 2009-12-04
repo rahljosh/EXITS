@@ -91,10 +91,10 @@ body {
     <td width="154" height="491" valign="bottom"><img src="images/principal_02.gif" width=154 height=491 border="0" usemap="#sites"></td>
     <td width="446" valign="top"><table width="447" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="447" background="images/principal_03b.gif"><span class="style6"><IMG SRC="images/principal_03b.gif" WIDTH=445 HEIGHT=37></span></td>
+        <td width="447" background="images/principal_03b.gif"><span class="style6"><IMG SRC="images/principal_03b.gif" WIDTH=445 HEIGHT=36></span></td>
       </tr>
       <tr>
-        <td height="115" background="images/back-site1.gif"><table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <td height="116" background="images/back-site1.gif"><table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td width="32%" rowspan="3" valign="bottom"><div align="center"><span class="style14"><img src="images/nyc.jpg" width="110" height="112"></span></div></td>
             <td width="68%" height="20"><div align="center" class="style14"><strong>SMG TRIPS </strong></div></td>
