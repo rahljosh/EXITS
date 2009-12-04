@@ -74,6 +74,7 @@
 	<cfloop	query="qGetCBCHost">
     	
         <cfscript>
+			// Data Validation
 			if ( NOT LEN(Evaluate(usertype & "firstname")) ) {
 				ArrayAppend(Errors.Messages, "First Name is missing for host #usertype# #Evaluate(usertype & "lastname")# (###qGetCBCHost.hostid#).");			
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
@@ -152,8 +153,8 @@
                     companyShort=qGetCompany.companyShort,
                     batchID=newBatchID,
                     userType=userType,
-                    hostID=hostid,
-                    CBCFamID=qGetCBCHost.CBCFamID,
+                    hostID=qGetCBCHost.hostID,
+                    cbcID=qGetCBCHost.CBCFamID,
                     // XML variables
                     username=qGetCompany.gis_username,
                     password=qGetCompany.gis_password,
@@ -177,7 +178,7 @@
         
             <!--- SUBMIT XML --->
             <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###hostid#)</td></tr>
+                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###qGetCBCHost.hostid#)</td></tr>
                 <tr><td><b>Status: #CBCStatus.message#</b></td></tr>
             </table>
         
@@ -198,7 +199,7 @@
 
     <cfscript>
 		// Get CBCs
-		qGetCBCMember = APPLICATION.CFC.CBC.GetCBCMember(
+		qGetCBCMember = APPLICATION.CFC.CBC.GetCBCHostMember(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID
 		);	
@@ -212,6 +213,7 @@
 	<cfloop query="qGetCBCMember">
 		
         <cfscript>
+			// Data Validation
 			if ( NOT LEN(qGetCBCMember.name) ) {
 				ArrayAppend(Errors.Messages, "First Name is missing for #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");			
 				if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
@@ -226,7 +228,7 @@
 				}
 			}
 			
-			if ( NOT LEN(birthdate) OR NOT IsDate(qGetCBCMember.birthdate) )  {
+			if ( NOT LEN(qGetCBCMember.birthdate) OR NOT IsDate(qGetCBCMember.birthdate) )  {
 				ArrayAppend(Errors.Messages, "DOB is missing for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
 				if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
 					skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
@@ -290,8 +292,8 @@
                     companyShort=qGetCompany.companyShort,
                     batchID=newBatchID,
                     userType=userType,
-                    hostID=hostid,
-                    CBCFamID=qGetCBCMember.CBCFamID,
+                    hostID=qGetCBCMember.hostID,
+                    cbcID=qGetCBCMember.CBCFamID,
                     // XML variables
                     username=qGetCompany.gis_username,
                     password=qGetCompany.gis_password,
@@ -315,7 +317,7 @@
         
             <!--- SUBMIT XML --->
             <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #usertype# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###hostid#)</td></tr>
+                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #usertype# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###qGetCBCMember.hostid#)</td></tr>
                 <tr><td><b>Status: #CBCStatus.message#</b></td></tr>
             </table>
         

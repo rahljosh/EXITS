@@ -329,7 +329,7 @@ div.scroll2 {
 </cfquery>
 
 <cfquery name="get_cbc_members" datasource="#application.dsn#">
-	SELECT date_authorized, requestid, smg_hosts_cbc.seasonid, date_sent, date_received, sent_file, rec_file, batchid,
+	SELECT date_authorized, requestid, smg_hosts_cbc.seasonid, date_sent, date_received, batchid,
 		smg_host_children.name,	smg_seasons.season
 	FROM smg_hosts_cbc
 	LEFT JOIN smg_seasons ON smg_seasons.seasonid = smg_hosts_cbc.seasonid
@@ -381,7 +381,7 @@ div.scroll2 {
 		<!--- BODY OF TABLE --->
 		<table width=100% cellpadding=4 cellspacing=0 border=0 class="section">
 			<tr bgcolor="e2efc7">
-				<td align="center" valign="top"><b>Name</b></td>
+				<td valign="top"><b>Name</b></td>
 				<td align="center" valign="top"><b>Season</b></td>		
 				<td align="center" valign="top"><b>Date Sent</b> <br><font size="-2">mm/dd/yyyy</font></td>		
 	 			<td align="center" valign="top"><b>Date Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
@@ -390,35 +390,36 @@ div.scroll2 {
 			<cfif get_cbc_mother.recordcount EQ '0' AND check_mother.recordcount EQ '0' AND get_cbc_father.recordcount EQ '0' AND check_father.recordcount EQ '0'>
 				<tr><td align="center" colspan="5">No CBC has been submitted.</td></tr>
 			<cfelse>
-				<tr><td colspan="6">Host Mother:</td></tr>
+				<tr><td colspan="6"><strong>Host Mother:</strong></td></tr>
 				<cfloop query="get_cbc_mother">
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-					<td>#family_info.motherfirstname# #family_info.motherlastname#</td>
-					<td align="center" style="line-height:20px;"><b>#season#</b></td>
-					<td align="center" style="line-height:20px;"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center" style="line-height:20px;"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center" style="line-height:20px;">
+					<td style="padding-left:20px;">#family_info.motherfirstname# #family_info.motherlastname#</td>
+					<td align="center"><b>#season#</b></td>
+					<td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center">
 						<cfif requestid EQ ''>
                         	processing
 						<cfelseif flagcbc EQ 1 AND client.usertype LTE 4>
                         	On Hold Contact Compliance
                         <cfelse>
 							<cfif client.usertype lte 4>
-                        		<a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">
+                        		<a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestid#</a>
+                            <cfelse>
+                            	#requestid#
                             </cfif>
-                       	 	#requestid#</a>
                         </cfif>
                 	</td>
 				</tr>
 				</cfloop>
 				<cfloop query="check_mother">
-				<tr><td colspan="3">CBC Submitted for User #firstname# #lastname# (###userid#).</td></tr>
+				<tr><td colspan="3" style="padding-left:20px;">Submitted for User #firstname# #lastname# (###userid#).</td></tr>
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td>&nbsp;</td>
-					<td align="center" style="line-height:20px;"><b>#season#</b></td>
-					<td align="center" style="line-height:20px;"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center" style="line-height:20px;"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
-					<td align="center" style="line-height:20px;"><cfif requestid EQ ''>processing<cfelse>
+					<td align="center"><b>#season#</b></td>
+					<td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+					<td align="center"><cfif requestid EQ ''>processing<cfelse>
 					
 						<!----Piece together file name---->
 						<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml"></cfif>#requestid#</a>
@@ -427,41 +428,41 @@ div.scroll2 {
 					</cfif></td>
 				</tr>
 				</cfloop>
-				<tr><td colspan="6">Host Father:</td></tr>
+				<tr bgcolor="e2efc7"><td colspan="6"><strong>Host Father:</strong></td></tr>
 				<cfloop query="get_cbc_father">
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-					<td>#family_info.fatherfirstname# #family_info.fatherlastname#</td>
-					<td align="center" style="line-height:20px;"><b>#season#</b></td>
-					<td align="center" style="line-height:20px;"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center" style="line-height:20px;"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
-					<td align="center" style="line-height:20px;"><cfif requestid EQ ''>processing<cfelseif flagcbc EQ 1 AND client.usertype LTE 4>On Hold Contact Compliance<cfelse>		
+					<td style="padding-left:20px;">#family_info.fatherfirstname# #family_info.fatherlastname#</td>
+					<td align="center"><b>#season#</b></td>
+					<td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+					<td align="center"><cfif requestid EQ ''>processing<cfelseif flagcbc EQ 1 AND client.usertype LTE 4>On Hold Contact Compliance<cfelse>		
 					
 						<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_father_#hostid#_rec.xml">#requestid#</a></cfif></cfif></td>
 				</tr>
 				</cfloop>
 				<cfloop query="check_father">
-				<tr><td colspan="6">CBC Submitted for User #firstname# #lastname# (###userid#).</td></tr>
+				<tr><td colspan="6" style="padding-left:20px;">Submitted for User #firstname# #lastname# (###userid#).</td></tr>
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td>&nbsp;</td>
-					<td align="center" style="line-height:20px;"><b>#season#</b></td>
-					<td align="center" style="line-height:20px;"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center" style="line-height:20px;"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
-					<td align="center" style="line-height:20px;"><cfif requestid EQ ''>processing<cfelse>
+					<td align="center"><b>#season#</b></td>
+					<td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
+					<td align="center"><cfif requestid EQ ''>processing<cfelse>
 					<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_father_#hostid#_rec.xml">#requestid#</a></cfif></cfif></td>
 				</tr>
 				</cfloop>				
 			</cfif>
-			<tr bgcolor="e2efc7"><th colspan="6">Other Family Members</th></tr>
+			<tr bgcolor="e2efc7"><td colspan="6"><strong>Other Family Members</strong></td></tr>
 			<cfif get_cbc_members.recordcount EQ '0'>
 				<tr><td align="center" colspan="6">No CBC has been submitted.</td></tr>
 			<cfelse>
                 <cfloop query="get_cbc_members">
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                    <td align="center" style="line-height:20px;"><b>#name#</b></td>
-                    <td align="center" style="line-height:20px;"><b>#season#</b></td>
-                    <td align="center" style="line-height:20px;"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center" style="line-height:20px;"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
-                    <td align="center" style="line-height:20px;">
+                    <td style="padding-left:20px;"><b>#name#</b></td>
+                    <td align="center"><b>#season#</b></td>
+                    <td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                    <td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+                    <td align="center">
 						<cfif requestid EQ ''>
                         	processing
                         <cfelse>

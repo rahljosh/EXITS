@@ -130,7 +130,7 @@
         <cfloop list="#FORM.motherIDs#" index="cbcID">
             
             <cfscript>
-				if ( IsDefined('motherFlagCBC'&cbcID) ) {
+				if ( IsDefined('motherFlagCBC' & cbcID) ) {
 					flagValue = 1;
 				} else {
 					flagValue = 0;
@@ -146,10 +146,10 @@
         </cfloop>
         
         <!--- CBC FLAG HOST FATHER ---->
-        <cfloop list="#FORM.fatherIDs#" index='m_cbcfamID'>
+        <cfloop list="#FORM.fatherIDs#" index='cbcID'>
         
             <cfscript>
-				if ( IsDefined('fatherFlagCBC'&cbcID) ) {
+				if ( IsDefined('fatherFlagCBC' & cbcID) ) {
 					flagValue = 1;
 				} else {
 					flagValue = 0;
@@ -166,7 +166,7 @@
         
         <!--- Submit Batch 10/20/2009 --->
 		<cfscript>
-            // Declares newBatchID
+            // Declare newBatchID
 			newBatchID = 0;
 			// Set errorCount used in data validaation
 			errorCount = 0;
@@ -179,7 +179,7 @@
             );	
 
 			// Get CBCs Host Member
-			qGetCBCMember = APPLICATION.CFC.CBC.GetCBCMember(
+			qGetCBCMember = APPLICATION.CFC.CBC.GetCBCHostMember(
 				companyID=CLIENT.companyID,
 				hostID=FORM.hostID
 			);	
@@ -241,7 +241,7 @@
                         batchID=newBatchID,
                         userType=qGetCBCHost.cbc_type,
                         hostID=qGetCBCHost.hostid,
-                        CBCFamID=qGetCBCHost.CBCFamID,
+                        cbcID=qGetCBCHost.CBCFamID,
                         // XML variables
                         username=qGetCompanyID.gis_username,
                         password=qGetCompanyID.gis_password,
@@ -273,7 +273,7 @@
                         batchID=newBatchID,
                         userType='member',
                         hostID=qGetCBCMember.hostid,
-                        CBCFamID=qGetCBCMember.CBCFamID,
+                        cbcID=qGetCBCMember.CBCFamID,
                         // XML variables
                         username=qGetCompanyID.gis_username,
                         password=qGetCompanyID.gis_password,
@@ -384,7 +384,7 @@ function OpenWindow(url) {
                     <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
                     <td align="center"><cfif date_sent EQ ''>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                     <td align="center"><cfif date_received EQ ''>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center">#requestID#</td>
+                    <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
                     <td align="center"><input type="checkbox" name="motherFlagCBC#cbcfamID#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
                     <td width="20%">&nbsp;</td>
                 </tr>
@@ -446,7 +446,7 @@ function OpenWindow(url) {
                     <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
                     <td align="center"><cfif date_sent EQ ''>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                     <td align="center"><cfif date_received EQ ''>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center">#requestID#</td>
+                    <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
                     <td align="center"><input type="checkbox" name="fatherFlagCBC#cbcfamID#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
                     <td width="20%">&nbsp;</td>
                 </tr>
@@ -533,7 +533,7 @@ function OpenWindow(url) {
                             <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
                             <td align="center"><cfif date_sent EQ ''>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center"><cfif date_received EQ ''>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center">#requestID#</td>
+                            <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
                             <td width="20%">&nbsp;</td>
                         </tr>
                     </cfloop>
