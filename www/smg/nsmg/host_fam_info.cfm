@@ -395,8 +395,8 @@ div.scroll2 {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td style="padding-left:20px;">#family_info.motherfirstname# #family_info.motherlastname#</td>
 					<td align="center"><b>#season#</b></td>
-					<td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
 					<td align="center">
 						<cfif requestid EQ ''>
                         	processing
@@ -404,7 +404,7 @@ div.scroll2 {
                         	On Hold Contact Compliance
                         <cfelse>
 							<cfif client.usertype lte 4>
-                        		<a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestid#</a>
+                        		<a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Mother&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestid#</a>
                             <cfelse>
                             	#requestid#
                             </cfif>
@@ -417,15 +417,15 @@ div.scroll2 {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td>&nbsp;</td>
 					<td align="center"><b>#season#</b></td>
-					<td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
-					<td align="center"><cfif requestid EQ ''>processing<cfelse>
-					
-						<!----Piece together file name---->
-						<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml"></cfif>#requestid#</a>
-				
-					
-					</cfif></td>
+					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+					<td align="center">
+						<cfif requestid EQ ''>
+                        	processing
+                        <cfelse>
+							#requestid#
+						</cfif>
+                   </td>
 				</tr>
 				</cfloop>
 				<tr bgcolor="e2efc7"><td colspan="6"><strong>Host Father:</strong></td></tr>
@@ -433,11 +433,10 @@ div.scroll2 {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td style="padding-left:20px;">#family_info.fatherfirstname# #family_info.fatherlastname#</td>
 					<td align="center"><b>#season#</b></td>
-					<td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
 					<td align="center"><cfif requestid EQ ''>processing<cfelseif flagcbc EQ 1 AND client.usertype LTE 4>On Hold Contact Compliance<cfelse>		
-					
-						<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_father_#hostid#_rec.xml">#requestid#</a></cfif></cfif></td>
+						<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Father&file=batch_#batchid#_host_father_#hostid#_rec.xml">#requestid#</a></cfif></cfif></td>
 				</tr>
 				</cfloop>
 				<cfloop query="check_father">
@@ -445,10 +444,10 @@ div.scroll2 {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td>&nbsp;</td>
 					<td align="center"><b>#season#</b></td>
-					<td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
+					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
 					<td align="center"><cfif requestid EQ ''>processing<cfelse>
-					<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_father_#hostid#_rec.xml">#requestid#</a></cfif></cfif></td>
+					<cfif client.usertype lte 4>#requestid#</cfif></cfif></td>
 				</tr>
 				</cfloop>				
 			</cfif>
@@ -460,13 +459,13 @@ div.scroll2 {
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                     <td style="padding-left:20px;"><b>#name#</b></td>
                     <td align="center"><b>#season#</b></td>
-                    <td align="center"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+                    <td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                    <td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
                     <td align="center">
 						<cfif requestid EQ ''>
                         	processing
                         <cfelse>
-                        	<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_hostm_#name#_#hostid#_rec.xml">#requestid#</a></cfif>
+                        	<cfif client.usertype lte 4><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Member&file=batch_#batchid#_hostm_#name#_#hostid#_rec.xml">#requestid#</a></cfif>
 	                    </cfif>
                     </td>
                 </tr>

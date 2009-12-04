@@ -1101,9 +1101,9 @@
                         <cfloop query="get_cbc_user">
                         <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
-                            <td align="center" style="line-height:20px;"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
-                            <td align="center" style="line-height:20px;"><cfif requestid EQ ''>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="index.cfm?curdoc=cbc/view_user_cbc&userid=#rep_info.userid#&batchID=#batchid#&file=batch_#batchid#_user_#rep_info.userid#_rec.xml">#requestid#</a></cfif></cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="index.cfm?curdoc=cbc/view_user_cbc&userid=#rep_info.userid#&batchID=#batchid#&userType=User&file=batch_#batchid#_user_#rep_info.userid#_rec.xml">#requestid#</a></cfif></cfif></td>
                         </tr>
                         </cfloop>
                     </cfif>
@@ -1111,9 +1111,9 @@
                         <tr><td colspan="3">CBC Submitted for Host Family (###hostid#).</td></tr>
                         <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
-                            <td align="center" style="line-height:20px;"><cfif date_sent EQ ''>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif date_received EQ ''>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
-                            <td align="center" style="line-height:20px;"><cfif requestid EQ ''>processing<cfelse><cfif CLIENT.usertype lte 4><a href="index.cfm?curdoc=cbc/view_user_cbc&userid=#rep_info.userid#&batchID=#batchid#&file=batch_#batchid#_user_#rep_info.userid#_rec.xml">#requestid#</a></cfif></cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelse><cfif CLIENT.usertype lte 4>#requestid#</cfif></cfif></td>
                         </tr>
                     </cfloop>				
                 </table>

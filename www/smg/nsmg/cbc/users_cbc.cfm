@@ -112,7 +112,7 @@ function OpenWindow(url) {
 		<cfloop query="get_cbc_user">
 		<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 			<td align="center">
-				<cfif date_sent EQ ''>
+				<cfif NOT LEN(date_sent)>
 					<cfselect name="companyid#currentrow#" required="yes" message="You must select a company">
 						<option value="0"></option>
 						<cfloop query="get_companies">
@@ -126,16 +126,16 @@ function OpenWindow(url) {
 			</td>
 			<td align="center"><b>#season#</b> <cfinput type="hidden" name="cbcid#currentrow#" value="#cbcid#"></td>
 			<td align="center">
-				<cfif date_sent EQ ''>
+				<cfif NOT LEN(date_sent)>
 					<cfinput type="Text" name="date_authorized#currentrow#" size="8" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#" validate="date" maxlength="10">
 				<cfelse>
 					#DateFormat(date_authorized, 'mm/dd/yyyy')#
 					<cfinput type="hidden" name="date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#">
 				</cfif>
 			</td>
-			<td align="center"><cfif date_sent EQ ''>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-			<td align="center"><cfif date_received EQ ''>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-			<td align="center">#requestid#</td>
+			<td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+			<td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+			<td align="center"><a href="index.cfm?curdoc=cbc/view_user_cbc&userid=#rep_info.userid#&batchID=#batchid#&userType=User&file=batch_#batchid#_user_#rep_info.userid#_rec.xml">#requestid#</a></td>
 			<td align="center"><input type="checkbox" name="flagcbc_#cbcid#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
 			<td width="20%">&nbsp;</td>
 		</tr>
@@ -229,7 +229,7 @@ function OpenWindow(url) {
 				<cfloop query="get_cbc_family">
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td align="center">
-						<cfif date_sent EQ ''>
+						<cfif NOT LEN(date_sent)>
 							<cfselect name="#family_id#companyid#currentrow#" required="yes" message="You must select a company">
 								<option value="0"></option>
 								<cfloop query="get_companies">
@@ -243,15 +243,15 @@ function OpenWindow(url) {
 					</td>
 					<td align="center"><b>#season#</b> <cfinput type="hidden" name="#family_id#cbcid#currentrow#" value="#cbcid#"></td>
 					<td align="center">
-						<cfif date_sent EQ ''>
+						<cfif NOT LEN(date_sent)>
 							<cfinput type="Text" name="#family_id#date_authorized#currentrow#" size="8" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#" validate="date" maxlength="10">
 						<cfelse>
 							#DateFormat(date_authorized, 'mm/dd/yyyy')#
 							<cfinput type="hidden" name="#family_id#date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#">
 						</cfif>
 					</td>
-					<td align="center"><cfif date_sent EQ ''>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif date_received EQ ''>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
 					<td align="center">#requestid#</td>
 					<td width="20%">&nbsp;</td>
 				</tr>
