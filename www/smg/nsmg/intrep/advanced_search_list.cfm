@@ -49,7 +49,7 @@
 	<!--- AGE --->
 	<cfif form.age NEQ '0'>
 		<cfset nextage = #form.age# + 1>
-		AND DATEDIFF(now(),smg_students.dob)/365 >= '#form.age#' AND DATEDIFF(now(),smg_students.dob)/365 < '#nextage#'
+		AND DATEDIFF(now(),s.dob)/365 >= '#form.age#' AND DATEDIFF(now(),s.dob)/365 < '#nextage#'
 	</cfif>
 	<!--- GENDER --->
 	<cfif form.gender NEQ '0'>
