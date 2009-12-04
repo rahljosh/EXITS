@@ -15,6 +15,7 @@
     <cfparam name="URL.hostID" default="0">
     <cfparam name="URL.batchID" default="0">
     <cfparam name="URL.file" default="">
+    <cfparam name="URL.hostType" default="">
     
     <cfscript>
 		// Get Batch Information		
@@ -36,7 +37,7 @@
 		APPCFC.CBC.displayXMLResult(
 			companyID=qGetBatchInfo.companyID, 
 			responseXML=qGetBatchInfo.xml_received, 
-			userType='host',
+			userType=URL.hostType,
 			hostID=qGetBatchInfo.hostID
 		);												   
 	</cfscript>

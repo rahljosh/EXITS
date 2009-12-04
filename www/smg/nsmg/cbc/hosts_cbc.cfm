@@ -382,9 +382,9 @@ function OpenWindow(url) {
                     <td align="center">#companyshort#</td>
                     <td align="center"><b>#season#</b></td>
                     <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
-                    <td align="center"><cfif date_sent EQ ''>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><cfif date_received EQ ''>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
+                    <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                    <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+                    <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Mother&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
                     <td align="center"><input type="checkbox" name="motherFlagCBC#cbcfamID#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
                     <td width="20%">&nbsp;</td>
                 </tr>
@@ -444,9 +444,9 @@ function OpenWindow(url) {
                     <td align="center">#companyshort#</td>
                     <td align="center"><b>#season#</b></td>
                     <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
-                    <td align="center"><cfif date_sent EQ ''>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><cfif date_received EQ ''>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
+                    <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                    <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+                    <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Father&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
                     <td align="center"><input type="checkbox" name="fatherFlagCBC#cbcfamID#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
                     <td width="20%">&nbsp;</td>
                 </tr>
@@ -531,9 +531,9 @@ function OpenWindow(url) {
                             <td align="center">#companyshort#</td>
                             <td align="center"><b>#season#</b></td>
                             <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
-                            <td align="center"><cfif date_sent EQ ''>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center"><cfif date_received EQ ''>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
+                            <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                            <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+                            <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Member&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
                             <td width="20%">&nbsp;</td>
                         </tr>
                     </cfloop>

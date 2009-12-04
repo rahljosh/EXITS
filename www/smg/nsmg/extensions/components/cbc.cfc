@@ -90,7 +90,6 @@
                         h.date_authorized, 
                         h.date_sent, 
                         h.date_received,
-                        h.xml_sent,
                         h.xml_received, 
                         h.requestID, 
                         h.flagcbc,
@@ -357,7 +356,6 @@
     	<cfargument name="batchID" type="numeric" required="yes">
         <cfargument name="ReportID" type="string" required="yes">  
         <cfargument name="cbcFamID" type="numeric" required="yes">      
-		<cfargument name="xmlSent" type="string" default=""> 
         <cfargument name="xmlReceived" type="string" default="">
         
         <cfquery 
@@ -369,7 +367,6 @@
                 date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
                 batchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.batchID#">,
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
-                xml_sent = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlSent#">,
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
             	cbcfamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcFamID#">
@@ -399,7 +396,6 @@
                         u.date_authorized,
                         u.date_sent,
                         u.date_received,
-                        u.xml_sent,
                         u.xml_received,
                         u.notes,
                         u.flagCBC,
@@ -550,7 +546,6 @@
     	<cfargument name="batchID" type="numeric" required="yes">
         <cfargument name="ReportID" type="string" required="yes">  
         <cfargument name="cbcID" type="numeric" required="yes">  
-        <cfargument name="xmlSent" type="string" default="">         
         <cfargument name="xmlReceived" type="string" default=""> 
         
         <cfquery 
@@ -562,7 +557,6 @@
                 date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
                 batchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.batchID#">,
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
-                xml_sent = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlSent#">,
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
             	cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
@@ -777,16 +771,14 @@
                                 batchID=ARGUMENTS.BatchID,
                                 ReportID=ReportID,
                                 cbcFamID=ARGUMENTS.cbcID,
-                                xmlSent=requestXML,
                                 xmlReceived=responseXML
-                            );
+                            );							
                         } else {
                             // Update User CBC 
                             APPLICATION.CFC.CBC.updateUserCBC(
                                 batchID=ARGUMENTS.BatchID,
                                 ReportID=ReportID,
                                 cbcID=ARGUMENTS.cbcID,
-                                xmlSent=requestXML,
                                 xmlReceived=responseXML
                             );
                         }
