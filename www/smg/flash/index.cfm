@@ -209,9 +209,12 @@ body {
             <tr>
               <td valign="bottom"><a href="http://www.caremed-assistance.com" target="_blank"></a>                <table width="100%" height="33" border="0" cellpadding="0" cellspacing="0">
                   <tr>
+                    <td height="35" colspan="2"><div align="center"><a href="#"><img src="images/ChinaAffiliate.png" border="0" onClick="MM_openBrWindow('chinaAffiliate.html','chinaAffiliate','width=450,height=200')"></a></div></td>
+                    <!--- Erika Insurance Removed
                     <td><div align="center"><a href="http://www.erikainsurance.com/index_eng.asp" target="_blank"><img src="images/erika.jpg" width="70" height="33" border="0"></a></div>                    <div align="center"></div></td>
                     <td height="35"><a href="#"><img src="images/ChinaAffiliate.png" border="0" onClick="MM_openBrWindow('chinaAffiliate.html','chinaAffiliate','width=450,height=200')"></a></td>
-                  </tr>
+                  	--->
+				  </tr>
                   <tr>
                     <td height="35" colspan="2"><div align="center"><a href="https://www.esecutive.com/smg/" target="_blank"><img src="../images/BaggageInsurance.jpg" alt="Glibal Secutive International Insurance Solutions" width="150" height="33" border="0" /></a></div></td>
                     </tr>
