@@ -135,7 +135,7 @@ function OpenWindow(url) {
 			</td>
 			<td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
 			<td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-			<td align="center"><a href="index.cfm?curdoc=cbc/view_user_cbc&userid=#rep_info.userid#&batchID=#batchid#&userType=User&file=batch_#batchid#_user_#rep_info.userid#_rec.xml">#requestid#</a></td>
+			<td align="center"><a href="index.cfm?curdoc=cbc/view_user_cbc&userid=#rep_info.userid#&batchID=#batchid#&file=batch_#batchid#_user_#rep_info.userid#_rec.xml">#requestid#</a></td>
 			<td align="center"><input type="checkbox" name="flagcbc_#cbcid#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
 			<td width="20%">&nbsp;</td>
 		</tr>
