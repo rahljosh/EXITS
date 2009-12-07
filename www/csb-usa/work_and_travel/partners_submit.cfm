@@ -69,7 +69,7 @@ function test(){
   
  
   <cfif url.request is 'send'>
-    <cfmail to="anca@intoedventures.org" from="into@intoedventures.org" subject="#form.companyName#">
+    <cfmail to="#APPLICATION.EMAIL.contact#" from="#APPLICATION.EMAIL.from#" subject="#form.companyName#">
 
     #desc# from the CSB web site on #dateformat(Now())#.
       
