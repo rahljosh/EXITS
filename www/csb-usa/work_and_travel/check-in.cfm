@@ -169,13 +169,13 @@ function changeAddress(){
                             <p><strong><span class="style5">*</span></strong><span class="style5"> Required</span><br></p>
                         </div>
                         <form action="submit_request.cfm?request=checkin" method="post" name="form" id="form" onSubmit="return checkin()"> 
-                        <table width="600px" align="center">
+                        <table width="620px" align="center">
                             <tr>
                                 <td width="180" class="text"><div align="right"><strong>Participant ID Number:&nbsp; </strong></div></td>
-                                <td width="420" class="text">
+                                <td width="440" class="text">
                                     <input name="idnumber" type="Text" class="text" id="idnumber" size="50" maxlength="50">
                                     <!---
-                                    <strong><a href="javascript:MM_openBrWindow('images/id-card.jpg','idnumber','width=535', 'height=310')"><img src="images/question.gif" width="15" height="15" border="0"> What is this? </a></strong>
+                                    <strong><a href="javascript:MM_openBrWindow('images/id-card.jpg','idnumber','width=535,height=310')"><img src="images/question.gif" width="15" height="15" border="0"> What is this? </a></strong>
                                 	--->
 								</td>
                             </tr>
@@ -183,7 +183,7 @@ function changeAddress(){
                                 <td class="text"><div align="right"><strong>SEVIS Number:&nbsp; </strong></div></td>
                                 <td class="text">
                                     <input name="sevis" type="Text" class="text" id="sevis" size="50" maxlength="50">
-                                    <strong> <a href="javascript:MM_openBrWindow('images/ds-2019.jpg','ds-2019','width=635', 'height=467')"><img src="images/question.gif" width="15" height="15" border="0"> What is this?</a></strong>
+                                    <strong> <a href="javascript:MM_openBrWindow('images/ds-2019.jpg','ds2019','width=635,height=467')"><img src="images/question.gif" width="15" height="15" border="0"> What is this?</a></strong>
 								</td>
                             </tr>
                             <tr>
@@ -384,11 +384,11 @@ function changeAddress(){
                                 <td colspan="2" align="center" class="text"><input name="submit" type="Submit" class="text" value="Submit"></td>
                             </tr>
                         </table>
-                        </form>
+                        </form>                        
+                        
+                        <hr width="95%" color="#000099" align="center"><br>
                         
                         <!--- Change of Employer Address --->
-                        <hr width="90%" color="#000099" align="center">                  
-                        <br>
                         <div align="justify">
                             <span class="style3"><u>- CHANGE OF EMPLOYER/ADDRESS </u></span><u><strong>(while in the United States) </strong></u><br>
                             To keep your information updated in the SEVIS system while you are in the United States, you must notify CSB of any changes related to your job or to your housing address.<br>
@@ -396,10 +396,10 @@ function changeAddress(){
             
                         <form action="submit_request.cfm?request=change" method="post" enctype="multipart/form-data" name="formChangeAdrress" onSubmit="return changeAddress()">
                         <cfset filepath = expandpath('/var/www/html/intoedventures/uploaded/job-offers/')>
-                        <table width="600px" align="center">
+                        <table width="620px" align="center">
                             <tr>
                                 <td width="180" class="text"><div align="right"><strong>Participant ID Number:&nbsp;</strong></div></td>
-                                <td width="420" class="text"><input name="idnumber2" type="Text" class="text" id="idnumber2" size="50" maxlength="50"></td>
+                                <td width="440" class="text"><input name="idnumber2" type="Text" class="text" id="idnumber2" size="50" maxlength="50"></td>
                             </tr>
                             <tr>
                                 <td class="text"><div align="right"><strong>Last Name:&nbsp;<span class="style5">*</span> </strong></div></td>
@@ -421,7 +421,7 @@ function changeAddress(){
                             </tr>
                             <tr>
                                 <td class="text"><div align="right"><strong>Company Name:&nbsp;<span class="style5">*</span> </strong></div></td>
-                                <td class="text"><input name="company" type="Text" class="text" id="company" size="50" maxlength="50">                                        </td>
+                                <td class="text"><input name="company" type="Text" class="text" id="company" size="50" maxlength="50"></td>
                             </tr>
                             <tr>
                                 <td class="text"><div align="right"><strong>Street Address:&nbsp;<span class="style5">*</span> </strong></div></td>
@@ -429,7 +429,7 @@ function changeAddress(){
                             </tr>
                             <tr>
                                 <td class="text"><div align="right"><strong>City:&nbsp;<span class="style5">*</span></strong></div></td>
-                                <td class="text"><input name="compcity" type="Text" class="text" id="compcity" size="50" maxlength="50">                                        </td>
+                                <td class="text"><input name="compcity" type="Text" class="text" id="compcity" size="50" maxlength="50"></td>
                             </tr>
                             <tr>
                                 <td class="text"><div align="right"><strong>State:&nbsp;<span class="style5">*</span></strong></div></td>
@@ -510,7 +510,7 @@ function changeAddress(){
                                 <td class="text"><div align="right"><strong>Upload Job Offer:&nbsp; </strong></div></td>
                                 <td class="text">
                                     <input name="UploadFile" type="file" class="text" size="50" required="yes">
-                                    <strong><a href="StudEmployment.pdf" target="_blank"><img src="images/pdf.gif" width="15" height="16" border="0"> PDF template </a></strong><br>
+                                    <strong><img src="images/pdf.gif" width="15" height="16" border="0"> <a href="StudEmployment.pdf" target="_blank">PDF template </a></strong><br>
                                 </td>
                             </tr>
                             <tr>
