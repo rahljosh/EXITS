@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>:: CSB International : Emplyers ::</title>
+<title>:: CSB International : Employers ::</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="../style.css" rel="stylesheet" type="text/css">
 <script>
@@ -510,7 +510,7 @@ function changeAddress(){
                                 <td class="text"><div align="right"><strong>Upload Job Offer:&nbsp; </strong></div></td>
                                 <td class="text">
                                     <input name="UploadFile" type="file" class="text" size="50" required="yes">
-                                    <strong><img src="images/pdf.gif" width="15" height="16" border="0"> <a href="StudEmployment.pdf" target="_blank">PDF template </a></strong><br>
+                                    <strong><img src="images/pdf.gif" width="15" height="16" border="0"> <a href="../files/Job_Offer_Agreement_Employer.pdf" target="_blank">PDF template </a></strong><br>
                                 </td>
                             </tr>
                             <tr>

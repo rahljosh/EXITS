@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>:: CSB International : Emplyers ::</title>
+<title>:: CSB International : Employers ::</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="style.css" rel="stylesheet" type="text/css">
 <script>
@@ -283,7 +283,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
   </tr>
 </table>
 </form>
-                  <hr width="80%" color="#000099">                  
+                  <hr width="95%" color="#000099" align="center">                  
                   <br>
                   <div align="justify"><span class="style3"><u>- CHANGE OF HOST COMPANY/ADDRESS </u></span><u><strong>(while in the United States) </strong></u><br>
   To keep your information updated in the SEVIS system while you are in the United States, you must notify CSB of any changes related to your training site or to your housing address.<br>
