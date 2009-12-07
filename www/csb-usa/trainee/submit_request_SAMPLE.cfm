@@ -41,7 +41,7 @@
   
  
   <cfif url.request is 'checkin'>
-    <cfmail to="anca@intoedventures.org" from="into@intoedventures.org" subject="#form.lastname#, #form.firstname#  - Validation">
+    <cfmail to="#APPLICATION.EMAIL.contact#" from="#APPLICATION.EMAIL.from#" subject="#form.lastname#, #form.firstname#  - Validation">
 
       #desc# from the INTO web site on #dateformat(Now())#.
       
@@ -90,8 +90,8 @@
     <!--- Check to see if the Form variable exists. --->
 	
 
-    <!---- <cfmail to="bruno@student-management.com" from="into@intoedventures.org" subject="#form.lastname2#, #form.firstname2#  - Validation"> ---->
-    <cfmail to="anca@intoedventures.org" from="into@intoedventures.org" subject="#form.lastname2#, #form.firstname2#  - Validation">
+    <!---- <cfmail to="bruno@student-management.com" from="#APPLICATION.EMAIL.from#" subject="#form.lastname2#, #form.firstname2#  - Validation"> ---->
+    <cfmail to="#APPLICATION.EMAIL.contact#" from="#APPLICATION.EMAIL.from#" subject="#form.lastname2#, #form.firstname2#  - Validation">
 	<cfif form.UploadFile NEQ ''>
     	<cffile action="upload" fileField="UploadFile" destination="/var/www/html/intoedventures/uploaded/job-offers/" nameConflict="overwrite" mode="777">
 		<cfmailparam file="#CFFILE.ServerDirectory#/#CFFILE.ServerFile#">

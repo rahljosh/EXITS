@@ -178,7 +178,7 @@ function testChangeAdrress(){
   
  
   <cfif url.request is 'checkin'>
-    <cfmail to="tanya@csb-usa.com" from="into@intoedventures.org" subject="#form.lastname#, #form.firstname#  - Validation">
+    <cfmail to="tanya@csb-usa.com" from="#APPLICATION.EMAIL.from#" subject="#form.lastname#, #form.firstname#  - Validation">
 
       #desc# from the CSB web site on #dateformat(Now())#.
       
@@ -220,7 +220,7 @@ function testChangeAdrress(){
 	
     <Cfelse>
     
-    <cfmail to="tanya@csb-usa.com" from="into@intoedventures.org" subject="#form.lastname2#, #form.firstname2#  - Validation">
+    <cfmail to="tanya@csb-usa.com" from="#APPLICATION.EMAIL.from#" subject="#form.lastname2#, #form.firstname2#  - Validation">
 	<cfif form.UploadFile NEQ ''>
     	<cffile action="upload" fileField="UploadFile" destination="/var/www/html/intoedventures/uploaded/job-offers/" nameConflict="overwrite" mode="777">
 		<cfmailparam file="#CFFILE.ServerDirectory#/#CFFILE.ServerFile#">
