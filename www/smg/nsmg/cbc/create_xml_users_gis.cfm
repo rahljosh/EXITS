@@ -38,13 +38,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>CBC Users</title>
 </head>
-
 <body>
 
 <cfoutput>
 
+<table width="700" align="center" cellpadding="0" cellspacing="0">
+    <th bgcolor="##CCCCCC">GIS - Criminal Background Check</th>
+</table><br>
+
 <cfif NOT LEN(FORM.usertype) OR NOT VAL(FORM.seasonID)>
-	You must select a usertype or a season in order to run the batch. Please go back and try again.
+    <table width="700" align="center" cellpadding="0" cellspacing="0">
+        <td>You must select a usertype and a season in order to run the batch. Please go back and try again.</td>
+    </table>
 	<cfabort>
 </cfif>
 
@@ -81,27 +86,28 @@
 
 	<cfscript>
 		// Data Validation
+		//First Name
         if ( NOT LEN(qGetCBCUsers.firstName) ) {
             ArrayAppend(Errors.Messages, "First Name is missing for user #firstName# #lastname# (###userid#).");			
             if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                 skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
             }
         }
-    
+    	// Last Name
         if ( NOT LEN(qGetCBCUsers.lastname) )  {
             ArrayAppend(Errors.Messages, "Last Name is missing for user #firstName# #lastname# (###userid#).");
             if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                 skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
             }
         }
-        
+        // DOB
         if ( NOT LEN(qGetCBCUsers.dob) OR NOT IsDate(qGetCBCUsers.dob) )  {
             ArrayAppend(Errors.Messages, "DOB is missing for user #firstName# #lastname# (###userid#).");
             if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                 skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
             }
         }
-
+		// SSN
         if ( NOT LEN(qGetCBCUsers.ssn) )  {
             ArrayAppend(Errors.Messages, "SSN is missing for user #firstName# #lastname# (###userid#).");
             if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
@@ -114,7 +120,7 @@
 
 <!--- Display Errors --->
 <cfif VAL(ArrayLen(Errors.Messages))>
-	<table width="670" align="center" cellpadding="0" cellspacing="0">
+	<table width="700" align="center" cellpadding="0" cellspacing="0">
 		<tr>
 			<td>
 				<font color="##FF0000">Please review the following items:</font> <br>
@@ -124,7 +130,7 @@
 				</cfloop>
 			</td>
 		</tr>
-	</table> <br><br>                          
+	</table>                        
 </cfif>	
 
 <!--- Check if there are records --->    
@@ -171,30 +177,24 @@
                 middleName=Left(qGetCBCUsers.middleName,1),
                 DOBYear=DateFormat(qGetCBCUsers.dob, 'yyyy'),
                 DOBMonth=DateFormat(qGetCBCUsers.dob, 'mm'),
-                DOBDay=DateFormat(qGetCBCUsers.dob, 'dd'),
-                noSummary='YES',
-                includeDetails='YES'
+                DOBDay=DateFormat(qGetCBCUsers.dob, 'dd')
             );	
         </cfscript>
-
-        <table width="670" align="center" cellpadding="0" cellspacing="0">
-            <th bgcolor="##CCCCCC">GIS - Criminal Background Check</th>
-            <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
-        </table><br>
     
         <!--- SUBMIT XML --->
-        <table width="670" align="center" cellpadding="0" cellspacing="0">
-            <tr><td>Submitting CBC for #qGetCompany.companyshort# User - #qGetCBCUsers.firstName# #qGetCBCUsers.lastName# (###userID#)</td></tr>
-            <tr><td><b>Status: #CBCStatus.message#</b></td></tr>
-        </table>
-    
-        <!--- Display Link to XML --->
-        <cfif CBCStatus.message EQ 'success'>
-        <table width="670" align="center" cellpadding="0" cellspacing="0">
-            <!--- <tr><td>XML FILE <a href="#CBCStatus.sentFile#" target="_blank">Sent</a></td></tr> --->
-            <tr><td>XML FILE <a href="view_user_cbc.cfm?userID=#qGetCBCUsers.userID#&batchID=#newBatchID#" target="_blank">Received</a></td></tr>
-        </table><br>
-		</cfif>
+        <table width="700" align="center" cellpadding="0" cellspacing="0">
+       		<tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
+            <tr><td>Submitting CBC for #qGetCompany.companyshort# User #FORM.userType# - #qGetCBCUsers.firstName# #qGetCBCUsers.lastName# (###userID#)</td></tr>
+                <tr>
+                	<td>
+                		<strong>Status: </strong> #CBCStatus.message#
+                        <!--- Display Link to Results --->
+						<cfif CBCStatus.message EQ 'success'> 
+                        	&nbsp; - &nbsp; <a href="#CBCStatus.URLResults#" target="_blank">See Results</a>
+                        </cfif>                        
+                 	</td>
+                </tr>
+        </table> <br />
             
     </cfloop>
 

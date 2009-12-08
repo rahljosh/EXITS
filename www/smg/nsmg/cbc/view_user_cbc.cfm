@@ -12,15 +12,17 @@
 <!--- Kill extra output --->
 <cfsilent>
 	
-    <cfparam name="URL.userID" default="0">
+    <cfparam name="URL.userID" default="0">    
     <cfparam name="URL.batchID" default="0">
+    <cfparam name="URL.userType" default="">
     <cfparam name="URL.file" default="">
     
     <cfscript>
 		// Get Batch Information		
-		qGetBatchInfo =  APPCFC.CBC.getCBCUserByID(
-			userID=userID,
-			batchID=batchID
+		qGetBatchInfo = APPCFC.CBC.getCBCUserByID(
+			userID=URL.userID,
+			batchID=URL.batchID,
+			cbcType=URL.userType
 		);												   
 	</cfscript>
     
@@ -46,7 +48,7 @@
 	
     <cftry>
 
-        <cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file#" variable="receivedFile">
+        <cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file#" variable="receivedFile">
     
         <cfscript>
             // Parse XML File
@@ -64,7 +66,7 @@
 	
         <cfcatch type="any">
         	<p>
-	        	The file /uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file# file could not be found.
+	        	The file /uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file# file could not be found.
             </p>
         </cfcatch>
     

@@ -220,8 +220,9 @@
 	<cffunction name="getCBCHost" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a host">
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
-        <cfargument name="userType" type="string" default="" hint="UserType is not required. List (mother,father or only one value)">
+        <cfargument name="userType" type="string" default="" hint="UserType is not required. List of values such as mother,father">
         <cfargument name="hostID" type="numeric" default="0" hint="HostID is not required">
+        <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
         
         <cfquery 
         	name="qGetCBCHost" 	
@@ -252,7 +253,9 @@
                 INNER JOIN 
                     smg_hosts h ON h.hostID = cbc.hostID
                 WHERE 
-                    cbc.date_sent IS NULL 
+                    cbc.date_authorized IS NOT NULL                
+				AND
+                	cbc.date_sent IS NULL 	
                 AND 
                     requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 
@@ -275,6 +278,16 @@
                 <cfif LEN(ARGUMENTS.userType)>
                 AND 
                     cbc.cbc_type IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.userType#" list="yes">)
+                
+                	<!--- NO SSN --->
+                	<cfif VAL(ARGUMENTS.noSSN) AND ARGUMENTS.userType EQ 'father'>
+					AND 
+                        h.fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    <cfelseif VAL(ARGUMENTS.noSSN) AND ARGUMENTS.userType EQ 'mother'>
+					AND 
+                        h.motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    </cfif>
+                
                 </cfif>
 				
             	<!--- Check if we have a valid hostID --->
@@ -295,6 +308,7 @@
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
         <cfargument name="hostID" type="numeric" default="0" hint="HostID is not required">
+        <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
         
         <cfquery 
         	name="qGetCBCHostMember" 	
@@ -314,17 +328,21 @@
                     child.middlename, 
                     child.lastname, 
                     child.birthdate, 
-                    child.ssn, 
+                    child.SSN, 
                     child.hostID
                 FROM 
                 	smg_hosts_cbc cbc
                 INNER JOIN 
                 	smg_host_children child ON child.childID = cbc.familyID
                 WHERE 
-                	cbc.date_sent IS NULL 
+                	cbc.date_authorized IS NOT NULL 
+				AND
+                	cbc.date_sent IS NULL 	               
                 AND 
                     requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-			
+            	AND	
+                	cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="member">
+            
                 <!--- Check if we are running ISE's CBC --->
                 <cfif VAL(ARGUMENTS.companyID) LTE 4>
                 AND 
@@ -345,6 +363,12 @@
                 AND 
                     cbc.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
 				</cfif>
+
+				<!--- NO SSN --->
+                <cfif VAL(ARGUMENTS.noSSN)>
+                AND 
+                    child.SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                </cfif>            
 
                 LIMIT 20
 			</cfquery>
@@ -381,7 +405,8 @@
 	<cffunction name="getCBCUserByID" access="public" returntype="query" output="false" hint="Returns CBC records for a user">
         <cfargument name="userID" required="yes" hint="userID is required">
         <cfargument name="familyID" default="0" hint="Family Member ID is not required">
-        <cfargument name="batchID" default="0" hint="BatchID is not required">
+        <cfargument name="batchID" default="0" hint="BatchID is not required">.
+        <cfargument name="cbcType" default="" hint="CBC type is optional: user/member">
 
             <cfquery 
             	name="qGetCBCUserByID" 
@@ -420,6 +445,14 @@
                     AND
                         u.batchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.batchID#">                
                 	</cfif>
+
+                    <cfif LEN(ARGUMENTS.cbcType) EQ 'user'>
+                    AND 
+                        h.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    <cfelseif LEN(ARGUMENTS.cbcType) EQ 'member'>
+                    AND 
+                        h.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    </cfif>
             </cfquery>    
 
 		<cfreturn qGetCBCUserByID>
@@ -430,6 +463,7 @@
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
         <cfargument name="userID" type="numeric" default="0" hint="UserID is not required">
+        <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
         
         <cfquery 
         	name="qGetCBCUser" 	
@@ -453,7 +487,9 @@
                 INNER JOIN 
                 	user_access_rights uar ON uar.userID = u.userID
                 WHERE 
-                    cbc.date_sent IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
+                    cbc.date_authorized IS NOT NULL
+				AND                    
+                    cbc.date_sent IS NULL
                 AND 
                     requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 AND 
@@ -482,6 +518,12 @@
                     cbc.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
 				</cfif>
 
+            	<!--- NO SSN --->
+				<cfif VAL(ARGUMENTS.noSSN)>
+                AND 
+                    u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+				</cfif>
+
                 <!--- If running batch, limit to 20 so we don't get time outs --->
                 LIMIT 20
         </cfquery>
@@ -494,6 +536,7 @@
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
         <cfargument name="userID" type="numeric" default="0" hint="UserID is not required">
+        <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
         
         <cfquery 
         	name="qGetCBCUserMember" 	
@@ -515,7 +558,9 @@
                 INNER JOIN 
                 	smg_user_family u ON u.ID = cbc.familyID
                 WHERE 
-                    cbc.date_sent IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
+                	cbc.date_authorized IS NOT NULL
+                AND
+                    cbc.date_sent IS NULL
                 AND 
                     requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 AND 
@@ -535,6 +580,12 @@
                 AND 
                     cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 </cfif>
+
+            	<!--- NO SSN --->
+				<cfif VAL(ARGUMENTS.noSSN)>
+                AND 
+                    u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+				</cfif>
 
                 LIMIT 20
         </cfquery>
@@ -626,8 +677,7 @@
         <cfargument name="DOBYear" type="numeric" required="yes">
         <cfargument name="DOBMonth" type="numeric" required="yes">
         <cfargument name="DOBDay" type="numeric" required="yes">
-        <cfargument name="noSummary" type="string" required="yes">
-        <cfargument name="includeDetails" type="string" required="yes">
+        <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
                
 			<cfscript>
 				// declare variable
@@ -640,10 +690,7 @@
 				var batchResult = StructNew();
 
 				batchResult.message = 'Success';
-				batchResult.fullPathsentFile = '';
-				batchResult.sentFile = '';
-				batchResult.fullPathreceivedFile = '';				
-				batchResult.receivedFile = '';
+				batchResult.URLResults = '';
 			
 				// URL is shown in the create_xml_users_gis and create_xml_hosts_gis pages.
 				batchResult.BGCDirectURL = BGCDirectURL;
@@ -658,78 +705,119 @@
 				// Get Company Information
 				qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
 			</cfscript>
-
-            <cftry>
-                <cfscript>
-					// Decrypt SSN
-					//decryptedSSN = Replace(Decrypt(ARGUMENTS.SSN, 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', 'desede', 'hex'),"-","","All");
-					decryptedSSN = Replace(Decrypt(ARGUMENTS.SSN, decryptKey, decryptAlgorithm, decryptEncoding),"-","","All");
-					decryptedSSN = Replace(decryptedSSN, " ", "", "All");
-				</cfscript>
-       
-                <cfcatch type="any">
-                    
-					<cfscript>
-                        // Set up message
-                        if ( VAL(ARGUMENTS.hostID) ) {
-							batchResult.message = 'Please check SSN for host #ARGUMENTS.usertype# family #ARGUMENTS.lastName# (###ARGUMENTS.hostID#)';
-						} else {
-							batchResult.message = 'Please check SSN for user #ARGUMENTS.lastName# (###ARGUMENTS.userID#)';
-						}
-						
-						return batchResult;
-					</cfscript>
-                    
-                </cfcatch>
-            </cftry>
         	
             <!--- Create XML --->
             <cfoutput>
-                <cfxml variable='requestXML'>
-                <BGC>
-                    <login>
-                        <user>#ARGUMENTS.username#</user>
-                        <password>#ARGUMENTS.password#</password>
-                        <account>#ARGUMENTS.account#</account>
-                    </login>
-                    <product>
-                        <USOneValidate version="1">
-                            <order>
-                                <SSN>#decryptedSSN#</SSN>
-                            </order>
-                        </USOneValidate>
-                    </product>
-                    <product>
-                        <USOneSearch version='1'>
-                            <order>
-                                <lastName>#ARGUMENTS.lastName#</lastName>				
-                                <firstName>#ARGUMENTS.firstName#</firstName>
-                                <middleName>#ARGUMENTS.middleName#</middleName>
-                                <DOB>
-                                    <year>#ARGUMENTS.DOBYear#</year>
-                                    <month>#ARGUMENTS.DOBMonth#</month>
-                                    <day>#ARGUMENTS.DOBDay#</day>
-                                </DOB>
-                            </order>
-                            <custom>
-                                <options>
-                                    <noSummary>#ARGUMENTS.noSummary#</noSummary>			
-                                    <includeDetails>#ARGUMENTS.includeDetails#</includeDetails>
-                                </options>
-                            </custom>				
-                        </USOneSearch>
-                    </product>
-                    <product>	
-                        <USOneTrace version="1">
-                            <order>
-                                <SSN>#decryptedSSN#</SSN>
-                                <lastName>#ARGUMENTS.lastName#</lastName>
-                                <firstName>#ARGUMENTS.firstName#</firstName>
-                            </order>
-                        </USOneTrace>
-                    </product>	
-                </BGC>
-                </cfxml>
+                
+                <!--- Check if we should include SSN --->
+                <cfif NOT VAL(ARGUMENTS.noSSN)>
+
+                    <cftry>
+                        <cfscript>
+                            // Decrypt SSN
+                            decryptedSSN = Replace(Decrypt(ARGUMENTS.SSN, decryptKey, decryptAlgorithm, decryptEncoding),"-","","All");
+                            decryptedSSN = Replace(decryptedSSN, " ", "", "All");
+                        </cfscript>
+               
+                        <cfcatch type="any">
+                            
+                            <cfscript>
+                                // Set up message
+                                if ( VAL(ARGUMENTS.hostID) ) {
+                                    batchResult.message = 'Please check SSN for host #ARGUMENTS.usertype# family #ARGUMENTS.lastName# (###ARGUMENTS.hostID#)';
+                                } else {
+                                    batchResult.message = 'Please check SSN for user #ARGUMENTS.lastName# (###ARGUMENTS.userID#)';
+                                }
+                                
+                                return batchResult;
+                            </cfscript>
+                            
+                        </cfcatch>
+                    </cftry>
+                    
+                    <cfxml variable="requestXML">
+                    <BGC>
+                        <login>
+                            <user>#ARGUMENTS.username#</user>
+                            <password>#ARGUMENTS.password#</password>
+                            <account>#ARGUMENTS.account#</account>
+                        </login>
+                        <product>
+                            <USOneValidate version="1">
+                                <order>
+                                    <SSN>#decryptedSSN#</SSN>
+                                </order>
+                            </USOneValidate>
+                        </product>
+                        <product>
+                            <USOneSearch version='1'>
+                                <order>
+                                    <lastName>#ARGUMENTS.lastName#</lastName>				
+                                    <firstName>#ARGUMENTS.firstName#</firstName>
+                                    <middleName>#ARGUMENTS.middleName#</middleName>
+                                    <DOB>
+                                        <year>#ARGUMENTS.DOBYear#</year>
+                                        <month>#ARGUMENTS.DOBMonth#</month>
+                                        <day>#ARGUMENTS.DOBDay#</day>
+                                    </DOB>
+                                </order>
+                                <custom>
+                                    <options>
+                                        <noSummary>YES</noSummary>			
+                                        <includeDetails>YES</includeDetails>
+                                    </options>
+                                </custom>				
+                            </USOneSearch>
+                        </product>
+                        <product>	
+                            <USOneTrace version="1">
+                                <order>
+                                    <SSN>#decryptedSSN#</SSN>
+                                    <lastName>#ARGUMENTS.lastName#</lastName>
+                                    <firstName>#ARGUMENTS.firstName#</firstName>
+                                </order>
+                            </USOneTrace>
+                        </product>	
+                    </BGC>
+                    </cfxml>
+                
+				<!--- 
+					No SNN USOneSearch Only
+				--->   
+				<cfelse>     
+                               
+                    <cfxml variable="requestXML">
+                    <BGC>
+                        <login>
+                            <user>#ARGUMENTS.username#</user>
+                            <password>#ARGUMENTS.password#</password>
+                            <account>#ARGUMENTS.account#</account>
+                        </login>
+                        <product>
+                            <USOneSearch version='1'>
+                                <order>
+                                    <lastName>#ARGUMENTS.lastName#</lastName>				
+                                    <firstName>#ARGUMENTS.firstName#</firstName>
+                                    <middleName>#ARGUMENTS.middleName#</middleName>
+                                    <DOB>
+                                        <year>#ARGUMENTS.DOBYear#</year>
+                                        <month>#ARGUMENTS.DOBMonth#</month>
+                                        <day>#ARGUMENTS.DOBDay#</day>
+                                    </DOB>
+                                </order>
+                                <custom>
+                                    <options>
+                                        <noSummary>YES</noSummary>			
+                                        <includeDetails>YES</includeDetails>
+                                    </options>
+                                </custom>				
+                            </USOneSearch>
+                        </product>
+                    </BGC>
+                    </cfxml>
+                
+                </cfif> <!--- End of NO SSN --->
+                
 			</cfoutput>
             
             <cftry>
@@ -748,7 +836,6 @@
                     batchResult.message = sendEmailResult(
                         companyID=ARGUMENTS.companyID,
                         responseXML=responseXML,
-                        //XMLFilePath=batchResult.fullPathreceivedFile,
                         userType=ARGUMENTS.userType,
                         hostID=ARGUMENTS.hostID,
                         userID=ARGUMENTS.userID,
@@ -762,7 +849,7 @@
                     } else {
                         ReportID = '#responseXML.bgc.XmlAttributes.orderId#';
                     }
-                    
+
                     // Check if we have successfully submitted the background check
                     if (batchResult.message EQ 'success') {
                         
@@ -774,7 +861,11 @@
                                 cbcFamID=ARGUMENTS.cbcID,
                                 xmlReceived=responseXML
                             );							
-                        } else {
+							
+							// Set up URL Results
+							batchResult.URLResults = "view_host_cbc.cfm?hostID=#ARGUMENTS.hostID#&batchID=#ARGUMENTS.batchID#&hostType=#ARGUMENTS.userType#";
+
+						} else {
                             // Update User CBC 
                             APPLICATION.CFC.CBC.updateUserCBC(
                                 batchID=ARGUMENTS.BatchID,
@@ -782,6 +873,9 @@
                                 cbcID=ARGUMENTS.cbcID,
                                 xmlReceived=responseXML
                             );
+
+							// Set up URL Results
+							batchResult.URLResults = "view_user_cbc.cfm?userid=#ARGUMENTS.userID#&batchID=#ARGUMENTS.batchID#&userType=#ARGUMENTS.userType#";
                         }
                     }
                     
@@ -795,7 +889,7 @@
                         subject="CBC Error"
                         type="html">
 					
-                        <p><b>Error Processing CBC for #ARGUMENTS.firstName# #ARGUMENTS.lastName#</b></p>                 
+                        <p><b>Error Processing CBC for #ARGUMENTS.userType# #ARGUMENTS.firstName# #ARGUMENTS.lastName# #ARGUMENTS.userID# #ARGUMENTS.hostID# </b></p>                 
                         
                         <p>Message: #cfcatch.message#</p>
                         
@@ -816,7 +910,7 @@
 
 					<cfscript>
                         // Set up message
-                        batchResult.message = 'Error Processing CBC for #ARGUMENTS.firstName# #ARGUMENTS.lastName#. <br> Please try again.';
+                        batchResult.message = 'Error Processing CBC for #ARGUMENTS.firstName# #ARGUMENTS.lastName#. Please try again.';
 						
 						return batchResult;
 					</cfscript>
@@ -1068,7 +1162,7 @@
                         
                         <!--- ITEMS - OFFENDER --->
                         <cfloop from="1" to ="#totalItems#" index="t">				
-                            <cfset totalOffenses = (ArrayLen(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.XmlChildren))>
+                            <cfset totalOffenses = ArrayLen(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.XmlChildren)>
                             <tr>
                                 <td><b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].identity.personal.fullName#</b></td>
                                 <td>ID ##: #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].record.key.offenderid#</td>
@@ -1091,99 +1185,100 @@
                                 <tr><td colspan="2">&nbsp;</td></tr>
                                 
                                 <!--- Disposition --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].disposition.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].disposition.XmlText)>
                                     <tr><td colspan="2">Disposition : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].disposition#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Degree Of Offense --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].degreeOfOffense.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].degreeOfOffense.XmlText)>
                                     <tr><td colspan="2">Degree Of Offense : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].degreeOfOffense#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Sentence --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentence.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentence.XmlText)>
                                     <tr><td colspan="2">Sentence : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentence#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Probation --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].probation.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].probation.XmlText)>
                                     <tr><td colspan="2">Probation : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].probation#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Offense --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].confinement.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].confinement.XmlText)>
                                     <tr><td colspan="2">Offense : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].confinement#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Arresting Agency --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestingAgency.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestingAgency.XmlText)>
                                     <tr><td colspan="2">Arresting Agency : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestingAgency#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Original Agency --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].originatingAgency.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].originatingAgency.XmlText)>
                                     <tr><td colspan="2">Original Agency : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].originatingAgency#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Jurisdiction --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].jurisdiction.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].jurisdiction.XmlText)>
                                 <tr><td colspan="2">Jurisdiction : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].jurisdiction#</b></td></tr>
                                 </cfif>
                                
                                 <!--- Statute --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].statute.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].statute.XmlText)>
                                 <tr><td colspan="2">Statute : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].statute#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Plea --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].plea.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].plea.XmlText)>
                                     <tr><td colspan="2">Plea : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].plea#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Court Decision --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtDecision.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtDecision.XmlText)>
                                     <tr><td colspan="2">Court Decision : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtDecision#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Court Costs --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtCosts.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtCosts.XmlText)>
                                     <tr><td colspan="2">Court Costs : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtCosts#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Fine --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fine.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fine.XmlText)>
                                     <tr><td colspan="2">Fine : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fine#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Offense Date --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].offenseDate.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].offenseDate.XmlText)>
                                 <tr><td colspan="2">Offense Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].offenseDate#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Arrest Date --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestDate.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestDate.XmlText)>
                                     <tr><td colspan="2">Arrest Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestDate#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Sentence Date --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentenceDate.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentenceDate.XmlText)>
                                     <tr><td colspan="2">Sentence Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentenceDate#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Disposition Date --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].dispositionDate.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].dispositionDate.XmlText)>
                                     <tr><td colspan="2">Disposition Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].dispositionDate#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- File Date --->
-                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fileDate.XmlText NEQ ''>
+                                <cfif LEN(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fileDate.XmlText)>
                                 <tr><td colspan="2">File Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fileDate#</b></td></tr>
                                 </cfif>
+                                
                                 <tr><td colspan="2">&nbsp;</td></tr>
                                 
                                 <!--- SPECIFIC INFORMATION --->				
                                 <tr><td colspan="2"><i>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].record.provider#, #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].record.key.state# SPECIFIC INFORMATION</i></td></tr>
-                                <cfset totalSpecifics = (ArrayLen(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].recorddetails.recorddetail.supplements.XmlChildren))>
+                                <cfset totalSpecifics = ArrayLen(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].recorddetails.recorddetail.supplements.XmlChildren)>
                                 <tr>
                                 
                                 <cfloop from="1" to ="#totalSpecifics#" index="s">
