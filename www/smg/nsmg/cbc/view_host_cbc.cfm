@@ -21,7 +21,8 @@
 		// Get Batch Information		
 		qGetBatchInfo =  APPCFC.CBC.getCBCHostByID(
 			hostID=hostID,
-			batchID=batchID
+			batchID=batchID,
+			cbcType=URL.hostType
 		);												   
 	</cfscript>
     
