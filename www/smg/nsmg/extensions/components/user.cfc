@@ -83,7 +83,7 @@
                 SELECT
 					id,
                     userID,
-                    firsName,
+                    firstName,
                     middleName,
                     LastName,
                     sex,
@@ -92,7 +92,7 @@
                     SSN,
                     drivers_license,
                     auth_received,
-                    auth.received_type,
+                    auth_received_type,
                     no_members
                 FROM 
                     smg_user_family

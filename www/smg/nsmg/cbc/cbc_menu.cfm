@@ -105,15 +105,15 @@
 					<TD width="15%">Usertype :</td>
 					<TD><cfselect name="usertype">			
 						<option value="">Select a usertype</option>
-						<option value="user">Office & Reps</option>
-						<option value="member">Reps Family Members</option>
+						<option value="User">Office & Reps</option>
+						<option value="Member">Reps Family Members</option>
 						</cfselect>
 					</td>
 				</tr>
 				<tr align="left">
 					<TD width="15%">Season :</td>
 					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
-						<option value=0>Select a season</option>
+						<option value="0">Select a season</option>
 						</cfselect>
 					</td>
 				</tr>
@@ -130,17 +130,17 @@
 				<tr align="left">
 					<TD width="15%">Usertype :</td>
 					<TD><cfselect name="usertype">			
-						<option value=0>Select an usertype</option>
-						<option value="father">Host Father</option>
-						<option value="mother">Host Mother</option>
-						<option value="member">Host Members</option>
+						<option value="0">Select an usertype</option>
+						<option value="Father">Host Father</option>
+						<option value="Mother">Host Mother</option>
+						<option value="Member">Host Members</option>
 						</cfselect>
 					</td>
 				</tr>
 				<tr align="left">
 					<TD width="15%">Season :</td>
 					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
-						<option value=0>Select a season</option>
+						<option value="0">Select a season</option>
 						</cfselect>
 					</td>
 				</tr>
@@ -162,17 +162,16 @@
 				<tr align="left">
 					<TD width="15%">Usertype :</td>
 					<TD><cfselect name="usertype">			
-						<option value=0>Select an usertype</option>
-						<option value="1">Office</option>
-						<option value="2">Reps (Man., Adv. and Area)</option>
-						<option value="3">Reps Family</option>
+						<option value="">Select a usertype</option>
+						<option value="User">Office & Reps</option>
+						<option value="Member">Reps Family Members</option>
 						</cfselect>
 					</td>
 				</tr>
 				<tr align="left">
 					<TD width="15%">Season :</td>
 					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
-						<option value=0>Select a season</option>
+						<option value="0">Select a season</option>
 						</cfselect>
 					</td>
 				</tr>
@@ -189,7 +188,7 @@
 				<tr align="left">
 					<TD width="15%">Usertype :</td>
 					<TD><cfselect name="usertype">			
-						<option value=0>Select an usertype</option>
+						<option value="0">Select an usertype</option>
 						<option value="father">Host Father</option>
 						<option value="mother">Host Mother</option>
 						<option value="member">Host Members</option>
@@ -199,7 +198,7 @@
 				<tr align="left">
 					<TD width="15%">Season :</td>
 					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
-						<option value=0>Select a season</option>
+						<option value="0">Select a season</option>
 						</cfselect>
 					</td>
 				</tr>
@@ -255,7 +254,7 @@
 				<tr align="left">
 					<TD width="15%">Usertype :</td>
 					<TD><cfselect name="usertype">			
-						<option value=0>Select an usertype</option>
+						<option value="0">Select an usertype</option>
 						<option value="1">Office</option>
 						<option value="2">Reps (Man., Adv. and Area)</option>
 						<option value="3">Reps Family</option>
@@ -265,7 +264,7 @@
 				<tr align="left">
 					<TD width="15%">Season :</td>
 					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
-						<option value=0>Select a season</option>
+						<option value="0">Select a season</option>
 						</cfselect>
 					</td>
 				</tr>
@@ -282,7 +281,7 @@
 				<tr align="left">
 					<TD width="15%">Usertype :</td>
 					<TD><cfselect name="usertype">			
-						<option value=0>Select an usertype</option>
+						<option value="0">Select an usertype</option>
 						<option value="father">Host Father</option>
 						<option value="mother">Host Mother</option>
 						<option value="member">Host Members</option>
@@ -292,7 +291,7 @@
 				<tr align="left">
 					<TD width="15%">Season :</td>
 					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
-						<option value=0>Select a season</option>
+						<option value="0">Select a season</option>
 						</cfselect>
 					</td>
 				</tr>
@@ -392,7 +391,7 @@
 				<tr align="left">
 					<TD width="15%">Season :</td>
 					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
-						<option value=0>Select a season</option>
+						<option value="0">Select a season</option>
 						</cfselect>
 					</td>
 				</tr>
@@ -463,7 +462,7 @@
 				<tr align="left">
 					<TD width="15%">Season :</td>
 					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
-						<option value=0>Select a season</option>
+						<option value="0">Select a season</option>
 						</cfselect>
 					</td>
 				</tr>
@@ -529,7 +528,7 @@
 				<tr align="left">
 					<td>Region :</td>
 					<td><select name="regionid" size="1">
-						<option value=0>All Regions</option>
+						<option value="0">All Regions</option>
 						<cfloop query="get_regions"><option value="#regionid#">#regionname#</option></cfloop>
 						</select>
 					</td>

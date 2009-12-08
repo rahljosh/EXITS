@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		view_user_cbc.cfm
+	File:		view_host_cbc.cfm
 	Author:		Marcus Melo
 	Date:		November 25, 2009
 	Desc:		Reads and Display XML
@@ -12,16 +12,16 @@
 <!--- Kill extra output --->
 <cfsilent>
 	
-    <cfparam name="URL.hostID" default="0">
-    <cfparam name="URL.familyID" default="0">
+    <cfparam name="URL.hostID" default="0">    
     <cfparam name="URL.batchID" default="0">
+    <cfparam name="URL.hostType" default="">
     <cfparam name="URL.file" default="">
     
     <cfscript>
 		// Get Batch Information		
 		qGetBatchInfo =  APPCFC.CBC.getCBCHostByID(
-			hostID=hostID,
-			batchID=batchID,
+			hostID=URL.hostID,
+			batchID=URL.batchID,
 			cbcType=URL.hostType
 		);												   
 	</cfscript>
@@ -48,7 +48,7 @@
 	
     <cftry>
 
-        <cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file#" variable="receivedFile">
+        <cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file#" variable="receivedFile">
     
         <cfscript>
             // Parse XML File
@@ -66,7 +66,7 @@
 	
         <cfcatch type="any">
         	<p>
-	        	/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file# file could not be found.
+	        	/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file# file could not be found.
             </p>
         </cfcatch>
     

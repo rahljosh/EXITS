@@ -42,17 +42,24 @@
 <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
 <title>CBC Host Family and Members</title>
 </head>
-
 <body>
 
 <cfoutput>
 
+<table width="700" align="center" cellpadding="0" cellspacing="0">
+    <th bgcolor="##CCCCCC">GIS - Criminal Background Check</th>
+</table> <br />
+
 <cfif NOT LEN(FORM.usertype) OR NOT VAL(FORM.seasonID)>
-	You must select a usertype or a season in order to run the batch. Please go back and try again.
+    <table width="700" align="center" cellpadding="0" cellspacing="0">
+        <td>You must select a usertype and a season in order to run the batch. Please go back and try again.</td>
+    </table>
 	<cfabort>
 </cfif>
 
-<!--- HOSTS PARENTS --->
+<!--- 
+	HOSTS PARENTS 
+--->
 <cfif FORM.usertype NEQ 'member'>   
     
     <cfscript>
@@ -75,27 +82,28 @@
     	
         <cfscript>
 			// Data Validation
+			// First Name
 			if ( NOT LEN(Evaluate(FORM.userType & "firstname")) ) {
 				ArrayAppend(Errors.Messages, "First Name is missing for host #FORM.userType# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");			
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
 			}
-		
+			// Last Name
 			if ( NOT LEN(Evaluate(FORM.userType & "lastname")) )  {
 				ArrayAppend(Errors.Messages, "Last Name is missing for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# (###qGetCBCHost.hostid#).");
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
 			}
-			
+			// DOB
 			if ( NOT LEN(Evaluate(FORM.userType & "dob")) OR NOT IsDate(Evaluate(FORM.userType & "dob")) )  {
 				ArrayAppend(Errors.Messages, "DOB is missing or is not a valid date for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
 			}
-
+			// SSN
 			if ( NOT LEN(Evaluate(FORM.userType & "ssn")) )  {
 				ArrayAppend(Errors.Messages, "SSN is missing for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
@@ -108,7 +116,7 @@
 
 	<!--- Display Errors --->
 	<cfif VAL(ArrayLen(Errors.Messages))>
-		<table width="670" align="center" cellpadding="0" cellspacing="0">
+		<table width="700" align="center" cellpadding="0" cellspacing="0">
         	<tr>
             	<td>
 			        <font color="##FF0000">Please review the following items:</font> <br>
@@ -118,7 +126,7 @@
                     </cfloop>
 				</td>
 			</tr>
-		</table> <br><br>                              
+		</table>                        
 	</cfif>	
 	
 	<!--- Check if there are records --->    
@@ -165,29 +173,25 @@
                     middleName=Left(Evaluate(usertype & 'middlename'),1),
                     DOBYear=DateFormat(Evaluate(usertype & 'dob'), 'yyyy'),
                     DOBMonth=DateFormat(Evaluate(usertype & 'dob'), 'mm'),
-                    DOBDay=DateFormat(Evaluate(usertype & 'dob'), 'dd'),
-                    noSummary='YES',
-                    includeDetails='YES'
+                    DOBDay=DateFormat(Evaluate(usertype & 'dob'), 'dd')
                 );	
             </cfscript>
         
-            <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <th bgcolor="##CCCCCC">GIS - Criminal Background Check</th>
-                <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
-            </table><br>
-        
             <!--- SUBMIT XML --->
-            <table width="670" align="center" cellpadding="0" cellspacing="0">
+            <table width="700" align="center" cellpadding="0" cellspacing="0">
+                <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
                 <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #FORM.userType# - #Evaluate(FORM.userType & "firstname")# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#)</td></tr>
-                <tr><td><b>Status: #CBCStatus.message#</b></td></tr>
-            </table>
+                <tr>
+                	<td>
+                		<strong>Status: </strong> #CBCStatus.message#
+                        <!--- Display Link to Results --->
+						<cfif CBCStatus.message EQ 'success'> 
+                        	&nbsp; - &nbsp; <a href="#CBCStatus.URLResults#" target="_blank">See Results</a>
+                        </cfif>                        
+                 	</td>
+                </tr>
+            </table> <br />
         
-            <!--- Display Link to XML --->
-            <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <tr><td>XML FILE <a href="#CBCStatus.sentFile#" target="_blank">Sent</a></td></tr>
-                <tr><td>XML FILE <a href="#CBCStatus.receivedFile#" target="_blank">Received</a></td></tr>
-            </table><br>
-
 		</cfloop>
 
     </cfif> <!--- Check if there are records ---> 
@@ -247,7 +251,7 @@
 
 	<!--- Display Errors --->
 	<cfif VAL(ArrayLen(Errors.Messages))>
-		<table width="670" align="center" cellpadding="0" cellspacing="0">
+		<table width="700" align="center" cellpadding="0" cellspacing="0">
         	<tr>
             	<td>
 			        <font color="##FF0000">Please review the following items:</font> <br>
@@ -257,7 +261,7 @@
                     </cfloop>
 				</td>
 			</tr>
-		</table> <br><br>                          
+		</table>                      
 	</cfif>	
 
 	<!--- Check if there are records --->    
@@ -304,28 +308,24 @@
                     middleName=Left(qGetCBCMember.middleName,1),
                     DOBYear=DateFormat(qGetCBCMember.birthdate, 'yyyy'),
                     DOBMonth=DateFormat(qGetCBCMember.birthdate, 'mm'),
-                    DOBDay=DateFormat(qGetCBCMember.birthdate, 'dd'),
-                    noSummary='YES',
-                    includeDetails='YES'
+                    DOBDay=DateFormat(qGetCBCMember.birthdate, 'dd')
                 );	
             </cfscript>
     
-            <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <th bgcolor="##CCCCCC">GIS - Criminal Background Check</th>
-                <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
-            </table><br>
-        
             <!--- SUBMIT XML --->
-            <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #FORM.userType# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###qGetCBCMember.hostid#)</td></tr>
-                <tr><td><b>Status: #CBCStatus.message#</b></td></tr>
-            </table>
-        
-            <!--- Display Link to XML --->
-            <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <tr><td>XML FILE <a href="#CBCStatus.sentFile#" target="_blank">Sent</a></td></tr>
-                <tr><td>XML FILE <a href="#CBCStatus.receivedFile#" target="_blank">Received</a></td></tr>
-            </table><br>
+            <table width="700" align="center" cellpadding="0" cellspacing="0">
+                <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
+                <tr><td>Submitting CBC for #qGetCompany.companyshort# Host #FORM.userType# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###qGetCBCMember.hostid#)</td></tr>
+                <tr>
+                	<td>
+                		<b>Status: #CBCStatus.message#</b>
+                        <!--- Display Link to Results --->
+						<cfif CBCStatus.message EQ 'success'> 
+                        	&nbsp; - &nbsp; <a href="#CBCStatus.URLResults#" target="_blank">See Results</a>
+                        </cfif>                        
+                 	</td>
+                </tr>
+            </table> <br />
         
         </cfloop>
 
@@ -337,11 +337,3 @@
 
 </body>
 </html>
-
-
-<!---
-<cfset thisPath=ExpandPath("*.*")>
-<cfset thisDirectory=GetDirectoryFromPath(thisPath)>
-The current directory is: #GetDirectoryFromPath(thisPath)#
-<cfabort>
---->

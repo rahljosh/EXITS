@@ -252,9 +252,7 @@
                         middleName=Left(Evaluate(qGetCBCHost.cbc_type & 'middlename'),1),
                         DOBYear=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'yyyy'),
                         DOBMonth=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'mm'),
-                        DOBDay=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'dd'),
-                        noSummary='YES',
-                        includeDetails='YES'
+                        DOBDay=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'dd')
                     );	
                 </cfscript>
             
@@ -284,9 +282,7 @@
                         middleName=Left(qGetCBCMember.middleName,1),
                         DOBYear=DateFormat(qGetCBCMember.birthdate, 'yyyy'),
                         DOBMonth=DateFormat(qGetCBCMember.birthdate, 'mm'),
-                        DOBDay=DateFormat(qGetCBCMember.birthdate, 'dd'),
-                        noSummary='YES',
-                        includeDetails='YES'
+                        DOBDay=DateFormat(qGetCBCMember.birthdate, 'dd')
                     );	
                 </cfscript>
 			
