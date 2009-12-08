@@ -49,7 +49,7 @@
 </cfif>
 
 <!--- OFFICE AND REP USERS --->
-<cfif FORM.userType EQ 'users'>
+<cfif FORM.userType EQ 'user'>
 	
     <cfscript>
 		// Get CBCs
@@ -146,7 +146,7 @@
             companyID=qGetCompany.companyID,
             userID=CLIENT.userid,
             cbcTotal=qGetCBCUsers.recordcount,
-            batchType='host'
+            batchType='user'
         );	
     </cfscript>
 
@@ -158,7 +158,7 @@
                 companyID=qGetCompany.companyID,
                 companyShort=qGetCompany.companyShort,
                 batchID=newBatchID,
-                userType='user',
+                userType=FORM.userType
                 userID=qGetCBCUsers.userID,
                 cbcID=qGetCBCUsers.cbcID,
                 // XML variables

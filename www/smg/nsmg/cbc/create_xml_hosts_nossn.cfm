@@ -1,3 +1,38 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		create_xml_hosts_nossn.cfm
+	Author:		Marcus Melo
+	Date:		December 08, 2009
+	Desc:		Host CBC Management
+
+	Updated:  	
+
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill extra output --->
+<cfsilent>
+
+    <cfsetting requestTimeOut = "999">
+	
+	<cfparam name="FORM.userType" default="">
+    <cfparam name="FORM.seasonID" default="0">
+    
+    <cfscript>
+		// Gets Current Company
+		qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+		
+		// Create Structure to store errors
+		Errors = StructNew();
+		// Create Array to store errors messages
+		Errors.Messages = ArrayNew(1);
+
+		// Skip IDs List if any information is missing;
+		skipHostIDs = '';
+		skipMemberIDs = '';
+	</cfscript>
+
+</cfsilent>
+
 <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'
 'http://www.w3.org/TR/html4/loose.dtd'>
 <html>
@@ -8,26 +43,15 @@
 
 <body>
 
-<cfsetting requestTimeOut = "500">
-
 <cfoutput>
 
 <!--- GIS - WEBSITE - PRODUCTION --->
 <cfset BGCDirectURL = "https://direct.backgroundchecks.com/integration/bgcdirectpost.aspx">
 
-<!--- GIS - TEST - PRODUCTION --->
-<!--- <cfset BGCDirectURL = "https://model.backgroundchecks.com/integration/bgcdirectpost.aspx"> --->
-
-<cfif form.usertype EQ '0' OR form.seasonid EQ '0'>
+<cfif NOT LEN(FORM.usertype) OR NOT VAL(FORM.seasonID)>
 	You must select a usertype or a season in order to run the batch. Please go back and try again.
 	<cfabort>
 </cfif>
-
-<cfquery name="get_company" datasource="MySql">
-	SELECT companyid, companyshort, gis_account, gis_username, gis_password, support_email, gis_email 
-	FROM smg_companies
-	WHERE companyid = <cfqueryparam value="#client.companyid#" cfsqltype="cf_sql_integer">
-</cfquery>
 
 <!--- HOSTS PARENTS --->
 <cfif form.usertype NEQ 'member'>
@@ -91,7 +115,7 @@
 	<!--- BATCH ID MUST BE UNIQUE --->
 	<cfquery name="insert_batchid" datasource="MySqL">
 		INSERT INTO smg_users_cbc_batch  (companyid, createdby, datecreated, total, type)
-		VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_cbc_hosts.recordcount#', 'host')
+		VALUES ('#qGetCompany.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_cbc_hosts.recordcount#', 'host')
 	</cfquery>
 	<cfquery name="get_batchid" datasource="MySql">
 		SELECT MAX(cbcid) as cbcid
@@ -100,19 +124,12 @@
 
 	<cfloop query='get_cbc_hosts'> 
 	
-	<!--- 
-		TEST - https://model.backgroundchecks.com/integration/bgcdirectpost.aspx
-		<user>smg1</user>
-		<password>R3d3x##</password>
-		<account>10005542</account>
-	--->
-
 	<cfxml variable='requestXML'>
 	<BGC>
 		<login>
-			<user>#get_company.gis_username#</user>
-			<password>#get_company.gis_password#</password>
-			<account>#get_company.gis_account#</account>
+			<user>#qGetCompany.gis_username#</user>
+			<password>#qGetCompany.gis_password#</password>
+			<account>#qGetCompany.gis_account#</account>
 		</login>
 		<product>
 			<USOneSearch version='1'>
@@ -139,7 +156,7 @@
  	
 	<!--- SUBMIT XML --->
 	<table width="670" align="center" cellpadding="0" cellspacing="0">
-		<tr><td>Submitting CBC for #get_company.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###hostid#)</td></tr>
+		<tr><td>Submitting CBC for #qGetCompany.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###hostid#)</td></tr>
 		<cftry>
 			<cfhttp url="#BGCDirectURL#" method="POST" throwonerror="yes">
 				<cfhttpparam type="XML" value="#requestXML#" />
@@ -158,16 +175,16 @@
 		<tr><td><b>Success!</b></td></tr>
 	</table><br>
 
-	<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#get_company.companyshort#/batch_#get_batchid.cbcid#_host_#form.usertype#_#hostid#_sent.xml" output="#toString(requestXML)#" mode="777">
+	<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetCompany.companyshort#/batch_#get_batchid.cbcid#_host_#form.usertype#_#hostid#_sent.xml" output="#toString(requestXML)#" mode="777">
 
 	<cfset responseXML = ''>
    	<cfset responseXML = XmlParse(cfhttp.filecontent)>
    	
-	<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#get_company.companyshort#/batch_#get_batchid.cbcid#_host_#form.usertype#_#hostid#_rec.xml" output="#toString(responseXML)#" mode="777">
+	<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetCompany.companyshort#/batch_#get_batchid.cbcid#_host_#form.usertype#_#hostid#_rec.xml" output="#toString(responseXML)#" mode="777">
 
 	<table width="670" align="center" cellpadding="0" cellspacing="0">
-		<tr><td>XML FILE <a href="gis/#get_company.companyshort#\batch_#get_batchid.cbcid#_host_#hostid#_#form.usertype#_sent.xml" target="_blank">Sent</a></td></tr>
-		<tr><td>XML FILE <a href="gis/#get_company.companyshort#\batch_#get_batchid.cbcid#_host_#hostid#_#form.usertype#_rec.xml" target="_blank">Received</a></td></tr>
+		<tr><td>XML FILE <a href="gis/#qGetCompany.companyshort#\batch_#get_batchid.cbcid#_host_#hostid#_#form.usertype#_sent.xml" target="_blank">Sent</a></td></tr>
+		<tr><td>XML FILE <a href="gis/#qGetCompany.companyshort#\batch_#get_batchid.cbcid#_host_#hostid#_#form.usertype#_rec.xml" target="_blank">Received</a></td></tr>
 	</table><br>
 	
 	<!--- GET REPORT ID --->
@@ -177,10 +194,10 @@
 		<cfset ReportID = '#responseXML.bgc.XmlAttributes.orderId#'>
 	</cfif>	
 	
-	<cfmail from="support@iseusa.com" to="#get_company.gis_email#" subject="GIS Search for #get_company.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###hostid#)" failto="support@student-management.com" type="html">
+	<cfmail from="support@iseusa.com" to="#qGetCompany.gis_email#" subject="GIS Search for #qGetCompany.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###hostid#)" failto="support@student-management.com" type="html">
 		<table width="670" align="center">
 			<tr><td colspan="2">&nbsp;</td></tr>
-			<tr bgcolor="##CCCCCC"><th colspan="2">* Search Results for : #get_company.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###hostid#) *</th></tr>
+			<tr bgcolor="##CCCCCC"><th colspan="2">* Search Results for : #qGetCompany.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###hostid#) *</th></tr>
 			<tr><td colspan="2">&nbsp;</td></tr>
 			<!--- USOneSearch --->	
 			<tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE SEARCH</b></th></tr>
@@ -375,7 +392,7 @@
 	<!--- BATCH ID MUST BE UNIQUE --->
 	<cfquery name="insert_batchid" datasource="MySqL">
 		INSERT INTO smg_users_cbc_batch  (companyid, createdby, datecreated, total, type)
-		VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_cbc_members.recordcount#', 'host')
+		VALUES ('#qGetCompany.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_cbc_members.recordcount#', 'host')
 	</cfquery>
 	<cfquery name="get_batchid" datasource="MySql">
 		SELECT MAX(cbcid) as cbcid
@@ -392,9 +409,9 @@
 	<cfxml variable='requestXML'>
 	<BGC>
 		<login>
-			<user>#get_company.gis_username#</user>
-			<password>#get_company.gis_password#</password>
-			<account>#get_company.gis_account#</account>
+			<user>#qGetCompany.gis_username#</user>
+			<password>#qGetCompany.gis_password#</password>
+			<account>#qGetCompany.gis_account#</account>
 		</login>
 		<product>
 			<USOneSearch version='1'>
@@ -421,7 +438,7 @@
  	
 	<!--- SUBMIT XML --->
 	<table width="670" align="center" cellpadding="0" cellspacing="0">
-		<tr><td>Submitting CBC for #get_company.companyshort# HF #usertype# - #name# #lastname# (###hostid#)</td></tr>
+		<tr><td>Submitting CBC for #qGetCompany.companyshort# HF #usertype# - #name# #lastname# (###hostid#)</td></tr>
 		<cftry>
 			<cfhttp url="#BGCDirectURL#" method="POST" throwonerror="yes">
 				<cfhttpparam type="XML" value="#requestXML#" />
@@ -440,16 +457,16 @@
 		<tr><td><b>Success!</b></td></tr>
 	</table><br>
 
-	<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#get_company.companyshort#/batch_#get_batchid.cbcid#_host_#form.usertype#_#hostid#_sent.xml" output="#toString(requestXML)#">
+	<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetCompany.companyshort#/batch_#get_batchid.cbcid#_host_#form.usertype#_#hostid#_sent.xml" output="#toString(requestXML)#">
 
 	<cfset responseXML = ''>
    	<cfset responseXML = XmlParse(cfhttp.filecontent)>
 	
-	<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#get_company.companyshort#/batch_#get_batchid.cbcid#_host_#form.usertype#_#hostid#_rec.xml" output="#toString(responseXML)#">	
+	<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetCompany.companyshort#/batch_#get_batchid.cbcid#_host_#form.usertype#_#hostid#_rec.xml" output="#toString(responseXML)#">	
 	
 	<table width="670" align="center" cellpadding="0" cellspacing="0">
-		<tr><td>XML FILE <a href="gis/#get_company.companyshort#/batch_#get_batchid.cbcid#_hostm_#name#_#hostid#_sent.xml" target="_blank">Sent</a></td></tr>
-		<tr><td>XML FILE <a href="gis/#get_company.companyshort#/batch_#get_batchid.cbcid#_hostm_#name#_#hostid#_rec.xml" target="_blank">Received</a></td></tr>
+		<tr><td>XML FILE <a href="gis/#qGetCompany.companyshort#/batch_#get_batchid.cbcid#_hostm_#name#_#hostid#_sent.xml" target="_blank">Sent</a></td></tr>
+		<tr><td>XML FILE <a href="gis/#qGetCompany.companyshort#/batch_#get_batchid.cbcid#_hostm_#name#_#hostid#_rec.xml" target="_blank">Received</a></td></tr>
 	</table><br>	
 	
 	<!--- GET REPORT ID --->
@@ -459,10 +476,10 @@
 		<cfset ReportID = '#responseXML.bgc.XmlAttributes.orderId#'>
 	</cfif>
 	
-	<cfmail from="support@student-management.com" to="caroline@student-management.com" subject="GIS Search for #get_company.companyshort# HF #usertype# - #name# #lastname# (###hostid#)" failto="support@student-management.com" type="html">
+	<cfmail from="support@student-management.com" to="caroline@student-management.com" subject="GIS Search for #qGetCompany.companyshort# HF #usertype# - #name# #lastname# (###hostid#)" failto="support@student-management.com" type="html">
 		<table width="670" align="center">
 			<tr><td colspan="2">&nbsp;</td></tr>
-			<tr bgcolor="##CCCCCC"><th colspan="2">* Search Results for : #get_company.companyshort# HF #usertype# - #name# #lastname# (###hostid#) *</th></tr>
+			<tr bgcolor="##CCCCCC"><th colspan="2">* Search Results for : #qGetCompany.companyshort# HF #usertype# - #name# #lastname# (###hostid#) *</th></tr>
 			<tr><td colspan="2">&nbsp;</td></tr>
 			<!--- USOneSearch --->	
 			<tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE SEARCH</b></th></tr>
@@ -591,7 +608,7 @@
 			<tr><td colspan="2">
 					***************<br>
 					CONFIDENTIALITY NOTICE:<br>
-					This is a transmission from #get_company.companyshort# and may contain information that is confidential and proprietary.
+					This is a transmission from #qGetCompany.companyshort# and may contain information that is confidential and proprietary.
 					If you are not the addressee, any disclosure, copying or distribution or use of the contents of this message is expressly prohibited.
 					If you have received this transmission in error, please destroy it and notify us immediately at 1-631-893-4540.<br>
 					Thank you.<br>

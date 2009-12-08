@@ -152,8 +152,8 @@
                     smg_hosts
                     
                 <cfif VAL(ARGUMENTS.hostID)>
-                	WHERE
-                    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                WHERE
+                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
                 </cfif>
                     
                 ORDER BY 
@@ -161,6 +161,43 @@
 		</cfquery>
 		   
 		<cfreturn qGetHosts>
+	</cffunction>
+
+
+	<cffunction name="getHostMemberByID" access="public" returntype="query" output="false" hint="Gets a host member by ID">
+    	<cfargument name="childID" type="numeric" hint="Child ID is required">
+        <cfargument name="hostID" default="0" hint="HostID is not required">
+        
+        <cfquery 
+			name="qGetHostMemberByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					childID,
+                    hostID,
+                    memberType,
+                    birthDate,
+                    sex,
+                    liveAtHome,
+                    name,
+                    middleName,
+                    lastName,
+                    SSN,
+                    cbc_form_received,
+                    shared,
+                    roomShareWith
+                FROM 
+                    smg_host_children
+                WHERE
+                	childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.childID#">
+                    
+                <cfif VAL(ARGUMENTS.hostID)>
+                AND
+                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                </cfif>
+
+		</cfquery>
+		   
+		<cfreturn qGetHostMemberByID>
 	</cffunction>
 
 

@@ -75,29 +75,29 @@
     	
         <cfscript>
 			// Data Validation
-			if ( NOT LEN(Evaluate(usertype & "firstname")) ) {
-				ArrayAppend(Errors.Messages, "First Name is missing for host #usertype# #Evaluate(usertype & "lastname")# (###qGetCBCHost.hostid#).");			
+			if ( NOT LEN(Evaluate(FORM.userType & "firstname")) ) {
+				ArrayAppend(Errors.Messages, "First Name is missing for host #FORM.userType# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");			
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
 			}
 		
-			if ( NOT LEN(Evaluate(usertype & "lastname")) )  {
-				ArrayAppend(Errors.Messages, "Last Name is missing for host #usertype# #Evaluate(usertype & "firstname")# (###qGetCBCHost.hostid#).");
+			if ( NOT LEN(Evaluate(FORM.userType & "lastname")) )  {
+				ArrayAppend(Errors.Messages, "Last Name is missing for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# (###qGetCBCHost.hostid#).");
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
 			}
 			
-			if ( NOT LEN(Evaluate(usertype & "dob")) OR NOT IsDate(Evaluate(usertype & "dob")) )  {
-				ArrayAppend(Errors.Messages, "DOB is missing or is not a valid date for host #usertype# #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###qGetCBCHost.hostid#).");
+			if ( NOT LEN(Evaluate(FORM.userType & "dob")) OR NOT IsDate(Evaluate(FORM.userType & "dob")) )  {
+				ArrayAppend(Errors.Messages, "DOB is missing or is not a valid date for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
 			}
 
-			if ( NOT LEN(Evaluate(usertype & "ssn")) )  {
-				ArrayAppend(Errors.Messages, "SSN is missing for host #usertype# #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###qGetCBCHost.hostid#).");
+			if ( NOT LEN(Evaluate(FORM.userType & "ssn")) )  {
+				ArrayAppend(Errors.Messages, "SSN is missing for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
@@ -152,7 +152,7 @@
                     companyID=qGetCompany.companyID,
                     companyShort=qGetCompany.companyShort,
                     batchID=newBatchID,
-                    userType=userType,
+                    userType=FORM.userType,
                     hostID=qGetCBCHost.hostID,
                     cbcID=qGetCBCHost.CBCFamID,
                     // XML variables
@@ -178,7 +178,7 @@
         
             <!--- SUBMIT XML --->
             <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #usertype# - #Evaluate(usertype & "firstname")# #Evaluate(usertype & "lastname")# (###qGetCBCHost.hostid#)</td></tr>
+                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #FORM.userType# - #Evaluate(FORM.userType & "firstname")# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#)</td></tr>
                 <tr><td><b>Status: #CBCStatus.message#</b></td></tr>
             </table>
         
@@ -291,7 +291,7 @@
                     companyID=qGetCompany.companyID,
                     companyShort=qGetCompany.companyShort,
                     batchID=newBatchID,
-                    userType=userType,
+                    userType=FORM.userType,
                     hostID=qGetCBCMember.hostID,
                     cbcID=qGetCBCMember.CBCFamID,
                     // XML variables
@@ -317,7 +317,7 @@
         
             <!--- SUBMIT XML --->
             <table width="670" align="center" cellpadding="0" cellspacing="0">
-                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #usertype# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###qGetCBCMember.hostid#)</td></tr>
+                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #FORM.userType# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###qGetCBCMember.hostid#)</td></tr>
                 <tr><td><b>Status: #CBCStatus.message#</b></td></tr>
             </table>
         
