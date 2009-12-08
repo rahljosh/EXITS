@@ -109,7 +109,7 @@ function OpenWindow(url) {
 	<cfinput type="hidden" name="count" value="#get_cbc_user.recordcount#">
 	<!--- UPDATE --->
 	<cfif get_cbc_user.recordcount NEQ '0'>
-		<cfloop query="get_cbc_user">
+        <cfloop query="get_cbc_user">
 		<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 			<td align="center">
 				<cfif NOT LEN(date_sent)>
@@ -135,7 +135,7 @@ function OpenWindow(url) {
 			</td>
 			<td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
 			<td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-			<td align="center"><a href="index.cfm?curdoc=cbc/view_user_cbc&userid=#rep_info.userid#&batchID=#batchid#&file=batch_#batchid#_user_#rep_info.userid#_rec.xml">#requestid#</a></td>
+			<td align="center">#requestid#</td>
 			<td align="center"><input type="checkbox" name="flagcbc_#cbcid#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
 			<td width="20%">&nbsp;</td>
 		</tr>
