@@ -86,6 +86,7 @@
                     SELECT 
                         h.cbcfamID, 
                         h.hostID, 
+                        h.familyID,
                         h.batchID,
                         h.date_authorized, 
                         h.date_sent, 
@@ -611,7 +612,7 @@
 	<cffunction name="processBatch" access="public" returntype="struct" output="false" hint="Process XML Batch. Creates, submits and sends email">
         <cfargument name="companyID" type="numeric" required="yes">
         <cfargument name="batchID" type="numeric" required="yes">
-        <cfargument name="userType" type="string" required="yes">
+        <cfargument name="userType" type="string" required="yes" hint="Father,Mother,User,Member">
         <cfargument name="hostID" type="numeric" default="0">
         <cfargument name="cbcID" type="string" default="0" hint="ID of smg_users_cbc or smg_hosts_cbc so we know which record we need to update">
         <cfargument name="userID" type="numeric" default="0">
@@ -756,8 +757,8 @@
                     );				
     
                     // Get Report ID
-                    if ( responseXML.bgc.product[2].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
-                        ReportID = '#responseXML.bgc.product[2].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
+                    if ( responseXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
+                        ReportID = '#responseXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
                     } else {
                         ReportID = '#responseXML.bgc.XmlAttributes.orderId#';
                     }
@@ -830,7 +831,7 @@
     	<cfargument name="companyID" required="yes">
         <cfargument name="responseXML" default="" hint="responseXML or XMLFilePath must be passed to this function">
         <cfargument name="XMLFilePath" default="" hint="responseXML or XMLFilePath must be passed to this function">
-        <cfargument name="userType" type="string" default="" hint="Optional: Member, Host Father, Host Mother, User">
+        <cfargument name="userType" type="string" default="" hint="Father,Mother,User,Member">
         <cfargument name="hostID" type="numeric" default="0" hint="Optional">
         <cfargument name="userID" type="numeric" default="0" hint="Optional">        
         <cfargument name="firstName" type="string" default="" hint="Optional">
@@ -840,7 +841,7 @@
 				// Set return variable
 				var emailResult = 'Success';
 				var readXML = '';
-				var setUserType = '';
+				var setCBCType = '';
 				
 				// check if we have at least one of the required arguments
 				if ( NOT LEN(ARGUMENTS.responseXML) AND NOT LEN(ARGUMENTS.XMLFilePath) ) {										
@@ -880,28 +881,21 @@
             <cfscript>
 				// Parse XML
 				readXML = XmlParse(ARGUMENTS.responseXML);
-			
-				// Get Report ID
-                if ( readXML.bgc.product[2].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
-                    ReportID = '#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
-                } else {
-                    ReportID = '#readXML.bgc.XmlAttributes.orderId#';
-                }
-				
+
 				// Get Company Information
 				qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
 				
 				if ( VAL(ARGUMENTS.hostID) ) {
-					setUserType = 'Host';	
+					setCBCType = 'Host';	
 				} else if ( VAL(ARGUMENTS.userID) ) {
-					setUserType = 'User';	
+					setCBCType = 'User';	
 				}
             </cfscript>
         
             <cfmail 
             	from="#qGetCompany.support_email#" 
-                to="#qGetCompany.gis_email#"  <!--- marcus@student-management.com | #qGetCompany.gis_email# ---->
-                subject="GIS Search for #qGetCompany.companyshort# #setUserType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# (###ARGUMENTS.hostID#)" 
+                to="#qGetCompany.gis_email#"
+                subject="GIS Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# (###ARGUMENTS.hostID#)" 
                 failto="#qGetCompany.support_email#"
                 type="html">
                 
@@ -912,9 +906,7 @@
                             responseXML=ARGUMENTS.responseXML, 
                             userType=ARGUMENTS.userType,
                             hostID=ARGUMENTS.hostID,
-                            userID=ARGUMENTS.userID,
-                            firstName=ARGUMENTS.firstName,
-                            lastName=ARGUMENTS.lastName
+                            userID=ARGUMENTS.userID
                         );
                     </cfscript>
                     
@@ -930,75 +922,143 @@
         <cfargument name="userType" type="string" default="" hint="Father,Mother,User,Member">
         <cfargument name="hostID" type="numeric" default="0" hint="Optional">
         <cfargument name="userID" type="numeric" default="0" hint="Optional"> 
-        <cfargument name="familyID" type="numeric" default="0" hint="Optional">  
-        <cfargument name="firstName" type="string" default="" hint="Optional">
-        <cfargument name="lastName" type="string" default="" hint="Optional">        
+        <cfargument name="familyID" type="numeric" default="0" hint="User or Host member ID">  
 			
             <cfscript>
 				// Parse XML
 				var readXML = XmlParse(ARGUMENTS.responseXML);
-			
-				var setFirstName = '';
-				var setLastName = '';
-			
-				// Get Report ID
-                if ( readXML.bgc.product[2].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
-                    ReportID = '#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
+				
+				// Declare First and Last Name
+				setFirstName = '';
+				setLastName = '';
+				
+				/* 
+					Up to 3 Products 
+				   	1. UsOneValidate
+				   	2. UsOneSearch
+				   	3. UsOneTrace 
+				   	If run without social, there will be only one product UsOneSearch 
+				*/
+
+				// Get Total of Products
+				totalProducts = ArrayLen(readXML.bgc.product);
+				
+				// Set USOneSearchID, if there is a social is product 2 if there is no social is product 1
+				if ( totalProducts GT 1 ) {
+					usOneSearchID = 2;					
+				} else {
+					usOneSearchID = 1;					
+				}
+				
+				// Get USOneSearch Report ID
+                if ( readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
+                    ReportID = '#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
                 } else {
                     ReportID = '#readXML.bgc.XmlAttributes.orderId#';
                 }
 				
 				// Get Company Information
 				qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
-				
+							
 				if ( VAL(ARGUMENTS.hostID) ) {
-					setUserType = 'Host';						
-				} else if ( VAL(ARGUMENTS.userID) ) {					
-					setUserType = 'User';	
-					ARGUMENTS.firstName = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID).firstName;
-					ARGUMENTS.lastName = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID).lastName;
+					// Set CBC Type 
+					setCBCType = 'Host';
+					
+					// Get First Name / Last Name
+					switch (ARGUMENTS.userType) {
+						// Get host father first and last name
+						case "father": {
+							qHostFather = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
+							setFirstName = qHostFather.fatherFirstName;
+							setLastName = qHostFather.fatherLastName;
+							break;
+						}
+						// Get host mother first and last name
+						case "mother": {
+							qHostMother = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
+							setFirstName = qHostMother.motherFirstName;
+							setLastName = qHostMother.motherLastName;
+							break;
+						}
+						// Get host member first and last name
+						case "member": {
+							qHostMember = APPLICATION.CFC.HOST.getHostMemberByID(childID=ARGUMENTS.familyID, hostID=ARGUMENTS.hostID);
+							setFirstName = qHostMember.name;
+							setLastName = qHostMember.lastName;
+							break;
+						}
+					}
+				
+				} else if ( VAL(ARGUMENTS.userID) ) {
+
+					switch (ARGUMENTS.userType) {
+						// Get User First and Last Name
+						case "user": {
+							// Set CBC Type 
+							setCBCType = '';	
+							qUser = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID);
+							setFirstName = qUser.firstName;
+							setLastName = qUser.lastName;
+							break;
+						}
+						// Get Member First and Last Name
+						case "member": {
+							// Set CBC Type 
+							setCBCType = 'User';	
+							qUserMember = APPLICATION.CFC.USER.getUserMemberByID(ID=ARGUMENTS.familyID, userID=ARGUMENTS.userID);
+							setFirstName = qUserMember.firstName;
+							setLastName = qUserMember.lastName;
+							break;
+						}
+					}
 				}
 				
-				// Get total of items
-				totalItems = readXML.bgc.product[2].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound;
+				// Get total of items - USOneSearch
+				totalItems = readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound;
             </cfscript>
         
 			<cfoutput>
                 <table width="670" align="center">
                 	<!--- Header --->
-                    <tr bgcolor="##CCCCCC"><th colspan="2">Criminal Backgroud Check - Date Processed: #DateFormat(now(), 'mm/dd/yyyy')#</th></tr>
-                    
+                    <tr bgcolor="##CCCCCC"><th colspan="2">#qGetCompany.companyName#</th></tr>
+                    <tr><td colspan="2">&nbsp;</td></tr>
+
+                    <tr bgcolor="##CCCCCC"><th colspan="2">Criminal Backgroud Check &nbsp; -  &nbsp; Date Processed: #DateFormat(now(), 'mm/dd/yyyy')#</th></tr>
                     <tr><td colspan="2">&nbsp;</td></tr>
                     
                     <tr bgcolor="##CCCCCC">
                         <th colspan="2">
-                            * Search Results for : #qGetCompany.companyshort# #setUserType# #ARGUMENTS.usertype# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# 
+                            *** Search Results for #setCBCType# #ARGUMENTS.usertype# - #setFirstName# #setLastName# 
                             <cfif VAL(ARGUMENTS.hostID)>
                                 (###ARGUMENTS.hostID#)
                             <cfelseif VAL(ARGUMENTS.userID)>
                                 (###ARGUMENTS.userID#)
                             </cfif> 
-                            *
+                            ***
                         </th>
                     </tr>
                     
                     <tr><td colspan="2">&nbsp;</td></tr>
                     
                     <!--- USOneValidate --->
-                    <tr bgcolor="##CCCCCC"><th colspan="2">US ONE VALIDATE</th></tr>
-                    <tr><td colspan="2"><b>SSN Validation & Death Master Index Check for #readXML.bgc.product[1].USOneValidate.order.ssn#</b></td></tr>
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; #readXML.bgc.product[1].USOneValidate.response.validation.textResponse#</td></tr>	
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; The associated individual is <b> <cfif readXML.bgc.product[1].USOneValidate.response.validation.isDeceased.XmlText EQ 'no'>not</cfif> deceased.</b></td></tr>			
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; Issued in <b>#readXML.bgc.product[1].USOneValidate.response.validation.stateIssued#</b> between <b>#readXML.bgc.product[1].USOneValidate.response.validation.yearIssued#</b></td></tr>			
-                                            
-                    <tr><td colspan="2"><hr width="100%" align="center"></td></tr>	
-                    
+					<cfif totalProducts GT 1>                   
+                        <tr bgcolor="##CCCCCC"><th colspan="2">US ONE VALIDATE</th></tr>
+                        <tr><td colspan="2"><b>SSN Validation & Death Master Index Check for #readXML.bgc.product[1].USOneValidate.order.ssn#</b></td></tr>
+                        <tr><td colspan="2">&nbsp; &nbsp; &nbsp; #readXML.bgc.product[1].USOneValidate.response.validation.textResponse#</td></tr>	
+                        <tr><td colspan="2">&nbsp; &nbsp; &nbsp; The associated individual is <b> <cfif readXML.bgc.product[1].USOneValidate.response.validation.isDeceased.XmlText EQ 'no'>not</cfif> deceased.</b></td></tr>			
+                        <tr><td colspan="2">&nbsp; &nbsp; &nbsp; Issued in <b>#readXML.bgc.product[1].USOneValidate.response.validation.stateIssued#</b> between <b>#readXML.bgc.product[1].USOneValidate.response.validation.yearIssued#</b></td></tr>			
+                                                
+                        <tr><td colspan="2"><hr width="100%" align="center"></td></tr>	
+                    </cfif>
+                                        
                     <!--- USOneSearch --->	
                     <tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE SEARCH</b></th></tr>
                     <tr><td colspan="2"><b>You searched for:</b></td></tr>
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[2].USOneSearch.order.lastname#, #readXML.bgc.product[2].USOneSearch.order.firstname# #readXML.bgc.product[2].USOneSearch.order.middlename#</b></td></tr>
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>SSN : </b> #readXML.bgc.product[1].USOneValidate.order.ssn#</td></tr>
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>DOB : </b> #readXML.bgc.product[2].USOneSearch.order.dob.month#/#readXML.bgc.product[2].USOneSearch.order.dob.day#/#readXML.bgc.product[2].USOneSearch.order.dob.year#</td></tr>						
+                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[usOneSearchID].USOneSearch.order.lastname#, #readXML.bgc.product[usOneSearchID].USOneSearch.order.firstname# #readXML.bgc.product[usOneSearchID].USOneSearch.order.middlename#</b></td></tr>
+                    <cfif totalProducts GT 1>    
+	                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>SSN : </b> #readXML.bgc.product[1].USOneValidate.order.ssn#</td></tr>
+                    </cfif>
+                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>DOB : </b> #readXML.bgc.product[usOneSearchID].USOneSearch.order.dob.month#/#readXML.bgc.product[usOneSearchID].USOneSearch.order.dob.day#/#readXML.bgc.product[usOneSearchID].USOneSearch.order.dob.year#</td></tr>						
                     <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>Report ID : </b> #ReportID#</td></tr>
                     <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>Number of items: </b> #totalItems#<br></td></tr>
                     
@@ -1008,14 +1068,14 @@
                         
                         <!--- ITEMS - OFFENDER --->
                         <cfloop from="1" to ="#totalItems#" index="t">				
-                            <cfset totalOffenses = (ArrayLen(readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.XmlChildren))>
+                            <cfset totalOffenses = (ArrayLen(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.XmlChildren))>
                             <tr>
-                                <td><b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].identity.personal.fullName#</b></td>
-                                <td>ID ##: #readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].record.key.offenderid#</td>
+                                <td><b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].identity.personal.fullName#</b></td>
+                                <td>ID ##: #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].record.key.offenderid#</td>
                             </tr>
                             <tr>
-                                <td>DOB: #readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].identity.personal.dob#</td>
-                                <td>GENDER: #readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].identity.personal.gender#</td>
+                                <td>DOB: #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].identity.personal.dob#</td>
+                                <td>GENDER: #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].identity.personal.gender#</td>
                             </tr>
                             <tr><td colspan="2">Total of Offenses: #totalOffenses#<br></td></tr>
                            
@@ -1024,111 +1084,111 @@
                             <!--- OFFENSES --->
                             <cfloop from="1" to ="#totalOffenses#" index="i">
                                 <tr><td colspan="2">
-                                        <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].description#</b>
-                                        (#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].record.provider#, #readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].record.key.state#)
+                                        <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].description#</b>
+                                        (#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].record.provider#, #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].record.key.state#)
                                     </td>
                                 </tr>
                                 <tr><td colspan="2">&nbsp;</td></tr>
                                 
                                 <!--- Disposition --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].disposition.XmlText NEQ ''>
-                                    <tr><td colspan="2">Disposition : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].disposition#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].disposition.XmlText NEQ ''>
+                                    <tr><td colspan="2">Disposition : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].disposition#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Degree Of Offense --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].degreeOfOffense.XmlText NEQ ''>
-                                    <tr><td colspan="2">Degree Of Offense : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].degreeOfOffense#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].degreeOfOffense.XmlText NEQ ''>
+                                    <tr><td colspan="2">Degree Of Offense : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].degreeOfOffense#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Sentence --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentence.XmlText NEQ ''>
-                                    <tr><td colspan="2">Sentence : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentence#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentence.XmlText NEQ ''>
+                                    <tr><td colspan="2">Sentence : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentence#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Probation --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].probation.XmlText NEQ ''>
-                                    <tr><td colspan="2">Probation : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].probation#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].probation.XmlText NEQ ''>
+                                    <tr><td colspan="2">Probation : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].probation#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Offense --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].confinement.XmlText NEQ ''>
-                                    <tr><td colspan="2">Offense : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].confinement#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].confinement.XmlText NEQ ''>
+                                    <tr><td colspan="2">Offense : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].confinement#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Arresting Agency --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestingAgency.XmlText NEQ ''>
-                                    <tr><td colspan="2">Arresting Agency : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestingAgency#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestingAgency.XmlText NEQ ''>
+                                    <tr><td colspan="2">Arresting Agency : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestingAgency#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Original Agency --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].originatingAgency.XmlText NEQ ''>
-                                    <tr><td colspan="2">Original Agency : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].originatingAgency#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].originatingAgency.XmlText NEQ ''>
+                                    <tr><td colspan="2">Original Agency : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].originatingAgency#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Jurisdiction --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].jurisdiction.XmlText NEQ ''>
-                                <tr><td colspan="2">Jurisdiction : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].jurisdiction#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].jurisdiction.XmlText NEQ ''>
+                                <tr><td colspan="2">Jurisdiction : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].jurisdiction#</b></td></tr>
                                 </cfif>
                                
                                 <!--- Statute --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].statute.XmlText NEQ ''>
-                                <tr><td colspan="2">Statute : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].statute#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].statute.XmlText NEQ ''>
+                                <tr><td colspan="2">Statute : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].statute#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Plea --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].plea.XmlText NEQ ''>
-                                    <tr><td colspan="2">Plea : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].plea#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].plea.XmlText NEQ ''>
+                                    <tr><td colspan="2">Plea : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].plea#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Court Decision --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtDecision.XmlText NEQ ''>
-                                    <tr><td colspan="2">Court Decision : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtDecision#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtDecision.XmlText NEQ ''>
+                                    <tr><td colspan="2">Court Decision : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtDecision#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Court Costs --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtCosts.XmlText NEQ ''>
-                                    <tr><td colspan="2">Court Costs : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtCosts#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtCosts.XmlText NEQ ''>
+                                    <tr><td colspan="2">Court Costs : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].courtCosts#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Fine --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fine.XmlText NEQ ''>
-                                    <tr><td colspan="2">Fine : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fine#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fine.XmlText NEQ ''>
+                                    <tr><td colspan="2">Fine : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fine#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Offense Date --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].offenseDate.XmlText NEQ ''>
-                                <tr><td colspan="2">Offense Date : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].offenseDate#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].offenseDate.XmlText NEQ ''>
+                                <tr><td colspan="2">Offense Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].offenseDate#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Arrest Date --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestDate.XmlText NEQ ''>
-                                    <tr><td colspan="2">Arrest Date : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestDate#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestDate.XmlText NEQ ''>
+                                    <tr><td colspan="2">Arrest Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].arrestDate#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Sentence Date --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentenceDate.XmlText NEQ ''>
-                                    <tr><td colspan="2">Sentence Date : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentenceDate#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentenceDate.XmlText NEQ ''>
+                                    <tr><td colspan="2">Sentence Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].sentenceDate#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- Disposition Date --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].dispositionDate.XmlText NEQ ''>
-                                    <tr><td colspan="2">Disposition Date : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].dispositionDate#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].dispositionDate.XmlText NEQ ''>
+                                    <tr><td colspan="2">Disposition Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].dispositionDate#</b></td></tr>
                                 </cfif>
                                 
                                 <!--- File Date --->
-                                <cfif readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fileDate.XmlText NEQ ''>
-                                <tr><td colspan="2">File Date : <b>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fileDate#</b></td></tr>
+                                <cfif readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fileDate.XmlText NEQ ''>
+                                <tr><td colspan="2">File Date : <b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].fileDate#</b></td></tr>
                                 </cfif>
                                 <tr><td colspan="2">&nbsp;</td></tr>
                                 
                                 <!--- SPECIFIC INFORMATION --->				
-                                <tr><td colspan="2"><i>#readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].record.provider#, #readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].record.key.state# SPECIFIC INFORMATION</i></td></tr>
-                                <cfset totalSpecifics = (ArrayLen(readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].recorddetails.recorddetail.supplements.XmlChildren))>
+                                <tr><td colspan="2"><i>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].record.provider#, #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].record.key.state# SPECIFIC INFORMATION</i></td></tr>
+                                <cfset totalSpecifics = (ArrayLen(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].recorddetails.recorddetail.supplements.XmlChildren))>
                                 <tr>
                                 
                                 <cfloop from="1" to ="#totalSpecifics#" index="s">
-                                    <td>&nbsp; &nbsp; &nbsp; #readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].recorddetails.recorddetail.supplements.supplement[s].displayTitle# : 
-                                        <b> #readXML.bgc.product[2].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].recorddetails.recorddetail.supplements.supplement[s].displayValue# </b>
+                                    <td>&nbsp; &nbsp; &nbsp; #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].recorddetails.recorddetail.supplements.supplement[s].displayTitle# : 
+                                        <b> #readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.offense[i].recorddetails.recorddetail.supplements.supplement[s].displayValue# </b>
                                     </td>
                                     <cfif s MOD 2></tr><tr></tr></cfif>
                                 </cfloop>
@@ -1145,53 +1205,57 @@
                     </cfif>
                     
                     <!--- US ONE TRACE --->
-                    <tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE TRACE</b></th></tr>
-                    <tr><td colspan="2"><b>You searched for:</b></td></tr>
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[3].USOneTrace.order.lastname#, #readXML.bgc.product[3].USOneTrace.order.firstname#</b></td></tr>
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>SSN : </b> #readXML.bgc.product[3].USOneTrace.order.ssn#</td></tr>
+                    <cfif totalProducts GT 1> 
                     
-                    <tr><td colspan="2"><hr width="100%" align="center"></td></tr>			
-                    
-                    <cfset traceRecords = (ArrayLen(readXML.bgc.product[3].USOneTrace.response.records.XmlChildren))>
-                    <cfif traceRecords GT 0>			
-                        <cfloop index="tr" from="1" to ="#traceRecords#">
-                            <tr>
-                                <td width="50%">First Name : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].firstName# 
-                                    #readXML.bgc.product[3].USOneTrace.response.records.record[tr].middleName# 
-                                    #readXML.bgc.product[3].USOneTrace.response.records.record[tr].lastName# </b>
-                                </td>
-                                <td width="50%">Phone Info : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].phoneInfo#</b></td>
-                            </tr>
-                            <tr>
-                                <td>Address : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].streetNumber# 
-                                    #readXML.bgc.product[3].USOneTrace.response.records.record[tr].streetName# </b>
-                                </td>		
-                                <td>
-                                    <b>
-                                        #readXML.bgc.product[3].USOneTrace.response.records.record[tr].city#, 
-                                        #readXML.bgc.product[3].USOneTrace.response.records.record[tr].state# 
-                                        #readXML.bgc.product[3].USOneTrace.response.records.record[tr].postalCode#-
-                                        #readXML.bgc.product[3].USOneTrace.response.records.record[tr].postalCode4# 
-                                    </b>
-                                </td>
-                            </tr>	
-                            <tr>
-                                <td>County : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].county#</b></td>
-                                <td>Verified : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].verified#</b></td>
-                            </tr>	
+                        <tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE TRACE</b></th></tr>
+                        <tr><td colspan="2"><b>You searched for:</b></td></tr>
+                        <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[3].USOneTrace.order.lastname#, #readXML.bgc.product[3].USOneTrace.order.firstname#</b></td></tr>
+                        <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>SSN : </b> #readXML.bgc.product[3].USOneTrace.order.ssn#</td></tr>
+                        
+                        <tr><td colspan="2"><hr width="100%" align="center"></td></tr>			
+                        
+                        <cfset traceRecords = (ArrayLen(readXML.bgc.product[3].USOneTrace.response.records.XmlChildren))>
+                        <cfif traceRecords GT 0>			
+                            <cfloop index="tr" from="1" to ="#traceRecords#">
+                                <tr>
+                                    <td width="50%">First Name : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].firstName# 
+                                        #readXML.bgc.product[3].USOneTrace.response.records.record[tr].middleName# 
+                                        #readXML.bgc.product[3].USOneTrace.response.records.record[tr].lastName# </b>
+                                    </td>
+                                    <td width="50%">Phone Info : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].phoneInfo#</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Address : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].streetNumber# 
+                                        #readXML.bgc.product[3].USOneTrace.response.records.record[tr].streetName# </b>
+                                    </td>		
+                                    <td>
+                                        <b>
+                                            #readXML.bgc.product[3].USOneTrace.response.records.record[tr].city#, 
+                                            #readXML.bgc.product[3].USOneTrace.response.records.record[tr].state# 
+                                            #readXML.bgc.product[3].USOneTrace.response.records.record[tr].postalCode#-
+                                            #readXML.bgc.product[3].USOneTrace.response.records.record[tr].postalCode4# 
+                                        </b>
+                                    </td>
+                                </tr>	
+                                <tr>
+                                    <td>County : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].county#</b></td>
+                                    <td>Verified : <b>#readXML.bgc.product[3].USOneTrace.response.records.record[tr].verified#</b></td>
+                                </tr>	
+                                <tr><td colspan="2"><hr width="100%" align="center"></td></tr>
+                            </cfloop>
+                        <cfelse>
+                            <tr><td colspan="2">No data found.</td></tr>
                             <tr><td colspan="2"><hr width="100%" align="center"></td></tr>
-                        </cfloop>
-                    <cfelse>
-                        <tr><td colspan="2">No data found.</td></tr>
-                        <tr><td colspan="2"><hr width="100%" align="center"></td></tr>
-                    </cfif>
+                        </cfif>
+                        
+                        <tr><td colspan="2">&nbsp;</td></tr>
                     
-                    <tr><td colspan="2">&nbsp;</td></tr>
+                    </cfif>
                     
                     <!--- FOOTER --->
                     <tr><td colspan="2">For more information please visit <a href="www.backgroundchecks.com">www.backgroundchecks.com</a></td></tr>	
                     <tr><td colspan="2">
-                            ***********************<br>
+                            *******************************<br>
                             CONFIDENTIALITY NOTICE:<br>
                             This is a transmission from 
                             <cfif ARGUMENTS.companyID EQ 10>
@@ -1203,7 +1267,7 @@
                             If you are not the addressee, any disclosure, copying or distribution or use of the contents of this message is expressly prohibited.
                             If you have received this transmission in error, please destroy it and notify us immediately at #qGetCompany.phone#.<br>
                             Thank you.<br>
-                            ***********************
+                            *******************************
                     </td>
                 </tr>
                 </table>

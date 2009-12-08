@@ -56,7 +56,7 @@
 
 
 	<cffunction name="getUserByID" access="public" returntype="query" output="false" hint="Gets a user by ID">
-    	<cfargument name="userID" default="0" hint="userID is not required">
+    	<cfargument name="userID" type="numeric" hint="userID is required">
               
         <cfquery 
 			name="qGetUserByID" 
@@ -67,11 +67,44 @@
                     smg_users
                 WHERE	
                     userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-                ORDER BY 
-                    lastName
 		</cfquery>
 		   
 		<cfreturn qGetUserByID>
+	</cffunction>
+
+
+	<cffunction name="getUserMemberByID" access="public" returntype="query" output="false" hint="Gets a user member by ID">
+    	<cfargument name="ID" type="numeric" hint="ID is required">
+        <cfargument name="userID" default="0" hint="userID is not required">
+              
+        <cfquery 
+			name="qGetUserMemberByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					id,
+                    userID,
+                    firsName,
+                    middleName,
+                    LastName,
+                    sex,
+                    relationShip,
+                    DOB,
+                    SSN,
+                    drivers_license,
+                    auth_received,
+                    auth.received_type,
+                    no_members
+                FROM 
+                    smg_user_family
+                WHERE	
+                    id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                <cfif VAL(ARGUMENTS.userID)>
+                AND    
+                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+				</cfif>                    
+		</cfquery>
+		   
+		<cfreturn qGetUserMemberByID>
 	</cffunction>
 
 

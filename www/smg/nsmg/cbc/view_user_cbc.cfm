@@ -36,8 +36,9 @@
 		APPCFC.CBC.displayXMLResult(
 			companyID=qGetBatchInfo.companyID, 
 			responseXML=qGetBatchInfo.xml_received, 
-			userType='user',
-			userID=qGetBatchInfo.userID
+			userType='User',
+			userID=qGetBatchInfo.userID,
+			familyID=qGetBatchInfo.familyID
 		);												   
 	</cfscript>
 
@@ -45,26 +46,25 @@
 	
     <cftry>
 
-        <cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file#" variable="rec_xml">
+        <cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file#" variable="receivedFile">
     
         <cfscript>
             // Parse XML File
-            responseXML = XmlParse(rec_xml);
+            responseXML = XmlParse(receivedFile);
             
             // Display Results		
             APPCFC.CBC.displayXMLResult(
                 companyID=qGetBatchInfo.companyID, 
                 responseXML=responseXML, 
-                userType='user',
-                userID=qGetBatchInfo.userID, 
-                firstName='', 
-                lastName=''
+                userType='User',
+                userID=qGetBatchInfo.userID,
+				familyID=qGetBatchInfo.familyID
             );												   
         </cfscript>
 	
         <cfcatch type="any">
         	<p>
-	        	/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file# file could not be found.
+	        	The file /uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#url.file# file could not be found.
             </p>
         </cfcatch>
     
