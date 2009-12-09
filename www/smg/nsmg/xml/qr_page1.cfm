@@ -70,6 +70,16 @@
 				<cfset yrs_study_english = #StudentXMLFile.applications.application[i].page2.languages.yearsofstudy[yreng].xmltext# >
 			</cfif>
 		</cfloop>
+        <!----Other Interests---->
+        <!----Years Studied English---->
+		<cfset list_participate_activities =''>
+		<cfset countInterests = ArrayLen(#StudentXMLFile.applications.application[i].page3.participates.participate#)>
+		<cfloop index="CountI" from="1" to="#countInterests#">
+			<cfset list_participate = #ListAppend(list_participate_activities, #StudentXMLFile.applications.application[i].page2.participates.participate[CountI].XmlText#)>
+		</cfloop>
+        lpa: #list_participate_activities#
+        <cfabort>
+        
 <!----Actual insert query---->
 
 
@@ -151,7 +161,8 @@ UPDATE smg_students
 		chores_list = '#StudentXMLFile.applications.application[i].page2.householdresponsibilities.XmlText#',
 		yearsenglish = <cfif yrs_study_english is not ''> #yrs_study_english#<cfelse>null</cfif>,
 		religious_participation = '#ind_religious_part#',
-		app_region_guarantee = #app_region_guarantee#
+		app_region_guarantee = #app_region_guarantee#,
+        app_other_interest = '#list_participate_activities#'
 	
 WHERE soid = '#StudentXMLFile.applications.application[i].XmlAttributes.studentid#'
 LIMIT 1
