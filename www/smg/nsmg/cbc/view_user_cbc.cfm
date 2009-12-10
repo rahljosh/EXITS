@@ -76,9 +76,25 @@
                 userType=userType,
                 userID=qGetBatchInfo.userID,
 				familyID=qGetBatchInfo.familyID
-            );												   
+            );		
+			
+			// Updates XML Received		
+			APPCFC.CBC.updateUserXMLReceived(
+				cbcID=qGetBatchInfo.cbcID,
+				xmlReceived=responseXML
+			);
+			
+			//Check if XML Received has been updated
+			qGetBatchInfo = APPCFC.CBC.getCBCUserByID(
+				userID=URL.userID,
+				cbcID=URL.cbcID
+			);												   
         </cfscript>
 	
+    	<cfif LEN(qGetBatchInfo.xml_received)>
+	    	<cffile action="delete" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file#">
+    	</cfif>
+        
         <cfcatch type="any">
         	<p>
 	        	The file /uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file# could not be found.
