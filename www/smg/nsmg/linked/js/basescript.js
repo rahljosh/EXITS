@@ -1,7 +1,5 @@
 // JavaScript Document
-
 // Stores base javascript functions that can be used in any page of the application
-
 
 function getCurrentDate() {
 	var d = new Date();
@@ -26,4 +24,11 @@ function checkInsertDate(CKname, FRname) {
 function openPopUp(url, width, height) {
 	window.open(url,"","scrollbars=yes,resizable=yes,width=" + width + ",height=" + height);
 	return false;
+}
+
+function OpenWindow(url) {
+	newwindow=window.open(url, 'NewWindow', 'height=350, width=720, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
+	if (window.focus) {
+		newwindow.focus()
+	}
 }

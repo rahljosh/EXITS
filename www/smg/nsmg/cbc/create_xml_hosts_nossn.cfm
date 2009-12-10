@@ -62,7 +62,7 @@
 
     <cfscript>
 		// Get CBCs
-		qGetCBCHost = APPLICATION.CFC.CBC.getCBCHost(
+		qGetCBCHost = APPLICATION.CFC.CBC.getPendingCBCHost(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID,
 			userType=FORM.usertype,
@@ -197,7 +197,7 @@
 
     <cfscript>
 		// Get CBCs
-		qGetCBCMember = APPLICATION.CFC.CBC.GetCBCHostMember(
+		qGetCBCMember = APPLICATION.CFC.CBC.getPendingCBCHostMember(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID,
 			noSSN=1

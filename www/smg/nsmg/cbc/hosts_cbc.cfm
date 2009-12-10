@@ -6,14 +6,14 @@
 	Desc:		Host CBC Management
 
 	Updated:  	10/12/09 - Combined qr_hosts_cbc.cfm to this file.
-				10/13/09 - Running CBC background checks						
+				10/13/09 - Running CBCs on this page						
 
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill extra output --->
 <cfsilent>
 	
-    <cfsetting requesttimeout="99999">
+    <cfsetting requesttimeout="9999">
     
     <cftry>
 	    <!--- param variables --->
@@ -36,34 +36,33 @@
 		</cfcatch>
 	</cftry>        
 
-
 	<cfscript>
 		// Gets List of Companies
-		qGetCompanies = APPLICATION.CFC.COMPANY.getCompanies();
+		qGetCompanies = APPCFC.COMPANY.getCompanies();
 	
 		// Gets Host Family Information
-		qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=hostID);
+		qGetHost = APPCFC.HOST.getHosts(hostID=hostID);
 
-		// Gets Host Mother CBC
-		qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(
+		// Get Host Mother CBC
+		qGetCBCMother = APPCFC.CBC.getCBCHostByID(
 			hostID=hostID, 
 			cbcType='mother'
 		);
 		
 		// Get Mother Available Seasons
-		qGetMotherSeason = APPLICATION.CFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMother.seasonID));
+		qGetMotherSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMother.seasonID));
 		
 		// Gets Host Father CBC
-		qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(
+		qGetCBCFather = APPCFC.CBC.getCBCHostByID(
 			hostID=hostID, 
 			cbcType='father'
 		);
 		
 		// Get Father Available Seasons
-		qGetFatherSeason = APPLICATION.CFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCFather.seasonID));
+		qGetFatherSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCFather.seasonID));
 
 		// Get Family Member CBC
-		qGetHostMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=hostID);
+		qGetHostMembers = APPCFC.CBC.getEligibleHostMember(hostID=hostID);
 
 		// Set Variables
 		motherIDs = ValueList(qGetCBCMother.cbcfamID);
@@ -78,7 +77,7 @@
             // Check if we have valid data for host mother
             if ( VAL(FORM.motherSeasonID) AND LEN(FORM.motherdate_authorized) ) {
 				// Insert Host Mother CBC
-				APPLICATION.CFC.CBC.insertHostCBC(
+				APPCFC.CBC.insertHostCBC(
 					hostID=FORM.hostID,
 					familyMemberID=0,
 					cbcType='mother',
@@ -91,7 +90,7 @@
             // Check if we have valid data for host father
             if ( VAL(FORM.fatherSeasonID) AND LEN(FORM.fatherdate_authorized) ) {
 				// Insert Host Father CBC
-                APPLICATION.CFC.CBC.insertHostCBC(
+                APPCFC.CBC.insertHostCBC(
                     hostID=FORM.hostID,
                     familyMemberID=0,
                     cbcType='father',
@@ -111,7 +110,7 @@
 					// Check if we have valid data for family members
 					if ( VAL(FORM[memberID & 'seasonID']) AND LEN(FORM[memberID & 'date_authorized']) ) {
 						// Insert Host Father CBC
-						APPLICATION.CFC.CBC.insertHostCBC(
+						APPCFC.CBC.insertHostCBC(
 							hostID=FORM.hostID,
 							familyMemberID=memberID,
 							cbcType='member',
@@ -137,7 +136,7 @@
 				}
 			
 				// update Host Mother CBC Flag
-				APPLICATION.CFC.CBC.updateHostFlagCBC(
+				APPCFC.CBC.updateHostFlagCBC(
 					cbcfamID=cbcID,
 					flagCBC=flagValue
 				);			
@@ -156,7 +155,7 @@
 				}
 			
 				// update Host Father CBC Flag
-				APPLICATION.CFC.CBC.updateHostFlagCBC(
+				APPCFC.CBC.updateHostFlagCBC(
 					cbcfamID=cbcID,
 					flagCBC=flagValue
 				);			
@@ -168,77 +167,40 @@
 		<cfscript>
             // Declare newBatchID
 			newBatchID = 0;
-			// Set errorCount used in data validaation
+			// Set errorCount used in data validation
 			errorCount = 0;
 			
 			// Get CBCs Host Parents
-            qGetCBCHost = APPLICATION.CFC.CBC.getCBCHost(
+            qGetCBCHost = APPCFC.CBC.getPendingCBCHost(
                 companyID=CLIENT.companyID,
 				hostID=FORM.hostID,
 				userType='mother,father'
             );	
 
 			// Get CBCs Host Member
-			qGetCBCMember = APPLICATION.CFC.CBC.GetCBCHostMember(
+			qGetCBCMember = APPCFC.CBC.getPendingCBCHostMember(
 				companyID=CLIENT.companyID,
 				hostID=FORM.hostID
 			);	
         </cfscript>  
 
-		<!--- Host Parents Data Validation --->
+		<!--- Submit CBC Host Parents --->
 		<cfloop query="qGetCBCHost">
 			
             <cfscript>
-				if (NOT LEN(Evaluate(qGetCBCHost.cbc_type & "firstname"))
-					AND NOT LEN(Evaluate(qGetCBCHost.cbc_type & "lastname"))
-					AND NOT LEN(Evaluate(qGetCBCHost.cbc_type & "dob")) 
-					AND NOT IsDate(Evaluate(qGetCBCHost.cbc_type & "dob")) 
-					AND NOT LEN(Evaluate(qGetCBCHost.cbc_type & "ssn")) ) {
-					errorCount = errorCount + 1;
-				}
-			</cfscript>
-		
-        </cfloop>
+				// Data Validation
+				if (LEN(Evaluate(qGetCBCHost.cbc_type & "firstname"))
+					AND LEN(Evaluate(qGetCBCHost.cbc_type & "lastname"))
+					AND IsDate(Evaluate(qGetCBCHost.cbc_type & "dob")) 
+					AND LEN(Evaluate(qGetCBCHost.cbc_type & "ssn")) ) {
 
-		<!--- Host Members Data Validation --->
-		<cfloop query="qGetCBCMember">
-			
-            <cfscript>
-				if (NOT LEN(qGetCBCMember.name)
-					AND NOT LEN(qGetCBCMember.lastname)
-					AND NOT LEN(birthdate)
-					AND NOT IsDate(qGetCBCMember.birthdate) 
-					AND NOT LEN(qGetCBCMember.ssn) ) {
-					errorCount = errorCount + 1;
-				}
-			</cfscript>
-            					
-        </cfloop>
-        
-        <!--- Check if any errors were found --->
-		<cfif NOT VAL(errorCount)>
-        
-            <cfscript>
-                // Create a batch ID - It must be unique
-                newBatchID = APPLICATION.CFC.CBC.createBatchID(
-                    companyID=CLIENT.companyID,
-                    userID=CLIENT.userid,
-                    cbcTotal=qGetCBCHost.recordcount,
-                    batchType='host'
-                );
-			</cfscript>
-            
-            <cfloop query="qGetCBCHost">
-            
-				<cfscript>
 					// Get Company ID
-					qGetCompanyID = APPLICATION.CFC.COMPANY.getCompanies(companyID=qGetCBCHost.companyID);
+					qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetCBCHost.companyID);
 				
                     // Process Batch
-                    CBCStatus = APPLICATION.CFC.CBC.processBatch(
+                    CBCStatus = APPCFC.CBC.processBatch(
                         companyID=qGetCBCHost.companyID,
                         companyShort=qGetCompanyID.companyShort,
-                        batchID=newBatchID,
                         userType=qGetCBCHost.cbc_type,
                         hostID=qGetCBCHost.hostid,
                         cbcID=qGetCBCHost.CBCFamID,
@@ -254,21 +216,29 @@
                         DOBMonth=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'mm'),
                         DOBDay=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'dd')
                     );	
-                </cfscript>
-            
-            </cfloop> <!--- Loop qGetCBCHost --->
-            
-            <cfloop query="qGetCBCMember"> 
-            
-                <cfscript>
+
+				}
+			</cfscript>
+		
+        </cfloop>
+
+		<!--- Submit CBC Host Member --->
+		<cfloop query="qGetCBCMember">
+			
+            <cfscript>
+				// Data Validation
+				if (LEN(qGetCBCMember.name)
+					AND LEN(qGetCBCMember.lastname)
+					AND IsDate(qGetCBCMember.birthdate) 
+					AND LEN(qGetCBCMember.SSN) ) {
+					
 					// Get Company ID
-					qGetCompanyID = APPLICATION.CFC.COMPANY.getCompanies(companyID=qGetCBCMember.companyID);
+					qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetCBCMember.companyID);
 				
                     // Process Batch
-                    CBCStatus = APPLICATION.CFC.CBC.processBatch(
+                    CBCStatus = APPCFC.CBC.processBatch(
                         companyID=qGetCompanyID.companyID,
                         companyShort=qGetCompanyID.companyShort,
-                        batchID=newBatchID,
                         userType='member',
                         hostID=qGetCBCMember.hostid,
                         cbcID=qGetCBCMember.CBCFamID,
@@ -284,12 +254,12 @@
                         DOBMonth=DateFormat(qGetCBCMember.birthdate, 'mm'),
                         DOBDay=DateFormat(qGetCBCMember.birthdate, 'dd')
                     );	
-                </cfscript>
-			
-            </cfloop> <!--- qGetCBCMember --->                    
-            
-        </cfif> <!--- NOT VAL(errorCount) --->
 
+				}
+			</cfscript>
+            					
+        </cfloop>
+        
     </cfif> <!--- VAL(FORM.submitted) --->
     
 </cfsilent>
@@ -303,18 +273,7 @@
 </head>
 <body>
 
-<script language="JavaScript"> 	
-<!--//
-// opens letters in a defined format
-function OpenWindow(url) {
-	newwindow=window.open(url, 'Application', 'height=300, width=720, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
-	if (window.focus) {newwindow.focus()}
-}
-//-->
-</script> 	<!--// [ end ] custom JavaScript //-->
-
 <cfoutput>
-
 
 <!--- FORM submitted --->
 <cfif VAL(FORM.submitted)>
@@ -328,24 +287,22 @@ function OpenWindow(url) {
     
 </cfif>
 
-
 <cfif NOT VAL(hostID)>
 	Sorry, an error has ocurred. Please go back and try again.
 	<cfabort>
 </cfif>
 
-
 <!--- header of the table --->
-<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-<tr valign=middle height=24>
-	<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-	<td width=26 background="pics/header_background.gif"><img src="pics/school.gif"></td>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
+<tr valign=middle height="24">
+	<td height="24" width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+	<td width="26" background="pics/header_background.gif"><img src="pics/school.gif"></td>
 	<td background="pics/header_background.gif"><h2>Criminal Background Check - Host Family and Members</h2></td>
-	<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+	<td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
 
-<cfform action="?curdoc=cbc/hosts_cbc" method="post"> <!--- ?curdoc=cbc/qr_hosts_cbc / ?#CGI.QUERY_STRING# --->
+<cfform action="?curdoc=cbc/hosts_cbc" method="post">
     <cfinput type="hidden" name="submitted" value="1">
     <cfinput type="hidden" name="hostID" value="#hostID#">
     <!--- list cbcs --->
@@ -353,10 +310,7 @@ function OpenWindow(url) {
     <cfinput type="hidden" name="fatherIDs" value="#fatherIDs#">
     <cfinput type="hidden" name="memberIDs" value="#memberIDs#">
 
-    <table border=0 cellpadding=4 cellspacing=0 width="100%" class="section">
-        <!--- 
-        <tr><td valign="center"> <img src="student_app/pics/delete.gif"><td colspan="5"> If you are running a second rouund of reports,  delete the current CBC records. This will remove CBC's associatd with ALL family members.</td></tr>
-        --->
+    <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
 		<tr><th colspan="6" bgcolor="e2efc7">H O S T &nbsp; P A R E N T S</th><th bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_parents_info.cfm?hostID=#hostID#');">Edit Host Parents Info</a></th></tr>
         <tr><td colspan="6">&nbsp;</td></tr>
         
@@ -380,14 +334,14 @@ function OpenWindow(url) {
                     <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
                     <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                     <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Mother&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
-                    <td align="center"><input type="checkbox" name="motherFlagCBC#cbcfamID#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
+                    <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostid#_rec.xml" target="_blank">#requestID#</a></td>
+                    <td align="center"><input type="checkbox" name="motherFlagCBC#cbcfamID#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
                     <td width="20%">&nbsp;</td>
                 </tr>
             </cfloop>
         
 			<!--- NEW CBC - HOST MOTHER --->
-            <cfif qGetMotherSeason.recordcount GT '0'>
+            <cfif VAL(qGetMotherSeason.recordcount)>
                 <cfif qGetHost.motherssn EQ ''>
                     <tr><td colspan="6">PS: Mother's SSN is missing.</td></tr>
                 </cfif>
@@ -442,14 +396,14 @@ function OpenWindow(url) {
                     <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
                     <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                     <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Father&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
-                    <td align="center"><input type="checkbox" name="fatherFlagCBC#cbcfamID#" <cfif flagcbc EQ 1>checked="checked"</cfif>></td>
+                    <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#qGetCBCFather.CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_mother_#qGetCBCFather.hostid#_rec.xml" target="_blank">#requestID#</a></td>
+                    <td align="center"><input type="checkbox" name="fatherFlagCBC#cbcfamID#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
                     <td width="20%">&nbsp;</td>
                 </tr>
             </cfloop>
         
 			<!--- NEW CBC --->
-            <cfif qGetFatherSeason.recordcount GT '0'>
+            <cfif VAL(qGetFatherSeason.recordcount)>
                 <cfif qGetHost.fatherssn EQ ''>
                     <tr><td colspan="6">PS: Father's SSN is missing.</td></tr>
                 </cfif>
@@ -495,18 +449,20 @@ function OpenWindow(url) {
                 
                 <cfscript>
 					// Set current Family ID
-					family_ID = qGetHostMembers.childID;
+					familyID = qGetHostMembers.childID;
 					
 					// Gets Host Member CBC
-					qGetCBCMember = APPLICATION.CFC.CBC.getCBCHostByID(
+					qGetCBCMember = APPCFC.CBC.getCBCHostByID(
 						hostID=hostID,
-						familyMemberID=family_ID,
+						familyMemberID=familyID,
 						cbcType='member'
 					);		
 
 					// Get Member Available Seasons
-					qGetMemberSeason = APPLICATION.CFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMember.seasonID));
+					qGetMemberSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMember.seasonID));
 				</cfscript>
+   
+   				<cfinput type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
    
                 <tr><td colspan="6" bgcolor="e2efc7"><b>#name# #lastname#</b></td><th bgcolor="e2efc7"></th></tr>
                 <tr>
@@ -518,7 +474,6 @@ function OpenWindow(url) {
                     <th valign="top">Request ID</th>
                     <td width="20%">&nbsp;</td>
                 </tr>
-                <cfinput type="hidden" name="#family_ID#count" value="#qGetCBCMember.recordcount#">
                 
                 <!--- UPDATE DATE RECEIVED --->
                 <cfif qGetCBCMember.recordcount NEQ '0'>
@@ -529,7 +484,7 @@ function OpenWindow(url) {
                             <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
                             <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center"><a href="?curdoc=cbc/view_host_cbc&hostID=#hostID#&batchID=#batchid#&hostType=Member&file=batch_#batchid#_host_mother_#hostid#_rec.xml">#requestID#</a></td>
+                            <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMember.hostID#&CBCFamID=#qGetCBCMember.CBCFamID#&file=batch_#qGetCBCMember.batchid#_host_mother_#qGetCBCMember.hostid#_rec.xml" target="_blank">#requestID#</a></td>
                             <td width="20%">&nbsp;</td>
                         </tr>
                     </cfloop>
@@ -539,21 +494,21 @@ function OpenWindow(url) {
                 <cfif qGetMemberSeason.recordcount GT '0'>
                     <tr>
                         <td align="center">
-                            <cfselect name="#family_ID#companyID" required="yes" message="You must select a company">
+                            <cfselect name="#familyID#companyID" required="yes" message="You must select a company">
                                 <cfloop query="qGetCompanies">
                                 <option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
                                 </cfloop>
                             </cfselect>
                         </td>						
                         <td align="center">
-                            <cfselect name="#family_ID#seasonID" required="yes" message="You must select a season">
+                            <cfselect name="#familyID#seasonID" required="yes" message="You must select a season">
                                 <option value="0">Select a Season</option>
                                 <cfloop query="qGetMemberSeason">
                                 <option value="#seasonID#">#season#</option>
                                 </cfloop>
                             </cfselect>
                         </td>
-                        <td align="center"><cfinput type="Text" name="#family_ID#date_authorized" size="8" value="" validate="date" maxlength="10"></td>
+                        <td align="center"><cfinput type="Text" name="#familyID#date_authorized" size="8" value="" validate="date" maxlength="10"></td>
                         <td align="center">n/a</td>
                         <td align="center">n/a</td>
                         <td align="center">n/a</td>
@@ -561,28 +516,28 @@ function OpenWindow(url) {
                     </tr>
                     <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
                 <cfelse>
-                    <cfinput type="hidden" name="#family_ID#seasonID" value="0">
+                    <cfinput type="hidden" name="#familyID#seasonID" value="0">
                 </cfif>
             <tr><td colspan="6">&nbsp; <br><br></td></tr>			
             </cfloop>
         </cfif>
     </table>
     
-    <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
+    <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
         <tr><td align="center">
                 <a href="?curdoc=host_fam_info&hostID=#hostID#"><img src="pics/back.gif" border="0"></a>
                 &nbsp;  &nbsp;  &nbsp;  &nbsp; &nbsp;  &nbsp;
-                <input name="Submit" type="image" src="pics/update.gif" border=0 alt="submit">
+                <input name="Submit" type="image" src="pics/update.gif" border="0" alt="submit">
             </td>
         <td width="20%">&nbsp;</td></tr>
     </table>
 </cfform>
 
-<table width=100% cellpadding=0 cellspacing=0 border=0>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
 	<tr valign=bottom >
-		<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-		<td width=100% background="pics/header_background_footer.gif"></td>
-		<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
+		<td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
+		<td width="100%" background="pics/header_background_footer.gif"></td>
+		<td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
 	</tr>
 </table>
 </cfoutput>
