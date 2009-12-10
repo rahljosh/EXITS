@@ -78,7 +78,7 @@
 		<cfargument name="hostID" required="yes" hint="Host ID is required">
         <cfargument name="familyMemberID" default="0" hint="Family Member ID is not required">
         <cfargument name="cbcType" default="" hint="cbcType is required (mother, father or member)">
-        <cfargument name="batchID" default="0" hint="Batch ID is not required">
+        <cfargument name="cbcfamID" default="0" hint="CBCFamID is not required">
 
             <cfquery 
             	name="qGetCBCHostByID" 
@@ -88,6 +88,7 @@
                         h.hostID, 
                         h.familyID,
                         h.batchID,
+                        h.cbc_type,
                         h.date_authorized, 
                         h.date_sent, 
                         h.date_received,
@@ -107,9 +108,9 @@
                     WHERE 
                         h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#"> 
 
-                    <cfif VAL(ARGUMENTS.batchID)>
+                    <cfif VAL(ARGUMENTS.cbcfamID)>
                     AND
-                        h.batchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.batchID#">                                	
+                        h.cbcfamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcfamID#">                                	
                     </cfif>
 	                    
                     <cfif LEN(ARGUMENTS.cbcType)>
@@ -123,14 +124,14 @@
                     </cfif>
                     
                     ORDER BY 
-                        s.season
+                        h.seasonID
             </cfquery>    
 
 		<cfreturn qGetCBCHostByID>
 	</cffunction>
 
 
-	<cffunction name="getEligibleHostMember" access="public" returntype="query" output="false" hint="Returns CBC for family members">
+	<cffunction name="getEligibleHostMember" access="public" returntype="query" output="false" hint="Returns CBC for family members 18 years old and older">
 		<cfargument name="hostID" required="yes" hint="Host ID is required">
 
             <cfquery 
@@ -142,7 +143,7 @@
                         membertype, 
                         name, 
                         middlename, 
-                        lastname, 
+                        lastName, 
                         ssn, 
                         birthdate, 
                         (DATEDIFF(now( ) , birthdate)/365)
@@ -217,7 +218,7 @@
 	</cffunction>
 
 	
-	<cffunction name="getCBCHost" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a host">
+	<cffunction name="getPendingCBCHost" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a host">
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
         <cfargument name="userType" type="string" default="" hint="UserType is not required. List of values such as mother,father">
@@ -237,14 +238,14 @@
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
-                    h.familylastname,
-                    h.fatherlastname, 
-                    h.fatherfirstname, 
+                    h.familylastName,
+                    h.fatherlastName, 
+                    h.fatherfirstName, 
                     h.fathermiddlename, 
                     fatherdob, 
                     fatherssn,
-                    h.motherlastname, 
-                    h.motherfirstname, 
+                    h.motherlastName, 
+                    h.motherfirstName, 
                     h.mothermiddlename, 
                     motherdob,
                     motherssn
@@ -304,7 +305,7 @@
     </cffunction>
 
 
-	<cffunction name="getCBCHostMember" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a host member">
+	<cffunction name="getPendingCBCHostMember" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a host member">
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
         <cfargument name="hostID" type="numeric" default="0" hint="HostID is not required">
@@ -326,7 +327,7 @@
                 	child.childID, 
                     child.name, 
                     child.middlename, 
-                    child.lastname, 
+                    child.lastName, 
                     child.birthdate, 
                     child.SSN, 
                     child.hostID
@@ -405,9 +406,9 @@
 	<cffunction name="getCBCUserByID" access="public" returntype="query" output="false" hint="Returns CBC records for a user">
         <cfargument name="userID" required="yes" hint="userID is required">
         <cfargument name="familyID" default="0" hint="Family Member ID is not required">
-        <cfargument name="batchID" default="0" hint="BatchID is not required">.
+        <cfargument name="cbcID" default="0" hint="CBC ID is not required">
         <cfargument name="cbcType" default="" hint="CBC type is optional: user/member">
-
+			
             <cfquery 
             	name="qGetCBCUserByID" 
                 datasource="#APPLICATION.dsn#">
@@ -441,25 +442,117 @@
                         u.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyID#">                
                 	</cfif>
                     
-                    <cfif VAL(ARGUMENTS.batchID)>
+                    <cfif VAL(ARGUMENTS.cbcID)>
                     AND
-                        u.batchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.batchID#">                
+                        u.cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">                
                 	</cfif>
 
-                    <cfif LEN(ARGUMENTS.cbcType) EQ 'user'>
+                    <cfif ARGUMENTS.cbcType EQ "user">
                     AND 
-                        h.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                    <cfelseif LEN(ARGUMENTS.cbcType) EQ 'member'>
+                        u.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    <cfelseif ARGUMENTS.cbcType EQ "member">
                     AND 
-                        h.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        u.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                     </cfif>
+                    
+				ORDER BY
+                	u.seasonID                    
             </cfquery>    
 
 		<cfreturn qGetCBCUserByID>
 	</cffunction>
 
+
+	<cffunction name="getEligibleUserMember" access="public" returntype="query" output="false" hint="Returns CBC for family members 18 years old and older">
+		<cfargument name="userID" required="yes" hint="User ID is required">
+
+            <cfquery 
+            	name="qGetEligibleUserMember" 
+            	datasource="#APPLICATION.dsn#">
+                    SELECT 
+                    	id, 
+                        firstName, 
+                        middleName,
+                        lastName,
+                        sex,
+                        relationship,
+                        dob,
+                        SSN,
+                        drivers_license,
+                        auth_received,
+                        auth_received_type,
+                        no_members
+                    FROM 
+                    	smg_user_family 
+                    WHERE 
+                    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userid#">
+                    AND 
+                    	(DATEDIFF(now( ) , dob)/365) > 18
+                    ORDER BY 
+                    	id                
+            </cfquery>
+            
+		<cfreturn qGetEligibleUserMember>
+    </cffunction>
+
+
+	<cffunction name="insertUserCBC" access="public" returntype="void" output="false" hint="Inserts CBC record. It does not return a value">
+		<cfargument name="userID" required="yes" hint="User ID is required">
+        <cfargument name="familyMemberID" default="0" hint="Family Member ID is not required">
+        <cfargument name="seasonID" required="yes" hint="SeasonID is required">
+        <cfargument name="companyID" required="yes" hint="companyID is required">
+        <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
+
+            <cfquery 
+            	datasource="#APPLICATION.dsn#">
+                    INSERT INTO 
+                    	smg_users_cbc 
+                    (
+                    	userid, 
+                        familyid, 
+                        seasonid, 
+                        companyid, 
+                        date_authorized
+                    )
+                    VALUES 
+                    (
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">,  
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                        <cfif LEN(ARGUMENTS.dateAuthorized)>
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
+                        <cfelse>
+                            NULL                            
+                        </cfif>
+                    )
+            </cfquery>	
+
+	</cffunction>
+
+
+	<cffunction name="updateUserCBCByID" access="public" returntype="void" output="false" hint="Update a CBC record">
+		<cfargument name="cbcID" required="yes" hint="CBC ID is required">
+        <cfargument name="companyID" required="yes" hint="companyID is required">
+        <cfargument name="flagCBC" default="0" hint="flagCBC is required. Values 0 or 1">
+        <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
+
+            <cfquery 
+            	datasource="#APPLICATION.dsn#">
+                    UPDATE 
+                    	smg_users_cbc 
+                    SET 	
+                    	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                        flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
+                        date_authorized = <cfif LEN(ARGUMENTS.dateAuthorized)><cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#"><cfelse>NULL</cfif>
+                    WHERE 
+                    	cbcid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
+            </cfquery>	
+
+	</cffunction>
+
     
-	<cffunction name="getCBCUser" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a user">
+	<cffunction name="getPendingCBCUser" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a user">
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
         <cfargument name="userID" type="numeric" default="0" hint="UserID is not required">
@@ -471,12 +564,13 @@
                 SELECT DISTINCT 
                 	cbc.cbcID, 
                     cbc.userID, 
-                    cbc.familyID, 
+                    cbc.familyID,
+                    cbc.companyID,
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
-                    u.firstname, 
-                    u.lastname, 
+                    u.firstName, 
+                    u.lastName, 
                     u.middlename, 
                     u.dob, 
                     u.ssn
@@ -532,7 +626,7 @@
     </cffunction>
 
 
-	<cffunction name="getCBCUserMember" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a user member">
+	<cffunction name="getPendingCBCUserMember" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a user member">
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
         <cfargument name="userID" type="numeric" default="0" hint="UserID is not required">
@@ -545,11 +639,12 @@
                 	cbc.cbcID, 
                     cbc.userID, 
                     cbc.familyID, 
+                    cbc.companyID,
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
-                    u.firstname, 
-                    u.lastname, 
+                    u.firstName, 
+                    u.lastName, 
                     u.middlename, 
                     u.dob, 
                     u.ssn
@@ -662,7 +757,7 @@
 
 	<cffunction name="processBatch" access="public" returntype="struct" output="false" hint="Process XML Batch. Creates, submits and sends email">
         <cfargument name="companyID" type="numeric" required="yes">
-        <cfargument name="batchID" type="numeric" required="yes">
+        <cfargument name="batchID" type="numeric" default="0">
         <cfargument name="userType" type="string" required="yes" hint="Father,Mother,User,Member">
         <cfargument name="hostID" type="numeric" default="0">
         <cfargument name="cbcID" type="string" default="0" hint="ID of smg_users_cbc or smg_hosts_cbc so we know which record we need to update">
@@ -883,12 +978,15 @@
                 </cfscript>
                 
                 <cfcatch type="any">
+                                       
                     <cfmail 
-                    	from="support@student-management.com"
-                        to="marcus@student-management.com"
+                    	from="#APPLICATION.EMAIL.support#"
+                        to="#APPLICATION.EMAIL.errors#"
                         subject="CBC Error"
                         type="html">
 					
+                    	<p>#APPLICATION.site_url#</p>
+                    
                         <p><b>Error Processing CBC for #ARGUMENTS.userType# #ARGUMENTS.firstName# #ARGUMENTS.lastName# #ARGUMENTS.userID# #ARGUMENTS.hostID# </b></p>                 
                         
                         <p>Message: #cfcatch.message#</p>
@@ -1023,7 +1121,7 @@
 				var readXML = XmlParse(ARGUMENTS.responseXML);
 				
 				// Declare First and Last Name
-				setFirstName = '';
+				setfirstName = '';
 				setLastName = '';
 				
 				/* 
@@ -1063,21 +1161,21 @@
 						// Get host father first and last name
 						case "father": {
 							qHostFather = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
-							setFirstName = qHostFather.fatherFirstName;
+							setfirstName = qHostFather.fatherfirstName;
 							setLastName = qHostFather.fatherLastName;
 							break;
 						}
 						// Get host mother first and last name
 						case "mother": {
 							qHostMother = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
-							setFirstName = qHostMother.motherFirstName;
+							setfirstName = qHostMother.motherfirstName;
 							setLastName = qHostMother.motherLastName;
 							break;
 						}
 						// Get host member first and last name
 						case "member": {
 							qHostMember = APPLICATION.CFC.HOST.getHostMemberByID(childID=ARGUMENTS.familyID, hostID=ARGUMENTS.hostID);
-							setFirstName = qHostMember.name;
+							setfirstName = qHostMember.name;
 							setLastName = qHostMember.lastName;
 							break;
 						}
@@ -1091,7 +1189,7 @@
 							// Set CBC Type 
 							setCBCType = '';	
 							qUser = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID);
-							setFirstName = qUser.firstName;
+							setfirstName = qUser.firstName;
 							setLastName = qUser.lastName;
 							break;
 						}
@@ -1100,7 +1198,7 @@
 							// Set CBC Type 
 							setCBCType = 'User';	
 							qUserMember = APPLICATION.CFC.USER.getUserMemberByID(ID=ARGUMENTS.familyID, userID=ARGUMENTS.userID);
-							setFirstName = qUserMember.firstName;
+							setfirstName = qUserMember.firstName;
 							setLastName = qUserMember.lastName;
 							break;
 						}
@@ -1112,9 +1210,10 @@
             </cfscript>
         
 			<cfoutput>
+            
                 <table width="670" align="center">
-                	<!--- Header --->
-                    <tr bgcolor="##CCCCCC"><th colspan="2">#qGetCompany.companyName#</th></tr>
+					<!--- Header --->
+                    <tr bgcolor="##CCCCCC"><th colspan="2"><cfif APPLICATION.isServerLocal>Development Server - </cfif> #qGetCompany.companyName#</th></tr>
                     <tr><td colspan="2">&nbsp;</td></tr>
 
                     <tr bgcolor="##CCCCCC"><th colspan="2">Criminal Backgroud Check &nbsp; -  &nbsp; Date Processed: #DateFormat(now(), 'mm/dd/yyyy')#</th></tr>
@@ -1122,7 +1221,7 @@
                     
                     <tr bgcolor="##CCCCCC">
                         <th colspan="2">
-                            *** Search Results for #setCBCType# #ARGUMENTS.usertype# - #setFirstName# #setLastName# 
+                            *** Search Results for #setCBCType# #ARGUMENTS.usertype# - #setfirstName# #setLastName# 
                             <cfif VAL(ARGUMENTS.hostID)>
                                 (###ARGUMENTS.hostID#)
                             <cfelseif VAL(ARGUMENTS.userID)>
@@ -1148,7 +1247,7 @@
                     <!--- USOneSearch --->	
                     <tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE SEARCH</b></th></tr>
                     <tr><td colspan="2"><b>You searched for:</b></td></tr>
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[usOneSearchID].USOneSearch.order.lastname#, #readXML.bgc.product[usOneSearchID].USOneSearch.order.firstname# #readXML.bgc.product[usOneSearchID].USOneSearch.order.middlename#</b></td></tr>
+                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[usOneSearchID].USOneSearch.order.lastName#, #readXML.bgc.product[usOneSearchID].USOneSearch.order.firstName# #readXML.bgc.product[usOneSearchID].USOneSearch.order.middlename#</b></td></tr>
                     <cfif totalProducts GT 1>    
 	                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>SSN : </b> #readXML.bgc.product[1].USOneValidate.order.ssn#</td></tr>
                     </cfif>
@@ -1304,7 +1403,7 @@
                     
                         <tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE TRACE</b></th></tr>
                         <tr><td colspan="2"><b>You searched for:</b></td></tr>
-                        <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[3].USOneTrace.order.lastname#, #readXML.bgc.product[3].USOneTrace.order.firstname#</b></td></tr>
+                        <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[3].USOneTrace.order.lastName#, #readXML.bgc.product[3].USOneTrace.order.firstName#</b></td></tr>
                         <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>SSN : </b> #readXML.bgc.product[3].USOneTrace.order.ssn#</td></tr>
                         
                         <tr><td colspan="2"><hr width="100%" align="center"></td></tr>			

@@ -60,7 +60,7 @@
 
     <cfscript>
 		// Get CBCs
-		qGetCBCUsers = APPLICATION.CFC.CBC.getCBCUser(
+		qGetCBCUsers = APPLICATION.CFC.CBC.getPendingCBCUser(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID,
 			noSSN=1
@@ -74,7 +74,7 @@
 
     <cfscript>
 		// Get CBCs
-		qGetCBCUsers = APPLICATION.CFC.CBC.getCBCUserMember(
+		qGetCBCUsers = APPLICATION.CFC.CBC.getPendingCBCUserMember(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID,
 			noSSN=1

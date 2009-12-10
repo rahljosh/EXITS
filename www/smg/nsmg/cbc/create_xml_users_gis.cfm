@@ -12,7 +12,7 @@
 <!--- Kill extra output --->
 <cfsilent>
 
-    <cfsetting requestTimeOut = "999">
+    <cfsetting requesttimeout="3600">
 	
 	<cfparam name="FORM.userType" default="">
     <cfparam name="FORM.seasonID" default="0">
@@ -58,7 +58,7 @@
 	
     <cfscript>
 		// Get CBCs
-		qGetCBCUsers = APPLICATION.CFC.CBC.getCBCUser(
+		qGetCBCUsers = APPLICATION.CFC.CBC.getPendingCBCUser(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID
 		);	

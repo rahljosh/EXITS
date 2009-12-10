@@ -1043,7 +1043,7 @@
             <td width="50%" valign="top">
                 <!----CBC---->
                 <cfquery name="get_cbc_user" datasource="#application.dsn#">
-                    SELECT cbcid, date_authorized , date_sent, date_received, requestid, smg_users_cbc.seasonid, flagcbc, smg_seasons.season, batchid
+                    SELECT cbcid, userid, date_authorized , date_sent, date_received, requestid, smg_users_cbc.seasonid, flagcbc, smg_seasons.season, batchid
                     FROM smg_users_cbc
                     LEFT JOIN smg_seasons ON smg_seasons.seasonid = smg_users_cbc.seasonid
                     <!---
@@ -1103,7 +1103,7 @@
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="index.cfm?curdoc=cbc/view_user_cbc&userID=#rep_info.userID#&userType=User&batchID=#batchid#&file=batch_#batchid#_user_#rep_info.userid#_rec.xml">#requestid#</a></cfif></cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userid#_rec.xml" target="_blank">#requestid#</a></cfif></cfif></td>
                         </tr>
                         </cfloop>
                     </cfif>
