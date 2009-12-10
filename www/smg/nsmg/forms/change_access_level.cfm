@@ -63,7 +63,7 @@
     LEFT JOIN smg_regions r ON uar.regionid = r.regionid
     INNER JOIN smg_companies c ON uar.companyid = c.companyid
     INNER JOIN smg_usertype ut ON uar.usertype = ut.usertypeid
-    WHERE c.website = 'SMG'
+    WHERE c.website = '#client.company_submitting#'
     AND uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
     ORDER BY uar.companyid, uar.regionid, uar.usertype
 </cfquery>
