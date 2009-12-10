@@ -399,6 +399,23 @@
         </cfquery>
 
 	</cffunction>
+    
+
+	<cffunction name="UpdateHostXMLReceived" access="public" returntype="void" output="false" hint="Updates XML Received Information">
+        <cfargument name="cbcFamID" type="numeric" required="yes">      
+        <cfargument name="xmlReceived" type="string" default="">
+        
+        <cfquery 
+        	datasource="MySql">
+            UPDATE 
+            	smg_hosts_cbc  
+            SET 
+                xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
+            WHERE 
+            	cbcfamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcFamID#">
+        </cfquery>
+
+	</cffunction>
 	<!--- End of Hosts --->
     
 
@@ -704,6 +721,23 @@
                 date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
                 batchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.batchID#">,
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
+                xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
+            WHERE 
+            	cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
+        </cfquery>
+
+	</cffunction>
+    
+    
+	<cffunction name="updateUserXMLReceived" access="public" returntype="void" output="false" hint="Updates XML Received Information">
+        <cfargument name="cbcID" type="numeric" required="yes">      
+        <cfargument name="xmlReceived" type="string" default="">
+        
+        <cfquery 
+        	datasource="MySql">
+            UPDATE 
+            	smg_users_cbc  
+            SET 
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
             	cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
