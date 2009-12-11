@@ -165,7 +165,7 @@ function changeAddress(){
                             <p><span class="style3"><u>- CHECK-IN / VALIDATION</u></span><span class="style3"><u> </u></span><u><strong>(at arrival in the United States) </strong></u><br>
                             In order to keep your visa from being cancelled by the SEVIS system, CSB must validate your visa within 30 days from the start date on the DS-2019. 
                             Please CHECK-IN in maximum 10 days from your arrival date in U.S.A. by filling in all the below fields and submitting the form. If you have questions or concerns, 
-                            please call 1-866-822-1095 (Toll-Free).</p>
+                            please call 1-877-669-0717 (Toll-Free).</p>
                             <p><strong><span class="style5">*</span></strong><span class="style5"> Required</span><br></p>
                         </div>
                         <form action="submit_request.cfm?request=checkin" method="post" name="form" id="form" onSubmit="return checkin()"> 

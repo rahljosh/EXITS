@@ -61,7 +61,7 @@
         Comments: #FORM.comment#    
 	</cfsavecontent>    
 
-    <cfmail to="#APPLICATION.EMAIL.contact#" from="#APPLICATION.EMAIL.from#" subject="#FORM.lastname#, #FORM.firstname# - Validation" type="html">
+    <cfmail from="#APPLICATION.EMAIL.CSB.from#" to="#APPLICATION.EMAIL.CSB.contact#" subject="#FORM.lastname#, #FORM.firstname# - Validation" type="html">
 
         SUMMER WORK & TRAVEL - CHECK-IN / VALIDATION from the CSB web site on #dateformat(Now())# #TimeFormat(now())#. 
       	
@@ -166,7 +166,7 @@
         Phone Number: #FORM.housingphone#<br>
     </cfsavecontent>
     
-    <cfmail to="#APPLICATION.EMAIL.contact#" from="#APPLICATION.EMAIL.from#" subject="#FORM.lastname2#, #FORM.firstname2#  - Validation" type="html">
+    <cfmail from="#APPLICATION.EMAIL.CSB.from#" to="#APPLICATION.EMAIL.CSB.contact#" subject="#FORM.lastname2#, #FORM.firstname2#  - Validation" type="html">
 
         <cfif LEN(FORM.UploadFile)>
             <cffile action="upload" fileField="UploadFile" destination="/var/www/html/intoedventures/uploaded/job-offers/" nameConflict="overwrite" mode="777">
