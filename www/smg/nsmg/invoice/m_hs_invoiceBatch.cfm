@@ -779,8 +779,16 @@ GROUP BY agentid, testCompid
 		</cfdocument>
 		
     </cfloop>
+		
+	<cfif APPLICATION.isServerLocal>
+		<!--- Dev Server --->
+		<cfset emailTo = 'marcel@student-management.com'>
+	<cfelse>
+		<!--- Production Server --->
+		<cfset emailTo = getAgentInfo.billing_email>
+	</cfif> 	
 				
-	<cfmail from="#variables.emailFrom#" to="#variables.emailFrom#" bcc="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# invoices - please find attached." type="html">
+	<cfmail from="#variables.emailFrom#" to="#variables.emailTo#" bcc="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# invoices - please find attached." type="html">
 	
 <small>
 Dear Partner
