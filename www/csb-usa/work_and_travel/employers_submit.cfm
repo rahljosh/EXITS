@@ -50,7 +50,7 @@ function test(){
 		    <td width="5%">&nbsp;</td>
 		    <td width="90%" class="text">
             
-            <cfparam name="idnumber" default="Not filled in the request form">
+    <cfparam name="idnumber" default="Not filled in the request form">
 	<cfparam name="sevis" default="Not filled in the request form">
 	<cfparam name="lastname" default="Not filled in the request form">
 	<cfparam name="firstname" default="Not filled in the request form">
@@ -68,7 +68,7 @@ function test(){
   
  
   <cfif url.request is 'send'>
-    <cfmail to="#APPLICATION.EMAIL.contact#" from="#APPLICATION.EMAIL.from#" subject="#form.companyName#">
+    <cfmail from="#APPLICATION.EMAIL.CSB.from#" to="#APPLICATION.EMAIL.CSB.contact#" subject="#form.companyName#">
 
       #desc# from the CSB web site on #dateformat(Now())#.
       

@@ -5,6 +5,9 @@
 <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<cfoutput>
+
 <table width="871" height="506" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
 	<tr>
 		<td height="131" background="images/top.jpg"><table width="99%" border="0">
@@ -25,7 +28,7 @@
 		    <td width="5%">&nbsp;</td>
 	      </tr>
 		  <tr>
-		    <td height="17" colspan="3"><hr width="94%" color="#CCCCCC"></td>
+		    <td height="17" colspan="3"><hr width="94%" color="##CCCCCC"></td>
 	      </tr>
 		  <tr>
 		    <td colspan="3">&nbsp;</td>
@@ -35,15 +38,15 @@
 		  <tr>
 		    <td width="5%">&nbsp;</td>
 		    <td width="90%" class="text" align="center"><p align="center">Please feel free to contact our main office at any  time.&nbsp; Our contact information is listed  below.</p>
-		      <p align="center"><strong>CSB International</strong><br>
-119 Cooper Street<br>
-Babylon, NY 11706<br>
-<br>
-<strong>Phone:</strong> 866 822 1095<br>
-<strong>Phone:</strong> 631 893 4540<br>
-<strong>Fax:</strong> 631 893 4550<br>
-<br>
-<strong>e-mail:</strong>&nbsp; <a href="mailto:craig@csb-usa.com">craig@csb-usa.com</a></p>
+		      <p align="center"><strong>CSB International, Inc.</strong><br>
+                119 Cooper Street<br>
+                Babylon, NY 11706<br>
+                <br>
+                <strong>Phone: </strong> 631 893 4549<br>
+                <strong>Toll Free:</strong> 877 669 0717<br>
+                <strong>Fax: </strong> 631 893 4547<br>
+                <br>
+                <strong>e-mail:</strong>&nbsp; <a href="mailto:#APPLICATION.EMAIL.CSB.info#">#APPLICATION.EMAIL.CSB.info#</a></p>
               <p><br>
             </p></td>
 		    <td width="5%">&nbsp;</td>
@@ -55,5 +58,8 @@ Babylon, NY 11706<br>
 		<td height="52" background="images/bottom.png" align="center"><cfinclude template="bottom.cfm"></td>
 	</tr>
 </table>
+
+</cfoutput>
+
 </body>
 </html>
