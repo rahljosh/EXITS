@@ -72,13 +72,14 @@
 		</cfloop>
         <!----Other Interests---->
         <!----Years Studied English---->
-		<cfset list_participate_activities =''>
-		<cfset countInterests = ArrayLen(#StudentXMLFile.applications.application[i].page3.participates.participate#)>
-		<cfloop index="CountI" from="1" to="#countInterests#">
-			<cfset list_participate = #ListAppend(list_participate_activities, #StudentXMLFile.applications.application[i].page2.participates.participate[CountI].XmlText#)>
-		</cfloop>
-        lpa: #list_participate_activities#
-        <cfabort>
+       
+		<cfset list_participate_activities =' '>
+        <cfif #Len(StudentXMLFile.applications.application[i].page2.participates)# gt 150> 
+			<cfset countInterests = ArrayLen(#StudentXMLFile.applications.application[i].page2.participates.participate#)>
+            <cfloop index="CountI" from="1" to="#countInterests#">
+                <cfset list_participate_activities = #ListAppend(list_participate_activities, '#StudentXMLFile.applications.application[i].page2.participates.participate[CountI].XmlText#')#>
+            </cfloop>
+      	</cfif>
         
 <!----Actual insert query---->
 
