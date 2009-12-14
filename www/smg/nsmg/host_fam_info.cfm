@@ -400,7 +400,7 @@ div.scroll2 {
 				<cfloop query="qGetCBCMother">
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td style="padding-left:20px;">#family_info.motherfirstname# #family_info.motherlastname#</td>
-					<td align="center"><b>#season#</b></td>
+					<td align="center">#season#</td>
 					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
 					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
 					<td align="center">
@@ -422,7 +422,7 @@ div.scroll2 {
 				<tr><td colspan="3" style="padding-left:20px;">Submitted for User #firstname# #lastname# (###userid#).</td></tr>
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td>&nbsp;</td>
-					<td align="center"><b>#season#</b></td>
+					<td align="center">#season#</td>
 					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
 					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
 					<td align="center">
@@ -439,7 +439,7 @@ div.scroll2 {
 				<cfloop query="qGetCBCFather">
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td style="padding-left:20px;">#family_info.fatherfirstname# #family_info.fatherlastname#</td>
-					<td align="center"><b>#season#</b></td>
+					<td align="center">#season#</td>
 					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
 					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
 					<td align="center"><cfif requestid EQ ''>processing<cfelseif flagcbc EQ 1 AND client.usertype LTE 4>On Hold Contact Compliance<cfelse>		
@@ -450,7 +450,7 @@ div.scroll2 {
 				<tr><td colspan="6" style="padding-left:20px;">Submitted for User #firstname# #lastname# (###userid#).</td></tr>
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td>&nbsp;</td>
-					<td align="center"><b>#season#</b></td>
+					<td align="center">#season#</td>
 					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
 					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
 					<td align="center"><cfif requestid EQ ''>processing<cfelse>
@@ -467,12 +467,12 @@ div.scroll2 {
                 
                 <cfscript>
 					// Get Member Details
-					qGetMemberDetail = APPCFC.HOST.getHostMemberByID(childID=qGetHostMembers.CBCFamID);
+					qGetMemberDetail = APPCFC.HOST.getHostMemberByID(childID=qGetHostMembers.familyID);
 				</cfscript>
                 
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                    <td style="padding-left:20px;"><b>#qGetMemberDetail.name#</b></td>
-                    <td align="center"><b>#season#</b></td>
+                    <td style="padding-left:20px;">#qGetMemberDetail.name# #qGetMemberDetail.lastName#</td>
+                    <td align="center">#season#</td>
                     <td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                     <td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
                     <td align="center">
@@ -520,5 +520,4 @@ div.scroll2 {
     </td>
 </tr>
 </table>
-
 </cfoutput>
