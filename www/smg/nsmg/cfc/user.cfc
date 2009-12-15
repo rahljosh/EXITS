@@ -1,5 +1,8 @@
 
 <cfcomponent>
+	
+    <cfparam name="CLIENT.companyID" default="0">
+	
 	<cfif cgi.http_host is "jan.case-usa.org">
         <cfset client.company_submitting = "CASE">
         <cfset application.company_short = "CASE">
