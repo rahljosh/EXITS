@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="app.css" server="www.student-management.com//var/www/html/student-management/" local="129050464770000000" remote="129050464770000000" />
+<file name="Application.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464780000000" remote="129050464780000000" />
+<file name="blurFilter.cfc" server="www.student-management.com//var/www/html/student-management/" local="129050464790000000" remote="129050464790000000" />
+<file name="delete_inserts.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464800000000" remote="129050464800000000" />
+<file name="error_message.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464810000000" remote="129050464810000000" />
+<file name="fileUpload.swf" server="www.student-management.com//var/www/html/student-management/" local="129050464810000000" remote="129050464810000000" />
+<file name="form_upload_album.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464820000000" remote="129050464820000000" />
+<file name="form_upload_file.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464830000000" remote="129050464830000000" />
+<file name="form_upload_letter.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464840000000" remote="129050464840000000" />
+<file name="form_upload_page1.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464840000000" remote="129050464840000000" />
+<file name="form_upload_page22.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464850000000" remote="129050464850000000" />
+<file name="form_upload_virtualf.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464860000000" remote="129050464860000000" />
+<file name="image.cfc" server="www.student-management.com//var/www/html/student-management/" local="129050464900000000" remote="129050464900000000" />
+<file name="image2.cfc" server="www.student-management.com//var/www/html/student-management/" local="129050464880000000" remote="129050464880000000" />
+<file name="ImageObject.cfc" server="www.student-management.com//var/www/html/student-management/" local="129050464890000000" remote="129050464890000000" />
+<file name="index.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464910000000" remote="129050464910000000" />
+<file name="list_vfolder.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464670000000" remote="129050464670000000" />
+<file name="metadata-extractor-2.3.1.jar" server="www.student-management.com//var/www/html/student-management/" local="129050464930000000" remote="129050464930000000" />
+<file name="posterizeFilter.cfc" server="www.student-management.com//var/www/html/student-management/" local="129050464920000000" remote="129050464920000000" />
+<file name="qr_delete_file.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464680000000" remote="129050464680000000" />
+<file name="qr_delete_letter.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464950000000" remote="129050464950000000" />
+<file name="qr_delete_page1.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464970000000" remote="129050464970000000" />
+<file name="qr_delete_page22.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464980000000" remote="129050464980000000" />
+<file name="qr_upload_album.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465000000000" remote="129050465000000000" />
+<file name="qr_upload_file.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465010000000" remote="129050465010000000" />
+<file name="qr_upload_letter.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465030000000" remote="129050465030000000" />
+<file name="qr_upload_page1.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465040000000" remote="129050465040000000" />
+<file name="qr_upload_page22.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465060000000" remote="129050465060000000" />
+<file name="qr_upload_virtualf.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465060000000" remote="129050465060000000" />
+<file name="qr_virtual_folder_upload.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465070000000" remote="129050465070000000" />
+<file name="reload_window.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050464700000000" remote="129050464700000000" />
+<file name="sharpenFilter.cfc" server="www.student-management.com//var/www/html/student-management/" local="129050465080000000" remote="129050465080000000" />
+<file name="upload_file.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465090000000" remote="129050465090000000" />
+<file name="upload_letter.cfm" server="www.student-management.com//var/www/html/student-management/" local="129050465090000000" remote="129050465090000000" />
+<file name="vfolderdelete.gif" server="www.student-management.com//var/www/html/student-management/" local="129050464710000000" remote="129050464710000000" />
+<file name="vfolderview.gif" server="www.student-management.com//var/www/html/student-management/" local="129050464730000000" remote="129050464730000000" />
+</dwsync>

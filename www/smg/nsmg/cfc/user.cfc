@@ -2,19 +2,41 @@
 <cfcomponent>
 	
     <cfparam name="CLIENT.companyID" default="0">
+    <!----This should be removed when SMG uses the global login page---->
 	
-	<cfif client.companyid eq 10>
-        <cfset client.company_submitting = "CASE">
-        <cfset application.company_short = "CASE">
-        <cfset client.app_menu_comp = 10>
-    <cfelseif client.companyid lte 5>
-        <cfset client.company_submitting = "SMG">
-        <cfset application.company_short = "SMG">
-        <cfset client.app_menu_comp = 5>
-    </cfif>
-    <cfoutput>
+        <cfquery name="get_company" datasource="mysql">
+        select companyid, companyname
+        from smg_companies where url_ref = '#cgi.server_name#' 
+        </cfquery>
+        
+        <cfif get_company.recordcount neq 0>
+            <cfset client.companyid = #get_company.companyid#>
+            <cfset client.companyname = '#get_company.companyname#'>
+        <cfelse>
+            <cfset client.companyid = 0>
+            <cfset client.companyname = 'EXIT Group'>
+        </cfif>
     
-    </cfoutput>
+    <!----If error code SI-102, company information is wrong---->
+    <cfquery name="submitting_info" datasource="#application.dsn#">
+    select website from
+    smg_companies
+    where companyid = #client.companyid#
+    </cfquery>
+    
+	<cfif submitting_info.recordcount eq 0>
+        Error durring login.  Please try again shortly.
+        <cfoutput>
+        #cgi.server_name#
+        </cfoutput>
+        <cfabort>
+    </cfif>
+    
+        <cfset client.company_submitting = "#submitting_info.website#">
+        <cfset application.company_short = "#submitting_info.website#">
+        <cfset client.app_menu_comp = #client.companyid#>
+ 
+    
 	<!--- Login.  called by: flash/login.cfm --->
 	<cffunction name="login" access="public" returntype="string">
 		<cfargument name="username" type="string" required="yes">
