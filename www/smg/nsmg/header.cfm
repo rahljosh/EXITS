@@ -127,25 +127,16 @@
 		</td>---->
 
 		<cfif not isDefined('url.novelaro')>
-            <cfif 1 gt 2> <!---  client.usertype eq 8 or client.usertype eq 1 or client.userid eq 85309672 deb bowen 9272 Brigetta klemek --->
+            <cfif client.usertype eq 8 or client.usertype eq 1 >
                 <td>		
-                    <script>
-                    var rm = escape(window.document.referrer.replace("&","*"));
-                    var pm = window.document.URL.replace("&","*");
-                    var sm = 'https://srv0.velaro.com/visitor/monitor.aspx?siteid=2837&autorefresh=yes&origin=';
-                    sm=sm+rm+'&pa='+pm+'"></scr'+'ipt>';
-                    document.write('<script src="'+sm);
-                    </script> 
-                    <table cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                          <td align="center">
-                            <a href="https://srv0.velaro.com/visitor/requestchat.aspx?siteid=2837&showwhen=inqueue&forcename=#client.name#&email=#client.email#&id=#client.userid#" target="VelaroChat"  onClick="this.newWindow = window.open('https://srv0.velaro.com/visitor/requestchat.aspx?siteid=2837&showwhen=inqueue&forcename=#client.name#&email=#client.email#&id=#client.userid#, 'VelaroChat', 'toolbar=no,location=no,directories=no,menubar=no,status=no,scrollbars=no,resizable=yes,replace=no');this.newWindow.focus();this.newWindow.opener=window;return false;">
-                                <img alt="SMG Live Help Available" src="https://srv0.velaro.com/visitor/check.aspx?siteid=2837&showwhen=inqueue&forcename=#client.name#&email=#client.email#&id=#client.userid#" border="0">
-                            </a> 
-                            </td>
-                        </tr>
-                    </table>
+                    <!-- http://www.LiveZilla.net Chat Button Link Code --><a href="javascript:void(window.open('http://www.exitsapplication.com/livezilla/livezilla.php','','width=600,height=600,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes'))"><img src="http://www.exitsapplication.com/livezilla/image.php?id=04" width="128" height="42" border="0" alt="LiveZilla Live Help"></a><noscript><div></div></noscript><!-- http://www.LiveZilla.net Chat Button Link Code --><!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->
+                         
                 </td>
+               <cfelse>
+                        <td>		
+                  <!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->      
+                </td>
+               
             </cfif> 
         </cfif>
 		
