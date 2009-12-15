@@ -3,11 +3,11 @@
 	
     <cfparam name="CLIENT.companyID" default="0">
 	
-	<cfif cgi.http_host is "jan.case-usa.org">
+	<cfif client.companyid eq 10>
         <cfset client.company_submitting = "CASE">
         <cfset application.company_short = "CASE">
         <cfset client.app_menu_comp = 10>
-    <cfelse>
+    <cfelseif client.companyid lte 5>
         <cfset client.company_submitting = "SMG">
         <cfset application.company_short = "SMG">
         <cfset client.app_menu_comp = 5>
