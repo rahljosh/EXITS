@@ -67,7 +67,7 @@
 	ORDER BY schoolname
 	</cfquery>
 	
-	<cfif #get_student_info.schoolid# is 0> <!--- PLACE A SCHOOL --->
+	<cfif #get_student_info.schoolID# is 0> <!--- PLACE A SCHOOL --->
 		<table width="580" align="center">
 		<tr><td>	
 		<cfoutput>The following schools in the state of #get_host_state.state# are available for this student:</cfoutput>
@@ -76,10 +76,10 @@
 		<cfform action="../querys/update_place_school.cfm?studentid=#client.studentid#" method="post">
 			<table width="580" align="center">
 			<tr><td>				
-			<cfselect name="schoolid">
+			<cfselect name="schoolID">
 				<option value="0"></option>
 				<cfoutput query="get_available_schools">
-				<option value=#schoolid#>#schoolname# (#schoolid#) </option>
+				<option value=#schoolID#>#schoolname# (#schoolID#) </option>
 				</cfoutput>
 			</cfselect>
 			</td></tr>
@@ -95,17 +95,17 @@
 	
 	<cfelse> <!--- STUDENT HAS ALREADY A SCHOOL --->
 		<cfquery name="school_info" datasource="MySQL">
-			SELECT  schoolid, schoolname, address, address2, city, state, zip, phone, principal, email, begins, semesterends, semesterbegins, ends
+			SELECT  schoolID, schoolname, address, address2, city, state, zip, phone, principal, email, begins, semesterends, semesterbegins, ends
 			FROM smg_schools
-			WHERE schoolid = #get_student_info.schoolid#
+			WHERE schoolID = #get_student_info.schoolID#
 		</cfquery>
 		<cfoutput>
 			<cfif school_info.recordcount is '0'>	
-				<table width="580" align="center"><tr><td><font color="CC3300">School (#get_student_info.schoolid#) was not found in the system.</font></td></tr></table>
+				<table width="580" align="center"><tr><td><font color="CC3300">School (#get_student_info.schoolID#) was not found in the system.</font></td></tr></table>
 			<cfelse>
 				<table width="580" align="center">
 				<tr><td>			
-				School: #school_info.schoolname# (#school_info.schoolid#) &nbsp; <cfif client.usertype LTE 4> [ <A href="../index.cfm?curdoc=forms/school_app_1&schoolid=#get_student_info.schoolid#" target="_blank">edit</A> ] </cfif><br>
+				School: #school_info.schoolname# (#school_info.schoolID#) &nbsp; <cfif client.usertype LTE 4> [ <A href="../index.cfm?curdoc=forms/school_form&schoolID=#get_student_info.schoolID#" target="_blank">edit</A> ] </cfif><br>
 				#school_info.address#<br>
 				<cfif #school_info.address2# is ''><cfelse>#school_info.address2#<br></cfif>
 				#school_info.city# #school_info.state#, #school_info.zip#<br>
@@ -134,10 +134,10 @@
 <!--- SCHOOL HISTORY --->
 <cfquery name="school_history" datasource="MySQL">
 	SELECT hostid, reason, studentid, dateofchange,	arearepid, placerepid, changedby,
-		sc.schoolname, sc.city, sc.state, sc.schoolid as school,
+		sc.schoolname, sc.city, sc.state, sc.schoolID as school,
 		u.firstname, u.lastname, u.userid
 	FROM smg_hosthistory
-	INNER JOIN smg_schools sc ON sc.schoolid = smg_hosthistory.schoolid
+	INNER JOIN smg_schools sc ON sc.schoolID = smg_hosthistory.schoolID
 	INNER JOIN smg_users u ON u.userid = changedby
 	WHERE studentid = '#client.studentid#' AND hostid = 0 AND arearepid = 0 AND placerepid = 0
 	ORDER BY dateofchange desc
