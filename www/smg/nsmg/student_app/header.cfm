@@ -38,10 +38,10 @@
 
 </head>
 <body>
-<cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
+<cfif client.companyid eq 10>
 	<cfset client.org_code = 10>
 	<cfset bgcolor ='ffffff'>    
-<cfelse>
+<cfelseif client.companyid lte 5>
     <cfset client.org_code = 5>
     <cfset bgcolor ='B5D66E'>  
 </cfif>
