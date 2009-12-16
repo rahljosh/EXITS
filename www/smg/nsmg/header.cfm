@@ -97,7 +97,7 @@
 <Cfif isdefined('client.name')><cfoutput>#client.name#</cfoutput> [<a href="index.cfm">Home</a>] [ <a href="logout.cfm">Logout</a> ] <cfif #Len(client.companies)# gt 1>[ <Cfoutput><A href="change_company_view.cfm?curdoc=#url.curdoc#">Change Company</A></Cfoutput> ]</cfif> <cfelse>[ <as href="loginform.cfm">Login</a> ]</Cfif> </div>
 ---->
 <cfoutput>
-<table width="100%"  bgcolor="##FFFFFF" cellpadding=0 cellspacing=0 border=0>
+<table width="100%"  bgcolor="##FFFFFF" cellpadding=0 cellspacing=0 border=0 background="pics/#client.companyid#_header.png">
 	<tr>
 		<td valign="top">
             <table>
