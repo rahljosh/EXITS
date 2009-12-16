@@ -398,7 +398,7 @@
 						<cfif CLIENT.usertype LTE 4 AND rep_info.changepass eq 1>
 							<i>User will be required to change password on next log in.</i><br />
 						</cfif>
-                        <cfif CLIENT.usertype LTE 4>
+                        <cfif CLIENT.usertype LTE 6>
                             <a href="index.cfm?curdoc=history&userid=#rep_info.userid#">view history</a><br>
                         </cfif>
                         <a href="index.cfm?curdoc=user_info&action=resend_login&userid=#rep_info.userid#"><img src="pics/email.gif" border="0" align="left"> Resend Login Info Email</a>
