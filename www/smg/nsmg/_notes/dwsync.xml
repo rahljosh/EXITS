@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="header.cfm" server="www.student-management.com//var/www/html/student-management/" local="129053896953281250" remote="129053899100000000" />
+<file name="header.cfm" server="www.student-management.com//var/www/html/student-management/" local="129055587749531250" remote="129055587860000000" />
 <file name="logout.cfm" server="www.student-management.com//var/www/html/student-management/" local="128993565370000000" remote="128993565370000000" />
 <file name="user_info.cfm" server="www.student-management.com//var/www/html/student-management/" local="129054529230000000" remote="129054530230000000" />
+<file name="initial_welcome.cfm" server="www.student-management.com//var/www/html/student-management/" local="129031351120000000" remote="129031351120000000" />
+<file name="history.cfm" server="www.student-management.com//var/www/html/student-management/" local="129054654797031250" remote="129054654990000000" />
+<file name="student_info.cfm" server="www.student-management.com//var/www/html/student-management/" local="129034816540000000" remote="129034816540000000" />
 </dwsync>

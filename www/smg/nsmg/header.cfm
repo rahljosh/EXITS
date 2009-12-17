@@ -197,8 +197,15 @@
                     </cfif>
                 </cfquery>
                 <cfif NOT LEN(logo.logo)>
-                    <!--- SMG LOGO --->
-                    <img src="pics/logos/smg_clear.gif">
+                <cfset comp_logo = '/var/www/html/student-management/nsmg/pics/logos'>
+				<cfdirectory directory="#comp_logo#" name="file" filter="#client.companyid#_header_logo.png">
+                	<cfif file.recordcount>
+                    	<!--- SMG LOGO --->
+                    	<img src="pics/logos/#file.name#">
+                   <cfelse>
+                    	<!--- SMG LOGO --->
+                    	<img src="pics/logos/smg_clear.gif">
+                	</cfif>
                 <cfelse>
                     <!--- INTL. AGENT LOGO --->
                     <img src="pics/logos/#logo.logo#" height="71">

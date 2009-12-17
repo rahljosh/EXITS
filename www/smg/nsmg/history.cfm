@@ -1,4 +1,4 @@
-<cfif not client.usertype LTE 4>
+<cfif not client.usertype LTE 6>
 	You do not have access to this page.
     <cfabort>
 </cfif>     

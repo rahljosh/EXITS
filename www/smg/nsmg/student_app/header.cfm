@@ -19,7 +19,7 @@
 <meta name="Author" content="Josh Rahl">
 <meta http-EQuiv="Content-Type" content="text/html; charset=iso-8859-1">
 
-<title>EXITS Student Application</title>
+<title>EXITS Student Application - 2</title>
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 
 <link rel="stylesheet" href="../smg.css" type="text/css">
@@ -38,8 +38,8 @@
 
 </head>
 <body>
-<cfif client.companyid eq 10>
-	<cfset client.org_code = 10>
+<cfif client.companyid gt 5>
+	<cfset client.org_code = #client.companyid#>
 	<cfset bgcolor ='ffffff'>    
 <cfelseif client.companyid lte 5>
     <cfset client.org_code = 5>

@@ -54,7 +54,14 @@
                         <cfoutput><a href="index.cfm?curdoc=student_app/student_list_intrep&status=#i#">#apps.count#</a></cfoutput>
                     </td>
 				</cfloop>
-			</tr>
+                </tr>
+			<tr><td colspan=3 align="right">Apps you are entering can be found here </td>
+            	<td>&nbsp;&nbsp;&nbsp;&nbsp;<img src="pics/arrow_rt.gif"></td></tr>
+				<tr><td colspan=10 align="center"> 
+                <cfif client.companyid gt 5>
+                	<a href="index.cfm?curdoc=student_app/question_start_student"><img src="student_app/pics/startApplication.png" border=0></a>
+					</cfif>
+				</td></tr>
 		</table>
 	</td>
 	<td align="right" valign="top" rowspan=2></td>
