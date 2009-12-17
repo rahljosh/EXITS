@@ -4,18 +4,41 @@
     <cfparam name="CLIENT.companyID" default="0">
     <!----This should be removed when SMG uses the global login page---->
 	
+    <!--- Check if we are on Local Server --->
+	<cfif APPLICATION.IsServerLocal>
+    
         <cfquery name="get_company" datasource="mysql">
-        select companyid, companyname
-        from smg_companies where url_ref = '#cgi.server_name#' 
+            SELECT 
+            	companyid, 
+                companyname
+            FROM 
+            	smg_companies 
+            WHERE
+            	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="www.student-management.com"> 
         </cfquery>
+    
+    <!--- Production Server --->    
+	<cfelse>
+    
+        <cfquery name="get_company" datasource="mysql">
+            SELECT 
+            	companyid, 
+                companyname
+            FROM 
+            	smg_companies 
+            WHERE
+            	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.server_name#"> 
+        </cfquery>
+    
+    </cfif>        
         
-        <cfif get_company.recordcount neq 0>
-            <cfset client.companyid = #get_company.companyid#>
-            <cfset client.companyname = '#get_company.companyname#'>
-        <cfelse>
-            <cfset client.companyid = 0>
-            <cfset client.companyname = 'EXIT Group'>
-        </cfif>
+	<cfif VAL(get_company.recordcount)>
+        <cfset client.companyid = get_company.companyid>
+        <cfset client.companyname = get_company.companyname>
+    <cfelse>
+        <cfset client.companyid = 0>
+        <cfset client.companyname = 'EXIT Group'>
+    </cfif>
     
     <!----If error code SI-102, company information is wrong---->
     <cfquery name="submitting_info" datasource="#application.dsn#">
@@ -25,7 +48,7 @@
     </cfquery>
     
 	<cfif submitting_info.recordcount eq 0>
-        Error durring login.  Please try again shortly.
+        Error during login.  Please try again shortly.
         <cfoutput>
         #cgi.server_name#
         </cfoutput>
@@ -34,7 +57,7 @@
     
         <cfset client.company_submitting = "#submitting_info.website#">
         <cfset application.company_short = "#submitting_info.website#">
-        <cfset client.app_menu_comp = #client.companyid#>
+        <cfset client.app_menu_comp = client.companyid>
  
     
 	<!--- Login.  called by: flash/login.cfm --->
