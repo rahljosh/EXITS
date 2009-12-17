@@ -18,15 +18,21 @@ function checkEmail() {
 </script> 
 
 <cfquery name="app_programs" datasource="MySQL">
-	SELECT app_programid, app_program 
+	SELECT app_programid, app_program, companyid 
 	FROM smg_student_app_programs
 	WHERE app_type = 'regular'
+    <cfif client.companyid gt 5>
+    and companyid = #client.companyid#
+    </cfif>
 </cfquery>
  
 <cfquery name="app_other_programs" datasource="MySQL">
-	SELECT app_programid, app_program 
+	SELECT app_programid, app_program, companyid
 	FROM smg_student_app_programs
 	WHERE app_type = 'additional'
+    <cfif client.companyid gt 5>
+    and companyid = #client.companyid#
+    </cfif>
 </cfquery> 
 
 <cfquery name="intl_rep" datasource="MySql">
@@ -162,7 +168,9 @@ function checkEmail() {
 		</td>
 		<td>
 			<cfselect name="add_program">
+            <option value="0">N/A</option>
 				<cfloop query="app_other_programs">
+                
 				<option value="#app_programid#">#app_program#</option>
 				</cfloop>
 			</cfselect>

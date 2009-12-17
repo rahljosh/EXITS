@@ -45,7 +45,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
         </tr>
     </table>
     
-    <table width=100%> 
+    <table width=100%>
         <tr>
             <td width=40% valign="top">
             
@@ -149,7 +149,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
         </tr>
     </table>
     
-    <!----News & Announcements----> 
+    <!----News & Announcements---->
     <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
         <tr height=24>
             <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>

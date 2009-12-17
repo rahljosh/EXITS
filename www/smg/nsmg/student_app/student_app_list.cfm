@@ -52,7 +52,7 @@ function AppReceived(url)
 		<cfelseif client.usertype EQ '11'>
 			AND s.branchid = '#client.userid#'
 		</cfif>
-        <cfif client.companyid gt 5>AND s.companyid = 10</cfif>
+        <cfif client.companyid gt 5>AND s.companyid = #client.companyid#</cfif>
 	GROUP BY s.app_sent_student, s.studentid
 </cfquery>
 
@@ -81,7 +81,9 @@ function AppReceived(url)
 	These applications have been approved by SMG.	
 </cfif>
 </h2>
-
+<cfif client.userid eq 14133>
+	<cfdump var="#client#">
+</cfif>
 <cfif client.usertype GTE 5 OR (url.status neq 7 and url.status neq 8)>
 	<br>
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>

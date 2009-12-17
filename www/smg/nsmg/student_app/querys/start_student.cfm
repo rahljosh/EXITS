@@ -19,13 +19,17 @@
 </cfif>
 
 <!--- MAIN OFFICE ---->
-<cfif client.usertype EQ '8'>
+<cfif client.usertype LTE '8'>
 	<cfif url.r is 'y'> 
 		<cfset cs = 5> <!--- INTL. REP. FILLING OUT APPLICATION --->
 	<cfelse>
 		<cfset cs = 1>  <!--- STUDENT FILLING OUT APPLICATION --->
 	</cfif>
-	<cfset get_intrepid = '#client.userid#'>
+    <cfif client.usertype eq 8> 
+		<cfset get_intrepid = '#client.userid#'>
+	<cfelse>
+    	<cfset get_intrepid = '#client.companyid#'>
+    </cfif>
 	<cfset get_branchid = '0'>
 <!--- BRANCH --->
 <cfelseif client.usertype EQ '11'>
@@ -152,7 +156,11 @@
         branchid,  
 		app_sent_student, 
         app_current_status, 
+       <cfif client.companyid gt 5>
+        companyid,
+        </cfif>
         application_expires
+        
     )
 	VALUES 
     (
@@ -169,6 +177,9 @@
         <cfqueryparam cfsqltype="cf_sql_integer" value="#get_branchid#">, 
         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">, 
         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(cs)#">, 
+        <cfif client.companyid gt 5>
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">, 
+        </cfif>
         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#expiration_date#">
 	)
 </cfquery>
