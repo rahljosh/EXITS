@@ -81,9 +81,7 @@ function AppReceived(url)
 	These applications have been approved by SMG.	
 </cfif>
 </h2>
-<cfif client.userid eq 14133>
-	<cfdump var="#client#">
-</cfif>
+
 <cfif client.usertype GTE 5 OR (url.status neq 7 and url.status neq 8)>
 	<br>
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -259,7 +257,7 @@ function AppReceived(url)
 			<td><b>Confirm Receipt</b></td>
 		</tr>
 		<cfloop query="students_7">
-			<tr bgcolor="#iif(students_7.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
+			<tr bgcolor="#iif(students_7.currentrow MOD 2 ,DE("FFFFFF") ,DE("e2efc7") )#">
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#studentid#</a></td>
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#familylastname#</a></td>
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>

@@ -56,7 +56,7 @@
 		</tr>
 	</table>
 	
-	<table cellpadding="3" cellspacing="0" bgcolor="ffffe6" width=100% class="section">
+	<table cellpadding="3" cellspacing="0" bgcolor="FFFFFF" width=100% class="section">
 		<tr>
 			<td><b>Field Label</b></td>
 			<td><b>Section</b></td>

@@ -101,7 +101,7 @@
             <BODY>	
         
             <table width=550 class="thin-border" cellspacing="3" cellpadding=0>
-                <tr><td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/#CLIENT.companyID#_top-email.gif" width=550 height=75></td></tr>
+                <tr><td bgcolor=b5d66e><img src="http://#cgi.server_name#/nsmg/student_app/pics/#CLIENT.companyID#_top-email.gif" width=550 height=75></td></tr>
                 <tr><td><br>Dear Friend,<br><br></td></tr>
                 <tr><td>A new EXITS online student has been sent to you from #get_current_user.firstname# #get_current_user.lastname#.<br><br></td></tr>	
                 <tr><td>
@@ -110,7 +110,7 @@
                     Additional Comments:<br>
                     <cfif FORM.comments EQ ''>n/a<cfelse>#FORM.comments#</cfif><br><br>
                     Please click
-                    <a href="#emailSiteURL#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
+                    <a href="http://#cgi.server_name#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
                     to see the student's online application.<br><br>
              
                     Please keep in mind that this application might take a few minutes to load completely. The loading time will depend on your internet connection.<br><br>	
