@@ -27,8 +27,8 @@
 <style type="text/css">
 <!--
 .smlink         		{font-size: 11px;}
-.section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #Ffffe6;}
-.sideborders			{ border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6; background: #Ffffe6;}
+.section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #FFFFFF;}
+.sideborders			{ border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6; background: #FFFFFF;}
 .sectionFoot    		{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;font-size:2px;}
 .sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
@@ -78,7 +78,7 @@ where companyid = #client.org_code#
 </cfquery>
 
 <cfoutput>
-<table width=100% bgcolor="#bgcolor#" cellpadding=0 cellspacing=0 border=0>
+<table width=100% bgcolor="#bgcolor#" cellpadding=0 cellspacing=0 border=0 background="pics/#client.companyid#_header.png">
 	<tr>
 		<td valign="top"><div style="font: bold 150% Arial,sans-serif; color: ##000000;	margin:0px; padding: 2px;">
         #org_info.companyname# Online Application</div>

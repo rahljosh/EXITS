@@ -406,7 +406,7 @@
 						overflow:auto;
 						border-left: 2px solid c6c6c6;
 						border-right: 2px solid c6c6c6;
-						background: Ffffe6;
+						background: FFFFFF;
 						left:auto;
 					}
 					div.scroll2 {
@@ -415,7 +415,7 @@
 						overflow:auto;
 						border-left: 2px solid c6c6c6;
 						border-right: 2px solid c6c6c6;
-						background: Ffffe6;
+						background: FFFFFF;
 						left:auto;
 					}
 					-->

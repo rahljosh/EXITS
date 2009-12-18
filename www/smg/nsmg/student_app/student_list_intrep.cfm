@@ -61,7 +61,7 @@
 		<td><b>Total</b></td>
 	</tr>
 <cfloop query="students">
-	<tr bgcolor="#iif(students.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
+	<tr bgcolor="#iif(students.currentrow MOD 2 ,DE("FFFFFF") ,DE("e2efc7") )#">
 		<td><a href="?curdoc=student_app/student_app_list&status=#url.status#&intrep=#userid#">#businessname#</a></td>
 		<td>#total#</td>
 	</tr>
