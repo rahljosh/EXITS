@@ -203,7 +203,7 @@
 		VALUES ('#get_student_id.studentid#')
 	</cfquery>
 </cfif>
-
+<cfoutput>
 <!----if rep is filling out, update status to reps status---->
 <cfif url.r is 'y'>
 	<cfif client.usertype EQ '8'>
@@ -235,7 +235,56 @@
 		
 	</cfquery>
 
-	<cfoutput>
+	
+    
+    <!----Email CFC---->
+<cfsavecontent variable="email_message">
+ #FORM.firstname#-
+        <br><br>
+        An account has been created for you on the #client.companyname# EXITS system.  
+        Using EXITS you will be able to apply for your exchange program and view the status of your application as it is processed. 
+        <br><br>
+        You can start your application at any time and do not need to complete it all at once.
+        You can save your work at any time and return to the application when convenient.  
+        The first time you access EXITS you will create a username and password that will allow you to work 
+        on your application at any time. 
+        <br><br>
+        Your application will remain active until <strong>#expiration_date#</strong>.
+        You will need to contact #agent_info.businessname# to re-activate your application if your application expires.
+        <br><br>
+        Please provide the information requested by the application and press the submit button when it is complete.
+        Once submitted, the application can no longer be edited.  
+        The completed application will be reviewed by your international representative and if accepted sent to a parnter organization.
+        The status of your application can be viewed by logging into the EXITS Login Portal. 
+        After your placement has been made, you will also be able to access your host family profile. (Host family profiles available only if the partner organization uses EXITS)
+        <br><br>
+        You are taking the first step in what will become one of the greatest experiences in your life!
+        <br><br>
+        Click the link below to start your application process.  
+        <br><br>
+        <a href="http://#client.exits_url#/nsmg/student_app/?s=#uniqueid#">http://#client.exits_url#/nsmg/student_app/?s=#uniqueid#</a>
+        <br><br>
+        You will need the following information to verify your account:<br>
+        *email address<br>
+        *this ID: #randid#
+        <br><br>
+        If you have any questions about the application or the information you need to submit, please contact your international representative:
+        <br><br>
+        #agent_info.businessname#<br>
+        #agent_info.phone#<br>
+        #agent_info.studentcontactemail#<br><br>
+        
+        For technical issues with EXITS, submit questions to the support staff via the EXITS system.
+ 
+</cfsavecontent>
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#FORM.email1#">
+                <cfinvokeargument name="email_subject" value="Student App. Login Information">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.support_email#">
+            </cfinvoke>
+    <!----End EMAL CFC---->
+    <!----
 	<cfmail to="#FORM.email1#" from="support@student-management.com" Subject="SMG Exchange Application" type="html">
 	<style type="text/css">
 	.thin-border{ border: 1px solid ##000000;}
@@ -296,9 +345,11 @@
 		</tr>
 	</cfmail>
 	</cfoutput>
+	---->
+   
 </cfif>
 
-<cfoutput>
+
 <script language="JavaScript">
 <!-- 
 alert("You have successfully created this account for #FORM.firstname# #FORM.familylastname#. Thank You.");

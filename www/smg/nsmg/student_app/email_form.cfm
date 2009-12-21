@@ -84,46 +84,32 @@
 
 	<!--- FORM submitted --->
 	<cfif VAL(FORM.submitted) AND LEN(FORM.email_address)>
-    
-        <CFMAIL
-            TO="#FORM.email_address#"
-            replyto="#get_current_user.email#"
-            FROM="#emailFrom#" 
-            SUBJECT="EXITS Online Application for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)"
-            TYPE="html">
-        
-            <HTML>
-            <HEAD>
-            <style type="text/css">
-                .thin-border{ border: 1px solid ##000000;}
-            </style>
-            </HEAD>
-            <BODY>	
-        
-            <table width=550 class="thin-border" cellspacing="3" cellpadding=0>
-                <tr><td bgcolor=b5d66e><img src="http://#cgi.server_name#/nsmg/student_app/pics/#CLIENT.companyID#_top-email.gif" width=550 height=75></td></tr>
-                <tr><td><br>Dear Friend,<br><br></td></tr>
-                <tr><td>A new EXITS online student has been sent to you from #get_current_user.firstname# #get_current_user.lastname#.<br><br></td></tr>	
-                <tr><td>
-                    <b>Student: #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</b><br><br>
-                    
-                    Additional Comments:<br>
-                    <cfif FORM.comments EQ ''>n/a<cfelse>#FORM.comments#</cfif><br><br>
-                    Please click
-                    <a href="http://#cgi.server_name#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
-                    to see the student's online application.<br><br>
-             
-                    Please keep in mind that this application might take a few minutes to load completely. The loading time will depend on your internet connection.<br><br>	
-                </td></tr>	
-                <tr><td>
-                     Sincerely,<br>
-                    #CLIENT.companyname#<br><br>
-                </td></tr>
-            </table>
-            
-            </body>
-            </html>
-        </CFMAIL>
+    <cfsavecontent variable="email_message">
+
+Dear Friend,<br><br>
+A new EXITS online student has been sent to you from #get_current_user.firstname# #get_current_user.lastname#.<br><br>	
+<b>Student: #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</b><br><br>
+
+Additional Comments:<br>
+<cfif FORM.comments EQ ''>n/a<cfelse>#FORM.comments#</cfif><br><br>
+Please click
+<a href="http://#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
+to see the student's online application.<br><br>
+
+Please keep in mind that this application might take a few minutes to load completely. The loading time will depend on your internet connection.<br><br>             
+ Sincerely,<br>
+#CLIENT.companyname#<br><br>
+
+</cfsavecontent>
+			
+<!--- send email --->
+<cfinvoke component="nsmg.cfc.email" method="send_mail">
+	<cfinvokeargument name="email_to" value="#FORM.email_address#">
+	<cfinvokeargument name="email_subject" value="EXITS Online Application for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)">
+	<cfinvokeargument name="email_message" value="#email_message#">
+	<cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
+</cfinvoke>
+       
    
     </cfif>
 	

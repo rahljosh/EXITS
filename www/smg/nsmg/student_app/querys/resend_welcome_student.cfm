@@ -37,19 +37,13 @@
 		<cfset int_email = '#agent_info.studentcontactemail#'>
 	</cfif>
 	
-	<cfmail to="#get_student.email#" bcc="#int_email#" from="support@student-management.com" Subject="SMG Exchange Application - Login Information" type="html">
-	<style type="text/css">
-	.thin-border{ border: 1px solid ##000000;}
-	</style>
-	<table width=550 class="thin-border" cellspacing="0" cellpadding=0>
-		<tr>
-			<td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
-		</tr>
-		<tr>
-			<td>
+    <!----Email To be Send. nsmg cfc emal cfc---->
+    
+    		<cfsavecontent variable="email_message">
+           			
 			#get_student.firstname#-
 			<br><br>
-			An account has been created for you on the Student Management Groups EXITS system.  
+			An account has been created for you on the #client.companyname# EXITS system.  
 			Using EXITS you will be able to apply for your exchange program and view the status of your application as it is processed. 
 			<br><br>
 			You can start your application at any time and do not need to complete it all at once.
@@ -57,12 +51,9 @@
 			The first time you access EXITS you will create a username and password that will allow you to work 
 			on your application at any time. 
 			<br><br>
-			Your application will remain active as long as you access it at least once every 30 days.
-			The application process will have to be restarted after this period of time expires.
-			<br><br>
 			Please provide the information requested by the application and press the submit button when it is complete.
 			Once submitted, the application can no longer be edited.  
-			The completed application will be reviewed by your international representative and sent to the SMG Headquarters in New York.
+			The completed application will be reviewed by your international representative and if accepted, sent on to there partner organization.
 			The status of your application can be viewed by logging into the Exits Login Portal. 
 			After your placement has been made, you will also be able to access your host family profile.
 			<br><br>
@@ -70,39 +61,40 @@
 			<br><br>
 			Click the link below to start your application process.  
 			<br><br>
-			<a href="http://www.student-management.com/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">http://www.student-management.com/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#</a>
+			<a href="http://#exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">http://#exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#</a>
 			<br><br>
 			You will need the following information to verify your account:<br>
 			*email address<br>
 			*this ID: #get_student.randid#
 			<br><br>
-			If you have any questions about the application or the information you need to submit, please contact your international representative:
+			If you have any questions about the application or the information you need to submit, please contact:
 			<br><br>
 			#agent_info.businessname#<br>
 			#agent_info.phone#<br>
 			#agent_info.email#<br><br>
 			
 			For technical issues with EXITS, submit questions to the support staff via the EXITS system.
-			</td>
-		</tr>
-		<tr>
-			<td align="center">__________________________________________</td>
-		</tr>
-		<tr>
-			<Td align="center">
-			<font color="##CCCCCC"><font size=-1>Please add support@student-management.com to your whitelist to ensure it isn't marked as spam. SMG will
-			not sell your address or use it for unsolicited emails.  This email was sent on behalf of Student Management Group from an International Agent, listed above.  If you received this email as an unsolicited contact 
-			about SMG or SMG subsidiaries, please contact support@student-management.com  </font></font>
-			</Td>
-		</tr>
-	</cfmail>
-
+				
+                <!----
+				<p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
+				---->
+			</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#get_student.email#">
+                <cfinvokeargument name="email_subject" value="Student App. Login Information">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.support_email#">
+            </cfinvoke>
+    <!----End of Email---->
+   
 	<html>
 	<head>
 	<script language="JavaScript">
 	<!-- 
 	alert("EXITS - You have successfully resent the login information for #get_student.firstname# #get_student.familylastname#. Thank You.");
-		location.replace("index.cfm?curdoc=student_app/student_app_list&status=#url.status#");
+		location.replace("http://wep.exitsapplication.com/nsmg/student_app/login_information.cfm?unqid=#url.unqid#");
 	-->
 	</script>
 	</head>

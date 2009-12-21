@@ -111,6 +111,28 @@
 				<cfelse>
 					<cfset cc_email = '#get_email.email#'>
 				</cfif>
+<cfsavecontent variable="email_message">
+  <h2>Congratulations!</h2>
+        #firstname# #familylastname#-
+        <br><br>
+        This email is to inform you that your application has been accepted and approved. <br><br>
+        <em>What does this mean to you and what are the next steps?</em><br>
+        Your are now listed as available for placement in region or state you chose if applicable.  Students are placed on a 
+        daily basis all over the county.  All you have to do is wait to hear from us.  You will receive an email and acceptance letter once you have been placed with a host family. 
+        You will also be able to see your host family profile when you log into #client.exits_url# after you have been placed.
+        <br><br>
+</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#get_email.intrepemail#">
+                <cfinvokeargument name="email_subject" value="Exchange application apporved">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_cc" value="#cc_email#">
+                <cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
+            </cfinvoke>
+    <!----End of Email---->
+                
 					<cfmail to='#get_email.intrepemail#' cc="#cc_email#" from='support@student-management.com' subject='Exchange Application Information' type="html">
 					<style type="text/css">
 					.thin-border{ border: 1px solid ##000000;}

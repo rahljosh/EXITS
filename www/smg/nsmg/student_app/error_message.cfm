@@ -50,18 +50,24 @@
 		<td width="42"><img src="#path#pics/p_bottonright.gif" width="42"></td>
 	</tr>
 </table>
-
-<CFMAIL TO="#APPLICATION.EMAIL.errors#" FROM="#APPLICATION.EMAIL.support#"
-	 SUBJECT="Online App - Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#" type="html"> 
-	   There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#<br>
-	   On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#<Br>
-	   <cfif IsDefined('CFCATCH.Type')>Type: #CFCATCH.Type#<br></cfif>
-	   <cfif IsDefined('CFCATCH.Message')>Message: #CFCATCH.Message#<br></cfif>
-	   <cfif IsDefined('CFCATCH.Detail')>Details: #CFCATCH.Detail#<br></cfif>
-	   <cfif IsDefined('cfcatch.NativeErrorCode')>Native Error: #cfcatch.NativeErrorCode#<br></cfif>
-	   <cfif IsDefined('cfcatch.sqlstate')>SQLState: #cfcatch.SQLState#<br></cfif>
-	   <cfif IsDefined('client.studentid')>StudentID: #client.studentid#<br><cfelse>Non student related.<br></cfif> 
-</CFMAIL>
+<cfsavecontent variable="email_message">
+There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#<br>
+On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#<Br>
+<cfif IsDefined('CFCATCH.Type')>Type: #CFCATCH.Type#<br></cfif>
+<cfif IsDefined('CFCATCH.Message')>Message: #CFCATCH.Message#<br></cfif>
+<cfif IsDefined('CFCATCH.Detail')>Details: #CFCATCH.Detail#<br></cfif>
+<cfif IsDefined('cfcatch.NativeErrorCode')>Native Error: #cfcatch.NativeErrorCode#<br></cfif>
+<cfif IsDefined('cfcatch.sqlstate')>SQLState: #cfcatch.SQLState#<br></cfif>
+<cfif IsDefined('client.studentid')>StudentID: #client.studentid#<br><cfelse>Non student related.<br></cfif> 
+</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#APPLICATION.EMAIL.errors#">
+                <cfinvokeargument name="email_subject" value="Online App - Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.support_email#">
+            </cfinvoke>
 
 </cfoutput>
 </body>

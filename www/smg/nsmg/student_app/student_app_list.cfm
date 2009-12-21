@@ -99,7 +99,7 @@ function AppReceived(url)
 			<td><b>First Name</b></td>
 			<td><b>Sex</b></td>
 			<td><b>Email</b></td>
-			<td><b>Login</b></td>
+			<td><b>Login Info</b></td>
          <!---- <Cfif url.status is 2 or url.status gte 7><td><b>Future</b></td></Cfif> ---->
 			<cfif client.usertype GTE 5>
 				<td><b>Phone</b></td>
@@ -138,9 +138,7 @@ function AppReceived(url)
 			<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
 			<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
 			<td>#email# 
-				<cfif email NEQ '' AND url.status EQ 1>
-					<font size=-2><a href="index.cfm?curdoc=student_app/querys/resend_welcome_student&unqid=#uniqueid#&status=#url.status#">Resend Welcome email</A></font>
-				</cfif>
+				
 			</td>
 			<td align="center"><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#url.status#');"><img src="student_app/pics/info.gif" border="0" alt="Login Information"></a></td>
         <!----  <Cfif url.status is 2 or url.status gte 7><td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#url.status#" >Change</a></td></cfif>---->

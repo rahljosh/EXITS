@@ -49,83 +49,35 @@
 		<td width="42"><img src="#path#pics/p_bottonright.gif" width="42"></td>
 	</tr>
 </table>
+<cfsavecontent variable="email_message">
+There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#.
+On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#
+<cfif IsDefined('CFCATCH.Type')>Type: #CFCATCH.Type#</cfif>
+<cfif IsDefined('CFCATCH.Message')>Message: #CFCATCH.Message#</cfif>
+<cfif IsDefined('CFCATCH.Detail')>Details: #CFCATCH.Detail#</cfif>
+<cfif IsDefined('cfcatch.NativeErrorCode')>Native Error: #cfcatch.NativeErrorCode#</cfif>
+<cfif IsDefined('cfcatch.sqlstate')>SQLState: #cfcatch.SQLState#</cfif>
+<cfif IsDefined('client.studentid')>
+    <cfquery name="get_email" datasource="MySql">
+        SELECT studentid, email 
+        FROM smg_students
+        WHERE studentid = '#client.studentid#'
+    </cfquery>
+    StudentID: ###client.studentid#
+    Email: #get_email.email#
+<cfelse>
+    Non student related.
+</cfif> 
+</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#APPLICATION.EMAIL.errors#">
+                <cfinvokeargument name="email_subject" value="Online App - Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
+            </cfinvoke>
 
-<CFMAIL TO="#APPLICATION.EMAIL.errors#" FROM="#APPLICATION.EMAIL.support#" SUBJECT="Online App - Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#"> 
-	There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#.
-	On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#
-	<cfif IsDefined('CFCATCH.Type')>Type: #CFCATCH.Type#</cfif>
-	<cfif IsDefined('CFCATCH.Message')>Message: #CFCATCH.Message#</cfif>
-	<cfif IsDefined('CFCATCH.Detail')>Details: #CFCATCH.Detail#</cfif>
-	<cfif IsDefined('cfcatch.NativeErrorCode')>Native Error: #cfcatch.NativeErrorCode#</cfif>
-	<cfif IsDefined('cfcatch.sqlstate')>SQLState: #cfcatch.SQLState#</cfif>
-	<cfif IsDefined('client.studentid')>
-		<cfquery name="get_email" datasource="MySql">
-			SELECT studentid, email 
-			FROM smg_students
-			WHERE studentid = '#client.studentid#'
-		</cfquery>
-		StudentID: ###client.studentid#
-		Email: #get_email.email#
-	<cfelse>
-		Non student related.
-	</cfif> 
-</CFMAIL>
-
-<!---
-<cfquery name="get_intrep" datasource="MySql">
-	SELECT intrep
-	FROM smg_students
-	WHERE studentid = <cfif IsDefined('form.studentid')><cfqueryparam value="#form.studentid#" cfsqltype="cf_sql_integer">
-						<cfelse>'0'</cfif>
-</cfquery>
-
-<cfquery name="insert_help_desk" datasource="MySql">
-INSERT INTO smg_help_desk
-		(title, category, section, priority, text, status, assignid, submitid, date)
-		VALUES
-		('Online App - #CFCATCH.Message#','error', '11', 'medium', 
-		'There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#.<br>
-		On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#<br>
-		Type: #CFCATCH.Type#<br>
-		Message: #CFCATCH.Message#<br>
-		Details: #CFCATCH.Detail#<br>
-		<cfif IsDefined('form.studentid')>StudentID: #form.studentid#<cfelse>Non student related.</cfif><br>',
-		'initial', '510', 
-		<cfif get_intrep.recordcount NEQ '0'>'#get_intrep.intrep#'<cfelse>'0'</cfif>,
-		#CreateODBCDateTime(now())#)
-</cfquery>
-
-<cfquery name="retrive_helpdeskid" datasource="mysql">
-	SELECT Max(helpdeskid) as helpdeskid
-	FROM smg_help_desk
-</cfquery>
-
-<cfquery name="insert_link" datasource="MySQL">
-	INSERT INTO smg_links (link)
-	VALUES ('https://www.student-management.com/nsmg/index.cfm?curdoc=helpdesk/help_desk_view&amp;helpdeskid=#retrive_helpdeskid.helpdeskid#')
-</cfquery>
-
-<cfquery name="get_link_id" datasource="MySQL">
-	SELECT Max(id) as linkid
-	FROM smg_links
-</cfquery>
-
-<CFMAIL TO="marcus@student-management.com" FROM="marcus@student-management.com"
-	 SUBJECT="Online App - Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#">
-	   A new request of service has been submitted to you.
-	   Item Link: http://www.student-management.com/?link=#get_link_id.linkid#
-	   
-	   There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#.
-	   On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#
-	   Type: #CFCATCH.Type#
-	   Message: #CFCATCH.Message#
-	   Details: #CFCATCH.Detail#
-	   <cfif IsDefined('cfcatch.NativeErrorCode')>Native Error: #cfcatch.NativeErrorCode#</cfif>
-	   <cfif IsDefined('cfcatch.sqlstate')>SQLState: #cfcatch.SQLState#</cfif>
-	   <cfif IsDefined('form.studentid')>StudentID: #form.studentid#<cfelse>Non student related.</cfif> 
-</CFMAIL>
-
---->
 </cfoutput>
 
 </body>

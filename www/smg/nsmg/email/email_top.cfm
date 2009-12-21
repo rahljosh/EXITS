@@ -9,6 +9,8 @@
 	<cfset companycolor='0054A0'>
  <cfelseif client.companyid eq 10>
 	<cfset companycolor='98012E'>
+<cfelseif client.companyid eq 11>
+	<cfset companycolor='00b3d9'>
 <cfelse>
 	<cfset companycolor='0054A0'> 
 </cfif>
@@ -35,7 +37,7 @@ table,tr,td					{font-family:Arial, Helvetica, sans-serif;}
     <cfif client.companyid lte 5>
         <td><strong><font size=+2>INTERNATIONAL <font color="#companycolor#">STUDENT EXCHANGE</font></font></strong></td>
      <cfelse>
-     	<td><strong><font size=+2>CULTURAL ACADEMIC <br /><font color="#companycolor#">STUDENT EXCHANGE</font></font></strong></td>
+     	<td><strong><font size=+2>#client.companyname#</font></font></strong></td>
      </cfif>
      </Tr>	
    

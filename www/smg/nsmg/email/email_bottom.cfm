@@ -10,7 +10,7 @@
  </Cfquery>
 <table width="600">
 	  <tr>
-     	<td colspan=2 bgcolor="#companycolor#" align="center"><font color="##FFFFFF" size=-2>Toll-free: #company_info.toll_free# &middot; Local: #company_info.phone# &middot; Fax: #company_info.fax# </font></td>
+     	<td colspan=2 bgcolor="#client.color#" align="center"><font color="##FFFFFF" size=-2><cfif company_info.toll_free is not ''>Toll-free: #company_info.toll_free# &middot;</cfif><cfif company_info.phone is not ''> Local: #company_info.phone# &middot;</cfif> <cfif company_info.fax is not ''>Fax: #company_info.fax#</cfif> </font></td>
 	</tr>
 </table>
 </div>
