@@ -51,24 +51,32 @@
 <cfoutput>
 
 <!--- message sent to the Technical Support --->
-<cfmail from="helpdesk@student-management.com" to="support@student-management.com" subject="Student App Message">
-	Dear #assigned_to.firstname# #assigned_to.lastname#,
-	
-	A new request of service has been submitted to you.
-	Full Details: http://www.student-management.com/?link=#get_link_id.linkid#
-	
-	Title: #form.title#
-	Category: #form.category#
-	
-	Text: #form.text#
-	
-	Related HD Item: #form.previous_post#
-	
-	Submission Info
-	Browser: #form.browser#
-	IP: #form.ip#
-	Submitted on: #dateformat (now(), "dd/mm/yyyy")#
-</cfmail>
+<cfsavecontent variable="email_message">
+#assigned_to.firstname# #assigned_to.lastname#,
+<br /><br />
+A new request of service has been submitted to you.
+Full Details: http://#client.exits_url#/?link=#get_link_id.linkid#
+<br /><br />
+Title: #form.title#
+Category: #form.category#
+<br /><br />
+Text: #form.text#
+<br /><br />
+Related HD Item: #form.previous_post#
+<br /><br />
+Submission Info
+Browser: #form.browser#<br />
+IP: #form.ip#<br />
+Submitted on: #dateformat (now(), "dd/mm/yyyy")#<br />
+</cfsavecontent>			
+<!--- send email --->
+    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+       <cfinvokeargument name="email_to" value="#client.support_email#">
+       <cfinvokeargument name="email_subject" value="#client.companyshort# Student App Message">
+       <cfinvokeargument name="email_message" value="#email_message#">
+       <cfinvokeargument name="email_from" value="#client.support_email#">
+    </cfinvoke>
+
 </cfoutput>
 			
 <html>

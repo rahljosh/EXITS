@@ -37,41 +37,35 @@ body {font:Arial, Helvetica, sans-serif;}
 </cfif>
 
 <cfoutput query="get_name">
-<cfmail to='#get_name.email#' from='#client.support_email#' subject='Your Account Information' type="html">
-<style type="text/css">
+<cfsavecontent variable="email_message">
+#firstname# #familylastname#-
+<br><br>
+Your account has been succesfully created. Below is your login information for your records.
+<br><br>
+Login ID (User ID) : #email#<br>
+Password: #password1#
+<br><br>
+You can log in and out of the EXITS Online Application System at any time using this login information.
+To login to the EXITS Online Application, go to the EXITS Login Portal at #client.exits_url#
+<br><br>
+Please remember that if your application will expire on #DateFormat(application_expires, 'mmm dd, yyyy')# at #TimeFormat(application_expires, 'h:mm tt')# MST.  
+<br><br>
+Sincerely-<br>
+#client.companyname# / EXITS Support
+</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#get_name.email#">
+                <cfinvokeargument name="email_subject" value="#client.companyshort# Account Information">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.support_email#">
+            </cfinvoke>
+    <!----End of Email---->
 
-.thin-border{ border: 1px solid ##000000;}
-
-    </style>
-<table width=550 class="thin-border" >
-	<tr>
-		<td bgcolor=b5d66e><img src="#client.site_url#nsmg/student_app/pics/5_top-email.gif"></td>
-	</tr>
-	<tr>
-		<td>
-		#firstname# #familylastname#-
-		<br><br>
-		Your account has been succesfully created. Below is your login information for your records.
-		<br><br>
-		Login ID (User ID) : #email#<br>
-		Password: #password1#
-		<br><br>
-		You can log in and out of the EXITS Online Application System at any time using this login information.
-		To login to the EXITS Online Application, go to the EXITS Login Portal at #client.site_url#
-		<br><br>
-		Please remember that if your application will expire on #DateFormat(application_expires, 'mmm dd, yyyy')# at #TimeFormat(application_expires, 'h:mm tt')# MST.  
-		<br><br>
-		Sincerely-<br>
-		#client.companyname# / EXITS Support
-		</td>
-	</tr>
-</table>
-</cfmail>
 
 <table align="center" width=550 class=thin-border>
-			<tr>
-				<td colspan=2><img src="pics/top-email.gif"></td>
-			</tr>
+			
 			<tr>
 				<td align="center" colspan=2><h1>Account Verification</h1></td>
 			</tr>

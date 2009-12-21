@@ -42,7 +42,8 @@
     
     <!----If error code SI-102, company information is wrong---->
     <cfquery name="submitting_info" datasource="#application.dsn#">
-    select website from
+    select website, url_ref, company_color
+    from
     smg_companies
     where companyid = #client.companyid#
     </cfquery>
@@ -58,6 +59,8 @@
         <cfset client.company_submitting = "#submitting_info.website#">
         <cfset application.company_short = "#submitting_info.website#">
         <cfset client.app_menu_comp = client.companyid>
+        <cfset client.exits_url = "#submitting_info.url_ref#">
+        <cfset client.color = "#submitting_info.company_color#">
  
     
 	<!--- Login.  called by: flash/login.cfm --->

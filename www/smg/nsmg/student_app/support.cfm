@@ -57,7 +57,7 @@
 			<h3><u>Live Chat</u></h3>
 		<table cellpadding="0" cellspacing="0" border="0" align="center">
 			<tr>
-				<td align="center"><a href="http://srv0.velaro.com/visitor/requestchat.aspx?siteid=2837&showwhen=inqueue" target="VelaroChat"  onClick="this.newWindow = window.open('http://srv0.velaro.com/visitor/requestchat.aspx?siteid=2837&showwhen=inqueue', 'VelaroChat', 'toolbar=no,location=no,directories=no,menubar=no,status=no,scrollbars=no,resizable=yes,replace=no');this.newWindow.focus();this.newWindow.opener=window;return false;"><img alt="Velaro Live Help" src="http://srv0.velaro.com/visitor/check.aspx?siteid=2837&showwhen=inqueue" border="0"></a></td></tr><tr><td align="center"></td></tr></table>
+				<td align="center"><!-- http://www.LiveZilla.net Chat Button Link Code --><div style="text-align:center;width:128px;"><a href="javascript:void(window.open('http://www.exitsapplication.com/livezilla/livezilla.php','','width=600,height=600,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes'))"><img src="http://www.exitsapplication.com/livezilla/image.php?id=04" width="128" height="42" border="0" alt="LiveZilla Live Help"></a><noscript><div><a href="http://www.exitsapplication.com/livezilla/livezilla.php" target="_blank">Start Live Help Chat</a></div></noscript><div style="margin-top:2px;"></div></div><!-- http://www.LiveZilla.net Chat Button Link Code --></td></tr><tr><td align="center"></td></tr></table>
 				Live chat will be available between 
 				8am - 4pm MST as support staff is available.<br>
 			</td>

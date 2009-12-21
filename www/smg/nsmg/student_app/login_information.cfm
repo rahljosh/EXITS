@@ -45,13 +45,13 @@
 <div class="section"><br>
 
 <cfif NOT IsDefined('form.unqid')>
-	<table width="450" border=0 cellpadding=3 cellspacing=0 align="center">
+	<table width="450" border=0 cellpadding=3 cellspacing=0 align="center" bgcolor="##ffffff">
 		<cfform name="login_info" action="login_information.cfm">
 		<cfinput type="hidden" name="unqid" value="#get_student_info.uniqueid#">
 		<tr><th colspan="2">Student : #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</th></tr>
 		<!--- ACCOUNT IS NOT ACTIVE --->
 		<cfif get_student_info.email NEQ '' AND get_student_info.app_current_status EQ 1>
-		<tr><td colspan="2"><font size=-2>Student is not active - <a href="index.cfm?curdoc=student_app/querys/resend_welcome_student&unqid=#get_student_info.uniqueid#&status=#get_student_info.app_current_status#">Resend Welcome email</A></font></td>
+		<tr><td colspan="2"><font size=-2>Student is not active - <a href="querys/resend_welcome_student.cfm?unqid=#get_student_info.uniqueid#&status=#get_student_info.app_current_status#">Resend Welcome email</A></font></td>
 		<tr><td width="25%">Email (username) :</td><td>#get_student_info.email#</td></tr>	
 		<tr><td colspan="2">* Email address can be changed on page 1 of the online application.</td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
