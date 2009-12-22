@@ -14,7 +14,6 @@
         <cfinclude template="/nsmg/logout.cfm">
     </cfif>
     
-    
 	<!--- Param URL variable --->
 	<cfparam name="URL.init" default="0">
 

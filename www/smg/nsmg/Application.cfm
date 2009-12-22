@@ -2,6 +2,7 @@
 	name="smg" 
     clientmanagement="yes">
 
+	<cfparam name="APPLICATION.dsn" default="MySQL">
 
 	<!--- Added by Marcus Melo 10/13/2009 --->
 
@@ -21,6 +22,9 @@
     <cfparam name="CLIENT.company_submitting" default="">  
     <cfparam name="CLIENT.lastLogin" default="">  
 	<cfparam name="CLIENT.programManager" default="">
+    <cfparam name="CLIENT.levels" default="0">
+    <cfparam name="CLIENT.accesslevelname" default="">
+    <cfparam name="CLIENT.invoice_access" default="0">
     
 	<cfscript>
         // Check if we need to initialize Application scope
@@ -40,7 +44,7 @@
 		// Store the initialized UDF Library object in the Application scope
 		APPLICATION.CFC.UDF = CreateCFC("udf").Init();
 		
-		// Store Application.IsServerLocal - This needs be declare before CFC component
+		// Store Application.IsServerLocal - This needs be declare before the other CFC components
 		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 
 		// Store the initialized CBC object in the Application scope
@@ -93,6 +97,26 @@
 			// Live Server Settings
 			APPLICATION.site_url = 'http://www.student-management.com';
 		}
+		
+		/* Create the constant object in the application scope - can be used to store states, countries and statuses 
+			that are often used in the system so we do not need to call the database to get them
+		*/
+		APPLICATION.Constants = StructNew();
+		
+		// Get the reference to the struct
+		Constants = APPLICATION.Constants;
+		
+		// Set up constant for project help statuses
+		Constants.projectHelpStatus = ArrayNew(1);		
+		Constants.projectHelpStatus[1] = "created";
+		Constants.projectHelpStatus[2] = "sr_approved";
+		Constants.projectHelpStatus[3] = "ra_approved";
+		Constants.projectHelpStatus[4] = "ra_rejected";
+		Constants.projectHelpStatus[5] = "rd_approved";
+		Constants.projectHelpStatus[6] = "rd_rejected";
+		Constants.projectHelpStatus[7] = "ny_approved";
+		Constants.projectHelpStatus[8] = "ny_rejected";
+		// ArrayAppend(Constants.projectHelpStatus, "sr_approved");
 	</cfscript>
 	<!--- End of Added by Marcus Melo 10/13/2009 --->
 
@@ -109,6 +133,7 @@
 cgi.SERVER_PORT=#cgi.SERVER_PORT#
 </cfoutput>--->
 
+
 <!----Set site variables for email and site---->
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfparam name="application.support_email" default="support@case-usa.org">
@@ -119,16 +144,16 @@ cgi.SERVER_PORT=#cgi.SERVER_PORT#
 </cfif>
 
 
-<cfparam name="application.dsn" default="MySQL">
-
 <!--- this enables the address lookup. 0=off, 1=simple (lookup required but user can enter any value), 2=auto (lookup required and auto fill in readonly value).
 used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
 <cfparam name="application.address_lookup" default="0"> 
 
-<!--- session has expired. --->
-<cfif not isDefined("client.userid")>
-	<cflocation url="#cgi.http_host#" addtoken="no">
+
+<!--- session has expired // Go to login page. --->
+<cfif NOT VAL(CLIENT.userID)>
+    <cflocation url="http://#cgi.http_host#/" addtoken="no">
 </cfif>
+
 
 <!----Take Down site except for certain users
 <cfif not listFind("1,13282,7178", client.userid)>
@@ -136,6 +161,7 @@ used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
     <cfabort>
 </cfif>
 ---->
+
 
 <!--- always allow logout. --->
 <cfif not findNoCase("/logout.cfm", getBaseTemplatePath())>
@@ -153,6 +179,7 @@ used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
 		</cfif>
     </cfif>
 </cfif>
+
 
 <!--- if "resume login" is used login is not run.  Automatically logout if not the same day, so change password and verify info can be checked when they login again.
 use isDefined because students don't have thislogin.  this is on application.cfm and nsmg/application.cfm --->
