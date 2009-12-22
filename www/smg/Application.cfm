@@ -36,6 +36,6 @@
 		// Store the initialized UDF Library object in the Application scope
 		APPLICATION.CFC.UDF = CreateCFC("udf").Init();
 		
-		// Store Application.IsServerLocal - This needs be declare before CFC component
+		// Store Application.IsServerLocal - This needs be declare before the other CFC components
 		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 	</cfscript>
