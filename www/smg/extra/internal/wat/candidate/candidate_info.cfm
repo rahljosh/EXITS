@@ -755,7 +755,7 @@ function cancelation() {
 											<cfselect name="wat_placement"  class="style1" required="no">
 													<option value="">Select....</option>
 													<option value="Self-Placement" <cfif wat_placement EQ 'Self-Placement'>selected="selected"</cfif>>Self-Placement</option>
-													<option value="INTO-Placement" <cfif wat_placement EQ 'INTO-Placement'>selected="selected"</cfif>>INTO-Placement</option>
+													<option value="CSB-Placement" <cfif wat_placement EQ 'CSB-Placement'>selected="selected"</cfif>>CSB-Placement</option>
 											</cfselect>
 										</cfif>
 										</td>
@@ -848,7 +848,16 @@ function cancelation() {
 										<td class="style1" align="left">
 											
 											<table width="100%">
-												<tr>
+                                                <tr>
+													<td class="style1" align="left" colspan="2"><strong>Sponsor</strong>&nbsp; 
+														<cfif LEN(program.extra_sponsor)>
+	                                                        #program.extra_sponsor#
+                                                        <cfelse>
+                                                        	n/a
+														</cfif>		                                                                                                                    
+													</td>
+												</tr>
+                                                <tr>
 													<td class="style1" align="left" colspan="2"><strong>DS-2019 Verification Report Received </strong>&nbsp; 
 													<cfif verification_received is ''>
 													<input type="checkbox" class="style1" <cfif edit EQ 'no'>disabled</cfif>>

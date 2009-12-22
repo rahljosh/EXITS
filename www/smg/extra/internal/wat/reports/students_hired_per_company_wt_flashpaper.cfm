@@ -31,7 +31,7 @@
 	WHERE c.companyid = #client.companyid#
 	AND c.hostcompanyid = #url.companyid# 
 	AND c.programid = #url.program#
-	AND c.wat_placement = 'INTO-Placement'
+	AND c.wat_placement = 'CSB-Placement'
 	AND c.status <> 'canceled'
 </cfquery> 
 
@@ -77,7 +77,7 @@
 			<div class="style1"><strong>Host Company:</strong> #host_company_info.name# </div>
 		</td>
 		<td width="50%">
-			<div class="style1"><strong>INTO-Placement:</strong> #students_hired.recordcount#</div>
+			<div class="style1"><strong>CSB-Placement:</strong> #students_hired.recordcount#</div>
 			<div class="style1"><strong>Self-Placement:</strong> #get_candidates_self.recordcount#</div>
 			<div class="style1"><strong>Total Number of Students:</strong> #total#</div>
 		</td>

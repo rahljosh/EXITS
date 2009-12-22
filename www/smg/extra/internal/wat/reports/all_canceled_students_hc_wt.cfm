@@ -109,7 +109,7 @@
 		
 	<cfelse>
 
-<div class="style1"><strong>&nbsp; &nbsp; INTO-Placement:</strong> #get_candidates.recordcount#</div>	
+<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #get_candidates.recordcount#</div>	
 <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #get_candidates_self.recordcount#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
 <div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #total#</div>

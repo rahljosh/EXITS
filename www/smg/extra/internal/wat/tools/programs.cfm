@@ -5,16 +5,32 @@
 <body>
 
 <cfquery name="programstools" datasource="MySql">
-	SELECT programid, programname, type, smg_program_type.programtype, startdate, enddate, insurance_startdate, insurance_enddate, smg_programs.companyid, smg_companies.companyname, programfee, smg_programs.active, smg_programs.hold
-	FROM smg_programs
-    INNER JOIN smg_companies ON smg_companies.companyid = smg_programs.companyid
-    LEFT JOIN smg_program_type ON smg_program_type.programtypeid = smg_programs.type
-    WHERE smg_programs.companyid = #client.companyid#
+	SELECT 
+    	programid, 
+        programname, 
+        type, 
+        extra_sponsor,
+        smg_program_type.programtype, 
+        startdate, 
+        enddate, 
+        insurance_startdate, 
+        insurance_enddate, 
+        smg_programs.companyid, 
+        smg_companies.companyname, 
+        programfee, 
+        smg_programs.active, 
+        smg_programs.hold
+	FROM 
+    	smg_programs
+    INNER JOIN 
+    	smg_companies ON smg_companies.companyid = smg_programs.companyid
+    LEFT JOIN 
+    	smg_program_type ON smg_program_type.programtypeid = smg_programs.type
+    WHERE 
+    	smg_programs.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
 
-
-
-<form method=post action="?curdoc=tools/new_program">
+<form method=post action="?curdoc=tools/program_info">
 
 <table width=95% cellpadding=0 cellspacing=0 border=0 align="center" height="25" bgcolor="E4E4E4">
 	<tr bgcolor="E4E4E4">
@@ -26,26 +42,14 @@
 
 <table width=95% border=0 align="center" cellpadding=4 cellspacing=0 class="section">
   <tr>
-  		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>ID</b></font>
-
-        </span></td>
-		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Status</b></font>
-
-        </span></td>
-		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Program Name</b></font>
-
-		</span></td>
-		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Type</b></font>
-
-		</span></td>
-		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Start Date</b></font>
-
-		</span></td>
-		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>End Date</b></font>
-
-		</span></td>
-		<td bgcolor="4F8EA4"><span class="style2"><strong><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Company</b></font>
-		</span></td>
+  		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>ID</b></font></span></td>
+		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Status</b></font></span></td>
+		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Program Name</b></font></span></td>
+		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Type</b></font></span></td>
+		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Start Date</b></font></span></td>
+		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>End Date</b></font></span></td>
+		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Company</b></font></span></td>
+        <td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Sponsor</b></font></span></td>
 	
 	  <!--- <td><b>Fee's</b></td> --->
 	</tr>
@@ -62,7 +66,7 @@
 		      <span class="style5"><font color="green">active</font> </span>
 		    </cfif>
 	    </div></Td>
-		<td><span class="style5"><a href="?curdoc=tools/change_programs&programid=#programid#">#programname# </a>
+		<td><span class="style5"><a href="?curdoc=tools/program_info&programID=#programid#">#programname# </a>
 	      </div>
 		</span></td>
 		<td>
@@ -88,12 +92,17 @@
 	      #companyname#</span>
 	      </div>
 	    </span></td>
-		
+		<td>
+		  <span class="style5">
+	      #extra_sponsor#</span>
+	      </div>
+	    </span></td>
+
 		<!--- <td>#programfee# *</td> --->
 	</tr>
 	</cfoutput>
 	<Tr>
-		<td colspan=8 align="center"><a href="index.cfm?curdoc=tools/new_program" class="style5"><input name="Submit" type="image" src="../pics/add-program.gif" alt="Add Program" border=0></a></td>
+		<td colspan=8 align="center"><a href="index.cfm?curdoc=tools/program_info" class="style5"><input name="Submit" type="image" src="../pics/add-program.gif" alt="Add Program" border=0></a></td>
 	</Tr>
 	<tr><td colspan=8></span></td>
 	</tr>

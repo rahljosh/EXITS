@@ -37,7 +37,7 @@
 	INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
 	WHERE extra_candidates.intrep = #url.intrep#
 	AND extra_candidates.status <> 'canceled'
-	AND extra_candidates.wat_placement = 'INTO-Placement'
+	AND extra_candidates.wat_placement = 'CSB-Placement'
 	AND extra_candidates.programid = #url.program#
 </cfquery>
 
@@ -99,7 +99,7 @@
 		INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 		INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
 		WHERE extra_candidates.programid = #url.program#  
-		AND extra_candidates.wat_placement = 'INTO-Placement'
+		AND extra_candidates.wat_placement = 'CSB-Placement'
 		AND extra_candidates.status <> 'canceled'
 		ORDER BY smg_users.businessname
 	</cfquery>
@@ -224,7 +224,7 @@
 			<div class="style1"><strong>Int. Rep.:</strong> <cfif url.intrep EQ "All"> All International Rep. <cfelse>#get_intrep.businessname#</cfif></div>
 		</td>
 		<td width="50%">
-			<div class="style1"><strong>INTO-Placement:</strong> #get_candidates.recordcount#</div>
+			<div class="style1"><strong>CSB-Placement:</strong> #get_candidates.recordcount#</div>
 			<div class="style1"><strong>Self-Placement:</strong> #get_candidates_self.recordcount#</div>
 			<div class="style1"><strong>Total Number of Students:</strong> #total#</div>
 		</td>

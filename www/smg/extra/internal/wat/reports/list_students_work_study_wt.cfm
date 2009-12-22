@@ -117,7 +117,7 @@
 <strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Total Number of Students: #get_students.recordcount# </font></strong> 
 
 <!----<div class="head3">  <strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif"> Self-Placement:</strong> #get_candidates_self.recordcount#</font></div>
-<div class="head3">  <strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif"> INTO-Placement:</strong> #get_students.recordcount#</font></div>-------->
+<div class="head3">  <strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif"> CSB-Placement:</strong> #get_students.recordcount#</font></div>-------->
 
 <img src="../../pics/black_pixel.gif" width="100%" height="2">
 					

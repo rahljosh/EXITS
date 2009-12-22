@@ -67,7 +67,7 @@
 			<div class="style1"><strong>Host Company:</strong> #get_hostcompanyname.name# </div>
 		</td>
 		<td width="50%">
-			<div class="style1"><strong>INTO-Placement:</strong> #get_candidates.recordcount#</div>
+			<div class="style1"><strong>CSB-Placement:</strong> #get_candidates.recordcount#</div>
 			<div class="style1"><strong>Self-Placement:</strong> #get_candidates_self.recordcount#</div>
 			<div class="style1"><strong>Total Number of Students:</strong> #total#</div>
 		</td>

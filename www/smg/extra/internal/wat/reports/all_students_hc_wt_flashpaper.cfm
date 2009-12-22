@@ -91,7 +91,7 @@ where programid = #url.program#
 <div class="head3"><strong>Int. Rep.:</strong> #get_intrep.businessname# </div>
 <div class="head3">  <strong>Total Number of Students:</strong> #get_candidates.recordcount#</div>
 <div class="head3">  <strong>Self-Placement:</strong> #get_candidates_self.recordcount#</div>
-<div class="head3">  <strong>INTO-Placement:</strong> #get_candidates.recordcount#</div>
+<div class="head3">  <strong>CSB-Placement:</strong> #get_candidates.recordcount#</div>
 <img src="../../pics/black_pixel.gif" width="100%" height="2">
 						<table width=100% cellpadding="4" cellspacing=0> 
   <tr>

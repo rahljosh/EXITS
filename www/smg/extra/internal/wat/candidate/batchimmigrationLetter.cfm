@@ -1,113 +1,146 @@
+<!--- Kill extra output --->
+<cfsilent>
 
-<cfquery name="get_candidate" datasource="MySql">
-	SELECT candidateid, uniqueid, firstname, middlename, lastname
-	FROM extra_candidates
-	WHERE immigration_letter_printed IS  NULL
-	AND verification_received = '#form.date#'
-	AND intrep = #form.selected_rep#
-	AND programid = #form.selected_program#
-</cfquery>
+	<cfparam name="FORM.selected_rep" default="All">
+    <cfparam name="FORM.selected_program" default="0">
+    <cfparam name="FORM.date" default="">
 
-<cfif get_candidate.recordcount EQ 0>
-No records were found that match your criteria.<br />
-Please use your browsers back button to select different criteria and resubmit.
+    <cfquery name="qGetCandidate" datasource="MySql">
+        SELECT 
+        	candidateid, 
+            uniqueid, 
+            firstname, 
+            middlename, 
+            lastname,
+            ds2019
+        FROM 
+        	extra_candidates
+        WHERE 
+        	verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date#">
+        AND 
+        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_program#">
+        <cfif VAL(FORM.selected_rep)>
+        AND 
+        	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_rep#">
+        </cfif>
+    </cfquery>
 
-<cfelse>
+    <cfquery name="qGetProgram" datasource="MySql">
+        SELECT 
+            programID,
+            programName,
+            extra_sponsor
+        FROM 
+            smg_programs
+        WHERE 
+            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_program#">
+    </cfquery>
+
+</cfsilent>
 
 <style type="text/css" media="print">
 	.page-break {page-break-after: always}
-</style>
-<style type="text/css">
-<!--
-.style1 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 14;
-}
-.style2 {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 18;
-}
-
--->
-</style>
-
-<style type="text/css">
-
-p.breakhere { page-break-after: always }
-
+	<!--
+	.style1 {
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size: 14;
+	}
+	
+	.style2 {
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size: 18;
+	}
+	
+	p.breakhere { page-break-after: always }
+	-->
 </style>
 
-</head>
+<cfif NOT VAL(qGetCandidate.recordcount)>
+	No records were found that match your criteria.<br />
+	Please use your browsers back button to select different criteria and resubmit.
+	<cfabort>
+</cfif>
 
+<cfoutput query="qGetCandidate">
 
-<cfoutput>
-<cfloop query="get_candidate">
-<div style="page-break-after: always">
-
-
-<table width="60%" border="0">
-  <tr>
-    <td class="style1"><img src="http://www.student-management.com/2.gif"><br /></td>
-    <td class="style2">Babylon, New York 11702<br />
-      1-888-Into USA </td>
-  </tr>
-</table>
-<span class="style1"><br />
-</span>
-<table width="60%" border="0">
-  <tr>
-    <td valign="top" class="style1">TO: </td>
-    <td class="style1">U.S Embassy/Consulate<br />
-      Social Security Administration<br>
-      <br></td>
-  </tr>
-  <tr>
-    <td valign="top" class="style1">From: </td>
-    <td class="style1">Craig Brewer<br />
-Executive Director<br />
-Responsible Officer<br />
-U.S. Department of State Designated Sponsor P-3-06010</td>
-  </tr>
-</table>
-
-<br>
-<br>
-<br>
-
-
-<p class="style1"> To Whom it May Concern:<br>
-  <br>
-</p>
-<p class="style1">Please accept this letter as an official document attesting to the fact that #firstname# #middlename# #lastname# is a participant on the IntoEdVentures Summer Work and Travel.<br />
-  <br />
-  IntoEdVentures is a sponsor of exchange visitors to the United States, participating in<br />
-  Exchange Visitor Program P-3-06010, designated by the United States Department of State.<br />
-  Such participants have been admitted under Section 101 (A) (15) (J) of the Immigration and<br />
-  Nationality Act. Their J-1 visa status is evidenced by the DS2019 Form and the J-1 visa in their passports.<br />
-  <br />
-  According to the Immigration Reform and Control Act of 1986 (IRCA), the participants of this program are eligible for employment. 
-  The participants of this program 
-  are also entitled to receive compensation from employers for theirs efforts while they are on the 
-  program.<br />
-  <br />
-  Each participant has been sponsored by IntoEdVentures as indicated on the DS2019 Form.<br />
-  <br />
-  IntoEdVentures would like to thank you in advance for your cooperation. If you should have<br />
-  any questions or concerns, please feel free to contact us at 1-888-Into USA.<br>
-  <br>
-  <br>
-</p>
-<p class="style1">Kind Regards,<br>
-  <br />
-  <img src="http://www.student-management.com/extra/internal/uploadedfiles/craig_signature.gif"><br>
-  Craig Brewer<br />
-Executive Director/Responsible Officert</p>
-</div>
-
-</Cfloop>
+    <div style="page-break-after: always">
+    
+    <!--- Header --->
+    <table width="700px" border="0">
+        <tr>
+            <td class="style1">
+                <img src="http://www.student-management.com/#APPLICATION[qGetProgram.extra_sponsor].logo#"> <br />
+            </td>
+            <td class="style2">
+                #APPLICATION[qGetProgram.extra_sponsor].name# <br />
+                Babylon, New York 11702 <br />
+                #APPLICATION[qGetProgram.extra_sponsor].phone#
+            </td>
+        </tr>
+    </table>
+    
+    <span class="style1"> <br /> </span>
+    
+    <table width="700px" border="0">
+        <tr>
+            <td valign="top" class="style1">TO: </td>
+            <td class="style1">
+                United States Embassy/Consulate <br />
+                Social Security Administration <br /> <br />
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" class="style1">From: </td>
+            <td class="style1">
+                Craig Brewer <br />
+                Executive Director <br />
+                Responsible Officer <br />
+                United States Department of State Designated Sponsor #APPLICATION[qGetProgram.extra_sponsor].programNumber#
+           </td>
+        </tr>
+    </table>
+    
+    <br /> <br />
+    <br /> <br />
+    
+    <table width="700px" border="0">
+        <tr>
+            <td>
+                <p class="style1"> 
+                    To Whom it May Concern: <br /> <br /> 
+                </p>
+                
+                <p class="style1">
+                    Please accept this letter as an official document attesting to the fact that 
+                    <strong>#qGetCandidate.firstname# #qGetCandidate.middlename# #qGetCandidate.lastname#</strong> 
+                    is a participant in the #APPLICATION[qGetProgram.extra_sponsor].name# Summer Work Travel Program. <br />
+                    Form DS-2019 number #qGetCandidate.ds2019# has been issued for the above mentioned participant. <br /> <br />
+                    
+                    #APPLICATION[qGetProgram.extra_sponsor].name# is a sponsor of exchange visitors to the United States, participating in 
+                    Exchange Visitor Program #APPLICATION[qGetProgram.extra_sponsor].programNumber#, designated by the United States Department of State. 
+                    Such participants have been admitted under Section 101 (A) (15) (J) of the Immigration and Nationality Act. 
+                    Their J-1 visa status is evidenced by the DS-2019 Form and the J-1 visa in their passports. <br /> <br />
+                    
+                    According to the Immigration Reform and Control Act of 1986 (IRCA), the participants of this program are eligible for employment. 
+                    The participants of this program are also entitled to receive compensation from employers for theirs efforts while they are on the 
+                    program. For payroll purposes, the participants must obtain Social Security Numbers. <br /> <br />
+                    
+                    Each participant has been sponsored by #APPLICATION[qGetProgram.extra_sponsor].name# as indicated on the DS2019 Form. <br /> <br />
+    
+                    #APPLICATION[qGetProgram.extra_sponsor].name# would like to thank you in advance for your cooperation. 
+                    If you should have any questions or concerns, please feel free to contact us at #APPLICATION[qGetProgram.extra_sponsor].phone#. <br /> <br /> <br /> 
+                </p>
+    
+                <p class="style1">
+                    Kind Regards,  <br /> <br />            
+                    <img src="http://www.student-management.com/extra/internal/uploadedfiles/craig_signature.gif">  <br /> 
+                    Craig Brewer <br />
+                    Executive Director/Responsible Officer
+                </p>
+                
+                <br /> <br /> <br />
+            </td>
+        </tr>
+    </table>            
 
 </cfoutput>
-
-
-
-</cfif>

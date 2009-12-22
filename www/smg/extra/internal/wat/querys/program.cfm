@@ -11,10 +11,17 @@
 <cftry> 
 
 <cfquery name="program" datasource="mysql">
-	SELECT programid, programname, companyid
-	FROM smg_programs
-	WHERE companyid = '#client.companyid#'
-	ORDER BY programname
+	SELECT 
+    	programid, 
+        programname, 
+        companyid, 
+        extra_sponsor
+	FROM 
+    	smg_programs
+	WHERE 
+    	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+	ORDER BY 
+    	programname
 </cfquery>
 
 <cfcatch type="any">

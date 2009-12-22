@@ -34,10 +34,10 @@
   	LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
  	INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
   	INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
-	WHERE extra_candidates.intrep = #url.intrep#
- 	AND extra_candidates.programid = #url.program#  
-	AND extra_candidates.status = 'canceled' 
-	AND extra_candidates.wat_placement = 'INTO-Placement'
+	WHERE extra_candidates.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.intrep#">
+ 	AND extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.program#">
+	AND extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+	AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
 </cfquery>
 
 <cfquery name="get_candidates_self" datasource="MySql">
@@ -46,17 +46,17 @@
   	LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
   	INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
   	INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
- 	WHERE extra_candidates.intrep = #url.intrep#
-	AND extra_candidates.programid = #url.program#  
-	AND extra_candidates.status = 'canceled' 
- 	AND extra_candidates.wat_placement = 'Self-Placement'
+ 	WHERE extra_candidates.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.intrep#">
+	AND extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.program#">
+	AND extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+ 	AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
 </cfquery>
 
 <cfquery name="get_intrep" datasource="MySql">
 	SELECT userid as intrep, businessname
 	FROM smg_users
-	WHERE usertype = 8
-	AND userid = #url.intrep# 
+	WHERE usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+	AND userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.intrep#">
 	ORDER BY businessname
 </cfquery>
 
@@ -81,9 +81,9 @@
   	LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
  	INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
   	INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
-	WHERE  extra_candidates.programid = #url.program#  
-	AND extra_candidates.status = 'canceled' 
-	AND extra_candidates.wat_placement = 'INTO-Placement'
+	WHERE  extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.program#">
+	AND extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+	AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
 </cfquery>
 
 <cfquery name="get_candidates_self" datasource="MySql">
@@ -92,9 +92,9 @@
   	LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
   	INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
   	INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
- 	WHERE  extra_candidates.programid = #url.program#  
-	AND extra_candidates.status = 'canceled' 
- 	AND extra_candidates.wat_placement = 'Self-Placement'
+ 	WHERE  extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.program#">
+	AND extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+ 	AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
 </cfquery>
 	
 	<tr>
@@ -180,7 +180,7 @@
 			<div class="style1"><strong>Int. Rep.:</strong> <cfif url.intrep EQ "All"> All International Rep. <cfelse> #get_intrep.businessname# </cfif></div>
 		</td>
 		<td width="50%">
-			<div class="style1"><strong>INTO-Placement:</strong> #get_candidates.recordcount#</div>
+			<div class="style1"><strong>CSB-Placement:</strong> #get_candidates.recordcount#</div>
 			<div class="style1"><strong>Self-Placement:</strong> #get_candidates_self.recordcount#</div>
 			<div class="style1"><strong>Total Number of Students:</strong> #total#</div>
 		</td>
