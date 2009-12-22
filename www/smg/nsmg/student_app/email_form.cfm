@@ -14,10 +14,12 @@
 
     <!--- Param Variables --->
     <cfparam name="userID" default="0">
+    <cfparam name="companyShort" default="ise">
     
     <cfparam name="URL.email" default="">
 	<cfparam name="URL.unqid" default="">
-    
+       
+    <cfparam name="CLIENT.exits_url" default="http://www.student-management.com">
     <cfparam name="CLIENT.companyID" default="5">
     <cfparam name="CLIENT.companyName" default="International Student Exchange">
     <cfparam name="CLIENT.support_email" default="support@student-management.com">
@@ -41,13 +43,6 @@
 		} else if ( LEN(CLIENT.email) ) {
 			emailFrom = CLIENT.email;	
 		}	
-		 
-		 // Case Application URL
-		 if ( CLIENT.companyID EQ 10 ) {
-			 emailSiteURL = "http://www.case-usa.org";
-		 } else {
-			 emailSiteURL = "http://www.student-management.com";
-		 }
 	</cfscript>
 
     <cfquery name="get_student_info" datasource="MySql">
@@ -111,7 +106,7 @@
             <cfinvokeargument name="email_to" value="#FORM.email_address#">
             <cfinvokeargument name="email_subject" value="EXITS Online Application for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)">
             <cfinvokeargument name="email_message" value="#email_message#">
-            <cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
+            <cfinvokeargument name="email_from" value="#LCase(companyshort)#-support@exitsapplication.com">
         </cfinvoke>
        
     </cfif>
