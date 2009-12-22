@@ -120,7 +120,7 @@ a:active {
 -->
 </style>
 
-<cfif isDefined('client.userid')>
+<cfif isDefined('CLIENT.userid')>
     <table width="90%"  border="0" align="center" cellpadding="1" cellspacing="0">
      <tr>
         <td class="style3">
