@@ -243,7 +243,7 @@ is this used?
                                         <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_application.cfm?user=#client.userid#&unqid=#uniqueid#&userType=#client.usertype#&exits_app');"><img src="pics/exits.jpg" border="0"></a>
                                     </cfif>
                                     <br><a href="javascript:OpenSmallW('http://www.student-management.com/nsmg/student_app/section4/page22print.cfm?user=#client.userid#&unqid=#uniqueid#&userType=#client.usertype#');"><img src="pics/attached-files.gif" border="0"></a>	
-                                    <br><a href="javascript:SendEmail('http://www.student-management.com/nsmg/student_app/email_form.cfm?userid=#client.userid#&unqid=#uniqueid#&email=#client.email#');"><img src="pics/send-email.gif" border="0"></a>	
+                                    <br><a href="javascript:SendEmail('http://www.student-management.com/nsmg/student_app/email_form.cfm?userid=#client.userid#&unqid=#uniqueid#&companyShort=php');"><img src="pics/send-email.gif" border="0"></a>	
                                     </td>
                                 </tr>
                                 <cfelse>
