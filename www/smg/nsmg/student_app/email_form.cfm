@@ -83,36 +83,39 @@
     </cfquery>
 
 	<!--- FORM submitted --->
-	<cfif VAL(FORM.submitted) AND LEN(FORM.email_address)>
-    <cfsavecontent variable="email_message">
-
-Dear Friend,<br><br>
-A new EXITS online student has been sent to you from #get_current_user.firstname# #get_current_user.lastname#.<br><br>	
-<b>Student: #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</b><br><br>
-
-Additional Comments:<br>
-<cfif FORM.comments EQ ''>n/a<cfelse>#FORM.comments#</cfif><br><br>
-Please click
-<a href="http://#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
-to see the student's online application.<br><br>
-
-Please keep in mind that this application might take a few minutes to load completely. The loading time will depend on your internet connection.<br><br>             
- Sincerely,<br>
-#CLIENT.companyname#<br><br>
-
-</cfsavecontent>
-			
-<!--- send email --->
-<cfinvoke component="nsmg.cfc.email" method="send_mail">
-	<cfinvokeargument name="email_to" value="#FORM.email_address#">
-	<cfinvokeargument name="email_subject" value="EXITS Online Application for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)">
-	<cfinvokeargument name="email_message" value="#email_message#">
-	<cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
-</cfinvoke>
+    <cfif VAL(FORM.submitted) AND LEN(FORM.email_address)>
+            
+        <cfoutput>
+           
+            <cfsavecontent variable="email_message">
+                Dear Friend,<br><br>
+                
+                A new EXITS online student has been sent to you from #get_current_user.firstname# #get_current_user.lastname#.<br><br>	
+                <b>Student: #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</b><br><br>
+                
+                Additional Comments:<br>
+                <cfif FORM.comments EQ ''>n/a<cfelse>#FORM.comments#</cfif><br><br>
+                Please click
+                <a href="http://#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
+                to see the student's online application.<br><br>
+                
+                Please keep in mind that this application might take a few minutes to load completely. The loading time will depend on your internet connection.<br><br>             
+                 Sincerely,<br>
+                #CLIENT.companyname#<br><br>
+            </cfsavecontent>
+        
+        </cfoutput>
+                
+        <!--- send email --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="#FORM.email_address#">
+            <cfinvokeargument name="email_subject" value="EXITS Online Application for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)">
+            <cfinvokeargument name="email_message" value="#email_message#">
+            <cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
+        </cfinvoke>
        
-   
     </cfif>
-	
+
 </cfsilent>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
