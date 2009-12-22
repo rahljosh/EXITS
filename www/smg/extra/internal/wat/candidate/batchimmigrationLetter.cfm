@@ -1,6 +1,6 @@
 <!--- Kill extra output --->
 <cfsilent>
-
+	
 	<cfparam name="FORM.selected_rep" default="All">
     <cfparam name="FORM.selected_program" default="0">
     <cfparam name="FORM.date" default="">
@@ -16,7 +16,7 @@
         FROM 
         	extra_candidates
         WHERE 
-        	verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date#">
+        	verification_received = '#FORM.date#'
         AND 
         	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_program#">
         <cfif VAL(FORM.selected_rep)>
@@ -71,8 +71,9 @@
             <td class="style1">
                 <img src="http://www.student-management.com/#APPLICATION[qGetProgram.extra_sponsor].logo#"> <br />
             </td>
-            <td class="style2">
+            <td class="style2" width="100%" align="right">
                 #APPLICATION[qGetProgram.extra_sponsor].name# <br />
+                119 Cooper Street <br />
                 Babylon, New York 11702 <br />
                 #APPLICATION[qGetProgram.extra_sponsor].phone#
             </td>

@@ -35,6 +35,17 @@
 	</cfif>
 </cfquery>
 
+<cfquery name="qGetProgram" datasource="MySql">
+    SELECT 
+        programID,
+        programName,
+        extra_sponsor
+    FROM 
+        smg_programs
+    WHERE 
+        programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.programID#">
+</cfquery>
+
 <!-----Int Rep----->
 <Cfquery name="int_Reps" datasource="MySQL">
 	SELECT userid, firstname, lastname, businessname, country
@@ -851,7 +862,7 @@ function cancelation() {
                                                 <tr>
 													<td class="style1" align="left" colspan="2"><strong>Sponsor</strong>&nbsp; 
 														<cfif LEN(program.extra_sponsor)>
-	                                                        #program.extra_sponsor#
+	                                                        #qGetProgram.extra_sponsor#
                                                         <cfelse>
                                                         	n/a
 														</cfif>		                                                                                                                    

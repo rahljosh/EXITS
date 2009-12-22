@@ -52,9 +52,12 @@
         	<img src="http://www.student-management.com/#APPLICATION[qGetProgram.extra_sponsor].logo#"> <br />
         </td>
         <td class="style2">
-			#APPLICATION[qGetProgram.extra_sponsor].name# <br />
-        	Babylon, New York 11702 <br />
-            #APPLICATION[qGetProgram.extra_sponsor].phone#
+			<div align="center">
+                #APPLICATION[qGetProgram.extra_sponsor].name# <br />
+                119 Cooper Street <br />
+                Babylon, New York 11702 <br />
+                #APPLICATION[qGetProgram.extra_sponsor].phone#
+            </div>
         </td>
     </tr>
 </table>
