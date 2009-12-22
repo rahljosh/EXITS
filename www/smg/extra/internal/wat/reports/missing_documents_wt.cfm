@@ -11,7 +11,7 @@
 	AND (c.wat_doc_agreement = 0 OR c.wat_doc_college_letter = 0 OR
 	     c.wat_doc_passport_copy = 0 OR c.wat_doc_job_offer = 0 OR c.wat_doc_orientation = 0)
 	AND c.active = 1
-	AND c.wat_placement = 'INTO-Placement'
+	AND c.wat_placement = 'CSB-Placement'
 	ORDER BY smg_users.businessname, c.firstname	
  </cfquery>
  <cfquery name="get_candidates_self" datasource="mysql">
@@ -139,7 +139,7 @@
 </cfloop> --->
 <cfset total = #get_candidates_self.recordcount# + #get_candidates_into.recordcount#>
 
-<div class="style1"><strong>&nbsp; &nbsp; INTO-Placement:</strong> #get_candidates_into.recordcount#</div>	
+<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #get_candidates_into.recordcount#</div>	
 <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #get_candidates_self.recordcount#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
 <div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #total#</div>
@@ -180,7 +180,7 @@
 							<cfif get_candidates_into.wat_doc_job_offer EQ 0><font color="##CC0000">- Job Offer<br /></cfif>
 							<cfif get_candidates_into.wat_doc_orientation EQ 0><font color="##CC0000">- Orientation Sign Off</cfif>
 					</td>
-					<td valign="top" class="style1">INTO-Placement</td>
+					<td valign="top" class="style1">CSB-Placement</td>
 				</tr>
 				</cfloop>
 				

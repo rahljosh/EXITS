@@ -7,10 +7,10 @@
 		LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
 		INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 		INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
-		WHERE extra_candidates.intrep = #form.intrep#
-		AND extra_candidates.programid = #form.program#  
-		AND extra_candidates.status = 'canceled'
-		AND extra_candidates.wat_placement = 'INTO-Placement'
+		WHERE extra_candidates.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
+		AND extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.program#">
+		AND extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+		AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
 	</cfquery>
 	<cfquery name="get_candidates_self" datasource="MySql">
 	  SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.candidateid, extra_candidates.placedby, extra_candidates.sex, extra_candidates.hostcompanyid, extra_hostcompany.name, smg_programs.startdate, smg_programs.enddate, extra_candidates.ds2019, extra_candidates.wat_vacation_Start, extra_candidates.wat_vacation_end, extra_candidates.status, extra_candidates.wat_placement
@@ -18,9 +18,10 @@
 	  LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
 	  INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 	  INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
-	  WHERE extra_candidates.intrep = #form.intrep#
- 	  AND extra_candidates.programid = #form.program#  and extra_candidates.status = 'canceled'
-	  AND extra_candidates.wat_placement = 'Self-Placement'
+	  WHERE extra_candidates.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
+ 	  AND extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.program#">
+      AND extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+	  AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
 	</cfquery>
 </cfif>
 
@@ -167,11 +168,13 @@ function test(){
 			LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
 			INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 			INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
-			WHERE extra_candidates.programid = #form.program#  
-			AND extra_candidates.status = 'canceled'
-			AND extra_candidates.wat_placement = 'INTO-Placement'
-			AND extra_candidates.intrep = #getWatAgents.userid#
-			ORDER BY smg_users.businessname, extra_candidates.wat_placement
+			WHERE extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.program#">
+			AND extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+			AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
+			AND extra_candidates.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#getWatAgents.userid#">
+			ORDER BY 
+            	smg_users.businessname, 
+                extra_candidates.wat_placement
 		</cfquery>
 		<cfquery name="get_candidates_self" datasource="MySql">
 		  SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.candidateid, extra_candidates.placedby, extra_candidates.sex, extra_candidates.hostcompanyid, extra_hostcompany.name, smg_programs.startdate, smg_programs.enddate, extra_candidates.ds2019, extra_candidates.wat_vacation_Start, extra_candidates.wat_vacation_end, extra_candidates.status, extra_candidates.wat_placement, smg_users.businessname
@@ -179,16 +182,17 @@ function test(){
 		  LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.hostcompanyid
 		  INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 		  INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
-		  WHERE extra_candidates.programid = #form.program#  and extra_candidates.status = 'canceled'
-		  AND extra_candidates.wat_placement = 'Self-Placement'
-		  AND extra_candidates.intrep = #getWatAgents.userid#
+		  WHERE extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.program#">
+          and extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+		  AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+		  AND extra_candidates.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#getWatAgents.userid#">
 		  ORDER BY smg_users.businessname
 		</cfquery>
 
-		<cfset totalPerAgent = #get_candidates_self.recordcount# + #get_candidates_into.recordcount#>
-		<cfset intoPlacement = #variables.intoPlacement# + #get_candidates_into.recordcount#>
-		<cfset selfPlacement = #variables.selfPlacement# + #get_candidates_self.recordcount#>
-		<cfset grandTotal = #variables.grandTotal# + #variables.totalPerAgent#>
+		<cfset totalPerAgent = get_candidates_self.recordcount + get_candidates_into.recordcount>
+		<cfset intoPlacement = variables.intoPlacement + get_candidates_into.recordcount>
+		<cfset selfPlacement = variables.selfPlacement + get_candidates_self.recordcount>
+		<cfset grandTotal = variables.grandTotal + variables.totalPerAgent>
 				
 		<table width=99% cellpadding="4" cellspacing=0 align='center'>
 			<tr>
@@ -271,7 +275,7 @@ function test(){
 	</cfif>
 
 <br>
-<div class="style1"><strong>&nbsp; &nbsp; INTO-Placement:</strong> #variables.intoPlacement#</div>	
+<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #variables.intoPlacement#</div>	
 <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #variables.selfPlacement#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
 <div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #variables.grandTotal#</div>

@@ -10,7 +10,7 @@
 	  AND c.hostcompanyid = 0
 	  AND c.programid = #form.program#
 	  AND c.status = 1
-	  AND c.wat_placement = 'INTO-Placement'
+	  AND c.wat_placement = 'CSB-Placement'
 	ORDER BY businessname
 	</cfquery>
 	
@@ -108,7 +108,7 @@
 </cfquery> --->
 
 
-<div class="style1"><strong>&nbsp; &nbsp; INTO-Placement:</strong> #get_students.recordcount#</div>	
+<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #get_students.recordcount#</div>	
 <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #get_students_self.recordcount#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
 <div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #total#</div>

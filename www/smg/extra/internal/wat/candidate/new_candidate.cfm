@@ -352,7 +352,7 @@
 												<cfselect name="wat_placement"  class="style1" required="no">
 														<option value="">Select....</option>
 														<option value="Self-Placement">Self-Placement</option>
-														<option value="INTO-Placement">INTO-Placement</option>
+														<option value="CSB-Placement">CSB-Placement</option>
 												</cfselect>
 												
 												</td>

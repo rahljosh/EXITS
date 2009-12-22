@@ -134,7 +134,7 @@ ORDER BY name
 		WHERE c.companyid = #client.companyid#
 		AND c.hostcompanyid = #getHostCompany.hostcompanyid# 
 		AND c.programid = #form.program#
-		AND c.wat_placement = 'INTO-Placement'
+		AND c.wat_placement = 'CSB-Placement'
 		AND c.status <> 'canceled'
 	</cfquery> 
 	
@@ -240,7 +240,7 @@ ORDER BY name
 	</cfif>
 </cfloop>
 
-<div class="style1"><strong>&nbsp; &nbsp; INTO-Placement:</strong> #variables.intoPlacement#</div>	
+<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #variables.intoPlacement#</div>	
 <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #variables.selfPlacement#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
 <div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #variables.grandTotal#</div>

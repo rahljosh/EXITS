@@ -1,4 +1,9 @@
-<cfapplication name="extra" clientmanagement="yes" sessionmanagement="yes" sessiontimeout="#CreateTimeSpan(0,10,40,1)#">
+<cfapplication 
+	name="extra" 
+    clientmanagement="yes" 
+    sessionmanagement="yes" 
+    sessiontimeout="#CreateTimeSpan(0,10,40,1)#">
+    
 <CFQUERY name="selectdb" datasource="MySQL" >
 	USE smg
 </CFQUERY>
