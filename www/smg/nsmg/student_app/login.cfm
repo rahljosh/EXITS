@@ -7,7 +7,7 @@
 
 <body>
 
-<cflocation url="index.cfm">
+<cflocation url="index.cfm" addtoken="no">
 
 </body>
 </html>
