@@ -120,7 +120,19 @@ a:active {
 -->
 </style>
 
-<cfif isDefined('CLIENT.userid')>
+<!--- Student --->
+<cfif VAL(CLIENT.studentID)>
+    <table width="90%"  border="0" align="center" cellpadding="1" cellspacing="0">
+     <tr>
+        <td class="style3">
+            You are already logged in.<br><br>
+            <a href="../nsmg/student_app/login.cfm">Resume your session</a><br><br>
+            <a href="../nsmg/logout.cfm">Logout</a>
+        </td>
+    </tr>
+    </table>
+<!--- User --->   
+<cfelseif VAL(CLIENT.userID)>
     <table width="90%"  border="0" align="center" cellpadding="1" cellspacing="0">
      <tr>
         <td class="style3">

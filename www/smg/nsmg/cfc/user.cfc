@@ -76,7 +76,7 @@
 
 		<!--- student login --->
         <cfquery name="student_login" datasource="#application.dsn#">
-            SELECT studentid, firstname, familylastname
+            SELECT studentID, firstname, familylastname
             FROM smg_students
             WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
             and password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(password)#">
@@ -84,9 +84,9 @@
         </cfquery>
         
         <cfif student_login.recordcount gt 0>
-            <cfset client.studentid = student_login.studentid>
+            <cfset client.studentID = student_login.studentID>
             <cfset client.usertype = 10>
-            <cfset client.userid = student_login.studentid>
+            <cfset client.userID = 0>
             <cfset client.name = '#student_login.firstname# #student_login.familylastname#'>
             <cflocation url="/nsmg/student_app/login.cfm" addtoken="no">
         </cfif>
@@ -109,7 +109,7 @@
             FROM user_access_rights
             INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
             WHERE smg_companies.website = '#client.company_submitting#'
-            AND user_access_rights.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userid#">
+            AND user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userID#">
             ORDER BY user_access_rights.usertype
         </cfquery>
 
@@ -132,7 +132,7 @@
             </cfquery>
         </cfif>
 
-		<cfset client.userid = authenticate.userid>
+		<cfset client.userID = authenticate.userID>
 		<cfset client.name = '#authenticate.firstname# #authenticate.lastname#'>
         <cfset client.email = authenticate.email>
         
@@ -181,7 +181,7 @@
 		<cfset client.companies = valueList(get_companies.companyid)>
 
 		<cfif client.usertype EQ 8>
-            <cfset client.parentcompany = authenticate.userid>
+            <cfset client.parentcompany = authenticate.userID>
         <cfelseif client.usertype GTE 9>
             <cfset client.parentcompany = authenticate.intrepid>
         </cfif>
@@ -192,7 +192,7 @@
         <cfquery datasource="#application.dsn#">
         	UPDATE smg_users
             SET lastlogin = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-        	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userid#">
+        	WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userID#">
         </cfquery>
         
         <!--- this is used only in application.cfm to logout after 24 hours. --->
@@ -219,13 +219,13 @@
 
 
 	<!--- This gets the access level of the user viewed, based on the company of the logged in user viewing that user.
-	This returns one of the following for the userid passed in:
+	This returns one of the following for the userID passed in:
 	a. 0 if the user has no access records in the SMG companies.
 	b. the usertype of the access record with the company of the user logged in viewing this user.
 	c. null if there are none in b. with that company
 	called by: forms/user_form.cfm, user_info.cfm --->
 	<cffunction name="get_access_level" access="public" returntype="string">
-		<cfargument name="userid" type="string" required="yes">
+		<cfargument name="userID" type="string" required="yes">
 
 		<cfset var get_usertypes = ''>
         <cfset var get_company_usertypes = ''>
@@ -236,7 +236,7 @@
             FROM user_access_rights
             INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
             WHERE smg_companies.website = '#client.company_submitting#'
-            AND user_access_rights.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">
+            AND user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#userID#">
             ORDER BY user_access_rights.usertype
         </cfquery>
         <!--- user has no access records. --->
