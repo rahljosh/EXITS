@@ -48,9 +48,57 @@ HAVING (((smg_charges.agentid)=#userid#))
 </cfquery>
 ---->
 
+<cfquery name="agentTotalBalance" datasource="MySQL">
+SELECT SUM(t.total) AS totalPerAgent
+        FROM (
+        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(sch.amount_due),0) AS total, (CASE 
+WHEN sp.type = 7 THEN 7
+WHEN sp.type = 8 THEN 7
+WHEN sp.type = 9 THEN 7
+WHEN sp.type = 11 THEN 8
+ELSE sch.companyid
+END) AS testCompId
+        FROM smg_charges sch
+        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
+        LEFT JOIN smg_users su ON su.userid = sch.agentid
+        WHERE sch.agentid = #url.userid#
+        GROUP BY testCompId HAVING testCompId = #client.companyid#
+        UNION ALL
+        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total,  
+(CASE 
+WHEN sp.type = 7 THEN 7
+WHEN sp.type = 8 THEN 7
+WHEN sp.type = 9 THEN 7
+WHEN sp.type = 11 THEN 8
+ELSE sch.companyid
+END) AS testCompId
+        FROM smg_payment_charges spc
+        LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
+        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
+        LEFT JOIN smg_users su ON su.userid = sch.agentid
+        WHERE  sch.agentid = #url.userid#
+        GROUP BY testCompId HAVING testCompId = #client.companyid#
+        UNION ALL
+        SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, 
+(CASE 
+WHEN sp.type = 7 THEN 7
+WHEN sp.type = 8 THEN 7
+WHEN sp.type = 9 THEN 7
+WHEN sp.type = 11 THEN 8
+ELSE sc.companyid
+END) AS testCompId
+        FROM smg_credit sc
+        LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
+        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
+        LEFT JOIN smg_users su ON su.userid = sc.agentid
+        WHERE sc.active =1
+        AND sc.agentid = #url.userid#
+        GROUP BY testCompId HAVING testCompId = #client.companyid#
+        ) t
+        GROUP BY t.agentid
+</cfquery>
 
-
-			<Cfquery name="total_due" datasource="MySQL">
+			<!--- <Cfquery name="total_due" datasource="MySQL">
 			select sum(amount_due) as amount_due
 			from smg_charges
 			where agentid = #URL.userid# 
@@ -75,6 +123,18 @@ HAVING (((smg_charges.agentid)=#userid#))
 			<cfif total_received.total_received is ''>
 				<cfset total_received.total_received = 0>
 			</cfif>
+			
+			<cfquery name="overpayment_credit" datasource="MySQL">
+			select sum(amount) as overpayment_amount
+			from smg_credit
+			where agentid = #url.userid# and payref <> '' and active = 0
+			<cfif form.view is not 'all'>
+			and companyid = #client.companyid#
+			</cfif>
+			</cfquery>
+			<cfif overpayment_credit.overpayment_amount is ''>
+			<cfset overpayment_credit.overpayment_amount = 0>
+			</cfif> --->
             
 			<!----total credits in system---->
 			<cfquery name="total_credit_amount" datasource="MySQL">
@@ -105,21 +165,9 @@ HAVING (((smg_charges.agentid)=#userid#))
 			</cfif>
 			
 			<cfset total_credit = #total_credit_amount.credit_amount# - #total_credit_applied.credit_amount#>
-			
-			<cfquery name="overpayment_credit" datasource="MySQL">
-			select sum(amount) as overpayment_amount
-			from smg_credit
-			where agentid = #url.userid# and payref <> '' and active = 0
-				<cfif form.view is not 'all'>
-                and companyid = #client.companyid#
-                </cfif>
-			</cfquery>
-			<cfif overpayment_credit.overpayment_amount is ''>
-			<cfset overpayment_credit.overpayment_amount = 0>
-			</cfif>
 
 
-			<cfquery name="total_refund" datasource="mysql">
+			<!--- <cfquery name="total_refund" datasource="mysql">
 			select sum(smg_credit.amount) as total_refund
 			from smg_invoice_refunds right join smg_credit on smg_invoice_refunds.creditid = smg_credit.creditid
 			where smg_invoice_refunds.agentid =#url.userid#
@@ -130,11 +178,11 @@ HAVING (((smg_charges.agentid)=#userid#))
 			</cfquery>
 			<cfif total_refund.total_refund is ''>
 				<cfset total_refund.total_refund = 0>
-			</cfif>
+			</cfif> --->
 			
 			
 			<!----Refund Query not combined---->
-			<!----<cfquery name="refunds" datasource="MySQL">
+			<cfquery name="refunds" datasource="MySQL">
 			select *
 			from smg_invoice_refunds
 			where smg_invoice_refunds.agentid = #url.userid#
@@ -142,7 +190,7 @@ HAVING (((smg_charges.agentid)=#userid#))
 			and smg_invoice_refunds.companyid = #client.companyid#
 			</cfif>
 			and smg_invoice_refunds.refund_receipt_id = 0
-			</cfquery>---->
+			</cfquery>
 			<cfquery name="refunds" datasource="MySQL">
 			select smg_invoice_refunds.id, smg_invoice_refunds.refund_receipt_id, smg_invoice_refunds.date, smg_invoice_refunds.amount,
 			smg_credit.creditid, smg_credit.amount as credit_amount, smg_credit.description
@@ -240,8 +288,8 @@ HAVING (((smg_charges.agentid)=#userid#))
 									<!---Current Balance---->
 									<table align="right">
 											<tr><strong></strong>
-												<td><b>Balance:</b></td><td><cfset balance_due = #total_due.amount_due# - #total_received.total_received# - #total_credit# + #overpayment_credit.overpayment_amount#>
-												<b>#LSCurrencyFormat(balance_due, 'local')#</b></td>
+												<td><b>Balance:</b></td><td><!--- <cfset balance_due = #total_due.amount_due# - #total_received.total_received# - #total_credit# + #overpayment_credit.overpayment_amount#> --->
+												<b>#LSCurrencyFormat(agentTotalBalance.totalPerAgent, 'local')#</b></td>
 											</tr>
 										
 											<tr>
@@ -806,7 +854,7 @@ ORDER BY date DESC
 select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.creditid, sc.amount_applied, sc.credit_type, c.companyshort
 from smg_credit sc
 LEFT JOIN smg_companies c ON c.companyid = sc.companyid
-where agentid = #url.userid# <cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'>
+where agentid = #url.userid# <cfif (client.companyid EQ 10) AND form.view is not 'all'>
 								and sc.companyid = #client.companyid# 
 							 </cfif>
 and  active = 1
@@ -875,7 +923,7 @@ ORDER BY creditid DESC
 select date, type, description, stuid, invoiceid, amount, creditid, credit_type, c.companyshort
 from smg_credit
 LEFT OUTER JOIN smg_companies c ON c.companyid = smg_credit.companyid
-where agentid = #url.userid# <cfif client.companyid EQ 5 OR client.companyid EQ 10 AND form.view is not 'all'>
+where agentid = #url.userid# <cfif client.companyid EQ 10 AND form.view is not 'all'>
 								and smg_credit.companyid = #client.companyid# 
 							 </cfif>
 and active = 0
