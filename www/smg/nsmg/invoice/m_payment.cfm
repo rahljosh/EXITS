@@ -271,7 +271,7 @@ ORDER BY businessname
 		<cfset form.date_received = #now()#>
 		<cfset form.pay_ref = #form.creditId#>
 		<cfset form.payment_method = 'apply credit'>
-		<cfset form.amount_received = #variables.totalReceived#>
+		<cfset form.amount_received = #variables.amount_avail#>
 		
 		<cfquery name="get_bal" datasource="mysql">
 			select id, amount_applied, amount 
