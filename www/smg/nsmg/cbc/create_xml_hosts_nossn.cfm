@@ -23,7 +23,7 @@
 		
 		// Create Structure to store errors
 		Errors = StructNew();
-		// Create Array to store errors messages
+		// Create Array to store error messages
 		Errors.Messages = ArrayNew(1);
 
 		// Skip IDs List if any information is missing;
