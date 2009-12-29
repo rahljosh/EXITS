@@ -20,7 +20,7 @@
 6. Have had standard charges canceled
 7. Have been canceled and reactivated afterwards --->
 <cfquery name="getTraineeCand" datasource="MySQL">
-SELECT e.candidateid, e.firstname, e.lastname, e.programid, sp.programname, sp.type
+SELECT e.candidateid, e.firstname, e.lastname, e.programid, e.companyid, sp.programname, sp.type
 FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
@@ -38,7 +38,7 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.type = 'Program price'
                         AND sc.active = 1)
 UNION
-SELECT e.candidateid, e.firstname, e.lastname, e.programid, sp.programname, sp.type
+SELECT e.candidateid, e.firstname, e.lastname, e.programid, e.companyid, sp.programname, sp.type
 FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
@@ -56,7 +56,7 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.type = 'Insurance fee'
                         AND sc.active = 1) 
 UNION
-SELECT e.candidateid, e.firstname, e.lastname, e.programid, sp.programname, sp.type
+SELECT e.candidateid, e.firstname, e.lastname, e.programid, e.companyid, sp.programname, sp.type
 FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
@@ -162,6 +162,7 @@ ORDER BY candidateid
 		<cfinput type="hidden" name="agentId#getTraineeCand.candidateid#" value="#url.userid#">
 		<cfinput type="hidden" name="programId#getTraineeCand.candidateid#" value="#getTraineeCand.programid#">
 		<cfinput type="hidden" name="programName#getTraineeCand.candidateid#" value="#getTraineeCand.programname#">
+		<cfinput type="hidden" name="companyId#getTraineeCand.candidateid#" value="#getTraineeCand.candidateid.companyid#">
     
         <table class="frame" width="500">            
             <!--- default values for form variables to execute INSERT SQL --->
