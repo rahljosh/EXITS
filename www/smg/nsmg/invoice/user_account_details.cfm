@@ -51,49 +51,58 @@ HAVING (((smg_charges.agentid)=#userid#))
 <cfquery name="agentTotalBalance" datasource="MySQL">
 SELECT SUM(t.total) AS totalPerAgent
         FROM (
-        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(sch.amount_due),0) AS total, (CASE 
+        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(sch.amount_due),0) AS total, sch.companyid<!--- (CASE 
 WHEN sp.type = 7 THEN 7
 WHEN sp.type = 8 THEN 7
 WHEN sp.type = 9 THEN 7
 WHEN sp.type = 11 THEN 8
 ELSE sch.companyid
-END) AS testCompId
+END) AS testCompId --->
         FROM smg_charges sch
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE sch.agentid = #url.userid#
-        GROUP BY testCompId HAVING testCompId = #client.companyid#
+		GROUP BY sch.companyid<!--- testCompId --->
+		<cfif form.view is not 'all'>
+        	HAVING testCompId = #client.companyid#
+		</cfif>
         UNION ALL
-        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total,  
+        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total, sch.companyid<!--- 
 (CASE 
 WHEN sp.type = 7 THEN 7
 WHEN sp.type = 8 THEN 7
 WHEN sp.type = 9 THEN 7
 WHEN sp.type = 11 THEN 8
 ELSE sch.companyid
-END) AS testCompId
+END) AS testCompId --->
         FROM smg_payment_charges spc
         LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE  sch.agentid = #url.userid#
-        GROUP BY testCompId HAVING testCompId = #client.companyid#
+		GROUP BY sch.companyid<!--- testCompId --->
+		<cfif form.view is not 'all'>
+        	HAVING testCompId = #client.companyid#
+		</cfif>
         UNION ALL
-        SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, 
+        SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, sc.companyid<!--- 
 (CASE 
 WHEN sp.type = 7 THEN 7
 WHEN sp.type = 8 THEN 7
 WHEN sp.type = 9 THEN 7
 WHEN sp.type = 11 THEN 8
 ELSE sc.companyid
-END) AS testCompId
+END) AS testCompId --->
         FROM smg_credit sc
         LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sc.agentid
         WHERE sc.active =1
         AND sc.agentid = #url.userid#
-        GROUP BY testCompId HAVING testCompId = #client.companyid#
+		GROUP BY sc.companyid<!--- testCompId --->
+		<cfif form.view is not 'all'>
+        	HAVING testCompId = #client.companyid#
+		</cfif>
         ) t
         GROUP BY t.agentid
 </cfquery>
