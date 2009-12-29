@@ -159,7 +159,7 @@ ORDER BY verification_received
     
 <!--- gets work candidates with the chosen "ds verification report date received" --->
 <cfquery name="getWorkCand" datasource="MySQL">
-SELECT e.candidateid, e.firstname, e.lastname, e.wat_placement, e.programid, e.startdate, e.enddate, su.extra_insurance_typeid, su.extra_accepts_sevis_fee, sp.programname
+SELECT e.candidateid, e.firstname, e.lastname, e.wat_placement, e.programid, e.startdate, e.enddate, e.companyid, su.extra_insurance_typeid, su.extra_accepts_sevis_fee, sp.programname
 FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
@@ -176,7 +176,7 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.type = 'Program price'
                         AND sc.active = 1)
 UNION
-SELECT e.candidateid, e.firstname, e.lastname, e.wat_placement, e.programid, e.startdate, e.enddate, su.extra_insurance_typeid, su.extra_accepts_sevis_fee, sp.programname
+SELECT e.candidateid, e.firstname, e.lastname, e.wat_placement, e.programid, e.startdate, e.enddate, e.companyid, su.extra_insurance_typeid, su.extra_accepts_sevis_fee, sp.programname
 FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
@@ -193,7 +193,7 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.type = 'Insurance fee'
                         AND sc.active = 1) 
 UNION
-SELECT e.candidateid, e.firstname, e.lastname, e.wat_placement, e.programid, e.startdate, e.enddate, su.extra_insurance_typeid, su.extra_accepts_sevis_fee, sp.programname
+SELECT e.candidateid, e.firstname, e.lastname, e.wat_placement, e.programid, e.startdate, e.enddate, e.companyid, su.extra_insurance_typeid, su.extra_accepts_sevis_fee, sp.programname
 FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
@@ -210,7 +210,7 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.type = 'Placement fee'
                         AND sc.active = 1)
 UNION
-SELECT e.candidateid, e.firstname, e.lastname, e.wat_placement, e.programid, e.startdate, e.enddate, su.extra_insurance_typeid, su.extra_accepts_sevis_fee, sp.programname
+SELECT e.candidateid, e.firstname, e.lastname, e.wat_placement, e.programid, e.startdate, e.enddate, e.companyid, su.extra_insurance_typeid, su.extra_accepts_sevis_fee, sp.programname
 FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
@@ -264,6 +264,7 @@ ORDER BY candidateid
 	<cfinput type="hidden" name="agentId#getWorkCand.candidateid#" value="#url.userid#">
 	<cfinput type="hidden" name="programId#getWorkCand.candidateid#" value="#getWorkCand.programid#">
 	<cfinput type="hidden" name="programName#getWorkCand.candidateid#" value="#getWorkCand.programname#">
+	<cfinput type="hidden" name="companyId#getWorkCand.candidateid#" value="#getWorkCand.companyid#">
     
     <table class="frame" width="500">            
         <!--- default values for form variables to execute INSERT SQL --->
