@@ -42,7 +42,7 @@
 				<img src="pics/error_exclamation.gif" width="37" height="44"> I am sorry but you do not have the rights to see this page.
 			</td>
 		</tr>
-		<tr><td align="center">If you think this is a mistake please contact <cfoutput>#client.support_email#</cfoutput></td></tr>
+		<tr><td align="center">If you think this is a mistake please contact <cfoutput>#APPLICATION.EMAIL.support#</cfoutput></td></tr>
 		<tr><td align="center">You can view your account by clicking <a href="?curdoc=user_info&userid=<cfoutput>#client.userid#</cfoutput>">here<a/>.<br /><br /></td></tr>			
 	</table>
 	<cfinclude template="table_footer.cfm">
