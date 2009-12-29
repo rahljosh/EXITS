@@ -64,7 +64,7 @@ END) AS testCompId --->
         WHERE sch.agentid = #url.userid#
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
-        	HAVING testCompId = #client.companyid#
+        	HAVING sch.companyid = #client.companyid#
 		</cfif>
         UNION ALL
         SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total, sch.companyid<!--- 
@@ -82,7 +82,7 @@ END) AS testCompId --->
         WHERE  sch.agentid = #url.userid#
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
-        	HAVING testCompId = #client.companyid#
+        	HAVING sch.companyid = #client.companyid#
 		</cfif>
         UNION ALL
         SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, sc.companyid<!--- 
@@ -101,7 +101,7 @@ END) AS testCompId --->
         AND sc.agentid = #url.userid#
 		GROUP BY sc.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
-        	HAVING testCompId = #client.companyid#
+        	HAVING sc.companyid = #client.companyid#
 		</cfif>
         ) t
         GROUP BY t.agentid
