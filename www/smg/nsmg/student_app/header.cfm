@@ -19,7 +19,7 @@
 <meta name="Author" content="Josh Rahl">
 <meta http-EQuiv="Content-Type" content="text/html; charset=iso-8859-1">
 
-<title>EXITS Student Application - 2</title>
+<title>EXITS Student Application</title>
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 
 <link rel="stylesheet" href="../smg.css" type="text/css">
