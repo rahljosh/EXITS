@@ -39,7 +39,3 @@ use isDefined because students don't have thislogin.  this is on application.cfm
 	<cfinclude template="../nsmg/logout.cfm">
 </cfif>
 
-<!--- session has expired // Go to login page. --->
-<cfif NOT VAL(CLIENT.studentID)>
-    <cflocation url="http://#cgi.http_host#/" addtoken="no">
-</cfif>
