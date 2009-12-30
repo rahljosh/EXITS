@@ -78,7 +78,7 @@
 											<td class="style1" align="right"><b>DS Verification Received:</b></td>
 											<td class="style1" align="left">
 												<cfselect name="verification_received" query="verification_dates" value="verification_received" display="verification_received" queryPosition="below" class="style1">
-												<option value="0"></option>
+												<option value=""></option>
 												</cfselect>
 											</td>
 										</tr>

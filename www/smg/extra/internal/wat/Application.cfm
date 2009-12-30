@@ -10,18 +10,22 @@
         
         APPLICATION.INTO = StructNew();		
         APPLICATION.INTO.name = "IntoEdVentures";
+		APPLICATION.INTO.programName = "Into EdVentures Work And Travel";
 		APPLICATION.INTO.programNumber = "P-3-06010";
-		APPLICATION.INTO.phone = "1-888-Into USA";
+		APPLICATION.INTO.phone = "1-888-INTO USA";
+		APPLICATION.INTO.phoneIDCard = "1-888-468-6872";
 		APPLICATION.INTO.logo = "2.gif";
 		APPLICATION.INTO.smallLogo = "2.gif";
 	
 		// Set CSB Information
         APPLICATION.CSB = StructNew();		
 		APPLICATION.CSB.name = "CSB International, Inc.";
+		APPLICATION.CSB.programName = "CSB Work And Travel";
         APPLICATION.CSB.programNumber = "P-4-13299";
 		APPLICATION.CSB.phone = "1-877-669-0717";
+		APPLICATION.CSB.phoneIDCard = "1-877-669-0717";
 		APPLICATION.CSB.logo = "8.gif";
-		APPLICATION.CSB.smallLogo = "8.gif";
+		APPLICATION.CSB.smallLogo = "8s.gif";
     </cfscript>
         
     <CFQUERY name="selectdb" datasource="MySQL" >
