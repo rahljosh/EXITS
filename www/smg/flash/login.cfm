@@ -121,7 +121,7 @@ a:active {
 </style>
 
 <!--- Student --->
-<cfif VAL(CLIENT.studentID)>
+<cfif VAL(CLIENT.userType) AND CLIENT.userType EQ 10>
     <table width="90%"  border="0" align="center" cellpadding="1" cellspacing="0">
      <tr>
         <td class="style3">
@@ -132,7 +132,7 @@ a:active {
     </tr>
     </table>
 <!--- User --->   
-<cfelseif VAL(CLIENT.userID)>
+<cfelseif VAL(CLIENT.userType) AND CLIENT.userType NEQ 10>
     <table width="90%"  border="0" align="center" cellpadding="1" cellspacing="0">
      <tr>
         <td class="style3">

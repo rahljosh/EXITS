@@ -150,7 +150,7 @@ used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
 
 
 <!--- session has expired // Go to login page. --->
-<cfif NOT VAL(CLIENT.userID)>
+<cfif NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.userType)>
     <cflocation url="http://#cgi.http_host#/" addtoken="no">
 </cfif>
 
