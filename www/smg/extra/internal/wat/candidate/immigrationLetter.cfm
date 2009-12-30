@@ -49,7 +49,7 @@
 <table width="700px" border="0">
     <tr>
         <td class="style1">
-        	<img src="http://www.student-management.com/#APPLICATION[qGetProgram.extra_sponsor].logo#"> <br />
+        	<img src="../../../../#APPLICATION[qGetProgram.extra_sponsor].logo#"> <br />
         </td>
         <td class="style2">
 			<div align="center">
@@ -108,7 +108,7 @@
                 The participants of this program are also entitled to receive compensation from employers for theirs efforts while they are on the 
                 program. For payroll purposes, the participants must obtain Social Security Numbers. <br /> <br />
                 
-                Each participant has been sponsored by #APPLICATION[qGetProgram.extra_sponsor].name# as indicated on the DS2019 Form. <br /> <br />
+                Each participant has been sponsored by #APPLICATION[qGetProgram.extra_sponsor].name# as indicated on the DS-2019 Form. <br /> <br />
 
                 #APPLICATION[qGetProgram.extra_sponsor].name# would like to thank you in advance for your cooperation. 
                 If you should have any questions or concerns, please feel free to contact us at #APPLICATION[qGetProgram.extra_sponsor].phone#. <br /> <br /> <br /> 
