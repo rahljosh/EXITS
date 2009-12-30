@@ -44,28 +44,27 @@
         INNER 
         	JOIN smg_states s ON s.id = h.state
         WHERE 
-        	1 = 1
-            <!--- c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> --->
+			c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+
+       	AND 
+        	c.verification_received =  <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#">  
+		
 		<cfif VAL(FORM.intrep)>
             AND c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
         </cfif>        
+        
         AND  ( 
         		<cfloop list="#FORM.programID#" index="progID">
 					c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#progID#"> 
                    <cfif progID NEQ ListLast(form.programid)> OR </cfif>
              	</cfloop> 
              )
-        <!---
-        AND 
-        	c.verification_received =  <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#">  
-		--->
+        
         GROUP BY 
         	c.candidateid        
         ORDER BY 
         	u.businessname, 
             c.candidateid
-            
-		LIMIT 20            
     </cfquery>
 
 </cfsilent>
