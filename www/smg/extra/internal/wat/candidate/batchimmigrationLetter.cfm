@@ -17,9 +17,11 @@
         	extra_candidates
         WHERE 
         	verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date#">
+        
         AND 
         	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_program#">
-        <cfif VAL(FORM.selected_rep)>
+        
+		<cfif VAL(FORM.selected_rep)>
         AND 
         	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_rep#">
         </cfif>
