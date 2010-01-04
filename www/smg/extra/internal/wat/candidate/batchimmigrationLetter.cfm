@@ -1,6 +1,7 @@
 <!--- Kill extra output --->
 <cfsilent>
 	
+    <!--- Param FORM variables --->
 	<cfparam name="FORM.selected_rep" default="All">
     <cfparam name="FORM.selected_program" default="0">
     <cfparam name="FORM.date" default="">
@@ -77,7 +78,7 @@
                 #APPLICATION[qGetProgram.extra_sponsor].name# <br />
                 119 Cooper Street <br />
                 Babylon, New York 11702 <br />
-                #APPLICATION[qGetProgram.extra_sponsor].phone#
+                #APPLICATION[qGetProgram.extra_sponsor].toolFreePhone#
             </td>
         </tr>
     </table>
@@ -131,7 +132,7 @@
                     Each participant has been sponsored by #APPLICATION[qGetProgram.extra_sponsor].name# as indicated on the DS-2019 Form. <br /> <br />
     
                     #APPLICATION[qGetProgram.extra_sponsor].name# would like to thank you in advance for your cooperation. 
-                    If you should have any questions or concerns, please feel free to contact us at #APPLICATION[qGetProgram.extra_sponsor].phone#. <br /> <br /> <br /> 
+                    If you should have any questions or concerns, please feel free to contact us at #APPLICATION[qGetProgram.extra_sponsor].toolFreePhone#. <br /> <br /> <br /> 
                 </p>
     
                 <p class="style1">

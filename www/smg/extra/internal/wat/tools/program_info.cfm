@@ -88,13 +88,13 @@
             if ( NOT VAL(FORM.type) ) {
                 ArrayAppend(Errors.Messages, "Program Type is required.");			
             }
-            
+
             // Sponsor
             if ( NOT LEN(FORM.extra_sponsor) ) {
                 ArrayAppend(Errors.Messages, "Sponsor is required.");			
             }
-            
-            // Start Date
+
+			// Start Date
             if ( NOT IsDate(FORM.startDate) ) {
                 ArrayAppend(Errors.Messages, "Please enter a valid start date");
                 FORM.startDate = '';

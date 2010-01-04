@@ -9,10 +9,12 @@
         APPLICATION.Constants = StructNew();
         
         APPLICATION.INTO = StructNew();		
-        APPLICATION.INTO.name = "IntoEdVentures";
+        APPLICATION.INTO.name = "Into EdVentures";
 		APPLICATION.INTO.programName = "Into EdVentures Work And Travel";
+		APPLICATION.INTO.shortProgramName = "INTO WAT";
 		APPLICATION.INTO.programNumber = "P-3-06010";
-		APPLICATION.INTO.phone = "1-888-INTO USA";
+		APPLICATION.INTO.toolFreePhone = "1-888-INTO USA";
+		APPLICATION.INTO.phone = "(631) 893-8059";
 		APPLICATION.INTO.phoneIDCard = "1-888-468-6872";
 		APPLICATION.INTO.logo = "2.gif";
 		APPLICATION.INTO.smallLogo = "2.gif";
@@ -20,9 +22,11 @@
 		// Set CSB Information
         APPLICATION.CSB = StructNew();		
 		APPLICATION.CSB.name = "CSB International, Inc.";
-		APPLICATION.CSB.programName = "CSB Work And Travel";
+		APPLICATION.CSB.programName = "Summer Work Travel Program";
+		APPLICATION.CSB.shortProgramName = "CSB SWT";
         APPLICATION.CSB.programNumber = "P-4-13299";
-		APPLICATION.CSB.phone = "1-877-669-0717";
+		APPLICATION.CSB.toolFreePhone = "1-877-669-0717";
+		APPLICATION.CSB.phone = "(631) 893-4549";
 		APPLICATION.CSB.phoneIDCard = "1-877-669-0717";
 		APPLICATION.CSB.logo = "8.gif";
 		APPLICATION.CSB.smallLogo = "8s.gif";

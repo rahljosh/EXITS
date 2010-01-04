@@ -149,7 +149,7 @@
                         <p class="style1">#APPLICATION[qGetCandidates.extra_sponsor].phoneIDCard#</p>
                         <p class="style5">&nbsp;</p>
                         <p class="style3">Student : <b>#Firstname# #lastname# (###candidateid#)</b></p>
-                        <p class="style1"><!--- This is not an insurance card. ---> See reverse for insurance information.</p>
+                        <p class="style1">Please see reverse for the insurance information.</p>
                     </td>
                 </tr>
             </table>
