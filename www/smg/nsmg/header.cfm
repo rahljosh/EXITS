@@ -65,30 +65,13 @@
 <title>EXITS</title>
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" href="smg.css" type="text/css">
-<link rel="stylesheet" href="linked/css/datePicker.css" type="text/css">
-<!-- BaseScript -->
-<script src="linked/js/basescript.js " type="text/javascript"></script>
-<!-- jQuery -->
-<script src="linked/js/jquery.js" type="text/javascript"></script>
-<!-- Coldfusion functions for jquery -->
-<script src="linked/js/jquery.cfjs.js" type="text/javascript"></script>
-<!-- required plugins -->
-<script src="linked/js/date.js " type="text/javascript"></script>
-<!-- jquery.datePicker.js -->
-<script src="linked/js/jquery.datePicker.js " type="text/javascript"></script>
-
-<style type="text/css">
-<!--
-.smlink         		{font-size: 11px;}
-.section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #ffffff;}
-.sideborders				{ border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6; background: #ffffff;}
-.sectionFoot    		{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;font-size:2px;}
-.sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
-.sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
-.sectionSubHead			{font-size:11px;font-weight:bold;}
--->
-</style>
-
+<link rel="stylesheet" href="linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
+<link rel="stylesheet" href="linked/css/datePicker.css" type="text/css"> <!-- Date Picker Style -->
+<script src="linked/js/basescript.js " type="text/javascript"></script> <!-- BaseScript -->
+<script src="linked/js/jquery.js" type="text/javascript"></script> <!-- jQuery -->
+<script src="linked/js/jquery.cfjs.js" type="text/javascript"></script> <!-- Coldfusion functions for jquery -->
+<script src="linked/js/date.js " type="text/javascript"></script> <!-- required plugins for date picker -->
+<script src="linked/js/jquery.datePicker.js " type="text/javascript"></script> <!-- jquery.datePicker.js -->
 </head>
 <body>
 
