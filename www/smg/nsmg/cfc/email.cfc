@@ -1,3 +1,4 @@
+
 <cfcomponent>
 <cfparam name="client.name" default="Support">
 
@@ -15,7 +16,7 @@ student_app/email_form.cfm
 student_app_app_recived--->
 	<cffunction name="send_mail" access="public" returntype="void">
     	
-        <cfargument name="email_from" default="support@exitsapplication.org" required="true">
+        <cfargument name="email_from" default="#client.support_email#" required="true">
 		<cfargument name="email_to" type="string" required="true">
 		<cfargument name="email_subject" type="string" required="true">
         
