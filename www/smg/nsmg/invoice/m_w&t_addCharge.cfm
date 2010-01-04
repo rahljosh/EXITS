@@ -409,7 +409,7 @@ ORDER BY candidateid
          <tr>
             <td>
             </td>
-            <cfif #getWorkCand.wat_placement# IS "INTO-Placement">
+            <cfif #getWorkCand.wat_placement# IS "CSB-Placement">
                 <td>
                 <cfinput type="text" name="#candidateId#typePlacementFee" value="Placement fee">
                 </td> 
