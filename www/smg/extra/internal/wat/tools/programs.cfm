@@ -1,4 +1,3 @@
-
 <html>
 <head><title></title>
 <link href="http://dev.student-management.com/extra/style.css" rel="stylesheet" type="text/css">
@@ -41,7 +40,7 @@
 
 
 <table width=95% border=0 align="center" cellpadding=4 cellspacing=0 class="section">
-  <tr>
+	<tr>
   		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>ID</b></font></span></td>
 		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Status</b></font></span></td>
 		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Program Name</b></font></span></td>
@@ -49,56 +48,44 @@
 		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Start Date</b></font></span></td>
 		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>End Date</b></font></span></td>
 		<td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Company</b></font></span></td>
-        <td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Sponsor</b></font></span></td>
-	
-	  <!--- <td><b>Fee's</b></td> --->
+        <td bgcolor="4F8EA4"><span class="style2"><font color="#FFFFFF" face="Verdana, Arial, Helvetica, sans-serif"><b>Sponsor</b></font></span></td>		  
 	</tr>
 	<cfoutput query="programstools">
-	<tr bgcolor="#iif(programstools.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#"> <!---  --->
-		<td> <span class="style5">#programid#</td>
+	<tr bgcolor="#iif(programstools.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+		<td> 
+        	<span class="style5">#programid#</span>
+        </td>
 		<Td>
-		  
-		    <cfif #enddate# lt #now()#>
+		    <cfif enddate lt now()>
 		      <span class="style5"><font color="red">expired</font></span>
 		      <cfelseif hold is 1>
 		      <span class="style5"><font color="##3300CC">hold</font></span>
-		      <cfelseif #enddate# gt #now()#>
+		      <cfelseif enddate gt now()>
 		      <span class="style5"><font color="green">active</font> </span>
 		    </cfif>
-	    </div></Td>
-		<td><span class="style5"><a href="?curdoc=tools/program_info&programID=#programid#">#programname# </a>
-	      </div>
-		</span></td>
+		</Td>
 		<td>
-		  
+        	<span class="style5"><a href="?curdoc=tools/program_info&programID=#programid#">#programname# </a></span>
+		</td>
+		<td>
 		    <cfif programtype is ''>
 		      <span class="style5"><font color="red">None Assigned</font></span>
 		      <cfelse>
-		      <span class="style5">#programtype#	          </span>
+		      <span class="style5">#programtype#</span>
 		    </cfif>
-        </div></td>
+		</td>
 		<td>
-		  <span class="style5">
-	      #DateFormat(startdate, 'mm-dd-yyyy')#</span>
-	      </div>
-	    </span></td>
+		  <span class="style5">#DateFormat(startdate, 'mm-dd-yyyy')#</span>	    
+	    </td>
 		<td>
-		  <span class="style5">
-	      #DateFormat(enddate, 'mm-dd-yyyy')#</span>
-	      </div>
-	    </span></td>
+		  <span class="style5">#DateFormat(enddate, 'mm-dd-yyyy')#</span>
+		</td>
 		<td>
-		  <span class="style5">
-	      #companyname#</span>
-	      </div>
-	    </span></td>
+		  <span class="style5">#companyname#</span>
+        </td>
 		<td>
-		  <span class="style5">
-	      #extra_sponsor#</span>
-	      </div>
-	    </span></td>
-
-		<!--- <td>#programfee# *</td> --->
+		  <span class="style5">#extra_sponsor#</span>
+		</td>
 	</tr>
 	</cfoutput>
 	<Tr>
