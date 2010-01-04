@@ -162,7 +162,7 @@ ORDER BY candidateid
 		<cfinput type="hidden" name="agentId#getTraineeCand.candidateid#" value="#url.userid#">
 		<cfinput type="hidden" name="programId#getTraineeCand.candidateid#" value="#getTraineeCand.programid#">
 		<cfinput type="hidden" name="programName#getTraineeCand.candidateid#" value="#getTraineeCand.programname#">
-		<cfinput type="hidden" name="companyId#getTraineeCand.candidateid#" value="#getTraineeCand.candidateid.companyid#">
+		<cfinput type="hidden" name="companyId#getTraineeCand.candidateid#" value="#getTraineeCand.companyid#">
     
         <table class="frame" width="500">            
             <!--- default values for form variables to execute INSERT SQL --->
