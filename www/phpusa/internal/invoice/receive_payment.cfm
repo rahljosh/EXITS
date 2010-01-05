@@ -122,7 +122,7 @@ function CalculateTotal() {
 						WHERE s.intrep = '#intrep#'
 							AND e.full_paid = '0'
 							AND e.canceled = '0'
-						GROUP BY studentid
+						GROUP BY s.firstName
 					</cfquery>
 					<tr><td colspan=4>Select by invoice or student, keep in mind that a student may have charges on multiple invoices.</td></tr>
 					<tr>
@@ -131,7 +131,7 @@ function CalculateTotal() {
 							<select name="invoice" onChange="javascript:formHandlerInvoice()">
 							<option value="?curdoc=invoice/receive_payment&intrep=#intrep#">Select Invoice</option>
 							<cfloop query="open_invoices">
-							<option value = "?curdoc=invoice/receive_payment&intrep=#intrep#&invoice=#invoiceid#" <cfif isDefined('url.invoice')><cfif url.invoice eq invoiceid>selected</cfif></cfif>>#invoiceid# - #LSCurrencyFormat(invoice_amount,'local')#</option>
+							<option value = "?curdoc=invoice/receive_payment&intrep=#intrep#&invoice=#invoiceid#" <cfif isDefined('url.invoice')><cfif url.invoice eq invoiceid>selected</cfif></cfif>>###invoiceid# - #LSCurrencyFormat(invoice_amount,'local')#</option>
 							</cfloop>
 							</select>
 						</td>
@@ -140,7 +140,7 @@ function CalculateTotal() {
 							<select name="open_students" onChange="javascript:formHandlerStudents()">
 							<option value="?curdoc=invoice/receive_payment&intrep=#intrep#">Select Student</option>
 							<cfloop query="open_students">
-							<option value = "?curdoc=invoice/receive_payment&intrep=#intrep#&student=#studentid#" <cfif isDefined('url.student')><cfif url.student eq studentid>selected</cfif></cfif>>#firstname# #familylastname# - #LSCurrencyFormat(student_amount,'local')#</option>
+							<option value = "?curdoc=invoice/receive_payment&intrep=#intrep#&student=#studentid#" <cfif isDefined('url.student')><cfif url.student eq studentid>selected</cfif></cfif>>###studentID# - #firstname# #familylastname# - #LSCurrencyFormat(student_amount,'local')#</option>
 							</cfloop>
 							</select>
 						</td>
