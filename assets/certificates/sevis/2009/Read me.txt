@@ -11,17 +11,9 @@ Password: sevisbatch
 
 Instructions for Use:
 
-Upload *.cer to SEVIS
+Upload *.pem to SEVIS
 
 Import *.pfx to Browser (IE)
 
-
------------------------------------------
-
-Instructions for Getting New Certificate
-
-Convert with open SSL
-
-Certificate Password: 
 
 
