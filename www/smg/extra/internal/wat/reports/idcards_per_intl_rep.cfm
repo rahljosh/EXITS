@@ -138,17 +138,17 @@
             <!--- HEADER --->
             <table border="0" width="100%">
                 <tr> 
-                    <td width="25%" align="center">
+                    <td align="center">
                         <img src="../../../../#APPLICATION[qGetCandidates.extra_sponsor].smallLogo#" border="0">
                     </td>
-                    <td width="75%" align="center"> 
+                    <td align="center" width="100%"> 
                         <p class="style5">&nbsp;</p>
                         <p class="style4"><b>#APPLICATION[qGetCandidates.extra_sponsor].programName#</b>
                         <p class="style1">#c_address#</p>
                         <p class="style1">#c_city#, #c_state# &nbsp; #c_zip#</p>
                         <p class="style1">#APPLICATION[qGetCandidates.extra_sponsor].phoneIDCard#</p>
                         <p class="style5">&nbsp;</p>
-                        <p class="style3">Student : <b>#Firstname# #lastname# (###candidateid#)</b></p>
+                        <p class="style3">Student: <b>#Firstname# #lastname# (###candidateid#)</b></p>
                         <p class="style1">Please see reverse for the insurance information.</p>
                     </td>
                 </tr>
@@ -161,8 +161,8 @@
                         <table width="100%" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td width="50%" align="left" valign="top">
-                                    <p class="style2">Host Company : #hostcompanyname#</p>
-                                    <p class="style2">Address : #hostaddress#</p>	
+                                    <p class="style2">Host Company: #hostcompanyname#</p>
+                                    <p class="style2">Address: #hostaddress#</p>	
                                     <p class="style2">#hostcity#, #hoststate# #hostzip#</p>						
                                     <p class="style2">&nbsp;</p>	
                                     <p class="style2">Exchange Visitor Program Number:</p>															
