@@ -96,7 +96,7 @@
 							<tr>
                             	<td colspan="2">
                                 	Start Date: Arrival Date <br>
-                                	End Date: Program Insurance End Date 
+                                	End Date: Program End Date 
                                 </td>
                             </tr>                            
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
