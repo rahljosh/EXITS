@@ -104,8 +104,10 @@
                 MIN(fi.dep_date) as dep_date,            
                 it.type,  
                 ic.policycode, 
+                p.startDate,
+                p.endDate,
                 p.insurance_startdate, 
-                p.insurance_enddate 
+                p.insurance_enddate
             FROM
                 smg_flight_info fi
             INNER JOIN
@@ -135,7 +137,7 @@
                             type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N"> 
                     )
             AND
-                it.insuTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
+                u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
             AND 
                 ( 
                     <cfloop list="#FORM.programID#" index="pID">

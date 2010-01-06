@@ -93,7 +93,6 @@
                 </cfif>
 
                 ORDER BY 
-                    c.companyShort,
                     p.programName
 		</cfquery>
 		   
