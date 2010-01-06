@@ -13,6 +13,8 @@
 <!--- Kill extra output --->
 <cfsilent>
 	
+    <cfsetting requesttimeout="9999">
+    
     <!--- Param variables --->
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.policyID" default="0">
@@ -28,21 +30,10 @@
 		policyName = APPCFC.INSURANCE.getInsurancePolicies(insuTypeID=FORM.policyID).shortType;
 	
 		// Set XLS File Name
-		XLSFileName = '#companyShort#_#policyName#_#DateFormat(now(),'mm-dd-yy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
+		XLSFileName = '#companyShort#_#policyName#_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
 	</cfscript>
  
 </cfsilent>	
-
-<cfdump var="#XLSFileName#"><cfabort>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>New Transaction Insurance</title>
-</head>
-
-<body>
 
 <cfif NOT VAL(FORM.programID)>
 	Please select at least one program.
@@ -51,6 +42,11 @@
 
 <cfif NOT VAL(FORM.policyID)>
 	Please select a policy type.
+	<cfabort>
+</cfif>
+
+<cfif NOT VAL(qGetStudents.recordCount)>
+	There are no students that match your criteria at this time.
 	<cfabort>
 </cfif>
 
@@ -136,6 +132,3 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 </table>
 
 </cfoutput> 
-
-</body>
-</html>

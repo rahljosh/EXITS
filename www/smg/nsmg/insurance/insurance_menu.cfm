@@ -62,7 +62,6 @@
 			<!--- NEW TRANSACTION HEADER --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> New Transaction</th></tr>
-                <tr><td colspan="2" align="center"><font size="-2">Students with Flight Information</font></td></tr>
             </table>
 		
 			<!--- NEW TRANSACTION - FIRST ROW - 2 REPORTS --->
@@ -103,8 +102,8 @@
                         </table>
                         </form>
                     </td>
-                    <td width="50%" valign="top">
-						&nbsp;
+                    <td width="50%" valign="top">&nbsp;
+						
                     </td>
                 </tr>
             </table>
