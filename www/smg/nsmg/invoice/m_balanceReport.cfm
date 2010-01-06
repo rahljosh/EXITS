@@ -76,7 +76,8 @@ AND (companyid = 1
     OR companyid = 4
     OR companyid = 7
     OR companyid = 8
-    OR companyid = 9)
+    OR companyid = 9
+	OR companyid = 10)
 ORDER BY companyid, startdate DESC
 </cfquery>
 
@@ -101,6 +102,7 @@ ORDER BY companyid, startdate DESC
                     <cfcase value="7"><cfset compId = 'Trainee'></cfcase>
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
+					<cfcase value="10"><cfset compId = 'CASE'></cfcase>
                 </cfswitch>
                 <option value="#programid#">#variables.compId# - #getPrograms.programname#</option>
             </cfoutput>
@@ -330,6 +332,7 @@ ORDER BY totalPerAgent ASC
                     <cfcase value="7"><cfset compId = 'Trainee'></cfcase>
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
+					<cfcase value="10"><cfset compId = 'CASE'></cfcase>
                 </cfswitch>
                 
                 <small>#variables.compId# - #getProgramsSelected.programname# (###getProgramsSelected.programid#)</small> <br/>
@@ -435,6 +438,7 @@ ORDER BY totalPerAgent ASC
         <td class="right">TRAINEE</td>
         <td class="right" width="5%">W & T</td>
         <td class="right">H2B</td>
+        <td class="right">CASE</td>
         <td class="right">TOTAL</td>
     </tr>    
 
@@ -445,7 +449,8 @@ ORDER BY totalPerAgent ASC
 <cfparam name="totalSmgBal" default="0">
 <cfparam name="totalTraineeBal" default="0">
 <cfparam name="totalWandtBal" default="0">
-<cfparam name="totalH2bBal" default="0"> 
+<cfparam name="totalH2bBal" default="0">
+<cfparam name="totalCASEBal" default="0"> 
 <cfparam name="getBalancePerAgent.totalPerAgent" default="0">    
 <cfparam name="grandTotalBal" default="0">
 
@@ -462,7 +467,8 @@ ORDER BY totalPerAgent ASC
     <cfset smgBal = 0>
     <cfset traineeBal = 0>
     <cfset wandtBal = 0>
-    <cfset h2bBal = 0>            
+    <cfset h2bBal = 0>
+	<cfset caseBal = 0>            
 
     <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9">
     
@@ -614,6 +620,10 @@ END) AS testCompId
                     <cfset h2bBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totalH2bBal = #variables.totalH2bBal# + #variables.H2bBal#>
                 </cfcase>
+                <cfcase value="10">
+                    <cfset caseBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset totalCaseBal = #variables.totalCaseBal# + #variables.CaseBal#>
+                </cfcase>
             </cfswitch>
         
         </cfif>
@@ -637,6 +647,7 @@ END) AS testCompId
         <td class="two <cfif variables.traineeBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.traineeBal)#</td>
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
         <td class="two <cfif variables.h2bBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.h2bBal)#</td>
+        <td class="two <cfif variables.caseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.caseBal)#</td>
         <td class="two <cfif getAgentsReceivable.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(getAgentsReceivable.totalPerAgent)#</td>
     </tr>
 
@@ -657,6 +668,7 @@ END) AS testCompId
         <td class="right">#LsCurrencyFormat(variables.totalTraineeBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalWandtBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalH2bBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalCaseBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.grandTotalBal)#</td>
     </tr>
 
@@ -688,6 +700,7 @@ END) AS testCompId
         <td class="right">TRAINEE</td>
         <td class="right" width="5%">W & T</td>
         <td class="right">H2B</td>
+        <td class="right">CASE</td>
         <td class="right">TOTAL</td>
     </tr>    
 
@@ -699,6 +712,7 @@ END) AS testCompId
 <cfset totalTraineeBal =0>
 <cfset totalWandtBal =0>
 <cfset totalH2bBal =0>
+<cfset totalCaseBal =0>
 <cfset getBalancePerAgent.totalPerAgent =0>
 <cfset grandTotalBal =0>   
 
@@ -713,7 +727,8 @@ END) AS testCompId
     <cfset smgBal = 0>
     <cfset traineeBal = 0>
     <cfset wandtBal = 0>
-    <cfset h2bBal = 0>            
+    <cfset h2bBal = 0>
+    <cfset caseBal = 0>         
 
     <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9">
     
@@ -865,6 +880,10 @@ END) AS testCompId
                     <cfset h2bBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalH2bBal = #variables.totalH2bBal# + #variables.H2bBal#>
                 </cfcase>
+                <cfcase value="9">
+                    <cfset caseBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset totalCaseBal = #variables.totalCaseBal# + #variables.caseBal#>
+                </cfcase>
             </cfswitch>
         
         </cfif>
@@ -884,6 +903,7 @@ END) AS testCompId
         <td class="two <cfif variables.traineeBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.traineeBal)#</td>
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
         <td class="two <cfif variables.h2bBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.h2bBal)#</td>
+        <td class="two <cfif variables.caseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.caseBal)#</td>
         <td class="two <cfif getAgentsRefund.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(getAgentsRefund.totalPerAgent)#</td>
     </tr>
 
@@ -902,6 +922,7 @@ END) AS testCompId
         <td class="right">#LsCurrencyFormat(variables.totalTraineeBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalWandtBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalH2bBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalCaseBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.grandTotalBal)#</td>
     </tr>
 
