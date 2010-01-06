@@ -103,21 +103,21 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     </cfif>
                 </td>
                 <td>
-                    <cfif IsDate(qGetStudents.insurance_enddate)>
-                        #DateFormat(qGetStudents.insurance_enddate, 'dd/mmm/yyyy')#
+                    <cfif IsDate(qGetStudents.enddate)>
+                        #DateFormat(qGetStudents.enddate, 'dd/mmm/yyyy')#
                     <cfelse>
                         Missing
                     </cfif>
                 </td>
                 <td>&nbsp;</td>
 				<td>
-                  	<cfif IsDate(qGetStudents.dep_date) AND IsDate(qGetStudents.insurance_enddate)>
-                    	#DateDiff("d", qGetStudents.dep_date, qGetStudents.insurance_enddate)#
+                  	<cfif IsDate(qGetStudents.dep_date) AND IsDate(qGetStudents.enddate)>
+                    	#DateDiff("d", qGetStudents.dep_date, qGetStudents.enddate)#
                     </cfif>             
                 </td>                                
             </tr>
             
-            <cfif LEN(qGetStudents.policycode) AND IsDate(qGetStudents.dep_date) AND IsDate(qGetStudents.insurance_enddate)>
+            <cfif LEN(qGetStudents.policycode) AND IsDate(qGetStudents.dep_date) AND IsDate(qGetStudents.enddate)>
 	
 				<cfscript>
 					// Update Insurace Record and Insert History
@@ -125,7 +125,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 						studentID=qGetStudents.studentID,
 						type="N",
 						startDate=qGetStudents.dep_date,
-						endDate=qGetStudents.insurance_enddate,
+						endDate=qGetStudents.enddate,
 						fileName=XLSFileName
 					);				
 				</cfscript>
