@@ -3,7 +3,7 @@
 	File:		program.cfc
 	Author:		Marcus Melo
 	Date:		October, 27 2009
-	Desc:		This holds the functions needed for the user
+	Desc:		This holds the functions needed for the program
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -26,43 +26,75 @@
 	
 	<cffunction name="getPrograms" access="public" returntype="query" output="false" hint="Gets a list of users, if programID is passed gets a program by ID">
     	<cfargument name="programID" default="0" hint="programID is not required">
+        <cfargument name="isActive" default="1" hint="IsActive is not required">
+        <cfargument name="dateActive" default="" hint="DateActive is not required">
+        <cfargument name="companyID" default="" hint="CompanyID is not required">
               
         <cfquery 
 			name="qGetPrograms" 
 			datasource="#APPLICATION.dsn#">
                 SELECT
-					programID,
-                    programName,
-                    type,
-                    startDate,
-                    endDate,
-                    insurance_startDate,
-                    insurance_endDate,
-                    sevis_startDate,
-                    sevis_endDate,
-                    preAyp_date,
-                    companyID,
-                    programFee,
-                    application_fee,
-                    insurance_w_deduct,
-                    insurance_wo_deduct,
-                    blank,
-                    hold,
-                    progress_reports_active,
-                    seasonID,
-                    smgSeasonID,
-                    tripID,
-                    active,
-                    fieldViewable,
-                    insurance_batch
+					p.programID,
+                    p.programName,
+                    p.type,
+                    p.startDate,
+                    p.endDate,
+                    p.insurance_startDate,
+                    p.insurance_endDate,
+                    p.sevis_startDate,
+                    p.sevis_endDate,
+                    p.preAyp_date,
+                    p.companyID,
+                    p.programFee,
+                    p.application_fee,
+                    p.insurance_w_deduct,
+                    p.insurance_wo_deduct,
+                    p.blank,
+                    p.hold,
+                    p.progress_reports_active,
+                    p.seasonID,
+                    p.smgSeasonID,
+                    p.tripID,
+                    p.active,
+                    p.fieldViewable,
+                    p.insurance_batch,
+                    c.companyName,
+                    c.companyShort
                 FROM 
-                    smg_programs
-                <cfif VAL(ARGUMENTS.programID)>
-                	WHERE
-                    	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
-                </cfif>    
+                    smg_programs p
+				LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = p.companyID                    
+                WHERE
+                	1 = 1
+                    
+				<cfif VAL(ARGUMENTS.programID)>
+                	AND
+                    	p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                </cfif>
+                
+				<cfif LEN(ARGUMENTS.isActive)>
+                	AND
+                    	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.dateActive)>
+                	AND
+                    	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                    AND
+                    	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.companyID) AND ARGUMENTS.companyID LTE 4>
+                    AND
+                    	p.companyID <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND
+                   		p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                </cfif>
+
                 ORDER BY 
-                    programName
+                    c.companyShort,
+                    p.programName
 		</cfquery>
 		   
 		<cfreturn qGetPrograms>

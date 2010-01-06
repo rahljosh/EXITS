@@ -56,6 +56,9 @@
 		// Store the initialized Host object in the Application scope
 		APPLICATION.CFC.Host = CreateCFC("host").Init();
 
+		// Store the initialized Host object in the Application scope
+		APPLICATION.CFC.Insurance = CreateCFC("insurance").Init();
+
 		// Store the initialized Program object in the Application scope
 		APPLICATION.CFC.Program = CreateCFC("program").Init();
 

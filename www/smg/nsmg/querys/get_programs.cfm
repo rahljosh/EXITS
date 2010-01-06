@@ -4,7 +4,7 @@
 	LEFT JOIN smg_program_type ON type = programtypeid
 	INNER JOIN smg_companies c ON p.companyid = c.companyid
 	WHERE 1 = 1
-	<cfif #client.companyid# NEQ 5>
+	<cfif client.companyid NEQ 5>
 		AND p.companyid = #client.companyid#
 	<cfelse>
 		AND p.companyid <= 5
