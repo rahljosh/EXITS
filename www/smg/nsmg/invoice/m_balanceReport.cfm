@@ -470,7 +470,7 @@ ORDER BY totalPerAgent ASC
     <cfset h2bBal = 0>
 	<cfset caseBal = 0>            
 
-    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9">
+    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10">
     
         <cfquery name="getBalancePerAgentReceivable" datasource="MySQL"> 
         SELECT t.agentid, t.businessname, SUM(t.total) AS totalPerAgent
@@ -730,7 +730,7 @@ END) AS testCompId
     <cfset h2bBal = 0>
     <cfset caseBal = 0>         
 
-    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9">
+    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10">
     
         <cfquery name="getBalancePerAgentRefund" datasource="MySQL"> 
         SELECT t.agentid, t.businessname, SUM(t.total) AS totalPerAgent
@@ -880,7 +880,7 @@ END) AS testCompId
                     <cfset h2bBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalH2bBal = #variables.totalH2bBal# + #variables.H2bBal#>
                 </cfcase>
-                <cfcase value="9">
+                <cfcase value="10">
                     <cfset caseBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalCaseBal = #variables.totalCaseBal# + #variables.caseBal#>
                 </cfcase>
