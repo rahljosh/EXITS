@@ -37,6 +37,7 @@
                     smg_users
                 WHERE
                 	1 = 1
+                    
 				<cfif VAL(ARGUMENTS.usertype)>
                 	AND	
                     	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
@@ -70,6 +71,74 @@
 		</cfquery>
 		   
 		<cfreturn qGetUserByID>
+	</cffunction>
+
+
+	<cffunction name="getUserAccessRights" access="public" returntype="query" output="false" hint="Gets user access rights for a user or region">
+    	<cfargument name="userID" type="numeric" default="0" hint="userID is required">
+        <cfargument name="regionID" type="numeric" default="0" hint="regionID is required">
+              
+        <cfquery 
+			name="qGetUserAccessRights" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					uar.id,
+                    uar.userID,
+                    uar.companyID,
+                    uar.regionID,
+                    uar.userType,
+                    uar.advisorID,
+                    uar.default_region,
+                    uar.default_access,
+                    uar.changeDate,
+                    r.regionID,
+                    r.regionName
+                FROM 
+                    user_access_rights uar
+                INNER JOIN
+                	smg_regions r ON r.regionID = uar.regionID
+                WHERE
+                	1 = 1
+
+				<cfif VAL(ARGUMENTS.userID )>
+                	AND
+                    	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                </cfif>                  
+                    
+				<cfif VAL(ARGUMENTS.regionID )>
+                	AND
+                    	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                </cfif>                  
+		</cfquery>
+		   
+		<cfreturn qGetUserAccessRights>
+	</cffunction>
+
+
+	<cffunction name="getRegionalManager" access="public" returntype="query" output="false" hint="Gets a regional manager for a given region">
+        <cfargument name="regionID" type="numeric" default="0" hint="regionID is required">
+              
+        <cfquery 
+			name="qGetRegionalManager" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                	u.userid,
+                    u.firstName,
+                    u.lastName,
+                    u.email
+                FROM 
+                	smg_users u
+                INNER JOIN 
+                	user_access_rights uar ON u.userid = uar.userid
+                WHERE 
+                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                AND 
+                	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+		</cfquery>
+		   
+		<cfreturn qGetRegionalManager>
 	</cffunction>
 
 

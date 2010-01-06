@@ -22,7 +22,8 @@
 	<cfif client.companyid NEQ 5>
 		AND smg_programs.companyid = #client.companyid#
 	</cfif>
-	ORDER BY smg_companies.companyshort
+	ORDER BY 
+    	smg_companies.companyshort, endDate DESC
 </Cfquery>
 
 <form method=post action="?curdoc=tools/new_program">
@@ -47,9 +48,11 @@
 		<td><b>Type</b></td>
 		<td><b>Start Date</b></td>
 		<td><b>End Date</b></td>
-		<td><b>Company</b></td>
+        <td><b>Insurance Start </b></td>
+		<td><b>Insurance End </b></td>
+        <td><b>Company</b></td>
 		<td><b>Season</b></td>
-		<td><b>Season</b></td>
+		<td><b>SMG Season</b></td>
 		<td><b>Incentive Trip</b></td>
 		<!--- <td><b>Fee's</b></td> --->
 	</tr>
@@ -61,6 +64,8 @@
 		<td><cfif programtype is ''><font color="red">None Assigned</font><cfelse>#programtype#</cfif></td>
 		<td>#DateFormat(startdate, 'mm-dd-yyyy')#</td>
 		<td>#DateFormat(enddate, 'mm-dd-yyyy')#</td>
+        <td>#DateFormat(insurance_startDate, 'mm-dd-yyyy')#</td>
+		<td>#DateFormat(insurance_endDate, 'mm-dd-yyyy')#</td>
 		<td>#companyshort#</td>
 		<td>#season#</td>
 		<td>#smgseason#</td>

@@ -21,14 +21,6 @@
 </cfquery>
 
 <cftransaction action="BEGIN" isolation="SERIALIZABLE">
-	<!--- GET VSC GROUP --->
-	<cfquery name="get_group" datasource="MySql">
-		SELECT groupid, insutypeid, vsc_group
-		FROM smg_insurance_vsc_group
-		WHERE insutypeid = 	'#get_last_insu_record.policy_code#'
-			AND MONTH(startdate) = #DateFormat(insu_new_date, 'mm')#
-			AND YEAR(startdate) = #DateFormat(insu_new_date, 'yyyy')#
-	</cfquery>
 	
 	<!--- NEW INSURANCE RECORD --->
 	<cfif form.insu_new_date NEQ '' AND form.insu_end_date NEQ '' AND NOT IsDefined('form.insuranceid')> 
@@ -44,7 +36,7 @@
 				INSERT INTO smg_insurance
 					(companyid, vsc_group, studentid, firstname, lastname, sex, dob, country_code, new_date, end_date, org_code, policy_code, transtype)
 				VALUES
-					('#get_student.companyid#', '#get_group.vsc_group#', '#client.studentid#', '#get_student.firstname#', '#get_student.familylastname#', '#get_student.sex#', 
+					('#get_student.companyid#', '0', '#client.studentid#', '#get_student.firstname#', '#get_student.familylastname#', '#get_student.sex#', 
 					#CreateODBCDate(get_student.dob)#, 
 					<cfif get_student.insurance_typeid GTE 7 AND get_student.insurance_typeid LTE 10> <!--- VSC --->
 						'#get_student.countryname#',
