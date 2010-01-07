@@ -56,31 +56,54 @@ function AppReceived(url)
 	GROUP BY s.app_sent_student, s.studentid
 </cfquery>
 
-<h2>
-<cfif url.status EQ 1>
-	Access has been sent to these students, they have not followed the link to activate their account.
-<cfelseif url.status EQ 2>
-	These students have activated their accounts and are working on their applications.
-<cfelseif url.status EQ 25>
-	These students have active applications, but won't be applying to programs until a future date.
-<cfelseif url.status EQ 3>
-	These applications are waiting for <cfif client.usertype EQ '11'>your<cfelse>the branch</cfif> approval.
-<cfelseif url.status EQ 4>
-	These applications have been rejected by <cfif client.usertype EQ '11'>you<cfelse>the branch</cfif>.
-<cfelseif url.status EQ 5>
-	These applications are waiting for <cfif client.usertype EQ 8>your<cfelse>the international rep</cfif> approval.
-<cfelseif url.status EQ 6>
-	These applications have been rejected by <cfif client.usertype EQ 8>you<cfelse>the international rep</cfif>.
-<cfelseif url.status EQ 7>
-	These applications have been approved by <cfif client.usertype EQ 8>you<cfelse>the international rep</cfif> and are waiting for SMG.
-<cfelseif url.status EQ 8>
-	These applications have been approved by <cfif client.usertype EQ 8>you<cfelse>the international rep</cfif> and are waiting for the SMG approval.
-<cfelseif url.status EQ 9>
-	These applications have been rejected by SMG.
-<cfelseif url.status EQ 10>
-	These applications have been approved by SMG.	
-</cfif>
-</h2>
+<cfswitch expression="#URL.status#">
+
+	<cfcase value="1">
+    	<h2>Access has been sent to these students, they have not followed the link to activate their account.</h2>
+    </cfcase>
+
+	<cfcase value="2">
+    	<h2>These students have activated their accounts and are working on their applications.</h2>
+    </cfcase>
+
+	<cfcase value="3">
+    	<h2>These applications are waiting for <cfif client.usertype EQ '11'>your<cfelse>the branch</cfif> approval.</h2>
+    </cfcase>
+
+	<cfcase value="4">
+    	<h2>These applications have been rejected by <cfif client.usertype EQ '11'>you<cfelse>the branch</cfif>.</h2>
+    </cfcase>
+
+	<cfcase value="5">
+    	<h2>These applications are waiting for <cfif client.usertype EQ 8>your<cfelse>the international rep</cfif> approval.</h2>
+    </cfcase>
+
+	<cfcase value="6">
+    	<h2>These applications have been rejected by <cfif client.usertype EQ 8>you<cfelse>the international rep</cfif>.</h2>
+    </cfcase>
+
+	<cfcase value="7">
+    	<h2>These applications have been approved by <cfif client.usertype EQ 8>you<cfelse>the international rep</cfif> and are waiting for SMG.</h2>
+    </cfcase>
+
+	<cfcase value="8">
+    	<h2>These applications have been approved by <cfif client.usertype EQ 8>you<cfelse>the international rep</cfif> and are waiting for the SMG approval.</h2>
+    </cfcase>
+
+	<cfcase value="9">
+    	<h2>These applications have been rejected by SMG.</h2>
+    </cfcase>
+
+	<cfcase value="10">
+    	<h2>These applications have been approved by SMG.</h2>	
+    </cfcase>
+
+	<cfcase value="25">
+    	<h2>These students have active applications, but won't be applying to programs until a future date.</h2>
+    </cfcase>
+
+</cfswitch>
+
 
 <cfif client.usertype GTE 5 OR (url.status neq 7 and url.status neq 8)>
 	<br>
@@ -88,13 +111,13 @@ function AppReceived(url)
 		<tr valign=middle height=24>
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 			<td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
-			<td background="pics/header_background.gif"><h2><cfoutput>Total of #students.recordcount# Student(s)</cfoutput></td>
+			<td background="pics/header_background.gif"><h2><cfoutput>Total of #students.recordcount# Student(s)</cfoutput></h2></td>
 			<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 		</tr>
 	</table>
 	
 	<table width=100% border=0 cellpadding=4 cellspacing=0 class="section">
-		<tr><td><b>ID</b></td>
+		<tr><td><b>ID</b></td>w
 			<td><b>Last Name</b></td>
 			<td><b>First Name</b></td>
 			<td><b>Sex</b></td>
