@@ -159,15 +159,21 @@ ORDER BY businessname
 							Credit Available to Apply:
 							</Td>
 							<td>
+							<cfoutput>
+								<script type="text/javascript">									
+									function getCreditValue(currentamount) {
+										document.getElementById("amount_received").value = currentamount;
+									}
+								</script>
+							</cfoutput>
 							<cfoutput query="get_credits">
 								<cfquery name="companyname" datasource="mysql">
 								select companyshort from smg_companies where companyid = #get_credits.companyid#
 								</cfquery>
-							
-								<cfinput type="radio" name="creditId" value="#creditid#">
-								#creditid# -
 								<cfset amount_avail = #amount# - #amount_applied#> 
-								#amount_avail# #companyname.companyshort#<br>
+								<cfinput type="radio" name="creditId" id="creditId#creditid#" value="#creditid#" onClick="javaScript:getCreditValue('#amount_avail#');">
+								<cfinput type="hidden" name="creditAvail#creditid#" id="creditAvail#creditid#" value="#amount_avail#">
+								#creditid# - #amount_avail# #companyname.companyshort#<br>
 							</cfoutput>
 							</td>
 						</Tr>
@@ -185,7 +191,7 @@ ORDER BY businessname
 						Amount Received:
 						</td>
 						<td>
-						<input type="text" name="amount_received"></td><td> <font size=-2>(for apply credit, leave blank)</font>
+						<input type="text" name="amount_received" id="amount_received"></td><td> <font size=-2>(for apply credit, leave blank)</font>
 						</td>
 					</tr>
 						<tr>
@@ -223,6 +229,30 @@ ORDER BY businessname
 					<cfabort>
 				</cfif>
 				
+				<cfset counter = #qInvBalance.recordCount#>
+				<cfset arrayInvoiceId = arrayNew(1)>
+				<cfloop query="qInvBalance">
+					<cfset #arrayAppend(arrayInvoiceId,"#qInvBalance.invoiceid#")#>
+				</cfloop>
+				
+				<cfoutput>
+				<script type="text/javascript" language="javascript">
+					var jsCounter = #counter#;
+					var #toScript(arrayInvoiceId, "jsArrayInvoiceId")#;			
+					
+					function calculator() {
+						var paymAmount = 0;
+						for (var i=0; i<=jsCounter-1; i++) {
+							if (document.getElementById("selectInvoice"+jsArrayInvoiceId[i]).checked == true) {
+								//multiply by 1 to force conversion to a number;
+								paymAmount = paymAmount +  document.getElementById("paying"+jsArrayInvoiceId[i]).value * 1; 
+							}
+							document.getElementById("amount_received").value = paymAmount;
+						}
+					}
+				</script>
+				</cfoutput>
+				
 				<table class="frame">
 					<tr class="darkBlue">
 						<td class="right">
@@ -235,19 +265,19 @@ ORDER BY businessname
 					<cfoutput query="qInvBalance">
 					<tr>
 						<td class="two">
-						<cfinput name="selectInvoice" value="#qInvBalance.invoiceid#" type="checkbox">
+						<cfinput name="selectInvoice" id="selectInvoice#qInvBalance.invoiceid#" value="#qInvBalance.invoiceid#" type="checkbox" onClick="javaScript:calculator();">
 						</td>
 						<td class="two">
 						#qInvBalance.companyid#
 						</td>
 						<td class="two">
-						<a href="invoice/invoice_view.cfm?id=#qInvBalance.invoiceid#" target="_blank">#qInvBalance.invoiceid#</a>
+						<a href="invoice_view.cfm?id=#qInvBalance.invoiceid#" target="_blank">#qInvBalance.invoiceid#</a>
 						</td>
 						<td class="two">
 						#LSCurrencyFormat(qInvBalance.totalPerInvoice,'local')#
 						</td>
 						<td class="two">
-						<cfinput name="payInv#qInvBalance.invoiceid#" type="text" value="#LSCurrencyFormat(qInvBalance.totalPerInvoice,'local')#" size="6">
+						<cfinput name="payInv#qInvBalance.invoiceid#" id="paying#qInvBalance.invoiceid#" type="text" value="#qInvBalance.totalPerInvoice#" size="6">
 						</td>
 					</tr>
 					</cfoutput>
@@ -264,14 +294,13 @@ ORDER BY businessname
 <cfif form.selectInvoice NEQ 0>
 
 	<cfloop list="#form.selectInvoice#" index="iInvoiceNumber">
-		<cfset totalReceived = #variables.totalReceived# + #LSPARSECURRENCY(EVALUATE('form.payInv' & '#iInvoiceNumber#'))#>
+		<cfset totalReceived = #variables.totalReceived# + #EVALUATE('form.payInv' & '#iInvoiceNumber#')#>
 	</cfloop>
 	
 	<cfif form.creditId NEQ 0>
 		<cfset form.date_received = #now()#>
 		<cfset form.pay_ref = #form.creditId#>
 		<cfset form.payment_method = 'apply credit'>
-		<cfset form.amount_received = #variables.amount_avail#>
 		
 		<cfquery name="get_bal" datasource="mysql">
 			select id, amount_applied, amount 
