@@ -50,7 +50,7 @@
         LEFT JOIN 
         	smg_countrylist citizen ON c.citizen_country = citizen.countryid
         WHERE 
-        	c.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
+        	c.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
         AND 
         	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -61,7 +61,7 @@
         	c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
         AND 
         	(
-            	c.ds2019 IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
+            	c.ds2019 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
             OR
             	c.ds2019 = <cfqueryparam cfsqltype="cf_sql_date" value="">
 			)

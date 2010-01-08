@@ -133,12 +133,12 @@
                         <cfif LEN(FORM.startDate)>  
                             <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.startDate)#">,
                         <cfelse>
-                            <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,                                
+                            <cfqueryparam cfsqltype="cf_sql_date" null="yes">,                                
                         </cfif>
                         <cfif LEN(FORM.endDate)>  
                             <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.endDate)#">
                         <cfelse>
-                            <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">                                
+                            <cfqueryparam cfsqltype="cf_sql_date" null="yes">                                
                         </cfif>
                     );
                 </cfquery>        
@@ -159,12 +159,12 @@
                         <cfif LEN(FORM.startDate)>  
                             startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.startDate)#">,
                         <cfelse>
-                            startDate = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,                                
+                            startDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,                                
                         </cfif>
                         <cfif LEN(FORM.endDate)>  
                             endDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.endDate)#">
                         <cfelse>
-                            endDate = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">                                
+                            endDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">                                
                         </cfif>
                     WHERE 
                         programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">
