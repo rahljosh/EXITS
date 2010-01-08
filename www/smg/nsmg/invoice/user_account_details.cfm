@@ -683,7 +683,8 @@ AND invoiceid <> 0
 			<cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'>
 			and companyid = #client.companyid#
 			</cfif>
-GROUP BY invoiceid DESC           
+GROUP BY 
+	invoiceid DESC, companyID 
 </cfquery>
 
 <div class=scroll>
@@ -729,14 +730,21 @@ GROUP BY invoiceid DESC
 				
 				
 			<cfoutput query="current_invoices">
-            	<cfquery name="get_applied_amount" datasource="mysql">
+            	
+				<cfquery name="get_applied_amount" datasource="mysql">
                 SELECT s.invoiceid, SUM(spc.amountapplied) AS total_received
                 FROM smg_payment_charges spc
                 RIGHT JOIN smg_charges s ON s.chargeid = spc.chargeid
                 WHERE s.agentid =#url.userid#
-                    <cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'>
-                    AND s.companyid = #client.companyid#
-                    </cfif> 
+                    
+				<cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'>
+					AND 
+						s.companyid = #client.companyid#
+				<cfelse>
+					AND 
+						s.companyid = #current_invoices.companyid#
+				</cfif> 
+				
                 AND s.invoiceid = #current_invoices.invoiceid#
                 GROUP BY s.invoiceid
                 ORDER BY s.invoiceid DESC
