@@ -102,7 +102,7 @@
 		FROM smg_users
 		WHERE userid = '#client.userid#'
 	</cfquery>
-	<cfmail to="craig@intoedventures.org" from="support@phpusa.com" subject='PHP Cancelation - #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)' type="html" failto="support@phpusa.com">
+	<cfmail to="#AppEmail.finance#" from="#AppEmail.support#" subject='PHP Cancelation - #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)' type="html" failto="support@phpusa.com">
 		<table align="center">
 			<tr><td><img src="http://www.phpusa.com/images/dmd_banner.gif" align="Center"></td></tr>
 			<tr><td align="center"><h1>Cancelation Notice</h1></td></tr>
