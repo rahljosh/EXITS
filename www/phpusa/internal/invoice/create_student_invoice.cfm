@@ -548,11 +548,8 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 				</cfloop>
 				<tr bgcolor="##C2D1EF"><th colspan="5">
                 	<a href="?curdoc=invoice/invoice_index"><img src="pics/back.gif" border="0" /></a>
-					<!--- submit for active programs only. --->
-                    <cfif get_student.active>
-                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
-                        <cfinput type="image" name="next" value=" Submit " src="pics/submit.gif" submitOnce>
-                    </cfif>
+                    &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+                    <cfinput type="image" name="next" value=" Submit " src="pics/submit.gif" submitOnce>
                 </th></tr>
 				</cfform>	
 			</table>
@@ -607,11 +604,8 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 				</cfloop>
 				<tr bgcolor="##C2D1EF"><th colspan="5">
                 	<a href="?curdoc=invoice/invoice_index"><img src="pics/back.gif" border="0" /></a>
-					<!--- submit for active programs only. --->
-                    <cfif get_student.active>
-                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
-                        <cfinput type="image" name="next" value=" Submit " src="pics/submit.gif" submitOnce>
-                    </cfif>
+                    &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
+                    <cfinput type="image" name="next" value=" Submit " src="pics/submit.gif" submitOnce>
                 </th></tr>
 				</cfform>
 			</table>
