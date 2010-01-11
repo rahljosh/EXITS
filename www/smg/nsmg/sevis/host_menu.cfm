@@ -1,32 +1,50 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		host_menu.cfm
+	Author:		Marcus Melo
+	Date:		January 11, 2010
+	Desc:		DS-2019 Updates HF Information
+
+	Updated: 	
+
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill extra output --->
+<cfsilent>
+
+	<!--- Param URL Variables --->
+	<cfparam name="URL.text" default="no">
+    <cfparam name="URL.all" default="no">
+
+    <cfparam name="batch_type" default="host_update">
+
+	<cfscript>
+        // Get Programs
+        qGetPrograms = APPCFC.PROGRAM.getPrograms(companyID=CLIENT.companyID, dateActive=1);
+    </cfscript>
+
+	<!-----Company Information----->
+    <Cfquery name="get_company" datasource="MySQL">
+    select companyid, companyname, sevis_userid, iap_auth
+    from smg_companies
+    where companyid = #client.companyid#
+    </Cfquery>
+    
+    <cfquery name="get_sevis_history" datasource="MySql">
+    SELECT s.batchid, s.companyid, s.createdby, s.datecreated, s.totalstudents, s.totalprint, s.received, 
+            c.companyshort,
+            u.firstname, u.lastname
+    FROM smg_sevis s
+    INNER JOIN smg_companies c ON c.companyid = s.companyid
+    INNER JOIN smg_users u ON u.userid = s.createdby
+    WHERE type = 'host_update'
+    <cfif url.all is 'no'>AND s.companyid = #client.companyid#<cfelse></cfif>
+    ORDER BY c.companyshort, datecreated DESC
+    </cfquery>
+
+</cfsilent>
+
 <link rel="stylesheet" href="../reports/reports.css" type="text/css">
-
-<cfif not isDefined('url.text')><cfset url.text = 'no'></cfif>
-
-<cfif not isDefined('url.all')><cfset url.all = 'no'></cfif>
-
-<cfinclude template="../querys/get_active_programs.cfm">
-
-
-<!-----Company Information----->
-<Cfquery name="get_company" datasource="MySQL">
-select companyid, companyname, sevis_userid, iap_auth
-from smg_companies
-where companyid = #client.companyid#
-</Cfquery>
-
-<cfquery name="get_sevis_history" datasource="MySql">
-SELECT s.batchid, s.companyid, s.createdby, s.datecreated, s.totalstudents, s.totalprint, s.received, 
-		c.companyshort,
-		u.firstname, u.lastname
-FROM smg_sevis s
-INNER JOIN smg_companies c ON c.companyid = s.companyid
-INNER JOIN smg_users u ON u.userid = s.createdby
-WHERE type = 'host_update'
-<cfif url.all is 'no'>AND s.companyid = #client.companyid#<cfelse></cfif>
-ORDER BY c.companyshort, datecreated DESC
-</cfquery>
-
-<cfset batch_type = 'host_update'>
 
 <span class="application_section_header">SEVIS BATCH INTERFACE SYSTEM - Version 5.0</span><br>
 
@@ -45,8 +63,7 @@ ORDER BY c.companyshort, datecreated DESC
 	<tr align="left">
 		<TD width="15%">Program :</td>
 		<TD><select name="programid" multiple  size="5">			
-			<!--- <option value=0>All Programs</option> --->
-			<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
+			<cfloop query="qGetPrograms"><option value="#ProgramID#">#qGetPrograms.companyshort# - #programname#</option></cfloop>
 			</select></td></tr>
 	<tr align="left">
 		<TD width="15%">Pre-AYP :</td>

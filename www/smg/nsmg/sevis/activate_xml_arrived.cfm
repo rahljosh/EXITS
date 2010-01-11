@@ -6,7 +6,7 @@ WHERE companyid = '#client.companyid#'
 </cfquery>
 
 <cfquery name="get_students" datasource="MySql"> 
-	SELECT 	DISTINCT s.studentid, s.dateapplication, s.active, s.ds2019_no, s.firstname, s.familylastname, 
+	SELECT 	DISTINCT s.studentid, s.dateapplication, s.active, s.ds2019_no, s.firstname, s.familylastname, s.companyID, 
 			s.middlename, s.dob, s.sex,	s.citybirth, s.hostid, s.schoolid, s.host_fam_approved,
 			s.ayporientation, s.aypenglish,
 			h.familylastname as hostlastname, h.fatherlastname, h.motherlastname, h.address as hostaddress, 
@@ -18,8 +18,7 @@ WHERE companyid = '#client.companyid#'
 	INNER JOIN smg_users u ON s.intrep = u.userid
 	INNER JOIN smg_flight_info f ON s.studentid = f.studentid
 	LEFT JOIN smg_hosts h ON s.hostid = h.hostid
-	WHERE s.companyid = '#client.companyid#' 
-			AND s.active = '1'
+	WHERE s.active = '1'
 			AND s.sevis_batchid != '0'
 			AND s.sevis_activated = '0'
 			<cfif IsDefined('form.pre_ayp')>

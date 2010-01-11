@@ -20,8 +20,7 @@
 	INNER JOIN smg_programs p ON s.programid = p.programid
 	INNER JOIN smg_users u ON s.intrep = u.userid
 	LEFT JOIN smg_hosts h ON s.hostid = h.hostid
-	WHERE s.companyid = '#client.companyid#' 
-			AND s.active = '1'
+	WHERE s.active = '1'
 			AND s.sevis_amend_dates = '0'
 			AND s.ds2019_no like 'N%'
 			AND s.sevis_activated = '0'
