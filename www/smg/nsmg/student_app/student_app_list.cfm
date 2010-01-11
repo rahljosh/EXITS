@@ -117,7 +117,7 @@ function AppReceived(url)
 	</table>
 	
 	<table width=100% border=0 cellpadding=4 cellspacing=0 class="section">
-		<tr><td><b>ID</b></td>w
+		<tr><td><b>ID</b></td>
 			<td><b>Last Name</b></td>
 			<td><b>First Name</b></td>
 			<td><b>Sex</b></td>
