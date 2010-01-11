@@ -1,27 +1,38 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>End Program</title>
-</head>
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		end_program_menu.cfm
+	Author:		Marcus Melo
+	Date:		January 11, 2010
+	Desc:		DS-2019 End Program Menu
 
-<body>
+	Updated: 	
+
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill extra output --->
+<cfsilent>
+
+	<!--- Param URL Variables --->
+	<cfparam name="URL.text" default="no">
+    <cfparam name="URL.all" default="no">
+
+    <cfparam name="batch_type" default="new">
+
+	<cfscript>
+        // Get Programs
+        qGetPrograms = APPCFC.PROGRAM.getPrograms(companyID=CLIENT.companyID, dateActive=1);
+    </cfscript>
+
+    <!-----Company Information----->
+    <Cfquery name="get_company" datasource="MySQL">
+    select companyid, companyname, sevis_userid, iap_auth
+    from smg_companies
+    where companyid = #client.companyid#
+    </Cfquery>
+
+</cfsilent>
 
 <link rel="stylesheet" href="../reports/reports.css" type="text/css">
-
-<cfif not isDefined('url.text')><cfset url.text = 'no'></cfif>
-
-<cfif not isDefined('url.all')><cfset url.all = 'no'></cfif>
-
-<cfinclude template="../querys/get_active_programs.cfm">
-
-<!-----Company Information----->
-<Cfquery name="get_company" datasource="MySQL">
-select companyid, companyname, sevis_userid, iap_auth
-from smg_companies
-where companyid = #client.companyid#
-</Cfquery>
 
 <span class="application_section_header">SEVIS BATCH INTERFACE SYSTEM - Version 5.0</span><br>
 
@@ -37,8 +48,7 @@ where companyid = #client.companyid#
 	<tr>
 		<TD width="15%">Program :</td>
 		<TD><cfselect name="programid" multiple  size="5">			
-			<!--- <option value=0>All Programs</option> --->
-			<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
+			<cfloop query="qGetPrograms"><option value="#ProgramID#">#qGetPrograms.companyshort# - #programname#</option></cfloop>
 			</cfselect></td></tr>
 	<tr>
 		<td width="15%">According to :</td>
@@ -63,6 +73,3 @@ where companyid = #client.companyid#
 <!--- END OF CREATING NEW FORMS --->
 
 <cfinclude template="ds_forms.cfm">
-
-</body>
-</html>

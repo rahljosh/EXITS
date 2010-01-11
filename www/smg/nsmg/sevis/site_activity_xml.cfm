@@ -8,7 +8,7 @@
 </cfquery>
 
 <cfquery name="get_students" datasource="MySql"> 
-	SELECT 	s.studentid, s.dateapplication, s.ds2019_no, s.firstname, s.familylastname, s.ds2019_no,
+	SELECT 	s.studentid, s.dateapplication, s.ds2019_no, s.firstname, s.familylastname, s.ds2019_no, s.companyID,
 			s.middlename, s.dob, s.sex,	s.hostid, s.schoolid, s.host_fam_approved,
 			s.ayporientation, s.aypenglish,
 			sc.schoolname, sc.address as schooladdress, sc.address2 as schooladdress2, sc.city as schoolcity,
@@ -19,8 +19,7 @@
 	INNER JOIN smg_programs p ON s.programid = p.programid
 	INNER JOIN smg_users u ON s.intrep = u.userid
 	INNER JOIN smg_schools sc ON s.schoolid = sc.schoolid
-	WHERE s.companyid = '#client.companyid#' 
-			AND s.active = '1'
+	WHERE  s.active = '1'
 			AND s.host_fam_approved < '5'
 			AND s.sevis_batchid != '0'
 			AND s.sevis_activated != '0'

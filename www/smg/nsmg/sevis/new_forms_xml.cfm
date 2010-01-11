@@ -9,7 +9,7 @@
 </cfquery>
 
 <cfquery name="qGetStudents" datasource="MySql"> 
-	SELECT 	s.studentid, s.ds2019_no, s.firstname, s.familylastname, s.middlename, s.dob, s.sex, s.citybirth, 
+	SELECT 	s.studentid, s.ds2019_no, s.firstname, s.familylastname, s.middlename, s.dob, s.sex, s.citybirth, s.companyID,
 			s.ayporientation, s.aypenglish, s.hostid, s.schoolid, s.host_fam_approved, 
 			birth.seviscode as birthseviscode,
 			resident.seviscode as residentseviscode,
@@ -84,7 +84,7 @@
     )
 	VALUES 
     (
-    	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompany.companyid#">, 
+    	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.companyid#">, 
         <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">, 
         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">, 
         <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.recordcount#">, 
