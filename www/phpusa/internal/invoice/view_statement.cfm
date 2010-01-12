@@ -212,16 +212,29 @@ where intrepid = #userid#
 </tr>
 </table>
 <br />
+
+<!--- BANK INFORMATION --->
 <table width=90% border=0 cellspacing=0 cellpadding=2 align="Center" class="thin-border"> 
 	<tr>
-	<td bgcolor="CCCCCC"  class="thin-border-bottom" background="../pics/cccccc.gif" colspan=5>Remit Payment to:</td>
-</tr>
-<tr>
-	<td>Suffolk Country National Bank<br>
-	228 East Main Street<br />
-	Port Jefferson, NY 11777<br />
-	</td><td valign="top">ABA/Routing ## 021405464<br />
-	Account ## 1110038682</td>
+    	<td bgcolor="CCCCCC"  class="thin-border-bottom" background="../pics/cccccc.gif" colspan=5>
+        	Remit Payment to:
+        </td>
+    </tr>
+	<tr>
+		<td>
+            #AppInvoice.companyName# <br />
+            #AppInvoice.bankName# <br />
+            #AppInvoice.bankAddress# <br />
+            #AppInvoice.bankCity#, #AppInvoice.bankState# #AppInvoice.bankZip# <br />
+		</td>
+		<td valign="top">
+        	<br />
+			ABA/Routing ## #AppInvoice.bankRouting#<br />
+			Account ## #AppInvoice.bankAccount#
+		</td>
+	</tr>
+</table>
+<br />
 	
 </cfoutput>
 </body>
