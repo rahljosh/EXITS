@@ -479,11 +479,8 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 							<tr><td colspan="6">&nbsp;</td></tr>			
 							<tr bgcolor="##C2D1EF"><th colspan="6">
                             	<a href="?curdoc=invoice/invoice_index"><img src="pics/back.gif" border="0" /></a>
-								<!--- submit for active programs only. --->
-                                <cfif get_student.active>
                                     &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
                                     <cfinput type="image" name="next" value=" Submit " src="pics/submit.gif" submitOnce>
-                                </cfif>
                             </th></tr>
 							</cfform>
 						</table>
