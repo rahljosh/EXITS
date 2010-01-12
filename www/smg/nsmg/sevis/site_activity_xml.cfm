@@ -8,32 +8,73 @@
 </cfquery>
 
 <cfquery name="get_students" datasource="MySql"> 
-	SELECT 	s.studentid, s.dateapplication, s.ds2019_no, s.firstname, s.familylastname, s.ds2019_no, s.companyID,
-			s.middlename, s.dob, s.sex,	s.hostid, s.schoolid, s.host_fam_approved,
-			s.ayporientation, s.aypenglish,
-			sc.schoolname, sc.address as schooladdress, sc.address2 as schooladdress2, sc.city as schoolcity,
-			sc.state as schoolstate, sc.zip as schoolzip,
-			p.startdate, p.enddate,
-			u.businessname
-	FROM smg_students s
-	INNER JOIN smg_programs p ON s.programid = p.programid
-	INNER JOIN smg_users u ON s.intrep = u.userid
-	INNER JOIN smg_schools sc ON s.schoolid = sc.schoolid
-	WHERE  s.active = '1'
-			AND s.host_fam_approved < '5'
-			AND s.sevis_batchid != '0'
-			AND s.sevis_activated != '0'
-			AND sc.schoolname NOT IN (SELECT school_name FROM smg_sevis_history WHERE studentid = s.studentid)
-			<cfif IsDefined('form.pre_ayp')>
-			AND (s.aypenglish <> '0' or s.ayporientation <> '0')
-			</cfif>
-			AND (
-			<cfloop list=#form.programid# index='prog'>
-	 	    	s.programid = #prog# 
-		   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-	   	   </cfloop> )
-	ORDER BY u.businessname, s.familylastname, s.firstname
-	LIMIT 250
+	SELECT 	
+    	s.studentid, 
+        s.dateapplication, 
+        s.ds2019_no, 
+        s.firstname, 
+        S.familylastname, 
+        s.ds2019_no, 
+        s.companyID,
+        s.middlename, 
+        s.dob, 
+        s.sex,	
+        s.hostid, 
+        s.schoolid, 
+        s.host_fam_approved,
+        s.ayporientation, 
+        s.aypenglish,
+        sc.schoolname, 
+        sc.address as schooladdress, 
+        sc.address2 as schooladdress2, 
+        sc.city as schoolcity,
+        sc.state as schoolstate, 
+        sc.zip as schoolzip,
+        p.startdate, 
+        p.enddate,
+        u.businessname
+	FROM 
+    	smg_students s
+	INNER JOIN 
+    	smg_programs p ON s.programid = p.programid
+	INNER JOIN 
+    	smg_users u ON s.intrep = u.userid
+	INNER JOIN 
+    	smg_schools sc ON s.schoolid = sc.schoolid
+	WHERE  
+    	s.active = '1'
+    AND 
+    	s.host_fam_approved < '5'
+    AND 
+    	s.sevis_batchid != '0'
+    AND 
+    	s.sevis_activated != '0'
+    AND 
+    	sc.schoolname NOT IN (SELECT school_name FROM smg_sevis_history WHERE studentid = s.studentid)
+
+    AND 
+    	(
+    		<cfloop list="#form.programid#" index="prog">
+			    s.programid = #prog# 
+		    <cfif prog NEQ ListLast(form.programid)> OR </cfif>
+		    </cfloop> 
+        )
+
+	<cfif IsDefined('form.pre_ayp')>
+    	AND 
+        	(
+            	s.aypenglish <> '0' 
+             OR
+             	s.ayporientation <> '0'
+            )
+    </cfif>
+   
+	ORDER BY 	    
+    	u.businessname, 
+        s.familylastname, 
+        s.firstname
+	LIMIT 
+    	250
 </cfquery>
 
 <cfif get_students.recordcount is '0'>
