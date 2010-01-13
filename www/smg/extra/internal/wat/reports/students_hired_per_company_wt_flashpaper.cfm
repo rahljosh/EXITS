@@ -28,11 +28,13 @@
 	LEFT JOIN smg_programs p on p.programid = c.programid
 	LEFT JOIN smg_users u on u.userid = c.intrep
 	LEFT JOIN smg_countrylist on smg_countrylist.countryid = c.home_country
-	WHERE c.companyid = #client.companyid#
-	AND c.hostcompanyid = #url.companyid# 
-	AND c.programid = #url.program#
-	AND c.wat_placement = 'CSB-Placement'
-	AND c.status <> 'canceled'
+	WHERE c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">	
+    <cfif VAL(URL.hostCompanyID)>
+	    AND c.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+    </cfif>
+	AND c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.program#">
+	AND c.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
+	AND c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
 </cfquery> 
 
 <cfquery name="get_candidates_self" datasource="mysql">
@@ -43,25 +45,29 @@
   	INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
   	INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
 	LEFT JOIN smg_countrylist on smg_countrylist.countryid = extra_candidates.home_country
- 	WHERE extra_candidates.companyid = #client.companyid#
-	AND extra_candidates.hostcompanyid = #url.companyid# 
-	AND extra_candidates.programid = #url.program#
-	AND extra_candidates.wat_placement = 'Self-Placement'
-	AND extra_candidates.status <> 'canceled'
+ 	WHERE extra_candidates.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+	<cfif VAL(URL.hostCompanyID)>
+    	AND extra_candidates.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+    </cfif>
+	AND extra_candidates.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.program#">
+	AND extra_candidates.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+	AND extra_candidates.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
 </cfquery>
 
-<cfset total = #get_candidates_self.recordcount# + #students_hired.recordcount#>
+<cfset total = get_candidates_self.recordcount + students_hired.recordcount>
 
 <cfquery name="program_info" datasource="mysql">
 	select programname
 	from smg_programs
-	where programid = #url.program#
+	where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.program#">
 </cfquery> 
 
 <cfquery name="host_company_info" datasource="mysql">
 	select name
 	from extra_hostcompany
-	where hostcompanyid = #url.companyid#
+	<cfif VAL(URL.hostCompanyID)>
+    	where hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#"> 
+    </cfif>
 </cfquery> 
 
 <cfoutput>
