@@ -271,7 +271,9 @@ function CalculateTotal() {
 									<td>
 										<cfquery name="payment_methods" datasource="mysql">
 											SELECT *
-											FROM egom_payment_type			
+											FROM egom_payment_type
+                                            ORDER BY 
+                                            	paymentType DESC			
 										</cfquery>
 										<select name="payment_method">
 										<cfloop query="payment_methods">
@@ -285,7 +287,7 @@ function CalculateTotal() {
 									<td><cfinput type="text" name="payment_amount" size=10 value="#balance#"></td>
 								</tr>
 								<tr>
-									<td>Date Received:</td><td><input type="text" name="date_received" value="#DateFormat(now(),'mm/dd/yy')#" size=6/></td>
+									<td>Date Received:</td><td><input type="text" name="date_received" value="" class="date-pick"/></td>
 									<td>Date Applied:</td><td>#DateFormat(now(),'mm/dd/yy')# </td>
 								</tr>
 							</table>

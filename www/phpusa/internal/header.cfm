@@ -6,6 +6,21 @@
 <title>Private High School Program</title>
 <link rel="stylesheet" href="phpusa.css" type="text/css">
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
+
+<link rel="stylesheet" href="linked/css/datePicker.css" type="text/css">
+<!-- jQuery -->
+<script src="linked/js/jquery.js" type="text/javascript"></script>
+<!-- required plugins -->
+<script src="linked/js/date.js" type="text/javascript"></script>
+<!-- jquery.datePicker.js -->
+<script src="linked/js/jquery.datePicker.js " type="text/javascript"></script>
+
+<script type="text/javascript" language="javascript">
+	$(function() {
+		$('.date-pick').datePicker({startDate:'01/01/2009'});
+	});	
+</script>
+
 </head>
 <body>
 

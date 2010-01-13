@@ -18,7 +18,7 @@ function OpenInvoice(url) {
 </script> 
 
 <cfquery name="get_payments" datasource="MySql">
-	SELECT p.paymentid, p.date_applied, p.date_received, 
+	SELECT p.paymentid, p.date_applied, p.date_received, p.transaction,
 		p.total_amount, p.description as payment_description,
 		ptype.paymenttype,
 		u.userid, u.firstname as userfirstname, u.lastname,
@@ -35,7 +35,7 @@ function OpenInvoice(url) {
 	INNER JOIN smg_students stu ON stu.studentid = charges.studentid
 	WHERE charges.studentid = <cfqueryparam value="#url.studentid#" cfsqltype="cf_sql_integer" maxlength="6">
 		AND charges.programid = <cfqueryparam value="#url.programid#" cfsqltype="cf_sql_integer" maxlength="6">
-		AND p.companyid = '#client.companyid#'
+		AND p.companyid = <cfqueryparam value="#client.companyid#" cfsqltype="cf_sql_integer">
 	ORDER BY paymentid
 </cfquery>
 
@@ -49,7 +49,7 @@ function OpenInvoice(url) {
 		<td width="100%" valign="top">
 			<table border="0" cellpadding="3" cellspacing="0" width="100%">				
 				<tr>
-					<td width="20%" align="center"><b>Payment ID</b></td>
+					<td width="20%" align="center"><b>Reference</b></td>
 					<td width="20%" align="center"><b>Date Received</b></td>
 					<td width="20%" align="center"><b>Payment Type</b></td>
 					<td width="20%"><b>Received By</b></td>
@@ -57,7 +57,7 @@ function OpenInvoice(url) {
 				</tr>
 				<cfoutput query="get_payments" group="paymentid">
 					<tr bgcolor="e9ecf1">
-						<td align="center">#paymentid#</td>
+						<td align="center">#transaction#</td>
 						<td align="center">#DateFormat(date_received, 'mm/dd/yyyy')#</td>
 						<td align="center">#paymenttype#</td>
 						<td>#userfirstname# #lastname# (###userid#)</td>
