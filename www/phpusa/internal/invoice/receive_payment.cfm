@@ -281,7 +281,7 @@ function CalculateTotal() {
 										</cfloop>
 										</select>
 									</td>
-									<td>Ref:</td>
+									<td>Reference:</td>
 									<td><cfinput type="text" name="ref" message="You must suplly a reference number. Please use check or wire transfer confermation number." validateat="onSubmit" required="yes" size=10></td>
 									<td>Amount:</td>
 									<td><cfinput type="text" name="payment_amount" size=10 value="#balance#"></td>
@@ -340,7 +340,7 @@ function CalculateTotal() {
 			</td>
 		</td>
 	</tr>
-</table><br />
+</table>
 
 </cfoutput>
 </body>
