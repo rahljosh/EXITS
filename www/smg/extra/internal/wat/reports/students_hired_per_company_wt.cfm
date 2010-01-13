@@ -7,7 +7,7 @@
     <cfparam name="FORM.submitted" default="0">
 	<cfparam name="FORM.print" default="">
 	<cfparam name="FORM.program" default="">
-	<cfparam name="FORM.companyID" default="0">
+	<cfparam name="FORM.hostCompanyID" default="0">
 
     <!--- Param Variables --->
     <cfparam name="intoPlacement" default="0">
@@ -21,7 +21,7 @@
         FROM 
         	smg_programs 
         WHERE 
-        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     </cfquery>
 
     <cfquery name="get_host_company" datasource="MySql">
@@ -41,8 +41,8 @@
         	smg_states ON smg_states.id = extra_hostcompany.state
         LEFT JOIN 
         	extra_typebusiness ON extra_typebusiness.business_typeid = extra_hostcompany.business_typeid
-        WHERE 
-        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        WHERE         	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         AND 
         	extra_hostcompany.name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
         ORDER BY 
@@ -75,10 +75,10 @@
         <tr valign="middle">
             <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
             <td valign="middle">  
-                <select name="companyID" class="style1">
+                <select name="hostCompanyID" class="style1">
                     <option value="ALL">---  All Host Companies  ---</option>
                     <cfloop query="get_host_company">
-                    <option value="#hostcompanyID#" <cfif IsDefined('FORM.companyID')><cfif get_host_company.hostcompanyID eq #FORM.companyID#> selected</cfif></cfif>> #get_host_company.name# </option>
+                    	<option value="#hostcompanyID#" <cfif IsDefined('FORM.hostCompanyID')><cfif get_host_company.hostcompanyID eq FORM.hostCompanyID> selected</cfif></cfif>> #get_host_company.name# </option>
                     </cfloop>
                 </select>
             </td>
@@ -88,7 +88,7 @@
                 <select name="program" class="style1">
                     <option></option>
                     <cfloop query="get_program">
-                    <option value="#programid#" <cfif get_program.programid eq FORM.program> selected </cfif> >#programname#</option>
+                    	<option value="#programid#" <cfif get_program.programid eq FORM.program> selected </cfif> >#programname#</option>
                     </cfloop>
                 </select>
             </td>
@@ -118,7 +118,7 @@
 <!-----Display Reports---->
 <cfif VAL(FORM.submitted)>
 
-	<cfif NOT LEN(FORM.companyID)>
+	<cfif NOT LEN(FORM.hostCompanyID)>
         <table width=99% cellpadding="4" cellspacing=0 align="center">
             <tr>
                 <td align="center" colspan=10> 
@@ -130,13 +130,23 @@
         <cfabort>
     </cfif>                    
     
+    <!--- PDF --->
 	<cfif FORM.print eq 1>
-		<span class="style1"><center><b>Results are being generated...</b></center></span><br /><br /><br />
-		<meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/qHiredStudents_per_company_wt_flashpaper&program=#FORM.program#&companyID=#FORM.companyID#&format=PDF">
-	
+
+		<cfoutput>
+            <span class="style1"><center><b>Results are being generated...</b></center></span><br /><br /><br />
+            <meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/students_hired_per_company_wt_flashpaper&program=#FORM.program#&hostCompanyID=#FORM.hostCompanyID#&format=PDF">
+		</cfoutput>
+
+	<!--- Excel --->        	
 	<cfelseif FORM.print eq 2>
-		<span class="style1"><center><b>Results are being generated...</b></center></span><br /><br /><br />
-		<meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/qHiredStudents_per_company_wt_excel&program=#FORM.program#&companyID=#FORM.companyID#">
+		
+        <cfoutput>
+            <span class="style1"><center><b>Results are being generated...</b></center></span><br /><br /><br />
+            <meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/students_hired_per_company_wt_excel&program=#FORM.program#&hostCompanyID=#FORM.hostCompanyID#">
+        </cfoutput>
+    
+    <!--- On Screen --->    
 	<cfelse>
 	
         <!--- Get All Host Companies Current Hosting Students --->
@@ -169,7 +179,11 @@
             LEFT JOIN 
                 smg_countrylist country ON country.countryid = c.home_country
             WHERE 
-                c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+                c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">                      
+            <cfif VAL(FORM.hostcompanyID)> 
+                AND
+                    c.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+			</cfif>                
             AND 
                 c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">
             AND 
