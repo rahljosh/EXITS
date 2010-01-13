@@ -34,7 +34,7 @@ function areYouSure() {
 </cfquery>
 
 <cfquery name="get_payments" datasource="MySql">
-	SELECT p.paymentid, p.date_applied, p.date_received, 
+	SELECT p.paymentid, p.date_applied, p.date_received, p.transaction,
 		p.total_amount, p.description as payment_description,
 		ptype.paymenttype,
 		u.userid, u.firstname as userfirstname, u.lastname,
@@ -66,7 +66,7 @@ function areYouSure() {
 			<table border="0" cellpadding="3" cellspacing="0" width="100%">				
 				<tr>
                 	<td width="10%" align="center"><b>Delete</b></td>
-					<td width="10%" align="center"><b>Payment ID</b></td>
+					<td width="10%" align="center"><b>Reference</b></td>
 					<td width="12%" align="center"><b>Date Received</b></td>
 					<td width="12%"><b>Payment Type</b></td>
 					<td width="18%"><b>Received By</b></td>
@@ -75,9 +75,14 @@ function areYouSure() {
 				</tr>
 				<cfoutput query="get_payments" group="paymentid">
 					<tr bgcolor="e9ecf1">
-                   	  <cfif client.usertype LTE '4'><td bgcolor="##C2D1EF"><div align="center"><a href="?curdoc=invoice/delete_invoice&paymentid=#paymentid#" onClick="return areYouSure(this);"><img src="pics/deletex.gif"  border="0"></img></a></div></td>
-			</cfif>	
-						<td align="center">#paymentid#</td>
+                   	  	<cfif client.usertype LTE '4'>
+                      		<td bgcolor="##C2D1EF">
+                            	<div align="center">
+                            		<a href="?curdoc=invoice/delete_invoice&paymentid=#paymentid#" onClick="return areYouSure(this);"><img src="pics/deletex.gif"  border="0"></img></a>
+                                </div>
+							</td>
+						</cfif>	
+						<td align="center">#transaction#</td>
 						<td align="center">#DateFormat(date_received, 'mm/dd/yyyy')#</td>
 						<td>#paymenttype#</td>
 						<td>#userfirstname# #lastname# (###userid#)</td>
