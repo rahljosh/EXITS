@@ -31,7 +31,7 @@
         	cbc.date_sent <= <cfqueryparam cfsqltype="cf_sql_date" value="#back_date#">
         AND 
         	(
-            	cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" value="" null="yes"> 
+            	cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes"> 
             OR 
             	cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
             )
@@ -87,7 +87,7 @@ CURDATE( ), (YEAR( CURDATE( ) ) - YEAR( date_sent ) ) - ( RIGHT( CURDATE( ) , 5 
             	familyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             AND 
                 (
-                    cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" value="" null="yes">
+                    cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
                 OR 
                     cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 )
@@ -146,7 +146,7 @@ CURDATE( ), (YEAR( CURDATE( ) ) - YEAR( date_sent ) ) - ( RIGHT( CURDATE( ) , 5 
             AND 
             	familyid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             AND 
-            	notes IS <cfqueryparam cfsqltype="cf_sql_varchar" value="" null="yes">
+            	notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
 			ORDER BY 
             	cbcid DESC	
 		</cfquery>
