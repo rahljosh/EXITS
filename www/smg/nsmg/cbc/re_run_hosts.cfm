@@ -36,7 +36,7 @@
             p.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonid#">
         AND 
             (
-                cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" value="" null="yes">
+                cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
             OR 
                 cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
             )
@@ -106,7 +106,7 @@
             	p.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonid#">
             AND 
                 (
-                    cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" value="" null="yes">
+                    cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
                 OR 
                     cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 )
