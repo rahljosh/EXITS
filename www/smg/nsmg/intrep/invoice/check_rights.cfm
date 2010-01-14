@@ -1,4 +1,4 @@
-<cfif NOT IsDefined('client.userid') OR NOT IsDefined('client.usertype')>
+<cfif NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.userType)>
 	<cflocation url="http://www.student-management.com/nsmg/loginform.cfm" addtoken="no">
 </cfif>
 

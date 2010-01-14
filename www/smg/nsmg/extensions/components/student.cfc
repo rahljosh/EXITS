@@ -23,33 +23,6 @@
         
 	</cffunction>
 
-	
-	<cffunction name="getStudents" access="public" returntype="query" output="false" hint="Gets a list of students, if studentID is passed gets a student by ID">
-    	<cfargument name="studentID" default="0" hint="studentID is not required">
-        <cfargument name="isActive" default="1" hint="Defaults to active">
-              
-        <cfquery 
-			name="qGetStudents" 
-			datasource="#APPLICATION.dsn#">
-                SELECT
-					*
-                FROM 
-                    smg_students
-				WHERE
-                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isActive)#">
-
-					<cfif VAL(ARGUMENTS.studentID)>
-	                    AND
-                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-					</cfif>
-                    
-                ORDER BY 
-                    familyLastName
-		</cfquery>
-		   
-		<cfreturn qGetStudents>
-	</cffunction>
-
 
 	<cffunction name="getStudentByID" access="public" returntype="query" output="false" hint="Gets a student by studentID or uniqueID">
     	<cfargument name="studentID" default="0" hint="studentID is not required">
