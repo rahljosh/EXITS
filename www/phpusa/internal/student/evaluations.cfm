@@ -49,9 +49,9 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 
 <!--- Get Student Info by UniqueID --->
 <cfinclude template="../querys/get_student_unqid.cfm">
-
+<!----
 <cftry>
-
+--->
 <cfoutput>
 
 <table width="580" border="0" cellpadding="2" align="center" bgcolor="##ffffff" class="box">
@@ -72,12 +72,12 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 					</tr>
 					<tr>
 						<td>
-							<Cfif get_student_unqid.doc_evaluation1 EQ ''>
-								<cfinput type="checkbox" name="doc_evaluation1_box" onClick="CheckDates('doc_evaluation1_box', 'doc_evaluation1')">
+							<Cfif get_student_unqid.doc_evaluation9 EQ ''>
+								<cfinput type="checkbox" name="doc_evaluation9_box" onClick="CheckDates('doc_evaluation9_box', 'doc_evaluation9')">
 							<cfelse>
-								<cfinput type="checkbox" name="doc_evaluation1_box" onClick="CheckDates('doc_evaluation1_box', 'doc_evaluation1')" checked="yes">		
+								<cfinput type="checkbox" name="doc_evaluation9_box" onClick="CheckDates('doc_evaluation9_box', 'doc_evaluation9')" checked="yes">		
 							</cfif>						
-							Evaluation 1 &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation1" size=8 value="#DateFormat(get_student_unqid.doc_evaluation1, 'mm/dd/yyyy')#">						</td>
+							Oct. Evaluation  &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation1" size=8 value="#DateFormat(get_student_unqid.doc_evaluation9, 'mm/dd/yyyy')#">						</td>
 						<td>
 							<Cfif get_student_unqid.doc_grade1 EQ ''>
 								<cfinput type="checkbox" name="doc_grade1_box" onClick="CheckDates('doc_grade1_box', 'doc_grade1')">
@@ -89,12 +89,12 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 					</tr>
 					<tr>
 						<td>
-							<Cfif get_student_unqid.doc_evaluation2 EQ ''>
-								<cfinput type="checkbox" name="doc_evaluation2_box" onClick="CheckDates('doc_evaluation2_box', 'doc_evaluation2')">
+							<Cfif get_student_unqid.doc_evaluation12 EQ ''>
+								<cfinput type="checkbox" name="doc_evaluation12_box" onClick="CheckDates('doc_evaluation12_box', 'doc_evaluation2')">
 							<cfelse>
-								<cfinput type="checkbox" name="doc_evaluation2_box" onClick="CheckDates('doc_evaluation2_box', 'doc_evaluation2')" checked="yes">		
+								<cfinput type="checkbox" name="doc_evaluation12_box" onClick="CheckDates('doc_evaluation12_box', 'doc_evaluation2')" checked="yes">		
 							</cfif>						
-							Evaluation 2 &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation2" size=8 value="#DateFormat(get_student_unqid.doc_evaluation2, 'mm/dd/yyyy')#">						</td>
+							Dec. Evaluation  &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation12" size=8 value="#DateFormat(get_student_unqid.doc_evaluation12, 'mm/dd/yyyy')#">						</td>
 						<td>
 							<Cfif get_student_unqid.doc_grade2 EQ ''>
 								<cfinput type="checkbox" name="doc_grade2_box" onClick="CheckDates('doc_grade2_box', 'doc_grade2')">
@@ -105,12 +105,12 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 					</tr>	
 					<tr>
 						<td>
-							<Cfif get_student_unqid.doc_evaluation3 EQ ''>
-								<cfinput type="checkbox" name="doc_evaluation3_box" onClick="CheckDates('doc_evaluation3_box', 'doc_evaluation3')">
+							<Cfif get_student_unqid.doc_evaluation2 EQ ''>
+								<cfinput type="checkbox" name="doc_evaluation2_box" onClick="CheckDates('doc_evaluation2_box', 'doc_evaluation2')">
 							<cfelse>
-								<cfinput type="checkbox" name="doc_evaluation3_box" onClick="CheckDates('doc_evaluation3_box', 'doc_evaluation3')" checked="yes">		
+								<cfinput type="checkbox" name="doc_evaluation2_box" onClick="CheckDates('doc_evaluation2_box', 'doc_evaluation2')" checked="yes">		
 							</cfif>						
-							Evaluation 3 &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation3" size=8 value="#DateFormat(get_student_unqid.doc_evaluation3, 'mm/dd/yyyy')#">						</td>
+							Feb. Evaluation &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation3" size=8 value="#DateFormat(get_student_unqid.doc_evaluation2, 'mm/dd/yyyy')#">						</td>
 						<td>
 							<Cfif get_student_unqid.doc_grade3 EQ ''>
 								<cfinput type="checkbox" name="doc_grade3_box" onClick="CheckDates('doc_grade3_box', 'doc_grade3')">
@@ -126,7 +126,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 							<cfelse>
 								<cfinput type="checkbox" name="doc_evaluation4_box" onClick="CheckDates('doc_evaluation4_box', 'doc_evaluation4')" checked="yes">		
 							</cfif>						
-							Evaluation 4 &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation4" size=8 value="#DateFormat(get_student_unqid.doc_evaluation4, 'mm/dd/yyyy')#">						</td>
+							Apr. Evaluation &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation4" size=8 value="#DateFormat(get_student_unqid.doc_evaluation4, 'mm/dd/yyyy')#">						</td>
 						<td>
 							<Cfif get_student_unqid.doc_grade4 EQ ''>
 								<cfinput type="checkbox" name="doc_grade4_box" onClick="CheckDates('doc_grade4_box', 'doc_grade4')">
@@ -137,12 +137,12 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 					</tr>	
 					<tr>
 						<td>
-							<Cfif get_student_unqid.doc_evaluation5 EQ ''>
-								<cfinput type="checkbox" name="doc_evaluation5_box" onClick="CheckDates('doc_evaluation5_box', 'doc_evaluation5')">
+							<Cfif get_student_unqid.doc_evaluation6 EQ ''>
+								<cfinput type="checkbox" name="doc_evaluation6_box" onClick="CheckDates('doc_evaluation6_box', 'doc_evaluation6')">
 							<cfelse>
-								<cfinput type="checkbox" name="doc_evaluation5_box" onClick="CheckDates('doc_evaluation5_box', 'doc_evaluation5')" checked="yes">		
+								<cfinput type="checkbox" name="doc_evaluation6_box" onClick="CheckDates('doc_evaluation6_box', 'doc_evaluation6')" checked="yes">		
 							</cfif>						
-							Evaluation 5 &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation5" size=8 value="#DateFormat(get_student_unqid.doc_evaluation5, 'mm/dd/yyyy')#">						</td>
+							June Evaluation  &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation6" size=8 value="#DateFormat(get_student_unqid.doc_evaluation6, 'mm/dd/yyyy')#">						</td>
 							<td>
 							<Cfif get_student_unqid.doc_grade5 EQ ''>
 								<cfinput type="checkbox" name="doc_grade5_box" onClick="CheckDates('doc_grade5_box', 'doc_grade5')">
@@ -206,11 +206,11 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 	
 </td></tr>
 </table>
-
+<!----
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
 </cftry>
-
+---->
 </body>
 </html>
