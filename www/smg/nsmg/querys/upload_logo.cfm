@@ -13,7 +13,7 @@
 <cfset directory = '/var/www/html/student-management/nsmg/pics/logos'>
 
 <!----Upload File---->
-<cffile action="upload" destination="#directory#" fileField="file_upload" nameConflict="makeunique" charset="utf-8" mode="777">
+<cffile action="upload" destination="#directory#" fileField="UploadFile" nameConflict="makeunique" charset="utf-8" mode="777">
 	
 	<cffile action="rename" source="#directory#/#cffile.serverfile#" destination="#directory#/#form.userid#.#file.ServerFileExt#">	
 		
@@ -61,9 +61,12 @@
 
 	<!----Check if file has been uploaded---->
 	<cfquery name="insert_logo" datasource="MySQL">
-		UPDATE smg_users
-		SET logo = '#cffile.serverfile#'
-		WHERE userid = '#form.userid#.#file.ServerFileExt#'
+		UPDATE 
+        	smg_users
+		SET 
+        	logo = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.userid#.#file.ServerFileExt#">
+		WHERE 
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.userid#">
 		LIMIT 1
 	</cfquery>
 
