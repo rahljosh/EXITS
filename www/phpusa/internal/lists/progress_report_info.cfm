@@ -25,6 +25,7 @@
     <!--- NY --->
     <cfelseif client.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
     	<cfset approve_field = 'pr_ny_approved_date'>
+        
     </cfif>
     <!--- if user was none of the above but usertype LTE 4 approve NY. --->
     <cfif approve_field EQ '' and client.usertype LTE 4>
@@ -36,6 +37,16 @@
             #approve_field# = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
             pr_rejected_date = NULL
             WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+        </cfquery>
+        <cfquery name="get_student_id_pr" datasource="#application.dsn#">
+        select fk_student 
+        from progress_reports 
+        where pr_id = #form.pr_id#
+        </cfquery>
+        <cfquery datasource="#application.dsn#">
+        	update php_students_in_program
+            set doc_evaluation#get_report.pr_month_of_report# = #now()#
+            where studentid = '#get_student_id_pr.fk_student#'
         </cfquery>
     </cfif>
 </cfcase>

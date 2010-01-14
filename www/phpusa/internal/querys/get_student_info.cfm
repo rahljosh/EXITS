@@ -46,7 +46,7 @@
 		stu_prog.dateplaced, stu_prog.school_acceptance, stu_prog.active, stu_prog.i20no, stu_prog.i20received,
 		stu_prog.i20sent, stu_prog.doubleplace, stu_prog.canceldate, stu_prog.cancelreason, stu_prog.insurancedate, stu_prog.insurancecanceldate,
 		stu_prog.hf_placement, stu_prog.hf_application, stu_prog.sevis_fee_paid, stu_prog.transfer_type,
-		stu_prog.doc_evaluation1, stu_prog.doc_evaluation2, stu_prog.doc_evaluation3, stu_prog.doc_evaluation4, stu_prog.doc_evaluation5, 
+		stu_prog.doc_evaluation9, stu_prog.doc_evaluation12, stu_prog.doc_evaluation2, stu_prog.doc_evaluation4, stu_prog.doc_evaluation6, 
 		stu_prog.doc_grade1, stu_prog.doc_grade2, stu_prog.doc_grade3, stu_prog.doc_grade4, stu_prog.return_student		
 	FROM smg_students s
 	INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid

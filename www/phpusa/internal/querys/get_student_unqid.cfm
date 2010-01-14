@@ -12,7 +12,7 @@
 
 <!--- IF STUDENTS IN PROGRAM IS NOT DEFINED --->
 <cfif NOT IsDefined('url.assignedid')>
-	<cfquery name="get_assignedid" datasource="MySql">
+	<cfquery name="get_assignedid" datasource="#application.dsn#">
 		SELECT s.studentid,
 			stu_prog.assignedid
 		FROM smg_students s
@@ -23,7 +23,7 @@
 	<cfparam name="url.assignedid" default="#get_assignedid.assignedid#">
 </cfif>
 
-<cfquery name="get_student_unqid" datasource="mysql">
+<cfquery name="get_student_unqid" datasource="#application.dsn#">
 	SELECT s.studentid, uniqueid, familylastname, firstname, middlename, fathersname, fatheraddress,
 		fatheraddress2, fathercity, fathercountry, fatherzip, fatherbirth, fathercompany, fatherworkphone,
 		fatherworkposition, fatherworktype, fatherenglish, motherenglish, mothersname, motheraddress,
@@ -47,7 +47,7 @@
 		stu_prog.dateplaced, stu_prog.school_acceptance, stu_prog.active, stu_prog.i20no, stu_prog.i20received, stu_prog.i20note,
 		stu_prog.i20sent, stu_prog.doubleplace, stu_prog.canceldate, stu_prog.cancelreason, stu_prog.insurancedate, stu_prog.insurancecanceldate,
 		stu_prog.hf_placement, stu_prog.hf_application, stu_prog.sevis_fee_paid, stu_prog.transfer_type,
-		stu_prog.doc_evaluation1, stu_prog.doc_evaluation2, stu_prog.doc_evaluation3, stu_prog.doc_evaluation4, stu_prog.doc_evaluation5, 
+		stu_prog.doc_evaluation9, stu_prog.doc_evaluation12, stu_prog.doc_evaluation2, stu_prog.doc_evaluation4, stu_prog.doc_evaluation6, 
 		stu_prog.doc_grade1, stu_prog.doc_grade2, stu_prog.doc_grade3, stu_prog.doc_grade4, stu_prog.doc_grade5, stu_prog.doc_grade6,stu_prog.doc_grade7,
 		stu_prog.doc_grade8,
 		stu_prog.return_student, stu_prog.flightinfo_sent, stu_prog.flightinfo_received, stu_prog.flightinfo_no, stu_prog.flightinfo_note
