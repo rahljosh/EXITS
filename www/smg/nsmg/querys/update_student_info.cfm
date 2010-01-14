@@ -17,7 +17,7 @@
 
 	<cfscript>
 		// Get Student Information 
-		qStudentInfo = AppCFC.STUDENT.getStudents(studentID=FORM.studentID); 
+		qStudentInfo = AppCFC.STUDENT.getStudentByID(studentID=FORM.studentID); 
 	</cfscript>
     
     <cfscript>
@@ -344,7 +344,7 @@
         UPDATE 
         	smg_students
         SET 
-        	canceldate = <cfqueryparam cfsqltype="cf_sql_timestamp" value="" null="yes">, 
+        	canceldate = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">, 
             cancelreason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">, 
             active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         WHERE 
