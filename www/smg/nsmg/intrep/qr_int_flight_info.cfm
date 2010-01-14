@@ -153,38 +153,38 @@
 	<cfset email_to = '#get_region_info.email#'>
 </cfif>
 
-<CFMAIL SUBJECT="SMG EXITS - Flight Information for #get_students.firstname# #get_students.familylastname# (###get_students.studentid#)"
-TO="#email_to#"
-FROM="""SMG Support"" <support@student-management.com>"
-TYPE="HTML">
 
-<HTML>
-<HEAD>
-<style type="text/css">
-	.thin-border{ border: 1px solid ##000000;}
-</style>
-</HEAD>
-<BODY>	
 
-<table width=550 class="thin-border" cellspacing="3" cellpadding=0>
-<tr><td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 height=75></td></tr>
-<tr><td><br>Dear #get_region_info.firstname# #get_region_info.lastname#,<br><br></td></tr>
-<tr><td>This e-mail is just to let you know new or updated flight information for the student 
-	#get_students.firstname# #get_students.familylastname# (###get_students.studentid#) has been recorded in EXITS by #get_int_Agent.businessname#.<br><br></td></tr>	
-<tr><td>
+
+
+<cfsavecontent variable="email_message">
+Dear #get_region_info.firstname# #get_region_info.lastname#,<br><br>
+This e-mail is just to let you know new or updated flight information for the student 
+	#get_students.firstname# #get_students.familylastname# (###get_students.studentid#) has been recorded in EXITS by #get_int_Agent.businessname#.<br><br>
 	Please click 
-	<a href="http://www.student-management.com/nsmg/index.cfm?curdoc=student_info&studentid=#get_students.studentid#">here</a>
+	<a href="http://#client.exits_url#/nsmg/index.cfm?curdoc=student_info&studentid=#get_students.studentid#">here</a>
 	to see the student's flight information.<br><br>
-</td></tr>	
-<tr><td>
-	 Sincerely,<br>
-	 EXITS - Student Management Group<br><br>
-</td></tr>
-</table>
 
-</body>
-</html>
-</CFMAIL>
+	 Sincerely,<br>
+	 EXITS Flight Info<br><br>
+</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#email_to#">
+                <cfinvokeargument name="email_subject" value="Flight Information for #get_students.firstname# #get_students.familylastname# (#get_students.studentid#)">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.support_email#">
+            </cfinvoke>
+    <!----End of Email---->
+
+
+
+
+
+
+
+
 
 <script language="JavaScript">
 <!-- 

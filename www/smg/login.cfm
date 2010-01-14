@@ -118,6 +118,8 @@ from smg_companies where url_ref = '#cgi.server_name#'
 
 
 
+
+
 <style type="text/css">
 <!--
 .style1 {
@@ -147,6 +149,7 @@ a:hover {
 a:active {
 	text-decoration: none;
 }
+
 -->
 </style>
 
@@ -159,9 +162,18 @@ a:active {
   <div id="logoContent">
     <table width="557" height="72" border="0">
       <tr>
-        <td width="189" height="68">#client.companyname#</td>
-        <td width="311">&nbsp;</td>
-        <td width="43"><img src="exitsapp_images/#client.companyid#.png" width="74" height="97" /></td>
+        <td width="478" height="96" class="clientcompanyname">
+		<Cfif client.companyid eq 15>
+        <font size = px>#client.companyname#</font>
+        <!----
+        	#Left(client.companyname, 17)#<br>
+            #Right(client.companyname, 17)#---->
+        <cfelse>
+        
+        	#client.companyname#
+        </Cfif></td>
+        
+        <td align="right" width=100><img src="exitsapp_images/#client.companyid#.png" ></td>
       </tr>
     </table>
   </div>
