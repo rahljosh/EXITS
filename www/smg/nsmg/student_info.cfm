@@ -22,7 +22,7 @@
 		currentDate = now();
 
 		// Get Student Information 
-		qStudentInfo = AppCFC.STUDENT.getStudents(studentID=studentID); 
+		qStudentInfo = AppCFC.STUDENT.getStudentByID(studentID=studentID); 
 
 		// Get Super Rep
 		qGetSuperRep = APPCFC.USER.getUserByID(userID=qStudentInfo.arearepid);
@@ -445,7 +445,7 @@
 				<!----All Users---->				
 				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(virtual_folder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>		
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qStudentInfo.studentID#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
-				<a href="" onClick="javascript: win=window.open('forms/flight_info.cfm', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
+				<a href="" onClick="javascript: win=window.open('forms/flight_info.cfm', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
 				<a href="" onClick="javascript: win=window.open('forms/double_place_docs.cfm', 'Settings', 'height=380, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Double Place Docs</a>
 				<!---- GLOBAL OR COMPLIANCE USERS ---->
 				<cfif CLIENT.usertype EQ 1 OR qUserCompliance.compliance EQ 1>
@@ -676,7 +676,10 @@
 							<cfquery name="ins_info" datasource="#application.dsn#">
 								select distinct startdate 
 								from smg_insurance_batch
-								where studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
+								where 
+                                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
+                                AND 
+                                	type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
 							</cfquery>
 							<cfif ins_info.recordcount eq 0>
 							not insured yet.
