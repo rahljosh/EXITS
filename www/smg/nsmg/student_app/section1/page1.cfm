@@ -99,7 +99,9 @@ function areYouSure() {
 		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
 		<td class="tablecenter"><h2>Page [01] - Student's Information</h2></td>
-		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section1/page1print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
+		<td align="right" class="tablecenter">
+        
+        <a href="" onClick="javascript: win=window.open('section1/page1print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		<td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
