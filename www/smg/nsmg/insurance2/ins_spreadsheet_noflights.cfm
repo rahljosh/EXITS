@@ -266,7 +266,7 @@ relatively correct Internet Explorer behavior. --->
                     </cfif>
 					     <!----
 					<cfquery name="insert_student_id" datasource="mysql">
-						insert into smg_insurance_batch2 (studentid, file,type, date, startdate, enddate)
+						insert into smg_insurance_batch (studentid, file,type, date, startdate, enddate)
 							values (#studentid#,'#xlsfilename#','N', #now()#, #CreateODBCDate(dep_date)#, #CreateODBCDate(end_date_temp)#)
 					</cfquery>
 					---->

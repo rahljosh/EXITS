@@ -8,8 +8,8 @@
     <cfparam name="URL.action" default="">
     
     <!--- Param FORM variables --->
-    <cfparam name="FORM.errors" default="">
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.errors" default="">    
     <cfparam name="FORM.webEx_dateTrained" default="#DateFormat(now(), 'mm/dd/yyyy')#">
     <cfparam name="FORM.webEx_notes" default="">
 
@@ -1167,7 +1167,7 @@
                                             	<label for="webEx_dateTrained">Date Trained:</label>
                                              </td>
                                              <td>
-                                             	<input type="text" name="webEx_dateTrained" value="#DateFormat(FORM.webEx_dateTrained, 'mm/dd/yyyy')#" id="webEx_dateTrained" class="date-pick" maxlength="10" size="8" />  (mm/dd/yyyy)
+                                             	<input type="text" name="webEx_dateTrained" value="#DateFormat(FORM.webEx_dateTrained, 'mm/dd/yyyy')#" id="webEx_dateTrained" class="date-pick" maxlength="10" />  (mm/dd/yyyy)
                                              </td>
                                         </tr>
                                     	<tr>

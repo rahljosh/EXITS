@@ -38,7 +38,7 @@
 
 <cfquery name="ins_info" datasource="mysql">
 select * 
-from smg_insurance_batch2
+from smg_insurance_batch
 where studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
 </cfquery>
 <table border="0" align="center" width="100%" cellpadding="3" cellspacing="1">
