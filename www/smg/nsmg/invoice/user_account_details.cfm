@@ -820,9 +820,9 @@ GROUP BY
 select distinct paymentref
 from smg_payment_received
 where agentid = #url.userid#
-			<cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'>
+			<!--- <cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'> --->
 			and companyid = #client.companyid#
-			</cfif>
+			<!--- </cfif> --->
 ORDER BY date DESC			
 </Cfquery>
 	
