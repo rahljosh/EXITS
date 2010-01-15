@@ -5,8 +5,10 @@
 	Date:		January 12, 2010
 	Desc:		Inserts/Updates Students flight information
 
-	Updated:  	10/12/2010 - Reorganized - Marcus Melo
-				10/12/2010 - Added date-pick - Marcus Melo
+	PS:			Update intrep\int_flight_info.cfm
+
+	Updated:  	01/14/2010 - Reorganized - Marcus Melo
+				01/14/2010 - Added date-pick - Marcus Melo
 				09/29/2005 - revised by Josh Rahl
 
 ----- ------------------------------------------------------------------------- --->
@@ -105,7 +107,7 @@
         <!--- DEPARTURE INFORMATION - NEW FLIGHT DEPARTURE UP TO 4 LEGS --->
         <cfif FORM.dp_update is 'new'>
             
-            <cfloop From = "1" To = "4" Index = "i">
+            <cfloop From="1" To="4" Index="i">
                 
                 <!--- Param FORM Variables --->
                 <cfparam name="FORM.dp_overnight#i#" default="0">
@@ -308,7 +310,7 @@
 <cfoutput>
 
 <br>
-<table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
+<table width="98%" cellpadding="0" cellspacing="0" border="0" height="24" align="center">
 	<tr valign="middle" height="24">
 		<td height="24" width="13" background="../pics/header_leftcap.gif">&nbsp;</td>
 		<td width="26" background="../pics/header_background.gif"><img src="../pics/students.gif"></td>
@@ -318,7 +320,7 @@
 	</tr>
 </table>
 
-<table width="100%" border="0" cellpadding="4" cellspacing="0" class="section">
+<table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
     <tr>
     	<td>
 
@@ -351,7 +353,7 @@
             </cfif>            
 
         	<!---
-			<cfif qGetStudentInfo.insurance_typeid GT 1 AND CLIENT.usertype LTE 4> 
+			<cfif VAL(FORM.submitted) AND qGetStudentInfo.insurance_typeid GT 1 AND CLIENT.usertype LTE 4> 
 				<table border="0" align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1">
 					<th colspan=4 bgcolor="FF5151"> 
 						<a href="" onClick="javascript: win=window.open('../insurance/insurance_management.cfm?studentID=#studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"> 
@@ -606,7 +608,7 @@
 	</tr>
 </table> <!--- end of main table --->
 
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+<table border="0" cellpadding="4" cellspacing="0" width="98%" class="section" align="center">
     <tr>
 		<cfif CLIENT.usertype LTE 4>
     		<td align="right" width="50%"><input name="Submit" type="image" src="../pics/update.gif" border="0" alt=" update ">&nbsp;</td>
@@ -614,10 +616,10 @@
     	<td align="left" width="50%">&nbsp;<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td></tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="98%" cellpadding="0" cellspacing="0" border="0" align="center">
 	<tr valign="bottom">
 		<td width="9" valign="top" height="12"><img src="../pics/footer_leftcap.gif" ></td>
-		<td width="100%" background="../pics/header_background_footer.gif"></td>
+		<td width="98%" background="../pics/header_background_footer.gif"></td>
 		<td width="9" valign="top"><img src="../pics/footer_rightcap.gif"></td>
 	</tr>
 </table>
