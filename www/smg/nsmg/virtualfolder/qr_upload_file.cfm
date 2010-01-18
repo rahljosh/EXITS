@@ -40,7 +40,7 @@
 </cfquery>
 
 <cfif get_region_info.email EQ ''>
-	<cfset get_region_info.email = 'support@student-management.com'>
+	<cfset get_region_info.email = '#client.support_email#'>
 </cfif>
 
 <!--- If TRUE, upload the file. --->
@@ -104,78 +104,72 @@
 </cfif>
 
 <cfif get_region_info.email EQ ''>
-	<cfset emailrecipient = 'support@student-management.com'> <!--- NO FACILITATOR - GOES TO SUPPORT ACCOUNT --->
+	<cfset emailrecipient = '#client.support_email#'> <!--- NO FACILITATOR - GOES TO SUPPORT ACCOUNT --->
 <cfelseif get_student_info.companyid EQ '6'>
 	<cfset emailrecipient = 'rich@phpusa.com'> <!--- PHP MESSAGE GOES TO RICH --->
 <cfelse>	
 	<cfset emailrecipient = '#get_region_info.email#'> <!--- FACILITATOR --->
 </cfif>
 
-<CFMAIL SUBJECT="SMG EXITS - Virtual Folder - Upload Notification for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)"
-TO="#emailrecipient#"
-FROM="""#get_user.businessname# #get_user.firstname# #get_user.lastname#"" <#get_user.email#>"
-TYPE="HTML">
-	<HTML>
-	<HEAD>
-	<style type="text/css">
-		.thin-border{ border: 1px solid ##000000;}
-	</style>
-	</HEAD>
-	<BODY>	
+<!---Email to Local Person---->
+<!----Email To be Send. nsmg cfc emal cfc---->
+    
+    		<cfsavecontent variable="email_message">
+           			
+			Dear #get_region_info.firstname# #get_region_info.lastname#,<br><br>This e-mail is just to let you know a new document has been uploaded into #get_student_info.firstname# #get_student_info.familylastname#'s (###get_student_info.studentid#) virtual folder by #get_user.businessname# #get_user.firstname# #get_user.lastname#.
+			The document has been recorded in the category #get_category.category# <cfif form.other_category NEQ ''>&nbsp; - &nbsp; #form.other_category#</cfif>.<br><br>
+		Please login to <a href="http://#exits_url#/">#exits_url#</a> and click on Students from the menu, select this student from the list, and then select the Virtual Folder from the right menu in the student profile.  <br><br>
 	
-	<table width=550 class="thin-border" cellspacing="3" cellpadding=0>
-	<tr><td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 height=75></td></tr>
-	<tr><td><br>Dear #get_region_info.firstname# #get_region_info.lastname#,<br><br></td></tr>
-	<tr><td>This e-mail is just to let you know a new document has been uploaded into #get_student_info.firstname# #get_student_info.familylastname#'s (###get_student_info.studentid#) virtual folder by #get_user.businessname# #get_user.firstname# #get_user.lastname#.
-			The document has been recorded in the category #get_category.category# <cfif form.other_category NEQ ''>&nbsp; - &nbsp; #form.other_category#</cfif>.<br><br></td></tr>	
-	<tr><td>
-		Please login to <a href="http://www.student-management.com/">www.stuent-management.com</a> and click on Students from the menu, select this student from the list, and then select the Virtual Folder from the right menu in the student profile.  <br><br>
-	</td></tr>	
-	<tr><td>
 		 Sincerely,<br>
-		 EXITS - Student Management Group<br><br>
-	</td></tr>
-	</table>
-	
-	</body>
-	</html>
-</CFMAIL>
+		 EXITS - #client.companyname#<br><br>
+				
+                <!----
+				<p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
+				---->
+			</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#emailrecipient#">
+                <cfinvokeargument name="email_subject" value="Virtual Folder - Upload Notification for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.support_email#">
+                
+            </cfinvoke>
+    <!----End of Email---->
+
+
 <!----Email to Int. Representative---->
 <cfquery name="email_int_rep" datasource="mysql">
 select email
 from smg_users 
 where userid = #get_student_info.intrep#
 </cfquery>
-<CFMAIL SUBJECT="SMG EXITS - Virtual Folder - Upload Notification for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)"
-TO="#email_int_rep.email#" 
-FROM="""#get_user.businessname# #get_user.firstname# #get_user.lastname#"" <#get_user.email#>"
-TYPE="HTML">
-	<HTML>
-	<HEAD>
-	<style type="text/css">
-		.thin-border{ border: 1px solid ##000000;}
-	</style>
-	</HEAD>
-	<BODY>	
-	
-	<table width=550 class="thin-border" cellspacing="3" cellpadding=0>
-	<tr><td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 height=75></td></tr>
-		<tr><td>This e-mail is just to let you know a new document has been uploaded into #get_student_info.firstname# #get_student_info.familylastname#'s (###get_student_info.studentid#) virtual folder by #get_user.businessname# #get_user.firstname# #get_user.lastname#.
-			The document has been recorded in the category #get_category.category# <cfif form.other_category NEQ ''>&nbsp; - &nbsp; #form.other_category#</cfif>.<br><br></td></tr>	
-	<tr><td>
-		Please click 
-		<a href="http://www.student-management.com/nsmg/index.cfm?curdoc=student_info&studentid=#get_student_info.studentid#">here</a>
-		to see the student's virtual folder.<br><br>
-	</td></tr>	
-	<tr><td>
-		 Sincerely,<br>
-		 EXITS - Student Management Group<br><br>
-	</td></tr>
-	</table>
-	
-	</body>
-	</html>
-</CFMAIL>
+	<cfsavecontent variable="email_message">
+           			
+This e-mail is just to let you know a new document has been uploaded into #get_student_info.firstname# #get_student_info.familylastname#'s (###get_student_info.studentid#) virtual folder by #get_user.businessname# #get_user.firstname# #get_user.lastname#.
+			The document has been recorded in the category #get_category.category# <cfif form.other_category NEQ ''>&nbsp; - &nbsp; #form.other_category#</cfif>.<br><br>
+Please click 
+<a href="http://#exits_url#/nsmg/index.cfm?curdoc=student_info&studentid=#get_student_info.studentid#">here</a>
+to see the student's virtual folder.<br><br>
+ Sincerely,<br>
+ EXITS - #client.companyname#<br><br>
+				
+                <!----
+				<p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
+				---->
+			</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#email_int_rep.email#">
+                <cfinvokeargument name="email_subject" value="Virtual Folder - Upload Notification for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.support_email#">
+                
+            </cfinvoke>
+
+
 
 
 <html>

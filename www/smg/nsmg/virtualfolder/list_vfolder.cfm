@@ -94,16 +94,16 @@ function PrintFile(url)
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="../pics/header_leftcap.gif">&nbsp;</td>
 		<td width=26 background="../pics/header_background.gif"><img src="../pics/helpdesk.gif"></td>
-		<td background="../pics/header_background.gif"><h2>SMG - Virtual Folder &nbsp; - &nbsp; #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</h2></td>
+		<td background="../pics/header_background.gif"><h2>Virtual Folder &nbsp; - &nbsp; #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</h2></td>
 		<td width=17 background="../pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
 
 <div class="section"><br>
 <table width=660 cellpadding=6 cellspacing=1 border=0 align="center">
-	<tr><th><h2>Welcome to SMG Virtual Folder</h2></th></tr>
+	<tr><th><h2>Welcome to the Virtual Folder</h2></th></tr>
 	<tr><td><div align="justify">In this new feature you can upload as many files as you want for your student. For each file upload notification will be sent out to inform
-			the appropriate people at SMG that you have uploaded a file. <br>
+			the appropriate people that you have uploaded a file. <br>
 			The students international representative will also receive an email with notification that a file was added the virtual folder.<br>
 			Each student has his/her own Virtual Folder so please do not upload a file that does not belong in this record.<br>
 			PS: There is a limit of 4mb per file.</div></td></tr>
