@@ -13,7 +13,7 @@
 <cfsilent>
 
     <!--- Param Variables --->
-    <cfparam name="userID" default="0">
+    <cfparam name="URL.userID" default="0">
     
     <cfparam name="URL.email" default="">
 	<cfparam name="URL.unqid" default="">
@@ -31,13 +31,12 @@
 
     <cfscript>
 		// Opening from PHP - AXIS
-		if ( VAL(userID) ) {
+		if ( VAL(URL.userID) ) {
 			// Set PHP Variables
 			CLIENT.userID = userID;
 			CLIENT.companyName = "Private High School Program";
 			CLIENT.companyShort = "php";
-			CLIENT.exits_url = "http://www.student-management.com";
-			//CLIENT.exits_url = "php.exitsapplication.com";
+			CLIENT.exits_url = "php.exitsapplication.com";
 			CLIENT.companyID = 6;
 		}
 		
@@ -50,6 +49,15 @@
 			emailFrom = CLIENT.email;	
 		}	
 	</cfscript>
+
+
+    <cfparam name="url.test" default="0">
+    
+    <cfif val(url.test)>
+        <cfdump var="#client#">
+        <cfabort>
+    </cfif>
+
 
     <cfquery name="get_student_info" datasource="MySql">
         SELECT 
