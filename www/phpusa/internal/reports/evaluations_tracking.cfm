@@ -28,8 +28,8 @@
 		smg_programs.programname,
 		u.businessname,
 		sc.schoolname,
-		stu_prog.datecreated, stu_prog.doc_evaluation1, stu_prog.doc_evaluation2, stu_prog.doc_evaluation3, stu_prog.doc_evaluation4,
-		stu_prog.doc_evaluation5, stu_prog.doc_grade1, stu_prog.doc_grade2, stu_prog.doc_grade3, stu_prog.doc_grade4, stu_prog.doc_grade5, stu_prog.doc_grade6, stu_prog.doc_grade7, stu_prog.doc_grade8, stu_prog.return_student
+		stu_prog.datecreated, stu_prog.doc_evaluation2, stu_prog.doc_evaluation4, stu_prog.doc_evaluation6, stu_prog.doc_evaluation9,
+		stu_prog.doc_evaluation12, stu_prog.doc_grade1, stu_prog.doc_grade2, stu_prog.doc_grade3, stu_prog.doc_grade4, stu_prog.doc_grade5, stu_prog.doc_grade6, stu_prog.doc_grade7, stu_prog.doc_grade8, stu_prog.return_student
 	FROM smg_students s
 	INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
 	LEFT JOIN smg_programs ON smg_programs.programid = stu_prog.programid 
@@ -104,11 +104,11 @@
 			<td width="20%" align="center">
 				<table width="90%" cellpadding="0" cellspacing="0">
 					<tr>
-						<td width="20%" align="center"><cfif doc_evaluation1 NEQ ''><img border="0" src="../pics/checkY.gif"><cfelse><img border="0" src="../pics/checkN.gif"></cfif></td>
 						<td width="20%" align="center"><cfif doc_evaluation2 NEQ ''><img border="0" src="../pics/checkY.gif"><cfelse><img border="0" src="../pics/checkN.gif"></cfif></td>
-						<td width="20%" align="center"><cfif doc_evaluation3 NEQ ''><img border="0" src="../pics/checkY.gif"><cfelse><img border="0" src="../pics/checkN.gif"></cfif></td>
 						<td width="20%" align="center"><cfif doc_evaluation4 NEQ ''><img border="0" src="../pics/checkY.gif"><cfelse><img border="0" src="../pics/checkN.gif"></cfif></td>
-						<td width="20%" align="center"><cfif doc_evaluation5 NEQ ''><img border="0" src="../pics/checkY.gif"><cfelse><img border="0" src="../pics/checkN.gif"></cfif></td>
+						<td width="20%" align="center"><cfif doc_evaluation6 NEQ ''><img border="0" src="../pics/checkY.gif"><cfelse><img border="0" src="../pics/checkN.gif"></cfif></td>
+						<td width="20%" align="center"><cfif doc_evaluation9 NEQ ''><img border="0" src="../pics/checkY.gif"><cfelse><img border="0" src="../pics/checkN.gif"></cfif></td>
+						<td width="20%" align="center"><cfif doc_evaluation12 NEQ ''><img border="0" src="../pics/checkY.gif"><cfelse><img border="0" src="../pics/checkN.gif"></cfif></td>
 					</tr>				
 				</table>		
 			</td>

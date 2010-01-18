@@ -6,7 +6,7 @@
 <title>Private High School Program</title>
 <link rel="stylesheet" href="phpusa.css" type="text/css">
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
-
+<!-- DatePicker CSS -->
 <link rel="stylesheet" href="linked/css/datePicker.css" type="text/css">
 <!-- jQuery -->
 <script src="linked/js/jquery.js" type="text/javascript"></script>
