@@ -35,7 +35,7 @@
 	INNER JOIN smg_regions r ON regionassigned = r.regionid
 	WHERE 	(s.active = '1' 
 			AND hostid != '0'
-			<cfif IsDefined('form.dateplaced')>AND s.dateplaced <= #CreateODBCDate(form.dateplaced)#</cfif>
+			<cfif IsDate(form.dateplaced)>AND s.dateplaced <= #CreateODBCDate(form.dateplaced)#</cfif>
 			AND	( <cfloop list=#form.programid# index='prog'>
 				programid = #prog# 
 				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
@@ -45,7 +45,7 @@
 		OR
 			(s.active = '1' 
 			AND hostid != '0'
-			<cfif IsDefined('form.dateplaced')>AND s.dateplaced <= #CreateODBCDate(form.dateplaced)#</cfif>
+			<cfif IsDate(form.dateplaced)>AND s.dateplaced <= #CreateODBCDate(form.dateplaced)#</cfif>
 			AND	( <cfloop list=#form.programid# index='prog'>
 				programid = #prog# 
 				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
@@ -73,7 +73,7 @@
 				INNER JOIN smg_regions r ON regionassigned = r.regionid
 				WHERE 	(s.active = '1'
 						AND hostid != '0' 
-						<cfif IsDefined('form.dateplaced')>AND s.dateplaced <= #CreateODBCDate(form.dateplaced)#</cfif>
+						<cfif IsDate(form.dateplaced)>AND s.dateplaced <= #CreateODBCDate(form.dateplaced)#</cfif>
 						AND	( <cfloop list=#form.programid# index='prog'>
 							programid = #prog# 
 							<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
@@ -83,7 +83,7 @@
 					OR
 						(s.active = '1' 
 						AND hostid != '0'
-						<cfif IsDefined('form.dateplaced')>AND s.dateplaced <= #CreateODBCDate(form.dateplaced)#</cfif>
+						<cfif IsDate(form.dateplaced)>AND s.dateplaced <= #CreateODBCDate(form.dateplaced)#</cfif>
 						AND	( <cfloop list=#form.programid# index='prog'>
 							programid = #prog# 
 							<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
