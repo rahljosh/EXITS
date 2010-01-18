@@ -14,7 +14,6 @@
 
     <!--- Param Variables --->
     <cfparam name="userID" default="0">
-    <cfparam name="companyShort" default="ise">
     
     <cfparam name="URL.email" default="">
 	<cfparam name="URL.unqid" default="">
@@ -22,17 +21,24 @@
     <cfparam name="CLIENT.exits_url" default="http://www.student-management.com">
     <cfparam name="CLIENT.companyID" default="5">
     <cfparam name="CLIENT.companyName" default="International Student Exchange">
+    <cfparam name="CLIENT.companyShort" default="ise">
     <cfparam name="CLIENT.support_email" default="support@student-management.com">
     <cfparam name="CLIENT.email" default="support@student-management.com">
     
     <cfparam name="FORM.submitted" default="0">
 	<cfparam name="FORM.studentID" default="0">
     <cfparam name="FORM.email_address" default="">
-    
+
     <cfscript>
 		// Opening from PHP - AXIS
 		if ( VAL(userID) ) {
+			// Set PHP Variables
 			CLIENT.userID = userID;
+			CLIENT.companyName = "Private High School Program";
+			CLIENT.companyShort = "php";
+			CLIENT.exits_url = "http://www.student-management.com";
+			//CLIENT.exits_url = "php.exitsapplication.com";
+			CLIENT.companyID = 6;
 		}
 		
 		// PHP Users - client variables are not defined. Use URL
@@ -91,7 +97,11 @@
                 Additional Comments:<br>
                 <cfif FORM.comments EQ ''>n/a<cfelse>#FORM.comments#</cfif><br><br>
                 Please click
-                <a href="http://#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
+                <cfif Left(CLIENT.exits_url, 7) NEQ "http://">
+                	<a href="http://#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
+                <cfelse>
+                	<a href="#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
+                </cfif>
                 to see the student's online application.<br><br>
                 
                 Please keep in mind that this application might take a few minutes to load completely. The loading time will depend on your internet connection.<br><br>             
@@ -106,7 +116,7 @@
             <cfinvokeargument name="email_to" value="#FORM.email_address#">
             <cfinvokeargument name="email_subject" value="EXITS Online Application for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)">
             <cfinvokeargument name="email_message" value="#email_message#">
-            <cfinvokeargument name="email_from" value="#LCase(companyshort)#-support@exitsapplication.com">
+            <cfinvokeargument name="email_from" value="#LCase(CLIENT.companyShort)#-support@exitsapplication.com">
         </cfinvoke>
        
     </cfif>
@@ -190,7 +200,7 @@
 		</tr>
 		<tr>	
 			<td colspan="2">
-				<cfinput type="text" name="email_address" message="Please enter one valid email address." validateat="onSubmit" validate="email" size="15">
+				<cfinput type="text" name="email_address" message="Please enter one valid email address." validateat="onSubmit" validate="email" size="55">
 			</td>
 		</tr>
 		<tr>	
