@@ -77,7 +77,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 							<cfelse>
 								<cfinput type="checkbox" name="doc_evaluation9_box" onClick="CheckDates('doc_evaluation9_box', 'doc_evaluation9')" checked="yes">		
 							</cfif>						
-							Oct. Evaluation  &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation1" size=8 value="#DateFormat(get_student_unqid.doc_evaluation9, 'mm/dd/yyyy')#">						</td>
+							Oct. Evaluation  &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation9" size=8 value="#DateFormat(get_student_unqid.doc_evaluation9, 'mm/dd/yyyy')#">						</td>
 						<td>
 							<Cfif get_student_unqid.doc_grade1 EQ ''>
 								<cfinput type="checkbox" name="doc_grade1_box" onClick="CheckDates('doc_grade1_box', 'doc_grade1')">
@@ -110,7 +110,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 							<cfelse>
 								<cfinput type="checkbox" name="doc_evaluation2_box" onClick="CheckDates('doc_evaluation2_box', 'doc_evaluation2')" checked="yes">		
 							</cfif>						
-							Feb. Evaluation &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation3" size=8 value="#DateFormat(get_student_unqid.doc_evaluation2, 'mm/dd/yyyy')#">						</td>
+							Feb. Evaluation &nbsp; &nbsp; Date: &nbsp; <cfinput type="text" name="doc_evaluation2" size=8 value="#DateFormat(get_student_unqid.doc_evaluation2, 'mm/dd/yyyy')#">						</td>
 						<td>
 							<Cfif get_student_unqid.doc_grade3 EQ ''>
 								<cfinput type="checkbox" name="doc_grade3_box" onClick="CheckDates('doc_grade3_box', 'doc_grade3')">
