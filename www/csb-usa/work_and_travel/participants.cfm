@@ -45,14 +45,18 @@
 		  <center>
 		    <a href="check-in.cfm" target="_blank"><img src="images/CheckIn.jpg" alt="" width="420" height="40" vspace="10" border="0"></a>
 		  </center>
-		  <table width="90%" border="0" align="center">
-		    <tr>
-		      <td align="center"><a href="files/W&T_StudHandbook.pdf" class="bottom"><img src="images/StudentHandbook.jpg" width="217" height="270" border="0"><br>
+		  <cfoutput>
+          <table width="90%" border="0" align="center">
+            <tr>
+		      <td align="center">
+              <a href="participants_login.cfm?fileName=#URLEncodedFormat("W&T_StudHandbook.pdf")#" class="bottom"><img src="images/StudentHandbook.jpg" width="217" height="270" border="0"><br>
 		        Click to download Student Handbook</a></td>
-		      <td align="center"><a href="files/Job_Offer_Agreement_FULL.pdf" class="bottom"><img src="images/JobOfferAgreement.jpg" width="217" height="270" border="0"><br>
+		      <td align="center"><a href="participants_login.cfm?fileName=#URLEncodedFormat("Job_Offer_Agreement_FULL.pdf")#" class="bottom"><img src="images/JobOfferAgreement.jpg" width="217" height="270" border="0"><br>
 		        Click to download Job Offer Agreement</a></td>
-	        </tr>
-      </table></td>
+	        </tr>          
+      	   </table>
+           </cfoutput>
+      </td>
 	</tr>
 	<tr>
 		<td height="52" background="images/bottom.png" align="center"><cfinclude template="bottom.cfm"></td>
