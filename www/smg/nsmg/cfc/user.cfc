@@ -1,4 +1,3 @@
-
 <cfcomponent>
 	
     <cfparam name="CLIENT.companyID" default="0">
@@ -32,20 +31,20 @@
     
     </cfif>        
         
-	<cfif VAL(get_company.recordcount)>
-        <cfset client.companyid = get_company.companyid>
-        <cfset client.companyname = get_company.companyname>
-    <cfelse>
-        <cfset client.companyid = 0>
-        <cfset client.companyname = 'EXIT Group'>
+	<cfif NOT VAL(CLIENT.companyID) AND VAL(get_company.recordcount)>
+        <cfset CLIENT.companyid = get_company.companyid>
+        <cfset CLIENT.companyname = get_company.companyname>
+    <cfelseif NOT VAL(CLIENT.companyID)>
+        <cfset CLIENT.companyid = 0>
+        <cfset CLIENT.companyname = 'EXIT Group'>
     </cfif>
     
     <!----If error code SI-102, company information is wrong---->
-    <cfquery name="submitting_info" datasource="#application.dsn#">
-    select website, url_ref, company_color
-    from
-    smg_companies
-    where companyid = #client.companyid#
+    <cfquery name="submitting_info" datasource="#APPLICATION.dsn#">
+        select website, url_ref, company_color
+        from
+        smg_companies
+        where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
     </cfquery>
     
 	<cfif submitting_info.recordcount eq 0>
@@ -56,11 +55,11 @@
         <cfabort>
     </cfif>
     
-        <cfset client.company_submitting = "#submitting_info.website#">
-        <cfset application.company_short = "#submitting_info.website#">
-        <cfset client.app_menu_comp = client.companyid>
-        <cfset client.exits_url = "#submitting_info.url_ref#">
-        <cfset client.color = "#submitting_info.company_color#">
+	<cfset CLIENT.company_submitting = "#submitting_info.website#">
+    <cfset APPLICATION.company_short = "#submitting_info.website#">
+    <cfset CLIENT.app_menu_comp = CLIENT.companyid>
+    <cfset CLIENT.exits_url = "#submitting_info.url_ref#">
+    <cfset CLIENT.color = "#submitting_info.company_color#">
  
     
 	<!--- Login.  called by: flash/login.cfm --->
@@ -75,7 +74,7 @@
 		<cfset var get_companies = ''>
 
 		<!--- student login --->
-        <cfquery name="student_login" datasource="#application.dsn#">
+        <cfquery name="student_login" datasource="#APPLICATION.dsn#">
             SELECT studentID, firstname, familylastname
             FROM smg_students
             WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
@@ -84,14 +83,14 @@
         </cfquery>
         
         <cfif student_login.recordcount gt 0>
-            <cfset client.studentID = student_login.studentID>
-            <cfset client.usertype = 10>
-            <cfset client.userID = 0>
-            <cfset client.name = '#student_login.firstname# #student_login.familylastname#'>
+            <cfset CLIENT.studentID = student_login.studentID>
+            <cfset CLIENT.usertype = 10>
+            <cfset CLIENT.userID = 0>
+            <cfset CLIENT.name = '#student_login.firstname# #student_login.familylastname#'>
             <cflocation url="/nsmg/student_app/login.cfm" addtoken="no">
         </cfif>
 
-        <cfquery name="authenticate" datasource="#application.dsn#">
+        <cfquery name="authenticate" datasource="#APPLICATION.dsn#">
             SELECT *
             FROM smg_users
             where username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
@@ -104,11 +103,11 @@
         </cfif>
         
 		<!--- get all of the user's access records in the SMG companies. --->
-        <cfquery name="get_access" datasource="#application.dsn#">
+        <cfquery name="get_access" datasource="#APPLICATION.dsn#">
             SELECT user_access_rights.*
             FROM user_access_rights
             INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-            WHERE smg_companies.website = '#client.company_submitting#'
+            WHERE smg_companies.website = '#CLIENT.company_submitting#'
             AND user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userID#">
             ORDER BY user_access_rights.usertype
         </cfquery>
@@ -132,85 +131,85 @@
             </cfquery>
         </cfif>
 
-		<cfset client.userID = authenticate.userID>
-		<cfset client.name = '#authenticate.firstname# #authenticate.lastname#'>
-        <cfset client.email = authenticate.email>
+		<cfset CLIENT.userID = authenticate.userID>
+		<cfset CLIENT.name = '#authenticate.firstname# #authenticate.lastname#'>
+        <cfset CLIENT.email = authenticate.email>
         
         <!--- these are currently used only in the header & menu. --->
-		<cfset client.levels = get_access.recordcount>  <!--- the number of access records the user has. --->
-		<cfset client.compliance = authenticate.compliance>
-		<cfset client.invoice_access = authenticate.invoice_access>
+		<cfset CLIENT.levels = get_access.recordcount>  <!--- the number of access records the user has. --->
+		<cfset CLIENT.compliance = authenticate.compliance>
+		<cfset CLIENT.invoice_access = authenticate.invoice_access>
         
         <!--- these are set from the default access record.  These are also set in forms/change_access_level.cfm. --->
-        <cfset client.companyid = get_default_access.companyid>
-        <cfset client.usertype = get_default_access.usertype>
-        <cfset client.regions = get_default_access.regionid>  <!--- these are both the same, but phase out client.regions --->
-        <cfset client.regionid = get_default_access.regionid>
+        <cfset CLIENT.companyid = get_default_access.companyid>
+        <cfset CLIENT.usertype = get_default_access.usertype>
+        <cfset CLIENT.regions = get_default_access.regionid>  <!--- these are both the same, but phase out CLIENT.regions --->
+        <cfset CLIENT.regionid = get_default_access.regionid>
         
         <!--- companyname, programmanager and accesslevelname are used in header.cfm.  These are also set in forms/change_access_level.cfm. --->
-        <cfquery name="get_company" datasource="#application.dsn#">
+        <cfquery name="get_company" datasource="#APPLICATION.dsn#">
             SELECT companyname, team_id, support_email, url, companyshort_nocolor
             FROM smg_companies
-            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
         </cfquery>
-        <cfset client.companyname = get_company.companyname>
-        <cfset client.companyshort = get_company.companyshort_nocolor>
-	    <cfset client.programmanager = get_company.team_id>
-        <cfset client.support_email = get_company.support_email> 
-        <cfset client.site_url = get_company.url>
+        <cfset CLIENT.companyname = get_company.companyname>
+        <cfset CLIENT.companyshort = get_company.companyshort_nocolor>
+	    <cfset CLIENT.programmanager = get_company.team_id>
+        <cfset CLIENT.support_email = get_company.support_email> 
+        <cfset CLIENT.site_url = get_company.url>
         
-        <cfquery name="get_usertype" datasource="#application.dsn#">
+        <cfquery name="get_usertype" datasource="#APPLICATION.dsn#">
             SELECT usertype
             FROM smg_usertype
-            WHERE usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
+            WHERE usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
         </cfquery>
-        <cfset client.accesslevelname = get_usertype.usertype>
-        <cfif client.regionid NEQ ''>
-            <cfquery name="get_region" datasource="#application.dsn#">
+        <cfset CLIENT.accesslevelname = get_usertype.usertype>
+        <cfif CLIENT.regionid NEQ ''>
+            <cfquery name="get_region" datasource="#APPLICATION.dsn#">
                 SELECT regionname
                 FROM smg_regions
-                WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+                WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
             </cfquery>
-            <cfset client.accesslevelname = "#client.accesslevelname# in #get_region.regionname#">
+            <cfset CLIENT.accesslevelname = "#CLIENT.accesslevelname# in #get_region.regionname#">
         </cfif>
 
         <cfquery name="get_companies" dbtype="query">
             SELECT DISTINCT companyid
             FROM get_access
         </cfquery>
-		<cfset client.companies = valueList(get_companies.companyid)>
+		<cfset CLIENT.companies = valueList(get_companies.companyid)>
 
-		<cfif client.usertype EQ 8>
-            <cfset client.parentcompany = authenticate.userID>
-        <cfelseif client.usertype GTE 9>
-            <cfset client.parentcompany = authenticate.intrepid>
+		<cfif CLIENT.usertype EQ 8>
+            <cfset CLIENT.parentcompany = authenticate.userID>
+        <cfelseif CLIENT.usertype GTE 9>
+            <cfset CLIENT.parentcompany = authenticate.intrepid>
         </cfif>
         
-        <cfset client.lastlogin = authenticate.lastlogin>
+        <cfset CLIENT.lastlogin = authenticate.lastlogin>
 
 		<!---- Update Last Login ---->
-        <cfquery datasource="#application.dsn#">
+        <cfquery datasource="#APPLICATION.dsn#">
         	UPDATE smg_users
             SET lastlogin = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
         	WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userID#">
         </cfquery>
         
-        <!--- this is used only in application.cfm to logout after 24 hours. --->
-        <cfset client.thislogin = dateFormat(now(), 'mm/dd/yyyy')>
+        <!--- this is used only in APPLICATION.cfm to logout after 24 hours. --->
+        <cfset CLIENT.thislogin = dateFormat(now(), 'mm/dd/yyyy')>
 
 		<!--- this usertype doesn't need to verify information. --->
-        <cfif client.usertype NEQ 11>
+        <cfif CLIENT.usertype NEQ 11>
         	<!--- Verify user info. New user will have null, or it's been 90 days. --->
 			<cfif authenticate.last_verification EQ '' OR dateDiff("d", authenticate.last_verification, now()) GTE 90>
-            	<!--- this is checked in application.cfm and redirected if set. --->
-      	  		<cfset client.verify_info = 1>
+            	<!--- this is checked in APPLICATION.cfm and redirected if set. --->
+      	  		<cfset CLIENT.verify_info = 1>
             </cfif>
 		</cfif>
 
         <!--- change password --->
         <cfif authenticate.changepass EQ 1>
-			<!--- this is checked in application.cfm and redirected if set. --->
-            <cfset client.change_password = 1>      
+			<!--- this is checked in APPLICATION.cfm and redirected if set. --->
+            <cfset CLIENT.change_password = 1>      
 		</cfif>
 
 		<cflocation url="/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
@@ -231,11 +230,11 @@
         <cfset var get_company_usertypes = ''>
         <cfset var usertype_list = ''>
 
-        <cfquery name="get_usertypes" datasource="#application.dsn#">
+        <cfquery name="get_usertypes" datasource="#APPLICATION.dsn#">
             SELECT user_access_rights.companyid, user_access_rights.usertype
             FROM user_access_rights
             INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-            WHERE smg_companies.website = '#client.company_submitting#'
+            WHERE smg_companies.website = '#CLIENT.company_submitting#'
             AND user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#userID#">
             ORDER BY user_access_rights.usertype
         </cfquery>
@@ -247,7 +246,7 @@
             <cfquery name="get_company_usertypes" dbtype="query">
                 SELECT usertype
                 FROM get_usertypes
-                WHERE (companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> OR usertype = 8)
+                WHERE (companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> OR usertype = 8)
             </cfquery>
             <cfset usertype_list = valueList(get_company_usertypes.usertype)>
             <!--- if any are international, set to that. --->

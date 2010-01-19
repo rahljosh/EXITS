@@ -576,7 +576,9 @@
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width="26" background="pics/header_background.gif"><img src="pics/usa.gif"></td>
                         <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Company & Regional Access</h2></td>
-                        <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/access_rights_form&userid=#rep_info.userid#">Add</a></td>
+                        <cfif CLIENT.usertype LTE 5>
+	                        <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/access_rights_form&userid=#rep_info.userid#">Add</a></td>
+                        </cfif>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
                 </table>
@@ -594,7 +596,7 @@
     
                             <!----Regional Information---->
                             <cfquery name="region_company_access" datasource="#application.dsn#">
-                                SELECT uar.id, uar.regionid, uar.usertype, uar.changedate, uar.default_access, r.regionname, c.companyshort, ut.usertype AS usertypename,
+                                SELECT uar.id, uar.regionid, uar.usertype, uar.changedate, uar.default_access, r.regionname, c.companyshort, c.companyID, ut.usertype AS usertypename,
                                     adv.userid AS advisorid, adv.firstname, adv.lastname
                                 FROM user_access_rights uar
                                 LEFT JOIN smg_regions r ON uar.regionid = r.regionid
@@ -611,6 +613,7 @@
                                 FROM region_company_access
                                 WHERE default_access = 1
                             </cfquery>
+                            
                             <cfif check_default.recordCount EQ 0>
                                 <font color="##FF0000">You have no default selected.  Please select a default by clicking the "No" in the "Default" column.</font>
                             </cfif>
@@ -619,9 +622,8 @@
                                 <!----scrolling table with region information---->
                                 <table width="100%" cellspacing="0">
                                     <tr>
-                                        <cfif CLIENT.usertype LTE 4>
-                                            <td>&nbsp;</td>
-                                            <!---<td>&nbsp;</td>--->
+                                        <cfif CLIENT.usertype LTE 5>
+                                            <td><u>Actions</u></td>
                                         </cfif>
                                         <td><u>Default</u></td>
                                         <td><u>P.M.</u></td>
@@ -637,12 +639,16 @@
                                         <cfloop query="region_company_access">
                                        
                                             <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffff") ,DE("ffffe6") )#">
-                                            <cfif CLIENT.usertype LTE 4>
-                                                <td>
+                                            <cfif CLIENT.usertype LTE 5>
+                                                <td align="center">
                                                     <!--- don't allow delete if user has only one record or for the default record. --->
-                                                    <cfif not (region_company_access.recordcount EQ 1 OR default_access)>
-                                                        <a href="index.cfm?curdoc=user_info&action=delete_uar&id=#id#&userid=#rep_info.userid#" onClick="return confirm('Are you sure you want to delete this Company & Regional Access record?')"><img src="pics/deletex.gif" border="0" alt="Delete"></a>
+                                                    <cfif CLIENT.usertype LTE 4 AND ( not (region_company_access.recordcount EQ 1 OR default_access))>
+                                                        <a href="index.cfm?curdoc=user_info&action=delete_uar&id=#id#&userid=#rep_info.userid#" onClick="return confirm('Are you sure you want to delete this Company & Regional Access record?')">
+                                                        	<img src="pics/deletex.gif" border="0" alt="Delete">
+                                                        </a>                                                    
+                                                    	 -
                                                     </cfif>
+                                                    <a href="index.cfm?curdoc=forms/access_rights_form&id=#id#&companyID=#companyID#&userid=#rep_info.userid#" title="Edit Access Level">Edit</a>
                                                 </td> 
                                                 <!---<td><a href="index.cfm?curdoc=forms/access_rights_form&id=#id#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>--->
                                             </cfif>
