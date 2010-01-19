@@ -13,7 +13,7 @@
 <!--- Kill extra output --->
 <cfsilent>
 	
-    <cfsetting requesttimeout="9999">
+    <cfsetting requesttimeout="99999">
     
     <!--- Param variables --->
     <cfparam name="FORM.programID" default="0">

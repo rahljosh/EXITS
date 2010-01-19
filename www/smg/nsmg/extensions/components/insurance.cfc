@@ -27,6 +27,7 @@
 	<cffunction name="getInsurancePolicies" access="public" returntype="query" output="false" hint="Returns Insurance Policies">
         <cfargument name="insuTypeID" default="0" hint="InsuTypeID is not required">
         <cfargument name="provider" default="" hint="Provider Name eg. Global">
+        <cfargument name="isActive" default="1">
         
         <cfquery name="qGetInsurancePolicies" datasource="#APPLICATION.dsn#">
             SELECT 
@@ -41,7 +42,7 @@
             FROM 
             	smg_insurance_type 
             WHERE
-            	1 = 1
+            	active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
             
             <cfif VAL(ARGUMENTS.insuTypeID)>
             	AND
@@ -66,11 +67,11 @@
         <cfquery name="qGetInsuranceHistory" datasource="#APPLICATION.dsn#">>
             SELECT 
                 s.insurance, 
-                COUNT(s.studentid) AS total
+                COUNT(s.studentID) AS total
             FROM 
                 smg_students s
             WHERE 
-                s.insurance IS NOT <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
+                s.insurance IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
             
             <cfif VAL(ARGUMENTS.companyID) AND ARGUMENTS.companyID LTE 4>
                 AND
@@ -111,7 +112,7 @@
             FROM
                 smg_flight_info fi
             INNER JOIN
-                smg_students s ON fi.studentid = s.studentid
+                smg_students s ON fi.studentID = s.studentID
             INNER JOIN 
                 smg_users u ON u.userid = s.intrep
             INNER JOIN
@@ -125,28 +126,31 @@
             AND 
                 fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
             AND 
-                fi.studentid NOT IN 
+                fi.studentID NOT IN 
                     (
                         SELECT 
-                            studentID 
+                            ib.studentID 
                         FROM 
-                            smg_insurance_batch2 
+                            smg_insurance_batch ib
+                        INNER JOIN
+                        	smg_students s ON s.studentID = ib.studentID
                         WHERE 
-                            studentID = fi.studentID 
+                            ib.studentID = fi.studentID 
                         AND 
-                            type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N"> 
+                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                        AND
+                        	s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)    
+                        <!---
+                        AND	
+                        	ib.date > <cfqueryparam cfsqltype="cf_sql_date" value="2009-12-01">
+						--->
                     )
             AND
                 u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
             AND 
-                ( 
-                    <cfloop list="#FORM.programID#" index="pID">
-                        s.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#pID#">
-                        <cfif pID NEQ ListLast(FORM.programID)> OR </cfif>
-                    </cfloop> 
-                )
+           		s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)     
             GROUP BY 
-                fi.studentid
+                fi.studentID
             ORDER BY 
                 u.businessname, 
                 s.firstname
@@ -165,7 +169,7 @@
               
         <cfquery datasource="#APPLICATION.dsn#">
             INSERT INTO 
-                smg_insurance_batch2
+                smg_insurance_batch
             (
                 studentID,
                 date,
