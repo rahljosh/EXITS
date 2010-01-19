@@ -113,21 +113,24 @@
 
 <!---Email to Local Person---->
 <!----Email To be Send. nsmg cfc emal cfc---->
-    
-    		<cfsavecontent variable="email_message">
-           			
-			Dear #get_region_info.firstname# #get_region_info.lastname#,<br><br>This e-mail is just to let you know a new document has been uploaded into #get_student_info.firstname# #get_student_info.familylastname#'s (###get_student_info.studentid#) virtual folder by #get_user.businessname# #get_user.firstname# #get_user.lastname#.
-			The document has been recorded in the category #get_category.category# <cfif form.other_category NEQ ''>&nbsp; - &nbsp; #form.other_category#</cfif>.<br><br>
-		Please login to <a href="http://#exits_url#/">#exits_url#</a> and click on Students from the menu, select this student from the list, and then select the Virtual Folder from the right menu in the student profile.  <br><br>
-	
-		 Sincerely,<br>
-		 EXITS - #client.companyname#<br><br>
-				
-                <!----
-				<p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
-				---->
-			</cfsavecontent>
-			
+    		
+            <cfoutput>
+                <cfsavecontent variable="email_message">
+                        
+                    Dear #get_region_info.firstname# #get_region_info.lastname#,<br><br>T
+                    his e-mail is just to let you know a new document has been uploaded into #get_student_info.firstname# #get_student_info.familylastname#'s (###get_student_info.studentid#) virtual folder by #get_user.businessname# #get_user.firstname# #get_user.lastname#.
+                    The document has been recorded in the category #get_category.category# <cfif form.other_category NEQ ''>&nbsp; - &nbsp; #form.other_category#</cfif>.<br><br>
+                    Please login to <a href="http://#exits_url#/">#exits_url#</a> and click on Students from the menu, select this student from the list, and then select the Virtual Folder from the right menu in the student profile.  <br><br>
+                    
+                    Sincerely,<br>
+                    EXITS - #client.companyname#<br><br>
+                    
+                    <!----
+                    <p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
+                    ---->
+                </cfsavecontent>
+            </cfoutput>
+            
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#emailrecipient#">
