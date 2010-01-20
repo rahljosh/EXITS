@@ -389,7 +389,7 @@
             </cfquery> 
             
             <cfquery name="getCurrStudInfo" datasource="MySQL">
-            SELECT ss.studentId, ss.intrep AS agentid, ss.programid, ss.firstname, ss.familylastname AS lastname, ss.active AS stud_active, ss.date_host_fam_approved, ss.host_fam_approved, ss.sevis_fee_paid_date, sp.programname, sh.state AS hostState, sr.regionname
+            SELECT ss.studentId, ss.intrep AS agentid, ss.programid, ss.firstname, ss.familylastname AS lastname, ss.active AS stud_active, ss.date_host_fam_approved, ss.host_fam_approved, ss.sevis_fee_paid_date, ss.companyid, sp.programname, sh.state AS hostState, sr.regionname
             FROM smg_students ss
             INNER JOIN smg_programs sp ON sp.programid = ss.programid
             LEFT JOIN smg_hosts sh ON ss.hostid = sh.hostid
@@ -434,7 +434,7 @@
             </cfquery>          
     
             <cfquery name="getCurrStudInfo" datasource="MySQL">
-            SELECT e.candidateid AS studentid, e.intrep AS agentid, e.programid, e.firstname, e.lastname, e.active AS stud_active, sp.programname
+            SELECT e.candidateid AS studentid, e.intrep AS agentid, e.programid, e.firstname, e.lastname, e.active AS stud_active, e.companyid, sp.programname
             FROM extra_candidates e
             INNER JOIN smg_programs sp ON sp.programid = e.programid
             WHERE e.candidateid =#student#
@@ -566,7 +566,7 @@
         <cfinput type="hidden" name="stuid" value="#student#">
         <cfinput type="hidden" name="programid#student#" value="#getCurrStudInfo.programid#">
         <cfinput type="hidden" name="programname#student#" value="#getCurrStudInfo.programname#">
-        <cfinput type="hidden" name="companyid#student#" value="#client.companyid#">
+        <cfinput type="hidden" name="companyid#student#" value="#getCurrStudInfo.companyid#">
         
     <cfoutput query="getChargesCancellations">
     	<cfparam name="form.chargeId" default="">
