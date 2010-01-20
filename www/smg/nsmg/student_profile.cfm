@@ -169,11 +169,11 @@ Order by birthdate
 		<cfif #get_student_info.regionguar# is 'yes'><b> - #region_guarantee.regionname# Guaranteed</b></cfif>
 		<cfif #get_student_info.state_guarantee# NEQ 0><b> - #get_state_guarantee.statename# Guaranteed</b></cfif><br>
 		<cfif get_student_info.scholarship is '1'>Participant of Scholarship Program</cfif></td>
-	</div><td><img src="pics/logos/#client.companyid#.gif"  alt="" border="0" align="right"></td></tr>	
+	</div><td><img src="pics/logos/#client.companyid#_small.gif" border="0" align="right"></td></tr>	
 </table>
 
 <table  width=650 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
-	<hr width=80% align="center">
+	<hr width=100% align="center">
 	<td bgcolor="F3F3F3" valign="top" width=133><div align="left">
 		<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
 		<cfdirectory directory="#nsmg_directory#" name="file" filter="#url.studentid#.*">
@@ -186,7 +186,7 @@ Order by birthdate
 	<!--- <td bgcolor="F3F3F3" valign="top" width=133><div align="left"><img <cfif #get_student_info.old_stuid# is 0>src="http://www.student-management.com/pics/#client.studentid#.jpg"<cfelse> src="http://www.student-management.com/pics/web-students/#client.studentid#.jpg"</cfif> width=133><br> --->
 	</div></td>
 	<td valign="top" width=504>
-	<span class="application_section_header">STUDENT PROFILE</span><br><br>
+	<span class="application_section_header">STUDENT PROFILE</span><br>
 	
 	<table cellpadding=0 cellspacing=0 border=0 style="font-size:13px">
 		<tr><td width="50"><font face="" color="Gray">Name: </font><b></td><td>#get_student_info.firstname# #get_student_info.middlename# #get_student_info.familylastname# (#get_student_info.studentid#)</b></td></tr>	
