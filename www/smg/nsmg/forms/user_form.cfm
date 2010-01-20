@@ -111,7 +111,18 @@
                     	drivers_license, dob, sex, ssn, phone, phone_ext, work_phone, work_ext, cell_phone, fax, email, email2, skype_id,
                         username, password, changepass, bypass_checklist, invoice_access, date_contract_received, active, datecancelled,
 						<cfif form.usertype EQ 8>
-							usebilling, billing_company, billing_contact, billing_address, billing_address2, billing_city, billing_country, billing_zip, billing_phone, billing_fax, billing_email,
+							usertype, 
+                            usebilling, 
+                            billing_company, 
+                            billing_contact, 
+                            billing_address, 
+                            billing_address2, 
+                            billing_city, 
+                            billing_country, 
+                            billing_zip, 
+                            billing_phone, 
+                            billing_fax, 
+                            billing_email,
                         </cfif>
                         comments)
                     VALUES (
@@ -150,6 +161,7 @@
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#form.active#">,
                     <cfqueryparam cfsqltype="cf_sql_date" value="#form.datecancelled#" null="#yesNoFormat(trim(form.datecancelled) EQ '')#">,
                     <cfif form.usertype EQ 8>
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#form.usertype#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#form.usebilling#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.billing_company#" null="#yesNoFormat(trim(form.billing_company) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.billing_contact#" null="#yesNoFormat(trim(form.billing_contact) EQ '')#">,
