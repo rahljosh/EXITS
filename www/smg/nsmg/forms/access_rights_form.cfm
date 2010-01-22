@@ -449,9 +449,10 @@
                                             FROM 
                                                 smg_usertype
                                             <!--- don't include international since those are added automatically when adding a new user. --->
+                                            <!--- include international rep --->
                                             WHERE 
-                                                usertypeid IN (1,2,3,4,5,6,7,9)
-                                            <cfif not CLIENT.usertype LTE 4>
+                                                usertypeid IN (1,2,3,4,5,6,7,8,9)
+                                            <cfif CLIENT.usertype GT 4>
                                             AND 
                                                 usertypeid > <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
                                             </cfif>

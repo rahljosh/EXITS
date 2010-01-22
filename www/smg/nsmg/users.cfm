@@ -39,11 +39,11 @@
             </cfquery>
             Program Manager - Region<br />
 			<select name="company_region">
-                <option value="">All</option>
+                <option value="" selected="selected">All</option>
             	<cfoutput query="list_regions" group="companyid">
-                  <option value="company,#companyid#" <cfif company_region EQ 'company,#companyid#'>selected</cfif>>#team_id# (All Regions)</option>
+                  <option value="company,#companyid#" >#team_id# (All Regions)</option> <!--- <cfif company_region EQ 'company,#companyid#'>selected</cfif> --->
                     <cfoutput>
-                   		<option value="region,#regionid#" <cfif company_region EQ 'region,#regionid#'>selected</cfif>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#team_id# - #regionname#</option>
+                   		<option value="region,#regionid#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#team_id# - #regionname#</option> <!--- <cfif company_region EQ 'region,#regionid#'>selected</cfif> --->
                     </cfoutput>
                 </cfoutput>
 			</select>
