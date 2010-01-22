@@ -112,19 +112,33 @@
             FROM
                 smg_flight_info fi
             INNER JOIN
-                smg_students s ON fi.studentID = s.studentID
+                smg_students s ON fi.studentID = s.studentID 
+					AND
+                    	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                	AND 
+                    	s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
             INNER JOIN 
-                smg_users u ON u.userid = s.intrep
+                smg_users u ON u.userid = s.intrep 
+                    AND 
+                        u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
             INNER JOIN
                 smg_insurance_type it ON it.insutypeid = u.insurance_typeid
             INNER JOIN 
                 smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
             INNER JOIN  
                 smg_programs p ON p.programID = s.programID
+
+			LEFT OUTER JOIN 
+            	smg_insurance_batch ib ON ib.studentID = fi.studentID 
+                    AND 
+                        ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                
             WHERE 
-                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-            AND 
                 fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+            AND
+            	ib.studentID IS NULL
+                
+            <!---
             AND 
                 fi.studentID NOT IN 
                     (
@@ -145,10 +159,8 @@
                         	ib.date > <cfqueryparam cfsqltype="cf_sql_date" value="2009-12-01">
 						--->
                     )
-            AND
-                u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
-            AND 
-           		s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)     
+			--->
+            					
             GROUP BY 
                 fi.studentID
             ORDER BY 
