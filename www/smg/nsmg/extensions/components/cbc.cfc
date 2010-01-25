@@ -1121,7 +1121,7 @@
             <cfmail 
             	from="#qGetCompany.support_email#" 
                 to="#qGetCompany.gis_email#"
-                subject="GIS Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# (###ARGUMENTS.hostID#)" 
+                subject="Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# (###ARGUMENTS.hostID#)" 
                 failto="#qGetCompany.support_email#"
                 type="html">
                 
