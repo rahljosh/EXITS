@@ -256,7 +256,8 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                 <tr valign="top">
                     <td>
                         <a href="index.cfm?curdoc=progress_reports">Progress Reports</a><br>
-                        <A href="index.cfm?curdoc=pending_hosts">View Pending Placements</a>
+                        <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
+                        <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a>
                     </td>
          			<cfif client.usertype lte 4>
 						<td>

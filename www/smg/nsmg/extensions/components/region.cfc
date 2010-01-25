@@ -25,35 +25,44 @@
 
 	
 	<cffunction name="getRegions" access="public" returntype="query" output="false" hint="Gets a list of regions, if regionID is passed gets a region by ID">
-    	<cfargument name="regionID" default="0" hint="regionID is not required">
+    	<cfargument name="regionID" default="0" hint="regionID is not required">        
         <cfargument name="companyID" default="0" hint="companyID is not required">
+        <cfargument name="includeGuaranteed" default="0" hint="Set to 1 to include regional guaranteed">
               
         <cfquery 
 			name="qGetRegions" 
 			datasource="#APPLICATION.dsn#">
                 SELECT
-					regionID,
-                    active,
-                    regionName,
-                    subOfRegion,
-                    regionFacilitator,
-                    company,
-                    masterRegion,
-                    regional_guarantee
+					r.regionID,
+                    r.active,
+                    r.regionName,
+                    r.subOfRegion,
+                    r.regionFacilitator,
+                    r.company,
+                    r.masterRegion,
+                    r.regional_guarantee
                 FROM 
-                    smg_regions
+                    smg_regions r
                 WHERE
                 	1 = 1
+				
 				<cfif VAL(ARGUMENTS.regionID)>
                 	AND
-                    	regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                    	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 </cfif>    
+				
 				<cfif VAL(ARGUMENTS.companyID)>
                 	AND
-                    	company = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                    	r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 </cfif>    
+
+				<cfif NOT VAL(ARGUMENTS.includeGuaranteed)>
+                	AND
+                    	r.subOfRegion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                </cfif>    
+                
                 ORDER BY 
-                    regionName
+                    r.regionName
 		</cfquery>
 		   
 		<cfreturn qGetRegions>
@@ -98,7 +107,7 @@
                     SELECT 
                     	uar.regionID, 
                         uar.usertype,
-                        r.regionname                         
+                        r.regionname                        
                     FROM 
                     	user_access_rights uar
                     INNER JOIN 
@@ -112,6 +121,8 @@
                         	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
                         OR 
                         	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
+                        OR 
+                        	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
                         )
                     ORDER BY 
                     	default_region DESC, 
