@@ -604,7 +604,7 @@
     	<cfargument name="raUserID" default="0" hint="raUserID is not required">
     	<cfargument name="rdUserID" default="0" hint="rdUserID is not required">
     	<cfargument name="nyUserID" default="0" hint="nyUserID is not required">                   
-
+		
             <cfquery 
             	name="checkProject"
                 datasource="#APPLICATION.dsn#">
@@ -676,6 +676,7 @@
         <cfargument name="activity" hint="activity is required">
         <cfargument name="hours" hint="hours is required">
         <cfargument name="dateCompleted" hint="date completed is required">
+        <cfargument name="userType" hint="UserType is required">
 
 		<cfscript>
 			// Check if there is a project Help
@@ -702,19 +703,63 @@
                     UPDATE
                         smg_project_help
                     SET
-                        sr_date_submitted = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,                       
-    
-                        ra_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
-                        ra_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
-                        ra_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
-    
-                        rd_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
-                        rd_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
-                        rd_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                        <cfswitch expression="#ARGUMENTS.userType#">
+                        	
+                            <!--- NY Office --->
+                        	<cfcase value="1,2,3,4">
+                                ny_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ny_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ny_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                            </cfcase>
+                            
+                            <!--- Regional Manager --->
+                        	<cfcase value="5">
+                                rd_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                rd_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                rd_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                                
+                                ny_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ny_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ny_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                            </cfcase>
+                           
+                            <!--- Regional Advisor --->
+                        	<cfcase value="6">
+                                ra_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ra_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ra_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+            
+                                rd_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                rd_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                rd_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                                
+                                ny_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ny_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ny_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                            </cfcase>
+
+							<!--- Area Rep --->
+                        	<cfcase value="7">
+                                sr_date_submitted = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,                       
+            
+                                ra_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ra_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ra_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+            
+                                rd_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                rd_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                rd_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                                
+                                ny_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ny_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                ny_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                            </cfcase>
                         
-                        ny_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
-                        ny_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
-                        ny_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                        </cfswitch>
+						
+						<cfif ARGUMENTS.userType EQ 4>
+                        
+                        </cfif>
                         
                         date_updated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">                    	
                         
