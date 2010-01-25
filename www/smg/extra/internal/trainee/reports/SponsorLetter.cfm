@@ -58,10 +58,9 @@
   <br>
   Respectfully Submitted,<br />
   <br />
-  <img src="../../pics/TanyaSig.gif" /><br />
-  <br /></p>
+</p>
   
-<p class="style1">Ms. Tatsyana Bykava, Program Manager<br />
+<p class="style1">Sergei Chernyshov, Program Manager<br />
 International Student Exchange<br />
 119 Cooper Street<br />
 Babylon, NY  11702<br />

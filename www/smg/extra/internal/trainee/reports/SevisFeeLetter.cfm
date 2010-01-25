@@ -45,10 +45,7 @@
   This fee can be  paid by accessing form I-901 at the following web site:<br>
   <br>
   <b>https://www.fmjfee.com/index.jhtml</b><br>
-  <br>
-  For a PDF version of form I-901 and the instructions for completing this form,  please visit:<br>
-  <br>
-  <b>http://www.ice.gov/graphics/sevis/pdf/I-901.pdf</b><br>
+ 
   <br>
   The SEVIS fee must be paid before applying for the J-1 visa at the U.S. Embassy  or Consulate.</p>
 <p class="style1">You  will need to bring the electronic or original receipt with you for your visa  interview.<br>
@@ -115,6 +112,6 @@
 <br />
 <p class="style1">Please do not hesitate to contact  ISE Training Program staff should you have any questions.</p>
 <p class="style1">Sincerely,</p>
-<p class="style1">Tatsyana Bykava (tanya@iseusa.com) </p>
+<p class="style1">Sergei Chernyshov (sergei@iseusa.com) </p>
 </cfoutput>
 </cfdocument>
