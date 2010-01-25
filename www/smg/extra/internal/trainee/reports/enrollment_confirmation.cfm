@@ -52,12 +52,13 @@ WHERE uniqueid = '#url.uniqueid#'
     <br>
     RE: #firstname# #middlename# #lastname# <!--- #programname#  18 month Training program---></p>
   <br>
-    <p class="style1" align="justify">#DateFormat(Now(), 'DDDD, MMMM D, YYYY')#. <br />
+    #DateFormat(Now(), 'DDDD, MMMM D, YYYY')#. <br />
       <br />
       <br />
     </p>
    
-     <div align="justify"><span class="style1">Please accept this letter as official notification verifying that #firstname# #middlename# #lastname# is a participant on the International Student Exchange Trainee Program. International Student Exchange has been designated by the Education &amp; Cultural Affairs division of the Department of State to issue Form DS-2019 to all qualified applicants for the Trainee category, occupational field of Management, Business, Commerce and Finance. We have reviewed the application materials for #firstname# #middlename# #lastname# and verified that the individual is well qualified for the Trainee program.<br />
+     <div align="justify"><span class="style1">Please accept this letter as official notification verifying that #firstname# #middlename# #lastname# is a participant on the International Student Exchange Trainee Program. International Student Exchange has been designated by the Education &amp; Cultural Affairs division of the Department of State to issue Form DS-2019 to all qualified applicants for the Trainee category, occupational field of <cfif #subfield# EQ ''> #fieldstudy#
+                    <cfelse> #subfield#</cfif>. We have reviewed the application materials for #firstname# #middlename# #lastname# and verified that the individual is well qualified for the Trainee program.<br />
                   <br />
                   #firstname# #middlename# #lastname# is a citizen of #countryname# and has been accepted into the ISE Trainee Program. Form DS-2019 number #ds2019# has been issued for the above-mentioned student to train in the field of
               <cfif #subfield# EQ ''>
@@ -79,8 +80,9 @@ WHERE uniqueid = '#url.uniqueid#'
       <br />
       <br />
       <br>
-  Jordan Nagler<br>
-  Executive Director<br>
+  Sergei Chernyshov<br>
+Program Manager
+<br>
   <p align="center" class="style1">    www.isetraining.com</p>    </td>
   </tr>
 </table>
