@@ -119,7 +119,7 @@
 		<cfset ReportID = '#responseXML.bgc.XmlAttributes.orderId#'>
 	</cfif>
 
-	<cfmail from="support@student-management.com" to="marcus@student-management.com" subject="GIS Search for " failto="support@student-management.com" type="html">
+	<cfmail from="support@student-management.com" to="marcus@student-management.com" subject="Background Checks Search for " failto="support@student-management.com" type="html">
 		<table width="670" align="center">
 			<tr><td colspan="2">&nbsp;</td></tr>
 			<tr bgcolor="##CCCCCC"><th colspan="2">* Search Results for : USER NAME + ID + COMPANY *</th></tr>
