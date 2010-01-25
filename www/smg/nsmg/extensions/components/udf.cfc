@@ -61,4 +61,22 @@
 	</cffunction>
 
 
+    <cffunction name="displayFileSize" access="public" output="false" returntype="string">
+        <cfargument name="size" default="0" required="yes">
+        
+		<cfif (NOT IsNumeric(arguments.size)) OR (arguments.size LTE 0)>
+            <cfset outText = "Size Unknown">
+        <cfelseif arguments.size LT 1024>
+			<cfset outText = "#arguments.size# bytes">
+        <cfelseif arguments.size LT 1048576>
+            <cfset outText = "#NumberFormat(arguments.size/1024, "_")# Kb">
+        <cfelseif arguments.size LT 1073741824>
+            <cfset outText = "#DecimalFormat(arguments.size/1048576)# Mb">
+        <cfelse>
+            <cfset outText = "#DecimalFormat(arguments.size/1073741824)# Gb">
+        </cfif>
+        
+        <cfreturn outText>
+    </cffunction>
+
 </cfcomponent>

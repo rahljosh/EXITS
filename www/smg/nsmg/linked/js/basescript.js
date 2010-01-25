@@ -32,3 +32,42 @@ function OpenWindow(url) {
 		newwindow.focus()
 	}
 }
+
+// Display DIV
+function displayDiv(divID) {
+	if($("#" + divID).css("display") == "none"){
+		$("#" + divID).fadeIn("slow");
+	} else {
+		$("#" + divID).fadeOut("slow");	
+	}
+}	
+
+// Hide Div with the same class name and display selected div
+function hideClass(className) {
+	// Looping through a set of elements with the same class name
+	$("." + className).each(function(i) {
+									
+		if($(this).css("display") != "none"){
+			$(this).hide();
+			//$(this).fadeOut("slow");	
+		}
+		
+	});
+}	
+
+// Display Classes
+function displayClass(className) {
+	// Looping through a set of elements with the same class name
+	$("." + className).each(function(i) {
+									
+		if($(this).css("display") == "none"){
+			$(this).fadeIn("slow");
+		} else {
+			$(this).fadeOut("slow");	
+		}
+		
+	});
+}	
+
+
+
