@@ -138,29 +138,6 @@
             AND
             	ib.studentID IS NULL
                 
-            <!---
-            AND 
-                fi.studentID NOT IN 
-                    (
-                        SELECT 
-                            ib.studentID 
-                        FROM 
-                            smg_insurance_batch ib
-                        INNER JOIN
-                        	smg_students s ON s.studentID = ib.studentID
-                        WHERE 
-                            ib.studentID = fi.studentID 
-                        AND 
-                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
-                        AND
-                        	s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)    
-                        <!---
-                        AND	
-                        	ib.date > <cfqueryparam cfsqltype="cf_sql_date" value="2009-12-01">
-						--->
-                    )
-			--->
-            					
             GROUP BY 
                 fi.studentID
             ORDER BY 
@@ -169,6 +146,65 @@
         </cfquery>
     
 		<cfreturn qGetStudentsToInsure>
+	</cffunction>
+
+
+
+	<cffunction name="getStudentsToInsureNoFlight" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
+        <cfargument name="programID" hint="List of program IDs. Required.">
+        <cfargument name="PolicyID" hint="Policy ID required">
+        <cfargument name="startDate" default="" hint="Start Date is not required">
+
+		<cfscript>			
+			// Set up date in the same format to keep consistency with the other date fields {ts 'YYYY-MM-DD HH:MM:SS'} 
+			if ( IsDate(ARGUMENTS.startDate) ) {
+				ARGUMENTS.startDate = CreateODBCDateTime(ARGUMENTS.startDate);
+			} else {
+				ARGUMENTS.startDate = CreateODBCDateTime(now());		
+			}
+		</cfscript>
+
+        <cfquery name="qGetStudentsToInsureNoFlight" datasource="#APPLICATION.dsn#">
+            SELECT DISTINCT
+                s.studentID, 
+                s.firstname, 
+                s.familyLastName, 
+                s.dob, 
+                "#ARGUMENTS.startDate#" as dep_date,                
+                it.type,  
+                ic.policycode, 
+                p.startDate,
+                p.endDate,
+                p.insurance_startdate, 
+                p.insurance_enddate
+           	FROM
+           		smg_students s  
+            INNER JOIN 
+                smg_users u ON u.userid = s.intrep 
+                    AND 
+                        u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
+            INNER JOIN
+                smg_insurance_type it ON it.insutypeid = u.insurance_typeid
+            INNER JOIN 
+                smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
+            INNER JOIN  
+                smg_programs p ON p.programID = s.programID
+			LEFT OUTER JOIN 
+            	smg_insurance_batch ib ON ib.studentID = s.studentID 
+                    AND 
+                        ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+            WHERE 
+                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND 
+                s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)  
+            AND
+            	ib.studentID IS NULL
+            ORDER BY 
+                u.businessname, 
+                s.firstname        
+        </cfquery>
+    
+		<cfreturn qGetStudentsToInsureNoFlight>
 	</cffunction>
 
 
