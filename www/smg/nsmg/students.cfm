@@ -68,7 +68,8 @@
                 SELECT regionid, regionname
                 FROM smg_regions
                 WHERE company = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-                AND subofregion = 0
+                	AND subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    AND active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 ORDER BY regionname
             </cfquery>
             Region<br />

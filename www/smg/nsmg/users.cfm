@@ -33,8 +33,9 @@
                 SELECT smg_regions.regionid, smg_regions.regionname, smg_companies.companyid, smg_companies.team_id
                 FROM smg_regions
                 INNER JOIN smg_companies ON smg_regions.company = smg_companies.companyid
-                WHERE smg_companies.website = '#client.company_submitting#'
-                AND smg_regions.subofregion = '0'
+                WHERE smg_companies.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#client.company_submitting#">
+               		AND smg_regions.subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                	AND active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 ORDER BY smg_companies.companyid, smg_regions.regionname
             </cfquery>
             Program Manager - Region<br />
