@@ -19,7 +19,7 @@
 	<cfelseif url.status EQ 'closed'>
 		AND status = '#url.status#'	
 	</cfif>
-	ORDER BY assign.firstname, priority DESC, date, status
+	ORDER BY status, date DESC
 </cfquery>
 
 <cfquery name="help_desk_user" datasource="MySql">
@@ -30,7 +30,7 @@
 	LEFT JOIN smg_users submit ON smg_help_desk.submitid = submit.userid
 	LEFT JOIN smg_users assign ON smg_help_desk.assignid = assign.userid 
 	WHERE submitid = '#client.userid#'
-	ORDER BY status, date
+	ORDER BY status, date DESC
 </cfquery>
 
 <style type="text/css">
