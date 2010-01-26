@@ -1,127 +1,188 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="stylesheet" href="../upi.css" type="text/css">
-<title>Update Student Info</title>
-</head>
+<!--- Kill Extra Output --->
+<cfsilent>
 
-<body>
+	<!--- Used to Send Emails  --->
+    <cfquery name="qGetCurrentUser" datasource="MySql">
+        SELECT 
+        	userid, 
+            firstname, 
+            lastname, 
+            email
+        FROM 
+        	smg_users
+        WHERE 
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+    </cfquery>
+    
+    <cfquery name="qGetStudentInfo" datasource="MySql">
+        SELECT 
+            s.studentID, 
+            s.uniqueid, 
+            s.jan_app, 
+            s.firstname, 
+            s.familylastname, 
+            s.intRep,
+            stu_prog.assignedID, 
+            stu_prog.hostid, 
+            stu_prog.schoolID, 
+            stu_prog.programID, 
+            stu_prog.school_acceptance,
+            stu_prog.i20no,
+            stu_prog.i20received,
+            stu_prog.canceldate,
+            u.businessname,
+            sc.schoolname
+        FROM 
+        	smg_students s
+        INNER JOIN 
+        	php_students_in_program stu_prog ON stu_prog.studentID = s.studentID
+        LEFT JOIN 
+        	smg_users u ON u.userid = s.intrep
+        LEFT JOIN 
+        	php_schools sc ON sc.schoolID = stu_prog.schoolID
+        WHERE 
+        	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+		AND 
+        	stu_prog.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.assignedID#">
+        <!--- 
+			AND stu_prog.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> --->
+    </cfquery>
 
-<!----
-<cftry>
----->
-<cfif NOT IsDefined('form.studentid')>
+</cfsilent>
+
+<cfif NOT IsDefined('FORM.studentID')>
 	<cfinclude template="../error_message.cfm">
 	<cfabort>
 </cfif>
 
-<cfquery name="get_student_info" datasource="mysql">
-	SELECT 
-    	s.studentid, 
-        s.uniqueid, 
-        s.jan_app, 
-        s.firstname, 
-        s.familylastname, 
-        s.intRep,
-		stu_prog.assignedid, 
-        stu_prog.hostid, stu_prog.schoolid, 
-        stu_prog.programid, 
-        stu_prog.school_acceptance,
-        stu_prog.i20no,
-        stu_prog.i20received,
-        stu_prog.canceldate,
-		u.businessname,
-		sc.schoolname
-	FROM smg_students s
-	INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
-	LEFT JOIN smg_users u ON u.userid = s.intrep
-	LEFT JOIN php_schools sc ON sc.schoolid = stu_prog.schoolid
-	WHERE s.studentid = '#form.studentid#'
-		AND stu_prog.assignedid = '#form.assignedid#'
-		<!--- AND stu_prog.active = '1' --->
-</cfquery>
-
 <cfquery name="get_non_transfer_student" datasource="MySql">
-	SELECT studentid, companyid
-	FROM smg_students
-	WHERE smg_students.studentid = '#form.studentid#'
+	SELECT 
+    	studentID, 
+        companyid
+	FROM 
+    	smg_students
+	WHERE 
+    	smg_students.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 </cfquery>
 
 <!--- PROGRAM HISTORY --->
-<cfif get_student_info.programid NEQ form.program>
-	<cfquery name="program_history" datasource="mysql">
-		INSERT INTO smg_programhistory
-			(studentid, programid, reason, changedby,  date)
+<cfif qGetStudentInfo.programID NEQ FORM.program>
+	
+    <cfquery datasource="MySql">
+		INSERT INTO 
+       		smg_programhistory
+		(
+        	studentID, 
+            programID, 
+            reason, 
+            changedby,  
+            date
+        )
 		VALUES
-			('#get_student_info.studentid#', '#form.program#', 
-			<cfif get_student_info.programid NEQ '0'>'#form.program_reason#', <cfelse> 'Student was unassigned',</cfif>
-			'#client.userid#', #CreateODBCDateTime(now())# )
+		(
+        	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">, 
+			<cfif VAL(qGetStudentInfo.programID)>
+            	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.program_reason#">,
+            <cfelse> 
+            	<cfqueryparam cfsqltype="cf_sql_varchar" value="Student was unassigned">,
+            </cfif>
+			<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
+            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">
+		)
 	</cfquery>
+    
 </cfif>
 
+
 <!---  CANCELLING A STUDENT --->
-<cfif IsDefined("form.student_cancel")>
+<cfif IsDefined("FORM.student_cancel")>
 	
-	<cfif get_student_info.hostid NEQ 0 AND get_student_info.canceldate EQ ''>
+	<cfif qGetStudentInfo.hostid NEQ 0 AND qGetStudentInfo.canceldate EQ ''>
 		
-        <cfquery name="hostchangereason" datasource="mysql">		
-			INSERT INTO smg_hosthistory	(hostid, studentid, schoolid, dateofchange, changedby, reason)
-			VALUES('#get_student_info.hostid#', '#get_student_info.studentid#', '#get_student_info.schoolid#', 
-				#CreateODBCDateTime(now())#, 
-				'#client.userid#','Student Canceled Program for the following reason: #form.Reason_canceled#')
+        <cfquery datasource="MySql">		
+			INSERT INTO 
+            	smg_hosthistory	
+            (
+            	hostid, 
+                studentID, 
+                schoolID, 
+                dateofchange, 
+                changedby, 
+                reason
+            )
+			VALUES
+            (
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.hostid#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.schoolID#">, 
+				<cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">, 
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="Student Canceled Program for the following reason: #FORM.Reason_canceled#">
+            )
 		</cfquery>
         
 	</cfif> 
     
-	<cfquery name="cancel_student" datasource="mysql">
-		UPDATE php_students_in_program
-		SET canceldate = #CreateODBCDate(form.date_canceled)#, 
-			cancelreason = '#form.Reason_canceled#', 
-			active = '0',
-			canceledby = '#client.userid#'
-		WHERE assignedid = '#get_student_info.assignedid#'
+	<cfquery datasource="MySql">
+		UPDATE
+        	php_students_in_program
+		SET 
+        	canceldate = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.date_canceled)#">, 
+			cancelreason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.Reason_canceled#">, 
+			active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+			canceledby = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+		WHERE 
+        	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.assignedID#">
 	</cfquery>
 	
 	<!--- CANCEL STUDENT IN THE F1 STUDENTS TABLE --->
-	<cfif get_non_transfer_student.companyid EQ '6'>
+	<cfif get_non_transfer_student.companyid EQ 6>
 		
-        <cfquery name="cancel_student_table" datasource="MySql">
-			UPDATE php_students_in_program
-			SET canceldate = #CreateODBCDate(form.date_canceled)#, 
-				cancelreason = '#form.Reason_canceled#', 
-				active = '0'
-			WHERE studentid = '#form.studentid#'	
+        <cfquery datasource="MySql">
+			UPDATE 
+            	php_students_in_program
+			SET 
+            	canceldate = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.date_canceled)#">, 
+				cancelreason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.Reason_canceled#">, 
+				active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+			WHERE 
+            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">	
 			LIMIT 1
 		</cfquery>
         
 	</cfif>
 	
 	<!--- let student be active and canceled for invoicing reasons ---->
-	
-	<cfif isDefined('form.active')>
-		<cfquery name="set_student_active_status" datasource="mysql">
-		update php_students_in_program
-		set active = 1
-		where studentid = '#form.studentid#'
+	<cfif isDefined('FORM.active')>
+		
+        <cfquery datasource="MySql">
+            UPDATE php_students_in_program
+            SET 
+            	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            WHERE
+            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 		</cfquery>
-	<cfelse>
-		<cfquery name="set_student_active_status" datasource="mysql">
-		update php_students_in_program
-		set active = 0
-		where studentid = '#form.studentid#'
-		</cfquery>
-	</cfif>
 	
- 	<!--- SEND EMAIL TO CRAIG --->
-	<cfquery name="get_sender" datasource="MySql">
-		SELECT userid, firstname, lastname, email
-		FROM smg_users
-		WHERE userid = '#client.userid#'
-	</cfquery>
+    <cfelse>
+	
+    	<cfquery datasource="MySql">
+            UPDATE 
+            	php_students_in_program
+            SET 
+            	active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            WHERE 
+            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+		</cfquery>
+	
+    </cfif>
     
-	<cfmail to="#AppEmail.finance#" from="#AppEmail.support#" subject='PHP Cancelation - #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)' type="html" failto="support@phpusa.com">
+    <!--- Email Finance Department --->
+	<cfmail to="#AppEmail.finance#" 
+    	from="#AppEmail.support#" 
+        subject="PHP Cancelation - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)" 
+        type="html" 
+        failto="support@phpusa.com">
 		<table align="center">
 			<tr><td><img src="http://www.phpusa.com/images/dmd_banner.gif" align="Center"></td></tr>
 			<tr><td align="center"><h1>Cancelation Notice</h1></td></tr>
@@ -129,18 +190,18 @@
 		
         <table align="center">
 			<tr><td>This email is to let you know that a student was canceled in the database.</td></tr>
-			<tr><td>Intl. Rep.: #get_student_info.businessname# (###get_student_info.intRep#) </td></tr>
-			<tr><td>Student: #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid# - Assigned ID ###get_student_info.assignedid#)</td></tr>
-            <tr><td>Cancel Date: #DateFormat(form.date_canceled, 'mm/dd/yyyy')#</td></tr>
-			<tr><td>Cancel Reason: #form.Reason_canceled#</td></tr>
-            <tr><td>Applying School: <cfif LEN(get_student_info.schoolname)> #get_student_info.schoolname# <cfelse> n/a </cfif> </td></tr>
-			<tr><td>Status: <cfif LEN(get_student_info.school_acceptance)> Accepted <cfelse> Not Accepted/Pending </cfif> </td></tr>
-            <tr><td>I-20: <cfif LEN(get_student_info.i20received) OR LEN(get_student_info.i20no)> Received n: #get_student_info.i20no# <cfelse> Not Received </cfif> </td></tr>
-            <tr><td>Canceled by: #get_sender.firstname# #get_sender.lastname#</td></tr>		
+			<tr><td>Intl. Rep.: #qGetStudentInfo.businessname# (###qGetStudentInfo.intRep#) </td></tr>
+			<tr><td>Student: #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID# - Assigned ID ###qGetStudentInfo.assignedID#)</td></tr>
+            <tr><td>Cancel Date: #DateFormat(FORM.date_canceled, 'mm/dd/yyyy')#</td></tr>
+			<tr><td>Cancel Reason: #FORM.Reason_canceled#</td></tr>
+            <tr><td>Applying School: <cfif LEN(qGetStudentInfo.schoolname)> #qGetStudentInfo.schoolname# <cfelse> n/a </cfif> </td></tr>
+			<tr><td>Status: <cfif LEN(qGetStudentInfo.school_acceptance)> Accepted <cfelse> Not Accepted/Pending </cfif> </td></tr>
+            <tr><td>I-20: <cfif LEN(qGetStudentInfo.i20received) OR LEN(qGetStudentInfo.i20no)> Received n: #qGetStudentInfo.i20no# <cfelse> Not Received </cfif> </td></tr>
+            <tr><td>Canceled by: #qGetCurrentUser.firstname# #qGetCurrentUser.lastname#</td></tr>		
 		</table><br>
 	</cfmail>
 
-    <cflocation url="?curdoc=student/student_info&unqid=#get_student_info.uniqueid#" addtoken="no">
+    <cflocation url="?curdoc=student/student_info&unqid=#qGetStudentInfo.uniqueid#" addtoken="no">
 	<cfabort>
 
 </cfif>
@@ -149,42 +210,49 @@
 <cftransaction>
 
 	<!--- UPDATE STUDENT INFORMATION - STUDENT TABLE --->
-    <cfquery name="Update_Student" datasource="mysql">
-        UPDATE smg_students
-        SET intrep = #form.intrep#
-        WHERE studentid = '#get_student_info.studentid#'
+    <cfquery datasource="MySql">
+        UPDATE 
+        	smg_students
+        SET 
+        	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+        WHERE 
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
         LIMIT 1
     </cfquery>
     
     <!--- UPDATE STUDENT IN COMPANY INFORMATION --->
-    <cfquery name="Update_Student" datasource="mysql">
-        UPDATE php_students_in_program
-        SET <cfif IsDefined('form.active')>
-                active = '1',
-                canceldate = NULL, 
-                cancelreason = '', 	
+    <cfquery datasource="MySql">
+        UPDATE 
+        	php_students_in_program
+        SET 
+			<cfif IsDefined('FORM.active')>
+                active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                canceldate = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">, 
+                cancelreason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">, 	
             <cfelse>
-                active = '0',	
+                active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,	
             </cfif>
-            programid = '#form.program#',
-            i20no ='#form.i20no#',
-            i20received = <cfif form.i20received EQ ''>null<cfelse>#CreateODBCDate(form.i20received)#</cfif>,
-            i20sent = <cfif form.i20sent EQ ''>null<cfelse>#CreateODBCDate(form.i20sent)#</cfif>,
-            i20note = '#form.i20note#',
-            return_student = #form.return_student#		
-        WHERE assignedid = '#get_student_info.assignedid#'
+            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">,
+            i20no = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.i20no#">,
+            <cfif FORM.i20received EQ ''>
+            	i20received =  <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+            <cfelse>
+            	i20received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.i20received)#">,
+            </cfif>
+            <cfif FORM.i20sent EQ ''>
+            	i20sent = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+            <cfelse>
+            	i20sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.i20sent)#">,
+            </cfif>
+            i20note = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.i20note#">,
+            return_student = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.return_student#">		
+        WHERE 
+        	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.assignedID#">
     </cfquery>
 
 </cftransaction> 
 
-<cflocation url="?curdoc=student/student_info&unqid=#get_student_info.uniqueid#" addtoken="no">
+<cflocation url="?curdoc=student/student_info&unqid=#qGetStudentInfo.uniqueid#" addtoken="no">
 
-<!----
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-
-</cftry>
----->
 </body>
 </html>

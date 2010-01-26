@@ -58,11 +58,12 @@
 	<table width="580" border="0" cellpadding="2" align="center" bgcolor="##ffffff" class="box">
 		<tr bgcolor="##C2D1EF"><td align="center" colspan="2"><b>High School</b></td></tr>
 		<cfif get_student_unqid.schoolid EQ 0> <!--- PLACE A SCHOOL --->
-			<cfform action="qr_place_school.cfm?unqid=#get_student_unqid.uniqueid#" method="post">
-			<cfinput type="hidden" name="assignedid" value="#get_student_unqid.assignedid#">
+			<cfform action="qr_place_school.cfm" method="post">
+            <cfinput type="hidden" name="studentID" value="#get_student_unqID.studentID#">
+            <cfinput type="hidden" name="assignedid" value="#get_student_unqid.assignedid#">
 			<tr><td>The following schools are available for this student:</td></tr>
 			<tr><td>				
-			<cfselect name="schoolid">
+			<cfselect name="schoolID">
 				<option value="0"></option>
 				<cfloop query="get_available_schools">
 				<option value=#schoolid#>#schoolname# (###schoolid#)</option>
@@ -111,12 +112,14 @@
 <!--- UPDATE/CHANGE CURRENT SCHOOL --->
 <cfelse>
 
-	<cfform action="qr_place_school.cfm?unqid=#get_student_unqid.uniqueid#&change=yes" method="post">
-	<cfinput type="hidden" name="assignedid" value="#get_student_unqid.assignedid#">
+	<cfform action="qr_place_school.cfm" method="post">
+    <cfinput type="hidden" name="studentID" value="#get_student_unqID.studentID#">
+    <cfinput type="hidden" name="assignedid" value="#get_student_unqid.assignedid#">
+    <cfinput type="hidden" name="updateSchool" value="1">
 	<table width="580" border="0" cellpadding="2" align="center" bgcolor="##ffffff" class="box">
 		<tr bgcolor="##C2D1EF"><td align="center" colspan="2"><b>Change High School</b></td></tr>
 		<tr><td>The following schools are available for this student:</td></tr>
-		<tr><td><cfselect name="schoolid">
+		<tr><td><cfselect name="schoolID">
 					<option value="0">Set to unplaced</option>
 					<cfloop query="get_available_schools">
 					<option value="#schoolid#">#schoolname# (###schoolid#)</option>
