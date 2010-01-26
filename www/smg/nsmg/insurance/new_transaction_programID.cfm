@@ -18,11 +18,25 @@
     <!--- Param variables --->
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.policyID" default="0">
+    <cfparam name="FORM.noFlight" default="0">
+    <cfparam name="FORM.startDate" default="">
 	
     <cfscript>
-		// Get Students that needs to be insured
-		qGetStudents = APPCFC.INSURANCE.getStudentsToInsure(programID=FORM.programID, policyID=FORM.policyID);
-	
+		
+		// Get Students with flight information
+		if ( NOT VAL(FORM.noFlight) ) {
+		
+			// Get Students that needs to be insured
+			qGetStudents = APPCFC.INSURANCE.getStudentsToInsure(programID=FORM.programID, policyID=FORM.policyID);
+
+		// Get Students with no flight information
+		} else {
+
+			// Get Students that needs to be insured
+			qGetStudents = APPCFC.INSURANCE.getStudentsToInsureNoFlight(programID=FORM.programID, policyID=FORM.policyID, startDate=FORM.startDate);
+
+		}
+
 		// Get Company Short
 		companyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
 		
