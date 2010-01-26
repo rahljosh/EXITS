@@ -148,6 +148,7 @@ select email
 from smg_users 
 where userid = #get_student_info.intrep#
 </cfquery>
+<cfoutput>
 	<cfsavecontent variable="email_message">
            			
 This e-mail is just to let you know a new document has been uploaded into #get_student_info.firstname# #get_student_info.familylastname#'s (###get_student_info.studentid#) virtual folder by #get_user.businessname# #get_user.firstname# #get_user.lastname#.
@@ -162,7 +163,7 @@ to see the student's virtual folder.<br><br>
 				<p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
 				---->
 			</cfsavecontent>
-			
+			</cfoutput>
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#email_int_rep.email#">

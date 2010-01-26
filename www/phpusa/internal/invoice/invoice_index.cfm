@@ -51,7 +51,10 @@
         	php.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
         AND 
         	php.active =  <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        ORDER BY 
+       <!---- AND 
+        	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+       ---->
+	    ORDER BY 
         	u.businessname, 
             familylastname
     </cfquery>
