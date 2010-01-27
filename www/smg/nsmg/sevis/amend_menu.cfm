@@ -16,7 +16,7 @@
 	<cfparam name="URL.text" default="no">
     <cfparam name="URL.all" default="no">
 
-    <cfparam name="batch_type" default="school_update">
+    <cfparam name="batch_type" default="amend">
 
 	<cfscript>
         // Get Programs
@@ -24,12 +24,21 @@
     </cfscript>
 
 	<!-----Company Information----->
-    <Cfquery name="get_company" datasource="MySQL">
-    select companyid, companyname, sevis_userid, iap_auth
-    from smg_companies
-    where companyid = #client.companyid#
-    </Cfquery>
-    
+    <cfquery name="get_company" datasource="MySQL">
+        SELECT 
+            companyID,
+            companyName,
+            companyshort,
+            companyshort_nocolor,
+            sevis_userid,
+            iap_auth,
+            team_id
+        FROM 
+            smg_companies
+        WHERE 
+            companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+    </cfquery>
+
     <cfquery name="get_sevis_history" datasource="MySql">
     SELECT s.batchid, s.companyid, s.createdby, s.datecreated, s.totalstudents, s.totalprint, s.received, 
             c.companyshort,
@@ -72,11 +81,15 @@
 		<TD><input type="checkbox" name="non_pre_ayp">Only Non Pre-AYP students</td></tr>
 	<tr align="left">
 		<TD width="23%">Program Start Date :</td>
-		<TD><input type="text" name="start_date" value="08-20-2007" maxlength="10" size="7"> (mm-dd-yyyy)</td></tr>
+		<TD><input type="text" name="start_date" value="08-20-#Year(now())#" maxlength="10" size="7"> (mm-dd-yyyy)</td></tr>
 	<tr align="left">
 		<TD width="23%">Program End Date :</td>
-		<TD><input type="text" name="end_date" value="06-30-2008" maxlength="10" size="7"> (mm-dd-yyyy)</td></tr>		
-	<tr><td colspan="2" align="center" bgcolor="ededed"><input type="image" src="pics/view.gif" align="center" border=0 <cfif client.usertype is not '1'>disabled</cfif>></td></tr>
+		<TD><input type="text" name="end_date" value="06-30-#Year(now())+1#" maxlength="10" size="7"> (mm-dd-yyyy)</td>
+    </tr>		
+	<tr>
+    	<td colspan="2">PS: Exchange visitor's minimum duration must be at least 5 month(s)</td>
+    </tr>
+    <tr><td colspan="2" align="center" bgcolor="ededed"><input type="image" src="pics/view.gif" align="center" border=0 <cfif client.usertype is not '1'>disabled</cfif>></td></tr>
 </table><br>
 </cfform>
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">

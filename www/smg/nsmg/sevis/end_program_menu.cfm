@@ -24,11 +24,20 @@
     </cfscript>
 
     <!-----Company Information----->
-    <Cfquery name="get_company" datasource="MySQL">
-    select companyid, companyname, sevis_userid, iap_auth
-    from smg_companies
-    where companyid = #client.companyid#
-    </Cfquery>
+    <cfquery name="get_company" datasource="MySQL">
+        SELECT 
+            companyID,
+            companyName,
+            companyshort,
+            companyshort_nocolor,
+            sevis_userid,
+            iap_auth,
+            team_id
+        FROM 
+            smg_companies
+        WHERE 
+            companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+    </cfquery>
 
 </cfsilent>
 

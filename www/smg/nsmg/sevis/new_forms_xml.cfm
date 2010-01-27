@@ -272,7 +272,7 @@ END OF DISPLAY
 
 <!-- dump the resulting XML document object -->
 
-<cffile action="write" file="/var/www/html/student-management/nsmg/sevis/xml/#qGetCompany.companyshort#/new_forms/#qGetCompany.companyshort#_new_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#qGetCompany.companyshort#/new_forms/#qGetCompany.companyshort#_new_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
 	<th>#qGetCompany.companyshort# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</th>
@@ -283,7 +283,7 @@ END OF DISPLAY
 
 <!--- <cfdump var="#qGetStudents#">----->
 
-<!--- <cffile action="write" file="/var/www/html/student-management/nsmg/sevis/xml/sevis_batch_#Dateformat(now(), 'mm-dd-yyyy')#_#TimeFormat(now(), 'hh-mm-ss-tt')#.xml" output="#toString(sevis_batch)#"> --->
+<!--- <cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/sevis_batch_#Dateformat(now(), 'mm-dd-yyyy')#_#TimeFormat(now(), 'hh-mm-ss-tt')#.xml" output="#toString(sevis_batch)#"> --->
 <!--- You can view the schemas at: 
 http://www.ice.gov/xmlschema/sevisbatch/alpha/Common.xsd 
 http://www.ice.gov/xmlschema/sevisbatch/alpha/Create-UpdateExchangeVisitor.xsd 

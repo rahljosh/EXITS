@@ -24,7 +24,7 @@
 	</cfquery>
 
 	<table align="center" width="95%" frame="box">
-	<tr><th colspan="3"><cfoutput>#get_company.companyshort# &nbsp; ACTIVATE STUDENTS &nbsp; - &nbsp; Batch ID &nbsp; 0#url.batchid# &nbsp; - &nbsp; List of Students</cfoutput></th></tr>
+	<tr><th colspan="3"><cfoutput>#get_company.companyshort_nocolor# &nbsp; ACTIVATE STUDENTS &nbsp; - &nbsp; Batch ID &nbsp; 0#url.batchid# &nbsp; - &nbsp; List of Students</cfoutput></th></tr>
 	<tr><th colspan="3"><cfoutput>Total of students: #get_students.recordcount#</cfoutput></th></tr>	
 	<cfif get_students.recordcount is 0>
 		<tr>

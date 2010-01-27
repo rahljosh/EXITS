@@ -7,11 +7,21 @@
 -->
 </style>
 
-<cfquery name="get_company" datasource="MySql">
-SELECT *
-FROM smg_companies
-WHERE companyid = '#client.companyid#'
+<cfquery name="get_company" datasource="MySQL">
+    SELECT 
+        companyID,
+        companyName,
+        companyshort,
+        companyshort_nocolor,
+        sevis_userid,
+        iap_auth,
+        team_id
+    FROM 
+        smg_companies
+    WHERE 
+        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
+
 
 <cfif not IsDefined("form.filename") or form.filename is ''>
 	<br>
@@ -26,7 +36,7 @@ WHERE companyid = '#client.companyid#'
 	</table>
 <cfelse>
 
-	<cffile action="read" file="/var/www/html/student-management/nsmg/sevis/xml/#get_company.companyshort#/amend/#form.filename#" variable="myxml">
+	<cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/amend/#form.filename#" variable="myxml">
 	<cfset mydoc = XmlParse(myxml)>
 	
 	<cfset batchid =#mydoc.TransactionLog.BatchHeader.BatchID.XmlText#> 
