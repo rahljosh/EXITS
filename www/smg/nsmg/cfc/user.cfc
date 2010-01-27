@@ -211,9 +211,12 @@
 			<!--- this is checked in APPLICATION.cfm and redirected if set. --->
             <cfset CLIENT.change_password = 1>      
 		</cfif>
-
-		<cflocation url="/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
-
+		<cfif client.companyid eq 10>
+			<cflocation url="http://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome">
+		<cfelse>
+			<cflocation url="https://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome">
+		</cfif>
+		
 	</cffunction>
 
 
