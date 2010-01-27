@@ -1,0 +1,79 @@
+html, body, #wrap {height: 100%;}
+
+body > #wrap {height: auto; min-height: 100%;}
+
+body{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background-image: url(../images/blob.png);
+	background-repeat: repeat;
+	background-color: #AFA790;
+}
+
+#main {padding-bottom: 150px;}  /* must be same height as the footer */
+
+#footer {position: relative;
+	margin-top: -150px; /* negative value of footer height */
+	height: 150px;
+	clear:both;
+	background-image: url(../images/botBorder.png);
+	background-repeat: repeat-x;
+} 
+	.clearfix:after {content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;}
+.clearfix {display: inline-block;}
+/* Hides from IE-mac \*/
+* html .clearfix { height: 1%;}
+.clearfix {display: block;}
+/* End hide from IE-mac */
+#logo {
+	background-image: url(../images/logo.png);
+	background-repeat: no-repeat;
+	padding: 0px;
+	float: left;
+	height: 140px;
+	width: 225px;
+	z-index: 50;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	position: absolute;
+	left: 15%;
+}
+#header {
+	background-image: url(../images/topBorder.png);
+	background-repeat: repeat-x;
+	height: 50px;
+	margin: 0px;
+	padding: 0px;
+}
+.topbuttons {
+	height: 35px;
+	width: 250px;
+	padding: 0px;
+	top: 3px;
+	right: 25%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #FFF;
+	position: absolute;
+	margin: 0px;
+	float: right;
+}
+#guts {
+	background-color: #0F0;
+	height: 600px;
+	width: 1000px;
+	align: center;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+}

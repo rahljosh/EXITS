@@ -1,0 +1,691 @@
+html{
+height: 100%;
+border: 0;
+padding: 0;
+margin: 0;
+}
+body{
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background-image: url(../images/blob.png);
+	background-repeat: repeat;
+	background-color: #AFA790;
+}
+#spacer{
+	display: block;
+	height: 95%;
+	float: left;
+	width: 2px; /* 1px would be enough this is for display only */
+	font-size: 1px; /* to make sure width is not overridden */
+	padding: 0;
+	margin: 0; /* visual effect only */
+}
+#container {
+	width: 760px; /* the auto margins (in conjunction with a width) center the page */
+	text-align: left;
+	height: 400px;
+	background-image: url(../images/grungePlain2.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+
+#contentwrap{
+display: block;
+width: 99%; /* to suit but leave room for spacer */
+text-align: center;
+padding: 0;
+margin: 0;
+height: auto;
+min-height: 100%;
+}
+
+#content{
+margin: 0;
+padding: 0;
+border: 1px solid blue;
+}
+
+#footer{
+	clear: both;
+	height: 11%;
+	border-top: 1px solid green;
+	padding: 0;
+	margin: 0;
+	background-image: url(../images/botBorder.png);
+	background-repeat: repeat-x;
+	background-color: #3A3A3C;
+} 
+#header {
+	background-image: url(../images/topBorder.png);
+	background-repeat: repeat-x;
+	height: 50px;
+	margin: 0px;
+	padding: 0px;
+}
+#logo {
+	background-image: url(../images/logo.png);
+	background-repeat: no-repeat;
+	padding: 0px;
+	float: left;
+	height: 140px;
+	width: 225px;
+	z-index: 50;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	position: absolute;
+	left: 13%;
+}
+.topbuttons {
+	height: 35px;
+	width: 250px;
+	padding: 0px;
+	top: 3px;
+	right: 25%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #FFF;
+	position: absolute;
+	margin: 0px;
+	float: right;
+}
+.whitePic {
+	height: 170px;
+	width: 125px;
+	float: right;
+	margin-right: 20px;
+	margin-top: 10px;
+}
+.bullets {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 0.75em;
+	font-weight: bold;
+	color: #FFF;
+	text-align: left;
+	list-style-type: square;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 55px;
+	height: 200px;
+	width: 150px;
+	padding-top: 100px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	line-height: 1.5em;
+}
+#title {
+	height: 40px;
+	width: 350px;
+	float: right;
+	background-image: url(../images/tagline.png);
+	background-repeat: no-repeat;
+	padding-top: 25px;
+	padding-right: 100px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin-top: 5px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+#bluegradient {
+	margin: 0px;
+	padding: 0px;
+	height: 390px;
+	width: 275px;
+	z-index: 10;
+	background-image: url(../images/gradient.png);
+	background-repeat: repeat-y;
+	background-position: center top;
+}
+#white {
+	background-image: url(../images/whitebkgrnd.png);
+	background-repeat: no-repeat;
+	height: 325px;
+	width: 450px;
+	clear: both;
+	float: right;
+	margin-right: 75px;
+	font-family: "MS Serif", "New York", serif;
+	font-size: 24px;
+	color: #FFF;
+	margin-top: 100px;
+	text-align: center;
+	z-index: 100;
+	background-position: center top;
+	position: relative;
+	left: 400px;
+	top: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding: 0px;
+}
+.whiteInfo {
+	height: 225px;
+	width: 375px;
+	padding: 0px;
+	clear: none;
+	float: right;
+	top: 75px;
+	right: 90px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	position: relative;
+	margin-top: 0px;
+	margin-right: 0px;
+}
+#bottomSec {
+	background-image: url(../images/bwgradient.png);
+	background-repeat: repeat-x;
+	background-position: center top;
+	height: auto;
+	width: 650px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 50px;
+	padding: 20px;
+}
+.botText {
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	color: #666;
+	font-size: 12px;
+	font-weight: 200;
+	text-align: center;
+	line-height: 13px;
+}
+.bText {
+	background-color: #666;
+	height: 100%;
+	width: 610px;
+	margin: 0px;
+	padding: 20px;
+}
+.bTextYes {
+	background-color: #666;
+	height: 100%;
+	width: 600px;
+	padding-top: 10px;
+	padding-right: 30px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	margin: 0px;
+}
+.header4 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #000;
+	text-align: center;
+	font-weight: bold;
+}
+.text1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000;
+	text-align: left;
+	margin: 0px;
+	padding-top: 0px;
+	padding-right: 5px;
+	padding-bottom: 0px;
+	padding-left: 10px;
+	line-height: normal;
+	font-weight: normal;
+}
+.text2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFF;
+	text-align: justify;
+	margin: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 5px;
+	font-weight: normal;
+}
+.bottomTabs {
+	margin: 0px;
+	padding: 0px;
+	height: 50px;
+	width: 741px;
+}
+#containerMain {
+	width: 1060px; /* the auto margins (in conjunction with a width) center the page */
+	min-width: 800px;
+	text-align: left;
+	height: auto;
+    min-height: 100%;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	top: 50 px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 25px;
+	padding-left: 0px;
+}
+#sidebarR {
+	margin: 0px;
+	padding: 0px;
+	height: 700px;
+	width: 300px;
+	float: right;
+}
+#studentTab {
+	background-image: url(../images/beStudent.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	margin: 0px;
+	padding: 0px;
+	float: right;
+	height: 230px;
+	width: 300px;
+}
+#hostStudent {
+	background-image: url(../images/hostStudent.png);
+	background-position: center;
+	float: right;
+	height: 210px;
+	width: 300px;
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+}
+#scholarship {
+	background-image: url(../images/scholarship.png);
+	height: 240px;
+	width: 300px;
+	background-repeat: no-repeat;
+	float: right;
+	background-position: center top;
+	margin: 0px;
+	padding: 0px;
+}
+#yesProgram {
+	background-image: url(../images/YESstudent.png);
+	height: 240px;
+	width: 300px;
+	background-repeat: no-repeat;
+	float: right;
+	background-position: center top;
+	margin: 0px;
+	padding: 0px;
+}
+#incStudent {
+	background-image: url(../images/IncomingStudents.png);
+	height: 240px;
+	width: 300px;
+	background-repeat: no-repeat;
+	float: right;
+	background-position: center top;
+	margin: 0px;
+	padding: 0px;
+}
+.info1     {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+	color: #000;
+	position: static;
+	padding-top: 115px;
+	padding-right: 120px;
+	padding-bottom: 0px;
+	padding-left: 57px;
+	text-align: left;
+	font-weight: normal;
+}
+.info2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+	color: #000;
+	position: static;
+	padding-top: 110px;
+	padding-right: 115px;
+	padding-bottom: 0px;
+	padding-left: 60px;
+	text-align: left;
+	font-weight: normal;
+}
+.info3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+	color: #000;
+	position: static;
+	padding-top: 125px;
+	padding-right: 125px;
+	padding-bottom: 0px;
+	padding-left: 55px;
+	text-align: left;
+	margin: 0px;
+	font-weight: normal;
+}
+.info4 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+	color: #000;
+	position: static;
+	padding-top: 120px;
+	padding-right: 120px;
+	padding-bottom: 0px;
+	padding-left: 57px;
+	text-align: left;
+	font-weight: normal;
+}
+.info5 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: normal;
+	color: #000;
+	position: static;
+	padding-top: 115px;
+	padding-right: 120px;
+	padding-bottom: 0px;
+	padding-left: 57px;
+	text-align: left;
+	font-weight: normal;
+}
+.links {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #005DAB;
+}
+.linksY {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FF0;
+}
+.header5 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FF0;
+}
+.clearfix {display: inline-block;}
+/* Hides from IE-mac \*/
+* html .clearfix { height: 1%;}
+.clearfix {display: block;}
+/* End hide from IE-mac */
+.botTextItalic {
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	padding-top: 10px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	color: #666;
+	font-size: 11px;
+	font-weight: 100;
+	text-align: center;
+	line-height: 14px;
+	font-style: normal;
+	font-variant: normal;
+}
+#tabs {
+	background-image: url(../images/tabs.png);
+	height: 47px;
+	width: 690px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 50px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	position: absolute;
+	top: 404px;
+}
+#tabsYes {
+	background-image: url(../images/tabsYes.png);
+	height: 47px;
+	width: 690px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 50px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	position: absolute;
+	top: 340px;
+}
+#tabsStudent {
+	background-image: url(../StudentInfo/images/tabsStudent.png);
+	height: 47px;
+	width: 690px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 50px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	position: absolute;
+	top: 340px;
+}
+#tabsHost {
+	background-image: url(../HostFamily/images/tabshostfamily.png);
+	height: 47px;
+	width: 690px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 50px;
+	padding: 0px;
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	position: absolute;
+	top: 340px;
+}
+/* CSS for login */
+.boxTop {
+	margin: 0px;
+	padding: 0px;
+	width: 700px;
+	background-image: url(../Login/images/loginTop.png);
+	background-repeat: no-repeat;
+	height: 55px;
+}
+.boxContainer {
+	padding: 0px;
+	height: auto;
+	width: 700px;
+	margin-top: 175px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+}
+.boxTile {
+	background-image: url(../Login/images/loginTile.png);
+	background-repeat: repeat-y;
+	height: 275px;
+	width: 700px;
+}
+.boxBot {
+	background-image: url(../Login/images/loginBot.png);
+	height: 52px;
+	width: 700px;
+	background-repeat: no-repeat;
+}
+#loginBox {
+	background-color: #FFF;
+	padding: 0px;
+	width: 605px;
+	z-index: 10;
+	height: 225px;
+	position: absolute;
+	margin-top: 50px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 47px;
+}
+.loginTop {
+	background-image: url(../Login/images/colorTop.png);
+	background-repeat: no-repeat;
+	width: 608px;
+	height: 20px;
+	margin: 0px;
+	padding: 0px;
+}
+.loginMain {
+	background-color: #0046A0;
+	margin: 0px;
+	width: 607px;
+	background-image: url(../Login/images/logTilecolor.png);
+	background-repeat: repeat-y;
+	height: 110px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+#logoContent {
+	height: 75px;
+	width: 560px;
+	z-index: 10;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 1.5em;
+	margin: 0px;
+	top: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 25px;
+	color: #FFF;
+	position: absolute;
+	text-align: left;
+}
+.exitLogo {
+	background-image: url(../Login/images/EXITSlogo.png);
+	background-repeat: no-repeat;
+	padding: 0px;
+	float: left;
+	height: 150px;
+	width: 310px;
+	margin-top: 30px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+.form1 {
+	float: right;
+	height: 125px;
+	width: 230px;
+	margin-top: 30px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 20px;
+	padding-right: 30px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+	text-align: left;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	color: #999;
+}
+.button {
+	background-image: url(images/button.png);
+	background-repeat: no-repeat;
+	height: 30px;
+	width: 228px;
+	float: right;
+	background-position: right;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	color: #999;
+	text-align: left;
+	padding-top: 30px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+/* CSS for login */#contentwrap #loginBox .form1 .button .submit {
+	background-image: url(../Login/images/button.png);
+	background-repeat: no-repeat;
+	background-position: right center;
+	height: 40px;
+	position: absolute;
+	top: 251px;
+	margin: 0px;
+	padding: 0px;
+	left: 475px;
+	width: 100px;
+}
+#containerYes {
+	width: 760px; /* the auto margins (in conjunction with a width) center the page */
+	text-align: left;
+	height: 325px;
+	background-image: url(../yesProgram/images/grungeYes.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+#containerbStudent {
+	width: 760px; /* the auto margins (in conjunction with a width) center the page */
+	text-align: left;
+	height: 325px;
+	background-image: url(../StudentInfo/images/beStudentGrunge.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+#containerHost {
+	width: 760px; /* the auto margins (in conjunction with a width) center the page */
+	text-align: left;
+	height: 325px;
+	background-image: url(../HostFamily/images/hostFamilyGrunge.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+.imageHolder {
+	float: right;
+	height: 250px;
+	width: 300px;
+	margin-top: 30px;
+	margin-right: 20px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+}
+.imageHolderYes {
+	float: right;
+	height: 195px;
+	width: 250px;
+	margin-top: 30px;
+	margin-right: 20px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+}
