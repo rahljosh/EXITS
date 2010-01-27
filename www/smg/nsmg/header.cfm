@@ -111,15 +111,17 @@
 		</td>---->
 
 		<cfif not isDefined('url.novelaro')>
-            <cfif client.usertype eq 8 or client.usertype eq 1 >
+            <cfif client.usertype eq 8 >
                 <td>		
-                    <!-- http://www.LiveZilla.net Chat Button Link Code --><a href="javascript:void(window.open('http://www.exitsapplication.com/livezilla/livezilla.php','','width=600,height=600,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes'))"><img src="http://www.exitsapplication.com/livezilla/image.php?id=04" width="128" height="42" border="0" alt="LiveZilla Live Help"></a><noscript><div></div></noscript><!-- http://www.LiveZilla.net Chat Button Link Code --><!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->
+                    <!-- http://www.LiveZilla.net Chat Button Link Code --><a href="javascript:void(window.open('http://www.exitsapplication.com/livezilla/livezilla.php','','width=600,height=600,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes'))"><img src="http://www.exitsapplication.com/livezilla/image.php?id=04" width="128" height="42" border="0" alt="LiveZilla Live Help">Live Help Available</a><noscript><div></div></noscript><!-- http://www.LiveZilla.net Chat Button Link Code --><!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->
                          
                 </td>
                <cfelse>
-                        <td>		
+                        <td>	
+				<!----	
                   <!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->      
-                </td>
+               ---->
+			    </td>
                
             </cfif> 
         </cfif>
@@ -132,12 +134,7 @@
             	Users Online: #structcount(Application.Online)#
             </cfif>
             <br>
-            <!---- BoldchatPlus Live Chat Button HTML v1.10 (Type=Web,ChatButton=- None -,ChatWindow=- None -,Website=- None -) 
-            <table cellpadding="0" cellspacing="0" border="0">
-            <tr><td align="center"><a href="http://chat.boldcenter.com/aid/7039641255287299138/bc.chat?vr=#client.userid#&amp;vn=#client.name#&amp;vi=#client.email#" target="_blank"><img alt="Live chat by BoldchatPlus" src="https://cbi.boldcenter.com/aid/7039641255287299138/bc.cbi" width="133" height="34" border="0"></a></td></tr>
-            <tr><td align="center"><font size="1" face="Arial"><a href="http://www.boldcenter.com" style="text-decoration: none"><font color="black">CRM by </font><b><font color="##AD3100">Bold</font><font color="##003163">center</font></b></a></font></td></tr>
-            </table>
-             /BoldchatPlus Live Chat Button HTML v1.10 ---->
+            
 		</td>
 		
 		<cfif alert_messages.recordcount NEQ 0>

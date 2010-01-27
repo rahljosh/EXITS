@@ -2,6 +2,7 @@
 	select *
 	from smg_news_messages
 	where messagetype = 'news'  and  (expires > #now()# and startdate < #now()#)
+	and companyid = #client.companyid#
 </cfquery>
 
 <Cfquery name="new_hostcompanies" datasource="mysql">
