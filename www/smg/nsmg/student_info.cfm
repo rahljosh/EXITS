@@ -25,13 +25,13 @@
 		qStudentInfo = AppCFC.STUDENT.getStudentByID(studentID=studentID); 
 
 		// Get Super Rep
-		qGetSuperRep = APPCFC.USER.getUserByID(userID=qStudentInfo.arearepid);
+		qGetSuperRep = APPCFC.USER.getUserByID(userID=VAL(qStudentInfo.arearepid));
 
 		// Get Place Rep
-		qGetPlaceRep = APPCFC.USER.getUserByID(userID=qStudentInfo.placerepid);
+		qGetPlaceRep = APPCFC.USER.getUserByID(userID=VAL(qStudentInfo.placerepid));
 
 		// Get Super Rep
-		qEnteredBy = APPCFC.USER.getUserByID(userID=qStudentInfo.entered_by);
+		qEnteredBy = APPCFC.USER.getUserByID(userID=VAL(qStudentInfo.entered_by));
 		
 		// Get Student Company Assigned
 		qAssignedCompany = AppCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID);
@@ -91,7 +91,7 @@
         LEFT JOIN 
         	smg_insurance_type insu ON insu.insutypeid = u.insurance_typeid
         WHERE 
-        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.intrep#">
+        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.intrep)#">
     </cfquery>
     
     <cfquery name="qProgramInfo" datasource="#application.dsn#">
@@ -122,7 +122,7 @@
         WHERE 
         	smg_programs.enddate <= #currentDate# 
         AND 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">
     </cfquery>
         
     <cfquery name="qStates" datasource="#application.dsn#">
@@ -149,7 +149,7 @@
         INNER JOIN 
         	smg_students s ON s.sevis_activated = smg_sevis.batchid
         WHERE 
-        	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
+        	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">
         AND 
         	received = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
     </cfquery>
@@ -161,7 +161,7 @@
         FROM 
         	smg_sevis_history
         WHERE 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">
         ORDER BY 
         	historyid DESC 
     </cfquery>
@@ -173,7 +173,7 @@
         FROM 
         	phone_call_log
         WHERE 
-        	fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
+        	fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">
     </cfquery>
     
 </cfsilent>
