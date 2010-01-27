@@ -1,11 +1,21 @@
 <link rel="stylesheet" href="../reports/reports.css" type="text/css">
 
 <!-----Company Information----->
-<Cfquery name="get_company" datasource="MySQL">
-	select companyid, companyname, companyshort, sevis_userid, iap_auth
-	from smg_companies
-	where companyid = #client.companyid#
-</Cfquery>
+<cfquery name="get_company" datasource="MySQL">
+    SELECT 
+        companyID,
+        companyName,
+        companyshort,
+        companyshort_nocolor,
+        sevis_userid,
+        iap_auth,
+        team_id
+    FROM 
+        smg_companies
+    WHERE 
+        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+</cfquery>
+
 
 <cfquery name="get_batches" datasource="MySql">
 	SELECT s.batchid, s.type
@@ -31,8 +41,8 @@
 			Batch ID: <span style="width:24"></span>
 				<select name="batchid" id="batchid=">
 					<cfloop query="get_batches">
-						<cfset add_zeros = 13 - len(#get_batches.batchid#) - len(#get_company.companyshort#)>
-						<option value="#get_company.companyshort#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#batchid#">#get_company.companyshort#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#batchid# &nbsp;</option>
+						<cfset add_zeros = 13 - len(#get_batches.batchid#) - len(#get_company.companyshort_nocolor#)>
+						<option value="#get_company.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#batchid#">#get_company.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#batchid# &nbsp;</option>
 					</cfloop>
 				</select><br>			
 			<!--- Batch ID: <Span Style="Width:25"></Span>  <input type="text" name="batchid" id="batchid=" maxlength="14" --->
@@ -50,8 +60,8 @@
 			Batch ID: <span style="width:24"></span>
 				<select name="batchid" id="batchid=">
 					<cfloop query="get_batches">
-						<cfset add_zeros = 13 - len(#get_batches.batchid#) - len(#get_company.companyshort#)>
-						<option value="#get_company.companyshort#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#batchid#">#get_company.companyshort#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#batchid# &nbsp;</option>
+						<cfset add_zeros = 13 - len(#get_batches.batchid#) - len(#get_company.companyshort_nocolor#)>
+						<option value="#get_company.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#batchid#">#get_company.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#batchid# &nbsp;</option>
 					</cfloop>
 				</select><br>
 			Orgid: <span style="width:40"></span><input type="text" name="orgid" id="orgid=" value="#get_company.iap_auth#"><br>

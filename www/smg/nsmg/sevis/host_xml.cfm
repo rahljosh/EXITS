@@ -1,11 +1,21 @@
 <cfsetting requesttimeout="300">
 
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySql">
-SELECT *
-FROM smg_companies
-WHERE companyid = '#client.companyid#'
+<cfquery name="get_company" datasource="MySQL">
+    SELECT 
+        companyID,
+        companyName,
+        companyshort,
+        companyshort_nocolor,
+        sevis_userid,
+        iap_auth,
+        team_id
+    FROM 
+        smg_companies
+    WHERE 
+        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
+
 
 <cfquery name="get_students" datasource="MySql"> 
 	SELECT 	
@@ -95,11 +105,11 @@ Sorry, there were no students to populate the XML file at this time.
 	FROM smg_sevis
 </cfquery>
 
-<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#get_company.companyshort#)>
+<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#get_company.companyshort_nocolor#)>
 <!--- Batch id has to be numeric in nature A through Z a through z 0 through 9  --->
 
 <table align="center" width="100%" frame="box">
-<th colspan="2"><cfoutput>#get_company.companyshort# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</cfoutput></th>
+<th colspan="2"><cfoutput>#get_company.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</cfoutput></th>
 <cfoutput query="get_students">
 <tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 	<td width="35%">#businessname#</td><td width="65%">#firstname# #familylastname# (#studentid#)</td>
@@ -118,7 +128,7 @@ Sorry, there were no students to populate the XML file at this time.
 	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/alpha/Create-UpdateExchangeVisitor.xsd"
 	userID='#get_company.sevis_userid#'>
 	<BatchHeader>
-		<BatchID>#get_company.companyshort#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#get_batchid.batchid#</BatchID>
+		<BatchID>#get_company.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#get_batchid.batchid#</BatchID>
 		<OrgID>#get_company.iap_auth#</OrgID> 
 	</BatchHeader>
 	<UpdateEV>
@@ -153,10 +163,10 @@ Sorry, there were no students to populate the XML file at this time.
 </cfxml>
 
 <cfoutput>
-<cffile action="write" file="/var/www/html/student-management/nsmg/sevis/xml/#get_company.companyshort#/host_family/#get_company.companyshort#_host_0#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/host_family/#get_company.companyshort_nocolor#_host_0#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
-	<th>#get_company.companyshort# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
+	<th>#get_company.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
 	<th>BATCH CREATED.</th>
 </table>
 

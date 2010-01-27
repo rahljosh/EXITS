@@ -30,7 +30,7 @@
  
 <cfoutput> 
 <table align="center" width="95%" frame="box">
-<tr><th colspan="3">#get_company.companyshort# &nbsp; - &nbsp; S E V I S &nbsp; F E E &nbsp; - &nbsp; Bulk ID &nbsp; 0#url.bulkid# &nbsp; - &nbsp; Sent on: #DateFormat(get_company.datecreated, 'mm/dd/yyyy')#</th></tr>
+<tr><th colspan="3">#get_company.companyshort_nocolor# &nbsp; - &nbsp; S E V I S &nbsp; F E E &nbsp; - &nbsp; Bulk ID &nbsp; 0#url.bulkid# &nbsp; - &nbsp; Sent on: #DateFormat(get_company.datecreated, 'mm/dd/yyyy')#</th></tr>
 <tr><th colspan="3">Total of students: #get_students.recordcount#</th></tr>	
 <tr>
 	<td width="45%">Intl. Representative</td>

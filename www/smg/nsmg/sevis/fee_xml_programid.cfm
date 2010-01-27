@@ -6,11 +6,21 @@
 </cfif>
 
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySql">
-SELECT *
-FROM smg_companies
-WHERE companyid = '#client.companyid#'
+<cfquery name="get_company" datasource="MySQL">
+    SELECT 
+        companyID,
+        companyName,
+        companyshort,
+        companyshort_nocolor,
+        sevis_userid,
+        iap_auth,
+        team_id
+    FROM 
+        smg_companies
+    WHERE 
+        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
+
 
 <!--- Query the database and get students --->
 <cfquery name="get_students" datasource="MySql"> 
@@ -55,7 +65,7 @@ WHERE companyid = '#client.companyid#'
 
 <table align="center" width="100%" frame="box">
 <tr><th colspan="2">PLEASE PRINT THIS PAGE FOR YOU REFERENCE.</th></tr>
-<tr><th colspan="2"><cfoutput>#get_company.companyshort# &nbsp; - &nbsp; SEVIS FEE &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</cfoutput></th></tr>
+<tr><th colspan="2"><cfoutput>#get_company.companyshort_nocolor# &nbsp; - &nbsp; SEVIS FEE &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</cfoutput></th></tr>
 <cfoutput query="get_students">
 <tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 	<td width="35%">#businessname#</td><td width="65%">#firstname# #familylastname# &nbsp; (#studentid#)</td>
@@ -101,5 +111,5 @@ WHERE companyid = '#client.companyid#'
 <!--- dump the resulting XML document object --->
 <cfdump var=#transmission#>
 <cfoutput>					
-<cffile action="write" file="/var/www/html/student-management/nsmg/sevis/xml/#get_company.companyshort#/fee/#get_company.companyshort#_fee_00#get_bulkid.bulkid#.xml" output=#toString(transmission)# nameconflict="makeunique">
+<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/fee/#get_company.companyshort_nocolor#_fee_00#get_bulkid.bulkid#.xml" output=#toString(transmission)# nameconflict="makeunique">
 </cfoutput>

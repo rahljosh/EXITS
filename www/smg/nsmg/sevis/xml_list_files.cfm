@@ -28,15 +28,25 @@ function areYouSure() {
 </cfif>
 
 <!--- VIRTUAL FOLDER --->
-<Cfquery name="get_company" datasource="MySQL">
-	select companyshort,team_id
-	from smg_companies
-	where companyid = #client.companyid#
-</Cfquery>
+<cfquery name="get_company" datasource="MySQL">
+    SELECT 
+        companyID,
+        companyName,
+        companyshort,
+        companyshort_nocolor,
+        sevis_userid,
+        iap_auth,
+        team_id
+    FROM 
+        smg_companies
+    WHERE 
+        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+</cfquery>
+
 
 <cfoutput>
 
-<cfset currentDirectory = "/var/www/html/student-management/nsmg/sevis/xml/#get_company.companyshort#/#url.type#">
+<cfset currentDirectory = "/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/#url.type#">
 <!--- Check to see if the Directory exists. --->
 <cfif NOT DirectoryExists(currentDirectory)>
    An error has ocurred. Please contact your system administrator.
@@ -89,10 +99,10 @@ function areYouSure() {
 	
 	<cfloop query="mydirectory">
 	<tr bgcolor="#iif(mydirectory.currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-	  <td><a href="xml/#get_company.companyshort#/#url.type#/#name#" target="_blank">#mydirectory.name#</a></td>
+	  <td><a href="xml/#get_company.companyshort_nocolor#/#url.type#/#name#" target="_blank">#mydirectory.name#</a></td>
 	  <td>#mydirectory.size#</td>
 	  <td>#mydirectory.dateLastModified#</td>
-	  <td align="center"><a href="xml/#get_company.companyshort#/#url.type#/#name#" target="_blank"><img src="../virtualfolder/vfolderview.gif" border="0" alt="View File"></img></a></td>
+	  <td align="center"><a href="xml/#get_company.companyshort_nocolor#/#url.type#/#name#" target="_blank"><img src="../virtualfolder/vfolderview.gif" border="0" alt="View File"></img></a></td>
 	  <cfif client.usertype LTE '4'>
 	  <td align="center">
 		<cfform method="post" action="xml_delete_file.cfm" name="Delete">
