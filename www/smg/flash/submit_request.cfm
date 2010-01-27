@@ -27,8 +27,8 @@
 
  
 <cfif url.request is 'student'>
-<cfmail to='wayne@iseusa.com' cc='josh@pokytrails.com' from='ise@iseusa.com' subject='Request for Info'>
-#desc# from the ISE web site on #dateformat(Now())#.
+<cfmail to='bob@iseusa.com' cc='josh@pokytrails.com' from='request_for_info@student-management.com' subject=' #url.request# Request for Info'>
+#desc# from the SMG web site on #dateformat(Now())#.
 
 First Name: #form.fname#
 Last Name: #form.lname#
@@ -42,7 +42,7 @@ Additional Comments: #form.comment#
 --
 </cfmail>
 <Cfelse>
-<cfmail to='wayne@iseusa.com' cc='josh@pokytrails.com' from='request@student-management.com' subject='Request for Info'>
+<cfmail to='bob@iseusa.com' cc='josh@pokytrails.com' from='request_for_info@student-management.com' subject=' #url.request# Request for Info'>
 #desc# from the SMG web site on #dateformat(Now())#.
 
 
@@ -63,7 +63,7 @@ Additional Comments: #form.comment#
 </cfif>
 <div class="style1">Request Submitted&nbsp;</div>
 <span class="style1"><br>
-The following information was submitted to ISE:
+The following information was submitted to SMG:
 <cfoutput>
 </cfoutput></span><cfoutput><table width=90% align="center">
 	<tr>
