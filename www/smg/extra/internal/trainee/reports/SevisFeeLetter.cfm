@@ -112,6 +112,12 @@
 <br />
 <p class="style1">Please do not hesitate to contact  ISE Training Program staff should you have any questions.</p>
 <p class="style1">Sincerely,</p>
-<p class="style1">Sergei Chernyshov (sergei@iseusa.com) </p>
+
+      <br />
+      <br />
+      <br />
+
+   
+<p class="style1">Sergei Chernyshov (sergei@iseusa.com)
 </cfoutput>
 </cfdocument>

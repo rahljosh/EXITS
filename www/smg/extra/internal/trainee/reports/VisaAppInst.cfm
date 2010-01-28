@@ -55,13 +55,15 @@ Do not say to your country's officials or American Officials that you are "worki
 		You must also show the Immigration Officer the Sponsorship Letter for Host Company.  However, give the original of that letter to the Human Resources (Personnel) Department of your new Host Company.<br />
 		<br />
 		In most cases, these documents, along with your valid Passport Identification, is all you need to procure a visa.  However, each Country is different; therefore, you should make an early appointment to the Consulate's office in case they request you to return with additional documentation.<br />
-		<strong><br />
-  <strong>During your training in the USA you are insured from the start day to the last day of your training (please see your DS2019 form). You are responsible for the insurance before and after the training program start and end dates accordingly.</strong></p>
-<strong>After you arrive to America, please send me your new address and date when you actually arrived. You must do it within 2 weeks of your arrival. </strong>If this is not done we cannot activate your status in the SEVIS database and your profile will be cancelled automatically. <br>
+		<br />
+During your training in the USA you are insured from the start day to the last day of your training (please see your DS2019 form). You are responsible for the insurance before and after the training program start and end dates accordingly.<br><br>
+<strong>After you arrive to America, please send me your new address and date when you actually arrived. You must do it within 2 weeks of your arrival.  If this is not done we cannot activate your status in the SEVIS database and your profile will be cancelled automatically. </strong><br>
     <br>
     Respectfully Submitted,<br />
     <br>
     <br>
+	<br>
+	<br>
 </p>
 <p class="style1">Sergei Chernyshov<br>
 Program Manager

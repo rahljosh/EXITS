@@ -30,11 +30,41 @@
 	WHERE studentid = '#form.studentid#'
 	LIMIT 1
 </cfquery>
+<!----Send Email if company is CASE---->
+<cfif form.companyid eq 10>
+<cfquery name="email_info" datasource="#application.dsn#">
+select u.businessname, u.email, s.firstname, s.familylastname
+from smg_students s 
+LEFT join smg_users u on u.userid = s.intrep
+where studentid = #form.studentid#
+</cfquery>
 
 <cfoutput>
+<cfsavecontent variable="email_message">
+#email_info.businessname#<br><Br>
+
+The application for #email_info.firstname# #email_info.familylastname# has been transfered to CASE.
+<br>
+You will receive notification from CASE with final approval information.
+<Br><br>
+Regards-<br>
+#client.name#<br><br>
+<font size=-2>Companies that use EXITS systems are able to transfer applications to each other, if desired.  You are receiving this notice as an application has been transfered from one company to another.  Please contact #client.email# with any questions.</font>     
+</cfsavecontent>
+</cfoutput>
+
+<cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#email_info.email#, josh@pokytrails.com">
+                <cfinvokeargument name="reply_to" value="#client.email#">
+                <cfinvokeargument name="email_subject" value="EXITS Application Transfered">
+                <cfinvokeargument name="email_message" value="#email_message#">
+            </cfinvoke>
+
+<cfoutput>
+</cfif>
 <script language="JavaScript">
 <!-- 
-alert("This application has been assigned to the company selected.");
+alert("This application has been assigned to the company selected. If transfered to CASE, an email was sent to the student.");
 	location.replace("index.cfm?curdoc=app_process/apps_received");
 -->
 </script>

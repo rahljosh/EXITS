@@ -56,11 +56,14 @@
   <br />
   <span class="style3">http://www.ssa.gov/employer/hiring.htm</span><br />
   <br>
-  Respectfully Submitted,<br />
-  <br />
-</p>
-  
-<p class="style1">Sergei Chernyshov, Program Manager<br />
+  Respectfully Submitted,<br>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br>
+Sergei Chernyshov, Program Manager<br />
 International Student Exchange<br />
 119 Cooper Street<br />
 Babylon, NY  11702<br />

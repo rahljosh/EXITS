@@ -27,7 +27,7 @@
 
  
 <cfif url.request is 'student'>
-<cfmail to='bob@iseusa.com' cc='josh@pokytrails.com' from='request_for_info@student-management.com' subject=' #url.request# Request for Info'>
+<cfmail to='bob@iseusa.com' from='request_for_info@student-management.com' subject=' #url.request# Request for Info'>
 #desc# from the SMG web site on #dateformat(Now())#.
 
 First Name: #form.fname#

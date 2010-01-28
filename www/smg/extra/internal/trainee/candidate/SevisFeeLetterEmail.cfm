@@ -20,14 +20,10 @@
 <!----TO: #get_intrep_email.email# --->
 
  <cfoutput query="get_candidate">
- 
+
 <CFMAIL TO="#intrep_email#" bcc="sergei@iseusa.com" FROM="sergei@iseusa.com"
 	 SUBJECT="#firstname# #middlename# #lastname# form DS-2019 issued/sevis fee payment information" type="html"> 
-	 
-	  <br />
-
-
-<p class="style1">
+	 <br>
 <p class="style1">This  letter is to confirm that #firstname# #lastname# has been approved by ISE for  the J-1 visa sponsorship and has been entered into the Student and Exchange Visitor Information System (SEVIS) database. A DS-2019 form (SEVIS ID #ds2019#) has been issued and sent.<br>
     <br>
   If an  appointment to apply for the J-1 visa at the U.S. Embassy or Consulate in the  home country has not yet been scheduled, please make sure that is done at this  time.<br>
@@ -104,7 +100,13 @@
 <br />
 <p class="style1">Please do not hesitate to contact  ISE Training Program staff should you have any questions.</p>
 <p class="style1">Sincerely,</p>
-<p class="style1">Sergei Chernyshov (sergei@iseusa.com) </p>
+
+      <br />
+      <br />
+      <br />
+
+   
+<p class="style1">Sergei Chernyshov (sergei@iseusa.com)
 
 	  
 </CFMAIL>
