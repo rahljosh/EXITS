@@ -128,7 +128,7 @@
       <th align="left" bgcolor="4F8EA4" class="style2">Sex</th>
       <th align="left" bgcolor="4F8EA4" class="style2">Country</th>
       <th align="left" bgcolor="4F8EA4" class="style2">Req. Placement</th>
-	  <th align="left" bgcolor="4F8EA4" class="style2">Agent</th>
+	  <th align="left" bgcolor="4F8EA4" class="style2">Intl. Rep.</th>
 	  <th align="left" bgcolor="4F8EA4" class="style2">Option</th>
     </tr>	
 

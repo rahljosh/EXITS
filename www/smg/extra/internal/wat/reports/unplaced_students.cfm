@@ -99,7 +99,7 @@ WHERE
       <Th align="left"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Student</font></Th>
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Sex</font></th>
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Country</font></th>
-      <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Agent</font></th>
+      <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Intl. Rep.</font></th>
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Requested Placement </font></th>
     </tr>
  

@@ -34,7 +34,7 @@
 <table align="center" width="670" border="0" cellspacing="2" cellpadding="0" frame="below">	
 	<tr><td colspan="3">Insurance Cards List &nbsp; - &nbsp; Insured on #DateFormat(url.date, 'mm/dd/yyyy')# &nbsp; - &nbsp; Total of #get_candidates.recordcount# candidate(s)</td></tr>
 	<tr>
-		<td><b>Intl. Agent</b></td>
+		<td><b>Intl. Rep.</b></td>
 		<td><b>Student</b></td>
 		<td><b>Program</b></td>
 	</tr>

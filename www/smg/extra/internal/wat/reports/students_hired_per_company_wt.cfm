@@ -262,7 +262,7 @@
                     <td align="left" bgcolor="4F8EA4" class="style2">SSN</Td>
                     <td align="left" bgcolor="4F8EA4" class="style2">Start Date</td>
                     <td align="left" bgcolor="4F8EA4" class="style2">End Date</td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">International Agent</td>
+                    <td align="left" bgcolor="4F8EA4" class="style2">Intl. Rep.</td>
                     <td align="left" bgcolor="4F8EA4" class="style2">Option</td>
                 </tr>
             	

@@ -65,7 +65,7 @@ and c.programid = #form.program# ---->
     <td></td>
   </tr>
   <tr valign="middle" height="24">
-    <td valign="middle" class="title1"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Agent
+    <td valign="middle" class="title1"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Intl. Rep.
       <script language="JavaScript" type="text/javascript"> 
 		<!-- Begin
 		function formHandler2(form){
@@ -105,7 +105,7 @@ and c.programid = #form.program# ---->
 <br><br>
 
  <cfif NOT IsDefined('url.userid') >
-  	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">Choose an Agent <br /> </font>
+  	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">Choose an Intl. Rep. <br /> </font>
   <cfelseif students_hired.recordcount eq 0 >
   <font size="2" face="Verdana, Arial, Helvetica, sans-serif">	No students </font>
   <cfelse>
@@ -116,7 +116,7 @@ and c.programid = #form.program# ---->
 	<Th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Student</font></Th><th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Sex</font></th><th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Country</font></th><th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Email</font></th>
 	<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">SSN</font></th>
 	<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Passport</font></th>
-	<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Passport dates </font></th><th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">International Agent</font></th>
+	<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Passport dates </font></th><th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Intl. Rep.</font></th>
 	</tr>
 <cfloop query="students_hired">
 	<tr <cfif students_hired.currentrow mod 2>bgcolor="##E4E4E4"</cfif>>

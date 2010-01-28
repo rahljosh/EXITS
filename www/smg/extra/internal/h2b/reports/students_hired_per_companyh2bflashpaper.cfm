@@ -69,7 +69,7 @@ where hostcompanyid = #url.companyid#
 	<th align="left"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >SSN</font></th>
 	<th align="left"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Passport</font></th>
 	<th align="left"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Passport dates </font></th>
-	<th align="left"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >International Agent</font></th>
+	<th align="left"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Intl. Rep.</font></th>
 	</tr>
 <cfloop query="students_hired">
 	<tr > <!--- line color: <cfif students_hired.currentrow mod 2>bgcolor="##E4E4E4"</cfif> --->

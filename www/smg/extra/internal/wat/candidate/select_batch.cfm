@@ -44,7 +44,7 @@ order by verification_received
 <form action="candidate/batchimmigrationLetter.cfm" method="post" name="batch">
 <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
   <tr valign="middle" height="24">
-    <td valign="middle" bgcolor="##E4E4E4"  class="style1" colspan=2><strong>&nbsp;Select the agent and program you would like to generate batch immigration letters for.  Candidates will only show up on this list once.  Once the report is ran, the candidate will be marked as letter printed and no longer show up on this list.  To print additional copies, click on Immigration Letter on the candidates profile.</strong></td>
+    <td valign="middle" bgcolor="##E4E4E4"  class="style1" colspan=2><strong>&nbsp;Select the Intl. Rep. and program you would like to generate batch immigration letters for.  Candidates will only show up on this list once.  Once the report is ran, the candidate will be marked as letter printed and no longer show up on this list.  To print additional copies, click on Immigration Letter on the candidates profile.</strong></td>
 
   </tr>
   <tr valign="middle" height="24">

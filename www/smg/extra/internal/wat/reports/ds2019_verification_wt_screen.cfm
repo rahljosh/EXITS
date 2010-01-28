@@ -64,7 +64,7 @@
         	c.candidateID
     </cfquery>
 
-	<!-----Intl. Agent----->
+	<!-----Intl. Rep.----->
     <cfquery name="qGetIntlAgent" datasource="MySQL">
         SELECT 
         	userID,

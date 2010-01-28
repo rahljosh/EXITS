@@ -28,7 +28,7 @@
 	ORDER BY lastname
 </cfquery>
 
-<!-----Intl. Agent----->
+<!-----Intl. Rep.----->
 <cfquery name="int_Agent" datasource="MySQL">
 	select companyid, businessname, fax, email
 	from smg_users 

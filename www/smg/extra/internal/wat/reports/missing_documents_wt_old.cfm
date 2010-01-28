@@ -127,7 +127,7 @@
 					
   <table width=100% cellpadding="4" cellspacing=0>
     <tr>
-      <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Agent</font></th>	 
+      <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Intl. Rep.</font></th>	 
       <Th align="left"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Student</font></Th>
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Missing<font color="FFFFFF">_</font>Documents</font></th>
    <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Placement Information</font></th>  

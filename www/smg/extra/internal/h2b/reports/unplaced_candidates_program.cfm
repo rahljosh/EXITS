@@ -126,7 +126,7 @@
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Sex</font></th>
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Country</font></th>
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Req. Placement </font></th>
-      <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Agent</font></th>
+      <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Intl. Rep.</font></th>
     </tr>
 	 <img src="../../pics/black_pixel.gif" width="100%" height="2">
 				

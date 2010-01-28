@@ -104,7 +104,7 @@
 		<th align="left" class="style2" width="20">SSN</Th>
 		<th align="left" class="style2">Start Date</th>
 		<th align="left" class="style2">End Date</th>
-		<th align="left" class="style2">International Agent</th>
+		<th align="left" class="style2">Intl. Rep.</th>
 		<th align="left" class="style2">Option</th>
 	</tr>
 	<tr>

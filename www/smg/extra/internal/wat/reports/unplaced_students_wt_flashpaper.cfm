@@ -87,7 +87,7 @@ where hostcompanyid = 0
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Country</font></th>
 
       <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Requested Placement </font></th>
-      <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Agent</font></th>
+      <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Intl. Rep.</font></th>
 	  <th align="left" ><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Option </font></th>	  
     </tr>
  

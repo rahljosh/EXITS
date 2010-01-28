@@ -55,7 +55,7 @@
 <tr><td align="center">
 	<div align="center">Program(s) Included in this Report:</div><br>
 	<cfloop query="get_program"><b>#companyshort# &nbsp; &nbsp; #programname# &nbsp; (#ProgramID#)</b><br></cfloop>
-	<div align="center">Total of #get_agent_list.recordcount# agent(s).</div>
+	<div align="center">Total of #get_agent_list.recordcount# Intl. Rep(s).</div>
 </td></tr>
 </table><br>
 

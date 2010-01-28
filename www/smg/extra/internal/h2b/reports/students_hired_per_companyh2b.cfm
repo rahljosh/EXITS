@@ -134,7 +134,7 @@ and c.programid = #form.program# ---->
 					<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">SSN</font></th>
 					<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Passport</font></th>
 					<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Passport dates </font></th>
-					<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">International Agent</font></th>
+					<th align="left" bgcolor="##4F8EA4"><font size="2" face="Verdana, Arial, Helvetica, sans-serif" color="##FFFFFF">Intl. Rep.</font></th>
 					</tr>
 				
 					<tr <cfif students_hired.currentrow mod 2>bgcolor="##E4E4E4"</cfif>>

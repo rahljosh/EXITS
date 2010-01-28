@@ -101,7 +101,7 @@
 		<th align="left" class="style1">Email</font></th>
 		<th align="left" class="style1">Start Date </font></th>
 		<th align="left" class="style1">End Date</font></th>
-		<th align="left" class="style1">International Agent</font></th>
+		<th align="left" class="style1">Intl. Rep.</font></th>
 		<th align="left" class="style1">Option</font></th>
 	</tr>
 	<tr>

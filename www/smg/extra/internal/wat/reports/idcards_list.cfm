@@ -56,7 +56,7 @@
 
 <table align="center" width="700" border="0" cellspacing="2" cellpadding="0" frame="below">	
 	<tr>
-		<td><b>Intl. Agent</b></td>
+		<td><b>Intl. Rep.</b></td>
 		<td><b>Student</b></td>
 		<th>Start Date</th>
 		<th>End Date</th>
