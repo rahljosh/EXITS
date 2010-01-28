@@ -211,12 +211,22 @@
 			<!--- this is checked in APPLICATION.cfm and redirected if set. --->
             <cfset CLIENT.change_password = 1>      
 		</cfif>
-		<cfif client.companyid eq 10>
-			<cflocation url="http://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome">
-		<cfelse>
-			<cflocation url="https://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome">
-		</cfif>
 		
+        <!--- Check if server is local, if it is do not redirect to SSL --->
+		<cfif APPLICATION.IsServerLocal>
+
+			<cflocation url="/nsmg/index.cfm?initial_welcome" addtoken="no">
+		
+        <cfelse>
+        
+			<cfif client.companyid eq 10>
+                <cflocation url="http://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
+            <cfelse>
+                <cflocation url="https://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
+            </cfif>
+
+        </cfif>
+        
 	</cffunction>
 
 
