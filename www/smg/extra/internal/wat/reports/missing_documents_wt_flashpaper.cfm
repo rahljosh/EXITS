@@ -102,7 +102,7 @@ SELECT name, extra_hostcompany.hostcompanyid, extra_candidates.candidateid, extr
 							
   <table width=100% cellpadding="4" cellspacing=0>
     <tr>
-		<td align="left" class="style1"><b>Agent</b></th>	
+		<td align="left" class="style1"><b>Intl. Rep.</b></th>	
    		<td align="left" class="style1"><b>Student</b></Th>
       	<td align="left" class="style1"><b>Missing<font color="FFFFFF">_</font>Documents</b></th>
   		<td align="left" class="style1"><b>Placement Information</b></th>	

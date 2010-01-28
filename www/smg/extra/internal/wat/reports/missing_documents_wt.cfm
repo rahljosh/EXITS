@@ -150,7 +150,7 @@
 					
   <table width=99% cellpadding="4" align="center" cellspacing=0>
     <tr bgcolor="##FFFFCC">
-      	<td align="left" class="style1"><strong>Agent</strong></td>	 
+      	<td align="left" class="style1"><strong>Intl. Rep.</strong></td>	 
      	<td align="left" class="style1"><strong>Student</strong></td>
 		<td align="left" class="style1"><strong>Placement Information</strong></td>  
    		<td align="left" class="style1" width="130"><strong>Missing Documents</strong></td>	  

@@ -91,7 +91,7 @@ function extensiondate(startdate,enddate,progenddate)
 		<!--- CHECK IF HAS INSURANCE --->
 		<cfif get_candidate_unqid.insurance_date EQ '' AND get_intl_rep.extra_insurance_typeid LTE 1>
 			<table border=0 cellpadding=4 cellspacing=1 class="section" align="center" width=95%>
-				<tr bgcolor="##8FB6C9"><td class="style2">This Agent does not take Caremed Insurance or the Insurance Policy Type is Missing.</td></tr>
+				<tr bgcolor="##8FB6C9"><td class="style2">The Intl. Rep. does not take Caremed Insurance or the Insurance Policy Type is Missing.</td></tr>
 			</table>
 			<cfabort>
 		</cfif>

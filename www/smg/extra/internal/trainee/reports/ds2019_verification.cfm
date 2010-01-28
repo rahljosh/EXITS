@@ -62,7 +62,7 @@
     	lastname
 </cfquery>
 
-<!-----Intl. Agent----->
+<!-----Intl. Rep.----->
 <cfquery name="int_Agent" datasource="MySQL">
 	select 
     	companyid, 

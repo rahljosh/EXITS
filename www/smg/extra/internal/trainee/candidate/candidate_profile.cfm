@@ -80,7 +80,7 @@ function OpenApp(url)
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 	<tr>
 	<td valign="top" width=180> <span id="titleleft">
-		 <b>Intl. Agent:</b> #int_Reps.businessname#<br>
+		 <b>Intl. Rep.:</b> #int_Reps.businessname#<br>
 		 <b>Date Entry:</b> #DateFormat(get_candidate_unqid.entrydate, 'mmm d, yyyy')#<br>
 		 <b>Today's Date:</b> #DateFormat(now(), 'mmm d, yyyy')#<br><br>
 		</span>

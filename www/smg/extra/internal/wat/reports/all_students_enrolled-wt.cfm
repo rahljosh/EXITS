@@ -40,7 +40,7 @@
       <td></td>
     </tr>
     <tr valign="middle" height="24">
-      <td valign="middle" class="title1"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Agent
+      <td valign="middle" class="title1"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Intl. Rep.
         <SCRIPT LANGUAGE="JavaScript"> 
 		<!-- Begin
 		function formHandler2(form){
@@ -74,7 +74,7 @@
 </cfoutput><br />
 
  <cfif NOT IsDefined('url.userid') >
-  	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">Choose an Agent<br> </font>
+  	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">Choose an Intl. Rep.<br> </font>
   <cfelseif get_candidates.recordcount eq 0 >
   <font size="2" face="Verdana, Arial, Helvetica, sans-serif">	No students </font>
   <cfelse>

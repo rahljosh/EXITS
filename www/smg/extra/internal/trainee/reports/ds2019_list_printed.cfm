@@ -34,7 +34,7 @@
 <hr width=80% color="000000">
 <cfoutput>
 <div align="center"><h3>#companyshort.companyshort# - DS-2019 Printed</h3></div>
-<div align="center"><h4>Total of #get_agent_list.recordcount# agent(s).</h4></b></div>
+<div align="center"><h4>Total of #get_agent_list.recordcount# Intl. Rep(s).</h4></b></div>
 <div align="center"><h4>Program: <cfloop query="get_program">(#programid#) #programname# <br/></cfloop></h4></b></div>
 </cfoutput>
 <hr width=80% color="000000">

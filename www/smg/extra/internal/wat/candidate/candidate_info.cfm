@@ -895,7 +895,7 @@ function cancelation() {
 													</td>
 												</tr>
 												<tr>	
-													<td class="style1" colspan="2" align="left"><b>Intl. Agent Accepts Sevis Fee</b>&nbsp; &nbsp;
+													<td class="style1" colspan="2" align="left"><b>Intl. Rep. Accepts Sevis Fee</b>&nbsp; &nbsp;
 														<cfif agent_accepts_sevis is 1>
 														<input type="checkbox" name="agent_accepts_sevis" checked="checked" <cfif edit EQ 'no'>disabled</cfif>><cfelse>
 														<input type="checkbox" name="agent_accepts_sevis" <cfif edit EQ 'no'>disabled</cfif>>Yes</cfif>

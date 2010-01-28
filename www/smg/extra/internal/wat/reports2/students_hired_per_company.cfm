@@ -38,7 +38,7 @@ and c.programid = #form.program#
 <br><br>
 <table width=100% cellpadding="4" cellspacing=0> 
 	<tr>
-	<Th align="left">Student</Th><th align="left">Sex</th><th align="left">Country</th><th align="left">Email</th><th align="left">Earliest Arrival</th><th align="left">Program / Length</th><th align="left">International Agent</th>
+	<Th align="left">Student</Th><th align="left">Sex</th><th align="left">Country</th><th align="left">Email</th><th align="left">Earliest Arrival</th><th align="left">Program / Length</th><th align="left">Intl. Rep.</th>
 	</tr>
 <cfloop query="students_hired">
 	<tr <cfif students_hired.currentrow mod 2>bgcolor="##cccccc"</cfif>>

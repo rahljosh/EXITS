@@ -93,7 +93,7 @@
         <tr>
             <td valign="top" align="right" class="style1"><b>Email Options:</b></td>
             <td class="style1">
-            	<input type="checkbox" name="email_intrep" value="1" />Send email to Intl. Agent (if on file)<BR />
+            	<input type="checkbox" name="email_intrep" value="1" />Send email to Intl. Rep. (if on file)<BR />
                 <input type="checkbox" name="email_self" value="1" />I would like to receive a copy of the email. (#CLIENT.email#)
 			</td>
         </tr>

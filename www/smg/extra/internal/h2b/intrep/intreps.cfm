@@ -53,7 +53,7 @@
 <br><br>
 </cfoutput>
 <div align="center">
-<a href="index.cfm?curdoc=intrep/new_intrep"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a International Agent"></img></a></div>
+<a href="index.cfm?curdoc=intrep/new_intrep"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></img></a></div>
 <br>
 
 
