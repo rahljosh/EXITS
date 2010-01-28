@@ -280,26 +280,39 @@ div.box2 {
 				<table width=100% cellpadding=4 cellspacing=0 border=0 class="section" >
 	<tr>
 		<td><h3><u>Finance Questions</u></h3>
-		
+	<cfif client.companyid LTE 5>
+	
 	Marcel Akira Maebara<br>
 	<a href="mailto:marcel@student-management.com">marcel@student-management.com</a><br>
 	800-766-4656-Toll Free<br>
 	631-893-4540-Phone<br>
 	631-893-4550-Fax<br>
-
+<cfelseif client.companyid eq 10>
+Jana De Fillipps <br>
+	<a href="mailto:jana@case-usa.org">jana@case-usa.org</a><br>
+	800-458-8336-Toll Free<br>
+	732-671-6448-Phone<br>
+	732-615-9183-Fax<br>
+</cfif>
 		</td>
 	
 	
 	<td valign="top">
 	<h3><u>Live Chat</u></h3>
-	Live chat will be available at a minimum between <br>
-	9:00am - 3:00pm MST and as support staff is available. <br>
-	<table cellpadding="0" cellspacing="0" border="0" align="center"><tr><td align="center"><a href="http://srv0.velaro.com/visitor/requestchat.aspx?siteid=2837&showwhen=inqueue" target="VelaroChat"  onClick="this.newWindow = window.open('http://srv0.velaro.com/visitor/requestchat.aspx?siteid=2837&showwhen=inqueue', 'VelaroChat', 'toolbar=no,location=no,directories=no,menubar=no,status=no,scrollbars=no,resizable=yes,replace=no');this.newWindow.focus();this.newWindow.opener=window;return false;"><img alt="Velaro Live Help" src="http://srv0.velaro.com/visitor/check.aspx?siteid=2837&showwhen=inqueue" border="0"></a></td></tr><tr><td align="center"></td></tr></table>
+	Live chat is available depending on operator availability.<br>
+	<table cellpadding="0" cellspacing="0" border="0" align="center"><tr><td align="center">
+	 <!-- http://www.LiveZilla.net Chat Button Link Code --><a href="javascript:void(window.open('http://www.exitsapplication.com/livezilla/livezilla.php','','width=600,height=600,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes'))"><img src="http://www.exitsapplication.com/livezilla/image.php?id=04" width="128" height="42" border="0" alt="LiveZilla Live Help"></a><noscript><div></div></noscript><!-- http://www.LiveZilla.net Chat Button Link Code --><!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->
+                   
+	</td>
+	</tr><tr><td align="center"></td></tr></table>
 	</td>
 	<td valign="top">
 	<h3><u>Email</u></h3>
+	<cfoutput>
 	Need to contact us or send an attachment? Please email our<br>
-	general support email at <a href="mailto:support@student-management.com">support@student-management.com</a> <br>
+	general support email at <a href="mailto:#client.support_email#">#client.support_email#</a> <br>
+	</cfoutput>
+	
 	</td>
 	</tr>
 </table>

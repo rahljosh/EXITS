@@ -36,7 +36,7 @@
 <cfquery name="get_company" datasource="MySQL">
 	SELECT companyid, companyname, companyshort, team_id
 	FROM smg_companies
-	WHERE companyid <= '6'
+	WHERE companyid <= '6' or companyid = 10
 </cfquery>
  
 <cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
