@@ -33,7 +33,7 @@
 <cfparam name="countryid" default="">
 <cfparam name="intrep" default="">
 <cfparam name="stateid" default="">
-<cfparam name="programid" default="">
+<cfparam name="programID" default="">
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24 bgcolor="#ffffff">
     <tr height=24>
@@ -128,7 +128,7 @@
                 <option value="sex" <cfif orderby EQ 'sex'>selected</cfif>>Sex</option>
                 <option value="country" <cfif orderby EQ 'country'>selected</cfif>>Country</option>
                 <option value="regionname" <cfif orderby EQ 'regionname'>selected</cfif>>Region</option>
-                <option value="s.programid" <cfif orderby EQ 's.programid'>selected</cfif>>Program</option>
+                <option value="s.programID" <cfif orderby EQ 's.programID'>selected</cfif>>Program</option>
                 <option value="hostid" <cfif orderby EQ 'hostid'>selected</cfif>>Family</option>
                 <cfif client.companyid EQ 5>
 	                <option value="companyshort" <cfif orderby EQ 'companyshort'>selected</cfif>>Company</option>
@@ -295,25 +295,39 @@
                 </cfselect>
             </td>
             <td colspan="2">
-                <cfquery name="get_programs" datasource="#application.dsn#">
-                    SELECT smg_programs.programid, smg_companies.companyshort, smg_programs.programname
-                    FROM smg_programs
-					INNER JOIN smg_companies ON smg_programs.companyid = smg_companies.companyid
-                    WHERE smg_programs.active = 1
+                <cfquery name="qGetPrograms" datasource="#application.dsn#">
+                    SELECT 
+                    	p.programID, 
+                        p.programname,
+                        c.companyshort,
+                        CONCAT(c.companyshort, ' ', p.programname) AS companyProgram
+                    FROM 
+                    	smg_programs p
+					INNER JOIN 
+                    	smg_companies c ON p.companyid = c.companyid
+                    WHERE 
+                    	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                	AND
+                    	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                    AND
+                    	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
 					<cfif client.companyid EQ 5>
-                        AND smg_companies.website = 'SMG'
+                        AND 
+                        	c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="SMG">
                     <cfelse>
-                        AND smg_programs.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                        AND 
+                        	p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
                     </cfif>
-                    ORDER BY smg_programs.companyid, smg_programs.startdate DESC, smg_programs.programname
+                    ORDER BY p.startdate DESC, p.programname
                 </cfquery>
+                
                 Program<br />
 				<cfif client.companyid EQ 5>
-                    <cfselect name="programid" query="get_programs" group="companyshort" value="programid" display="programname" selected="#programid#" queryPosition="below">
+                    <cfselect name="programID" query="qGetPrograms" group="companyshort" value="programID" display="companyProgram" selected="#programID#" queryPosition="below" multiple="yes" size="5">
                         <option value="">All</option>
                     </cfselect>
                 <cfelse>
-                    <cfselect name="programid" query="get_programs" value="programid" display="programname" selected="#programid#" queryPosition="below">
+                    <cfselect name="programID" query="qGetPrograms" value="programID" display="programname" selected="#programID#" queryPosition="below" multiple="yes" size="5">
                         <option value="">All</option>
                     </cfselect>
                 </cfif>
@@ -359,7 +373,7 @@
         LEFT JOIN smg_regions smg_g ON s.regionalguarantee = smg_g.regionid
         LEFT JOIN smg_states ON s.state_guarantee = smg_states.id
         LEFT JOIN smg_hosts ON s.hostid = smg_hosts.hostid
-        LEFT JOIN smg_programs on s.programid = smg_programs.programid
+        LEFT JOIN smg_programs on s.programID = smg_programs.programID
 		<!--- advanced search item. --->
 		<cfif preayp NEQ ''>
 			<cfif preayp EQ 'english'>
@@ -480,8 +494,8 @@
 			<cfif stateid NEQ ''>
                 AND s.state_guarantee = <cfqueryparam cfsqltype="cf_sql_integer" value="#stateid#">
             </cfif>		
-			<cfif programid NEQ ''>
-                AND s.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#programid#">
+			<cfif programID NEQ ''>
+                AND s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#programID#" list="yes">)
             </cfif>		
         </cfif>
         ORDER BY #orderby#	
@@ -501,7 +515,7 @@
 		</cfif>
 		<cfset urlVariables = "submitted=1&adv_search=#adv_search#&regionid=#regionid#&keyword=#urlEncodedFormat(keyword)#&placed=#placed#&cancelled=#cancelled#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#">
 		<cfif adv_search>
-        	<cfset urlVariables = "#urlVariables#&familylastname=#urlEncodedFormat(familylastname)#&firstname=#urlEncodedFormat(firstname)#&preayp=#preayp#&direct=#direct#&age=#age#&sex=#sex#&grade=#grade#&graduate=#graduate#&religionid=#religionid#&interestid=#interestid#&sports=#sports#&interests_other=#urlEncodedFormat(interests_other)#&countryid=#countryid#&intrep=#intrep#&stateid=#stateid#&programid=#programid#">
+        	<cfset urlVariables = "#urlVariables#&familylastname=#urlEncodedFormat(familylastname)#&firstname=#urlEncodedFormat(firstname)#&preayp=#preayp#&direct=#direct#&age=#age#&sex=#sex#&grade=#grade#&graduate=#graduate#&religionid=#religionid#&interestid=#interestid#&sports=#sports#&interests_other=#urlEncodedFormat(interests_other)#&countryid=#countryid#&intrep=#intrep#&stateid=#stateid#&programID=#programID#">
         </cfif>
     
         <cfoutput>
