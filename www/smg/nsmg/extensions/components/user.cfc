@@ -235,4 +235,39 @@
 		   
 	</cffunction>
 
+
+	<cffunction name="reportTrainingByRegion" access="public" returntype="query" output="false" hint="Gets a list of training records for a userID">
+    	<cfargument name="regionID" default="0" hint="List of region IDs">
+              
+        <cfquery 
+			name="qReportTrainingByRegion" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					u.userID,
+                    u.firstName,
+                    u.lastName,
+                    r.regionID,
+                    r.regionName,
+                    sut.notes,
+                    sut.date_trained
+                FROM 
+                    smg_users u
+                INNER JOIN 
+                	user_access_rights uar ON uar.userID = u.userID 
+                        AND 
+                            uar.regionID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes">)
+                INNER JOIN
+                	smg_regions r ON r.regionID = uar.regionID   
+                LEFT OUTER JOIN
+                	smg_users_training sut ON sut.user_ID = u.userID
+                ORDER BY 
+                    r.regionName,
+                    u.lastName,
+                    sut.date_trained DESC
+		</cfquery>
+		   
+		<cfreturn qReportTrainingByRegion>
+	</cffunction>
+
+
 </cfcomponent>
