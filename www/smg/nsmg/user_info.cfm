@@ -1187,12 +1187,12 @@
                                              <td>
                                                 <select name="webEx_notes">
                                                 	<option value=""></option>
-                                                    <option value="New Area Reps">New Area Reps</option>
-                                                    <option value="Student Issues and Resolutions">Student Issues and Resolutions</option>
                                                     <option value="Database Navigation">Database Navigation</option>
                                                     <option value="Host Family Orientations">Host Family Orientations</option>
-                                                    <option value="Student Orientations">Student Orientations</option>
+                                                    <option value="New Area Reps">New Area Reps</option>
                                                     <option value="Positive Supervisions">Positive Supervisions</option>
+                                                    <option value="Student Issues and Resolutions">Student Issues and Resolutions</option>
+                                                    <option value="Student Orientations">Student Orientations</option>
 												</select>
                                              </td>
                                         </tr>
