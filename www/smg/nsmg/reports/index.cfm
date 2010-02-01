@@ -39,7 +39,7 @@ window.location.href = URL;
 	locations throughout the site.  If no reports are listed, there are no stand alone reports that you have access to.</td>
 </tr>
 <!--- OFFICE PEOPLE ONLY --->	
-<cfif client.usertype LTE '4'>
+<cfif client.usertype LTE 4>
 <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for Office Users</td></tr>
     <tr>
 		<td width="50%"><a href="?curdoc=reports/acceptance_select_pro">Acceptance Letter and Missing Documents Report</a></td>
@@ -90,10 +90,15 @@ window.location.href = URL;
 		<td><a href="?curdoc=reports/host_check_selection">Hosts in System</a></td>
 		<td><a href="?curdoc=reports/users_in_system">Users Privilege Report</a></td>
 	</tr>
+    
+	<tr>
+		<td>&nbsp;</td>
+		<td><a href="?curdoc=reports/webex_reports">WebEx Reports</a></td>
+	</tr>
 </cfif>
 
 <!--- Compliance Reports --->
-<cfif client.usertype LTE '4' OR user_compliance.compliance EQ '1'>
+<cfif client.usertype LTE 4 OR user_compliance.compliance EQ 1>
 <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Compliance Reports - Available for Compliance Users and Office</td></tr>
 	<tr>
 		<td><a href="?curdoc=compliance/reports_menu">Compliance - Placement Reports</a></td>

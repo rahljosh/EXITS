@@ -65,7 +65,9 @@
 				LEFT OUTER JOIN
                 	smg_companies c ON c.companyID = p.companyID                    
                 WHERE
-                	1 = 1
+                	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                AND
+                    p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
                     
 				<cfif VAL(ARGUMENTS.programID)>
                 	AND
@@ -84,16 +86,9 @@
                     	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                 </cfif>
 
-				<cfif VAL(ARGUMENTS.companyID) AND ARGUMENTS.companyID LTE 4>
-                    AND
-                    	p.companyID <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-                <cfelseif VAL(ARGUMENTS.companyID)>
-                    AND
-                   		p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
-                </cfif>
-
                 ORDER BY 
-                    p.programName
+                   p.endDate DESC,
+                   p.programName
 		</cfquery>
 		   
 		<cfreturn qGetPrograms>
