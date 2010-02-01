@@ -178,7 +178,11 @@
 				FORM.errors = "Please enter a valid date trained (mm/dd/yyyy)";
 				FORM.webEx_dateTrained = '';
 			}		
-			
+
+			if (NOT LEN(FORM.webEx_notes)) {
+				FORM.errors = "Please select a training type";
+			}		
+
 			// There are no errors
 			if (NOT LEN(FORM.errors)) {
 				// Insert Training
@@ -1178,10 +1182,18 @@
                                         </tr>
                                     	<tr>
                                         	<td valign="top">
-                                            	<label for="webEx_notes">Notes:</label>
+                                            	<label for="webEx_notes">Training:</label>
                                              </td>
                                              <td>
-                                             	<textarea name="webEx_notes" id="webEx_notes" cols="45" rows="3">#FORM.webEx_notes#</textarea>
+                                                <select name="webEx_notes">
+                                                	<option value=""></option>
+                                                    <option value="New Area Reps">New Area Reps</option>
+                                                    <option value="Student Issues and Resolutions">Student Issues and Resolutions</option>
+                                                    <option value="Database Navigation">Database Navigation</option>
+                                                    <option value="Host Family Orientations">Host Family Orientations</option>
+                                                    <option value="Student Orientations">Student Orientations</option>
+                                                    <option value="Positive Supervisions">Positive Supervisions</option>
+												</select>
                                              </td>
                                         </tr>
                                     	<tr>
@@ -1202,7 +1214,7 @@
                             <strong>Date Trained</strong>
                         </td>
                         <td>
-                            <strong>Notes</strong>
+                            <strong>Training</strong>
                         </td>
                         <td>
                             <strong>Added By</strong>
