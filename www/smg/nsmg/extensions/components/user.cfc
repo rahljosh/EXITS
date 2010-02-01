@@ -260,6 +260,8 @@
                 	smg_regions r ON r.regionID = uar.regionID   
                 LEFT OUTER JOIN
                 	smg_users_training sut ON sut.user_ID = u.userID
+                WHERE	
+                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                
                 ORDER BY 
                     r.regionName,
                     u.lastName,
