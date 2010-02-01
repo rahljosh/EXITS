@@ -48,11 +48,14 @@
 
     <table width="100%" cellpadding="6" cellspacing="0" align="center" frame="box">	
         <tr>
-        	<th>Region</th>
+        	<th>WebEx Training Report</th>
+        </tr>
+        <tr>
+        	<td><strong>Region</strong></td>
         </tr>
     </table>
 
-    <br />
+	<br />
     
     <cfloop query="qGetRegions">
 
@@ -63,7 +66,7 @@
 
         <table width="100%" cellpadding="6" cellspacing="0" align="center" frame="box">		
             <tr>
-            	<th><cfoutput>#qGetRegions.regionname#</th></cfoutput>
+            	<td><cfoutput><strong>#qGetRegions.regionname#</strong></td></cfoutput>
             </tr>
         </table>
     
