@@ -2,66 +2,7 @@
 	
     <cfparam name="CLIENT.companyID" default="0">
     <!----This should be removed when SMG uses the global login page---->
-	
-    <!--- Check if we are on Local Server --->
-	<cfif APPLICATION.IsServerLocal>
-    
-        <cfquery name="get_company" datasource="mysql">
-            SELECT 
-            	companyid, 
-                companyname
-            FROM 
-            	smg_companies 
-            WHERE
-            	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="www.student-management.com"> 
-        </cfquery>
-    
-    <!--- Production Server --->    
-	<cfelse>
-    
-        <cfquery name="get_company" datasource="mysql">
-            SELECT 
-            	companyid, 
-                companyname
-            FROM 
-            	smg_companies 
-            WHERE
-            	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.server_name#"> 
-        </cfquery>
-    
-    </cfif>        
-        
-	<cfif NOT VAL(CLIENT.companyID) AND VAL(get_company.recordcount)>
-        <cfset CLIENT.companyid = get_company.companyid>
-        <cfset CLIENT.companyname = get_company.companyname>
-    <cfelseif NOT VAL(CLIENT.companyID)>
-        <cfset CLIENT.companyid = 0>
-        <cfset CLIENT.companyname = 'EXIT Group'>
-    </cfif>
-    
-    <!----If error code SI-102, company information is wrong---->
-    <cfquery name="submitting_info" datasource="#APPLICATION.dsn#">
-        select website, url_ref, company_color
-        from
-        smg_companies
-        where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-    </cfquery>
-    
-	<cfif submitting_info.recordcount eq 0>
-        Error during login.  Please try again shortly.
-        <cfoutput>
-        #cgi.server_name#
-        </cfoutput>
-        <cfabort>
-    </cfif>
-    
-	<cfset CLIENT.company_submitting = "#submitting_info.website#">
-    <cfset APPLICATION.company_short = "#submitting_info.website#">
-    <cfset CLIENT.app_menu_comp = CLIENT.companyid>
-    <cfset CLIENT.exits_url = "#submitting_info.url_ref#">
-    <cfset CLIENT.color = "#submitting_info.company_color#">
- 
-    
+	   
 	<!--- Login.  called by: flash/login.cfm --->
 	<cffunction name="login" access="public" returntype="string">
 		<cfargument name="username" type="string" required="yes">
@@ -72,6 +13,65 @@
 		<cfset var get_access = ''>
 		<cfset var get_default_access = ''>
 		<cfset var get_companies = ''>
+
+		<!--- Check if we are on Local Server --->
+        <cfif APPLICATION.IsServerLocal>
+        
+            <cfquery name="qGetCompany" datasource="mysql">
+                SELECT 
+                    companyid, 
+                    companyname
+                FROM 
+                    smg_companies 
+                WHERE
+                    url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="www.student-management.com"> 
+            </cfquery>
+        
+        <!--- Production Server --->    
+        <cfelse>
+        
+            <cfquery name="qGetCompany" datasource="mysql">
+                SELECT 
+                    companyid, 
+                    companyname
+                FROM 
+                    smg_companies 
+                WHERE
+                    url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.server_name#"> 
+            </cfquery>
+        
+        </cfif>        
+    
+		<cfif NOT VAL(CLIENT.companyID) AND VAL(qGetCompany.recordcount)>
+			<cfset CLIENT.companyid = qGetCompany.companyid>
+            <cfset CLIENT.companyname = qGetCompany.companyname>
+        <cfelseif NOT VAL(CLIENT.companyID)>
+            <cfset CLIENT.companyid = 0>
+            <cfset CLIENT.companyname = 'EXIT Group'>
+        </cfif>
+        
+        <!----If error code SI-102, company information is wrong---->
+        <cfquery name="submitting_info" datasource="#APPLICATION.dsn#">
+            select website, url_ref, company_color
+            from
+            smg_companies
+            where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        </cfquery>
+
+        <cfif submitting_info.recordcount eq 0>
+            Error during login.  Please try again shortly.
+            <cfoutput>
+            #cgi.server_name#
+            </cfoutput>
+            <cfabort>
+        </cfif>
+        
+        <cfset CLIENT.company_submitting = "#submitting_info.website#">
+        <cfset APPLICATION.company_short = "#submitting_info.website#">
+        <cfset CLIENT.app_menu_comp = CLIENT.companyid>
+        <cfset CLIENT.exits_url = "#submitting_info.url_ref#">
+        <cfset CLIENT.color = "#submitting_info.company_color#">
+
 
 		<!--- student login --->
         <cfquery name="student_login" datasource="#APPLICATION.dsn#">
@@ -147,16 +147,16 @@
         <cfset CLIENT.regionid = get_default_access.regionid>
         
         <!--- companyname, programmanager and accesslevelname are used in header.cfm.  These are also set in forms/change_access_level.cfm. --->
-        <cfquery name="get_company" datasource="#APPLICATION.dsn#">
+        <cfquery name="qGetCompany" datasource="#APPLICATION.dsn#">
             SELECT companyname, team_id, support_email, url, companyshort_nocolor
             FROM smg_companies
             WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
         </cfquery>
-        <cfset CLIENT.companyname = get_company.companyname>
-        <cfset CLIENT.companyshort = get_company.companyshort_nocolor>
-	    <cfset CLIENT.programmanager = get_company.team_id>
-        <cfset CLIENT.support_email = get_company.support_email> 
-        <cfset CLIENT.site_url = get_company.url>
+        <cfset CLIENT.companyname = qGetCompany.companyname>
+        <cfset CLIENT.companyshort = qGetCompany.companyshort_nocolor>
+	    <cfset CLIENT.programmanager = qGetCompany.team_id>
+        <cfset CLIENT.support_email = qGetCompany.support_email> 
+        <cfset CLIENT.site_url = qGetCompany.url>
         
         <cfquery name="get_usertype" datasource="#APPLICATION.dsn#">
             SELECT usertype
