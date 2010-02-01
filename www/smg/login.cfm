@@ -118,8 +118,6 @@ from smg_companies where url_ref = '#cgi.server_name#'
 
 
 
-
-
 <style type="text/css">
 <!--
 .style1 {
