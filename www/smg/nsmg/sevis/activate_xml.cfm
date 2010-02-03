@@ -26,8 +26,8 @@
 	INNER JOIN smg_users u ON s.intrep = u.userid
 	LEFT JOIN smg_hosts h ON s.hostid = h.hostid
 	WHERE s.active = '1'
-			AND s.sevis_batchid != '0'
-			AND s.sevis_activated = '0'
+			<!--- AND s.sevis_batchid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> --->
+			AND s.sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 			<cfif IsDefined('form.pre_ayp')>
 			AND (s.aypenglish <> '0' or s.ayporientation <> '0')
 			</cfif>
