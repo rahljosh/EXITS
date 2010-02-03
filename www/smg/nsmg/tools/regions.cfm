@@ -33,7 +33,7 @@
 		Regional Guarantee: $#regional_guarantee#<br>
 		<cfquery name="subregions" datasource="MySQL">
 			select regionname
-			from smg_Regions 
+			from smg_regions 
 			where subofregion = #regionid#
 		</cfquery>		
 		<cfloop query="subregions">
