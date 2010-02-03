@@ -66,14 +66,8 @@
 		// Virtual Folder Directory
 		virtualDirectory = "/var/www/html/student-management/nsmg/uploadedfiles/virtualfolder/#qStudentInfo.studentID#";
 		
-		// Facilitator
-		if ( NOT VAL(qGetRegionAssigned.recordcount) ) {
-			qGetFacilitator.firstname = "Region doesn't have Fac. Assigned.";
-			qGetFacilitator.lastname = "";
-		} else {
-			// Get Facilitator for this Region
-			qGetFacilitator = APPCFC.USER.getUserByID(userID=qGetRegionAssigned.regionfacilitator);
-		}
+		// Get Facilitator for this Region
+		qGetFacilitator = APPCFC.USER.getUserByID(userID=VAL(qGetRegionAssigned.regionfacilitator));
 	</cfscript>
    
 
@@ -102,7 +96,9 @@
         FROM 
         	smg_programs
         WHERE 
-        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+			is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+        AND 
+        	companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
         AND 
         	enddate > #currentDate#
         ORDER BY
@@ -495,8 +491,15 @@
 					<td><input type="text" size="20" name="program_reason"></td>
 				</tr>
 				<tr><td>Facilitator :</td>
-					<td><cfif regionassigned is 0>	<div class="get_attention">No Region Assigned</div><cfelse>
-						<a href="index.cfm?curdoc=user_info&userid=#qGetFacilitator.userid#">#qGetFacilitator.firstname# #qGetFacilitator.lastname#</a></cfif>
+					<td><cfif NOT VAL(regionassigned)>	
+	                    	<div class="get_attention">No Region Assigned</div>
+                        <cfelse>
+							<cfif VAL(qGetFacilitator.recordCount)>
+		                        <a href="index.cfm?curdoc=user_info&userid=#qGetFacilitator.userid#">#qGetFacilitator.firstname# #qGetFacilitator.lastname#</a>                        
+	                        <cfelse>
+                        		<div class="get_attention">Region doesn't have Fac. Assigned.</div>
+							</cfif>
+						</cfif>                            
 					</td>
 				</tr>
 				<tr><td>Supervising Rep. :</td>
