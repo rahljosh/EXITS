@@ -194,7 +194,7 @@
             <tr valign="middle" height="24">
                 <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
                 <td width="26" background="pics/header_background.gif"><img src="pics/docs.gif"></td>
-                <td background="pics/header_background.gif"><h2> #qGetPDFCategory.name# - PDF Documents </h2></td>
+                <td background="pics/header_background.gif"><h2> #qGetPDFCategory.name# </h2></td>
                 <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
             </tr>
         </table>
