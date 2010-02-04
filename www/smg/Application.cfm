@@ -43,4 +43,19 @@
 		
 		// Store Application.IsServerLocal - This needs be declare before the other CFC components
 		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
+		
+		// Check if this is Dev or Live 
+		if ( APPLICATION.isServerLocal ) {
+			// Development Server Settings	
+			
+			// Set Site URL
+			APPLICATION.site_url = 'http://dev.student-management.com';
+			
+		} else {
+			// Live Server Settings
+			
+			// Set Site URL
+			APPLICATION.site_url = 'http://www.student-management.com';
+			
+		}		
 	</cfscript>

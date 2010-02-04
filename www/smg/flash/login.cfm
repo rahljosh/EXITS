@@ -26,26 +26,47 @@
 	<cfif not isValid("email", trim(form.email))>
 		<cfset errorMsg = "Please enter a valid Email.">
 	<cfelse>
-
-		<cfquery name="check_user" datasource="#application.dsn#">
-			SELECT *
-			FROM smg_users
-			WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.email)#">
+		
+        <!--- Users --->
+		<cfquery name="qCheckUser" datasource="#application.dsn#">
+			SELECT 
+            	*
+			FROM 
+            	smg_users
+			WHERE 
+            	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.email)#">
 		</cfquery>
-	 		
-		<cfif check_user.recordCount EQ 0>
-			<cfset errorMsg = "The email address entered was not found in our database.">
-		<cfelse>
+
+        <!--- Students --->
+		<cfquery name="qCheckStudent" datasource="#application.dsn#">
+			SELECT 
+            	*
+			FROM 
+            	smg_students
+			WHERE 
+            	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.email)#">
+		</cfquery>
+
+		<!--- Email is valid but User is Inactive --->
+		<cfif VAL(qCheckUser.recordCount) AND NOT VAL(qCheckUser.active)>
+            <cfset errorMsg = "Your account is inactive.">
+		
+		<!--- Email is valid but Student is Inactive --->
+		<cfelseif VAL(qCheckStudent.recordCount) AND NOT VAL(qCheckStudent.active)>
+			<cfset errorMsg = "Your account is inactive. Please contact your International Representative.">
+        
+		<!--- Email User Password --->    
+		<cfelseif VAL(qCheckUser.recordCount)>
 
 			<cfsavecontent variable="email_message">
-            	<cfif check_user.recordCount GT 1>
+            	<cfif qCheckUser.recordCount GT 1>
                 	<p>(There were multiple accounts found with the email address entered.)</p>
                 </cfif>
-				<cfoutput query="check_user">				
-					<p>#firstname# #lastname#, a login information retrieval request was made from the SMG website.
+				<cfoutput query="qCheckUser">				
+					<p>#qCheckUser.firstname# #qCheckUser.lastname#, a login information retrieval request was made from the SMG website.
 					Your login information is:<br />
-					Username: #username#<br />
-					Password: #password#</p>
+					Username: #qCheckUser.username#<br />
+					Password: #qCheckUser.password#</p>
 				</cfoutput>
 				<p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
 			</cfsavecontent>
@@ -53,7 +74,7 @@
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#form.email#">
-                <cfinvokeargument name="email_subject" value="Login Information">
+                <cfinvokeargument name="email_subject" value="EXITS - Login Information">
                 <cfinvokeargument name="email_message" value="#email_message#">
             </cfinvoke>
             
@@ -64,9 +85,44 @@
                 alert('Your login information has been sent to the email address entered.');
             </script>
 		
-		</cfif>
+        <!--- Email Student Password --->
+        <cfelseif VAL(qCheckStudent.recordCount)>
+        
+			<cfsavecontent variable="email_message">
+            	<cfif qCheckStudent.recordCount GT 1>
+                	<p>(There were multiple accounts found with the email address entered.)</p>
+                </cfif>
+				<cfoutput query="qCheckStudent">				
+					<p>#qCheckStudent.firstname# #qCheckStudent.familyLastName#, a login information retrieval request was made from the SMG website.
+					Your login information is:<br />
+					Username: #qCheckStudent.email#<br />
+					Password: #qCheckStudent.password#</p>
+				</cfoutput>
+				<p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
+			</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#form.email#">
+                <cfinvokeargument name="email_subject" value="EXITS - Login Information">
+                <cfinvokeargument name="email_message" value="#email_message#">
+            </cfinvoke>
             
-	</cfif>
+            <!--- return to the login form, not forgot password form. --->
+            <cfset url.forgot = 0>
+				
+			<script language="JavaScript">
+                alert('Your login information has been sent to the email address entered.');
+            </script>
+
+		<!--- No email found --->
+		<cfelse>		
+			
+			<cfset errorMsg = "The email address entered was not found in our database.">			
+            
+		</cfif>
+    
+    </cfif>
  
 </cfif>
 
