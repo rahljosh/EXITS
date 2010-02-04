@@ -24,7 +24,7 @@
         
 		<!--- the from address in the cfmail tag below is always the support address because emails from other domains are blocked.  use replyto if needed. --->
 		<cfargument name="email_replyto" type="string" required="false" default="#CLIENT.email#">
-          <cfargument name="email_cc" type="string" required="false" default="">
+        <cfargument name="email_cc" type="string" required="false" default="">
                 
 		<!--- message is optional because include_content may be used instead. --->
 		<cfargument name="email_message" type="string" required="false" default="">
@@ -44,7 +44,7 @@
 		</cfsavecontent>
                 
 		<cfmail to="#email_to#" from="#email_from#" replyto="#email_replyto#" cc="#email_cc#" subject="#email_subject#" type="html">
-<cfinclude template="../email/email_top.cfm">
+			<cfinclude template="../email/email_top.cfm">
         	<cfif email_file NEQ ''>
             	<cfmailparam file="#email_file#">
             </cfif>
