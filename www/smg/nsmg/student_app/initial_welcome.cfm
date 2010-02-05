@@ -434,14 +434,14 @@
 							<table width="100%" border=0 cellpadding=3 cellspacing=0 class="section">
 								<tr><td>Family Name:</td><td>#family_info.familylastname#</td><td></td><td></td></tr>
 								<tr><td>Address:</td><td>#family_info.address#</td></tr>
-								<tr><td>City:</td><td><a href="http://en.wikipedia.org/wiki/#family_info.city#%2C_#family_info.state#">#family_info.city# <img src="pics/external_link.png" border=0></a>  <a href="http://maps.google.com/maps?f=q&hl=en&q=#family_info.city#+#family_info.state#&btnG=Search&t=h"> <img src="pics/sat_image.png" border=0></a></td></tr>
+								<tr><td>City:</td><td><a href="http://en.wikipedia.org/wiki/#family_info.city#%2C_#family_info.state#" target="_blank">#family_info.city# <img src="pics/external_link.png" border=0></a>  <a href="http://maps.google.com/maps?f=q&hl=en&q=#family_info.city#+#family_info.state#&btnG=Search&t=h"> <img src="pics/sat_image.png" border=0></a></td></tr>
 								<tr><td>State:</td><td>
 								<cfquery name="get_state_name" datasource="MySQL">
 								select statename
 								from smg_states
 								where state='#family_info.state#'
 								</cfquery>
-								<a href="http://en.wikipedia.org/wiki/#get_state_name.statename#">#family_info.state# <img src="pics/external_link.png" border=0></a></td><td>ZIP:</td><td>#family_info.zip#</td></tr>
+								<a href="http://en.wikipedia.org/wiki/#get_state_name.statename#" target="_blank">#family_info.state# <img src="pics/external_link.png" border=0></a></td><td>ZIP:</td><td>#family_info.zip#</td></tr>
 								<tr><td>Phone:</td><td>#family_info.phone#</td></tr>
 								<tr><td>Email:</td><td><a href="mailto:#family_info.email#">#family_info.email#</a></td></tr>
 								<tr><td>Host Father:</td><td>#family_info.fatherfirstname# #family_info.fatherlastname# &nbsp; <cfif family_info.fatherbirth is '0'><cfelse> <cfset calc_age_father = #CreateDate(family_info.fatherbirth,01,01)#> (#DateDiff('yyyy', calc_age_father, now())#) </cfif></td><td>Occupation:</td><td><cfif family_info.fatherworkposition is ''>n/a<cfelse>#family_info.fatherworkposition#</cfif></td></tr>
@@ -458,7 +458,7 @@
 							<table width=100% cellpadding=0 cellspacing=0 border=0 height=24 >
 								<tr valign=middle height=24>
 									<td height=24 width=13 background="../pics/header_leftcap.gif">&nbsp;</td><td width=26 background="../pics/header_background.gif"><img src="../pics/family.gif"></td>
-									<td background="../pics/header_background.gif"><h2>Other Family Members</h2></td><td background="../pics/header_background.gif" width=16><a href="?curdoc=forms/host_fam_pis_2"></a></td>
+									<td background="../pics/header_background.gif"><h2>Other Family Members</h2></td>
 									<td width=17 background="../pics/header_rightcap.gif">&nbsp;</td></tr>
 							</table>
 							<!--- BODY OF TABLE --->
@@ -467,9 +467,6 @@
 									<td width="20%"><u>Sex</u></td>
 									<td width="20%"><u>Age</u></td>
 									<td width="20%"><u>At Home</u></td></tr>
-							</table>
-							<div class="scroll">
-							<table width=100% align="left" border=0 cellpadding=2 cellspacing=0>
 								<cfloop query="host_children">
 									<tr><td width="40%">#name#</td>
 										<td width="20%">#sex#</td>
@@ -477,7 +474,6 @@
 										<td width="20%">#liveathome#</td></tr>
 								</cfloop>
 							</table>
-							</div>
 							<!--- BOTTOM OF A TABLE --->
 							<table width=100% cellpadding=0 cellspacing=0 border=0>
 								<tr valign="bottom"><td width=9 valign="top" height=12><img src="../pics/footer_leftcap.gif" ></td><td width=100% background="../pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="../pics/footer_rightcap.gif"></td></tr>
@@ -492,17 +488,17 @@
 								<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 									<tr valign=middle height=24>
 										<td height=24 width=13 background="../pics/header_leftcap.gif">&nbsp;</td><td width=26 background="../pics/header_background.gif"><img src="../pics/family.gif"></td>
-										<td background="../pics/header_background.gif"><h2>Community Info</h2></td><td background="../pics/header_background.gif" width=16><a href="?curdoc=forms/family_app_7_pis"></a></td>
+										<td background="../pics/header_background.gif"><h2>Community Info</h2></td>
 										<td width=17 background="../pics/header_rightcap.gif">&nbsp;</td></tr>
 								</table>
 								<!--- BODY OF TABLE --->
 								<table width="100%" border=0 cellpadding=3 cellspacing=0 class="section">
 									<tr><td></td><td colspan="3"></td></tr>
 									<tr><td>Community:</td><td colspan="3"><cfif family_info.community is ''>n/a<cfelse> #family_info.community#</cfif></td></tr>
-									<tr><td>Closest City:</td><td><cfif family_info.nearbigcity is ''>n/a<cfelse> <a href="http://en.wikipedia.org/wiki/#family_info.nearbigcity#">#family_info.nearbigcity# <img src="pics/external_link.png" border=0></a></cfif></td><td>Distance:</td><td>#family_info.near_City_dist# miles</td></tr>
-									<tr><td>Airport Code:</td><td colspan="3"><cfif family_info.major_air_code is ''>n/a<cfelse> <a href="http://www.airnav.com/airport/K#family_info.major_air_code#" target="_top">#family_info.major_air_code# <img src="pics/external_link.png" border=0></a> <a href="http://maps.google.com/maps?f=q&hl=en&q=#family_info.major_air_code#+airport&btnG=Search&t=k&t=h"><img src=pics/sat_image.png border=0></a></cfif></td></tr>
-									<tr><td>Airport City:</td><td colspan="3"><cfif family_info.airport_city is '' and family_info.airport_state is ''>n/a<cfelse><a href="http://en.wikipedia.org/wiki/#family_info.airport_city#%2C_#family_info.airport_state#">#family_info.airport_city# / #family_info.airport_state# <img src="pics/external_link.png" border=0></a> <a href="http://maps.google.com/maps?f=q&hl=en&q=#family_info.airport_city#+#family_info.airport_state#&btnG=Search&t=h"> <img src="pics/sat_image.png" border=0></a></cfif></td></tr>
-									<tr><td valign="top">Interests: </td><td colspan="3"><cfif len(#family_info.pert_info#) gt '100'>#Left(family_info.pert_info,92)# <a href="?curdoc=forms/family_app_7_pis">more...</a><cfelse>#family_info.pert_info#</cfif></td></tr>
+									<tr><td>Closest City:</td><td><cfif family_info.nearbigcity is ''>n/a<cfelse> <a href="http://en.wikipedia.org/wiki/#family_info.nearbigcity#" target="_blank">#family_info.nearbigcity# <img src="pics/external_link.png" border=0></a></cfif></td><td>Distance:</td><td>#family_info.near_City_dist# miles</td></tr>
+									<tr><td>Airport Code:</td><td colspan="3"><cfif family_info.major_air_code is ''>n/a<cfelse> <a href="http://www.airnav.com/airport/K#family_info.major_air_code#" target="_blank">#family_info.major_air_code# <img src="pics/external_link.png" border=0></a> <a href="http://maps.google.com/maps?f=q&hl=en&q=#family_info.major_air_code#+airport&btnG=Search&t=k&t=h"><img src=pics/sat_image.png border=0></a></cfif></td></tr>
+									<tr><td>Airport City:</td><td colspan="3"><cfif family_info.airport_city is '' and family_info.airport_state is ''>n/a<cfelse><a href="http://en.wikipedia.org/wiki/#family_info.airport_city#%2C_#family_info.airport_state#" target="_blank">#family_info.airport_city# / #family_info.airport_state# <img src="pics/external_link.png" border=0></a> <a href="http://maps.google.com/maps?f=q&hl=en&q=#family_info.airport_city#+#family_info.airport_state#&btnG=Search&t=h" target="_blank"> <img src="pics/sat_image.png" border=0></a></cfif></td></tr>
+									<tr><td valign="top">Interests: </td><td colspan="3">#family_info.pert_info#</td></tr>
 								</table>				
 								<!--- BOTTOM OF A TABLE  --- COMMUNITY INFO --->
 								<table width=100% cellpadding=0 cellspacing=0 border=0>
@@ -515,17 +511,17 @@
 								<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 									<tr valign=middle height=24>
 										<td height=24 width=13 background="../pics/header_leftcap.gif">&nbsp;</td><td width=26 background="../pics/header_background.gif"><img src="../pics/school.gif"></td>
-										<td background="../pics/header_background.gif"><h2>School Info</h2></td><td background="../pics/header_background.gif" width=16><a href="?curdoc=forms/host_fam_pis_5"></a></td>
+										<td background="../pics/header_background.gif"><h2>School Info</h2></td>
 										<td width=17 background="../pics/header_rightcap.gif">&nbsp;</td></tr>
 								</table>
 								<!--- BODY OF TABLE --->
 								<table width="100%" border=0 cellpadding=3 cellspacing=0 class="section">
 									<tr><td>School:</td><td><cfif get_school.recordcount is '0'>there is no school assigned<cfelse>#get_school.schoolname#</cfif></td></tr>
 									<tr><td>Address:</td><td><cfif get_school.address is ''>n/a<cfelse>#get_school.address#</cfif></td></tr>
-									<tr><td>City:</td><td><cfif get_school.city is '' and get_school.state is ''>n/a<cfelse><a href="http://en.wikipedia.org/wiki/#get_school.city#%2C_#get_school.state#">#get_school.city# / #get_school.state# <img src="pics/external_link.png" border=0></a> <a href="http://maps.google.com/maps?f=q&hl=en&q=#get_school.city#+#get_school.state#&btnG=Search&t=h"> <img src=pics/sat_image.png border=0></a></cfif></td></tr>
+									<tr><td>City:</td><td><cfif get_school.city is '' and get_school.state is ''>n/a<cfelse><a href="http://en.wikipedia.org/wiki/#get_school.city#%2C_#get_school.state#" target="_blank">#get_school.city# / #get_school.state# <img src="pics/external_link.png" border=0></a> <a href="http://maps.google.com/maps?f=q&hl=en&q=#get_school.city#+#get_school.state#&btnG=Search&t=h" target="_blank"> <img src=pics/sat_image.png border=0></a></cfif></td></tr>
 									<tr><td>Start Date:</td><td><cfif get_school.begins is ''>n/a<cfelse>#DateFormat(get_school.begins, 'mm/dd/yyyy')#</cfif></td></tr>
 									<tr><td>End Date:</td><td><cfif get_school.ends is ''>n/a<cfelse>#DateFormat(get_school.ends, 'mm/dd/yyyy')#</cfif></td></tr>			
-									<tr><td>Web Site:</td><td><cfif get_school.url is ''>n/a<cfelse><a href="#get_school.url#">#get_school.url#</a></cfif></td></tr>
+									<tr><td>Web Site:</td><td><cfif get_school.url is ''>n/a<cfelse><a href="#get_school.url#" target="_blank">#get_school.url#</a></cfif></td></tr>
 								</table>				
 								<!--- BOTTOM OF A TABLE --- SCHOOL  --->
 								<table width=100% cellpadding=0 cellspacing=0 border=0>
@@ -537,7 +533,7 @@
 										<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 									<tr valign=middle height=24>
 										<td height=24 width=13 background="../pics/header_leftcap.gif">&nbsp;</td><td width=26 background="../pics/header_background.gif"></td>
-										<td background="../pics/header_background.gif"><h2>Host Interests</h2></td><td background="../pics/header_background.gif" width=16><a href="?curdoc=forms/host_fam_pis_5"></a></td>
+										<td background="../pics/header_background.gif"><h2>Host Interests</h2></td>
 										<td width=17 background="../pics/header_rightcap.gif">&nbsp;</td></tr>
 								</table>
 								<!--- BODY OF TABLE --->
