@@ -307,16 +307,14 @@
                     	smg_companies c ON p.companyid = c.companyid
                     WHERE 
                     	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                	AND
-                    	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                    AND
-                    	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
 					<cfif client.companyid EQ 5>
                         AND 
                         	c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="SMG">
                     <cfelse>
                         AND 
-                        	p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                            p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        AND 
+                            p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
                     </cfif>
                     ORDER BY p.startdate DESC, p.programname
                 </cfquery>

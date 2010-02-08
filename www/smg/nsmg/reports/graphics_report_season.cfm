@@ -22,7 +22,10 @@
 	LEFT JOIN smg_program_type pt ON p.type = pt.programtypeid
 	INNER JOIN smg_companies c ON p.companyid = c.companyid
 	WHERE <cfloop list="#form.seasonid#" index="season"> smgseasonid = #season# <cfif season EQ #ListLast(form.seasonid)#><Cfelse>or</cfif> </cfloop>
-	<cfif client.companyid NEQ '5'>AND p.companyid = '#client.companyid#'</cfif>
+	AND
+        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
+    AND	
+    	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	
 </cfquery>
 
 <cfquery name="get_stu_in_prog" datasource="MySQL">

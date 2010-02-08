@@ -1,11 +1,17 @@
 <cfquery name="get_all_programs" datasource="MYSQL">
-SELECT	*
-FROM 	smg_programs p
-LEFT OUTER JOIN smg_program_type ON type = programtypeid
-INNER JOIN smg_companies c ON p.companyid = c.companyid
-WHERE 1 = 1
-<cfif #client.companyid# is 5><cfelse>
-	AND p.companyid = #client.companyid#
-</cfif>
-ORDER BY companyshort, programname
+    SELECT	
+    	*
+    FROM 	
+    	smg_programs p
+	INNER JOIN 
+    	smg_companies c ON p.companyid = c.companyid
+	LEFT JOIN 
+    	smg_program_type t ON type = t.programtypeid
+    WHERE 
+        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
+    AND	
+    	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+	ORDER BY 
+    	p.startdate DESC, 
+        p.programname
 </cfquery>

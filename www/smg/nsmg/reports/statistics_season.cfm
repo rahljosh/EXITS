@@ -42,9 +42,12 @@
 	FROM 	smg_programs p
 	INNER JOIN smg_companies c ON c.companyid = p.companyid
 	LEFT JOIN smg_program_type ON type = programtypeid
-	WHERE 1 = 1
-		<cfif client.companyid NEQ '5'>AND p.companyid = '#client.companyid#'</cfif>
-		AND ( <cfloop list=#form.seasonid# index='season'> smgseasonid = #season# <cfif season EQ #ListLast(form.seasonid)#><Cfelse>or</cfif> </cfloop> ) 	  
+	WHERE 
+        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
+    AND	
+    	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	
+		
+        AND ( <cfloop list=#form.seasonid# index='season'> smgseasonid = #season# <cfif season EQ #ListLast(form.seasonid)#><Cfelse>or</cfif> </cfloop> ) 	  
 </cfquery>
 
 <cfquery name="get_stu_in_prog" datasource="MySQL">
