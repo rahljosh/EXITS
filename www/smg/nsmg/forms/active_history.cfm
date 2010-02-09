@@ -33,7 +33,7 @@ where history.studentid = #get_student_id.studentid#
 	</Tr>
 	<cfif active_history.recordcount eq 0>
 	<tr>
-		<td colspan=3 align="Center">There is no acitve / inactive history for this student</td>
+		<td colspan=3 align="Center">There is no Active / inactive history for this student</td>
 	<cfelse>
 	<cfloop query="active_history">
 	<Tr>
