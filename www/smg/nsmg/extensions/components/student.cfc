@@ -786,7 +786,7 @@
                 (
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.projectHelpID#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.activity#">,
-                    <cfqueryparam cfsqltype="numeric" value="#ARGUMENTS.hours#">,
+                    <cfqueryparam cfsqltype="cf_sql_numeric" value="#ARGUMENTS.hours#">,
                     <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCompleted#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="0">,                    
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,

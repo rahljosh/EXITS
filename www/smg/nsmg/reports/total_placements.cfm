@@ -1,3 +1,122 @@
+<!--- Kill Extra Output ---><br />
+<cfsilent>
+
+	<cfparam name="FORM.programID" default="">
+    <cfparam name="FORM.active" default="1">
+    
+    <!--- Get Program --->
+    <cfquery name="qGetProgram" datasource="MYSQL">
+        SELECT	
+            p.programid, 
+            p.programname
+        FROM 	
+            smg_programs p
+        LEFT JOIN 
+            smg_program_type ON p.type = programtypeid
+        WHERE
+            programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> ) 
+        ORDER BY 
+            p.programname
+    </cfquery>
+    
+    <!-----Company Information----->
+    <cfinclude template="../querys/get_company_short.cfm">
+    
+    <!--- get total students in program --->
+    <cfquery name="qGetTotalStudents" datasource="MySQL">
+        SELECT	
+            studentid, 
+            hostid
+        FROM 	
+            smg_students
+        WHERE 
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND        
+            hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND 
+            host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+        AND 
+            programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> ) 
+        <!--- inactive --->        
+        <cfif FORM.active EQ 0> 
+            AND 
+                active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        <!--- active --->        
+        <cfelseif FORM.active EQ 1> 
+            AND 
+                active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        <!--- canceled --->        
+        <cfelseif FORM.active EQ 2>
+            AND 
+                canceldate IS NOT NULL
+        </cfif>
+    </cfquery>
+
+	<cfquery name="qTotalPlaced" datasource="MySQL">
+		SELECT 
+        	DISTINCT count( s.studentid ) AS totalPlaced
+		FROM 
+        	smg_students s
+		LEFT JOIN 
+        	smg_users u ON s.placerepid = u.userid
+		WHERE 
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		AND            
+            s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND 
+            s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+        AND 
+            s.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> ) 		
+        <cfif FORM.active EQ 0> <!--- inactive --->
+            AND
+                 s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        <cfelseif FORM.active EQ 1> <!--- active --->
+            AND 
+                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        <cfelseif FORM.active EQ 2> <!--- canceled --->
+            AND 
+                s.canceldate IS NOT NULL
+        </cfif>
+        GROUP BY 
+        	placerepid
+		ORDER BY 
+        	totalPlaced
+	</cfquery>
+
+    <cfquery name="qTotalPerRep" datasource="MySQL">
+        SELECT DISTINCT 
+            count( s.studentid ) AS totalPlaced, 
+            u.userid
+        FROM 
+            smg_students s
+        LEFT JOIN 
+            smg_users u ON s.placerepid = u.userid
+        WHERE 
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND
+            s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND 
+            s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+        AND 
+            s.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> ) 		
+        <cfif FORM.active EQ 0> <!--- inactive --->
+            AND
+                 s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        <cfelseif FORM.active EQ 1> <!--- active --->
+            AND 
+                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        <cfelseif FORM.active EQ 2> <!--- canceled --->
+            AND 
+                s.canceldate IS NOT NULL
+        </cfif>
+        GROUP BY 
+            s.placerepid
+        ORDER BY 
+            totalPlaced
+    </cfquery>
+    
+</cfsilent>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -7,7 +126,7 @@
 </head>
 <body>
 
-<cfif not IsDefined('form.programid')>
+<cfif NOT LEN(FORM.programid)>
 	<table width='100%' cellpadding=6 cellspacing="0" align="center" frame="box">
 	<tr><td align="center">
 	<h1>Sorry, It was not possible to proccess you request at this time due the program information was not found.<br>
@@ -18,46 +137,6 @@
 	<cfabort>
 </cfif>
 
-<cfif NOT IsDefined('form.active')>
-	<cfset form.active = 1>
-</cfif>
-
-<!--- Get Program --->
-<cfquery name="get_program" datasource="MYSQL">
-	SELECT	p.programid, p.programname,
-		c.companyshort
-	FROM 	smg_programs p
-	LEFT JOIN smg_program_type ON p.type = programtypeid
-	INNER JOIN smg_companies c ON c.companyid = p.companyid
-	WHERE 	(<cfloop list="#form.programid#" index="prog">
-			programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
-	ORDER BY c.companyshort, p.programname
-</cfquery>
-
-<!-----Company Information----->
-<cfinclude template="../querys/get_company_short.cfm">
-
-<!--- get total students in program --->
-<cfquery name="get_total_students" datasource="MySQL">
-	SELECT	studentid, hostid
-	FROM 	smg_students
-	WHERE smg_students.hostid != '0'
-		AND host_fam_approved <= '4'
-		<cfif form.active EQ 0> <!--- inactive --->
-			AND smg_students.active = '0'
-		<cfelseif form.active EQ 1> <!--- active --->
-			AND smg_students.active = '1'
-		<cfelseif form.active EQ 2> <!--- canceled --->
-			AND smg_students.canceldate IS NOT NULL
-		</cfif>
-		AND (<cfloop list="#form.programid#" index="prog">
-			smg_students.programid = #prog# 
-		<cfif prog NEQ #ListLast(form.programid)#>or</cfif>
-		</cfloop> )
-</cfquery>
-
 <cfoutput>
 
 <table width="50%" cellpadding=6 cellspacing="0" align="center">
@@ -67,8 +146,8 @@
 <table width="50%" cellpadding=6 cellspacing="0" align="center" frame="box">
 <tr><td align="center">
 	Program(s) Included in this Report:<br>
-	<cfloop query="get_program"><b>#companyshort# -  #programname# &nbsp; (###ProgramID#)</b><br></cfloop>
-	Total of <cfif form.active EQ 0>inactive<cfelseif form.active EQ 1>active<cfelseif form.active EQ 2>canceled</cfif> Students <b>placed</b> in program: #get_total_students.recordcount#
+	<cfloop query="qGetProgram"><b>#programname# &nbsp; (###ProgramID#)</b><br></cfloop>
+	Total of <cfif FORM.active EQ 0>inactive<cfelseif FORM.active EQ 1>active<cfelseif FORM.active EQ 2>canceled</cfif> Students <b>placed</b> in program: #qGetTotalStudents.recordcount#
 	</td></tr>
 </table><br>
 
@@ -76,60 +155,18 @@
 <table width="50%" cellpadding=6 cellspacing="0" align="center" frame="box">	
 	<tr><th width="50%">Total of Placements</th><th width="50%" align="center">Total of Reps</th></tr>
 
-	<cfquery name="total_placed" datasource="MySQL">
-		SELECT DISTINCT count( studentid ) AS total_placed
-		FROM smg_students
-		LEFT JOIN smg_users u ON placerepid = userid
-		WHERE smg_students.hostid != '0'
-			AND host_fam_approved <= '4'
-			<cfif form.active EQ 0> <!--- inactive --->
-				AND smg_students.active = '0'
-			<cfelseif form.active EQ 1> <!--- active --->
-				AND smg_students.active = '1'
-			<cfelseif form.active EQ 2> <!--- canceled --->
-				AND smg_students.canceldate IS NOT NULL
-			</cfif>
-			AND (<cfloop list="#form.programid#" index="prog">
-				smg_students.programid = #prog# 
-			<cfif prog NEQ #ListLast(form.programid)#>or</cfif>
-			</cfloop> )
-		GROUP BY placerepid
-		ORDER BY total_placed
-	</cfquery>
-
-	<cfloop query="total_placed">
+	<cfloop query="qTotalPlaced">
 		
-		<cfset cur_placed = total_placed.total_placed>
+		<cfset cur_placed = qTotalPlaced.totalPlaced>
 		
 		<cfset calc_total_reps = 0>
-	 
-		<cfquery name="total_per_reps" datasource="MySQL">
-			SELECT DISTINCT count( studentid ) AS total_placed, userid
-			FROM smg_students
-			LEFT JOIN smg_users u ON placerepid = userid
-			WHERE smg_students.hostid != '0'
-				AND host_fam_approved <= '4'
-				<cfif form.active EQ 0> <!--- inactive --->
-					AND smg_students.active = '0'
-				<cfelseif form.active EQ 1> <!--- active --->
-					AND smg_students.active = '1'
-				<cfelseif form.active EQ 2> <!--- canceled --->
-					AND smg_students.canceldate IS NOT NULL
-				</cfif>
-				AND (<cfloop list="#form.programid#" index="prog">
-					smg_students.programid = #prog# 
-				<cfif prog NEQ #ListLast(form.programid)#>or</cfif>
-				</cfloop> )
-			GROUP BY placerepid
-			ORDER BY total_placed
-		</cfquery>
-		
-		<cfloop query="total_per_reps">
-			<cfif total_per_reps.total_placed EQ cur_placed>
+	 		
+		<cfloop query="qTotalPerRep">
+			<cfif qTotalPerRep.totalPlaced EQ cur_placed>
 				<cfset calc_total_reps = calc_total_reps + 1>
 			</cfif>	
 		</cfloop>
-		<tr><td align="center">#total_placed.total_placed#</td><td align="center">#calc_total_reps#</td></tr>
+		<tr><td align="center">#qTotalPlaced.totalPlaced#</td><td align="center">#calc_total_reps#</td></tr>
 	</cfloop>
 	
 </table><br>

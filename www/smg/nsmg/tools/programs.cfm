@@ -1,29 +1,34 @@
 <cfif client.usertype LTE '4'>
 
-<cfif NOT IsDefined('url.active')>
-	<cfset url.active = '1'>
-</cfif>
+<cfparam name="URL.active" default="1">
 
 <Cfquery name="programs" datasource="MySQL">
-	SELECT programid, programname, type, startdate, enddate, insurance_startdate, insurance_enddate, smg_programs.companyid, programfee,
-			application_fee, insurance_w_deduct, insurance_wo_deduct, blank, hold, smg_programs.tripid, smg_programs.active, smg_programs.fieldviewable,
-			smg_companies.companyshort,
-			smg_program_type.programtype,
-			smg_incentive_trip.trip_place, smg_incentive_trip.trip_year,
-			smg_seasons.season,
-			smg.season as smgseason
-	FROM smg_programs
-	INNER JOIN smg_companies ON smg_companies.companyid = smg_programs.companyid
-	LEFT JOIN smg_program_type ON smg_program_type.programtypeid = smg_programs.type
-	LEFT JOIN smg_incentive_trip ON smg_incentive_trip.tripid = smg_programs.tripid
-	LEFT JOIN smg_seasons ON smg_seasons.seasonid = smg_programs.seasonid
-	LEFT JOIN smg_seasons smg ON smg.seasonid = smg_programs.smgseasonid
-	WHERE smg_programs.active = <cfqueryparam value="#url.active#" cfsqltype="cf_sql_integer">
-	<cfif client.companyid NEQ 5>
-		AND smg_programs.companyid = #client.companyid#
-	</cfif>
-	ORDER BY 
-    	smg_companies.companyshort, endDate DESC
+	SELECT 
+    	programid, programname, type, startdate, enddate, insurance_startdate, insurance_enddate, smg_programs.companyid, programfee,
+        application_fee, insurance_w_deduct, insurance_wo_deduct, blank, hold, smg_programs.tripid, smg_programs.active, smg_programs.fieldviewable,
+        smg_companies.companyshort,
+        smg_program_type.programtype,
+        smg_incentive_trip.trip_place, smg_incentive_trip.trip_year,
+        smg_seasons.season,
+        smg.season as smgseason
+	FROM 
+    	smg_programs
+	INNER JOIN 
+    	smg_companies ON smg_companies.companyid = smg_programs.companyid
+	LEFT JOIN 
+    	smg_program_type ON smg_program_type.programtypeid = smg_programs.type
+	LEFT JOIN 
+    	smg_incentive_trip ON smg_incentive_trip.tripid = smg_programs.tripid
+	LEFT JOIN 
+    	smg_seasons ON smg_seasons.seasonid = smg_programs.seasonid
+	LEFT JOIN 
+    	smg_seasons smg ON smg.seasonid = smg_programs.smgseasonid
+	WHERE 
+    	smg_programs.active = <cfqueryparam value="#URL.active#" cfsqltype="cf_sql_integer">
+	AND 
+    	smg_programs.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
+	ORDER BY     	
+        endDate DESC
 </Cfquery>
 
 <form method=post action="?curdoc=tools/new_program">
@@ -34,7 +39,7 @@
 		<td width=26 background="pics/header_background.gif"><img src="pics/helpdesk.gif"></td>
 		<td background="pics/header_background.gif"><h2>Program Maintenence</h2></td>
 		<td background="pics/header_background.gif" align="right">
-			<font size=-1>  [ &nbsp; <cfif url.active EQ '1'><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif> <a href="?curdoc=tools/programs&active=1">Active</a></span> &middot; <cfif url.active EQ '0'><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif> <a href="?curdoc=tools/programs&active=0">Inactive</a> </span> &middot; All &nbsp; ] </font> 
+			<font size=-1>  [ &nbsp; <cfif URL.active EQ '1'><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif> <a href="?curdoc=tools/programs&active=1">Active</a></span> &middot; <cfif URL.active EQ '0'><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif> <a href="?curdoc=tools/programs&active=0">Inactive</a> </span> &middot; All &nbsp; ] </font> 
 		</td>
 		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
@@ -58,7 +63,7 @@
 	</tr>
 	<cfoutput query="programs">
 	<tr bgcolor="#iif(programs.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
-		<Td><cfif #enddate# lt #now()#><font color="red">expired<cfelseif hold is 1><font color="##3300CC">hold</font><cfelseif #enddate# gt #now()#><Font color="green">active</cfif></Font></Td>
+		<Td><cfif enddate lt now()><font color="red">expired<cfelseif hold is 1><font color="##3300CC">hold</font><cfelseif #enddate# gt #now()#><Font color="green">active</cfif></Font></Td>
 		<td><cfif fieldviewable is 1>Yes<cfelse>No</cfif></td>
 		<td><a href="?curdoc=tools/change_programs&progid=#programid#">#programname#</a></td>
 		<td><cfif programtype is ''><font color="red">None Assigned</font><cfelse>#programtype#</cfif></td>
@@ -92,24 +97,5 @@
 <cfelse>
 You do not have sufficient rights to edit programs.
 </cfif>
-
-<!--- TURN PROGRAMS TO INACTIVE 
-<cfquery name="get_program" datasource="MYSQL">
-	SELECT	*
-	FROM smg_programs p
-	LEFT JOIN smg_program_type ON type = programtypeid
-	INNER JOIN smg_companies c ON p.companyid = c.companyid
-	WHERE enddate < '#DateFormat(now(), 'yyyy-mm-dd')#'
-	ORDER BY companyshort, programname
-</cfquery>
-<cfoutput query="get_program">
-	<cfquery name="update" datasource="MySql">
-		UPDATE smg_programs 
-		SET active = '0'
-		WHERE programid = '#get_program.programid#'
-		LIMIT 1
-	</cfquery>
-</cfoutput>
----->
 
 <cfinclude template="../table_footer.cfm">
