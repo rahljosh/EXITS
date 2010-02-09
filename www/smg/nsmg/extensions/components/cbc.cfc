@@ -650,7 +650,7 @@
         <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
         
         <cfquery 
-        	name="qGetCBCUserMember" 	
+        	name="qGetPendingCBCUserMember" 	
         	datasource="#APPLICATION.dsn#">
                 SELECT DISTINCT 
                 	cbc.cbcID, 
@@ -702,7 +702,7 @@
                 LIMIT 20
         </cfquery>
    
-        <cfreturn qGetCBCUserMember>
+        <cfreturn qGetPendingCBCUserMember>
     </cffunction>
 
 
@@ -984,7 +984,7 @@
                         
                         if ( VAL(ARGUMENTS.hostID) ) {
                             // Update Host CBC 
-                            APPLICATION.CFC.CBC.updateHostCBC(
+                            updateHostCBC(
                                 batchID=ARGUMENTS.BatchID,
                                 ReportID=ReportID,
                                 cbcFamID=ARGUMENTS.cbcID,
@@ -992,11 +992,11 @@
                             );							
 							
 							// Set up URL Results
-							batchResult.URLResults = "view_host_cbc.cfm?hostID=#ARGUMENTS.hostID#&batchID=#ARGUMENTS.batchID#&hostType=#ARGUMENTS.userType#";
+							batchResult.URLResults = "view_host_cbc.cfm?hostID=#ARGUMENTS.hostID#&CBCFamID=#ARGUMENTS.cbcID#"; //&batchID=#ARGUMENTS.batchID#&hostType=#ARGUMENTS.userType#
 
 						} else {
                             // Update User CBC 
-                            APPLICATION.CFC.CBC.updateUserCBC(
+                            updateUserCBC(
                                 batchID=ARGUMENTS.BatchID,
                                 ReportID=ReportID,
                                 cbcID=ARGUMENTS.cbcID,
@@ -1004,7 +1004,7 @@
                             );
 
 							// Set up URL Results
-							batchResult.URLResults = "view_user_cbc.cfm?userid=#ARGUMENTS.userID#&batchID=#ARGUMENTS.batchID#&userType=#ARGUMENTS.userType#";
+							batchResult.URLResults = "view_user_cbc.cfm?userid=#ARGUMENTS.userID#&cbcID=#ARGUMENTS.cbcID#"; //&batchID=#ARGUMENTS.batchID#&userType=#ARGUMENTS.userType#
                         }
                     }
                     

@@ -129,7 +129,7 @@
 				</cfloop>
 			</td>
 		</tr>
-	</table>                        
+	</table>  <br /><br />                     
 </cfif>	
 
 <!--- Check if there are records --->    
