@@ -179,7 +179,7 @@
                         </td>
                         <td>
                         	<!--- Create Report --->
-							<cfif NOT VAL(projectHelpID)>												
+							<cfif NOT VAL(projectHelpID) OR NOT VAL(getPHTotalHours)>												
                                 <a href="?curdoc=project_help/submit&studentID=#studentID#&regionID=#FORM.regionID#&isActive=#FORM.isActive#">Create</a>
 							
 							<!--- Area Rep Options --->
