@@ -19,7 +19,7 @@
     
     <cfscript>
 		// Gets Current Company
-		qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+		qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
 	
 		// Create Structure to store errors
 		Errors = StructNew();
@@ -58,7 +58,7 @@
 	
     <cfscript>
 		// Get CBCs
-		qGetCBCUsers = APPLICATION.CFC.CBC.getPendingCBCUser(
+		qGetCBCUsers = APPCFC.CBC.getPendingCBCUser(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID
 		);	
@@ -69,7 +69,7 @@
 
     <cfscript>
 		// Get CBCs
-		qGetCBCUsers = APPLICATION.CFC.CBC.getCBCUserMember(
+		qGetCBCUsers = APPCFC.CBC.getPendingCBCUserMember(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID
 		);	
@@ -130,7 +130,7 @@
 				</cfloop>
 			</td>
 		</tr>
-	</table>                        
+	</table>  <br /><br />                     
 </cfif>	
 
 <!--- Check if there are records --->    
@@ -148,7 +148,7 @@
     
     <cfscript>
         // Create a batch ID - It must be unique
-        newBatchID = APPLICATION.CFC.CBC.createBatchID(
+        newBatchID = APPCFC.CBC.createBatchID(
             companyID=qGetCompany.companyID,
             userID=CLIENT.userid,
             cbcTotal=qGetCBCUsers.recordcount,
@@ -160,7 +160,7 @@
 
         <cfscript>
             // Process Batch
-            CBCStatus = APPLICATION.CFC.CBC.processBatch(
+            CBCStatus = APPCFC.CBC.processBatch(
                 companyID=qGetCompany.companyID,
                 companyShort=qGetCompany.companyShort,
                 batchID=newBatchID,
