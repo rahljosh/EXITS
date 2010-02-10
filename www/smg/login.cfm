@@ -15,7 +15,12 @@ from smg_companies where url_ref = '#cgi.server_name#'
 </cfif><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><cfoutput>#client.companyname#</cfoutput></title>
-<link href="exitsapp_images/STB.css" rel="stylesheet" type="text/css" />
+<cfif client.companyid eq 11>
+<link href="exitsapp_images/WEP.css" rel="stylesheet" type="text/css" media="screen"/>
+<cfelse>
+<link href="exitsapp_images/STB.css" rel="stylesheet" type="text/css" media="screen"/>
+</cfif>
+
 <script src="SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
 <script src="SpryAssets/SpryValidationPassword.js" type="text/javascript"></script>
 <link href="SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
@@ -151,9 +156,9 @@ a:active {
 -->
 </style>
 
-
-<body>
 <cfoutput>
+<body>
+
 <div id="mainContent">
 <div id="loginBox">
   <div class="loginTop"></div>

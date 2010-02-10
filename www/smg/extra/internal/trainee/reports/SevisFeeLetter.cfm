@@ -1,7 +1,7 @@
 <cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes">
 
 <cfquery name="get_candidate" datasource="MySql">
-	SELECT *, <!---- smg_countrylist.countryname --->
+	SELECT *, <!---- smg_countrylist.countryname ---->
 	bcountrylist.countryname as birhcountryname,
 	hcountrylist.countryname as homecountryname,
 	ccountrylist.countryname as citizencountryname
@@ -121,3 +121,4 @@
 <p class="style1">Sergei Chernyshov (sergei@iseusa.com)
 </cfoutput>
 </cfdocument>
+

@@ -1,4 +1,4 @@
-<!--- PS: Any changes made here should be also be made to extensions/customtags/progressreport.cfm which is used to print bulk reports --->
+<!--- PS: Any changes made here should be also be made in the bulk progress report printing file --->
 
 <cfparam name="form.pr_action" default="">
 <cfswitch expression="#form.pr_action#">

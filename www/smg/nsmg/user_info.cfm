@@ -1,3 +1,4 @@
+
 <!--- CHECK RIGHTS --->
 <cfinclude template="check_rights.cfm">
 
@@ -607,7 +608,7 @@
                                 INNER JOIN smg_companies c ON uar.companyid = c.companyid
                                 INNER JOIN smg_usertype ut ON uar.usertype = ut.usertypeid
                                 LEFT JOIN smg_users adv ON uar.advisorid = adv.userid
-                                WHERE c.website = '#application.company_short#'
+                                WHERE c.website = '#client.company_submitting#'
                                 AND uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
                                 ORDER BY uar.companyid, uar.regionid, uar.usertype
                             </cfquery>
