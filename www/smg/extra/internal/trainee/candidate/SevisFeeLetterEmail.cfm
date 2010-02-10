@@ -1,6 +1,14 @@
 <cfquery name="get_candidate" datasource="MySql">
-	SELECT *, smg_countrylist.countryid, smg_countrylist.countryname, smg_users.firstname as intrep_name, smg_users.email as intrep_email
+	SELECT *, smg_countrylist.countryid, smg_countrylist.countryname, smg_users.firstname as intrep_name, smg_users.email as intrep_email,
+    bcountrylist.countryname as birhcountryname,
+	hcountrylist.countryname as homecountryname,
+	ccountrylist.countryname as citizencountryname
 	FROM extra_candidates
+    
+    INNER JOIN smg_countrylist as bcountrylist ON bcountrylist.countryid = extra_candidates.birth_country
+	INNER JOIN smg_countrylist as hcountrylist ON hcountrylist.countryid = extra_candidates.home_country
+	INNER JOIN smg_countrylist as ccountrylist ON ccountrylist.countryid = extra_candidates.citizen_country
+    
 	INNER JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.birth_country
 	AND extra_candidates.home_country AND extra_candidates.citizen_country
 	INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
@@ -22,8 +30,9 @@
  <cfoutput query="get_candidate">
 
 <CFMAIL TO="#intrep_email#" bcc="sergei@iseusa.com" FROM="sergei@iseusa.com"
-	 SUBJECT="#firstname# #middlename# #lastname# form DS-2019 issued/sevis fee payment information" type="html"> 
-	 <br>
+	 SUBJECT="#firstname# #middlename# #lastname# form DS-2019 issued/sevis fee payment information" type="html">  
+
+     <br>
 <p class="style1">This  letter is to confirm that #firstname# #lastname# has been approved by ISE for  the J-1 visa sponsorship and has been entered into the Student and Exchange Visitor Information System (SEVIS) database. A DS-2019 form (SEVIS ID #ds2019#) has been issued and sent.<br>
     <br>
   If an  appointment to apply for the J-1 visa at the U.S. Embassy or Consulate in the  home country has not yet been scheduled, please make sure that is done at this  time.<br>

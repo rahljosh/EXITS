@@ -175,6 +175,7 @@
         uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueid#">
 </cfquery>
 
+
 <cfif LEN(check_sevis.ds2019)>
     <cfset sendemail = 'no'>		
 <cfelse>
@@ -250,6 +251,7 @@
 
 
 <cfif sendemail eq 'yes' AND LEN(FORM.ds2019)>
+
 
     <cfquery name="get_intrep_email" datasource="mysql">
         SELECT 	
