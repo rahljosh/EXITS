@@ -28,8 +28,13 @@
 		// Create Array to store error messages
 		Errors.Messages = ArrayNew(1);
 	
-		// Get Company Info
-		qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+		if ( CLIENT.companyID EQ 5 ) {
+			// Get ISE Info
+			qGetCompany = APPCFC.COMPANY.getCompanies(companyID=1);
+		} else {
+			// Get Company Info
+			qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+		}
 		
 		// Get PDF Categories
 		qGetPDFCategory = APPCFC.pdfDoc.getPDFCategories(userTypeID=CLIENT.userType);
