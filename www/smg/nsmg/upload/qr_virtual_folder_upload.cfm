@@ -7,9 +7,7 @@
 </head>
 
 <body>
-<!----
-<cftry>
----->
+
 <!--- Check to see if the Form variable exists. --->
 <cfif NOT isDefined("form.UploadFile") OR NOT IsDefined('form.unqid')>
 	<cfinclude template="error_message.cfm">
@@ -142,12 +140,14 @@ TYPE="HTML">
 	</body>
 	</html>
 </CFMAIL>
+
 <!----Email to Int. Representative---->
 <cfquery name="email_int_rep" datasource="mysql">
 select email
 from smg_users 
 where userid = #get_student_info.intrep#
 </cfquery>
+
 <CFMAIL SUBJECT="SMG EXITS - Virtual Folder - Upload Notification for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)"
 TO="#email_int_rep.email#" 
 FROM="""#get_user.businessname# #get_user.firstname# #get_user.lastname#"" <#get_user.email#>"
@@ -165,9 +165,12 @@ TYPE="HTML">
 		<tr><td>This e-mail is just to let you know a new document has been uploaded into #get_student_info.firstname# #get_student_info.familylastname#'s (###get_student_info.studentid#) virtual folder by #get_user.businessname# #get_user.firstname# #get_user.lastname#.
 			The document has been recorded in the category #get_category.category# <cfif form.other_category NEQ ''>&nbsp; - &nbsp; #form.other_category#</cfif>.<br><br></td></tr>	
 	<tr><td>
-		Please click 
-		<a href="http://www.student-management.com/nsmg/index.cfm?curdoc=student_info&studentid=#get_student_info.studentid#">here</a>
+		Please click
+		<a href="https://www.student-management.com/nsmg/virtualfolder/list_vfolder.cfm?unqid=#form.unqid#">here</a> and
 		to see the student's virtual folder.<br><br>
+		<!---
+        <a href="http://www.student-management.com/nsmg/index.cfm?curdoc=intrep/int_student_info&unqid=#form.unqid#">here</a> and click on Virtual Folder (top-right)
+		to see the student's virtual folder.<br><br> --->
 	</td></tr>	
 	<tr><td>
 		 Sincerely,<br>
@@ -179,9 +182,6 @@ TYPE="HTML">
 	</html>
 </CFMAIL>
 
-
-<html>
-<head>
 <cfoutput>
 <script language="JavaScript">
 <!-- 
@@ -190,13 +190,6 @@ alert("You have successfully uploaded this file.");
 -->
 </script>
 </cfoutput>
-</head>
-</html> 		
-<!----
-<cfcatch type="any">
-	<cfinclude template="error_message.cfm">
-</cfcatch>
-</cftry>
-	---->
+
 </body>
 </html>
