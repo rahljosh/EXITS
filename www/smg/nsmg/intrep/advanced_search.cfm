@@ -29,6 +29,9 @@
 	LEFT JOIN smg_program_type ON type = programtypeid
 	INNER JOIN smg_companies c ON p.companyid = c.companyid
 	WHERE enddate > '#DateFormat(now(), 'yyyy-mm-dd')#'
+    AND
+    	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+    AND
         p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
     AND 
         p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
@@ -118,7 +121,7 @@
 		<tr><td class="label">Program :</td>
 			<td><select name="programid" multiple  size="5">
 				<option value="0" selected>All</option>
-					<cfloop query="get_program"><option value="#ProgramID#">#companyshort# &nbsp; #programname#</option></cfloop>
+					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 				</select></td></tr>
 		<tr><td class="label">Student ID :</td>
 			<td><input type="text" name="studentid" size="5" maxlength="5"></td></tr>
