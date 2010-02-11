@@ -7,10 +7,8 @@
 		c.companyshort
 	FROM 	smg_programs p
 	INNER JOIN smg_companies c ON c.companyid = p.companyid
-	WHERE 	<cfloop list=#form.programid# index='prog'>
-				programid = #prog# 
-				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop>
+	WHERE 	
+    	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 </cfquery>
 
 <!-----Company Information----->
@@ -30,7 +28,10 @@
 	INNER JOIN smg_regions r ON r.regionid = s.regionassigned
 	LEFT JOIN smg_aypcamps english ON s.aypenglish = english.campid
 	LEFT JOIN smg_aypcamps orientation ON s.ayporientation = orientation.campid
-	WHERE s.active = '1' 
+	WHERE 
+    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    AND	
+	    s.active = '1' 
 		AND s.onhold_approved <= '4'
 		<cfif form.regionid NEQ 0>
 			AND s.regionassigned = '#form.regionid#'
@@ -54,11 +55,11 @@
 			AND s.ds2019_no NOT LIKE 'N%'
 			AND (s.countryresident = '232' or s.countrycitizen = '232' or s.countrybirth = '232') 
 		</cfif>
-		AND	( <cfloop list="#form.programid#" index="prog">
-			s.programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
-	Order by r.regionname, s.familylastname
+		AND	
+			s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )            
+	Order by 
+    	r.regionname, 
+        s.familylastname
 </cfquery> 
 
 
