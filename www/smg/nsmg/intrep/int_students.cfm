@@ -1,3 +1,65 @@
+<!--- Kill Extra Output --->
+<cfsilent>
+	
+    <!--- Param URL variables --->
+    <cfparam name="URL.student_order" default="familylastname">
+    <cfparam name="URL.status" default="unplaced">
+
+	<!----International Rep---->
+    <cfquery name="int_Agent" datasource="MySQL">
+        SELECT  u.userid, u.master_account
+        FROM smg_users u
+        LEFT JOIN smg_insurance_type insu ON insu.insutypeid = u.insurance_typeid
+        WHERE u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+    </cfquery>
+
+    <cfquery name="students" datasource="MySql">
+        SELECT  s.studentid, s.firstname, s.familylastname, s.sex, s.regionassigned, s.programid, s.dateapplication, s.regionguar,
+                s.hostid, s.companyid, s.state_guarantee, s.uniqueid, s.branchid, s.host_fam_approved, s.dateplaced,
+                smg_regions.regionname,
+                smg_g.regionname as r_guarantee,
+                c.countryname,
+                co.companyshort,
+                smg_states.state,
+                h.familylastname as hostlastname,
+                branch.businessname as branchname,
+                office.businessname as officename, 
+                p.programname
+        FROM smg_students s
+        INNER JOIN smg_companies co ON s.companyid = co.companyid		
+        LEFT JOIN smg_programs p ON s.programid = p.programid
+        LEFT JOIN smg_regions ON s.regionassigned = smg_regions.regionid
+        LEFT JOIN smg_countrylist c ON c.countryid = s.countryresident
+        LEFT JOIN smg_regions smg_g on s.regionalguarantee = smg_g.regionid
+        LEFT JOIN smg_states ON s.state_guarantee = smg_states.id
+        LEFT JOIN smg_hosts h ON s.hostid = h.hostid
+        LEFT JOIN smg_users branch ON s.branchid = branch.userid
+        LEFT JOIN smg_users office ON s.intrep = office.userid
+        WHERE s.companyid <= '4'
+            <cfif URL.status EQ 'placed'>
+                AND s.active = '1' 
+                AND s.hostid != 0
+                AND s.host_fam_approved <= '4'
+            <cfelseif URL.status EQ 'unplaced'>
+                AND s.active = '1' 
+                AND (s.hostid = '0' OR s.hostid != '0' AND s.host_fam_approved >= 5)
+            <cfelseif URL.status EQ 'inactive'>
+                AND s.active = '0'
+                AND s.canceldate IS NULL
+            <cfelseif URL.status EQ 'cancelled'>
+                AND s.active = '0'
+                AND s.canceldate IS NOT NULL
+            </cfif>
+            <cfif client.usertype EQ '8'>
+                AND (s.intrep = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer"> OR office.master_accountid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">)
+            <cfelse>
+                AND s.branchid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
+            </cfif>
+        ORDER BY '#URL.student_order#'	
+    </cfquery>
+
+</cfsilent>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -7,72 +69,11 @@
 
 <body>
 
-<cfif not isDefined("url.student_order")>
-	<cfset url.student_order = "familylastname">
-</cfif>
-
-<cfif NOT isDefined("url.status")>
-	<cfset url.status = "unplaced">
-</cfif>
-
-<!----International Rep---->
-<cfquery name="int_Agent" datasource="MySQL">
-	SELECT  u.userid, u.master_account
-	FROM smg_users u
-	LEFT JOIN smg_insurance_type insu ON insu.insutypeid = u.insurance_typeid
-	WHERE u.userid = '#client.userid#'
-</cfquery>
-
 <!--- INTL AGENT --->
-<cfif client.usertype NEQ '8' AND client.usertype NEQ '11'>
+<cfif client.usertype NEQ 8 AND client.usertype NEQ 11>
 	You do not have rights to see the students.
 	<cfabort>
 </cfif>
-
-<cfquery name="students" datasource="MySql">
-	SELECT  s.studentid, s.firstname, s.familylastname, s.sex, s.regionassigned, s.programid, s.dateapplication, s.regionguar,
-			s.hostid, s.companyid, s.state_guarantee, s.uniqueid, s.branchid, s.host_fam_approved, s.dateplaced,
-			smg_regions.regionname,
-			smg_g.regionname as r_guarantee,
-			c.countryname,
-			co.companyshort,
-			smg_states.state,
-			h.familylastname as hostlastname,
-			branch.businessname as branchname,
-			office.businessname as officename, 
-			p.programname
-	FROM smg_students s
-	INNER JOIN smg_companies co ON s.companyid = co.companyid		
-	LEFT JOIN smg_programs p ON s.programid = p.programid
-	LEFT JOIN smg_regions ON s.regionassigned = smg_regions.regionid
-	LEFT JOIN smg_countrylist c ON c.countryid = s.countryresident
-	LEFT JOIN smg_regions smg_g on s.regionalguarantee = smg_g.regionid
-	LEFT JOIN smg_states ON s.state_guarantee = smg_states.id
-	LEFT JOIN smg_hosts h ON s.hostid = h.hostid
-	LEFT JOIN smg_users branch ON s.branchid = branch.userid
-	LEFT JOIN smg_users office ON s.intrep = office.userid
-	WHERE s.companyid <= '4'
-		<cfif url.status EQ 'placed'>
-			AND s.active = '1' 
-			AND s.hostid != 0
-			AND s.host_fam_approved <= '4'
-		<cfelseif url.status EQ 'unplaced'>
-			AND s.active = '1' 
-			AND (s.hostid = '0' OR s.hostid != '0' AND s.host_fam_approved >= 5)
-		<cfelseif url.status EQ 'inactive'>
-			AND s.active = '0'
-			AND s.canceldate IS NULL
-		<cfelseif url.status EQ 'cancelled'>
-			AND s.active = '0'
-			AND s.canceldate IS NOT NULL
-		</cfif>
-		<cfif client.usertype EQ '8'>
-			AND (s.intrep = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer"> OR office.master_accountid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">)
-		<cfelse>
-			AND s.branchid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
-		</cfif>
-	ORDER BY '#url.student_order#'	
-</cfquery>
 
 <style type="text/css">
 <!--
@@ -97,11 +98,11 @@ div.scroll {
 		<td background="pics/header_background.gif" align="right"><cfoutput><font size=-1>
 			<font size=-1>[ <a href="?curdoc=intrep/int_php_students">Private High School</a> ] &nbsp; &middot; &nbsp;
 			[ 
-			<cfif url.status EQ "placed"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=placed">Placed</a></span> &middot; 			
-			<cfif url.status EQ "unplaced"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=unplaced">Unplaced</a></span> &middot; 
-			<cfif url.status EQ "all"><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=all">All</a></span> &middot;
-			<cfif url.status EQ "inactive"><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=inactive">Inactive</a></span> &middot;  
-			<cfif url.status EQ "cancelled"><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=cancelled">Cancelled</a></span>  
+			<cfif URL.status EQ "placed"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=placed">Placed</a></span> &middot; 			
+			<cfif URL.status EQ "unplaced"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=unplaced">Unplaced</a></span> &middot; 
+			<cfif URL.status EQ "all"><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=all">All</a></span> &middot;
+			<cfif URL.status EQ "inactive"><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=inactive">Inactive</a></span> &middot;  
+			<cfif URL.status EQ "cancelled"><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif><a href="?curdoc=intrep/int_students&status=cancelled">Cancelled</a></span>  
 			] 
 			#students.recordcount# students displayed</cfoutput></td>
 		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
@@ -109,22 +110,22 @@ div.scroll {
 </table>
 
 <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
-	<tr><td width="3%"><a href="?curdoc=intrep/int_students&student_order=studentid&status=#url.status#">ID</a></td>
-		<td width="10%"><a href="?curdoc=intrep/int_students&student_order=familylastname&status=#url.status#">Last Name</a></td>
-		<td width="10%"><a href="?curdoc=intrep/int_students&student_order=firstname&status=#url.status#">First Name</a></td>
-		<td width="5%"><a href="?curdoc=intrep/int_students&student_order=sex&status=#url.status#">Sex</a></td>
-		<td width="8%"><a href="?curdoc=intrep/int_students&student_order=country&status=#url.status#">Country</a></td>
-		<td width="8%"><a href="?curdoc=intrep/int_students&student_order=regionname&status=#url.status#">Region</a></td>
-		<td width="8%"><a href="?curdoc=intrep/int_students&student_order=programid&status=#url.status#">Program</a></td>
-		<cfif url.status NEQ "unplaced">
-			<Td width="10%"><a href="?curdoc=intrep/int_students&student_order=hostid&status=#url.status#">Family</a></td>
-			<Td width="8%"><a href="?curdoc=intrep/int_students&student_order=dateplaced&status=#url.status#">Place Date</a></td>
+	<tr><td width="3%"><a href="?curdoc=intrep/int_students&student_order=studentid&status=#URL.status#">ID</a></td>
+		<td width="10%"><a href="?curdoc=intrep/int_students&student_order=familylastname&status=#URL.status#">Last Name</a></td>
+		<td width="10%"><a href="?curdoc=intrep/int_students&student_order=firstname&status=#URL.status#">First Name</a></td>
+		<td width="5%"><a href="?curdoc=intrep/int_students&student_order=sex&status=#URL.status#">Sex</a></td>
+		<td width="8%"><a href="?curdoc=intrep/int_students&student_order=country&status=#URL.status#">Country</a></td>
+		<td width="8%"><a href="?curdoc=intrep/int_students&student_order=regionname&status=#URL.status#">Region</a></td>
+		<td width="8%"><a href="?curdoc=intrep/int_students&student_order=programid&status=#URL.status#">Program</a></td>
+		<cfif URL.status NEQ "unplaced">
+			<Td width="10%"><a href="?curdoc=intrep/int_students&student_order=hostid&status=#URL.status#">Family</a></td>
+			<Td width="8%"><a href="?curdoc=intrep/int_students&student_order=dateplaced&status=#URL.status#">Place Date</a></td>
 		</cfif>
-		<td width="8%"><a href="?curdoc=intrep/int_students&student_order=companyshort&status=#url.status#">Company</a></td>
+		<td width="8%"><a href="?curdoc=intrep/int_students&student_order=companyshort&status=#URL.status#">Company</a></td>
 		<cfif int_Agent.master_account EQ '0'>
-		<td width="10%"><a href="?curdoc=intrep/int_students&student_order=branchname&status=#url.status#">Branch</a></td>
+		<td width="10%"><a href="?curdoc=intrep/int_students&student_order=branchname&status=#URL.status#">Branch</a></td>
 		<cfelse>
-		<td width="10%"><a href="?curdoc=intrep/int_students&student_order=officename&status=#url.status#">Office</a></td>
+		<td width="10%"><a href="?curdoc=intrep/int_students&student_order=officename&status=#URL.status#">Office</a></td>
 		</cfif>
 		<td width="2%">&nbsp;</td>
 	</tr>
@@ -161,7 +162,7 @@ div.scroll {
 			</cfif>
 		</td>
 		<td width="8%">#programname#</td>
-		<cfif url.status NEQ "unplaced">
+		<cfif URL.status NEQ "unplaced">
 			<td width="10%"><cfif hostid NEQ '0' AND host_fam_approved LTE '4'>#hostlastname#</cfif></td>
 			<Td width="8%"><cfif hostid NEQ '0' AND host_fam_approved LTE '4' AND dateplaced NEQ ''>#DateFormat(dateplaced, 'mm/dd/yy')#</cfif></td>
 		</cfif>

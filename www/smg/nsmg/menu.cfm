@@ -1,3 +1,8 @@
+<cfscript>
+	// Get Company Info
+	qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+</cfscript>
+
 <script src="/nsmg/SpryAssets/SpryMenuBar.js" type="text/javascript"></script>
 <link href="/nsmg/SpryAssets/SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
 
@@ -11,9 +16,9 @@
         <li>
         	<a href="index.cfm?curdoc=intrep/int_students">Students</a>
             <ul>
-                <li><a href="index.cfm?curdoc=intrep/int_students&placed=no">Unplaced</a></li>
-                <li><a href="index.cfm?curdoc=intrep/int_students&placed=yes">Placed</a></li>
-                <li><a href="index.cfm?curdoc=intrep/int_students&placed=all">All</a></li>
+                <li><a href="index.cfm?curdoc=intrep/int_students&status=unplaced">Unplaced</a></li>
+                <li><a href="index.cfm?curdoc=intrep/int_students&status=placed">Placed</a></li>
+                <li><a href="index.cfm?curdoc=intrep/int_students&status=all">All</a></li>
                 <li><a href="index.cfm?curdoc=intrep/advanced_search">Advanced Search</a></li>
                 <li><a href="index.cfm?curdoc=intrep/int_php_students">Private High School</a></li>
             </ul>
@@ -123,7 +128,13 @@
 			</li>              
         </cfif>
         
-        <li><a href="index.cfm?curdoc=pdf_docs/docs_forms">PDF Docs</a></li>
+        <cfif CLIENT.companyID EQ 10>
+        	 <!--- Old Section --->
+             <li><a href="index.cfm?curdoc=pdf_docs/docs_forms">#qGetCompany.companyShort_noColor# Docs</a></li>
+        <cfelse>
+        	 <!--- New Section --->
+             <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
+        </cfif>
         
         <!--- Not Student View --->
         <cfif client.usertype NEQ 9>
