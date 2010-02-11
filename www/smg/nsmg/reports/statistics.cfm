@@ -1,4 +1,92 @@
-<cfif not IsDefined('form.programid')>
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<cfparam name="FORM.programid" default="">
+
+	<!--- get company region --->
+    <cfquery name="get_region" datasource="MySQL">
+        SELECT	
+        	regionname, 
+            company, 
+            regionid
+        FROM 
+        	smg_regions
+        WHERE 
+        	company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfif NOT IsDefined('FORM.inactive')>
+        	AND 
+            	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        </cfif>
+        ORDER BY regionname
+    </cfquery>
+    
+    <!-----Company Information----->
+    <cfinclude template="../querys/get_company_short.cfm">
+    
+    <cfquery name="get_program" datasource="MYSQL">
+        SELECT	
+        	ProgramID, 
+            programname, 
+            startdate, 
+            enddate, 
+            companyid, 
+            type,
+            programtype
+        FROM 	
+        	smg_programs 
+        LEFT JOIN 
+        	smg_program_type ON type = programtypeid
+        WHERE 
+            programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+    </cfquery>
+    
+    <cfquery name="get_stu_in_prog" datasource="MySQL">
+        SELECT	 
+        	count(studentid) as count_stu
+        FROM 	
+        	smg_students
+        <cfif FORM.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
+        WHERE 
+        	onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+        AND	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND 
+            canceldate IS NULL
+        AND 
+            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND 
+          programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+        <cfif FORM.continent NEQ 0>
+        	AND 
+            	c.continent = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.continent#">
+        </cfif>
+    </cfquery>
+    
+    <cfquery name="get_stu_placed" datasource="MySQL">
+        SELECT	 
+        	count(studentid) as count_stu
+        FROM 	
+        	smg_students
+        <cfif FORM.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
+        WHERE 
+        	hostid != '0' 
+        AND	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+            AND host_fam_approved < '5'
+            AND onhold_approved <= '4'
+            AND active = 1
+            AND canceldate IS NULL
+            AND 
+              programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+            <cfif isDate(FORM.date_host_fam_approved)>
+                AND date_host_fam_approved <= #CreateODBCDate(FORM.date_host_fam_approved)#
+            </cfif>
+            <cfif FORM.continent NEQ 0>AND c.continent = '#FORM.continent#'</cfif>
+    </cfquery>
+
+</cfsilent>
+
+<cfif NOT LEN(FORM.programid)>
 	<table align="center" width="90%" cellpadding=6 cellspacing="0">
 	<tr><td>An error has ocurred and the report could not be generated. Please go back and try again.</td></tr>
 	<tr><td align="center"><input type="image" value="close window" src="pics/back.gif" onClick="javascript:history.back()"></td></tr>
@@ -6,57 +94,8 @@
 	<cfabort>
 </cfif>
 
-<!--- get company region --->
-<cfquery name="get_region" datasource="MySQL">
-	SELECT	regionname, company, regionid
-	FROM smg_regions
-	WHERE company = '#client.companyid#'
-	<cfif NOT IsDefined('form.inactive')>AND active = '1'</cfif>
-	ORDER BY regionname
-</cfquery>
 
-<!-----Company Information----->
-<cfinclude template="../querys/get_company_short.cfm">
 
-<cfquery name="get_program" datasource="MYSQL">
-	SELECT	ProgramID, programname, startdate, enddate, companyid, type,
-			programtype
-	FROM 	smg_programs 
-	LEFT JOIN smg_program_type ON type = programtypeid
-	WHERE 
-    	programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
-</cfquery>
-
-<cfquery name="get_stu_in_prog" datasource="MySQL">
-	SELECT	 count(studentid) as count_stu
-	FROM 	smg_students
-	<cfif form.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
-	WHERE onhold_approved <= '4'
-    AND 
-    	canceldate IS NULL
-    AND 
-    	active = 1
-    AND 
-      programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
-    <cfif form.continent NEQ 0>AND c.continent = '#form.continent#'</cfif>
-</cfquery>
-
-<cfquery name="get_stu_placed" datasource="MySQL">
-	SELECT	 count(studentid) as count_stu
-	FROM 	smg_students
-	<cfif form.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
-	WHERE hostid != '0' 
-		AND host_fam_approved < '5'
-		AND onhold_approved <= '4'
-        AND active = 1
-		AND canceldate IS NULL
-        AND 
-          programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
-		<cfif isDate(FORM.date_host_fam_approved)>
-			AND date_host_fam_approved <= #CreateODBCDate(form.date_host_fam_approved)#
-		</cfif>
-		<cfif form.continent NEQ 0>AND c.continent = '#form.continent#'</cfif>
-</cfquery>
 
 <!--- <cfif not isDefined('url.graphics')><cfset url.graphics = 'no'></cfif> --->
 <cfoutput>
@@ -66,8 +105,8 @@
 <tr><td align="left">
 	&nbsp &nbsp Program(s) : &nbsp <br>
 	<cfloop query="get_program">&nbsp &nbsp <b>(#ProgramID#) &nbsp #programname# &nbsp (#programtype#)</b><br></cfloop>
-	<cfif form.continent NEQ 0>&nbsp &nbsp Continent: &nbsp; <b>#form.continent#</b><br></cfif>
-	<cfif isDate(FORM.date_host_fam_approved)>&nbsp &nbsp Students placed by <b>#DateFormat(form.date_host_fam_approved, 'mm/dd/yyyy')#</b><br></cfif>
+	<cfif FORM.continent NEQ 0>&nbsp &nbsp Continent: &nbsp; <b>#FORM.continent#</b><br></cfif>
+	<cfif isDate(FORM.date_host_fam_approved)>&nbsp &nbsp Students placed by <b>#DateFormat(FORM.date_host_fam_approved, 'mm/dd/yyyy')#</b><br></cfif>
 	&nbsp &nbsp Active Students in Program(s) : &nbsp #get_stu_in_prog.Count_stu#<br>
 	&nbsp &nbsp Placed : &nbsp #get_stu_placed.Count_stu# (#numberformat(evaluate((get_stu_placed.Count_stu/get_stu_in_prog.Count_stu)*100),"___.__")#%) &nbsp;  <font size="-2" color="FF6633"> ( Approved Placements Only )</font><br>
 	&nbsp &nbsp Unplaced : &nbsp #get_stu_in_prog.Count_stu - get_stu_placed.Count_stu# (#numberformat(evaluate(((get_stu_in_prog.Count_stu - get_stu_placed.Count_stu)/get_stu_in_prog.Count_stu)*100),"___.__")#%)<br>
@@ -105,11 +144,13 @@
 			SUM(IF(SEX = 'FEMALE', 1, 0)) AS assigned_female,
 			SUM(IF(SEX = 'MALE', 1, 0)) AS assigned_male
 	FROM 	smg_students
-	<cfif form.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
+	<cfif FORM.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
 	WHERE regionassigned = '#get_region.regionid#' 
-		  AND onhold_approved <= 4
+        AND	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+          AND onhold_approved <= 4
 		  AND  active = 1
-		  <cfif form.continent NEQ 0>AND c.continent = '#form.continent#'</cfif>
+		  <cfif FORM.continent NEQ 0>AND c.continent = '#FORM.continent#'</cfif>
         AND 
           programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
 </cfquery>
@@ -119,16 +160,18 @@
 			SUM(if(Sex = 'Female', 1, 0)) as placed_female,
 			SUM(if(Sex = 'Male', 1, 0)) as placed_male
 	FROM 	smg_students
-	<cfif form.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
+	<cfif FORM.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
 	WHERE regionassigned = '#get_region.regionid#' 
-		AND host_fam_approved < 5	
+        AND	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND host_fam_approved < 5	
 		AND Hostid != 0 
 		AND onhold_approved <= 4
 		And active = 1
 		<cfif isDate(FORM.date_host_fam_approved)>
-			AND date_host_fam_approved <= #CreateODBCDate(form.date_host_fam_approved)#
+			AND date_host_fam_approved <= #CreateODBCDate(FORM.date_host_fam_approved)#
 		</cfif>
-		<cfif form.continent NEQ 0>AND c.continent = '#form.continent#'</cfif>
+		<cfif FORM.continent NEQ 0>AND c.continent = '#FORM.continent#'</cfif>
         AND 
           programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
 </cfquery>
@@ -179,14 +222,16 @@
 			SUM(IF(SEX = 'MALE', 1, 0)) AS assigned_male,
 			studentid
 	FROM 	smg_students
-	<cfif form.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
+	<cfif FORM.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
 	WHERE regionassigned = '0' 
-		  AND onhold_approved <= '4'
+        AND	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+          AND onhold_approved <= '4'
 		  AND canceldate IS NULL
 		<cfif isDate(FORM.date_host_fam_approved)>
-			AND date_host_fam_approved <= #CreateODBCDate(form.date_host_fam_approved)#
+			AND date_host_fam_approved <= #CreateODBCDate(FORM.date_host_fam_approved)#
 		</cfif>
-		  <cfif form.continent NEQ 0>AND c.continent = '#form.continent#'</cfif>
+		  <cfif FORM.continent NEQ 0>AND c.continent = '#FORM.continent#'</cfif>
         AND 
           programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
 		group by studentid
@@ -198,16 +243,18 @@
 			SUM(if(Sex = 'Female', 1, 0)) as placed_female,
 			SUM(if(Sex = 'Male', 1, 0)) as placed_male
 	FROM 	smg_students
-	<cfif form.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
+	<cfif FORM.continent NEQ 0>INNER JOIN smg_countrylist c ON countryresident = c.countryid</cfif>
 	WHERE regionassigned = '0' 
-		AND host_fam_approved < '5'	
+        AND	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND host_fam_approved < '5'	
 		AND Hostid != '0' 
 		AND onhold_approved <= '4'
 		AND canceldate IS NULL
 		<cfif isDate(FORM.date_host_fam_approved)>
-			AND date_host_fam_approved <= #CreateODBCDate(form.date_host_fam_approved)#
+			AND date_host_fam_approved <= #CreateODBCDate(FORM.date_host_fam_approved)#
 		</cfif>
-		<cfif form.continent NEQ 0>AND c.continent = '#form.continent#'</cfif>
+		<cfif FORM.continent NEQ 0>AND c.continent = '#FORM.continent#'</cfif>
         AND 
           programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
 </cfquery>
