@@ -49,9 +49,8 @@
                 <option value="countryname" <cfif orderby EQ 'countryname'>selected</cfif>>Country</option>
                 <option value="randid" <cfif orderby EQ 'randid'>selected</cfif>>Type</option>
                 <option value="app_program" <cfif orderby EQ 'app_program'>selected</cfif>>Program</option>
-				<cfif status EQ 'received'>
-                    <option value="businessname" <cfif orderby EQ 'businessname'>selected</cfif>>Intl. Agent</option>
-                <cfelseif status EQ 'hold'>
+                <option value="businessname" <cfif orderby EQ 'businessname'>selected</cfif>>Intl. Agent</option>
+                <cfif status EQ 'hold'>
                     <option value="hold_reason" <cfif orderby EQ 'hold_reason'>selected</cfif>>Hold Reason</option>
                 </cfif>
                 <option value="companyshort" <cfif orderby EQ 'companyshort'>selected</cfif>>Company</option>
@@ -156,10 +155,8 @@
                 <th>Country</th>
                 <th>Type</th>
                 <th>Program</th>
-                
-				<cfif status EQ 'received'>
-	                <th>Intl. Agent</th>
-                <cfelseif status EQ 'hold'>
+                <th>Intl. Agent</th>
+                <cfif status EQ 'hold'>
 	                <th>Hold Reason</th>
                 <cfelseif status EQ 'denied'>
 	                <th>Denied By</th>
@@ -207,10 +204,8 @@
                         </cfif>
                     </td>
                     <td>#app_program#</td>
-                    
-					<cfif status EQ 'received'>
-	                    <td>#businessname#</td>
-                    <cfelseif status EQ 'hold'>
+                    <td>#businessname#</td>
+                    <cfif status EQ 'hold'>
 	                    <td>#hold_reason#</td>
                     <cfelseif status EQ 'denied'>
                         <cfquery name="denied_by" datasource="#application.dsn#" maxrows="1">
