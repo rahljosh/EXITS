@@ -20,7 +20,7 @@
 	<cflocation url="?curdoc=section3/page11print&id=3&p=11" addtoken="no">
 </cfif>
 
-<SCRIPT>
+<script type="text/javascript">
 <!--
 function CheckLink()
 {
@@ -34,7 +34,7 @@ function CheckLink()
 }
 function DataChanged()
 {
-  document.page11.CheckChanged.value = 1
+  document.page11.CheckChanged.value = 1;
 }
 function CheckFields() {
    if ((document.page11.been_hospitalized[1].checked) && (document.page11.hospitalized_reason.value == '')) {

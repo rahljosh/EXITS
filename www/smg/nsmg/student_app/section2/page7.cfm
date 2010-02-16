@@ -20,7 +20,7 @@
 	<cflocation url="?curdoc=section2/page7print&id=2&p=7" addtoken="no">
 </cfif>
 
-<SCRIPT>
+<script type="text/javascript">
 <!--
 function CheckLink()
 {
@@ -34,7 +34,7 @@ function CheckLink()
 }
 function DataChanged()
 {
-  document.page7.CheckChanged.value = 1
+  document.page7.CheckChanged.value = 1;
 }
 function NextPage() {
 	document.page7.action = '?curdoc=section2/qr_page7&next';

@@ -9,74 +9,69 @@
 			CLIENT.userType = URL.userType;	
 		}
 	</cfscript>
+
+	<cfif client.companyid gt 5>
+        <cfset client.org_code = #client.companyid#>
+        <cfset bgcolor ='ffffff'>    
+    <cfelseif client.companyid lte 5>
+        <cfset client.org_code = 5>
+        <cfset bgcolor ='B5D66E'>  
+    </cfif>
+    
+    <cfquery name="org_info" datasource="mysql">
+        select *
+        from smg_companies
+        where companyid = #client.org_code#
+    </cfquery>
+
+	<!----set variables to display on application---->
+    
+    <cfif isDefined('url.unqid')>
+        <!----Get student id  for office folks linking into the student app---->
+        <cfquery name="get_student_id" datasource="#application.dsn#">
+            SELECT studentid
+            from smg_students
+            WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_idstamp" value="#url.unqid#">
+        </cfquery>
+        <cfset client.studentid = get_student_id.studentid>
+    </cfif>
+    
+    <cfquery name="get_status" datasource="#application.dsn#">
+        SELECT app_current_status as status
+        FROM smg_students
+        WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
+    </cfquery>
+    
+    <!--- leave this query separate and named like it is, since it's used on other templates. --->
+    <cfquery name="student_name" datasource="#application.dsn#">
+        select firstname, familylastname, studentid, intrep, branchid, application_expires
+        from smg_students
+        where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
+    </cfquery>
     
 </cfsilent>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-
 <meta name="Author" content="Josh Rahl">
 <meta http-EQuiv="Content-Type" content="text/html; charset=iso-8859-1">
-
 <title>EXITS Student Application</title>
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
-
 <link rel="stylesheet" href="../smg.css" type="text/css">
-
 <style type="text/css">
-<!--
-.smlink         		{font-size: 11px;}
-.section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #FFFFFF;}
-.sideborders			{ border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6; background: #FFFFFF;}
-.sectionFoot    		{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;font-size:2px;}
-.sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
-.sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
-.sectionSubHead			{font-size:11px;font-weight:bold;}
--->
+	<!--
+	.smlink         		{font-size: 11px;}
+	.section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #FFFFFF;}
+	.sideborders			{ border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6; background: #FFFFFF;}
+	.sectionFoot    		{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;font-size:2px;}
+	.sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
+	.sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
+	.sectionSubHead			{font-size:11px;font-weight:bold;}
+	-->
 </style>
-
 </head>
 <body>
-
-<cfif client.companyid gt 5>
-	<cfset client.org_code = #client.companyid#>
-	<cfset bgcolor ='ffffff'>    
-<cfelseif client.companyid lte 5>
-    <cfset client.org_code = 5>
-    <cfset bgcolor ='B5D66E'>  
-</cfif>
-<cfquery name="org_info" datasource="mysql">
-select *
-from smg_companies
-where companyid = #client.org_code#
-</cfquery>
-
-<!----set variables to display on application---->
-
-
-
-<cfif isDefined('url.unqid')>
-	<!----Get student id  for office folks linking into the student app---->
-	<cfquery name="get_student_id" datasource="#application.dsn#">
-		SELECT studentid
-		from smg_students
-		WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_idstamp" value="#url.unqid#">
-	</cfquery>
-	<cfset client.studentid = get_student_id.studentid>
-</cfif>
-
-<cfquery name="get_status" datasource="#application.dsn#">
-	SELECT app_current_status as status
-	FROM smg_students
-	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
-</cfquery>
-<!--- leave this query separate and named like it is, since it's used on other templates. --->
-<cfquery name="student_name" datasource="#application.dsn#">
-    select firstname, familylastname, studentid, intrep, branchid, application_expires
-    from smg_students
-    where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
-</cfquery>
 
 <cfoutput>
 <table width=100% bgcolor="#bgcolor#" cellpadding=0 cellspacing=0 border=0 background="pics/#client.companyid#_header.png">

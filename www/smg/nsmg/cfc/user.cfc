@@ -87,7 +87,19 @@
             <cfset CLIENT.usertype = 10>
             <cfset CLIENT.userID = 0>
             <cfset CLIENT.name = '#student_login.firstname# #student_login.familylastname#'>
-            <cflocation url="/nsmg/student_app/login.cfm" addtoken="no">
+
+			<!--- Check if server is local, if it is do not redirect to SSL --->
+            <cfif APPLICATION.IsServerLocal>
+				
+                <cflocation url="/nsmg/student_app/login.cfm" addtoken="no">
+            
+            <!--- Production / Force SSL --->    
+            <cfelse>
+            	
+                <cflocation url="https://#CLIENT.exits_url#/nsmg/student_app/login.cfm" addtoken="no">
+            
+            </cfif>
+
         </cfif>
 
         <cfquery name="authenticate" datasource="#APPLICATION.dsn#">
@@ -217,6 +229,7 @@
 
 			<cflocation url="/nsmg/index.cfm?initial_welcome" addtoken="no">
 		
+        <!--- Production / Force SSL if not Case --->
         <cfelse>
         
 			<cfif client.companyid eq 10>

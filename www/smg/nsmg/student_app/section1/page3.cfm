@@ -34,7 +34,7 @@ function CheckLink()
 }
 function DataChanged()
 {
-  document.page3.CheckChanged.value = 1
+  document.page3.CheckChanged.value = 1;
 }
 function CheckFields() {
    var Counter = 0;

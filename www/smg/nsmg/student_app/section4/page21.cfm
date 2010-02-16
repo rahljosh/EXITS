@@ -62,7 +62,7 @@ function CheckLink()
   }
 }
 function DataChanged() {
-  document.page21.CheckChanged.value = 1
+  document.page21.CheckChanged.value = 1;
 }
 function CheckStates() {
 	if ((document.page21.state_select[0].checked) && ((document.page21.state1.value == '0') || (document.page21.state2.value == '0') ||  (document.page21.state3.value == '0'))) {
