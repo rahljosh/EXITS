@@ -64,7 +64,7 @@ function CheckLink()
 }
 function DataChanged()
 {
-  document.page20.CheckChanged.value = 1
+  document.page20.CheckChanged.value = 1;
 }
 function CheckRegion() {
    var Counter = 0;

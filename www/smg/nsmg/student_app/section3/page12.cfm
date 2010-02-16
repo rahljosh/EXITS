@@ -42,7 +42,7 @@ function CheckLink()
 }
 function DataChanged()
 {
-  document.page12.CheckChanged.value = 1
+  document.page12.CheckChanged.value = 1;
 }
 
 function calc(val,factor,putin) { 

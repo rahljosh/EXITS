@@ -14,7 +14,7 @@
 	}
 	function DataChanged()
 	{
-	  document.checklist.CheckChanged.value = 1
+	  document.checklist.CheckChanged.value = 1;
 	}
 	// unhide script -->
 	</SCRIPT>

@@ -20,7 +20,7 @@
 	<cflocation url="?curdoc=section1/page2print&id=1&p=2" addtoken="no">
 </cfif>
 
-<SCRIPT>
+<script type="text/javascript">
 <!--
 function CheckLink()
 {
@@ -34,7 +34,7 @@ function CheckLink()
 }
 function DataChanged()
 {
-  document.page2.CheckChanged.value = 1
+  document.page2.CheckChanged.value = 1;
 }
 function areYouSure() { 
    if(confirm("You are about to delete this sibling. Click OK to continue")) { 
