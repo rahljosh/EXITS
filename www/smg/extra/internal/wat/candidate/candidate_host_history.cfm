@@ -62,7 +62,7 @@
 							<td align="left" class="style5">#reason_host#</td>
 							<td align="left" class="style5">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
 							<td align="left" class="style5">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
-							<td align="left" class="style5"><CFif status EQ 1>Acitve<CFelse>Inactive</CFif></td>
+							<td align="left" class="style5"><CFif status EQ 1>Active<CFelse>Inactive</CFif></td>
 						</tr>
 					</cfloop>
 				</cfif>

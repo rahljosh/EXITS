@@ -43,7 +43,7 @@
 				</tr>
 			</table><br>
 			
-			<!--- INSURANCE ID CARDS --->
+			<!--- ID CARDS --->
 			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
 				<tr>
 					<td width="49%" valign="top">
@@ -135,6 +135,66 @@
 					</td>
 				</tr>
 			</table><br>
+            
+            
+			<!--- INSURANCE ID CARDS --->
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+				<tr>
+					<td width="49%" valign="top">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+							<tr>
+								<td bordercolor="FFFFFF" valign="top">
+									<table width="100%" cellpadding=3 cellspacing=0 border=0>
+										<cfform name="new_ticket" action="reports/insurance_cards.cfm" method="post" target="_blank">
+										<tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: Insurance ID Cards</td></tr>
+										<tr>
+											<td class="style1" valign="top" align="right"><b>Program:</b></td>
+											<td class="style1" align="left">
+											<cfselect name="programid" size="5" multiple="yes" class="style1">
+												<cfloop query="get_active_programs">
+													<option value="#programid#">#programname#</option>
+												</cfloop>
+											</cfselect>	
+											</td>
+										</tr>
+										<tr>
+											<td class="style1" align="right"><b>Intl. Rep.:</b></td>
+											<td class="style1" align="left">
+											<cfselect name="intrep" class="style1">
+												<option value="0">All</option>
+												<cfloop query="get_intl_reps">
+													<option value="#userid#"><cfif len(businessname) GT 40>#Right(businessname, 38)#..<cfelse>#businessname#</cfif></option>
+												</cfloop>
+											</cfselect>												
+											</td>
+										</tr>
+										<tr>
+											<td class="style1" align="right"><b>DS Verification Received:</b></td>
+											<td class="style1" align="left">
+												<cfselect name="verification_received" query="verification_dates" value="verification_received" display="verification_received" queryPosition="below" class="style1">
+												<option value=""></option>
+												</cfselect>
+											</td>
+										</tr>
+                                        <tr>
+                                        	<td align="center" class="style1" colspan="2">
+                                            	PS: Please set your browser margins to: top: 0.3 / bottom: 0.3 / left: 0.5 / right: 0.5
+                                            </td>
+                                        </tr>
+										<tr><td align="center" colspan="2"><cfinput type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>
+										</cfform>	                                        
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td width="2%" valign="top">&nbsp;</td>
+					<td width="49%" valign="top">&nbsp;
+						
+					</td>
+				</tr>
+			</table><br>
+            
 		</td>
 	</tr>
 </table>

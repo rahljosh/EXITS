@@ -1000,7 +1000,7 @@ function cancelation() {
 	document.getElementById('host_history').style.display = 'none';
 </script>	
 
-<cfif get_candidate_unqid.status NEq 'canceled'>
+<cfif get_candidate_unqid.status NEQ 'canceled'>
 	<script language="javascript">
 		document.getElementById('cancelation').style.display = 'none';
 		document.getElementById('cancelation2').style.display = 'none';
