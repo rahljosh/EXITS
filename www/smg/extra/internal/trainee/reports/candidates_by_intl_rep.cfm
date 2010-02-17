@@ -4,6 +4,7 @@
 	<!--- Param Variables --->
 	<cfparam name="FORM.submitted" default="0">
    	<cfparam name="FORM.userID" default="0">
+    <cfparam name="FORM.active" default="1">
     
     <cfquery name="qGetProgram" datasource="MySql">
         SELECT 
@@ -51,11 +52,13 @@
             INNER JOIN 
               	smg_users u ON u.userID = ec.intrep
             WHERE 
-                ec.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-            AND  
                 ec.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
             AND 
             	ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+			<cfif LEN(FORM.active)>
+    		AND        
+	            ec.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.active#">
+			</cfif>
         	ORDER BY
             	ec.lastName
         </cfquery>
@@ -69,17 +72,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>All Students Enroolled in the Program</title>
-<script language="JavaScript"> 
-	<!-- Begin
-	function submitForm(form){
-		//var URL = document.reportForm.agent.options[document.reportForm.agent.selectedIndex].value;
-		//window.location.href = URL;
-		document.reportForm.submit();
-	}
-	// End -->
-</script>
 </head>
-<body style="font-size:12px; font-family:Verdana, Geneva, sans-serif;">
+<body>
 
 <cfoutput>
 
@@ -88,32 +82,53 @@
 
     <table width=95% cellpadding=0 cellspacing=0 border=0 align="center" height="25">
         <tr bgcolor="##E4E4E4">
-            <td class="title1">&nbsp; &nbsp; Active Candidates by Intl. Rep. Report</td>
+            <td class="title1">&nbsp; &nbsp; Candidates by Intl. Rep. Report</td>
         </tr>
     </table>
     <br />
     
-    <table width="95%" cellpadding="0" cellspacing="0" border="0" align="center">
-        <tr valign="middle" height="24">
-            <td valign="middle" class="style1">
-            	 Intl. Rep. 
-                <select name="userID" onChange="javascript:submitForm();">
+    <table width="95%" cellpadding="4" cellspacing="2" border="0" align="center">
+        <tr>
+            <td class="style1" width="130px">
+            	 Intl. Rep.: 
+        	</td>
+			<td class="style1">
+                <select name="userID">
                     <cfloop query="qGetIntlRepList">
                     	<option value="#qGetIntlRepList.userID#" <cfif qGetIntlRepList.userID EQ FORM.userID> selected="selected" </cfif> > #qGetIntlRepList.businessName# </option>
                     </cfloop>
                 </select>
-        	</td>
+            </td>
         </tr>
+        <tr>
+            <td class="style1">
+            	Candidate Status:
+        	</td>
+            <td class="style1">
+                <select name="active">
+					<option value="" <cfif NOT LEN(FORM.active)> selected="selected" </cfif> > All</option>
+                    <option value="1" <cfif VAL(FORM.active)> selected="selected" </cfif> >Active</option>
+                    <option value="0" <cfif FORM.active EQ 0> selected="selected" </cfif> >Inactive</option>
+                </select>
+            </td>
+        </tr>   
+        <tr>
+            <td class="style1">
+            	&nbsp;
+            </td>
+            <td class="style1">
+            	<input type="image" src="../pics/view.gif" name="submit" value=" Submit " />
+            </td>
+        </tr>        
     </table>
-    <br />
     
 	</form>
   
   	<cfif FORM.submitted>
 
         <table width="95%" cellpadding="0" cellspacing="0" border="0" align="center">
-            <tr valign="middle" height="24">
-                <td valign="middle" class="style1">
+            <tr>
+                <td class="style1">
                     Total No of Students: #qGetCandidates.recordcount# 
                 </td>
             </tr>
@@ -129,14 +144,18 @@
                 <td bgcolor="##4F8EA4"><span class="style2">Program Start Date</span></td>
                 <td bgcolor="##4F8EA4"><span class="style2">Program End Date</span></td>
             </tr>
-            <tr>
-                <td class="style1">#qGetCandidates.firstname#</td>
-                <td class="style1">#qGetCandidates.lastname#</td>
-                <td class="style1">#qGetCandidates.sex#</td>
-                <td class="style1">#qGetCandidates.hostCompanyName#</td>
-                <td class="style1">#DateFormat(qGetCandidates.ds2019_startdate, 'mm/dd/yyyy')#</td>
-                <td class="style1">#DateFormat(qGetCandidates.ds2019_enddate, 'mm/dd/yyyy')#</td>
-            </tr>
+            
+            <cfloop query="qGetCandidates">
+                <tr>
+                    <td class="style1">#qGetCandidates.firstname#</td>
+                    <td class="style1">#qGetCandidates.lastname#</td>
+                    <td class="style1">#qGetCandidates.sex#</td>
+                    <td class="style1">#qGetCandidates.hostCompanyName#</td>
+                    <td class="style1">#DateFormat(qGetCandidates.ds2019_startdate, 'mm/dd/yyyy')#</td>
+                    <td class="style1">#DateFormat(qGetCandidates.ds2019_enddate, 'mm/dd/yyyy')#</td>
+                </tr>
+            </cfloop>
+            
         </table>
         <br />
         
