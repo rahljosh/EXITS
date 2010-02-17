@@ -4,6 +4,7 @@
     <cfquery name="qGetStudents" datasource="MySql">
         SELECT     	
         	s.studentid,  
+            s.firstName,
             s.dob, 
             s.interests,
             c.countryname, 
@@ -136,6 +137,7 @@
                             </cfif>
                          </td>
                         <td class="style1">
+                            Name: #qGetStudents.firstName#<br>
                             Age: #DateDiff('yyyy', qGetStudents.dob, now())# <br>
                             From: #qGetStudents.countryname#<br>
                             Interests: #ValueList(qGetInterests.interest, ", ")# <br>
