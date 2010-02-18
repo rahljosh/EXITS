@@ -7,10 +7,8 @@
 		c.companyshort
 	FROM 	smg_programs p
 	INNER JOIN smg_companies c ON c.companyid = p.companyid
-	WHERE 	<cfloop list=#form.programid# index='prog'>
-				programid = #prog# 
-				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop>
+	WHERE 		
+		programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 </cfquery>
 
 <!-----Company Information----->
@@ -56,7 +54,11 @@
 	LEFT JOIN 
     	smg_aypcamps orientation ON s.ayporientation = orientation.campid
 	WHERE
-        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfif CLIENT.companyID EQ 5>
+	        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes"> )        
+        <cfelse>
+	        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
+        </cfif>        
         
         <cfif form.active EQ 1> <!--- active --->
             AND 

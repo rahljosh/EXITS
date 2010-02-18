@@ -22,15 +22,15 @@
 	INNER JOIN smg_countrylist c ON c.countryid = s.countryresident
 	INNER JOIN smg_programs p ON p.programid = s.programid
 	WHERE s.active = '1'
-		AND s.hostid != '0'
+    AND 
+    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND s.hostid != '0'
 		AND s.host_fam_approved <= '4'
 		<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 			AND (s.dateplaced between #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#) 
 		</cfif>
-		AND (<cfloop list="#form.programid#" index="prog">
-				s.programid = '#prog#' 
-				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
+	AND 
+        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
 	ORDER BY s.familylastname, s.firstname	
 </cfquery>
 
