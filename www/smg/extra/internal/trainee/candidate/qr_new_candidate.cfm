@@ -49,7 +49,9 @@
 </cfif>  
 
 
-
+<cfif isDefined('form.bypass_check')>
+	<cfset check_new_candidate.recordcount = 0>
+<cfelse>
 <cfquery name="check_new_candidate" datasource="mysql">
 	SELECT candidateid, firstname, lastname, dob
 	FROM extra_candidates
@@ -57,16 +59,17 @@
 		AND	lastname = '#form.lastname#'
 		AND DOB = '#DateFormat(form.dob, 'yyyy/mm/dd')#'
 </cfquery>
+</cfif>
 
 <cfif check_new_candidate.recordcount NEQ '0'><br>
 	<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=90%>
 		<tr><th background="images/back_menu2.gif" class="title1">EXITS - Error Message</th>
 		</tr>
-		<tr><td class="style1" align="center">Sorry, but this candidate has been entered in the database as follow:</td></tr>
+		<tr><td class="style1" align="center">This candidate has been entered in the database as follows:</td></tr>
 		<tr>
 			<td align="center" class="style1">
 				<cfoutput query="check_new_candidate">
-				<a href="?curdoc=candidate/candidate_info&candidateid=#check_new_candidate.candidateid#"><br>- #firstname# #lastname# (#candidateid#)</a>
+				<a href="?curdoc=candidate/candidate_info&uniqueid=#check_new_candidate.uniqueid#"><br>- #firstname# #lastname# (#candidateid#)</a>
 				</cfoutput>
 			</td>
 		</tr>
@@ -80,6 +83,7 @@
 		SELECT email
 		FROM extra_candidates
 		WHERE email = '#form.email#'
+        and active = 1
 	</cfquery>
 	<cfif check_username.recordcount NEQ '0'><br>
 		<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=90%>

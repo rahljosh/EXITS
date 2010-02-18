@@ -19,7 +19,7 @@
                 <li><a href="index.cfm?curdoc=intrep/int_students&status=unplaced">Unplaced</a></li>
                 <li><a href="index.cfm?curdoc=intrep/int_students&status=placed">Placed</a></li>
                 <li><a href="index.cfm?curdoc=intrep/int_students&status=all">All</a></li>
-                <li><a href="index.cfm?curdoc=intrep/advanced_search">Advanced Search</a></li>
+              <!----  <li><a href="index.cfm?curdoc=intrep/advanced_search">Advanced Search</a></li>---->
                 <li><a href="index.cfm?curdoc=intrep/int_php_students">Private High School</a></li>
             </ul>
         </li>
