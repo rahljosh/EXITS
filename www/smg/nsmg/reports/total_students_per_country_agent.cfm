@@ -10,21 +10,20 @@ SELECT	DISTINCT
 	c.companyshort
 FROM 	smg_programs p
 INNER JOIN smg_companies c ON c.companyid = p.companyid
-WHERE 	<cfloop list=#form.programid# index='prog'>
-			programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop>
+WHERE
+    p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 </cfquery>
 
 <!--- get total of students in programs --->
 <cfquery name="get_total_students" datasource="MySQL">
 	SELECT  count(studentid) as total
 	FROM	smg_students s
-	WHERE 	s.canceldate IS NULL
-			AND	( <cfloop list=#form.programid# index='prog'>
-				s.programid = #prog# 
-				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
+	WHERE 	
+    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">   
+    AND
+    	s.canceldate IS NULL		
+    AND	
+    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 </cfquery>
 
 <!--- ( active = '1' OR canceldate > '2005-08-03') --->
@@ -40,11 +39,12 @@ WHERE 	<cfloop list=#form.programid# index='prog'>
 	FROM smg_users u
 	LEFT JOIN smg_countrylist c ON c.countryid = u.country
 	INNER JOIN smg_students s ON s.intrep = u.userid
-	WHERE s.canceldate IS NULL
-		AND	( <cfloop list=#form.programid# index='prog'>
-			programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
+	WHERE 
+    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">   
+    AND
+    	s.canceldate IS NULL
+    AND	
+	    programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 	GROUP BY c.countryname
 	ORDER BY c.countryname
 </cfquery>
@@ -71,12 +71,15 @@ WHERE 	<cfloop list=#form.programid# index='prog'>
 			SELECT u.businessname, count(s.studentid) as total
 			FROM smg_students s
 			INNER JOIN smg_users u ON u.userid = s.intrep
-			WHERE s.canceldate IS NULL
-				  AND u.country = '#get_country.country#'
-				  AND	( <cfloop list=#form.programid# index='prog'>
-							s.programid = #prog# 
-							<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-						  </cfloop> )
+			WHERE 
+            	s.canceldate IS NULL
+			AND 
+            	u.country = '#get_country.country#'
+			AND
+	            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">   
+            AND
+            	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+                
 			GROUP BY businessname 
 		</cfquery>
 		<table width='650' cellpadding=6 cellspacing="0" align="center" frame="box">

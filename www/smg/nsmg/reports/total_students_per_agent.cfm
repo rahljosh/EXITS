@@ -18,11 +18,12 @@
 	INNER JOIN smg_countrylist c ON s.countryresident = c.countryid
 	INNER JOIN smg_users u ON u.userid = s.intrep
 	LEFT JOIN smg_countrylist agent_country ON u.country = agent_country.countryid
-	WHERE 	s.canceldate IS NULL 
-			AND (<cfloop list=#form.programid# index='prog'>
-				programid = #prog# 
-				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-				</cfloop> )
+	WHERE 	
+    		companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND
+    		s.canceldate IS NULL 
+        AND
+            programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 			<!--- AND u.businessname LIKE '%EF%' AND u.businessname != 'Treff' --->
 	GROUP BY Businessname
 	ORDER BY Businessname
@@ -35,10 +36,8 @@
 		c.companyshort
 	FROM 	smg_programs p
 	INNER JOIN smg_companies c ON c.companyid = p.companyid
-	WHERE 	<cfloop list=#form.programid# index='prog'>
-				programid = #prog# 
-				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop>
+	WHERE
+    	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 	ORDER BY companyshort
 </cfquery>
 
