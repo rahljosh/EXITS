@@ -7,11 +7,10 @@
 <cfquery name="get_total_stu" datasource="MySQL">
 SELECT 	programname
 FROM	smg_programs
-WHERE <cfloop list=#form.programid# index='prog'>
-		programid = #prog# 
-		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-	</cfloop> 
-ORDER BY programname
+WHERE 
+	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+ORDER BY 
+	programname
 </cfquery>
 
 <table width='650' cellpadding=6 cellspacing="0" align="center">
@@ -23,22 +22,29 @@ ORDER BY programname
 SELECT 	count(studentid) as total_students, smg_students.countryresident, countryname, countryid
 FROM 	smg_students
 INNER JOIN smg_countrylist c ON countryresident = c.countryid
-WHERE 	(active = '1' 
-		AND	( <cfloop list=#form.programid# index='prog'>
-			programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
-		<cfif form.countryid is not '0'>AND countryresident = '#form.countryid#'</cfif>
-		AND grades = '12')
+WHERE 	(
+			companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND    
+            active = '1'            
+		AND	
+            programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )                        
+			<cfif form.countryid is not '0'>AND countryresident = '#form.countryid#'</cfif>
+		AND 
+        	grades = '12'
+        )
 	OR
-		(active = '1' 
-		AND	( <cfloop list=#form.programid# index='prog'>
-			programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
-		<cfif form.countryid is not '0'>AND countryresident = '#form.countryid#'</cfif>
-		AND grades = '11' and (countryresident = '49' or countryresident = '237'))
-GROUP BY countryname
+		(
+        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND    
+            active = '1' 
+		AND	
+            programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+			<cfif form.countryid is not '0'>AND countryresident = '#form.countryid#'</cfif>
+		AND 
+        	grades = '11' and (countryresident = '49' or countryresident = '237')
+        )
+GROUP BY 
+	countryname
 </cfquery>
 
 <!--- 0 students will skip the table --->

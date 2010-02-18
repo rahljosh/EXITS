@@ -14,17 +14,16 @@
 	FROM 	smg_programs 
 	LEFT JOIN smg_program_type ON type = programtypeid
 	LEFT JOIN smg_companies c ON c.companyid = smg_programs.companyid
-	WHERE 	(<cfloop list=#form.programid# index='prog'>
-		programid = #prog# 
-		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )
+	WHERE 	
+    	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 </cfquery>
 
 <!--- get total students in each program according to the company --->
 <cfquery name="get_total_students" datasource="MySQL">
 	SELECT 	s.studentid
 	FROM smg_students s
-	WHERE 1 = 1 
+	WHERE 
+    	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 		<cfif NOT IsDefined('form.all')>
 			AND s.active = '1'
 		</cfif>
@@ -33,10 +32,8 @@
 		<cfelseif form.status EQ 2>
 			AND hostid = '0'
 		</cfif>
-		AND (<cfloop list="#form.programid#" index='prog'>
-		s.programid = #prog# 
-		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )
+        AND	
+            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 </cfquery>
 
 <cfoutput>
@@ -59,17 +56,18 @@
 				countryname
 		FROM 	smg_students
 		LEFT JOIN smg_countrylist c ON countryresident = c.countryid
-		WHERE 	active = '1' 
+		WHERE 	
+        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND    
+            active = '1' 
 		<cfif form.countryid NEQ 0>AND countryresident = '#form.countryid#'</cfif>
 		<cfif form.status is 1>
 			AND hostid <> '0'
 		<cfelseif form.status is 2>
 			AND hostid = '0'
 		</cfif>
-		AND (<cfloop list="#form.programid#" index='prog'>
-		programid = #prog# 
-		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )
+        AND	
+            programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 		GROUP BY countryname
 	</cfquery>
 

@@ -36,7 +36,10 @@
 	LEFT JOIN smg_countrylist birth ON s.countrybirth = birth.countryid
 	LEFT JOIN smg_countrylist citizen ON s.countrycitizen = citizen.countryid
 	LEFT JOIN smg_countrylist resident ON s.countryresident = resident.countryid
-	WHERE s.canceldate IS NULL
+	WHERE 
+    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    AND
+	    s.canceldate IS NULL
 		AND ( <cfloop list="#form.programid#" index='prog'>
 			 s.programid = #prog# 
 			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
