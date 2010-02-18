@@ -160,6 +160,8 @@ cgi.SERVER_PORT=#cgi.SERVER_PORT#
 </cfoutput>--->
 
 
+
+
 <!----Set site variables for email and site---->
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfparam name="application.support_email" default="support@case-usa.org">

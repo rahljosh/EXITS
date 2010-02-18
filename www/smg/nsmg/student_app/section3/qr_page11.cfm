@@ -2,7 +2,25 @@
 	<cfinclude template="../error_message.cfm">
 	<cfabort>
 </cfif>
+<cfset allergies_details = 0>
+<!----Check for Allergies---->
+<cfif IsDefined('form.allergic_to_penicillin')><cfif form.allergic_to_penicillin eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_morphine')><cfif form.allergic_to_morphine eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_aspirin')><cfif form.allergic_to_aspirin eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_tetanus')><cfif form.allergic_to_tetanus eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_foods')><cfif form.allergic_to_foods eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_pets')><cfif form.allergic_to_pets eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_novocaine')><cfif form.allergic_to_novocaine eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_sulfa')><cfif form.allergic_to_sulfa eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_adhesive')><cfif form.allergic_to_adhesive eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_iodine')><cfif form.allergic_to_iodine eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.allergic_to_other_drugs')><cfif form.allergic_to_other_drugs eq 1><cfset allergies_details = 1></cfif></cfif>
+<cfif IsDefined('form.other_allergies')><cfif form.other_allergies eq 1><cfset allergies_details = 1></cfif></cfif>
 
+
+		
+
+            
 <cftransaction action="begin" isolation="serializable">
 	<cftry>
 
@@ -71,7 +89,9 @@
 		WHERE healthid = <cfqueryparam value="#form.healthid#" cfsqltype="cf_sql_integer"> 
 		</cfquery>
 	</cfif>
-	
+	<cfif allergies_details eq 1 and client.studentid eq 18948>
+    	<cflocation url="index.cfm?curdoc=section3/allergy_info_request">
+    </cfif>
 	<html>
 	<head>
 	<script language="JavaScript">

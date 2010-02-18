@@ -527,7 +527,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 				
 				<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 					<tr>
-						<td align="center"><br><cfinput name="Submit" type="image" value="  Save  " src="../pics/save.gif" alt="Next" border="0"><br></td>
+						<td align="center"><br><cfinput name="Submit" type="image" value="  Save  " src="../pics/save.gif" alt="Next" border="0"><br><input type=checkbox name="bypass_check">Bypass duplicate check. </td>
 					</tr>
 				</table>
 				

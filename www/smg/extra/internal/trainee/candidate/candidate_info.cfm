@@ -523,6 +523,27 @@
 											<td class="style1" bordercolor="FFFFFF" align="right"><b>Personal Info./ Preferences:</b></td>
 											<td class="style1" bordercolor="FFFFFF"><cfif FORM.edit EQ 'no'>#personal_info#<cfelse><cftextarea name="personal_info" class="style1" cols="25" rows="3">#personal_info#</cftextarea></cfif></td>
 										</tr>
+                                        <tr bgcolor="##C2D1EF">
+											<td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Degree Information</td>
+										</tr>
+										<tr>
+											<td width="30%" align="right" valign="top" class="style1"><b>Degree:</b></td>
+											<td class="style1"><cfif FORM.edit EQ 'no'>#degree#<cfelse><cfinput type="text" class="style1" name="degree" size=34 value="#degree#" maxlength="200"></cfif></td>
+										</tr>
+										<tr>
+
+
+
+											<td class="style1" align="right" valign="top"><b>Other Degree:</b></td>
+											<td class="style1">
+												<cfif FORM.edit EQ 'no'>
+												   <cfif #degree_other# eq ''> n/a <cfelse>
+													 #degree_other#
+													</cfif>
+												<cfelse>
+													<cfinput type="text" class="style1" name="degree_other" size=34 value="#degree_other#" maxlength="200">
+												</cfif></td>
+										</tr>
 									</table>
 													
 								</td>
@@ -582,85 +603,7 @@
 						</table>
 						
 						<br>
-						
-						<!--- DEGREE INFORMATION --->
-						<table cellpadding=5 cellspacing=5 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-							<tr>
-								<td bordercolor="FFFFFF">
-								
-									<table width="100%" cellpadding=5 cellspacing=0 border=0>
-										<tr bgcolor="##C2D1EF">
-											<td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Degree Information</td>
-										</tr>
-										<tr>
-											<td width="30%" align="right" valign="top" class="style1"><b>Degree:</b></td>
-											<td class="style1"><cfif FORM.edit EQ 'no'>#degree#<cfelse><cfinput type="text" class="style1" name="degree" size=34 value="#degree#" maxlength="200"></cfif></td>
-										</tr>
-										<tr>
-											<td class="style1" align="right" valign="top"><b>Other Degree:</b></td>
-											<td class="style1">
-												<cfif FORM.edit EQ 'no'>
-												   <cfif #degree_other# eq ''> n/a <cfelse>
-													 #degree_other#
-													</cfif>
-												<cfelse>
-													<cfinput type="text" class="style1" name="degree_other" size=34 value="#degree_other#" maxlength="200">
-												</cfif></td>
-										</tr>							
-										<tr>
-											<td class="style1" valign="top" align="right"><b>Category:</b></td>
-											<td class="style1">
-												<cfif FORM.edit EQ 'no'>
-													<cfif 'getCategory.recordcount' eq 0>n/a <cfelse>
-													<cfquery name="getCategory" datasource="MySql">
-														SELECT DISTINCT fieldstudy
-														FROM extra_sevis_fieldstudy
-														WHERE fieldstudyid = '#get_candidate_unqid.fieldstudyid#'
-													</cfquery>
-													#getCategory.fieldstudy# </cfif>
-												<cfelse>
-													<select name="fieldstudyid" class="style1" onChange="loadOptions('listsubcat');">
-														<option value="0">Select...</option>
-														<cfloop query="fieldstudy">
-															<option value="#fieldstudyid#" <cfif fieldstudyid EQ get_candidate_unqid.fieldstudyid>selected</cfif>><cfif len(fieldstudy) GT 35>#Left(fieldstudy,30)#...<cfelse>#fieldstudy#</cfif></option>
-														</cfloop>
-													</select>
-												</cfif>
-											</td>
-										</tr>
-										<tr>
-										  <td class="style1" valign="top" align="right"><b>Sub Category:</b></td>
-											<td class="style1">
-												<cfif FORM.edit EQ 'no'>
-													<cfif 'getSubCategory' eq 0>n/a <cfelse>
-													<cfquery name="getSubCategory" datasource="MySql">
-														SELECT DISTINCT subfield
-														FROM extra_sevis_sub_fieldstudy
-														WHERE subfieldid = '#get_candidate_unqid.subfieldid#'
-													</cfquery>
-													#getSubCategory.subfield#</cfif>
-												<cfelse>
-													<select name="listsubcat" class="style1">
-														<option> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </option>
-														<option></option><option></option><option></option><option></option><option></option><option></option>
-														<option></option><option></option><option></option><option></option><option></option><option></option>
-														<option></option><option></option><option></option><option></option><option></option><option></option>
-														<option></option><option></option><option></option><option></option><option></option><option></option>
-													 </select>
-												 </cfif>
-											</td>
-										</tr>
-										<tr>
-											<td class="style1" valign="top" align="right"><b>Comments/ Evaluation:</b></td>
-											<td class="style1"><cfif FORM.edit EQ 'no'>#degree_comments#<cfelse><cftextarea name="degree_comments" class="style1" cols="26" rows="3" >#degree_comments#</cftextarea></cfif></td>
-										</tr>
-									</table>	
-									
-								</td>
-							</tr>
-						</table>
-						
-						<br>
+				
 						
 						<!---DOCUMENTS CONTROL --->
 						<table cellpadding=5 cellspacing=5 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
@@ -752,7 +695,7 @@
 											<td class="style1">
 												<cfif FORM.edit EQ 'no'>
 													<cfloop query="hostcompany">
-														<a href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#candidate_place_company.hostcompanyid#" class="style4"><cfif hostcompany.hostcompanyid EQ candidate_place_company.hostcompanyid><b>#name#</b></cfif></a>
+														<a href="" class="style4"><cfif hostcompany.hostcompanyid EQ candidate_place_company.hostcompanyid><b>#name#</b></cfif></a>
 													</cfloop>
 												<cfelse>
 												
@@ -813,28 +756,7 @@
 											 </cfif></cfif>	 
 											</td>
 										</tr>
-										
-									 <!---- // close position from wat --->			
-										
-										<tr>
-											<td width="35%" class="style1" align="right"><b>Status:</b></td>
-											<td class="style1"><cfif FORM.edit EQ 'no'><cfif candidate_place_company.status EQ '1'>Active</cfif><cfif candidate_place_company.status EQ '0'>Inactive</cfif>
-											<cfelse>
-												<input type="radio" name="hostcompany_status" value="1" <cfif candidate_place_company.status EQ '1'>checked="yes" </cfif>>
-												Active&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-												<input type="radio" name="hostcompany_status" value="0" <cfif candidate_place_company.status EQ '0'>checked="yes" </cfif>>
-												Inactive
-											</cfif></td>
-										</tr>
-											<cfif FORM.edit EQ 'no'>
-										<tr>
-											<td colspan="2" class="style1" align="left"><b>Placement Date:</b> #dateformat (candidate_place_company.placement_date, 'mm/dd/yyyy')#</td>
-										</tr>
-
-
-
-											</cfif>
-										<tr>
+                                        <tr>
 											<td class="style1" align="right"><b>Start Date:</b></td>
 											<td class="style1"><cfif FORM.edit EQ 'no'>#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" name="host_startdate" class="style1" size=30 value="#dateformat (candidate_place_company.startdate, 'mm/dd/yyyy')#" maxlength="50"></cfif></td>
 										</tr>
@@ -842,16 +764,7 @@
 											<td class="style1" align="right"><b>End Date:</b></td>
 											<td class="style1"><cfif FORM.edit EQ 'no'>#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" name="host_enddate" class="style1" size=30 value="#dateformat (candidate_place_company.enddate, 'mm/dd/yyyy')#" maxlength="50"></cfif></td>
 										</tr>
-										<tr>
-											<td colspan="2" class="style1" align="left"><b>Confirmation Received:</b> <cfif FORM.edit EQ 'no'><cfif candidate_place_company.confirmation_received EQ '1'>Yes</cfif><cfif candidate_place_company.confirmation_received EQ '0'>No</cfif>
-											<cfelse>
-												<input type="radio" name="confirmation_received" value="1" <cfif candidate_place_company.confirmation_received EQ '1'>checked="yes" </cfif>>
-												Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-												<input type="radio" name="confirmation_received" value="0" <cfif candidate_place_company.confirmation_received EQ '0'>checked="yes" </cfif>>
-												No
-											</cfif>
-											</td>
-										</tr>
+										
 									</table>	
 									
 								</td>
@@ -861,53 +774,8 @@
 						<br>
 					
 						<!--- PROGRAM INFO --->
-						<table cellpadding=5 cellspacing=5 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-							<tr>
-								<td bordercolor="FFFFFF">
-								
-									<table width="100%" cellpadding=5 cellspacing=0 border=0>
-										<tr bgcolor="##C2D1EF" bordercolor="FFFFFF">
-											<td class="style2" bgcolor="8FB6C9" colspan="4">&nbsp;:: Program Information &nbsp;  [<a href="javascript:OpenHistory('candidate/candidate_program_history.cfm?unqid=#uniqueid#');"><font class="style3" color="FFFFFF"> History </font></a> ]</span></td>
-										</tr>
-										<tr>
-											<td class="style1" bordercolor="FFFFFF" align="right" width="27%"><b>Program:</b></td>
-											<td bordercolor="FFFFFF" width="73%" colspan="3">
-													<select name="programid" class="style1" <cfif FORM.edit EQ 'no'>disabled</cfif>>
-													<option value="0">Unassigned</option>
-													<cfloop query="program">
-													<cfif get_candidate_unqid.programid EQ programid><option value="#programid#" selected>#programname#</option><cfelse>
-													<option value="#programid#">#programname#</option></cfif>
-													</cfloop>
-													</select>
-												
-											</td>
-										</tr>
-										<tr id="program_history" bgcolor="FFBD9D">
-											<td class="style1" align="right"><b>Reason:</b></td>
-											<td class="style1" colspan="3"><cfinput type="text" class="style1" size="35" name="reason"></td>
-										</tr>
-												
-										<tr>
-											<td class="style1" bordercolor="FFFFFF" align="right"><b>Start:</b></td>
-											<td class="style1" bordercolor="FFFFFF"><cfif FORM.edit EQ 'no'>#dateformat (startdate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="startdate" size=10 value="#dateformat (startdate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Start Date (MM/DD/YYYY)"></cfif></td>
-											<td class="style1" bordercolor="FFFFFF" align="right"><b>End:</b></td>
-											<td class="style1" bordercolor="FFFFFF"><cfif FORM.edit EQ 'no'>#dateformat (enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="enddate" size=10 value="#dateformat (enddate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="End Date(MM/DD/YYYY)"></cfif></td>
-										</tr>
-										<tr>
-											<td class="style1" bordercolor="FFFFFF" align="right"><b>Arrival Date:</b></td>
-											<td class="style1" bordercolor="FFFFFF" colspan="3"><cfif FORM.edit EQ 'no'>#dateformat (arrivaldate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="arrivaldate" size=35 value="#dateformat (arrivaldate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Arrival Date(MM/DD/YYYY)"></cfif></td>
-										</tr>	
-										<tr>
-											<td class="style1" bordercolor="FFFFFF" align="right"><b>Remarks:</b></td>
-											<td class="style1" bordercolor="FFFFFF" colspan="3"><cfif FORM.edit EQ 'no'>#remarks#<cfelse><cftextarea name="remarks" class="style1" cols="25" rows="3">#remarks#</cftextarea></cfif></td>
-										</tr>	
-									</table>
-													
-								</td>
-							</tr>
-						</table>
 						
-						<br>
+					
 					
 						<!--- INSURANCE INFO --->
 						<table cellpadding=5 cellspacing=5 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
@@ -988,37 +856,66 @@
 											<td class="style1" colspan="3"><cfif FORM.edit EQ 'no'>#ds2019#<cfelse><cfinput type="text" class="style1" name="ds2019" size="15" value="#ds2019#" maxlength="100"></cfif></td>
 										</tr>
                                         
-										<!---- 1054 add combo Subject/Field --->
-										<cfquery name="get_subfield" datasource="mysql">
-											SELECT code, subfield <!---, extra_candidates.candidateid, extra_candidates.ds2019_subject--->
-											FROM extra_sevis_sub_fieldstudy
-											<cfif FORM.edit EQ 'no'>
-												INNER JOIN extra_candidates ON extra_candidates.ds2019_subject = extra_sevis_sub_fieldstudy.code
-												WHERE extra_candidates.candidateid = #get_candidate_unqid.candidateid#					
-											</cfif>
-										</cfquery>
-										
-										<cfquery name="get_candidate_subject" datasource="mysql">
-											SELECT candidateid, ds2019_subject
-											FROM extra_candidates
-											WHERE extra_candidates.candidateid = #get_candidate_unqid.candidateid#
-										</cfquery>
-										
-										<tr>
-											<td class="style1" align="right"><b>Subject/Field:</b></td>
-											<td class="style1" colspan="3">
+											<tr>
+											<td class="style1" valign="top" align="right"><b>Category:</b></td>
+											<td class="style1" colspan=4>
 												<cfif FORM.edit EQ 'no'>
-												#left(get_subfield.subfield,45)# - #get_subfield.code#
+													<cfif 'getCategory.recordcount' eq 0>n/a <cfelse>
+													<cfquery name="getCategory" datasource="MySql">
+														SELECT DISTINCT fieldstudy
+														FROM extra_sevis_fieldstudy
+														WHERE fieldstudyid = '#get_candidate_unqid.fieldstudyid#'
+													</cfquery>
+													#getCategory.fieldstudy# </cfif>
 												<cfelse>
-											
-												<select name="combo_subfield" class="style1" >
-														<option value=0></option>
-														<cfloop query="get_subfield">	
-														<option value="#code#" <cfif get_subfield.code EQ get_candidate_subject.ds2019_subject>selected</cfif>>#code# <cfif len(subfield) GT 27>#Left(subfield,25)#...<cfelse>#subfield#</cfif> </option>
-														
+													<select name="fieldstudyid" class="style1" onChange="loadOptions('listsubcat');">
+														<option value="0">Select...</option>
+														<cfloop query="fieldstudy">
+															<option value="#fieldstudyid#" <cfif fieldstudyid EQ get_candidate_unqid.fieldstudyid>selected</cfif>><cfif len(fieldstudy) GT 35>#Left(fieldstudy,30)#...<cfelse>#fieldstudy#</cfif></option>
 														</cfloop>
-												</select>
-												</cfif>											</td>
+													</select>
+												</cfif>
+											</td>
+										</tr>
+										<tr>
+										  <td class="style1" valign="top" align="right"><b>Sub Category:</b></td>
+											<td class="style1" colspan=4>
+												<cfif FORM.edit EQ 'no'>
+													<cfif 'getSubCategory' eq 0>n/a <cfelse>
+													<cfquery name="getSubCategory" datasource="MySql">
+														SELECT DISTINCT subfield
+														FROM extra_sevis_sub_fieldstudy
+														WHERE subfieldid = '#get_candidate_unqid.subfieldid#'
+													</cfquery>
+													#getSubCategory.subfield#</cfif>
+												<cfelse>
+													<select name="listsubcat" class="style1">
+														<option> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </option>
+														<option></option><option></option><option></option><option></option><option></option><option></option>
+														<option></option><option></option><option></option><option></option><option></option><option></option>
+														<option></option><option></option><option></option><option></option><option></option><option></option>
+														<option></option><option></option><option></option><option></option><option></option><option></option>
+													 </select>
+												 </cfif>
+											</td>
+										</tr>
+                                        <!----Program Information---->
+                                        <tr>
+											<td class="style1" bordercolor="FFFFFF" align="right" width="27%"><b>Program:</b></td>
+											<td bordercolor="FFFFFF" width="73%" colspan="3">
+													<select name="programid" class="style1" <cfif FORM.edit EQ 'no'>disabled</cfif>>
+													<option value="0">Unassigned</option>
+													<cfloop query="program">
+													<cfif get_candidate_unqid.programid EQ programid><option value="#programid#" selected>#programname#</option><cfelse>
+													<option value="#programid#">#programname#</option></cfif>
+													</cfloop>
+													</select>
+												
+											</td>
+										</tr>
+										<tr id="program_history" bgcolor="FFBD9D">
+											<td class="style1" align="right"><b>Reason:</b></td>
+											<td class="style1" colspan="3"><cfinput type="text" class="style1" size="35" name="reason"></td>
 										</tr>
 										<tr>
 											<td class="style1" align="right"><b>Street:</b></td>
@@ -1064,6 +961,15 @@
 											<td class="style1" align="right"><b>End:</b></td>
 											<td class="style1"><cfif FORM.edit EQ 'no'>#DateFormat(ds2019_enddate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="ds2019_enddate" size=20 value="#DateFormat(ds2019_enddate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 End Date(MM/DD/YYYY)"></cfif></td>
 										</tr>
+                                        <tr>
+											<td class="style1" bordercolor="FFFFFF" align="right"><b>Arrival Date:</b></td>
+											<td class="style1" bordercolor="FFFFFF" colspan="3"><cfif FORM.edit EQ 'no'>#dateformat (arrivaldate, 'mm/dd/yyyy')#<cfelse><cfinput type="text" class="style1" name="arrivaldate" size=35 value="#dateformat (arrivaldate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Arrival Date(MM/DD/YYYY)"></cfif></td>
+										</tr>	
+										<tr>
+											<td class="style1" bordercolor="FFFFFF" align="right"><b>Remarks:</b></td>
+											<td class="style1" bordercolor="FFFFFF" colspan="3"><cfif FORM.edit EQ 'no'>#remarks#<cfelse><cftextarea name="remarks" class="style1" cols="25" rows="3">#remarks#</cftextarea></cfif></td>
+										</tr>	
+                                        
 									</table>
 									
 								</td>	
@@ -1114,13 +1020,13 @@
 										
                                     	<!--- Verification Received --->
                                         <tr>
-                                        	<td>Depart Home</td><td><cfif departure_date.flight_seg is not ''>#DateFormat(dep_Date_info.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif> </td>
+                                        	<td class="style1">Depart Home</td><td class="style1"><cfif departure_date.flight_seg is not ''>#DateFormat(dep_Date_info.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif> </td>
                                         </tr>
                                         <tr>
-                                        	<td>Depart US</td><td><cfif arr_date.flight_seg is not ''>#DateFormat(arr_date_info.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif></td>
+                                        	<td class="style1">Depart US</td><td class="style1"><cfif arr_date.flight_seg is not ''>#DateFormat(arr_date_info.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif></td>
                                         
                                         <tr>
-                                        <Td align="Center" colspan=2><a href="" onClick="javascript: win=window.open('flight_info/flight_info.cfm?candidateid=#get_candidate_unqid.candidateid#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">View / Edit  Itinerary</A></Td>
+                                        <Td align="Center" colspan=2 class="style1"><a href="" onClick="javascript: win=window.open('flight_info/flight_info.cfm?candidateid=#get_candidate_unqid.candidateid#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">View / Edit  Itinerary</A></Td>
 										</tr>
 									
 								</td>	

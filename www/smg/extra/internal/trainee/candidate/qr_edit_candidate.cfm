@@ -1,3 +1,4 @@
+
 <!--- ------------------------------------------------------------------------- ----
 	
 	File:		qr_edit_candidate.cfm
@@ -16,7 +17,8 @@
 	<title>Edit Candidate</title>
 </head>
 <body>
-
+<cfdump var="#client#">
+<cfdump var="#form#">
 <cfif NOT isDefined('FORM.doc_application')> 
 	<cfset FORM.doc_application = '0'>
 <cfelse>
@@ -155,8 +157,8 @@
                 extra_candidate_place_company
             SET 
                 jobid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.combo_position#">, 
-                startdate = <cfif LEN(FORM.host_startdate)> <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.host_startdate)#"> <cfelse> NULL </cfif>,
-                enddate = <cfif LEN(FORM.host_enddate)> <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.host_enddate)#"> <cfelse> NULL </cfif>,
+               <!---- startdate = <cfif LEN(FORM.host_startdate)> <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.host_startdate)#"> <cfelse> NULL </cfif>,
+                enddate = <cfif LEN(FORM.host_enddate)> <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.host_enddate)#"> <cfelse> NULL </cfif>,---->
                 status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">, 
                 confirmation_received = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.confirmation_received#">
             WHERE 
@@ -211,9 +213,9 @@
         emergency_relationship = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_relationship#">,	
         degree = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.degree#">,	 
         degree_other = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.degree_other#">,	
-        degree_comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.degree_comments#">,	
+       <!---- degree_comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.degree_comments#">,---->	
         fieldstudyid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fieldstudyid#">,	 
-        subfieldid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,	 
+     	 subfieldid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,	
         doc_application = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_application#">,	 
         doc_resume = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_resume#">,
         doc_proficiency = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_proficiency#">,	  
@@ -224,18 +226,18 @@
         missing_documents = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.missing_documents#">,	  
         programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">,	
         hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyid#">,		  		
-        <!--- earliestarrival = <cfif LEN(FORM.earliestarrival)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.earliestarrival)#"> <cfelse> NULL </cfif>,  --->
-        arrivaldate = <cfif LEN(FORM.arrivaldate)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.arrivaldate)#"> <cfelse> NULL </cfif>,
+        <!---- earliestarrival = <cfif LEN(FORM.earliestarrival)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.earliestarrival)#"> <cfelse> NULL </cfif>,  ---->
+      	<!----  arrivaldate = <cfif LEN(FORM.arrivaldate)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.arrivaldate)#"> <cfelse> NULL </cfif>, 
         startdate = <cfif LEN(FORM.startdate)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.startdate)#"> <cfelse> NULL </cfif>, 
         enddate = <cfif LEN(FORM.enddate)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.enddate)#"> <cfelse> NULL </cfif>, 
-        remarks = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.remarks#">,  
+        remarks = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.remarks#">,  ---->
         cancel_date = <cfif LEN(FORM.cancel_date)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.cancel_date)#"> <cfelse> NULL </cfif>,
         cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancel_reason#">,
         <!--- DS 2019 --->
 		verification_received = <cfif LEN(FORM.verification_received)> <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.verification_received)#"> <cfelse> NULL </cfif>,
         ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019#">,
-        <!---ds2019_position = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_position#">, ----> 
-        ds2019_subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.combo_subfield#">,
+        <!---ds2019_position = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_position#">,
+        ds2019_subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.combo_subfield#">, ----> 
         ds2019_street = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_street#">, 
         ds2019_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_city#">, 
         ds2019_state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_state#">, 
