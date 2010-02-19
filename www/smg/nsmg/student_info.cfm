@@ -352,7 +352,7 @@
 									<table width="225" cellpadding="2" align="left">
 										<tr><td width="80">Date of Entry : </td><td>#DateFormat(dateapplication, 'mm/dd/yyyy')# </td></tr>
 										<tr><td><cfif randid EQ 0>Entered by : <cfelse>Approved by : </cfif> </td><td><cfif qEnteredBy.recordcount NEQ 0>#qEnteredBy.firstname# #qEnteredBy.lastname# (###qEnteredBy.userid#)<cfelse>n/a</cfif></td></tr>										
-										<cfif CLIENT.userid eq 8731 or CLIENT.usertype eq 1>
+										<cfif CLIENT.usertype eq 1 OR CLIENT.userid eq 8731 or client.userID EQ 11245> <!--- Pat and Bill --->
                                         <tr>
 											<td>Division:</td><td><cfif FORM.edit EQ 'no'>#qAssignedCompany.team_id# <cfelse>
 											<select name="team_id">
