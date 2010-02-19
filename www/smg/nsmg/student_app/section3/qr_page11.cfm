@@ -92,7 +92,7 @@
 		</cfquery>
         
 	</cfif>
-	<cfif allergies_details eq 1 and client.studentid eq 18948>
+	<cfif allergies_details eq 1>
     	<cflocation url="index.cfm?curdoc=section3/allergy_info_request">
     </cfif>
 	<html>

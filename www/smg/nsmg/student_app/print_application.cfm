@@ -68,7 +68,11 @@ where companyid = #client.org_code#
 	-->
 	</style>
 </head>
-
+<cfquery name="check_allergy" datasource="#application.dsn#">
+select has_an_allergy
+from smg_student_app_health
+where studentid = #client.studentid#
+</cfquery>
 <!--- check for attached files ---->
 <body onLoad="print();launchRemote();"> 
 
@@ -138,10 +142,17 @@ where companyid = #client.org_code#
 			<cfinclude template="section3/page12print.cfm">
 			<div style="page-break-after:always;"></div>	
 	</td></tr>
+       <cfif check_allergy.has_an_allergy eq 1>
+    	<tr><td valign="top">				
+			<cfinclude template="section3/allergy_info_request_print.cfm">
+			<div style="page-break-after:always;"></div>	
+	</td></tr>
+    </cfif>
 	<tr><td valign="top">				
 			<cfinclude template="section3/page13print.cfm">
 			<div style="page-break-after:always;"></div>	
 	</td></tr>
+
 	<tr><td valign="top">			
 			<!--- DO NOT PRINT PAGE 14 if PDF or DOC is attached --->
 			<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page14" name="page14" filter="#get_student_info2.studentid#.*">	
