@@ -21,7 +21,7 @@
 		
 
             
-<cftransaction action="begin" isolation="serializable">
+
 	<cftry>
 
 	<!--- UPDATE ROW --->
@@ -74,20 +74,23 @@
 			allergic_to_foods = <cfif IsDefined('form.allergic_to_foods')>'#form.allergic_to_foods#',<cfelse>NULL,</cfif>
 			foods_list = <cfqueryparam value="#form.foods_list#" cfsqltype="cf_sql_char">,
 			allergic_to_pets = <cfif IsDefined('form.allergic_to_pets')>'#form.allergic_to_pets#',<cfelse>NULL,</cfif>
-			pets_list = <cfqueryparam value="#form.pets_list#" cfsqltype="cf_sql_char">,
+			
 			allergic_to_novocaine = <cfif IsDefined('form.allergic_to_novocaine')>'#form.allergic_to_novocaine#',<cfelse>NULL,</cfif>
 			allergic_to_sulfa = <cfif IsDefined('form.allergic_to_sulfa')>'#form.allergic_to_sulfa#',<cfelse>NULL,</cfif>
 			allergic_to_adhesive = <cfif IsDefined('form.allergic_to_adhesive')>'#form.allergic_to_adhesive#',<cfelse>NULL,</cfif>
 			allergic_to_iodine = <cfif IsDefined('form.allergic_to_iodine')>'#form.allergic_to_iodine#',<cfelse>NULL,</cfif>
 			allergic_to_other_drugs = <cfif IsDefined('form.allergic_to_other_drugs')>'#form.allergic_to_other_drugs#',<cfelse>NULL,</cfif>
-			other_drugs_list = <cfqueryparam value="#form.other_drugs_list#" cfsqltype="cf_sql_char">,
+			
 			other_allergies = <cfif IsDefined('form.other_allergies')>'#form.other_allergies#',<cfelse>NULL,</cfif>
 			other_allergies_list = <cfqueryparam value="#form.other_allergies_list#" cfsqltype="cf_sql_char">,
 			depression = <cfif IsDefined('form.depression')>'#form.depression#',<cfelse>NULL,</cfif>
 			eating_disorders = <cfif IsDefined('form.eating_disorders')>'#form.eating_disorders#',<cfelse>NULL,</cfif>
+            has_an_allergy = #allergies_details#,
 			medical_attention_reason = <cfqueryparam value="#form.medical_attention_reason#" cfsqltype="cf_sql_char">
+            
 		WHERE healthid = <cfqueryparam value="#form.healthid#" cfsqltype="cf_sql_integer"> 
 		</cfquery>
+        
 	</cfif>
 	<cfif allergies_details eq 1 and client.studentid eq 18948>
     	<cflocation url="index.cfm?curdoc=section3/allergy_info_request">
@@ -111,4 +114,3 @@
 		<cfinclude template="../email_error.cfm">
 	</cfcatch>
 	</cftry>
-</cftransaction>
