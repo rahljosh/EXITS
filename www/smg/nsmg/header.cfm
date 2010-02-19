@@ -159,7 +159,7 @@
 			</td>
 		</cfif>
 
-        <td align="right" rowspan="2" valign="bottom">
+        <td align="right" rowspan="2" valign="top">
             <cfif client.usertype EQ 8 OR client.usertype EQ 11>
                 <cfif client.usertype eq 11>
                     <cfquery name="get_intrep" datasource="#application.dsn#">

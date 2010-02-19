@@ -38,6 +38,11 @@ function OpenApp(url)
 	WHERE userid = <cfqueryparam value="#get_student_info.intrep#" cfsqltype="cf_sql_integer">
 </cfquery>
 
+<cfquery name="check_allergies" datasource="#application.dsn#">
+select has_an_allergy
+from smg_student_app_health
+where studentid = #client.studentid#
+</cfquery>
 <cfset currentDirectory = "/var/www/html/student-management/nsmg/uploadedfiles/virtualfolder/#get_student_info.studentid#/page22">
 <!--- Check to see if the Directory exists. --->
 <cfif NOT DirectoryExists(currentDirectory)>
@@ -90,6 +95,11 @@ function OpenApp(url)
 	  <td><em>View</em></td>
 	  <td><em>Delete</em></td>
 	</tr>
+    <cfif check_allergies.has_an_allergy eq 1>
+    <tr>
+    	<td><a href="?curdoc=section3/allergy_info_request">Allergy Clarification Form</a></td>
+    </tr>
+    </cfif>
 	<cfif mydirectory.recordcount EQ '0'>
 	<tr><td colspan="5">No file has been uploaded.</td></tr>
 	</cfif>

@@ -60,7 +60,7 @@ function areYouSure() {
 				<td>#LSCurrencyFormat(amount, 'local')#</td>
 				<td>#comment#</td>
 				<td>#transtype#</td>
-				<td align="center"><cfif client.userid is '7657' or client.userid is '1960' or client.usertype is '1' or client.userid is 9719><a href="../querys/delete_supervising_payment.cfm?paymentid=#id#&userid=#rep_info.userid#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a></cfif></td>
+				<td align="center"><cfif client.userid is '7657' or client.userid is '1960' or client.usertype lte 2 or client.userid is 9719><a href="../querys/delete_supervising_payment.cfm?paymentid=#id#&userid=#rep_info.userid#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a></cfif></td>
 			</tr>
 			<cfset total =  total +  #amount#>
 			</cfloop>

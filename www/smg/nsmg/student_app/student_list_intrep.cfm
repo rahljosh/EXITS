@@ -3,7 +3,7 @@
 <head>
 	<meta http-EQuiv="Content-Type" content="text/html;  charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="smg.css">
-	<title>SMG - EXITS Online Application List</title>
+	<title>EXITS Online Application List</title>
 </head>
 <body>
 
@@ -20,9 +20,7 @@
         <cfif client.companyid gt 5>AND s.companyid = 10</cfif>
 	GROUP BY u.businessname
 </cfquery>
-<cfif client.userid eq 1>
-<cfdump var="#client#"> 
-</cfif>
+
 <h2>
 <cfif url.status EQ 1>
 	Access has been sent to these applications, they have not followed the link to activate their account.

@@ -173,7 +173,7 @@ a:active {
             #Right(client.companyname, 17)#---->
         <cfelse>
         
-        	#client.companyname#
+        	<cfif client.companyid eq 11><font color="##000000"></cfif>#client.companyname#<cfif client.companyid eq 11></font></cfif>
         </Cfif></td>
         
         <td align="right" width=100><img src="exitsapp_images/#client.companyid#.png" ></td>
