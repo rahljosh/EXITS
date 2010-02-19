@@ -35,7 +35,12 @@
         LEFT JOIN smg_hosts h ON s.hostid = h.hostid
         LEFT JOIN smg_users branch ON s.branchid = branch.userid
         LEFT JOIN smg_users office ON s.intrep = office.userid
-        WHERE s.companyid <= '4'
+        WHERE 
+        <cfif client.companyid lte 5>
+        s.companyid <= 4
+        <cfelse>
+        s.companyid = #client.companyid#
+        </cfif>
             <cfif URL.status EQ 'placed'>
                 AND s.active = '1' 
                 AND s.hostid != 0

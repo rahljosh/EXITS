@@ -59,7 +59,7 @@
 			</cfif>		
 		</cfloop>
 			other_allergies_list = '#StudentXMLFile.applications.application[i].page9.allergystatement.specificpollens.xmltext#'' , ' 							'#StudentXMLFile.applications.application[i].page9.ohterallergies.specificsubstances.xmltext#',
-			allergic_to_pets =  <cfif StudentXMLFile.applications.application[i].page2.animals.allergictoanimals.xmltext EQ 'NO'>0<cfelse>1</cfif>,
+			allergic_to_pets =  <cfif StudentXMLFile.applications.application[i].page9.ohterallergies.toanimals.xmltext EQ 'NO'>0<cfelse>1</cfif>,
 			been_hospitalized = <cfif StudentXMLFile.applications.application[i].page9.medicalcare.hospitalized.xmltext EQ 'Yes'>1<cfelse>0</cfif>,
 			hospitalized_reason = '#StudentXMLFile.applications.application[i].page9.medicalcare.whyhospitalized.xmltext#',
 			allergic_to_other_drugs = <cfif #StudentXMLFile.applications.application[i].page9.medicalcare.whyhospitalized.xmltext# EQ 'Yes'>1<cfelse>0</cfif>,
@@ -121,7 +121,7 @@
 		</cfquery>
 		<cfquery name="update_students_all" datasource="mysql">
         update smg_students 
-        set animal_allergies = <cfif StudentXMLFile.applications.application[i].page2.animals.allergictoanimals.xmltext EQ 'NO'>'no'<cfelse>'yes'</cfif>,
+        set animal_allergies = <cfif StudentXMLFile.applications.application[i].page9.ohterallergies.toanimals.xmltext EQ 'No'>'no'<cfelse>'yes'</cfif>,
 			app_allergic_animal = '#StudentXMLFile.applications.application[i].page2.animals.allergictoanimals.xmltext#'
             where studentid = #client.studentid#
         </cfquery>
