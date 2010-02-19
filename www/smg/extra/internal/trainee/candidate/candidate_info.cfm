@@ -111,6 +111,7 @@
         	name
     </Cfquery>
     
+
     <cfset currentdate = #now()#>
 
 </cfsilent>    
@@ -400,7 +401,33 @@
 			</table>
 			
 			<br>
-			
+                
+    <cfquery name="check_new_candidate" datasource="mysql">
+	SELECT candidateid, firstname, lastname, dob, uniqueid, smg_companies.companyshort
+	FROM extra_candidates
+    LEFT JOIN smg_companies on smg_companies.companyid = extra_candidates.companyid 
+	WHERE firstname = '#firstname#' 
+		AND	lastname = '#lastname#'
+		AND DOB = '#DateFormat(dob, 'yyyy/mm/dd')#'
+        and candidateid <> #candidateid# 
+	</cfquery>
+    
+            <cfif check_new_candidate.recordcount gt 0>
+			<table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
+				<tr>
+					<td width="49%" valign="top">
+					
+						<!--- Duplicate Check - Display link to other profile with W&T or Trainee --->
+						<table cellpadding=5 cellspacing=5 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+                        	<tr>
+                            	<td colspan=5>This candidate is also in the system as <a href="?curdoc=candidate/candidate_info&uniqueid=#check_new_candidate.uniqueid#">#check_new_candidate.firstname# #check_new_candidate.lastname# (#check_new_candidate.candidateid#)</a> with #check_new_candidate.companyshort#
+                               	</td>
+                        </table>
+                        </td>
+                        </tr>
+            </table>
+            <br>
+            </cfif>
 			<table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
 				<tr>
 					<td width="49%" valign="top">
