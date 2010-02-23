@@ -180,12 +180,8 @@
 				        </ul>
 			        </li>
                     
-			        <!--- <li><a href="index.cfm?curdoc=insurance/vsc_menu">Insurance VSC Menu</a></li> --->
-
                     <li><a href="index.cfm?curdoc=tools/programs">Programs</a></li>
 
-                    <li><a href="index.cfm?curdoc=poll/poll_results">Poll Results</a></li>
-                    
                     <li><a href="index.cfm?curdoc=tools/progress_report_questions">PR Questions</a></li>
 
                     <li><a href="index.cfm?curdoc=tools/regions">Regions</a></li>
