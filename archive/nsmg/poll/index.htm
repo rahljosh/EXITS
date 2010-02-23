@@ -1,0 +1,24 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Untitled Document</title>
+<script>
+var popUpWin=0;
+function popUpWindow(URLStr, left, top, width, height)
+{
+  if(popUpWin)
+  {
+    if(!popUpWin.closed) popUpWin.close();
+  }
+  popUpWin = open(URLStr, 'popUpWin', 'toolbar=no,location=no,directories=no,status=no,menub ar=no,scrollbar=no,resizable=no,copyhistory=yes,width='+width+',height='+height+',left='+left+', top='+top+',screenX='+left+',screenY='+top+'');
+}
+</script>
+</head>
+
+<body>
+<p><a href="javascript:popUpWindow('poll.cfm', 30, 30, 310, 435)">TESTE POLL</a></p>
+<p>&nbsp;</p>
+</body>
+</html>
