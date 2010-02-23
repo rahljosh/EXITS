@@ -141,9 +141,9 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
             <td align="right">
                 <cfset tripcount = 7 - placed_students.Count>
                 <cfif placed_students.Count LT 7>
-                    You're only #tripcount# placements away from a trip to <A href="javascript:popUpWindow('http://www.student-management.com/images/incentive-trip-2008.jpg',10, 10, 770, 590)">#incentive_trip.trip_place#!</A>
+                    You're only #tripcount# placements away from a trip to <A href="http://www.student-management.com/flash/images/incentiveTrip2010.pdf" target="_blank">#incentive_trip.trip_place#!</A>
                 <cfelse>
-                    You've earned a trip to <A href="javascript:popUpWindow('http://www.student-management.com/images/incentive-trip-2008.jpg',10, 10, 770, 590)">#incentive_trip.trip_place#!!!</A> 
+                    You've earned a trip to <A href="http://www.student-management.com/flash/images/incentiveTrip2010.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
                 </cfif>
             </td>
         </tr>
