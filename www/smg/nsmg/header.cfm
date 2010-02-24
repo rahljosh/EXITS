@@ -35,6 +35,7 @@
             )
         ORDER BY 
         	startdate DESC
+        
     </cfquery>
     
     <cfquery name="alert_messages" dbtype="query">
