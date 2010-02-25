@@ -128,13 +128,7 @@
 			</li>              
         </cfif>
         
-        <cfif CLIENT.companyID EQ 10>
-        	 <!--- Old Section --->
-             <li><a href="index.cfm?curdoc=pdf_docs/docs_forms">#qGetCompany.companyShort_noColor# Docs</a></li>
-        <cfelse>
-        	 <!--- New Section --->
-             <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
-        </cfif>
+        <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
         
         <!--- Not Student View --->
         <cfif client.usertype NEQ 9>
