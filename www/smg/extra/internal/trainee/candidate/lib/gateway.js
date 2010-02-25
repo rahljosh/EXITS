@@ -237,7 +237,7 @@ Gateway.prototype.sendPacket = function(packet, _bUseCache){
 	if( this.statusResetID != null ) clearTimeout(this.statusResetID);
 
 	this.sent = packet;
-
+	
 //	this.serializeAndSend(packet);
 	this.delayID = setTimeout(this.id + ".serializeAndSend(" + String(bUseCache) + ")", this.delay);
 }

@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="../../style.css">
-	<title>Program Assigment History</title>
+	<title>Host Company Assigment History</title>
 </head>
 <body>
 
@@ -24,7 +24,7 @@
 	FROM extra_candidate_place_company 
 	INNER JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidate_place_company.hostcompanyid
 	WHERE extra_candidate_place_company.candidateid = '#get_candidate_info.candidateid#'
-	ORDER BY candcompid ASC
+	ORDER BY placement_date DESC
 </cfquery>
 
 
@@ -61,7 +61,7 @@
 							<td align="left" class="style5">#reason_host#</td>
 							<td align="left" class="style5">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
 							<td align="left" class="style5">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
-							<td align="left" class="style5"><CFif status EQ "1">Acitve<CFelse>Inactive</CFif></td>
+							<td align="left" class="style5"><CFif status EQ "1">Active<CFelse>Inactive</CFif></td>
 						</tr>
 					</cfloop>
 				</cfif>
