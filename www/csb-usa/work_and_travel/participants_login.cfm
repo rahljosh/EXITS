@@ -123,38 +123,48 @@
                 <form name="login" action="#cgi.SCRIPT_NAME#" method="post">
                 	<input type="hidden" name="submitted" value="1">
                     <input type="hidden" name="fileName" value="#fileName#">
-                    <table width="50%" align="center" cellpadding="2" cellspacing="2" class="text">
-						<!--- Display Errors --->
-                        <cfif VAL(ArrayLen(Errors.Messages))>
-                            <tr>
-                                <td colspan="2" align="center">
-                                    <p style="color:##FF0000">
-                                        Please review the following items: <br>
-                                        <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
-                                           <span style="padding-left:25px;">
-                                               #Errors.Messages[i]# <br> 
-                                           </span>       	
-                                        </cfloop>
-                                    </p>
-                                </td>
-                            </tr>                                                    
-                        </cfif>	
+                    
+                    <table width="220" border="0" align="center" bgcolor="##666666">
+						
                         <tr>
-                        	<th align="right">Please Login</th>
-							<td>&nbsp;</td>							
+                            <td class="MenuItens">Login:</td>
                         </tr>
                         <tr>
-                        	<td align="right">Username:</td>
-                            <td><input type="userName" name="userName" value="#FORM.userName#"></td>
+                            <td bgcolor="##FFFFFF">
+
+                                <table width="100%" border="0" cellpadding="5" cellspacing="0" class="text">
+									<!--- Display Errors --->
+									<cfif VAL(ArrayLen(Errors.Messages))>
+                                        <tr>
+                                            <td class="MenuItens" colspan="2" align="center">
+                                                <p style="color:##FF0000">
+                                                    Please review the following items: <br>
+                                                    <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
+                                                       <span style="padding-left:25px;">
+                                                           #Errors.Messages[i]# <br> 
+                                                       </span>       	
+                                                    </cfloop>
+                                                </p>
+                                            </td>
+                                        </tr>                                                    
+                                    </cfif>	
+                                    <tr>
+                                        <td width="21%"><strong>Username:</strong></td>
+                                        <td width="79%"><input type="userName" name="userName" value="#FORM.userName#" class="text" size="30"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Password:</strong></td>
+                                        <td><input type="password" name="password" value="#FORM.password#" class="text" size="30"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="center"><input type="submit" name="Submit" class="text" value="Submit"></td>
+                                    </tr>
+                                </table>
+                                
+							</td>                                           
 						</tr>
-                    	<tr>
-                        	<td align="right">Password:</td>
-                            <td><input type="password" name="password" value="#FORM.password#"></td>
-						</tr>
-                        <tr>
-                        	<td colspan="2" align="center"><input type="submit" name="submit" value="Submit"></td>
-						</tr>                                                        
 					</table>                                                    
+                    
                 </form>
                 
             </td>
