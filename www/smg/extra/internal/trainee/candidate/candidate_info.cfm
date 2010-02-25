@@ -354,7 +354,7 @@
 			</table>
 			<br>
 
-			<cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate" onsubmit="return checkHistory(#VAL(get_candidate_unqID.programid)#, #VAL(qCandidatePlacedCompany.hostCompanyID)#);">
+			<cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate&uniqueid=#get_candidate_unqid.uniqueid#" onsubmit="return checkHistory(#VAL(get_candidate_unqID.programid)#, #VAL(qCandidatePlacedCompany.hostCompanyID)#);">
 			<input type="hidden" name="candidateID" value="#get_candidate_unqID.candidateID#">
 			<input type="hidden" name="uniqueID" value="#get_candidate_unqID.uniqueID#">
 			<input type="hidden" name="candCompID" value="#qCandidatePlacedCompany.candCompID#">
