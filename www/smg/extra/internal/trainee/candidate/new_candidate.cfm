@@ -20,10 +20,11 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 <!--// [start] custom JavaScript //-->
 <script language="JavaScript"> 	
 	<!--// // create the gateway object
-	oGateway = new Gateway("./candidate/NewCandidateSelect.cfm", false);
+	oGatewaySubCat = new Gateway("./candidate/NewCandidateSelect.cfm", false);
+	
 	function init(){ 
 		// when the page first loads, grab the Categories and populate the select box
-		oGateway.onReceive = updateOptions; 
+		oGatewaySubCat.onReceive = updateOptions; 
 		// clear option boxes
 		document.NewCandidate.listsubcat.length = 1;
 		loadOptions("listsubcat");
@@ -43,7 +44,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 		var sfieldstudyid = oForm.fieldstudyid.options[oForm.fieldstudyid.options.selectedIndex].value;
 		
 		displayLoadMsg(f);
-		oGateway.sendPacket({field: f, fieldstudyid: sfieldstudyid});
+		oGatewaySubCat.sendPacket({field: f, fieldstudyid: sfieldstudyid});
 	}
 	function updateOptions(){
 		if( this.received == null ) return false; 
@@ -525,7 +526,11 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 					</tr>
 				</table>
 				
-		
+			<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
+					<tr>
+						<td align="center"><br><cfinput name="Submit" type="image" value="  Save  " src="../pics/save.gif" alt="Next" border="0"></td>
+					</tr>
+				</table>
 				
 				</cfform>
 
@@ -537,7 +542,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 
 <script>
 	// place this on the page where you want the gateway to appear
-	oGateway.create();
+	oGatewaySubCat.create();
 </script>						
 
 <cfcatch type="any">

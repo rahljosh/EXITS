@@ -26,7 +26,7 @@
 	LEFT JOIN smg_programs p ON p.programid = extra_program_history.programid
 	LEFT JOIN smg_users u ON u.userid = extra_program_history.userid
 	WHERE candidateid = '#get_candidate_info.candidateid#'
-	ORDER BY programhistoryid
+	ORDER BY date DESC
 </cfquery>
 
 <cfoutput query="get_candidate_info">
