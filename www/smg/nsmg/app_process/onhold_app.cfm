@@ -197,7 +197,7 @@ function confirm_hold() {
 <table width="660" border=0 cellpadding=6 cellspacing=2 align="center" class="thin-border">	
 	<tr><td colspan=2><h3><u>The following information is required to put this application On Hold.</u></h3></td></tr>
 	<tr>
-		<td width="30%" align="right">SMG company: </td>
+		<td width="30%" align="right">Program Manager: </td>
 		<td width="70%">
 			<cfselect name="companyid">
 				<option value="0">Select Company</option>
