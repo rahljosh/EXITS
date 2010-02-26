@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css">
     <link rel="stylesheet" href="../linked/css/basescript.css" type="text/css">
     <!-- jQuery -->
-    <script src="../linked/js/jquery.js" type="text/javascript"></script>
+	<script src="../linked/js/jquery.js" type="text/javascript"></script>
     <!-- required plugins -->
     <script src="../linked/js/date.js" type="text/javascript"></script>
     <!-- jquery.datePicker.js -->
     <script src="../linked/js/jquery.datePicker.js" type="text/javascript"></script>
-    <!-- Basescript --->
-    <script src="../linked/js/basescript.js" type="text/javascript"></script>
+    <!-- Basescript -->
+	<script src="../linked/js/basescript.js" type="text/javascript"></script>
 </head>
 
 <body>
