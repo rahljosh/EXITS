@@ -10,9 +10,12 @@
         UPDATE  
              extra_candidates        
         SET
-             active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">   
+             active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+             status = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
         WHERE
-             active = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+		AND            
+        	status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">      
         AND 
             DATE_ADD(ds2019_enddate, INTERVAL 15 DAY) < now()
         LIMIT 1
