@@ -1,41 +1,70 @@
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<!--- Param FORM variables --->
+    <cfparam name="url.status" default="1">
+    <cfparam name="url.order" default="lastname">
+
+    <!--- Inactivate Candidates --->
+    <cfquery datasource="MySql">
+        UPDATE  
+             extra_candidates        
+        SET
+             active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">   
+        WHERE
+             active = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
+        AND 
+            DATE_ADD(ds2019_enddate, INTERVAL 15 DAY) < now()
+        LIMIT 1
+    </cfquery>
+
+    <cfquery name="qCandidatesList" datasource="MySql">
+        SELECT 
+        	ec.firstname, 
+            ec.lastname, 
+            ec.sex, 
+            ec.residence_country, 
+            ec.candidateid, 
+            ec.programid,
+        	ec.intrep, 
+            ec.status, 
+            ec.uniqueid, 
+            c.countryname, 
+            p.programname, 
+            u.businessname
+        FROM 
+        	extra_candidates ec
+        LEFT JOIN 
+        	smg_countrylist c ON c.countryid = ec.residence_country 
+        LEFT JOIN 
+        	smg_programs p ON p.programid = ec.programid 
+        LEFT JOIN 
+        	smg_users u ON u.userid = ec.intrep 	
+        WHERE 
+        	ec.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            <cfif url.status EQ 'canceled'>
+                AND ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+                <!--- AND ec.cancel_date IS NOT NULL --->
+            <cfelseif url.status EQ 0>
+                AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                <!---AND ec.cancel_date IS NULL --->
+            <cfelseif url.status EQ 1>
+                AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            </cfif>
+        ORDER BY 
+        	#url.order#
+    </cfquery>
+
+</cfsilent>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Candi List</title>
+<title>Candidate List</title>
 </body>
 <link href="../style.css" rel="stylesheet" type="text/css">
-
-<cftry>
-
-<cfif NOT IsDefined('url.status')>
-	<cfset url.status = '1'>
-</cfif>
-
-<cfif NOT IsDefined('url.order')>
-	<cfset url.order = 'lastname'>
-</cfif>
-
-<cfquery name="candidates" datasource="MySql">
-	SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.sex, extra_candidates.residence_country, extra_candidates.candidateid, extra_candidates.programid,
-	extra_candidates.intrep, extra_candidates.status, extra_candidates.uniqueid, smg_countrylist.countryname, smg_programs.programname, smg_users.businessname
-	FROM extra_candidates
-	LEFT JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.residence_country 
-	LEFT JOIN smg_programs ON smg_programs.programid = extra_candidates.programid 
-	LEFT JOIN smg_users ON smg_users.userid = extra_candidates.intrep 	
-	WHERE extra_candidates.companyid = '#client..companyid#' 
-		<cfif url.status EQ 'canceled'>
-			AND extra_candidates.status = 'canceled'
-			<!--- AND extra_candidates.cancel_date IS NOT NULL --->
-		<cfelseif url.status EQ 0>
-			AND extra_candidates.status = '0'
-			<!---AND extra_candidates.cancel_date IS NULL --->
-		<cfelseif url.status EQ 1>
-			AND extra_candidates.status = '1'
-		</cfif>
-	ORDER BY #url.order#
-</cfquery>
 
 <cfoutput>
 
@@ -45,10 +74,10 @@
 
 		<table width=95% cellpadding=0 cellspacing=0 border=0 align="center">
 			<tr valign=middle height=24>
-				<td width="57%" valign="middle" bgcolor="##E4E4E4" class="title1">&nbsp;Candidates</td>
+				<td width="57%" valign="middle" bgcolor="##E4E4E4" class="title1">&nbsp; Candidates</td>
 				<td width="42%" align="right" valign="top" bgcolor="##E4E4E4" class="style1">
-					#candidates.recordcount# 
-					<b><cfif url.status EQ 1>active<cfelseif url.status EQ 0>inactive<cfelseif url.status EQ 'canceled'>canceled</cfif></b> candidate<cfif candidates.recordcount GT 1>s</cfif> found&nbsp; <br>
+					#qCandidatesList.recordcount# 
+					<b><cfif url.status EQ 1>active<cfelseif url.status EQ 0>inactive<cfelseif url.status EQ 'canceled'>canceled</cfif></b> candidate<cfif qCandidatesList.recordcount GT 1>s</cfif> found&nbsp; <br>
 					Filter: &nbsp; <cfif url.status NEQ 'All'><a href="?curdoc=candidate/candidates&placed=all&status=all" class="style4"></cfif>All</a> 
 					&nbsp; | &nbsp; <cfif url.status NEQ 1><a href="?curdoc=candidate/candidates&status=1" class="style4"></cfif>Active</a> 
 					&nbsp; | &nbsp; <cfif url.status NEQ 0><a href="?curdoc=candidate/candidates&status=0" class="style4"></cfif>Inactive</a> 
@@ -67,18 +96,18 @@
 				<th width="15%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=programname&status=#url.status#" class="style2">Program</a></th>		
 				<th width="25%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=businessname&status=#url.status#" class="style2">Intl. Rep.</a></th>
 			</tr>
-		<cfloop query="candidates">
-			<tr bgcolor="#iif(candidates.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-				<td bgcolor="#iif(candidates.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+		<cfloop query="qCandidatesList">
+			<tr bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
 				  <div align="left"><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#candidateid#</a></div></td>
-				<td bgcolor="#iif(candidates.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
 				  <div align="left"><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#firstname#</a></div></td>
-				<td bgcolor="#iif(candidates.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
 				  <div align="left"><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#lastname#</a></div></td>
-				<td bgcolor="#iif(candidates.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left"><cfif sex EQ 'm'>Male<cfelse>Female</cfif></div></td>
-				<td bgcolor="#iif(candidates.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#countryname#</div></td>
-				<td bgcolor="#iif(candidates.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#programname#</div></td>		
-				<td bgcolor="#iif(candidates.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#businessname#
+				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left"><cfif sex EQ 'm'>Male<cfelse>Female</cfif></div></td>
+				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#countryname#</div></td>
+				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#programname#</div></td>		
+				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#businessname#
 				  </option>
 				  </div></td>
 			</tr>
@@ -94,8 +123,3 @@
   </tr>
 </table>
 </html>
-
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-</cftry>
