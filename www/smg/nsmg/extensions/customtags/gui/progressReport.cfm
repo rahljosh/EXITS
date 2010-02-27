@@ -10,6 +10,17 @@
 
 	Status:		In Development
 	
+	Call Custom Tag: 
+	
+		<!--- Import CustomTag --->
+		<cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+	
+		<gui:tableHeader
+			regionID=""
+			dateFrom=""
+			dateTo=""
+		/>
+
 ----- ------------------------------------------------------------------------- --->
 
 
