@@ -177,6 +177,89 @@
 	</cffunction>
 
 
+	<!--- Payments --->
+	<cffunction name="getRepTotalPayments" access="public" returntype="query" output="false" hint="Gets reps total payment by program">
+    	<cfargument name="userID" hint="UserID is required">
+        <cfargument name="companyID" hint="companyID is required">
+              
+            <cfquery 
+                name="qGetRepTotalPayments" 
+                datasource="#APPLICATION.dsn#">
+                SELECT 
+                    rep.programID, 
+                    SUM(rep.amount) as totalPerProgram,
+                    p.programName            
+                FROM 
+                    smg_rep_payments rep
+                LEFT JOIN
+                    smg_programs p ON p.programID = rep.programID
+                WHERE 
+                    rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                <cfif ARGUMENTS.companyID GT 5>
+                    AND rep.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                <cfelse>
+                    AND rep.companyid < <cfqueryparam cfsqltype="cf_sql_integer" value="6"> 
+                </cfif>
+                GROUP BY
+                    rep.programID            
+                ORDER BY 
+                    p.startDate DESC
+            </cfquery>
+		   
+		<cfreturn qGetRepTotalPayments>
+	</cffunction>
+
+    
+	<cffunction name="getRepPaymentsByProgramID" access="public" returntype="query" output="false" hint="Gets rep payments by a programID">
+    	<cfargument name="userID" hint="UserID is required">
+        <cfargument name="programID" hint="ProgramID is required">
+        <cfargument name="companyID" hint="companyID is required">
+              
+        <cfquery 
+			name="qGetRepPaymentsByProgramID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    rep.id, 
+                    rep.amount, 
+                    rep.comment, 
+                    rep.date, 
+                    rep.transtype,
+                    s.studentid,
+                    s.firstname, 
+                    s.familylastname,             
+                    c.team_id,
+                    type.type,
+                    p.programName
+                FROM 
+                    smg_rep_payments rep
+                LEFT JOIN 
+                    smg_students s ON s.studentid = rep.studentid
+                LEFT JOIN 
+                    smg_payment_types type ON type.id = rep.paymenttype
+                LEFT JOIN 
+                    smg_companies c ON c.companyid = rep.companyid
+                LEFT JOIN
+                    smg_programs p ON p.programID = rep.programID
+                WHERE 
+                    rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+				AND
+                	rep.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">                  
+				<cfif ARGUMENTS.companyID GT 5>
+                    AND 
+                    	rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                <cfelse>
+                    AND 
+                    	rep.companyID < <cfqueryparam cfsqltype="cf_sql_integer" value="6"> 
+                </cfif>
+                ORDER BY 
+                    rep.date DESC
+		</cfquery>
+		   
+		<cfreturn qGetRepPaymentsByProgramID>
+	</cffunction>
+
+
+	<!--- Training --->
 	<cffunction name="getTraining" access="public" returntype="query" output="false" hint="Gets a list of training records for a userID">
     	<cfargument name="userID" default="0" hint="userID is not required">
               
