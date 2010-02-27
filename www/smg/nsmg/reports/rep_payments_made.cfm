@@ -1,78 +1,158 @@
-<cfif not IsDefined('url.user')>
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		rep_payments_made.cfm
+	Author:		Marcus Melo
+	Date:		February 25, 2010
+	Desc:		Display payments made to an user
+
+	Updated:  	02-25-2010 - Grouped by Program Name
+
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+	
+    <!--- Param Variables --->	
+    <cfparam name="URL.user" default="0">
+
+	<!--- Import CustomTag --->
+    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+    
+    <cfscript>
+		if (CLIENT.userType GT 4) {
+			// Do not allow users to see other users payments
+			URL.user = CLIENT.userID;	
+		}
+
+		// Get Rep Information
+		qRepInfo = APPCFC.USER.getUserByID(userID=VAL(URL.user));
+		
+		// Get Company Information
+		qGetCompanyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+		
+		// Get Total Payments by Program
+		qGetRepTotalPayments = APPCFC.USER.getRepTotalPayments(userID=VAL(URL.user), companyID=CLIENT.companyID);
+	</cfscript>
+              
+</cfsilent>
+
+<cfif NOT VAL(URL.user)>
 	<cfinclude template="error_message.cfm">
 </cfif>
 
+<script language="JavaScript"> 
+	function displayPaymentDetails(trName) {
+		if ( $("#" + trName).css("display") == "none" ) {						
+			// Display Table
+			$("#" + trName).fadeIn("slow");
+		} else {
+			// Hide Table
+			$("#" + trName).fadeOut("slow");
+		}
+	}
+
+	// Expand/Collapse All
+	function expandAll() {
+		if ( $(".programList").css("display") == "none" ) {						
+			$(".programList").fadeIn("slow");
+		} else {
+			$(".programList").fadeOut("slow");
+		}
+	}
+</script>
+
 <link rel="stylesheet" href="../smg.css" type="text/css">
 
-<cfinclude template="../querys/get_company_short.cfm">
-
-<Cfquery name="rep_info" datasource="MySQL">
-	SELECT firstname, lastname, userid
-	FROM smg_users
-	WHERE userid = <cfqueryparam value="#url.user#" cfsqltype="cf_sql_integer">
-</cfquery>
-
-<cfquery name="all_charges" datasource="MySQL">
-	SELECT rep.id, rep.agentid, rep.amount, rep.comment, rep.date, rep.inputby, rep.companyid, rep.transtype,
-		   s.firstname, s.familylastname, s.studentid, smg_companies.team_id,
-		   type.type
-	FROM smg_rep_payments rep
-	LEFT JOIN smg_students s ON s.studentid = rep.studentid
-	LEFT JOIN smg_payment_types type ON type.id = rep.paymenttype
-    LEFT JOIN smg_companies on smg_companies.companyid = rep.companyid
-	WHERE rep.agentid = <cfqueryparam value="#url.user#" cfsqltype="cf_sql_integer">
-    <cfif client.companyid gt 5>
-     AND rep.companyid = '#client.companyid#'
-     <cfelse>
-     AND rep.companyid < 6 
-	</cfif>
-    ORDER BY rep.date desc
-</cfquery>
-
 <cfoutput>
-<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-	<tr valign=middle height=24>
-		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-		<td width=26 background="pics/header_background.gif"><img src="pics/user.gif"></td>
-		<td background="pics/header_background.gif"><h2>#companyshort.companyshort#</h2></td>
-		<td align="right" background="pics/header_background.gif"><h2>All Payments for #rep_info.firstname# #rep_info.lastname#</h2></td>
-		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+
+<!--- Call tableHeader CustomTag and pass the variables --->
+<gui:tableHeader
+    imageName="user.gif"
+    tableTitle="#qGetCompanyShort.companyshort#"
+    tableRightTitle="Payment List for #qRepInfo.firstname# #qRepInfo.lastname# (###qRepInfo.userID#)"
+/>
+
+<table width="100%" border="0" cellpadding="8" cellspacing="" class="section">
+	<tr>
+        <td width="80px">
+            <a href="javascript:expandAll();">[ View All ]</a>
+        </td>            
+        <td>
+            <b>Program Name</b>  
+		</td>
+        <td><b>Total</b></td>
 	</tr>
-</table>
+    
+    <cfloop query="qGetRepTotalPayments">
+        <tr bgcolor="#iif(qGetRepTotalPayments.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
+            <td>
+            	<a href="javascript:displayPaymentDetails('programList#qGetRepTotalPayments.programID#');">[ View Details ]</a>
+            </td>            
+            <td width="300px">
+                <b>#qGetRepTotalPayments.programName#</b> 
+            </td>
+            <td>
+            	<b>#LSCurrencyFormat(qGetRepTotalPayments.totalPerProgram, 'local')#</b>
+            </td>
+        </tr>
+        
+        <cfscript>
+			// Get Payment List for current programID
+			qPaymentList = APPCFC.USER.getRepPaymentsByProgramID(userID=URL.user, programID=qGetRepTotalPayments.programID, companyID=CLIENT.companyID);		
+		</cfscript>
+        
+        <tr id="programList#qGetRepTotalPayments.programID#" class="programList" style="display:none">
+            <td>&nbsp;</td>
+            <td colspan="2">
+       
+        		<!--- Detail Table --->
+            	<table width="100%" border="0" cellpadding="4" cellspacing="0">
+                    <tr>
+                        <td><b>Date</b></td>
+                        <Td><b>ID</b></Td>
+                        <td><b>Student</b></td>
+                        <td><b>Type</b></td>
+                        <td><b>Amount</b></td>
+                        <td><b>Comment</b></td>
+                        <td><b>Trans. Type</b></td>
+                        <td><b>Prog. Manager</b></td>
+                    </tr>
 
-<table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-	<tr><td><b>Date</b></td><Td><b>ID</b></Td><td><b>Student</b></td><td><b>Type</b></td><td><b>Amount</b></td><td><b>Comment</b></td><td><b>Trans. Type</b></td><td><b>Prog. Manager</b></tr>
-		<Cfif all_charges.recordcount is '0'>
-		<tr><td colspan=5 align="center">No placement payments submitted.</td></tr>
-		<cfelse>
-			<cfset total = '0'>
-			<cfloop query="all_charges">
-			<tr bgcolor="#iif(all_charges.currentrow MOD 2 ,DE("ffffff") ,DE("eeeeee") )#">
-				<td>#DateFormat(date, 'mm/dd/yyyy')#</td>
-				<Td>#id#</Td>
-				<td><cfif studentid is ''>n/a<cfelse>#firstname# #familylastname# (#studentid#)</cfif></td>
-				<Td>#type#</Td>  
-				<td>#LSCurrencyFormat(amount, 'local')#</td>
-				<td>#comment#</td>
-				<td>#transtype#</td>
-                <td>#team_id#</td>
-			</tr>
-			<cfset total =  total +  #amount#>
-			</cfloop>
-			<tr><td colspan=4 align="right"><b>Total to Date:</b></td><td>#LSCurrencyFormat(total, 'local')#</td><td colspan=2></td></tr>
-		</cfif>
-</table>
+					<cfif NOT VAL(qPaymentList.recordcount)>
+                        <tr>
+                            <td colspan="8" align="center" style="padding-left:40px;">No placement payments submitted for this program.</td>
+                        </tr>
+                    </cfif>
 
-<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
+                    <cfloop query="qPaymentList">
+                        <tr bgcolor="#iif(qPaymentList.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
+                            <td>#DateFormat(qPaymentList.date, 'mm/dd/yyyy')#</td>
+                            <Td>#qPaymentList.id#</Td>
+                            <td><cfif NOT VAL(qPaymentList.studentID)> n/a <cfelse> #qPaymentList.firstname# #qPaymentList.familylastname# (#qPaymentList.studentid#) </cfif></td>
+                            <Td>#qPaymentList.type#</Td>  
+                            <td>#LSCurrencyFormat(qPaymentList.amount, 'local')#</td>
+                            <td>#qPaymentList.comment#</td>
+                            <td>#qPaymentList.transtype#</td>
+                            <td>#qPaymentList.team_id#</td>
+                        </tr>
+                    </cfloop>
+
+				</table>
+                
+        	</td>
+		</tr>            
+    </cfloop>     
+    
+    <tr>
+    	<td colspan="8">&nbsp;</td>
+	</tr>            
+</table>   
+
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
 	<tr><td align="center" width="50%">&nbsp;<input type="image" value="Back" src="pics/back.gif" onClick="javascript:history.back()"></td></tr>
 </table>
 
-<!----footer of table---->
-<table width=100% cellpadding=0 cellspacing=0 border=0>
-	<tr valign="bottom">
-		<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-		<td width=100% background="pics/header_background_footer.gif"></td>
-		<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>
-</table>
+<!--- Call tableFooter CustomTag --->
+<gui:tableFooter />
 
-</cfoutput>
+</ cfoutput>
