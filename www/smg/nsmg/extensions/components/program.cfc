@@ -67,12 +67,12 @@
                 WHERE
                 	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                
-				<cfif ARGUMENTS.companyID EQ 10>
+				<cfif LEN(ARGUMENTS.companyID)>
                     AND
                         p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 <cfelse>
                     AND
-                        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes">)
+                        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
                 </cfif>	                
                     
 				<cfif VAL(ARGUMENTS.programID)>
@@ -93,7 +93,7 @@
                 </cfif>
 
                 ORDER BY 
-                   p.endDate DESC,
+                   p.startDate DESC,
                    p.programName
 		</cfquery>
 		   
