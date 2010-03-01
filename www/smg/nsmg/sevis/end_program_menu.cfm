@@ -20,7 +20,7 @@
 
 	<cfscript>
         // Get Programs
-        qGetPrograms = APPCFC.PROGRAM.getPrograms(companyID=CLIENT.companyID, dateActive=1);
+        qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
     </cfscript>
 
     <!-----Company Information----->
@@ -57,7 +57,7 @@
 	<tr>
 		<TD width="15%">Program :</td>
 		<TD><cfselect name="programid" multiple  size="5">			
-			<cfloop query="qGetPrograms"><option value="#ProgramID#">#qGetPrograms.companyshort# - #programname#</option></cfloop>
+			<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 			</cfselect></td></tr>
 	<tr>
 		<td width="15%">According to :</td>

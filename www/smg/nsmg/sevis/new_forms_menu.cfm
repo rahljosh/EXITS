@@ -20,7 +20,7 @@
 
 	<cfscript>
         // Get Programs
-        qGetPrograms = APPCFC.PROGRAM.getPrograms(companyID=CLIENT.companyID, dateActive=1);
+        qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
     </cfscript>
 
     <cfquery name="get_sevis_history" datasource="MySql">
@@ -54,7 +54,7 @@
 	<tr align="left">
 		<TD width="15%">Program :</td>
 		<TD><select name="programid" multiple  size="5">			
-			<cfloop query="qGetPrograms"><option value="#ProgramID#">#qGetPrograms.companyshort# - #programname#</option></cfloop>
+			<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 			</select></td></tr>
 	<tr><td colspan="2" align="center" bgcolor="ededed"><input type="image" src="pics/view.gif" align="center" border=0 <cfif client.usertype is not '1'>disabled</cfif>></td></tr>
 </table><br>
