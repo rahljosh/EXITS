@@ -88,7 +88,7 @@
 
 	<cfif NOT VAL(qGetRepTotalPayments.recordcount)>
         <tr>
-            <td colspan="3" align="center">No payments have been submitted for this user.</td>
+            <td colspan="3">No payments have been submitted for this user.</td>
         </tr>
     </cfif>
     
@@ -130,7 +130,7 @@
 
 					<cfif NOT VAL(qPaymentList.recordcount)>
                         <tr>
-                            <td colspan="8" align="center" style="padding-left:40px;">No payments submitted for this season.</td>
+                            <td colspan="8" style="padding-left:40px;">No payments submitted for this season.</td>
                         </tr>
                     </cfif>
 
