@@ -69,4 +69,4 @@ If you need to remove an amount, set it to 0 (zero).</p>
 
 </form>
 <Cfif isDefined('url.message')>
-<p><span class="get_attention" align="center">Program charges were updated / added succesfully!!</span><br><br></cfif>
+<p><span class="get_attention" align="center">Program charges were updated / added Successfully!!</span><br><br></cfif>

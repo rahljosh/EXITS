@@ -40,7 +40,7 @@ body {font:Arial, Helvetica, sans-serif;}
 <cfsavecontent variable="email_message">
 #firstname# #familylastname#-
 <br><br>
-Your account has been succesfully created. Below is your login information for your records.
+Your account has been Successfully created. Below is your login information for your records.
 <br><br>
 Login ID (User ID) : #email#<br>
 Password: #password1#

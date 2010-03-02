@@ -167,9 +167,9 @@
 
 						// Set Message for User
 						if ( VAL(FORM.isApproved) ) {
-							FORM.message = 'Report succesfully approved';
+							FORM.message = 'Report Successfully approved';
 						} else {
-							FORM.message = 'Report succesfully rejected';
+							FORM.message = 'Report Successfully rejected';
 						}
 					}					
 					

@@ -19,4 +19,4 @@
 	
 </cfloop> 
 </cftransaction>
-<cflocation url="?curdoc=tools/countries&message=Countries Updated Succesfully!!">
+<cflocation url="?curdoc=tools/countries&message=Countries Updated Successfully!!">

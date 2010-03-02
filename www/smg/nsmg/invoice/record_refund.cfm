@@ -21,7 +21,7 @@
 
 
 <body onLoad="opener.location.reload()"> 
-<h2>Refund item has been succesfully recorded.</h2>
+<h2>Refund item has been Successfully recorded.</h2>
 
 <br><br>
 <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">
