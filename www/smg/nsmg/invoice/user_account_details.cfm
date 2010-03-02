@@ -1,6 +1,30 @@
 <!--- CHECK INVOICE RIGHTS ---->
 <cfinclude template="check_rights.cfm">
 
+<cfparam name="FORM.companyID" default="#CLIENT.companyID#">
+<cfparam name="FORM.submitted" default="0">
+
+<cfif FORM.submitted>
+	
+	<!--- query to get company info --->
+	<Cfquery name="qCompanyDetail" datasource="MySQL">
+		select			
+			companyID,
+			companyShort,
+			companyName
+		from 
+			smg_companies
+		where 
+			companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyID#">
+	</Cfquery>
+	
+	<cfset CLIENT.companyID = qCompanyDetail.companyID>
+	<cfset CLIENT.companyShort = qCompanyDetail.companyShort>
+	<cfset CLIENT.companyName = qCompanyDetail.companyName>
+	
+	<cflocation url="#CGI.SCRIPT_NAME#?#cgi.QUERY_STRING#" addtoken="no">
+</cfif>
+
 <cfsetting requestTimeOut = "800">
 
 <!----Cookie list for recent agents accessed---->
@@ -27,11 +51,11 @@
 <cfif isDefined('url.invall')>
 	<Cfset form.view = 'all'>
 <cfelse>
-	<cfset form.view = #client.companyid#>		
+	<cfset form.view = #FORM.companyID#>		
 </cfif>
 
 
-<cfif client.companyid is 5><Cfoutput><div align="center"><a href="?curdoc=invoice/user_account_details&userid=#url.userid#">Show only SMG</a> :: <a href="?curdoc=invoice/user_account_details&userid=#url.userid#&invall">Include all company numbers</a></div></Cfoutput></cfif>
+<cfif FORM.companyID is 5><Cfoutput><div align="center"><a href="?curdoc=invoice/user_account_details&userid=#url.userid#">Show only SMG</a> :: <a href="?curdoc=invoice/user_account_details&userid=#url.userid#&invall">Include all company numbers</a></div></Cfoutput></cfif>
 
 <Cfquery name="agent_details" datasource="MySQL">
 	select businessname, firstname, lastname, city, smg_countrylist.countryname
@@ -64,7 +88,7 @@ END) AS testCompId --->
         WHERE sch.agentid = #url.userid#
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
-        	HAVING sch.companyid = #client.companyid#
+        	HAVING sch.companyid = #FORM.companyID#
 		</cfif>
         UNION ALL
         SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total, sch.companyid<!--- 
@@ -82,7 +106,7 @@ END) AS testCompId --->
         WHERE  sch.agentid = #url.userid#
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
-        	HAVING sch.companyid = #client.companyid#
+        	HAVING sch.companyid = #FORM.companyID#
 		</cfif>
         UNION ALL
         SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, sc.companyid<!--- 
@@ -101,7 +125,7 @@ END) AS testCompId --->
         AND sc.agentid = #url.userid#
 		GROUP BY sc.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
-        	HAVING sc.companyid = #client.companyid#
+        	HAVING sc.companyid = #FORM.companyID#
 		</cfif>
         ) t
         GROUP BY t.agentid
@@ -112,7 +136,7 @@ END) AS testCompId --->
 			from smg_charges
 			where agentid = #URL.userid# 
 				<cfif form.view is not 'all'>
-                and companyid = #client.companyid#
+                and companyid = #FORM.companyID#
                 </cfif>
 			</Cfquery>
             
@@ -126,7 +150,7 @@ END) AS testCompId --->
 			from smg_payment_received
 			where agentid = #url.userid# 			
 				<cfif form.view is not 'all'>
-                and companyid = #client.companyid#
+                and companyid = #FORM.companyID#
                 </cfif>
 			</cfquery>
 			<cfif total_received.total_received is ''>
@@ -138,7 +162,7 @@ END) AS testCompId --->
 			from smg_credit
 			where agentid = #url.userid# and payref <> '' and active = 0
 			<cfif form.view is not 'all'>
-			and companyid = #client.companyid#
+			and companyid = #FORM.companyID#
 			</cfif>
 			</cfquery>
 			<cfif overpayment_credit.overpayment_amount is ''>
@@ -151,7 +175,7 @@ END) AS testCompId --->
 			from smg_credit
 			where agentid = #url.userid#
 			<cfif form.view is not 'all'>
-			and companyid = #client.companyid#
+			and companyid = #FORM.companyID#
 			</cfif>
 			and active = 1
 			</cfquery>
@@ -165,7 +189,7 @@ END) AS testCompId --->
 			from smg_credit
 			where agentid = #url.userid#
 				<cfif form.view is not 'all'>
-                and companyid = #client.companyid#
+                and companyid = #FORM.companyID#
                 </cfif>
 			and active = 1
 			</cfquery>
@@ -182,7 +206,7 @@ END) AS testCompId --->
 			where smg_invoice_refunds.agentid =#url.userid#
 			
 				<cfif form.view is not 'all'>
-				and smg_invoice_refunds.companyid = #client.companyid#
+				and smg_invoice_refunds.companyid = #FORM.companyID#
 				</cfif>
 			</cfquery>
 			<cfif total_refund.total_refund is ''>
@@ -196,7 +220,7 @@ END) AS testCompId --->
 			from smg_invoice_refunds
 			where smg_invoice_refunds.agentid = #url.userid#
 			<cfif form.view is not 'all'>
-			and smg_invoice_refunds.companyid = #client.companyid#
+			and smg_invoice_refunds.companyid = #FORM.companyID#
 			</cfif>
 			and smg_invoice_refunds.refund_receipt_id = 0
 			</cfquery>
@@ -205,8 +229,8 @@ END) AS testCompId --->
 			smg_credit.creditid, smg_credit.amount as credit_amount, smg_credit.description
 			from smg_invoice_refunds right join smg_credit on smg_invoice_refunds.creditid = smg_credit.id
 			where smg_invoice_refunds.agentid = #url.userid#
-			<cfif client.companyid EQ 5 AND form.view is not 'all'>
-			and smg_invoice_refunds.companyid = #client.companyid#
+			<cfif FORM.companyID EQ 5 AND form.view is not 'all'>
+			and smg_invoice_refunds.companyid = #FORM.companyID#
 			</cfif>
 			and smg_invoice_refunds.refund_receipt_id = 0
 			</cfquery>
@@ -215,8 +239,8 @@ END) AS testCompId --->
 			select  distinct smg_invoice_refunds.refund_receipt_id
 			from smg_invoice_refunds 
 			where smg_invoice_refunds.agentid = #url.userid#
-			<cfif client.companyid EQ 5 AND form.view is not 'all'>
-			and smg_invoice_refunds.companyid = #client.companyid#
+			<cfif FORM.companyID EQ 5 AND form.view is not 'all'>
+			and smg_invoice_refunds.companyid = #FORM.companyID#
 			</cfif>
 			and smg_invoice_refunds.refund_receipt_id <> 0
 			</cfquery>
@@ -239,7 +263,6 @@ END) AS testCompId --->
 	function hideMenu1() {
 		document.getElementById("cancellationMenu").style.display = "none";
 	}	
-	
 </script>
 
 <style type="text/css">
@@ -288,12 +311,27 @@ END) AS testCompId --->
 									<b>#agent_details.businessname#</b><br>
 									Agent ID: #userid#<br>
 		#agent_Details.firstname# #agent_details.lastname#<br>
-		#agent_details.city#, #agent_details.countryname#
+		#agent_details.city#, #agent_details.countryname#</br>
+		
+
+		<cfquery name="qCompShort" datasource="MySQL">
+		SELECT companyid, companyshort
+		FROM smg_companies
+		WHERE companyid != 11
+		</cfquery>
+		
+		<cfform name="changeCompany" method="post" action="#cgi.SCRIPT_NAME#?#cgi.QUERY_STRING#">
+			<input type="hidden" name="submitted" value="1" />
+			Change company:
+			<cfselect name="companyid" query="qCompShort" display="companyshort" value="companyid" selected="#FORM.companyID#" onChange="javaScript:changeCompany.submit();">
+			</cfselect>
+		</cfform>
 
 									</td>
 									
 									<td>&nbsp;</td>
 									<td valign="top" align="right">
+
 									<!---Current Balance---->
 									<table align="right">
 											<tr><strong></strong>
@@ -308,7 +346,7 @@ END) AS testCompId --->
 												from smg_payment_received
 												where agentid = #url.userid#
 													<cfif form.view is not 'all'>
-													and companyid = #client.companyid#
+													and companyid = #FORM.companyID#
 													</cfif>
 												</Cfquery>
 												<cfif recent_Date.recent_pay is ''>
@@ -446,7 +484,7 @@ LEFT JOIN smg_programs sp ON sp.programid = s.programid
 WHERE s.agentid = #url.userid#
 AND s.invoiceid = 0
 	<cfif form.view is not 'all'>
-    AND s.companyid = #client.companyid#
+    AND s.companyid = #FORM.companyID#
     </cfif>
 </cfquery>
 
@@ -461,7 +499,7 @@ AND s.invoiceid = 0
         INNER JOIN extra_candidates ec ON ec.candidateid = s.stuid
         where s.agentid = #url.userid# and s.invoiceID = 0
                     <cfif form.view is not 'all'>
-                    and s.companyid = #client.companyid#
+                    and s.companyid = #FORM.companyID#
                     </cfif>
         </cfquery>
             
@@ -474,7 +512,7 @@ AND s.invoiceid = 0
             LEFT JOIN smg_students ss ON ss.studentid = s.stuid
             where s.agentid = #url.userid# and s.invoiceID = 0
                         <cfif form.view is not 'all'>
-                        and s.companyid = #client.companyid#
+                        and s.companyid = #FORM.companyID#
                         </cfif>
             </cfquery>
 
@@ -680,8 +718,8 @@ SELECT invoiceid, invoicedate, SUM(amount_due) AS invoice_due, companyid
 FROM smg_charges
 WHERE agentid = #url.userid#
 AND invoiceid <> 0
-			<cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'>
-			and companyid = #client.companyid#
+			<cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10) AND form.view is not 'all'>
+			and companyid = #FORM.companyID#
 			</cfif>
 GROUP BY 
 	invoiceid DESC, companyID 
@@ -737,9 +775,9 @@ GROUP BY
                 RIGHT JOIN smg_charges s ON s.chargeid = spc.chargeid
                 WHERE s.agentid =#url.userid#
                     
-				<cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'>
+				<cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10) AND form.view is not 'all'>
 					AND 
-						s.companyid = #client.companyid#
+						s.companyid = #FORM.companyID#
 				<cfelse>
 					AND 
 						s.companyid = #current_invoices.companyid#
@@ -820,8 +858,8 @@ GROUP BY
 select distinct paymentref
 from smg_payment_received
 where agentid = #url.userid#
-			<!--- <cfif (client.companyid EQ 5 OR client.companyid EQ 10) AND form.view is not 'all'>
-			and companyid = #client.companyid#
+			<!--- <cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10) AND form.view is not 'all'>
+			and companyid = #FORM.companyID#
 			</cfif> --->
 ORDER BY date DESC			
 </Cfquery>
@@ -871,8 +909,8 @@ ORDER BY date DESC
 select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.creditid, sc.amount_applied, sc.credit_type, c.companyshort
 from smg_credit sc
 LEFT JOIN smg_companies c ON c.companyid = sc.companyid
-where agentid = #url.userid# <cfif (client.companyid EQ 10) AND form.view is not 'all'>
-								and sc.companyid = #client.companyid# 
+where agentid = #url.userid# <cfif (FORM.companyID EQ 10) AND form.view is not 'all'>
+								and sc.companyid = #FORM.companyID# 
 							 </cfif>
 and  active = 1
 ORDER BY creditid DESC
@@ -940,8 +978,8 @@ ORDER BY creditid DESC
 select date, type, description, stuid, invoiceid, amount, creditid, credit_type, c.companyshort
 from smg_credit
 LEFT OUTER JOIN smg_companies c ON c.companyid = smg_credit.companyid
-where agentid = #url.userid# <cfif client.companyid EQ 10 AND form.view is not 'all'>
-								and smg_credit.companyid = #client.companyid# 
+where agentid = #url.userid# <cfif FORM.companyID EQ 10 AND form.view is not 'all'>
+								and smg_credit.companyid = #FORM.companyID# 
 							 </cfif>
 and active = 0
 ORDER BY creditid DESC
@@ -1037,7 +1075,7 @@ WHERE su.userid = #url.userid#
 	</cfquery>
 </cfif>
 
-<cfswitch expression="#client.companyid#">
+<cfswitch expression="#FORM.companyID#">
 	<cfcase value="10">
 		<cfset compName = "case">
 		<cfset emailFrom = 'marcel@case-usa.org'>
