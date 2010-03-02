@@ -33,45 +33,88 @@
 <!--- END PROGRAM ACCORDING TO TERMINATION DATE --->
 <cfif form.type EQ 'termination'>
 	<cfquery name="get_students" datasource="MySql"> 
-		SELECT DISTINCT s.studentid, s.ds2019_no, s.termination_date, s.firstname, s.familylastname, 
-				u.businessname
-		FROM smg_students s
-		INNER JOIN smg_programs p ON s.programid = p.programid
-		INNER JOIN smg_users u ON s.intrep = u.userid
-		WHERE s.active = '1'
-				AND s.ds2019_no LIKE 'N%'
-				AND s.sevis_end_program = '0'
-				AND s.termination_date IS NOT NULL
-				AND s.termination_date < #CreateODBCDate(now())#
-				AND (
-				<cfloop list=#form.programid# index='prog'>
-					s.programid = #prog# 
-			   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			   </cfloop> )
-		ORDER BY u.businessname, s.firstname
+		SELECT DISTINCT 
+        	s.studentid, 
+            s.ds2019_no, 
+            s.termination_date, 
+            s.firstname, 
+            s.familylastname, 
+			u.businessname
+		FROM 
+        	smg_students s
+		INNER JOIN 
+        	smg_programs p ON s.programid = p.programid
+		INNER JOIN 
+        	smg_users u ON s.intrep = u.userid
+		WHERE 
+        	s.active = '1'
+        AND 
+        	s.ds2019_no LIKE 'N%'
+        AND 
+        	s.sevis_end_program = '0'
+        AND 
+        	s.termination_date IS NOT NULL
+        AND 
+        	s.termination_date < #CreateODBCDate(now())#
+        AND 
+            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+
+		<cfif CLIENT.companyID EQ 10>
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfelse>
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes">
+        </cfif>
+		
+        ORDER BY 
+        	u.businessname, 
+            s.firstname
 		LIMIT 250
 	</cfquery>
 <!--- END PROGRAM ACCORDING TO FLIGHT INFORMATION --->
 <cfelse>
 	<cfquery name="get_students" datasource="MySql"> 
-		SELECT DISTINCT	s.studentid, s.ds2019_no, s.firstname, s.familylastname,
-				u.businessname
-		FROM smg_students s
-		INNER JOIN smg_programs p ON s.programid = p.programid
-		INNER JOIN smg_users u ON s.intrep = u.userid
-		INNER JOIN smg_flight_info f on s.studentid = f.studentid
-		WHERE s.active = '1'
-				AND s.ds2019_no LIKE 'N%'
-				AND s.sevis_end_program = '0'
-				AND f.flight_type = 'departure'
-				AND f.dep_date < #CreateODBCDate(now())# 
-				AND f.dep_date IS NOT NULL
-				AND (
-				<cfloop list=#form.programid# index='prog'>
-					s.programid = #prog# 
-			   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			   </cfloop> )
-		ORDER BY u.businessname, s.firstname
+		SELECT DISTINCT	
+        	s.studentid, 
+            s.ds2019_no, 
+            s.firstname, 
+            s.familylastname,
+			u.businessname
+		FROM 
+        	smg_students s
+		INNER JOIN 
+        	smg_programs p ON s.programid = p.programid
+		INNER JOIN 
+        	smg_users u ON s.intrep = u.userid
+		INNER JOIN 
+        	smg_flight_info f on s.studentid = f.studentid
+		WHERE 
+        	s.active = '1'
+        AND 
+        	s.ds2019_no LIKE 'N%'
+        AND 
+        	s.sevis_end_program = '0'
+        AND 
+        	f.flight_type = 'departure'
+        AND 
+        	f.dep_date < #CreateODBCDate(now())# 
+        AND 
+        	f.dep_date IS NOT NULL
+        AND 
+            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+
+		<cfif CLIENT.companyID EQ 10>
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfelse>
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes">
+        </cfif>
+       
+		ORDER BY 
+        	u.businessname, 
+            s.firstname
 		LIMIT 250
 	</cfquery>
 </cfif>

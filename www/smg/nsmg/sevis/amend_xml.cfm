@@ -21,32 +21,75 @@
 
 
 <cfquery name="get_students" datasource="MySql"> 
-	SELECT 	s.studentid, s.dateapplication, s.active, s.ds2019_no, s.firstname, s.familylastname, 
-			s.middlename, s.dob, s.sex,	s.citybirth, s.hostid, s.schoolid, s.host_fam_approved,
-			s.ayporientation, s.aypenglish,
-			h.address as hostaddress, h.address2 as hostaddress2, h.city as hostcity, h.state as hoststate, h.zip as hostzip,
-			u.businessname
-	FROM smg_students s
-	INNER JOIN smg_programs p ON s.programid = p.programid
-	INNER JOIN smg_users u ON s.intrep = u.userid
-	LEFT JOIN smg_hosts h ON s.hostid = h.hostid
-	WHERE s.active = '1'
-			AND s.sevis_amend_dates = '0'
-			AND s.ds2019_no like 'N%'
-			AND s.sevis_activated = '0'
-			<cfif IsDefined('form.pre_ayp')>
-			AND (s.aypenglish != '0' or s.ayporientation != '0')
-			</cfif>
-			<cfif IsDefined('form.non_pre_ayp')>
-			AND s.aypenglish = '0' 
-			AND s.ayporientation = '0'
-			</cfif>
-			AND (
-			<cfloop list=#form.programid# index='prog'>
-	 	    	s.programid = #prog# 
-		   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-	   	   </cfloop> )
-	ORDER BY u.businessname, s.familylastname, s.firstname
+	SELECT 	
+    	s.studentid, 
+        s.dateapplication, 
+        s.active, 
+        s.ds2019_no, 
+        s.firstname, 
+        s.familylastname, 
+        s.middlename, 
+        s.dob, 
+        s.sex,	
+        s.citybirth, 
+        s.hostid, 
+        s.schoolid, 
+        s.host_fam_approved,
+        s.ayporientation, 
+        s.aypenglish,
+        h.address as hostaddress, 
+        h.address2 as hostaddress2, 
+        h.city as hostcity, 
+        h.state as hoststate, 
+        h.zip as hostzip,
+        u.businessname
+	FROM 
+    	smg_students s
+	INNER JOIN 
+    	smg_programs p ON s.programid = p.programid
+	INNER JOIN 
+    	smg_users u ON s.intrep = u.userid
+	LEFT JOIN 
+    	smg_hosts h ON s.hostid = h.hostid
+	WHERE 
+    	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    AND 
+    	s.sevis_amend_dates = '0'
+    AND 
+    	s.ds2019_no like 'N%'
+    AND 
+    	s.sevis_activated = '0'
+    AND 
+    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+               
+    <cfif IsDefined('form.pre_ayp')>
+    AND 
+    	(
+        	s.aypenglish != '0' 
+        OR
+        	s.ayporientation != '0'
+        )
+    </cfif>
+
+    <cfif IsDefined('form.non_pre_ayp')>
+    AND 
+    	s.aypenglish = '0' 
+    AND 
+    	s.ayporientation = '0'
+    </cfif>
+
+	<cfif CLIENT.companyID EQ 10>
+    AND
+    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    <cfelse>
+    AND
+    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes">
+    </cfif>
+
+	ORDER BY 
+    	u.businessname, 
+        s.familylastname, 
+        s.firstname
 	LIMIT 250
 </cfquery>
 
