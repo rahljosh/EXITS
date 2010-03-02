@@ -66,7 +66,7 @@ body {
               America's finest Private High Schools. ISE works with a network of 
               independent international educational partners who provide
               information, screening and orientations for prospective applicants. ISE is designated by the Department of State</span> as a sponsor of an 
-              exchange visitor program. The Council on Standards for International Educational Travel (CSIET) has accepted ISE for listing in the 2007-08 Advisory List. Students between 15 and 18.5 years upon  arrival may apply to our program for a semester of study or for the full school year.<br>              
+              exchange visitor program. The Council on Standards for International Educational Travel (CSIET) has accepted ISE for listing in the 2009-10 Advisory List. Students between 15 and 18.5 years upon  arrival may apply to our program for a semester of study or for the full school year.<br>              
               <br>            
             </div></td>
           </tr>
