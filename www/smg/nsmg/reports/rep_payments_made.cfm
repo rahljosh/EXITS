@@ -11,7 +11,7 @@
 
 <!--- Kill Extra Output --->
 <cfsilent>
-	
+
     <!--- Param Variables --->	
     <cfparam name="URL.user" default="0">
 
@@ -19,11 +19,12 @@
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
     
     <cfscript>
-		if (CLIENT.userType GT 4) {
-			// Do not allow users to see other users payments
-			URL.user = CLIENT.userID;	
+		allowAccess = APPCFC.USER.checkUserAccess(currentUserID=CLIENT.userID, currentRegionID=CLIENT.regionID, currentUserType=CLIENT.userType, viewUserID=URL.user);
+		
+		if (NOT allowAccess) {
+			URL.user = CLIENT.userID;		
 		}
-
+		
 		// Get Rep Information
 		qRepInfo = APPCFC.USER.getUserByID(userID=VAL(URL.user));
 		
@@ -45,9 +46,11 @@
 		if ( $("#" + trName).css("display") == "none" ) {						
 			// Display Table
 			$("#" + trName).fadeIn("slow");
+			//$("#" + trName).slideToggle();
 		} else {
 			// Hide Table
 			$("#" + trName).fadeOut("slow");
+			//$("#" + trName).slideUp();
 		}
 	}
 
@@ -77,19 +80,25 @@
         <td width="80px">
             <a href="javascript:expandAll();">[ View All ]</a>
         </td>            
-        <td>
-            <b>Program Name</b>  
+        <td width="300px">
+            <b>Season</b>  
 		</td>
         <td><b>Total</b></td>
 	</tr>
+
+	<cfif NOT VAL(qGetRepTotalPayments.recordcount)>
+        <tr>
+            <td colspan="3" align="center">No payments have been submitted for this user.</td>
+        </tr>
+    </cfif>
     
     <cfloop query="qGetRepTotalPayments">
         <tr bgcolor="#iif(qGetRepTotalPayments.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
             <td>
-            	<a href="javascript:displayPaymentDetails('programList#qGetRepTotalPayments.programID#');">[ View Details ]</a>
+            	<a href="javascript:displayPaymentDetails('programList#qGetRepTotalPayments.seasonID#');">[ View Details ]</a>
             </td>            
-            <td width="300px">
-                <b>#qGetRepTotalPayments.programName#</b> 
+            <td>
+                <b>#qGetRepTotalPayments.season#</b> 
             </td>
             <td>
             	<b>#LSCurrencyFormat(qGetRepTotalPayments.totalPerProgram, 'local')#</b>
@@ -98,10 +107,10 @@
         
         <cfscript>
 			// Get Payment List for current programID
-			qPaymentList = APPCFC.USER.getRepPaymentsByProgramID(userID=URL.user, programID=qGetRepTotalPayments.programID, companyID=CLIENT.companyID);		
+			qPaymentList = APPCFC.USER.getRepPaymentsBySeasonID(userID=URL.user, seasonID=qGetRepTotalPayments.seasonID, companyID=CLIENT.companyID);		
 		</cfscript>
         
-        <tr id="programList#qGetRepTotalPayments.programID#" class="programList" style="display:none">
+        <tr id="programList#qGetRepTotalPayments.seasonID#" class="programList" style="display:none">
             <td>&nbsp;</td>
             <td colspan="2">
        
@@ -109,8 +118,9 @@
             	<table width="100%" border="0" cellpadding="4" cellspacing="0">
                     <tr>
                         <td><b>Date</b></td>
-                        <Td><b>ID</b></Td>
+                        <td><b>ID</b></Td>
                         <td><b>Student</b></td>
+                        <td><b>Program</b></td>
                         <td><b>Type</b></td>
                         <td><b>Amount</b></td>
                         <td><b>Comment</b></td>
@@ -120,16 +130,17 @@
 
 					<cfif NOT VAL(qPaymentList.recordcount)>
                         <tr>
-                            <td colspan="8" align="center" style="padding-left:40px;">No placement payments submitted for this program.</td>
+                            <td colspan="8" align="center" style="padding-left:40px;">No payments submitted for this season.</td>
                         </tr>
                     </cfif>
 
                     <cfloop query="qPaymentList">
                         <tr bgcolor="#iif(qPaymentList.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
                             <td>#DateFormat(qPaymentList.date, 'mm/dd/yyyy')#</td>
-                            <Td>#qPaymentList.id#</Td>
+                            <td>#qPaymentList.id#</Td>
                             <td><cfif NOT VAL(qPaymentList.studentID)> n/a <cfelse> #qPaymentList.firstname# #qPaymentList.familylastname# (#qPaymentList.studentid#) </cfif></td>
-                            <Td>#qPaymentList.type#</Td>  
+                            <td>#qPaymentList.programName#</Td> 
+                            <td>#qPaymentList.type#</Td>  
                             <td>#LSCurrencyFormat(qPaymentList.amount, 'local')#</td>
                             <td>#qPaymentList.comment#</td>
                             <td>#qPaymentList.transtype#</td>

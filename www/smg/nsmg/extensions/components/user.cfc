@@ -115,6 +115,53 @@
 	</cffunction>
 
 
+	<cffunction name="checkUserAccess" access="public" returntype="boolean" output="false" hint="Checks if current user is allow to see a record for another user, returns an userID">
+    	<cfargument name="currentUserID" type="numeric" hint="currentUserID is required">
+        <cfargument name="currentRegionID" type="numeric" hint="currentRegionID is required">
+        <cfargument name="currentUserType" type="numeric" hint="currentUserType is required">
+        <cfargument name="viewUserID"type="numeric" hint="viewUserID is required">
+              
+        <cfscript>
+			var allowAccess = false;
+
+			if ( ARGUMENTS.currentUserType LTE 4 OR ARGUMENTS.currentUserID EQ ARGUMENTS.viewUserID ) {
+				
+				// Allow Access to office users and users seeing their own information
+				allowAccess = true;
+			
+			} else {
+
+				// Get view user access				
+				viewUserAccess = getUserAccessRights(userID=ARGUMENTS.viewUserID, regionID=ARGUMENTS.currentRegionID);
+				
+				if ( VAL(viewUserAccess.recordCount) ) {
+				
+					switch(ARGUMENTS.currentUserType) {
+						
+						// Regional Manager
+						case 5: {
+							 allowAccess = true;
+							 break;
+						}
+						
+						// Regional Advisor
+						case 6: {
+							 if ( ARGUMENTS.currentUserID EQ viewUserAccess.advisorID ) {
+								 allowAccess = true;
+							 }
+							 break;
+						}
+						
+						// Area Rep is only allowed to see their own information
+					}								 
+				}
+			}
+		</cfscript>
+        
+        <cfreturn allowAccess>
+	</cffunction>
+
+
 	<cffunction name="getRegionalManager" access="public" returntype="query" output="false" hint="Gets a regional manager for a given region">
         <cfargument name="regionID" type="numeric" default="0" hint="regionID is required">
               
@@ -185,14 +232,16 @@
             <cfquery 
                 name="qGetRepTotalPayments" 
                 datasource="#APPLICATION.dsn#">
-                SELECT 
-                    rep.programID, 
+                SELECT                     
+                    s.seasonID,
                     SUM(rep.amount) as totalPerProgram,
-                    p.programName            
+                    s.season           
                 FROM 
                     smg_rep_payments rep
                 LEFT JOIN
                     smg_programs p ON p.programID = rep.programID
+                LEFT JOIN
+                	smg_seasons s ON s.seasonID = p.seasonID    
                 WHERE 
                     rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
                 <cfif ARGUMENTS.companyID GT 5>
@@ -201,19 +250,19 @@
                     AND rep.companyid < <cfqueryparam cfsqltype="cf_sql_integer" value="6"> 
                 </cfif>
                 GROUP BY
-                    rep.programID            
+                    s.seasonID            
                 ORDER BY 
-                    p.startDate DESC
+                    s.seasonID DESC
             </cfquery>
 		   
 		<cfreturn qGetRepTotalPayments>
 	</cffunction>
 
     
-	<cffunction name="getRepPaymentsByProgramID" access="public" returntype="query" output="false" hint="Gets rep payments by a programID">
-    	<cfargument name="userID" hint="UserID is required">
-        <cfargument name="programID" hint="ProgramID is required">
+	<cffunction name="getRepPaymentsBySeasonID" access="public" returntype="query" output="false" hint="Gets rep payments by a programID">
+    	<cfargument name="userID" hint="UserID is required">        
         <cfargument name="companyID" hint="companyID is required">
+        <cfargument name="seasonID" hint="seasonID is required">
               
         <cfquery 
 			name="qGetRepPaymentsByProgramID" 
@@ -224,26 +273,28 @@
                     rep.comment, 
                     rep.date, 
                     rep.transtype,
-                    s.studentid,
-                    s.firstname, 
-                    s.familylastname,             
+                    stu.studentid,
+                    stu.firstname, 
+                    stu.familylastname,             
                     c.team_id,
                     type.type,
                     p.programName
                 FROM 
                     smg_rep_payments rep
                 LEFT JOIN 
-                    smg_students s ON s.studentid = rep.studentid
+                    smg_students stu ON stu.studentid = rep.studentid
+                INNER JOIN
+                    smg_programs p ON p.programID = rep.programID
+                INNER JOIN	
+                	smg_seasons s ON s.seasonID = p.seasonID
                 LEFT JOIN 
                     smg_payment_types type ON type.id = rep.paymenttype
                 LEFT JOIN 
                     smg_companies c ON c.companyid = rep.companyid
-                LEFT JOIN
-                    smg_programs p ON p.programID = rep.programID
                 WHERE 
                     rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
 				AND
-                	rep.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">                  
+                	s.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">                  
 				<cfif ARGUMENTS.companyID GT 5>
                     AND 
                     	rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
