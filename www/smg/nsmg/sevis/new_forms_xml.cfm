@@ -9,18 +9,43 @@
 </cfquery>
 
 <cfquery name="qGetStudents" datasource="MySql"> 
-	SELECT 	s.studentid, s.ds2019_no, s.firstname, s.familylastname, s.middlename, s.dob, s.sex, s.citybirth, s.companyID,
-			s.ayporientation, s.aypenglish, s.hostid, s.schoolid, s.host_fam_approved, 
-			birth.seviscode as birthseviscode,
-			resident.seviscode as residentseviscode,
-			citizen.seviscode as citizenseviscode,
-			h.familylastname as hostlastname, h.fatherlastname, h.motherlastname, h.address as hostaddress, 
-			h.address2 as hostaddress2, h.city as hostcity, 
-			h.state as hoststate, h.zip as hostzip,
-			sc.schoolname, sc.address as schooladdress, sc.address2 as schooladdress2, sc.city as schoolcity,
-			sc.state as schoolstate, sc.zip as schoolzip,
-			p.startdate, p.enddate, p.preayp_date, p.type as programtype,
-			u.businessname
+	SELECT 	
+    	s.studentid, 
+        s.ds2019_no, 
+        s.firstname, 
+        s.familylastname, 
+        s.middlename, 
+        s.dob, 
+        s.sex, 
+        s.citybirth, 
+        s.companyID,
+        s.ayporientation, 
+        s.aypenglish, 
+        s.hostid, 
+        s.schoolid, 
+        s.host_fam_approved, 
+        birth.seviscode as birthseviscode,
+        resident.seviscode as residentseviscode,
+        citizen.seviscode as citizenseviscode,
+        h.familylastname as hostlastname, 
+        h.fatherlastname, 
+        h.motherlastname, 
+        h.address as hostaddress, 
+        h.address2 as hostaddress2, 
+        h.city as hostcity, 
+        h.state as hoststate, 
+        h.zip as hostzip,
+        sc.schoolname, 
+        sc.address as schooladdress, 
+        sc.address2 as schooladdress2, 
+        sc.city as schoolcity,
+        sc.state as schoolstate, 
+        sc.zip as schoolzip,
+        p.startdate, 
+        p.enddate, 
+        p.preayp_date, 
+        p.type as programtype,
+        u.businessname
 	FROM 
     	smg_students s 
 	INNER JOIN 
@@ -51,13 +76,17 @@
     	s.verification_received IS NOT NULL
     AND 
     	s.sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+    AND 
+        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+
+	<cfif CLIENT.companyID EQ 10>
     AND
-		(
-        <cfloop list=#form.programid# index='prog'>
-            s.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#">  
-       		<cfif ListLast(form.programid) NEQ prog> OR </cfif>
-        </cfloop> 
-       ) 
+        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    <cfelse>
+    AND
+        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes">
+    </cfif>
+
 	ORDER BY 
     	u.businessname, 
         s.firstname

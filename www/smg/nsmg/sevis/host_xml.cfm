@@ -60,16 +60,10 @@
     	s.sevis_batchid != '0'
     AND 
     	s.sevis_activated != '0'
-			
-    AND h.hostid NOT IN (SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentid)
-    
     AND 
-    	(
-    		<cfloop list="#form.programid#" index="prog">
-			    s.programid = #prog# 
-		    <cfif prog NEQ ListLast(form.programid)> OR </cfif>
-		    </cfloop> 
-        )
+    	h.hostid NOT IN (SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentid)
+    AND 
+        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 
 	<cfif IsDefined('form.pre_ayp')>
     	AND 
@@ -78,6 +72,14 @@
              OR
              	s.ayporientation <> '0'
             )
+    </cfif>
+
+	<cfif CLIENT.companyID EQ 10>
+    AND
+        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    <cfelse>
+    AND
+        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes">
     </cfif>
     
 	ORDER BY 
