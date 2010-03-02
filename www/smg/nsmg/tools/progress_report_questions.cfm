@@ -36,7 +36,7 @@ Select the month of questions you'd like to view:
 
 <br>
 <cfif isDefined('url.u')>
-<div align="center"><font color="green">Questions Updated Succesfully!! Make additional changes below.</font></div>
+<div align="center"><font color="green">Questions Updated Successfully!! Make additional changes below.</font></div>
 </cfif>
 <br>
 

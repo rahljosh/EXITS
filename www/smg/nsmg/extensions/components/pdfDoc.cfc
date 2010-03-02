@@ -98,7 +98,7 @@
 			<cfscript>
 				// Set Response Struct
 				response.success = 1;
-				response.message = 'File Uploaded Succesfully';
+				response.message = 'File Uploaded Successfully';
 
 				// Get Folder Name
 				folderName = getPDFCategories(categoryID=ARGUMENTS.categoryID).folder_name;
@@ -149,7 +149,7 @@
 			<cfscript>
 				// Set Response Struct
 				response.success = 1;
-				response.message = 'File Deleted Succesfully';
+				response.message = 'File Deleted Successfully';
 			</cfscript>
 
             <cftry>

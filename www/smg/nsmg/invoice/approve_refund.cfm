@@ -30,7 +30,7 @@ where agentid = #url.userid# and refund_receipt_id = 0
 </cfquery>
 
 <body onLoad="opener.location.reload()"> 
-<h2>Receipt has been succesfully created.</h2>
+<h2>Receipt has been Successfully created.</h2>
 
 <br><br>
 <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">

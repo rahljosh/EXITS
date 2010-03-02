@@ -21,7 +21,7 @@
 		<td><br>
 <div align="center">Please fill out the form below to add your own personal message.<br>
 Plase note that this message will go out for all branch offices as well.<br>
-<cfif isDefined('url.us')><br><h2><font color="green">Message succesfully updated.</font></h2><br></cfif></div>
+<cfif isDefined('url.us')><br><h2><font color="green">Message Successfully updated.</font></h2><br></cfif></div>
 	<table width=550 class="thin-border" cellspacing="0" cellpadding=0 bgcolor="white" align="center">
 		<tr>
 			<td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>

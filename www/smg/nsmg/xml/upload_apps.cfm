@@ -180,7 +180,7 @@ from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlA
 	
 #StudentXMLFile.applications.application[i].XmlAttributes.studentid# ::
 #StudentXMLFile.applications.application[i].page1.student.firstname.XmlText# #StudentXMLFile.applications.application[i].page1.student.lastname.XmlText#
-was submitted succesfully. 
+was submitted Successfully. 
 <cfflush>
 <cfset client.checkstudent =#StudentXMLFile.applications.application[i].XmlAttributes.studentid#>
 

@@ -14,7 +14,7 @@ tr.dash {  font-size: 12px; border-bottom: dashed #201D3E; }
 td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 -->
 </style> 
-<div class="form_section_title"><h3>New User Succesfully Added!</h3></div><p>
+<div class="form_section_title"><h3>New User Successfully Added!</h3></div><p>
 The following information was successfully  added to the system for <cfoutput>#all_rep_info.firstname# #all_rep_info.lastname#</cfoutput>.  They have immediate access to the information under their company/region that their account status will
  allow.
  <p>Information has been emailed to them with their user ID, password and  additional information based on their account type.  Upon logging in the first time, all account passwords 

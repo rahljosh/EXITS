@@ -55,7 +55,7 @@
 					<tr valign=middle height=24>
 						<td height=24 width=13 background="../pics/header_leftcap.gif">&nbsp;</td>
 						<td width=26 background="../pics/header_background.gif"><img src="../../pics/students.gif"></td>
-						<td background="../pics/header_background.gif"><h2>Letter Deleted Succesfully</h2></td>
+						<td background="../pics/header_background.gif"><h2>Letter Deleted Successfully</h2></td>
 						<td width=17 background="../pics/header_rightcap.gif"></td>
 					</tr>
 				</table>
@@ -65,7 +65,7 @@
 											<br>
 				
 				<div align = center>
-				<h2>Your letter was succesfully  deleted. Cose this window to continue your application.</h2><br>
+				<h2>Your letter was Successfully  deleted. Cose this window to continue your application.</h2><br>
 				<input type="image" value="close window" src="../../pics/close.gif" onClick="javascript:window.close()">
 				
 				</div>

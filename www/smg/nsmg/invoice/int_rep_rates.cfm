@@ -98,6 +98,6 @@
 
 </cftransaction>
 
-<cflocation url="?curdoc=invoice/int_rep_rates&message=Prices Updated Succesfully!!">
+<cflocation url="?curdoc=invoice/int_rep_rates&message=Prices Updated Successfully!!">
 
 </cfif>
