@@ -1,0 +1,244 @@
+/* ----------------------------------------------
+	Template Name : FreshMedia
+	Template Code : S-0021
+	Version : 1.1   
+	Author : Erwin Aligam
+	Author URI : http://www.styleshout.com/       
+	Last Date Modified :  January 17, 2010
+ ------------------------------------------------ */
+ 
+/* ----------------------------------------------
+   HTML ELEMENTS
+------------------------------------------------- */ 
+
+/* Top Elements */
+* { margin: 0; padding: 0; outline: 0 }
+
+body {
+	font: 11px/165% "Lucida Grande", Geneva, Verdana, Arial, Helvetica, sans-serif;
+	color: #666666; 	
+	margin: 0; padding: 0 0 50px 0; 
+	background: #fff;
+}
+
+/* Links */
+a, a:active, a:link {
+	text-decoration: none;
+	color: #0B9AC7;		
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	background: #F1F9DA; 
+	color: #895F30;
+	border-bottom: 1px dotted #895F30;
+}
+
+/* headers */
+h1, h2, h3 {
+	font-family: "Trebuchet MS", Tahoma, Arial, Sans-serif;
+	color: #555;
+}
+h1 {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 350%;	
+	font-weight: normal;
+	letter-spacing: -2px;
+	padding: 15px 10px 5px 10px;
+	margin: 0;
+}
+h2 {
+	font-size: 200%;
+	color: #895F30;
+	padding: 20px 10px 5px 10px;
+	margin: 0;
+}
+h3 {
+	font-size: 170%;	
+	font-weight: normal;
+	padding: 20px 10px 5px 10px;
+	margin: 0;	
+}
+
+p, dl { padding: 10px; margin: 0; }
+
+ul, ol {
+	margin: 10px 20px;
+	padding: 0 20px;
+}
+ul { list-style: none; }
+
+dt {
+  font-weight: bold;
+  color: #895F30;
+}
+dd {
+  padding-left: 25px; 
+}
+
+/* images */
+img {
+	background: #fafafa;
+   border: 1px solid #dcdcdc;
+	padding: 8px;
+}
+img.float-right {
+  	margin: 5px 0px 10px 10px;  
+}
+img.float-left {
+  	margin: 5px 10px 10px 0px;
+}
+
+code {
+  	margin: 5px 0;
+  	padding: 15px;
+  	text-align: left;
+  	display: block;
+  	overflow: auto;  
+  	font: 500 1em/1.5em 'Lucida Console', 'courier new', monospace ;
+  	/* white-space: pre; */
+  	border: 1px solid #ECF8FE;
+	background: #ECF8FE;  
+}
+acronym {
+  cursor: help;
+  border-bottom: 1px dotted #895F30;
+}
+blockquote {
+	margin: 15px 10px;
+ 	padding: 10px 10px 10px 35px;  
+   border: 1px solid #ECF8FE;
+	background: #ECF8FE url(../images/quote.jpg) no-repeat 10px 10px;
+	font-weight: normal;
+	font-size: 1.5em;
+	line-height: 1.5em;
+	font-style: italic;
+	font-family: Georgia, "Times New Roman", Times, serif;	
+	color: #976957;	
+}
+
+/* start - table */
+table {
+	border-collapse: collapse;
+	margin: 15px 10px;	
+}
+th {
+	background: #ADD8E6 url(../images/header-bg.jpg) repeat-x 0 -100px;
+	height: 38px;
+	padding-left: 12px;
+	padding-right: 12px;
+	color: #fff;
+	text-align: left;
+	border-left: 1px solid #78C7FA;
+	border-bottom: solid 2px #fff;
+}
+tr {
+	height: 34px;
+	background: #fff;
+}
+td {
+	padding-left: 11px;
+	padding-right: 11px;
+	border: 1px solid #EDEDED;	
+}	
+/* end - table */
+
+/* form elements */
+form {
+	margin: 15px 10px; padding: 5px 10px 20px 10px;
+	border: 1px solid #f1f1f1; 
+	background: #fdfdfd; 	
+}
+label {
+	display: block;
+	font-weight: bold;
+	margin: 8px 0 5px 0;
+	color: #895F30;
+}
+input, select {
+	padding: 4px;
+	font: normal 1em Verdana, sans-serif;
+	color: #666666;
+	background: #fff;  	
+}
+textarea {
+	width: 400px;
+	padding: 4px;
+	font: normal 1em Verdana, sans-serif;
+	height: 100px;
+	display: block;
+	color: #666666;
+}
+input, textarea, select {
+	background: #fff;
+  	border-width: 1px;
+  	border-style: solid;
+  	border-color: #D4D4D4 #ebebeb #ebebeb #d4d4d4; 
+}
+
+input.button { 
+	font: bold 12px Arial, Sans-serif; 
+	height: 30px;
+	margin: 0;
+	padding: 2px 3px; 
+	color: #555;
+	background: #E6E6E6;
+	
+	border-width: 1px;
+  	border-style: solid;
+  	border-color: #ebebeb #d4d4d4 #d4d4d4 #ebebeb;
+}
+
+
+
+/* thumbnails */
+p.thumbs{ padding: 12px 0 0 10px; }
+
+.thumbs img { 
+	position: relative;
+	border: 1px solid #ebebeb;
+	background: none;
+	padding: 7px;
+	margin: 5px;
+	/* margin: 4px 7px 4px 4px; */	
+}
+.thumbs img:hover	{
+	border: 1px solid #c5c5c5; 
+	background: none;	
+}
+.thumbs a:hover { background-color: transparent; border: none }
+
+/* alignment classes */
+.float-left  { float: left; }
+.float-right { float: right; }
+.align-left  { text-align: left; }
+.align-right { text-align: right; }
+
+/* display and additional classes */
+.clearer { clear: both; }
+
+
+.highlighted {
+	
+}
+
+.breadcrumb {
+  margin-bottom: 1em;
+}
+
+.error {
+	color: #FC3307;
+	border: 1px solid #FC3307;
+}
+
+.message {
+	color: #090;
+	border: 1px solid #7ed500;
+}
+
+p.error, p.message {
+	padding: 1em;
+	font-weight: bold;
+	margin-top: 2em;
+}
