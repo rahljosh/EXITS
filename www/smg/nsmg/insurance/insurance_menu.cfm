@@ -42,11 +42,6 @@
 			return false; 
 	   } 
 	} 
-	
-	// Date-pick function
-	$(function() {
-		$('.date-pick').datePicker({startDate:'01/01/2009'});
-	});	
 </script>		
 
 <cfoutput>

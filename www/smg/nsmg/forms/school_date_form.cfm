@@ -171,19 +171,19 @@ function checkForm() {
     </tr>
     <tr>
     	<td class="label">Year Begins:</td>
-        <td><cfinput type="text" name="year_begins" value="#dateFormat(form.year_begins, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Year Begins."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="year_begins" value="#dateFormat(form.year_begins, 'mm/dd/yyyy')#" class="date-pick" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Year Begins."> mm/dd/yyyy</td>
     </tr>
     <tr>
     	<td class="label">1st Semester Ends:</td>
-        <td><cfinput type="text" name="semester_ends" value="#dateFormat(form.semester_ends, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid 1st Semester Ends."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="semester_ends" value="#dateFormat(form.semester_ends, 'mm/dd/yyyy')#" class="date-pick" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid 1st Semester Ends."> mm/dd/yyyy</td>
     </tr>
     <tr>
     	<td class="label">2nd Semester Begins:</td>
-        <td><cfinput type="text" name="semester_begins" value="#dateFormat(form.semester_begins, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid 2nd Semester Begins."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="semester_begins" value="#dateFormat(form.semester_begins, 'mm/dd/yyyy')#" class="date-pick" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid 2nd Semester Begins."> mm/dd/yyyy</td>
     </tr>
     <tr>
     	<td class="label">Year Ends:</td>
-        <td><cfinput type="text" name="year_ends" value="#dateFormat(form.year_ends, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Year Ends."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="year_ends" value="#dateFormat(form.year_ends, 'mm/dd/yyyy')#" class="date-pick" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Year Ends."> mm/dd/yyyy</td>
     </tr>
 </table>
 
