@@ -21,7 +21,7 @@
     
     <cfscript>
 		// Gets Current Company
-		qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+		qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
 		
 		// Create Structure to store errors
 		Errors = StructNew();
@@ -29,8 +29,8 @@
 		Errors.Messages = ArrayNew(1);
 
 		// Skip IDs List if any information is missing;
-		skipHostIDs = '';
-		skipMemberIDs = '';
+		skipHostIDs = 0;
+		skipMemberIDs = 0;
 	</cfscript>
 
 </cfsilent>
@@ -64,7 +64,7 @@
     
     <cfscript>
 		// Get CBCs
-		qGetCBCHost = APPLICATION.CFC.CBC.getPendingCBCHost(
+		qGetCBCHost = APPCFC.CBC.getPendingCBCHost(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID,
 			userType=FORM.usertype
@@ -139,12 +139,12 @@
             FROM	
             	qGetCBCHost
              WHERE	
-             	hostID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(skipHostIDs)#" list="yes">)            
+             	hostID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#skipHostIDs#" list="yes">)            
         </cfquery>
         
 		<cfscript>
             // Create a batch ID - It must be unique
-            newBatchID = APPLICATION.CFC.CBC.createBatchID(
+            newBatchID = APPCFC.CBC.createBatchID(
                 companyID=qGetCompany.companyID,
                 userID=CLIENT.userid,
                 cbcTotal=qGetCBCHost.recordcount,
@@ -156,7 +156,7 @@
         
 			<cfscript>
                 // Process Batch
-                CBCStatus = APPLICATION.CFC.CBC.processBatch(
+                CBCStatus = APPCFC.CBC.processBatch(
                     companyID=qGetCompany.companyID,
                     companyShort=qGetCompany.companyShort,
                     batchID=newBatchID,
@@ -203,7 +203,7 @@
 
     <cfscript>
 		// Get CBCs
-		qGetCBCMember = APPLICATION.CFC.CBC.getPendingCBCHostMember(
+		qGetCBCMember = APPCFC.CBC.getPendingCBCHostMember(
 			companyID=CLIENT.companyID,
 			seasonID=FORM.seasonID
 		);	
@@ -274,12 +274,12 @@
             FROM	
             	qGetCBCMember
              WHERE	
-             	cbcfamID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(skipMemberIDs)#" list="yes">)
+             	cbcfamID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#skipMemberIDs#" list="yes">)
         </cfquery>
     
         <cfscript>
             // Create a batch ID - It must be unique
-            newBatchID = APPLICATION.CFC.CBC.createBatchID(
+            newBatchID = APPCFC.CBC.createBatchID(
                 companyID=qGetCompany.companyID,
                 userID=CLIENT.userid,
                 cbcTotal=qGetCBCMember.recordcount,
@@ -291,7 +291,7 @@
 
 			<cfscript>
                 // Process Batch
-                CBCStatus = APPLICATION.CFC.CBC.processBatch(
+                CBCStatus = APPCFC.CBC.processBatch(
                     companyID=qGetCompany.companyID,
                     companyShort=qGetCompany.companyShort,
                     batchID=newBatchID,

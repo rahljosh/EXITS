@@ -31,9 +31,12 @@
         	cbc.date_sent IS NULL 
         AND 
         	requestid = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        <cfif NOT ListFind("1,2,3,4,5", CLIENT.companyID)>
+        <cfif CLIENT.companyID EQ 10>
         AND 
         	cbc.companyid = <cfqueryparam value="#CLIENT.companyid#" cfsqltype="cf_sql_integer">
+        <cfelse>
+        AND 
+        	cbc.companyid IN ( <cfqueryparam value="1,2,3,4,5" cfsqltype="cf_sql_integer" list="yes"> )
         </cfif>
         GROUP BY 
         	cbc.cbc_type, cbc.seasonid
@@ -53,9 +56,12 @@
         	smg_seasons ON smg_seasons.seasonid = cbc.seasonid
         WHERE 
         	cbc.date_sent IS NULL 
-        <cfif NOT ListFind("1,2,3,4,5", CLIENT.companyID)>
+        <cfif CLIENT.companyID EQ 10>
         AND 
         	cbc.companyid = <cfqueryparam value="#CLIENT.companyid#" cfsqltype="cf_sql_integer">
+        <cfelse>
+        AND 
+        	cbc.companyid IN ( <cfqueryparam value="1,2,3,4,5" cfsqltype="cf_sql_integer" list="yes"> )
         </cfif>
         GROUP BY 
         	cbc.seasonid
