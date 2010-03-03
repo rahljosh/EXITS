@@ -1,6 +1,11 @@
 // JavaScript Document
 // Stores base javascript functions that can be used in any page of the application
 
+/* Date Pick Function */
+$(function() {            
+	$('.date-pick').datePicker({startDate:'01/01/2009'});
+});	
+
 function getCurrentDate() {
 	var d = new Date();
 	var curr_day = d.getDate();

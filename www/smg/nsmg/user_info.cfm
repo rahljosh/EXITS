@@ -227,10 +227,6 @@
 			$("#webExForm").fadeOut("slow");	
 		}
 	}	
-	
-	$(function() {
-		$('.date-pick').datePicker({startDate:'01/01/2009'});
-	});	
 </script>
 
 <!--- user has no access records - force entry of one. --->

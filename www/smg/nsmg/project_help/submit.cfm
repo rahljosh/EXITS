@@ -194,11 +194,6 @@
 </cfsilent>    
     
 <script type="text/javascript" language="javascript">
-	// Date Pick Function
-	$(function() {
-		$('.date-pick').datePicker({startDate:'01/01/2009'});
-	});	
-
 	// Display Reason and Submit Form
 	function displayReason(divID, formName) {
 		
