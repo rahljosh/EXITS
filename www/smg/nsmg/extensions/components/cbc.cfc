@@ -33,6 +33,7 @@
 			} else {
 				// PRODUCTION URL
 				BGCDirectURL = 'https://direct.backgroundchecks.com/integration/bgcdirectpost.aspx';
+				// stored in the database
 				BGCUser = '';
 				BGCPassword = '';
 				BGCAccount = '';

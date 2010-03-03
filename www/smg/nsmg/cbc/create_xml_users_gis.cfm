@@ -27,7 +27,7 @@
 		Errors.Messages = ArrayNew(1);
 
 		// Skip IDs List if any information is missing;
-		skipUserIDs = '';
+		skipUserIDs = 0;
 	</cfscript>
 
 </cfsilent>
@@ -143,9 +143,9 @@
         FROM	
             qGetCBCUsers
          WHERE	
-            userID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(skipUserIDs)#" list="yes">)
+            userID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#skipUserIDs#" list="yes"> )
     </cfquery>
-    
+
     <cfscript>
         // Create a batch ID - It must be unique
         newBatchID = APPCFC.CBC.createBatchID(
@@ -156,7 +156,7 @@
         );	
     </cfscript>
 
-    <cfloop query="qGetCBCUsers"> 
+    <cfloop query="qGetCBCUsers">
 
         <cfscript>
             // Process Batch
