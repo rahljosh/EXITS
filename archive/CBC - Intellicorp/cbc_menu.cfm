@@ -253,6 +253,65 @@
 
 
 <table width=100% border=0 cellpadding=4 cellspacing=0>
+	<tr>
+		<td align="center" width="50%" valign="top">
+			<cfform action="cbc/create_xml_users.cfm" method="POST" target="blank">
+			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
+				<tr><th colspan="2" bgcolor="e2efc7">Intellicorp - CBC Batch - Office and Reps</th></tr>
+				<tr align="left">
+					<TD width="15%">Usertype :</td>
+					<TD><cfselect name="usertype">			
+						<option value="0">Select an usertype</option>
+						<option value="1">Office</option>
+						<option value="2">Reps (Man., Adv. and Area)</option>
+						<option value="3">Reps Family</option>
+						</cfselect>
+					</td>
+				</tr>
+				<tr align="left">
+					<TD width="15%">Season :</td>
+					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
+						<option value="0">Select a season</option>
+						</cfselect>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
+				</tr>
+			</table><br>
+			</cfform>
+		</td>
+		<td align="center" width="50%" valign="top">
+			<cfform action="cbc/create_xml_hosts.cfm" method="POST" target="blank">
+			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
+					<tr><th colspan="2" bgcolor="e2efc7">Intellicorp - CBC Batch - Host Family and Members</th></tr>
+				<tr align="left">
+					<TD width="15%">Usertype :</td>
+					<TD><cfselect name="usertype">			
+						<option value="0">Select an usertype</option>
+						<option value="father">Host Father</option>
+						<option value="mother">Host Mother</option>
+						<option value="member">Host Members</option>
+						</cfselect>
+					</td>
+				</tr>
+				<tr align="left">
+					<TD width="15%">Season :</td>
+					<TD><cfselect name="seasonid" query="qGetSeasons" display="season" value="seasonid" queryPosition="below">			
+						<option value="0">Select a season</option>
+						</cfselect>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
+				</tr>
+			</table><br>
+			</cfform>
+		</td>
+	</tr>
+</table>
+
+<table width=100% border=0 cellpadding=4 cellspacing=0>
 	<tr><th colspan="2" bgcolor="e2efc7">R E P O R T S</th></tr>
 	<tr>
 		<td align="center" width="50%" valign="top">
