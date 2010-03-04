@@ -66,13 +66,6 @@
 <cfif VAL(FORM.displayReport)>
 	<!--- Get stylesheets for the report ---->
     <link rel="stylesheet" href="../smg.css" type="text/css">
-<cfelse>
-	<!--- Use datePicker in the form --->
-	<script type="text/javascript" language="javascript">
-        $(function() {
-            $('.date-pick').datePicker({startDate:'01/01/2009'});
-        });	
-    </script>
 </cfif>
 
 </head>
