@@ -264,7 +264,7 @@
                 <!--- Check if we are running ISE's CBC --->
                 <cfif VAL(ARGUMENTS.companyID) LTE 4>
                 AND 
-                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes"> )
+                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                 AND 
                     cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
@@ -348,7 +348,7 @@
                 <!--- Check if we are running ISE's CBC --->
                 <cfif VAL(ARGUMENTS.companyID) LTE 4>
                 AND 
-                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes"> )
+                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                 AND 
                     cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
@@ -612,7 +612,7 @@
                 <!--- Check if we are running ISE's CBC --->
                 <cfif VAL(ARGUMENTS.companyID) LTE 4>
                 AND 
-                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes"> )
+                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                 AND 
                     cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
@@ -688,7 +688,7 @@
                 <!--- Check if we are running ISE's CBC --->
                 <cfif VAL(ARGUMENTS.companyID) LTE 4>
                 AND 
-                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5" list="yes"> )
+                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                 AND 
                     cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">

@@ -10,7 +10,7 @@
         WHERE 
             p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND	
-            p.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
+            p.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes">)
         AND        
             DATE_ADD(p.endDAte, INTERVAL 90 DAY) < now()
         ORDER BY 

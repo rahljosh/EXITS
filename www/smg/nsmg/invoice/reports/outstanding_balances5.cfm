@@ -27,7 +27,7 @@ order by businessname
 <cfset get_total = 0>
 <cfoutput query=agents>
 <td>#businessname#</td>
-<cfloop list='1,2,3,4,5' index="x" >
+<cfloop list='1,2,3,4,5,12' index="x" >
 	
 	<cfquery name="charges_unpaid" datasource="mysql">
 		SELECT sum(smg_charges.amount_due) as amount_due
@@ -76,7 +76,7 @@ Date Range to include: <input type="text" value='#form.beg_date#' name=beg_date>
 <cfoutput query="agents">
 <tr <cfif agents.currentrow mod 2>bgcolor="ededed"</cfif>><td>#businessname#</td>
 <cfset total_agent_due = 0>
-<cfloop list ='1,2,3,4,5' index=x>
+<cfloop list ='1,2,3,4,5,12' index=x>
 
 	<cfquery name="current_invoices" datasource="mysql">
 		select distinct invoiceid, invoicedate, companyid

@@ -43,7 +43,7 @@
 	INNER JOIN smg_companies c ON c.companyid = p.companyid
 	LEFT JOIN smg_program_type ON type = programtypeid
 	WHERE 
-        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
+        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes">)
     AND	
     	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	
 		

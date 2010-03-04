@@ -36,7 +36,7 @@
         	cbc.companyid = <cfqueryparam value="#CLIENT.companyid#" cfsqltype="cf_sql_integer">
         <cfelse>
         AND 
-        	cbc.companyid IN ( <cfqueryparam value="1,2,3,4,5" cfsqltype="cf_sql_integer" list="yes"> )
+        	cbc.companyid IN ( <cfqueryparam value="1,2,3,4,5,12" cfsqltype="cf_sql_integer" list="yes"> )
         </cfif>
         GROUP BY 
         	cbc.cbc_type, cbc.seasonid
@@ -61,7 +61,7 @@
         	cbc.companyid = <cfqueryparam value="#CLIENT.companyid#" cfsqltype="cf_sql_integer">
         <cfelse>
         AND 
-        	cbc.companyid IN ( <cfqueryparam value="1,2,3,4,5" cfsqltype="cf_sql_integer" list="yes"> )
+        	cbc.companyid IN ( <cfqueryparam value="1,2,3,4,5,12" cfsqltype="cf_sql_integer" list="yes"> )
         </cfif>
         GROUP BY 
         	cbc.seasonid

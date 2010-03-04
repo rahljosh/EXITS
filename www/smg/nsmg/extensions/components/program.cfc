@@ -72,7 +72,7 @@
                         p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 <cfelse>
                     AND
-                        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
+                        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes">)
                 </cfif>	                
                     
 				<cfif VAL(ARGUMENTS.programID)>

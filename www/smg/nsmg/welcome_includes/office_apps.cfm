@@ -55,15 +55,20 @@
                     </td>
 				</cfloop>
                 </tr>
-			<tr><td colspan=3 align="right">Apps you are entering can be found here </td>
-            	<td>&nbsp;&nbsp;&nbsp;&nbsp;<img src="pics/arrow_rt.gif"></td></tr>
-				<tr><td colspan=10 align="center"> 
-                <cfoutput>
-                <cfif client.companyid gt 5>
-                	<a href="index.cfm?curdoc=student_app/question_start_student"><img src="student_app/pics/#client.companyid#_startApplication.png" border=0></a>
-					</cfif>
-                    </cfoutput>
-				</td></tr>
+                                               
+                <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyID)>
+				<tr>
+                	<td colspan=3 align="right">Apps you are entering can be found here </td>
+	            	<td>&nbsp;&nbsp;&nbsp;&nbsp;<img src="pics/arrow_rt.gif"></td>
+                </tr>
+				<tr>
+                	<td colspan=10 align="center"> 
+						<cfoutput>
+                                <a href="index.cfm?curdoc=student_app/question_start_student"><img src="student_app/pics/#client.companyid#_startApplication.png" border=0></a>
+                        </cfoutput>
+					</td>
+                </tr>
+                </cfif>
 		</table>
 	</td>
 	<td align="right" valign="top" rowspan=2></td>

@@ -25,7 +25,7 @@ order by businessname
 <tr>
 <cfoutput query=agents>
 <td>#businessname#</td>
-<cfloop list='1,2,3,4,5' index="x">
+<cfloop list='1,2,3,4,5,12' index="x">
 		<!----get the total amount that this agent was charged---->
 		<cfquery name="total_charges" datasource="mysql">
 		select sum(amount_due) as amount_due

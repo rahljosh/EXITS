@@ -26,7 +26,7 @@
 	WHERE 
     	smg_programs.active = <cfqueryparam value="#URL.active#" cfsqltype="cf_sql_integer">
 	AND 
-    	smg_programs.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10" list="yes">)
+    	smg_programs.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes">)
 	ORDER BY     	
         endDate DESC
 </Cfquery>
