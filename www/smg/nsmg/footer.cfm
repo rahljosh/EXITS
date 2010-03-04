@@ -1,7 +1,9 @@
 <br><br>
 <cfif client.companyid eq 11>
 <div align="center">
-<img src="pics/wep-footer.jpg" />
+
+<img src="pics/wep-footer.jpg" height=20  />
+
 </div>
 <cfelse>
 <cfoutput>

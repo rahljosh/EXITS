@@ -131,6 +131,8 @@ limit 1
 	<cfinclude template="email_missing_docs.cfm">
 <cfelseif form.onhold_reasonid EQ 4>
 	<cfinclude template="email_self_placement.cfm">
+<cfelseif form.onhold_reasonid EQ 5>
+	<cfinclude template="email_see_notes.cfm">
 </cfif>
 
 </cfoutput>

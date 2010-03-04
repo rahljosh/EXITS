@@ -1101,6 +1101,7 @@
                         <td align="center" valign="top"><b>Date Sent</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td align="center" valign="top"><b>Date Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td align="center" valign="top"><b>Request ID</b></td>
+                        <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top">Delete</td></cfif>
                     </tr>				
                     <cfif get_cbc_user.recordcount EQ '0'>
                         <tr><td align="center" colspan="5">No CBC has been submitted.</td></tr>
@@ -1111,6 +1112,7 @@
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userid#_rec.xml" target="_blank">#requestid#</a></cfif></cfif></td>
+                            <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></td></cfif>
                         </tr>
                         </cfloop>
                     </cfif>
@@ -1121,6 +1123,7 @@
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelse><cfif CLIENT.usertype lte 4>#requestid#</cfif></cfif></td>
+                            <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></td></cfif>
                         </tr>
                     </cfloop>				
                 </table>

@@ -392,6 +392,7 @@ div.scroll2 {
 				<td align="center" valign="top"><b>Date Sent</b> <br><font size="-2">mm/dd/yyyy</font></td>		
 	 			<td align="center" valign="top"><b>Date Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
 				<td align="center" valign="top"><b>Request ID</b></td>
+                <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><b>Delete</b></td></cfif>
 			</tr>				
 			<cfif qGetCBCMother.recordcount EQ '0' AND qCheckCBCMother.recordcount EQ '0' AND qGetCBCFather.recordcount EQ '0' AND qCheckCBCFather.recordcount EQ '0'>
 				<tr><td align="center" colspan="5">No CBC has been submitted.</td></tr>
@@ -416,6 +417,7 @@ div.scroll2 {
                             </cfif>
                         </cfif>
                 	</td>
+                     <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td></cfif>
 				</tr>
 				</cfloop>
 				<cfloop query="qCheckCBCMother">
@@ -432,6 +434,7 @@ div.scroll2 {
 							#requestid#
 						</cfif>
                    </td>
+                   <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td></cfif>
 				</tr>
 				</cfloop>
                 
@@ -444,6 +447,7 @@ div.scroll2 {
 					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
 					<td align="center"><cfif requestid EQ ''>processing<cfelseif flagcbc EQ 1 AND client.usertype LTE 4>On Hold Contact Compliance<cfelse>		
 						<cfif client.usertype lte 4><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_father_#qGetCBCFather.hostID#_rec.xml" target="_blank">#requestid#</a></cfif></cfif></td>
+                        <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td></cfif>
 				</tr>
 				</cfloop>
 				<cfloop query="qCheckCBCFather">
@@ -455,6 +459,7 @@ div.scroll2 {
 					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
 					<td align="center"><cfif requestid EQ ''>processing<cfelse>
 					<cfif client.usertype lte 4>#requestid#</cfif></cfif></td>
+                    <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td></cfif>
 				</tr>
 				</cfloop>				
 			</cfif>
@@ -482,6 +487,7 @@ div.scroll2 {
                         	<cfif client.usertype lte 4><a href="cbc/view_host_cbc.cfm?hostID=#qGetHostMembers.hostID#&CBCFamID=#qGetHostMembers.CBCFamID#&file=batch_#qGetHostMembers.batchid#_hostm_#qGetMemberDetail.name#_#qGetHostMembers.hostID#_rec.xml" target="_blank">#requestid#</a></cfif>
 	                    </cfif>
                     </td>
+                    <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td></cfif>
                 </tr>
                 </cfloop>
 			</cfif>

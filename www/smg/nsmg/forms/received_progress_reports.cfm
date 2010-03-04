@@ -62,7 +62,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
                     <cfif fk_ra_user EQ ''>
                         N/A
                     <cfelse>
-                        #DateFormat(get_report.pr_ra_approved_date, 'mm/dd/yyyy')#
+                        #DateFormat(get_progress_reports.pr_ra_approved_date, 'mm/dd/yyyy')#
                     </cfif>
                 </td>
                 <td>#DateFormat(pr_rd_approved_date, 'mm/dd/yyyy')#</td>

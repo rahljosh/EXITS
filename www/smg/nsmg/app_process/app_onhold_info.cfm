@@ -220,6 +220,8 @@ function CheckFields() {
 				Missing Documents Notification <a href="?curdoc=app_process/email_missing_docs&studentid=#get_student_info.studentid#" onClick="return confirm_email()"><img src="pics/email.gif" border="0" alt="Email Missing Documents Notification"></a>
 			<cfelseif get_student_info.onhold_reasonid EQ 4>
 				Self Placement Notification <a href="?curdoc=app_process/email_self_placement&studentid=#get_student_info.studentid#" onClick="return confirm_email()"><img src="pics/email.gif" border="0" alt="Email Self Placement Notification"></a>
+             <cfelseif get_student_info.onhold_reasonid EQ 5>
+				See Notes Notification <a href="?curdoc=app_process/email_see_notes&studentid=#get_student_info.studentid#" onClick="return confirm_email()"><img src="pics/email.gif" border="0" alt="Email See Notes Notification"></a>
 			</cfif>			
 			<br><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle">
 		</td>
