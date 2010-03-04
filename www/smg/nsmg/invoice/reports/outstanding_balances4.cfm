@@ -22,7 +22,7 @@ order by businessname
 <tr>
 <cfoutput query=agents>
 <td>#businessname#</td>
-<cfloop list='1,2,3,4,5' index="x" >
+<cfloop list='1,2,3,4,5,12' index="x" >
 	<cfquery name="charges_unpaid" datasource="mysql">
 
 		SELECT smg_charges.amount_due, smg_charges.chargeid, smg_payment_charges.amountapplied 
