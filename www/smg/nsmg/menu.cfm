@@ -155,10 +155,12 @@
             	<a href="##">Tools</a>                
                 <ul>
 					<cfif client.usertype LTE 2 OR client.compliance EQ 1>    
-                        <li><a href="index.cfm?curdoc=cbc/cbc_menu">CBC Batch</a></li>
-                        <ul>
-                            <li><a href="index.cfm?curdoc=cbc/re_run_menu">Re-Run CBCs</a></li>
-                        </ul>
+                        <li>
+                        	<a href="index.cfm?curdoc=cbc/cbc_menu">CBC Batch</a>
+                            <ul>
+                                <li><a href="index.cfm?curdoc=cbc/re_run_menu">Re-Run CBCs</a></li>
+                            </ul>
+                        </li>
 
                         <li><a href="index.cfm?curdoc=cbc/combine_hosts">Combining Hosts</a></li>   
                         
