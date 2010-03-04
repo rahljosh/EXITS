@@ -36,6 +36,5 @@
 use isDefined because students don't have thislogin.  this is on application.cfm and nsmg/application.cfm --->
 <cfif isDefined("client.thislogin") and client.thislogin NEQ dateFormat(now(), 'mm/dd/yyyy')>
 	<!--- don't do a cflocation because we'll get an infinite loop. --->
-	<cfinclude template="../nsmg/logout.cfm">
+	<cfinclude template="../../nsmg/logout.cfm">
 </cfif>
-
