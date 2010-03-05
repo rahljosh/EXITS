@@ -1101,7 +1101,7 @@
                         <td align="center" valign="top"><b>Date Sent</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td align="center" valign="top"><b>Date Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td align="center" valign="top"><b>Request ID</b></td>
-                        <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top">Delete</td></cfif>
+                        <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><strong>Delete</strong></td></cfif>
                     </tr>				
                     <cfif get_cbc_user.recordcount EQ '0'>
                         <tr><td align="center" colspan="5">No CBC has been submitted.</td></tr>
