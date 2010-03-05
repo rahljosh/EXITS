@@ -122,62 +122,90 @@
 				<table width=100% class="section">
 					<tr>
 						<td>
-						<cfif get_status.status LTE 2>
-							Welcome to the #org_info.companyname# EXITS Online Application.<br><br>
-							There are 5 main sections of the application with multiple pages under each main section. The menu
-							across the top of the screen shows each section of the application along with a check list, print options, and a support link.<br><br>
-							
-							To begin your application, click on the student application section above. You can fill out the application in any order
-							and come back to each section at any time to add, edit or finish the application. To save your progress simply push the save button
-							at the bottom of the page you have most recently worked on.<br><br>
-											
-							Keep in mind that if you don't access your account at least once in 30 days your application will be deleted and you 
-							will have to start the entire process over. <br><br>
-							<div align="center"><form action="index.cfm?curdoc=section1&id=1" method="post"><input type="image" alt="Start Application" src="pics/start-application.gif"></form></div>
-						
-						<cfelseif get_status.status EQ 3>
-							Your application is currently being reviewed by #get_branch.businessname#.
-							Your applicaiton may be denied by #get_branch.businessname# for information they feel is incomplete or missing,
-							in which case you will need to provide the requestd information and resubmit the application.
-						
-						<cfelseif get_status.status EQ 4>
-							Your application has been rejected by #get_branch.businessname#.  You may need to provide more information, please see notes on the right.
-						
-						<cfelseif get_status.status EQ 5>
-							Your application is currently being reviewed by #get_intl_rep.businessname#.
-							Your applicaiton may be denied by #get_intl_rep.businessname# for information they feel is incomplete or missing,
-							in which case you will need to provide the requestd information and resubmit the application.
-						
-						<cfelseif get_status.status EQ 6>
-							Your application has been rejected by #get_intl_rep.businessname#.  You may need to provide more information, please see notes on the right.
-		
-						<cfelseif get_status.status EQ 7>
-							Your application has been approved by #get_intl_rep.businessname# and submitted to SMG headquarters in New York.  
-							If SMG denies your application due to missing or incomplete information, it will be first sent back to #get_intl_rep.businessname# who may be able
-							to provide the additional information.  If #get_intl_rep.businessname# is not able to provide it, it will be rejected back to you so you can provide
-							the information and then resubmit it for processing.  
-							<br><br>
-							If SMG approves your application it will immediately be available for placement.
-						
-						<cfelseif get_status.status EQ 8>
-							Your application is under review by #org_info.companyshort_nocolor#.  
-							If #org_info.companyshort_nocolor# denies your application due to missing or incomplete information, it will be first sent back to #get_intl_rep.businessname# who may be able
-							to provide the additional information.  If #get_intl_rep.businessname# is not able to provide it, it will be rejected back to you so you can provide
-							the information and then resubmit it for processing.  
-							<br><br>
-							If #org_info.companyshort_nocolor# approves your application it will immediately be available for placement.
-						
-						<cfelseif get_status.status EQ 9>
-							#org_info.companyshort_nocolor# has denied your application.  You or #get_intl_rep.businessname# needs to provide more information. Please see details on the right.
+						<cfswitch expression="#get_status.status#">
+                        
+                        	<cfcase value="0,1,2">
+                                Welcome to the #org_info.companyname# EXITS Online Application.<br><br>
+                                There are 5 main sections of the application with multiple pages under each main section. The menu
+                                across the top of the screen shows each section of the application along with a check list, print options, and a support link.<br><br>
+                                
+                                To begin your application, click on the student application section above. You can fill out the application in any order
+                                and come back to each section at any time to add, edit or finish the application. To save your progress simply push the save button
+                                at the bottom of the page you have most recently worked on.<br><br>
+                                                
+                                Keep in mind that if you don't access your account at least once in 30 days your application will be deleted and you 
+                                will have to start the entire process over. <br><br>
+                                <div align="center"><form action="index.cfm?curdoc=section1&id=1" method="post"><input type="image" alt="Start Application" src="pics/start-application.gif"></form></div>
+                            </cfcase>
+                        
+                        	<cfcase value="3">
+                                Your application is currently being reviewed by #get_branch.businessname#.
+                                Your applicaiton may be denied by #get_branch.businessname# for information they feel is incomplete or missing,
+                                in which case you will need to provide the requestd information and resubmit the application.
+                            </cfcase>
 
-						<cfelseif get_status.status EQ 10>
-							On Hold. Your application is currently on hold. #org_info.companyshort_nocolor# will be contacting #get_intl_rep.businessname#.
+                        	<cfcase value="4">
+                                Your application has been rejected by #get_branch.businessname#.  You may need to provide more information, please see notes on the right.
+                            </cfcase>
 
-						<cfelseif get_status.status EQ 11>
-							<h3>Congratulations!</h3>
-							Your application has been approved. Your profile and information are showing as available for placement in the region/state you requested or where assigned
-							to upon acceptance of your application.  Once you are placed with a family, your host family information will be available below.
-						</cfif>
+                        	<cfcase value="5">
+                                Your application is currently being reviewed by #get_intl_rep.businessname#.
+                                Your applicaiton may be denied by #get_intl_rep.businessname# for information they feel is incomplete or missing,
+                                in which case you will need to provide the requestd information and resubmit the application.						
+                            </cfcase>
+
+                        	<cfcase value="6">
+                                Your application has been rejected by #get_intl_rep.businessname#.  You may need to provide more information, please see notes on the right.
+                            </cfcase>
+
+                        	<cfcase value="7">
+                                Your application has been approved by #get_intl_rep.businessname# and submitted to SMG headquarters in New York.  
+                                If SMG denies your application due to missing or incomplete information, it will be first sent back to #get_intl_rep.businessname# who may be able
+                                to provide the additional information.  If #get_intl_rep.businessname# is not able to provide it, it will be rejected back to you so you can provide
+                                the information and then resubmit it for processing.  
+                                <br><br>
+                                If SMG approves your application it will immediately be available for placement.
+                            </cfcase>
+
+                        	<cfcase value="8">
+                                Your application is under review by #org_info.companyshort_nocolor#.  
+                                If #org_info.companyshort_nocolor# denies your application due to missing or incomplete information, it will be first sent back to #get_intl_rep.businessname# who may be able
+                                to provide the additional information.  If #get_intl_rep.businessname# is not able to provide it, it will be rejected back to you so you can provide
+                                the information and then resubmit it for processing.  
+                                <br><br>
+                                If #org_info.companyshort_nocolor# approves your application it will immediately be available for placement.
+                            </cfcase>
+
+                        	<cfcase value="9">
+                                #org_info.companyshort_nocolor# has denied your application.  You or #get_intl_rep.businessname# needs to provide more information. Please see details on the right.
+                            </cfcase>
+
+                        	<cfcase value="10">
+                                On Hold. Your application is currently on hold. #org_info.companyshort_nocolor# will be contacting #get_intl_rep.businessname#.
+                            </cfcase>
+
+                        	<cfcase value="11">
+                                <h3>Congratulations!</h3>
+                                Your application has been approved. Your profile and information are showing as available for placement in the region/state you requested or where assigned
+                                to upon acceptance of your application.  Once you are placed with a family, your host family information will be available below.
+                            </cfcase>
+                            
+                            <cfdefaultcase>
+                                Welcome to the #org_info.companyname# EXITS Online Application.<br><br>
+                                There are 5 main sections of the application with multiple pages under each main section. The menu
+                                across the top of the screen shows each section of the application along with a check list, print options, and a support link.<br><br>
+                                
+                                To begin your application, click on the student application section above. You can fill out the application in any order
+                                and come back to each section at any time to add, edit or finish the application. To save your progress simply push the save button
+                                at the bottom of the page you have most recently worked on.<br><br>
+                                                
+                                Keep in mind that if you don't access your account at least once in 30 days your application will be deleted and you 
+                                will have to start the entire process over. <br><br>
+                                <div align="center"><form action="index.cfm?curdoc=section1&id=1" method="post"><input type="image" alt="Start Application" src="pics/start-application.gif"></form></div>
+                            </cfdefaultcase>
+                            
+                        </cfswitch>
+						
 						<br>
 						<font size=-2>Status Last Changed: #DateFormat(get_latest_date.date, 'mm/dd/yyyy')#</font>
 						</td>
@@ -209,38 +237,76 @@
 								<tr>
 									<!----Reports---->
 									<td valign="top">
-									<!--- 2 - Application Incomplete --->
-									<cfif get_status.status EQ 2>
-										<img src="pics/incomplete.gif" align="left"> In Progress - Your application has not been submitted for review.  If your application is ready to submit, click 'Submit Application to Representative' below.  To view missing items, click on <a href="?curdoc=check_list&id=cl">Check List</a> in the menu.
-									<!--- 3 - Application submitted to Branch --->
-									<cfelseif get_status.status EQ 3>
-										<img src="pics/under_review.gif"  align="left"> Under Review - Application has been submitted to #get_branch.businessname#.  
-									<!--- 4 - Application Rejected by Branch --->
-									<cfelseif get_status.status EQ 4>
-										<img src="pics/incomplete.gif"  align="left"> Rejected - Your application has been rejected by #get_branch.businessname#. 
-									<!--- 5 - Application submitted to Intl. Rep. --->
-									<cfelseif get_status.status EQ 5>
-										<img src="pics/under_review.gif"  align="left"> Under Review - Application has been submitted to #get_intl_rep.businessname#.  
-									<!--- 6 - Application Rejected by Intl. Rep. --->
-									<cfelseif get_status.status EQ 6>
-										<img src="pics/incomplete.gif"  align="left"> Rejected - Your application has been rejected by #get_intl_rep.businessname#. You may need to provide more information, please see notes on below. 
-									<!--- 7 - Application submitted to SMG --->
-									<cfelseif get_status.status EQ 7>
-										<img src="pics/under_review.gif"  align="left"> Approved - Your application has been approved by #get_intl_rep.businessname#! 
-									<!--- 8 - Application under review --->
-									<cfelseif get_status.status EQ 8>
-										<img src="pics/under_review.gif"  align="left"> Reviewing - Your application has been received and it's under review by #org_info.companyshort_nocolor#. 
-									<!--- 9 - Application rejected by SMG --->
-									<cfelseif get_status.status EQ 9>
-										<img src="pics/incomplete.gif"  align="left"> Rejected - Your application has been rejected by #org_info.companyshort_nocolor#. 
-									<!--- 10 - Application approved by SMG --->
-									<cfelseif get_status.status EQ 10>
-										<img src="pics/incomplete.gif"  align="left"> On Hold - Your application has been put on hold.
-									<!--- 11 - Application approved by SMG --->
-									<cfelseif get_status.status EQ 11>
-										<img src="pics/approved.gif"  align="left"> Approved - Your application has been approved by #org_info.companyshort_nocolor#! #org_info.companyshort_nocolor# is in the processing of locating a host family.
-									</cfif>
-									<cfif get_status.reason NEQ ''><br><br>
+									
+									<cfswitch expression="#get_status.status#">
+                                        
+                                    	<!--- 2 - Application Incomplete --->
+                                    	<cfcase value="2">
+                                            <img src="pics/incomplete.gif" align="left"> 
+                                            In Progress - Your application has not been submitted for review.  
+                                            If your application is ready to submit, click 'Submit Application to Representative' below.  
+                                            To view missing items, click on <a href="?curdoc=check_list&id=cl">Check List</a> in the menu.
+                                    	</cfcase>
+                                    
+                                    	<!--- 3 - Application submitted to Branch --->
+                                    	<cfcase value="3">
+											<img src="pics/under_review.gif" align="left"> 
+                                            Under Review - Application has been submitted to #get_branch.businessname#.  
+                                    	</cfcase>
+                                    	
+                                        <!--- 4 - Application Rejected by Branch --->
+                                    	<cfcase value="4">
+                                            <img src="pics/incomplete.gif" align="left"> 
+                                            Rejected - Your application has been rejected by #get_branch.businessname#. 
+                                    	</cfcase>
+                                    
+                                    	<!--- 5 - Application submitted to Intl. Rep. --->
+                                    	<cfcase value="5">
+                                            <img src="pics/under_review.gif" align="left"> 
+                                            Under Review - Application has been submitted to #get_intl_rep.businessname#.  
+                                    	</cfcase>
+                                    
+                                    	<!--- 6 - Application Rejected by Intl. Rep. --->
+                                    	<cfcase value="6">
+											<img src="pics/incomplete.gif" align="left"> 
+                                            Rejected - Your application has been rejected by #get_intl_rep.businessname#. 
+                                            You may need to provide more information, please see notes on below. 
+                                    	</cfcase>
+                                    
+                                    	<!--- 7 - Application submitted to SMG --->
+                                    	<cfcase value="7">
+											<img src="pics/under_review.gif" align="left"> 
+                                            Approved - Your application has been approved by #get_intl_rep.businessname#! 
+                                    	</cfcase>
+                                    
+                                    	<!--- 8 - Application under review --->
+                                    	<cfcase value="8">
+                                            <img src="pics/under_review.gif" align="left"> 
+                                            Reviewing - Your application has been received and it's under review by #org_info.companyshort_nocolor#. 
+                                    	</cfcase>
+                                    
+                                    	<!--- 9 - Application rejected by SMG --->
+                                    	<cfcase value="9">
+											<img src="pics/incomplete.gif" align="left"> 
+                                            Rejected - Your application has been rejected by #org_info.companyshort_nocolor#. 
+                                    	</cfcase>
+                                    
+                                    	<!--- 10 - Application approved by SMG --->
+                                    	<cfcase value="10">
+											<img src="pics/incomplete.gif" align="left"> 
+                                            On Hold - Your application has been put on hold.
+                                    	</cfcase>
+                                    
+                                    	<!--- 11 - Application approved by SMG --->
+                                    	<cfcase value="11">
+											<img src="pics/approved.gif" align="left"> 
+                                            Approved - Your application has been approved by #org_info.companyshort_nocolor#! #org_info.companyshort_nocolor# is in the processing of locating a host family.
+                                    	</cfcase>
+                                    
+                                    </cfswitch>
+									
+                                    <!--- Reason --->
+									<cfif LEN(get_status.reason)><br><br>
 									<table align="center" width="100%" cellpadding=0 cellspacing=0 border=0>
 										<tr>
 											<td valign="top"><img src="pics/error_exclamation_clear.gif"></td>
@@ -267,6 +333,7 @@
 										</tr>
 									</table>
 									</cfif>
+                                    
 									</td>
 								</tr>
 							</table>
@@ -274,7 +341,7 @@
 					</tr>
 					<tr>
 						<td><br>
-							<cfif get_status.status LTE 2 OR get_status.status EQ 4 OR (get_student_info.branchid EQ '0' AND get_status.status EQ 6)>
+							<cfif get_status.status LTE 2 OR get_status.status EQ 4 OR (get_student_info.branchid EQ 0 AND get_status.status EQ 6)>
 								<div align="center"><a href="querys/check_app_before_submit.cfm"><img src="pics/submit-app.gif" border=0></a></div><br>
 								<font size=-1>*<em>An initial check for required information is performed before the application is submited. This does not
 								guarantee that the application will not be denied by #get_intl_rep.businessname# and more information will be requested.</em></font>
@@ -291,7 +358,7 @@
 					</tr>
 				</table><br>
 				
-				<cfif get_student_info.app_intl_comments NEQ ''>
+				<cfif LEN(get_student_info.app_intl_comments)>
 					<!--- INTL. Rep. Comments --->
 					<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 						<tr valign=middle height=24>
@@ -317,7 +384,9 @@
 			</tr>
 		</table><br>
 		<br>
-<cfif get_intl_rep.userid NEQ 19>
+    
+    <!--- Do not display for STB Kids --->    
+	<cfif get_intl_rep.userid NEQ 19>
 		<!--- Student Profile  --->
 		<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 			<tr valign=middle height=24>
@@ -368,8 +437,8 @@
 					<cfif (host_fam.recordcount EQ 0 OR get_student_info.host_fam_approved GT 4)>
 						Information on your host family and location will be available here once you are assigned to a host family. <br><br>
 					<cfelse>
-						<cfset client.hostid = #host_fam.hostid#>
-						<cfset hostid = #host_fam.hostid#>
+						<cfset client.hostid = host_fam.hostid>
+						<cfset hostid = host_fam.hostid>
 						<img src="pics/external_link.png" border=0> indicates additional information from external site(s). <br>
 						<img src="pics/sat_image.png" border=0> satalite images of area. <br>SMG is not responsible for information received or available from the external sites linked below.  Some links may not be valid.<br><br>
 					
@@ -568,8 +637,8 @@
 				<td width=9 valign="top"><img src="../pics/footer_rightcap.gif"></td>
 			</tr>
 		</table>
-<!----close tag to not show the profiles for STB---->
-</cfif>
+	<!----close tag to not show the profiles for STB---->
+    </cfif>
 
 </cfif>
 		</cfoutput>
