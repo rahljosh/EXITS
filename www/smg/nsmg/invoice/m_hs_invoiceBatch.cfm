@@ -188,7 +188,7 @@ smg_charges
 		sp.hold != 1
     AND
 		(ss.companyid < 5
-		OR ss.companyid = 10)
+		OR ss.companyid = 10 OR ss.companyid = 12)
     AND
 		ss.studentid
 	NOT IN
@@ -516,6 +516,7 @@ ORDER BY companyid
 			WHEN companyid = 2 THEN 1
 			WHEN companyid = 3 THEN 1
 			WHEN companyid = 4 THEN 1
+			WHEN companyid = 12 THEN 1
 			ELSE companyid
 			END) AS groupCompId
     FROM smg_charges
@@ -540,7 +541,7 @@ ORDER BY companyid
         WHERE agentid = #getAgent.agentid#
         AND invoiceid = 0
 			<cfif getAgent.groupCompId EQ 1>
-				AND companyid < 5
+				AND (companyid < 5 OR companyid = 12)
         		<cfelse>
 					AND companyid = #getAgent.groupCompId#
 			</cfif>
@@ -586,6 +587,7 @@ ORDER BY su.businessname<!--- , s.companyid --->
                 <cfcase value="4">DMD</cfcase>
                 <cfcase value="5">SMG</cfcase>
 				<cfcase value="10">CASE</cfcase>
+				<cfcase value="12">CASE</cfcase>
             </cfswitch></td>
     </tr>
 </cfoutput>
@@ -602,7 +604,7 @@ WHERE ss.active =1
 AND sp.seasonid =#form.seasonId#
 AND sp.hold !=1
 AND	(ss.companyid < 5
-	OR ss.companyid = 10)
+	OR ss.companyid = 10 OR ss.companyid = 12)
 ORDER BY businessname, endMonth, datediffer
 </cfquery>
 
@@ -713,6 +715,7 @@ SELECT sc.agentid, companyid,
 			WHEN sc.companyid = 2 THEN 1
 			WHEN sc.companyid = 3 THEN 1
 			WHEN sc.companyid = 4 THEN 1
+			WHEN sc.companyid = 12 THEN 1
 			ELSE sc.companyid
 			END) AS testCompId
 FROM smg_charges sc
@@ -751,7 +754,7 @@ GROUP BY agentid, testCompid
     WHERE sc.invoiceid > #variables.lastOldInvoice#
     AND sc.agentid = #getAgentIds.agentId#
 		<cfif getAgentIds.testCompId EQ 1>
-			AND sc.companyid < 5
+			AND (sc.companyid < 5 OR sc.companyid = 12)
 			<cfelse>
 				AND sc.companyid = #getAgentIds.testCompId#
 		</cfif>
