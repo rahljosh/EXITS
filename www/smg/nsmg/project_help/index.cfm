@@ -30,15 +30,19 @@
 		// Office Users
 		if ( VAL(CLIENT.userType) LTE 4 ) {
 		
-			if ( VAL(URL.regionID) ) {
-				FORM.regionID = URL.regionID;	
-			}
-		
 			// Get All Regions
 			qGetRegions = APPCFC.REGION.getRegions(			
 				companyID=CLIENT.companyID,
 				userID=CLIENT.userID
 			);	
+
+			if ( VAL(URL.regionID) ) {
+				FORM.regionID = URL.regionID;	
+			} 
+			
+			if (NOT VAL(FORM.regionID)) {
+				FORM.regionID = qGetRegions.regionID;	
+			}		
 			
 			// Get Student List
 			qGetStudents = APPCFC.STUDENT.getProjectHelpList(
@@ -63,6 +67,10 @@
 			if ( VAL(URL.regionID) AND ListFind(regionList, URL.regionID) ) {
 				FORM.regionID = URL.regionID;		
 			}
+			
+			if (NOT VAL(FORM.regionID)) {
+				FORM.regionID = qGetRegions.regionID;	
+			}		
 
 			// Get Student List
 			qGetStudents = APPCFC.STUDENT.getProjectHelpList(
