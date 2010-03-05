@@ -582,12 +582,12 @@ ORDER BY su.businessname<!--- , s.companyid --->
         <td>
             <cfswitch expression="#getNewInv.companyid#">
                 <cfcase value="1">ISE</cfcase>
-                <cfcase value="2">INTOED</cfcase>
-                <cfcase value="3">ASAI</cfcase>
-                <cfcase value="4">DMD</cfcase>
+                <cfcase value="2">ISE</cfcase>
+                <cfcase value="3">ISE</cfcase>
+                <cfcase value="4">ISE</cfcase>
                 <cfcase value="5">SMG</cfcase>
 				<cfcase value="10">CASE</cfcase>
-				<cfcase value="12">CASE</cfcase>
+				<cfcase value="12">ISE</cfcase>
             </cfswitch></td>
     </tr>
 </cfoutput>
@@ -767,7 +767,7 @@ GROUP BY agentid, testCompid
 		</cfcase>	
 		<cfdefaultcase>
 			<cfset compName = "ise">
-			<cfset emailFrom = 'marcel@student-management.com'>
+			<cfset emailFrom = 'marcel@iseusa.com'>
 		</cfdefaultcase>
 	</cfswitch>
 	
@@ -785,7 +785,7 @@ GROUP BY agentid, testCompid
 		
 	<cfif APPLICATION.isServerLocal>
 		<!--- Dev Server --->
-		<cfset emailTo = 'marcel@student-management.com'>
+		<cfset emailTo = 'marcel@iseusa.com'>
 	<cfelse>
 		<!--- Production Server --->
 		<cfset emailTo = getAgentInfo.billing_email>
@@ -806,16 +806,14 @@ Thank you for your cooperation,
 Marcel
 Financial Department
 
-Student Management Group
 119 Cooper St
 Babylon, NY 11702
 800-766-4656-Toll Free
 631-893-4540-Phone
 631-893-4550-Fax
 
-marcel@student-management.com
+marcel@iseusa.com
 
-visit our web site at www.student-management.com
 </small>
 		
 		<cfloop query="getNewInvPerAgent">
