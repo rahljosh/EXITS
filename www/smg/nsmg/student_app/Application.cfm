@@ -7,11 +7,13 @@
 <cfscript>
 	/***** Create APPLICATION.EMAIL structure *****/
 	APPLICATION.EMAIL = StructNew();		
-	APPLICATION.EMAIL.support = 'support@student-management.com';
-	APPLICATION.EMAIL.finance = 'marcel@student-management.com';
-	APPLICATION.EMAIL.errors = 'errors@student-management.com';
+
 	// Set a short name for the CFCs
 	AppEmail = APPLICATION.EMAIL;
+
+	AppEmail.support = 'support@student-management.com';
+	AppEmail.finance = 'marcel@student-management.com';
+	AppEmail.errors = 'errors@student-management.com';
 </cfscript>
 
 
