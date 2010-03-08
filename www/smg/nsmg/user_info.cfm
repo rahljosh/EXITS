@@ -388,7 +388,10 @@
                         <strong>User Entered:</strong>&nbsp;&nbsp; #DateFormat(datecreated, 'mm/dd/yyyy')#<br>
                         <strong>Last Changed:</strong>&nbsp;&nbsp; #DateFormat(lastchange, 'mm/dd/yyyy')# #timeFormat(lastchange)#<br>
                         <strong>Status:</strong>&nbsp;&nbsp; <cfif active EQ 1>Active<cfelse>Inactive</cfif><br>
-                        <cfif CLIENT.usertype LT uar_usertype> <!--- CLIENT.usertype LTE 4 OR - protect passwords --->
+                        <cfif CLIENT.userType EQ 1>
+                            <strong>Username:</strong>&nbsp;&nbsp;#username#<br>
+                            <strong>Password:</strong>&nbsp;&nbsp;#password#<br>
+                        <cfelseif CLIENT.usertype LT uar_usertype> <!--- CLIENT.usertype LTE 4 OR - protect passwords --->
                             <strong>Username:</strong>&nbsp;&nbsp;#username#<br>
                             <strong>Password:</strong>&nbsp;&nbsp;#password#<br>
                         </cfif>
