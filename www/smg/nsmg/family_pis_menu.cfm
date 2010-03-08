@@ -1,17 +1,29 @@
-<!--- a lot of the templates still use client.hostid and not url.hostid so need default or will get error. --->
-<cfparam name="url.hostid" default="">
+<cfparam name="URL.hostID" default="0">
+<cfparam name="CLIENT.hostID" default="0">
+<cfparam name="currentHostID" default="0">
+
+<cfscript>
+	// a lot of the templates still use client.hostid and not url.hostid so we need to check which one is valid
+	if ( VAL(CLIENT.hostID) ) {
+		currentHostID = CLIENT.hostID;			
+	} else if ( VAL(URL.hostID) ) {
+		currentHostID = URL.hostID;			
+	}
+</cfscript>
 
  <div id="subMenuNav"> 
     <div id="subMenuLinks">  
     <cfoutput>
-    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_form&hostid=#url.hostid#">Host Family Infomation</A>  
-    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_2&hostid=#url.hostid#">Other Family Members</A>
-    <a class="nav_bar" href="index.cfm?curdoc=forms/family_app_7_pis&hostid=#url.hostid#">Community Information</a> 
-    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_5&hostid=#url.hostid#">School Information</a> 
-    <a class="nav_bar" href="index.cfm?curdoc=cbc/hosts_cbc&hostid=#url.hostid#">Criminal Background Check</a> 
-    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_3&hostid=#url.hostid#">Room, Smoking, Pets, Church</a>
-    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_4&hostid=#url.hostid#">Family Interests</a>
-    <a class="nav_bar" href="index.cfm?curdoc=forms/double_placement&hostid=#url.hostid#">Rep Info</a> 
+    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_form&hostid=#currentHostID#">Host Family Infomation</A>  
+    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_2&hostid=#currentHostID#">Other Family Members</A>
+    <a class="nav_bar" href="index.cfm?curdoc=forms/family_app_7_pis&hostid=#currentHostID#">Community Information</a> 
+    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_5&hostid=#currentHostID#">School Information</a> 
+    <cfif CLIENT.userType LTE 4>
+	    <a class="nav_bar" href="index.cfm?curdoc=cbc/hosts_cbc&hostid=#currentHostID#">Criminal Background Check</a> 
+    </cfif>
+    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_3&hostid=#currentHostID#">Room, Smoking, Pets, Church</a>
+    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_4&hostid=#currentHostID#">Family Interests</a>
+    <a class="nav_bar" href="index.cfm?curdoc=forms/double_placement&hostid=#currentHostID#">Rep Info</a> 
     <!----<Cfquery name="check_host_status" datasource="MySQL">
     select studentid from smg_students where hostid = #client.hostid#
     </Cfquery>
