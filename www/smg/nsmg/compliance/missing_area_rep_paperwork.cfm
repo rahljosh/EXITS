@@ -127,17 +127,27 @@
 		LEFT OUTER JOIN 
         	smg_users_paperwork pw ON pw.userid = u.userid AND pw.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
 		WHERE 
-            	pw.ar_info_sheet IS NULL 
-            OR 
-            	pw.ar_ref_quest1 IS NULL 
-            OR 
-            	pw.ar_ref_quest2 IS NULL 
-            OR
-            	pw.ar_cbc_auth_form IS NULL
-            OR 
-            	pw.ar_agreement IS NULL 
-            OR 
-            	pw.ar_training IS NULL
+        	1 = 1
+            
+			<cfif FORM.status NEQ 'All'>
+            AND	
+                u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
+            </cfif>            
+            
+            AND
+            (
+                    pw.ar_info_sheet IS NULL 
+                OR 
+                    pw.ar_ref_quest1 IS NULL 
+                OR 
+                    pw.ar_ref_quest2 IS NULL 
+                OR
+                    pw.ar_cbc_auth_form IS NULL
+                OR 
+                    pw.ar_agreement IS NULL 
+                OR 
+                    pw.ar_training IS NULL
+            )
 		GROUP BY 
         	u.userid
 		ORDER BY 
