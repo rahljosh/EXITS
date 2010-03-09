@@ -108,7 +108,10 @@
 				<cfif VAL(ARGUMENTS.regionID )>
                 	AND
                     	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
-                </cfif>                  
+                </cfif>   
+
+				ORDER BY
+                	uar.default_access DESC                               
 		</cfquery>
 		   
 		<cfreturn qGetUserAccessRights>
