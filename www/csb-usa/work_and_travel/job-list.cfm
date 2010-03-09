@@ -11,10 +11,10 @@
 	</cfloop>
 </cfif>
 <cfif isDefined('form.pass')>
-	<cfset client.pass = '#form.pass#'>
+	<cfset client.pass = form.pass>
 </cfif>
 <cfif isDefined('form.user')>
-	<cfset client.user = '#form.user#'>
+	<cfset client.user = form.user>
 </cfif>
 <table width="871" height="455" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
 	<tr>
@@ -73,14 +73,14 @@
               </table>
               </form>
               <cfelse>
-	              <cfif client.user EQ 'csbagent' AND client.pass EQ 'csb45'>
-							<cfinclude template="view_job_listing.cfm">
-                   <cfelseif client.user EQ 'anca' AND client.pass eq 'qaz123'>
-                 			  <cfinclude template="admin_job_listing.cfm">
-				<cfelse>
-	                  Wrong User or password!<br><br>
-                      <a href="job-list.cfm?redo">Try again</a>
-                  </cfif>
+	              	<cfif client.user EQ 'csbagent' AND client.pass EQ 'jobs10'>
+						<cfinclude template="view_job_listing.cfm">
+                   	<cfelseif client.user EQ 'anca' AND client.pass eq 'qaz123'>
+ 	                   <cfinclude template="admin_job_listing.cfm">
+					<cfelse>
+	                  	Wrong User or password!<br><br>
+                      	<a href="job-list.cfm?redo">Try again</a>
+                  	</cfif>
               </cfif></td>
 		    <td width="5%">&nbsp;</td>
 	      </tr>
