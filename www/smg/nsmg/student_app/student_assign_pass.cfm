@@ -5,6 +5,8 @@ body {font:Arial, Helvetica, sans-serif;}
 .dashed-border {border: 1px dashed #FF9933;}
 </style>
 
+<cfparam name="CLIENT.exits_url" default="http://www.student-management.com">
+
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfparam name="client.support_email" default="support@case-usa.org">
 	<cfparam name="client.site_url" default="http://www.case-usa.org">
