@@ -146,12 +146,12 @@ body {
                       <td height="48" valign="middle" class="style5"><div align="center" class="style1 style6">
                           <div align="justify">
                             <p align="center" class="style15"><strong class="style7">SMG CELEBRATION OF SUCCESS!! </strong><br>
-                            <span class="style23">Scotland has a long, eventful history and cultural heritage.</span></p>
+                            <span class="style23">A photo album of our latest trip overseas in Scotland.</span></p>
                           </div>
                       </div></td>
                     </tr>
                     <tr>
-                      <td height="21" class="style5" align="center"><a href="incentive2009-.htm" target="botton" onMouseOver="MM_swapImage('clicks41','','images/click1.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/click2.gif" name="clicks41" width="70" height="21" border="0" id="clicks41"></a></td>
+                      <td height="21" class="style5" align="center"><a href="incentive2009-photos.cfm" onMouseOver="MM_swapImage('clicks41','','images/click1.gif',1)" onMouseOut="MM_swapImgRestore()"><img src="images/click2.gif" name="clicks41" width="70" height="21" border="0" id="clicks41"></a></td>
                     </tr>
                 </table></td>
               <td width="49%" valign="bottom"><table width="94%"  border="0" align="center" cellpadding="0" cellspacing="0">
