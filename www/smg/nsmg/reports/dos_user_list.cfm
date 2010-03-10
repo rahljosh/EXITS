@@ -21,20 +21,29 @@
 			u.userID,
             u.firstName,
             u.lastName,
-            u.occupation,
             u.ssn,
             u.dateCreated
    		FROM
         	smg_users u
         INNER JOIN
-        	user_access_rights uar ON uar.userID = u.userID
-            AND        
-                uar.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">) 
-            AND
-                uar.userType IN (<cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes">)                    
-        WHERE
-            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">   
-
+        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
+        INNER JOIN
+        	smg_programs p ON s.programID = p.programID AND p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
+		
+        UNION
+        
+        SELECT
+			u.userID,
+            u.firstName,
+            u.lastName,
+            u.ssn,
+            u.dateCreated
+  		FROM
+        	smg_users u
+        INNER JOIN
+        	smg_hosthistory h ON (h.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">) AND (h.placeRepID = u.userID OR h.areaRepID = u.userID) )
+        
+        <!---
         UNION
         
         <!--- Get inactive reps that were involved in placing/supervising kids --->
@@ -42,18 +51,18 @@
 			u.userID,
             u.firstName,
             u.lastName,
-            u.occupation,
             u.ssn,
             u.dateCreated
   		FROM
         	smg_users u
         INNER JOIN
-        	smg_students s ON (s.placeRepID = u.userID OR s.areaRepID = u.userID)
+        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
         INNER JOIN
         	smg_programs p ON s.programID = p.programID AND p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
         WHERE
             u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">       
-
+		--->
+        
         ORDER BY
         	lastName,
             firstName
@@ -115,6 +124,7 @@
 
 </cfsilent>    
 
+
 <!--- set content type --->
 <cfcontent type="application/msexcel">
 
@@ -127,6 +137,7 @@ relatively correct Internet Explorer behavior. --->
 
 <!--- Format data using cfoutput and a table. Excel converts the table to a spreadsheet.
 The cfoutput tags around the table tags force output of the HTML when using cfsetting enablecfoutputonly="Yes" --->
+
 
 <cfoutput>
 
@@ -205,20 +216,20 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 FROM
                     qRegionalManagersList
                 WHERE
-                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPCFC.USER.getUserAccessRights(userID=qUsers.userID).regionID)#">    	
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPCFC.USER.getUserAccessRights(userID=qUsers.userID, companyID=CLIENT.companyID).regionID)#">     	
             </cfquery>
 
             <tr>
                 <td>#qUsers.firstName#</td>
                 <td>#qUsers.lastName#</td>
-                <td>#qUsers.occupation# &nbsp;</td>
+                <td>AR</td>
                 <td>#qRegionalManager.name#</td>
                 <td>#checkHostFamily(qUsers.SSN)#</td>
-                <td>&nbsp;</td>
+                <td>N/A</td>
                 <td>Independent Contractor</td>
                 <td>Part-time</td>
                 <td>#DateFormat(qUsers.dateCreated, 'mm/dd/yyyy')#</td>
-                <td>&nbsp;</td>
+                <td>No</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
             </tr>		
