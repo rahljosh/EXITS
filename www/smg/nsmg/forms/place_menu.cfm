@@ -19,22 +19,34 @@
 
 <cfquery name="get_student_info" datasource="MySQL">
 	SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.hostid, stu.arearepid, stu.placerepid, stu.schoolid, 
-		stu.uniqueid, stu.dateplaced, stu.host_fam_approved, stu.date_host_fam_approved, stu.address, stu.address2, stu.city, stu.country, 
+		stu.uniqueid, stu.dateplaced, stu.host_fam_approved, stu.date_host_fam_approved, stu.address, stu.address2, stu.city, stu.country, stu.programid,
 		stu.zip,  stu.fax, stu.email, stu.phone, stu.welcome_family,
 		h.familylastname as hostlastname, h.hostid as hostfamid,
-		sc.schoolname, sc.schoolid as highschoolid, sc.begins, sc.semesterbegins, sc.semesterends, sc.ends,
 		area.firstname as areafirstname, area.lastname as arealastname, area.userid as areaid,
 		place.firstname as placefirstname, place.lastname as placelastname, place.userid as placeid,
 		countryname 
 	FROM smg_students stu
 	LEFT JOIN smg_hosts h ON stu.hostid = h.hostid
-	LEFT JOIN smg_schools sc ON stu.schoolid = sc.schoolid
 	LEFT JOIN smg_users area ON stu.arearepid = area.userid
 	LEFT JOIN smg_users place ON stu.placerepid = place.userid
 	LEFT JOIN smg_countrylist country ON stu.countryresident = country.countryid
 	WHERE stu.studentid = #client.studentid#
 </cfquery>
-
+<cfquery name="season" datasource="#application.dsn#">
+select seasonid
+from smg_programs
+where programid = #get_student_info.programid#
+</cfquery>
+<cfquery name="school_info" datasource="#application.dsn#">
+select sc.schoolname, sc.schoolid, sd.year_begins, sd.semester_begins, sd.semester_ends, sd.year_ends
+from smg_schools sc
+left join smg_school_dates sd on sd.schoolid = sc.schoolid
+where sc.schoolid = #get_student_info.schoolid#
+and sd.seasonid = #season.seasonid#
+</cfquery>
+<cfif client.userid eq 1>
+<cfdump var="#get_student_info#">
+</cfif>
 <!--- PLACEMENT HISTORY --->
 <cfquery name="placement_history" datasource="MySQL">
 	SELECT hist.hostid, hist.reason, hist.studentid, hist.dateofchange, hist.arearepid, hist.placerepid, hist.schoolid, hist.changedby, hist.original_place,
@@ -223,7 +235,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 				<tr>
 					<td valign="top">
 					<cfif schoolid is 0><font color="CC3300">School has not been assigned yet.</font><cfelse>
-					<cfif highschoolid is ''><font color="CC3300">School (#schoolid#) was not found in the system.</font><cfelse>#schoolname# (#schoolid#)<br><font size=-2>year beg: #DateFormat(begins, 'mm/dd/yy')# sem end: #DateFormat(semesterends, 'mm/dd/yy')# <br> sem start:#DateFormat(semesterbegins, 'mm/dd/yy')#  year end: #DateFormat(ends, 'mm/dd/yy')#</font></cfif></cfif>
+					<cfif schoolid is ''><font color="CC3300">School (#schoolid#) was not found in the system.</font><cfelse>#school_info.schoolname# (#school_info..schoolid#)<br><font size=-2>year beg: #DateFormat(school_info..year_begins, 'mm/dd/yy')# sem end: #DateFormat(school_info..semester_ends, 'mm/dd/yy')# <br> sem start:#DateFormat(school_info..semester_begins, 'mm/dd/yy')#  year end: #DateFormat(school_info..year_ends, 'mm/dd/yy')#</font></cfif></cfif>
 					</td>		
 					<td rowspan="3" valign="top">
 						<table border=0 class="placeinfo" align="center">
