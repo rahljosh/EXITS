@@ -36,31 +36,35 @@
         LEFT JOIN smg_users branch ON s.branchid = branch.userid
         LEFT JOIN smg_users office ON s.intrep = office.userid
         WHERE 
-        <cfif client.companyid lte 5>
-        s.companyid <= 4
+        <cfif client.companyid LTE 5>
+        	s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> ) 
         <cfelse>
-        s.companyid = #client.companyid#
+        	s.companyid = #client.companyid#
         </cfif>
-            <cfif URL.status EQ 'placed'>
-                AND s.active = '1' 
-                AND s.hostid != 0
-                AND s.host_fam_approved <= '4'
-            <cfelseif URL.status EQ 'unplaced'>
-                AND s.active = '1' 
-                AND (s.hostid = '0' OR s.hostid != '0' AND s.host_fam_approved >= 5)
-            <cfelseif URL.status EQ 'inactive'>
-                AND s.active = '0'
-                AND s.canceldate IS NULL
-            <cfelseif URL.status EQ 'cancelled'>
-                AND s.active = '0'
-                AND s.canceldate IS NOT NULL
-            </cfif>
-            <cfif client.usertype EQ '8'>
-                AND (s.intrep = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer"> OR office.master_accountid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">)
-            <cfelse>
-                AND s.branchid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
-            </cfif>
-        ORDER BY '#URL.student_order#'	
+        
+		<cfif URL.status EQ 'placed'>
+            AND s.active = '1' 
+            AND s.hostid != 0
+            AND s.host_fam_approved <= '4'
+        <cfelseif URL.status EQ 'unplaced'>
+            AND s.active = '1' 
+            AND (s.hostid = '0' OR s.hostid != '0' AND s.host_fam_approved >= 5)
+        <cfelseif URL.status EQ 'inactive'>
+            AND s.active = '0'
+            AND s.canceldate IS NULL
+        <cfelseif URL.status EQ 'cancelled'>
+            AND s.active = '0'
+            AND s.canceldate IS NOT NULL
+        </cfif>
+        
+        <cfif client.usertype EQ 8>
+            AND (s.intrep = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer"> OR office.master_accountid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">)
+        <cfelse>
+            AND s.branchid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
+        </cfif>
+        
+        ORDER BY 
+        	'#URL.student_order#'	
     </cfquery>
 
 </cfsilent>
