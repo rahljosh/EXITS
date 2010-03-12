@@ -65,6 +65,50 @@
     	smg_students.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 </cfquery>
 
+
+<!--- UPDATE STUDENT INFORMATION - STUDENT TABLE --->
+<cfquery datasource="MySql">
+	UPDATE 
+		smg_students
+	SET 
+		intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+	WHERE 
+		studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+	LIMIT 1
+</cfquery>
+
+
+<!--- UPDATE STUDENT IN COMPANY INFORMATION --->
+<cfquery datasource="MySql">
+	UPDATE 
+		php_students_in_program
+	SET 
+		<cfif IsDefined('FORM.active')>
+			active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+			canceldate = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">, 
+			cancelreason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">, 	
+		<cfelse>
+			active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,	
+		</cfif>
+		programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">,
+		i20no = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.i20no#">,
+		<cfif FORM.i20received EQ ''>
+			i20received =  <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+		<cfelse>
+			i20received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.i20received)#">,
+		</cfif>
+		<cfif FORM.i20sent EQ ''>
+			i20sent = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+		<cfelse>
+			i20sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.i20sent)#">,
+		</cfif>
+		i20note = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.i20note#">,
+		return_student = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.return_student#">		
+	WHERE 
+		assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.assignedID#">
+</cfquery>
+
+
 <!--- PROGRAM HISTORY --->
 <cfif qGetStudentInfo.programID NEQ FORM.program>
 	
@@ -152,30 +196,7 @@
 		</cfquery>
         
 	</cfif>
-	
-	<!--- let student be active and canceled for invoicing reasons ---->
-	<cfif isDefined('FORM.active')>
-		
-        <cfquery datasource="MySql">
-            UPDATE php_students_in_program
-            SET 
-            	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-            WHERE
-            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
-		</cfquery>
-	
-    <cfelse>
-	
-    	<cfquery datasource="MySql">
-            UPDATE 
-            	php_students_in_program
-            SET 
-            	active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-            WHERE 
-            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
-		</cfquery>
-	
-    </cfif>
+
     
     <!--- Email Finance Department --->
 	<cfmail to="#AppEmail.finance#" 
@@ -205,52 +226,6 @@
 	<cfabort>
 
 </cfif>
-
-
-<cftransaction>
-
-	<!--- UPDATE STUDENT INFORMATION - STUDENT TABLE --->
-    <cfquery datasource="MySql">
-        UPDATE 
-        	smg_students
-        SET 
-        	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-        WHERE 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
-        LIMIT 1
-    </cfquery>
-    
-    <!--- UPDATE STUDENT IN COMPANY INFORMATION --->
-    <cfquery datasource="MySql">
-        UPDATE 
-        	php_students_in_program
-        SET 
-			<cfif IsDefined('FORM.active')>
-                active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-                canceldate = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">, 
-                cancelreason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">, 	
-            <cfelse>
-                active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,	
-            </cfif>
-            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">,
-            i20no = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.i20no#">,
-            <cfif FORM.i20received EQ ''>
-            	i20received =  <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
-            <cfelse>
-            	i20received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.i20received)#">,
-            </cfif>
-            <cfif FORM.i20sent EQ ''>
-            	i20sent = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
-            <cfelse>
-            	i20sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.i20sent)#">,
-            </cfif>
-            i20note = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.i20note#">,
-            return_student = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.return_student#">		
-        WHERE 
-        	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.assignedID#">
-    </cfquery>
-
-</cftransaction> 
 
 <cflocation url="?curdoc=student/student_info&unqid=#qGetStudentInfo.uniqueid#" addtoken="no">
 
