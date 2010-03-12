@@ -1,0 +1,27 @@
+CREATE TABLE `calendar_event` (
+  `Id` int(11) NOT NULL auto_increment,
+  `name` varchar(100) default '',
+  `description` text,
+  `date_started` date default NULL,
+  `date_ended` date default NULL,
+  `time_started` varchar(5) default '',
+  `time_ended` varchar(5) default '',
+  `is_all_day` tinyint(3) NOT NULL default '0',
+  `repeat_type` tinyint(3) default '0',
+  `color` varchar(6) default '',
+  `webEx_url` longtext,
+  `date_created` timestamp NULL default NULL,
+  `date_updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`Id`),
+  KEY `date_started` (`date_started`),
+  KEY `date_ended` (`date_ended`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `calendar_event_exception` (
+  `calendar_event_id` int(11) NOT NULL default '0',
+  `date` timestamp NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`calendar_event_id`),
+  KEY `date` (`date`),
+  CONSTRAINT `event_id` FOREIGN KEY (`calendar_event_id`) REFERENCES `calendar_event` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
