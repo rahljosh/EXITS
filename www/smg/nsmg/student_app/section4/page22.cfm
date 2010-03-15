@@ -1,4 +1,3 @@
-<cftry>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -111,7 +110,7 @@ where studentid = #client.studentid#
 	  <td>#Round(newsize)# kb</td>
 	  <td>#mydirectory.dateLastModified#</td>
 	  <td>
-	  	<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(name, 3))>
+	  	<cfif ListFind("jpg,jpeg,gif,tif,png", Right(name, 3))>
 			<a href="javascript:OpenApp('section4/page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#URLEncodedFormat(name)#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
 		<cfelse>
 	  		<a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
@@ -142,12 +141,6 @@ where studentid = #client.studentid#
 
 </cfoutput>
 
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-</body></html>
-
-</cftry>
 
 
 <!---
