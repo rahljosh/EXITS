@@ -19,7 +19,7 @@
                 <li><a href="index.cfm?curdoc=intrep/int_students&status=unplaced">Unplaced</a></li>
                 <li><a href="index.cfm?curdoc=intrep/int_students&status=placed">Placed</a></li>
                 <li><a href="index.cfm?curdoc=intrep/int_students&status=all">All</a></li>
-              <!----  <li><a href="index.cfm?curdoc=intrep/advanced_search">Advanced Search</a></li>---->
+                <!----  <li><a href="index.cfm?curdoc=intrep/advanced_search">Advanced Search</a></li>---->
                 <li><a href="index.cfm?curdoc=intrep/int_php_students">Private High School</a></li>
             </ul>
         </li>
@@ -217,21 +217,9 @@
         <!--- Webmail --->
         <cfswitch expression="#client.companyid#">
         	
-            <cfcase value="1">
+            <cfcase value="1,2,3,4,12">
         		<li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
         	</cfcase>
-            
-            <cfcase value="2">
-                <li><a href="http://webmail.intoedventures.org/" target="_blank">Webmail</a></li>
-            </cfcase>
-            
-            <cfcase value="3">
-                <li><a href="http://webmail.asainternational.com/" target="_blank">Webmail</a></li>
-            </cfcase>
-            
-            <cfcase value="4">
-                <li><a href="http://webmail.dmdusa.com/" target="_blank">Webmail</a></li>
-            </cfcase>
             
             <cfcase value="5">
                 <li><a href="http://webmail.student-management.com/" target="_blank">Webmail</a></li>
