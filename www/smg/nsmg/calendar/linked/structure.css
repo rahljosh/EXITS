@@ -76,8 +76,9 @@ div#sitecontent {
 	/* Added by Marcus Melo 03/12/2010 */
 	border-right: 1px solid #666666 ;
 	border-left: 1px solid #666666 ;
+	background: url( "../images/webex-logo.jpg" ) top right no-repeat; 
 	/* End of Added by Marcus Melo 03/12/2010 */	
-	padding: 35px 30px 50px 30px ;
+	padding: 35px 30px 50px 30px ;	
 	}
 	
 div#sitecontent div.buffer {	

@@ -199,7 +199,9 @@
 						WHERE
 							id = <cfqueryparam value="#REQUEST.Attributes.id#" cfsqltype="CF_SQL_INTEGER" />
 						;
-						
+					</cfquery>
+
+					<cfquery name="qDelete" datasource="#APPLICATION.DSN#">
 						<!--- Delete event exceptions. --->
 						DELETE FROM
 							calendar_event_exception
@@ -207,7 +209,7 @@
 							calendar_event_id = <cfqueryparam value="#REQUEST.Attributes.id#" cfsqltype="CF_SQL_INTEGER" />
 						;
 					</cfquery>
-				
+
 				</cfdefaultcase>
 									
 			</cfswitch>
@@ -217,14 +219,14 @@
 			<cfif REQUEST.Attributes.viewas>
 			
 				<cflocation
-					url="#CGI.script_name#?action=month&date=#REQUEST.Attributes.viewas#"
+					url="#REQUEST.URLPath#&action=month&date=#REQUEST.Attributes.viewas#"
 					addtoken="false"
 					/>
 					
 			<cfelse>
 					
 				<cflocation
-					url="#CGI.script_name#?action=month&date=#Fix( qEvent.date_started )#"
+					url="#REQUEST.URLPath#&action=month&date=#Fix( qEvent.date_started )#"
 					addtoken="false"
 					/>
 					
@@ -280,7 +282,7 @@
 	
 	</cfif>
 	
-	<form action="#CGI.script_name#" method="post">
+	<form action="#REQUEST.URLFullPath#" method="post">
 	
 		<!--- The action of the page (so that we submit back to ourselves). --->
 		<input type="hidden" name="action" value="#REQUEST.Attributes.action#" />

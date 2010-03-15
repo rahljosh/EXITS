@@ -246,7 +246,7 @@
 			
             <a 
                 <!--- Only Gary Lubrat or Global Administrator are allowed to input events --->
-                <cfif CLIENT.userID EQ 12431 OR CLIENT.userType EQ 1>
+                <cfif ListFind(REQUEST.AllowedIDs, CLIENT.userID) OR CLIENT.userType EQ 1>
                     href="#REQUEST.URLPath#&action=edit&viewas=#dtDay#" 
                 </cfif>
                 title="#DateFormat( dtDay, "mmmm d, yyyy" )#" 
@@ -283,10 +283,10 @@
 				<cfloop query="qEventSub">
 
 					<!--- Only Gary Lubrat or Global Administrator are allowed to input events --->
-                    <cfif CLIENT.userID EQ 12431 OR CLIENT.userType EQ 1>
+                    <cfif ListFind(REQUEST.AllowedIDs, CLIENT.userID) OR CLIENT.userType EQ 1>
                         
                         <a 
-                            href="#CGI.script_name#?action=edit&id=#qEventSub.id#&viewas=#dtDay#"
+                            href="#REQUEST.URLPath#&action=edit&id=#qEventSub.id#&viewas=#dtDay#"
                             <cfif Len( qEventSub.color )>
                                 style="border-left: 3px solid ###qEventSub.color# ; padding-left: 3px ;"
                             </cfif>

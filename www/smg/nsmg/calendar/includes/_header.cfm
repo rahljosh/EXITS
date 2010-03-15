@@ -54,7 +54,7 @@
 					<a href="#REQUEST.URLPath#&action=day&date=#REQUEST.DefaultDate#" <cfif (REQUEST.Attributes.action EQ "day")>class="on"</cfif>>Day View</a>
 				</li>
                 <!--- Only Gary Lubrat or Global Administrator are allowed to input events --->
-                <cfif CLIENT.userID EQ 12431 OR CLIENT.userType EQ 1>
+                <cfif ListFind(REQUEST.AllowedIDs, CLIENT.userID) OR CLIENT.userType EQ 1>
                     <li class="nav5">
                         <a href="#REQUEST.URLPath#&action=edit&date=#REQUEST.DefaultDate#" <cfif (REQUEST.Attributes.action EQ "edit")>class="on"</cfif>>Add New Event</a>
                     </li>
