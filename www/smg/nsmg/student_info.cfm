@@ -352,7 +352,8 @@
 									<table width="225" cellpadding="2" align="left">
 										<tr><td width="80">Date of Entry : </td><td>#DateFormat(dateapplication, 'mm/dd/yyyy')# </td></tr>
 										<tr><td><cfif randid EQ 0>Entered by : <cfelse>Approved by : </cfif> </td><td><cfif qEnteredBy.recordcount NEQ 0>#qEnteredBy.firstname# #qEnteredBy.lastname# (###qEnteredBy.userid#)<cfelse>n/a</cfif></td></tr>										
-										<cfif CLIENT.usertype eq 1 OR CLIENT.userid eq 8731 or client.userID EQ 11245> <!--- Pat and Bill --->
+										
+										<cfif CLIENT.usertype EQ 1 OR ListFind(8731,11245, CLIENT.userid)> <!--- Pat and Bill --->
                                         <tr>
 											<td>Division:</td><td><cfif FORM.edit EQ 'no'>#qAssignedCompany.team_id# <cfelse>
 											<select name="team_id">
@@ -364,6 +365,7 @@
 											</cfif>
 										</tr>
                                         </cfif>
+                                        
 										<tr><cfif canceldate EQ ''>
 											<td width="80" align="right">				
 												<cfif VAL(active)>
@@ -393,7 +395,7 @@
 											<cfelse>
 												<a href="javascript:OpenApp('student_app/print_application.cfm?unqid=#uniqueid#');"><img src="pics/exits.jpg" border="0"></a>
 											</cfif>
-											<br><a href="javascript:OpenSmallW('student_app/section4/page22print.cfm?unqid=#uniqueid#');"><img src="pics/attached-files.gif" border="0"></a>	
+											<br><a href="javascript:OpenMediumW('student_app/section4/page22print.cfm?unqid=#uniqueid#');"><img src="pics/attached-files.gif" border="0"></a>	
 											<br><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#');"><img src="pics/send-email.gif" border="0"></a>	
 											</td>
 										</tr>

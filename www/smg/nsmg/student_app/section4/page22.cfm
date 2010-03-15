@@ -105,14 +105,14 @@ where studentid = #client.studentid#
 	</cfif>
 
 	<cfloop query="mydirectory">
-	<cfset newsize = #mydirectory.size# / '1024'>
+	<cfset newsize = mydirectory.size / '1024'>
 	<tr bgcolor="#iif(mydirectory.currentrow MOD 2 ,DE("white") ,DE("CCCCCC") )#">
 	  <td><a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#');">#mydirectory.name#</a></td>
 	  <td>#Round(newsize)# kb</td>
 	  <td>#mydirectory.dateLastModified#</td>
 	  <td>
-	  	<cfif Right(name, 3) EQ 'jpg' OR Right(name, 3) EQ 'gif' OR Right(name, 3) EQ 'peg' OR Right(name, 3) EQ 'JPG' OR Right(name, 3) EQ 'GIF' OR Right(name, 3) EQ 'PEG'>
-			<a href="javascript:OpenApp('section4/page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#name#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
+	  	<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(name, 3))>
+			<a href="javascript:OpenApp('section4/page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#URLEncodedFormat(name)#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
 		<cfelse>
 	  		<a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
 		</cfif>
@@ -166,9 +166,8 @@ File Name: #name# &nbsp; left: #Left(name, 4)#<br>
    <cfdirectory action = "create" directory = "#newfolder#">
 </cfif>
 <cffile	action="Move" 
-				source="#oldfolder#\#name#" 
-				destination="#newfolder#\#name#">
-	
+	source="#oldfolder#\#name#" 
+	destination="#newfolder#\#name#">
 </cfloop>
 </cfoutput>
 </cfif>
