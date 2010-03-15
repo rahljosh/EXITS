@@ -85,10 +85,10 @@ function PrintFile(url)
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfloop query="mydirectory">
-		<cfset newsize = #size# / '1024'>
+		<cfset newsize = size / '1024'>
 		<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("CCCCCC") )#">
-			<cfif Right(name, 3) EQ 'JPG' OR Right(name, 3) EQ 'PEG' OR Right(name, 3) EQ 'GIF' OR Right(name, 3) EQ 'TIF' OR Right(name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#name#');">#name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#URLEncodedFormat(name)#');">#name#</a></td>
 			<cfelse>
 				<td><b>*</b> <a href="../../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#" target="_blank">#name#</a></td>
 			</cfif>
@@ -105,7 +105,7 @@ function PrintFile(url)
 	<cfif studentletter.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #studentletter.size# / '1024'>
+		<cfset newsize = studentletter.size / '1024'>
 		<tr><td><a href="../../uploadedfiles/letters/students/#studentletter.name#" target="_blank">#studentletter.name#</a></td>
 			<td>#Round(newsize)# kb</td>
 			<td>#studentletter.dateLastModified#</td>
@@ -117,7 +117,7 @@ function PrintFile(url)
 	<cfif parentletter.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #parentletter.size# / '1024'>
+		<cfset newsize = parentletter.size / '1024'>
 		<tr><td><a href="../../uploadedfiles/letters/parents/#parentletter.name#" target="_blank">#parentletter.name#</a></td>
 			<td>#Round(newsize)# kb</td>
 			<td>#parentletter.dateLastModified#</td>
@@ -127,14 +127,15 @@ function PrintFile(url)
 	<cfloop list="07,08,09,10,12,13,14,15,16,17,18,19,20,21" index="x">
 		<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page#x#" name="page#x#" filter="#get_student_info.studentid#.*">	
 	</cfloop>
+    
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 07 - School Information</b></td></tr>
 	<cfif page07.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page07.size# / '1024'>
+		<cfset newsize = page07.size / '1024'>
 		<tr>
-			<cfif Right(page07.name, 3) EQ 'JPG' OR Right(page07.name, 3) EQ 'PEG' OR Right(page07.name, 3) EQ 'GIF' OR Right(page07.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page07&file=#page07.name#');">#page07.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page07.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page07&file=#URLEncodedFormat(page07.name)#');">#page07.name#</a></td>
 			<cfelse>
 				<td><b>*</b> <a href="../../uploadedfiles/online_app/page07/#page07.name#" target="_blank">#page07.name#</a></td>
 			</cfif>
@@ -146,10 +147,10 @@ function PrintFile(url)
 	<cfif page08.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page08.size# / '1024'>
+		<cfset newsize = page08.size / '1024'>
 		<tr>
-			<cfif Right(page08.name, 3) EQ 'JPG' OR Right(page08.name, 3) EQ 'PEG' OR Right(page08.name, 3) EQ 'GIF' OR Right(page08.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page08&file=#page08.name#');">#page08.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page08.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page08&file=#URLEncodedFormat(page08.name)#');">#page08.name#</a></td>
 			<cfelse>
 				<td><b>*</b> <a href="../../uploadedfiles/online_app/page08/#page08.name#" target="_blank">#page08.name#</a></td>
 			</cfif>
@@ -161,10 +162,10 @@ function PrintFile(url)
 	<cfif page09.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page09.size# / '1024'>
+		<cfset newsize = page09.size / '1024'>
 		<tr>
-			<cfif Right(page09.name, 3) EQ 'JPG' OR Right(page09.name, 3) EQ 'PEG' OR Right(page09.name, 3) EQ 'GIF' OR Right(page09.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page09&file=#page09.name#');">#page09.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page09.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page09&file=#URLEncodedFormat(page09.name)#');">#page09.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page09/#page09.name#" target="_blank">#page09.name#</a></td>
 			</cfif>
@@ -176,10 +177,10 @@ function PrintFile(url)
 	<cfif page10.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page10.size# / '1024'>
+		<cfset newsize = page10.size / '1024'>
 		<tr>
-			<cfif Right(page10.name, 3) EQ 'JPG' OR Right(page10.name, 3) EQ 'PEG' OR Right(page10.name, 3) EQ 'GIF' OR Right(page10.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page10&file=#page10.name#');">#page10.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page10.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page10&file=#URLEncodedFormat(page10.name)#');">#page10.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page10/#page10.name#" target="_blank">#page10.name#</a></td>
 			</cfif>
@@ -191,10 +192,10 @@ function PrintFile(url)
 	<cfif page12.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page12.size# / '1024'>
+		<cfset newsize = page12.size / '1024'>
 		<tr>
-			<cfif Right(page12.name, 3) EQ 'JPG' OR Right(page12.name, 3) EQ 'PEG' OR Right(page12.name, 3) EQ 'GIF' OR Right(page12.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page12&file=#page12.name#');">#page12.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page12.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page12&file=#URLEncodedFormat(page12.name)#');">#page12.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page12/#page12.name#" target="_blank">#page12.name#</a></td>
 			</cfif>
@@ -206,10 +207,10 @@ function PrintFile(url)
 	<cfif page13.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page13.size# / '1024'>
+		<cfset newsize = page13.size / '1024'>
 		<tr>
-			<cfif Right(page13.name, 3) EQ 'JPG' OR Right(page13.name, 3) EQ 'PEG' OR Right(page13.name, 3) EQ 'GIF' OR Right(page13.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page13&file=#page13.name#');">#page13.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page13.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page13&file=#URLEncodedFormat(page13.name)#');">#page13.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page13/#page13.name#" target="_blank">#page13.name#</a></td>
 			</cfif>
@@ -221,10 +222,10 @@ function PrintFile(url)
 	<cfif page14.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page14.size# / '1024'>
+		<cfset newsize = page14.size / '1024'>
 		<tr>
-			<cfif Right(page14.name, 3) EQ 'JPG' OR Right(page14.name, 3) EQ 'PEG' OR Right(page14.name, 3) EQ 'GIF' OR Right(page14.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page14&file=#page14.name#');">#page14.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page14.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page14&file=#URLEncodedFormat(page14.name)#');">#page14.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page14/#page14.name#" target="_blank">#page14.name#</a></td>
 			</cfif>
@@ -236,10 +237,10 @@ function PrintFile(url)
 	<cfif page15.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page15.size# / '1024'>
+		<cfset newsize = page15.size / '1024'>
 		<tr>
-			<cfif Right(page15.name, 3) EQ 'JPG' OR Right(page15.name, 3) EQ 'PEG' OR Right(page15.name, 3) EQ 'GIF' OR Right(page15.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page15&file=#page15.name#');">#page15.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page15.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page15&file=#URLEncodedFormat(page15.name)#');">#page15.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page15/#page15.name#" target="_blank">#page15.name#</a></td>
 			</cfif>
@@ -251,10 +252,10 @@ function PrintFile(url)
 	<cfif page16.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page16.size# / '1024'>
+		<cfset newsize = page16.size / '1024'>
 		<tr>
-			<cfif Right(page16.name, 3) EQ 'JPG' OR Right(page16.name, 3) EQ 'PEG' OR Right(page16.name, 3) EQ 'GIF' OR Right(page16.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page16&file=#page16.name#');">#page16.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page16.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page16&file=#URLEncodedFormat(page16.name)#');">#page16.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page16/#page16.name#" target="_blank">#page16.name#</a></td>
 			</cfif>
@@ -266,10 +267,10 @@ function PrintFile(url)
 	<cfif page17.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page17.size# / '1024'>
+		<cfset newsize = page17.size / '1024'>
 		<tr>
-			<cfif Right(page17.name, 3) EQ 'JPG' OR Right(page17.name, 3) EQ 'PEG' OR Right(page17.name, 3) EQ 'GIF' OR Right(page17.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page17&file=#page17.name#');">#page17.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page17.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page17&file=#URLEncodedFormat(page17.name)#');">#page17.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page17/#page17.name#" target="_blank">#page17.name#</a></td>
 			</cfif>
@@ -281,10 +282,10 @@ function PrintFile(url)
 	<cfif page18.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page18.size# / '1024'>
+		<cfset newsize = page18.size / '1024'>
 		<tr>
-			<cfif Right(page18.name, 3) EQ 'JPG' OR Right(page18.name, 3) EQ 'PEG' OR Right(page18.name, 3) EQ 'GIF' OR Right(page18.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page18&file=#page18.name#');">#page18.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page18.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page18&file=#URLEncodedFormat(page18.name)#');">#page18.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page18/#page18.name#" target="_blank">#page18.name#</a></td>
 			</cfif>
@@ -296,10 +297,10 @@ function PrintFile(url)
 	<cfif page19.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page19.size# / '1024'>
+		<cfset newsize = page19.size / '1024'>
 		<tr>
-			<cfif Right(page19.name, 3) EQ 'JPG' OR Right(page19.name, 3) EQ 'PEG' OR Right(page19.name, 3) EQ 'GIF' OR Right(page19.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page19&file=#page19.name#');">#page19.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page19.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page19&file=#URLEncodedFormat(page19.name)#');">#page19.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page19/#page19.name#" target="_blank">#page19.name#</a></td>
 			</cfif>
@@ -311,10 +312,10 @@ function PrintFile(url)
 	<cfif page20.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page20.size# / '1024'>
+		<cfset newsize = page20.size / '1024'>
 		<tr>
-			<cfif Right(page20.name, 3) EQ 'JPG' OR Right(page20.name, 3) EQ 'PEG' OR Right(page20.name, 3) EQ 'GIF' OR Right(page20.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page20&file=#page20.name#');">#page20.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page20.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page20&file=#URLEncodedFormat(page20.name)#');">#page20.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page20/#page20.name#" target="_blank">#page20.name#</a></td>
 			</cfif>
@@ -326,10 +327,10 @@ function PrintFile(url)
 	<cfif page21.recordcount EQ '0'>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
-		<cfset newsize = #page21.size# / '1024'>
+		<cfset newsize = page21.size / '1024'>
 		<tr>
-			<cfif Right(page21.name, 3) EQ 'JPG' OR Right(page21.name, 3) EQ 'PEG' OR Right(page21.name, 3) EQ 'GIF' OR Right(page21.name, 3) EQ 'BMP'>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page21&file=#page21.name#');">#page21.name#</a></td>
+			<cfif ListFind("jpg,jpeg,gif,tif,png,bmp", Right(page21.name, 3))>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page21&file=#URLEncodedFormat(page21.name)#');">#page21.name#</a></td>
 			<cfelse>
 		  		<td><b>*</b> <a href="../../uploadedfiles/online_app/page21/#page21.name#" target="_blank">#page21.name#</a></td>
 			</cfif>

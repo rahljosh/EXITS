@@ -1,3 +1,15 @@
+<cfsilent>
+	
+    <!--- Param URL Variables --->
+	<cfparam name="URL.studentID" default="0">
+	<cfparam name="URL.page" default="">
+    <cfparam name="URL.file" default="">
+
+	<!--- Decode URL --->
+	<cfset URL.file = URLDecode(URL.file)>
+
+</cfsilent>
+
 <cftry>
 
 <!--- <cfdocument format="pdf"> --->
@@ -12,7 +24,7 @@
 
 <body onLoad="print()">
 
-<cfif NOT IsDefined('url.studentid') AND NOT IsDefined('url.page') AND NOT IsDefined('url.file')>
+<cfif NOT VAL(URL.studentid) OR NOT LEN(URL.page) OR NOT LEN(URL.file)>
 	Sorry, an error has occurred. Please try again.<br>
 	If this error persists please contact the system administrator support@student-management.com
 	<cfabort>
@@ -21,13 +33,13 @@
 <cfoutput>
 
 <!--- page 22 virtual folder --->
-<cfif url.page EQ 'page22'>
+<cfif URL.page EQ 'page22'>
 	<table width="680" border="0" cellpadding="3" cellspacing="0" align="center">
-		<tr><td><img src="../../uploadedfiles/virtualfolder/#url.studentid#/#url.page#/#url.file#" width="680" height="860"></td></tr>
+		<tr><td><img src="../../uploadedfiles/virtualfolder/#URL.studentid#/#URL.page#/#URL.file#" width="680" height="860"></td></tr>
 	</table>
 <cfelse>
 	<table width="680" border="0" cellpadding="3" cellspacing="0" align="center">
-		<tr><td><img src="../../uploadedfiles/online_app/#url.page#/#url.file#" width="680" height="860"></td></tr>
+		<tr><td><img src="../../uploadedfiles/online_app/#URL.page#/#URL.file#" width="680" height="860"></td></tr>
 	</table>
 </cfif>
 
