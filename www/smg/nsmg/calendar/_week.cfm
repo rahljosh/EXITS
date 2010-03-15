@@ -87,7 +87,7 @@
 <cfoutput>
 		
 	<h2>
-		Week Of #DateFormat( dtThisWeek, "mmmm d, yyyy" )# Events
+		Week Of #DateFormat( dtThisWeek, "mmmm d, yyyy" )# WebEx Calendar
 	</h2>
 
 	<p id="calendarcontrols">

@@ -113,7 +113,7 @@
 <cfoutput>
 		
 	<h2>
-		#Year( dtThisYear )# Events
+		#Year( dtThisYear )# WebEx Calendar
 	</h2>
 
 	<p id="calendarcontrols">

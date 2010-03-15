@@ -129,7 +129,7 @@
 <cfoutput>
 		
 	<h2>
-		#DateFormat( dtThisMonth, "mmmm yyyy" )# Events
+		#DateFormat( dtThisMonth, "mmmm yyyy" )# WebEx Calendar
 	</h2>
 
 	<p id="calendarcontrols">
