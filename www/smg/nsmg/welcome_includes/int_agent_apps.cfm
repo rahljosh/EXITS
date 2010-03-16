@@ -59,7 +59,13 @@
 				</tr>
 				<tr><td colspan=2 align="right">Apps you are entering can be found here </td><td><img src="pics/arrow_rt.gif"></td></tr>
 				<tr><td colspan=10 align="center">
-                	<a href="index.cfm?curdoc=student_app/question_start_student"><img src="student_app/pics/start-application.gif" border=0></a>
+                	
+					<!--- Do Not Display Start Application Process for Bellnor - This agent is now a branch of Troika --->
+                    <cfif CLIENT.userID NEQ 8134>
+	                    <a href="index.cfm?curdoc=student_app/question_start_student"><img src="student_app/pics/start-application.gif" border=0></a>
+					</cfif>
+                    
+					<!--- INTO Germany / Into Austria / XML Upload Feature --->
 					<cfif client.userid eq 20 or client.userid eq 21>
                         <br />
                         <a href="index.cfm?curdoc=xml/upload_form&novelaro">Try the XML upload feature.</a>
