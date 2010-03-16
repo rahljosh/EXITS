@@ -1,46 +1,199 @@
-<script>
-<!-- Begin
-var popUpWin=0;
-function popUpWindow(URLStr, left, top, width, height)
-{
-  if(popUpWin)
-  {
-    if(!popUpWin.closed) popUpWin.close();
-  }
-  popUpWin = open(URLStr, 'popUpWin', 'toolbar=no,location=no,directories=no,status=no,menub ar=no,scrollbar=no,resizable=no,copyhistory=yes,width='+width+',height='+height+',left='+left+', top='+top+',screenX='+left+',screenY='+top+'');
-}
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		initial_welcome.cfm
+	Author:		Marcus Melo
+	Date:		March 15, 2010
+	Desc:		Intial Welcome Screen
 
-// End -->
-</script>
+	Updated:  	
+
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+
+    <cfsetting requesttimeout="200">
+
+	<!--- the number of weeks to display new items. --->
+    <cfparam name="url.new_weeks" default="2">
+
+	<cfset new_date = dateFormat(dateAdd("ww", "-#url.new_weeks#", now()), "mm/dd/yyyy")>
+    
+    <cfquery name="news_messages" datasource="#application.dsn#">
+        SELECT 
+        	*
+        FROM 
+        	smg_news_messages
+        WHERE 
+        	messagetype = <cfqueryparam cfsqltype="cf_sql_varchar" value="news">
+        AND
+        	expires > #now()# 
+        AND
+        	startdate < #now()#
+        AND
+        	lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
+        AND
+        	(
+            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+            OR 
+            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+            )
+        ORDER BY
+        	startdate DESC
+    </cfquery>
+
+    <cfquery name="smg_pics" datasource="#application.dsn#" maxrows="1">
+        SELECT 
+            pictureid, 
+            title, 
+            description
+        FROM 
+            smg_pictures
+        WHERE 
+            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        ORDER BY 
+            rand()
+    </cfquery> 
+
+    <cfquery name="help_desk_user" datasource="#application.dsn#">
+        SELECT 
+        	helpdeskid, 
+            title,
+            category, 
+            priority, 
+            text, 
+            status, 
+            date, 
+            submit.firstname as submit_firstname, submit.lastname as submit_lastname,
+            assign.firstname as assign_firstname, assign.lastname as assign_lastname
+        FROM 
+        	smg_help_desk
+        LEFT JOIN 
+        	smg_users submit ON smg_help_desk.submitid = submit.userid
+        LEFT JOIN 
+        	smg_users assign ON smg_help_desk.assignid = assign.userid 
+        
+		<!--- Global Administrator Users --->
+        <cfif CLIENT.usertype eq 1>
+            WHERE 
+                assignid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+            AND 
+                status = <cfqueryparam cfsqltype="cf_sql_varchar" value="initial">
+        <!--- Field and Intl. Rep --->
+        <cfelse>            
+            WHERE 
+                submitid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+            AND
+                status != <cfqueryparam cfsqltype="cf_sql_varchar" value="closed">
+        </cfif>	
+        ORDER BY 
+        	status, 
+            date
+    </cfquery>
+
+    <cfquery name="new_students" datasource="#application.dsn#">
+        SELECT 
+        	studentid, 
+            dateapplication, 
+            firstname, 
+            familylastname
+        FROM
+        	smg_students
+        WHERE 
+        	dateapplication >= <cfqueryparam cfsqltype="cf_sql_date" value="#new_date#">
+        AND 
+        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND 
+        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        <cfif CLIENT.usertype LTE 5>
+            AND 
+            	regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+        <cfelseif CLIENT.usertype EQ 6>
+            <!--- get reps who the user is the advisor of, and in the company. --->
+            <cfquery name="get_reps" datasource="#application.dsn#">
+                SELECT DISTINCT 
+                	userid 
+                FROM
+                	user_access_rights
+                WHERE
+                	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                AND 
+                (
+                    advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                OR 
+                	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                )
+            </cfquery>
+            <!--- use val() so if get_reps has no results we get 0 instead of null and get no results. --->
+            AND 
+            	arearepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#val(valueList(get_reps.userid))#" list="yes"> )
+        <cfelseif CLIENT.usertype eq 7 or CLIENT.usertype eq 9>
+            AND 
+            	arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+        </cfif>
+        ORDER BY 
+        	dateapplication DESC
+    </cfquery>
+
+    <cfquery name="get_new_users" datasource="#application.dsn#">
+        SELECT 
+        	u.email, 
+            u.userid, 
+            u.firstname, 
+            u.lastname, 
+            u.city, 
+            u.state, 
+            u.datecreated,
+            uar.advisorid
+        FROM 
+        	smg_users u
+        INNER JOIN 
+        	user_access_rights uar ON u.userid = uar.userid
+        WHERE 
+        	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+        AND 
+        	u.datecreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#new_date#">
+        ORDER BY 
+        	u.datecreated DESC
+    </cfquery>
+    
+</cfsilent>    
+
 <script type="text/javascript">
-<!--
-function MM_jumpMenu(targ,selObj,restore){ //v3.0
-  eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
-  if (restore) selObj.selectedIndex=0;
-}
-//-->
+	<!-- Begin
+	var popUpWin=0;
+	function popUpWindow(URLStr, left, top, width, height)
+	{
+	  if(popUpWin)
+	  {
+		if(!popUpWin.closed) popUpWin.close();
+	  }
+	  popUpWin = open(URLStr, 'popUpWin', 'toolbar=no,location=no,directories=no,status=no,menub ar=no,scrollbar=no,resizable=no,copyhistory=yes,width='+width+',height='+height+',left='+left+', top='+top+',screenX='+left+',screenY='+top+'');
+	}
+	
+	function MM_jumpMenu(targ,selObj,restore){ //v3.0
+	  eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+	  if (restore) selObj.selectedIndex=0;
+	}
+	// End -->
 </script>
-<style type="text/css">
-<!--
-.new_weeks {
-	font-size: 10px;
-}
--->
-</style>
-<!--- the number of weeks to display new items. --->
-<cfparam name="url.new_weeks" default="2">
-<cfset new_date = dateFormat(dateAdd("ww", "-#url.new_weeks#", now()), "mm/dd/yyyy")>
 
-<cfsetting requesttimeout="200">
+<style type="text/css">
+	<!--
+	.new_weeks {
+		font-size: 10px;
+	}
+	-->
+</style>
 
 <cfoutput>
 
 <!--- OFFICE USERS - INTL. REPS AND BRANCHES --->
-<cfif listFind("1,2,3,4,8,11", client.usertype)>
+<cfif listFind("1,2,3,4,8,11", CLIENT.usertype)>
 
     <table width=100%>
         <tr>
-            <td>Your last visit was on #DateFormat(client.lastlogin, 'mmm d, yyyy')# MST</td>
+            <td>Your last visit was on #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')# MST</td>
             <td align="right">#DateFormat(now(), 'MMMM D, YYYY')#</td>
         </tr>
     </table>
@@ -65,16 +218,6 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                         <td  valign="top" width="100%"><br>
                             <img src="pics/tower_100.jpg" width=71 height=100 align="left">
                             <!---<img src="http://www.student-management.com/nsmg/pics/clover.gif" width="75" align="left" >--->
-
-                            <cfquery name="news_messages" datasource="#application.dsn#">
-                                select *
-                                from smg_news_messages
-                                where messagetype = 'news'
-                                and expires > #now()# and startdate < #now()#
-                                and lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
-                                AND (companyid = 0 OR companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">)
-                                order by startdate DESC
-                            </cfquery>
                             <cfif news_messages.recordcount is 0>
                                 <br>There are currently no announcements or news items.
                             <cfelse>
@@ -87,7 +230,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                                     </p>
                                 </cfloop>
                             </cfif>
-							<cfif client.usertype gte 8>
+							<cfif CLIENT.usertype gte 8>
                                 <br><br>Please see below for announcements from your organization.
                             </cfif>
                         </td>
@@ -101,13 +244,13 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
             </td>
             <td valign="top" width="1%">&nbsp;</td>
             <td valign="top" width="59%">
-                <cfif client.userid EQ 10115>
+                <cfif CLIENT.userid EQ 10115>
                     <cfinclude template="welcome_includes/ef_centraloffice.cfm">
-                <cfelseif client.usertype EQ 8>
+                <cfelseif CLIENT.usertype EQ 8>
                     <cfinclude template="welcome_includes/int_agent_apps.cfm">
-                <cfelseif client.usertype EQ 11>
+                <cfelseif CLIENT.usertype EQ 11>
                     <cfinclude template="welcome_includes/branch_apps.cfm">
-                <cfelseif client.usertype LTE 4>
+                <cfelseif CLIENT.usertype LTE 4>
                     <cfinclude template="welcome_includes/office_apps.cfm">
                 </cfif>
             </td>
@@ -123,7 +266,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
         FROM smg_students
         INNER JOIN smg_programs ON smg_programs.programid = smg_students.programid
         INNER JOIN smg_incentive_trip ON smg_programs.tripid = smg_incentive_trip.tripid
-        WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#"> 
+        WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
         AND smg_students.host_fam_approved < 5 
         AND smg_students.active = 1
         AND smg_incentive_trip.active = 1
@@ -137,7 +280,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 
     <table width=100%>
         <tr>
-            <td>Your last visit was on #DateFormat(client.lastlogin, 'mmm d, yyyy')# MST</td>
+            <td>Your last visit was on #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')# MST</td>
             <td align="right">
                 <cfset tripcount = 7 - placed_students.Count>
                 <cfif placed_students.Count LT 7>
@@ -163,58 +306,41 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
     <table width=100% cellpadding=4 cellspacing=0 border=0 class="section">
         <tr>
            <td  valign="top" width="100%"><br>
-                            <img src="pics/tower_100.jpg" width=71 height=100 align="left">
-                            <!---<img src="http://www.student-management.com/nsmg/pics/clover.gif" width="75" align="left" >--->
-
-                            <cfquery name="news_messages" datasource="#application.dsn#">
-                                select *
-                                from smg_news_messages
-                                where messagetype = 'news'
-                                and expires > #now()# and startdate < #now()#
-                                and lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
-                                AND (companyid = 0 OR companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">)
-                                order by startdate DESC
-                            </cfquery>
-                            <cfif news_messages.recordcount is 0>
-                                <br>There are currently no announcements or news items.
-                            <cfelse>
-                                <cfloop query="news_messages">
-                                    <p><b>#message#</b><br>
-                                    #DateFormat(startdate, 'MMMM D, YYYY')# - #replaceList(details, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#
-                                    <cfif additional_file is not ''>
-                                        <br /><img src="pics/info.gif" height="15" border="0" />&nbsp;<a href="uploadedfiles/news/#additional_file#" target="_blank">Additional Information (pdf)</font></a>
-                                    </cfif>
-                                    </p>
-                                </cfloop>
-                            </cfif>
-							<cfif client.usertype gte 8>
-                                <br><br>Please see below for announcements from your organization.
-                            </cfif>
-                        </td>
-            <td align="right" valign="top" rowspan=2>
-                <!--- intl reps pictures --->
-                <cfif client.usertype EQ 8>
+                <img src="pics/tower_100.jpg" width=71 height=100 align="left">
+                <!---<img src="http://www.student-management.com/nsmg/pics/clover.gif" width="75" align="left" >--->
+                <cfif news_messages.recordcount is 0>
+                    <br>There are currently no announcements or news items.
+                <cfelse>
+                    <cfloop query="news_messages">
+                        <p><b>#message#</b><br>
+                        #DateFormat(startdate, 'MMMM D, YYYY')# - #replaceList(details, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#
+                        <cfif additional_file is not ''>
+                            <br /><img src="pics/info.gif" height="15" border="0" />&nbsp;<a href="uploadedfiles/news/#additional_file#" target="_blank">Additional Information (pdf)</font></a>
+                        </cfif>
+                        </p>
+                    </cfloop>
+                </cfif>
+                <cfif CLIENT.usertype gte 8>
+                    <br><br>Please see below for announcements from your organization.
+                </cfif>
+          </td>
+          <td align="right" valign="top" rowspan=2>
+                <!--- Intl. Rep Pictures --->
+                <cfif CLIENT.usertype EQ 8>
                     <cfset pic_num = RandRange(1,34)>
                     <img src="pics/intrep/#pic_num#.jpg"><br>
                 <cfelse>
-                    <cfquery name="smg_pics" datasource="#application.dsn#">
-                        SELECT count(*) as count
-                        FROM smg_pictures
-                    </cfquery>
-                    <cfquery name="smg_pics" datasource="#application.dsn#" maxrows="1">
-                        SELECT pictureid, title, description
-                        FROM smg_pictures
-                        WHERE active = 1
-                        ORDER BY rand()
-                    </cfquery> 
-                    <cfif smg_pics.description is not ''>
+                	<!--- Office and Field Incentive Trip Pictures --->
+                    <cfif LEN(smg_pics.description)>
                         <a href="index.cfm?curdoc=picture_details&pic=#smg_pics.pictureid#">
-                    </cfif>
-                    <img src="uploadedfiles/welcome_pics/#smg_pics.pictureid#.jpg" border=0><br>
-                    <em>#smg_pics.title#</em><br>
-                    <img src="pics/view_details.gif" border=0>
-                    <cfif smg_pics.description is not ''>
-                        </a>				
+                            <img src="uploadedfiles/welcome_pics/#smg_pics.pictureid#.jpg" border="0"><br>
+                            <em>#smg_pics.title#</em><br>
+                            <img src="pics/view_details.gif" border="0">
+                    	</a>                    
+                    <cfelse>
+                        <img src="uploadedfiles/welcome_pics/#smg_pics.pictureid#.jpg" border="0"><br>
+                        <em>#smg_pics.title#</em><br>
+                        <img src="pics/view_details.gif" border="0">                    
                     </cfif>
                 </cfif>	
             </td>
@@ -240,7 +366,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 </table>
 
 <!---- OFFICE AND FIELD ---->			
-<cfif client.usertype LTE 7 OR client.usertype EQ 9>        
+<cfif ListFind("1,2,3,4,5,6,7,9", CLIENT.usertype)>        
     
     <table width=100% cellspacing=0 border=0 class="section">
         <tr>
@@ -249,38 +375,29 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                 <table cellpadding=2 cellspacing=4 width=100%>
                 <tr>
                     <td class="get_attention"><span class="get_attention"><b>::</b></span> Items Needing Attention</u></td>
-                    <cfif client.usertype lte 4>
+                    <!--- Office Users --->
+					<cfif CLIENT.usertype lte 4>
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets</td>
+                    <!--- Field Users --->
+					<cfelseif ListFind("5,6,7,9", CLIENT.userType)>
+                    	<td class="get_attention"><span class="get_attention"><b>::</b></span> WebEx Calendar</td>
                     </cfif>
                 </tr>
                 <tr valign="top">
                     <td>
                         <a href="index.cfm?curdoc=progress_reports">Progress Reports</a><br>
                         <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
-                        <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a>
+                        <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a><br />
+                        <cfif CLIENT.userType LTE 4>
+                        	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a>
+                        </cfif>
                     </td>
-         			<cfif client.usertype lte 4>
+         			<!--- Office Users --->
+					<cfif CLIENT.usertype LTE 4>
 						<td>
-						 	<!----Help Desk List---->
-                            <cfquery name="help_desk_user" datasource="#application.dsn#">
-                                SELECT helpdeskid, title, category, section, priority, text, status, date, submitid, assignid,
-                                    submit.firstname as submit_firstname, submit.lastname as submit_lastname,
-                                    assign.firstname as assign_firstname, assign.lastname as assign_lastname
-                                FROM smg_help_desk
-                                LEFT JOIN smg_users submit ON smg_help_desk.submitid = submit.userid
-                                LEFT JOIN smg_users assign ON smg_help_desk.assignid = assign.userid 
-                                <cfif client.usertype eq 1>
-                                    WHERE assignid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                                    and status = 'initial'
-                                <cfelse>
-                                    WHERE submitid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                                    and status != 'closed'
-                                </cfif>
-                                ORDER BY status, date
-                            </cfquery>
                             <table cellpadding=4 cellspacing =0 border=0>
                                 <tr><td>Submitted</td><td>Title</td><td>Status</td></Tr>
-                                <cfif help_desk_user.recordcount is not 0>
+                                <cfif help_desk_user.recordcount>
                                     <cfloop query="help_desk_user">
                                         <tr bgcolor="#iif(help_desk_user.currentrow MOD 2 ,DE("eeeeee") ,DE("white") )#">
                                             <td width="10%" valign="top">#DateFormat(date, 'mm/dd/yyyy')#</td>
@@ -293,7 +410,19 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                                 </cfif>
                             </table>
 						</td>
-					</cfif>
+					<!--- Field Users --->                        
+                    <cfelseif ListFind("5,6,7,9", CLIENT.userType)>
+						<td>
+                            <table cellpadding=4 cellspacing =0 border=0>
+                                <tr>
+                                	<td valign="top">
+                                        <a href="index.cfm?curdoc=calendar/index">Click here to register for WebEx Meetings <br /></a>
+                                        <a href="index.cfm?curdoc=calendar/index"><img src="pics/webex-logo.jpg" border=0></a>                                        
+                                	</td>
+                                </tr>
+                            </table>
+						</td>
+                    </cfif>
                 </tr>
                 <tr>
                     <td></td>
@@ -304,32 +433,6 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                 </tr>
                 <tr valign="top">
                     <td>
-                        <cfquery name="new_students" datasource="#application.dsn#">
-                            select studentid, dateapplication, firstname, familylastname
-                            from smg_students
-                            WHERE dateapplication >= <cfqueryparam cfsqltype="cf_sql_date" value="#new_date#">
-                            AND active = 1
-                            AND companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-							<cfif client.usertype lte 5>
-	                            AND regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
-                            <cfelseif client.usertype EQ 6>
-        						<!--- get reps who the user is the advisor of, and in the company. --->
-                                <cfquery name="get_reps" datasource="#application.dsn#">
-                                    select DISTINCT userid 
-                                    from user_access_rights
-                                    where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-                                    and (
-                                    	advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                                    	OR userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                                    )
-                                </cfquery>
-                                <!--- use val() so if get_reps has no results we get 0 instead of null and get no results. --->
-                                AND arearepid IN (#val(valueList(get_reps.userid))#)
-                            <cfelseif client.usertype eq 7 or client.usertype eq 9>
-                                AND arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                            </cfif>
-                            ORDER BY dateapplication DESC
-                        </cfquery>
                         <cfif new_students.recordcount eq 0>
                             There are no new students.
                         <cfelse>
@@ -337,7 +440,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                             <cfset since_lastlogin = 0>
                             <cfloop query="new_students">
 								<!--- highlight if user was added since last login. --->
-                                <cfif dateapplication GTE client.lastlogin>
+                                <cfif dateapplication GTE CLIENT.lastlogin>
                                     <a href="index.cfm?curdoc=student_info&studentid=#studentid#"><font color="FF0000">#firstname# #familylastname#</font></a>
 			                        <cfset since_lastlogin = 1>
                                 <cfelse>
@@ -351,16 +454,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                         </cfif>
                     </td>
                     <td>
-                        <cfquery name="get_new_users" datasource="#application.dsn#">
-                            SELECT smg_users.email, smg_users.userid, smg_users.firstname, smg_users.lastname, smg_users.city, smg_users.state, smg_users.datecreated,
-                            	user_access_rights.advisorid
-                            FROM smg_users
-                            INNER JOIN user_access_rights ON smg_users.userid = user_access_rights.userid
-                            WHERE user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
-                            AND smg_users.datecreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#new_date#">
-                            ORDER BY smg_users.datecreated DESC
-                        </cfquery>
-                        <cfif get_new_users.recordcount eq 0 or client.usertype gte 6>
+                        <cfif get_new_users.recordcount eq 0 or CLIENT.usertype gte 6>
                             There are no new reps in your region.
                         <cfelse>
                             <!--- this is used to display the message if the user was added since last login. --->
@@ -369,13 +463,13 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                             <cfset is_advisor = 0>
                             <cfloop query="get_new_users"> 
 								<!--- put * if user is the advisor for this user. --->
-                                <cfif advisorid EQ client.userid>
+                                <cfif advisorid EQ CLIENT.userid>
                                     <font color="FF0000" size="4"><strong>*</strong></font>
 			                        <cfset is_advisor = 1>
                                 </cfif>
                             	<a href="mailto:#email#"><img src="pics/email.gif" border=0 align="absmiddle"></a>
 								<!--- highlight if user was added since last login. --->
-                                <cfif datecreated GTE client.lastlogin>
+                                <cfif datecreated GTE CLIENT.lastlogin>
                                     <a href="index.cfm?curdoc=user_info&userid=#userid#"><font color="FF0000">#firstname# #lastname#</font></a> <font color="FF0000">of #city#, #state#</font>
 			                        <cfset since_lastlogin = 1>
                                 <cfelse>
@@ -417,12 +511,12 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
     </table>
 
 <!---- WELCOME SCREEN FOR INTL. AGENTS ---->
-<cfelseif client.usertype EQ 8>
+<cfelseif CLIENT.usertype EQ 8>
 
     <cfquery name="companyname" datasource="#application.dsn#">
         select businessname
         from smg_users
-        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.parentcompany#">
+        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentcompany#">
     </cfquery>
 
 	<table cellpadding=2 cellspacing=4 width=100% bgcolor="##ffffff" class="section">
@@ -435,7 +529,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 			<cfquery name="intagent_messages" datasource="#application.dsn#">
                 select *
                 from smg_intagent_messages
-                where parentcompany = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.parentcompany#">
+                where parentcompany = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentcompany#">
                 and expires > #now()#
                 and startdate < #now()#
 			</cfquery>
@@ -484,17 +578,6 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
             </cfif>
 			</td>
 			<td valign="top">
-				<cfquery name="help_desk_user" datasource="#application.dsn#">
-					SELECT helpdeskid, title, category, section, priority, text, status, date, submitid, assignid,
-						submit.firstname as submit_firstname, submit.lastname as submit_lastname,
-						assign.firstname as assign_firstname, assign.lastname as assign_lastname
-					FROM smg_help_desk
-					LEFT JOIN smg_users submit ON smg_help_desk.submitid = submit.userid
-					LEFT JOIN smg_users assign ON smg_help_desk.assignid = assign.userid 
-					WHERE submitid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                    and status != 'closed'
-					ORDER BY status, date
-				</cfquery>
 				<table cellpadding=4 cellspacing=0 border=0>
 					<tr>
                     	<td>&nbsp;</td>
@@ -502,7 +585,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                         <td>Title</td>
                         <td>Status</td>
                     </tr>
-					<cfif help_desk_user.recordcount is not 0>
+					<cfif help_desk_user.recordcount>
                         <cfloop query="help_desk_user">
                             <tr bgcolor="#iif(help_desk_user.currentrow MOD 2 ,DE("eeeeee") ,DE("white") )#">
                                 <td><a href="index.cfm?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">View</a></td>
@@ -520,7 +603,8 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 		<tr><td>&nbsp;</td></tr>
 	</table>
 
-<cfelseif client.usertype EQ 11>
+<!--- Intl Branch --->
+<cfelseif CLIENT.usertype EQ 11>
   
 		<table cellpadding=2 cellspacing=4 width=100% bgcolor="##ffffff" class="section">
 		<tr>
@@ -528,17 +612,6 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 		</tr>
 		<tr>
 			<td valign="top">
-				<cfquery name="help_desk_user" datasource="#application.dsn#">
-					SELECT helpdeskid, title, category, section, priority, text, status, date, submitid, assignid,
-						submit.firstname as submit_firstname, submit.lastname as submit_lastname,
-						assign.firstname as assign_firstname, assign.lastname as assign_lastname
-					FROM smg_help_desk
-					LEFT JOIN smg_users submit ON smg_help_desk.submitid = submit.userid
-					LEFT JOIN smg_users assign ON smg_help_desk.assignid = assign.userid 
-					WHERE submitid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-					and status != 'closed'
-					ORDER BY status, date
-				</cfquery>
 				<table cellpadding=4 cellspacing =0 border=0>
 					<tr><td>Submitted</td><td>Title</td><td>Status</td></Tr>
 					<cfif help_desk_user.recordcount NEQ 0>
