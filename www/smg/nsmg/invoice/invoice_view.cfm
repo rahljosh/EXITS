@@ -306,38 +306,52 @@ select *,
                 <span class="style3">Account: 745938175</span><br>
                 SWIFT code: CHASUS33<br>
                 
-                <cfelse>
-                    <cfswitch expression="#invoice_info.testCompId#">
-                        <cfcase value="8">
-                            <span class="style3">CSB International</span><br>
-                            JPMorgan Chase<br>
-                            595 Sunrise Highway<br>
-                            West Babylon, NY 11704<br>
-                            ABA/Routing: 021000021<br>
-                            <span class="style3">Account: 745938175</span><br>
-                            SWIFT code: CHASUS33<br>            
-                        </cfcase>
-						
-                        <cfcase value="10">
-                            <span class="style3">Cultural Academic Student Exchange</span><br>
-                            Chase Bank<br>
-                            Red Bank, NJ 07701<br>
-                            <br>
-                            ABA/Routing: 021202337<br>
-                            <span class="style3">Account: 747523579</span><br>
-                            SWIFT## : CHASUS33<br>            
-                        </cfcase>
-                        
-                        <cfdefaultcase>
-                            Student Management Group<br>
-                            JPMorgan Chase<br>
-                            403 N. Little E. Neck Rd.<br>
-                            West Babylon, NY 11704<br>
-                            ABA/Routing: 021000021<br>
-                            Account: 773701750<br>
-                            SWIFT code: CHASUS33<br>
-                        </cfdefaultcase>
-                    </cfswitch>  
+      <cfelse>
+          <cfswitch expression="#invoice_info.testCompId#">
+              <cfcase value="8">
+                  <span class="style3">CSB International</span><br>
+                  JPMorgan Chase<br>
+                  595 Sunrise Highway<br>
+                  West Babylon, NY 11704<br>
+                  ABA/Routing: 021000021<br>
+                  <span class="style3">Account: 745938175</span><br>
+                  SWIFT code: CHASUS33<br>            
+              </cfcase>
+              
+              <cfcase value="10">
+                  <span class="style3">Cultural Academic Student Exchange</span><br>
+                  Chase Bank<br>
+                  Red Bank, NJ 07701<br>
+                  <br>
+                  ABA/Routing: 021202337<br>
+                  <span class="style3">Account: 747523579</span><br>
+                  SWIFT## : CHASUS33<br>            
+              </cfcase>
+              
+              <cfdefaultcase>
+                  <span class="style3">
+                      Please note our new bank information <br />  <br />               
+                      International Student Exchange<br>
+                      Chase Bank<br>
+                      595 Sunrise Highway<br>
+                      West Babylon, NY 11704<br>
+                      ABA/Routing: 021000021<br>
+                      Account: 773701875<br>
+                      SWIFT code: CHASUS33<br>      
+                  </span>            
+                  
+                  <!--- SMG ACCOUNT INFO --->
+                  <!---
+                  Student Management Group<br>
+                  JPMorgan Chase<br>
+                  403 N. Little E. Neck Rd.<br>
+                  West Babylon, NY 11704<br>
+                  ABA/Routing: 021000021<br>
+                  Account: 773701750<br>
+                  SWIFT code: CHASUS33<br>
+				  --->
+              </cfdefaultcase>
+          </cfswitch>  
         </cfif>
 	</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
