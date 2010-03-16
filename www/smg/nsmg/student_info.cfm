@@ -353,15 +353,18 @@
 										<tr><td width="80">Date of Entry : </td><td>#DateFormat(dateapplication, 'mm/dd/yyyy')# </td></tr>
 										<tr><td><cfif randid EQ 0>Entered by : <cfelse>Approved by : </cfif> </td><td><cfif qEnteredBy.recordcount NEQ 0>#qEnteredBy.firstname# #qEnteredBy.lastname# (###qEnteredBy.userid#)<cfelse>n/a</cfif></td></tr>										
 										
-										<cfif CLIENT.usertype EQ 1 OR ListFind(8731,11245, CLIENT.userid)> <!--- Pat and Bill --->
+										<cfif CLIENT.usertype EQ 1 OR ListFind("8731,11245", CLIENT.userid)> <!--- Pat and Bill --->
                                         <tr>
-											<td>Division:</td><td><cfif FORM.edit EQ 'no'>#qAssignedCompany.team_id# <cfelse>
-											<select name="team_id">
-											<cfloop query="qAvailableTeams">
-											<option value="#companyid#" <cfif CLIENT.companyid eq companyid>selected</cfif>>#team_id#</option>
-											</cfloop>
-                                            </select>
-											<br>*You will need to re-assign regions after updating.
+											<td>Division:</td><td>
+											<cfif FORM.edit EQ 'no'>
+                                            	#qAssignedCompany.team_id# 
+                                            <cfelse>
+                                                <select name="team_id">
+                                                <cfloop query="qAvailableTeams">
+                                                <option value="#companyid#" <cfif CLIENT.companyid eq companyid>selected</cfif>>#team_id#</option>
+                                                </cfloop>
+                                                </select>
+                                                <br>*You will need to re-assign regions after updating.
 											</cfif>
 										</tr>
                                         </cfif>
