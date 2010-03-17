@@ -2,7 +2,7 @@
 	name="smg" 
     clientmanagement="yes">
 
-	<cfparam name="APPLICATION.dsn" default="MySQL">
+	<cfparam name="APPLICATION.DSN" default="MySQL">
 
 	<!--- Added by Marcus Melo 10/13/2009 --->
 
@@ -17,7 +17,8 @@
     <cfparam name="CLIENT.regionID" default="0">  
 	<cfparam name="CLIENT.name" default=""> 
     <cfparam name="CLIENT.userType" default="0">   
-    <cfparam name="CLIENT.companyName" default="">  
+    <cfparam name="CLIENT.companyName" default=""> 
+    <cfparam name="CLIENT.companyShort" default=""> 
     <cfparam name="CLIENT.parentCompany" default="">   
     <cfparam name="CLIENT.company_submitting" default="">  
     <cfparam name="CLIENT.lastLogin" default="">  
@@ -84,6 +85,11 @@
 		// Store the initialized User object in the Application scope
 		AppCFC.User = CreateCFC("user").Init();
 
+
+		if (APPLICATION.IsServerLocal) {
+			// Store the initialized webEx object in the Application scope
+			// AppCFC.WebEx = CreateCFC("webEx").Init();
+		}
 
 		/***** Create APPLICATION.EMAIL structure *****/
 		APPLICATION.EMAIL = StructNew();		
