@@ -22,7 +22,7 @@
 
     <!--- Sort Feature --->
     <cfparam name="URL.sortBy" default="app_sent_student">
-    <cfparam name="URL.sortOrder" default="ASC">
+    <cfparam name="URL.sortOrder" default="DESC">
 
 	<cfscript>
         // make sure we have a valid sortOrder value
