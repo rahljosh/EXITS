@@ -68,7 +68,7 @@
     	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     <cfelse>
     AND
-    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes">
+    	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
     </cfif>
 
 	ORDER BY 
