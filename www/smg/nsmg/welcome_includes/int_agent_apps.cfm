@@ -35,24 +35,37 @@
 					<td align="center">	
 						<!----Application has been sent, but student hasn't logged in.---->
                         <cfquery name="apps" datasource="#application.dsn#">
-                            SELECT COUNT(*) AS count
-                            from smg_students
-                            where intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                            SELECT 
+                            	COUNT(*) AS count
+                            FROM
+                            	smg_students
+                            WHERE
+                            	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+							
 							<!--- RANDID = TO IDENTIFY ONLINE APPS --->
-                            AND (randid != 0 or soid != 0)
-                            <cfif i eq 9>
-                                AND active = 0
-                            <cfelse>
-                                AND active = 1
-                            </cfif>	
-							<!--- INCLUDE BRANCH STUDENTS TO ACTIVE KIDS --->
-                            AND (
-                            	app_current_status = #i#
-								<cfif i EQ 2>
-                                	OR app_current_status = 3 OR app_current_status = 4
-                                </cfif>
-                            )
+                            AND 
+                            	(
+                                	randid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                                 OR
+                                 	soid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                                 )
+                                 
+							<cfif NOT ListFind("4,6,9", i)>
+                                AND 
+                                    active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            </cfif>
+    
+                            <!--- Display Branch Applications (3/4) in the Active list --->
+                            <cfif CLIENT.usertype NEQ 11 AND i EQ 2>
+                                AND 
+                                    app_current_status IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#i#,3,4" list="yes"> )
+                            <!--- Display Current Status --->
+                            <cfelse>            
+                                AND 
+                                    app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
+                            </cfif>
                         </cfquery>
+                        
                         <cfoutput><a href="index.cfm?curdoc=student_app/student_app_list&status=#i#">#apps.count#</a></cfoutput>
 					</td>
 				</cfloop>
