@@ -117,12 +117,11 @@
                 	s.branchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
             </cfif>
             
-            <!---
+            <!--- Filter for WEP Site --->
             <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyID)>
             	AND 
 	                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
             </cfif>			
-			--->
            
             AND 
             	(
