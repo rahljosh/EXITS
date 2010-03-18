@@ -3,7 +3,7 @@
 	File:		student_app_list.cfm
 	Author:		Marcus Melo
 	Date:		March 17, 2010
-	Desc:		Project Help Index
+	Desc:		Student Application List
 
 	Updated:	03/17/2010 - Group Applications by Season for Intl. Representatives	
 
@@ -122,17 +122,16 @@
             	AND 
 	                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
             </cfif>			
-           
-            AND 
-            	(
-                	app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.status#"> 
-					<cfif CLIENT.usertype NEQ 11 AND URL.status EQ 2> 
-                    OR 
-                        app_current_status = <cfqueryparam cfsqltype="cf_sql_bit" value="3">
-                    OR 
-                        app_current_status = <cfqueryparam cfsqltype="cf_sql_bit" value="4"> 
-                    </cfif> 
-                )
+
+			<!--- Display Branch Applications (3/4) in the Active list --->
+			<cfif CLIENT.usertype NEQ 11 AND URL.status EQ 2>
+                AND 
+                    s.app_current_status IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.status#,3,4" list="yes"> )
+            <!--- Display Current Status --->
+            <cfelse>            
+                AND 
+                    s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.status#"> 
+            </cfif>
 
         ORDER BY 
         	
@@ -185,15 +184,6 @@
     </cfquery>
 
 </cfsilent>    
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-	<meta http-EQuiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link rel="stylesheet" type="text/css" href="smg.css">
-	<title>EXITS Online Application List</title>
-</head>
-<body>
 
 <script language="JavaScript" type="text/JavaScript">
 	<!--
@@ -628,6 +618,3 @@
 
 <!--- Include Table Footer --->
 <gui:tableFooter />
-
-</body>
-</html>
