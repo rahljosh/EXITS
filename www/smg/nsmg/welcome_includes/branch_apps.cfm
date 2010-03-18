@@ -20,10 +20,10 @@
 		<td style="line-height:20px;" valign="top" width="100%">
 		<table width=100% valign="top" border=0>
 			<tr class="style1">
-				<th colspan="2" align="center" bgcolor="#E2E2E2">Student</th>
-				<th colspan="2" align="center" bgcolor="#CCCCCC">Branch</th>
-				<th colspan="2" align="center" bgcolor="#CCCCCC">Main Office</th>
-				<th colspan="5" align="center" bgcolor="#B0B0B0">SMG</th>
+				<th colspan="2" align="center" bgcolor="#fef3b9">Student</th>
+				<th colspan="2" align="center" bgcolor="#fcd3a3">Branch</th>
+				<th colspan="2" align="center" bgcolor="#bed0fc">Main Office</th>
+				<th colspan="5" align="center" bgcolor="#bde2ac">SMG</th>
 			</tr>			
 			<tr class="style1">
 				<th valign="top">Issued</th>
@@ -43,16 +43,28 @@
 				<td align="center">	
 					<!----Application has been sent, but student hasn't logged in.---->
                     <cfquery name="apps" datasource="#application.dsn#">
-                        SELECT COUNT(*) AS count 
-                        FROM smg_students
-                        WHERE branchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-						<cfif not listFind("4,6,9", i)>
-                        	AND active = 1
+                        SELECT 
+                        	COUNT(*) AS count 
+                        FROM 
+                        	smg_students
+                        WHERE 
+                        	branchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                            
+						<!--- RANDID = TO IDENTIFY ONLINE APPS --->
+                        AND    
+                            randid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+
+						<!--- Display Current Status --->
+                        AND 
+                            app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
+                            
+						<!--- Do not get active reps if viewing a rejected status --->     
+                        <cfif NOT ListFind("4,6,9", i)>
+                            AND 
+                                active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                         </cfif>
-                        AND randid != 0
-                        AND app_current_status = #i#
                     </cfquery>
-                    <!--- RANDID = TO IDENTIFY ONLINE APPS --->
+                    
                     <cfoutput><a href="index.cfm?curdoc=student_app/student_app_list&status=#i#">#apps.count#</a></cfoutput>
 				</td>
 			</cfloop>

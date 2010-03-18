@@ -14,17 +14,17 @@
 		<td style="line-height:20px;" valign="top" width="100%">
 			<table width=100% valign="top" border=0>
 				<tr>
-					<th colspan="3" align="center" bgcolor="#E2E2E2">Waiting on Student</th>
-					<th colspan="2" align="center" bgcolor="#CCCCCC">Waiting on Agent</th>
-					<th colspan="5" align="center" bgcolor="#999999">Waiting on SMG</th>
+					<th colspan="3" align="center" bgcolor="#fef3b9">Waiting on Student</th>
+					<th colspan="2" align="center" bgcolor="#bed0fc">Waiting on Intl. Rep.</th> 
+					<th colspan="5" align="center" bgcolor="#bde2ac">Waiting on SMG</th>
 				</tr>
 				<tr>
 					<th valign="top">Issued</th>
-					<th valign="top">Active</th>
+					<th valign="top">Active</th>					
 					<th valign="top">Future</th>
-					<th valign="top">Apps to Approve</th>
+                    <th valign="top">Apps to Approve</th>
 					<th valign="top">Apps you Denied</th>
-					<th valign="top">Submitted</th> 
+                    <th valign="top">Submitted</th> 					
 					<th valign="top">Received</th>
 					<th valign="top">Denied</th>
 					<th valign="top">Hold</th>
@@ -50,6 +50,7 @@
                                  	soid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                                  )
                                  
+                            <!--- Do not get active reps if viewing a rejected status --->     
 							<cfif NOT ListFind("4,6,9", i)>
                                 AND 
                                     active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
@@ -70,7 +71,10 @@
 					</td>
 				</cfloop>
 				</tr>
-				<tr><td colspan=2 align="right">Apps you are entering can be found here </td><td><img src="pics/arrow_rt.gif"></td></tr>
+				<tr>
+                	<td colspan="3" align="right">Apps you are entering can be found here </td>
+                	<td><img src="pics/arrow_rt.gif" align="middle"></td>
+                </tr>
 				<tr><td colspan=10 align="center">
                 	
 					<!--- Do Not Display Start Application Process for Bellnor - This agent is now a branch of Troika --->
