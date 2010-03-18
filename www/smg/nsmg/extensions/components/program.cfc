@@ -86,8 +86,10 @@
                 </cfif>
 
 				<cfif VAL(ARGUMENTS.dateActive)>
-                	AND
+                	<!---
+                    AND
                     	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+					--->
                     AND
                     	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                 </cfif>

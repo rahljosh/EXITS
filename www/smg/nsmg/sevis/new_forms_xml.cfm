@@ -1,11 +1,11 @@
 <!-- get company info -->
-<cfquery name="qGetCompany" datasource="MySql">
-	SELECT 
-    	*
-	FROM 
-    	smg_companies
-	WHERE
-    	companyid = '#client.companyid#'
+<cfquery name="qGetCompany" datasource="MySQL">
+    SELECT 
+        *
+    FROM 
+        smg_companies
+    WHERE 
+        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
 
 <cfquery name="qGetStudents" datasource="MySql"> 
@@ -41,8 +41,8 @@
         sc.city as schoolcity,
         sc.state as schoolstate, 
         sc.zip as schoolzip,
-        p.startdate, 
-        p.enddate, 
+        p.sevis_startdate, 
+        p.sevis_enddate, 
         p.preayp_date, 
         p.type as programtype,
         u.businessname
@@ -78,14 +78,18 @@
     	s.sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
     AND 
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+    AND
+        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
+	<!---
 	<cfif CLIENT.companyID EQ 10>
     AND
         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     <cfelse>
     AND
-        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes">
+        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
     </cfif>
+	--->
 
 	ORDER BY 
     	u.businessname, 
@@ -129,13 +133,13 @@
     	smg_sevis
 </cfquery>
 
-<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#qGetCompany.companyshort#)>
+<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#qGetCompany.companyshort_nocolor#)>
 <!--- Batch id has to be numeric in nature A through Z a through z 0 through 9  --->
 
 <cfoutput>
 
 <table align="center" width="100%" frame="box">
-	<th colspan="2">#qGetCompany.companyshort# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</th>
+	<th colspan="5">#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</th>
 	<tr>
 		<td>Record</td>
         <td>Company</td>
@@ -149,19 +153,19 @@
         <td>#businessname#</td>
         <td>#firstname# #familylastname# (#studentid#)</td>
 		<td>
-			<cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(startdate, 'mm/dd/yyyy')> 
+			<cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(sevis_startdate, 'mm/dd/yyyy')> 
                 #DateFormat(now()+1, 'yyyy-mm-dd')#
-                <cfset nstart_date = #DateFormat(now()+1, 'yyyy-mm-dd')#>
+                <cfset nstart_date = DateFormat(now()+1, 'yyyy-mm-dd')>
             <cfelse>
-                <cfif DateDiff('yyyy', dob, startdate) LT 15>
+                <cfif DateDiff('yyyy', dob, sevis_startdate) LT 15>
                     #dateformat (now(), 'yyyy')#-#dateformat (dob, 'mm-dd')#
                     <cfset nstart_date = '#dateformat (now(), 'yyyy')#-#dateformat (dob, 'mm-dd')#'>
                 <cfelseif ayporientation NEQ '0' OR aypenglish NEQ '0'>
                     #dateformat (preayp_date, 'yyyy-mm-dd')#
                     <cfset nstart_date = dateformat (preayp_date, 'yyyy-mm-dd')>
                 <cfelse>
-                    #DateFormat(startdate, 'yyyy-mm-dd')#
-                    <cfset nstart_date = DateFormat(startdate, 'yyyy-mm-dd')>
+                    #DateFormat(sevis_startdate, 'yyyy-mm-dd')#
+                    <cfset nstart_date = DateFormat(sevis_startdate, 'yyyy-mm-dd')>
                 </cfif>
             </cfif>
 		</td>
@@ -191,7 +195,7 @@
 END OF DISPLAY
 
 <!--- <BatchID>#qGetCompany.iap_auth#_#add_zeros##get_batchid.batchid#</BatchID> --->
-<!--- <BatchID>#qGetCompany.companyshort#<cfloop index = "ZeroCount" from = "1" to = #qtd_zeros#>0</cfloop>#get_batchid.batchid#</BatchID>  --->
+<!--- <BatchID>#qGetCompany.companyshort_nocolor#<cfloop index = "ZeroCount" from = "1" to = #qtd_zeros#>0</cfloop>#get_batchid.batchid#</BatchID>  --->
 
 <!-- Create an XML document object containing the data -->
 
@@ -203,7 +207,7 @@ END OF DISPLAY
 	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/Create-UpdateExchangeVisitor.xsd"
 	userID='#qGetCompany.sevis_userid#'>
 <BatchHeader>
-	<BatchID>#qGetCompany.companyshort#-<cfloop index = "ZeroCount" from="1" to="#add_zeros#">0</cfloop>#get_batchid.batchid#</BatchID>
+	<BatchID>#qGetCompany.companyshort_nocolor#-<cfloop index = "ZeroCount" from="1" to="#add_zeros#">0</cfloop>#get_batchid.batchid#</BatchID>
 	<OrgID>#qGetCompany.iap_auth#</OrgID> 
 </BatchHeader>
 <CreateEV>
@@ -217,7 +221,7 @@ END OF DISPLAY
 			<cfif LEN(middlename)><MiddleName>#middlename#</MiddleName></cfif>			
 		</FullName>
 		<BirthDate>#DateFormat(dob, 'yyyy-mm-dd')#</BirthDate> 
-		<Gender><cfif sex is 'male'>M</cfif><cfif sex is 'female'>F</cfif></Gender> 
+		<Gender><cfif sex is 'male'>M<cfelseif sex is 'female'>F</cfif></Gender> 
 		<BirthCity>#citybirth#</BirthCity> 
 		<BirthCountryCode>#birthseviscode#</BirthCountryCode> 
 		<CitizenshipCountryCode>#citizenseviscode#</CitizenshipCountryCode> 
@@ -225,23 +229,23 @@ END OF DISPLAY
 	</Biographical>
 	<PositionCode>223</PositionCode> 
 	<PrgStartDate>
-		<cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(startdate, 'mm/dd/yyyy')> 
+		<cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(sevis_startdate, 'mm/dd/yyyy')> 
         	#DateFormat(now()+1, 'yyyy-mm-dd')#
 			<cfset nstart_date = DateFormat(now()+1, 'yyyy-mm-dd')>
         <cfelse>
-			<cfif DateDiff('yyyy', dob, startdate) LT 15>
+			<cfif DateDiff('yyyy', dob, sevis_startdate) LT 15>
             	#dateformat (now(), 'yyyy')#-#dateformat (dob, 'mm-dd')#
 				<cfset nstart_date = '#dateformat (now(), 'yyyy')#-#dateformat (dob, 'mm-dd')#'>
 			<cfelseif ayporientation NEQ '0' OR aypenglish NEQ '0'>
 				#dateformat (preayp_date, 'yyyy-mm-dd')#
 				<cfset nstart_date = dateformat (preayp_date, 'yyyy-mm-dd')>
             <cfelse>
-                #DateFormat(startdate, 'yyyy-mm-dd')#
-                <cfset nstart_date = DateFormat(startdate, 'yyyy-mm-dd')>
+                #DateFormat(sevis_startdate, 'yyyy-mm-dd')#
+                <cfset nstart_date = DateFormat(sevis_startdate, 'yyyy-mm-dd')>
 			</cfif>
 		</cfif>
     </PrgStartDate>  
-	<PrgEndDate>#DateFormat(enddate, 'yyyy-mm-dd')#</PrgEndDate> <!--- <cfif programtype EQ '3'>2010-06-30<cfelse>#DateFormat(enddate, 'yyyy-mm-dd')#</cfif> <!--- type = 3 first semester ---> --->
+	<PrgEndDate>#DateFormat(sevis_enddate, 'yyyy-mm-dd')#</PrgEndDate> <!--- <cfif programtype EQ '3'>2010-06-30<cfelse>#DateFormat(sevis_enddate, 'yyyy-mm-dd')#</cfif> <!--- type = 3 first semester ---> --->
 	<CategoryCode>1A</CategoryCode>
 	<SubjectField>
 		<SubjectFieldCode>53.0299</SubjectFieldCode> 
@@ -292,7 +296,7 @@ END OF DISPLAY
             UPDATE smg_students SET sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_batchid.batchid#"> WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
         </cfquery><cfquery name="insert_history" datasource="MySql">
             INSERT INTO smg_sevis_history (studentid, batchid, hostid, school_name, start_date, end_date)
-            VALUES (#studentid#,#get_batchid.batchid#,#hostid#, <cfif VAL(schoolid) AND host_fam_approved LT 5>'#schoolname#'<cfelse>'#qGetCompany.companyname#'</cfif>, #CreateODBCDate(nstart_date)#, #CreateODBCDate(enddate)# <!---<cfif programtype EQ '3'>'2010-06-30'<cfelse>#CreateODBCDate(enddate)#</cfif>--->)
+            VALUES (#studentid#,#get_batchid.batchid#,#hostid#, <cfif VAL(schoolid) AND host_fam_approved LT 5>'#schoolname#'<cfelse>'#qGetCompany.companyname#'</cfif>, #CreateODBCDate(nstart_date)#, #CreateODBCDate(sevis_enddate)# <!---<cfif programtype EQ '3'>'2010-06-30'<cfelse>#CreateODBCDate(sevis_enddate)#</cfif>--->)
         </cfquery>
 	</cfloop>
 </CreateEV>
@@ -301,10 +305,10 @@ END OF DISPLAY
 
 <!-- dump the resulting XML document object -->
 
-<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#qGetCompany.companyshort#/new_forms/#qGetCompany.companyshort#_new_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#qGetCompany.companyshort_nocolor#/new_forms/#qGetCompany.companyshort_nocolor#_new_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
-	<th>#qGetCompany.companyshort# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</th>
+	<th>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</th>
 	<th>BATCH CREATED.</th>
 </table>
 

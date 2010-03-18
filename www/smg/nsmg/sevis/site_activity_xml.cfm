@@ -1,7 +1,7 @@
 <cfsetting requesttimeout="300">
 
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySQL">
+<cfquery name="qGetCompany" datasource="MySQL">
     SELECT 
         companyID,
         companyName,
@@ -78,7 +78,7 @@
         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     <cfelse>
     AND
-        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes">
+        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
     </cfif>
    
 	ORDER BY 	    
@@ -96,7 +96,7 @@
 
 <cfquery name="insert_batchid" datasource="MySqL">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
-	VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#', 'school_update')
+	VALUES ('#qGetCompany.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#', 'school_update')
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
@@ -105,11 +105,11 @@
 	FROM smg_sevis
 </cfquery> 
 
-<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#get_company.companyshort_nocolor#)>
+<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#qGetCompany.companyshort_nocolor#)>
 <!--- Batch id has to be numeric in nature A through Z a through z 0 through 9  --->
 
 <table align="center" width="100%" frame="box">
-<th colspan="2"><cfoutput>#get_company.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</cfoutput></th>
+<th colspan="2"><cfoutput>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</cfoutput></th>
 <cfoutput query="get_students">
 <tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 	<td width="35%">#businessname#</td><td width="65%">#firstname# #familylastname# (#studentid#)</td>
@@ -131,17 +131,17 @@
 	xmlns:table="http://www.ice.gov/xmlschema/sevisbatch/alpha/SEVISTable.xsd" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/alpha/Create-UpdateExchangeVisitor.xsd"
-	userID='#get_company.sevis_userid#'>
+	userID='#qGetCompany.sevis_userid#'>
 	<BatchHeader>
-		<BatchID>#get_company.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#get_batchid.batchid#</BatchID>
-		<OrgID>#get_company.iap_auth#</OrgID> 
+		<BatchID>#qGetCompany.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#get_batchid.batchid#</BatchID>
+		<OrgID>#qGetCompany.iap_auth#</OrgID> 
 	</BatchHeader>
 	<UpdateEV>
 	<cfloop query="get_students">
 		<cfquery name="get_previous_info" datasource="MySql">
 			SELECT historyid, school_name, hostid, start_date, end_date FROM smg_sevis_history  WHERE studentid = '#get_students.studentid#' ORDER BY historyid DESC
 		</cfquery>
-		<ExchangeVisitor sevisID="#get_students.ds2019_no#" requestID="#get_students.studentid#" userID="#get_company.sevis_userid#">
+		<ExchangeVisitor sevisID="#get_students.ds2019_no#" requestID="#get_students.studentid#" userID="#qGetCompany.sevis_userid#">
 			<SiteOfActivity>
 				<Edit printForm="false">
 					<Address1>#schooladdress#</Address1> 
@@ -168,10 +168,10 @@
 
 <cfoutput>
 
-<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/school/#get_company.companyshort_nocolor#_school_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#qGetCompany.companyshort_nocolor#/school/#qGetCompany.companyshort_nocolor#_school_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
-	<th>#get_company.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
+	<th>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
 	<th>BATCH CREATED.</th>
 </table>
 
