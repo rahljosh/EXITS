@@ -106,7 +106,7 @@
 			<!--- Intl. Rep / EF Central Office --->
             <cfif LEN(URL.ef) AND CLIENT.usertype EQ 8>
                 AND 
-                	office.master_accountid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                	u.master_accountid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                 AND 
                 	u.userid != <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
             <cfelseif CLIENT.usertype EQ 8>

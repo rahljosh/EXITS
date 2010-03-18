@@ -16,8 +16,8 @@
 			<table width=100% valign="top" border=0>
 			<tr>
 				<th></th>
-				<th colspan="4" align="center" bgcolor="#CCCCCC">Waiting on Agent</th>
-				<th colspan="5" align="center" bgcolor="#999999">Waiting on SMG</th>
+				<th colspan="4" align="center" bgcolor="#bed0fc">Waiting on Intl. Rep.</th>
+				<th colspan="5" align="center" bgcolor="#bde2ac">Waiting on SMG</th>
 			</tr>
 			<tr>
 				<th></th>
@@ -37,24 +37,45 @@
 					<td align="center">	
 						<!----Application has been sent, but student hasn't logged in.---->
                         <cfquery name="apps" datasource="#application.dsn#">
-                            SELECT COUNT(*) AS count
-                            FROM smg_students s
-                            INNER JOIN smg_users office ON s.intrep = office.userid
-                            WHERE s.randid != 0
-                            AND s.active = 1
-                            AND office.master_accountid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                            AND s.intrep != <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                            <!--- INCLUDE BRANCH STUDENTS TO ACTIVE KIDS --->
-                            AND (
-                                s.app_current_status = #i#
-                                <cfif i EQ 2>
-                                    OR s.app_current_status = 3 OR s.app_current_status = 4
-                                </cfif>
-                                <cfif i EQ 7>
-                                    OR s.app_current_status = 8
-                                </cfif>
-                            )
+                            SELECT 
+                            	COUNT(*) AS count
+                            FROM
+                            	smg_students s
+                            INNER JOIN 
+                            	smg_users office ON s.intrep = office.userid
+							
+                            <!--- EF Applications --->
+                            AND 
+                            	office.master_accountid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+
+                            AND 
+                            	s.intrep != <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                            
+							<!--- RANDID = TO IDENTIFY ONLINE APPS --->
+                            AND 
+                            	(
+                                	s.randid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                                 OR
+                                 	s.soid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                                 )
+
+                            <!--- Do not get active reps if viewing a rejected status --->     
+							<cfif NOT ListFind("4,6,9", i)>
+                                AND 
+                                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            </cfif>
+                            
+                            <!--- Display Branch Applications (3/4) in the Active list --->
+                            <cfif CLIENT.usertype NEQ 11 AND i EQ 2>
+                                AND 
+                                    s.app_current_status IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#i#,3,4" list="yes"> )
+                            <!--- Display Current Status --->
+                            <cfelse>            
+                                AND 
+                                    s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
+                            </cfif>
                         </cfquery>
+                        
                         <!--- RANDID = TO IDENTIFY ONLINE APPS --->
                         <cfoutput><a href="index.cfm?curdoc=student_app/student_app_list&status=#i#&ef=central">#apps.count#</a></cfoutput>
 					</td>
