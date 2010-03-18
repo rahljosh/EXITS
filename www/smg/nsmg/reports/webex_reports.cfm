@@ -12,7 +12,7 @@
 		Errors.Messages = ArrayNew(1);
 	
 		// Get Regions
-		qGetRegions = APPCFC.REGION.getUserRegions(companyID=CLIENT.companyID, userType=CLIENT.userType);
+		qGetRegions = APPCFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, userType=CLIENT.userType);
 	
     	// FORM Submitted
 		if (FORM.submitted) {
@@ -24,7 +24,10 @@
                 ArrayAppend(Errors.Messages, "Please select at least one region.");			
             }
     	
-		}    
+		} 
+		
+		// Set Row Count
+		rowCount = 0;
     </cfscript>
 
 </cfsilent>
@@ -34,6 +37,32 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>EXITS - WebEx Report By Region</title>
+
+<style type="text/css">
+	table.report {
+		width:100%;
+		border-width: 1px;
+		border-spacing: 0px;
+		border-style: solid;
+		border-color: gray;
+		border-collapse: collapse;
+	}
+	table.report tr {
+		border-width: 1px;
+		padding: 5px;
+		border-style: solid;
+		border-color: gray;
+		-moz-border-radius: 0px 0px 0px 0px;
+	}
+	table.report td {
+		border-width: 1px;
+		padding: 5px;
+		border-style: solid;
+		border-color: gray;
+		-moz-border-radius: 0px 0px 0px 0px;
+	}
+</style>
+
 </head>
 
 <body>
@@ -46,7 +75,7 @@
 		qGetRegions = APPCFC.REGION.getRegionsByList(regionIDList=FORM.regionID, companyID=CLIENT.companyID);
 	</cfscript>
 
-    <table width="100%" cellpadding="6" cellspacing="0" align="center" frame="box">	
+    <table class="report" align="center">	
         <tr>
         	<th>WebEx Training Report</th>
         </tr>
@@ -64,8 +93,8 @@
             qGetResults = APPCFC.USER.reportTrainingByRegion(regionID=qGetRegions.regionID);
         </cfscript>
 
-        <table width="100%" cellpadding="6" cellspacing="0" align="center" frame="box">		
-            <tr>
+        <table class="report" align="center">
+            <tr bgcolor="#e2efc7">
             	<td><cfoutput><strong>#qGetRegions.regionname#</strong></td></cfoutput>
             </tr>
         </table>
@@ -78,9 +107,14 @@
         </table>
 
         <cfoutput query="qGetResults" group="userID">
-
-			<table width="100%" cellpadding="6" cellspacing="0" align="center" frame="box">	
-				<tr>
+        
+			<cfscript>
+                // Start Count (Grouped cfoutput has incorrect currentrow after inner cfoutput loop)
+                rowCount = rowCount + 1;
+            </cfscript>
+			           	
+			<table class="report" align="center">
+				<tr bgcolor="#iif(rowCount MOD 2 ,DE("ffffe6") ,DE("FFFFFF") )#">
                 	<td width="40%" valign="top">
 						#qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)
 					</td>
@@ -145,7 +179,9 @@
                                         <td>Region: </td>
                                         <td>
                                             <select name="regionID" multiple="multiple" size="6">
-                                                <option value="0">All</option>
+                                                <cfif CLIENT.userType LTE 4>
+	                                                <option value="0">All</option>
+                                                </cfif>
                                                 <cfloop query="qGetRegions">
                                                     <option value="#regionID#">#regionName#</option>
                                                 </cfloop>
