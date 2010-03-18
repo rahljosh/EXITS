@@ -38,6 +38,7 @@ window.location.href = URL;
 <tr><td colspan="2">All reports that can be run are listed below.  These reports are also linked to various other 
 	locations throughout the site.  If no reports are listed, there are no stand alone reports that you have access to.</td>
 </tr>
+
 <!--- OFFICE PEOPLE ONLY --->	
 <cfif client.usertype LTE 4>
 <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for Office Users</td></tr>
@@ -171,7 +172,7 @@ window.location.href = URL;
 	</tr>
 	<tr>
 		<td><a href="?curdoc=cbc/managers_menu">CBC Form Authorization Not Received</a></td>
-		<td></td>
+		<td><a href="?curdoc=reports/webex_reports">WebEx Reports</a></td>
 	</tr>	
 </cfif>
 
