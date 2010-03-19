@@ -546,7 +546,7 @@
 			<td><a href="#setURL('email')#" title="Sorty by Email"><strong>Email</strong></a></td>
             <td><strong>Login</strong></td>
             <td><strong>Future</strong></td>
-			<td><strong>App Received</strong></td>
+			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Received</strong></a></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
 			<td><strong>Cover Page</strong></td>
 			<td><strong>Confirm Receipt</strong></td>
@@ -589,7 +589,7 @@
 			<td><a href="#setURL('email')#" title="Sorty by Email"><strong>Email</strong></a></td>
 			<td><strong>Login</strong></td>
             <td><strong>Future</strong></td>
-			<td><strong>App Submitted</strong></td>
+			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Submitted</strong></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
 			<td><strong>Cover Page</strong></td>
 		</tr>
