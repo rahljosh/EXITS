@@ -140,7 +140,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #0
         <cfif invoice_check.agentid neq client.userid> 
             <table align="center" width="90%" frame="box">
                 <tr>
-                    <td valign="top"><img src="http://www.student-management.com/nsmg/pics/error.gif"></td>
+                    <td valign="top"><img src="https://www.student-management.com/nsmg/pics/error.gif"></td>
                     <td valign="top"><font color="##CC3300">You can only view your invoices. The invoice that you are trying to view is not yours.  <br>If you received this error from clicking directly on a link, contact the person who sent you the link.</td>
                 </tr>
             </table>
@@ -172,12 +172,12 @@ order by s.stuid, s.chargeid
     <Tr>
     	<td>
 			<cfif invoice_info.type IS 'trainee program'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-            <img src="http://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
+            <img src="https://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
             
             <cfelse>
                 <cfswitch expression="#invoice_info.testCompId#">
                     <cfcase value="8">
-                        <img src="http://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
+                        <img src="https://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
                     </cfcase>
                     
                     <cfcase value="10">
@@ -185,7 +185,7 @@ order by s.stuid, s.chargeid
                     </cfcase>
                     
                     <cfdefaultcase>
-						<img src="http://www.student-management.com/nsmg/pics/smg_banner.jpg" align="Center">
+						<img src="https://www.student-management.com/nsmg/pics/smg_banner.jpg" align="Center">
                     </cfdefaultcase>
                 </cfswitch>                        
             </cfif>                   
@@ -424,7 +424,7 @@ select *,
 <br>
 
 <!-----Invoice with Students---->
-		<div align="center"><img src="http://www.student-management.com/nsmg/pics/detach.jpg" ></div><br>
+		<div align="center"><img src="https://www.student-management.com/nsmg/pics/detach.jpg" ></div><br>
 		<table width=100% cellspacing=0 cellpadding=2 class=thin-border border=0> 
 			<tr bgcolor="CCCCCC" >
 				<td class="thin-border-right-bottom">
@@ -614,16 +614,16 @@ select *,
 				<td  rowspan=3 width=470>
 				<cfoutput>
 					<cfif invoice_info.type IS 'trainee program'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-       					<img src="http://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
+       					<img src="https://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
                         
                         <cfelse>
                             <cfswitch expression="#invoice_info.progType#">
                                 <cfcase value="7,8,9,11,22,23">
-                                    <img src="http://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
+                                    <img src="https://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
                                 </cfcase>
                                 
                                 <cfdefaultcase>
-                                    <img src="http://www.student-management.com/nsmg/pics/logos/#invoice_info.companyid#.gif" height="100"/>
+                                    <img src="https://www.student-management.com/nsmg/pics/logos/#invoice_info.companyid#.gif" height="100"/>
                                 </cfdefaultcase>
                             </cfswitch>                        
                         
