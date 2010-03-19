@@ -256,18 +256,24 @@ div.scrollAgent {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
 					<td width="24%"><a href="?curdoc=invoice/create_student_invoice&studentID=#studentID#&assignedid=#assignedid#">#businessname#</a></td>
 					<td width="24%"><a href="?curdoc=invoice/create_student_invoice&studentID=#studentID#&assignedid=#assignedid#">#firstname# #familylastname# (###studentID#)</a> <cfif school_acceptance NEQ ''>*Accepted*</cfif></td>
-						<cfif NOT VAL(programID)>
-                            <td colspan="6" align="center" bgcolor="##FFCCFF">Student has not been assigned to a program.</td>
-						<cfelseif NOT LEN(school_tuition)>
-							<td colspan="6" align="center" bgcolor="##9999FF">Tuition for this school has not been recorded.</td>
-                        <cfelse>
-						<td width="10%">#programname#</td>
-						<td width="10%" align="right">#LSCurrencyFOrmat(school_tuition, 'local')#</td>
-						<td width="10%" align="right">#LSCurrencyFormat(VAL(qStuTotalInvoiced.amount))#</td>
-						<td width="10%" align="right">#LSCurrencyFormat(VAL(qStuTotalReceived.amount_paid))#</td>
-						<td width="10%" align="right">#LSCurrencyFOrmat(balance_Due)#</td>
-						<td width="1%">&nbsp;</td>
-					</cfif>
+					
+					<cfif NOT VAL(programID)>
+                        <td align="center" bgcolor="##FFCCFF">Program Missing</td>
+                    <cfelse>
+                        <td width="10%">#programname#</td>
+                    </cfif>
+					
+					<cfif NOT LEN(school_tuition)>
+                        <td align="center" bgcolor="##9999FF">Tuition Missing</td>
+                   	<cfelse>
+                    	<td width="10%" align="right">#LSCurrencyFOrmat(school_tuition, 'local')#</td>                    
+                    </cfif>
+                    
+                    <td width="10%" align="right">#LSCurrencyFormat(VAL(qStuTotalInvoiced.amount))#</td>
+                    <td width="10%" align="right">#LSCurrencyFormat(VAL(qStuTotalReceived.amount_paid))#</td>
+                    <td width="10%" align="right">#LSCurrencyFOrmat(balance_Due)#</td>
+                    <td width="1%">&nbsp;</td>
+                    
 				</tr>
 			</cfloop>
 			</table>

@@ -65,7 +65,7 @@
 	<cfabort>
 </cfif>
 
-<cfmail from="#get_sender.email#" to="#invoice_info.php_contact_email#" bcc="#get_sender.email#" subject='PHP Invoice ###invoice_info.invoiceid# for #invoice_info.businessname#' type="html" failto="support@student-management.com">
+<cfmail from="#AppEmail.finance#" to="#invoice_info.php_contact_email#" bcc="#get_sender.email#" subject='PHP Invoice ###invoice_info.invoiceid# for #invoice_info.businessname#' type="html" failto="support@student-management.com">
 <style type="text/css">
 /*<![CDATA[*/
 	body {
