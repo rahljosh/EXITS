@@ -17,22 +17,21 @@
 	WHERE s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
 </cfquery>	
 
-<cfquery name="get_latest_date" datasource="MySQL">
-	SELECT id, date
-	FROM smg_student_app_status
-	WHERE studentid = <cfqueryparam value="#get_student.studentid#" cfsqltype="cf_sql_integer">
-	ORDER BY id DESC
-</cfquery>
-
-<cfquery name="get_status" datasource="MySQL">
-	SELECT status 
-	FROM smg_student_app_status
-	WHERE date = '#get_latest_date.date#' 
-		AND studentid = <cfqueryparam value="#get_student.studentid#" cfsqltype="cf_sql_integer">
+<cfquery name="qGetAppStatus" datasource="MySQL">
+	SELECT 
+    	id, 
+    	status,	
+	    date
+	FROM 
+    	smg_student_app_status
+	WHERE 
+    	studentid = <cfqueryparam value="#get_student.studentid#" cfsqltype="cf_sql_integer">
+	ORDER BY 
+    	id DESC
 </cfquery>
 
 <!--- Set application received - New Status 8 ---->
-<cfif get_student.recordcount EQ '1' AND get_student.app_current_status EQ '7' AND get_status.status EQ '7'>
+<cfif get_student.recordcount AND get_student.app_current_status EQ 7 AND qGetAppStatus.status EQ 7>
 
 	<cfquery name="application_received" datasource="MySQL">
 		INSERT INTO smg_student_app_status (studentid, status, date, approvedby)
@@ -46,15 +45,27 @@
 		
 	<!--- APPLICATION RECEIVED - SEND OUT NOTIFICATION --->
 	<cfinclude template="../app_received_email.cfm">
-		
-</cfif>
 
-<meta http-equiv="refresh" content="3;url=close_window.cfm">
-<body onLoad="opener.location.reload()"> 
-<table align="center" width="95%" bordercolor="e2efc7" frame="box" cellpadding="0" cellspacing="0">
-	<tr><td><img src="../pics/top-email.gif" border="0"></td></tr>
-	<tr><td align="center"><br />This application has been received and is now waiting to be approved. <br />This window should close automatically.</td></tr>
-	<tr><td bgcolor="e2efc7">&nbsp;</td></tr>
-</table>
-</body>
-</html>
+    <meta http-equiv="refresh" content="3;url=close_window.cfm">
+    <body onLoad="opener.location.reload()"> 
+    <table align="center" width="95%" bordercolor="e2efc7" frame="box" cellpadding="0" cellspacing="0">
+        <tr><td><img src="../pics/top-email.gif" border="0"></td></tr>
+        <tr><td align="center"><br />This application has been received and is now waiting to be approved. <br />This window should close automatically.</td></tr>
+        <tr><td bgcolor="e2efc7">&nbsp;</td></tr>
+    </table>
+    </body>
+    </html>
+
+<cfelse>
+
+    <meta http-equiv="refresh" content="3;url=close_window.cfm">
+    <body onLoad="opener.location.reload()"> 
+    <table align="center" width="95%" bordercolor="e2efc7" frame="box" cellpadding="0" cellspacing="0">
+        <tr><td><img src="../pics/top-email.gif" border="0"></td></tr>
+        <tr><td align="center"><br /><font color="#FF0000"> There was a problem receiving this application. Please try again.</td></tr>
+        <tr><td bgcolor="e2efc7">&nbsp;</td></tr>
+    </table>
+    </body>
+    </html>
+    
+</cfif>
