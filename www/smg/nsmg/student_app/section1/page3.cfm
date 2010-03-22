@@ -21,7 +21,7 @@
 	<cflocation url="?curdoc=section1/page3print&id=1&p=3" addtoken="no">
 </cfif>
 
-<script language="javascript">
+<script type="text/javascript">
 <!--
 function CheckLink()
 {
@@ -236,7 +236,7 @@ function NextPage() {
 		<td align="center" valign="bottom" class="buttontop">
 			<input name="Submit" type="image" src="pics/save.gif" border=0 alt="Save and reload this page" onClick="return CheckFields();"> 
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<input name="Submit" type="image" src="pics/save_continue.gif" border=0 alt="Save and go to next Page" onclick="return CheckFields();NextPage();">
+			<input name="Submit" type="image" src="pics/save_continue.gif" border=0 alt="Save and go to next Page" onclick="NextPage(); return CheckFields();">
 		</td>
 	</tr>
 </table>
