@@ -1,3 +1,11 @@
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<cfparam name="sd" default="son/daughter">
+	<cfparam name="hs" default="he/she">
+   	<cfparam name="hh" default="his/her">
+
+</cfsilent>
 
 <p>While the majority of students attend local public (tuition-free) high schools, the exchange
 organization does have a selected number of private Catholic, Christian, and non-sectarian high schools available.  Occasionally the teen-agers 

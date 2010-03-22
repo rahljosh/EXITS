@@ -1,3 +1,11 @@
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<cfparam name="sd" default="son/daughter">
+	<cfparam name="hs" default="he/she">
+   	<cfparam name="hh" default="his/her">
+
+</cfsilent>
 
 <cfoutput>
 In the City of <u>#get_student_info.city#</u>, country of <u>#get_student_info.countryname#</u>, on the <u>#DateFormat(now(),'d')#</u> day of <u>#DateFormat(now(), 'mmmm')#</u> in the year of <u>#dateformat(now(), 'yyyy')#</u>, I/We the undersigned parents of #get_student_info.firstname# #get_student_info.familylastname#
