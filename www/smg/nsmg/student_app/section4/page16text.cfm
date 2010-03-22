@@ -1,3 +1,12 @@
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<cfparam name="sd" default="son/daughter">
+	<cfparam name="hs" default="he/she">
+   	<cfparam name="hh" default="his/her">
+
+</cfsilent>
+
 <style>
 .cap{text-transform:capitalize;}
 </style>

@@ -21,15 +21,27 @@
 
 <cfset doc = 'page17'>
 
-<cfif get_student_info.sex is 'male'>
-	<cfset sd='son'>
-	<cfset hs='he'>
-	<cfset hh='his'>
-<cfelse>
-	<cfset sd='daughter'>
-	<cfset hs='she'>
-	<cfset hh='her'>
-</cfif>
+<cfswitch expression="#get_student_info.sex#">
+
+	<cfcase value="male">
+		<cfset sd='son'>
+        <cfset hs='he'>
+        <cfset hh='his'>
+    </cfcase>
+    
+    <cfcase value="female">
+		<cfset sd='daughter'>
+        <cfset hs='she'>
+        <cfset hh='her'>
+    </cfcase>
+    
+    <cfdefaultcase>
+		<cfset sd='son/daughter'>
+        <cfset hs='he/she'>
+        <cfset hh='his/her'>
+    </cfdefaultcase>
+
+</cfswitch>
 
 <cfoutput>
 
