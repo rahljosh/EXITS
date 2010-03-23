@@ -67,18 +67,15 @@
 </head>
 
 <cfquery name="getPrograms" datasource="MySQL">
-SELECT *
-FROM smg_programs
-WHERE active = 1
-AND (companyid = 1
-	OR companyid = 2
-    OR companyid = 3
-    OR companyid = 4
-    OR companyid = 7
-    OR companyid = 8
-    OR companyid = 9
-	OR companyid = 10)
-ORDER BY companyid, startdate DESC
+SELECT 
+	*
+FROM 
+	smg_programs
+WHERE
+	companyID IN ('1,2,3,4,7,8,9,10,12')
+ORDER BY 
+	companyid, 
+	startdate DESC
 </cfquery>
 
 <body>
@@ -91,14 +88,15 @@ ORDER BY companyid, startdate DESC
         <cfinput type="hidden" name="submitted">
     
         <select name="selectPrograms" multiple="multiple" size="30">
-            <option selected="selected">Select All</option>
+            <option value="All" selected="selected">Select All</option>
             <option value="0">Charges not related to a program</option>
             <cfoutput query="getPrograms">
                 <cfswitch expression="#companyid#">
-                    <cfcase value="1"><cfset compId = 'Red'></cfcase>
-                    <cfcase value="2"><cfset compId = 'Blue'></cfcase>
-                    <cfcase value="3"><cfset compId = 'Green'></cfcase>
-                    <cfcase value="4"><cfset compId = 'Yellow'></cfcase>
+                    <cfcase value="1"><cfset compId = 'WILLIAM'></cfcase>
+                    <cfcase value="2"><cfset compId = 'MARGARITA'></cfcase>
+                    <cfcase value="3"><cfset compId = 'DIANA'></cfcase>
+                    <cfcase value="4"><cfset compId = 'GARY'></cfcase>
+                    <cfcase value="12"><cfset compId = 'BRIAN'></cfcase>
                     <cfcase value="7"><cfset compId = 'Trainee'></cfcase>
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
@@ -127,26 +125,9 @@ FROM (
 SELECT sch.agentid, su.businessname, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
 FROM smg_charges sch
 LEFT JOIN smg_users su ON su.userid = sch.agentid
-<cfif form.selectPrograms IS NOT 'Select All'>
-    WHERE (
-    <cfloop list="#form.selectPrograms#" index="progId">
-        <cfif progId EQ 0>
-            sch.programid = 0
-            <cfelse>
-            sch.programid = #progId#
-        </cfif>
-        <cfif progId IS NOT #listLast(form.selectPrograms)#>
-            OR
-        </cfif>
-    </cfloop>)
-    <cfelse>
-        WHERE (sch.programid = 0 OR
-        <cfoutput query="getPrograms">
-            sch.programid = #getPrograms.programid#
-            <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                OR
-            </cfif>
-        </cfoutput>)	
+<cfif form.selectPrograms IS NOT 'All'>
+    WHERE 
+		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
 </cfif>
 GROUP BY agentid
 UNION ALL
@@ -154,26 +135,9 @@ SELECT sch.agentid, su.businessname, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) 
 FROM smg_payment_charges spc
 LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
 LEFT JOIN smg_users su ON su.userid = sch.agentid
-<cfif form.selectPrograms IS NOT 'Select All'>
-    WHERE (
-    <cfloop list="#form.selectPrograms#" index="progId">
-        <cfif progId EQ 0>
-            sch.programid = 0
-            <cfelse>
-            sch.programid = #progId#
-        </cfif>
-        <cfif progId IS NOT #listLast(form.selectPrograms)#>
-            OR
-        </cfif>
-    </cfloop>)
-    <cfelse>
-        WHERE (sch.programid = 0 OR
-        <cfoutput query="getPrograms">
-            sch.programid = #getPrograms.programid#
-            <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                OR
-            </cfif>
-        </cfoutput>)
+<cfif form.selectPrograms IS NOT 'All'>
+    WHERE 
+		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
 </cfif>
 GROUP BY sch.agentid
 UNION ALL
@@ -182,26 +146,9 @@ FROM smg_credit sc
 LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
 LEFT JOIN smg_users su ON su.userid = sc.agentid
 WHERE sc.active =1
-<cfif form.selectPrograms IS NOT 'Select All'>
-    AND (
-    <cfloop list="#form.selectPrograms#" index="progId">
-        <cfif progId EQ 0>
-            sch.programid IS NULL
-            <cfelse>
-            sch.programid = #progId#
-        </cfif>
-        <cfif progId IS NOT #listLast(form.selectPrograms)#>
-            OR
-        </cfif>
-    </cfloop>)
-    <cfelse>
-        AND (sch.programid IS NULL OR
-        <cfloop query="getPrograms">
-            sch.programid = #getPrograms.programid#
-            <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                OR
-            </cfif>
-        </cfloop>)
+<cfif form.selectPrograms IS NOT 'All'>
+    AND
+		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
 </cfif>
 GROUP BY sc.agentid
 ) t
@@ -215,26 +162,9 @@ FROM (
 SELECT sch.agentid, su.businessname, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
 FROM smg_charges sch
 LEFT JOIN smg_users su ON su.userid = sch.agentid
-<cfif form.selectPrograms IS NOT 'Select All'>
-    WHERE (
-    <cfloop list="#form.selectPrograms#" index="progId">
-        <cfif progId EQ 0>
-            sch.programid = 0
-            <cfelse>
-            sch.programid = #progId#
-        </cfif>
-        <cfif progId IS NOT #listLast(form.selectPrograms)#>
-            OR
-        </cfif>
-    </cfloop>)
-    <cfelse>
-        WHERE (sch.programid = 0 OR
-        <cfoutput query="getPrograms">
-            sch.programid = #getPrograms.programid#
-            <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                OR
-            </cfif>
-        </cfoutput>)	
+<cfif form.selectPrograms IS NOT 'All'>
+    WHERE 
+		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
 </cfif>
 GROUP BY agentid
 UNION ALL
@@ -242,26 +172,9 @@ SELECT sch.agentid, su.businessname, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) 
 FROM smg_payment_charges spc
 LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
 LEFT JOIN smg_users su ON su.userid = sch.agentid
-<cfif form.selectPrograms IS NOT 'Select All'>
-    WHERE (
-    <cfloop list="#form.selectPrograms#" index="progId">
-        <cfif progId EQ 0>
-            sch.programid = 0
-            <cfelse>
-            sch.programid = #progId#
-        </cfif>
-        <cfif progId IS NOT #listLast(form.selectPrograms)#>
-            OR
-        </cfif>
-    </cfloop>)
-    <cfelse>
-        WHERE (sch.programid = 0 OR
-        <cfoutput query="getPrograms">
-            sch.programid = #getPrograms.programid#
-            <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                OR
-            </cfif>
-        </cfoutput>)
+<cfif form.selectPrograms IS NOT 'All'>
+    WHERE 
+		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
 </cfif>
 GROUP BY sch.agentid
 UNION ALL
@@ -270,26 +183,9 @@ FROM smg_credit sc
 LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
 LEFT JOIN smg_users su ON su.userid = sc.agentid
 WHERE sc.active =1
-<cfif form.selectPrograms IS NOT 'Select All'>
-    AND (
-    <cfloop list="#form.selectPrograms#" index="progId">
-        <cfif progId EQ 0>
-            sch.programid IS NULL
-            <cfelse>
-            sch.programid = #progId#
-        </cfif>
-        <cfif progId IS NOT #listLast(form.selectPrograms)#>
-            OR
-        </cfif>
-    </cfloop>)
-    <cfelse>
-        AND (sch.programid IS NULL OR
-        <cfloop query="getPrograms">
-            sch.programid = #getPrograms.programid#
-            <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                OR
-            </cfif>
-        </cfloop>)
+<cfif form.selectPrograms IS NOT 'All'>
+    AND
+		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
 </cfif>
 GROUP BY sc.agentid
 ) t
@@ -305,7 +201,7 @@ ORDER BY totalPerAgent ASC
 
 <cfloop list="#form.selectPrograms#" index="programsSelected">
 
-    <cfif programsSelected IS "Select All">
+    <cfif programsSelected IS "All">
     
         <small>All programs were selected</small><br/>
         
@@ -318,17 +214,18 @@ ORDER BY totalPerAgent ASC
                 <cfquery name="getProgramsSelected" datasource="MySQL">
                 SELECT *
                 FROM smg_programs sp
-                WHERE sp.programid = #programsSelected#
+				WHERE sp.programid = #programsSelected#
                 ORDER BY companyid ASC, startdate DESC
                 </cfquery>
                 
                 <cfoutput query="getProgramsSelected">
                 
                 <cfswitch expression="#getProgramsSelected.companyid#">
-                    <cfcase value="1"><cfset compId = 'Red'></cfcase>
-                    <cfcase value="2"><cfset compId = 'Blue'></cfcase>
-                    <cfcase value="3"><cfset compId = 'Green'></cfcase>
-                    <cfcase value="4"><cfset compId = 'Yellow'></cfcase>
+                    <cfcase value="1"><cfset compId = 'WILLIAM'></cfcase>
+                    <cfcase value="2"><cfset compId = 'MARGARITA'></cfcase>
+                    <cfcase value="3"><cfset compId = 'DIANA'></cfcase>
+                    <cfcase value="4"><cfset compId = 'GARY'></cfcase>
+                    <cfcase value="12"><cfset compId = 'BRIAN'></cfcase>
                     <cfcase value="7"><cfset compId = 'Trainee'></cfcase>
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
@@ -344,7 +241,7 @@ ORDER BY totalPerAgent ASC
 </cfloop>
 
 
-<!--- <cfif form.selectPrograms IS NOT "Select All" AND form.selectPrograms NEQ 0>
+<!--- <cfif form.selectPrograms IS NOT "All" AND form.selectPrograms NEQ 0>
 
     <cfquery name="getProgramsSelected" datasource="MySQL">
     SELECT *
@@ -430,10 +327,11 @@ ORDER BY totalPerAgent ASC
             </td>
         </cfif>
         <td class="right">AGENT</td>
-        <td class="right">RED</td>
-        <td class="right">BLUE</td>
-        <td class="right">GREEN</td>
-        <td class="right">YELLOW</td>
+        <td class="right">WILLIAM</td>
+        <td class="right">MARGARITA</td>
+        <td class="right">DIANA</td>
+        <td class="right">GARY</td>
+        <td class="right">BRIAN</td>
         <td class="right">SMG</td>
         <td class="right">TRAINEE</td>
         <td class="right" width="5%">W & T</td>
@@ -446,6 +344,7 @@ ORDER BY totalPerAgent ASC
 <cfparam name="totalBlueBal" default="0">
 <cfparam name="totalGreenBal" default="0">
 <cfparam name="totalYellowBal" default="0">
+<cfparam name="totalBrianBal" default="0">
 <cfparam name="totalSmgBal" default="0">
 <cfparam name="totalTraineeBal" default="0">
 <cfparam name="totalWandtBal" default="0">
@@ -461,10 +360,10 @@ ORDER BY totalPerAgent ASC
     <cfset intlAgentId = #getAgentsReceivable.agentid#>
         
     <cfset iseBal = 0>
-	<!--- companies 2,3,4 , merged with ise --->
-    <!--- <cfset blueBal = 0>
+    <cfset blueBal = 0>
     <cfset greenBal = 0>
-    <cfset yellowBal = 0> --->
+    <cfset yellowBal = 0>
+    <cfset brianBal = 0>
     <cfset smgBal = 0>
     <cfset traineeBal = 0>
     <cfset wandtBal = 0>
@@ -486,27 +385,10 @@ END) AS testCompId
         FROM smg_charges sch
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE sch.agentid = #variables.intlAgentId#
-        <cfif form.selectPrograms IS NOT 'Select All'>
-            AND (
-                <cfloop list="#form.selectPrograms#" index="progId">
-                    <cfif progId EQ 0>
-                        sch.programid = 0
-                        <cfelse>
-                        sch.programid = #progId#
-                    </cfif>
-                    <cfif progId IS NOT #listLast(form.selectPrograms)#>
-                        OR
-                    </cfif>
-                </cfloop>)
-            <cfelse>
-                AND (sch.programid = 0 OR
-                <cfloop query="getPrograms">
-                    sch.programid = #getPrograms.programid#
-                    <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                        OR
-                    </cfif>
-                </cfloop>)
+        WHERE sch.agentid = #VAL(variables.intlAgentId)#
+        <cfif form.selectPrograms IS NOT 'All'>
+			AND
+				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
         </cfif>
         GROUP BY testCompId HAVING testCompId = #indexCompId#
         UNION ALL
@@ -522,27 +404,10 @@ END) AS testCompId
         LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE  sch.agentid = #variables.intlAgentId#
-        <cfif form.selectPrograms IS NOT 'Select All'>
-            AND (
-                <cfloop list="#form.selectPrograms#" index="progId">
-                    <cfif progId EQ 0>
-                        sch.programid = 0
-                        <cfelse>
-                        sch.programid = #progId#
-                    </cfif>
-                    <cfif progId IS NOT #listLast(form.selectPrograms)#>
-                        OR
-                    </cfif>
-                </cfloop>)
-            <cfelse>
-                AND (sch.programid = 0 OR
-                <cfloop query="getPrograms">
-                    sch.programid = #getPrograms.programid#
-                    <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                        OR
-                    </cfif>
-                </cfloop>)
+        WHERE  sch.agentid = #VAL(variables.intlAgentId)#
+        <cfif form.selectPrograms IS NOT 'All'>
+			AND
+				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
         </cfif>
         GROUP BY testCompId HAVING testCompId = #indexCompId#
         UNION ALL
@@ -559,41 +424,24 @@ END) AS testCompId
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sc.agentid
         WHERE sc.active =1
-        AND sc.agentid = #variables.intlAgentId#
-        <cfif form.selectPrograms IS NOT 'Select All'>
-            AND (
-            <cfloop list="#form.selectPrograms#" index="progId">
-                <cfif progId EQ 0>
-                    sch.programid IS NULL
-                    <cfelse>
-                    sch.programid = #progId#
-                </cfif>
-                <cfif progId IS NOT #listLast(form.selectPrograms)#>
-                    OR
-                </cfif>
-            </cfloop>)
-            <cfelse>
-                AND (sch.programid IS NULL OR
-                <cfloop query="getPrograms">
-                    sch.programid = #getPrograms.programid#
-                    <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                        OR
-                    </cfif>
-                </cfloop>)
+        AND sc.agentid = #VAL(variables.intlAgentId)#
+        <cfif form.selectPrograms IS NOT 'All'>
+			AND
+				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
         </cfif>
         GROUP BY testCompId HAVING testCompId = #indexCompId#
         ) t
-        GROUP BY t.agentid    
+        GROUP BY t.agentid  
         </cfquery>
         
         <cfif getBalancePerAgentReceivable.recordCount NEQ 0>          
     
             <cfswitch expression="#indexCompId#">
-                <cfcase value="1,2,3,4"><!--- companies 2,3,4 merged with ise --->
+                <cfcase value="1">
                     <cfset iseBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totaliseBal = #variables.totaliseBal# + #variables.iseBal#>
                 </cfcase>
-                <!--- <cfcase value="2">
+                <cfcase value="2">
                     <cfset blueBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totalBlueBal = #variables.totalBlueBal# + #variables.BlueBal#>
                 </cfcase>
@@ -605,10 +453,14 @@ END) AS testCompId
                     <cfset yellowBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totalYellowBal = #variables.totalYellowBal# + #variables.YellowBal#>
                 </cfcase>
+                <cfcase value="12">
+                    <cfset brianBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset totalbrianBal = #variables.totalbrianBal# + #variables.brianBal#>
+                </cfcase>
                 <cfcase value="5">
                     <cfset smgBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totalSmgBal = #variables.totalSmgBal# + #variables.smgBal#>
-                </cfcase> --->
+                </cfcase>
                 <cfcase value="7">
                     <cfset traineeBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totalTraineeBal = #variables.totalTraineeBal# + #variables.TraineeBal#>
@@ -626,7 +478,7 @@ END) AS testCompId
                     <cfset totalCaseBal = #variables.totalCaseBal# + #variables.CaseBal#>
                 </cfcase>
             </cfswitch>
-        
+    
         </cfif>
     
     </cfloop>
@@ -641,10 +493,10 @@ END) AS testCompId
         </cfif>
         <td class="two">#getAgentsReceivable.businessname# (#getAgentsReceivable.agentid#)</td> 
         <td class="two <cfif variables.iseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.iseBal)#</td>
-		<!--- companies 2,3,4 merged with ise --->
-        <!--- <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
+        <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
         <td class="two <cfif variables.greenBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.greenBal)#</td>
-        <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td> --->
+        <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td>
+        <td class="two <cfif variables.brianBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.brianBal)#</td>
         <td class="two <cfif variables.smgBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.smgBal)#</td>
         <td class="two <cfif variables.traineeBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.traineeBal)#</td>
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
@@ -663,10 +515,10 @@ END) AS testCompId
         </cfif>
         <td class="right">TOTAL</td>
         <td class="right">#LsCurrencyFormat(variables.totaliseBal)#</td>
-		<!--- companies 2,3,4 merged with ise --->
-        <!--- <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalGreenBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td> --->
+        <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalbrianBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalSmgBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalTraineeBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalWandtBal)#</td>
@@ -693,14 +545,12 @@ END) AS testCompId
 <table class="frame">
 
     <tr class="darkBlue">
-    	<td></td>
-		<td></td>
         <td class="right">AGENT</td>
-        <td class="right">ISE</td>
-		<!--- companies 2,3,4 merged with ise --->
-        <!--- <td class="right">BLUE</td>
-        <td class="right">GREEN</td>
-        <td class="right">YELLOW</td> --->
+        <td class="right">WILLIAM</td>
+        <td class="right">MARGARITA</td>
+        <td class="right">DIANA</td>
+        <td class="right">GARY</td>
+        <td class="right">BRIAN</td>
         <td class="right">SMG</td>
         <td class="right">TRAINEE</td>
         <td class="right" width="5%">W & T</td>
@@ -710,10 +560,10 @@ END) AS testCompId
     </tr>    
 
 <cfset totaliseBal =0>
-<!--- companies 2,3,4 merged with ise --->
-<!--- <cfset totalBlueBal =0>
+<cfset totalBlueBal =0>
 <cfset totalGreenBal =0>
-<cfset totalYellowBal =0> --->
+<cfset totalYellowBal =0>
+<cfset totalbrianBal =0>
 <cfset totalSmgBal =0>
 <cfset totalTraineeBal =0>
 <cfset totalWandtBal =0>
@@ -727,10 +577,10 @@ END) AS testCompId
     <cfset intlAgentId = #getAgentsRefund.agentid#>
         
     <cfset iseBal = 0>
-	<!--- companies 2,3,4 merged with ise --->
-    <!--- <cfset blueBal = 0>
+    <cfset blueBal = 0>
     <cfset greenBal = 0>
-    <cfset yellowBal = 0> --->
+    <cfset yellowBal = 0>
+    <cfset brianBal = 0>
     <cfset smgBal = 0>
     <cfset traineeBal = 0>
     <cfset wandtBal = 0>
@@ -752,27 +602,10 @@ END) AS testCompId
         FROM smg_charges sch
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE sch.agentid = #variables.intlAgentId#
-        <cfif form.selectPrograms IS NOT 'Select All'>
-            AND (
-                <cfloop list="#form.selectPrograms#" index="progId">
-                    <cfif progId EQ 0>
-                        sch.programid = 0
-                        <cfelse>
-                        sch.programid = #progId#
-                    </cfif>
-                    <cfif progId IS NOT #listLast(form.selectPrograms)#>
-                        OR
-                    </cfif>
-                </cfloop>)
-            <cfelse>
-                AND (sch.programid = 0 OR
-                <cfloop query="getPrograms">
-                    sch.programid = #getPrograms.programid#
-                    <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                        OR
-                    </cfif>
-                </cfloop>)
+        WHERE sch.agentid = #VAL(variables.intlAgentId)#
+        <cfif form.selectPrograms IS NOT 'All'>
+			AND
+				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
         </cfif>
         GROUP BY testCompId HAVING testCompId = #indexCompId#
         UNION ALL
@@ -788,27 +621,10 @@ END) AS testCompId
         LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE  sch.agentid = #variables.intlAgentId#
-        <cfif form.selectPrograms IS NOT 'Select All'>
-            AND (
-                <cfloop list="#form.selectPrograms#" index="progId">
-                    <cfif progId EQ 0>
-                        sch.programid = 0
-                        <cfelse>
-                        sch.programid = #progId#
-                    </cfif>
-                    <cfif progId IS NOT #listLast(form.selectPrograms)#>
-                        OR
-                    </cfif>
-                </cfloop>)
-            <cfelse>
-                AND (sch.programid = 0 OR
-                <cfloop query="getPrograms">
-                    sch.programid = #getPrograms.programid#
-                    <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                        OR
-                    </cfif>
-                </cfloop>)
+        WHERE  sch.agentid = #VAL(variables.intlAgentId)#
+        <cfif form.selectPrograms IS NOT 'All'>
+			AND
+				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
         </cfif>
         GROUP BY testCompId HAVING testCompId = #indexCompId#
         UNION ALL
@@ -825,27 +641,10 @@ END) AS testCompId
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sc.agentid
         WHERE sc.active =1
-        AND sc.agentid = #variables.intlAgentId#
-        <cfif form.selectPrograms IS NOT 'Select All'>
-            AND (
-            <cfloop list="#form.selectPrograms#" index="progId">
-                <cfif progId EQ 0>
-                    sch.programid IS NULL
-                    <cfelse>
-                    sch.programid = #progId#
-                </cfif>
-                <cfif progId IS NOT #listLast(form.selectPrograms)#>
-                    OR
-                </cfif>
-            </cfloop>)
-            <cfelse>
-                AND (sch.programid IS NULL OR
-                <cfloop query="getPrograms">
-                    sch.programid = #getPrograms.programid#
-                    <cfif getPrograms.currentRow NEQ getPrograms.recordCount>
-                        OR
-                    </cfif>
-                </cfloop>)
+        AND sc.agentid = #VAL(variables.intlAgentId)#
+        <cfif form.selectPrograms IS NOT 'All'>
+			AND
+				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
         </cfif>
         GROUP BY testCompId HAVING testCompId = #indexCompId#
         ) t
@@ -855,12 +654,11 @@ END) AS testCompId
         <cfif getBalancePerAgentRefund.recordCount NEQ 0>          
     
             <cfswitch expression="#indexCompId#">
-                <cfcase value="1,2,3,4">
+                <cfcase value="1">
                     <cfset iseBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totaliseBal = #variables.totaliseBal# + #variables.iseBal#>
                 </cfcase>
-				<!--- companies 2,3,4 merged with ise --->
-                <!--- <cfcase value="2">
+                <cfcase value="2">
                     <cfset blueBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalBlueBal = #variables.totalBlueBal# + #variables.BlueBal#>
                 </cfcase>
@@ -871,7 +669,11 @@ END) AS testCompId
                 <cfcase value="4">
                     <cfset yellowBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalYellowBal = #variables.totalYellowBal# + #variables.YellowBal#>
-                </cfcase> --->
+                </cfcase>
+                <cfcase value="12">
+                    <cfset brianBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset totalbrianBal = #variables.totalbrianBal# + #variables.brianBal#>
+                </cfcase>
                 <cfcase value="5">
                     <cfset smgBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalSmgBal = #variables.totalSmgBal# + #variables.smgBal#>
@@ -901,14 +703,12 @@ END) AS testCompId
     <cfset grandTotalBal = #variables.grandTotalBal# + #getAgentsRefund.totalPerAgent#>
             
     <tr <cfif getAgentsRefund.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
-    	<td></td>
-		<td></td>
-        <td class="two">#getAgentsRefund.businessname# (###getAgentsRefund.agentid#)</td> 
+        <td class="two">#getAgentsRefund.businessname# (#getAgentsRefund.agentid#)</td> 
         <td class="two <cfif variables.iseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.iseBal)#</td>
-		<!--- companies 2,3,4 merged with ise --->
-        <!--- <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
+        <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
         <td class="two <cfif variables.greenBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.greenBal)#</td>
-        <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td> --->
+        <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td>
+        <td class="two <cfif variables.brianBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.brianBal)#</td>
         <td class="two <cfif variables.smgBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.smgBal)#</td>
         <td class="two <cfif variables.traineeBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.traineeBal)#</td>
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
@@ -922,14 +722,12 @@ END) AS testCompId
 <cfoutput>
 
     <tr class="darkBlue">
-    	<td></td>
-		<td></td>
         <td class="right">TOTAL</td>
         <td class="right">#LsCurrencyFormat(variables.totaliseBal)#</td>
-		<!--- companies 2,3,4 merged with ise --->
-       <!---  <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
+       <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalGreenBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td> --->
+        <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalbrianBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalSmgBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalTraineeBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalWandtBal)#</td>
