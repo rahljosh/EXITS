@@ -442,7 +442,7 @@ ORDER BY totalPerAgent ASC
         <td class="right">TOTAL</td>
     </tr>    
 
-<cfparam name="totalRedBal" default="0">
+<cfparam name="totaliseBal" default="0">
 <cfparam name="totalBlueBal" default="0">
 <cfparam name="totalGreenBal" default="0">
 <cfparam name="totalYellowBal" default="0">
@@ -460,10 +460,11 @@ ORDER BY totalPerAgent ASC
     <cfinput type="hidden" name="balPerAgent#getAgentsReceivable.agentid#" value="#getAgentsReceivable.totalPerAgent#">    
     <cfset intlAgentId = #getAgentsReceivable.agentid#>
         
-    <cfset redBal = 0>
-    <cfset blueBal = 0>
+    <cfset iseBal = 0>
+	<!--- companies 2,3,4 , merged with ise --->
+    <!--- <cfset blueBal = 0>
     <cfset greenBal = 0>
-    <cfset yellowBal = 0>
+    <cfset yellowBal = 0> --->
     <cfset smgBal = 0>
     <cfset traineeBal = 0>
     <cfset wandtBal = 0>
@@ -588,11 +589,11 @@ END) AS testCompId
         <cfif getBalancePerAgentReceivable.recordCount NEQ 0>          
     
             <cfswitch expression="#indexCompId#">
-                <cfcase value="1">
-                    <cfset redBal = #getBalancePerAgentReceivable.totalPerAgent#>
-                    <cfset totalRedBal = #variables.totalRedBal# + #variables.redBal#>
+                <cfcase value="1,2,3,4"><!--- companies 2,3,4 merged with ise --->
+                    <cfset iseBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset totaliseBal = #variables.totaliseBal# + #variables.iseBal#>
                 </cfcase>
-                <cfcase value="2">
+                <!--- <cfcase value="2">
                     <cfset blueBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totalBlueBal = #variables.totalBlueBal# + #variables.BlueBal#>
                 </cfcase>
@@ -607,7 +608,7 @@ END) AS testCompId
                 <cfcase value="5">
                     <cfset smgBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totalSmgBal = #variables.totalSmgBal# + #variables.smgBal#>
-                </cfcase>
+                </cfcase> --->
                 <cfcase value="7">
                     <cfset traineeBal = #getBalancePerAgentReceivable.totalPerAgent#>
                     <cfset totalTraineeBal = #variables.totalTraineeBal# + #variables.TraineeBal#>
@@ -638,11 +639,12 @@ END) AS testCompId
                 <cfinput name="email#getAgentsReceivable.agentid#" id="email#getAgentsReceivable.agentid#" type="checkbox" checked="yes" align="absmiddle">
             </td>
         </cfif>
-        <td class="two">#getAgentsReceivable.businessname# (###getAgentsReceivable.agentid#)</td> 
-        <td class="two <cfif variables.redBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.redBal)#</td>
-        <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
+        <td class="two">#getAgentsReceivable.businessname# (#getAgentsReceivable.agentid#)</td> 
+        <td class="two <cfif variables.iseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.iseBal)#</td>
+		<!--- companies 2,3,4 merged with ise --->
+        <!--- <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
         <td class="two <cfif variables.greenBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.greenBal)#</td>
-        <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td>
+        <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td> --->
         <td class="two <cfif variables.smgBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.smgBal)#</td>
         <td class="two <cfif variables.traineeBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.traineeBal)#</td>
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
@@ -660,10 +662,11 @@ END) AS testCompId
     		<td></td>
         </cfif>
         <td class="right">TOTAL</td>
-        <td class="right">#LsCurrencyFormat(variables.totalRedBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totaliseBal)#</td>
+		<!--- companies 2,3,4 merged with ise --->
+        <!--- <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalGreenBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td> --->
         <td class="right">#LsCurrencyFormat(variables.totalSmgBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalTraineeBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalWandtBal)#</td>
@@ -691,11 +694,13 @@ END) AS testCompId
 
     <tr class="darkBlue">
     	<td></td>
+		<td></td>
         <td class="right">AGENT</td>
-        <td class="right">RED</td>
-        <td class="right">BLUE</td>
+        <td class="right">ISE</td>
+		<!--- companies 2,3,4 merged with ise --->
+        <!--- <td class="right">BLUE</td>
         <td class="right">GREEN</td>
-        <td class="right">YELLOW</td>
+        <td class="right">YELLOW</td> --->
         <td class="right">SMG</td>
         <td class="right">TRAINEE</td>
         <td class="right" width="5%">W & T</td>
@@ -704,10 +709,11 @@ END) AS testCompId
         <td class="right">TOTAL</td>
     </tr>    
 
-<cfset totalRedBal =0>
-<cfset totalBlueBal =0>
+<cfset totaliseBal =0>
+<!--- companies 2,3,4 merged with ise --->
+<!--- <cfset totalBlueBal =0>
 <cfset totalGreenBal =0>
-<cfset totalYellowBal =0>
+<cfset totalYellowBal =0> --->
 <cfset totalSmgBal =0>
 <cfset totalTraineeBal =0>
 <cfset totalWandtBal =0>
@@ -720,10 +726,11 @@ END) AS testCompId
 
     <cfset intlAgentId = #getAgentsRefund.agentid#>
         
-    <cfset redBal = 0>
-    <cfset blueBal = 0>
+    <cfset iseBal = 0>
+	<!--- companies 2,3,4 merged with ise --->
+    <!--- <cfset blueBal = 0>
     <cfset greenBal = 0>
-    <cfset yellowBal = 0>
+    <cfset yellowBal = 0> --->
     <cfset smgBal = 0>
     <cfset traineeBal = 0>
     <cfset wandtBal = 0>
@@ -848,11 +855,12 @@ END) AS testCompId
         <cfif getBalancePerAgentRefund.recordCount NEQ 0>          
     
             <cfswitch expression="#indexCompId#">
-                <cfcase value="1">
-                    <cfset redBal = #getBalancePerAgentRefund.totalPerAgent#>
-                    <cfset totalRedBal = #variables.totalRedBal# + #variables.redBal#>
+                <cfcase value="1,2,3,4">
+                    <cfset iseBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset totaliseBal = #variables.totaliseBal# + #variables.iseBal#>
                 </cfcase>
-                <cfcase value="2">
+				<!--- companies 2,3,4 merged with ise --->
+                <!--- <cfcase value="2">
                     <cfset blueBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalBlueBal = #variables.totalBlueBal# + #variables.BlueBal#>
                 </cfcase>
@@ -863,7 +871,7 @@ END) AS testCompId
                 <cfcase value="4">
                     <cfset yellowBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalYellowBal = #variables.totalYellowBal# + #variables.YellowBal#>
-                </cfcase>
+                </cfcase> --->
                 <cfcase value="5">
                     <cfset smgBal = #getBalancePerAgentRefund.totalPerAgent#>
                     <cfset totalSmgBal = #variables.totalSmgBal# + #variables.smgBal#>
@@ -894,11 +902,13 @@ END) AS testCompId
             
     <tr <cfif getAgentsRefund.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
     	<td></td>
+		<td></td>
         <td class="two">#getAgentsRefund.businessname# (###getAgentsRefund.agentid#)</td> 
-        <td class="two <cfif variables.redBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.redBal)#</td>
-        <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
+        <td class="two <cfif variables.iseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.iseBal)#</td>
+		<!--- companies 2,3,4 merged with ise --->
+        <!--- <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
         <td class="two <cfif variables.greenBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.greenBal)#</td>
-        <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td>
+        <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td> --->
         <td class="two <cfif variables.smgBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.smgBal)#</td>
         <td class="two <cfif variables.traineeBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.traineeBal)#</td>
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
@@ -913,11 +923,13 @@ END) AS testCompId
 
     <tr class="darkBlue">
     	<td></td>
+		<td></td>
         <td class="right">TOTAL</td>
-        <td class="right">#LsCurrencyFormat(variables.totalRedBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totaliseBal)#</td>
+		<!--- companies 2,3,4 merged with ise --->
+       <!---  <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalGreenBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td> --->
         <td class="right">#LsCurrencyFormat(variables.totalSmgBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalTraineeBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalWandtBal)#</td>
