@@ -24,6 +24,12 @@
             smg_students s 
         INNER JOIN 
             smg_users u ON s.intrep = u.userid
+        INNER JOIN
+        	smg_insurance_type type ON type.insuTypeID = u.insurance_typeID 
+            AND 
+                type.insuTypeID > <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+			AND
+            	type.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         INNER JOIN 
             smg_programs p ON s.programid = p.programid
         WHERE 
@@ -90,7 +96,7 @@
 	.informationDiv {
 		padding-top:0.3in; /*  0.8cm */
 		padding-left:0.2in; /* 0.5cm */
-		width:2in; /* 5.0cm */ 
+		width:2.5in; /* 6.4cm */ 
 		overflow:hidden;
 	}
 
