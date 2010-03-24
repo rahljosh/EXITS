@@ -64,7 +64,7 @@
 			<td valign="top" width="2%">&nbsp;</td>
 			<td valign="top" width="49%" align="center">
 			<h3><u>Email</u></h3>
-			Please fill out this form for general questions about <cfoutput>#org_info.companyshort_nocolor#</cfoutput> or the EXITS application system. You will receive a reply on this page so do not forget to check it later.<br>
+			Please fill out this form for general questions about <cfoutput>#qOrgInfo.companyshort_nocolor#</cfoutput> or the EXITS application system. You will receive a reply on this page so do not forget to check it later.<br>
 			<a href="?curdoc=contact&id=su">Click Here</a>
 		</td>		
 	</tr>
