@@ -2,7 +2,6 @@
 <cfsilent>
 	
     <!--- Param Form Variables --->
-    <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.intRep" default="0">
     <cfparam name="FORM.insurance_typeID" default="0">
     <cfparam name="FORM.id1" default="0">
@@ -34,8 +33,6 @@
             smg_programs p ON s.programid = p.programid
         WHERE 
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-        	s.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
 
         <cfif VAL(FORM.intrep)>
             AND 
@@ -119,8 +116,8 @@
 
 <body>
 
-<cfif NOT VAL(FORM.programID)>
-	Please select at least one program ID.
+<cfif NOT VAL(FORM.id1) OR NOT VAL(FORM.id2) OR>
+	Please entera range of ids.
 	<cfabort>
 </cfif>
 			

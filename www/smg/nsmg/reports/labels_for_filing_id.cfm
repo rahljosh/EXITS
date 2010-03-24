@@ -79,7 +79,6 @@
 				WHERE   s.companyid = #client.companyid# 
 						AND s.studentid between '#form.id1#' AND '#form.id2#'
 						AND s.active = '1'				
-						<cfif form.programid is 0><cfelse>AND s.programid = '#form.programid#'</cfif>	
 				ORDER BY s.studentid
 			</cfquery>
 						
