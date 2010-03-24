@@ -80,7 +80,7 @@
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
     AND
         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-
+    
 	<!---
 	<cfif CLIENT.companyID EQ 10>
     AND
@@ -117,7 +117,7 @@
     )
 	VALUES 
     (
-    	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.companyid#">, 
+    	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">, 
         <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">, 
         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">, 
         <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.recordcount#">, 
