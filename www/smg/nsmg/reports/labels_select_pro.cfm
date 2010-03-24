@@ -206,10 +206,6 @@
                         <cfform action="reports/labels_student_idcards_id.cfm" method="post" target="_blank">
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
                             <tr><th colspan="2" bgcolor="##e2efc7">Students ID Cards per ID<th></tr>
-                            <tr>
-                                <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="5"></cfselect></td>
-                            </tr>
                             <tr align="left">
                                 <td>Intl. Rep:</td>
                                 <td>
@@ -463,10 +459,6 @@
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
                             <tr><th colspan="2" bgcolor="##e2efc7">Students per ID</th></tr>
                             <tr>
-                                <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="5"></cfselect></td>
-                            </tr>
-                            <tr>
                                 <td>Student ID: </td>
                                 <td>
                                 	From: &nbsp; <input type="text" name="id1" size="4" maxlength="6">
@@ -675,10 +667,6 @@
                         <cfform action="reports/labels_students_id.cfm" method="post">
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
                             <tr><th colspan="2" bgcolor="##e2efc7">Students per ID <br> <font size="-2">(Students in the USA - Approved placements only)</font> </th></tr>
-                            <tr>
-                                <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="5"></cfselect></td>
-                            </tr>
                             <tr>
                             	<td>Country:</td>
                                 <td>

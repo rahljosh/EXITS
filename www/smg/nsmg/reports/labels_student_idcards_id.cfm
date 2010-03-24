@@ -7,7 +7,6 @@
     <cfparam name="FORM.id1" default="0">
     <cfparam name="FORM.id2" default="0">
     <cfparam name="FORM.intrep" default="0">
-    <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.insurance_typeid" default="0">
 
     <cfscript>
@@ -70,14 +69,6 @@
                 	countrybirth = '232'
                 )
         </cfif>
-        
-        AND 
-            ( 
-                <cfloop list="#FORM.programID#" index="progID">
-                     s.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#progID#">
-                     <cfif ListLast(FORM.programID) NEQ progID> OR </cfif>
-                </cfloop> 
-            )
         
 		<cfif VAL(FORM.insurance_typeid)>
             AND 

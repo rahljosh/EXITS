@@ -84,8 +84,6 @@
 						<cfif form.countryid NEQ 0>
 							AND countryresident = '#form.countryid#'
 						</cfif>
-						AND ( <cfloop list=#form.programid# index='prog'> s.programid = #prog#
-							<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif></cfloop> )
 				ORDER BY s.familylastname, s.firstname
 			</cfquery>
 						
