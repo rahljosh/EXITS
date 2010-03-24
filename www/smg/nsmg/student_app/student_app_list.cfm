@@ -215,7 +215,7 @@
 	
 	function OpenApp(url)
 	{
-		newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
+		newwindow=window.open(url, 'Application', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
 		if (window.focus) {newwindow.focus()}
 	}
 	

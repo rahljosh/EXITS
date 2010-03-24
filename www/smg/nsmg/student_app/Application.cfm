@@ -9,7 +9,15 @@
 
 	<!--- Added by Marcus Melo - 11/20/2009 --->
     <cfscript>
-        /***** Create APPLICATION.EMAIL structure *****/
+		// List of User IDs that are not allowed to submit Online Applications
+		// Dream I - 03/23/2010
+        APPLICATION.submitAppNotAllowed = "6559"; 
+		
+		// List of User IDs that are not allowed to view the Student and Host Family Profile
+		// STB
+		APPLICATION.displayProfileNotAllowed = "19";
+		
+		/***** Create APPLICATION.EMAIL structure *****/
         APPLICATION.EMAIL = StructNew();		
     
         // Set a short name for the CFCs
