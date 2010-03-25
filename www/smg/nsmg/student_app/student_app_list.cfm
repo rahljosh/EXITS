@@ -73,6 +73,7 @@
             s.app_sent_student, 
             s.branchid, 
             s.application_expires, 
+            appProgram.short_name as programApplied,
             u.businessname, 
             c.companyshort,
             branch.businessname as branchname,
@@ -82,6 +83,8 @@
         	smg_students s 
         INNER JOIN 
         	smg_users u ON u.userid = s.intRep
+        INNER JOIN
+        	smg_student_app_programs appProgram ON appProgram.app_programID = s.app_indicated_program
         LEFT JOIN 
         	smg_companies c ON c.companyid = s.companyid
         LEFT JOIN 
@@ -165,6 +168,11 @@
                 <cfcase value="businessName">
                 	u.businessName #URL.sortOrder#,
                     branchName #URL.sortOrder#
+                </cfcase>
+
+                <cfcase value="programApplied">
+                	appProgram.short_name #URL.sortOrder#,
+                    s.familyLastName
                 </cfcase>
 
                 <cfcase value="lastChanged">
@@ -305,7 +313,7 @@
 />
 
 
-<!--- Group Students by Season ID if status is Approved and User is Intl. Rep, Intl. Branch, PHP School or Intl. User --->
+<!--- Group Students by Season ID if status is Approved, User is Intl. Rep, Intl. Branch or PHP School --->
 <cfif ListFind("8,11,12,13", CLIENT.userType) AND URL.status EQ 11>
 
 		<cfoutput query="qStudents" group="seasonName">   
@@ -423,6 +431,7 @@
 			
 			<cfif CLIENT.usertype LTE 4>
 				<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
+				<td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
 			</cfif>
             
             <cfif URL.status LT 10>
@@ -491,6 +500,7 @@
             
             <cfif CLIENT.usertype LTE 4>
                 <td>#businessname#</td>
+                <td>#programApplied#</td>
             </cfif>		
             
             <cfif URL.status LT 10>
@@ -537,7 +547,7 @@
 	<cfoutput>
 
     <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section">	
-		<tr><th colspan="11" bgcolor="e2efc7">#qStudents.recordcount# &nbsp; APPLICATION(S) TO BE PRINTED / RECEIVED</th></tr>
+		<tr><th colspan="12" bgcolor="e2efc7">#qStudents.recordcount# &nbsp; APPLICATION(S) TO BE PRINTED / RECEIVED</th></tr>
 		<tr>
 			<td><a href="#setURL('studentID')#" title="Sort By Student ID"><strong>ID</strong></a></td>
 			<td><a href="#setURL('familyLastName')#" title="Sort by Last Name"><strong>Last Name</strong></a></td>
@@ -548,6 +558,7 @@
             <td><strong>Future</strong></td>
 			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Received</strong></a></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
+            <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
 			<td><strong>Cover Page</strong></td>
 			<td><strong>Confirm Receipt</strong></td>
 		</tr>
@@ -563,6 +574,7 @@
                 <td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#URL.status#" >Change</a></td>
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
 				<td>#businessname#</td>
+                <td>#programApplied#</td>
 				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueid#');">Page</a></td>
 				<td><a href="javascript:AppReceived('student_app/querys/qr_app_received.cfm?unqid=#uniqueid#&status=#URL.status#');" onClick="return areYouSure(this);">Check</a></td>
 			</tr>
@@ -580,7 +592,7 @@
 
 	<!--- WAITING TO BE APPROVED - STATUS 8 --->
 	<table width="100%" border="0" cellpadding="4" cellspacing="0" class="section">	
-		<tr><th colspan="11" bgcolor="e2efc7">#qStudents.recordcount# &nbsp; ONLINE APPLICATION(S) TO BE APPROVED</th></tr>
+		<tr><th colspan="12" bgcolor="e2efc7">#qStudents.recordcount# &nbsp; ONLINE APPLICATION(S) TO BE APPROVED</th></tr>
 		<tr>
 			<td><a href="#setURL('studentID')#" title="Sort By Student ID"><strong>ID</strong></a></td>
 			<td><a href="#setURL('familyLastName')#" title="Sort by Last Name"><strong>Last Name</strong></a></td>
@@ -591,6 +603,7 @@
             <td><strong>Future</strong></td>
 			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Submitted</strong></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
+            <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
 			<td><strong>Cover Page</strong></td>
 		</tr>
         
@@ -605,6 +618,7 @@
                 <td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#URL.status#" >Change</a></td>
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
 				<td>#businessname#</td>
+				<td>#programApplied#</td>
 				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueid#');">Page</a></td>
 			</tr>
 		</cfloop>
