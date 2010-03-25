@@ -52,7 +52,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD><select name="programid" multiple  size="4">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select></td></tr>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<TD>Region :</td>
 					<TD><select name="regionid" size="1">
@@ -78,7 +78,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD><select name="programid" multiple  size="4">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select></td></tr>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<TD>Region :</td>
 					<TD><select name="regionid" size="1">
@@ -109,7 +109,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD><select name="programid" multiple  size="4">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select></td></tr>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 					<TD>Region :</td>
 					<TD><select name="regionid" size="1">
 						<cfif client.usertype GT 4><cfelse>

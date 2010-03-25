@@ -19,12 +19,19 @@
 	INNER JOIN smg_users u ON u.userid = s.intrep
 	LEFT JOIN smg_countrylist agent_country ON u.country = agent_country.countryid
 	WHERE 	
-    		companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        AND
     		s.canceldate IS NULL 
         AND
             programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
-			<!--- AND u.businessname LIKE '%EF%' AND u.businessname != 'Treff' --->
+
+		<cfif CLIENT.companyID EQ 5>
+        AND
+    		s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+        <cfelse>
+        AND
+    		s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		</cfif>    
+
+		<!--- AND u.businessname LIKE '%EF%' AND u.businessname != 'Treff' --->
 	GROUP BY Businessname
 	ORDER BY Businessname
 </cfquery>
@@ -63,7 +70,7 @@
 				<td>#businessname#</td>
 				<td align="center">#agentcountry#</td>
 				<td align="center">#get_total_students#</td>
-				<cfset total_stu = total_stu + #get_total_students#>
+				<cfset total_stu = total_stu + get_total_students>
 			</tr>
 		</cfloop>
 			<tr><th>Total of Students</th><th>&nbsp;</th><th>#total_stu#</th></tr>

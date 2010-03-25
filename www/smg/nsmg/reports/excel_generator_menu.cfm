@@ -39,7 +39,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD><select name="programid" multiple size="6">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select></td>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td>
 				</tr>
 				<tr align="left">
 					<TD>Region :</td>
@@ -63,7 +63,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD><select name="programid" multiple size="6">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select></td>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td>
 				</tr>
 				<tr align="left">
 					<TD>Region :</td>
@@ -96,7 +96,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD><select name="programid" multiple  size="7">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select></td></tr>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr><td colspan="2" align="center" bgcolor="#e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 			</table>
 			</cfform>
@@ -108,7 +108,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD><cfselect name="programid" multiple size="6">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></cfselect></td>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></cfselect></td>
 				</tr>
 				<tr align="left">
 					<td>From Placement Date</td>

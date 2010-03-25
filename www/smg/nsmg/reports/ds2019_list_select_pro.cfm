@@ -21,7 +21,7 @@
 		<TR>
 			<TD>Program :</td>
 			<TD><select name="programid" multiple size="6">
-				<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select>
+				<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select>
 			</td>
 		</tr>
 		</tr>
@@ -38,7 +38,7 @@
 		<TR>
 			<TD>Program :</td>
 			<TD><select name="programid" multiple size="6">
-				<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select>
+				<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select>
 			</td>
 		</tr>
 		<TR>
@@ -59,7 +59,7 @@
 		<TR>
 			<TD>Program :</td>
 			<TD><select name="programid" multiple size="6">
-				<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfoutput></select>
+				<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select>
 			</td>
 		</tr>
 		</tr>
