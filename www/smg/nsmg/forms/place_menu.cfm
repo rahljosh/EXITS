@@ -41,8 +41,8 @@ where programid = #get_student_info.programid#
 select sc.schoolname, sc.schoolid, sd.year_begins, sd.semester_begins, sd.semester_ends, sd.year_ends
 from smg_schools sc
 left join smg_school_dates sd on sd.schoolid = sc.schoolid
-where sc.schoolid = #get_student_info.schoolid#
-and sd.seasonid = #season.seasonid#
+where sc.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.schoolid)#">
+and sd.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(season.seasonid)#">
 </cfquery>
 <cfif client.userid eq 1>
 <cfdump var="#get_student_info#">
