@@ -3,7 +3,11 @@
 
 	<!--- Param Variables --->
     <cfparam name="URL.userType" default="0">
-    <cfparam name="URL.unqID" default="">
+    <!--- 	
+		03/25/10 - Online App Pages check for IsDefined('URL.unqID') and they all include the same query.
+		Update that later on so the same query is not included twice. Make sure the print app works.
+		<cfparam name="URL.unqID" default=""> 
+	--->
     
     <cfscript>
 		if ( VAL(URL.userType) AND NOT IsDefined('CLIENT.usertype') )  {
@@ -20,19 +24,19 @@
 		} 
     </cfscript>
 
-	<cfif LEN(URL.unqID)>
+	<cfif isDefined('URL.unqID')>
         
         <!----Get student id  for office folks linking into the student app---->
-        <cfquery name="qGetStudentID" datasource="MySQL">
+        <cfquery name="qGetstudentID" datasource="MySQL">
             SELECT 
-            	studentid 
+            	studentID 
             FROM
             	smg_students
             WHERE 
             	uniqueid = <cfqueryparam value="#URL.unqID#" cfsqltype="cf_sql_char">
         </cfquery>
         
-        <cfset CLIENT.studentid = qGetStudentID.studentid>
+        <cfset CLIENT.studentID = qGetstudentID.studentID>
         
     </cfif>
     
@@ -60,7 +64,7 @@
         FROM 
 	        smg_student_app_status
         WHERE 
-    	    studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">       
+    	    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentID#">       
         ORDER BY 
 	        ID DESC    
     </cfquery>
@@ -148,7 +152,7 @@
                     Welcome
                 </cfif>
                 
-                #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)
+                #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentID#)
                 
 				<cfif isDefined('CLIENT.rep_filling_app')>
                     [<a class="item1" href="../index.cfm">Home</a>]
@@ -157,7 +161,7 @@
                 </cfif>
                 
                 <br>
-                <cfif qGetLatestStatus.status lte 2>
+                <cfif qGetLatestStatus.status lte 2 AND IsDate(get_student_info.application_expires)>
                     <strong>Application Expires on #DateFormat(get_student_info.application_expires, 'mmm dd, yy')# at #TimeFormat(get_student_info.application_expires, 'hh:mm:ss')# MST. (#DateDiff('d', now(), get_student_info.application_expires)# days)</strong> 
                 </cfif>
             </div>
