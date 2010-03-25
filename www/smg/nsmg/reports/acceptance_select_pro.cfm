@@ -56,7 +56,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD><select name="programid" multiple  size="6">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif><cfif #len(get_program.programname)# gt 35>#Left(get_program.programname, 32)#...<cfelse>#programname#</cfif></option></cfoutput></select></td></tr>
+					<cfoutput query="get_program"><option value="#ProgramID#"><cfif #len(get_program.programname)# gt 35>#Left(get_program.programname, 32)#...<cfelse>#programname#</cfif></option></cfoutput></select></td></tr>
 				</tr>
 				<tr align="left">
 					<TD>Intl. Rep. :</td>
