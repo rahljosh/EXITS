@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<skin id="freshmedia" name="FreshMedia" version="1.1" provider-name="cftips.net" lastModified="2010-01-15">
+<skin id="iseusa" name="International Student Exchange" version="1.0" provider-name="cftips.net" lastModified="2010-03-29">
 	<description>Design based on Fresh Media by Erwin Aligam</description>
 	<url></url>
-	<author>John Gagliardi</author>
-	<authorUrl>http://www.cftips.net</authorUrl>
-	<designAuthor>Erwin Aligam</designAuthor>
-	<designAuthorUrl>http://www.styleshout.com/</designAuthorUrl>
+	<author>Marcus Melo</author>
+	<authorUrl></authorUrl>
+	<designAuthor>Marcus Melo</designAuthor>
+	<designAuthorUrl></designAuthorUrl>
 	<thumbnail>assets/images/skin_thumb.png</thumbnail>
 	<preview></preview>
 	<requiresVersion match="greaterOrEqual">1.4.1</requiresVersion>
