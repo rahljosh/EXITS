@@ -195,11 +195,10 @@ where intrepid = 49
             #AppInvoice.bankName# <br />
             #AppInvoice.bankAddress# <br />
             #AppInvoice.bankCity#, #AppInvoice.bankState# #AppInvoice.bankZip# <br />
-		</td>
-		<td valign="top">
-        	<br />
 			ABA/Routing ## #AppInvoice.bankRouting#<br />
 			Account ## #AppInvoice.bankAccount#
+		</td>
+		<td valign="top">
 		</td>
 	</tr>
 </table>
