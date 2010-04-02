@@ -42,7 +42,7 @@
 	</table>
 <cfelse>
 
-	<cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/school/#form.filename#" variable="myxml">
+	<cffile action="read" file="#AppPath.sevis##get_company.companyshort_nocolor#/school/#form.filename#" variable="myxml">
 	<cfset mydoc = XmlParse(myxml)>
 	
 	<cfset batchid =#mydoc.TransactionLog.BatchHeader.BatchID.XmlText#> 

@@ -11,7 +11,7 @@
 <cftry>
 
 <cfoutput>
-	<cfset directory = '/var/www/smg_upload_files/online_app/picture_album/#form.studentid#'>
+	<cfset directory = '#AppPath.onlineApp.familyAlbum##form.studentid#'>
 
 	<cfif NOT DirectoryExists('#directory#')>
 		<cfdirectory action="create" directory="#directory#" mode="777">
@@ -38,7 +38,7 @@
 	</cfif>
 
 	<!--- check image extension --->
-	<cfif cffile.ClientFileExt NEQ 'gif' AND cffile.ClientFileExt NEQ 'jpg' AND cffile.ClientFileExt NEQ 'jpeg' AND cffile.ClientFileExt NEQ 'GIF' AND cffile.ClientFileExt NEQ 'JPG' AND cffile.ClientFileExt NEQ 'JPEG'>
+	<cfif NOT ListFind("jpg,peg,gif,tif,png", LCase(cffile.clientfileext))>
 		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
 			<script language="JavaScript">
 			<!-- 
@@ -64,8 +64,8 @@
 		<cffile action="rename" source="#directory#/new#filename#.#file.ServerFileExt#" destination="#directory#/#filename#.#LCase(file.ServerFileExt)#" mode="777">
 	</cfif>
 	
-	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN--->
-	<cflocation url="https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm">
+	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN --->
+	<cflocation url="#AppPath.onlineApp.reloadURL#" addtoken="no">
 
 </cfoutput>
 

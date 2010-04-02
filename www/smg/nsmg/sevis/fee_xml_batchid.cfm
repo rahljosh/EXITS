@@ -144,7 +144,7 @@
 </transmission>
 </cfxml>
 
-<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/fee/#get_company.companyshort_nocolor#_fee_000#get_bulkid.bulkid#.xml" output=#toString(transmission)# nameconflict="makeunique">
+<cffile action="write" file="#AppPath.sevis##get_company.companyshort_nocolor#/fee/#get_company.companyshort_nocolor#_fee_000#get_bulkid.bulkid#.xml" output=#toString(transmission)# nameconflict="makeunique">
 
 <table align="center" width="100%" frame="box">
 <tr><th>XML CREATED</th></tr>

@@ -953,7 +953,7 @@
             <cftry>
             
 				<!--- Submit CBC --->
-                <cfhttp url="#BGCDirectURL#" method="POST" throwonerror="yes">
+                <cfhttp url="#BGCDirectURL#" method="post" throwonerror="yes">
                     <cfhttpparam type="XML" value="#requestXML#" />
                     <cfhttpparam type="Header" name="charset" value="utf-8" />
                 </cfhttp>

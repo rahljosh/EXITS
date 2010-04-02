@@ -36,7 +36,7 @@
 			<br><br>
 			Click the link below to start your application process.  
 			<br><br>
-			<a href="http://www.student-management.com/nsmg/student_app/?s=#uniqueid#">http://www.student-management.com/nsmg/student_app/?s=#uniqueid#</a>
+			<a href="http://www.student-management.com/exits/student_app/?s=#uniqueid#">http://www.student-management.com/exits/student_app/?s=#uniqueid#</a>
 			<br><br>
 			You will need the following information to verify your account:<br>
 			*email address<br>

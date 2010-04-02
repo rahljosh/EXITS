@@ -12,7 +12,7 @@
 ---->
 <!--- Check to see if the Form variable exists. --->
 <cfoutput>
-<cfset directory = '/var/www/smg_upload_files/virtualfolder/#url.student#'>
+<cfset directory = '#AppPath.onlineApp.virtualFolder##url.student#'>
 
 
 
@@ -37,7 +37,7 @@ l
 </cfif>
 
 <!--- Resize Image Files --->
-<cfif file.ServerFileExt EQ 'jpg' OR file.ServerFileExt EQ 'gif' OR file.ServerFileExt EQ 'png' OR file.ServerFileExt EQ 'tif'> 
+<cfif ListFind("jpg,peg,png,tif", LCase(file.ServerFileExt))>
 	<cfset filename = '#file.ServerFileName#'>
 	<cfset uploadedImage = cffile.serverfile>
 	<cfset filename = '#file.ServerFileName#'>

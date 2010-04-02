@@ -1,19 +1,5 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Delete File</title>
-</head>
+<cffile action = "delete" file = "#AppPath.onlineApp.picture##url.student#">
 
-<body>
-
-
-
-<cffile action = "delete" file = "/var/www/html/student-management/nsmg/uploadedfiles/web-students/#url.student#">
-
-<html>
-<head>
 <cfoutput>
 <script language="JavaScript">
 <!-- 
@@ -22,21 +8,10 @@ alert("You have successfully deleted the picture for this student.");
 -->
 </script>
 </cfoutput>
-</head>
-</html> 				
-	
-</body>
-</html>
-
-
-
-
-
 
 <!----
 
-
-<cffile action="rename" destination="/var/www/html/student-management/nsmg/uploadedfiles/web-students/#url.student#_delete" source="/var/www/html/student-management/nsmg/uploadedfiles/web-students/#url.student#"> 
+<cffile action="rename" destination="#AppPath.onlineApp.picture##url.student#_delete" source="#AppPath.onlineApp.picture##url.student#"> 
 <cflocation url="index.cfm?curdoc=student_info&studentid=#url.studentid#">
 
 ---->

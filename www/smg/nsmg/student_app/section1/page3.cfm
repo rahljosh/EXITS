@@ -61,7 +61,7 @@ function NextPage() {
 <cfinclude template="../querys/get_student_info.cfm">
 
 <cfquery name="get_interests" datasource="MySQL">
-	SELECT interestid, interest
+	SELECT interestID, interest
 	FROM smg_interests
 	WHERE student_app = 'yes'
 	ORDER BY interest
@@ -90,8 +90,8 @@ function NextPage() {
 <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
 	<tr><td colspan="8"><em>Check any activity in which you participate in your home country (check at least 3 and no more than 6).</em></td></tr>
 	<tr><cfloop query="get_interests">	
-		<td><input type="checkbox" name="interests" value='#interestid#' onchange="DataChanged();" <cfif ListFind(get_student_info.interests, interestid , ",")>checked</cfif>></td>
-		<td>#interest#</td>
+		<td><input type="checkbox" name="interests" id="interests#interestID#" value='#interestID#' onchange="DataChanged();" <cfif ListFind(get_student_info.interests, interestID , ",")>checked</cfif>></td>
+		<td><label for="interests#interestID#">#interest#</label></td>
 			<cfif (get_interests.currentrow MOD 4 ) EQ 0></tr><tr></cfif>
 		</cfloop>
 	<tr><td colspan="8"><em>Other:</em></td></tr>

@@ -240,7 +240,7 @@ order by team_id
 				<tr><th colspan="3" bgcolor="##e2efc7">Per Period</th></tr>
 				<tr><td>Program :</td>
 						<td><select name="programid" multiple size="5">
-						<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop>
+						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select></td></tr>
 				<tr><td>Country :</td>
 					<td><select name="countryid" size="1">
@@ -261,7 +261,7 @@ order by team_id
 				<tr><th colspan="2" bgcolor="##e2efc7">Per Student ID</th></tr>
 				<tr><td>Program :</td>
 					<td><select name="programid" multiple  size="5">
-						<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop>
+						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select></td></tr>
 				<tr><td>Country :</td>
 					<td><select name="countryid" size="1">
@@ -283,7 +283,7 @@ order by team_id
 				<tr><th colspan="3" bgcolor="##e2efc7">Per Placement Date</th></tr>
 				<tr><td>Program :</td>
 						<td><select name="programid" multiple size="5">
-						<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop>
+						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select></td></tr>
 				<tr>
 					<td>Insurance <br> Type:</td>
@@ -311,7 +311,7 @@ order by team_id
 				<tr><th colspan="3" bgcolor="##e2efc7">Per Region</th></tr>
 				<tr><td>Program :</td>
 						<td><select name="programid" multiple size="5">
-						<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop>
+						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select></td></tr>
 				<tr><td>Region :</td>
 					<td><cfselect name="regionid" query="get_regions" value="regionid" display="regionname" multiple="yes" size="5"></cfselect></td>
@@ -335,7 +335,7 @@ order by team_id
 				<tr><th colspan="3" bgcolor="##e2efc7">Host Family Welcome Letters</th></tr>
 				<tr><td>Program :</td>
 						<td><select name="programid" multiple size="5">
-						<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop>
+						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select></td></tr>
 				<tr>
 					<td>Insurance <br> Type:</td>
@@ -357,7 +357,7 @@ order by team_id
 				<tr><th colspan="2" bgcolor="##e2efc7">Host Family Labels</th></tr>
 				<tr><td>Program :</td>
 					<td><select name="programid" multiple  size="5">
-						<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop>
+						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select></td></tr>
 				<tr>
 					<td>Insurance <br> Type:</td>
@@ -380,7 +380,7 @@ order by team_id
 				<tr><th colspan="3" bgcolor="##e2efc7">School Welcome Letters</th></tr>
 				<tr><td>Program :</td>
 					<td><select name="programid" multiple size="5">
-						<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop>
+						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 						</select>
 					</td>
 				</tr>
@@ -399,7 +399,7 @@ order by team_id
 				<tr><th colspan="3" bgcolor="##e2efc7">School Labels</th></tr>
 			<tr><td>Program :</td>
 					<td><select name="programid" multiple size="5">
-						<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid is '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop>
+						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 						</select>
 					</td>
 				</tr>

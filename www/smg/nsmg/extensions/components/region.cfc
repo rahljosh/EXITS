@@ -54,12 +54,12 @@
                 
 				<cfif VAL(ARGUMENTS.regionID)>
                 	AND
-                    	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                    	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
                 </cfif>    
 				
 				<cfif VAL(ARGUMENTS.companyID)>
                 	AND
-                    	r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                    	r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">
                 </cfif>    
 
 				<cfif NOT VAL(ARGUMENTS.includeGuaranteed)>

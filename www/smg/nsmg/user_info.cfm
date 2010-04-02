@@ -1,3 +1,13 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		user_info.cfm
+	Author:		Marcus Melo
+	Date:		March 18, 2010
+	Desc:		User Information Page
+
+	Updated:	03/18/2010 - Address change email is sent to RM, Facilitator and Thea. 	
+
+----- ------------------------------------------------------------------------- --->
 
 <!--- CHECK RIGHTS --->
 <cfinclude template="check_rights.cfm">
@@ -65,7 +75,7 @@
         	p.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
         <cfif CLIENT.companyid eq 10>
         	AND
-            	p.fk_companyid = 10
+            	p.fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
         </cfif>
         ORDER BY 
         	p.seasonid DESC

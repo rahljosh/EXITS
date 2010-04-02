@@ -34,4 +34,31 @@
 		</cfscript>
 	</cffunction>
 
+
+	<!--- This Functions is stored in extensions/components/udf.cfc --->
+	<cffunction name="createFolder" access="public" returntype="void" output="no" hint="Check if folder exits, if it does not, it creates it">
+        <cfargument name="fullPath" type="string" required="yes" hint="Full Path is required" />
+        
+		<cftry>
+        
+			<!--- Make sure the directories are set up correctly --->
+            <cfif NOT directoryExists(ARGUMENTS.fullPath)>
+                
+                <cfdirectory 
+                	action="create" 
+                    directory="#ARGUMENTS.fullPath#" 
+					mode="777"
+                	/>
+            
+            </cfif>
+		
+            <cfcatch type="any">
+            	<!--- Error Handler --->
+				
+            </cfcatch>
+               
+        </cftry>
+        
+	</cffunction>
+
 </cfsilent>

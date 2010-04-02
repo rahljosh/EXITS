@@ -61,7 +61,7 @@
 			<br><br>
 			Click the link below to start your application process.  
 			<br><br>
-			<a href="http://#exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">http://#exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#</a>
+			<a href="http://#exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">http://#exits_url#/exits/student_app/verify.cfm?s=#get_student.uniqueid#</a>
 			<br><br>
 			You will need the following information to verify your account:<br>
 			*email address<br>
@@ -94,7 +94,7 @@
 	<script language="JavaScript">
 	<!-- 
 	alert("EXITS - You have successfully resent the login information for #get_student.firstname# #get_student.familylastname#. Thank You.");
-		location.replace("http://wep.exitsapplication.com/nsmg/student_app/login_information.cfm?unqid=#url.unqid#");
+		location.replace("http://wep.exitsapplication.com/exits/student_app/login_information.cfm?unqid=#url.unqid#");
 	-->
 	</script>
 	</head>

@@ -49,7 +49,7 @@ Plase note that this message will go out for all branch offices as well.<br>
 			<br><br>
 			Click the link below to start your application process.  
 			<br><br>
-			http://www.student-management.com/nsmg/student_app/?s=E180CA2F-1320-17E0-361BAD89F91C6FDBD</a>
+			http://www.student-management.com/exits/student_app/?s=E180CA2F-1320-17E0-361BAD89F91C6FDBD</a>
 			<br><br>
 			You will need the following information to verify your account:<br>
 			*email address<br>

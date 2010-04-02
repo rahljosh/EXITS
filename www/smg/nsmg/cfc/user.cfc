@@ -24,9 +24,9 @@
                 FROM 
                     smg_companies 
                 WHERE
-                    url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="www.student-management.com"> 
+                    url_ref LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%student-management.com"> 
             </cfquery>
-        
+
         <!--- Production Server --->    
         <cfelse>
         
@@ -37,11 +37,11 @@
                 FROM 
                     smg_companies 
                 WHERE
-                    url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.server_name#"> 
+                    url_ref LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#cgi.server_name#"> 
             </cfquery>
         
         </cfif>        
-    
+
 		<cfif NOT VAL(CLIENT.companyID) AND VAL(qGetCompany.recordcount)>
 			<cfset CLIENT.companyid = qGetCompany.companyid>
             <cfset CLIENT.companyname = qGetCompany.companyname>

@@ -168,7 +168,7 @@
 
 <cfoutput>
 
-<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#qGetCompany.companyshort_nocolor#/school/#qGetCompany.companyshort_nocolor#_school_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cffile action="write" file="#AppPath.sevis##qGetCompany.companyshort_nocolor#/school/#qGetCompany.companyshort_nocolor#_school_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
 	<th>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>

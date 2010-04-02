@@ -13,7 +13,7 @@
 	
 <cfset picture = URLDecode(url.img)>
 
-<cfset directory = '/var/www/html/student-management/nsmg/uploadedfiles/online_app/picture_album/#url.studentid#'>
+<cfset directory = '#AppPath.onlineApp.familyAlbum##url.studentid#'>
 
 <cffile action="delete" file="#directory#/#picture#" mode="777">
 

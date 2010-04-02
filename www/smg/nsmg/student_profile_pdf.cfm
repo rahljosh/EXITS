@@ -160,8 +160,7 @@ Order by birthdate
 <table  width=650 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
 	<hr width=80% align="center">
 	<td bgcolor="F3F3F3" valign="top" width=133><div align="left">
-		<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
-		<cfdirectory directory="#nsmg_directory#" name="file" filter="#client.studentid#.*">
+		<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 		<cfif file.recordcount>
 			<img src="uploadedfiles/web-students/#file.name#" width="135">
 		<cfelse>
@@ -187,8 +186,8 @@ Order by birthdate
 	<br>
 	<table cellpadding=0 cellspacing=0 border=0 width=65% style="font-size:13px">
 		<tr><td align="center" width="360">
-				<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/students" name="stuletter" filter="#get_student_info.studentid#.*">
-				<cfif Right(stuletter.name, 3) EQ 'jpg' OR Right(stuletter.name, 3) EQ 'gif'>
+				<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="stuletter" filter="#get_student_info.studentid#.*">
+				<cfif ListFind("jpg,gif", LCase(Right(stuletter.name, 3)))>
 					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentid=#get_student_info.studentid#&letter=students');">Students Letter</a>
 				<cfelseif stuletter.recordcount>
 					<a href="uploadedfiles/letters/students/#stuletter.name#" target="_blank">Students Letter</a>
@@ -198,8 +197,8 @@ Order by birthdate
 					Students Letter n/a					
 				</cfif>
 				&nbsp - &nbsp 
-				<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/parents" name="paletter" filter="#get_student_info.studentid#.*">
-				<cfif Right(paletter.name, 3) EQ 'jpg' OR Right(paletter.name, 3) EQ 'gif'>
+				<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="paletter" filter="#get_student_info.studentid#.*">
+				<cfif ListFind("jpg,gif", LCase(Right(paletter.name, 3)))>
 					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentid=#get_student_info.studentid#&letter=parents');">Parents Letter</a>
 				<cfelseif paletter.recordcount>
 					<a href="uploadedfiles/letters/parents/#paletter.name#" target="_blank">Parents Letter</a>

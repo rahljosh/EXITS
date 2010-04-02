@@ -73,8 +73,7 @@ function CheckCompany() {
 	WHERE companyid <= '6'
 </cfquery>
 
-<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
-<cfdirectory directory="#nsmg_directory#" name="file" filter="#client.studentid#.*">
+<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">

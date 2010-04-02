@@ -46,7 +46,7 @@ function areYouSure() {
 
 <cfoutput>
 
-<cfset currentDirectory = "/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/#url.type#">
+<cfset currentDirectory = "#AppPath.sevis##get_company.companyshort_nocolor#/#url.type#">
 <!--- Check to see if the Directory exists. --->
 <cfif NOT DirectoryExists(currentDirectory)>
    An error has ocurred. Please contact your system administrator.

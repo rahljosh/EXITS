@@ -701,11 +701,11 @@ colspan="2" align="center"><span class="style11">Problem</span></td>
 
 <!--- start emailing intl agents --->
 
-<cfif directoryExists("/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf")>
-	<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" action="delete" recurse="yes">
+<cfif directoryExists("#AppPath.uploadedFiles#invoices_pdf")>
+	<cfdirectory directory="#AppPath.uploadedFiles#invoices_pdf" action="delete" recurse="yes">
 </cfif>
 
-<cfdirectory action="create" directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" mode="777">
+<cfdirectory action="create" directory="#AppPath.uploadedFiles#invoices_pdf" mode="777">
 
 
 <cfquery name="getAgentIds" datasource="MySQL">
@@ -761,21 +761,32 @@ GROUP BY agentid, testCompid
     </cfquery>
 	
 	<cfswitch expression="#getAgentIds.testCompId#">
-		<cfcase value="10">
+
+        <!--- CSB --->
+		<cfcase value="7,8,9">
+			<cfset compName = "csb">
+			<cfset emailFrom = 'marcel@student-management.com'>
+		</cfcase>
+
+		<!--- Case --->
+        <cfcase value="10">
 			<cfset compName = "case">
 			<cfset emailFrom = 'marcel@case-usa.org'>
-		</cfcase>	
+		</cfcase>
+		
+        <!--- ISE --->        
 		<cfdefaultcase>
 			<cfset compName = "ise">
 			<cfset emailFrom = 'marcel@iseusa.com'>
 		</cfdefaultcase>
+        
 	</cfswitch>
 	
 	<cfloop query="getNewInvPerAgent">
 	
 		<cfset url.id = #getNewInvPerAgent.invoiceId#>
 		
-		<cfdocument format="PDF" filename="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf/#variables.compName#_#getNewInvPerAgent.invoiceId#.pdf" overwrite="yes">
+		<cfdocument format="PDF" filename="#AppPath.uploadedFiles#invoices_pdf/#variables.compName#_#getNewInvPerAgent.invoiceId#.pdf" overwrite="yes">
 		
 			<cfinclude template="invoice_view.cfm">
 		
@@ -818,7 +829,7 @@ marcel@iseusa.com
 		
 		<cfloop query="getNewInvPerAgent">
 		
-			<cfmailparam disposition="attachment" type="html" file="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf/#variables.compName#_#getNewInvPerAgent.invoiceId#.pdf">
+			<cfmailparam disposition="attachment" type="html" file="#AppPath.uploadedFiles#invoices_pdf/#variables.compName#_#getNewInvPerAgent.invoiceId#.pdf">
 
 		</cfloop>
 		

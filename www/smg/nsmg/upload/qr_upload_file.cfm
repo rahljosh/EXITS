@@ -7,73 +7,85 @@
 </head>
 
 <body>
-<!----
-<cftry>
----->
 
-	<!---- Files are written to the dev server... this path should NOT match the path for reading files.---->
-	<cfset directory = '/var/www/smg_upload_files/online_app/#form.folder#'>
+<cfoutput>
 
-	<!----Upload File---->
-	<cffile action = "upload" destination="#directory#" fileField="file_upload" nameConflict="makeunique" mode="777">
-	
-	<!--- check file size - 2mb limit --->
-	<cfset newfilesize = #file.FileSize# / 1024>
-	<cfif newfilesize GT 2048>  
-		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
-		<cfoutput>
-		<script language="JavaScript">
-		<!-- 
-		alert("The file you are trying to upload is bigger than 2mb. Files can not be bigger than 2mb. Please resize your file and try again.");
-			location.replace("form_upload_file.cfm?studentid=#form.studentid#&folder=#form.folder#");
-		-->
-		</script>
-		</cfoutput>
-	</cfif>
-	
-	<!--- file type --->
-	<cfif cffile.clientfileext NEQ 'gif' AND cffile.clientfileext NEQ 'jpg' AND cffile.clientfileext NEQ 'jpeg' AND cffile.clientfileext NEQ 'pdf' AND cffile.clientfileext NEQ 'doc' AND cffile.ClientFileExt NEQ 'GIF' AND cffile.ClientFileExt NEQ 'JPG' AND cffile.ClientFileExt NEQ 'JPEG' AND cffile.clientfileext NEQ 'PDF' AND cffile.clientfileext NEQ 'DOC'>  
-		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
-		<cfoutput>
-		<script language="JavaScript">
-		<!-- 
-		alert("Unfortunately EXITS Online Application does not accept #cffile.clientfileext# files. \n EXITS only accepts files in the following formats: JPG, JPEG, GIF, PDF AND DOC. Please change the file type and try again.");
-			location.replace("form_upload_file.cfm?studentid=#form.studentid#&folder=#form.folder#");
-		-->
-		</script>
-		</cfoutput>
-	</cfif>
+<cfscript>
+	// Set Directory	
+	directory = '#AppPath.onlineApp.inserts##FORM.folder#';
+
+	// Make Sure Directory Exists
+	createFolder(directory);
+</cfscript>
+
+<!----Upload File---->
+<cffile action = "upload" destination="#directory#" fileField="file_upload" nameConflict="makeunique" mode="777">
+
+<cfscript>
+	// Get File Size
+	newfilesize = file.FileSize / 1024;
+</cfscript>
+
+<!--- File Validation - check file size - 2mb limit --->
+<cfif newfilesize GT 2048>  
+
+	<!--- Delete File --->
+	<cffile action="delete" file="#directory#/#CFFILE.serverfile#">
+    
+	<script language="JavaScript">
+        <!-- 
+        alert("The file you are trying to upload is bigger than 2mb. Files can not be bigger than 2mb. Please resize your file and try again.");
+            location.replace("form_upload_file.cfm?studentid=#FORM.studentid#&folder=#FORM.folder#");
+        -->
+    </script>
+
+<!--- File Validation - file type --->    
+<cfelseif NOT ListFind("jpg,peg,gif,pdf,doc", LCase(CFFILE.clientfileext))>
+
+	<!--- Delete File --->
+	<cffile action="delete" file="#directory#/#CFFILE.serverfile#">
+
+	<script language="JavaScript">
+        <!-- 
+        alert("Unfortunately EXITS Online Application does not accept #CFFILE.clientfileext# files. \n EXITS only accepts files in the following formats: JPG, JPEG, GIF, PDF AND DOC. Please change the file type and try again.");
+            location.replace("form_upload_file.cfm?studentid=#FORM.studentid#&folder=#FORM.folder#");
+        -->
+   </script>
+
+<cfelse>
 
 	<!--- Resize Image Files --->
-	<cfif file.ServerFileExt EQ 'jpg' OR file.ServerFileExt EQ 'gif' OR file.ServerFileExt EQ 'jpeg' OR file.ServerFileExt EQ 'JPG' OR file.ServerFileExt EQ 'GIF' OR file.ServerFileExt EQ 'JPEG'> 
-		<cfset filename = '#file.ServerFileName#'>
-		<cfset uploadedImage = cffile.serverfile>
-		
-		
-		<!--- Invoke image.cfc component --->
-		<cfset imageCFC = createObject("component","image") />
-		<!--- scaleX image to 800px wide --->
-		<cfset scaleX800 = imageCFC.scaleX("", "#directory#/#uploadedImage#", "#directory#/new#uploadedImage#", 800)>
-	
-		<!--- if file has been resized ---->
-		<cfif #FileExists("#directory#/new#filename#.#file.ServerFileExt#")#>
-			<!--- delete big file --->
-			<cffile action = "delete" file = "#directory#/#uploadedImage#">
-			<!--- rename new file --->
-			<cffile action="rename" source="#directory#/new#filename#.#file.ServerFileExt#" destination="#directory#/#filename#.#file.ServerFileExt#" attributes="normal" mode="777" nameconflict="overwrite">
-		</cfif>
-		
-	</cfif>
-	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#form.studentid#.#LCase(cffile.clientfileext)#" mode="777">
-		 
+    <cfif ListFind("jpg,peg,gif,tif,png", LCase(file.ServerFileExt))>
+        
+        <cfscript>
+            // Invoke image.cfc component
+            imageCFC = createObject("component","image");
+            
+            // scaleX image to 1000px wide
+            scaleX1000 = imageCFC.scaleX("", "#directory#/#CFFILE.serverfile#", "#directory#/new#CFFILE.serverfile#", 1000);
+        </cfscript>
+        
+        <!--- if file has been resized ---->
+        <cfif FileExists("#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#")>
+            
+            <!--- delete original file --->
+            <cffile action="delete" file="#directory#/#CFFILE.serverfile#">
+            
+            <!--- rename resized file --->
+            <cffile action="rename" source="#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#" destination="#directory#/#FORM.studentid#.#LCase(CFFILE.ServerFileExt)#" attributes="normal" mode="777">
+    
+        </cfif>
+    
+    </cfif>
+
+	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#" mode="777" nameconflict="overwrite">
+
 	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN--->
-	<cflocation url="https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm">
-	<!---- 
-<cfcatch type="any">
-	<cfinclude template="error_message.cfm">	
-</cfcatch>
-</cftry>	
----->
+    <cflocation url="#AppPath.onlineApp.reloadURL#" addtoken="no">
+
+</cfif>
+
+</cfoutput>
 
 </body>
 </html>

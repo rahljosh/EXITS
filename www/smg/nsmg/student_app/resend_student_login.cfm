@@ -63,7 +63,7 @@ You are taking the first step in what will become one of the greatest experience
 <br><br>
 Click the link below to start your application process.  
 <br><br>
-<a href="http://#client.exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">http://#client.exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#</a>
+<a href="http://#client.exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">http://#client.exits_url#/exits/student_app/verify.cfm?s=#get_student.uniqueid#</a>
 <br><br>
 You will need the following information to verify your account:<br>
 *email address<br>

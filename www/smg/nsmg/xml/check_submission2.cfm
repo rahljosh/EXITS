@@ -1,6 +1,6 @@
 
 
-<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles'>
+<cfset nsmg_directory = AppPath.uploadedFiles>
 
 <cfquery name="smg_students" datasource="MySql">
 	SELECT s.* <!----, u.businessname, u.businessname, u.master_accountid, app_indicated_program---->

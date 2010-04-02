@@ -126,7 +126,7 @@ Sorry, there were no students to populate the XML file at this time.
 <!-- dump the resulting XML document object -->
 <!--- <cfdump var="#sevis_batch#"> --->
 <cfoutput>
-<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/activate/#get_company.companyshort_nocolor#_activate_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cffile action="write" file="#AppPath.sevis##get_company.companyshort_nocolor#/activate/#get_company.companyshort_nocolor#_activate_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
 	<th>#get_company.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>

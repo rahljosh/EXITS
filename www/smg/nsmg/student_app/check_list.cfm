@@ -9,8 +9,6 @@
 
 <cftry>
 
-<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles'>
-
 <cfquery name="smg_students" datasource="MySql">
 	SELECT s.*, u.businessname, u.businessname, u.master_accountid, app_indicated_program
 	FROM smg_students s
@@ -31,7 +29,6 @@
 	WHERE studentid = <cfqueryparam value="#smg_students.studentid#" cfsqltype="cf_sql_integer">
 </cfquery>
 
-<cfdirectory name="page04_family_album" directory="#nsmg_directory#/online_app/picture_album/#client.studentid#">
 
 <cfquery name="smg_student_app_school_year" datasource="MySql">
 	SELECT yearid, studentid, beg_year, end_year, class_year 
@@ -74,20 +71,23 @@
 	</cfquery>
 </cfloop>
 
-<!--- CHECK FOR UPLOADED FILE --->
+<!--- Check for Uploaded Files --->
 
-<!--- PASSPORT PICTURE --->
-<cfdirectory directory="#nsmg_directory#/web-students/" name="check_01_upload" filter="#client.studentid#.*">
+<!--- Passport Photo --->
+<cfdirectory directory="#AppPath.onlineApp.picture#" name="check_01_upload" filter="#smg_students.studentid#.*">
 
-<!--- STUDENTS LETTER --->
-<cfdirectory directory="#nsmg_directory#/letters/students/" name="check_05_upload" filter="#smg_students.studentid#.*">
+<!--- Family Album --->
+<cfdirectory name="page04_family_album" directory="#AppPath.onlineApp.familyAlbum##smg_students.studentid#">
 
-<!--- PARENTS LETTER --->
-<cfdirectory directory="#nsmg_directory#/letters/parents/" name="check_06_upload" filter="#smg_students.studentid#.*">
+<!--- Students Letter --->
+<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="check_05_upload" filter="#smg_students.studentid#.*">
 
-<!--- <cfloop from="10" to="21" index="i">  --->
+<!--- Parents Letter --->
+<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="check_06_upload" filter="#smg_students.studentid#.*">
+
+<!--- Inserts --->
 <cfloop list="08,09,10,11,12,13,14,15,16,17,18,19,20,21" index="i">
-	<cfdirectory directory="#nsmg_directory#/online_app/page#i#" name="check_#i#_upload" filter="#client.studentid#.*">	
+	<cfdirectory directory="#AppPath.onlineApp.inserts#page#i#" name="check_#i#_upload" filter="#smg_students.studentid#.*">	
 </cfloop>
 
 <cfinclude template="querys/get_latest_status.cfm">

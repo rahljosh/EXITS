@@ -5,14 +5,14 @@
 	</table>
 
 <cffile action="upload"
-    destination="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/flight_verification/"
+    destination="#AppPath.xmlFiles#flight_verification/"
     nameConflict="overwrite"
     fileField="form.flights"
 	mode="777"
 	accept="text/xml">
 
 
-<cfset FlightXMLFile = XMLParse('/var/www/html/student-management/nsmg/uploadedfiles/xml_files/flight_verification/#file.serverfile#')>
+<cfset FlightXMLFile = XMLParse('#AppPath.xmlFiles#flight_verification/#file.serverfile#')>
 
 <cfset numberofstudents = ArrayLen(#FlightXMLFile.FlightInfoCollection.FlightInfo#)>
 <!----

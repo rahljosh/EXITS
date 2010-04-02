@@ -33,13 +33,42 @@
 			// Check for local servers
 			if (	
 				FindNoCase("dev.student-management.com", CGI.http_host) OR 
-				FindNoCase("developer", server.ColdFusion.ProductLevel)
+				FindNoCase("developer", server.ColdFusion.ProductLevel) OR
+				FindNoCase("119cooper", CGI.http_host) OR
+				FindNoCase("111cooper", CGI.http_host)
 			){
 				return(true);
 			} else {
 				return(false);
 			}
 		</cfscript>
+	</cffunction>
+
+
+	<!--- Create Folder if it does not exist --->
+	<cffunction name="createFolder" access="public" returntype="void" output="no" hint="Check if folder exits, if it does not, it creates it">
+        <cfargument name="fullPath" type="string" required="yes" hint="Full Path is required" />
+        
+		<cftry>
+        
+			<!--- Make sure the directories are set up correctly --->
+            <cfif NOT directoryExists(ARGUMENTS.fullPath)>
+                
+                <cfdirectory 
+                	action="create" 
+                    directory="#ARGUMENTS.fullPath#" 
+					mode="777"
+                	/>
+            
+            </cfif>
+		
+            <cfcatch type="any">
+            	<!--- Error Handler --->
+				
+            </cfcatch>
+               
+        </cftry>
+        
 	</cffunction>
 
 
@@ -78,5 +107,34 @@
         
         <cfreturn outText>
     </cffunction>
+
+	
+	<cffunction name="SafeJavascript" access="public" returntype="string" output="No" hint="Escapes double and single quotes for javascript strings">
+		<cfargument name="Text" type="string" required="Yes" />
+		
+		<cfscript>
+			// Remove Foreign Accents
+			ARGUMENTS.text = removeAccent(ARGUMENTS.text);
+			
+			// Escape backslashes so they are not, in themselves, espace characters
+			ARGUMENTS.Text = Replace(ARGUMENTS.Text, "\", "\\", "ALL");
+			
+			// Remove Blank Spaces
+			ARGUMENTS.Text = Replace(ARGUMENTS.Text, " ", "", "ALL");
+
+			// Pound Sign
+			ARGUMENTS.Text = Replace(ARGUMENTS.Text, Chr(35), "", "ALL");
+
+			// Single quotes
+			ARGUMENTS.Text = Replace(ARGUMENTS.Text, Chr(39), ("\" & Chr(39)), "ALL");
+			ARGUMENTS.Text = Replace(ARGUMENTS.Text, "&##39;", ("\" & Chr(39)), "ALL");
+			
+			// Double quotes
+			ARGUMENTS.Text = Replace(ARGUMENTS.Text, Chr(34), ("\" & Chr(34)), "ALL");
+			ARGUMENTS.Text = Replace(ARGUMENTS.Text, "&##34;", ("\" & Chr(34)), "ALL");
+						
+			return(ARGUMENTS.Text);
+		</cfscript>
+	</cffunction>
 
 </cfcomponent>

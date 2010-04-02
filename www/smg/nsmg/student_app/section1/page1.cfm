@@ -91,8 +91,7 @@ function areYouSure() {
 	WHERE app_type = 'additional'
 </cfquery>  
 
-<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
-<cfdirectory directory="#nsmg_directory#" name="file" filter="#client.studentid#.*">
+<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -120,10 +119,10 @@ function areYouSure() {
 		<td width="150" rowspan="11" align="left" valign="top">
 			<cfif file.recordcount>
 				<img src="../uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
-				<a class=nav_bar href="" onClick="javascript: win=window.open('http://upload.student-management.com/form_upload_page1.cfm?studentid=#studentid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/docs.gif" border=0>Upload</a> 
-				/<a href="http://upload.student-management.com/qr_delete_page1.cfm?studentid=#client.studentid#" onClick="return areYouSure(this);"><img src="pics/button_drop.png" border=0>Delete</a>
+				<a class=nav_bar href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page1.cfm?studentid=#studentid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/docs.gif" border=0>Upload</a> 
+				/<a href="#AppPath.onlineApp.uploadURL#qr_delete_page1.cfm?studentid=#client.studentid#" onClick="return areYouSure(this);"><img src="pics/button_drop.png" border=0>Delete</a>
 			<cfelse>
-				<a class=nav_bar href="" onClick="javascript: win=window.open('http://upload.student-management.com/form_upload_page1.cfm?studentid=#studentid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/no_image.gif" border=0></a>
+				<a class=nav_bar href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page1.cfm?studentid=#studentid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/no_image.gif" border=0></a>
 			</cfif>
 		</td>
 		<td colspan="3"><b>Student's Name</b> &nbsp; <font size="-2">PS: Please do not use any type of accent.</font></td>
