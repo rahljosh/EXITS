@@ -20,7 +20,7 @@
 
 <cfoutput query="get_student_info">
 
-<cfdirectory action="list" name="fam_pics" directory="#expandPath("#path#../uploadedfiles/online_app/picture_album/#get_student_info.studentid#")#">
+<cfdirectory action="list" name="fam_pics" directory="#AppPath.onlineApp.familyAlbum##get_student_info.studentid#">
 
 <cfif not IsDefined('url.curdoc')>
 <table align="center" width=90% cellpadding=0 cellspacing=0  border=0> 

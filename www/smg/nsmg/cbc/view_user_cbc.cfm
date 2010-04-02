@@ -63,7 +63,7 @@
 	
     <cftry>
 
-        <cffile action="read" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file#" variable="receivedFile">
+        <cffile action="read" file="#AppPath.cbcXML##qGetBatchInfo.companyshort#/#URL.file#" variable="receivedFile">
     
         <cfscript>
             // Parse XML File
@@ -92,7 +92,7 @@
         </cfscript>
 	
     	<cfif LEN(qGetBatchInfo.xml_received)>
-	    	<cffile action="delete" file="/var/www/html/student-management/nsmg/uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file#">
+	    	<cffile action="delete" file="#AppPath.cbcXML##qGetBatchInfo.companyshort#/#URL.file#">
     	</cfif>
         
         <cfcatch type="any">

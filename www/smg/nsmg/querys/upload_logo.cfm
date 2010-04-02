@@ -10,17 +10,15 @@
 
 <cfoutput>
 
-<cfset directory = '/var/www/html/student-management/nsmg/pics/logos'>
-
 <!----Upload File---->
-<cffile action="upload" destination="#directory#" fileField="UploadFile" nameConflict="makeunique" charset="utf-8" mode="777">
+<cffile action="upload" destination="#AppPath.companyLogo#" fileField="UploadFile" nameConflict="makeunique" charset="utf-8" mode="777">
 	
-	<cffile action="rename" source="#directory#/#cffile.serverfile#" destination="#directory#/#form.userid#.#file.ServerFileExt#">	
+	<cffile action="rename" source="#AppPath.companyLogo#/#cffile.serverfile#" destination="#AppPath.companyLogo#/#form.userid#.#file.ServerFileExt#">	
 		
 	<!--- check file size - 1mb limit --->
 	<cfset newfilesize = file.FileSize / 1024>
 	<cfif newfilesize GT 1024>  
-		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
+		<cffile action = "delete" file = "#AppPath.companyLogo#/#cffile.serverfile#">
 			<script language="JavaScript">
 			<!-- 
 			alert("The logo you are trying to upload is bigger than 1mb. Logos can not be bigger than 1mb. Please try again.");
@@ -31,8 +29,8 @@
 	</cfif>
 
 	<!--- check image extension --->
-	<cfif cffile.ClientFileExt NEQ 'gif' AND cffile.ClientFileExt NEQ 'jpg' AND cffile.ClientFileExt NEQ 'jpeg' AND cffile.ClientFileExt NEQ 'GIF' AND cffile.ClientFileExt NEQ 'JPG' AND cffile.ClientFileExt NEQ 'JPEG'>
-		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
+	<cfif NOT ListFind("jpg,peg,gif,tif,png", LCase(cffile.clientfileext))>
+		<cffile action = "delete" file = "#AppPath.companyLogo#/#cffile.serverfile#">
 			<script language="JavaScript">
 			<!-- 
 			alert("You can only upload logos on the following formats: .gif, .jpg, or .jpeg.");
@@ -49,13 +47,13 @@
 	<!--- Invoke image.cfc component --->
 	<cfset imageCFC = createObject("component","image") />
 	<!--- scaleY image to 71px height --->
-	<cfset scaleY71 = imageCFC.scaleY("", "#directory#/#uploadedImage#", "#directory#/new#uploadedImage#", 71)>
+	<cfset scaleY71 = imageCFC.scaleY("", "#AppPath.companyLogo#/#uploadedImage#", "#AppPath.companyLogo#/new#uploadedImage#", 71)>
 	<!--- if file has been resized ---->
-	<cfif #FileExists("#directory#/new#filename#.#file.ServerFileExt#")#>
+	<cfif #FileExists("#AppPath.companyLogo#/new#filename#.#file.ServerFileExt#")#>
 		<!--- delete big file --->
-		<cffile action = "delete" file = "#directory#/#uploadedImage#">
+		<cffile action = "delete" file = "#AppPath.companyLogo#/#uploadedImage#">
 		<!--- rename new file --->
-		<cffile action="rename" source="#directory#/new#filename#.#file.ServerFileExt#" destination="#directory#/#filename#.#file.ServerFileExt#">
+		<cffile action="rename" source="#AppPath.companyLogo#/new#filename#.#file.ServerFileExt#" destination="#AppPath.companyLogo#/#filename#.#file.ServerFileExt#">
 	</cfif>
 	--->
 

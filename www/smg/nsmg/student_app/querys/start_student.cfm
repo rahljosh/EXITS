@@ -262,7 +262,7 @@
         <br><br>
         Click the link below to start your application process.  
         <br><br>
-        <a href="http://#client.exits_url#/nsmg/student_app/?s=#uniqueid#">http://#client.exits_url#/nsmg/student_app/?s=#uniqueid#</a>
+        <a href="http://#client.exits_url#/nsmg/student_app/?s=#uniqueid#">http://#client.exits_url#/exits/student_app/?s=#uniqueid#</a>
         <br><br>
         You will need the following information to verify your account:<br>
         *email address<br>

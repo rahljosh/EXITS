@@ -22,7 +22,7 @@
 		FROM smg_pictures
 	</cfquery>
 
-	<cfset directory = '/var/www/html/student-management/nsmg/uploadedfiles/welcome_pics'>
+	<cfset directory = AppPath.welcomePics>
 	
 	<!----Upload File---->
 	<cffile action="upload" destination="#directory#" fileField="file_upload" nameConflict="overwrite">

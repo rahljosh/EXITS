@@ -21,7 +21,7 @@
 
 <cfoutput>
 
-<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/#url.letter#/" name="letter" filter="#studentid#.*">
+<cfdirectory directory="#AppPath.onlineApp.letters##url.letter#/" name="letter" filter="#studentid#.*">
 <table width="680" border="0" cellpadding="3" cellspacing="0" align="center">
 <cfif letter.recordcount>	
 	<tr><td><img src="../uploadedfiles/letters/#url.letter#/#letter.name#" width="680" height="860"></td></tr>

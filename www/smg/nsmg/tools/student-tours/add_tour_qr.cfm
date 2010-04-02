@@ -8,7 +8,7 @@
 <body>
 
 
-<cfset directory = '/var/www/html/student-management/nsmg/uploadedfiles/student-tours'>
+<cfset directory = '#AppPath.uploadedFiles#student-tours'>
 	
 	<!----Upload File---->
 	<cffile action="upload" destination="#directory#" fileField="file_upload" nameConflict="overwrite">

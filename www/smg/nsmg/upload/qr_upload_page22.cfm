@@ -1,6 +1,3 @@
-<!--- Include Functions File --->
-<cfinclude template="_functions.cfm">
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -12,7 +9,7 @@
 <body>
 
 	<!---- Files are written to the dev server... this path should NOT match the path for reading files.---->
-	<cfset directory = "/var/www/smg_upload_files/virtualfolder/#form.studentid#/page22">
+	<cfset directory = "#AppPath.onlineApp.virtualFolder##form.studentid#/page22">
 
 	<!----Upload File---->
 	<cffile action="upload" destination="#directory#" fileField="file_upload" nameConflict="makeunique" mode="777">
@@ -34,7 +31,7 @@
 	</cfif>
 	
 	<!--- file type --->
-    <cfif NOT ListFind("jpg,jpeg,gif,tif,png,pdf,doc", cffile.clientfileext)>
+    <cfif NOT ListFind("jpg,peg,gif,tif,png,pdf,doc", LCase(cffile.clientfileext))>
 		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
 		<cfoutput>
 			<script language="JavaScript">
@@ -46,9 +43,9 @@
 		</cfoutput>
 		<cfabort>
 	</cfif>
-
+`
 	<!--- Resize Image Files --->
-	<cfif ListFind("jpg,jpeg,gif", cffile.clientfileext)> 
+	<cfif ListFind("jpg,peg,gif,tif,png", LCase(cffile.clientfileext))> 
 		<cfset filename = file.ServerFileName>
 		<cfset uploadedImage = cffile.serverfile>
 	
@@ -73,7 +70,7 @@
 		 
 	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN --->
 
-	<cflocation url="https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm">
+	<cflocation url="#AppPath.onlineApp.reloadURL#" addtoken="no">
     
 </body>
 </html>

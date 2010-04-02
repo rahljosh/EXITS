@@ -79,7 +79,7 @@ function PrintFile(url)
 
 <!--- EXAMPLE 1: Creating - Check that the directory exists to avoid getting a ColdFusion error message. --->
 <!--- <cfset currentDirectory = GetDirectoryFromPath(GetTemplatePath()) & "uploadedfiles\virtualfolder\#get_student_info.studentid#"> --->
-<cfset currentDirectory = "/var/www/html/student-management/nsmg/uploadedfiles/virtualfolder/#get_student_info.studentid#">
+<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##get_student_info.studentid#">
 
 <!--- Check to see if the Directory exists. --->
 <cfif NOT DirectoryExists(currentDirectory)>
@@ -136,7 +136,7 @@ function PrintFile(url)
 	<cfset newsize = #size# / '4024'>
 	<tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
 	
-		<cfif Right(name, 3) EQ 'JPG' OR Right(name, 3) EQ 'PEG' OR Right(name, 3) EQ 'GIF' OR Right(name, 3) EQ 'BMP'>
+		<cfif ListFind("jpg,peg,gif,tif,bmp", LCase(Right(name, 3)))>
 			<td><a href="javascript:PrintFile('print_file.cfm?studentid=#get_student_info.studentid#&file=#name#');">#name#</a></td>
 		<cfelse>
 			<td align="center"><a href="../uploadedfiles/virtualfolder/#get_student_info.studentid#/#name#" target="_blank">#name#</a></td>
@@ -145,7 +145,7 @@ function PrintFile(url)
 		<td>#dateLastModified#</td>
 		<td>#get_category.category# <cfif get_category.other_category NEQ ''> &nbsp; - &nbsp; #get_category.other_category#</cfif></td>
 	  
-		<cfif Right(name, 3) EQ 'JPG' OR Right(name, 3) EQ 'PEG' OR Right(name, 3) EQ 'GIF' OR Right(name, 3) EQ 'BMP'>
+		<cfif ListFind("jpg,peg,gif,tif,bmp", LCase(Right(name, 3)))>
 			<td><a href="javascript:PrintFile('print_file.cfm?studentid=#get_student_info.studentid#&file=#name#');"><img src="vfolderview.gif" border="0" alt="View File"></img></a></td>
 		<cfelse>
 			<td align="center"><a href="../uploadedfiles/virtualfolder/#get_student_info.studentid#/#name#" target="_blank"><img src="vfolderview.gif" border="0" alt="View File"></img></a></td>

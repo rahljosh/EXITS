@@ -77,6 +77,7 @@
 	<cffunction name="getUserAccessRights" access="public" returntype="query" output="false" hint="Gets user access rights for a user or region">
     	<cfargument name="userID" type="numeric" default="0" hint="userID is required">
         <cfargument name="regionID" type="numeric" default="0" hint="regionID is required">
+        <cfargument name="companyID" type="numeric" default="0" hint="companyID is required">
               
         <cfquery 
 			name="qGetUserAccessRights" 
@@ -109,6 +110,14 @@
                 	AND
                     	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 </cfif>   
+
+				<cfif ARGUMENTS.companyID EQ 10>
+                	AND
+                    	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                <cfelse>
+                	AND
+                    	uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                </cfif>
 
 				ORDER BY
                 	uar.default_access DESC                               

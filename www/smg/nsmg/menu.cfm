@@ -330,6 +330,6 @@
 
 <script type="text/javascript">
 <!--
-	var MenuBar1 = new Spry.Widget.MenuBar("MenuBar1", {imgDown:"/nsmg/SpryAssets/SpryMenuBarDownHover.gif", imgRight:"/nsmg/SpryAssets/SpryMenuBarRightHover.gif"});
+	var MenuBar1 = new Spry.Widget.MenuBar("MenuBar1", {imgDown:"/exits/SpryAssets/SpryMenuBarDownHover.gif", imgRight:"/exits/SpryAssets/SpryMenuBarRightHover.gif"});
 //-->
 </script>

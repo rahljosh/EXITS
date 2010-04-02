@@ -10,7 +10,7 @@
 
 
 
-<!--- <cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf " action="delete" mode="777">
+<!--- <cfdirectory directory="#AppPath.uploadedFiles#invoices_pdf " action="delete" mode="777">
 blalbalzzz
 <cfabort> --->
 

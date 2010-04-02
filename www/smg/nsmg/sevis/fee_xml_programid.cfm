@@ -111,5 +111,5 @@
 <!--- dump the resulting XML document object --->
 <cfdump var=#transmission#>
 <cfoutput>					
-<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/fee/#get_company.companyshort_nocolor#_fee_00#get_bulkid.bulkid#.xml" output=#toString(transmission)# nameconflict="makeunique">
+<cffile action="write" file="#AppPath.sevis##get_company.companyshort_nocolor#/fee/#get_company.companyshort_nocolor#_fee_00#get_bulkid.bulkid#.xml" output=#toString(transmission)# nameconflict="makeunique">
 </cfoutput>

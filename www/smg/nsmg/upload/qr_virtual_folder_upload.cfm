@@ -59,7 +59,7 @@
 </cfif>
 
 <!--- Resize Image Files --->
-<cfif file.ServerFileExt EQ 'jpg' OR file.ServerFileExt EQ 'gif' OR file.ServerFileExt EQ 'png' OR file.ServerFileExt EQ 'tif'> 
+<cfif ListFind("jpg,peg,gif,png,tif", LCase(file.ServerFileExt))>
 	<cfset filename = '#file.ServerFileName#'>
 	<cfset uploadedImage = cffile.serverfile>
 	<cfset filename = '#file.ServerFileName#'>
@@ -166,7 +166,7 @@ TYPE="HTML">
 			The document has been recorded in the category #get_category.category# <cfif form.other_category NEQ ''>&nbsp; - &nbsp; #form.other_category#</cfif>.<br><br></td></tr>	
 	<tr><td>
 		Please click
-		<a href="https://www.student-management.com/nsmg/virtualfolder/list_vfolder.cfm?unqid=#form.unqid#">here</a> and
+		<a href="http://www.student-management.com/nsmg/virtualfolder/list_vfolder.cfm?unqid=#form.unqid#">here</a> and
 		to see the student's virtual folder.<br><br>
 		<!---
         <a href="http://www.student-management.com/nsmg/index.cfm?curdoc=intrep/int_student_info&unqid=#form.unqid#">here</a> and click on Virtual Folder (top-right)

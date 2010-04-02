@@ -100,7 +100,7 @@ where studentid = #client.studentid#
 	</td></tr>
 	<tr><td valign="top">
 			<!--- DO NOT PRINT PAGES 5 IF PDF or DOC is attached --->
-			<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/students" name="page5" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="page5" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page5.name, 3) NEQ 'pdf' AND Right(page5.name, 3) NEQ 'doc'>	
 				<cfinclude template="section1/page5print.cfm">
 				<div style="page-break-after:always;"></div>	
@@ -108,7 +108,7 @@ where studentid = #client.studentid#
 	</td></tr>
 	<tr><td valign="top">
 			<!--- DO NOT PRINT PAGES 5 IF PDF or DOC is attached --->
-			<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/letters/parents" name="page6" filter="#get_student_info2.studentid#.*">
+			<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="page6" filter="#get_student_info2.studentid#.*">
 			<cfif Right(page6.name, 3) NEQ 'pdf' AND Right(page6.name, 3) NEQ 'doc'>	
 				<cfinclude template="section1/page6print.cfm">
 				<div style="page-break-after:always;"></div>
@@ -155,7 +155,7 @@ where studentid = #client.studentid#
 
 	<tr><td valign="top">			
 			<!--- DO NOT PRINT PAGE 14 if PDF or DOC is attached --->
-			<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page14" name="page14" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.inserts#page14" name="page14" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page14.name, 3) NEQ 'pdf' AND Right(page14.name, 3) NEQ 'doc'>	
 				<cfinclude template="section3/page14print.cfm">
 				<cfif printpage EQ 'yes'>
@@ -167,7 +167,7 @@ where studentid = #client.studentid#
 	<!--- SECTION 4 --->
 	<!--- DO NOT PRINT PAGES 15, 16 AND 17 if PDF or DOC are attached --->
 	<tr><td valign="top">
-			<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page15" name="page15" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.inserts#page15" name="page15" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page15.name, 3) NEQ 'pdf' AND Right(page15.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page15print.cfm">
 				<cfif printpage EQ 'yes'>
@@ -176,7 +176,7 @@ where studentid = #client.studentid#
 			</cfif>
 	</td></tr>
 	<tr><td valign="top">
-			<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page16" name="page16" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.inserts#page16" name="page16" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page16.name, 3) NEQ 'pdf' AND Right(page16.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page16print.cfm">
 				<cfif printpage EQ 'yes'>
@@ -185,7 +185,7 @@ where studentid = #client.studentid#
 			</cfif>
 	</td></tr>
 	<tr><td valign="top">		
-			<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page17" name="page17" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.inserts#page17" name="page17" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page17.name, 3) NEQ 'pdf' AND Right(page17.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page17print.cfm">
 				<cfif printpage EQ 'yes'>
@@ -207,7 +207,7 @@ where studentid = #client.studentid#
 	<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS --->
 	<cfif IsDefined('client.usertype') AND client.usertype NEQ 10 AND get_student_info2.master_accountid NEQ 10115 AND get_student_info2.intrep NEQ 10115 AND get_student_info2.intrep NEQ 8318>
 		<tr><td valign="top">		
-				<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page20" name="page20" filter="#get_student_info2.studentid#.*">
+				<cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#get_student_info2.studentid#.*">
 				<cfif Right(page20.name, 3) NEQ 'pdf' AND Right(page20.name, 3) NEQ 'doc'>
 					<cfinclude template="section4/page20print.cfm">
 					<cfif printpage EQ 'yes'>
@@ -216,7 +216,7 @@ where studentid = #client.studentid#
 				</cfif>
 		</td></tr>
 		<tr><td valign="top">
-				<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page21" name="page21" filter="#get_student_info2.studentid#.*">
+				<cfdirectory directory="#AppPath.onlineApp.inserts#page21" name="page21" filter="#get_student_info2.studentid#.*">
 				<cfif Right(page21.name, 3) NEQ 'pdf' AND Right(page21.name, 3) NEQ 'doc'>
 					<cfinclude template="section4/page21print.cfm">
 				</cfif>
@@ -225,14 +225,12 @@ where studentid = #client.studentid#
 </table>
 
 <!--- PRINT PAGE 22 SUPPLEMENTS --->
-<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles'>
-
-<cfset currentDirectory = "#nsmg_directory#/virtualfolder/#get_student_info2.studentid#/page22">
+<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder#/#get_student_info2.studentid#/page22">
 
 <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
 
 <cfoutput query="mydirectory">
-	<cfif (#Right(name, 3)# EQ 'jpg' OR #Right(name, 3)# EQ 'gif' OR #Right(name, 3)# EQ 'bmp' OR #Right(name, 3)# EQ 'peg')>
+    <cfif ListFind("jpg,peg,gif,tif,png", LCase(Right(name, 3)))>
 	<div style="page-break-after:always;"></div><br>
 	<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
 		<tr><td><img src="../uploadedfiles/virtualfolder/#get_student_info2.studentid#/page22/#name#" width="660" height="820"></td></tr>

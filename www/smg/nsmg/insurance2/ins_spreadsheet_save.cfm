@@ -215,7 +215,4 @@ relatively correct Internet Explorer behavior. --->
 				</table>"
 				>
 			<cffile action="write" file="/ output="#my_code#" addnewline="yes" nameconflict="overwrite"> 	
-<!----
-<cffile action="write" file="/var/www/html/student-management/nsmg/sevis/xml/#get_company.companyshort#/activate/#get_company.companyshort#_activate_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
----->
 </cfoutput>

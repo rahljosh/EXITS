@@ -190,7 +190,7 @@
 <!-- dump the resulting XML document object -->
 <cfdump var="#sevis_batch#">
 <cfoutput>
-<cffile action="write" file="/var/www/html/student-management/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/#get_company.companyshort_nocolor#_end_prog_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cffile action="write" file="#AppPath.sevis##get_company.companyshort_nocolor#/#get_company.companyshort_nocolor#_end_prog_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 </cfoutput>
 
 </body>

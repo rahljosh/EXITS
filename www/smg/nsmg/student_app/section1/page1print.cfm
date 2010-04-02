@@ -49,8 +49,7 @@
 	WHERE app_programid = '#get_student_info.app_additional_program#'
 </cfquery> 
 
-<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
-<cfdirectory directory="#nsmg_directory#" name="file" filter="#client.studentid#.*">
+<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 
 <cfif NOT IsDefined('url.curdoc')>
 <table align="center" width=90% cellpadding=0 cellspacing=0 border=0> 

@@ -84,13 +84,11 @@ function OpenDesc(url) {
 
 <div class="section"><br>
 
-<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/online_app/picture_album/#client.studentid#'>
-
 <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
 	<tr>  
 		<td> 
 			<cfoutput>
-			<cfdirectory action="list" name="fam_pics" directory="#nsmg_directory#">
+			<cfdirectory action="list" name="fam_pics" directory="#AppPath.onlineApp.familyAlbum##client.studentid#">
 			Please upload recent pictures (within 2 years) of you, your family, and friends.  
 			Describe each photo in the space provided. <br> 
 			<strong>PICTURES SHOULD BE EITHER JPEG, JPG OR GIF. </strong><br>
@@ -104,7 +102,7 @@ function OpenDesc(url) {
 				You are not able to upload more photos unless you decide to delete one of the photos below.<br><br></b>
 			<cfelse>
 				<div align="center">
-					<a href="" onClick="javascript: win=window.open('http://upload.student-management.com/form_upload_album.cfm?studentid=#client.studentid#', 'UploadPics', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/uploadpic.gif" border=0></a>
+					<a href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_album.cfm?studentid=#client.studentid#', 'UploadPics', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/uploadpic.gif" border=0></a>
 				</div>
 				<br><br>
 			</cfif>

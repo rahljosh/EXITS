@@ -1,0 +1,25 @@
+@charset "utf-8";
+/* CSS Document */
+
+.profileTable {
+	border-left: 1px solid #999;
+	border-right: 1px solid #999;;
+	border-bottom: 1px solid #999;;
+	border-top: 1px solid #999;;
+	padding: 6px 6px 6px 12px;
+	margin-bottom:10px;
+}
+
+.titleLeft {
+	width:200px;
+	vertical-align:top;
+}
+
+.titleCenter {
+	vertical-align:top;
+	text-align:center;
+}
+
+.titleRight {
+	vertical-align:top;
+}

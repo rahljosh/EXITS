@@ -1,36 +1,43 @@
 <cfapplication 
 	name="smg" 
     clientmanagement="yes">
+
+	<!--- Keep the same application name as ../Application.cfm so they can share the same APPLICATION variables --->
     
     <cfparam name="APPLICATION.DSN" default="MySQL">
     <cfparam name="APPLICATION.support_email" default="support@student-management.com">
     <cfparam name="APPLICATION.site_url" default="http://www.student-management.com">
 
+	<!--- Param Client Variables --->
+    <cfparam name="CLIENT.companyShort" default="SMG"> 
+    <cfparam name="CLIENT.support_email" default="support@student-management.com"> 
+		       
 
 	<!--- Added by Marcus Melo - 11/20/2009 --->
     <cfscript>
+		if ( StructKeyExists(APPLICATION, "CFC") ) {
+			// Set a short name for the CFCs
+			AppCFC = APPLICATION.CFC;
+		}
+	
+		if ( StructKeyExists(APPLICATION, "Path") ) {
+		   // Set a short name for the APPLICATION.PATH
+			AppPath = APPLICATION.PATH;
+		}
+
+		if ( StructKeyExists(APPLICATION, "EMAIL") ) {
+			// Set a short name for the APPLICATION.EMAIL
+			AppEmail = APPLICATION.EMAIL;
+		}
+		
 		// List of User IDs that are not allowed to submit Online Applications
 		// Dream I - 03/23/2010
         APPLICATION.submitAppNotAllowed = "6559"; 
 		
 		// List of User IDs that are not allowed to view the Student and Host Family Profile
-		// STB
+		// Current Intl. Rep: STB
 		APPLICATION.displayProfileNotAllowed = "19";
-		
-		/***** Create APPLICATION.EMAIL structure *****/
-        APPLICATION.EMAIL = StructNew();		
-    
-        // Set a short name for the CFCs
-        AppEmail = APPLICATION.EMAIL;
-    
-        AppEmail.support = 'support@student-management.com';
-        AppEmail.finance = 'marcel@student-management.com';
-        AppEmail.errors = 'errors@student-management.com';
     </cfscript>
-
-	<!--- Param Client Variables --->
-    <cfparam name="CLIENT.companyShort" default="SMG"> 
-    <cfparam name="CLIENT.support_email" default="support@student-management.com"> 
 
 
 	<!--- always allow logout. --->

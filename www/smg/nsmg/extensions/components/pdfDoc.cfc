@@ -107,12 +107,12 @@
 				shortName = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_nocolor;
 				
 				// Set Folder Path
-				setFolderPath = "#APPLICATION.PATH.base##APPLICATION.PATH.pdfDocs#/#shortName#/#folderName#";
+				setFolderPath = "#APPLICATION.PATH.pdfDocs#/#shortName#/#folderName#";
 				
 				// Check if folder exits
 				createFolder(fullPath=setFolderPath);
 			</cfscript>
-
+			
             <cftry>
             
 				<!--- Upload File /  filefield -> Do not use ## or Scope.  --->

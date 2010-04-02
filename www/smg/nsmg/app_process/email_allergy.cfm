@@ -104,7 +104,7 @@ FROM="""#companyshort.companyshort# Support"" <#client.support_email#>"
 	<BODY>
 	
 	<!--- Attach allergy form --->
-	<cfmailparam file="/var/www/html/student-management/nsmg/uploadedfiles/pdf_docs/allergy_info_form.pdf"/>
+	<cfmailparam file="#AppPath.pdfDocs#allergy_info_form.pdf"/>
 		
 	<!--- Page Header --->
 	<table width="650" border="0" bgcolor="FFFFFF"> 

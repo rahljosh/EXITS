@@ -10,7 +10,7 @@
 
 <cftry>
 
-<cfset directory = "/var/www/smg_upload_files/virtualfolder/#form.studentid#/page22">
+<cfset directory = "#AppPath.onlineApp.virtualFolder##form.studentid#/page22">
 
 <cffile action = "delete" file = "#directory#/#form.deletefile#">
 
@@ -21,7 +21,7 @@
 <script language="JavaScript">
 <!-- 
 alert("You have successfully deleted the #form.deletefile# file.");
-	location.replace("http://www.student-management.com/nsmg/student_app/index.cfm?curdoc=section4/page22&id=4&p=22");
+	location.replace("#AppPath.onlineApp.URL#index.cfm?curdoc=section4/page22&id=4&p=22");
 //-->
 </script>
 

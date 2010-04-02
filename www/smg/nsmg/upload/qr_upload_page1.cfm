@@ -12,7 +12,7 @@
 
 <cfoutput>
 	
-	<cfset directory = '/var/www/smg_upload_files/web-students'>
+	<cfset directory = AppPath.onlineApp.picture>
 	
 	<!----Upload File---->
 	<cffile action="upload" fileField="form.passaport" destination="#directory#"  nameconflict="overwrite">
@@ -31,7 +31,7 @@
 	</cfif>
 	
 	<!--- check image extension --->
-	<cfif cffile.ClientFileExt NEQ 'gif' AND cffile.ClientFileExt NEQ 'jpg' AND cffile.ClientFileExt NEQ 'jpeg' AND cffile.ClientFileExt NEQ 'GIF' AND cffile.ClientFileExt NEQ 'JPG' AND cffile.ClientFileExt NEQ 'JPEG'>
+	<cfif NOT ListFind("jpg,peg,gif,tif,png", LCase(cffile.clientfileext))>
 		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
 			<script language="JavaScript">
 			<!-- 
@@ -60,7 +60,7 @@
 	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#form.studentid#.#LCase(cffile.ClientFileExt)#" nameconflict="overwrite">
 	
 	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN--->
-	<cflocation url="https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm">
+	<cflocation url="#AppPath.onlineApp.reloadURL#" addtoken="no">
 
 </cfoutput>
 

@@ -64,7 +64,7 @@
 		qAvailableTeams = AppCFC.COMPANY.getCompanies(website=CLIENT.company_submitting);
 
 		// Virtual Folder Directory
-		virtualDirectory = "/var/www/html/student-management/nsmg/uploadedfiles/virtualfolder/#qStudentInfo.studentID#";
+		virtualDirectory = "#AppPath.onlineApp.virtualFolder##qStudentInfo.studentID#";
 		
 		// Get Facilitator for this Region
 		qGetFacilitator = APPCFC.USER.getUserByID(userID=VAL(qGetRegionAssigned.regionfacilitator));
@@ -320,8 +320,7 @@
 					<td width="135" valign="top">
 						<table width="100%" cellpadding="2">
 							<tr><td width="135">
-								<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
-								<cfdirectory directory="#nsmg_directory#" name="file" filter="#qStudentInfo.studentID#.*">
+								<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#qStudentInfo.studentID#.*">
 								<cfif file.recordcount>
 									<img src="uploadedfiles/web-students/#file.name#" width="135"><br>
 									<cfif CLIENT.usertype lte 4><A href="qr_delete_picture.cfm?student=#file.name#&studentID=#studentID#">Remove Picture</a></cfif>

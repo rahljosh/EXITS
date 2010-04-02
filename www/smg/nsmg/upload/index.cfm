@@ -1,8 +1,8 @@
 <!----
 
-<cfif DirectoryExists('/var/www/smg_uploaded_files/online_app/picture_album/#form.student#/')>
+<cfif DirectoryExists('#AppPath.onlineApp.familyAlbum##form.student#/')>
 <cfelse>
-	<cfdirectory action="create" directory="/var/www/smg_uploaded_files/online_app/picture_album/#form.student#/">
+	<cfdirectory action="create" directory="#AppPath.onlineApp.familyAlbum##form.student#/">
 </cfif>
 
 <cfsavecontent variable="swf"><cfoutput><p><img id="upload" hspace="0" vspace="0" src="fileUpload.swf"></p></cfoutput></cfsavecontent>

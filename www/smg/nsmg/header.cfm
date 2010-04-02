@@ -178,23 +178,25 @@
                     	where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
                     </cfif>
                 </cfquery>
-                <cfif NOT LEN(logo.logo)>
-                <cfset comp_logo = '/var/www/html/student-management/nsmg/pics/logos'>
-				<cfdirectory directory="#comp_logo#" name="file" filter="#client.companyid#_header_logo.png">
-                	<cfif file.recordcount>
-                    	<!--- SMG LOGO --->
-                    	<img src="pics/logos/#file.name#">
-                   <cfelse>
-                    	<!--- SMG LOGO --->
-                    	<img src="pics/logos/smg_clear.gif">
-                	</cfif>
+                
+				<cfif NOT LEN(logo.logo)>
+
+                    <cfdirectory directory="#AppPath.companyLogo#" name="file" filter="#client.companyid#_header_logo.png">
+                        <cfif file.recordcount>
+                            <!--- SMG LOGO --->
+                            <img src="pics/logos/#file.name#">
+                       <cfelse>
+                            <!--- SMG LOGO --->
+                            <img src="pics/logos/smg_clear.gif">
+                        </cfif>
+                    <cfelse>
+                        <!--- INTL. AGENT LOGO --->
+                        <img src="pics/logos/#logo.logo#" height="71">
+                    </cfif>
+                    
                 <cfelse>
-                    <!--- INTL. AGENT LOGO --->
-                    <img src="pics/logos/#logo.logo#" height="71">
+                    <img src="pics/logos/#client.companyid#_header_logo.png">
                 </cfif>
-            <cfelse>
-                <img src="pics/logos/#client.companyid#_header_logo.png">
-            </cfif>
         </td>
     </tr>
     <tr height="10">

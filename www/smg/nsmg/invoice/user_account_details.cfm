@@ -1045,15 +1045,15 @@ ORDER BY creditid DESC
 
 <!--- email invoices, credit notes to intl agents --->
 
-<cfif directoryExists("/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf")>
-	<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" action="delete" recurse="yes">
+<cfif directoryExists("#AppPath.uploadedFiles#invoices_pdf")>
+	<cfdirectory directory="#AppPath.uploadedFiles#invoices_pdf" action="delete" recurse="yes">
 </cfif>
 
 <cfif form.docNumber EQ 0>
 	<cfabort>
 </cfif>
 
-<cfdirectory action="create" directory="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf" mode="777">
+<cfdirectory action="create" directory="#AppPath.uploadedFiles#invoices_pdf" mode="777">
 
 <cfquery name="getAgentInfo" datasource="MySQL">
 SELECT *
@@ -1110,7 +1110,7 @@ WHERE su.userid = #url.userid#
 		</cfcase>
 	</cfswitch>
 	
-	<cfdocument format="PDF" filename="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf/#variables.compName#_#variables.docType#_#iDocNumb#.pdf" overwrite="yes">
+	<cfdocument format="PDF" filename="#AppPath.uploadedFiles#invoices_pdf/#variables.compName#_#variables.docType#_#iDocNumb#.pdf" overwrite="yes">
 	
 		<cfswitch expression="#docType#">
 			<cfcase value="invoice">
@@ -1125,7 +1125,8 @@ WHERE su.userid = #url.userid#
 	
 </cfloop>
 
-<cfmail from="#variables.emailFrom#" to="#getAgentInfo.billing_email#" bcc="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# #variables.docType#s - please find attached." type="html">
+<!--- to="#getAgentInfo.billing_email#" bcc="#variables.emailFrom#" --->
+<cfmail from="#variables.emailFrom#" to="marcus@student-management.com" bcc="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# #variables.docType#s - please find attached." type="html">
 
 <small>
 Dear Partner<br/><br/>
@@ -1170,7 +1171,7 @@ visit our web site at www.student-management.com</small>
 
 	<cfloop list="#form.docNumber#" index="iDocNumb">
 	
-		<cfmailparam disposition="attachment" type="html" file="/var/www/html/student-management/nsmg/uploadedfiles/invoices_pdf/#variables.compName#_#variables.docType#_#iDocNumb#.pdf">
+		<cfmailparam disposition="attachment" type="html" file="#AppPath.uploadedFiles#invoices_pdf/#variables.compName#_#variables.docType#_#iDocNumb#.pdf">
 
 	</cfloop>
 	

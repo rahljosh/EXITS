@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="../../smg.css" type="text/css">
-<body onload="opener.location.reload()">
+<body onLoad="opener.location.reload()">
 <cfif isDefined('url.confirmed')>
 	<cfif url.confirmed is 'pdf'>
 		<cfquery name="delete_letter" datasource="mysql">
@@ -7,7 +7,7 @@
 		where studentid = #client.userid#	
 		</cfquery>
 	<cfelse>
-		<cffile action="delete" file='#expandPath("../uploadedfiles/web-students/#client.studentid#.jpg")#'>
+		<cffile action="delete" file='#AppPath.onlineApp.picture##client.studentid#.jpg'>
 	</cfif>
 	<body onload="opener.location.reload()">
 				
@@ -16,7 +16,7 @@
 						<cffile 
 						   action = "upload"
 						   fileField = "form.student_pic"
-						   destination = "c:\websites\nsmg\uploadedfiles\web-students\"
+						   destination = "#AppPath.onlineApp.picture#"
 						   nameConflict = "MakeUnique"
 						   accept = "image/jpg, image/gif, image/jpeg"
 						  >
@@ -38,8 +38,8 @@
 				 
 				<cffile	
 					action="Move" 
-					source="c:\websites\nsmg\uploadedfiles\web-students\#CFFILE.ServerFile#" 
-					destination="c:\websites\nsmg\uploadedfiles\web-students\#client.studentid#.#cffile.clientfileext#"
+					source="#AppPath.onlineApp.picture##CFFILE.ServerFile#" 
+					destination="#AppPath.onlineApp.picture##client.studentid#.#cffile.clientfileext#"
 				  > 
 				
 				<script language="JavaScript"><!--

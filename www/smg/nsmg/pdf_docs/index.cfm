@@ -180,10 +180,10 @@
 	
     <cfscript>
 		// Set Folder Path
-		setFolderPath = "#APPLICATION.PATH.base##AppPath.pdfDocs#/#qGetCompany.companyShort_noColor#/#qGetPDFCategory.folder_name#";
+		setFolderPath = "#AppPath.pdfDocs##qGetCompany.companyShort_noColor#/#qGetPDFCategory.folder_name#";
 		
 		// Set Download Path - Replace backwards slashes.
-		setDownloadPath = Replace("#AppPath.pdfDocs#/#qGetCompany.companyShort_noColor#/#qGetPDFCategory.folder_name#", "\", "/", "ALL");
+		setDownloadPath = Replace("#AppPath.pdfDocs##qGetCompany.companyShort_noColor#/#qGetPDFCategory.folder_name#", "\", "/", "ALL");
     	
 		// Check if folder exits
 		APPCFC.pdfDoc.createFolder(fullPath=setFolderPath);

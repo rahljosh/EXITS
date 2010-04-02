@@ -109,8 +109,7 @@ function CheckFields() {
 	ORDER BY hist.date DESC
 </cfquery>
  
-<cfset nsmg_directory = '/var/www/html/student-management/nsmg/uploadedfiles/web-students'>
-<cfdirectory directory="#nsmg_directory#" name="file" filter="#get_student_info.studentid#.*">
+<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#get_student_info.studentid#.*">
 
 <!--- HEADER OF TABLE --->
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
