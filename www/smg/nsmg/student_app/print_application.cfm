@@ -82,78 +82,109 @@ where studentid = #client.studentid#
 
 <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
 	<!--- SECTION 1 --->
-	<tr><td valign="top">
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section1/page1print.cfm">
 			<div style="page-break-after:always;"></div>
-	</td></tr>
-	<tr><td valign="top">
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section1/page2print.cfm">
 			<div style="page-break-after:always;"></div>
-	</td></tr>
-	<tr><td valign="top">
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section1/page3print.cfm">
 			<div style="page-break-after:always;"></div>
-	</td></tr>
-	<tr><td valign="top">
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section1/page4print.cfm">
 			<div style="page-break-after:always;"></div>
-	</td></tr>
-	<tr><td valign="top">
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<!--- DO NOT PRINT PAGES 5 IF PDF or DOC is attached --->
 			<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="page5" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page5.name, 3) NEQ 'pdf' AND Right(page5.name, 3) NEQ 'doc'>	
 				<cfinclude template="section1/page5print.cfm">
 				<div style="page-break-after:always;"></div>	
 			</cfif>
-	</td></tr>
-	<tr><td valign="top">
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<!--- DO NOT PRINT PAGES 5 IF PDF or DOC is attached --->
 			<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="page6" filter="#get_student_info2.studentid#.*">
 			<cfif Right(page6.name, 3) NEQ 'pdf' AND Right(page6.name, 3) NEQ 'doc'>	
 				<cfinclude template="section1/page6print.cfm">
 				<div style="page-break-after:always;"></div>
 			</cfif>
-	</td></tr>
+		</td>
+    </tr>
 
 	<!--- SECTION 2 --->
-	<tr><td valign="top">
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section2/page7print.cfm">
 			<div style="page-break-after:always;"></div>	
-	</td></tr>		
-	<tr><td valign="top">			
+		</td>
+    </tr>		
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section2/page8print.cfm">
 			<div style="page-break-after:always;"></div>	
-	</td></tr>		
-	<tr><td valign="top">		
+		</td>
+    </tr>		
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section2/page9print.cfm">
 			<div style="page-break-after:always;"></div>	
-	</td></tr>		
-	<tr><td valign="top">		
+		</td>
+    </tr>		
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section2/page10print.cfm">
 			<div style="page-break-after:always;"></div>	
-	</td></tr>
+		</td>
+    </tr>
 
 	<!--- SECTION 3 --->
-	<tr><td valign="top">	
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section3/page11print.cfm">
 			<div style="page-break-after:always;"></div>	
-	</td></tr>		
-	<tr><td valign="top">		
+		</td>
+    </tr>		
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section3/page12print.cfm">
 			<div style="page-break-after:always;"></div>	
-	</td></tr>
-       <cfif check_allergy.has_an_allergy eq 1>
-    	<tr><td valign="top">				
-			<cfinclude template="section3/allergy_info_request_print.cfm">
-			<div style="page-break-after:always;"></div>	
-	</td></tr>
+		</td>
+    </tr>
+	<!--- file missing --->
+    <!---
+    <cfif check_allergy.has_an_allergy eq 1>
+		<tr>
+			<td valign="top">				
+				<cfinclude template="section3/allergy_info_request_print.cfm">
+				<div style="page-break-after:always;"></div>	
+			</td>
+		</tr>
     </cfif>
-	<tr><td valign="top">				
+	--->
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section3/page13print.cfm">
 			<div style="page-break-after:always;"></div>	
-	</td></tr>
-
-	<tr><td valign="top">			
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<!--- DO NOT PRINT PAGE 14 if PDF or DOC is attached --->
 			<cfdirectory directory="#AppPath.onlineApp.inserts#page14" name="page14" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page14.name, 3) NEQ 'pdf' AND Right(page14.name, 3) NEQ 'doc'>	
@@ -162,11 +193,13 @@ where studentid = #client.studentid#
 					<div style="page-break-after:always;"></div>	
 				</cfif>
 			</cfif>
-	</td></tr>
+		</td>
+    </tr>
 
 	<!--- SECTION 4 --->
 	<!--- DO NOT PRINT PAGES 15, 16 AND 17 if PDF or DOC are attached --->
-	<tr><td valign="top">
+	<tr>
+    	<td valign="top">
 			<cfdirectory directory="#AppPath.onlineApp.inserts#page15" name="page15" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page15.name, 3) NEQ 'pdf' AND Right(page15.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page15print.cfm">
@@ -174,8 +207,10 @@ where studentid = #client.studentid#
 					<div style="page-break-after:always;"></div>
 				</cfif>
 			</cfif>
-	</td></tr>
-	<tr><td valign="top">
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<cfdirectory directory="#AppPath.onlineApp.inserts#page16" name="page16" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page16.name, 3) NEQ 'pdf' AND Right(page16.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page16print.cfm">
@@ -183,8 +218,10 @@ where studentid = #client.studentid#
 					<div style="page-break-after:always;"></div>
 				</cfif>
 			</cfif>
-	</td></tr>
-	<tr><td valign="top">		
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<cfdirectory directory="#AppPath.onlineApp.inserts#page17" name="page17" filter="#get_student_info2.studentid#.*">	
 			<cfif Right(page17.name, 3) NEQ 'pdf' AND Right(page17.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page17print.cfm">
@@ -192,35 +229,44 @@ where studentid = #client.studentid#
 					<div style="page-break-after:always;"></div>
 				</cfif>
 			</cfif>
-	</td></tr>
-	<tr><td valign="top">	
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section4/page18print.cfm">
 			<cfif printpage EQ 'yes'>
 				<div style="page-break-after:always;"></div>
 			</cfif>
-	</td></tr>
-	<tr><td valign="top">			
+		</td>
+    </tr>
+    <tr>
+    	<td valign="top">				
 			<cfinclude template="section4/page19print.cfm">
 			<div style="page-break-after:always;"></div>	
-	</td></tr>
+		</td>
+    </tr>
 			
 	<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS --->
 	<cfif IsDefined('client.usertype') AND client.usertype NEQ 10 AND get_student_info2.master_accountid NEQ 10115 AND get_student_info2.intrep NEQ 10115 AND get_student_info2.intrep NEQ 8318>
-		<tr><td valign="top">		
-				<cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#get_student_info2.studentid#.*">
-				<cfif Right(page20.name, 3) NEQ 'pdf' AND Right(page20.name, 3) NEQ 'doc'>
-					<cfinclude template="section4/page20print.cfm">
-					<cfif printpage EQ 'yes'>
-						<div style="page-break-after:always;"></div>
-					</cfif>
-				</cfif>
-		</td></tr>
-		<tr><td valign="top">
-				<cfdirectory directory="#AppPath.onlineApp.inserts#page21" name="page21" filter="#get_student_info2.studentid#.*">
-				<cfif Right(page21.name, 3) NEQ 'pdf' AND Right(page21.name, 3) NEQ 'doc'>
-					<cfinclude template="section4/page21print.cfm">
-				</cfif>
-		</td></tr>
+        <tr>
+            <td valign="top">				
+                    <cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#get_student_info2.studentid#.*">
+                    <cfif Right(page20.name, 3) NEQ 'pdf' AND Right(page20.name, 3) NEQ 'doc'>
+                        <cfinclude template="section4/page20print.cfm">
+                        <cfif printpage EQ 'yes'>
+                            <div style="page-break-after:always;"></div>
+                        </cfif>
+                    </cfif>
+                </td>
+        </tr>
+        <tr>
+            <td valign="top">				
+                    <cfdirectory directory="#AppPath.onlineApp.inserts#page21" name="page21" filter="#get_student_info2.studentid#.*">
+                    <cfif Right(page21.name, 3) NEQ 'pdf' AND Right(page21.name, 3) NEQ 'doc'>
+                        <cfinclude template="section4/page21print.cfm">
+                    </cfif>
+                </td>
+        </tr>
 	</cfif>
 </table>
 
@@ -233,7 +279,8 @@ where studentid = #client.studentid#
     <cfif ListFind("jpg,peg,gif,tif,png", LCase(Right(name, 3)))>
 	<div style="page-break-after:always;"></div><br>
 	<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
-		<tr><td><img src="../uploadedfiles/virtualfolder/#get_student_info2.studentid#/page22/#name#" width="660" height="820"></td></tr>
+		<tr><td><img src="../uploadedfiles/virtualfolder/#get_student_info2.studentid#/page22/#name#" width="660" height="820">		</td>
+    </tr>
 	</table>
 	</cfif>
 </cfoutput>	
