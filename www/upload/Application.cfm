@@ -40,10 +40,8 @@
 		AppPath.onlineApp = StructNew();
 		
 		// URL Used on Upload/Delete Files
-		// AppPath.onlineApp.URL = 'http://www.student-management.com/nsmg/student_app/';		
-		AppPath.onlineApp.URL = 'http://www.119cooper.com/nsmg/student_app/';
-		//AppPath.onlineApp.reloadURL = 'http://www.student-management.com/nsmg/student_app/querys/reload_window.cfm';
-		AppPath.onlineApp.reloadURL = 'http://www.119cooper.com/nsmg/student_app/querys/reload_window.cfm';
+		AppPath.onlineApp.URL = 'https://www.student-management.com/nsmg/student_app/';		
+		AppPath.onlineApp.reloadURL = 'https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm';
 		
 		AppPath.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
 		AppPath.onlineApp.picture = AppPath.uploadedFiles & "web-students/";

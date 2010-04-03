@@ -33,6 +33,7 @@
 	AppEmail.finance = 'marcel@student-management.com';
 	AppEmail.errors = 'errors@student-management.com';
 	
+	
 	// Phase Out these variables
 	if ( cgi.http_host EQ 'jan.case-usa.org' OR cgi.http_host EQ 'www.case-usa.org' ) {
 		
@@ -45,7 +46,6 @@
 		APPLICATION.site_url = 'http://www.student-management.com';
 
 	}
-
 
 	/***** Create APPLICATION.PATH structure *****/
 	APPLICATION.PATH = StructNew();		
@@ -74,10 +74,8 @@
 	AppPath.onlineApp = StructNew();
 	
 	// URL Used on Upload/Delete Files
-	// AppPath.onlineApp.URL = 'http://www.student-management.com/nsmg/student_app/';		
-	AppPath.onlineApp.URL = 'http://www.119cooper.com/nsmg/student_app/';
-	//AppPath.onlineApp.reloadURL = 'http://www.student-management.com/nsmg/student_app/querys/reload_window.cfm';
-	AppPath.onlineApp.reloadURL = 'http://www.119cooper.com/nsmg/student_app/querys/reload_window.cfm';
+	AppPath.onlineApp.URL = 'https://www.student-management.com/nsmg/student_app/';		
+	AppPath.onlineApp.reloadURL = 'https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm';
 	
 	AppPath.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
 	AppPath.onlineApp.picture = AppPath.uploadedFiles & "web-students/";
