@@ -11,9 +11,12 @@
         // Set a short name for the APPLICATION.PATH
         AppPath = APPLICATION.PATH;
     
-        // Base Path eg. C:\websites\smg\nsmg\
+        // Base Path eg. C:\websites\student-management\extra\internal\trainee\ 
         AppPath.base = getDirectoryFromPath(getBaseTemplatePath());
     
+		// Remove the last item from Base (trainee, h2b or wat)
+		AppPath.base = ListDeleteAt(AppPath.base, ListLen(APPPath.base, '\'), '\') & '/';
+	
         AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';
         AppPath.pdfDocs = AppPath.uploadedFiles & 'pdf_docs/trainee/';
 		AppPath.candidatePicture = AppPath.uploadedFiles & "web-candidates/";
