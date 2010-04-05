@@ -1,3 +1,7 @@
+<Cfif #cgi.SERVER_PORT# eq 80>
+	<cflocation url="https://www.student-management.com/extra/">
+</Cfif>
+
 <link href="internal/style.css" rel="stylesheet" type="text/css" />
 <title>EXTRA - Exchange Training Abroad</title>
 
