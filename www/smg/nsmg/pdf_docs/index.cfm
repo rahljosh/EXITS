@@ -183,8 +183,9 @@
 		setFolderPath = "#AppPath.pdfDocs##qGetCompany.companyShort_noColor#/#qGetPDFCategory.folder_name#";
 		
 		// Set Download Path - Replace backwards slashes.
-		setDownloadPath = Replace("#AppPath.pdfDocs##qGetCompany.companyShort_noColor#/#qGetPDFCategory.folder_name#", "\", "/", "ALL");
-    	
+		//setDownloadPath = Replace("#AppPath.pdfDocs##qGetCompany.companyShort_noColor#/#qGetPDFCategory.folder_name#", "\", "/", "ALL");
+    	setDownloadPath = "uploadedfiles/pdf_docs/#qGetCompany.companyShort_noColor#/#qGetPDFCategory.folder_name#";
+		
 		// Check if folder exits
 		APPCFC.pdfDoc.createFolder(fullPath=setFolderPath);
     </cfscript>
@@ -214,7 +215,7 @@
                     <th>Delete</th>
                 </cfif>
             </tr> 
-	
+
             <cfloop query="listCategory#qGetPDFCategory.ID#">
             
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
