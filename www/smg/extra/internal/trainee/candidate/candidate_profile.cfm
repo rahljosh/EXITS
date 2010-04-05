@@ -106,7 +106,6 @@ function OpenApp(url)
 			<img src="../../images/no_stupicture.jpg" width="137" height="137">
 		</cfif>---->
 		
-		<!-----d:/websites/extra/internal/uploadedfiles/web-candidates/---->
 			<cfif FileExists("#AppPath.candidatePicture##candidateid#.#get_candidate_unqid.picture_type#")>
 				<img src="../../uploadedfiles/web-candidates/#candidateid#.#get_candidate_unqid.picture_type#" width="135" />
 			<cfelse>

@@ -147,7 +147,7 @@ function OpenFax(url) {
 											<td width="135">
 					
 												<cfoutput>
-												<cfif '#FileExists("c:/websites/extra/internal/uploadedfiles/web-hostlogo/#url.hostcompanyid#.#get_extrahostcompany.picture_type#")#'>
+												<cfif FileExists("#AppPath.hostLogo##url.hostcompanyid#.#get_extrahostcompany.picture_type#")>
 												<img src="../uploadedfiles/web-hostlogo/#url.hostcompanyid#.#get_extrahostcompany.picture_type#" width="135" /><br>
 												<a class=nav_bar href="" onClick="javascript: win=window.open('hostcompany/upload_picture.cfm?hostcompanyid=#url.hostcompanyid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Change Picture</a>
 												<cfelse>

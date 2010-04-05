@@ -39,8 +39,11 @@
     
         // Base Path eg. C:\websites\smg\nsmg\
         AppPath.base = getDirectoryFromPath(getBaseTemplatePath());
-    
-        AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';
+
+		// Remove the last item from Base (trainee, h2b or wat)
+		AppPath.base = ListDeleteAt(AppPath.base, ListLen(APPPath.base, '\'), '\') & '/';
+
+		AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';
         AppPath.pdfDocs = AppPath.uploadedFiles & 'pdf_docs/wat/';
 		AppPath.candidatePicture = AppPath.uploadedFiles & "web-candidates/";
 		AppPath.hostLogo = AppPath.uploadedFiles & "web-hostlogo/";
