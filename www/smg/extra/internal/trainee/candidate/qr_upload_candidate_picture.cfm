@@ -10,7 +10,7 @@ where uniqueid = '#url.uniqueid#'
 <cfset url.candidateid = #get_id.candidateid#>
 <cfoutput>
 
-	<cfset directory = '/var/www/html/student-management/extra/internal/uploadedfiles/web-candidates'>
+	<cfset directory = AppPath.candidatePicture>
 	 <!----'d:\websites\extra\internal\uploadedfiles\web-candidates'>---->
 	
 	<!----Upload File---->

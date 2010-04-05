@@ -370,7 +370,7 @@
 									<table width="100%" cellpadding="2">
 										<tr>
 											<td width="135" valign="top">			
-												<cfif '#FileExists("/var/www/html/student-management/extra/internal/uploadedfiles/web-candidates/#get_candidate_unqID.candidateID#.#get_candidate_unqID.picture_type#")#'>
+												<cfif '#FileExists("#AppPath.candidatePicture##get_candidate_unqID.candidateID#.#get_candidate_unqID.picture_type#")#'>
 													<img src="../uploadedfiles/web-candidates/#get_candidate_unqID.candidateID#.#get_candidate_unqID.picture_type#" width="135" /><br>
 													<a  class="style4Big" href="" onClick="javascript: win=window.open('candidate/upload_picture.cfm?uniqueID=#uniqueID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><b><center>Change Picture</center></b></a>
 												<cfelse>

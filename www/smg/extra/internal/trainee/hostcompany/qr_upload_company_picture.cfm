@@ -4,7 +4,7 @@
 <cftry>
 ---->
 <cfoutput>
-	<cfset directory = '/var/www/html/student-management/extra/internal/uploadedfiles/web-hostlogo'>
+	<cfset directory = AppPath.hostLogo>
 	
 	<!----Upload File---->
 	<cffile action = "upload" fileField = "form.company_pic"  destination = "#directory#"  nameConflict = "MakeUnique">
