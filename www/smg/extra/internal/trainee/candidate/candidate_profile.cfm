@@ -107,14 +107,11 @@ function OpenApp(url)
 		</cfif>---->
 		
 		<!-----d:/websites/extra/internal/uploadedfiles/web-candidates/---->
-			<cfif '#FileExists("/var/www/html/student-management/extra/internal/uploadedfiles/web-candidates/#candidateid#.#get_candidate_unqid.picture_type#")#'>
-									<img src="../../uploadedfiles/web-candidates/#candidateid#.#get_candidate_unqid.picture_type#" width="135" />
-				<cfelse>
-							<img src="../../pics/no_logo.jpg" width="135" border=0></a>
+			<cfif FileExists("#AppPath.candidatePicture##candidateid#.#get_candidate_unqid.picture_type#")>
+				<img src="../../uploadedfiles/web-candidates/#candidateid#.#get_candidate_unqid.picture_type#" width="135" />
+			<cfelse>
+				<img src="../../pics/no_logo.jpg" width="135" border=0></a>
 			</cfif>
-		
-		
-		
 	</div></td>
 	<td valign="top" width=504>
 	<span class="application_section_header"><b>TRAINEE PROFILE</b></span><br>

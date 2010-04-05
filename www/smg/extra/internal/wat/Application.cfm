@@ -30,8 +30,22 @@
 		APPLICATION.CSB.phoneIDCard = "1-877-669-0717";
 		APPLICATION.CSB.logo = "8.gif";
 		APPLICATION.CSB.smallLogo = "8s.gif";
+
+		/***** Create APPLICATION.PATH structure *****/
+		APPLICATION.PATH = StructNew();		
+
+		// Set a short name for the APPLICATION.PATH
+        AppPath = APPLICATION.PATH;
+    
+        // Base Path eg. C:\websites\smg\nsmg\
+        AppPath.base = getDirectoryFromPath(getBaseTemplatePath());
+    
+        AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';
+        AppPath.pdfDocs = AppPath.uploadedFiles & 'pdf_docs/wat/';
+		AppPath.candidatePicture = AppPath.uploadedFiles & "web-candidates/";
+		AppPath.hostLogo = AppPath.uploadedFiles & "web-hostlogo/";
     </cfscript>
-        
+
     <CFQUERY name="selectdb" datasource="MySQL" >
         USE smg
     </CFQUERY>

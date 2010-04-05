@@ -26,11 +26,7 @@ function areYouSure() {
 
 <cfinclude template="../querys/get_company.cfm">
 
-<cfset link7 = 'trainee'>
-<cfset link8 = 'wat'>
-<cfset link9 = 'h2b'>
-
-<cfset currentDirectory = "/var/www/html/student-management/extra/internal/uploadedfiles/pdf_docs/h2b">
+<cfset currentDirectory = AppPath.pdfDocs>
 
 <cfdirectory action="List" directory="#currentDirectory#" name="DirList" sort="name asc" filter="*.pdf">
 
