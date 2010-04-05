@@ -104,7 +104,7 @@ function launchRemote() {
 	</td></tr>	
 	<tr><td valign="top">
 		<!--- DO NOT PRINT PAGES 14 if PDF or DOC is attached --->
-		<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page14" name="page14" filter="#get_student_info.studentid#.*">	
+		<cfdirectory directory="#AppPath.onlineApp.inserts#page14" name="page14" filter="#get_student_info.studentid#.*">	
 		<cfif Right(page14.name, 3) NEQ 'pdf' AND Right(page14.name, 3) NEQ 'doc'>	
 			<cfinclude template="nsmg/student_app/section3/page14print.cfm">
 			<cfif printpage EQ 'yes'>
@@ -118,7 +118,7 @@ function launchRemote() {
 	<!--- DO NOT PRINT PAGES 15, 16 AND 17 if PDF or DOC are attached --->
 	
 	<tr><td valign="top">
-		<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page15" name="page15" filter="#get_student_info.studentid#.*">	
+		<cfdirectory directory="#AppPath.onlineApp.inserts#page15" name="page15" filter="#get_student_info.studentid#.*">	
 		<cfif Right(page15.name, 3) NEQ 'pdf' AND Right(page15.name, 3) NEQ 'doc'>	
 			<cfinclude template="nsmg/student_app/section4/page15print.cfm">
 			<cfif printpage EQ 'yes'>
@@ -127,7 +127,7 @@ function launchRemote() {
 		</cfif>
 	</td></tr>										
 	<tr><td valign="top">
-		<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page16" name="page16" filter="#get_student_info.studentid#.*">	
+		<cfdirectory directory="#AppPath.onlineApp.inserts#page16" name="page16" filter="#get_student_info.studentid#.*">	
 		<cfif Right(page16.name, 3) NEQ 'pdf' AND Right(page16.name, 3) NEQ 'doc'>	
 			<cfinclude template="nsmg/student_app/section4/page16print.cfm">
 			<cfif printpage EQ 'yes'>
@@ -136,7 +136,7 @@ function launchRemote() {
 		</cfif>
 	</td></tr>	
 	<tr><td valign="top">
-		<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/online_app/page17" name="page17" filter="#get_student_info.studentid#.*">	
+		<cfdirectory directory="#AppPath.onlineApp.inserts#page17" name="page17" filter="#get_student_info.studentid#.*">	
 		<cfif Right(page17.name, 3) NEQ 'pdf' AND Right(page17.name, 3) NEQ 'doc'>	
 			<cfinclude template="nsmg/student_app/section4/page17print.cfm">
 			<cfif printpage EQ 'yes'>

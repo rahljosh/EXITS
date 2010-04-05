@@ -5,6 +5,7 @@
 	<!---<CFQUERY name="selectdb" datasource="MySQL" >
         USE smg
     </CFQUERY>--->
+    
     <cfparam name="APPLICATION.DSN" default="MySQL">
     
     <!--- if "resume login" is used login is not run.  Automatically logout if not the same day, so change password and verify info can be checked when they login again.
@@ -59,3 +60,7 @@
 			
 		}		
 	</cfscript>
+
+
+	<!--- Include Application Config Files --->
+	<cfinclude template="nsmg/extensions/config/_app_index.cfm" />    
