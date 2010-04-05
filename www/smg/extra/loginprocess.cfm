@@ -72,9 +72,9 @@
 	</cfif>	
 	
 	<!--- SET LINKS --->
-	<cfset link7 = 'https:/www.student-management.com/extra/internal/trainee/index.cfm'>
-	<cfset link8 = 'https:/www.student-management.com/extra/internal/wat/index.cfm'>
-	<cfset link9 = 'https:/www.student-management.com/extra/internal/h2b/index.cfm'>
+	<cfset link7 = 'internal/trainee/index.cfm'>
+	<cfset link8 = 'internal/wat/index.cfm'>
+	<cfset link9 = 'internal/h2b/index.cfm'>
 	
 	<cflocation url="#Evaluate("link" & get_default_company.companyid)#" addtoken="no">
 	

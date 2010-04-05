@@ -17,7 +17,7 @@
 <img src="pics/logos/#client.companyid#_px.png" width="100%" height="1">
 </cfoutput>
 </cfif>
-<font size=-5>www1</font>
+
 <!----
 <script src="https://www.google-analytics.com/urchin.js" type="text/javascript">
 </script>
