@@ -75,7 +75,7 @@ function PrintFile(url)
 <div class="section"><br>
 
 <table width="300" border=0 cellpadding=3 cellspacing=0 align="center">
-	<tr><td colspan="3"><b>* Note: </b>PDF and DOC files are NOT included in the print complete application option. You must print these files separetely.</td></tr>
+	<tr><td colspan="3"><b>* Note: </b>PDF and DOC files are NOT included in the print complete application option. You must print these files separately.</td></tr>
 	<tr>
 	  <td><em>Name</em></td>
 	  <td><em>Size</em></td>
