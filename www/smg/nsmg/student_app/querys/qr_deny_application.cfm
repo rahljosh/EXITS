@@ -139,7 +139,7 @@
                 <cfinvokeargument name="email_to" value="#student_email.branchemail#">
                 <cfinvokeargument name="email_subject" value="#client.companyshort# Application Denied">
                 <cfinvokeargument name="email_message" value="#email_message#">
-                <cfinvokeargument name="email_replyto" value="#student_email.branchemail#"
+                <cfinvokeargument name="email_replyto" value="#student_email.branchemail#">
                 <cfinvokeargument name="email_from" value="#client.support_email#">
             </cfinvoke>
         <!----End Email CFC---->
@@ -196,7 +196,6 @@
                 <cfinvokeargument name="email_to" value="#get_email.intrepemail#">
                 <cfinvokeargument name="email_subject" value="#client.companyshort# Application Denied">
                 <cfinvokeargument name="email_message" value="#email_message#">
-                
                 <cfinvokeargument name="email_from" value="#client.support_email#">
             </cfinvoke>
         <!----End Email CFC---->
