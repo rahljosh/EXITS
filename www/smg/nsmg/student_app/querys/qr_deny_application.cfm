@@ -12,12 +12,12 @@
 	<cfquery name="get_latest_date" datasource="MySQL">
 		SELECT max(date) as date
 		FROM smg_student_app_status
-		WHERE studentid = <cfqueryparam value="#form.studentid#" cfsqltype="cf_sql_integer">
+		WHERE studentID = <cfqueryparam value="#FORM.studentID#" cfsqltype="cf_sql_integer">
 	</cfquery>
 	<cfquery name="get_status" datasource="MySQL">
 		SELECT * 
 		FROM smg_student_app_status
-		WHERE studentid = <cfqueryparam value="#form.studentid#" cfsqltype="cf_sql_integer">
+		WHERE studentID = <cfqueryparam value="#FORM.studentID#" cfsqltype="cf_sql_integer">
 		ORDER BY id DESC
 	</cfquery>
 
@@ -32,19 +32,19 @@
 	</cfif>
 
 	<cfquery name="deny_application_status" datasource="MySQL">
-		INSERT INTO smg_student_app_status (studentid, status, reason, date, approvedby)
-		VALUES (#form.studentid#, #newstatus#, '#form.reason#', #now()#, '#client.userid#')
+		INSERT INTO smg_student_app_status (studentID, status, reason, date, approvedby)
+		VALUES (#FORM.studentID#, #newstatus#, '#FORM.reason#', #now()#, '#client.userid#')
 	</cfquery>
 	
 	<cfif newstatus EQ '9'> <!--- DENIED BY SMG --->
 		<cfquery name="deny_application" datasource="MySQL">
 			UPDATE smg_students 
 			SET app_current_status = '#newstatus#',
-				companyid = '#form.companyid#',
-				cancelreason = '#form.reason#',
+				companyid = '#FORM.companyid#',
+				cancelreason = '#FORM.reason#',
 				active = '0',
 				canceldate = #CreateODBCDate(now())#
-			WHERE studentid = '#form.studentid#'
+			WHERE studentID = '#FORM.studentID#'
 			LIMIT 1
 		</cfquery>
 	<cfelse>
@@ -52,7 +52,7 @@
 			UPDATE smg_students 
 			SET app_current_status = '#newstatus#',
 				dateapplication = #CreateODBCDate(now())#
-			WHERE studentid = '#form.studentid#'
+			WHERE studentID = '#FORM.studentID#'
 		</cfquery>
 	</cfif>
 	
@@ -60,13 +60,13 @@
 
 <cfif newstatus LT 9>
 	<cfquery name="get_email" datasource="mysql">
-		SELECT s.studentid, s.email, s.firstname, s.familylastname, s.password, 
+		SELECT s.studentID, s.email, s.firstname, s.familylastname, s.password, 
 			u.email as intrepemail, u.businessname,
 			c.companyshort, c.companyname, c.admission_person, c.phone
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.branchid
 		LEFT JOIN smg_companies c ON c.companyid = s.companyid
-		WHERE studentid = '#form.studentid#'
+		WHERE studentID = '#FORM.studentID#'
 	</cfquery>
 </cfif>
 
@@ -75,18 +75,18 @@
 	<cfquery name="check_branch" datasource="mysql">
 	select branchid 
 	from smg_students
-	where studentid = #form.studentid#
+	where studentID = #FORM.studentID#
 	</cfquery>
 	
 <cfoutput>
 	<cfif check_branch.branchid eq 0>
 	<!----Studnet is filing out application directly with parent company, only send email to student saying app denied---->
 	<cfquery name="student_email" datasource="mysql">
-		Select s.studentid, s.email, s.firstname, s.familylastname, s.intrep,
+		Select s.studentID, s.email, s.firstname, s.familylastname, s.intrep,
 		u.businessname, u.email as intrepemail, u.phone
 		from smg_students s
 		inner join smg_users u on u.userid = s.intrep 
-		where studentid = #form.studentid#
+		where studentID = #FORM.studentID#
 	</cfquery>
 		<!----Email CFC---->
         <cfsavecontent variable="email_message">
@@ -106,7 +106,7 @@
                 <cfinvokeargument name="email_to" value="#student_email.email#">
                 <cfinvokeargument name="email_subject" value="#client.companyshort# Application Denied">
                 <cfinvokeargument name="email_message" value="#email_message#">
-                <cfinvokeargument name="email_replyto" value="#student_email.intrepemail#"
+                <cfinvokeargument name="email_replyto" value="#student_email.intrepemail#">
                 <cfinvokeargument name="email_from" value="#client.support_email#">
             </cfinvoke>
         <!----End Email CFC---->
@@ -114,12 +114,12 @@
 	<cfelse>
 
 	<cfquery name="student_email" datasource="mysql">
-		SELECT s.studentid, s.email, s.firstname, s.familylastname, s.branchid,
+		SELECT s.studentID, s.email, s.firstname, s.familylastname, s.branchid,
 			u.studentcontactemail as branchemail, u.businessname, s.intrep, s.branchid,
 			u.email as intrepemail, u.phone
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.branchid
-		WHERE studentid = #form.studentid#
+		WHERE studentID = #FORM.studentID#
 	</cfquery>
 		<!----Email CFC---->
         <cfsavecontent variable="email_message">
@@ -152,13 +152,13 @@
 <!--- SMG DENIES APPLICATION --->
 <cfif newstatus EQ 9> 
 	<cfquery name="get_email" datasource="mysql">
-		SELECT s.studentid, s.email, s.firstname, s.familylastname, s.password, 
+		SELECT s.studentID, s.email, s.firstname, s.familylastname, s.password, 
 			u.email as intrepemail, u.businessname,
 			c.companyshort, c.companyname, c.admission_person, c.phone
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.intrep
 		LEFT JOIN smg_companies c ON c.companyid = s.companyid
-		WHERE studentid = '#form.studentid#'
+		WHERE studentID = '#FORM.studentID#'
 	</cfquery>
 	
 	<cfquery name="get_current_user" datasource="MySql">
@@ -174,12 +174,12 @@
         <cfsavecontent variable="email_message">
                 Dear #businessname#-
                 <br><br>						
-                The application for #firstname# #familylastname# (###studentid#) has been reviewed by our admissions staff and after a complete review
+                The application for #firstname# #familylastname# (###studentID#) has been reviewed by our admissions staff and after a complete review
                 of the application it has been determined that the application will not be accepted into the program. 
                 The application has been rejected due to the following reason: 
                 
                 <br>
-                <b>Reason: #form.reason#</b>
+                <b>Reason: #FORM.reason#</b>
                 <br>
                 
                 Due to Department of State Regulations, program requirements and  acceptance deadlines this application will not be re-considered for 

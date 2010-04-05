@@ -166,8 +166,6 @@ where studentid = #client.studentid#
 			<div style="page-break-after:always;"></div>	
 		</td>
     </tr>
-	<!--- file missing --->
-    <!---
     <cfif check_allergy.has_an_allergy eq 1>
 		<tr>
 			<td valign="top">				
@@ -176,7 +174,6 @@ where studentid = #client.studentid#
 			</td>
 		</tr>
     </cfif>
-	--->
     <tr>
     	<td valign="top">				
 			<cfinclude template="section3/page13print.cfm">
