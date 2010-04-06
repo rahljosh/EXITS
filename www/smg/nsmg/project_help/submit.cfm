@@ -273,7 +273,7 @@
             <td background="#imagePath#pics/header_background.gif"><h2>H.E.L.P. Community Service Hours</h2></td>
             <cfif FORM.action NEQ 'print'>
                 <td background="#imagePath#pics/header_background.gif" align="right">
-                	<a href="index.cfm?curdoc=project_help&regionID=#regionID#&isActive=#isActive#">Back to Progress Help List</a>
+                	<a href="index.cfm?curdoc=project_help&regionID=#regionID#&isActive=#isActive#">Back to H.E.L.P. COMMUNITY SERVICE HOURS</a>
                 </td>
             </cfif>
             <td width="17" background="#imagePath#pics/header_rightcap.gif">&nbsp;</td>
