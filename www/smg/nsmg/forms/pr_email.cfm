@@ -44,16 +44,6 @@
             <cfinvokeargument name="email_file" value="#AppPath.temp#progress_report_#form.pr_id#.pdf">
         </cfinvoke>		
 
-		<!--- Delete File --->
-        <cftry>
-        	
-            <cffile action="delete" file="#AppPath.temp#progress_report_#form.pr_id#.pdf">
-        
-            <cfcatch type="any">
-				<!--- Error Handling --->            
-            </cfcatch>
-        </cftry>
-                        
         <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm" id="theForm">
         <input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>">
         </form>
