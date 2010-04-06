@@ -38,7 +38,7 @@
 	</cfif>
 
 	<!--- check image extension --->
-	<cfif NOT ListFind("jpg,peg,gif,tif,png", LCase(cffile.clientfileext))>
+	<cfif NOT ListFind("jpg,jpeg,gif,tif,tiff,png", LCase(CFFILE.clientfileext))>
 		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
 			<script language="JavaScript">
 			<!-- 

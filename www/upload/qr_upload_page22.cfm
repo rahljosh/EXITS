@@ -31,12 +31,12 @@
 	</cfif>
 	
 	<!--- file type --->
-    <cfif NOT ListFind("jpg,peg,gif,tif,png,pdf,doc", LCase(cffile.clientfileext))>
+    <cfif NOT ListFind("jpg,jpeg,gif,tif,tiff,png,pdf,doc", LCase(CFFILE.clientfileext))>
 		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
 		<cfoutput>
 			<script language="JavaScript">
 				<!-- 
-				alert("Unfortunately EXITS Online Application does not accept #cffile.clientfileext# files. \n EXITS only accepts files in the following formats: JPG, JPEG, GIF, PDF AND DOC. Please change the file type and try again.");
+				alert("Unfortunately EXITS Online Application does not accept #cffile.clientfileext# files. \n EXITS only accepts files in the following formats: JPG, JPEG, GIF, TIF, PNG, PDF AND DOC. Please change the file type and try again.");
 					location.replace("form_upload_page22.cfm?studentid=#form.studentid#");
 				-->
             </script>
@@ -45,7 +45,7 @@
 	</cfif>
 `
 	<!--- Resize Image Files --->
-	<cfif ListFind("jpg,peg,gif,tif,png", LCase(cffile.clientfileext))> 
+	<cfif ListFind("jpg,peg,gif,tif,tiff,png", LCase(cffile.clientfileext))> 
 		<cfset filename = file.ServerFileName>
 		<cfset uploadedImage = cffile.serverfile>
 	

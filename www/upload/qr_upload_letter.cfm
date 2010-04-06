@@ -40,7 +40,7 @@
     </script>
 
 <!--- File Validation - file type --->    
-<cfelseif NOT ListFind("jpg,peg,gif,pdf,doc", LCase(CFFILE.clientfileext))>
+<cfelseif NOT ListFind("jpg,jpeg,gif,tif,tiff,png,pdf,doc", LCase(CFFILE.clientfileext))>
 
 	<!--- Delete File --->
 	<cffile action="delete" file="#directory#/#CFFILE.serverfile#">
@@ -55,7 +55,7 @@
 <cfelse>
 
 	<!--- Resize Image Files --->
-    <cfif ListFind("jpg,peg,gif,tif,png", LCase(file.ServerFileExt))>
+    <cfif ListFind("jpg,peg,gif,tif,tiff,png", LCase(file.ServerFileExt))>
         
         <cfscript>
             // Invoke image.cfc component

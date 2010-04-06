@@ -35,12 +35,12 @@
 	<script language="JavaScript">
         <!-- 
         alert("The file you are trying to upload is bigger than 2mb. Files can not be bigger than 2mb. Please resize your file and try again.");
-            location.replace("form_upload_file.cfm?studentid=#FORM.studentid#&folder=#FORM.folder#");
+            location.replace("upload_file.cfm?student=#FORM.studentid#&folder=#FORM.folder#");
         -->
     </script>
 
 <!--- File Validation - file type --->    
-<cfelseif NOT ListFind("jpg,peg,gif,pdf,doc", LCase(CFFILE.clientfileext))>
+<cfelseif NOT ListFind("jpg,jpeg,gif,tif,tiff,png,pdf,doc", LCase(CFFILE.clientfileext))>
 
 	<!--- Delete File --->
 	<cffile action="delete" file="#directory#/#CFFILE.serverfile#">
@@ -48,14 +48,14 @@
 	<script language="JavaScript">
         <!-- 
         alert("Unfortunately EXITS Online Application does not accept #CFFILE.clientfileext# files. \n EXITS only accepts files in the following formats: JPG, JPEG, GIF, PDF AND DOC. Please change the file type and try again.");
-            location.replace("form_upload_file.cfm?studentid=#FORM.studentid#&folder=#FORM.folder#");
+            location.replace("upload_file.cfm?student=#FORM.studentid#&folder=#FORM.folder#");
         -->
    </script>
 
 <cfelse>
 
 	<!--- Resize Image Files --->
-    <cfif ListFind("jpg,peg,gif,tif,png", LCase(file.ServerFileExt))>
+    <cfif ListFind("jpg,peg,gif,tif,tiff,png", LCase(file.ServerFileExt))>
         
         <cfscript>
             // Invoke image.cfc component
