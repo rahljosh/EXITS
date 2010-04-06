@@ -23,17 +23,28 @@
 		<cfset var template_file = ''>
         <cfset var get_user = ''>
 
+		<!--- Create Email Body --->
 		<cfsavecontent variable="template_file">
-			<cfinclude template="../email/email_template.cfm">
-		</cfsavecontent>
+			
+            <cfinclude template="../email/email_top.cfm">
+            
+            <cfinclude template="../email/email_template.cfm">
+		
+        	<cfinclude template="../email/email_bottom.cfm">
+        
+        </cfsavecontent>
+	
                 
-		<cfmail to="#email_to#" from="#email_from#" replyto="#email_replyto#" cc="#email_cc#" subject="#email_subject#" type="html">
-			<cfinclude template="../email/email_top.cfm">
-        	<cfif email_file NEQ ''>
-            	<cfmailparam file="#email_file#">
+		<cfmail to="#ARGUMENTS.email_to#" from="#ARGUMENTS.email_from#" replyto="#ARGUMENTS.email_replyto#" cc="#ARGUMENTS.email_cc#" subject="#ARGUMENTS.email_subject#" type="html">
+
+            <!--- Attach File --->
+			<cfif LEN(ARGUMENTS.email_file)>
+				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file#">                
             </cfif>
-        	#template_file#
-            <cfinclude template="../email/email_bottom.cfm">
+			
+            <!--- Email Body --->
+            #template_file#
+            
         </cfmail>
 
 	</cffunction>

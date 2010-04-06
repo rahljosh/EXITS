@@ -54,6 +54,8 @@
 	// Base Path eg. C:\websites\smg\nsmg\
 	AppPath.base = 'C:/websites/student-management/nsmg/';
 	
+	AppPath.SmgURL = 'http://www.student-management.com/nsmg/';
+	
 	AppPath.companyLogo = AppPath.base & "pics/logos/"; 
 	AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';	
 	
