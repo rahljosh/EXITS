@@ -38,7 +38,7 @@
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
 
-	AppEmail.support = 'support@student-management.com';
+	AppEmail.support = 'support@phpusa.com';
 	AppEmail.finance = 'marcel@student-management.com';
 	AppEmail.errors = 'errors@student-management.com';
 	
