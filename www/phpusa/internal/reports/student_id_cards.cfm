@@ -109,7 +109,7 @@
 							<p class="style1">#toll_free#</p>
 						</td>
 						<td width="32%" rowspan="2" align="center" valign="top" height="140">
-							<cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/web-students" name="stupicture" filter="#studentid#.*">
+							<cfdirectory directory="#AppPath.onlineApp.picture#" name="stupicture" filter="#studentid#.*">
 							<cfif stupicture.recordcount>
 								<img src="http://www.student-management.com/nsmg/uploadedfiles/web-students/#stupicture.name#" width="100" height="135" border="0">
 							<cfelse>
