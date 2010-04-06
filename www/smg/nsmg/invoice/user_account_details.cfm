@@ -1110,10 +1110,14 @@ WHERE su.userid = #url.userid#
 		</cfcase>
 	</cfswitch>
 	
+    <!--- Remove "s" from https image links --->	
+    <cfset linkSSL = ''>
+    
 	<cfdocument format="PDF" filename="#AppPath.uploadedFiles#invoices_pdf/#variables.compName#_#variables.docType#_#iDocNumb#.pdf" overwrite="yes">
 	
 		<cfswitch expression="#docType#">
 			<cfcase value="invoice">
+	            
 				<cfinclude template="invoice_view.cfm">
 			</cfcase>
 			<cfcase value="credit_note">
@@ -1125,8 +1129,7 @@ WHERE su.userid = #url.userid#
 	
 </cfloop>
 
-<!--- to="#getAgentInfo.billing_email#" bcc="#variables.emailFrom#" --->
-<cfmail from="#variables.emailFrom#" to="marcus@student-management.com" bcc="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# #variables.docType#s - please find attached." type="html">
+<cfmail from="#variables.emailFrom#" to="#getAgentInfo.billing_email#" bcc="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# #variables.docType#s - please find attached." type="html">
 
 <small>
 Dear Partner<br/><br/>

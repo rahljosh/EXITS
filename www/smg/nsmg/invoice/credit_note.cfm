@@ -10,6 +10,8 @@
 <!--- CHECK INVOICE RIGHTS ---->
 <cfinclude template="check_rights.cfm">
 
+<cfparam name="linkSSL" default="s">
+
 <cfsetting requesttimeout="300">
 
 <link rel="stylesheet" href="../profile.css" type="text/css">
@@ -144,7 +146,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #0
 	<cfif credit_check.agentid NEQ client.userid> 
 		<table align="center" width="90%" frame="box">
 			<tr>
-				<td valign="top"><img src="../pics/error.gif"></td>
+				<td valign="top"><img src="http#linkSSL#://www.student-management.com/nsmg/pics/error.gif"></td>
 				<td valign="top"><font color="##CC3300">You can only view your invoices. The invoice that you are trying to view is not yours.  <br>If you received this error from clicking directly on a link, contact the person who sent you the link.</td></tr>
 		</table>
 	<cfabort>
@@ -171,22 +173,25 @@ WHERE sc.creditid = #url.creditid#
 </cfquery>
 
 <table align="center">
-	<Tr><td>			<cfif credit_info.credit_type IS 'Trainee'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-              <img src="../pics/logos/csb_banner.gif"/>
-            
+	<Tr>
+    	<td>			
+			<cfif credit_info.credit_type IS 'Trainee'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
+              <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
             <cfelse>
                 <cfswitch expression="#credit_info.testCompId#">
                     <cfcase value="8">
-                          <img src="http://jan.case-usa.org/nsmg/pics/logos/csb_banner.gif"/>
+                          <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
                     </cfcase>
 					<cfcase value="10">
 						<img src="http://jan.case-usa.org/nsmg/pics/case_banner.jpg" width="665" height="113" align="Center">
                     </cfcase>
                     <cfdefaultcase>
-                        <img src="http://jan.case-usa.org/nsmg/pics/smg_banner.jpg" align="Center">
+                        <img src="http#linkSSL#://jan.case-usa.org/nsmg/pics/smg_banner.jpg" align="Center">
                     </cfdefaultcase>
                 </cfswitch>                        
-            </cfif></Td></Tr>
+            </cfif>
+		</Td>
+	</Tr>
 </table>
 <br><br>
 
@@ -233,7 +238,7 @@ WHERE creditid = #url.creditid#
 		<td rowspan=2 valign="top">  
 			<table width="90%" border="0" cellspacing="0" cellpadding="2" align="right" class=thin-border>
 				  <tr><td bgcolor="CCCCCC" align="center" class="thin-border-bottom"><b><FONT size="+1">Credit</FONT></b></td></tr>
-				  <tr><td align="center" class="thin-border-bottom" ><B><font size=+1>###credit_info.creditid#</b></td></tr>
+				  <tr><td align="center" class="thin-border-bottom" ><B><font size=+1>###credit_info.creditid#</font></b></td></tr>
 				  <tr><td bgcolor="CCCCCC" align="center" class="thin-border-bottom">Date</td></tr>
 				  <tr><td  align="center" class="thin-border-bottom">#DateFormat(credit_info.date, 'mm/dd/yyyy')#</td></tr>
 			</table>
@@ -270,10 +275,13 @@ WHERE creditid = #url.creditid#
 		</Tr>
 	</cfif>
 </table>
-</cfoutput>
 <br>
 
-<div align="center"><img src="http://www.student-management.com/nsmg/pics/detach.jpg" ></div><br>
+<div align="center"><img src="http#linkSSL#://www.student-management.com/nsmg/pics/detach.jpg" ></div><br>
+
+</cfoutput>
+
+
 	<table width=100% cellspacing=0 cellpadding=2 class=thin-border border=0> 	
         <tr bgcolor="CCCCCC" >
 			<td class="thin-border-right-bottom">Type</td>
@@ -328,16 +336,16 @@ WHERE creditid = #url.creditid#
 	<table width=100% cellspacing=0 cellpadding=2 border=0 bgcolor="FFFFFF">	
 		<tr>
 			<td width="70%"><cfif credit_info.credit_type IS 'Trainee'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-       					<img src="http://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="70"/>
+       					<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="70"/>
                         
                         <cfelse>
                             <cfswitch expression="#credit_info.progType#">
                                 <cfcase value="7,8,9,11,22,23">
-                                   <img src="http://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="70"/>
+                                   <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="70"/>
                                 </cfcase>
                                 
                                 <cfdefaultcase>
-                                    <img src="http://www.student-management.com/nsmg/pics/logos/#credit_info.companyid#.gif" height="70"/>
+                                    <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/#credit_info.companyid#.gif" height="70"/>
                                 </cfdefaultcase>
                             </cfswitch>
                             </cfif> </td>
