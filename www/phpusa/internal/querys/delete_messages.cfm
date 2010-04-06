@@ -5,7 +5,7 @@
     AND additional_file IS NOT NULL
 </cfquery>
 
-<cfset currentDirectory = "/var/www/html/phpusa/internal/uploadedfiles/news/">
+<cfset currentDirectory = "#AppPath.newsMessage#">
 
 <cfloop query="get_files">
 	<cfif fileExists("#currentDirectory##additional_file#")>

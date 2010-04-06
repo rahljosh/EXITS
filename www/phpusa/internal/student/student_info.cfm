@@ -185,7 +185,7 @@ is this used?
             <td width="135">
                 <table width="100%" cellpadding="2">
                     <tr><td width="135" valign="top">
-                        <cfdirectory directory="/var/www/html/student-management/nsmg/uploadedfiles/web-students" name="stupicture" filter="#studentid#.*">
+                        <cfdirectory directory="#AppPath.onlineApp.picture#" name="stupicture" filter="#studentid#.*">
                         <cfif stupicture.recordcount>
                             <img src="http://www.student-management.com/nsmg/uploadedfiles/web-students/#stupicture.name#" width="135" height="200">
                         <cfelse>

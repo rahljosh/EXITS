@@ -8,16 +8,15 @@
     <cfelse>
     
     	<!--- delete old files. --->
-        <cfset directory_path = "/var/www/html/phpusa/internal/uploadedfiles/temp/">
-        <cfdirectory directory="#directory_path#" action="list" name="get_files">
+        <cfdirectory directory="#AppPath.temp#" action="list" name="get_files">
         <cfloop query="get_files">
         	<!--- delete older than 2 days. --->
             <cfif dateDiff("d", dateLastModified, now()) GTE 2>
-            	<cffile action="delete" file="#directory_path##name#">
+            	<cffile action="delete" file="#AppPath.temp##name#">
             </cfif>
         </cfloop>
         
-        <cfset file_path = "/var/www/html/phpusa/internal/uploadedfiles/temp/progress_report_#form.pr_id#.pdf">
+        <cfset file_path = "#AppPath.temp#progress_report_#form.pr_id#.pdf">
 
     	<cfdocument format="PDF" filename="#file_path#" overwrite="yes">
 			<style type="text/css">
@@ -52,6 +51,16 @@
             <cfinvokeargument name="email_message" value="#email_message#">
             <cfinvokeargument name="email_file" value="#file_path#">
         </cfinvoke>
+
+		<!--- Delete File --->
+        <cftry>
+        	
+            <cffile action="delete" file="#AppPath.temp#progress_report_#form.pr_id#.pdf">
+        
+            <cfcatch type="any">
+				<!--- Error Handling --->            
+            </cfcatch>
+        </cftry>
                         
         <form action="index.cfm?curdoc=lists/progress_report_info" method="post" name="theForm" id="theForm">
         <input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>">
