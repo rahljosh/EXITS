@@ -1,4 +1,3 @@
-
 <cfif client.companyid eq 1>
 	<cfset companycolor='0054A0'>
 <cfelseif client.companyid eq 2>
@@ -20,8 +19,7 @@
  from smg_companies
  where companyid = #client.companyid#
  </Cfquery>
-
-
+ 
 <style type="text/css">
 <!--
 table,tr,td					{font-family:Arial, Helvetica, sans-serif;}
@@ -36,24 +34,24 @@ table,tr,td					{font-family:Arial, Helvetica, sans-serif;}
 .thin-border-bottom{  border-bottom: 1px solid #000000;}
 -->
 </style>
+
 <cfoutput>
 <div class="thin-border">
-<table background="#application.site_url#/nsmg/pics/email_textured_background.png" width=600>
+<table background="#APPLICATION.PATH..SmgURL#pics/email_textured_background.png" width=600>
 	<Tr >
-    
-     	<td width=94><img src="#application.site_url#/nsmg/pics/logos/#client.companyid#_header_logo.png"></td>
+     	<td width=94><img src="#APPLICATION.PATH..SmgURL#pics/logos/#client.companyid#_header_logo.png"></td>
     <cfif client.companyid lte 5>
         <td><strong><font size=+2>INTERNATIONAL <font color="#companycolor#">STUDENT EXCHANGE</font></font></strong></td>
      <cfelse>
      	<td><strong><font size=+2>#company_info.companyname#</font></font></strong></td>
      </cfif>
-     </Tr>	
-   
-     	<td colspan=2><img src="#application.site_url#/nsmg/pics/logos/#client.companyid#_px.png" height=12 width=100%></td>
+     </Tr>
+     <tr>	
+     	<td colspan=2><img src="#APPLICATION.PATH..SmgURL#pics/logos/#client.companyid#_px.png" height=12 width=100%></td>
 	</tr>
 </table>
 
 <Table width=600>
 	<Tr>
     	<td>
- </cfoutput>
+</cfoutput>
