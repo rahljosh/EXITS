@@ -22,7 +22,7 @@
 6. Have had standard charges canceled
 7. Have been canceled and reactivated afterwards --->
 <cfquery name="getWorkCandidates" datasource="MySQL">
-SELECT e.candidateid, IFNULL(e.verification_received, ' ') AS verification_received
+SELECT e.candidateid, e.verification_received AS verification_received
 FROM extra_candidates e
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
@@ -40,7 +40,7 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.type = 'Program price'
                         AND sc.active = 1)
 UNION                                
-SELECT e.candidateid, IFNULL(e.verification_received, ' ') AS verification_received
+SELECT e.candidateid, e.verification_received AS verification_received
 FROM extra_candidates e
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
@@ -58,7 +58,7 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.type = 'Insurance fee'
                         AND sc.active = 1)
 UNION
-SELECT e.candidateid, IFNULL(e.verification_received, ' ') AS verification_received
+SELECT e.candidateid, e.verification_received AS verification_received
 FROM extra_candidates e
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
@@ -76,7 +76,7 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.type = 'Placement fee'
                         AND sc.active = 1)
 UNION
-SELECT e.candidateid, IFNULL(e.verification_received, ' ') AS verification_received
+SELECT e.candidateid, e.verification_received AS verification_received
 FROM extra_candidates e
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
@@ -100,6 +100,7 @@ ORDER BY verification_received
 	<h1 align="center" style="padding-top:3cm">There are no candidates to be invoiced at this time.</h1>
   <cfabort>
 </cfif>
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -140,7 +141,7 @@ ORDER BY verification_received
             <select name="dsVerRepDateRec" onChange="javaScript:this.form.submit();">
                 <option></option>                                                   
                 <cfoutput query="getWorkCandidates" group="verification_received">
-                <option>#verification_received#</option>
+                <option>#DateFormat(getWorkCandidates.verification_received, "yyyy-mm-dd")#</option>
                 </cfoutput>                         
             </select>
             </td>
