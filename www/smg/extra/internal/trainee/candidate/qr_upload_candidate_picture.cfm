@@ -1,17 +1,16 @@
 <link rel="stylesheet" href="../../smg.css" type="text/css">
 <body onLoad="opener.location.reload()">
-<!---
-<cftry>
----->
+
 <cfquery name="get_id" datasource="mysql">
-select candidateid from extra_candidates
-where uniqueid = '#url.uniqueid#'
+    select candidateid from extra_candidates
+    where uniqueid = '#url.uniqueid#'
 </cfquery>
+
 <cfset url.candidateid = #get_id.candidateid#>
+
 <cfoutput>
 
 	<cfset directory = AppPath.candidatePicture>
-	 <!----'d:\websites\extra\internal\uploadedfiles\web-candidates'>---->
 	
 	<!----Upload File---->
 	<cffile action = "upload" fileField = "form.candidate_pic"  destination = "#directory#"  nameConflict = "MakeUnique" mode=666>
@@ -77,13 +76,3 @@ where uniqueid = '#url.uniqueid#'
 	<cflocation url="reload_window.cfm">
 
 </cfoutput>
-
-
-
-<!----
-<cfcatch type="any">
-	<cfinclude template="../email_error.cfm">
-</cfcatch>
-
-</cftry>
----->
