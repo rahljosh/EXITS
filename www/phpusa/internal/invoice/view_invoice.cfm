@@ -69,7 +69,7 @@ table.nav_bar {  background-color: #ffffff; border: 1px solid #000000; }
 <div class="page-break">
 
 <table align="center" >
-	<tr><td><img src="dmd_banner.gif" align="Center"></td></tr>
+	<tr><td><!--- <img src="dmd_banner.gif" align="Center"> ---></td></tr>
 	<tr><td align="center"><h1>Invoice</h1></td></tr>
 </table>
 <br />
@@ -90,7 +90,7 @@ table.nav_bar {  background-color: #ffffff; border: 1px solid #000000; }
 	</tr>
 	<tr>
 		<td  valign="top" class="thin-border-left-bottom-right">
-			DMD Discoveries <br />
+			KCK INTERNATIONAL <br />
 			Private High School Program<br />
 			119 Cooper St.<br />
 			Suite 5<br />
@@ -197,6 +197,7 @@ where intrepid = 49
             #AppInvoice.bankCity#, #AppInvoice.bankState# #AppInvoice.bankZip# <br />
 			ABA/Routing ## #AppInvoice.bankRouting#<br />
 			Account ## #AppInvoice.bankAccount#
+
 		</td>
 		<td valign="top">
 		</td>
