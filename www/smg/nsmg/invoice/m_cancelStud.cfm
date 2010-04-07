@@ -115,7 +115,7 @@
 <cfswitch expression="#form.chooseProgram#">
     <cfcase value="High School">
         <cfquery name="getSmgChargesCredit" datasource="MySQL">
-        SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, su.accepts_sevis_fee, IFNULL(sc.creditid, ' ') AS creditid, IFNULL(sc.amount, ' ') AS amount, IFNULL(sc.description, ' ') AS credDescription, sc.type AS creditType
+        SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, su.accepts_sevis_fee, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType
         FROM smg_charges s
         LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
         INNER JOIN smg_programs sp ON sp.programid = s.programid
@@ -138,7 +138,7 @@
 	</cfcase>
     <cfcase value="Work Program">
         <cfquery name="getSmgChargesCredit" datasource="MySQL">
-        SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.active AS stud_active, IFNULL(sc.creditid, ' ') AS creditid, IFNULL(sc.amount, ' ') AS amount, IFNULL(sc.description, ' ') AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee
+        SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.active AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee
         FROM  `smg_charges` s
         LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
         INNER JOIN smg_programs sp ON sp.programid = s.programid
@@ -412,7 +412,7 @@
     <cfswitch expression="#form.chooseProgram#">
         <cfcase value="High School">
             <cfquery name="getChargesCancellations" datasource="MySQL">
-            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, su.accepts_sevis_fee, IFNULL(sc.creditid, ' ') AS creditid, IFNULL(sc.amount, ' ') AS amount, IFNULL(sc.description, ' ') AS credDescription, sc.type AS creditType
+            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, su.accepts_sevis_fee, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType
             FROM smg_charges s
             LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
             INNER JOIN smg_programs sp ON sp.programid = s.programid
@@ -456,7 +456,7 @@
         </cfcase>
         <cfcase value="Work Program">
             <cfquery name="getChargesCancellations" datasource="MySQL">
-            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.active AS stud_active, IFNULL(sc.creditid, ' ') AS creditid, IFNULL(sc.amount, ' ') AS amount, IFNULL(sc.description, ' ') AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee
+            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.active AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee
             FROM  `smg_charges` s
             LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
             INNER JOIN smg_programs sp ON sp.programid = s.programid
