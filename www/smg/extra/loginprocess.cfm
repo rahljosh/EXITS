@@ -72,10 +72,27 @@
 	</cfif>	
 	
 	<!--- SET LINKS --->
-	<cfset link7 = 'internal/trainee/index.cfm'>
-	<cfset link8 = 'internal/wat/index.cfm'>
-	<cfset link9 = 'internal/h2b/index.cfm'>
-	
+	<cfscript>
+		// SET LINKS
+		/*
+		if ( APPLICATION.IsServerLocal ) {
+			// Development Server
+			link7 = 'internal/trainee/index.cfm';
+			link8 = 'internal/wat/index.cfm';
+			link9 = 'internal/h2b/index.cfm';
+		} else {
+			// Live Server
+			link7 = 'https:/www.student-management.com/extra/internal/trainee/index.cfm';
+			link8 = 'https:/www.student-management.com/extra/internal/wat/index.cfm';
+			link9 = 'https:/www.student-management.com/extra/internal/h2b/index.cfm';
+		}
+		*/
+		
+		link7 = 'internal/trainee/index.cfm';
+		link8 = 'internal/wat/index.cfm';
+		link9 = 'internal/h2b/index.cfm';
+	</cfscript>		
+    
 	<cflocation url="#Evaluate("link" & get_default_company.companyid)#" addtoken="no">
 	
 	<!----Once more of site is complete, change this to an appropriate welcome page.--->

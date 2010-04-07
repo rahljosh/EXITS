@@ -1,5 +1,5 @@
-<Cfif #cgi.SERVER_PORT# eq 80>
-	<cflocation url="https://www.student-management.com/extra/">
+<Cfif NOT APPLICATION.IsServerLocal AND cgi.SERVER_PORT EQ 80>
+	<cflocation url="https://www.student-management.com/extra/" addtoken="no">
 </Cfif>
 
 <link href="internal/style.css" rel="stylesheet" type="text/css" />

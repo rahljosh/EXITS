@@ -7,7 +7,6 @@
 
 	<!--- set loop variables --->                    	
     <cfset startTable = 1>
-    <cfset firstPage = 1>
 
     <cfquery name="qGetCandidates" datasource="MySql"> 
         SELECT DISTINCT 
@@ -68,15 +67,15 @@
 	
 	.tableHolder {		
 		width:7in; /* 17.7cm */		
-		/* height:11in; /* 28cm */
+		/* height:10in; /* 25cm */
 		padding:0;
-		margin:0;
+		margin:0;	
+		/* border: 1px thin black; */
 	}
 
 	.tableCell {
 		height:2in; /* 5.0cm */
 		width:3.5in; /* 8.9cm */
-		border:thin;
 		padding:0;
 		margin:0;
 	}
@@ -151,9 +150,8 @@
     <!--- close table every 10 columsn and add a page break --->
     <cfif qGetCandidates.currentRow MOD 10 EQ 0> 
         <cfset startTable = 1>
-        <cfset firstPage = 1>
         </table>            
-        <div class="pageBreak"></div>			
+        <!--- <div class="pageBreak"></div>--->
     </cfif>	
 
 </cfoutput>
