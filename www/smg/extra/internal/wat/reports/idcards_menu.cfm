@@ -145,7 +145,7 @@
 							<tr>
 								<td bordercolor="FFFFFF" valign="top">
 									<table width="100%" cellpadding=3 cellspacing=0 border=0>
-										<cfform name="new_ticket" action="reports/insurance_cards.cfm" method="post" target="_blank">
+										<cfform name="new_ticket" action="reports/insurance_cards_pdf.cfm" method="post" target="_blank">
 										<tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: Insurance ID Cards</td></tr>
 										<tr>
 											<td class="style1" valign="top" align="right"><b>Program:</b></td>
@@ -176,11 +176,16 @@
 												</cfselect>
 											</td>
 										</tr>
+                                        <!---
                                         <tr>
-                                        	<td align="center" class="style1" colspan="2">
-                                            	PS: Please set your browser margins to: top: 0.3 / bottom: 0.3 / left: 0.5 / right: 0.5
+                                        	<td class="style1" colspan="2">
+                                            	Set margins to: <br><br>
+                                                IE: top: 0.5 / bottom: 0.4 / left: 0.7 / right: 0.5 <br><br>                                                
+                                                Firefox: top: 0.3 / bottom: 0.3 / left: 0.5 / right: 0.5 <br><br>                                                
+                                                Make sure you set page scaling to: Shrink to Printable Area <br><br>
                                             </td>
                                         </tr>
+										--->
 										<tr><td align="center" colspan="2"><cfinput type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>
 										</cfform>	                                        
 									</table>
@@ -190,7 +195,7 @@
 					</td>
 					<td width="2%" valign="top">&nbsp;</td>
 					<td width="49%" valign="top">&nbsp;
-						
+                    							
 					</td>
 				</tr>
 			</table><br>
