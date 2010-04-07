@@ -73,8 +73,6 @@ FROM smg_users
 WHERE userid = #client.userid#
 </cfquery>
 
-<CFSET ImgScrPath = "#client.site_url#">
-
 <!--- TO="""#regional_director.firstname# #regional_director.lastname#"" <#regional_director.email#>" --->
 <!--- cc="""#get_current_user.firstname# #get_current_user.lastname#"" <#get_current_user.email#>" --->
 
@@ -126,7 +124,3 @@ WHERE userid = #client.userid#
 </table>
 </div>
 </cfoutput>
-
-<!----  Path:	#ImgScrPath#<br>
-	Remote Address: #cgi.REMOTE_ADDR#<br>
-	Http Host:	#cgi.HTTP_HOST#<br> ---->

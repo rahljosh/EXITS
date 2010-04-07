@@ -41,8 +41,6 @@
 	ORDER BY u.businessname
 </cfquery>
 
-<CFSET ImgScrPath = "#client.site_url#">
-
 <cfif GetIntlReps.recordcount is 0>
 	<p>There is no students to populate the DS 2019 Verification Report for the programs selected.</p>
 	<cfabort>

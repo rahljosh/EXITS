@@ -74,22 +74,12 @@ FROM smg_users
 WHERE userid = #client.userid#
 </cfquery>
 
-<!---- Send Email to the user ---->
-<!---- Local variables ---->
-<!---- <cfif cgi.HTTP_HOST is 'web'>
-	<CFSET ImgScrPath = "http://web">
-<cfelse>
-	<CFSET ImgScrPath = "http://www.student-management.com">
-</cfif> ---->
-<!---- <CFSET ImgScrPath = "http://#CGI.HTTP_HOST#"> ---->
-
-<CFSET ImgScrPath = "#client.site_url#">
-
 <cfoutput>
+
 <CFMAIL SUBJECT="Flight Information for #get_student_info.firstname# #get_student_info.familylastname# ( #get_student_info.studentid# )"
-TO=#get_current_user.email#
-FROM="""#companyshort.companyname#"" <#get_facilitator.email#>"
-TYPE="HTML">
+    TO="#get_current_user.email#"
+    FROM="""#companyshort.companyname#"" <#get_facilitator.email#>"
+    TYPE="HTML">
 <HTML>
 <HEAD>
 
@@ -131,7 +121,7 @@ font-size: small;
 		#DateFormat(now(), 'dddd, mmmm dd, yyyy')#<br>
 	</td>
 	
-	<td><img src="#ImgScrPath#/#client.companyid#.gif"  alt="" border="0" align="right"></td>	
+	<td><img src="#APPLICATION.site_url#/nsmg/pics/logos/#client.companyid#.gif"  alt="" border="0" align="right"></td>	
 	<td valign="top" align="right"> 
 		<div align="right">
 		#companyshort.companyshort#<br>
@@ -268,6 +258,3 @@ font-size: small;
 </table>
 </div>
 </cfoutput>
-<!----  Path:	#ImgScrPath#<br>
-	Remote Address: #cgi.REMOTE_ADDR#<br>
-	Http Host:	#cgi.HTTP_HOST#<br> ---->
