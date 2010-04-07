@@ -90,8 +90,6 @@
 <!--- SEND E-MAIL --->
 <cfelse>
 
-<CFSET ImgScrPath = "#client.site_url#">
-
 <cfif IsDefined('form.self') AND NOT IsDefined('form.intrep')>
 	<cfset emails = '#get_current_user.email#'>
 <cfelseif IsDefined('form.intrep') AND NOT IsDefined('form.self')>

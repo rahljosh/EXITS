@@ -39,8 +39,6 @@ FROM smg_users
 WHERE userid = #client.userid#
 </cfquery>
 
-<CFSET ImgScrPath = "#client.site_url#">
-
 <cfoutput>
 <CFMAIL SUBJECT="Receipt and Acceptance Letter for #get_student_info.firstname# #get_student_info.familylastname# ( #get_student_info.studentid# )"
 TO=#int_agent.email#  

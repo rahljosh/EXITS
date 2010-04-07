@@ -70,8 +70,6 @@
 	<!--- SENDING EMAILS  - send email if the option is checked --->
 	<cfif IsDefined('form.send_email')>
 		
-		<CFSET ImgScrPath = "#client.site_url#">
-		
 		<cfif IsDefined('form.copy_user')>
 			<cfset get_user_email = #get_current_user.email#>			
 		<cfelse>

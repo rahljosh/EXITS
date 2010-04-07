@@ -31,8 +31,6 @@
 	WHERE userid = #client.userid#
 </cfquery>
 
-<CFSET ImgScrPath = "#client.site_url#">
-
 <cfoutput>
 <CFMAIL SUBJECT="Receipt and Acceptance Letter for #int_agent.businessname#"
 TO=#int_agent.email#  

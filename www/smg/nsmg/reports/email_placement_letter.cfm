@@ -122,22 +122,21 @@
 	WHERE userid = #client.userid#
 </cfquery>
 
-<CFSET ImgScrPath = "#client.site_url#">
-
 <cfif IsDefined('form.self')>
 	<cfset emails = '#get_current_user.email#'>
 	<!--- COPY linnea.nattochdag@ef.com on all EF placements --->
 <cfelseif GetIntlReps.master_accountid EQ 10115>
-	<cfset emails = '#GetIntlReps.email#'&'; '&'Maria.Ma@ef.com'&'; '&'#get_current_user.email#'>
+	<cfset emails = '#GetIntlReps.email#;Maria.Ma@ef.com'>
 <cfelse>
-	<cfset emails = '#GetIntlReps.email#'&'; '&'#get_current_user.email#'>
+	<cfset emails = '#GetIntlReps.email#'>
 </cfif>
 
 <cfoutput>
 
 <CFMAIL SUBJECT="Placement Information Letter for #get_student_info.firstname# #get_student_info.familylastname# ( #get_student_info.studentid# )"
 	TO="#emails#"
-	failto="#get_current_user.email#" 
+	bcc="#get_current_user.email#"
+    failto="#get_current_user.email#" 
 	replyto="""#companyshort.companyname#"" <#get_facilitator.email#>"
 	from="#client.support_email#"
     TYPE="HTML">
