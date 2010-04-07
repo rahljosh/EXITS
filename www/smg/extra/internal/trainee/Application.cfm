@@ -13,14 +13,21 @@
     
         // Base Path eg. C:\websites\student-management\extra\internal\trainee\ 
         AppPath.base = getDirectoryFromPath(getBaseTemplatePath());
-    
+    		
 		// Remove the last item from Base (trainee, h2b or wat)
 		AppPath.base = ListDeleteAt(AppPath.base, ListLen(APPPath.base, '\'), '\') & '/';
-	
+
         AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';
         AppPath.pdfDocs = AppPath.uploadedFiles & 'pdf_docs/trainee/';
-		AppPath.candidatePicture = AppPath.uploadedFiles & "web-candidates/";
-		AppPath.hostLogo = AppPath.uploadedFiles & "web-hostlogo/";
+		
+		// These are one level up
+		AppPath.baseRoot = AppPath.base; 
+		AppPath.baseRoot = ReplaceNoCase(AppPath.baseRoot, 'trainee/', '');
+		AppPath.baseRoot = ReplaceNoCase(AppPath.baseRoot, 'candidate/', '');
+		AppPath.baseRoot = ReplaceNoCase(AppPath.baseRoot, 'hostcompany/', '');
+
+		AppPath.candidatePicture = AppPath.baseRoot & "uploadedfiles/web-candidates/";
+		AppPath.hostLogo = AppPath.baseRoot & "uploadedfiles/web-hostlogo/";
     </cfscript>
     
     <CFQUERY name="selectdb" datasource="MySQL" >
