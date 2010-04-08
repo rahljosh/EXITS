@@ -781,13 +781,16 @@ GROUP BY agentid, testCompid
 		</cfdefaultcase>
         
 	</cfswitch>
-	
+
+	<!--- Remove "s" from https image links --->	
+	<cfset linkSSL = ''>
+		
 	<cfloop query="getNewInvPerAgent">
 	
 		<cfset url.id = #getNewInvPerAgent.invoiceId#>
 		
 		<cfdocument format="PDF" filename="#AppPath.uploadedFiles#invoices_pdf/#variables.compName#_#getNewInvPerAgent.invoiceId#.pdf" overwrite="yes">
-		
+
 			<cfinclude template="invoice_view.cfm">
 		
 		</cfdocument>
