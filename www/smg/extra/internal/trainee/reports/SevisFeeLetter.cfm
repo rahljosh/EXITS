@@ -1,20 +1,16 @@
-<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes">
+<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes" margintop="0.5" marginbottom="0.5">
 
 <cfquery name="get_candidate" datasource="MySql">
 	SELECT *, <!---- smg_countrylist.countryname ---->
 	bcountrylist.countryname as birhcountryname,
 	hcountrylist.countryname as homecountryname,
 	ccountrylist.countryname as citizencountryname
-	
 	FROM extra_candidates
-	
 	<!---- INNER JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.birth_country
 	AND extra_candidates.home_country AND extra_candidates.citizen_country ---->
-	
 	INNER JOIN smg_countrylist as bcountrylist ON bcountrylist.countryid = extra_candidates.birth_country
 	INNER JOIN smg_countrylist as hcountrylist ON hcountrylist.countryid = extra_candidates.home_country
 	INNER JOIN smg_countrylist as ccountrylist ON ccountrylist.countryid = extra_candidates.citizen_country
-	
 	WHERE uniqueid = '#url.uniqueid#'
 </cfquery>
 
@@ -34,7 +30,10 @@
       <div align="center">Sevis Fee Instruction Letter <font color="#FFFFFF">____________ </font> </div>
     </div></td>
   </tr>
-</table><cfoutput query="get_candidate"><br />
+</table>
+
+<cfoutput query="get_candidate">
+<br />
 
 <p class="style1">This  letter is to confirm that #firstname# #lastname# has been approved by ISE for  the J-1 visa sponsorship and has been entered into the Student and Exchange Visitor Information System (SEVIS) database. A DS-2019 form (SEVIS ID #ds2019#) has been issued and sent.<br>
     <br>
@@ -112,13 +111,9 @@
 <br />
 <p class="style1">Please do not hesitate to contact  ISE Training Program staff should you have any questions.</p>
 <p class="style1">Sincerely,</p>
-
-      <br />
-      <br />
-      <br />
-
-   
+<br />
 <p class="style1">Sergei Chernyshov (sergei@iseusa.com)
 </cfoutput>
+
 </cfdocument>
 
