@@ -1,0 +1,80 @@
+.ddmx {
+    font: 10px verdana;
+}
+.ddmx .item1,
+.ddmx .item1:hover, 
+.ddmx .item1-active,
+.ddmx .item1-active:hover {
+    padding: 2px 4px 3px 4px;
+    font: 10px verdana;
+    color: #000000;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+    position: relative;
+}
+
+.ddmx .item2,
+.ddmx .item2:hover,
+.ddmx .item2-active,
+.ddmx .item2-active:hover {
+	background: #F6E2C6;
+    padding: 2px 4px 3px 4px;
+    font: 10px verdana;
+    color: #555555;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+    position: relative;
+    z-index: 500;
+}
+.ddmx .item2 {
+    background: #FFFFFF;
+}
+
+.ddmx .arrow,
+.ddmx .arrow:hover {
+    padding: 2px 4px 3px 4px;
+}
+.ddmx .item2 img,
+.ddmx .item2-active img{
+    position: absolute;
+    top: 4px;
+    right: 1px;
+    border: 0;
+}
+.ddmx .section {
+    border: 1px solid #b8b4ae;
+    position: absolute;
+    visibility: hidden;
+    z-index: -1;
+}
+
+* html .ddmx td { position: relative; } /* ie 5.0 fix */
+
+.selected {
+	background: #FD9226;
+    padding: 2px 4px 3px 4px;
+    font: 10px verdana;
+    color: #FFFFFF;
+    font-weight: bold;
+	text-decoration: none;
+}
+
+.selectedlink {
+	font: 10px verdana;
+    color: #FFFFFF;
+    font-weight: bold;
+	text-decoration: none;
+}
+
+.menuline {
+	background: #FD9226;
+	border-top: 0px;
+	border-right: 0px;
+	border-left: 0px;
+	border-bottom: 1px solid;
+	border-bottom-color: #DDDDDD;
+}

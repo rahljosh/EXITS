@@ -1,0 +1,96 @@
+.contact {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	text-align: center;
+	padding-top: 20px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	font-weight: bold;
+}
+#index_r9_c1 {
+	background-image: url(file:///Macintosh%20HD/Users/Jeimi/Desktop/CASE%20HomePage/index_r9_c1.gif);
+	background-repeat: repeat;
+}
+#index_r9_c4 {
+	background-image: url(file:///Macintosh%20HD/Users/Jeimi/Desktop/CASE%20HomePage/index_r9_c4.gif);
+	background-repeat: repeat;
+}
+.Header {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 15px;
+	font-style: normal;
+	font-weight: bold;
+	text-decoration: underline;
+	text-align: center;
+	padding-top: 15px;
+	padding-right: 20px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	color: #000;
+}
+.rightrepeat {
+	background-image: url(file:///Macintosh%20HD/Users/Jeimi/Desktop/CASE%20HomePage/images/images/homepage_r4_c3_r3_c3.gif);
+	background-repeat: repeat;
+	background-position: top;
+}
+.leftrepeat {
+	background-image: url(file:///Macintosh%20HD/Users/Jeimi/Desktop/CASE%20HomePage/images/images/homepage_r4_c3_r3_c1.gif);
+	background-repeat: repeat;
+	background-position: top;
+}
+.paragraph {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	padding-top: 0px;
+	padding-right: 25px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	text-align: justify;
+	word-spacing: normal;
+	text-indent: 0px;
+	vertical-align: 0%;
+	letter-spacing: normal;
+	font-weight: normal;
+	margin: 0px;
+}
+h4 {
+	background-image: url(file:///Macintosh%20HD/Users/Jeimi/Desktop/CASE%20HomePage/images/images/homepage_r4_c3_r3_c1.gif);
+	background-repeat: repeat;
+	position: absolute;
+	width: 650px;
+}
+.login {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-style: normal;
+	font-weight: bold;
+	padding-left: 7px;
+}
+.forgetlogin {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #090;
+	text-decoration: underline;
+	padding-left: 7px;
+}
+.grey {
+	border-top-width: thin;
+	border-right-width: thin;
+	border-bottom-width: thin;
+	border-left-width: thin;
+	border-top-color: #333;
+	border-right-color: #333;
+	border-bottom-color: #333;
+	border-left-color: #333;
+}
+.international {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	color: #000;
+	text-decoration: underline;
+	padding-left: 8px;
+	font-weight: bold;
+	text-align: center;
+}

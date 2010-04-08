@@ -1,0 +1,118 @@
+/***********************************************/
+/* HTML tag styles                             */
+/***********************************************/
+body{
+	font-family: Arial,sans-serif;
+	color: #333333;
+	line-height: 1.166;	
+	margin: 0px;
+	padding: 0px;
+	background: 
+	background-attachment: fixed;
+	background-position: top;
+	background-repeat: repeat-x;
+	font-size:12px;
+}
+
+
+
+/************** header tag styles **************/
+
+h1{
+ font: bold 120% Arial,sans-serif;
+ color: #334d55;
+ margin: 0px;
+ padding: 0px;
+}
+
+h2{
+ font: bold 120% Arial,sans-serif;
+ color: #006699;
+ margin: 0px;
+ padding: 0px;
+}
+
+h3{
+ font: bold 100% Arial,sans-serif;
+ color: #334d55;
+ margin: 0px;
+ padding: 0px;
+}
+
+h4{
+ font: 100% Arial,sans-serif;
+ color: #333333;
+ margin: 0px;
+ padding: 0px;
+}
+
+h5{
+ font: 100% Arial,sans-serif;
+ color: #334d55;
+ margin: 0px;
+ padding: 0px;
+}
+
+
+/*************** list tag styles ***************/
+#login{
+	position:absolute;
+	top: 50px;
+	left: 25%;
+	right: 25%;
+	width: 50%;
+	background: none;
+	background-color: #FFFFFF;
+	background-image: none;
+	color:#000000;
+}
+#login img{
+	border:0px;
+}
+
+.grey_box{
+	border-top: 1px solid Gray;
+	border-bottom: 1px solid Gray;
+	background-color: #FFF8DC;
+	
+}
+
+/************** siteInfo styles ****************/
+
+#siteInfo{
+	clear: both;
+	border-top: 1px solid #666666;
+	font-size: small;
+	color: #cccccc;
+	padding: 10px 10px 10px 10px;
+	margin-top: -1px;
+}
+
+
+#siteInfo img{
+	padding: 4px 4px 4px 0px;
+	vertical-align: middle;
+}
+
+/******* hyperlink and anchor tag styles *******/
+
+a:link, a:visited{
+	color: #5E748C;
+	text-decoration: none;
+}
+
+a:hover{
+	text-decoration: underline;
+}
+
+.pagecell{
+	
+	width:520px;
+	background-color: white;
+	
+	
+	}
+	
+	.get_Attention{
+	color: #8B0000;
+}

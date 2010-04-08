@@ -1,0 +1,1124 @@
+body {
+	background-color: #FFF;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+}
+
+/* Navigation Tool Bar */
+
+.home1 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 170px;
+	text-align: center;
+	background-image: url(../images/home.jpg);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.home1:hover {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 170px;
+	text-align: center;
+	background-image: url(../images/MOhome.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.home1:active {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 170px;
+	text-align: center;
+	background-image: url(../images/AChome.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.about2 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 153px;
+	text-align: center;
+	background-image: url(../images/aboutcase.jpg);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.about2:hover {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 153px;
+	text-align: center;
+	background-image: url(../images/MOaboutcase.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.about2:active {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 153px;
+	text-align: center;
+	background-image: url(../images/ACaboutcase.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.hostfam3 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 147px;
+	text-align: center;
+	background-image: url(../images/hostfamilies.jpg);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.hostfam3:hover {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 147px;
+	text-align: center;
+	background-image: url(../images/MOhostfamilies.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.hostfam3:active {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 147px;
+	text-align: center;
+	background-image: url(../images/AChostfamilies.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.students4 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 147px;
+	text-align: center;
+	background-image: url(../images/students.jpg);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.students4:hover {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 147px;
+	text-align: center;
+	background-image: url(../images/MOstudents.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.students4:active {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 147px;
+	text-align: center;
+	background-image: url(../images/ACstudents.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.rep5 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 160px;
+	text-align: center;
+	background-image: url(../images/representatives.jpg);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.rep5:hover {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 160px;
+	text-align: center;
+	background-image: url(../images/MOrepresentatives.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.rep5:active {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 160px;
+	text-align: center;
+	background-image: url(../images/ACrepresentatives.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.contact6 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 175px;
+	text-align: center;
+	background-image: url(../images/contactcase.jpg);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.contact6:hover {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 175px;
+	text-align: center;
+	background-image: url(../images/MOcontactcase.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.contact6:active {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 165px;
+	text-align: center;
+	background-image: url(../images/ACcontactcase.gif);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+#spacer {
+	background-image: url(../images/spacer.jpg);
+	margin: 0px;
+	padding: 0px;
+	height: 5px;
+	width: 1024px;
+}
+#header {
+	background-image: url(../images/banner.jpg);
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+	height: 210px;
+	width: 1024px;
+	text-align: center;
+}
+
+
+
+/* Main Navigation */
+
+
+#home {
+	background-image: url(../images/home.jpg);
+	height: 35px;
+	width: 182px;
+}
+#home:active{
+	background-image: url(../images/AChome.gif);
+}
+#container p{
+	background-image: url(../images/aboutcase.jpg);
+	height: 35px;
+	width: 166px;
+}
+#aboutcase:hover{
+	background-image: url(../images/MOaboutcase.gif);
+}
+#aboutcase:active{
+	background-image: url(../images/ACaboutcase.gif);
+}
+#hostfamilies {
+	background-image: url(../images/hostfamilies.jpg);
+	height: 35px;
+	width: 159px;
+}
+#hostfamilies:hover{
+	background-image: url(../images/MOhostfamilies.gif);
+}
+#hostfamilies:active{
+	background-image: url(../images/AChostfamilies.gif);
+}
+#students {
+	background-image: url(../images/students.jpg);
+	height: 35px;
+	width: 157px;
+}
+#students:hover{
+	background-image: url(../images/MOstudents.gif);
+}
+#students:active{
+	background-image: url(../images/ACstudents.gif);
+}
+#representatives {
+	background-image: url(../images/representatives.jpg);
+	height: 35px;
+	width: 173px;
+}
+#representatives:hover{
+	background-image: url../images/MOrepresentatives.gif);
+}
+#representatives:active{
+	background-image: url(../images/ACrepresentatives.gif);
+}
+#contactcase {
+	background-image: url(../images/contactcase.jpg);
+	height: 35px;
+	width: 187px;
+}
+#contactcase:hover{
+	background-image: url(../images/MOcontactcase.gif);
+}
+#contactcase:active{
+	background-image: url(../images/images/ACcontactcase.gif);
+}
+#main-nav {
+	margin: 0px;
+	padding: 0px;
+	width: 1024px;
+	height: 35px;
+}
+
+/* Main Navigation End */
+
+
+#sidebar {
+	margin: 0px;
+	padding: 0px;
+	width: 223px;
+	background-image: url(../images/acctloginslice.jpg);
+	background-repeat: repeat-y;
+	text-align: left;
+	float: left;
+	z-index: 1;
+	height: 100%;
+}
+#repInfo {
+	background-image: url(../images/repinfo.jpg);
+	background-repeat: no-repeat;
+	height: 33px;
+	width: 223px;
+	margin: 0px;
+	padding: 0px;
+}
+#topBullets {
+	margin: 0px;
+	padding: 0px;
+	float: right;
+	height: 150px;
+	width: 200px;
+	clear: right;
+	position: relative;
+	visibility: inherit;
+	z-index: 1;
+	top: 40px;
+}
+#wrapper {
+	background-color: #FFF;
+	margin: 0px;
+	padding: 0px;
+	text-align: left;
+	width: 1024px;
+	height: 100%;
+}
+.toprightlinks1 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(../images/IntLogin.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks1:hover{
+	background-image: url(../images/IntLoginMO.png);
+}
+.toprightlinks2 {
+	color: #FF0;
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(../images/AssociateEmail.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks2:hover{
+	background-image: url(../images/MOAssociateEmail.png);
+}
+.toprightlinks3 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(../images/HeadNews.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks3:hover{
+	background-image: url(../images/MOHeadNews.png);
+}
+.toprightlinks4 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(../images/ContactUs.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks4:hover{
+	background-image: url(../images/MOContactUs.png);
+}
+.toprightlinks5 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(../images/FAQ.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks5:hover{
+	background-image: url(../images/MOFAQ.png);
+}
+#footer {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.70em;
+	margin: 0px;
+	width: 1024px;
+	height: 45px;
+	background-image: url(../images/footer.jpg);
+	background-repeat: no-repeat;
+	line-height: 1.25em;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	text-align: center;
+	color: #FFF;
+	z-index: 1;
+}
+.Login {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.6em;
+	line-height: 1em;
+	color: #666;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	font-weight: bold;
+}
+#sidebarSpacer {
+	background-image: url(../images/sidebarSpacer2.jpg);
+	margin: 0px;
+	padding: 0px;
+	height: 10px;
+	width: 218px;
+}
+#mainContent {
+	padding: 0px;
+	width: 800px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 220px;
+	left: 215px;
+	background-image: url(../images/bodyslice.jpg);
+	background-repeat: repeat-y;
+	height: 112%;
+}
+#content {
+	margin: 0px;
+	padding: 0px;
+	width: 800px;
+	height: 100%;
+}
+
+/* Navigation Tool Bar End */
+
+
+#ContentTop {
+	background-image: url(../images/bodytop.jpg);
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+	width: 800px;
+	height: 20px;
+}
+#Contentbottom {
+	background-image: url(../images/bodybottom.jpg);
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+	width: 800px;
+	height: 20px;
+}
+#sidebarEnd {
+	background-image: url(../images/repbottom.png);
+	margin: 0px;
+	padding: 0px;
+	width: 225px;
+	height: 18px;
+}
+#AccountLogin {
+	background-image: url(../images/accountlogin.jpg);
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	width: 225px;
+}
+.List {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.75em;
+	list-style-image: url(../images/arrow.png);
+	line-height: 2em;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 15px;
+	margin-right: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+.linkLG {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 14px;
+	color: #F00;
+	list-style-image: url(../images/arrow.png);
+}
+#hostfamilyinfo {
+	background-image: url(../images/hostfamilyinfo.jpg);
+	height: 33px;
+	width: 223px;
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+}
+#studentinfo {
+	background-image: url(../images/studentinfo.jpg);
+	height: 33px;
+	width: 223px;
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+}
+.loginButton {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.65em;
+	color: #000;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+.bodycopy {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: justify;
+	padding-top: 0px;
+	padding-right: 75px;
+	padding-bottom: 0px;
+	padding-left: 50px;
+}
+.header {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: bold;
+	text-decoration: underline;
+}
+#mainbody {
+	background-color: #FFF;
+	margin: 0px;
+	padding: 0px;
+	width: 1024px;
+	height: 100%;
+}
+#loginInfo {
+	height: 100%;
+	width: 168px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 35px;
+	z-index: 3;
+	padding-top: 40px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+.contact {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+}
+#contactInfo {
+	color: #000;
+	height: 250px;
+	width: 650px;
+	margin-top: 40px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 40px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 30px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 1em;
+	background-image: url(../images/jerseyHeadquarters.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+#headquarters {
+	background-image: url(../images/jersey.jpg);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 20px;
+	margin-left: 20px;
+	padding: 0px;
+}
+
+#Form2 {
+	color: #000;
+	height: 250px;
+	width: 650px;
+	margin-top: 10px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 40px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 30px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 1em;
+	background-image: url(../images/ContactedRep.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+#form2ContactRep {
+	background-image: url(../images/areaRep.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding: 0px;
+}
+.header2 {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 2em;
+	color: #FFF;
+	padding-top: 15px;
+}
+#aboutCase {
+	color: #000;
+	height: 100%;
+	width: 650px;
+	margin-top: 15px;
+	margin-right: 40px;
+	margin-bottom: 0px;
+	margin-left: 40px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 0.75em;
+	background-image: url(../images/blueTab.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	text-align: left;
+}
+#incomingstudentinfo {
+	margin: 0px;
+	float: right;
+	height: 150px;
+	width: 475px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 12px;
+	clear: right;
+	z-index: 2;
+	background-image: url(../images/gradient.png);
+	background-repeat: repeat-y;
+}
+.incomingstudenttext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+.12ptRed {
+	color: #F00;
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 11px;
+}
+#headquarterNews {
+	background-image: url(../images/HeadNews.jpg);
+	background-repeat: no-repeat;
+	float: right;
+	height: 250px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 0px;
+	margin-left: 20px;
+	padding: 0px;
+}
+.forminfo {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+}
+.facts {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	line-height: 1.5em;
+}
+#FAQphoto {
+	background-image: url(../images/FAQphoto.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 20px;
+	margin-left: 20px;
+	padding: 0px;
+}
+#mainContent2 {
+	padding: 0px;
+	width: 800px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 220px;
+	left: 215px;
+	background-image: url(../images/bodyslice.jpg);
+	background-repeat: repeat-y;
+	height: 600px;
+	clear: right;
+	float: right;
+}
+.gradient {
+	background-image: url(../images/gradient.png);
+	background-repeat: repeat;
+	padding-top: 5px;
+	padding-right: 0px;
+	padding-bottom: 5px;
+	padding-left: 15px;
+	margin: 0px;
+}
+.header3 {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 1.45em;
+	color: #FFF;
+	padding-top: 10px;
+}
+.contactText {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 1.45em;
+	font-weight: normal;
+	text-align: center;
+	line-height: 1.45em;
+}
+#bestudent {
+	background-image: url(../images/bestudent.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 15px;
+	margin-left: 20px;
+	padding: 0px;
+}
+.indexparagraph {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 1.25em;
+	text-align: justify;
+	line-height: 1.05em;
+}
+.StudentName {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	font-weight: bold;
+}
+#repPic {
+	background-image: url(../images/repPhoto.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 35px;
+	margin-left: 20px;
+	padding: 0px;
+}
+#hostFamilyPic {
+	background-image: url(../images/HostFamily.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 0px;
+	margin-left: 20px;
+	padding: 0px;
+}
+#indexPic {
+	background-image: url(../images/indexPhoto.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 230px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 20px;
+	margin-left: 20px;
+	padding: 0px;
+}
+.12ptBlkBold {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 10pt;
+	color: #000;
+}
+#bestudent1 {
+	background-image: url(../images/beStudent1.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 15px;
+	margin-left: 20px;
+	padding: 0px;
+}
+#aboutPhoto {
+	background-image: url(../images/aboutPhoto.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 20px;
+	margin-left: 20px;
+	padding: 0px;
+}
+.LoginBut {
+	height: 20px;
+	background-repeat: no-repeat;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin-top: 5px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+#hostFamilyPhoto {
+	background-image: url(../images/BWhostFamily.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-top: 45px;
+	margin-right: 25px;
+	margin-bottom: 0px;
+	margin-left: 20px;
+	padding: 0px;
+}
+#trip {
+	padding: 0px;
+	width: 800px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 100px;
+	background-repeat: no-repeat;
+	height: 100%;
+	vertical-align: middle;
+	background-color: #FFF;
+}
+#storeTag {
+	background-image: url(../images/store.jpg);
+	background-repeat: no-repeat;
+	height: 33px;
+	width: 223px;
+}
+#sidebarEnd2 {
+	background-image: url(../images/repbottom.png);
+	margin: 0px;
+	padding: 0px;
+	width: 225px;
+	height: 18px;
+}
+.clearfloat { /* this class should be placed on a div or break element and should be the final element before the close of a container that should fully contain a float */
+	clear:both;
+    height:0;
+    font-size: 1px;
+    line-height: 0px;
+}
+#storeFront {
+	height: 100%;
+	width: 610px;
+	margin: 0px;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+#aboutCaseStore {
+	color: #000;
+	height: 100%;
+	width: 650px;
+	margin-top: 15px;
+	margin-right: 40px;
+	margin-bottom: 0px;
+	margin-left: 40px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 0.75em;
+	background-repeat: no-repeat;
+	background-position: left top;
+	text-align: left;
+}
+.contactInfo {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #000;
+	text-align: left;
+}
+.bold {
+	font-weight: bold;
+}
