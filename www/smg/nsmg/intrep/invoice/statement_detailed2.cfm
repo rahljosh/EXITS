@@ -111,7 +111,16 @@ function OpenRefund(url)
 
 	<!--- RUNNING BALANCE --->
 	<cfquery name="get_statement" datasource="MySql">
-		SELECT 'invoice', 'paymenttype', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate as orderdate, invoiceid, 'paymentref', 'creditid', 'description' 
+		SELECT 
+        	'invoice', 
+            'paymenttype', 
+            smg_users.businessname, 
+            SUM( smg_charges.amount_due ) AS total_amount, 
+            smg_charges.invoicedate as orderdate, 
+            invoiceid, 
+            'paymentref', 
+            'creditid', 
+            'description' 
 		FROM smg_charges
 		INNER JOIN smg_users ON smg_charges.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
@@ -119,8 +128,19 @@ function OpenRefund(url)
 				AND (smg_charges.invoicedate BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
 		GROUP BY smg_users.userid, smg_charges.invoiceid
-		UNION
-		SELECT 'payments', paymenttype, smg_users.businessname, SUM( pay.totalreceived ) AS total_amount, pay.date as orderdate, '0', paymentref, 'creditid', 'description'
+		
+        UNION
+		
+        SELECT 
+        	'payments', 
+            paymenttype, 
+            smg_users.businessname, 
+            SUM( pay.totalreceived ) AS total_amount, 
+            pay.date as orderdate, 
+            '0', 
+            paymentref, 
+            'creditid', 
+            'description'
 		FROM smg_payment_received pay
 		INNER JOIN smg_users ON pay.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
