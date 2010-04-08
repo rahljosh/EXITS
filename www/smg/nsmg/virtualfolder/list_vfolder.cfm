@@ -77,17 +77,16 @@ function PrintFile(url)
 	FROM smg_virtualfolder_cat 
 </cfquery>
 
-<!--- EXAMPLE 1: Creating - Check that the directory exists to avoid getting a ColdFusion error message. --->
-<!--- <cfset currentDirectory = GetDirectoryFromPath(GetTemplatePath()) & "uploadedfiles\virtualfolder\#get_student_info.studentid#"> --->
-<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##get_student_info.studentid#">
+<cfscript>
+	// Get Folder Path 
+	currentDirectory = "#AppPath.onlineApp.virtualFolder##get_student_info.studentid#";
 
-<!--- Check to see if the Directory exists. --->
-<cfif NOT DirectoryExists(currentDirectory)>
-   <!--- If TRUE, create the directory. --->
-   <cfdirectory action = "create" directory = "#currentDirectory#" mode="777">
-</cfif>
+	// Make sure the folder Exists
+	AppCFC.UDF.createFolder(currentDirectory);
+</cfscript>
 
 <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
+
 <cfoutput>
 <!--- HEADER OF TABLE --->
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -170,7 +169,6 @@ function PrintFile(url)
 <table width=660 cellpadding=6 cellspacing=1 border=0 align="center">
 	<tr><th bgcolor="e2efc7">U P L O A D I N G &nbsp; F I L E S </th></tr>
 	<cfform method="post" action="qr_upload_file.cfm" name="Upload" enctype="multipart/form-data" onSubmit="return ProcessForm()">
-	<cfinput type="hidden" name="directory" value="#currentDirectory#">
 	<cfinput type="hidden" name="unqid" value="#get_student_info.uniqueid#">	
 	<tr><td>Please upload your file here:</td></tr>
 	<tr>
@@ -213,6 +211,7 @@ function PrintFile(url)
 <cfcatch type="any">
 	<cfinclude template="error_message.cfm">
 </cfcatch>
+
 </cftry>
 
 </body>
