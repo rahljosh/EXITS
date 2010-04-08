@@ -954,10 +954,10 @@
             
 				<!--- Submit CBC --->
                 <cfhttp url="#BGCDirectURL#" method="post" throwonerror="yes">
-                    <cfhttpparam type="XML" value="#requestXML#" />
                     <cfhttpparam type="Header" name="charset" value="utf-8" />
+                    <cfhttpparam type="XML" value="#requestXML#" />                    
                 </cfhttp>
-				
+                
                 <cfscript>	
                     // Parse XML we received back to a variable
                     responseXML = XmlParse(cfhttp.filecontent);		
@@ -1022,10 +1022,17 @@
 					
                     	<p>#APPLICATION.site_url#</p>
                     
-                        <p><b>Error Processing CBC for #ARGUMENTS.userType# #ARGUMENTS.firstName# #ARGUMENTS.lastName# #ARGUMENTS.userID# #ARGUMENTS.hostID# </b></p>                 
+                        <p>
+                        	<strong>
+                            	Error Processing CBC for #ARGUMENTS.userType# #ARGUMENTS.firstName# #ARGUMENTS.lastName# 
+								<cfif VAL(ARGUMENTS.userID)> #ARGUMENTS.userID# </cfif>
+                                <cfif VAL (ARGUMENTS.hostID)> #ARGUMENTS.hostID# </cfif> 
+                          	</strong>
+                       </p>                 
                         
                         <p>Message: #cfcatch.message#</p>
                         
+                        <!--- Do Not Include Sent XML - It contains SSN --->
                         <!---
                         <p>XML Sent:<br>
                         <cfdump var="#requestXML#"> </p>
@@ -1122,7 +1129,7 @@
             <cfmail 
             	from="#qGetCompany.support_email#" 
                 to="#qGetCompany.gis_email#"
-                subject="Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# (###ARGUMENTS.hostID#)" 
+                subject="Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# <cfif VAL(ARGUMENTS.userID)>(###ARGUMENTS.userID#)</cfif> <cfif VAL(ARGUMENTS.hostID)>(###ARGUMENTS.hostID#)</cfif>" 
                 failto="#qGetCompany.support_email#"
                 type="html">
                 
@@ -1483,7 +1490,8 @@
                     
                     <!--- FOOTER --->
                     <tr><td colspan="2">For more information please visit <a href="www.backgroundchecks.com">www.backgroundchecks.com</a></td></tr>	
-                    <tr><td colspan="2">
+                    <tr>
+                    	<td colspan="2">
                             *******************************<br>
                             CONFIDENTIALITY NOTICE:<br>
                             This is a transmission from 
@@ -1497,8 +1505,8 @@
                             If you have received this transmission in error, please destroy it and notify us immediately at #qGetCompany.phone#.<br>
                             Thank you.<br>
                             *******************************
-                    </td>
-                </tr>
+                    	</td>
+	                </tr>
                 </table>
                 <br><br>
             </cfoutput>
