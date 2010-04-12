@@ -11,9 +11,9 @@
 		<div align="right">
 		#companyshort.companyshort_nocolor#<br>#companyshort.address#<br>
 		#companyshort.city#, #companyshort.state# #companyshort.zip#<br>
-		<cfif companyshort.phone is ''><cfelse> Phone: #companyshort.phone#<br></cfif>
-		<cfif companyshort.toll_free is ''><cfelse> Toll Free: #companyshort.toll_free#<br></cfif>
-		<cfif companyshort.fax is ''><cfelse> Fax: #companyshort.fax#<br></cfif></div>
+		<cfif LEN(companyshort.phone)> Phone: #companyshort.phone#<br></cfif>
+		<cfif LEN(companyshort.toll_free)> Toll Free: #companyshort.toll_free#<br></cfif>
+		<cfif LEN(companyshort.fax)> Fax: #companyshort.fax#<br></cfif></div>
 	</td></tr>		
 </table>
 </cfoutput>
