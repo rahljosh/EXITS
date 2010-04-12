@@ -67,20 +67,26 @@ obj.checked = false; }
 					<tr><th colspan="2" bgcolor="e2efc7">DS-2019 Verification Reports</th></tr>
 					<tr align="left">
 						<TD>Program :</td>
-						<TD><cfselect name="programid" multiple  size="5">
-							<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
-							</cfselect></td>
+						<TD>
+                        	<cfselect name="programid" multiple  size="5">
+								<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
+							</cfselect>
+                        </td>
 					</tr>
 					<tr align="left">
 						<TD>Intl. Rep:</td>
-						<TD><cfselect name="intrep" size="1">
-							<option value=0>All Intl. Reps</option>
-							<cfoutput query="get_intl_rep"><option value="#intrep#">#businessname#</option></cfoutput>
-							</cfselect></td>
+						<TD>
+                        	<cfselect name="intrep" size="1">
+                                <option value=0>All Intl. Reps</option>
+                                <cfoutput query="get_intl_rep"><option value="#intrep#">#businessname#</option></cfoutput>
+							</cfselect>
+                        </td>
 					</tr>
-					<tr><td>Deadline(optional):</td><td><cfinput type="text" name="deadline" size="6" maxlength="10" validate="date"> mm/dd/yyyy</td></tr>
-					<tr><td colspan="2"><input type="checkbox" name="send_email" onClick="copy_user.checked = false">&nbsp; Send automated emails to Intl. Agents.</input></td></tr>
-					<tr><td colspan="2"><input type="checkbox" name="copy_user" onClick="checkEmail(this)">&nbsp; I would like to receive a copy of the emails</input></td></tr>
+					<tr>
+                    	<td>Deadline(optional):</td>
+                        <td><input type="text" name="deadline" maxlength="10" class="date-pick"> mm/dd/yyyy</td>
+                    </tr>
+					<tr><td colspan="2"><input type="checkbox" name="send_email" value="1">&nbsp; Send automated emails to International Representatives</input></td></tr>
 					<tr><TD colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border=0 readonly="yes"></td></tr>
 				</table>
 			</cfform>
