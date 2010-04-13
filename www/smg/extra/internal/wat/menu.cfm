@@ -48,7 +48,8 @@
 				<a class="item2" href="?curdoc=reports/idcards_menu">ID Cards</a>
 				<a class="item2" href="?curdoc=tools/programs">Programs &nbsp;</a>
 				<a class="item2" href="?curdoc=tools/labels_select_pro">Labels &nbsp; &nbsp; &nbsp; &nbsp;</a>
-				<a class="item2" href="?curdoc=candidate/select_batch">Batch Imm. Letters &nbsp; &nbsp; &nbsp; &nbsp;</a>
+                <a class="item2" href="?curdoc=candidate/select_batch">Batch Imm. Letters &nbsp; &nbsp; &nbsp; &nbsp;</a>
+				<a class="item2" href="?curdoc=candidate/candidate_profile_batch">Batch Candidate Profiles &nbsp; &nbsp; &nbsp; &nbsp;</a>
 			</div>
 		</td>
 		<td bgcolor="##8FB6C9">
