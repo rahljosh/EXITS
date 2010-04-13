@@ -40,17 +40,23 @@
 		<cfquery name="deny_application" datasource="MySQL">
 			UPDATE smg_students 
 			SET app_current_status = '#newstatus#',
-				companyid = '#FORM.companyid#',
-				cancelreason = '#FORM.reason#',
+				companyid = '#FORM.companyid#'				
+                <!--- Keep status active so the student can login and re-submit the application --->
+				<!---
+                cancelreason = '#FORM.reason#',
 				active = '0',
 				canceldate = #CreateODBCDate(now())#
+				--->
 			WHERE studentID = '#FORM.studentID#'
 			LIMIT 1
 		</cfquery>
 	<cfelse>
 		<cfquery name="deny_application" datasource="MySQL">
 			UPDATE smg_students 
-			SET app_current_status = '#newstatus#',
+			SET 
+            	<!--- Keep status active so the student can login and re-submit the application --->
+            	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                app_current_status = '#newstatus#',
 				dateapplication = #CreateODBCDate(now())#
 			WHERE studentID = '#FORM.studentID#'
 		</cfquery>
