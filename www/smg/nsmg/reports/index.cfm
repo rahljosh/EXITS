@@ -189,12 +189,12 @@ window.location.href = URL;
 <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for All Users</td></tr>
 <tr>
 	<td><a href="?curdoc=reports/manager_reports">Flight Information Report</a></td>
-	<td></td>
+	<td><a href="?curdoc=project_help/report">H.E.L.P. Community Service Hours Report</a></td>
 </tr>
 
 <!--- Marcus Testing section --->
-<cfif client.userid  is 510 or client.usertype is 1>
-<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Testing Section - Admin View Only</td></tr>
+<cfif ListFind("1,510", CLIENT.userID)>
+<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span>Admin View Only</td></tr>
 	<tr>
 		<td><a href="reports/hdreport.cfm" target=top>Help Desk Report</a></td>
 		<td></td>
