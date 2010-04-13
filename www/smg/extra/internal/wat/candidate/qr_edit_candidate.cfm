@@ -174,7 +174,7 @@
 <!--- 	<cfdump var ="#form#">---->
 
 	<cfoutput>
-	<script language="JavaScript"
+	<script language="JavaScript">
 		location.replace("?curdoc=candidate/candidate_info&uniqueid=#url.uniqueid#");
 	</script>
 	</cfoutput>
