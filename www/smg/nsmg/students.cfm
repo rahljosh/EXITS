@@ -38,7 +38,7 @@
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24 bgcolor="#ffffff">
     <tr height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-        <td width=30 background="pics/header_background.gif"><img src="pics/family.gif"></td>
+        <td width=30 background="pics/header_background.gif"><img src="pics/students.gif"></td>
         <td background="pics/header_background.gif"><h2>Students</h2></td>
         <td background="pics/header_background.gif" align="right">
         	<cfif adv_search>
