@@ -13,14 +13,14 @@
 <cfquery name="get_candidate_unqid" datasource="mysql">
 	SELECT *
 	FROM extra_candidates
-	WHERE uniqueid = <cfqueryparam value="#url.uniqueid#" cfsqltype="cf_sql_char">
+	WHERE uniqueid = <cfqueryparam value="#URL.uniqueid#" cfsqltype="cf_sql_char">
 </cfquery>
 
 <!---
 <cfquery name="get_student_unqid" datasource="mysql">
 	SELECT *
 	FROM smg_students
-	WHERE uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
+	WHERE uniqueid = <cfqueryparam value="#URL.unqid#" cfsqltype="cf_sql_char">
 </cfquery>
 --->
 
