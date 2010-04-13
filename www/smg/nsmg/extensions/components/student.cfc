@@ -254,7 +254,7 @@
         <cfargument name="regionID" default="0" hint="Region ID is not required">
         <cfargument name="userType" hint="UserType is required">
         <cfargument name="isActive" default="1" hint="Active status is not required">
-        <cfargument name="statusKey" default="" hint="Status Key is not required">
+        <cfargument name="statusKey" default="" hint="Project Help Status Key is not required">
 
         <cfquery 
 			name="qGetProjectHelpList" 
@@ -314,34 +314,34 @@
                 WHERE 
                 	1 = 1 
                     
-					<cfif VAL(ARGUMENTS.isActive)>
-                        AND 
-                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                    </cfif>
-					
-                    <cfif VAL(ARGUMENTS.regionID)>                    
-						AND
-							s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">                    
-                    </cfif>
-                    
-					<!--- regional advisor sees only their reps or their students. --->
-                    <cfif ARGUMENTS.userType EQ 6>
-                        AND 
-                        (
-                            uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-                        OR 
-                        	s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-                        )
-                    <!--- supervising reps sees only their students. --->
-                    <cfelseif ARGUMENTS.userType EQ 7>
-                        AND 
-                        	s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-                    </cfif>
-                    
-                    <cfif LEN(ARGUMENTS.statusKey)>
-                    	AND
-                        	ph.status_key = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.statusKey#">                    
-                    </cfif>
+				<cfif VAL(ARGUMENTS.isActive)>
+                    AND 
+                        s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.regionID)>                    
+                    AND
+                        s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">                    
+                </cfif>
+                
+                <!--- regional advisor sees only their reps or their students. --->
+                <cfif ARGUMENTS.userType EQ 6>
+                    AND 
+                    (
+                        uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    OR 
+                        s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    )
+                <!--- supervising reps sees only their students. --->
+                <cfelseif ARGUMENTS.userType EQ 7>
+                    AND 
+                        s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.statusKey)>
+                    AND
+                        ph.status_key = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.statusKey#">                    
+                </cfif>
                     
 				<!--- include the advisorID and arearepID because we're grouping by those in the output, just in case two have the same first and last name. --->
                 ORDER BY 
@@ -812,6 +812,114 @@
 		</cfquery>
 
 	</cffunction>
+
+
+	<cffunction name="getProjectHelpReport" access="public" returntype="query" output="false" hint="Gets a list of students, if studentID is passed gets a student by ID">
+    	<cfargument name="userID" default="0" hint="User ID is required">
+        <cfargument name="regionID" default="0" hint="List of Regions is not required">
+        <cfargument name="userType" hint="UserType is required">
+        <cfargument name="isActive" default="1" hint="Active status is not required">
+        <cfargument name="programID" default="0" hint="List of Programs is not required">
+        <cfargument name="statusKey" default="" hint="Project Help Status Key is not required">
+        <cfargument name="minimumHours" default="" hint="Project Help Minimum number of hours">
+
+        <cfquery 
+			name="qGetProjectHelpReport" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                	s.studentID, 
+                    s.firstname, 
+                    s.familylastname,
+                    <!--- Area Rep --->
+                    s.areaRepID,
+                    area.firstname as rep_firstName, 
+                    area.lastname as rep_lastName,
+                    <!--- Program --->
+					p.programID,
+                    p.programName,
+                    <!--- Region --->
+                    r.regionID,
+                    r.regionName,
+					<!--- Project Help Activities --->
+                    SUM(pha.hours) as hours
+                FROM 
+                	smg_students s
+                INNER JOIN 
+                	smg_programs p ON s.programID = p.programID
+                INNER JOIN 
+                	smg_users area ON s.arearepID = area.userID
+                INNER JOIN
+                	smg_regions r ON r.regionID = s.regionAssigned
+                INNER JOIN 
+                	user_access_rights uar ON 
+                    (
+                    	s.arearepID = uar.userID
+	                AND 
+                    	s.regionassigned = uar.regionID
+	                )
+              	INNER JOIN
+                	smg_project_help ph ON ph.student_id = s.studentID                                    
+          		INNER JOIN
+                	smg_project_help_activities pha ON pha.project_help_id = ph.id
+          
+                WHERE
+                    1 = 1
+
+                <!--- regional advisor sees only their reps or their students. --->
+                <cfif ARGUMENTS.userType EQ 6>
+                    AND 
+                    (
+                        uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    OR 
+                        s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    )
+                <!--- supervising reps sees only their students. --->
+                <cfelseif ARGUMENTS.userType EQ 7>
+                    AND 
+                        s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                </cfif>
+
+                <cfif VAL(ARGUMENTS.isActive)>
+                    AND 
+                        s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.regionID)>                    
+                    AND
+                        s.regionassigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )                    
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.programID)>
+                    AND
+                        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.programID#" list="yes"> )                    
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.statusKey)>
+                    AND
+                        ph.status_key = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.statusKey#">                    
+                </cfif>
+                
+                GROUP BY
+                	ph.id
+                
+                <!--- Minimum Hours --->
+                <cfif VAL(ARGUMENTS.minimumHours)>
+                    HAVING 
+                        sum(pha.hours) >= <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.minimumHours#">                                         
+                </cfif>
+                    
+				<!--- include the advisorID and arearepID because we're grouping by those in the output, just in case two have the same first and last name. --->
+                ORDER BY 
+                    r.regionName,
+                    rep_lastname, 
+                    rep_firstname, 
+                    s.familylastname, 
+                    s.firstname
+        	</cfquery>
+            
+		<cfreturn qGetProjectHelpReport>
+	</cffunction>
+
 
 	<!--- ------------------------------------------------------------------------- ----
 		

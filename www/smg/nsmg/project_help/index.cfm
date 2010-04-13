@@ -144,14 +144,14 @@
                     <cfif NOT LEN(advisorID)>
                         Reports Directly to Regional Director
                     <cfelse>
-                        #advisor_firstname# #advisor_lastname# (#advisorID#)
+                        #advisor_firstname# #advisor_lastname# (###advisorID#)
                     </cfif>
                 </td>
             </tr>
             <!--- Group by Area Reps --->
             <cfoutput group="arearepID">
                 <tr>
-                    <td colspan="9" class="projectHelpAreaRep">#rep_firstname# #rep_lastname# (#arearepID#)</td>
+                    <td colspan="9" class="projectHelpAreaRep">#rep_firstname# #rep_lastname# (###arearepID#)</td>
                 <tr>
                 <tr align="left">
                     <th width="15px">&nbsp;</th>
@@ -180,7 +180,7 @@
                         <td>
                         	<!--- put in red if user is the supervising rep for this student. Don't do for usertype 7 because they see only those students. --->
                             <cfif arearepID EQ CLIENT.userID and CLIENT.usertype NEQ 7>
-                        		<span class="projectHelpAttention">#firstname# #familylastname# (#studentID#)</span>
+                        		<span class="projectHelpAttention">#firstname# #familylastname# (###studentID#)</span>
                             <cfelse>
                                 #firstname# #familylastname# (#studentID#)                        		
                             </cfif>
