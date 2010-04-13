@@ -173,21 +173,11 @@
 	</cfquery>
 <!--- 	<cfdump var ="#form#">---->
 
-
-	<html>
-	<head>
 	<cfoutput>
-	<script language="JavaScript">
-	<!-- 
-	alert("Candidate Updated!");
+	<script language="JavaScript"
 		location.replace("?curdoc=candidate/candidate_info&uniqueid=#url.uniqueid#");
-	-->
 	</script>
 	</cfoutput>
-	</head>
-	</html> 		
-
-
 
 </body>
 </html>
