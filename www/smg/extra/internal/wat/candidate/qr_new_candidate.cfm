@@ -126,18 +126,10 @@
 		</cfquery>
 		
 	<cfoutput query="get_max_candidate">
-	<html>
-	<head>
+
 	<script language="JavaScript">
-	<!-- 
-	alert("You have successfully created this candidate. Thank You.");
-		//location.replace("?curdoc=candidate/candidate_form2&unqid=#uniqueid#");
-		//location.replace("?curdoc=candidate/candidates&order=candidateid&status=All");
 		location.replace("?curdoc=candidate/candidate_info&uniqueid=#uniqueid#");
-	-->
-	</script>
-	</head>
-	</html> 		
+	</script>		
 	</cfoutput>
 		
 
