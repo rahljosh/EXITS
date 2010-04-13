@@ -118,6 +118,7 @@
                 WHERE
                 	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
                 AND 
+
                 (
                     advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                 OR 
@@ -384,13 +385,16 @@
                     </cfif>
                 </tr>
                 <tr valign="top">
-                    <td>
+                    <td style="line-height:20px;">
                         <a href="index.cfm?curdoc=progress_reports">Progress Reports</a><br>
                         <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
                         <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a><br />
                         <cfif CLIENT.userType LTE 4>
-                        	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a>
+                        	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
                         </cfif>
+                       <cfif client.companyid lte 5>
+                        <a href="uploadedfiles/pdf_docs/ISE/payment/Aug%2010%20bonus%20flyer%202.pdf" target="_blank">Click Here For Exciting Bonuses For The Placing Season!</a>
+                   		</cfif>
                     </td>
          			<!--- Office Users --->
 					<cfif CLIENT.usertype LTE 4>
