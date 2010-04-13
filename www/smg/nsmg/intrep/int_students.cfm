@@ -13,6 +13,7 @@
         WHERE u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
     </cfquery>
 
+	<!--- Get Approved Applications --->
     <cfquery name="students" datasource="MySql">
         SELECT  
         	s.studentid, 
@@ -60,10 +61,15 @@
         LEFT JOIN 
         	smg_users office ON s.intrep = office.userid
         WHERE 
-        <cfif client.companyid LTE 5>
-        	s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> ) 
+        	<!--- SHOW ONLY APPS APPROVED --->
+	        s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+		
+		<cfif client.companyid LTE 5>
+        	AND
+            	s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> ) 
         <cfelse>
-        	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+        	AND
+            	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
         </cfif>
         
         <cfswitch expression="#URL.status#">
