@@ -4,31 +4,48 @@
 <cfinclude template="../querys/get_company_short.cfm">
 
 <cfquery name="get_agent_list" datasource="MYSQL">
-	SELECT DISTINCT	intrep, businessname, count(studentid) as total_student
-	FROM smg_students 
-	INNER JOIN smg_users ON smg_students.intrep = smg_users.userid 
-	WHERE ds2019_no = ''
-		AND verification_received IS null 
-		AND smg_students.active = '1'
-		AND onhold_approved <= '4'
-		AND	( <cfloop list=#form.programid# index='prog'>
-			programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
-	GROUP BY intrep
-	ORDER BY businessname
+	SELECT DISTINCT	
+    	s.intrep, 
+        u.businessname, 
+        count(s.studentid) as total_student
+	FROM 
+    	smg_students s
+	INNER JOIN 
+    	smg_users u ON s.intrep = u.userid 
+	WHERE 
+    	s.ds2019_no = ''
+    AND 
+    	s.verification_received IS null 
+    AND 
+    	s.active = '1'
+    AND 
+    	s.onhold_approved <= '4'
+    AND	
+    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+	<cfif CLIENT.companyID EQ 5>
+		AND          
+        	s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    <cfelse>
+		AND          
+        	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+    </cfif>
+	GROUP BY 
+    	s.intrep
+	ORDER BY 
+    	u.businessname
 </cfquery>
 
 <cfquery name="get_program" datasource="MYSQL">
-	SELECT	DISTINCT 
-		p.programid, p.programname, 
+	SELECT DISTINCT 
+		p.programid, 
+        p.programname, 
 		c.companyshort
-	FROM 	smg_programs p
-	INNER JOIN smg_companies c ON c.companyid = p.companyid
-	WHERE 	<cfloop list=#form.programid# index='prog'>
-				programid = #prog# 
-				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop>
+	FROM
+    	smg_programs p
+	INNER JOIN 
+    	smg_companies c ON c.companyid = p.companyid
+	WHERE 	
+    	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
 </cfquery>
 
 <cfset total = '0'>
@@ -51,7 +68,8 @@
 <Table width=80% frame=below cellpadding=6 cellspacing="0" align="center">
 	<tr>
 		<td width=5></td>
-		<td><u>International Representative</td><td align="center"><u>Total of Student(s)</td>
+		<td><u>International Representative</u></td>
+        <td align="center"><u>Total of Student(s)</u></td>
   	</tr>
 	<cfloop query="get_agent_list">
 	<tr bgcolor="#iif(get_agent_list.currentrow MOD 2 ,DE("ededed") ,DE("white") )#" >
@@ -62,6 +80,5 @@
 	</cfloop>
 	<tr><td colspan="3"><br>Total of forms to be issued: #total#</td></tr>
 </Table><br>
-
 </cfoutput>
 </div>
