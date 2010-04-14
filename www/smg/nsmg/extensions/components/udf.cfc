@@ -71,14 +71,14 @@
         
 	</cffunction>
 
-
+	<!--- This removes foreign accents from online application fields --->
 	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents from a string">
     	<cfargument name="varString" hint="String">
 
 		<cfscript>
 			// Declare Lists
- 		    var list1 = "Â,Á,À,Ã,Ä,â,á,à,ã,ä,É,Ê,é,ê,Í,Ì,í,ì,Ô,Ó,Õ,Ö,ô,ó,õ,ö,Ú,Ü,Û,ú,ü,û,Ç,ç,Ñ,ñ,S,Z,Ø,ø,å,',æ,Å,ß,Š";
-			var list2 = "A,A,A,A,A,a,a,a,a,a,E,E,e,e,I,I,i,i,O,O,O,O,o,o,o,o,U,U,U,u,u,u,C,c,N,n,S,Z,O,o,a, ,e,A,s,S";
+ 		    var list1 = "Â,Á,À,Ã,Ä,â,á,à,ã,ä,É,Ê,é,ê,Í,Ì,í,ì,Ô,Ó,Õ,Ö,ô,ó,õ,ö,Ú,Ü,Û,ú,ü,û,Ç,ç,Ñ,ñ,S,Z,Ø,ø,å,',æ,Å,ß,Š,î,ý,ë,è,ï,ò";
+			var list2 = "A,A,A,A,A,a,a,a,a,a,E,E,e,e,I,I,i,i,O,O,O,O,o,o,o,o,U,U,U,u,u,u,C,c,N,n,S,Z,O,o,a, ,e,A,s,S,i,y,e,e,i,o";
 
 			// Remove Accent - replaceList
 			var newString = replaceList(ARGUMENTS.varString, list1, list2) ; 
@@ -87,6 +87,16 @@
 			return(newString);
         </cfscript>
 		   
+	</cffunction>
+
+
+	<!--- This converts text to standard case --->
+	<cffunction name="ProperCase" access="public" returntype="string" output="No" hint="Converts a string to proper case - first letters capital">
+		<cfargument name="Text" type="string" required="Yes" />
+		
+		<cfscript>
+			return(REReplace(LCase(ARGUMENTS.Text), "(\b[a-z]{1,1})", "\U\1", "ALL"));
+		</cfscript>
 	</cffunction>
 
 
