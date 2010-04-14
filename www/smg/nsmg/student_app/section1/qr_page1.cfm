@@ -9,7 +9,7 @@
 
 <cftry>
 
-<cfif not IsDefined('form.studentid')>
+<cfif not IsDefined('FORM.studentid')>
 	<cfinclude template="../error_message.cfm">
 	<cfabort>
 </cfif>
@@ -17,8 +17,8 @@
 <cfquery name="check_username" datasource="MySql">
 	SELECT email
 	FROM smg_students
-	WHERE email = '#form.email#'
-	AND studentid != '#form.studentid#'
+	WHERE email = '#FORM.email#'
+	AND studentid != '#FORM.studentid#'
 </cfquery>
 
 <cfif check_username.recordcount NEQ '0'>
@@ -37,7 +37,7 @@
 			<div class="section"><br>
 			<cfoutput>
 			<table width=670 cellpadding=0 cellspacing=0 border=0 align="center">
-				<tr><td><h2>Sorry, the e-mail address <b>#form.email#</b> is being used by another account.</h2><br></td></tr>
+				<tr><td><h2>Sorry, the e-mail address <b>#FORM.email#</b> is being used by another account.</h2><br></td></tr>
 				<tr><td><h2>Please click on the "back" button below and enter a new e-mail address.</h2><br><br><br>
 						<div align="center"><input name="back" type="image" src="../pics/back.gif" align="middle" border=0 onClick="history.back()"></div><br><br></td></tr>
 			</table>
@@ -52,53 +52,72 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-	
+
 	<cfquery name="update_student" datasource="MySql">
 		UPDATE smg_students
-		SET	familylastname = '#APPLICATION.CFC.UDF.removeAccent(form.familylastname)#',
-			firstname = '#APPLICATION.CFC.UDF.removeAccent(form.firstname)#',
-			middlename = '#APPLICATION.CFC.UDF.removeAccent(form.middlename)#',
-			app_indicated_program = <cfif form.app_indicated_program EQ '0'>null,<cfelse>'#form.app_indicated_program#',</cfif>  
-			app_additional_program = <cfif form.app_additional_program EQ '0'>null,<cfelse> '#form.app_additional_program#',</cfif>  
-			address = '#form.address#',
-			city = '#form.city#',
-			zip = '#form.zip#',
-			country = '#form.country#',
-			phone = '#form.phone#',
-			fax = '#form.fax#',
-			email = '#form.email#',
-			<cfif IsDefined('form.sex')>sex = '#form.sex#',</cfif> 
-			<cfif form.dob is ''>dob = null,<cfelse>dob = #CreateODBCDate(form.dob)#,</cfif>
-			citybirth = '#APPLICATION.CFC.UDF.removeAccent(form.citybirth)#',
-			countrybirth = '#form.countrybirth#',
-			countrycitizen = '#form.countrycitizen#',
-			countryresident = '#form.countryresident#',
-			religiousaffiliation = '#form.religiousaffiliation#',
-			passportnumber = '#form.passportnumber#',
+		SET	familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.familylastname))#">,
+			firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.firstName))#">,
+			middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.middleName))#">,
+			app_indicated_program = <cfif FORM.app_indicated_program EQ '0'>null,<cfelse>'#FORM.app_indicated_program#',</cfif>  
+			app_additional_program = <cfif FORM.app_additional_program EQ '0'>null,<cfelse> '#FORM.app_additional_program#',</cfif>  
+			address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+			city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
+			zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+			country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.country#">,
+			phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+			fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
+			email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+			<cfif IsDefined('FORM.sex')>
+            	sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">,
+            </cfif> 
+			<cfif FORM.dob is ''>
+            	dob = null,
+            <cfelse>
+            	dob = #CreateODBCDate(FORM.dob)#,
+            </cfif>
+			citybirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.cityBirth))#">,
+			countrybirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.countrybirth#">,
+			countrycitizen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.countrycitizen#">,
+			countryresident = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.countryresident#">,
+			religiousaffiliation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.religiousaffiliation#">,
+			passportnumber = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.passportnumber#">,
 			<!--- father --->
-			fathersname = '#APPLICATION.CFC.UDF.removeAccent(form.fathersname)#',
-			fatheraddress = '#form.fatheraddress#',
-			fathercountry = '#form.fathercountry#',
-			<cfif form.fatherbirth is ''>fatherbirth = '0',<cfelse>fatherbirth = '#form.fatherbirth#',</cfif>
-			<cfif not IsDefined('form.fatherenglish')><cfelse>fatherenglish = '#form.fatherenglish#',</cfif> 
-			fatherworkphone = '#form.fatherworkphone#',
-			fathercompany = '#form.fathercompany#',
-			fatherworkposition = '#form.fatherworkposition#',
+			fathersname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.fathersname))#">,
+			fatheraddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatheraddress#">,
+			fathercountry = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fathercountry#">,
+			<cfif FORM.fatherbirth is ''>
+            	fatherbirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="0">,
+            <cfelse>
+            	fatherbirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherbirth#">,
+            </cfif>
+			<cfif IsDefined('FORM.fatherenglish')>
+            	fatherenglish = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherenglish#">,
+            </cfif> 
+			fatherworkphone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworkphone#">,
+			fathercompany = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fathercompany#">,
+			fatherworkposition = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworkposition#">,
 			<!--- mother --->
-			mothersname = '#APPLICATION.CFC.UDF.removeAccent(form.mothersname)#',
-			motheraddress = '#form.motheraddress#',
-			mothercountry = '#form.mothercountry#',
-			<cfif form.motherbirth is ''>motherbirth = '0',<cfelse>motherbirth = '#form.motherbirth#',</cfif>
-			<cfif not IsDefined('form.motherenglish')><cfelse>motherenglish = '#form.motherenglish#',</cfif>
-			motherworkphone = '#form.motherworkphone#',
-			mothercompany = '#form.mothercompany#',
-			motherworkposition = '#form.motherworkposition#',
+			mothersname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.mothersname))#">,
+			motheraddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motheraddress#">,
+			mothercountry = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mothercountry#">,
+			<cfif FORM.motherbirth is ''>
+            	motherbirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="0">,
+            <cfelse>
+            	motherbirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherbirth#">,
+            </cfif>
+			<cfif IsDefined('FORM.motherenglish')>
+            	motherenglish = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherenglish#">,
+            </cfif>
+			motherworkphone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworkphone#">,
+			mothercompany = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mothercompany#">,
+			motherworkposition = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworkposition#">,
 			<!--- emergency information --->
-			emergency_name = '#APPLICATION.CFC.UDF.removeAccent(form.emergency_name)#',
-			emergency_address = '#form.emergency_address#',
-			emergency_phone = '#form.emergency_phone#',
-			emergency_country = '#form.emergency_country#'
-		WHERE studentid = '#form.studentid#'
+			emergency_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.emergency_name))#">,
+			emergency_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_address#">,
+			emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">,
+			emergency_country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_country#">
+		WHERE 
+        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
 		LIMIT 1
 	</cfquery>
 	
@@ -125,35 +144,3 @@
 </cftry>
 
 <!--- <cflocation url="?curdoc=section1/page1&id=1&p=1" addtoken="no"> --->
-
-<!--- REMOVE ACCENTS --->
-
-<!---
-<cfif client.usertype EQ '1'>
-	<cfoutput>
-	
-	<cfquery name="get_students" datasource="MYSql">
-		SELECT studentid, firstname, middlename, familylastname, citybirth
-		FROM smg_students
-		WHERE randid != '0'
-	</cfquery>
-	Total of #get_students.recordcount#<br />
-	
-	<cfloop query="get_students">
-	#studentid#<br />
-		
-		<cfquery name="update" datasource="MySql">
-			UPDATE smg_students
-			SET firstname = '#APPLICATION.CFC.UDF.removeAccent(firstname)#',
-				middlename = '#APPLICATION.CFC.UDF.removeAccent(middlename)#',
-				familylastname = '#APPLICATION.CFC.UDF.removeAccent(familylastname)#',
-				citybirth = '#APPLICATION.CFC.UDF.removeAccent(citybirth)#'
-			WHERE studentid = '#get_students.studentid#'
-			LIMIT 1
-		</cfquery>
-	</cfloop>
-	
-	Done!
-	</cfoutput>
-</cfif>
---->
