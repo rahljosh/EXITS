@@ -42,7 +42,7 @@
 			<tr><td>
 				<Table align="Center">
 					<cfloop query="get_students">
-					<CFSET image_path="/var/www/html/student-management/nsmg/uploadedfiles/web-students/#get_students.studentid#.jpg">
+					<CFSET image_path="c:\websites\student-management\nsmg\uploadedfiles\web-students\#get_students.studentid#.jpg">
 					<tr>
 						<td>
 							<table>
