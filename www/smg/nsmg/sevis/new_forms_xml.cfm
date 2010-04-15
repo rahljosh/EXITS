@@ -80,8 +80,15 @@
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
     AND
         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+
+    <!--- Get Current Division Students --->
+    <!---
+    AND
+        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    --->
     
-	<!---
+    <!--- Get ISE students --->
+    <!---
 	<cfif CLIENT.companyID EQ 10>
     AND
         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
@@ -93,7 +100,8 @@
 
 	ORDER BY 
     	u.businessname, 
-        s.firstname
+        s.firstname,
+        s.familyLastName       
 	LIMIT 
     	250
 </cfquery><!--- COUNTRY 232 = USA --->
@@ -213,7 +221,7 @@ END OF DISPLAY
 <CreateEV>
 <cfloop query="qGetStudents">
 <ExchangeVisitor requestID="#qGetStudents.studentid#" printForm="true" userID="#qGetCompany.sevis_userid#">
-	<UserDefinedA>#qGetStudents.studentid#</UserDefinedA>
+	<UserDefinedA>#qGetStudents.currentRow#_#qGetStudents.studentid#</UserDefinedA>
 	<Biographical>
 		<FullName>
 			<LastName>#familylastname#</LastName> 

@@ -47,8 +47,9 @@
     
         ORDER BY 
             s.sevis_batchid, 
-            u.businessname, 
-            s.firstname
+        	u.businessname, 
+            s.firstName,
+            s.familylastname
     </cfquery>
 
 </cfsilent>

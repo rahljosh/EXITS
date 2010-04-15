@@ -55,6 +55,7 @@
     
         ORDER BY 
         	u.businessname, 
+            s.firstName,
             s.familylastname
     </cfquery>
 
