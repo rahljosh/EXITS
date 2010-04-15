@@ -118,7 +118,17 @@ function OpenRefund(url)
 
 	<!--- RUNNING BALANCE --->
 	<cfquery name="get_statement" datasource="MySql">
-		SELECT 'invoice', 'paymenttype', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate as orderdate, invoiceid, 'paymentref', 'creditid', 'description' 
+
+		SELECT 
+			'invoice', 
+			'paymenttype', 
+			smg_users.businessname, 
+			SUM( smg_charges.amount_due ) AS total_amount, 
+			smg_charges.invoicedate as orderdate, 
+			CONVERT(invoiceid USING latin1) AS invoiceID, 
+			'paymentref', 
+			0 AS creditID, 
+			'description' 
 		FROM smg_charges
 		INNER JOIN smg_users ON smg_charges.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
@@ -127,7 +137,16 @@ function OpenRefund(url)
 			</cfif>
 		GROUP BY smg_users.userid, smg_charges.invoiceid
 		UNION
-		SELECT 'payments', paymenttype, smg_users.businessname, SUM( pay.totalreceived ) AS total_amount, pay.date as orderdate, '0', paymentref, 'creditid', 'description'
+		SELECT 
+			'payments', 
+			paymenttype, 
+			smg_users.businessname, 
+			SUM( pay.totalreceived ) AS total_amount, 
+			pay.date as orderdate, 
+			0 AS invoiceID, 
+			paymentref, 
+			0 AS creditID, 
+			'description'
 		FROM smg_payment_received pay
 		INNER JOIN smg_users ON pay.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
@@ -137,7 +156,16 @@ function OpenRefund(url)
 			</cfif>
 		GROUP BY smg_users.userid, pay.paymentref
 		UNION
-		SELECT 'credits', type, smg_users.businessname, smg_credit.amount AS total_amount, smg_credit.date as orderdate, invoiceid, 'paymentref', smg_credit.creditid, CAST(CONCAT('stu id: ', smg_credit.stuid, ' inv: ',  smg_credit.invoiceid, '. ', smg_credit.description) as CHAR) as description
+		SELECT 
+			'credits', 
+			type, 
+			smg_users.businessname, 
+			smg_credit.amount AS total_amount, 
+			smg_credit.date as orderdate, 
+			CONVERT(invoiceid USING latin1) AS invoiceID, 
+			'paymentref', 
+			CONVERT(smg_credit.creditid USING latin1) AS creditID, 
+			CAST(CONCAT('stu id: ', smg_credit.stuid, ' inv: ',  smg_credit.invoiceid, '. ', smg_credit.description) as CHAR) as description
 		FROM smg_credit
 		INNER JOIN smg_users ON smg_credit.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
@@ -145,7 +173,16 @@ function OpenRefund(url)
 				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
 		UNION
-		SELECT 'refund', 'paymenttype', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date as orderdate, refund_receipt_id, 'paymentref', 'creditid', 'description'
+		SELECT 
+			'refund', 
+			'paymenttype', 
+			smg_users.businessname, 
+			SUM(ref.amount) AS total_amount, 
+			ref.date as orderdate, 
+			CONVERT(refund_receipt_id USING latin1) AS invoiceID, 
+			'paymentref', 
+			0 AS creditID, 
+			'description'
 		FROM smg_invoice_refunds ref
 		INNER JOIN smg_users ON ref.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
@@ -156,6 +193,7 @@ function OpenRefund(url)
 		ORDER BY orderdate DESC
 	</cfquery>
 	<!--- END OF RUNNING BALANCE --->
+	
 
 	<!--- BEGINNING BALANCE --->
 	<cfset beg_invoiced = 0>
