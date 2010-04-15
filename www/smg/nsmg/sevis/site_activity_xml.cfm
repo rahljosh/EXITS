@@ -168,7 +168,15 @@
 
 <cfoutput>
 
-<cffile action="write" file="#AppPath.sevis##qGetCompany.companyshort_nocolor#/school/#qGetCompany.companyshort_nocolor#_school_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cfscript>
+	// Get Folder Path 
+	currentDirectory = "#AppPath.sevis##get_company.companyshort_nocolor#/school/";
+
+	// Make sure the folder Exists
+	AppCFC.UDF.createFolder(currentDirectory);
+</cfscript>
+
+<cffile action="write" file="#currentDirectory##qGetCompany.companyshort_nocolor#_school_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
 	<th>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>

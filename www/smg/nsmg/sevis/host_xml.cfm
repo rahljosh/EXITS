@@ -165,7 +165,16 @@ Sorry, there were no students to populate the XML file at this time.
 </cfxml>
 
 <cfoutput>
-<cffile action="write" file="#AppPath.sevis##get_company.companyshort_nocolor#/host_family/#get_company.companyshort_nocolor#_host_0#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+
+<cfscript>
+	// Get Folder Path 
+	currentDirectory = "#AppPath.sevis##get_company.companyshort_nocolor#/host_family/";
+
+	// Make sure the folder Exists
+	AppCFC.UDF.createFolder(currentDirectory);
+</cfscript>
+
+<cffile action="write" file="#currentDirectory##get_company.companyshort_nocolor#_host_0#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
 	<th>#get_company.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>

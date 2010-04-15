@@ -108,8 +108,21 @@
 </transmission>
 </cfxml>
 
-<!--- dump the resulting XML document object --->
-<cfdump var=#transmission#>
-<cfoutput>					
-<cffile action="write" file="#AppPath.sevis##get_company.companyshort_nocolor#/fee/#get_company.companyshort_nocolor#_fee_00#get_bulkid.bulkid#.xml" output=#toString(transmission)# nameconflict="makeunique">
+<cfoutput>		
+
+<cfscript>
+	// Get Folder Path 
+	currentDirectory = "#AppPath.sevis##get_company.companyshort_nocolor#/fee/";
+
+	// Make sure the folder Exists
+	AppCFC.UDF.createFolder(currentDirectory);
+</cfscript>
+			
+<cffile action="write" file="#currentDirectory##get_company.companyshort_nocolor#_fee_00#get_bulkid.bulkid#.xml" output="#toString(transmission)#" nameconflict="makeunique">
+
+<table align="center" width="100%" frame="box">
+	<th>#get_company.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_bulkid.bulkid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
+	<th>BATCH CREATED.</th>
+</table>
+
 </cfoutput>

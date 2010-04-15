@@ -150,12 +150,10 @@
 </table>
 <br><br><br>
 
-<!--- <BatchID>#get_company.iap_auth#_#add_zeros##get_batchid.batchid#</BatchID> --->
-<!--- <BatchID>#get_company.companyshort_nocolor#<cfloop index = "ZeroCount" from = "1" to = #qtd_zeros#>0</cfloop>#get_batchid.batchid#</BatchID>  --->
+<cfoutput>
 
 <!-- Create an XML document object containing the data -->
 <cfxml variable="sevis_batch">
-<cfoutput>
 <SEVISBatchCreateUpdateEV 
 	xmlns:common="http://www.ice.gov/xmlschema/sevisbatch/Common.xsd" 
 	xmlns:table="http://www.ice.gov/xmlschema/sevisbatch/SEVISTable.xsd" 
@@ -184,14 +182,25 @@
 	</cfloop>
 </UpdateEV>
 </SEVISBatchCreateUpdateEV>  
-</cfoutput>
 </cfxml>
 
-<!-- dump the resulting XML document object -->
-<cfdump var="#sevis_batch#">
-<cfoutput>
-<cffile action="write" file="#AppPath.sevis##get_company.companyshort_nocolor#/#get_company.companyshort_nocolor#_end_prog_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cfscript>
+	// Get Folder Path 
+	currentDirectory = "#AppPath.sevis##get_company.companyshort_nocolor#/end/";
+
+	// Make sure the folder Exists
+	AppCFC.UDF.createFolder(currentDirectory);
+</cfscript>
+
+<cffile action="write" file="#currentDirectory##get_company.companyshort_nocolor#_end_prog_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+
+<table align="center" width="100%" frame="box">
+	<th>#get_company.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
+	<th>BATCH CREATED.</th>
+</table>
+
 </cfoutput>
+
 
 </body>
 </html>
