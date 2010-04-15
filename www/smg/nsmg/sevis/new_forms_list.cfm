@@ -6,7 +6,7 @@
 <cfelse>
 	<!-- get company info -->
 	<cfquery name="get_company" datasource="MySql">
-	SELECT s.companyid, c.companyshort
+	SELECT s.companyid, c.companyshort, c.companyshort_nocolor
 	FROM smg_sevis s
 	INNER JOIN smg_companies c ON s.companyid = c.companyid
 	WHERE s.batchid = <cfqueryparam value="#url.batchid#" cfsqltype="cf_sql_integer">
