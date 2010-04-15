@@ -285,7 +285,9 @@ smg_charges
                    
                     <!--- FOR AUGUST STUDENTS ONLY THAT ARE NOT DIRECT PLACEMENT!!! --->
                     <cfif getHSstud.startdate GT may AND getHSstud.startdate LT october AND getHSstud.direct_placement EQ 0>
-                        <!--- If app is received before Jan 1st of previous year from Intl Home Stud--->
+					
+						<!--- discount for early apps DISCONTINUED starting for AUG10 arriving students --->
+                       <!---  <!--- If app is received before Jan 1st of previous year from Intl Home Stud--->
                         <cfif #getHSstud.dateapplication# LTE #variables.discDeadLine#>
                            
                             <cfif getHSstud.intrep EQ 33>
@@ -307,7 +309,7 @@ smg_charges
                                 </cfquery>                     
                             </cfif>
                            
-                        </cfif>
+                        </cfif> --->
                        
                         <!--- discount for scholarship students from CLS --->
                         <cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 1>
@@ -801,8 +803,8 @@ GROUP BY agentid, testCompid
 		<!--- Dev Server --->
 		<cfset emailTo = 'marcel@iseusa.com'>
 	<cfelse>
-		<!--- Production Server --->
-		<cfset emailTo = getAgentInfo.billing_email>
+		<!--- Production Server  --->
+		<cfset emailTo = #getAgentInfo.billing_email#>
 	</cfif> 	
 				
 	<cfmail from="#variables.emailFrom#" to="#variables.emailTo#" bcc="#variables.emailFrom#" subject="#getAgentInfo.businessname#: #variables.compName# invoices - please find attached." type="html">
