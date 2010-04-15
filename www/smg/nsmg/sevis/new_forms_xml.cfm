@@ -141,7 +141,7 @@
     	smg_sevis
 </cfquery>
 
-<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#qGetCompany.companyshort_nocolor#)>
+<cfset add_zeros = 13 - len(get_batchid.batchid) - len(qGetCompany.companyshort_nocolor)>
 <!--- Batch id has to be numeric in nature A through Z a through z 0 through 9  --->
 
 <cfoutput>
@@ -161,17 +161,17 @@
         <td>#businessname#</td>
         <td>#firstname# #familylastname# (#studentid#)</td>
 		<td>
-			<cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(sevis_startdate, 'mm/dd/yyyy')> 
+			<cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(sevis_startdate, 'mm/dd/yyyy')> <!--- Start Date after program start date --->
                 #DateFormat(now()+1, 'yyyy-mm-dd')#
                 <cfset nstart_date = DateFormat(now()+1, 'yyyy-mm-dd')>
             <cfelse>
-                <cfif DateDiff('yyyy', dob, sevis_startdate) LT 15>
+                <cfif DateDiff('yyyy', dob, sevis_startdate) LT 15> <!--- Student has not completed 15 by the program start date --->
                     #dateformat (now(), 'yyyy')#-#dateformat (dob, 'mm-dd')#
                     <cfset nstart_date = '#dateformat (now(), 'yyyy')#-#dateformat (dob, 'mm-dd')#'>
-                <cfelseif ayporientation NEQ '0' OR aypenglish NEQ '0'>
+                <cfelseif ayporientation NEQ 0 OR aypenglish NEQ 0> <!--- Pre AYP student - get Pre Ayp Dates --->
                     #dateformat (preayp_date, 'yyyy-mm-dd')#
                     <cfset nstart_date = dateformat (preayp_date, 'yyyy-mm-dd')>
-                <cfelse>
+                <cfelse> <!--- Get SEVIS start/end date --->
                     #DateFormat(sevis_startdate, 'yyyy-mm-dd')#
                     <cfset nstart_date = DateFormat(sevis_startdate, 'yyyy-mm-dd')>
                 </cfif>
@@ -180,20 +180,18 @@
         <td>
             <cfif schoolid NEQ 0 AND host_fam_approved LT 5>
                 <Address1>#schooladdress#</Address1>
-                <cfif schooladdress2 NEQ ''><Address2>#schooladdress2#</Address2></cfif>
+                <cfif NOT LEN(schooladdress2)><Address2>#schooladdress2#</Address2></cfif>
                 <City>#schoolcity#</City> 
                 <State>#schoolstate#</State> 
                 <PostalCode>#schoolzip#</PostalCode> 
                 <SiteName>#schoolname#</SiteName>
-                <PrimarySite>true</PrimarySite>
             <cfelse>
                 <Address1>#qGetCompany.address#</Address1> 
-                <cfif schooladdress2 NEQ ''><Address2>#schooladdress2#</Address2></cfif>
+                <cfif NOT LEN(schooladdress2)><Address2>#schooladdress2#</Address2></cfif>
                 <City>#qGetCompany.city#</City> 
                 <State>#qGetCompany.state#</State> 
                 <PostalCode>#qGetCompany.zip#</PostalCode> 
                 <SiteName>#qGetCompany.companyname#</SiteName>
-                <PrimarySite>true</PrimarySite>
             </cfif>
         </td>
 	</tr>
@@ -220,7 +218,7 @@ END OF DISPLAY
 </BatchHeader>
 <CreateEV>
 <cfloop query="qGetStudents">
-<ExchangeVisitor requestID="#qGetStudents.studentid#" printForm="true" userID="#qGetCompany.sevis_userid#">
+<ExchangeVisitor requestID="#qGetStudents.currentRow#__#qGetStudents.studentid#" printForm="true" userID="#qGetCompany.sevis_userid#">
 	<UserDefinedA>#qGetStudents.currentRow#_#qGetStudents.studentid#</UserDefinedA>
 	<Biographical>
 		<FullName>
@@ -313,7 +311,15 @@ END OF DISPLAY
 
 <!-- dump the resulting XML document object -->
 
-<cffile action="write" file="#AppPath.sevis##qGetCompany.companyshort_nocolor#/new_forms/#qGetCompany.companyshort_nocolor#_new_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cfscript>
+	// Get Folder Path 
+	currentDirectory = "#AppPath.sevis##qGetCompany.companyshort_nocolor#/new_forms/";
+
+	// Make sure the folder Exists
+	AppCFC.UDF.createFolder(currentDirectory);
+</cfscript>
+
+<cffile action="write" file="#currentDirectory#/#qGetCompany.companyshort_nocolor#_new_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
 	<th>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</th>

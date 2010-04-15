@@ -20,7 +20,10 @@
 		INNER JOIN smg_programs p ON s.programid = p.programid
 		INNER JOIN smg_users u ON s.intrep = u.userid
 		WHERE s.sevis_batchid = <cfqueryparam value="#url.batchid#" cfsqltype="cf_sql_integer">  
-		ORDER BY u.businessname, s.firstname
+		ORDER BY 
+        	u.businessname, 
+            s.firstname, 
+            s.familyLastName
 	</cfquery>
 
 	<table align="center" width="95%" frame="box">
