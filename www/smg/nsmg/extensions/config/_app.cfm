@@ -126,4 +126,18 @@
 	Constants.projectHelpStatus[7] = "ny_approved";
 	Constants.projectHelpStatus[8] = "ny_rejected";
 	// ArrayAppend(Constants.projectHelpStatus, "sr_approved");
+	
+	
+	// Used in the Online Application
+	Constants.canadaAreas = ArrayNew(1);	
+	Constants.canadaAreas[1] = "Calgary";
+	Constants.canadaAreas[2] = "Comox";
+	Constants.canadaAreas[3] = "Edmonton";
+	Constants.canadaAreas[4] = "Golden Hills";
+	Constants.canadaAreas[5] = "Nova Scotia";
+	Constants.canadaAreas[6] = "Ottawa, Ontario";
+	Constants.canadaAreas[7] = "Richmond";
+	Constants.canadaAreas[8] = "Saskatoon";
+	Constants.canadaAreas[9] = "Southeast Kootenay";
+	Constants.canadaAreas[10] = "Winnipeg";
 </cfscript>

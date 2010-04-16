@@ -18,17 +18,18 @@
 			</tr>
 			<tr>
 				<Td valing="top" width=49%>	
-					<div align="justify"><h2>Option 1</h2> Students will fill out their own application. You will fill out some basic information and they will
-					recieve an email with instructions on submitting their application. <br>
-					<font size=-1><em>Students must have an email account and internet access to fill out the application</em></font><br><br><div align="center"> <a href="?curdoc=student_app/start_student"><img src="student_app/pics/start-application.gif" border=0></a> 
+					<div align="justify">
+                        <h2>Option 1</h2> Students will fill out their own application. You will fill out some basic information and they will
+                        recieve an email with instructions on submitting their application. <br>
+                        <font size=-1><em>Students must have an email account and internet access to fill out the application</em></font><br><br><div align="center"> <a href="?curdoc=student_app/start_student&option=1"><img src="student_app/pics/start-application.gif" border=0></a> 
 					</div>
 				</td>
 				<td width="2%">&nbsp;</td>
 				<td valign="top" width="49%">
 					<div align="justify">
-					<h2>Option 2</h2> If you have a hard copy of an application that you would like to submit to SMG, 
-					follow this link to submit an online application for a student.  
-					The same information that is mandatory for students to fill out, is also mandatory for applications that you fill out for them.<br><br><div align="center"><a href="?curdoc=student_app/start_student&r=y"><img src="student_app/pics/start-application.gif" border=0>
+                        <h2>Option 2</h2> If you have a hard copy of an application that you would like to submit to SMG, 
+                        follow this link to submit an online application for a student.  
+                        The same information that is mandatory for students to fill out, is also mandatory for applications that you fill out for them.<br><br><div align="center"><a href="?curdoc=student_app/start_student&option=2&r=y"><img src="student_app/pics/start-application.gif" border=0>
 					</div>
 				</td>
 			</tr>
