@@ -154,7 +154,6 @@ function areYouSure() {
 						</cfselect>
 					</td>
 					<td valign="top"><cfselect name="app_additional_program">
-						<option value="0"></option>
 						<cfloop query="app_other_programs">
 							<option value="#app_programid#" <cfif get_student_info.app_additional_program EQ app_programid>selected</cfif> >#app_program#</option>
 						</cfloop>

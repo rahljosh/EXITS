@@ -126,7 +126,7 @@
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#get_email.intrepemail#">
-                <cfinvokeargument name="email_subject" value="Exchange application apporved">
+                <cfinvokeargument name="email_subject" value="Exchange Application Approved">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 <cfinvokeargument name="email_cc" value="#cc_email#">
                 <cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
