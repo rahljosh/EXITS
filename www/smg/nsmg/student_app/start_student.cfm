@@ -429,7 +429,8 @@
 		if ( $.ListFind(canadaList, currentProgram, ',') ) {
 			$(".canadaAreaDiv").fadeIn("slow");															
 		} else {
-			$(".canadaAreaDiv").fadeOut("slow");
+			$("##app_canada_area").val("");
+			$(".canadaAreaDiv").fadeOut("slow");			
 		}
 	}
 
@@ -577,7 +578,7 @@
             <!--- Canada Areas - Only Available for Canada Programs --->
             <td>
                 <div class="canadaAreaDiv" style="display:none">
-                    <select name="app_canada_area" class="large">
+                    <select name="app_canada_area" id="app_canada_area" class="large">
                         <option value=""></option>
                         <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.canadaAreas)#" step="1">
                             <option value="#CONSTANTS.canadaAreas[i]#" <cfif CONSTANTS.canadaAreas[i] EQ FORM.app_canada_area> selected="selected" </cfif> >#CONSTANTS.canadaAreas[i]#</option>

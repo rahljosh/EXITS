@@ -89,7 +89,10 @@
 	<tr><td width="100">Student's Name: </td><td width="560"> <b>#firstname# #familylastname# (###studentid#)</b></td></tr> 
 	<tr><td>International Agent: </td><td><b>#get_intl_rep.businessname#</b></td></tr>
 	<tr><td>Program Information: </td><td><b>#app_programs.app_program#</b></td></tr>
-	<tr><td>Additional Program: </td><td><b>#app_other_programs.app_program#</b></td></tr>
+    <cfif LEN(get_student_info.app_canada_area)>
+    	<tr><td>Area in Canada: </td><td><b>#get_student_info.app_canada_area#</b></td></tr>
+	</cfif>
+    <tr><td>Additional Program: </td><td><b>#app_other_programs.app_program#</b></td></tr>
 	<tr><td valign="top">J-1 Private School: </td>
 		<td><b>
 			<cfif private_school.recordcount>

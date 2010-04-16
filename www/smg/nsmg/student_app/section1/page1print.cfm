@@ -110,7 +110,7 @@
 								<td><em>Additional Programs</em></td>
 							</tr>
 							<tr>
-								<td>#app_programs.app_program#<br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+								<td>#app_programs.app_program# <cfif LEN(get_student_info.app_canada_area)> - #get_student_info.app_canada_area#</cfif> <br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
 								<td><cfif app_other_programs.recordcount EQ '0'>None<cfelse>#app_other_programs.app_program#</cfif><br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
 							</tr>
 							<tr><td colspan="2">&nbsp;</td></tr>
