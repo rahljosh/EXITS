@@ -63,6 +63,16 @@ body {
 	color: #F00;
 	text-decoration: underline;
 }
+.style1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+}
+.style5 {
+	color: #FFFFFF;
+	font-size:10px;	
+	font-weight: bold;
+}
 -->
 </style></head>
 
@@ -70,6 +80,17 @@ body {
 
 <div id="container">
   <div id="mainContent">
+  <table width="70%" border="0" cellspacing="1" cellpadding="0" align="center">
+          <tr>
+            <td width="18%" height="22" bgcolor="#2E4F7A" class="style1"><A href="principal.cfm" class="style5">
+              <div align="center">Home</div>
+            </A></td>
+            <td width="18%" bgcolor="#2E4F7A" class="style1"><div align="center"><a href="contact.cfm" class="style5">Contact</a></div></td>
+            <td width="28%" bgcolor="#2E4F7A" class="style1"><div align="center" class="style6"><a href="rules.html" class="style5">Rules &amp; Policies</a></div></td>
+            <td width="15%" bgcolor="#FFFFFF" class="style1"><div align="center" class="style6">Forms</div></td>
+            <td width="21%" bgcolor="#2E4F7A" class="style1"><div align="center"><a href="faqs.html" class="style5">Questions?</a></div></td>
+          </tr>
+        </table>
   <div class="header"><span class="Header1">Flight Quote</span></div>
     <div class="logo"><span class="oneColFixCtr"><img src="images/SMGLogo.png" width="200" height="200" /></span></div>
     
@@ -95,8 +116,22 @@ body {
     <cfinput type="text" name="nameoftour" message="Tour Name Required" required="yes" id="nameoftour" />
   <br />
     Tour Dates<br />
-    <cfinput type="text" name="tourdates" message="Tour Dates Required" validate="date" required="yes" id="tourdates" />
-    <br />
+     <select name="tourdates" id="tour dates">
+      <option>Hawaii I &ndash; Feb. 5-12, 2010</option>
+      <option>Hawaii II &ndash; Feb. 13-20, 2010</option>
+      <option>Hawaii III &ndash; Feb. 22 Mar. 1, 2010</option>
+      <option>Western Tour &ndash; Mar. 13-19, 2010</option>
+      <option>California Experience &ndash; March 6-12, 2010</option>
+      <option>Hawaii IV &ndash; Apr. 3-10, 2010</option>
+      <option>East Coast Experience &ndash; April 13-19, 2010</option>
+      <option>New York & Boston &ndash; May 1 - May 7, 2010</option>
+      <option>NYC Long Weekend 1 &ndash; May 14-17, 2010</option>
+      <option>NYC Long Weekend 1 &ndash; May 21-24, 2010</option>
+      <option>LA Experience &ndash; Nov. 28 &ndash; Dec. 3, 2010</option>
+      <option>New York Holiday &ndash; Dec. 12-17, 2010</option>
+    </select>
+     <br />
+     <br />
     
     Host Family Departure City &amp; Airport<br />
     <cfinput type="text" name="departurecity" message="Departure City / Airport Required" required="yes" id="departurecity" />
