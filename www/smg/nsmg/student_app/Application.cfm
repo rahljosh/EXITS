@@ -30,6 +30,11 @@
 			AppEmail = APPLICATION.EMAIL;
 		}
 		
+		if ( StructKeyExists(APPLICATION, "CONSTANTS") ) {
+			// Set a short name for the CFCs
+			CONSTANTS = APPLICATION.CONSTANTS;
+		}
+		
 		// List of User IDs that are not allowed to submit Online Applications
 		// Dream I - 03/23/2010
         APPLICATION.submitAppNotAllowed = "6559"; 

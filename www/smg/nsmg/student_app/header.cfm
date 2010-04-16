@@ -122,6 +122,13 @@
 <title>EXITS Student Application</title>
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" href="../smg.css" type="text/css">
+<link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css"> <!-- Date Picker Style -->
+<script src="../linked/js/jquery.js" type="text/javascript"></script> <!-- jQuery -->
+<script src="../linked/js/jquery.cfjs.js" type="text/javascript"></script> <!-- Coldfusion functions for jquery -->
+<script src="../linked/js/date.js " type="text/javascript"></script> <!-- required plugins for date picker -->
+<script src="../linked/js/jquery.datePicker.js " type="text/javascript"></script> <!-- jquery.datePicker.js -->
+<script src="../linked/js/basescript.js " type="text/javascript"></script> <!-- BaseScript -->
+
 <style type="text/css">
 	<!--
 	.smlink         		{font-size: 11px;}

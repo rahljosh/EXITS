@@ -14,6 +14,11 @@
 	<cfabort>
 </cfif>
 
+<!--- Param Form Variables --->
+<cfparam name="FORM.app_indicated_program" default="0">
+<cfparam name="FORM.app_canada_area" default="">
+<cfparam name="FORM.app_additional_program" default="0">
+
 <cfquery name="check_username" datasource="MySql">
 	SELECT email
 	FROM smg_students
@@ -58,9 +63,10 @@
 		SET	familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.familylastname))#">,
 			firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.firstName))#">,
 			middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.middleName))#">,
-			app_indicated_program = <cfif FORM.app_indicated_program EQ '0'>null,<cfelse>'#FORM.app_indicated_program#',</cfif>  
-			app_additional_program = <cfif FORM.app_additional_program EQ '0'>null,<cfelse> '#FORM.app_additional_program#',</cfif>  
-			address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+			app_indicated_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">,  
+			app_additional_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_additional_program#">,  
+			app_canada_area = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_canada_area#">,
+            address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
 			city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
 			zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
 			country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.country#">,

@@ -29,6 +29,77 @@
 	<cflocation url="?curdoc=section1/page1print&id=1&p=1" addtoken="no">
 </cfif>
 
+<cfinclude template="../querys/get_student_info.cfm">
+
+<cfquery name="qGetIntlRep" datasource="MySql">
+	SELECT userid, businessname
+	FROM smg_users 
+	WHERE userid = '#get_student_info.intrep#'
+</cfquery>
+
+<cfquery name="qCountryList" datasource="MySQL">
+	SELECT countryid, countryname
+	FROM smg_countrylist
+	ORDER BY Countryname
+</cfquery>
+
+<cfquery name="qReligionList" datasource="MySQL">
+	SELECT religionid, religionname
+	FROM smg_religions
+	ORDER BY religionname
+</cfquery>
+ 
+<cfquery name="qAppProgramList" datasource="MySQL">
+    SELECT 
+        app_programID, 
+        app_program, 
+        app_type,
+        companyID,
+        country
+    FROM 
+        smg_student_app_programs
+    <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyid)>
+        WHERE
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
+</cfquery>
+
+<cfquery name="qAppPrograms" dbtype="query">
+    SELECT 
+        app_programID, 
+        app_program 
+    FROM 
+        qAppProgramList
+    WHERE 
+        app_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="regular">
+</cfquery>
+ 
+<cfquery name="qAppAddPrograms" dbtype="query">
+    SELECT 
+        app_programID, 
+        app_program 
+    FROM 
+        qAppProgramList
+    WHERE 
+        app_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="additional">
+</cfquery> 
+
+<cfquery name="qAppCanadaPrograms" dbtype="query">
+    SELECT 
+        app_programID, 
+        country
+    FROM 
+        qAppProgramList
+    WHERE 
+        country = <cfqueryparam cfsqltype="cf_sql_varchar" value="Canada">
+</cfquery> 
+
+<cfset canadaIDList = ValueList(qAppCanadaPrograms.app_programID)>
+
+<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
+
+<cfoutput>
+
 <script type="text/javascript">
 <!--
 function CheckLink()
@@ -56,42 +127,27 @@ function areYouSure() {
         return false; 
    } 
 } 
+
+function displayCanada() {
+	// Get canada list from the query
+	canadaList = '#canadaIDList#';
+	currentProgram = $("##app_indicated_program").val();
+
+	if ( $.ListFind(canadaList, currentProgram, ',') ) {
+		$(".canadaAreaDiv").fadeIn("slow");															
+	} else {
+		$("##app_canada_area").val("");
+		$(".canadaAreaDiv").fadeOut("slow");			
+	}
+}
+
+$(document).ready(function() {
+	displayCanada();
+});
 //-->
 </script>
 
-<cfinclude template="../querys/get_student_info.cfm">
-
-<cfquery name="get_intrep" datasource="MySql">
-	SELECT userid, businessname
-	FROM smg_users 
-	WHERE userid = '#get_student_info.intrep#'
-</cfquery>
-
-<cfquery name="country_list" datasource="MySQL">
-	SELECT countryid, countryname
-	FROM smg_countrylist
-	ORDER BY Countryname
-</cfquery>
-
-<cfquery name="religion_list" datasource="MySQL">
-	SELECT religionid, religionname
-	FROM smg_religions
-	ORDER BY religionname
-</cfquery>
- 
-<cfquery name="app_programs" datasource="MySQL">
-	SELECT app_programid, app_program 
-	FROM smg_student_app_programs
-	WHERE app_type = 'regular'
-</cfquery>
-
-<cfquery name="app_other_programs" datasource="MySQL">
-	SELECT app_programid, app_program 
-	FROM smg_student_app_programs
-	WHERE app_type = 'additional'
-</cfquery>  
-
-<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
+</cfoutput>
 
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -146,19 +202,36 @@ function areYouSure() {
 					<td><em>Additional Programs</em></td>
 				</tr>
 				<tr>
-					<td valign="top"><cfselect name="app_indicated_program">
+					<td valign="top">
+                    	<cfselect name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();">
 						<option value="0">Select a Program</option>
-						<cfloop query="app_programs">
+						<cfloop query="qAppPrograms">
 							<option value="#app_programid#" <cfif get_student_info.app_indicated_program EQ app_programid>selected</cfif> >#app_program#</option>
 						</cfloop>
 						</cfselect>
 					</td>
 					<td valign="top"><cfselect name="app_additional_program">
-						<cfloop query="app_other_programs">
+						<cfloop query="qAppAddPrograms">
 							<option value="#app_programid#" <cfif get_student_info.app_additional_program EQ app_programid>selected</cfif> >#app_program#</option>
 						</cfloop>
 						</cfselect>
 					</td>
+				</tr>
+				<tr class="canadaAreaDiv" style="display:none;"><td colspan="2">&nbsp;</td></tr>
+				<tr class="canadaAreaDiv" style="display:none;">
+					<td><em>Area in Canada</em></td>
+					<td>&nbsp;</td>
+				</tr>
+                <tr class="canadaAreaDiv" style="display:none">
+					<td valign="top">
+                        <select name="app_canada_area" id="app_canada_area" class="large">
+                            <option value=""></option>
+                            <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.canadaAreas)#" step="1">
+                                <option value="#CONSTANTS.canadaAreas[i]#" <cfif CONSTANTS.canadaAreas[i] EQ get_student_info.app_canada_area> selected="selected" </cfif> >#CONSTANTS.canadaAreas[i]#</option>
+                            </cfloop>
+                        </select>	
+					</td>
+					<td valign="top">&nbsp;</td>
 				</tr>
 				<tr><td colspan="2">&nbsp;</td></tr>
 			</table>
@@ -167,7 +240,7 @@ function areYouSure() {
 		<td colspan="3"><b>International Representative</b></td>
 	</tr>
 	<tr>
-		<td colspan="3">#get_intrep.businessname#<br><img src="pics/line.gif" width="480" height="1" border="0" align="absmiddle"></td>
+		<td colspan="3">#qGetIntlRep.businessname#<br><img src="pics/line.gif" width="480" height="1" border="0" align="absmiddle"></td>
 	</tr>
 </table><br>
 
@@ -190,7 +263,7 @@ function areYouSure() {
 				<td>
 				<cfselect name="country" onchange="DataChanged();">
 					<option value="0"></option>
-					<cfloop query="country_list">
+					<cfloop query="qCountryList">
 					<option value="#countryid#" <cfif get_student_info.country is countryid>selected</cfif>>#countryname#</option>
 					</cfloop>
 				</cfselect></td>
@@ -226,7 +299,7 @@ function areYouSure() {
 			<tr><td colspan="2">
 				<cfselect name="countrybirth" onchange="DataChanged();">
 					<option value="0"></option>
-					<cfloop query="country_list">
+					<cfloop query="qCountryList">
 					<option value="#countryid#" <cfif get_student_info.countrybirth is countryid>selected</cfif>>#countryname#</option>
 					</cfloop>
 				</cfselect></td>
@@ -236,7 +309,7 @@ function areYouSure() {
 			<tr><td colspan="2">
 				<cfselect name="countrycitizen" onchange="DataChanged();">
 					<option value="0"></option>
-					<cfloop query="country_list">
+					<cfloop query="qCountryList">
 					<!--- do not show Serbia and Montenegro SEVIS --->
 					<cfif countryid NEQ 250>		
 					<option value="#countryid#" <cfif get_student_info.countrycitizen is countryid>selected</cfif>>#countryname#</option>
@@ -249,7 +322,7 @@ function areYouSure() {
 			<tr><td colspan="2">
 				<cfselect name="countryresident" onchange="DataChanged();">
 					<option value="0"></option>
-					<cfloop query="country_list">
+					<cfloop query="qCountryList">
 					<!--- do not show Serbia and Montenegro SEVIS --->
 					<cfif countryid NEQ 250>		
 					<option value="#countryid#" <cfif get_student_info.countryresident is countryid>selected</cfif>>#countryname#</option>
@@ -262,7 +335,7 @@ function areYouSure() {
 			<tr><td colspan="2">
 				<cfselect name="religiousaffiliation" onchange="DataChanged();">
 					<option value="0"></option>
-					<cfloop query="religion_list">
+					<cfloop query="qReligionList">
 					<option value="#religionid#" <cfif get_student_info.religiousaffiliation is religionid>selected</cfif>>#religionname#</option>
 					</cfloop>
 				</cfselect></td>
@@ -293,7 +366,7 @@ function areYouSure() {
 			<tr><td colspan="2">
 				<cfselect name="fathercountry" onchange="DataChanged();">
 					<option value="0"></option>
-					<cfloop query="country_list">
+					<cfloop query="qCountryList">
 					<option value="#countryid#" <cfif get_student_info.fathercountry is countryid>selected</cfif>>#countryname#</option>
 					</cfloop>
 				</cfselect></td>
@@ -332,7 +405,7 @@ function areYouSure() {
 			<tr><td colspan="2">
 				<cfselect name="mothercountry" onchange="DataChanged();"> 
 					<option value="0"></option>
-					<cfloop query="country_list">
+					<cfloop query="qCountryList">
 					<option value="#countryid#" <cfif get_student_info.mothercountry is countryid>selected</cfif>>#countryname#</option>
 					</cfloop>
 				</cfselect></td>
@@ -383,7 +456,7 @@ function areYouSure() {
 			<tr><td>
 				<cfselect name="emergency_country" onchange="DataChanged();"> 
 					<option value="0"></option>
-					<cfloop query="country_list">
+					<cfloop query="qCountryList">
 					<option value="#countryid#" <cfif get_student_info.emergency_country is countryid>selected</cfif>>#countryname#</option>
 					</cfloop>
 				</cfselect></td>
