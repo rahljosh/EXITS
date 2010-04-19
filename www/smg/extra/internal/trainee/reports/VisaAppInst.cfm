@@ -3,11 +3,11 @@
 <cfquery name="get_candidate" datasource="MySql">
 SELECT firstname, middlename, lastname, home_country, ds2019, extra_candidates.fieldstudyid, extra_candidates.subfieldid, extra_candidates.programid, smg_programs.programname, extra_sevis_sub_fieldstudy.subfield, extra_sevis_fieldstudy.fieldstudy, smg_countrylist.countryname
 FROM extra_candidates
-INNER JOIN extra_sevis_fieldstudy ON extra_sevis_fieldstudy.fieldstudyid = extra_candidates.fieldstudyid
-INNER JOIN extra_sevis_sub_fieldstudy ON extra_sevis_sub_fieldstudy.subfieldid = extra_candidates.subfieldid
-INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
-INNER JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.citizen_country
-WHERE uniqueid = '#url.uniqueid#'
+LEFT OUTER JOIN extra_sevis_fieldstudy ON extra_sevis_fieldstudy.fieldstudyid = extra_candidates.fieldstudyid
+LEFT OUTER JOIN extra_sevis_sub_fieldstudy ON extra_sevis_sub_fieldstudy.subfieldid = extra_candidates.subfieldid
+LEFT OUTER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
+LEFT OUTER JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.citizen_country
+WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#">
 </cfquery>
 
 <style type="text/css">
