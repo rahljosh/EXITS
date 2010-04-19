@@ -65,8 +65,8 @@
 	ORDER BY 
     	s.sevis_batchid DESC, 
         u.businessname DESC, 
-        s.firstname DESC
-        s,familyLastName DESC
+        s.firstname DESC,
+        s.familyLastName DESC
 	LIMIT 
     	2000
 </cfquery>
