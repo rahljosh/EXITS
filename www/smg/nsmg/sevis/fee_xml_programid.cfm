@@ -43,7 +43,12 @@
 	 	    	s.programid = #prog# 
 		   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
 	   </cfloop> )
-	ORDER BY u.businessname DESC, s.firstname DESC
+	ORDER BY 
+    	s.sevis_batchid DESC, 
+        u.businessname DESC, 
+        s.firstname DESC,
+        s.familyLastName DESC,
+        s.studentID DESC
 	LIMIT 2000
 </cfquery>
 

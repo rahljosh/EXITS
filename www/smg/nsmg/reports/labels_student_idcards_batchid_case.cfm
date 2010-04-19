@@ -81,7 +81,8 @@
         ORDER BY 
             u.businessname, 
             s.firstname,
-            s.familyLastName       
+            s.familyLastName,
+            s.studentID      
     </cfquery>
     
 </cfsilent>

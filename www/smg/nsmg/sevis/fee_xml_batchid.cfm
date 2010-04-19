@@ -66,7 +66,8 @@
     	s.sevis_batchid DESC, 
         u.businessname DESC, 
         s.firstname DESC,
-        s.familyLastName DESC
+        s.familyLastName DESC,
+        s.studentID DESC
 	LIMIT 
     	2000
 </cfquery>

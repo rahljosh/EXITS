@@ -21,9 +21,10 @@
 		INNER JOIN smg_users u ON s.intrep = u.userid
 		WHERE s.sevis_batchid = <cfqueryparam value="#url.batchid#" cfsqltype="cf_sql_integer">  
 		ORDER BY 
-        	u.businessname, 
-            s.firstname, 
-            s.familyLastName
+            u.businessname, 
+            s.firstname,
+            s.familyLastName,
+            s.studentID      
 	</cfquery>
 
 	<table align="center" width="95%" frame="box">
@@ -36,7 +37,7 @@
 	<cfelse>	
 		<cfoutput query="get_students">
 		<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
-		<td width="30%">#businessname#</td><td width="50%">#firstname# #familylastname# (#studentid#)</td><td width="20%">#programname#</td>				
+		<td width="30%">#businessname#</td><td width="50%">#firstname# #familylastname# (###studentid#)</td><td width="20%">#programname#</td>				
 		</tr>
 		</cfoutput>
 	</cfif>
