@@ -27,6 +27,7 @@
 	<cffunction name="getUsers" access="public" returntype="query" output="false" hint="Gets a list of users, if usertype is passed gets users by usertype">
     	<cfargument name="userID" default="0" hint="userID is not required">
     	<cfargument name="usertype" default="0" hint="usertype is not required">
+        <cfargument name="isActive" default="1" hint="isActive is not required">
               
         <cfquery 
 			name="qGetUsers" 
@@ -41,6 +42,11 @@
 				<cfif VAL(ARGUMENTS.usertype)>
                 	AND	
                     	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.isActive)>
+                	AND
+                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
                 </cfif>
                 
 				<cfif VAL(ARGUMENTS.usertype)>

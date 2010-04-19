@@ -55,7 +55,6 @@
 
 	<cffunction name="getVerificationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
-        <cfargument name="studentID" default="0" hint="studentID is not required">
         <cfargument name="receivedDate" default="" hint="Filter by verification received date">
 
         <cfquery 
@@ -86,14 +85,19 @@
 				LEFT OUTER JOIN
                 	smg_countrylist resident ON resident.countryID = s.countryResident
                 WHERE
-					ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+				AND   
+                    s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 				<cfif VAL(ARGUMENTS.intRep)>
                     AND
                         s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
                 </cfif>
-				<cfif VAL(ARGUMENTS.studentID)>
+				<cfif CLIENT.companyID EQ 5>
                     AND
-                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12"> )
+                <cfelse>
+                    AND
+                        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 </cfif>
 				<cfif IsDate(ARGUMENTS.receivedDate)>
                 	AND
@@ -101,7 +105,10 @@
 				<cfelse>
                 	AND
                     	s.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
-                </cfif>                                        
+                </cfif>
+			ORDER BY
+            	s.familyLastName,
+                s.firstName                                                        
 		</cfquery>
 		   
 		<cfreturn qGetVerificationList>
@@ -168,58 +175,20 @@
 	</cffunction>
 
 
-	<!--- DELETE THIS ONE --->
-	<cffunction name="getVerificationList2" access="public" returntype="query" output="false" hint="Returns verification report list in Json format">
-    	<cfargument name="intRep" default="0" hint="International Representative is not required">
-        <cfargument name="studentID" default="0" hint="studentID is not required">
-        <cfargument name="receivedDate" default="" hint="Filter by verification received date">
-              
+	<cffunction name="confirmVerificationReceived" access="remote" returntype="void" hint="Sets verification_received field as received.">
+        <cfargument name="studentID" required="yes" hint="studentID is required">
+
         <cfquery 
-			name="qGetVerificationList" 
 			datasource="#APPLICATION.dsn#">
-                SELECT
-					s.studentID,
-                    s.firstName,
-                    s.middleName,
-                    s.familyLastName,
-                    s.sex,
-                    s.dob,
-                    s.cityBirth,
-                    s.countryBirth,
-                    s.countryCitizen,
-                    s.countryResident,
-                    birth.countryName as birthCountry,
-                    citizen.countryName as citizenCountry,
-                    resident.countryName as residentCountry
-                FROM 
-                    smg_students s
-				INNER JOIN
-                	smg_programs p ON p.programID = s.programID
-                LEFT OUTER JOIN
-                	smg_countrylist birth ON birth.countryID = s.countryBirth
-				LEFT OUTER JOIN
-                	smg_countrylist citizen ON citizen.countryID = s.countryCitizen
-				LEFT OUTER JOIN
-                	smg_countrylist resident ON resident.countryID = s.countryResident
+                UPDATE
+					smg_students
+				SET
+                    verification_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                 WHERE
-					ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">				
-				<cfif VAL(ARGUMENTS.intRep)>
-                    AND
-                        s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
-                </cfif>
-				<cfif IsDate(ARGUMENTS.receivedDate)>
-                	AND
-                    	s.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.receivedDate#">
-				<cfelse>
-                	AND
-                    	s.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
-                </cfif>                                        
-				LIMIT 5                
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
 		</cfquery>
 		   
-		<cfreturn qGetVerificationList>
 	</cffunction>
-
 
 
 	<!--- ------------------------------------------------------------------------- ----
