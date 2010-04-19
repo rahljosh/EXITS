@@ -54,9 +54,10 @@
         </cfif>
     
         ORDER BY 
-        	u.businessname, 
-            s.firstName,
-            s.familylastname
+            u.businessname, 
+            s.firstname,
+            s.familyLastName,
+            s.studentID      
     </cfquery>
 
 </cfsilent>

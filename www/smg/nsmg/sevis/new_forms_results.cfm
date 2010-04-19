@@ -37,20 +37,24 @@
 <cfelse>
 
 	<cffile action="read" file="#AppPath.sevis##get_company.companyshort_nocolor#/new_forms/#form.filename#" variable="myxml">
-	<cfset mydoc = XmlParse(myxml)>
-	
-	<cfset batchid =#mydoc.TransactionLog.BatchHeader.BatchID.XmlText#> 
-	<cfset filename =#mydoc.TransactionLog.BatchDetail.Upload.FileName.XmlText#> 
-	<cfset totalrequest =#mydoc.TransactionLog.BatchDetail.Process.RecordCount.Total.XmlText#> 
-	<cfset sucrequest =#mydoc.TransactionLog.BatchDetail.Process.RecordCount.Success.XmlText#> 
-	<cfset failure =#mydoc.TransactionLog.BatchDetail.Process.RecordCount.Failure.XmlText#> 
-	<cfset numItems = #mydoc.TransactionLog.BatchDetail.Process.RecordCount.Total.XmlText#>
+
+	<cfset mydoc = XmlParse(myxml)>	
+	<cfset batchid = mydoc.TransactionLog.BatchHeader.BatchID.XmlText> 
+	<cfset filename = mydoc.TransactionLog.BatchDetail.Upload.FileName.XmlText> 
+	<cfset totalrequest = mydoc.TransactionLog.BatchDetail.Process.RecordCount.Total.XmlText> 
+	<cfset sucrequest = mydoc.TransactionLog.BatchDetail.Process.RecordCount.Success.XmlText> 
+	<cfset failure = mydoc.TransactionLog.BatchDetail.Process.RecordCount.Failure.XmlText> 
+	<cfset numItems =  mydoc.TransactionLog.BatchDetail.Process.RecordCount.Total.XmlText>
 	<cfset numItems2 = (ArrayLen(mydoc.TransactionLog.BatchDetail.Process.XmlChildren) - 1)>
 	
 	<cfquery name="update_batch_table" datasource="MySql">
 		UPDATE smg_sevis
-		SET totalprint = #sucrequest#, received = 'yes', obs = 'automatic'
-		WHERE batchid = '#Right(batchid, 4)#'
+		SET 
+            totalprint = <cfqueryparam cfsqltype="cf_sql_integer" value="#sucrequest#">, 
+            received = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">, 
+            obs = <cfqueryparam cfsqltype="cf_sql_varchar" value="automatic">
+		WHERE 
+        	batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#Right(batchid, 4)#">
 	</cfquery>
 	
 	<br>
@@ -64,18 +68,22 @@
 	<tr><td colspan="3"> &nbsp; Successful Requested in this Batch &nbsp; : &nbsp; &nbsp;<b>#sucrequest#</b></td></tr>
 	</cfoutput>
 	<tr><th>Student ID</th><th>SEVIS ID</th><th>Message</th></tr>
-	<cfloop index="i" from = "1" to = #numItems#>
+	<cfloop from="1" to="#numItems#" index="i">
 		<tr>
-		<cfset stuID =#mydoc.TransactionLog.BatchDetail.Process.RECORD[i].XmlAttributes.requestID#>
-		<cfif #mydoc.TransactionLog.BatchDetail.Process.RECORD[i].Result.XmlAttributes.Status# is 'true'>
-			<cfset SevisID =#mydoc.TransactionLog.BatchDetail.Process.RECORD[i].XmlAttributes.sevisID#> 	
+        <cfset stuID = mydoc.TransactionLog.BatchDetail.Process.RECORD[i].UserDefinedA.XmlText>
+		
+		<cfif mydoc.TransactionLog.BatchDetail.Process.RECORD[i].Result.XmlAttributes.Status is 'true'>
+			<cfset SevisID = mydoc.TransactionLog.BatchDetail.Process.RECORD[i].XmlAttributes.sevisID> 	
 			<cfoutput>
 			<td align="center" class="style2">#stuID#</td><td align="center" class="style2">#SevisID#</td><td class="style2">&nbsp; OK &nbsp; - &nbsp; System Updated!</td>
 			</cfoutput>
  			<cfquery name="update_ds2019" datasource="MySql">
 				UPDATE smg_students
-				SET ds2019_no = '#SevisID#', sevis_batchid ='#Right(batchid, 4)#'
-				WHERE studentid = '#stuID#'
+				SET 
+                	ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="#SevisID#">, 
+                    sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#Right(batchid, 4)#">
+				WHERE
+                	studentid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stuID#"> <!--- Right(stuID, 5) --->
 			</cfquery>
 		<!--- ERROR - DS 2019 WAS NOT CREATED --->	
 		<cfelse> 

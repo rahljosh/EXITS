@@ -101,7 +101,8 @@
 	ORDER BY 
     	u.businessname, 
         s.firstname,
-        s.familyLastName       
+        s.familyLastName,
+        s.studentID       
 	LIMIT 
     	250
 </cfquery><!--- COUNTRY 232 = USA --->
@@ -218,8 +219,8 @@ END OF DISPLAY
 </BatchHeader>
 <CreateEV>
 <cfloop query="qGetStudents">
-<ExchangeVisitor requestID="#qGetStudents.currentRow#__#qGetStudents.studentid#" printForm="true" userID="#qGetCompany.sevis_userid#">
-	<UserDefinedA>#qGetStudents.currentRow#_#qGetStudents.studentid#</UserDefinedA>
+<ExchangeVisitor requestID="#qGetStudents.currentRow#_#qGetStudents.studentid#" printForm="true" userID="#qGetCompany.sevis_userid#">
+	<UserDefinedA>#qGetStudents.studentid#</UserDefinedA>
 	<Biographical>
 		<FullName>
 			<LastName>#familylastname#</LastName> 
