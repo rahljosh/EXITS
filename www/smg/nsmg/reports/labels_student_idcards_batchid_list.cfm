@@ -55,7 +55,11 @@
 				<cfif form.insurance_typeid NEQ 0> 
 					AND u.insurance_typeid = '#form.insurance_typeid#'
 				</cfif>
-			ORDER BY s.sevis_batchid, u.businessname, s.firstname
+			ORDER BY 
+                s.sevis_batchid, 
+                u.businessname, 
+                s.firstname,
+                s.familyLastName       
 		</cfquery>
 	
 		<cfloop query="get_students">

@@ -76,8 +76,9 @@
         </cfif>
         
         ORDER BY 
-        	u.businessname, 
-            s.familylastname
+            u.businessname, 
+            s.firstname,
+            s.familyLastName       
     </cfquery>
         
 </cfsilent>    
