@@ -1,857 +1,598 @@
-/*
- * Copyright (c) 1995-2005 Macromedia, Inc. All rights reserved. 
-*/
-// ColdFusion JavaScript functions for cfform client-side validation
-var _CF_error_messages = new Array();
-var _CF_error_fields = new Object();
-var _CF_FirstErrorField = null;
-var _CF_submit_status= new Array();
+/*ADOBE SYSTEMS INCORPORATED
+Copyright 2007 Adobe Systems Incorporated
+All Rights Reserved.
 
-function _CF_signalLoad()
-{
-	_CF_loaded = 1;
+NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the
+terms of the Adobe license agreement accompanying it.  If you have received this file from a
+source other than Adobe, then your use, modification, or distribution of it requires the prior
+written permission of Adobe.*/
+var _CF_error_messages=new Array();
+var _CF_error_fields=new Object();
+var _CF_FirstErrorField=null;
+var _CF_submit_status=new Array();
+_CF_signalLoad=function(){
+_CF_loaded=1;
+};
+_CF_onError=function(_1,_2,_3,_4){
+if(_CF_error_fields[_2]==null){
+if(_CF_FirstErrorField==null){
+_CF_FirstErrorField=_2;
 }
-
-function _CF_onError(form_object, input_object, object_value, error_message)
-{
-	if( _CF_error_fields[input_object] == null )
-	{
-		if( _CF_FirstErrorField == null )
-		{
-			_CF_FirstErrorField = input_object;
-		}
-		_CF_error_exists = true;
-		_CF_error_fields[input_object] = error_message;
-		_CF_error_messages[_CF_error_messages.length ] = error_message;
-	}
+_CF_error_exists=true;
+_CF_error_fields[_2]=_4;
+_CF_error_messages[_CF_error_messages.length]=_4;
 }
-
-
-function _CF_onErrorAlert(msgArray)
-{
-	//build error message string
-	var errorStr = "";
-	for(var i=0; i < msgArray.length; i++)
-	{
-		errorStr += msgArray[i] +"\n";
-	}
-		
-	alert(errorStr);
-	return false;	
+};
+_CF_onErrorAlert=function(_5){
+var _6="";
+for(var i=0;i<_5.length;i++){
+_6+=_5[i]+"\n";
 }
-
-/**
- * called by the flash controls in an html form, to update the right hidden field
- */
-function updateHiddenValue(val, form, name)
-{
-//alert(form +":" +name +":" +val);
-	if (form == null || form == "") form = 0;
-	if (document.forms[form] == null || document.forms[form][name] == null)
-	{
-	    return;
-	}
-	document.forms[form][name].value = val;
+alert(_6);
+return false;
+};
+updateHiddenValue=function(_8,_9,_a){
+if(_9==null||_9==""){
+_9=0;
 }
-
-function _CF_hasValue(obj, obj_type, obj_trim)
-{
-	
-	if (obj_type == "TEXT" || obj_type == "FILE" ||obj_type == "PASSWORD" || obj_type == "CFTEXTAREA" || obj_type == "TEXTAREA" || obj_type == "CFTEXTINPUT")
-	{
-		if (obj.value.length == 0) 
-	  		return false;
-		else 
-			if( obj_trim )
-			{
-			    //trim whitespace - for backward compatability this is optional
-				str = obj.value.replace(/^\s+/,'').replace(/\s+$/,'');
-				if (str.length == 0)
-				{ return false; }
-			}
-	  		return true;
-	}
-	else if (obj_type == "SELECT")
-	{
-		for (i=0; i < obj.length; i++)
-		{
-			if (obj.options[i].selected)
-				return true;
-		}
-	   	return false;	
-	}
-	else if (obj_type == "SINGLE_VALUE_RADIO" || obj_type == "SINGLE_VALUE_CHECKBOX")
-	{
-		if (obj.checked)
-			return true;
-		else
-	   		return false;	
-	}
-	else if (obj_type == "RADIO" || obj_type == "CHECKBOX")
-	{
-		if( obj.length == undefined && obj.checked )
-		{
-			return true;
-		}else{
-			for (i=0; i < obj.length; i++)
-			{
-				if (obj[i].checked)
-					return true;
-			}
-		}
-	   	return false;	
-	}else if( obj_type == "CFTREE"){
-	    if( obj['value'].length > 0 )
-	    {
-	        return true;
-        }else{
-            return false;
-        }
-	}else{
-	    return true;
-	}
+if(document.forms[_9]==null||document.forms[_9][_a]==null){
+return;
 }
-
- function _CF_checkdate(object_value, required) {
-     //Returns true if value is a date format or is NULL
-     //otherwise returns false
-    //trim whitespace before we validate
-
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-    object_value = object_value = object_value.replace(/{d \'/, '').replace(/'}/, '');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-
-     if (object_value.length == 0)
-         return true;
-
-
-     //Returns true if value is a date in the mm/dd/yyyy format
-    isplit = object_value.indexOf('/');
-	splitchr = "/";
-
-	if (isplit == -1)
-	{
-		isplit = object_value.indexOf('.');
-		splitchr = ".";
-	}
-
-	if (isplit == -1)
-	{
-		isplit = object_value.indexOf('-');
-		splitchr = "-";
-	}
-
-	if (isplit == -1 || isplit == object_value.length)
-		return false;
-
-    var element1 = object_value.substring(0, isplit);
-    // check for yyyy-mm-dd format
-    if( element1.length == 4 )
-    {
-        sYear = object_value.substring(0, isplit);
-        isplit = object_value.indexOf(splitchr, isplit + 1);
-        if (isplit == -1 || (isplit + 1 ) == object_value.length)
-                return false;
-        sMonth = object_value.substring((sYear.length + 1), isplit);
-        sDay = object_value.substring(isplit + 1);
-     }
-    else
-    {
-        sMonth = object_value.substring(0, isplit);
-        isplit = object_value.indexOf(splitchr, isplit + 1);
-         if (isplit == -1 || (isplit + 1 ) == object_value.length)
-                return false;
-        sDay = object_value.substring((sMonth.length + 1), isplit);
-        sYear = object_value.substring(isplit + 1);
-     }
-
-         if (!_CF_checkinteger(sMonth)) //check month
-                 return false;
-         else
-         if (!_CF_checkrange(sMonth, 1, 12)) //check month
-                 return false;
-         else
-         if (!_CF_checkinteger(sYear)) //check year
-                 return false;
-         else
-         if( sYear.length != 1 && sYear.length != 2 && sYear.length != 4 )
-                return false;
-         else
-         if (!_CF_checkrange(sYear, 0, 9999)) //check year
-                 return false;
-         else
-         if (!_CF_checkinteger(sDay)) //check day
-                 return false;
-         else
-         if (!_CF_checkday(sYear, sMonth, sDay)) // check day
-                 return false;
-         else
-                 return true;
-
- }
-
-
-function _CF_checkeurodate(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-	object_value = object_value = object_value.replace(/{d \'/, '').replace(/'}/, '');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	isplit = object_value.indexOf('/');
-	splitchr = "/";
-
-	if (isplit == -1)
-	{
-		isplit = object_value.indexOf('.');
-		splitchr = ".";
-	}
-		
-	if (isplit == -1)
-	{
-		isplit = object_value.indexOf('-');
-		splitchr = "-";
-	}
-
-	if (isplit == -1 || isplit == object_value.length)
-		return false;
-
-     var element1 = object_value.substring(0, isplit);
-     // check for yyyy-mm-dd format
-     if( element1.length == 4 )
-     {
-         sYear = object_value.substring(0, isplit);
-
-         isplit = object_value.indexOf(splitchr, isplit + 1);
-         if (isplit == -1 || (isplit + 1 ) == object_value.length)
-                 return false;
-
-         sMonth = object_value.substring((sYear.length + 1), isplit);
-         sDay = object_value.substring(isplit + 1);
-
-     }
-     else
-     {
-         sDay = object_value.substring(0, isplit);
-         isplit = object_value.indexOf(splitchr, isplit + 1);
-
-         if (isplit == -1 || (isplit + 1 ) == object_value.length)
-                 return false;
-
-         sMonth = object_value.substring((sDay.length + 1), isplit);
-         sYear = object_value.substring(isplit + 1);
-
-      }
-
-	if (!_CF_checkinteger(sMonth))
-		return false;
-	else
-	if (!_CF_checkrange(sMonth, 1, 12))
-		return false;
-	else
-	if (!_CF_checkinteger(sYear))
-		return false;
-	else
-	if (!_CF_checkrange(sYear, 0, null))
-		return false;
-	else
-	if (!_CF_checkinteger(sDay))
-		return false;
-	else
-	if (!_CF_checkday(sYear, sMonth, sDay))
-		return false;
-	else
-		return true;
+document.forms[_9][_a].value=_8;
+};
+_CF_hasValue=function(_b,_c,_d){
+if(_c=="TEXT"||_c=="FILE"||_c=="PASSWORD"||_c=="CFTEXTAREA"||_c=="TEXTAREA"||_c=="CFTEXTINPUT"||_c=="DATEFIELD"){
+if(_b.value.length==0){
+return false;
+}else{
+if(_d){
+str=_b.value.replace(/^\s+/,"").replace(/\s+$/,"");
+if(str.length==0){
+return false;
 }
-
-
-function _CF_checkday(checkYear, checkMonth, checkDay)
-{
-	maxDay = 31;
-
-	if (checkMonth == 4 || checkMonth == 6 ||
-		checkMonth == 9 || checkMonth == 11)
-		maxDay = 30;
-	else if (checkMonth == 2)
-	{
-		if (checkYear % 4 > 0)
-			maxDay =28;
-		else if (checkYear % 100 == 0 && checkYear % 400 > 0)
-			maxDay = 28;
-		else
-			maxDay = 29;
-	}
-
-	return _CF_checkrange(checkDay, 1, maxDay);
 }
-
-
-function _CF_checkinteger(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-	//remove numeric noise
-	object_value = object_value.replace(/[$£¥€,~+]?/g, '');
-
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-
-	var decimal_format = ".";
-	var check_char = object_value.indexOf(decimal_format);
-
-	if (check_char == -1)
-		return _CF_checknumber(object_value);
-	else
-		return false;
 }
-
-
-function _CF_numberrange(object_value, min_value, max_value, required)
-{
-    //trim whitespace before we validate
-    //object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-
-	if (min_value != null)
-	{
-		if (object_value < min_value)
-			return false;
-	}
-
-	if (max_value != null)
-	{
-		if (object_value > max_value)
-			return false;
-	}
-
-	return true;
+return true;
+}else{
+if(_c=="SELECT"){
+for(i=0;i<_b.length;i++){
+if(_b.options[i].selected){
+return true;
 }
-
-
-function _CF_checknumber(object_value, required)
-{
-	var start_format = " .+-0123456789";
-	var number_format = " .0123456789";
-	var check_char;
-	var decimal = false;
-	var trailing_blank = false;
-	var digits = false;
-
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-	//remove numeric noise
-	object_value = object_value.replace(/[$£¥€,~+]?/g, '');
-
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-
-
-	check_char = start_format.indexOf(object_value.charAt(0));
-
-	if (check_char == 1)
-		decimal = true;
-	else if (check_char < 1)
-		return false;
-
-	for (var i = 1; i < object_value.length; i++)
-	{
-		check_char = number_format.indexOf(object_value.charAt(i));
-		if (check_char < 0)
-			return false;
-		else if (check_char == 1)
-		{
-			if (decimal)
-				return false;
-			else
-				decimal = true;
-		}
-		else if (check_char == 0)
-		{
-			if (decimal || digits)	
-				trailing_blank = true;
-		}
-		else if (trailing_blank)
-			return false;
-		else
-			digits = true;
-	}	
-
-	return true
 }
-
-
-function _CF_checkrange(object_value, min_value, max_value, required)
-{
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-
-	if (!_CF_checknumber(object_value))
-		return false;
-	else
-		return (_CF_numberrange((eval(object_value)), min_value, max_value));
-
-	return true;
+return false;
+}else{
+if(_c=="SINGLE_VALUE_RADIO"||_c=="SINGLE_VALUE_CHECKBOX"){
+if(_b.checked){
+return true;
+}else{
+return false;
 }
-
-
-function _CF_checktime(object_value, required)
-{
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-    // replace the {t'..'} format around the timestamp if it exists
-    object_value = object_value = object_value.replace(/{t \'/, '').replace(/'}/, '');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-
-    var result = _CF_checkregex(object_value, /^(([0-1]?[0-9]|[2][1-4]):([0-5]?[0-9])(:[0-5]?[0-9])?).?([AP]M|[AP]m|[ap]m|[ap]M)?$/, required);
-	return result;
+}else{
+if(_c=="RADIO"||_c=="CHECKBOX"){
+if(_b.length==undefined&&_b.checked){
+return true;
+}else{
+for(i=0;i<_b.length;i++){
+if(_b[i].checked){
+return true;
 }
-
-/**
- * validate that the value is formatted as a telephone correctly
- * This pattern matches any US Telephone Number.
- * This regular expression excludes the first number, after the area code,from being 0 or 1;
- * it also allows an extension to be added where it does not have to be prefixed by 'x'.
- *
- * Matches: 
- * 617.219.2000 
- * 219-2000
- * (617)283-3599 x234
- * 1(222)333-4444
- * 1 (222) 333-4444
- * 222-333-4444
- * 1-222-333-4444
- * Non-Matches: 
- * 44-1344-458606
- * +44-1344-458606
- * +34-91-397-6611
- * 7-095-940-2000
- * +7-095-940-2000
- * +49-(0)-889-748-5516
-*/
-function _CF_checkphone(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	if (object_value.length == 0)
-		return true;		
-
-	return _CF_checkregex(object_value, /^(((1))?[ ,\-,\.]?([\\(]?([1-9][0-9]{2})[\\)]?))?[ ,\-,\.]?([^0-1]){1}([0-9]){2}[ ,\-,\.]?([0-9]){4}(( )((x){0,1}([0-9]){1,5}){0,1})?$/, required);
 }
-
-/**
- * validate that the value is formatted as a USA zipcode correctly
- *
- * This pattern will match any us zip code
- * matches: 12345, 12345-1234
- */
-function _CF_checkzip(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	return _CF_checkregex(object_value, /^([0-9]){5,5}$|(([0-9]){5,5}(-| ){1}([0-9]){4,4}$)/, required);
 }
-
-
-function _CF_checkcreditcard(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	if (object_value.length == 0)
-		return true;
-	var white_space = " -";
-	var creditcard_string="";
-	var check_char;
-
-	
-	for (var i = 0; i < object_value.length; i++)
-	{
-		check_char = white_space.indexOf(object_value.charAt(i));
-		if (check_char < 0)
-			creditcard_string += object_value.substring(i, (i + 1));
-	}	
-
-	if (creditcard_string.length < 13 || creditcard_string.length > 19)
-		return false;
-
-	if (creditcard_string.charAt(0) == "+")
-		return false;
-
-	if (!_CF_checkinteger(creditcard_string))
-		return false;
-
-	var doubledigit = creditcard_string.length % 2 == 1 ? false : true;
-	var checkdigit = 0;
-	var tempdigit;
-
-	for (var i = 0; i < creditcard_string.length; i++)
-	{
-		tempdigit = eval(creditcard_string.charAt(i));
-
-		if (doubledigit)
-		{
-			tempdigit *= 2;
-			checkdigit += (tempdigit % 10);
-
-			if ((tempdigit / 10) >= 1.0)
-				checkdigit++;
-
-			doubledigit = false;
-		}
-		else
-		{
-			checkdigit += tempdigit;
-			doubledigit = true;
-		}
-	}	
-
-	return (checkdigit % 10) == 0 ? true : false;
+return false;
+}else{
+if(_c=="CFTREE"){
+if(_b["value"].length>0){
+return true;
+}else{
+return false;
 }
-
-/**
- * validate that the value is formatted as a SSN# correctly
- *
- * this Pattern that the SSN number matches the different formats. (X = [0-9])
- * matches: XXX-XX-XXXX, XXX XX XXXX, 
- * non-match: XXXXXXXXX
- */
-function _CF_checkssn(object_value, required)
-{
-    //trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	return _CF_checkregex(object_value, /^[0-9]{3}(-| )[0-9]{2}(-| )[0-9]{4}$/, required);
+}else{
+if(_c=="RICHTEXT"){
+var _e=FCKeditorAPI.GetInstance(_b.id);
+var _f=_e.GetXHTML();
+if(_f.length==0){
+return false;
+}else{
+if(_d){
+str=_f.replace(/^\s+/,"").replace(/\s+$/,"");
+if(str.length==0){
+return false;
 }
-
-/**
- * validate that the value is formatted as an email address correctly
- *
- * this regex matches the majoriity of all email address.
- * example matches.
- * Matches:  [rick.jones@unit.army.mil], [john_doe@foobar.com], [foo99@foo.co.uk]  
- * Non-Matches:  [find_the_mistake.@foo.org], [.prefix.@some.net]
- *
- * _CF_checkURL mailto uses this same email regex - keep in sync.
- */
-function _CF_checkEmail(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-
-	//return _CF_checkregex(object_value, /^[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z]{2,7}$/);
-	//return _CF_checkregex(object_value, /^[a-zA-Z_0-9-]+(?:\.[a-zA-Z_0-9-]+)*@(?:[a-zA-Z_0-9-]+\.)+[a-zA-Z]{2,7}$/);
-	return _CF_checkregex(object_value, /^[a-zA-Z_0-9-'\+~]+(\.[a-zA-Z_0-9-'\+~]+)*@([a-zA-Z_0-9-]+\.)+[a-zA-Z]{2,7}$/, required);
 }
-
-/**
- * validate that the value is formatted correctly for a http/https/ftp url
- * This pattern will match http/https/ftp urls.
- *
- * Matches: http://www.mm.com/index.cfm
- *          HTTP://WWW.MM.COM
- *          http://www.mm.com/index.cfm?userid=1&name=mike+nimer
- *          http://www.mm.com/index.cfm/userid/1/name/mike+nimer - trick used by cf developers so search engines can parse their sites (search engines ignore query strings)
- *          ftp://www.mm.com/
- *          ftp://uname:pass@www.mm.com/
- *          mailto:email@address.com
- *          news:rec.gardening
- *          news:rec.gardening
- *          http://a/
- *			file://ftp.yoyodyne.com/pub/files/foobar.txt
- * Non-Matches: www.yahoo.com
- *              http:www.mm.com
- *
- * _CF_checkEmail - the mailto email check is the same as the _CF_checkEmail regex (keep in sync)
- */
-function _CF_checkURL(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	//return _CF_checkregex(object_value.toLowerCase(), /^((http|https|ftp|file)\:\/\/([a-zA-Z0-0]*:[a-zA-Z0-0]*(@))?[a-zA-Z0-9-\.]+(\.[a-zA-Z]{2,3})?(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9-\._\?\,\'\/\+&amp;%\$#\=~])*)|((mailto)\:[\w-]+(?:\.[\w-]+)*@(?:[\w-]+\.)+[a-zA-Z0-9]{2,7})|((news)\:[a-zA-Z0-9\.]*)$/);
-	return _CF_checkregex(object_value.toLowerCase(), /^((http|https|ftp|file)\:\/\/([a-zA-Z0-0]*:[a-zA-Z0-0]*(@))?[a-zA-Z0-9-\.]+(\.[a-zA-Z]{2,3})?(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9-\._\?\,\'\/\+&amp;%\$#\=~])*)|((mailto)\:[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,7})|((news)\:[a-zA-Z0-9\.]*)$/, required);
+return true;
 }
-
-/**
- * A string UUID value is required. A UUID is a string
- * of length 35 formatted as XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXXXXXX, where X is a
- * hexadecimal digit (0-9 or A-F).
- */
-function _CF_checkUUID(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	return _CF_checkregex(object_value, /[A-Fa-f0-9]{8,8}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{16,16}/, required);
+}else{
+return true;
 }
-/**
- * A string GUID value is required. A GUID is a string
- * of length 36 formatted as XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX, where X is a
- * hexadecimal digit (0-9 or A-F).
- */
-function _CF_checkGUID(object_value, required)
-{
-	//trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	return _CF_checkregex(object_value, /[A-Fa-f0-9]{8,8}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{12,12}/, required);
 }
-
-/**
- * checks CF boolean value
- * matches: true, false, 1, 0, yes, no
- */
-function _CF_checkBoolean(object_value, required)
-{	
-    //trim whitespace before we validate
-    object_value = object_value.replace(/^\s+/,'').replace(/\s+$/,'');
-
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	if( object_value.toUpperCase() == "TRUE" || object_value.toUpperCase() == "YES" || (_CF_checknumber(object_value) && object_value != "0")   )
-	{ 
-		return true; 
-	}else if( object_value.toUpperCase() == "FALSE" || object_value.toUpperCase() == "NO" || object_value == "0" ){
-		return true;
-	}else{
-		return false;
-	}
 }
-
-function _CF_setFormParam( strFormName, strParamName, strParamValue )
-{
-	var strObjName = "document['" + strFormName + "']['" + strParamName +"']";
-	var obj = eval( strObjName );
-	if( obj == undefined )
-	{
-	    return false;
-	}else{
-	    obj.value = strParamValue;
-	    return true;
-    }
 }
-
-
-function _CF_checkregex(object_value, regexPattern, required)
-{
-    if( required )
-    {
-        if( object_value.length == 0 )
-        {
-            return false;
-        }
-    }else{
-        if( object_value.length == 0 )
-        {
-            return true;
-        }
-    }
-
-	return regexPattern.test(object_value);
 }
-
+}
+};
+_CF_checkdate=function(_10,_11){
+_10=_10.replace(/^\s+/,"").replace(/\s+$/,"");
+_10=_10=_10.replace(/{d \'/,"").replace(/'}/,"");
+if(_11){
+if(_10.length==0){
+return false;
+}
+}else{
+if(_10.length==0){
+return true;
+}
+}
+if(_10.length==0){
+return true;
+}
+isplit=_10.indexOf("/");
+splitchr="/";
+if(isplit==-1){
+isplit=_10.indexOf(".");
+splitchr=".";
+}
+if(isplit==-1){
+isplit=_10.indexOf("-");
+splitchr="-";
+}
+if(isplit==-1||isplit==_10.length){
+return false;
+}
+var _12=_10.substring(0,isplit);
+if(_12.length==4){
+sYear=_10.substring(0,isplit);
+isplit=_10.indexOf(splitchr,isplit+1);
+if(isplit==-1||(isplit+1)==_10.length){
+return false;
+}
+sMonth=_10.substring((sYear.length+1),isplit);
+sDay=_10.substring(isplit+1);
+}else{
+sMonth=_10.substring(0,isplit);
+isplit=_10.indexOf(splitchr,isplit+1);
+if(isplit==-1||(isplit+1)==_10.length){
+return false;
+}
+sDay=_10.substring((sMonth.length+1),isplit);
+sYear=_10.substring(isplit+1);
+}
+if((sDay.length==0)||(sMonth.length==0)||(sYear.length==0)){
+return false;
+}
+if(!_CF_checkinteger(sMonth)){
+return false;
+}else{
+if(!_CF_checkrange(sMonth,1,12)){
+return false;
+}else{
+if(!_CF_checkinteger(sYear)){
+return false;
+}else{
+if(sYear.length!=1&&sYear.length!=2&&sYear.length!=4){
+return false;
+}else{
+if(!_CF_checkrange(sYear,0,9999)){
+return false;
+}else{
+if(!_CF_checkinteger(sDay)){
+return false;
+}else{
+if(!_CF_checkday(sYear,sMonth,sDay)){
+return false;
+}else{
+return true;
+}
+}
+}
+}
+}
+}
+}
+};
+_CF_checkeurodate=function(_13,_14){
+_13=_13.replace(/^\s+/,"").replace(/\s+$/,"");
+_13=_13=_13.replace(/{d \'/,"").replace(/'}/,"");
+if(_14){
+if(_13.length==0){
+return false;
+}
+}else{
+if(_13.length==0){
+return true;
+}
+}
+isplit=_13.indexOf("/");
+splitchr="/";
+if(isplit==-1){
+isplit=_13.indexOf(".");
+splitchr=".";
+}
+if(isplit==-1){
+isplit=_13.indexOf("-");
+splitchr="-";
+}
+if(isplit==-1||isplit==_13.length){
+return false;
+}
+var _15=_13.substring(0,isplit);
+if(_15.length==4){
+sYear=_13.substring(0,isplit);
+isplit=_13.indexOf(splitchr,isplit+1);
+if(isplit==-1||(isplit+1)==_13.length){
+return false;
+}
+sMonth=_13.substring((sYear.length+1),isplit);
+sDay=_13.substring(isplit+1);
+}else{
+sDay=_13.substring(0,isplit);
+isplit=_13.indexOf(splitchr,isplit+1);
+if(isplit==-1||(isplit+1)==_13.length){
+return false;
+}
+sMonth=_13.substring((sDay.length+1),isplit);
+sYear=_13.substring(isplit+1);
+}
+if(!_CF_checkinteger(sMonth)){
+return false;
+}else{
+if(!_CF_checkrange(sMonth,1,12)){
+return false;
+}else{
+if(!_CF_checkinteger(sYear)){
+return false;
+}else{
+if(!_CF_checkrange(sYear,0,null)){
+return false;
+}else{
+if(!_CF_checkinteger(sDay)){
+return false;
+}else{
+if(!_CF_checkday(sYear,sMonth,sDay)){
+return false;
+}else{
+return true;
+}
+}
+}
+}
+}
+}
+};
+_CF_checkday=function(_16,_17,_18){
+maxDay=31;
+if(_17==4||_17==6||_17==9||_17==11){
+maxDay=30;
+}else{
+if(_17==2){
+if(_16%4>0){
+maxDay=28;
+}else{
+if(_16%100==0&&_16%400>0){
+maxDay=28;
+}else{
+maxDay=29;
+}
+}
+}
+}
+return _CF_checkrange(_18,1,maxDay);
+};
+_CF_checkinteger=function(_19,_1a){
+_19=_19.replace(/^\s+/,"").replace(/\s+$/,"");
+_19=_19.replace(/[$£¥€,~+]?/g,"");
+if(_1a){
+if(_19.length==0){
+return false;
+}
+}else{
+if(_19.length==0){
+return true;
+}
+}
+var _1b=".";
+var _1c=_19.indexOf(_1b);
+if(_1c==-1){
+return _CF_checknumber(_19);
+}else{
+return false;
+}
+};
+_CF_numberrange=function(_1d,_1e,_1f,_20){
+if(_20){
+if(_1d.length==0){
+return false;
+}
+}else{
+if(_1d.length==0){
+return true;
+}
+}
+if(_1e!=null){
+if(_1d<_1e){
+return false;
+}
+}
+if(_1f!=null){
+if(_1d>_1f){
+return false;
+}
+}
+return true;
+};
+_CF_checknumber=function(_21,_22){
+var _23=" .+-0123456789";
+var _24=" .0123456789";
+var _25;
+var _26=false;
+var _27=false;
+var _28=false;
+_21=_21.replace(/^\s+/,"").replace(/\s+$/,"");
+_21=_21.replace(/[$£¥€,~+]?/g,"");
+if(_22){
+if(_21.length==0){
+return false;
+}
+}else{
+if(_21.length==0){
+return true;
+}
+}
+_25=_23.indexOf(_21.charAt(0));
+if(_25==1){
+_26=true;
+}else{
+if(_25<1){
+return false;
+}
+}
+for(var i=1;i<_21.length;i++){
+_25=_24.indexOf(_21.charAt(i));
+if(_25<0){
+return false;
+}else{
+if(_25==1){
+if(_26){
+return false;
+}else{
+_26=true;
+}
+}else{
+if(_25==0){
+if(_26||_28){
+_27=true;
+}
+}else{
+if(_27){
+return false;
+}else{
+_28=true;
+}
+}
+}
+}
+}
+return true;
+};
+_CF_checkrange=function(_2a,_2b,_2c,_2d){
+_2a=_2a.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_2d){
+if(_2a.length==0){
+return false;
+}
+}else{
+if(_2a.length==0){
+return true;
+}
+}
+if(!_CF_checknumber(_2a)){
+return false;
+}else{
+return (_CF_numberrange((eval(_2a)),_2b,_2c));
+}
+return true;
+};
+_CF_checktime=function(_2e,_2f){
+_2e=_2e.replace(/^\s+/,"").replace(/\s+$/,"");
+_2e=_2e.replace(/\s+:\s+/,":");
+_2e=_2e=_2e.replace(/{t \'/,"").replace(/'}/,"");
+if(_2f){
+if(_2e.length==0){
+return false;
+}
+}else{
+if(_2e.length==0){
+return true;
+}
+}
+var _30=_CF_checkregex(_2e,/^(([0-1]?[0-9]|[2][0-3]):([0-5]?[0-9])(:[0-5]?[0-9])?).?([AP]M|[AP]m|[ap]m|[ap]M)?$/,_2f);
+return _30;
+};
+_CF_checkphone=function(_31,_32){
+_31=_31.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_32){
+if(_31.length==0){
+return false;
+}
+}else{
+if(_31.length==0){
+return true;
+}
+}
+if(_31.length==0){
+return true;
+}
+return _CF_checkregex(_31,/^(((1))?[ ,\-,\.]?([\\(]?([1-9][0-9]{2})[\\)]?))?[ ,\-,\.]?([^0-1]){1}([0-9]){2}[ ,\-,\.]?([0-9]){4}(( )((x){0,1}([0-9]){1,5}){0,1})?$/,_32);
+};
+_CF_checkzip=function(_33,_34){
+_33=_33.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_34){
+if(_33.length==0){
+return false;
+}
+}else{
+if(_33.length==0){
+return true;
+}
+}
+return _CF_checkregex(_33,/^([0-9]){5,5}$|(([0-9]){5,5}(-| ){1}([0-9]){4,4}$)/,_34);
+};
+_CF_checkcreditcard=function(_35,_36){
+_35=_35.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_36){
+if(_35.length==0){
+return false;
+}
+}else{
+if(_35.length==0){
+return true;
+}
+}
+if(_35.length==0){
+return true;
+}
+var _37=" -";
+var _38="";
+var _39;
+for(var i=0;i<_35.length;i++){
+_39=_37.indexOf(_35.charAt(i));
+if(_39<0){
+_38+=_35.substring(i,(i+1));
+}
+}
+if(_38.length<13||_38.length>19){
+return false;
+}
+if(_38.charAt(0)=="+"){
+return false;
+}
+if(!_CF_checkinteger(_38)){
+return false;
+}
+var _3b=_38.length%2==1?false:true;
+var _3c=0;
+var _3d;
+for(var i=0;i<_38.length;i++){
+_3d=eval(_38.charAt(i));
+if(_3b){
+_3d*=2;
+_3c+=(_3d%10);
+if((_3d/10)>=1){
+_3c++;
+}
+_3b=false;
+}else{
+_3c+=_3d;
+_3b=true;
+}
+}
+return (_3c%10)==0?true:false;
+};
+_CF_checkssn=function(_3e,_3f){
+_3e=_3e.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_3f){
+if(_3e.length==0){
+return false;
+}
+}else{
+if(_3e.length==0){
+return true;
+}
+}
+return _CF_checkregex(_3e,/^[0-9]{3}(-| )[0-9]{2}(-| )[0-9]{4}$/,_3f);
+};
+_CF_checkEmail=function(_40,_41){
+_40=_40.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_41){
+if(_40.length==0){
+return false;
+}
+}else{
+if(_40.length==0){
+return true;
+}
+}
+return _CF_checkregex(_40,/^[a-zA-Z_0-9-'\+~]+(\.[a-zA-Z_0-9-'\+~]+)*@([a-zA-Z_0-9-]+\.)+[a-zA-Z]{2,7}$/,_41);
+};
+_CF_checkURL=function(_42,_43){
+_42=_42.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_43){
+if(_42.length==0){
+return false;
+}
+}else{
+if(_42.length==0){
+return true;
+}
+}
+return _CF_checkregex(_42.toLowerCase(),/^((http|https|ftp|file)\:\/\/([a-zA-Z0-0]*:[a-zA-Z0-0]*(@))?[a-zA-Z0-9-\.]+(\.[a-zA-Z]{2,3})?(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9-\._\?\,\'\/\+&amp;%\$#\=~])*)|((mailto)\:[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,7})|((news)\:[a-zA-Z0-9\.]*)$/,_43);
+};
+_CF_checkUUID=function(_44,_45){
+_44=_44.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_45){
+if(_44.length==0){
+return false;
+}
+}else{
+if(_44.length==0){
+return true;
+}
+}
+return _CF_checkregex(_44,/[A-Fa-f0-9]{8,8}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{16,16}/,_45);
+};
+_CF_checkGUID=function(_46,_47){
+_46=_46.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_47){
+if(_46.length==0){
+return false;
+}
+}else{
+if(_46.length==0){
+return true;
+}
+}
+return _CF_checkregex(_46,/[A-Fa-f0-9]{8,8}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{4,4}-[A-Fa-f0-9]{12,12}/,_47);
+};
+_CF_checkBoolean=function(_48,_49){
+_48=_48.replace(/^\s+/,"").replace(/\s+$/,"");
+if(_49){
+if(_48.length==0){
+return false;
+}
+}else{
+if(_48.length==0){
+return true;
+}
+}
+if(_48.toUpperCase()=="TRUE"||_48.toUpperCase()=="YES"||(_CF_checknumber(_48)&&_48!="0")){
+return true;
+}else{
+if(_48.toUpperCase()=="FALSE"||_48.toUpperCase()=="NO"||_48=="0"){
+return true;
+}else{
+return false;
+}
+}
+};
+_CF_setFormParam=function(_4a,_4b,_4c){
+var _4d="document['"+_4a+"']['"+_4b+"']";
+var obj=eval(_4d);
+if(obj==undefined){
+return false;
+}else{
+obj.value=_4c;
+return true;
+}
+};
+_CF_checkregex=function(_4f,_50,_51){
+if(_51){
+if(_4f.length==0){
+return false;
+}
+}else{
+if(_4f.length==0){
+return true;
+}
+}
+return _50.test(_4f);
+};

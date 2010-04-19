@@ -35,7 +35,7 @@ Vars.prototype.toString = function(pre) {
 	if(result.length > 0) result = result.substr(0, result.length-1);
 	return result;
 }
-function getSearch(wRef) {
+getSearch = function(wRef) {
 
 	var searchStr = '';
 	if(wRef.location.search.length > 1) {
@@ -47,7 +47,12 @@ function getSearch(wRef) {
 var lc_id = Math.floor(Math.random() * 100000).toString(16);
 if (this != top)
 {
-	top.Vars = Vars;
-	top.getSearch = getSearch;
-	top.lc_id = lc_id;
+        // Bug Number 66391. Added try catch block while setting the properties Windows.lc_id, Windows.getSearch and Windows.Vars to catch the permission denied exception.
+        try
+        {
+	        top.Vars = Vars;
+	        top.getSearch = getSearch;
+			top.lc_id = lc_id;
+        }  
+		catch(e){}
 }
