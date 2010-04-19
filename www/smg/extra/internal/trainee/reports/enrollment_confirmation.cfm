@@ -29,6 +29,7 @@ INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 INNER JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.citizen_country
 WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#">
 </cfquery>
+<cfdump var="#get_student#">
 
 <cfoutput query="get_student">
 <table width="100%" border="0">
