@@ -263,6 +263,8 @@
     
                         <li><a href="index.cfm?curdoc=tools/student-tours/index">Student Tours</a></li>
     
+    					<li><a href="index.cfm?curdoc=tools/verification_received">Verification Received List</a></li>
+    
                         <li><a href="index.cfm?curdoc=tools/smg_welcome_pictures">Welcome Pictures</a></li>
                     </ul>
                 </li>

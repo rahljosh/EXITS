@@ -34,6 +34,9 @@
 	// Store the initialized Host object in the Application scope
 	AppCFC.Insurance = CreateCFC("insurance").Init();
 
+	// Store the initialized Other object in the Application scope
+	AppCFC.LookUpTables = CreateCFC("lookUpTables").Init();
+
 	// Store the initialized Program object in the Application scope
 	AppCFC.pdfDoc = CreateCFC("pdfDoc").Init();
 
