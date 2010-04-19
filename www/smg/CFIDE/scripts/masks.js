@@ -1,321 +1,216 @@
-/*
- * Copyright (c) 1995-2005 Macromedia, Inc. All rights reserved. 
-*/
-	var KT_focusedEl = null;
+/*ADOBE SYSTEMS INCORPORATED
+Copyright 2007 Adobe Systems Incorporated
+All Rights Reserved.
 
-	/********** 
-	KT_validateSingle function
-		description:
-			Validates single character agains single mask component
-		params: 
-			ascchar: character
-				single character, to test if it is correct in the context of the mask character 
-			maskchar: character
-				single mask character, see below for meaning
-		returns: 
-			boolean
-	 **********/
-	function KT_validateSingle(ascchar, maskchar) {
-		var cchar = ascchar.charCodeAt(0);
-		switch (maskchar) {
-			case "9": //numeric
-				if (cchar < 58 && cchar > 47) {
-					return true;
-				}
-				break;
-			case "A": //letter
-				if ((cchar < 91 && cchar > 64) || (cchar < 123 && cchar > 96)) {
-					return true;
-				}
-				break;
-			case "X": //letter or numeric
-				if ((cchar < 91 && cchar > 64) || (cchar < 123 && cchar > 96) || (cchar < 58 && cchar > 47)) {
-					return true;
-				}
-				break;
-			case "?": //any character
-				return true;
-				break;
-			default:
-				return true;
-				break;
-		}
-	}
-
-	/********** 
-	KT_maskDefaultValue function
-		description:
-			Called with a special mask character, returns the default value for that type of mask
-		params:
-			maskchar: character
-				single mask character, see below for meaning
-		returns:
-			character
-	**********/
-	function KT_maskDefaultValue(maskchar) {
-		switch (maskchar) {
-			case "9": //numeric
-				return '0';
-				break;
-			case "A": //letter
-				return 'a';
-				break;
-			case "X": //letter or numeric
-				return '0';
-				break;
-			case "?": //any character
-				return '0';
-				break;
-			default:
-				return '0';
-				break;
-		}
-	}
-
-	/********** 
-	KT_isSpecialChar function
-		description:
-			Checks if the parameter is a special mask character
-		params:
-			ascchar: character
-				Special mask characters: 
-				9 - numeric
-				A - letters
-				X - letter or number
-				? - any character
-		returns:
-			boolean
-	**********/
-	function KT_isSpecialChar(ascchar) {
-		if (ascchar == '9' || ascchar == 'A' || ascchar == 'X' || ascchar == '?')  {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**********
-	mask_onValueChanged function
-		description:
-			Called when 
-				- the user types something in the input
-				- the input loses the focus
-			It validates the input's value against the input's mask
-		params: 
-			none
-		returns:
-			none
-	**********/
-	function mask_onValueChanged() {
-		if ((typeof window.getSelection == 'undefined' && typeof document.selection == 'undefined')) {
-			// if the current browser is not compatible, do nothing
-			return;
-		}
-		
-		if (KT_focusedEl == null || KT_focusedEl.mask == null || KT_focusedEl.mask == '') {
-			return;
-		}
-
-		var mask = KT_focusedEl.mask;
-		var val = KT_focusedEl.value;
-		var i = 0;
-		var moveCursor = false;
-
-		if (val == KT_focusedEl.oldText) {
-			// if the field content did not change since the last update, do nothing
-			return;
-		}
-		if (val.length > mask.length) {
-			// strip trailing characters if text length is bigger than mask length
-			val = val.substr(0, mask.length);
-			moveCursor = true;
-		}
-		for (; i < mask.length ; i++) {
-			if (val.charCodeAt(i).toString() != 'NaN') {
-				//if the char is inserted
-				if (KT_isSpecialChar(mask.charAt(i))) {
-					if (KT_validateSingle(val.charAt(i), mask.charAt(i))) {
-						//character is correct, go to next
-						continue;
-					} else {
-						//revert to the last known good value, increase index to break loop
-						val = KT_focusedEl.oldText;
-						i = mask.length;
-						break;
-					}
-				} else {
-					//normal character in the mask
-					if (val.charAt(i) != mask.charAt(i)) {
-						//if the character is different from the mask
-						if (i == val.length - 1) {
-							//append last character and move cursor to the end
-							var lastChar = val.substr(val.length -1, val.length);
-							val = val.substr(0, val.length -1) + mask.charAt(i) + lastChar;
-							moveCursor = true;
-							continue;
-						} else {
-							//revert to the last known good value, increase index to break loop
-							val = KT_focusedEl.oldText;
-							i = mask.length;
-						}
-						break;
-					}
-				}
-			} else {
-				//if the current char is not inserted
-				if (val.length < KT_focusedEl.oldText.length) {
-					//deleted character
-					break;
-				}
-				for (;i<mask.length;i++) {
-					if (!KT_isSpecialChar(mask.charAt(i))) {
-						//re-enter the mask characters if it has been deleted
-						val += mask.charAt(i);
-						moveCursor = true;
-					} else {
-						break;
-					}
-				}
-				break;
-			}
-		}
-		if (val.length > mask.length) {
-			// strip trailing characters if text length is bigger than mask length
-			val = val.substr(0, mask.length);
-			moveCursor = true;
-		}
-		if (KT_focusedEl.value != val) {
-			KT_focusedEl.value = val; //last calculated correct value
-		}
-		KT_focusedEl.oldText = val; //update so we can check on next character
-		if (moveCursor) {
-			// no need to move the cursor, it is automatically moved at the end of the sellection by IE and Mozilla
-		}
-	}
-
-	/********** 
-	mask_parseFirstTime function
-		description:
-			Called from mask_onSetFocus, only the first time ( when obj.mask is undefined)
-			Tries to parse the initial value into a valid format, with the following algorithm:
-			- normalizes the string adding non special mask characters if they do not exist
-			- it strips the mask of all non special characters
-			- rebuilds the string using the stripped mask
-			- compares the string with the stripped mask and changes the values if they are invalid
-			- rebuild the string and returns
-		params:
-			none
-		returns:
-			none
-	**********/
-	function mask_parseFirstTime(value, mask) {
-		var strippedmask = ''; var strippedvalue = '';
-		cond = 1;imask = 0; ival = 0;cnt = 0;
-
-		//NORMALIZE VALUE: add non special characters
-		while (cond == 1) {
-			cond = 1;
-			if (!KT_isSpecialChar(mask.charAt(imask))) {
-				if (value.charCodeAt(ival).toString() != 'NaN') {
-					if (mask.charAt(imask) == value.charAt(ival)) {
-						imask++;ival++;
-					} else {
-						value = value.substr(0, ival) + mask.charAt(imask) + value.substr(ival, value.length);
-						imask = 0; ival = 0; cond = 1;
-					}
-				} else {
-					value += KT_maskDefaultValue(mask.charAt(imask));
-				}
-			} else {
-				imask++;ival++;
-			}
-			if (imask >= mask.length || ival >= value.length) {
-				cond = 0;
-			}
-		}
-
-		//save only the special chars in a mask
-		for (i=0;i<mask.length;i++) {
-			if (KT_isSpecialChar(mask.charAt(i))) {
-				strippedmask += mask.charAt(i);
-				if (value.charCodeAt(i).toString() != 'NaN') {
-					strippedvalue += value.charAt(i);
-				} else {
-					strippedvalue += KT_maskDefaultValue(mask.charAt(i));
-				}
-			}
-		}
-
-		oldvalue = value; //save the old value for reference
-		value = strippedvalue;
-		var newvalue = '';
-
-		//rebuild the string removing invalid values and replacing them with defaults
-		for (i=0;i<strippedmask.length;i++) {
-				if (!KT_validateSingle(value.charAt(i), strippedmask.charAt(i))) {
-					newvalue += KT_maskDefaultValue(strippedmask.charAt(i));
-				} else {
-					newvalue += value.charAt(i);
-				}
-		}
-
-		//rebuild the value,by adding the initial non special mask characters
-		var toret = ''; var j = 0; //j holds the index in the stripped mask
-		for (i=0;i<mask.length;i++) {
-			if (KT_isSpecialChar(mask.charAt(i))) {
-				toret += newvalue.charAt(j++);
-			} else {
-				toret += mask.charAt(i);
-			}
-		}
-		return toret;
-	}
-
-	/********** 
-	mask_onSetFocus function
-		description:
-			Called when the input gets the focus
-			Saved the current input in a global variable and also the current value
-		params:
-			none
-		returns:
-			none
-	**********/
-	function mask_onSetFocus(obj, mask) {
-		if ((typeof window.getSelection == 'undefined' && typeof document.selection == 'undefined')) {
-			// if the current browser is not compatible, do nothing
-			return;
-		}
-		if (typeof obj.mask == 'undefined') {
-			ret = '';
-			if (obj.value != '') {
-				ret = mask_parseFirstTime(obj.value, mask);
-			}
-			obj.value = ret;
-			obj.mask = mask;
-		}
-		KT_focusedEl = obj; // store the current input object in a global variable
-		if (typeof KT_focusedEl.oldText == 'undefined') {
-			KT_focusedEl.oldText = obj.value; // save the input current value
-			mask_onValueChanged(); // validates the current input value
-		}
-	}
-
-	/********** 
-	mask_onKillFocus function
-		description:
-			Called when the input loses the focus
-			Verifies the input's value
-		params:
-			none
-		returns:
-			none
-	**********/
-	function mask_onKillFocus() {
-		if ((typeof window.getSelection == 'undefined' && typeof document.selection == 'undefined')) {
-			// if the current browser is not compatible, do nothing
-			return;
-		}
-		mask_onValueChanged(); // validates the current input value
-		KT_focusedEl = null;
-	}
+NOTICE:  Adobe permits you to use, modify, and distribute this file in accordance with the
+terms of the Adobe license agreement accompanying it.  If you have received this file from a
+source other than Adobe, then your use, modification, or distribution of it requires the prior
+written permission of Adobe.*/
+var KT_focusedEl=null;
+KT_validateSingle=function(_52,_53){
+var _54=_52.charCodeAt(0);
+switch(_53){
+case "9":
+if(_54<58&&_54>47){
+return true;
+}
+break;
+case "A":
+if((_54<91&&_54>64)||(_54<123&&_54>96)){
+return true;
+}
+break;
+case "X":
+if((_54<91&&_54>64)||(_54<123&&_54>96)||(_54<58&&_54>47)){
+return true;
+}
+break;
+case "?":
+return true;
+break;
+default:
+return true;
+break;
+}
+};
+KT_maskDefaultValue=function(_55){
+switch(_55){
+case "9":
+return "0";
+break;
+case "A":
+return "a";
+break;
+case "X":
+return "0";
+break;
+case "?":
+return "0";
+break;
+default:
+return "0";
+break;
+}
+};
+KT_isSpecialChar=function(_56){
+if(_56=="9"||_56=="A"||_56=="X"||_56=="?"){
+return true;
+}else{
+return false;
+}
+};
+mask_onValueChanged=function(){
+if((typeof window.getSelection=="undefined"&&typeof document.selection=="undefined")){
+return;
+}
+if(KT_focusedEl==null||KT_focusedEl.mask==null||KT_focusedEl.mask==""){
+return;
+}
+var _57=KT_focusedEl.mask;
+var val=KT_focusedEl.value;
+var i=0;
+var _5a=false;
+if(val==KT_focusedEl.oldText){
+return;
+}
+if(val.length>_57.length){
+val=val.substr(0,_57.length);
+_5a=true;
+}
+for(;i<_57.length;i++){
+if(val.charCodeAt(i).toString()!="NaN"){
+if(KT_isSpecialChar(_57.charAt(i))){
+if(KT_validateSingle(val.charAt(i),_57.charAt(i))){
+continue;
+}else{
+val=KT_focusedEl.oldText;
+i=_57.length;
+break;
+}
+}else{
+if(val.charAt(i)!=_57.charAt(i)){
+if(i==val.length-1){
+var _5b=val.substr(val.length-1,val.length);
+val=val.substr(0,val.length-1)+_57.charAt(i)+_5b;
+_5a=true;
+continue;
+}else{
+val=KT_focusedEl.oldText;
+i=_57.length;
+}
+break;
+}
+}
+}else{
+if(val.length<KT_focusedEl.oldText.length){
+break;
+}
+for(;i<_57.length;i++){
+if(!KT_isSpecialChar(_57.charAt(i))){
+val+=_57.charAt(i);
+_5a=true;
+}else{
+break;
+}
+}
+break;
+}
+}
+if(val.length>_57.length){
+val=val.substr(0,_57.length);
+_5a=true;
+}
+if(KT_focusedEl.value!=val){
+KT_focusedEl.value=val;
+}
+KT_focusedEl.oldText=val;
+if(_5a){
+}
+};
+mask_parseFirstTime=function(_5c,_5d){
+var _5e="";
+var _5f="";
+cond=1;
+imask=0;
+ival=0;
+cnt=0;
+while(cond==1){
+cond=1;
+if(!KT_isSpecialChar(_5d.charAt(imask))){
+if(_5c.charCodeAt(ival).toString()!="NaN"){
+if(_5d.charAt(imask)==_5c.charAt(ival)){
+imask++;
+ival++;
+}else{
+_5c=_5c.substr(0,ival)+_5d.charAt(imask)+_5c.substr(ival,_5c.length);
+imask=0;
+ival=0;
+cond=1;
+}
+}else{
+_5c+=KT_maskDefaultValue(_5d.charAt(imask));
+}
+}else{
+imask++;
+ival++;
+}
+if(imask>=_5d.length||ival>=_5c.length){
+cond=0;
+}
+}
+for(i=0;i<_5d.length;i++){
+if(KT_isSpecialChar(_5d.charAt(i))){
+_5e+=_5d.charAt(i);
+if(_5c.charCodeAt(i).toString()!="NaN"){
+_5f+=_5c.charAt(i);
+}else{
+_5f+=KT_maskDefaultValue(_5d.charAt(i));
+}
+}
+}
+oldvalue=_5c;
+_5c=_5f;
+var _60="";
+for(i=0;i<_5e.length;i++){
+if(!KT_validateSingle(_5c.charAt(i),_5e.charAt(i))){
+_60+=KT_maskDefaultValue(_5e.charAt(i));
+}else{
+_60+=_5c.charAt(i);
+}
+}
+var _61="";
+var j=0;
+for(i=0;i<_5d.length;i++){
+if(KT_isSpecialChar(_5d.charAt(i))){
+_61+=_60.charAt(j++);
+}else{
+_61+=_5d.charAt(i);
+}
+}
+return _61;
+};
+mask_onSetFocus=function(obj,_64){
+if((typeof window.getSelection=="undefined"&&typeof document.selection=="undefined")){
+return;
+}
+if(typeof obj.mask=="undefined"){
+ret="";
+if(obj.value!=""){
+ret=mask_parseFirstTime(obj.value,_64);
+}
+obj.value=ret;
+obj.mask=_64;
+}
+KT_focusedEl=obj;
+if(typeof KT_focusedEl.oldText=="undefined"){
+KT_focusedEl.oldText=obj.value;
+mask_onValueChanged();
+}
+};
+mask_onKillFocus=function(){
+if((typeof window.getSelection=="undefined"&&typeof document.selection=="undefined")){
+return;
+}
+mask_onValueChanged();
+KT_focusedEl=null;
+};

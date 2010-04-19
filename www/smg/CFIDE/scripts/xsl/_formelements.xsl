@@ -147,8 +147,8 @@ exclude-result-prefixes="xsi cf xsl xf html">
 			
 			<xsl:attribute name="value"><xsl:value-of select="xf:value/text()" /></xsl:attribute>
 
-			<!-- checked -->
-			<xsl:if test="//form/xf:model/xf:instance/cf:data/*[not(name() =  parent::*/parent::*/@id)]/text() = xf:value/text()">
+			<!-- checked? -->
+			<xsl:if test="//form/xf:model/xf:instance/cf:data/*[name() =  $id]/text() = xf:value/text()">
 				<xsl:attribute name="checked">checked</xsl:attribute>
 			</xsl:if>
 		</xsl:element>
