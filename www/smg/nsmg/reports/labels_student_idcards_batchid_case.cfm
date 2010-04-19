@@ -79,9 +79,9 @@
         </cfif>
     
         ORDER BY 
-            s.sevis_batchid, 
             u.businessname, 
-            s.firstname
+            s.firstname,
+            s.familyLastName       
     </cfquery>
     
 </cfsilent>
