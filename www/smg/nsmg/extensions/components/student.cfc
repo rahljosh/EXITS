@@ -10,10 +10,10 @@
 <cfcomponent 
 	displayname="student"
 	output="false" 
-	hint="A collection of functions for the company">
+	hint="A collection of functions for the student">
 
 
-	<!--- Return the initialized Company object --->
+	<!--- Return the initialized student object --->
 	<cffunction name="Init" access="public" returntype="student" output="false" hint="Returns the initialized student object">
 		
 		<cfscript>
@@ -51,6 +51,175 @@
 		   
 		<cfreturn qGetStudentByID>
 	</cffunction>
+
+
+	<cffunction name="getVerificationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
+    	<cfargument name="intRep" default="0" hint="International Representative is not required">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="receivedDate" default="" hint="Filter by verification received date">
+
+        <cfquery 
+			name="qGetVerificationList" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					s.studentID,
+                    s.firstName,
+                    s.middleName,
+                    s.familyLastName,
+                    s.sex,
+                    DATE_FORMAT(s.dob, '%m/%e/%Y') as dob,
+                    s.cityBirth,
+                    s.countryBirth,
+                    s.countryCitizen,
+                    s.countryResident,
+                    birth.countryName as birthCountry,
+                    citizen.countryName as citizenCountry,
+                    resident.countryName as residentCountry
+                FROM 
+                    smg_students s
+				INNER JOIN
+                	smg_programs p ON p.programID = s.programID
+                LEFT OUTER JOIN
+                	smg_countrylist birth ON birth.countryID = s.countryBirth
+				LEFT OUTER JOIN
+                	smg_countrylist citizen ON citizen.countryID = s.countryCitizen
+				LEFT OUTER JOIN
+                	smg_countrylist resident ON resident.countryID = s.countryResident
+                WHERE
+					ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+				<cfif VAL(ARGUMENTS.intRep)>
+                    AND
+                        s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+				<cfif VAL(ARGUMENTS.studentID)>
+                    AND
+                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                </cfif>
+				<cfif IsDate(ARGUMENTS.receivedDate)>
+                	AND
+                    	s.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.receivedDate#">
+				<cfelse>
+                	AND
+                    	s.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
+                </cfif>                                        
+		</cfquery>
+		   
+		<cfreturn qGetVerificationList>
+	</cffunction>
+
+
+	<cffunction name="getRemoteStudentByID" access="remote" returnFormat="json" output="false" hint="Returns a student in Json format">
+        <cfargument name="studentID" required="yes" hint="studentID is required">
+
+        <cfquery 
+			name="qGetRemoteStudentByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					s.studentID,
+                    s.firstName,
+                    s.middleName,
+                    s.familyLastName,
+                    s.sex,
+                    DATE_FORMAT(s.dob, '%m/%e/%Y') as dob,
+                    s.cityBirth,
+                    s.countryBirth,
+                    s.countryCitizen,
+                    s.countryResident
+                FROM 
+                    smg_students s
+                WHERE
+                    s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+		</cfquery>
+		   
+		<cfreturn qGetRemoteStudentByID>
+	</cffunction>
+
+
+	<cffunction name="updateRemoteStudentByID" access="remote" returntype="void" hint="Updates a student record.">
+        <cfargument name="studentID" required="yes" hint="studentID is required">
+        <cfargument name="firstName" required="yes" hint="firstName is required">
+        <cfargument name="middleName" required="yes" hint="middleName is required">
+        <cfargument name="familyLastName" required="yes" hint="familyLastName is required">
+        <cfargument name="sex" required="yes" hint="sex is required">
+        <cfargument name="dob" required="yes" hint="dob is required">
+        <cfargument name="cityBirth" required="yes" hint="cityBirth is required">
+        <cfargument name="countryBirth" required="yes" hint="countryBirth is required">
+        <cfargument name="countryCitizen" required="yes" hint="countryCitizen is required">
+        <cfargument name="countryResident" required="yes" hint="countryResident is required">
+
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+					smg_students
+				SET
+                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.firstName#">,
+                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.middleName#">,
+                    familyLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.familyLastName#">,
+                    sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sex#">,
+                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dob#">,
+                    cityBirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cityBirth#">,
+                    countryBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryBirth)#">,
+                    countryCitizen = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryCitizen)#">,
+                    countryResident = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryResident)#">
+                WHERE
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+		</cfquery>
+		   
+	</cffunction>
+
+
+	<!--- DELETE THIS ONE --->
+	<cffunction name="getVerificationList2" access="public" returntype="query" output="false" hint="Returns verification report list in Json format">
+    	<cfargument name="intRep" default="0" hint="International Representative is not required">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="receivedDate" default="" hint="Filter by verification received date">
+              
+        <cfquery 
+			name="qGetVerificationList" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					s.studentID,
+                    s.firstName,
+                    s.middleName,
+                    s.familyLastName,
+                    s.sex,
+                    s.dob,
+                    s.cityBirth,
+                    s.countryBirth,
+                    s.countryCitizen,
+                    s.countryResident,
+                    birth.countryName as birthCountry,
+                    citizen.countryName as citizenCountry,
+                    resident.countryName as residentCountry
+                FROM 
+                    smg_students s
+				INNER JOIN
+                	smg_programs p ON p.programID = s.programID
+                LEFT OUTER JOIN
+                	smg_countrylist birth ON birth.countryID = s.countryBirth
+				LEFT OUTER JOIN
+                	smg_countrylist citizen ON citizen.countryID = s.countryCitizen
+				LEFT OUTER JOIN
+                	smg_countrylist resident ON resident.countryID = s.countryResident
+                WHERE
+					ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">				
+				<cfif VAL(ARGUMENTS.intRep)>
+                    AND
+                        s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+				<cfif IsDate(ARGUMENTS.receivedDate)>
+                	AND
+                    	s.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.receivedDate#">
+				<cfelse>
+                	AND
+                    	s.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
+                </cfif>                                        
+				LIMIT 5                
+		</cfquery>
+		   
+		<cfreturn qGetVerificationList>
+	</cffunction>
+
 
 
 	<!--- ------------------------------------------------------------------------- ----
@@ -91,6 +260,7 @@
 		   
 		<cfreturn qGetFlightInformation>
 	</cffunction>
+
 
 	<cffunction name="updateFlightNotes" access="public" returntype="void" output="false" hint="Updates Flight Information Notes">
     	<cfargument name="studentID" hint="studentID is required">
@@ -860,7 +1030,7 @@
               	INNER JOIN
                 	smg_project_help ph ON ph.student_id = s.studentID                                    
           		INNER JOIN
-                	smg_project_help_activities pha ON pha.project_help_id = ph.id
+                	smg_project_help_activities pha ON pha.project_help_id = ph.id AND pha.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
           
                 WHERE
                     1 = 1
