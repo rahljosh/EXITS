@@ -48,21 +48,25 @@
 	
 	// Set a short name for the APPLICATION.PATH
 	AppPath = APPLICATION.PATH;
-	
+
+	// These are used in the PHP Application
+	AppPath.PHP = StructNew();
+	AppPath.PHP.base = "C:/websites/phpusa/";
+	AppPath.PHP.schools = AppPath.PHP.base & "newschools/";
+
 	// Getting error on querys/upload_logo.cfm. Getting full path including /query
 	// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
-	// Base Path eg. C:\websites\smg\nsmg\
-	AppPath.base = 'C:/websites/student-management/nsmg/';
+	AppPath.base = "C:/websites/student-management/nsmg/";
 	
-	AppPath.SmgURL = 'http://www.student-management.com/nsmg/';
+	AppPath.SmgURL = "http://www.student-management.com/nsmg/";
 	
 	AppPath.companyLogo = AppPath.base & "pics/logos/"; 
-	AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';	
+	AppPath.uploadedFiles = AppPath.base & "uploadedfiles/";	
 	
 	// These are inside uploadedFiles folder
 	AppPath.cbcXML = AppPath.uploadedFiles & "xml_files/gis/";
 	AppPath.newsMessage = AppPath.uploadedFiles & "news/";
-	AppPath.pdfDocs = AppPath.uploadedFiles & 'pdf_docs/';	
+	AppPath.pdfDocs = AppPath.uploadedFiles & "pdf_docs/";	
 	AppPath.sevis = AppPath.uploadedFiles & "sevis/";
 	AppPath.temp = AppPath.uploadedFiles & "temp/";	
 	AppPath.welcomePics = AppPath.uploadedFiles & "welcome_pics/";	
@@ -72,10 +76,10 @@
 	AppPath.onlineApp = StructNew();
 	
 	// URL Used on Upload/Delete Files
-	AppPath.onlineApp.URL = 'https://www.student-management.com/nsmg/student_app/';		
-	AppPath.onlineApp.reloadURL = 'https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm';
+	AppPath.onlineApp.URL = "https://www.student-management.com/nsmg/student_app/";		
+	AppPath.onlineApp.reloadURL = "https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm";
 	
-	AppPath.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
+	AppPath.onlineApp.uploadURL = "http://new.upload.student-management.com/";
 	AppPath.onlineApp.picture = AppPath.uploadedFiles & "web-students/";
 	AppPath.onlineApp.letters = AppPath.uploadedFiles & "letters/";
 	AppPath.onlineApp.studentLetter = AppPath.uploadedFiles & "letters/students/";
