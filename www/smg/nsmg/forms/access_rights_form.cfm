@@ -69,7 +69,7 @@
         <cfquery name="qGetRegions" datasource="#application.dsn#">
             SELECT 
                 r.regionid, 
-                CONVERT( CONCAT(regionname,' (',regionid,')') USING latin1) AS region
+                CONVERT( CONCAT(regionname,' (',r.regionid,')') USING latin1) AS region
             FROM 
                 smg_regions r
             INNER JOIN
