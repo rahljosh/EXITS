@@ -1,6 +1,6 @@
 <!----Upload File---->
 		<cffile action = "upload"
-				destination = "d:\websites\phpusa\newschools\"
+				destination = "#AppPath.PHP.schools#"
 				fileField = "form.school_pic"
 				nameConflict = "makeunique">
 
@@ -8,11 +8,11 @@
 		<!----Check Image Size--->
 <cffile	
 	action="Move" 
-	source="d:\websites\phpusa\newschools\#CFFILE.ServerFile#" 
-	destination="d:\websites\phpusa\newschools\#url.school#.#cffile.clientfileext#"
+	source="#AppPath.PHP.schools##CFFILE.ServerFile#" 
+	destination="#AppPath.PHP.schools##url.school#.#cffile.clientfileext#"
   > 
   <!----
-  <cffile action="delete" file="d:\websites\phpusa\newschools\#CFFILE.ServerFile#">
+  <cffile action="delete" file="#AppPath.PHP.schools##CFFILE.ServerFile#">
   ---->
 <div align = center>
 <h2>The picture was succesfully  uploaded. Close this window to continue entering information.</h2><br>
