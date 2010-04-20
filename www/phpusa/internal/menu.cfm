@@ -99,7 +99,9 @@
 		  --->
           <li><a href="index.cfm?curdoc=tools/progress_report_questions">PR Questions</a></li>
           <li><a href="index.cfm?curdoc=tools/programs">Programs</a></li>
+          <cfif client.userid eq 1>
            <li><a href="index.cfm?curdoc=forms/supervising_placement_payments">Rep Payments</a></li>
+          </cfif>
           <li><a href="index.cfm?curdoc=tools/returning_j1_students">Returning Students J1 to F1</a></li>
           <li><a href="index.cfm?curdoc=forms/update_alerts">System Messages</a></li>
           <li><a href="index.cfm?curdoc=reports/select_batch">Welcome Letter Batch</a></li>
