@@ -45,9 +45,7 @@ Total of: #qGetActiveStudents.recordCount#
         </tr>
     </cfloop>    
 </table>    
-<cfabort>
 
-<!---
 <cfloop query="qGetActiveStudents">
 	
 	<cfquery datasource="MySql">
@@ -64,7 +62,6 @@ Total of: #qGetActiveStudents.recordCount#
     </cfquery>
 
 </cfloop>
---->
 
 Done!
 
