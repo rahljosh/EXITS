@@ -94,7 +94,7 @@
                 </cfif>
 				<cfif CLIENT.companyID EQ 5>
                     AND
-                        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12"> )
+                        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
                 <cfelse>
                     AND
                         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">

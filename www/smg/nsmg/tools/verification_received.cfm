@@ -473,7 +473,7 @@
                     </cfloop>
                 </select>
             </td>                
-			<td><input name="send" type="submit" value="Submit" onClick="" /></td>
+			<td><input name="send" type="submit" value="Submit" onclick="getVerificationList();" /></td>
         </tr>            
     </table>
 
