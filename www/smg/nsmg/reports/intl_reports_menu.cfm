@@ -42,20 +42,29 @@ obj.checked = false; }
 					<tr><th colspan="2" bgcolor="e2efc7">Placement Reports & Flight Info</th></tr>
 					<tr align="left">
 						<TD>Program :</td>
-						<TD><select name="programid" multiple  size="5">
+						<TD><select name="programid" multiple  size="6">
 						<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td>
 					</tr>
 					<tr align="left">
 						<TD>Intl. Rep:</td>
 						<TD><select name="intrep" size="1">
-							<option value=0>All Intl. Reps</option>
+							<option value="0">All Intl. Reps</option>
 							<cfoutput query="get_intl_rep"><option value="#intrep#">#businessname#</option></cfoutput>
 							</select></td>
 					</tr>					
-					<tr><td colspan="2"><input type="checkbox" name="include_arrival" >&nbsp; Include Arrival Information</input></td></tr>
-					<tr><td colspan="2"><input type="checkbox" name="include_departure">&nbsp; Include Departure Information</input></td></tr>
-					<tr><td colspan="2"><input type="checkbox" name="send_email" onClick="copy_user.checked = false">&nbsp; Send automated emails to Intl. Agents.</input></td></tr>
-					<tr><td colspan="2"><input type="checkbox" name="copy_user" onClick="checkEmail(this)">&nbsp; I would like to receive a copy of the emails</input></td></tr>
+					<tr align="left">
+						<td>Flight Option:</td>
+						<td><select name="flightOption" size="1">
+							<option value="0">none</option>
+                                <option value="missingArrival">Missing Arrival Information</option>
+                                <option value="missingDeparture">Missing Departure Information</option>
+                            	<option value="receivedArrival">Received Arrival Information</option>
+                            	<option value="receivedDeparture">Received Departure Information</option>
+							</select>
+                        </td>
+					</tr>					                    
+					<tr><td colspan="2"><input type="checkbox" name="send_email" value="1" onClick="copy_user.checked = false">&nbsp; Send automated emails to Intl. Agents.</input></td></tr>
+					<tr><td colspan="2"><input type="checkbox" name="copy_user" value="1" onClick="checkEmail(this)">&nbsp; I would like to receive a copy of the emails</input></td></tr>
 					<tr><td colspan="2" align="center"><font color="FF6600">* Approved placements only.</font></td></tr>
 					<tr><td colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 				</table>
@@ -68,7 +77,7 @@ obj.checked = false; }
 					<tr align="left">
 						<TD>Program :</td>
 						<TD>
-                        	<cfselect name="programid" multiple  size="5">
+                        	<cfselect name="programid" multiple  size="6">
 								<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 							</cfselect>
                         </td>
