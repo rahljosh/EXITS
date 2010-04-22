@@ -385,7 +385,7 @@
                     <th><font size="-2"><b>Status</b></font></th>
             	</tr>
             	<tr bgcolor="##ACB9CD">
-                	<td colspan="11">The Aiport Arrival is: &nbsp; #qGetStudentInfo.airport_city# - #qGetStudentInfo.major_air_code#</td>
+                	<td colspan="11">The Airport Arrival is: &nbsp; #qGetStudentInfo.airport_city# - #qGetStudentInfo.major_air_code#</td>
                 </tr> 
 
 				<cfif NOT VAL(qGetArrival.recordcount) OR IsDefined('URL.add_arr')>
