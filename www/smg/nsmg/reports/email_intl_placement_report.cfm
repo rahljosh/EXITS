@@ -50,15 +50,12 @@
             h.familylastname as hostfamily,
             p.programname,
             u.businessName
-            
-            <!--- flight.studentID as FLIGHTSTUDETNID ---> 
-
         FROM 
         	smg_students s
 		INNER JOIN 
         	smg_users u ON s.intrep = u.userid
 		INNER JOIN 
-        	smg_programs p ON s.programID = p.programID
+        	smg_programs p ON s.programID = p.programID AND p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
 		INNER JOIN 
         	smg_hosts h ON s.hostid = h.hostid
 		LEFT JOIN 
@@ -80,32 +77,12 @@
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
             </cfcase>
-           
-		</cfswitch>        
-        
-        WHERE  
-            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">        
-        AND 
-            s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-        AND	
-            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
-		<cfif CLIENT.companyID EQ 5>
-            AND
-                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
-        <cfelse>
-            AND
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        </cfif>
-		<cfif VAL(FORM.intrep)>
-            AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-        </cfif>
 
-        <!--- Flight Option --->
-        <cfswitch expression="#FORM.flightOption#">
-           
         	<cfcase value="missingArrival">
-                AND 
-                	s.studentID NOT IN 
+            	LEFT OUTER JOIN	
+                	smg_flight_info flight ON flight.studentID = s.studentID 
+                    AND	
+                        s.studentID NOT IN
                     (
                     	SELECT 
                         	studentID
@@ -119,8 +96,10 @@
             </cfcase>
 
         	<cfcase value="missingDeparture">
-                AND 
-                	s.studentID NOT IN 
+            	LEFT OUTER JOIN	
+                	smg_flight_info flight ON flight.studentID = s.studentID 
+                    AND	
+                        s.studentID NOT IN
                     (
                     	SELECT 
                         	studentID
@@ -132,9 +111,24 @@
                         	studentID
                 	)
             </cfcase>
-            
+           
 		</cfswitch>        
         
+        WHERE  
+            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">        
+        AND 
+            s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+		<cfif CLIENT.companyID EQ 5>
+            AND
+                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+        <cfelse>
+            AND
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
+		<cfif VAL(FORM.intrep)>
+            AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+        </cfif>
+
         GROUP BY
         	s.studentID
         
@@ -165,7 +159,7 @@
                 <td align="center">
                     Program(s) Included in this Report:<br>
                     <cfloop query="qGetProgram">
-                        <b>#programname# &nbsp; (#programID#)</b><br>
+                        <b>#programname# &nbsp; (###programID#)</b><br>
                     </cfloop>
                 </td>
             </tr>
