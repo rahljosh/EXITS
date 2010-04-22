@@ -26,7 +26,8 @@
         s.sex, 
         s.dateapplication, 
         s.dob,
-		u.userid, 
+		s.schoolID,
+        u.userid, 
         u.businessname, 
         u.email, 
 		p.programid, 
@@ -36,33 +37,41 @@
 		countryname,
 		h.familylastname as hostfamily,
 		english.name as englishcamp, 
-		orientation.name as orientationcamp
+		orientation.name as orientationcamp,
+        fac.firstName as facFirstName,
+        fac.lastName as facLastName
 	FROM 
     	smg_students s
 	INNER JOIN 
     	smg_users u ON s.intrep = u.userid
 	INNER JOIN 
     	smg_programs p	ON s.programid = p.programid
-	LEFT JOIN 
+	LEFT OUTER JOIN 
     	smg_countrylist c ON s.countryresident = c.countryid
-	LEFT JOIN 
+	LEFT OUTER JOIN 
     	smg_regions r ON s.regionassigned = r.regionid 
-	LEFT JOIN 
+	LEFT OUTER JOIN 
     	smg_hosts h ON s.hostid = h.hostid		
-	LEFT JOIN 
+	LEFT OUTER JOIN 
     	smg_aypcamps english ON s.aypenglish = english.campid
-	LEFT JOIN 
+	LEFT OUTER JOIN 
     	smg_aypcamps orientation ON s.ayporientation = orientation.campid
-	WHERE
+	LEFT OUTER JOIN
+    	smg_users fac ON fac.userID = r.regionFacilitator
+    WHERE
+        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+    
         <cfif CLIENT.companyID EQ 5>
-	        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )        
+	        AND
+	            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )        
         <cfelse>
-	        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
+	        AND
+	            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
         </cfif>        
         
         <cfif form.active EQ 1> <!--- active --->
             AND 
-                s.active = '#form.active#'
+                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.active#">
         <cfelseif form.active EQ '0'> <!--- inactive --->
             AND 
                 canceldate IS NULL
@@ -71,16 +80,16 @@
         </cfif>  
         <cfif form.intrep NEQ 0>
             AND
-                s.intrep = #form.intrep#
+                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
         </cfif>
         <cfif form.status is 1>
             AND 
-                s.hostid != '0' 
+                s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
             AND 
-                s.host_fam_approved <= '4' <!--- placed --->
+                s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4"> <!--- placed --->
         <cfelseif form.status EQ 2>
             AND 
-                s.hostid = '0' <!--- unplaced --->
+                s.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> <!--- unplaced --->
         </cfif>
         <cfif form.preayp is 'all'>
             AND 
@@ -96,8 +105,6 @@
             AND 
                 s.ayporientation = orientation.campid
         </cfif>
-        AND	
-            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
     ORDER BY 
         u.businessname, 
         s.firstname, 
@@ -105,7 +112,9 @@
 </cfquery>  
 
 <table width='90%' cellpadding=6 cellspacing="0" align="center">
-<span class="application_section_header"><cfoutput>#companyshort.companyshort# -  Students per International Rep.</cfoutput></span>
+	<tr>
+    	<td><span class="application_section_header"><cfoutput>#companyshort.companyshort# -  Students per International Rep.</cfoutput></span></td>
+	</tr>        
 </table>
 <br>
 
@@ -133,34 +142,49 @@
 				   SELECT studentid
 				   FROM get_students
 				   WHERE intrep = #intrep#
-				 </cfquery>					
+				 </cfquery>
+                 
+                <Cfquery name="qSchoolDates" datasource="MySQL">
+                        SELECT year_begins
+                        FROM smg_school_dates
+                        INNER JOIN smg_programs p ON p.seasonid = smg_school_dates.seasonid
+                        WHERE schoolid = <cfqueryparam value="#get_students.schoolid#" cfsqltype="cf_sql_integer">
+                        AND p.programid = <cfqueryparam value="#get_students.programid#" cfsqltype="cf_sql_integer">
+                 </cfquery>
+                 					
 				<td width="25%" align="center">#get_total.recordcount#</td></tr>
 			</table>
 			<table width='90%' frame="below" cellpadding=6 cellspacing="0" align="center">
-				<tr><td width="6%" align="center"><b>ID</b></th>
-					<td width="25%"><b>Student</b></td>
+				<tr>
+                	<td width="6%" align="center"><b>ID</b></th>
+					<td width="18%"><b>Student</b></td>
 					<td width="8%" align="center"><b>Sex</b></td>
-					<td width="12" align="center"><b>DOB</b></td>
-					<td width="18%"><b>Country</b></td>
+					<td width="8%" align="center"><b>DOB</b></td>
+					<td width="12%"><b>Country</b></td>
 					<cfif form.status is 1>
-						<td width="16%"><b>Family</b></td>
+						<td width="12%"><b>Family</b></td>
 					<cfelse>
-						<td width="16%"><b>Region</b></td>
+						<td width="12%"><b>Region</b></td>
 					</cfif>			
-					<td width="15%"><b>Entry Date</b></td></tr>
+					<td width="16%"><b>Facilitator</b></td>
+					<td width="12%"><b>School Start Date</b></td>
+                    <td width="8%"><b>Entry Date</b></td>
+             </tr>
 			 <cfoutput>					
 				<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td align="center">#studentid#</td>
 					<td>#firstname# #familylastname#</td>
 					<td align="center">#sex#</td>
-					<td>#DateFormat(DOB, 'mm/dd/yyyy')#</td>
+					<td align="center">#DateFormat(DOB, 'mm/dd/yyyy')#</td>
 					<td>#countryname#</td>
 					<cfif form.status is 1>
 						<td>#hostfamily#</td>	
 					<cfelse>
 						<td>#regionname#</td>	
-					</cfif>					
-					<td>#DateFormat(dateapplication, 'mm/dd/yyyy')#</td></tr>							
+					</cfif>		
+                    <td>#facFirstName# #facLastName#</td>			
+					<td>#DateFormat(qSchoolDates.year_begins, 'mm/dd/yyyy')#</td>
+                    <td>#DateFormat(dateapplication, 'mm/dd/yyyy')#</td></tr>							
 			</cfoutput>	
 			</table><br>
 	</cfoutput><br>
