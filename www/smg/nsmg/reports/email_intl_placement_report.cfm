@@ -77,41 +77,7 @@
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
             </cfcase>
-
-        	<cfcase value="missingArrival">
-            	LEFT OUTER JOIN	
-                	smg_flight_info flight ON flight.studentID = s.studentID 
-                    AND	
-                        s.studentID NOT IN
-                    (
-                    	SELECT 
-                        	studentID
-                        FROM
-                        	smg_flight_info
-                        WHERE
-                			flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
-                		GROUP BY
-                        	studentID
-                	)
-            </cfcase>
-
-        	<cfcase value="missingDeparture">
-            	LEFT OUTER JOIN	
-                	smg_flight_info flight ON flight.studentID = s.studentID 
-                    AND	
-                        s.studentID NOT IN
-                    (
-                    	SELECT 
-                        	studentID
-                        FROM
-                        	smg_flight_info
-                        WHERE
-                			flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
-                		GROUP BY
-                        	studentID
-                	)
-            </cfcase>
-           
+			
 		</cfswitch>        
         
         WHERE  
@@ -129,6 +95,39 @@
             AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
         </cfif>
 
+        <!--- Flight Option --->
+        <cfswitch expression="#FORM.flightOption#">
+
+        	<cfcase value="missingArrival">
+                    AND NOT EXISTS	
+                    (
+                    	SELECT 
+                        	flight.studentID
+                        FROM
+                        	smg_flight_info flight
+                        WHERE
+							flight.studentID = s.studentID	
+                		AND
+                        	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                	)
+            </cfcase>
+
+        	<cfcase value="missingDeparture">
+                    AND NOT EXISTS	
+                    (
+                    	SELECT 
+                        	flight.studentID
+                        FROM
+                        	smg_flight_info flight
+                        WHERE
+							flight.studentID = s.studentID	
+						AND
+                			flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                	)
+            </cfcase>
+           
+		</cfswitch>        
+        
         GROUP BY
         	s.studentID
         
@@ -183,7 +182,7 @@
 </cfoutput>
 
 <cfoutput query="qGetStudentList" group="intRep">
-
+	
 	<cfset groupCount = 0>
 	    
 	<cfsavecontent variable="studentList">
@@ -205,7 +204,7 @@
                 <td width="12%" align="center"><b>Placement Date</b></td>
             </tr>
 			<!--- Loop over query --->    
-            <cfoutput>
+            <cfoutput>  
             	<cfset groupCount = groupCount + 1>
                 <tr bgcolor="#iif(groupCount MOD 2 ,DE("ededed") ,DE("white") )#">
                     <td align="center">###studentid#</td>
