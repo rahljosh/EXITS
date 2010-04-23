@@ -72,7 +72,7 @@ SELECT
 FROM 
 	smg_programs
 WHERE
-	companyID IN ('1,2,3,4,7,8,9,10,12')
+	companyID IN (1,2,3,4,7,8,9,10,12)
 ORDER BY 
 	companyid, 
 	startdate DESC
