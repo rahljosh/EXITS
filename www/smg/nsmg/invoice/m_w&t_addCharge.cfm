@@ -287,7 +287,7 @@ ORDER BY candidateid
                 <cfelse>
                 	<cfset programLength = #Int(progLengTest2)# + 1>
             </cfif>
-            <cfset insuranceCostPerWeek = 23 / 4>
+            <cfset insuranceCostPerWeek = 25 / 4>
             <cfset insuranceCost = Round(#insuranceCostPerWeek# * #programLength#)>
         </cfif>
         
