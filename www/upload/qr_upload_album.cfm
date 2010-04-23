@@ -25,7 +25,7 @@
 	</cfif>
 	  		  
 	<!--- check file size - 1mb limit --->
-	<cfset newfilesize = #file.FileSize# / 1024>
+	<cfset newfilesize = file.FileSize / 1024>
 	<cfif newfilesize GT 2048>  
 		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
 			<script language="JavaScript">
@@ -48,21 +48,14 @@
 			</script>
 		<cfabort>
 	</cfif>
-	
-	<!--- Resize Image Files to 800 width --->
-	<cfset filename = '#file.ServerFileName#'>
-	<cfset uploadedImage = cffile.serverfile>
-	<!--- Invoke image.cfc component --->
-	<cfset imageCFC = createObject("component","image") />
-	<!--- scaleX image to 1000px wide --->
-	<cfset scaleX800 = imageCFC.scaleX("", "#directory#/#uploadedImage#", "#directory#/new#uploadedImage#", 800)>
-	<!--- if file has been resized ---->
-	<cfif #FileExists("#directory#/new#filename#.#file.ServerFileExt#")#>
-		<!--- delete big file --->
-		<cffile action = "delete" file = "#directory#/#uploadedImage#">
-		<!--- rename new file --->
-		<cffile action="rename" source="#directory#/new#filename#.#file.ServerFileExt#" destination="#directory#/#filename#.#LCase(file.ServerFileExt)#" mode="777">
-	</cfif>
+
+	<cfscript>
+		// Invoke image.cfc component to resize image
+		imageCFC = createObject("component","image");
+		
+		//scaleX image to 1000px wide
+		scaleX800 = imageCFC.scaleX("", "#directory#/#CFFILE.serverfile#", "#directory#/#CFFILE.serverfile#", 800);
+	</cfscript>
 	
 	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN --->
 	<cflocation url="#AppPath.onlineApp.reloadURL#" addtoken="no">

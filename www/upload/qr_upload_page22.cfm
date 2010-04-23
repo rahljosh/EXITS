@@ -18,7 +18,7 @@
 	<cfset newfilesize = file.FileSize / 1024>
 	
 	<cfif newfilesize GT 2048>  
-        <cffile action = "delete" file = "#directory#/#cffile.serverfile#">
+        <cffile action = "delete" file = "#directory#/#CFFILE.serverfile#">
 		<cfoutput>
 			<script language="JavaScript">
                 <!-- 
@@ -32,11 +32,11 @@
 	
 	<!--- file type --->
     <cfif NOT ListFind("jpg,jpeg,gif,tif,tiff,png,pdf,doc", LCase(CFFILE.clientfileext))>
-		<cffile action = "delete" file = "#directory#/#cffile.serverfile#">
+		<cffile action = "delete" file = "#directory#/#CFFILE.serverfile#">
 		<cfoutput>
 			<script language="JavaScript">
 				<!-- 
-				alert("Unfortunately EXITS Online Application does not accept #cffile.clientfileext# files. \n EXITS only accepts files in the following formats: JPG, JPEG, GIF, TIF, PNG, PDF AND DOC. Please change the file type and try again.");
+				alert("Unfortunately EXITS Online Application does not accept #CFFILE.clientfileext# files. \n EXITS only accepts files in the following formats: JPG, JPEG, GIF, TIF, PNG, PDF AND DOC. Please change the file type and try again.");
 					location.replace("form_upload_page22.cfm?studentid=#form.studentid#");
 				-->
             </script>
@@ -44,26 +44,17 @@
 		<cfabort>
 	</cfif>
 `
-	<!--- Resize Image Files --->
-	<cfif ListFind("jpg,peg,gif,tif,tiff,png", LCase(cffile.clientfileext))> 
-		<cfset filename = file.ServerFileName>
-		<cfset uploadedImage = cffile.serverfile>
-	
-		<!--- Invoke image.cfc component --->
-		<cfset imageCFC = createObject("component","image") />
-			
-		<!--- scaleX image to 800px wide --->
-		<cfset scaleX800 = imageCFC.scaleX("", "#directory#/#uploadedImage#", "#directory#/new#uploadedImage#", 800)>
-	
-		<!--- if file has been resized ---->
-		<cfif FileExists("#directory#/new#filename#.#file.ServerFileExt#")>
-			<!--- delete old file --->
-			<cffile action = "delete" file = "#directory#/#uploadedImage#">
-
-			<!--- rename new file --->
-			<cffile action="rename" source="#directory#/new#filename#.#file.ServerFileExt#" destination="#directory#/#filename#.#file.ServerFileExt#" mode="777" attributes="normal" nameconflict="makeunique">
-		</cfif>
-	</cfif>
+	<cfscript>
+        //Resize Image Files
+        if ( ListFind("jpg,peg,gif,tif,tiff,png", LCase(CFFILE.clientfileext)) )  {
+        
+            // Invoke image.cfc component to resize image
+            imageCFC = createObject("component","image");
+            
+            // scaleX image to 1000px wide
+            scaleX1000 = imageCFC.scaleX("", "#directory#/#CFFILE.serverfile#", "#directory#/#CFFILE.serverfile#", 1000);
+        }
+    </cfscript>
 
 	<!--- Rename File - Lower Case, remove foreign accents, javascript safe and remove blank spaces --->
 	<cffile action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#LCase(SafeJavascript(CFFILE.ServerFile))#" mode="777" attributes="normal" nameconflict="makeunique">

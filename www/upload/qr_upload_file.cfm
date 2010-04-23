@@ -54,29 +54,26 @@
 
 <cfelse>
 
-	<!--- Resize Image Files --->
-    <cfif ListFind("jpg,peg,gif,tif,tiff,png", LCase(file.ServerFileExt))>
+	<!--- Make sure we delete an existing file for this student --->
+    <cfdirectory directory="#directory#" name="existingFile" filter="#FORM.studentid#.*">		
         
-        <cfscript>
-            // Invoke image.cfc component
+    <cfloop query="existingFile">
+       <cffile action="delete" file="#directory#/#existingFile.name#">
+    </cfloop>
+	<!--- End of Make sure we delete an existing file for this student --->
+
+	<cfscript>
+        //Resize Image Files
+        if ( ListFind("jpg,peg,gif,tif,tiff,png", LCase(cffile.clientfileext)) )  {
+			
+			// Invoke image.cfc component to resize image
             imageCFC = createObject("component","image");
             
             // scaleX image to 1000px wide
-            scaleX1000 = imageCFC.scaleX("", "#directory#/#CFFILE.serverfile#", "#directory#/new#CFFILE.serverfile#", 1000);
-        </cfscript>
-        
-        <!--- if file has been resized ---->
-        <cfif FileExists("#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#")>
-            
-            <!--- delete original file --->
-            <cffile action="delete" file="#directory#/#CFFILE.serverfile#">
-            
-            <!--- rename resized file --->
-            <cffile action="rename" source="#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#" destination="#directory#/#FORM.studentid#.#LCase(CFFILE.ServerFileExt)#" attributes="normal" mode="777">
-    
-        </cfif>
-    
-    </cfif>
+            scaleX1000 = imageCFC.scaleX("", "#directory#/#CFFILE.serverfile#", "#directory#/#CFFILE.serverfile#", 1000);
+			
+		}
+    </cfscript>
 
 	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#" mode="777" nameconflict="overwrite">
 
