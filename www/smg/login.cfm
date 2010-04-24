@@ -14,9 +14,11 @@ from smg_companies where url_ref = '#cgi.server_name#'
     <cfset client.companyname = 'EXIT Group'>
 </cfif><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><cfoutput>#client.companyname#</cfoutput></title>
+<title><cfoutput>#client.companyname#/cfoutput></title>
 <cfif client.companyid eq 11>
 <link href="exitsapp_images/WEP.css" rel="stylesheet" type="text/css" media="screen"/>
+<cfelseif client.companyid eq 1>
+<link href="exitsapp_images/ISE.css" rel="stylesheet" type="text/css" media="screen"/>
 <cfelse>
 <link href="exitsapp_images/STB.css" rel="stylesheet" type="text/css" media="screen"/>
 </cfif>
