@@ -27,7 +27,7 @@
 	SELECT 	
     	s.dateapplication, 
         s.active, 
-        s.ds2019_no, 
+        s.ds2019_no,
         s.firstname, 
         s.familylastname, 
         s.dob, 
@@ -56,12 +56,7 @@
     AND 
     	s.ds2019_no LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="N%">
     AND 
-    	(
-        <cfloop list="#form.batchid#" index='batch'>
-            s.sevis_batchid = #batch# 
-       		<cfif batch is #ListLast(form.batchid)#><Cfelse>or</cfif>
-    	</cfloop> 
-       	)
+    	s.sevis_batchid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.batchid#" list="yes"> )
 	ORDER BY 
     	s.sevis_batchid DESC, 
         u.businessname DESC, 
