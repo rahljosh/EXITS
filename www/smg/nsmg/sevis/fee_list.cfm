@@ -8,7 +8,7 @@
 
 <!-- get company info -->
 <cfquery name="get_company" datasource="MySql">
-	SELECT f.companyid, c.companyshort, datecreated
+	SELECT f.companyid, c.companyshort, c.companyshort_nocolor, datecreated
 	FROM smg_sevisfee f
 	INNER JOIN smg_companies c ON f.companyid = c.companyid
 	WHERE f.bulkid = #url.bulkid#
