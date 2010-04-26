@@ -26,10 +26,22 @@
 <body class="custom">
 <mango:Event name="beforeHtmlBodyStart" />
 <div id="container">
-
+	
+    <!--- Updating Blog Header - 04/22/2010 
 	<div id="masthead">
 		<h1><a href="<mango:Blog url />"><mango:Blog title /></a></h1>
 		<h3><mango:Blog tagline /></h3>
+	</div>
+	--->
+
+	<div id="masthead">
+		<h1>
+            <div id="header_img">
+                <a href="<mango:Blog url />">
+                    <img src="<mango:Blog skinurl />assets/images/header_<mangox:Random items='1.jpg,2.jpg,3.jpg,4.jpg'/>" width="770" height="140" alt="<mango:Blog title />" title="<mango:Blog title />" />
+                </a>                    
+            </div>
+        </h1>
 	</div>
 
 	<ul id="nav">
@@ -40,10 +52,13 @@
 			</mango:Page></mango:Pages>
 		<li class="rss"><a href="<mango:Blog rssurl />">RSS</a></li>
 	</ul>
-	
+
+	<!--- Updating Blog Header - 04/22/2010 
 	<div id="header_img">
 		<img src="<mango:Blog skinurl />assets/images/header_<mangox:Random items='1.jpg,2.jpg,3.jpg,4.jpg'/>" width="770" height="140" alt="<mango:Blog title />" title="<mango:Blog title />" />
 	</div>
+	--->
+    
 	<div id="content_box">
 	
 		<div id="content" class="posts">
