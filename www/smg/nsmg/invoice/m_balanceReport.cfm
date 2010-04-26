@@ -72,7 +72,9 @@ SELECT
 FROM 
 	smg_programs
 WHERE
-	companyID IN (1,2,3,4,7,8,9,10,12)
+	companyID IN (1,7,8,9,10,12)
+AND
+	type NOT IN (6,10,13,14,15,16,17,18,19,20,21)
 ORDER BY 
 	companyid, 
 	startdate DESC
