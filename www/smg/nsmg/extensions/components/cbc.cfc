@@ -38,11 +38,11 @@
 				BGCPassword = '';
 				BGCAccount = '';
 			}
-
+			
 			// There is nothing really to initiate, so just return this
 			return(this);
 		</cfscript>
-
+		
 	</cffunction>
 
 
@@ -1118,18 +1118,22 @@
 
 				// Get Company Information
 				qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
-				
+
 				if ( VAL(ARGUMENTS.hostID) ) {
 					setCBCType = 'Host';	
+					setCBCID = ' (###ARGUMENTS.hostID#)';
 				} else if ( VAL(ARGUMENTS.userID) ) {
 					setCBCType = 'User';	
+					setCBCID = ' (###ARGUMENTS.userID#)';
 				}
-            </cfscript>
-        
+
+            	emailSubject = 'Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+			</cfscript>
+        		
             <cfmail 
             	from="#qGetCompany.support_email#" 
                 to="#qGetCompany.gis_email#"
-                subject="Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# <cfif VAL(ARGUMENTS.userID)>(###ARGUMENTS.userID#)</cfif> <cfif VAL(ARGUMENTS.hostID)>(###ARGUMENTS.hostID#)</cfif>" 
+                subject="#emailSubject#" 
                 failto="#qGetCompany.support_email#"
                 type="html">
                 
