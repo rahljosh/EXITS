@@ -157,8 +157,7 @@
 	</div>
 
 	<div id="footer"><mango:Event name="afterFooterStart" />
-		<p><mango:Blog title /> &mdash; <a href="http://www.mangoblog.org" title="Mango Blog - A ColdFusion blog engine">Powered by Mango Blog</a> &mdash; Design by <a href="http://www.tubetorial.com">Chris Pearson</a> ported by <a href="http://www.asfusion.com">AsFusion</a></p>
-	<mango:Event name="beforeFooterEnd" />
+		<p><mango:Blog title /> <!--- &mdash; <a href="http://www.mangoblog.org" title="Mango Blog - A ColdFusion blog engine">Powered by Mango Blog</a> &mdash; Design by <a href="http://www.tubetorial.com">Chris Pearson</a> ported by <a href="http://www.asfusion.com">AsFusion</a></p> --->	<mango:Event name="beforeFooterEnd" />
 	</div>
 </div>
 <mango:Event name="beforeHtmlBodyEnd" />
