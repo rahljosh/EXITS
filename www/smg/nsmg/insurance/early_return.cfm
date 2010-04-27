@@ -1,96 +1,126 @@
 <!--- use cfsetting to block output of HTML outside of cfoutput tags --->
 <cfsetting enablecfoutputonly="Yes">
 
-<!--- get student info --->
-<cfquery name="get_students" datasource="MySQL">
-	SELECT s.firstname, s.familylastname, s.sex, s.dob, s.studentid,
-		 u.businessname, u.insurance_typeid,
-		 p.insurance_startdate, p.insurance_enddate,
-		 c.countrycode,
-		 co.orgcode,
-		 insu.insuranceid, insu.new_date
-	FROM 	smg_students s
-	INNER JOIN smg_users u 			ON u.userid = s.intrep  
-	INNER JOIN smg_programs p 		ON s.programid = p.programid
-	LEFT JOIN smg_countrylist c 	ON s.countryresident = c.countryid
-	INNER JOIN smg_companies co 	ON s.companyid = co.companyid
-	INNER JOIN smg_insurance insu ON s.studentid = insu.studentid	
-	WHERE s.companyid = #client.companyid# 
-		AND insu.sent_to_caremed is null
-		AND insu.transtype = 'early return'
-		<cfif form.programid NEQ 0>AND s.programid = '#form.programid#'</cfif>
-	ORDER BY u.businessname, s.firstname
-</cfquery>
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<!--- Param FORM Variables --->
+    <cfparam name="FORM.programID" default="">
+    <cfparam name="FORM.policyID" default="">
+    
+    <cfscript>
+		// Start Date must be Insurance End Date
+		setStartDate = '06/30/' & DateFormat(now(), "YYYY"); 
+		
+		// Get Students that needs to be insured
+		qGetStudents = APPCFC.INSURANCE.getStudentsReturnRecords(programID=FORM.programID, policyID=FORM.policyID);
+	
+		// Get Company Short
+		companyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
+		
+		// Get Policy Type
+		policyName = APPCFC.INSURANCE.getInsurancePolicies(insuTypeID=FORM.policyID).shortType;
+	
+		// Set XLS File Name
+		XLSFileName = '#companyShort#_EndDates_#policyName#_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
+    </cfscript>
+
+</cfsilent>
+
+<cfif NOT VAL(FORM.programID)>
+	Please select at least one program.
+	<cfabort>
+</cfif>
+
+<cfif NOT VAL(FORM.policyID)>
+	Please select a policy type.
+	<cfabort>
+</cfif>
+
+<cfif NOT VAL(qGetStudents.recordCount)>
+	There are no students that match your criteria at this time.
+	<cfabort>
+</cfif>
+
+<!--- use cfsetting to block output of HTML outside of cfoutput tags --->
+<cfsetting enablecfoutputonly="Yes">
 
 <!--- set content type --->
 <cfcontent type="application/msexcel">
 
-<!--- suggest default name for XLS file --->
-<<!--- "Content-Disposition" in cfheader also ensures 
-relatively correct Internet Explorer behavior. --->
-<cfheader name="Content-Disposition" value="attachment; filename=caremed_template.xls"> 
-
-<!--- <cfheader name="Content-Disposition"filename=caremed_template.xls">  Open in the Browser --->
+<!--- "Content-Disposition" in cfheader also ensures relatively correct Internet Explorer behavior. --->
+<cfheader name="Content-Disposition" value="attachment; filename=#XLSFileName#">
 
 <!--- Format data using cfoutput and a table. Excel converts the table to a spreadsheet.
 The cfoutput tags around the table tags force output of the HTML when using cfsetting enablecfoutputonly="Yes" --->
-
 <cfoutput>
-	<table border="1" cellpadding="3" cellspacing="0">
-	<tr>
-		<td>Organization Code</td>
-		<td>Policy Number</td>
-		<td>Transaction Type</td>
-		<td>Last Name</td>
-		<td>First Name</td>
-		<td>Birth Date</td>
-		<td>Gender</td>
-		<td>Departure Date</td>
-		<td>End Date</td>
-		<td>Country of Origin</td>
-		<td>Country of Destination</td>
-		<td>Program Type</td>
-	</tr>
-<cfloop query="get_students">
-	<cfquery name="get_previous" datasource="MySql">
-		SELECT max(insuranceid) as insuranceid
-		FROM smg_insurance
-		WHERE studentid = '#get_students.studentid#' AND smg_insurance.sent_to_caremed IS NOT NULL
-	</cfquery>
-	<cfquery name="insurance" datasource="MySql">
-		SELECT insuranceid, firstname, lastname, sex, dob, country_code, new_date, end_date, org_code, policy_code
-		FROM smg_insurance
-		WHERE smg_insurance.insuranceid = '#get_previous.insuranceid#'
-	</cfquery>
-	<tr>
-		<td>#orgcode#</td>
-		<td>#insurance.policy_code#</td>
-		<td>Early Return</td>
-		<td>#familylastname#</td>
-		<td>#FirstName#</td>
-		<td>#DateFormat(dob, 'dd/mmm/yyyy')#</td>
-		<td>#sex#</td>
-		<td>#DateFormat(new_date, 'dd/mmm/yyyy')#</td>
-		<td>#DateFormat(insurance.end_date, 'dd/mmm/yyyy')#</td>
-		<td>#countrycode#</td>
-		<td>US</td>
-		<td>AYP</td>
-	</tr>
-	<!--- UPDATE INSURANCE HISTORY --->
-	<cfquery name="update_students" datasource="MySQL">  
-	  UPDATE smg_insurance
-	  SET  firstname = '#firstname#',
-	  	   lastname = '#familylastname#',
-		   sex = '#sex#',
-		   dob = #CreateODBCDate(dob)#,
-		   country_code = '#countrycode#',
-		   end_date = #CreateODBCDate(insurance.end_date)#,
-	  	   org_code = '#orgcode#',
-		   policy_code = '#insurance.policy_code#',
-		   excel_spreadsheet = '1'
- 	  WHERE insuranceid = #insuranceid#
-	  LIMIT 1 
-	</cfquery>	
-</cfloop>
-	</table>
+
+    <table border="1" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">
+        <tr>
+            <td colspan="6" style="font-size:18pt; font-weight:bold; text-align:center; border:none;">
+            	Enrollment Sheet         
+            </td>
+            <td style="font-size:11pt; text-align:right;  border:none;">
+            	eSecutive                
+            </td>
+        </tr>
+        <tr>
+            <td colspan="7" style="background-color:##CCCCCC; border:none;">&nbsp;</td>
+        </tr>
+        <tr>
+            <!--- <td style="width:200px; text-align:left; font-weight:bold;">Student</td> --->
+            <td style="width:200px; text-align:left; font-weight:bold;">Last Name</td>
+            <td style="width:200px; text-align:left; font-weight:bold;">First Name</td>
+            <td style="width:100px; text-align:center; font-weight:bold;">Date of Birth</td>
+            <td style="width:80px; text-align:center; font-weight:bold;">Start Date</td>
+            <td style="width:80px; text-align:center; font-weight:bold;">End Date</td>
+            <td style="width:1px;">&nbsp;</td>
+            <td style="width:80px; text-align:center; font-weight:bold;">Days</td>
+        </tr>
+        
+        <cfloop query="qGetStudents">
+      		
+            <cfif qGetStudents.dep_date NEQ setStartDate AND qGetStudents.dep_date LTE setStartDate> <!--- Do not display extensions --->
+            
+                <tr>
+                    <!--- <td>#qGetStudents.studentID#</td> --->
+                    <td>#qGetStudents.familyLastName#</td>
+                    <td>#qGetStudents.firstName#</td>
+                    <td>#DateFormat(qGetStudents.dob, 'dd/mmm/yyyy')#</td>
+                    <td>#DateFormat(setStartDate, 'dd/mmm/yyyy')#</td>
+                    <td>
+                        <cfif IsDate(qGetStudents.dep_date)>
+                            #DateFormat(qGetStudents.dep_date, 'dd/mmm/yyyy')#
+                        <cfelse>
+                            Missing
+                        </cfif>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <cfif IsDate(setStartDate) AND IsDate(qGetStudents.enddate)>
+                            #DateDiff("d", qGetStudents.dep_date, setStartDate)#
+                        </cfif>             
+                    </td>                                
+                </tr>
+    
+                <cfif LEN(qGetStudents.policycode) AND IsDate(qGetStudents.dep_date)>
+                    
+                    <cfscript>
+                        // Update Insurace Record and Insert History
+                        APPCFC.INSURANCE.insertInsuranceHistory(
+                            studentID=qGetStudents.studentID,
+                            type="R",
+                            startDate=setStartDate,
+                            endDate=qGetStudents.enddate,
+                            fileName=XLSFileName
+                        );				
+                    </cfscript>
+        
+                </cfif>
+                
+			</cfif>
+            
+      </cfloop>
+</table>
+
 </cfoutput> 

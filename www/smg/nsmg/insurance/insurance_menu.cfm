@@ -17,7 +17,7 @@
     
 	<cfscript>
 		// Get Programs
-		qGetPrograms = APPCFC.PROGRAM.getPrograms(companyID=CLIENT.companyID, dateActive=1);
+		qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
 		
 		//Get Insurance Policies
 		qGetInsurancePolicies = APPCFC.INSURANCE.getInsurancePolicies(provider="global");
@@ -50,7 +50,7 @@
     <tr valign="middle" height="24">
         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
         <td width="26" background="pics/header_background.gif"><img src="pics/students.gif"></td>
-        <td background="pics/header_background.gif"><h2>Caremed Insurance - Excel files and Reports</h2></td>
+        <td background="pics/header_background.gif"><h2>Insurance - Excel files and Reports</h2></td>
         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
     </tr>
 </table>
@@ -70,7 +70,7 @@
                     <td width="50%" valign="top">
                         <form action="insurance/new_transaction_programID.cfm" method="POST">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">New Transaction - Based on Flight Information</th></tr>
+                                <tr><th colspan="2" bgcolor="##e2efc7">New Transaction - Based on Flight Arrival Information</th></tr>
                                 <tr align="left">
                                     <td>Program :</td>
                                     <td>
@@ -147,6 +147,50 @@
             
             <br><br>
 			
+            <!--- EARLY RETURN HEADER --->
+            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
+                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Early Return</th></tr>
+                <tr><td colspan="2" align="center"><font size="-2">According to Flight Departure Info</font></td></tr>
+            </table>
+            
+            <table cellpadding="6" cellspacing="0" align="center" width="96%">
+                <tr>
+                    <td width="50%" valign="top">
+                        <cfform action="?curdoc=insurance/early_return" method="POST">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                                <tr><th colspan="2" bgcolor="##e2efc7">Early Return</th></tr>
+                                <tr align="left">
+                                    <td>Program :</td>
+                                    <td>
+                                    	<select name="programID" size="6" multiple>
+                                            <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td>Policy Type :</td>
+                                    <td>
+                                        <select name="policyID">
+                                            <option value="0"></option>
+                                            <cfloop query="qGetInsurancePolicies">
+                                                <option value="#insuTypeID#">#qGetInsurancePolicies.type#</option>
+                                            </cfloop>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="2" align="center">&nbsp;</td></tr>					
+                                <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
+                            </table>
+                        </cfform>
+                    </td>
+                    <td width="50%" valign="top">&nbsp;
+                        
+                    </td>
+                </tr>
+            </table>
+            
+            <br><br>
+            
             <!--- Need to be re-done 01/26/2010 --->
             
             <!---
@@ -243,52 +287,7 @@
                 </td>
             </tr>
             </table><br><br>
-        
-            <!--- EARLY RETURN HEADER ---><!--- EARLY RETURN - FIRST ROW --->
-            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-            <tr></tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Early Return</th></tr>
-            <tr><td colspan="2" align="center"><font size="-2">According to Flight Departure Info</font></td></tr>
-            </table>
-            
-            <table cellpadding="6" cellspacing="0" align="center" width="96%">
-            <tr>
-                <td width="50%" valign="top">
-                <cfform action="?curdoc=insurance/early_return" method="POST">
-                    <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Early Return</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
-                                </select>
-                            </td></tr>
-                        <tr><td colspan="2" align="center">&nbsp;</td></tr>					
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
-                    </table>
-                    </cfform>
-                </td>
-                <td width="50%" valign="top">
-                <cfform action="?curdoc=insurance/early_return_update" method="POST"> 
-                    <table class="nav_bar"  cellpadding="6" cellspacing="0" align="right" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Update Early Return Records</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=1></option>
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
-                                </select></td></tr>
-                        <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
-                    </table>
-                    </cfform>
-                </td>
-            </tr>
-            </table><br><br>
-        
+                
             
             <!--- EXTENSION HEADER ---><!--- EXTENSION - FIRST ROW --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
