@@ -117,6 +117,13 @@
                     	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 	AND 
                     	s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
+					<cfif CLIENT.companyID EQ 5>
+                        AND          
+                            s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                    <cfelse>
+                        AND          
+                            s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+                    </cfif>
             INNER JOIN 
                 smg_users u ON u.userid = s.intrep 
                     AND 
@@ -147,7 +154,6 @@
     
 		<cfreturn qGetStudentsToInsure>
 	</cffunction>
-
 
 
 	<cffunction name="getStudentsToInsureNoFlight" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
@@ -208,6 +214,71 @@
 	</cffunction>
 
 
+	<cffunction name="getStudentsReturnRecords" access="public" returntype="query" output="false" hint="Returns students list with depature flight information">
+        <cfargument name="programID" hint="List of program IDs. Required.">
+        <cfargument name="PolicyID" hint="Policy ID required">
+              
+        <cfquery 
+        	name="qGetStudentsReturnRecords" 
+            datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                    s.studentID, 
+                    s.firstname, 
+                    s.familyLastName, 
+                    s.dob, 
+                    MIN(fi.dep_date) as dep_date,            
+                    it.type,  
+                    ic.policycode, 
+                    p.startDate,
+                    p.endDate,
+                    p.insurance_startdate, 
+                    p.insurance_enddate
+                FROM
+                    smg_flight_info fi
+                INNER JOIN
+                    smg_students s ON fi.studentID = s.studentID 
+                        AND
+                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        AND 
+                            s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+						<cfif CLIENT.companyID EQ 5>
+                            AND          
+                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                        <cfelse>
+                            AND          
+                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+                        </cfif>
+                INNER JOIN 
+                    smg_users u ON u.userid = s.intrep 
+                        AND 
+                            u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
+                INNER JOIN
+                    smg_insurance_type it ON it.insutypeid = u.insurance_typeid
+                INNER JOIN 
+                    smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
+                INNER JOIN  
+                    smg_programs p ON p.programID = s.programID
+                LEFT OUTER JOIN 
+                    smg_insurance_batch ib ON ib.studentID = fi.studentID 
+                        AND 
+                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="R">
+                WHERE 
+                    fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                AND
+                    ib.studentID IS NULL
+                    
+                GROUP BY 
+                    fi.studentID
+                ORDER BY 
+                    u.businessname, 
+                    s.firstname
+            </cfquery>
+        
+        <cfreturn qGetStudentsReturnRecords> 
+           
+	</cffunction>
+
+
 	<cffunction name="insertInsuranceHistory" access="public" returntype="void" output="false" hint="Sets student insurance date">
         <cfargument name="studentID" type="numeric" hint="studentID is required">
         <cfargument name="type" hint="type is required">
@@ -238,6 +309,7 @@
         </cfquery>
            
 	</cffunction>
-
+    
+    
 
 </cfcomponent>
