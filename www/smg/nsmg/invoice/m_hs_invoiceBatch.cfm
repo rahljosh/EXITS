@@ -137,6 +137,8 @@ smg_charges
 		ss.studentid,
 		ss.intrep,
 		ss.programid,
+		ss.countrybirth,
+		ss.countryresident,
 		ss.countrycitizen,
 		ss.dateassigned,
 		ss.regionassigned,
@@ -355,7 +357,7 @@ smg_charges
                 <cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
                    
                     <!--- US citizens country code is 232 don't pay sevis--->
-                    <cfif getHSstud.accepts_sevis_fee EQ 1 AND getHSstud.countrycitizen NEQ 232>
+                    <cfif getHSstud.accepts_sevis_fee EQ 1 AND (getHSstud.countrybirth NEQ 232 OR getHSstud.countryresident NEQ 232 OR getHSstud.countrycitizen NEQ 232)>
                         <cfquery name="insertSevis" datasource="MySQL">
                         INSERT INTO smg_charges
                             (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
