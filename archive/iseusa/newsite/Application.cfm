@@ -1,1 +1,0 @@
-<cfapplication name="external_ise" clientmanagement="yes" setclientcookies="yes" setdomaincookies="yes" sessiontimeout="#CreateTimeSpan(0,0,40,1)#">

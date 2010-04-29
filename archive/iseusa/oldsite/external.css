@@ -1,0 +1,109 @@
+P  {
+	font-family : sans-serif;
+	font-weight : normal;
+	font-style : normal;
+	color : Black;
+}
+
+BODY {
+	margin : 0px 0 0 0;
+	margin-bottom : 0;
+	background-color : #CACED8;
+	font-family : Arial, Helvetica, sans-serif;
+	
+}
+A:link  {
+	color :#5564B5 ;
+	text-decoration : underline;
+}
+
+A:visited  {
+	color : #cc0000;
+	text-decoration : underline;
+
+}
+
+A:hover  {
+	color : #93A0B2;
+	text-decoration : none;
+}
+
+ .cap{ 
+ 	text-transform: uppercase;
+  }
+  
+  .u{
+	text-decoration : underline;
+}
+
+.site-header{
+	font-size:20;
+	color: white;
+	font-style:normal;
+	font-family: Arial;
+	text-align : center;
+	
+}
+.page-title{
+	font-size:20;
+	color: black;
+	font-style:normal;
+	font-family: Arial;
+	text-align : right;
+	
+}
+.title{ 
+	font-size:20;
+	color: black;
+	font-style:normal;
+	font-family: Arial;
+	text-align:center;
+	
+}
+ .white{
+	color: white;
+	font-size : x-small;
+}
+  
+  .sub-title{ 
+  		font-size:16;
+		color: white;
+		font-style:normal;
+		font-family: Arial;
+		font-style: italic;
+   }
+   .white_menu{
+	color : White;
+	
+}
+
+.menu{ 
+	font-size:small;
+ }
+ 
+ .button_text{
+	font-weight : bold;
+	text-align : center;
+	font-size : 18;
+}
+.question{
+	font-style : italic;
+	font : bold;
+}
+
+.1pxborder{ 
+	border: 1px solid black;
+ }
+ 
+.5pxborder{ 
+	border: 5px solid black;
+ }
+ 
+ .1pxborderspace{
+	border: 2px solid black;
+	letter-spacing : 5px;
+	font-style : normal;
+	font-size : x-large;
+}
+ 
+ .page-break {page-break-after: always}
