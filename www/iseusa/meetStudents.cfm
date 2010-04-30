@@ -198,7 +198,7 @@
                     Password: #qCheckAccount.password#<br /><br />
                     <!---
                     *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
-                    <a href="http://www.iseusa.com/account_info">http://www.iseusa.com/account_info</a>.				
+                    <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
                     <br /><br />
                     --->
                     Best Regards-<br />
@@ -268,7 +268,7 @@
                     Password: #setPassword#<br />
                     <!---
                     *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
-                    <a href="http://www.iseusa.com/account_info">http://www.iseusa.com/account_info</a>.				
+                    <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
                     <br /><br />
                     --->
                     Best Regards-<br />

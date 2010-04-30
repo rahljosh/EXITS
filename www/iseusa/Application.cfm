@@ -11,6 +11,9 @@
     <cfparam name="CLIENT.email" default="">  
 
 	<cfscript>
+		// Site URL
+		APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
+		
 		/***** Create APPLICATION.EMAIL structure *****/
 		APPLICATION.EMAIL = StructNew();		
 	
