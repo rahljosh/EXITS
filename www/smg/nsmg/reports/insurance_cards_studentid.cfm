@@ -3,6 +3,7 @@
 	
     <!--- Param Form Variables --->
     <cfparam name="FORM.intRep" default="0">
+    <cfparam name="FORM.programID" default="">
     <cfparam name="FORM.insurance_typeID" default="0">
     <cfparam name="FORM.id1" default="0">
     <cfparam name="FORM.id2" default="0">
@@ -34,6 +35,19 @@
         WHERE 
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 
+		<cfif CLIENT.companyID EQ 5>
+           AND 
+              s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+        <cfelse>
+           AND 
+              s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+        </cfif>
+
+        <cfif LEN(FORM.programID)>
+        	AND
+            	s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+        </cfif>
+        
         <cfif VAL(FORM.intrep)>
             AND 
                 s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
@@ -118,11 +132,6 @@
 
 <body>
 
-<cfif NOT VAL(FORM.id1) OR NOT VAL(FORM.id2) OR>
-	Please entera range of ids.
-	<cfabort>
-</cfif>
-			
 <!--- The table consists has two columns, two labels. To identify where to place each, we need to maintain a column counter. --->
 
 <cfoutput query="qGetStudents">

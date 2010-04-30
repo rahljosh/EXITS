@@ -172,7 +172,7 @@
             FROM 	
                 smg_users
             WHERE	
-                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.arearepid#">
+                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.arearepid)#">
             AND 
                 usertype 
                     BETWEEN 

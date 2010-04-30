@@ -55,11 +55,11 @@
             smg_companies c ON s.companyid = c.companyid
         LEFT OUTER JOIN 
             smg_regions r ON s.regionassigned = r.regionid
-        LEFT OUTER JOIN 
+        LEFT OUTER JOIN  
             smg_hosts h ON s.hostid = h.hostid			
         WHERE 
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    
+
         AND 
             ( 
                 <cfloop list="#FORM.batchid#" index="batchID">
@@ -178,13 +178,7 @@
             FROM 	
                 smg_users
             WHERE	
-                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.arearepid#">
-            AND 
-                usertype 
-                    BETWEEN 
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
-                    AND 
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="7"> 		
+                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.arearepid)#">
         </cfquery>			
                     
 		<cfif pagebreak EQ 0>				
