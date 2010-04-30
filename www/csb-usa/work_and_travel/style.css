@@ -7,7 +7,7 @@ body {
 	font-family: Verdana;
 	font-size: 10px;
 	font-style: normal;
-	text-align: justify;
+	text-align: left;
 }
 .top {
 	font-family: Verdana;
@@ -20,8 +20,10 @@ body {
 	font-family: Verdana;
 	font-size: 10px;
 	font-style: normal;
-	color:#7286B6;
 	text-align:center;
+	color: #6985AD;
+	background-image: url(../images/bottom.png);
+	background-repeat: no-repeat;
 }
 .MenuItens {
 	font-family: Verdana;
@@ -41,6 +43,7 @@ body {
 	font-weight: bold;
 	color:#009;
 	text-align: center;
+	background-color: #FFF;
 }
 .LinkItens:hover {
 	color:#5B82C8;
@@ -49,4 +52,56 @@ body {
 }
 ul li {
 	margin-bottom:5px;
+}
+.bold {
+	font-weight: bold;
+}
+.centerText {
+	text-align: center;
+}
+.header {
+	background-image: url(../images/index_01.jpg);
+	background-repeat: no-repeat;
+}
+#menu {
+	float: right;
+	height: 25px;
+	width: 600px;
+	margin-top: 90px;
+	margin-left: 185px;
+	color: #FFF;
+}
+.footer {
+	background-image: url(images/bottom.png);
+	background-repeat: no-repeat;
+}
+#facebook {
+	background-color: #0F6;
+	float: left;
+	height: 30px;
+	width: 30px;
+	z-index: 50;
+	display: block;
+	clear: both;
+}
+.text2 {
+	font-family: Verdana;
+	font-size: 10px;
+	font-style: normal;
+	text-align: center;
+}
+.logo {
+	height: 115px;
+	width: 150px;
+	z-index: 200;
+	clear: both;
+	position: absolute;
+	margin-left: 50px;
+}
+.pageLinks {
+	font-family: Verdana;
+	font-size: 10px;
+	font-style: normal;
+	text-align:center;
+	color: #6985AD;
 }

@@ -3,38 +3,44 @@
 <title>:: CSB International ::</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="style.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="favicon.ico" />
+<style type="text/css">
+<!--
+-->
+</style>
 </head>
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <table width="871" height="600" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
 	<tr>
-		<td height="131" background="images/index_01.jpg">&nbsp;</td>
+		<td height="131" background="images/index_01.jpg"><div class="banner">Making a difference with Exchange Programs</div></td>
 	</tr>
 	<tr>
 		<td height="417" background="images/index_02.jpg"><table width="90%" border="0" align="center" cellpadding="10">
 		  <tr>
 		    <td height="99" colspan="2"><p class="text"><strong>Why CSB?</strong></p>
-		      <p class="text"> Founded in 1997, CSB is an exchange organization and a designated United States  Department of State sponsor for&nbsp; &nbsp;the Summer Work and Travel Program! CSB has  worked with thousands of high school and college-aged exchange students since  it inception. Our goal is to assist students by giving personal  attention and considering each detail of the exchange experience so as to allow  all students to grow intellectually through the exchange experience.</p></td>
+		      <p class="text">CSB has extensive experience in international programs and we take pride in the professional service that we provide.</p>
+		      <p class="text">Our team is devoted to develop and promote diverse cultural exchange programs that ultimately are translated into an enriching experience for our participants, their American host sites and overseas partners, from the moment they apply, during the program and until the program is completed.</p>
+	        <p class="text">CSB continues to build a strong  network worldwide. We have established relationships with more than 150 reliable international representatives from over 35 countries. Our commitment to offer tools to enhance our programs and our effort to provide exceptional support are on-going. Join us and help us to make a true difference.</p>
+	        <p class="text"><span class="bold">Enter the beautiful world of exchange and by selecting one of the below programs:</span></p></td>
 	      </tr>
 		  <tr>
-		    <td valign="top"><blockquote>
+		    <td width="49%" valign="top"><blockquote>
 		     <center>
                <a href="work_and_travel/index.cfm"><img src="images/work-travel.jpg" border="0"></a>
 		     </center>
-		      <p><span class="text">The CSB International Summer Work and Travel  Program is designed to allow international college and university students the<strong> opportunity to live, work and travel in the United States for a maximum period  of 4 months, but within the limits of their official college, summer vacation.</strong></span></p>
-		      <p class="LinkItens"><a href="work_and_travel/index.cfm"><strong>Clich here for Work and Travel Program</strong></a></p>
+		     <p class="LinkItens"><a href="work_and_travel/index.cfm"><strong>Click here for Work  Travel Program</strong></a></p>
 	        </blockquote></td>
-		    <td valign="top" class="text"><blockquote>
+		    <td width="51%" valign="top" class="text"><blockquote>
              <center>
                <a href="trainee/index.cfm"><img src="images/trainee.jpg" border="0"></a>
              </center>
-		      <p>The CSB Trainee Program is  designed for young professionals from overseas eager to come to the United  States to learn about American business, enhance their skills and expertise,  experience American culture and return home better qualified for their future  careers and endeavors.</p>
-		      <p align="center"><a href="trainee/index.cfm"><strong>Clich here for Trainee Program</strong></a></p>
+             <p align="center"><a href="trainee/index.cfm"><strong>Click here for Trainee Program</strong></a></p>
 	        </blockquote></td>
 	      </tr>
       </table></td>
 	</tr>
 	<tr>
-		<td height="52" background="images/index_04.jpg" align="center"><cfinclude template="bottom.cfm"></td>
+		<td height="45" align="center" class="bottom"><cfinclude template="bottom1.cfm"></td>
 	</tr>
 </table>
 </body>

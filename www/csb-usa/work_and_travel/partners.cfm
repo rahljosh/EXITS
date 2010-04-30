@@ -7,14 +7,14 @@
 <body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <table width="871" height="506" border="0" align="center" cellpadding="0" cellspacing="0" id="Table_01">
 	<tr>
-		<td height="131" background="images/top.jpg"><table width="99%" border="0">
-		  <tr>
-		    <td height="90" colspan="2">&nbsp; &nbsp; &nbsp; &nbsp; <a href="../index.cfm"><img src="images/transparent.gif" alt="" width="250" height="83" border="0"></a></td>
-	      </tr>
-		  <tr>
-		    <td width="325">&nbsp;</td>
-		    <td><cfinclude template="menu.cfm"></td>
-	      </tr>
+		<td height="131"><table width="99%" border="0">
+<tr class="header">
+          
+		    <td width="570" height="136" colspan="2"><div class="logo"><a href="http://www.csb-usa.com"><img src="../images/emptybox.png" width="150" height="115" border="0"></a></div>
+		      <div id="menu">
+              <cfinclude template="menu.cfm">
+            </div></td>
+	     
 	    </table></td>
 	</tr>
 	<tr>
@@ -113,7 +113,7 @@
 		  <br></td>
 	</tr>
 	<tr>
-		<td height="52" background="images/bottom.png" align="center"><cfinclude template="bottom.cfm"></td>
+		<td height="52" class="bottom" align="center"><cfinclude template="bottom1.cfm"></td>
 	</tr>
 </table>
 </body>

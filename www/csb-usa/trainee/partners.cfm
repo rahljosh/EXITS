@@ -40,6 +40,16 @@
 		    <td width="5%">&nbsp;</td>
 	      </tr>
       </table>
+      
+        <table width="90%" border="0" align="center">
+            <tr>
+                <td align="center">
+                	<a href="files/CSB_Agent_Manual.pdf" target="_blank" class="LinkItens"><img src="images/CSBAgentManual.jpg" width="217" height="270" border="0"><br>
+                	Click to download International Agent Manual</a>
+				</td>
+            </tr>
+        </table>     
+         
 		  <br></td>
 	</tr>
 	<tr>

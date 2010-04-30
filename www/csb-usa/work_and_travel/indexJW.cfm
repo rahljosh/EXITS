@@ -52,8 +52,8 @@
 	        </tr>
         </table></td>
   </tr>
-		<td height="45" colspan="2" align="center" class="bottom">
-	    <cfinclude template="bottom1.cfm">
+		<td height="35" colspan="2" align="center" class="bottom">
+	    <cfinclude template="bottom.cfm">
 		</td>
 	</tr>
 </table>
