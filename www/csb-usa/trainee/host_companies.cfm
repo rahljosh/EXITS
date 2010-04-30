@@ -58,14 +58,34 @@
 		    <td width="5%">&nbsp;</td>
 	      </tr>
       </table>
-		  <table width="90%" border="0" align="center">
-		    <tr>
-		      <td align="center"><a href="files/CSB Host Company Manual.doc"  class="LinkItens"><img src="images/HostCompanyHandbook.jpg" alt="" width="217" height="270" border="0"><br>
-Click to download the Host Company Handbook</a><a href="files/Employer_flyer.pdf" target="_blank" class="bottom"><br>
-	          Click to download the Employer Flyer
-		      </a></td>
-	        </tr>
-      </table></td>
+      
+        <table width="90%" border="0" align="center">
+            <tr>
+                <td align="center">
+                    <a href="files/CSB_Host_Company_Manual.pdf" target="_blank" class="LinkItens">
+                        <img src="images/HostCompanyHandbook.jpg" alt="" width="217" height="270" border="0"><br>
+                        Click to download the Host Company Handbook</a>
+                    </a>
+                </td>
+            	
+                <!---	
+                <td align="center">
+                    <a href="files/Employer_flyer.pdf" target="_blank" class="LinkItens"><br>
+                        Click to download the Employer Flyer
+                    </a>
+                </td>
+				--->
+                
+                <td align="center">
+                    <a href="files/CSB_DS_7002.pdf" target="_blank" class="LinkItens">
+                    	<img src="images/DS7002.jpg" width="217" height="270" border="0"><br>
+                    	Click to download the DS-7002
+                    </a>
+                </td>              
+            </tr>
+        </table>
+      
+      </td>
 	</tr>
 	<tr>
 		<td height="52" background="images/bottom.png" align="center"><cfinclude template="bottom.cfm"></td>

@@ -44,19 +44,39 @@
 	      </tr>
       </table>
 		  
-		  <table width="90%" border="0" align="center">
-		    <tr>
-		      <td align="center"><a href="files/CSB-Trainee_Welcome_Handbook.doc"  class="LinkItens"><img src="images/WelcomeHandbook.jpg" width="217" height="270" border="0"><br>
-		        Click to download the Welcome Handbook</a></td>
-		      <td align="center"><a href="files/CSB-DS-7002.doc"  class="LinkItens"><img src="images/DS7002.jpg" width="217" height="270" border="0"><br>
-Click to download the DS-7002</a></td>
-		      <td align="center"><p><a href="files/CSB-Midterm_Evaluation.doc"  class="LinkItens"><img src="images/MidtermEvaluation.jpg" width="88" height="110" border="0"><br>
-	          Click to download the Midterm Evaluation</a></p>
-	          <p><a href="files/CSB-Summative_Evaluation.doc"  class="LinkItens"><br>
-              <img src="images/FinalEvaluation.jpg" width="88" height="110" border="0"><br>
-Click to download the Final Evaluation</a></p></td>
-	        </tr>
-      </table>
+        <table width="90%" border="0" align="center">
+            <tr>
+                <td align="center">
+                	<a href="files/CSB_Trainee_Welcome_Handbook.pdf" target="_blank" class="LinkItens"><img src="images/WelcomeHandbook.jpg" width="217" height="270" border="0"><br>
+                	Click to download the Trainee Welcome Handbook</a>
+				</td>
+                <td align="center">
+                	<p>
+                    	<a href="files/CSB-Midterm_Evaluation.doc"  target="_blank" class="LinkItens">
+                    		<img src="images/MidtermEvaluation.jpg" width="88" height="110" border="0"><br>
+			                Click to download the Midterm Evaluation
+                        </a>
+                    </p>
+                	<p>
+                    	<a href="files/CSB-Summative_Evaluation.doc" target="_blank" class="LinkItens"><br>
+                            <img src="images/FinalEvaluation.jpg" width="88" height="110" border="0"><br>
+                            Click to download the Final Evaluation
+                      	</a>
+                   </p>
+				</td>
+            </tr>
+            <tr>
+                <td align="center"><br>
+                    <a href="files/CSB_Applicant_Handbook.pdf" target="_blank" class="LinkItens"><img src="images/CSBApplicantHandbook.jpg" width="217" height="270" border="0"><br>
+                	Click to download the Applicant Information Handbook</a>
+				</td>
+                <td align="center"><br>
+                	<a href="files/CSB_Trainee_Application.pdf" target="_blank" class="LinkItens"><img src="images/CSBTraineeApplication.jpg" width="217" height="270" border="0"><br>
+                	Click to download the Trainee Application</a>
+				</td>
+            </tr>
+        </table>
+
 		  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 		    <tr>
 		      <td width="5%">&nbsp;</td>

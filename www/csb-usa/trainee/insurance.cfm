@@ -40,20 +40,39 @@
 		    <td width="5%">&nbsp;</td>
 	      </tr>
       </table>
-		  <table width="90%" border="0" align="center">
-		    <tr>
-		      <td width="30%" align="center"><a href="files/InsurancePolicyBrochure.pdf" target="_blank" class="bottom"><img src="images/PolicyBrochure.jpg" width="231" height="270" border="0"><br>
-		        Click to download the Policy Brochure</a></td>
-		      <td width="30%" align="center"><a href="files/InsuranceClaimForm.pdf" target="_blank" class="bottom"><img src="images/ClaimForm.jpg" width="231" height="270" border="0"><br>
-Click to download the Claim Form</a></td>
-		      <td width="40%" align="center"><p><a href="files/InsuranceCard.pdf" target="_blank" class="bottom"><img src="images/IdCard.jpg" width="231" height="138" border="0"><br>
-	          Click to download the Sample ID Card</a></p>
-	          <p><a href="http://www.secutive.com" target="_blank"><br>
-              <br>
-              <img src="http://www.student-management.com/images/globalsecutive.gif" alt="Glibal Secutive International Insurance Solutions" width="158" height="33" border="0" /></a><br>
-              <a href="files/InsuranceCard.pdf" target="_blank" class="bottom">Click to load Global Secutive Website</a></p></td>
-	        </tr>
-      </table>
+
+        <table width="90%" border="0" align="center">
+            <tr>
+                <td width="30%" align="center">
+                	<a href="files/InsurancePolicyBrochure.pdf" target="_blank" class="bottom">
+                        <img src="images/PolicyBrochure.jpg" width="231" height="270" border="0"><br>
+                        Click to download the Policy Brochure
+                    </a>
+                </td>
+                <td width="30%" align="center">
+                	<a href="files/InsuranceClaimForm.pdf" target="_blank" class="bottom">
+                    	<img src="images/ClaimForm.jpg" width="231" height="270" border="0"><br>
+                		Click to download the Claim Form
+                    </a>
+                </td>
+                <td width="40%" align="center">
+                	<p>
+                    	<a href="files/InsuranceCard.pdf" target="_blank" class="bottom">
+                            <img src="images/IdCard.jpg" width="231" height="138" border="0"><br>
+                            Click to download the Sample ID Card
+                     	</a>
+                    </p>
+                    <p>
+                    	<a href="http://www.secutive.com" target="_blank"><br><br>
+	                    	<img src="http://www.student-management.com/images/globalsecutive.gif" alt="Glibal Secutive International Insurance Solutions" width="158" height="33" border="0" />
+                    	</a>
+                     	<br>
+                    	<a href="files/InsuranceCard.pdf" target="_blank" class="bottom">Click to load Global Secutive Website</a>
+                    </p>
+				</td>
+            </tr>
+        </table>
+
 		  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 		    <tr>
 		      <td width="5%">&nbsp;</td>

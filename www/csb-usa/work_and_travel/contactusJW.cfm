@@ -36,29 +36,28 @@
 		  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td width="5%">&nbsp;</td>
-		    <td width="90%" class="text2" align="center"><p><span class="bold">CSB International, Inc.</span><br>
-                119 Cooper Street<br>
-                Babylon, NY 11702 USA<br>
-                <br>
-                <span class="bold">Telephone:</span> 1-631-893-4549<br>
-                <span class="bold">Fax:</span> 1-631-893-4547<br>
-                <span class="bold">E-Mail: </span><a href="mailto:info@csb-usa.com">info@csb-usa.com</a></p>
-                </p>
+		    <td width="90%" class="text" align="center"><p><span class="bold">CSB International, Inc.</span><br>
+		      119 Cooper Street<br>
+		      Babylon, NY 11702 USA<br>
+		      <br>
+		      <span class="bold">Telephone:</span> 1-631-893-4549<br>
+		      <span class="bold">Fax:</span> 1-631-893-4547<br>
+		      <span class="bold">E-Mail: </span><a href="mailto:info@csb-usa.com">info@csb-usa.com</a></p>
 		      <p><span class="bold">Business hours:</span> Monday through Friday, 8am to 5:30pm</p>
 		      <p><span class="bold">General Questions:</span> 1-877-669-0717</p>
-		      <p><span class="bold">24 Hours / 7 Days Emergency Line:</span> 1-877-669-0717<br />
-              </p>
-		      <p class="bold">CSB International, Inc. is a designed sponsor by the United States Department <br />
-                of State for Summer Work Travel Program.</p>
+		      <p><span class="bold">24 Hours / 7 Days Emergency Line:</span> 1-877-669-0717<br>
+	          </p>
+		      <p class="bold">CSB International, Inc. is a designed sponsor by the United States Department <br>
+	          of State for Summer Work Travel Program.</p>
 		      <p>United States Department of State<br>
-                Office of Designation<br>
-                Private Sector Programs Division<br>
-                ECA/EC/PS - SA-5, Floor 5<br>
-                2200 C Street, NW<br>
-                Washington, DC 20522-0505<br>
-                Telephone: (202) 632-2805 <br>
-                FAX number: (202) 632-2701<br>
-                Website: <a href="http://exchanges.state.gov/jexchanges/index.html">http://exchanges.state.gov/jexchanges/index.html</a></p>
+		        Office of Designation<br>
+		        Private Sector Programs Division<br>
+		        ECA/EC/PS - SA-5, Floor 5<br>
+		        2200 C Street, NW<br>
+		        Washington, DC 20522-0505<br>
+		        Telephone: (202) 632-2805 <br>
+		        FAX number: (202) 632-2701<br>
+	          Website: <a href="http://exchanges.state.gov/jexchanges/index.html">http://exchanges.state.gov/jexchanges/index.html</a></p>
 		      <p align="center">&nbsp;</p>
               <p><br>
             </p></td>
@@ -68,7 +67,7 @@
 		  <br></td>
 	</tr>
 	<tr>
-		<td height="52" class="bottom" align="center"><cfinclude template="bottom1.cfm"></td>
+		<td height="52" background="images/bottom.png" align="center"><cfinclude template="bottom.cfm"></td>
 	</tr>
 </table>
 
