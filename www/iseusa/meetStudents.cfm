@@ -36,7 +36,6 @@
 			// User - Update Date - Loop over CBC not submitted
 			for (i=1; i LTE VAL(ARGUMENTS.PasswordLength); i=i+1) {
 				
-				
 				// let passChar be random number between 48 and 122. Thus this will include everything from 0 to 9, Capital A to Z and small case a to z.
 				passChar = randrange(48,122);
 				
@@ -403,13 +402,13 @@
                             
                             <tr>
 								<td scope="row">
-	                                <span class="loginText">Email Address</span> <br />
-                                    <cfinput type="text" name="loginEmail" value="#FORM.loginEmail#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address."  />          							
+	                                <label for="loginEmail" class="loginText">Email Address</label> <br />
+                                    <cfinput type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address."  />          							
                                 </td>
 					        </tr>
                             <tr>
                                 <td scope="row">
-                                    <span class="loginText">Password</span> <br />                                   
+                                    <label for="loginPassword" class="loginText">Password</label> <br />                                   
                                     <cfinput type="password" name="loginPassword" id="loginPassword" maxlength="10" class="largeInput" required="yes" message="Please enter a password." />                                    
                                 </td>
                             </tr>
@@ -444,40 +443,40 @@
                     <cfform name="newAccount" id="newAccount" method="post" action="#cgi.SCRIPT_NAME#">
                     <input type="hidden" name="type" value="newAccount" />
                     
-                    Family Last Name <br />
+                    <label for="lastName">Family Last Name</label><br />
                     <cfinput type="text" name="lastName" id="lastName" value="#FORM.lastName#" maxlength="100" class="largeInput" required="yes" message="Please enter a family last name."/> <br />
                     
-                    Your First Name <br />
+                    <label for="firstName">Your First Name</label><br />
                     <cfinput type="text" name="firstName" id="firstName" value="#FORM.firstName#" maxlength="100"  class="largeInput" required="yes" message="Please enter a first name." /> <br />
                    
-                    Address <br />
+                    <label for="address">Address</label><br />
                     <cfinput type="text" name="address" id="address" value="#FORM.address#" maxlength="100" class="largeInput" required="yes" message="Please enter an address." /> <br />
                     
-                    Additional Address Info <br />
+                    <label for="address2">Additional Address Info</label><br />
                     <cfinput type="text" name="address2" id="address2" value="#FORM.address2#" maxlength="100" class="largeInput" /> <br />
                     
-                    City <br />
+                    <label for="city">City</label><br />
                     <cfinput type="text" name="city" id="city" value="#FORM.city#" maxlength="100" class="largeInput" required="yes" message="Please enter a city." /> <br />
                     
-                    State <br />
-                    <cfselect name="stateID" class="largeInput" required="yes" message="Please select a state.">
+                    <label for="stateID">State</label><br />
+                    <cfselect name="stateID" id="stateID" class="largeInput" required="yes" message="Please select a state.">
                         <option value="0"></option>
                         <cfloop query="qStateList">
                         	<option value="#qStateList.id#" <cfif FORM.stateID EQ qStateList.id> selected="selected" </cfif> >#qStateList.state# - #qStateList.statename#</option>
                     	</cfloop>
                     </cfselect> <br />
                     
-                    Zipcode - 5 digits only <br />
+                    <label for="zipCode">Zipcode - 5 digits only</label><br />
                     <cfinput type="text" name="zipCode" id="zipCode" value="#FORM.zipCode#" maxlength="5" class="largeInput" required="yes" message="Please enter a valid zip code." validateat="onSubmit" validate="zipcode" /> <br />
                     
-                    Phone Number <br />
+                    <label for="phone">Phone Number</label><br />
                     <cfinput type="text" name="phone" id="phone" value="#FORM.phone#" maxlength="20" class="largeInput" required="yes"  message="Please enter a phone number xxx xxx-xxxx." pattern="(999) 999-9999" validateat="onSubmit" validate="telephone"/> <br />
                     
-                    Email <br />
+                    <label for="email">Email</label><br />
                     <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address.." validateat="onSubmit" validate="email" /> <br />
                     
-                    How did you hear about us <br />
-                    <cfselect name="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE."> 			
+                    <label for="hearAboutUs">How did you hear about us</label><br />
+                    <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE."> 			
                         <option value=""></option>
                         <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
                             <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>

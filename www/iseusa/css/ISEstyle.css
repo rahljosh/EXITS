@@ -1,6 +1,7 @@
 @charset "UTF-8";
 /* CSS Document */
 
+
 body {
 	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
 	padding: 0;
@@ -42,8 +43,8 @@ body {
 	text-align: center;
 }
 
-/* this is all the css code for the top box */
 
+/* this is all the css code for the top box */
 #topBar {
 	height: 40px;
 	width: 100%;
@@ -269,6 +270,7 @@ body {
 }
 /* the end of css code for the top box */
 
+
 /* logo box information */
 #logoBoxFixed {
 	background-image: url(/images/logobox.png);
@@ -282,11 +284,10 @@ body {
 	left: 12%;
 	top: 40px;
 }
-
 /* end logo box information */
 
-/* tab Bar information */
 
+/* tab Bar information */
 .tabs1 {
 	text-align: right;
 	display: block;
@@ -545,8 +546,8 @@ body {
 	width: 625px;
 	float: right;
 }
-
 /* end tab Bar information */
+
 
 #footer1 {
 	clear: both;
@@ -596,6 +597,8 @@ body {
 	height: auto;
 	width: 525px;
 }
+
+
 /* this is all the css code for the bottom box */
 .bottomLinks1{
 	display: block;
@@ -909,6 +912,8 @@ body {
 	font-weight: bold;
 	text-decoration: underline;
 }
+
+/* Meet Student Form */
 .form {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
@@ -960,6 +965,9 @@ body {
 .errorMessage ul {
 	/* padding-left: 15px; */
 }
+/* End of Meet Student Form */
+
+
 /* start Webstore css*/
 .shopping {
 	font-family: Arial, Helvetica, sans-serif;
@@ -984,6 +992,8 @@ body {
 	padding: 20px;
 }
 /* end Webstore css*/
+
+
 .whtMiddleStretch {
 	background-image: url(../images/whtBoxMiddle.png);
 	background-repeat: repeat-y;

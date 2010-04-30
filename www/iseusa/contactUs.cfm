@@ -27,7 +27,7 @@
   <div class="whtMiddle">
     <p class="header1">Contact ISE</p>
     <div class="subPic"><img src="images/LgContactUs.png" width="415" height="277" /></div>
-    <p class="p1"><strong>Questions? Comments? </strong>ISE is happy to respond to any inquiries you may have. You may email us at contact@iseusa.com. If you have questions regarding hosting, working as an area representative, or anything related to student exchange, we would be more than happy to answer your question!<br />
+    <p class="p1"><strong>Questions? Comments? </strong>ISE is happy to respond to any inquiries you may have. You may email us at <a href="mailto:contact@iseusa.com">contact@iseusa.com</a>. If you have questions regarding hosting, working as an area representative, or anything related to student exchange, we would be more than happy to answer your question!<br />
       <br />
      <strong>You can contact ISE by any of the following methods:<br /></strong>      <br />
      <strong>Mailing Address:<br /></strong>
