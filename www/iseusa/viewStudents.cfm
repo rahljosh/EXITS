@@ -49,7 +49,7 @@ a:active {
    <Cfif not isdefined('client.hostid') or client.hostid eq 0>
    	<tr>
     	<td> 
-   		You must be logged into to view students. If you have your login or need to register, visit <a href="http://www.iseusa.com/meetStudents.cfm">http://www.iseusa.com/meetStudents.cfm</a>.
+   		You must be logged into to view students. If you have your login or need to register, visit <a href="meetStudents.cfm">http://www.iseusa.com/meetStudents.cfm</a>.
         </td>
      </tr>
      </table>
