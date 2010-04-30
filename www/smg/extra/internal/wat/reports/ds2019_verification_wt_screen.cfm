@@ -37,6 +37,7 @@
             c.enddate, 
             c.startdate, 
             c.ds2019,
+			c.hostcompanyid,
             birth.countryname as countrybirth,
           	resident.countryname as countryresident,
             citizen.countryname as countrycitizen
@@ -60,6 +61,8 @@
         	c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
         AND 
             c.ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+		AND
+			c.hostcompanyid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         ORDER BY 
         	c.candidateID
     </cfquery>
@@ -129,6 +132,7 @@
         </cfif>
         
         <cfif isDefined('FORM.email_self')> 
+
             <cfset toLine = ListAppend(toLine, client.email)>
         </cfif>
     
