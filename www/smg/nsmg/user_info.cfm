@@ -1202,6 +1202,7 @@
                                                 	<option value=""></option>
                                                     <option value="Database Navigation">Database Navigation</option>
                                                     <option value="Host Family Orientations">Host Family Orientations</option>
+                                                    <option value="Host Family Recruitment">Host Family Recruitment</option>
                                                     <option value="New Area Reps">New Area Reps</option>
                                                     <option value="Positive Supervisions">Positive Supervisions</option>
                                                     <option value="Student Issues and Resolutions">Student Issues and Resolutions</option>
