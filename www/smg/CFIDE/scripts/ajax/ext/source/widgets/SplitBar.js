@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.SplitBar
  * @extends Ext.util.Observable
@@ -23,8 +21,8 @@ split.on('moved', splitterMoved);
 </code></pre>
  * @constructor
  * Create a new SplitBar
- * @param {String/HTMLElement/Ext.Element} dragElement The element to be dragged and act as the SplitBar. 
- * @param {String/HTMLElement/Ext.Element} resizingElement The element to be resized based on where the SplitBar element is dragged 
+ * @param {Mixed} dragElement The element to be dragged and act as the SplitBar.
+ * @param {Mixed} resizingElement The element to be resized based on where the SplitBar element is dragged
  * @param {Number} orientation (optional) Either Ext.SplitBar.HORIZONTAL or Ext.SplitBar.VERTICAL. (Defaults to HORIZONTAL)
  * @param {Number} placement (optional) Either Ext.SplitBar.LEFT or Ext.SplitBar.RIGHT for horizontal or  
                         Ext.SplitBar.TOP or Ext.SplitBar.BOTTOM for vertical. (By default, this is determined automatically by the initial
@@ -46,6 +44,11 @@ Ext.SplitBar = function(dragElement, resizingElement, orientation, placement, ex
      */
     this.orientation = orientation || Ext.SplitBar.HORIZONTAL;
     
+    /**
+     * The increment, in pixels by which to move this SplitBar. When <i>undefined</i>, the SplitBar moves smoothly.
+     * @type Number
+     * @property tickSize
+     */
     /**
      * The minimum size of the resizing element. (Defaults to 0)
      * @type Number
@@ -107,30 +110,30 @@ Ext.SplitBar = function(dragElement, resizingElement, orientation, placement, ex
         this.el.addClass("x-splitbar-v");
     }
     
-    this.addEvents({
+    this.addEvents(
         /**
          * @event resize
-         * Fires when the splitter is moved (alias for {@link #event-moved})
+         * Fires when the splitter is moved (alias for {@link #moved})
          * @param {Ext.SplitBar} this
          * @param {Number} newSize the new width or height
          */
-        "resize" : true,
+        "resize",
         /**
          * @event moved
          * Fires when the splitter is moved
          * @param {Ext.SplitBar} this
          * @param {Number} newSize the new width or height
          */
-        "moved" : true,
+        "moved",
         /**
          * @event beforeresize
          * Fires before the splitter is dragged
          * @param {Ext.SplitBar} this
          */
-        "beforeresize" : true,
+        "beforeresize",
 
-        "beforeapply" : true
-    });
+        "beforeapply"
+    );
 
     Ext.SplitBar.superclass.constructor.call(this);
 };
@@ -138,26 +141,22 @@ Ext.SplitBar = function(dragElement, resizingElement, orientation, placement, ex
 Ext.extend(Ext.SplitBar, Ext.util.Observable, {
     onStartProxyDrag : function(x, y){
         this.fireEvent("beforeresize", this);
-        if(!this.overlay){
-            var o = Ext.DomHelper.insertFirst(document.body,  {cls: "x-drag-overlay", html: "&#160;"}, true);
-            o.unselectable();
-            o.enableDisplayMode("block");
-            // all splitbars share the same overlay
-            Ext.SplitBar.prototype.overlay = o;
-        }
+        this.overlay =  Ext.DomHelper.append(document.body,  {cls: "x-drag-overlay", html: "&#160;"}, true);
+        this.overlay.unselectable();
         this.overlay.setSize(Ext.lib.Dom.getViewWidth(true), Ext.lib.Dom.getViewHeight(true));
         this.overlay.show();
         Ext.get(this.proxy).setDisplayed("block");
         var size = this.adapter.getElementSize(this);
-        this.activeMinSize = this.getMinimumSize();;
-        this.activeMaxSize = this.getMaximumSize();;
+        this.activeMinSize = this.getMinimumSize();
+        this.activeMaxSize = this.getMaximumSize();
         var c1 = size - this.activeMinSize;
         var c2 = Math.max(this.activeMaxSize - size, 0);
         if(this.orientation == Ext.SplitBar.HORIZONTAL){
             this.dd.resetConstraints();
             this.dd.setXConstraint(
                 this.placement == Ext.SplitBar.LEFT ? c1 : c2, 
-                this.placement == Ext.SplitBar.LEFT ? c2 : c1
+                this.placement == Ext.SplitBar.LEFT ? c2 : c1,
+                this.tickSize
             );
             this.dd.setYConstraint(0, 0);
         }else{
@@ -165,7 +164,8 @@ Ext.extend(Ext.SplitBar, Ext.util.Observable, {
             this.dd.setXConstraint(0, 0);
             this.dd.setYConstraint(
                 this.placement == Ext.SplitBar.TOP ? c1 : c2, 
-                this.placement == Ext.SplitBar.TOP ? c2 : c1
+                this.placement == Ext.SplitBar.TOP ? c2 : c1,
+                this.tickSize
             );
          }
         this.dragSpecs.startSize = size;
@@ -180,7 +180,8 @@ Ext.extend(Ext.SplitBar, Ext.util.Observable, {
         Ext.get(this.proxy).setDisplayed(false);
         var endPoint = Ext.lib.Event.getXY(e);
         if(this.overlay){
-            this.overlay.hide();
+            Ext.destroy(this.overlay);
+            delete this.overlay;
         }
         var newSize;
         if(this.orientation == Ext.SplitBar.HORIZONTAL){
@@ -271,14 +272,12 @@ Ext.extend(Ext.SplitBar, Ext.util.Observable, {
      * @param {Boolean} removeEl True to remove the element
      */
     destroy : function(removeEl){
-        if(this.shim){
-            this.shim.remove();
-        }
+		Ext.destroy(this.shim, Ext.get(this.proxy));
         this.dd.unreg();
-        this.proxy.parentNode.removeChild(this.proxy);
         if(removeEl){
             this.el.remove();
         }
+		this.purgeListeners();
     }
 });
 
@@ -354,7 +353,7 @@ Ext.SplitBar.BasicLayoutAdapter.prototype = {
  * @extends Ext.SplitBar.BasicLayoutAdapter
  * Adapter that  moves the splitter element to align with the resized sizing element. 
  * Used with an absolute positioned SplitBar.
- * @param {String/HTMLElement/Ext.Element} container The container that wraps around the absolute positioned content. If it's
+ * @param {Mixed} container The container that wraps around the absolute positioned content. If it's
  * document.body, make sure you assign an id to the body element.
  */
 Ext.SplitBar.AbsoluteLayoutAdapter = function(container){

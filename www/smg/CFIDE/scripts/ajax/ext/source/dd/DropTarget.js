@@ -1,18 +1,16 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.dd.DropTarget
  * @extends Ext.dd.DDTarget
  * A simple class that provides the basic implementation needed to make any element a drop target that can have
  * draggable items dropped onto it.  The drop has no effect until an implementation of notifyDrop is provided.
  * @constructor
- * @param {String/HTMLElement/Element} el The container element
+ * @param {Mixed} el The container element
  * @param {Object} config
  */
 Ext.dd.DropTarget = function(el, config){
@@ -30,6 +28,11 @@ Ext.dd.DropTarget = function(el, config){
 };
 
 Ext.extend(Ext.dd.DropTarget, Ext.dd.DDTarget, {
+    /**
+     * @cfg {String} ddGroup
+     * A named drag drop group to which this object belongs.  If a group is specified, then this object will only
+     * interact with other drag drop objects in the same group (defaults to undefined).
+     */
     /**
      * @cfg {String} overClass
      * The CSS class applied to the drop target element while the drag source is over it (defaults to "").

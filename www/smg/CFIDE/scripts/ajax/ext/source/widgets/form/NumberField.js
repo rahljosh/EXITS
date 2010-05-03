@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.form.NumberField
  * @extends Ext.form.TextField
@@ -13,12 +11,15 @@
  * @constructor
  * Creates a new NumberField
  * @param {Object} config Configuration options
+ * @xtype numberfield
  */
-Ext.form.NumberField = function(config){
-    Ext.form.NumberField.superclass.constructor.call(this, config);
-};
-
-Ext.extend(Ext.form.NumberField, Ext.form.TextField,  {
+Ext.form.NumberField = Ext.extend(Ext.form.TextField,  {
+    /**
+     * @cfg {RegExp} stripCharsRe @hide
+     */
+    /**
+     * @cfg {RegExp} maskRe @hide
+     */
     /**
      * @cfg {String} fieldClass The default CSS class for the field (defaults to "x-form-field x-form-num-field")
      */
@@ -60,29 +61,22 @@ Ext.extend(Ext.form.NumberField, Ext.form.TextField,  {
      * if a valid character like '.' or '-' is left in the field with no number (defaults to "{value} is not a valid number")
      */
     nanText : "{0} is not a valid number",
+    /**
+     * @cfg {String} baseChars The base set of characters to evaluate as valid numbers (defaults to '0123456789').
+     */
+    baseChars : "0123456789",
 
     // private
     initEvents : function(){
-        Ext.form.NumberField.superclass.initEvents.call(this);
-        var allowed = "0123456789";
-        if(this.allowDecimals){
+        var allowed = this.baseChars + '';
+        if (this.allowDecimals) {
             allowed += this.decimalSeparator;
         }
-        if(this.allowNegative){
-            allowed += "-";
+        if (this.allowNegative) {
+            allowed += '-';
         }
-        this.stripCharsRe = new RegExp('[^'+allowed+']', 'gi');
-        var keyPress = function(e){
-            var k = e.getKey();
-            if(!Ext.isIE && (e.isSpecialKey() || k == e.BACKSPACE || k == e.DELETE)){
-                return;
-            }
-            var c = e.getCharCode();
-            if(allowed.indexOf(String.fromCharCode(c)) === -1){
-                e.stopEvent();
-            }
-        };
-        this.el.on("keypress", keyPress, this);
+        this.maskRe = new RegExp('[' + Ext.escapeRe(allowed) + ']');
+        Ext.form.NumberField.superclass.initEvents.call(this);
     },
 
     // private
@@ -93,11 +87,12 @@ Ext.extend(Ext.form.NumberField, Ext.form.TextField,  {
         if(value.length < 1){ // if it's blank and textfield didn't flag it then it's valid
              return true;
         }
-        var num = this.parseValue(value);
-        if(isNaN(num)){
+        value = String(value).replace(this.decimalSeparator, ".");
+        if(isNaN(value)){
             this.markInvalid(String.format(this.nanText, value));
             return false;
         }
+        var num = this.parseValue(value);
         if(num < this.minValue){
             this.markInvalid(String.format(this.minText, this.minValue));
             return false;
@@ -113,6 +108,12 @@ Ext.extend(Ext.form.NumberField, Ext.form.TextField,  {
         return this.fixPrecision(this.parseValue(Ext.form.NumberField.superclass.getValue.call(this)));
     },
 
+    setValue : function(v){
+    	v = typeof v == 'number' ? v : parseFloat(String(v).replace(this.decimalSeparator, "."));
+        v = isNaN(v) ? '' : String(v).replace(".", this.decimalSeparator);
+        return Ext.form.NumberField.superclass.setValue.call(this, v);
+    },
+
     // private
     parseValue : function(value){
         value = parseFloat(String(value).replace(this.decimalSeparator, "."));
@@ -123,24 +124,16 @@ Ext.extend(Ext.form.NumberField, Ext.form.TextField,  {
     fixPrecision : function(value){
         var nan = isNaN(value);
         if(!this.allowDecimals || this.decimalPrecision == -1 || nan || !value){
-            return nan ? '' : value;
+           return nan ? '' : value;
         }
-        return parseFloat(value).toFixed(this.decimalPrecision);
-    },
-
-    setValue : function(v){
-        Ext.form.NumberField.superclass.setValue.call(this, String(v).replace(".", this.decimalSeparator));
-    },
-
-    // private
-    decimalPrecisionFcn : function(v){
-        return Math.floor(v);
+        return parseFloat(parseFloat(value).toFixed(this.decimalPrecision));
     },
 
     beforeBlur : function(){
         var v = this.parseValue(this.getRawValue());
-        if(v){
+        if(!Ext.isEmpty(v)){
             this.setValue(this.fixPrecision(v));
         }
     }
 });
+Ext.reg('numberfield', Ext.form.NumberField);

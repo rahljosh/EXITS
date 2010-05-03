@@ -1,17 +1,18 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
-/*
+/**
  * Portuguese/Brazil Translation by Weber Souza
  * 08 April 2007
- *
- * Actualized by Allan Brazute Alves (EthraZa)
- * 02 August 2007
+ * Updated by Allan Brazute Alves (EthraZa)
+ * 06 September 2007
+ * Updated by Leonardo Lima
+ * 05 March 2008
+ * Updated by Juliano Tarini (jtarini)
+ * 22 April 2008
  */
 
 Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">Carregando...</div>';
@@ -20,8 +21,8 @@ if(Ext.View){
    Ext.View.prototype.emptyText = "";
 }
 
-if(Ext.grid.Grid){
-   Ext.grid.Grid.prototype.ddText = "{0} linha(s) selecionada(s)";
+if(Ext.grid.GridPanel){
+   Ext.grid.GridPanel.prototype.ddText = "{0} linha(s) selecionada(s)";
 }
 
 if(Ext.TabPanelItem){
@@ -51,6 +52,29 @@ Date.monthNames = [
    "Dezembro"
 ];
 
+Date.getShortMonthName = function(month) {
+  return Date.monthNames[month].substring(0, 3);
+};
+
+Date.monthNumbers = {
+  Jan : 0,
+  Fev : 1,
+  Mar : 2,
+  Abr : 3,
+  Mai : 4,
+  Jun : 5,
+  Jul : 6,
+  Ago : 7,
+  Set : 8,
+  Out : 9,
+  Nov : 10,
+  Dez : 11
+};
+
+Date.getMonthNumber = function(name) {
+  return Date.monthNumbers[name.substring(0, 1).toUpperCase() + name.substring(1, 3).toLowerCase()];
+};
+
 Date.dayNames = [
    "Domingo",
    "Segunda",
@@ -70,12 +94,29 @@ if(Ext.MessageBox){
    };
 }
 
-if(Ext.util.Format){
-   Ext.util.Format.date = function(v, format){
-      if(!v) return "";
-      if(!(v instanceof Date)) v = new Date(Date.parse(v));
-      return v.dateFormat(format || "m/d/Y");
-   };
+if (Ext.util.Format) {
+  Ext.util.Format.date = function(v, format){
+    if (!v) return "";
+    if (!(v instanceof Date)) v = new Date(Date.parse(v));
+    return v.dateFormat(format || "d/m/Y");
+  };
+  Ext.util.Format.brMoney = function(v){
+    v = (Math.round((v - 0) * 100)) / 100;
+    v = (v == Math.floor(v)) ? v + ".00" : ((v * 10 == Math.floor(v * 10)) ? v + "0" : v);
+    v = String(v);
+    var ps = v.split('.');
+    var whole = ps[0];
+    var sub = ps[1] ? '.' + ps[1] : '.00';
+    var r = /(\d+)(\d{3})/;
+    while (r.test(whole)) {
+      whole = whole.replace(r, '$1' + '.' + '$2');
+    }
+    v = whole + sub;
+    if (v.charAt(0) == '-') {
+      return '- R$ ' + v.substr(1);
+    }
+    return "R$ " + v;
+  }
 }
 
 if(Ext.DatePicker){
@@ -91,7 +132,10 @@ if(Ext.DatePicker){
       prevText          : 'M&ecirc;s Anterior (Control+Esquerda)',
       monthYearText     : 'Escolha um M&ecirc;s (Control+Cima/Baixo para mover entre os anos)',
       todayTip          : "{0} (Espa&ccedil;o)",
-      format            : "m/d/y"
+      format            : "d/m/Y",
+      okText            : "&#160;OK&#160;",
+      cancelText        : "Cancelar",
+      startDay          : 0
    });
 }
 
@@ -154,6 +198,84 @@ if(Ext.form.VTypes){
    });
 }
 
+if(Ext.form.HtmlEditor){
+   Ext.apply(Ext.form.HtmlEditor.prototype, {
+        createLinkText : 'Porfavor, entre com a URL do link:',
+        buttonTips : {
+            bold : {
+               title: 'Negrito (Ctrl+B)',
+               text: 'Deixa o texto selecionado em negrito.',
+               cls: 'x-html-editor-tip'
+            },
+            italic : {
+               title: 'Italico (Ctrl+I)',
+               text: 'Deixa o texto selecionado em italico.',
+               cls: 'x-html-editor-tip'
+            },
+            underline : {
+               title: 'Sublinhado (Ctrl+U)',
+               text: 'Sublinha o texto selecionado.',
+               cls: 'x-html-editor-tip'
+           },
+           increasefontsize : {
+               title: 'Aumentar Texto',
+               text: 'Aumenta o tamanho da fonte.',
+               cls: 'x-html-editor-tip'
+           },
+           decreasefontsize : {
+               title: 'Diminuir Texto',
+               text: 'Diminui o tamanho da fonte.',
+               cls: 'x-html-editor-tip'
+           },
+           backcolor : {
+               title: 'Cor de Fundo',
+               text: 'Muda a cor do fundo do texto selecionado.',
+               cls: 'x-html-editor-tip'
+           },
+           forecolor : {
+               title: 'Cor da Fonte',
+               text: 'Muda a cor do texto selecionado.',
+               cls: 'x-html-editor-tip'
+           },
+           justifyleft : {
+               title: 'Alinhar &agrave; Esquerda',
+               text: 'Alinha o texto &agrave; esquerda.',
+               cls: 'x-html-editor-tip'
+           },
+           justifycenter : {
+               title: 'Centralizar Texto',
+               text: 'Centraliza o texto no editor.',
+               cls: 'x-html-editor-tip'
+           },
+           justifyright : {
+               title: 'Alinhar &agrave; Direita',
+               text: 'Alinha o texto &agrave; direita.',
+               cls: 'x-html-editor-tip'
+           },
+           insertunorderedlist : {
+               title: 'Lista com Marcadores',
+               text: 'Inicia uma lista com marcadores.',
+               cls: 'x-html-editor-tip'
+           },
+           insertorderedlist : {
+               title: 'Lista Numerada',
+               text: 'Inicia uma lista numerada.',
+               cls: 'x-html-editor-tip'
+           },
+           createlink : {
+               title: 'Hyperliga&ccedil;&atilde;o',
+               text: 'Transforma o texto selecionado em um hyperlink.',
+               cls: 'x-html-editor-tip'
+           },
+           sourceedit : {
+               title: 'Editar Fonte',
+               text: 'Troca para o modo de edi&ccedil;&atilde;o de c&oacute;digo fonte.',
+               cls: 'x-html-editor-tip'
+           }
+        }
+   });
+}
+
 if(Ext.grid.GridView){
    Ext.apply(Ext.grid.GridView.prototype, {
       sortAscText  : "Ordem Ascendente",
@@ -172,9 +294,9 @@ if(Ext.grid.PropertyColumnModel){
    });
 }
 
-if(Ext.SplitLayoutRegion){
-   Ext.apply(Ext.SplitLayoutRegion.prototype, {
-      splitTip            : "Arraste para redimencionar.",
-      collapsibleSplitTip : "Arraste para redimencionar. Duplo clique para esconder."
+if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
+   Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
+      splitTip            : "Arraste para redimensionar.",
+      collapsibleSplitTip : "Arraste para redimensionar. Duplo clique para esconder."
    });
 }

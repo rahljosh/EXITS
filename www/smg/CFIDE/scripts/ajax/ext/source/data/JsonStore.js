@@ -1,32 +1,49 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.data.JsonStore
  * @extends Ext.data.Store
- * Small helper class to make creating Stores for JSON data easier. <br/>
-<pre><code>
+ * <p>Small helper class to make creating {@link Ext.data.Store}s from JSON data easier.
+ * A JsonStore will be automatically configured with a {@link Ext.data.JsonReader}.</p>
+ * <p>A store configuration would be something like:<pre><code>
 var store = new Ext.data.JsonStore({
+    // store configs
+    autoDestroy: true,
     url: 'get-images.php',
+    storeId: 'myStore',
+    // reader configs
     root: 'images',
+    idProperty: 'name',  
     fields: ['name', 'url', {name:'size', type: 'float'}, {name:'lastmod', type:'date'}]
 });
-</code></pre>
- * <b>Note: Although they are not listed, this class inherits all of the config options of Store,
- * JsonReader and HttpProxy (unless inline data is provided).</b>
- * @cfg {Array} fields An array of field definition objects, or field name strings.
+ * </code></pre></p>
+ * <p>This store is configured to consume a returned object of the form:<pre><code>
+{
+    images: [
+        {name: 'Image one', url:'/GetImage.php?id=1', size:46.5, lastmod: new Date(2007, 10, 29)},
+        {name: 'Image Two', url:'/GetImage.php?id=2', size:43.2, lastmod: new Date(2007, 10, 30)}
+    ]
+}
+ * </code></pre>
+ * An object literal of this form could also be used as the {@link #data} config option.</p>
+ * <p><b>*Note:</b> Although not listed here, this class accepts all of the configuration options of 
+ * <b>{@link Ext.data.JsonReader JsonReader}</b>.</p>
  * @constructor
  * @param {Object} config
+ * @xtype jsonstore
  */
-Ext.data.JsonStore = function(c){
-    Ext.data.JsonStore.superclass.constructor.call(this, Ext.apply(c, {
-        proxy: !c.data ? new Ext.data.HttpProxy({url: c.url}) : undefined,
-        reader: new Ext.data.JsonReader(c, c.fields)
-    }));
-};
-Ext.extend(Ext.data.JsonStore, Ext.data.Store);
+Ext.data.JsonStore = Ext.extend(Ext.data.Store, {
+    /**
+     * @cfg {Ext.data.DataReader} reader @hide
+     */
+    constructor: function(config){
+        Ext.data.JsonStore.superclass.constructor.call(this, Ext.apply(config, {
+            reader: new Ext.data.JsonReader(config)
+        }));
+    }
+});
+Ext.reg('jsonstore', Ext.data.JsonStore);

@@ -520,7 +520,7 @@ _CF_checktime = function(object_value, required)
     }
 
 
-    var result = _CF_checkregex(object_value, /^(([0-1]?[0-9]|[2][0-3]):([0-5]?[0-9])(:[0-5]?[0-9])?).?([AP]M|[AP]m|[ap]m|[ap]M)?$/, required);
+    var result = _CF_checkregex(object_value, /^((([0-1]?\d)|(2[0-3])):[0-5]\d)?(:[0-5]\d)? ?([AP]M|[AP]m|[ap]m|[ap]M)?$/, required);
 	return result;
 }
 

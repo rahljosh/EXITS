@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.dd.Registry
  * Provides easy access to all drag drop components that are registered on a page.  Items can be retrieved either
@@ -31,9 +29,9 @@ Ext.dd.Registry = function(){
     
     return {
     /**
-     * Register a drag drop element
+     * Resgister a drag drop element
      * @param {String/HTMLElement) element The id or DOM node to register
-     * @param {Object} data (optional) A custom data object that will be passed between the elements that are involved
+     * @param {Object} data (optional) An custom data object that will be passed between the elements that are involved
      * in drag drop operations.  You can populate this object with any arbitrary properties that your own code
      * knows how to interpret, plus there are some specific properties known to the Registry that should be
      * populated in the data object (if applicable):

@@ -1,36 +1,40 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.dd.DragSource
  * @extends Ext.dd.DDProxy
  * A simple class that provides the basic implementation needed to make any element draggable.
  * @constructor
- * @param {String/HTMLElement/Element} el The container element
+ * @param {Mixed} el The container element
  * @param {Object} config
  */
 Ext.dd.DragSource = function(el, config){
     this.el = Ext.get(el);
-    this.dragData = {};
+    if(!this.dragData){
+        this.dragData = {};
+    }
     
     Ext.apply(this, config);
     
     if(!this.proxy){
         this.proxy = new Ext.dd.StatusProxy();
     }
-
-    Ext.dd.DragSource.superclass.constructor.call(this, this.el.dom, this.ddGroup || this.group,
+    Ext.dd.DragSource.superclass.constructor.call(this, this.el.dom, this.ddGroup || this.group, 
           {dragElId : this.proxy.id, resizeFrame: false, isTarget: false, scroll: this.scroll === true});
     
     this.dragging = false;
 };
 
 Ext.extend(Ext.dd.DragSource, Ext.dd.DDProxy, {
+    /**
+     * @cfg {String} ddGroup
+     * A named drag drop group to which this object belongs.  If a group is specified, then this object will only
+     * interact with other drag drop objects in the same group (defaults to undefined).
+     */
     /**
      * @cfg {String} dropAllowed
      * The CSS class returned to the drag source when drop is allowed (defaults to "x-dd-drop-ok").
@@ -301,7 +305,7 @@ Ext.extend(Ext.dd.DragSource, Ext.dd.DDProxy, {
      */
     onStartDrag : Ext.emptyFn,
 
-    // private - YUI override
+    // private override
     startDrag : function(x, y){
         this.proxy.reset();
         this.dragging = true;

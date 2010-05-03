@@ -1,14 +1,54 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 (function(){
 
-var libFlyweight;
+var libFlyweight,
+    version = Prototype.Version.split('.'),
+    mouseEnterSupported = (parseInt(version[0]) >= 2) || (parseInt(version[1]) >= 7) || (parseInt(version[2]) >= 1),
+    mouseCache = {},
+    isXUL = Ext.isGecko ? function(node){ 
+        return Object.prototype.toString.call(node) == '[object XULElement]';
+    } : function(){},
+    isTextNode = Ext.isGecko ? function(node){
+        try{
+            return node.nodeType == 3;
+        }catch(e) {
+            return false;
+        }
+
+    } : function(node){
+        return node.nodeType == 3;
+    },
+    elContains = function(parent, child) {
+       if(parent && parent.firstChild){  
+         while(child) {
+            if(child === parent) {
+                return true;
+            }
+            try {
+                child = child.parentNode;
+            } catch(e) {
+                // In FF if you mouseout an text input element
+                // thats inside a div sometimes it randomly throws
+                // Permission denied to get property HTMLDivElement.parentNode
+                // See https://bugzilla.mozilla.org/show_bug.cgi?id=208427
+                return false;
+            }                
+            if(child && (child.nodeType != 1)) {
+                child = null;
+            }
+          }
+        }
+        return false;
+    },
+    checkRelatedTarget = function(e) {
+        var related = Ext.lib.Event.getRelatedTarget(e);
+        return !(isXUL(related) || elContains(e.currentTarget,related));
+    };
 
 Ext.lib.Dom = {
     getViewWidth : function(full){
@@ -91,13 +131,17 @@ Ext.lib.Dom = {
     },
 
     getXY : function(el){ // this initially used Position.cumulativeOffset but it is not accurate enough
-        var p, pe, b, scroll, bd = document.body;
+        var p, pe, b, scroll, bd = (document.body || document.documentElement);
         el = Ext.getDom(el);
+
+        if(el == bd){
+            return [0, 0];
+        }
 
         if (el.getBoundingClientRect) {
             b = el.getBoundingClientRect();
             scroll = fly(document).getScroll();
-            return [b.left + scroll.left, b.top + scroll.top];
+            return [Math.round(b.left + scroll.left), Math.round(b.top + scroll.top)];
         }
         var x = 0, y = 0;
 
@@ -195,11 +239,7 @@ Ext.lib.Event = {
     },
 
     resolveTextNode: function(node) {
-        if (node && 3 == node.nodeType) {
-            return node.parentNode;
-        } else {
-            return node;
-        }
+        return node && !isXUL(node) && isTextNode(node) ? node.parentNode : node;
     },
 
     getRelatedTarget: function(ev) { // missing from prototype?
@@ -217,10 +257,26 @@ Ext.lib.Event = {
     },
 
     on : function(el, eventName, fn){
+        if((eventName == 'mouseenter' || eventName == 'mouseleave') && !mouseEnterSupported){
+            var item = mouseCache[el.id] || (mouseCache[el.id] = {});
+            item[eventName] = fn;
+            fn = fn.createInterceptor(checkRelatedTarget);
+            eventName = (eventName == 'mouseenter') ? 'mouseover' : 'mouseout';
+        }
         Event.observe(el, eventName, fn, false);
     },
 
     un : function(el, eventName, fn){
+        if((eventName == 'mouseenter' || eventName == 'mouseleave') && !mouseEnterSupported){
+            var item = mouseCache[el.id], 
+                ev = item && item[eventName];
+
+            if(ev){
+                fn = ev.fn;
+                delete item[eventName];
+                eventName = (eventName == 'mouseenter') ? 'mouseover' : 'mouseout';
+            }
+        }
         Event.stopObserving(el, eventName, fn, false);
     },
 
@@ -295,13 +351,24 @@ Ext.lib.Ajax = function(){
                 onFailure: createFailure(cb)
             };
             if(options){
-                if(options.headers){
-                    o.requestHeaders =	options.headers;
+                var hs = options.headers;
+                if(hs){
+                    o.requestHeaders = hs;
                 }
                 if(options.xmlData){
-                    method = 'POST';
-                    o.contentType = 'text/xml';
+                    method = (method ? method : (options.method ? options.method : 'POST'));
+                    if (!hs || !hs['Content-Type']){
+                        o.contentType = 'text/xml';
+                    }
                     o.postBody = options.xmlData;
+                    delete o.parameters;
+                }
+                if(options.jsonData){
+                    method = (method ? method : (options.method ? options.method : 'POST'));
+                    if (!hs || !hs['Content-Type']){
+                        o.contentType = 'application/json';
+                    }
+                    o.postBody = typeof options.jsonData == 'object' ? Ext.encode(options.jsonData) : options.jsonData;
                     delete o.parameters;
                 }
             }
@@ -325,7 +392,7 @@ Ext.lib.Ajax = function(){
         abort : function(trans){
             return false;
         },
-
+        
         serializeForm : function(form){
             return Form.serialize(form.dom||form);
         }
@@ -334,7 +401,7 @@ Ext.lib.Ajax = function(){
 
 
 Ext.lib.Anim = function(){
-
+    
     var easings = {
         easeOut: function(pos) {
             return 1-Math.pow(1-pos,2);
@@ -432,7 +499,7 @@ function fly(el){
     libFlyweight.dom = el;
     return libFlyweight;
 }
-
+    
 Ext.lib.Region = function(t, r, b, l) {
     this.top = t;
     this[1] = t;
@@ -476,6 +543,14 @@ Ext.lib.Region.prototype = {
         return new Ext.lib.Region(t, r, b, l);
     },
 
+    constrainTo : function(r) {
+            this.top = this.top.constrain(r.top, r.bottom);
+            this.bottom = this.bottom.constrain(r.top, r.bottom);
+            this.left = this.left.constrain(r.left, r.right);
+            this.right = this.right.constrain(r.left, r.right);
+            return this;
+    },
+
     adjust : function(t, l, b, r){
         this.top += t;
         this.left += l;
@@ -497,7 +572,7 @@ Ext.lib.Region.getRegion = function(el) {
 };
 
 Ext.lib.Point = function(x, y) {
-   if (x instanceof Array) {
+   if (Ext.isArray(x)) {
       y = x[1];
       x = x[0];
    }

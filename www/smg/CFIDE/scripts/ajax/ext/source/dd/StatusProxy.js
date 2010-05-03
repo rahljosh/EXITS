@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.dd.StatusProxy
  * A specialized drag proxy that supports a drop status icon, {@link Ext.Layer} styles and auto-repair.  This is the
@@ -68,7 +66,8 @@ Ext.dd.StatusProxy.prototype = {
 
     /**
      * Updates the contents of the ghost element
-     * @param {String} html The html that will replace the current innerHTML of the ghost element
+     * @param {String/HTMLElement} html The html that will replace the current innerHTML of the ghost element, or a
+     * DOM node to append as the child of the ghost element (in which case the innerHTML will be cleared first).
      */
     update : function(html){
         if(typeof html == "string"){
@@ -77,7 +76,11 @@ Ext.dd.StatusProxy.prototype = {
             this.ghost.update("");
             html.style.margin = "0";
             this.ghost.dom.appendChild(html);
-        }        
+        }
+        var el = this.ghost.dom.firstChild; 
+        if(el){
+            Ext.fly(el).setStyle('float', 'none');
+        }
     },
 
     /**

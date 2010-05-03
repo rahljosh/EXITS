@@ -1,70 +1,106 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
- * @class Ext.form.Form
- * @extends Ext.form.BasicForm
- * Adds the ability to dynamically render forms with JavaScript to {@link Ext.form.BasicForm}.
+ * @class Ext.form.FormPanel
+ * @extends Ext.Panel
+ * <p>Standard form container.</p>
+ * 
+ * <p><b><u>Layout</u></b></p>
+ * <p>By default, FormPanel is configured with <tt>layout:'form'</tt> to use an {@link Ext.layout.FormLayout}
+ * layout manager, which styles and renders fields and labels correctly. When nesting additional Containers
+ * within a FormPanel, you should ensure that any descendant Containers which host input Fields use the
+ * {@link Ext.layout.FormLayout} layout manager.</p>
+ * 
+ * <p><b><u>BasicForm</u></b></p>
+ * <p>Although <b>not listed</b> as configuration options of FormPanel, the FormPanel class accepts all
+ * of the config options required to configure its internal {@link Ext.form.BasicForm} for:
+ * <div class="mdetail-params"><ul>
+ * <li>{@link Ext.form.BasicForm#fileUpload file uploads}</li>
+ * <li>functionality for {@link Ext.form.BasicForm#doAction loading, validating and submitting} the form</li>
+ * </ul></div>
+ *  
+ * <p><b>Note</b>: If subclassing FormPanel, any configuration options for the BasicForm must be applied to
+ * the <tt><b>initialConfig</b></tt> property of the FormPanel. Applying {@link Ext.form.BasicForm BasicForm}
+ * configuration settings to <b><tt>this</tt></b> will <b>not</b> affect the BasicForm's configuration.</p>
+ * 
+ * <p><b><u>Form Validation</u></b></p>
+ * <p>For information on form validation see the following:</p>
+ * <div class="mdetail-params"><ul>
+ * <li>{@link Ext.form.TextField}</li>
+ * <li>{@link Ext.form.VTypes}</li>
+ * <li>{@link Ext.form.BasicForm#doAction BasicForm.doAction <b>clientValidation</b> notes}</li>
+ * <li><tt>{@link Ext.form.FormPanel#monitorValid monitorValid}</tt></li>
+ * </ul></div>
+ * 
+ * <p><b><u>Form Submission</u></b></p>
+ * <p>By default, Ext Forms are submitted through Ajax, using {@link Ext.form.Action}. To enable normal browser
+ * submission of the {@link Ext.form.BasicForm BasicForm} contained in this FormPanel, see the
+ * <tt><b>{@link Ext.form.BasicForm#standardSubmit standardSubmit}</b></tt> option.</p>
+ * 
  * @constructor
  * @param {Object} config Configuration options
+ * @xtype form
  */
-Ext.form.Form = function(config){
-    Ext.form.Form.superclass.constructor.call(this, null, config);
-    this.url = this.url || this.action;
-    if(!this.root){
-        this.root = new Ext.form.Layout(Ext.applyIf({
-            id: Ext.id()
-        }, config));
-    }
-    this.active = this.root;
+Ext.FormPanel = Ext.extend(Ext.Panel, {
+	/**
+	 * @cfg {String} formId (optional) The id of the FORM tag (defaults to an auto-generated id).
+	 */
     /**
-     * Array of all the buttons that have been added to this form via {@link addButton}
-     * @type Array
+     * @cfg {Boolean} hideLabels
+     * <p><tt>true</tt> to hide field labels by default (sets <tt>display:none</tt>). Defaults to
+     * <tt>false</tt>.</p>
+     * <p>Also see {@link Ext.Component}.<tt>{@link Ext.Component#hideLabel hideLabel}</tt>.
      */
-    this.buttons = [];
-    this.addEvents({
-        /**
-         * @event clientvalidation
-         * If the monitorValid config option is true, this event fires repetitively to notify of valid state
-         * @param {Form} this
-         * @param {Boolean} valid true if the form has passed client-side validation
-         */
-        clientvalidation: true
-    });
-};
-
-Ext.extend(Ext.form.Form, Ext.form.BasicForm, {
     /**
-     * @cfg {Number} labelWidth The width of labels. This property cascades to child containers.
+     * @cfg {Number} labelPad
+     * The default padding in pixels for field labels (defaults to <tt>5</tt>). <tt>labelPad</tt> only
+     * applies if <tt>{@link #labelWidth}</tt> is also specified, otherwise it will be ignored.
+     */
+    /**
+     * @cfg {String} labelSeparator
+     * See {@link Ext.Component}.<tt>{@link Ext.Component#labelSeparator labelSeparator}</tt>
+     */
+    /**
+     * @cfg {Number} labelWidth The width of labels in pixels. This property cascades to child containers
+     * and can be overridden on any child container (e.g., a fieldset can specify a different <tt>labelWidth</tt>
+     * for its fields) (defaults to <tt>100</tt>).
      */
     /**
      * @cfg {String} itemCls A css class to apply to the x-form-item of fields. This property cascades to child containers.
      */
     /**
-     * @cfg {String} buttonAlign Valid values are "left," "center" and "right" (defaults to "center")
+     * @cfg {Array} buttons
+     * An array of {@link Ext.Button}s or {@link Ext.Button} configs used to add buttons to the footer of this FormPanel.<br>
+     * <p>Buttons in the footer of a FormPanel may be configured with the option <tt>formBind: true</tt>. This causes
+     * the form's {@link #monitorValid valid state monitor task} to enable/disable those Buttons depending on
+     * the form's valid/invalid state.</p>
      */
-    buttonAlign:'center',
+
 
     /**
-     * @cfg {Number} minButtonWidth Minimum width of all buttons in pixels (defaults to 75)
+     * @cfg {Number} minButtonWidth Minimum width of all buttons in pixels (defaults to <tt>75</tt>).
      */
-    minButtonWidth:75,
+    minButtonWidth : 75,
 
     /**
-     * @cfg {String} labelAlign Valid values are "left," "top" and "right" (defaults to "left").
-     * This property cascades to child containers if not set.
+     * @cfg {String} labelAlign The label alignment value used for the <tt>text-align</tt> specification
+     * for the <b>container</b>. Valid values are <tt>"left</tt>", <tt>"top"</tt> or <tt>"right"</tt>
+     * (defaults to <tt>"left"</tt>). This property cascades to child <b>containers</b> and can be
+     * overridden on any child <b>container</b> (e.g., a fieldset can specify a different <tt>labelAlign</tt>
+     * for its fields).
      */
-    labelAlign:'left',
+    labelAlign : 'left',
 
     /**
-     * @cfg {Boolean} monitorValid If true the form monitors its valid state <b>client-side</b> and
-     * fires a looping event with that state. This is required to bind buttons to the valid
-     * state using the config value formBind:true on the button.
+     * @cfg {Boolean} monitorValid If <tt>true</tt>, the form monitors its valid state <b>client-side</b> and
+     * regularly fires the {@link #clientvalidation} event passing that state.<br>
+     * <p>When monitoring valid state, the FormPanel enables/disables any of its configured
+     * {@link #buttons} which have been configured with <code>formBind: true</code> depending
+     * on whether the {@link Ext.form.BasicForm#isValid form is valid} or not. Defaults to <tt>false</tt></p>
      */
     monitorValid : false,
 
@@ -74,177 +110,149 @@ Ext.extend(Ext.form.Form, Ext.form.BasicForm, {
     monitorPoll : 200,
 
     /**
-     * Opens a new {@link Ext.form.Column} container in the layout stack. If fields are passed after the config, the
-     * fields are added and the column is closed. If no fields are passed the column remains open
-     * until end() is called.
-     * @param {Object} config The config to pass to the column
-     * @param {Field} field1 (optional)
-     * @param {Field} field2 (optional)
-     * @param {Field} etc (optional)
-     * @return Column The column container object
+     * @cfg {String} layout Defaults to <tt>'form'</tt>.  Normally this configuration property should not be altered. 
+     * For additional details see {@link Ext.layout.FormLayout} and {@link Ext.Container#layout Ext.Container.layout}.
      */
-    column : function(c){
-        var col = new Ext.form.Column(c);
-        this.start(col);
-        if(arguments.length > 1){ // duplicate code required because of Opera
-            this.add.apply(this, Array.prototype.slice.call(arguments, 1));
-            this.end();
-        }
-        return col;
-    },
+    layout : 'form',
 
-    /**
-     * Opens a new {@link Ext.form.FieldSet} container in the layout stack. If fields are passed after the config, the
-     * fields are added and the fieldset is closed. If no fields are passed the fieldset remains open
-     * until end() is called.
-     * @param {Object} config The config to pass to the fieldset
-     * @param {Field} field1 (optional)
-     * @param {Field} field2 (optional)
-     * @param {Field} etc (optional)
-     * @return FieldSet The fieldset container object
-     */
-    fieldset : function(c){
-        var fs = new Ext.form.FieldSet(c);
-        this.start(fs);
-        if(arguments.length > 1){ // duplicate code required because of Opera
-            this.add.apply(this, Array.prototype.slice.call(arguments, 1));
-            this.end();
-        }
-        return fs;
-    },
+    // private
+    initComponent : function(){
+        this.form = this.createForm();
+        Ext.FormPanel.superclass.initComponent.call(this);
 
-    /**
-     * Opens a new {@link Ext.form.Layout} container in the layout stack. If fields are passed after the config, the
-     * fields are added and the container is closed. If no fields are passed the container remains open
-     * until end() is called.
-     * @param {Object} config The config to pass to the Layout
-     * @param {Field} field1 (optional)
-     * @param {Field} field2 (optional)
-     * @param {Field} etc (optional)
-     * @return Layout The container object
-     */
-    container : function(c){
-        var l = new Ext.form.Layout(c);
-        this.start(l);
-        if(arguments.length > 1){ // duplicate code required because of Opera
-            this.add.apply(this, Array.prototype.slice.call(arguments, 1));
-            this.end();
-        }
-        return l;
-    },
-
-    /**
-     * Opens the passed container in the layout stack. The container can be any {@link Ext.form.Layout} or subclass.
-     * @param {Object} container A Ext.form.Layout or subclass of Layout
-     * @return {Form} this
-     */
-    start : function(c){
-        // cascade label info
-        Ext.applyIf(c, {'labelAlign': this.active.labelAlign, 'labelWidth': this.active.labelWidth, 'itemCls': this.active.itemCls});
-        this.active.stack.push(c);
-        c.ownerCt = this.active;
-        this.active = c;
-        return this;
-    },
-
-    /**
-     * Closes the current open container
-     * @return {Form} this
-     */
-    end : function(){
-        if(this.active == this.root){
-            return this;
-        }
-        this.active = this.active.ownerCt;
-        return this;
-    },
-
-    /**
-     * Add Ext.form components to the current open container (e.g. column, fieldset, etc.).  Fields added via this method
-     * can also be passed with an additional property of fieldLabel, which if supplied, will provide the text to display
-     * as the label of the field.
-     * @param {Field} field1
-     * @param {Field} field2 (optional)
-     * @param {Field} etc. (optional)
-     * @return {Form} this
-     */
-    add : function(){
-        this.active.stack.push.apply(this.active.stack, arguments);
-        var r = [];
-        for(var i = 0, a = arguments, len = a.length; i < len; i++) {
-            if(a[i].isFormField){
-                r.push(a[i]);
-            }
-        }
-        if(r.length > 0){
-            Ext.form.Form.superclass.add.apply(this, r);
-        }
-        return this;
-    },
-
-    /**
-     * Render this form into the passed container. This should only be called once!
-     * @param {String/HTMLElement/Element} container The element this component should be rendered into
-     * @return {Form} this
-     */
-    render : function(ct){
-        ct = Ext.get(ct);
-        var o = this.autoCreate || {
+        this.bodyCfg = {
             tag: 'form',
+            cls: this.baseCls + '-body',
             method : this.method || 'POST',
-            id : this.id || Ext.id()
+            id : this.formId || Ext.id()
         };
-        this.initEl(ct.createChild(o));
-
-        this.root.render(this.el);
-
-        this.items.each(function(f){
-            f.render('x-form-el-'+f.id);
-        });
-
-        if(this.buttons.length > 0){
-            // tables are required to maintain order and for correct IE layout
-            var tb = this.el.createChild({cls:'x-form-btns-ct', cn: {
-                cls:"x-form-btns x-form-btns-"+this.buttonAlign,
-                html:'<table cellspacing="0"><tbody><tr></tr></tbody></table><div class="x-clear"></div>'
-            }}, null, true);
-            var tr = tb.getElementsByTagName('tr')[0];
-            for(var i = 0, len = this.buttons.length; i < len; i++) {
-                var b = this.buttons[i];
-                var td = document.createElement('td');
-                td.className = 'x-form-btn-td';
-                b.render(tr.appendChild(td));
-            }
+        if(this.fileUpload) {
+            this.bodyCfg.enctype = 'multipart/form-data';
         }
+        this.initItems();
+        
+        this.addEvents(
+            /**
+             * @event clientvalidation
+             * If the monitorValid config option is true, this event fires repetitively to notify of valid state
+             * @param {Ext.form.FormPanel} this
+             * @param {Boolean} valid true if the form has passed client-side validation
+             */
+            'clientvalidation'
+        );
+
+        this.relayEvents(this.form, ['beforeaction', 'actionfailed', 'actioncomplete']);
+    },
+
+    // private
+    createForm : function(){
+        var config = Ext.applyIf({listeners: {}}, this.initialConfig);
+        return new Ext.form.BasicForm(null, config);
+    },
+
+    // private
+    initFields : function(){
+        var f = this.form;
+        var formPanel = this;
+        var fn = function(c){
+            if(formPanel.isField(c)){
+                f.add(c);
+            }if(c.isFieldWrap){
+                Ext.applyIf(c, {
+                    labelAlign: c.ownerCt.labelAlign,
+                    labelWidth: c.ownerCt.labelWidth,
+                    itemCls: c.ownerCt.itemCls
+                });
+                f.add(c.field);
+            }else if(c.doLayout && c != formPanel){
+                Ext.applyIf(c, {
+                    labelAlign: c.ownerCt.labelAlign,
+                    labelWidth: c.ownerCt.labelWidth,
+                    itemCls: c.ownerCt.itemCls
+                });
+                //each check required for check/radio groups.
+                if(c.items && c.items.each){
+                    c.items.each(fn, this);
+                }
+            }
+        };
+        this.items.each(fn, this);
+    },
+
+    // private
+    getLayoutTarget : function(){
+        return this.form.el;
+    },
+
+    /**
+     * Provides access to the {@link Ext.form.BasicForm Form} which this Panel contains.
+     * @return {Ext.form.BasicForm} The {@link Ext.form.BasicForm Form} which this Panel contains.
+     */
+    getForm : function(){
+        return this.form;
+    },
+
+    // private
+    onRender : function(ct, position){
+        this.initFields();
+        Ext.FormPanel.superclass.onRender.call(this, ct, position);
+        this.form.initEl(this.body);
+    },
+    
+    // private
+    beforeDestroy : function(){
+        this.stopMonitoring();
+        Ext.FormPanel.superclass.beforeDestroy.call(this);
+        /*
+         * Clear the items here to prevent them being destroyed again.
+         * Don't move this behaviour to BasicForm because it can be used
+         * on it's own.
+         */
+        this.form.items.clear();
+        Ext.destroy(this.form);
+    },
+
+	// Determine if a Component is usable as a form Field.
+    isField : function(c) {
+        return !!c.setValue && !!c.getValue && !!c.markInvalid && !!c.clearInvalid;
+    },
+
+    // private
+    initEvents : function(){
+        Ext.FormPanel.superclass.initEvents.call(this);
+        this.on('remove', this.onRemove, this);
+        this.on('add', this.onAdd, this);
         if(this.monitorValid){ // initialize after render
             this.startMonitoring();
         }
-        return this;
     },
-
-    /**
-     * Adds a button to the footer of the form - this <b>must</b> be called before the form is rendered.
-     * @param {String/Object} config A string becomes the button text, an object can either be a Button config
-     * object or a valid Ext.DomHelper element config
-     * @param {Function} handler The function called when the button is clicked
-     * @param {Object} scope (optional) The scope of the handler function
-     * @return {Ext.Button}
-     */
-    addButton : function(config, handler, scope){
-        var bc = {
-            handler: handler,
-            scope: scope,
-            minWidth: this.minButtonWidth,
-            hideParent:true
-        };
-        if(typeof config == "string"){
-            bc.text = config;
-        }else{
-            Ext.apply(bc, config);
+    
+    // private
+    onAdd : function(ct, c) {
+		// If a single form Field, add it
+        if (this.isField(c)) {
+            this.form.add(c);
+		// If a Container, add any Fields it might contain
+        } else if (c.findBy) {
+            Ext.applyIf(c, {
+                labelAlign: c.ownerCt.labelAlign,
+                labelWidth: c.ownerCt.labelWidth,
+                itemCls: c.ownerCt.itemCls
+            });
+            this.form.add.apply(this.form, c.findBy(this.isField));
         }
-        var btn = new Ext.Button(null, bc);
-        this.buttons.push(btn);
-        return btn;
+    },
+	
+    // private
+    onRemove : function(ct, c) {
+		// If a single form Field, remove it
+        if (this.isField(c)) {
+            Ext.destroy(c.container.up('.x-form-item'));
+        	this.form.remove(c);
+		// If a Container, remove any Fields it might contain
+        } else if (c.findByType) {
+            Ext.each(c.findBy(this.isField), this.form.remove, this.form);
+        }
     },
 
     /**
@@ -252,9 +260,9 @@ Ext.extend(Ext.form.Form, Ext.form.BasicForm, {
      * option "monitorValid"
      */
     startMonitoring : function(){
-        if(!this.bound){
-            this.bound = true;
-            Ext.TaskMgr.start({
+        if(!this.validTask){
+            this.validTask = new Ext.util.TaskRunner();
+            this.validTask.start({
                 run : this.bindHandler,
                 interval : this.monitorPoll || 200,
                 scope: this
@@ -266,32 +274,62 @@ Ext.extend(Ext.form.Form, Ext.form.BasicForm, {
      * Stops monitoring of the valid state of this form
      */
     stopMonitoring : function(){
-        this.bound = false;
+        if(this.validTask){
+            this.validTask.stopAll();
+            this.validTask = null;
+        }
+    },
+
+    /**
+     * This is a proxy for the underlying BasicForm's {@link Ext.form.BasicForm#load} call.
+     * @param {Object} options The options to pass to the action (see {@link Ext.form.BasicForm#doAction} for details)
+     */
+    load : function(){
+        this.form.load.apply(this.form, arguments);  
+    },
+
+    // private
+    onDisable : function(){
+        Ext.FormPanel.superclass.onDisable.call(this);
+        if(this.form){
+            this.form.items.each(function(){
+                 this.disable();
+            });
+        }
+    },
+
+    // private
+    onEnable : function(){
+        Ext.FormPanel.superclass.onEnable.call(this);
+        if(this.form){
+            this.form.items.each(function(){
+                 this.enable();
+            });
+        }
     },
 
     // private
     bindHandler : function(){
-        if(!this.bound){
-            return false; // stops binding
-        }
         var valid = true;
-        this.items.each(function(f){
+        this.form.items.each(function(f){
             if(!f.isValid(true)){
                 valid = false;
                 return false;
             }
         });
-        for(var i = 0, len = this.buttons.length; i < len; i++){
-            var btn = this.buttons[i];
-            if(btn.formBind === true && btn.disabled === valid){
-                btn.setDisabled(!valid);
+        if(this.fbar){
+            var fitems = this.fbar.items.items;
+            for(var i = 0, len = fitems.length; i < len; i++){
+                var btn = fitems[i];
+                if(btn.formBind === true && btn.disabled === valid){
+                    btn.setDisabled(!valid);
+                }
             }
         }
         this.fireEvent('clientvalidation', this, valid);
     }
 });
+Ext.reg('form', Ext.FormPanel);
 
-
-// back compat
-Ext.Form = Ext.form.Form;
+Ext.form.FormPanel = Ext.FormPanel;
 

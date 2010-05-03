@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.menu.Separator
  * @extends Ext.menu.BaseItem
@@ -13,6 +11,7 @@
  * add one of these by using "-" in you call to add() or in your items config rather than creating one directly.
  * @constructor
  * @param {Object} config Configuration options
+ * @xtype menuseparator
  */
 Ext.menu.Separator = function(config){
     Ext.menu.Separator.superclass.constructor.call(this, config);
@@ -27,6 +26,12 @@ Ext.extend(Ext.menu.Separator, Ext.menu.BaseItem, {
      * @cfg {Boolean} hideOnClick True to hide the containing menu after this item is clicked (defaults to false)
      */
     hideOnClick : false,
+    
+    /** 
+     * @cfg {String} activeClass
+     * @hide 
+     */
+    activeClass: '',
 
     // private
     onRender : function(li){
@@ -38,3 +43,4 @@ Ext.extend(Ext.menu.Separator, Ext.menu.BaseItem, {
         Ext.menu.Separator.superclass.onRender.apply(this, arguments);
     }
 });
+Ext.reg('menuseparator', Ext.menu.Separator);

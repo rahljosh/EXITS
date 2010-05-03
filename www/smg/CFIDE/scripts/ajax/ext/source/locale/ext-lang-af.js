@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /*
  * List compiled by mystix on the extjs.com forums.
  * Thank you Mystix!
@@ -22,8 +20,8 @@ if(Ext.View){
     Ext.View.prototype.emptyText = "";
 }
 
-if(Ext.grid.Grid){
-    Ext.grid.Grid.prototype.ddText = "{0} geselekteerde ry(e)";
+if(Ext.grid.GridPanel){
+    Ext.grid.GridPanel.prototype.ddText = "{0} geselekteerde ry(e)";
 }
 
 if(Ext.TabPanelItem){
@@ -139,7 +137,8 @@ if(Ext.form.DateField){
        minText           : "Die datum in hierdie veld moet na {0} wees",
        maxText           : "Die datum in hierdie veld moet voor {0} wees",
        invalidText       : "{0} is nie 'n geldige datum nie - datumformaat is {1}",
-       format            : "d/m/y"
+       format            : "d/m/y",
+       altFormats        : "d/m/Y|d-m-y|d-m-Y|d/m|d-m|dm|dmy|dmY|d|Y-m-d"
     });
 }
 
@@ -177,8 +176,8 @@ if(Ext.grid.PropertyColumnModel){
     });
 }
 
-if(Ext.SplitLayoutRegion){
-    Ext.apply(Ext.SplitLayoutRegion.prototype, {
+if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
+    Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
        splitTip            : "Trek om grootte aan te pas.",
        collapsibleSplitTip : "Trek om grootte aan te pas. Dubbel-klik om weg te steek."
     });

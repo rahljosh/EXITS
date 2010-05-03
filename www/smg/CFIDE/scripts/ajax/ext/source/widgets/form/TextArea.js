@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.form.TextArea
  * @extends Ext.form.TextField
@@ -14,37 +12,34 @@
  * @constructor
  * Creates a new TextArea
  * @param {Object} config Configuration options
+ * @xtype textarea
  */
-Ext.form.TextArea = function(config){
-    Ext.form.TextArea.superclass.constructor.call(this, config);
-    // these are provided exchanges for backwards compat
-    // minHeight/maxHeight were replaced by growMin/growMax to be
-    // compatible with TextField growing config values
-    if(this.minHeight !== undefined){
-        this.growMin = this.minHeight;
-    }
-    if(this.maxHeight !== undefined){
-        this.growMax = this.maxHeight;
-    }
-};
-
-Ext.extend(Ext.form.TextArea, Ext.form.TextField,  {
+Ext.form.TextArea = Ext.extend(Ext.form.TextField,  {
     /**
-     * @cfg {Number} growMin The minimum height to allow when grow = true (defaults to 60)
+     * @cfg {Number} growMin The minimum height to allow when <tt>{@link Ext.form.TextField#grow grow}=true</tt>
+     * (defaults to <tt>60</tt>)
      */
     growMin : 60,
     /**
-     * @cfg {Number} growMax The maximum height to allow when grow = true (defaults to 1000)
+     * @cfg {Number} growMax The maximum height to allow when <tt>{@link Ext.form.TextField#grow grow}=true</tt>
+     * (defaults to <tt>1000</tt>)
      */
     growMax: 1000,
+    growAppend : '&#160;\n&#160;',
+    growPad : Ext.isWebKit ? -6 : 0,
+
+    enterIsSpecial : false,
+
     /**
-     * @cfg {Boolean} preventScrollbars True to prevent scrollbars from appearing regardless of how much text is
-     * in the field (equivalent to setting overflow: hidden, defaults to false)
+     * @cfg {Boolean} preventScrollbars <tt>true</tt> to prevent scrollbars from appearing regardless of how much text is
+     * in the field (equivalent to setting overflow: hidden, defaults to <tt>false</tt>)
      */
     preventScrollbars: false,
     /**
-     * @cfg {String/Object} autoCreate A DomHelper element spec, or true for a default element spec (defaults to
-     * {tag: "textarea", style: "width:300px;height:60px;", autocomplete: "off"})
+     * @cfg {String/Object} autoCreate <p>A {@link Ext.DomHelper DomHelper} element spec, or true for a default
+     * element spec. Used to create the {@link Ext.Component#getEl Element} which will encapsulate this Component.
+     * See <tt>{@link Ext.Component#autoEl autoEl}</tt> for details.  Defaults to:</p>
+     * <pre><code>{tag: "textarea", style: "width:100px;height:60px;", autocomplete: "off"}</code></pre>
      */
 
     // private
@@ -52,7 +47,7 @@ Ext.extend(Ext.form.TextArea, Ext.form.TextField,  {
         if(!this.el){
             this.defaultAutoCreate = {
                 tag: "textarea",
-                style:"width:300px;height:60px;",
+                style:"width:100px;height:60px;",
                 autocomplete: "off"
             };
         }
@@ -69,10 +64,14 @@ Ext.extend(Ext.form.TextArea, Ext.form.TextField,  {
     },
 
     onDestroy : function(){
-        if(this.textSizeEl){
-            this.textSizeEl.parentNode.removeChild(this.textSizeEl);
-        }
+        Ext.destroy(this.textSizeEl);
         Ext.form.TextArea.superclass.onDestroy.call(this);
+    },
+
+    fireKey : function(e){
+        if(e.isSpecialKey() && (this.enterIsSpecial || (e.getKey() != e.ENTER || e.hasModifier()))){
+            this.fireEvent("specialkey", this, e);
+        }
     },
 
     // private
@@ -80,35 +79,34 @@ Ext.extend(Ext.form.TextArea, Ext.form.TextField,  {
         if(!e.isNavKeyPress() || e.getKey() == e.ENTER){
             this.autoSize();
         }
+        Ext.form.TextArea.superclass.onKeyUp.call(this, e);
     },
 
     /**
      * Automatically grows the field to accomodate the height of the text up to the maximum field height allowed.
-     * This only takes effect if grow = true, and fires the autosize event if the height changes.
+     * This only takes effect if grow = true, and fires the {@link #autosize} event if the height changes.
      */
-    autoSize : function(){
+    autoSize: function(){
         if(!this.grow || !this.textSizeEl){
             return;
         }
         var el = this.el;
         var v = el.dom.value;
         var ts = this.textSizeEl;
-
         ts.innerHTML = '';
         ts.appendChild(document.createTextNode(v));
         v = ts.innerHTML;
-
         Ext.fly(ts).setWidth(this.el.getWidth());
         if(v.length < 1){
             v = "&#160;&#160;";
         }else{
+            v += this.growAppend;
             if(Ext.isIE){
-                v = v.replace(/\n/g, '<p>&#160;</p>');
+                v = v.replace(/\n/g, '<br />');
             }
-            v += "&#160;\n&#160;";
         }
         ts.innerHTML = v;
-        var h = Math.min(this.growMax, Math.max(ts.offsetHeight, this.growMin));
+        var h = Math.min(this.growMax, Math.max(ts.offsetHeight, this.growMin) + this.growPad);
         if(h != this.lastHeight){
             this.lastHeight = h;
             this.el.setHeight(h);
@@ -116,3 +114,4 @@ Ext.extend(Ext.form.TextArea, Ext.form.TextField,  {
         }
     }
 });
+Ext.reg('textarea', Ext.form.TextArea);

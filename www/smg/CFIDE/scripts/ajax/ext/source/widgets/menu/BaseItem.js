@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.menu.BaseItem
  * @extends Ext.Component
@@ -14,41 +12,55 @@
  * @constructor
  * Creates a new BaseItem
  * @param {Object} config Configuration options
+ * @xtype menubaseitem
  */
 Ext.menu.BaseItem = function(config){
     Ext.menu.BaseItem.superclass.constructor.call(this, config);
 
-    this.addEvents({
+    this.addEvents(
         /**
          * @event click
          * Fires when this item is clicked
          * @param {Ext.menu.BaseItem} this
          * @param {Ext.EventObject} e
          */
-        click: true,
+        'click',
         /**
          * @event activate
          * Fires when this item is activated
          * @param {Ext.menu.BaseItem} this
          */
-        activate : true,
+        'activate',
         /**
          * @event deactivate
          * Fires when this item is deactivated
          * @param {Ext.menu.BaseItem} this
          */
-        deactivate : true
-    });
+        'deactivate'
+    );
 
     if(this.handler){
-        this.on("click", this.handler, this.scope, true);
+        this.on("click", this.handler, this.scope);
     }
 };
 
 Ext.extend(Ext.menu.BaseItem, Ext.Component, {
     /**
+     * @property parentMenu
+     * @type Ext.menu.Menu
+     * The parent Menu of this Item.
+     */
+    /**
      * @cfg {Function} handler
-     * A function that will handle the click event of this menu item (defaults to undefined)
+     * A function that will handle the click event of this menu item (optional).
+     * The handler is passed the following parameters:<div class="mdetail-params"><ul>
+     * <li><code>b</code> : Item<div class="sub-desc">This menu Item.</div></li>
+     * <li><code>e</code> : EventObject<div class="sub-desc">The click event.</div></li>
+     * </ul></div>
+     */
+    /**
+     * @cfg {Object} scope
+     * The scope (<tt><b>this</b></tt> reference) in which the handler function will be called.
      */
     /**
      * @cfg {Boolean} canActivate True if this item can be visually activated (defaults to false)
@@ -63,33 +75,46 @@ Ext.extend(Ext.menu.BaseItem, Ext.Component, {
      */
     hideOnClick : true,
     /**
-     * @cfg {Number} hideDelay Length of time in milliseconds to wait before hiding after a click (defaults to 100)
+     * @cfg {Number} clickHideDelay Length of time in milliseconds to wait before hiding after a click (defaults to 100)
      */
-    hideDelay : 100,
+    clickHideDelay : 1,
 
     // private
-    ctype: "Ext.menu.BaseItem",
+    ctype : "Ext.menu.BaseItem",
 
     // private
     actionMode : "container",
 
     // private
-    render : function(container, parentMenu){
-        this.parentMenu = parentMenu;
-        Ext.menu.BaseItem.superclass.render.call(this, container);
-        this.container.menuItemId = this.id;
+    onRender : function(container, position){
+        Ext.menu.BaseItem.superclass.onRender.apply(this, arguments);
+        if(this.ownerCt && this.ownerCt instanceof Ext.menu.Menu){
+            this.parentMenu = this.ownerCt;
+        }else{
+            this.container.addClass('x-menu-list-item');
+            this.mon(this.el, 'click', this.onClick, this);
+            this.mon(this.el, 'mouseenter', this.activate, this);
+            this.mon(this.el, 'mouseleave', this.deactivate, this);
+        }
     },
 
-    // private
-    onRender : function(container, position){
-        this.el = Ext.get(this.el);
-        container.dom.appendChild(this.el.dom);
+    /**
+     * Sets the function that will handle click events for this item (equivalent to passing in the {@link #handler}
+     * config property).  If an existing handler is already registered, it will be unregistered for you.
+     * @param {Function} handler The function that should be called on click
+     * @param {Object} scope The scope that should be passed to the handler
+     */
+    setHandler : function(handler, scope){
+        if(this.handler){
+            this.un("click", this.handler, this.scope);
+        }
+        this.on("click", this.handler = handler, this.scope = scope);
     },
 
     // private
     onClick : function(e){
         if(!this.disabled && this.fireEvent("click", this, e) !== false
-                && this.parentMenu.fireEvent("itemclick", this, e) !== false){
+                && (this.parentMenu && this.parentMenu.fireEvent("itemclick", this, e) !== false)){
             this.handleClick(e);
         }else{
             e.stopEvent();
@@ -122,17 +147,14 @@ Ext.extend(Ext.menu.BaseItem, Ext.Component, {
     // private
     handleClick : function(e){
         if(this.hideOnClick){
-            this.parentMenu.hide.defer(this.hideDelay, this.parentMenu, [true]);
+            this.parentMenu.hide.defer(this.clickHideDelay, this.parentMenu, [true]);
         }
     },
 
-    // private
-    expandMenu : function(autoActivate){
-        // do nothing
-    },
+    // private. Do nothing
+    expandMenu : Ext.emptyFn,
 
-    // private
-    hideMenu : function(){
-        // do nothing
-    }
+    // private. Do nothing
+    hideMenu : Ext.emptyFn
 });
+Ext.reg('menubaseitem', Ext.menu.BaseItem);

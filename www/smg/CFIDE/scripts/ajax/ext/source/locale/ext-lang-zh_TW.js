@@ -1,12 +1,10 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
-/*
+﻿/*
  * Traditional Chinese translation
  * By hata1234
  * 09 April 2007
@@ -18,8 +16,8 @@ if(Ext.View){
     Ext.View.prototype.emptyText = "";
 }
 
-if(Ext.grid.Grid){
-    Ext.grid.Grid.prototype.ddText = "選擇了 {0} 行";
+if(Ext.grid.GridPanel){
+    Ext.grid.GridPanel.prototype.ddText = "選擇了 {0} 行";
 }
 
 if(Ext.TabPanelItem){
@@ -83,13 +81,15 @@ if(Ext.DatePicker){
        maxText           : "日期必須小於最大容許日期",
        disabledDaysText  : "",
        disabledDatesText : "",
-       monthNames	 : Date.monthNames,
-       dayNames		 : Date.dayNames,       
+       monthNames        : Date.monthNames,
+       dayNames          : Date.dayNames,
        nextText          : "下個月 (Ctrl+右方向鍵)",
        prevText          : "上個月 (Ctrl+左方向鍵)",
        monthYearText     : "選擇月份 (Ctrl+上/下方向鍵選擇年份)",
        todayTip          : "{0} (空白鍵)",
-       format            : "y/m/d"
+       format            : "y/m/d",
+       okText            : "确定",
+       cancelText        : "取消"
     });
 }
 
@@ -102,7 +102,7 @@ if(Ext.PagingToolbar){
        nextText       : "下一頁",
        lastText       : "最後頁",
        refreshText    : "重新整理",
-       displayMsg     : "顯示{0} - {1}頁,共{2}頁",
+       displayMsg     : "顯示{0} - {1}筆,共{2}筆",
        emptyMsg       : '沒有任何資料'
     });
 }
@@ -145,8 +145,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
     Ext.apply(Ext.form.VTypes, {
-       emailText    : '此欄位必須輸入像 "user@domain.com" 之E-Mail格式',
-       urlText      : '此欄位必須輸入像 "http:/'+'/www.domain.com" 之網址格式',
+       emailText    : '此欄位必須輸入像 "user@example.com" 之E-Mail格式',
+       urlText      : '此欄位必須輸入像 "http:/'+'/www.example.com" 之網址格式',
        alphaText    : '此欄位僅能輸入半形英文字母及底線( _ )符號',
        alphanumText : '此欄位僅能輸入半形英文字母、數字及底線( _ )符號'
     });
@@ -170,8 +170,8 @@ if(Ext.grid.PropertyColumnModel){
     });
 }
 
-if(Ext.SplitLayoutRegion){
-    Ext.apply(Ext.SplitLayoutRegion.prototype, {
+if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
+    Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
        splitTip            : "拖曳縮放大小.",
        collapsibleSplitTip : "拖曳縮放大小. 滑鼠雙擊隱藏."
     });

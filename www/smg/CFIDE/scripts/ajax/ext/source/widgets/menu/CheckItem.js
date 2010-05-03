@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.menu.CheckItem
  * @extends Ext.menu.Item
@@ -13,28 +11,37 @@
  * @constructor
  * Creates a new CheckItem
  * @param {Object} config Configuration options
+ * @xtype menucheckitem
  */
 Ext.menu.CheckItem = function(config){
     Ext.menu.CheckItem.superclass.constructor.call(this, config);
-    this.addEvents({
+    this.addEvents(
         /**
          * @event beforecheckchange
          * Fires before the checked value is set, providing an opportunity to cancel if needed
          * @param {Ext.menu.CheckItem} this
          * @param {Boolean} checked The new checked value that will be set
          */
-        "beforecheckchange" : true,
+        "beforecheckchange" ,
         /**
          * @event checkchange
          * Fires after the checked value has been set
          * @param {Ext.menu.CheckItem} this
          * @param {Boolean} checked The checked value that was set
          */
-        "checkchange" : true
-    });
+        "checkchange"
+    );
+    /**
+     * A function that handles the checkchange event.  The function is undefined by default, but if an implementation
+     * is provided, it will be called automatically when the checkchange event fires.
+     * @param {Ext.menu.CheckItem} this
+     * @param {Boolean} checked The checked value that was set
+     * @method checkHandler
+     */
     if(this.checkHandler){
         this.on('checkchange', this.checkHandler, this.scope);
     }
+    Ext.menu.MenuMgr.registerCheckable(this);
 };
 Ext.extend(Ext.menu.CheckItem, Ext.menu.Item, {
     /**
@@ -67,7 +74,6 @@ Ext.extend(Ext.menu.CheckItem, Ext.menu.Item, {
         if(this.group){
             this.el.addClass(this.groupClass);
         }
-        Ext.menu.MenuMgr.registerCheckable(this);
         if(this.checked){
             this.checked = false;
             this.setChecked(true, true);
@@ -76,9 +82,7 @@ Ext.extend(Ext.menu.CheckItem, Ext.menu.Item, {
 
     // private
     destroy : function(){
-        if(this.rendered){
-            Ext.menu.MenuMgr.unregisterCheckable(this);
-        }
+        Ext.menu.MenuMgr.unregisterCheckable(this);
         Ext.menu.CheckItem.superclass.destroy.apply(this, arguments);
     },
 
@@ -107,3 +111,4 @@ Ext.extend(Ext.menu.CheckItem, Ext.menu.Item, {
        Ext.menu.CheckItem.superclass.handleClick.apply(this, arguments);
     }
 });
+Ext.reg('menucheckitem', Ext.menu.CheckItem);

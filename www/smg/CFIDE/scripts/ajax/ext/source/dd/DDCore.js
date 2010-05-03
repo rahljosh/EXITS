@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /*
  * These classes are derivatives of the similarly named classes in the YUI Library.
  * The original license:
@@ -64,12 +62,20 @@ var Dom=Ext.lib.Dom;
  *                    padding, isTarget, maintainOffset, primaryButtonOnly
  */
 Ext.dd.DragDrop = function(id, sGroup, config) {
-    if (id) {
+    if(id) {
         this.init(id, sGroup, config);
     }
 };
 
 Ext.dd.DragDrop.prototype = {
+
+    /**
+     * Set to false to enable a DragDrop object to fire drag events while dragging
+     * over its own Element. Defaults to true - DragDrop objects do not by default
+     * fire drag events to themselves.
+     * @property ignoreSelf
+     * @type Boolean
+     */
 
     /**
      * The id of the element associated with this object.  This is what we
@@ -99,7 +105,7 @@ Ext.dd.DragDrop.prototype = {
     dragElId: null,
 
     /**
-     * the id of the element that initiates the drag operation.  By default
+     * The ID of the element that initiates the drag operation.  By default
      * this is the linked element, but could be changed to be a child of this
      * element.  This lets us do things like only starting the drag when the
      * header element within the linked html element is clicked.
@@ -110,24 +116,33 @@ Ext.dd.DragDrop.prototype = {
     handleElId: null,
 
     /**
-     * An associative array of HTML tags that will be ignored if clicked.
+     * An object who's property names identify HTML tags to be considered invalid as drag handles.
+     * A non-null property value identifies the tag as invalid. Defaults to the 
+     * following value which prevents drag operations from being initiated by &lt;a> elements:<pre><code>
+{
+    A: "A"
+}</code></pre>
      * @property invalidHandleTypes
-     * @type {string: string}
+     * @type Object
      */
     invalidHandleTypes: null,
 
     /**
-     * An associative array of ids for elements that will be ignored if clicked
+     * An object who's property names identify the IDs of elements to be considered invalid as drag handles.
+     * A non-null property value identifies the ID as invalid. For example, to prevent
+     * dragging from being initiated on element ID "foo", use:<pre><code>
+{
+    foo: true
+}</code></pre>
      * @property invalidHandleIds
-     * @type {string: string}
+     * @type Object
      */
     invalidHandleIds: null,
 
     /**
-     * An indexted array of css class names for elements that will be ignored
-     * if clicked.
+     * An Array of CSS class names for elements to be considered in valid as drag handles.
      * @property invalidHandleClasses
-     * @type string[]
+     * @type Array
      */
     invalidHandleClasses: null,
 
@@ -155,7 +170,7 @@ Ext.dd.DragDrop.prototype = {
      * DragDrop object in the same group.  This lets us define multiple
      * groups using a single DragDrop subclass if we want.
      * @property groups
-     * @type {string: string}
+     * @type object An object in the format {'group1':true, 'group2':true}
      */
     groups: null,
 
@@ -175,15 +190,23 @@ Ext.dd.DragDrop.prototype = {
     lock: function() { this.locked = true; },
 
     /**
+     * When set to true, other DD objects in cooperating DDGroups do not receive
+     * notification events when this DD object is dragged over them. Defaults to false.
+     * @property moveOnly
+     * @type boolean
+     */
+    moveOnly: false,
+
+    /**
      * Unlock this instace
      * @method unlock
      */
     unlock: function() { this.locked = false; },
 
     /**
-     * By default, all insances can be a drop target.  This can be disabled by
+     * By default, all instances can be a drop target.  This can be disabled by
      * setting isTarget to false.
-     * @method isTarget
+     * @property isTarget
      * @type boolean
      */
     isTarget: true,
@@ -191,8 +214,8 @@ Ext.dd.DragDrop.prototype = {
     /**
      * The padding configured for this drag and drop object for calculating
      * the drop zone intersection with this object.
-     * @method padding
-     * @type int[]
+     * @property padding
+     * @type int[] An array containing the 4 padding values: [top, right, bottom, left]
      */
     padding: null,
 
@@ -464,13 +487,13 @@ Ext.dd.DragDrop.prototype = {
     onAvailable: function () {
     },
 
-    /*
+    /**
      * Provides default constraint padding to "constrainTo" elements (defaults to {left: 0, right:0, top:0, bottom:0}).
      * @type Object
      */
     defaultPadding : {left:0, right:0, top:0, bottom:0},
 
-    /*
+    /**
      * Initializes the drag drop object's constraints to restrict movement to a certain element.
  *
  * Usage:
@@ -489,7 +512,7 @@ Ext.dd.DragDrop.prototype = {
      }
  });
  </code></pre>
-     * @param {String/HTMLElement/Element} constrainTo The element to constrain to.
+     * @param {Mixed} constrainTo The element to constrain to.
      * @param {Object/Number} pad (optional) Pad provides a way to specify "padding" of the constraints,
      * and can be either a number for symmetrical padding (4 would be equal to {left:4, right:4, top:4, bottom:4}) or
      * an object containing the sides to pad. For example: {right:10, bottom:10}
@@ -507,7 +530,7 @@ Ext.dd.DragDrop.prototype = {
         if(cd == document.body){
             c = { x: s.left, y: s.top, width: Ext.lib.Dom.getViewWidth(), height: Ext.lib.Dom.getViewHeight()};
         }else{
-            xy = ce.getXY();
+            var xy = ce.getXY();
             c = {x : xy[0]+s.left, y: xy[1]+s.top, width: cd.clientWidth, height: cd.clientHeight};
         }
 
@@ -517,10 +540,12 @@ Ext.dd.DragDrop.prototype = {
 
         this.resetConstraints();
         this.setXConstraint(leftSpace - (pad.left||0), // left
-                c.width - leftSpace - b.width - (pad.right||0) //right
+                c.width - leftSpace - b.width - (pad.right||0), //right
+				this.xTickSize
         );
         this.setYConstraint(topSpace - (pad.top||0), //top
-                c.height - topSpace - b.height - (pad.bottom||0) //bottom
+                c.height - topSpace - b.height - (pad.bottom||0), //bottom
+				this.yTickSize
         );
     },
 
@@ -664,7 +689,7 @@ Ext.dd.DragDrop.prototype = {
 
     /**
      * Stores the initial placement of the linked element.
-     * @method setInitialPosition
+     * @method setInitPosition
      * @param {int} diffX   the X offset, default 0
      * @param {int} diffY   the Y offset, default 0
      */
@@ -940,7 +965,7 @@ Ext.dd.DragDrop.prototype = {
         valid = valid && !this.invalidHandleIds[node.id];
 
         for (var i=0, len=this.invalidHandleClasses.length; valid && i<len; ++i) {
-            valid = !Dom.hasClass(node, this.invalidHandleClasses[i]);
+            valid = !Ext.fly(node).hasClass(this.invalidHandleClasses[i]);
         }
 
 
@@ -1267,7 +1292,7 @@ Ext.dd.DragDropMgr = function() {
          * @private
          * @static
          */
-        initalized: false,
+        initialized: false,
 
         /**
          * All drag and drop can be disabled.
@@ -1297,7 +1322,7 @@ Ext.dd.DragDropMgr = function() {
         POINT: 0,
 
         /**
-         * In intersect mode, drag and drop interactio nis defined by the
+         * In intersect mode, drag and drop interaction is defined by the
          * overlap of two or more drag and drop objects.
          * @property INTERSECT
          * @type int
@@ -1501,7 +1526,7 @@ Ext.dd.DragDropMgr = function() {
          */
         _remove: function(oDD) {
             for (var g in oDD.groups) {
-                if (g && this.ids[g][oDD.id]) {
+                if (g && this.ids[g] && this.ids[g][oDD.id]) {
                     delete this.ids[g][oDD.id];
                 }
             }
@@ -1549,7 +1574,7 @@ Ext.dd.DragDropMgr = function() {
         getRelated: function(p_oDD, bTargetsOnly) {
             var oDDs = [];
             for (var i in p_oDD.groups) {
-                for (j in this.ids[i]) {
+                for (var j in this.ids[i]) {
                     var dd = this.ids[i][j];
                     if (! this.isTypeOfDD(dd)) {
                         continue;
@@ -1642,8 +1667,13 @@ Ext.dd.DragDropMgr = function() {
             if(Ext.QuickTips){
                 Ext.QuickTips.disable();
             }
+            if(this.dragCurrent){
+                // the original browser mouseup wasn't handled (e.g. outside FF browser window)
+                // so clean up first to avoid breaking the next drag
+                this.handleMouseUp(e);
+            }
+            
             this.currentTarget = e.getTarget();
-
             this.dragCurrent = oDD;
 
             var el = oDD.getEl();
@@ -1769,7 +1799,6 @@ Ext.dd.DragDropMgr = function() {
             if (! this.dragCurrent) {
                 return true;
             }
-
             // var button = e.which || e.button;
 
             // check for IE mouseup outside of page boundary
@@ -1858,7 +1887,7 @@ Ext.dd.DragDropMgr = function() {
                         continue;
                     }
 
-                    if (oDD.isTarget && !oDD.isLocked() && oDD != dc) {
+                    if (oDD.isTarget && !oDD.isLocked() && ((oDD != dc) || (dc.ignoreSelf === false))) {
                         if (this.isOverTarget(pt, oDD, this.mode)) {
                             // look for drop interactions
                             if (isDrop) {
@@ -2176,7 +2205,7 @@ Ext.dd.DragDropMgr = function() {
 
             this._execOnAll("unreg", []);
 
-            for (i in this.elementCache) {
+            for (var i in this.elementCache) {
                 delete this.elementCache[i];
             }
 
@@ -2470,7 +2499,7 @@ Ext.extend(Ext.dd.DD, Ext.dd.DragDrop, {
 
     /**
      * When set to true, the utility automatically tries to scroll the browser
-     * window wehn a drag and drop element is dragged near the viewport boundary.
+     * window when a drag and drop element is dragged near the viewport boundary.
      * Defaults to true.
      * @property scroll
      * @type boolean
@@ -2532,7 +2561,7 @@ Ext.extend(Ext.dd.DD, Ext.dd.DragDrop, {
      */
     alignElWithMouse: function(el, iPageX, iPageY) {
         var oCoord = this.getTargetCoord(iPageX, iPageY);
-        var fly = el.dom ? el : Ext.fly(el);
+        var fly = el.dom ? el : Ext.fly(el, '_dd');
         if (!this.deltaSetXY) {
             var aCoord = [oCoord.x, oCoord.y];
             fly.setXY(aCoord);
@@ -2583,10 +2612,10 @@ Ext.extend(Ext.dd.DD, Ext.dd.DragDrop, {
 
         if (this.scroll) {
             // The client height
-            var clientH = Ext.lib.Dom.getViewWidth();
+            var clientH = Ext.lib.Dom.getViewHeight();
 
             // The client width
-            var clientW = Ext.lib.Dom.getViewHeight();
+            var clientW = Ext.lib.Dom.getViewWidth();
 
             // The amt scrolled down
             var st = this.DDM.getScrollTop();
@@ -2676,7 +2705,7 @@ Ext.extend(Ext.dd.DD, Ext.dd.DragDrop, {
         return {x:x, y:y};
     },
 
-    /*
+    /**
      * Sets up config options specific to this class. Overrides
      * Ext.dd.DragDrop, but all versions of this method through the
      * inheritance chain are called
@@ -2686,7 +2715,7 @@ Ext.extend(Ext.dd.DD, Ext.dd.DragDrop, {
         this.scroll = (this.config.scroll !== false);
     },
 
-    /*
+    /**
      * Event that fires prior to the onMouseDown event.  Overrides
      * Ext.dd.DragDrop.
      */
@@ -2696,7 +2725,7 @@ Ext.extend(Ext.dd.DD, Ext.dd.DragDrop, {
                             e.getPageY());
     },
 
-    /*
+    /**
      * Event that fires prior to the onDrag event.  Overrides
      * Ext.dd.DragDrop.
      */

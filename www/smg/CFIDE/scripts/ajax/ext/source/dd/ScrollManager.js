@@ -1,14 +1,26 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.dd.ScrollManager
- * Provides automatic scrolling of overflow regions in the page during drag operations.<br><br>
+ * <p>Provides automatic scrolling of overflow regions in the page during drag operations.</p>
+ * <p>The ScrollManager configs will be used as the defaults for any scroll container registered with it,
+ * but you can also override most of the configs per scroll container by adding a 
+ * <tt>ddScrollConfig</tt> object to the target element that contains these properties: {@link #hthresh},
+ * {@link #vthresh}, {@link #increment} and {@link #frequency}.  Example usage:
+ * <pre><code>
+var el = Ext.get('scroll-ct');
+el.ddScrollConfig = {
+    vthresh: 50,
+    hthresh: -1,
+    frequency: 100,
+    increment: 200
+};
+Ext.dd.ScrollManager.register(el);
+</code></pre>
  * <b>Note: This class uses "Point Mode" and is untested in "Intersect Mode".</b>
  * @singleton
  */
@@ -32,12 +44,14 @@ Ext.dd.ScrollManager = function(){
     var doScroll = function(){
         if(ddm.dragCurrent){
             var dds = Ext.dd.ScrollManager;
+            var inc = proc.el.ddScrollConfig ?
+                      proc.el.ddScrollConfig.increment : dds.increment;
             if(!dds.animate){
-                if(proc.el.scroll(proc.dir, dds.increment)){
+                if(proc.el.scroll(proc.dir, inc)){
                     triggerRefresh();
                 }
             }else{
-                proc.el.scroll(proc.dir, dds.increment, true, dds.animDuration, triggerRefresh);
+                proc.el.scroll(proc.dir, inc, true, dds.animDuration, triggerRefresh);
             }
         }
     };
@@ -55,7 +69,9 @@ Ext.dd.ScrollManager = function(){
         clearProc();
         proc.el = el;
         proc.dir = dir;
-        proc.id = setInterval(doScroll, Ext.dd.ScrollManager.frequency);
+        var freq = (el.ddScrollConfig && el.ddScrollConfig.frequency) ? 
+                el.ddScrollConfig.frequency : Ext.dd.ScrollManager.frequency;
+        proc.id = setInterval(doScroll, freq);
     };
     
     var onFire = function(e, isDrop){
@@ -71,23 +87,24 @@ Ext.dd.ScrollManager = function(){
         var pt = new Ext.lib.Point(xy[0], xy[1]);
         for(var id in els){
             var el = els[id], r = el._region;
+            var c = el.ddScrollConfig ? el.ddScrollConfig : dds;
             if(r && r.contains(pt) && el.isScrollable()){
-                if(r.bottom - pt.y <= dds.thresh){
+                if(r.bottom - pt.y <= c.vthresh){
                     if(proc.el != el){
                         startProc(el, "down");
                     }
                     return;
-                }else if(r.right - pt.x <= dds.thresh){
+                }else if(r.right - pt.x <= c.hthresh){
                     if(proc.el != el){
                         startProc(el, "left");
                     }
                     return;
-                }else if(pt.y - r.top <= dds.thresh){
+                }else if(pt.y - r.top <= c.vthresh){
                     if(proc.el != el){
                         startProc(el, "up");
                     }
                     return;
-                }else if(pt.x - r.left <= dds.thresh){
+                }else if(pt.x - r.left <= c.hthresh){
                     if(proc.el != el){
                         startProc(el, "right");
                     }
@@ -104,10 +121,10 @@ Ext.dd.ScrollManager = function(){
     return {
         /**
          * Registers new overflow element(s) to auto scroll
-         * @param {String/HTMLElement/Element/Array} el The id of or the element to be scrolled or an array of either
+         * @param {Mixed/Array} el The id of or the element to be scrolled or an array of either
          */
         register : function(el){
-            if(el instanceof Array){
+            if(Ext.isArray(el)){
                 for(var i = 0, len = el.length; i < len; i++) {
                 	this.register(el[i]);
                 }
@@ -119,10 +136,10 @@ Ext.dd.ScrollManager = function(){
         
         /**
          * Unregisters overflow element(s) so they are no longer scrolled
-         * @param {String/HTMLElement/Element/Array} el The id of or the element to be removed or an array of either
+         * @param {Mixed/Array} el The id of or the element to be removed or an array of either
          */
         unregister : function(el){
-            if(el instanceof Array){
+            if(Ext.isArray(el)){
                 for(var i = 0, len = el.length; i < len; i++) {
                 	this.unregister(el[i]);
                 }
@@ -133,12 +150,18 @@ Ext.dd.ScrollManager = function(){
         },
         
         /**
-         * The number of pixels from the edge of a container the pointer needs to be to 
+         * The number of pixels from the top or bottom edge of a container the pointer needs to be to
          * trigger scrolling (defaults to 25)
          * @type Number
          */
-        thresh : 25,
-        
+        vthresh : 25,
+        /**
+         * The number of pixels from the right or left edge of a container the pointer needs to be to
+         * trigger scrolling (defaults to 25)
+         * @type Number
+         */
+        hthresh : 25,
+
         /**
          * The number of pixels to scroll in each scroll increment (defaults to 50)
          * @type Number

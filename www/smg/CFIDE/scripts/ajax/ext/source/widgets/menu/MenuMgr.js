@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.menu.MenuMgr
  * Provides a common registry of all menu items on a page so that they can be easily accessed by id.
@@ -18,7 +16,7 @@ Ext.menu.MenuMgr = function(){
    function init(){
        menus = {};
        active = new Ext.util.MixedCollection();
-       Ext.get(document).addKeyListener(27, function(){
+       Ext.getDoc().addKeyListener(27, function(){
            if(active.length > 0){
                hideAll();
            }
@@ -39,7 +37,7 @@ Ext.menu.MenuMgr = function(){
    function onHide(m){
        active.remove(m);
        if(active.length < 1){
-           Ext.get(document).un("mousedown", onMouseDown);
+           Ext.getDoc().un("mousedown", onMouseDown);
            attached = false;
        }
    }
@@ -50,7 +48,7 @@ Ext.menu.MenuMgr = function(){
        lastShow = new Date();
        active.add(m);
        if(!attached){
-           Ext.get(document).on("mousedown", onMouseDown);
+           Ext.getDoc().on("mousedown", onMouseDown);
            attached = true;
        }
        if(m.parentMenu){
@@ -134,16 +132,20 @@ Ext.menu.MenuMgr = function(){
          * Returns a {@link Ext.menu.Menu} object
          * @param {String/Object} menu The string menu id, an existing menu object reference, or a Menu config that will
          * be used to generate and return a new Menu instance.
+         * @return {Ext.menu.Menu} The specified menu, or null if none are found
          */
        get : function(menu){
            if(typeof menu == "string"){ // menu id
+               if(!menus){  // not initialized, no menus to return
+                   return null;
+               }
                return menus[menu];
            }else if(menu.events){  // menu instance
                return menu;
            }else if(typeof menu.length == 'number'){ // array of menu items?
                return new Ext.menu.Menu({items:menu});
            }else{ // otherwise, must be a config
-               return new Ext.menu.Menu(menu);
+               return Ext.create(menu, 'menu');
            }
        },
 
@@ -180,6 +182,30 @@ Ext.menu.MenuMgr = function(){
                groups[g].remove(menuItem);
                menuItem.un("beforecheckchange", onBeforeCheck);
            }
+       },
+
+       getCheckedItem : function(groupId){
+           var g = groups[groupId];
+           if(g){
+               for(var i = 0, l = g.length; i < l; i++){
+                   if(g[i].checked){
+                       return g[i];
+                   }
+               }
+           }
+           return null;
+       },
+
+       setCheckedItem : function(groupId, itemId){
+           var g = groups[groupId];
+           if(g){
+               for(var i = 0, l = g.length; i < l; i++){
+                   if(g[i].id == itemId){
+                       g[i].setChecked(true);
+                   }
+               }
+           }
+           return null;
        }
    };
 }();

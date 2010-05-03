@@ -1,23 +1,55 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 if(typeof YAHOO == "undefined"){
     throw "Unable to load Ext, core YUI utilities (yahoo, dom, event) not found.";
 }
 
 (function(){
-var E = YAHOO.util.Event;
-var D = YAHOO.util.Dom;
-var CN = YAHOO.util.Connect;
-
-var ES = YAHOO.util.Easing;
-var A = YAHOO.util.Anim;
-var libFlyweight;
+    var E = YAHOO.util.Event,
+        D = YAHOO.util.Dom,
+        CN = YAHOO.util.Connect,
+        ES = YAHOO.util.Easing,
+        A = YAHOO.util.Anim,
+        libFlyweight,
+        version = YAHOO.env.getVersion('yahoo').version.split('.'),
+        mouseEnterSupported = parseInt(version[0]) >= 3,
+        mouseCache = {},
+        isXUL = Ext.isGecko ? function(node){
+            return Object.prototype.toString.call(node) == '[object XULElement]';
+        } : function(){
+        }, isTextNode = Ext.isGecko ? function(node){
+            try{
+                return node.nodeType == 3;
+            }catch (e){
+                return false;
+            }
+        } : function(node){
+            return node.nodeType == 3;
+        }, elContains = function(parent, child){
+            if(parent && parent.firstChild){
+                while(child){
+                    if(child === parent){
+                        return true;
+                    }
+                    try{
+                        child = child.parentNode;
+                    }catch (e){
+                        return false;
+                    }
+                    if(child && (child.nodeType != 1)){
+                        child = null;
+                    }
+                }
+            }
+            return false;
+        }, checkRelatedTarget = function(e){
+            var related = Ext.lib.Event.getRelatedTarget(e);
+            return !(isXUL(related) || elContains(e.currentTarget, related));
+        };
 
 Ext.lib.Dom = {
     getViewWidth : function(full){
@@ -48,13 +80,17 @@ Ext.lib.Dom = {
     // this version fixes several issues in Safari and FF
     // and boosts performance by removing the batch overhead, repetitive dom lookups and array index calls
     getXY : function(el){
-        var p, pe, b, scroll, bd = document.body;
+        var p, pe, b, scroll, bd = (document.body || document.documentElement);
         el = Ext.getDom(el);
+
+        if(el == bd){
+            return [0, 0];
+        }
 
         if (el.getBoundingClientRect) {
             b = el.getBoundingClientRect();
             scroll = fly(document).getScroll();
-            return [b.left + scroll.left, b.top + scroll.top];
+            return [Math.round(b.left + scroll.left), Math.round(b.top + scroll.top)];
         }
         var x = 0, y = 0;
 
@@ -155,11 +191,27 @@ Ext.lib.Event = {
     },
 
     on : function(el, eventName, fn, scope, override){
+        if((eventName == 'mouseenter' || eventName == 'mouseleave') && !mouseEnterSupported){
+            var item = mouseCache[el.id] || (mouseCache[el.id] = {});
+            item[eventName] = fn;
+            fn = fn.createInterceptor(checkRelatedTarget);
+            eventName = (eventName == 'mouseenter') ? 'mouseover' : 'mouseout';
+        }
         E.on(el, eventName, fn, scope, override);
     },
 
     un : function(el, eventName, fn){
-        E.removeListener(el, eventName, fn);
+        if((eventName == 'mouseenter' || eventName == 'mouseleave') && !mouseEnterSupported){
+            var item = mouseCache[el.id], 
+                ev = item && item[eventName];
+
+            if(ev){
+                fn = ev.fn;
+                delete item[eventName];
+                eventName = (eventName == 'mouseenter') ? 'mouseover' : 'mouseout';
+            }
+        }
+        E.removeListener(el, eventName, fn);;
     },
 
     purgeElement : function(el){
@@ -195,9 +247,17 @@ Ext.lib.Ajax = {
                 }
             }
             if(options.xmlData){
-                CN.initHeader('Content-Type', 'text/xml', false);
-                method = 'POST';
+                if (!hs || !hs['Content-Type']){
+                    CN.initHeader('Content-Type', 'text/xml', false);
+                }
+                method = (method ? method : (options.method ? options.method : 'POST'));
                 data = options.xmlData;
+            }else if(options.jsonData){
+                if (!hs || !hs['Content-Type']){
+                    CN.initHeader('Content-Type', 'application/json', false);
+                }
+                method = (method ? method : (options.method ? options.method : 'POST'));
+                data = typeof options.jsonData == 'object' ? Ext.encode(options.jsonData) : options.jsonData;
             }
         }
         return CN.asyncRequest(method, uri, cb, data);
@@ -263,17 +323,19 @@ function fly(el){
 }
 
 // prevent IE leaks
-if(Ext.isIE){
-    YAHOO.util.Event.on(window, "unload", function(){
+if(Ext.isIE) {
+    function fnCleanUp() {
         var p = Function.prototype;
         delete p.createSequence;
         delete p.defer;
         delete p.createDelegate;
         delete p.createCallback;
         delete p.createInterceptor;
-    });
-}
 
+        window.detachEvent("onunload", fnCleanUp);
+    }
+    window.attachEvent("onunload", fnCleanUp);
+}
 // various overrides
 
 // add ability for callbacks with animations
@@ -315,5 +377,14 @@ YAHOO.util.Region.prototype.adjust = function(t, l, b, r){
     this.bottom += b;
     return this;
 };
+    
+YAHOO.util.Region.prototype.constrainTo = function(r) {
+    this.top = this.top.constrain(r.top, r.bottom);
+    this.bottom = this.bottom.constrain(r.top, r.bottom);
+    this.left = this.left.constrain(r.left, r.right);
+    this.right = this.right.constrain(r.left, r.right);
+    return this;
+};
+
 
 })();

@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.KeyNav
  * <p>Provides a convenient wrapper for normalized keyboard navigation.  KeyNav allows you to bind
@@ -28,7 +26,7 @@ var nav = new Ext.KeyNav("my-element", {
 });
 </code></pre>
  * @constructor
- * @param {String/HTMLElement/Ext.Element} el The element to bind to
+ * @param {Mixed} el The element to bind to
  * @param {Object} config The config
  */
 Ext.KeyNav = function(el, config){
@@ -65,10 +63,7 @@ Ext.KeyNav.prototype = {
     prepareEvent : function(e){
         var k = e.getKey();
         var h = this.keyToHandler[k];
-        //if(h && this[h]){
-        //    e.stopPropagation();
-        //}
-        if(Ext.isSafari && h && k >= 37 && k <= 40){
+        if(Ext.isSafari2 && h && k >= 37 && k <= 40){
             e.stopEvent();
         }
     },
@@ -126,7 +121,7 @@ Ext.KeyNav.prototype = {
 		if(this.disabled){
             // ie won't do special keys on keypress, no one else will repeat keys with keydown
             // the EventObject will normalize Safari automatically
-            if(this.forceKeyDown || Ext.isIE || Ext.isAir){
+            if(this.isKeydown()){
                 this.el.on("keydown", this.relay,  this);
             }else{
                 this.el.on("keydown", this.prepareEvent,  this);
@@ -141,13 +136,26 @@ Ext.KeyNav.prototype = {
 	 */
 	disable: function(){
 		if(!this.disabled){
-		    if(this.forceKeyDown || Ext.isIE || Ext.isAir){
-                this.el.un("keydown", this.relay);
+		    if(this.isKeydown()){
+                this.el.un("keydown", this.relay, this);
             }else{
-                this.el.un("keydown", this.prepareEvent);
-                this.el.un("keypress", this.relay);
+                this.el.un("keydown", this.prepareEvent, this);
+                this.el.un("keypress", this.relay, this);
             }
 		    this.disabled = true;
 		}
-	}
+	},
+    
+    /**
+     * Convenience function for setting disabled/enabled by boolean.
+     * @param {Boolean} disabled
+     */
+    setDisabled : function(disabled){
+        this[disabled ? "disable" : "enable"]();
+    },
+    
+    // private
+    isKeydown: function(){
+        return this.forceKeyDown || Ext.EventManager.useKeydown;
+    }
 };

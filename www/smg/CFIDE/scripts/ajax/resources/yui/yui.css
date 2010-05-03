@@ -237,7 +237,6 @@ Version: 0.12
 
     background-color:#ffffff;
 	border:solid 1px #cccccc;
-    padding:1px;
 }
 
 /*
@@ -434,7 +433,7 @@ yuimenu h6.first-of-type {
 
     padding:2px 24px;
     outline:none;
-    
+
 }
 
 .yuimenubaritemlabel {
@@ -540,7 +539,7 @@ li.first-of-type .yuimenubaritemlabel {
 .yuimenubaritem a.selected {
 
     background-color:#AADEFF;
-    text-decoration:underline;
+	text-decoration:none;
     color:#fff;
 
 }

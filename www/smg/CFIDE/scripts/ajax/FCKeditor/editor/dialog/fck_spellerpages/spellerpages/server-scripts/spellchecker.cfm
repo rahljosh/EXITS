@@ -10,7 +10,6 @@ others files in certain cases.
 --->
 
 <!--- The following variables values must reflect your installation. --->
-
 <cfset aspell_dir	  = "C:\Program Files\Aspell\bin">
 <cfset lang         = "en_US">
 <cfset aspell_opts  = "-a --lang=#lang# --encoding=utf-8 -H --rem-sgml-check=alt">
@@ -38,9 +37,9 @@ others files in certain cases.
 	<cfset text = text & "%"  & CRLF
                       & "^A" & CRLF
                       & "!"  & CRLF>
-        <!--- Strip all tags for the text. (by FredCK - #339 / #681) ---> 
-	<cfset field = REReplace(URLDecode(field), "<[^>]+>", " ", "all")> 
- 	<cfloop list="#field#" index="line" delimiters="#CRLF#"> 
+	<!--- Strip all tags for the text. (by FredCK - #339 / #681) --->
+	<cfset field = REReplace(URLDecode(field), "<[^>]+>", " ", "all")>
+	<cfloop list="#field#" index="line" delimiters="#CRLF#">
 		<cfset text = ListAppend(text, "^" & Trim(JSStringFormat(line)), CRLF)>
 	</cfloop>
 </cfloop>

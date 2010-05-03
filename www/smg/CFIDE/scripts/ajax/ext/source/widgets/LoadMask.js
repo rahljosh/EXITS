@@ -1,20 +1,24 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.LoadMask
- * A simple utility class for generically masking elements while loading data.  If the element being masked has
- * an underlying {@link Ext.data.Store}, the masking will be automatically synchronized with the store's loading
+ * A simple utility class for generically masking elements while loading data.  If the {@link #store}
+ * config option is specified, the masking will be automatically synchronized with the store's loading
  * process and the mask element will be cached for reuse.  For all other elements, this mask will replace the
- * element's UpdateManager load indicator and will be destroyed after the initial load.
+ * element's Updater load indicator and will be destroyed after the initial load.
+ * <p>Example usage:</p>
+ *<pre><code>
+// Basic mask:
+var myMask = new Ext.LoadMask(Ext.getBody(), {msg:"Please wait..."});
+myMask.show();
+</code></pre>
  * @constructor
  * Create a new LoadMask
- * @param {String/HTMLElement/Ext.Element} el The element or DOM node, or its id
+ * @param {Mixed} el The element or DOM node, or its id
  * @param {Object} config The config object
  */
 Ext.LoadMask = function(el, config){
@@ -23,19 +27,24 @@ Ext.LoadMask = function(el, config){
     if(this.store){
         this.store.on('beforeload', this.onBeforeLoad, this);
         this.store.on('load', this.onLoad, this);
-        this.store.on('loadexception', this.onLoad, this);
-        this.removeMask = false;
+        this.store.on('exception', this.onLoad, this);
+        this.removeMask = Ext.value(this.removeMask, false);
     }else{
-        var um = this.el.getUpdateManager();
+        var um = this.el.getUpdater();
         um.showLoadIndicator = false; // disable the default indicator
         um.on('beforeupdate', this.onBeforeLoad, this);
         um.on('update', this.onLoad, this);
         um.on('failure', this.onLoad, this);
-        this.removeMask = true;
+        this.removeMask = Ext.value(this.removeMask, true);
     }
 };
 
 Ext.LoadMask.prototype = {
+    /**
+     * @cfg {Ext.data.Store} store
+     * Optional Store to which the mask is bound. The mask is displayed when a load request is issued, and
+     * hidden on either load sucess, or load fail.
+     */
     /**
      * @cfg {Boolean} removeMask
      * True to create a single-use mask that is automatically destroyed after loading (useful for page loads),
@@ -84,14 +93,28 @@ Ext.LoadMask.prototype = {
         }
     },
 
+    /**
+     * Show this LoadMask over the configured Element.
+     */
+    show: function(){
+        this.onBeforeLoad();
+    },
+
+    /**
+     * Hide this LoadMask.
+     */
+    hide: function(){
+        this.onLoad();
+    },
+
     // private
     destroy : function(){
         if(this.store){
             this.store.un('beforeload', this.onBeforeLoad, this);
             this.store.un('load', this.onLoad, this);
-            this.store.un('loadexception', this.onLoad, this);
+            this.store.un('exception', this.onLoad, this);
         }else{
-            var um = this.el.getUpdateManager();
+            var um = this.el.getUpdater();
             um.un('beforeupdate', this.onBeforeLoad, this);
             um.un('update', this.onLoad, this);
             um.un('failure', this.onLoad, this);

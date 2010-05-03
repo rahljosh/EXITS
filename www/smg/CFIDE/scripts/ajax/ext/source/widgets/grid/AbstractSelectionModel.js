@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.grid.AbstractSelectionModel
  * @extends Ext.util.Observable
@@ -19,6 +17,12 @@ Ext.grid.AbstractSelectionModel = function(){
 };
 
 Ext.extend(Ext.grid.AbstractSelectionModel, Ext.util.Observable,  {
+    /**
+     * The GridPanel for which this SelectionModel is handling selection. Read-only.
+     * @type Object
+     * @property grid
+     */
+
     /** @ignore Called by the grid automatically. Do not call directly. */
     init : function(grid){
         this.grid = grid;
@@ -45,5 +49,9 @@ Ext.extend(Ext.grid.AbstractSelectionModel, Ext.util.Observable,  {
      */
     isLocked : function(){
         return this.locked;
+    },
+    
+    destroy: function(){
+        this.purgeListeners();
     }
 });

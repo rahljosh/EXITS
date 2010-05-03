@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /*
  * Macedonia translation
  * By PetarD petar.dimitrijevic@vorteksed.com.mk (utf8 encoding)
@@ -18,8 +16,8 @@ if(Ext.View){
    Ext.View.prototype.emptyText = "";
 }
 
-if(Ext.grid.Grid){
-   Ext.grid.Grid.prototype.ddText = "{0} избрани редици";
+if(Ext.grid.GridPanel){
+   Ext.grid.GridPanel.prototype.ddText = "{0} избрани редици";
 }
 
 if(Ext.TabPanelItem){
@@ -145,8 +143,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
    Ext.apply(Ext.form.VTypes, {
-      emailText    : 'Ова поле треба да биде e-mail адреса во формат "user@domain.com"',
-      urlText      : 'Ова поле треба да биде URL во формат "http:/'+'/www.domain.com"',
+      emailText    : 'Ова поле треба да биде e-mail адреса во формат "user@example.com"',
+      urlText      : 'Ова поле треба да биде URL во формат "http:/'+'/www.example.com"',
       alphaText    : 'Ова поле треба да содржи само букви и _',
       alphanumText : 'Ова поле треба да содржи само букви, бројки и _'
    });
@@ -170,8 +168,8 @@ if(Ext.grid.PropertyColumnModel){
    });
 }
 
-if(Ext.SplitLayoutRegion){
-   Ext.apply(Ext.SplitLayoutRegion.prototype, {
+if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
+   Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
       splitTip            : "Повлечете за менување на големината.",
       collapsibleSplitTip : "Повлечете за менување на големината. Дупли клик за криење."
    });
