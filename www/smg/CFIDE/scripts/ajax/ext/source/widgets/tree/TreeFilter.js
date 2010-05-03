@@ -1,16 +1,14 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
-* @class Ext.tree.TreeFilter
-* Note this class is experimental and doesn't update the indent (lines) or expand collapse icons of the nodes
-* @param {TreePanel} tree
-* @param {Object} config (optional)
+ * @class Ext.tree.TreeFilter
+ * Note this class is experimental and doesn't update the indent (lines) or expand collapse icons of the nodes
+ * @param {TreePanel} tree
+ * @param {Object} config (optional)
  */
 Ext.tree.TreeFilter = function(tree, config){
     this.tree = tree;

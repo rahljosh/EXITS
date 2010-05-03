@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 if(typeof jQuery == "undefined"){
     throw "Unable to load Ext, jQuery not found.";
 }
@@ -65,17 +63,18 @@ Ext.lib.Dom = {
         return this.getXY(el)[0];
     },
 
-    // original version based on YahooUI getXY
-    // this version fixes several issues in Safari and FF
-    // and boosts performance by removing the batch overhead, repetitive dom lookups and array index calls
-    getXY : function(el){
-        var p, pe, b, scroll, bd = document.body;
+    getXY : function(el) {
+        var p, pe, b, scroll, bd = (document.body || document.documentElement);
         el = Ext.getDom(el);
+
+        if(el == bd){
+            return [0, 0];
+        }
 
         if (el.getBoundingClientRect) {
             b = el.getBoundingClientRect();
             scroll = fly(document).getScroll();
-            return [b.left + scroll.left, b.top + scroll.top];
+            return [Math.round(b.left + scroll.left), Math.round(b.top + scroll.top)];
         }
         var x = 0, y = 0;
 
@@ -283,16 +282,26 @@ Ext.lib.Ajax = function(){
                 timeout: cb.timeout,
                 complete: createComplete(cb)
             };
+
             if(options){
+                var hs = options.headers;
                 if(options.xmlData){
                     o.data = options.xmlData;
                     o.processData = false;
-                    o.type = 'POST';
-                    o.contentType = 'text/xml';
+                    o.type = (method ? method : (options.method ? options.method : 'POST'));
+                    if (!hs || !hs['Content-Type']){
+                        o.contentType = 'text/xml';
+                    }
+                }else if(options.jsonData){
+                    o.data = typeof options.jsonData == 'object' ? Ext.encode(options.jsonData) : options.jsonData;
+                    o.processData = false;
+                    o.type = (method ? method : (options.method ? options.method : 'POST'));
+                    if (!hs || !hs['Content-Type']){
+                        o.contentType = 'application/json';
+                    }
                 }
-                if(options.headers){
+                if(hs){
                     o.beforeSend = function(xhr){
-                        var hs = options.headers;
                         for(var h in hs){
                             if(hs.hasOwnProperty(h)){
                                 xhr.setRequestHeader(h, hs[h]);
@@ -308,7 +317,7 @@ Ext.lib.Ajax = function(){
             jQuery.ajax({
                 type: Ext.getDom(form).method ||'POST',
                 url: uri,
-                data: jQuery(form).formSerialize()+(data?'&'+data:''),
+                data: jQuery(form).serialize()+(data?'&'+data:''),
                 timeout: cb.timeout,
                 complete: createComplete(cb)
             });
@@ -323,7 +332,7 @@ Ext.lib.Ajax = function(){
         },
 
         serializeForm : function(form){
-            return jQuery(form.dom||form).formSerialize();
+            return jQuery(form.dom||form).serialize();
         }
     };
 }();
@@ -376,11 +385,6 @@ Ext.lib.Anim = function(){
             var anim = createAnim(cb, scope), e = Ext.fly(el, '_animrun');
             var o = {};
             for(var k in args){
-                if(args[k].from){
-                    if(k != 'points'){
-                        e.setStyle(k, args[k].from);
-                    }
-                }
                 switch(k){   // jquery doesn't support, so convert
                     case 'points':
                         var by, pts;
@@ -405,21 +409,33 @@ Ext.lib.Anim = function(){
                     break;
                     case 'width':
                         o.width = args.width.to;
+                        if (args.width.from)
+                            e.setWidth(args.width.from);
                     break;
                     case 'height':
                         o.height = args.height.to;
+                        if (args.height.from)
+                            e.setHeight(args.height.from);
                     break;
                     case 'opacity':
                         o.opacity = args.opacity.to;
+                        if (args.opacity.from)
+                            e.setOpacity(args.opacity.from);
                     break;
                     case 'left':
-                   	    o.left = args.left.to;
+                        o.left = args.left.to;
+                        if (args.left.from)
+                            e.setLeft(args.left.from);
                     break;
                     case 'top':
-                   	    o.top = args.top.to;
+                        o.top = args.top.to;
+                        if (args.top.from)
+                            e.setTop(args.top.from);
                     break;
                     default:
                         o[k] = args[k].to;
+                        if (args[k].from)
+                            e.setStyle(k, args[k].from);
                     break;
                 }
             }
@@ -474,6 +490,14 @@ Ext.lib.Region.prototype = {
         return new Ext.lib.Region(t, r, b, l);
     },
 
+    constrainTo : function(r) {
+            this.top = this.top.constrain(r.top, r.bottom);
+            this.bottom = this.bottom.constrain(r.top, r.bottom);
+            this.left = this.left.constrain(r.left, r.right);
+            this.right = this.right.constrain(r.left, r.right);
+            return this;
+    },
+
     adjust : function(t, l, b, r){
         this.top += t;
         this.left += l;
@@ -495,7 +519,7 @@ Ext.lib.Region.getRegion = function(el) {
 };
 
 Ext.lib.Point = function(x, y) {
-   if (x instanceof Array) {
+   if (Ext.isArray(x)) {
       y = x[1];
       x = x[0];
    }

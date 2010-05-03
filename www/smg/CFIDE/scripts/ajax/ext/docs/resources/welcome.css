@@ -1,3 +1,9 @@
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
+ * licensing@extjs.com
+ * http://www.extjs.com/license
+ */
 body{
 	background:url(welcome-bg.gif) top left;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
@@ -22,40 +28,4 @@ a:visited {
 a:hover {
 	text-decoration: underline;
 	color: #0000CC;
-}
-.col{
-	width:45%;
-	float:left;
-	margin-left:10px;
-}
-.block{
-	border:3px solid #B2D0F7;
-	background:white url(block-bg.gif) repeat-x;
-	margin-top:10px;
-}
-.block-title{
-	color: #083772;
-	font-weight: bold;
-	padding: 4px;
-	padding-left: 8px;
-}
-.block-body{
-	padding:8px;
-	padding-top:2px;
-}
-.block-body b{
-	color:#333333;
-	font-size:11px;
-}
-.block-body em {
-	display:block;
-	margin-top:5px;
-	font-size:11px;
-   color:gray;
-	text-align:right;
-}
-.list{
-	list-style: square;
-	padding-left:20px;
-	margin-top:5px;
 }

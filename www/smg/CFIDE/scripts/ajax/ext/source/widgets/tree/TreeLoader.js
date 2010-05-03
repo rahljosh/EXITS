@@ -1,20 +1,29 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.tree.TreeLoader
  * @extends Ext.util.Observable
  * A TreeLoader provides for lazy loading of an {@link Ext.tree.TreeNode}'s child
- * nodes from a specified URL. The response must be a javascript Array definition
- * who's elements are node definition objects. eg:
+ * nodes from a specified URL. The response must be a JavaScript Array definition
+ * whose elements are node definition objects. e.g.:
  * <pre><code>
-   [{ 'id': 1, 'text': 'A folder Node', 'leaf': false },
-    { 'id': 2, 'text': 'A leaf Node', 'leaf': true }]
+    [{
+        id: 1,
+        text: 'A leaf Node',
+        leaf: true
+    },{
+        id: 2,
+        text: 'A folder Node',
+        children: [{
+            id: 3,
+            text: 'A child Node',
+            leaf: true
+        }]
+   }]
 </code></pre>
  * <br><br>
  * A server request is sent, and child nodes are loaded only when a node is expanded.
@@ -27,7 +36,7 @@
     myTreeLoader.on("beforeload", function(treeLoader, node) {
         this.baseParams.category = node.attributes.category;
     }, this);
-</code></pre><
+</code></pre>
  * This would pass an HTTP parameter called "category" to the server containing
  * the value of the Node's "category" attribute.
  * @constructor
@@ -36,10 +45,9 @@
  */
 Ext.tree.TreeLoader = function(config){
     this.baseParams = {};
-    this.requestMethod = "POST";
     Ext.apply(this, config);
 
-    this.addEvents({
+    this.addEvents(
         /**
          * @event beforeload
          * Fires before a network request is made to retrieve the Json text which specifies a node's children.
@@ -47,7 +55,7 @@ Ext.tree.TreeLoader = function(config){
          * @param {Object} node The {@link Ext.tree.TreeNode} object being loaded.
          * @param {Object} callback The callback function specified in the {@link #load} call.
          */
-        "beforeload" : true,
+        "beforeload",
         /**
          * @event load
          * Fires when the node has been successfuly loaded.
@@ -55,7 +63,7 @@ Ext.tree.TreeLoader = function(config){
          * @param {Object} node The {@link Ext.tree.TreeNode} object being loaded.
          * @param {Object} response The response object containing the data from the server.
          */
-        "load" : true,
+        "load",
         /**
          * @event loadexception
          * Fires if the network request failed.
@@ -63,18 +71,29 @@ Ext.tree.TreeLoader = function(config){
          * @param {Object} node The {@link Ext.tree.TreeNode} object being loaded.
          * @param {Object} response The response object containing the data from the server.
          */
-        "loadexception" : true
-    });
-
+        "loadexception"
+    );
     Ext.tree.TreeLoader.superclass.constructor.call(this);
+    if(typeof this.paramOrder == 'string'){
+        this.paramOrder = this.paramOrder.split(/[\s,|]/);
+    }
 };
 
 Ext.extend(Ext.tree.TreeLoader, Ext.util.Observable, {
     /**
     * @cfg {String} dataUrl The URL from which to request a Json string which
-    * specifies an array of node definition object representing the child nodes
+    * specifies an array of node definition objects representing the child nodes
     * to be loaded.
     */
+    /**
+     * @cfg {String} requestMethod The HTTP request method for loading data (defaults to the value of {@link Ext.Ajax#method}).
+     */
+    /**
+     * @cfg {String} url Equivalent to {@link #dataUrl}.
+     */
+    /**
+     * @cfg {Boolean} preloadChildren If set to true, the loader recursively loads "children" attributes when doing the first load on nodes.
+     */
     /**
     * @cfg {Object} baseParams (optional) An object containing properties which
     * specify HTTP parameters to be passed to each request for child nodes.
@@ -88,7 +107,7 @@ Ext.extend(Ext.tree.TreeLoader, Ext.util.Observable, {
     * @cfg {Object} uiProviders (optional) An object containing properties which
     * specify custom {@link Ext.tree.TreeNodeUI} implementations. If the optional
     * <i>uiProvider</i> attribute of a returned child node is a string rather
-    * than a reference to a TreeNodeUI implementation, this that string value
+    * than a reference to a TreeNodeUI implementation, then that string value
     * is used as a property name in the uiProviders object.
     */
     uiProviders : {},
@@ -100,64 +119,144 @@ Ext.extend(Ext.tree.TreeLoader, Ext.util.Observable, {
     clearOnLoad : true,
 
     /**
+     * @cfg {Array/String} paramOrder Defaults to <tt>undefined</tt>. Only used when using directFn.
+     * A list of params to be executed
+     * server side.  Specify the params in the order in which they must be executed on the server-side
+     * as either (1) an Array of String values, or (2) a String of params delimited by either whitespace,
+     * comma, or pipe. For example,
+     * any of the following would be acceptable:<pre><code>
+paramOrder: ['param1','param2','param3']
+paramOrder: 'param1 param2 param3'
+paramOrder: 'param1,param2,param3'
+paramOrder: 'param1|param2|param'
+     </code></pre>
+     */
+    paramOrder: undefined,
+
+    /**
+     * @cfg {Boolean} paramsAsHash Only used when using directFn.
+     * Send parameters as a collection of named arguments (defaults to <tt>false</tt>). Providing a
+     * <tt>{@link #paramOrder}</tt> nullifies this configuration.
+     */
+    paramsAsHash: false,
+
+    /**
+     * @cfg {Function} directFn
+     * Function to call when executing a request.
+     */
+    directFn : undefined,
+
+    /**
      * Load an {@link Ext.tree.TreeNode} from the URL specified in the constructor.
      * This is called automatically when a node is expanded, but may be used to reload
      * a node (or append new children if the {@link #clearOnLoad} option is false.)
      * @param {Ext.tree.TreeNode} node
      * @param {Function} callback
+     * @param (Object) scope
      */
-    load : function(node, callback){
+    load : function(node, callback, scope){
         if(this.clearOnLoad){
             while(node.firstChild){
                 node.removeChild(node.firstChild);
             }
         }
-        if(node.attributes.children){ // preloaded json children
-            var cs = node.attributes.children;
-            for(var i = 0, len = cs.length; i < len; i++){
-                node.appendChild(this.createNode(cs[i]));
-            }
-            if(typeof callback == "function"){
-                callback();
-            }
-        }else if(this.dataUrl){
-            this.requestData(node, callback);
+        if(this.doPreload(node)){ // preloaded json children
+            this.runCallback(callback, scope || node, []);
+        }else if(this.directFn || this.dataUrl || this.url){
+            this.requestData(node, callback, scope || node);
         }
+    },
+
+    doPreload : function(node){
+        if(node.attributes.children){
+            if(node.childNodes.length < 1){ // preloaded?
+                var cs = node.attributes.children;
+                node.beginUpdate();
+                for(var i = 0, len = cs.length; i < len; i++){
+                    var cn = node.appendChild(this.createNode(cs[i]));
+                    if(this.preloadChildren){
+                        this.doPreload(cn);
+                    }
+                }
+                node.endUpdate();
+            }
+            return true;
+        }
+        return false;
     },
 
     getParams: function(node){
         var buf = [], bp = this.baseParams;
-        for(var key in bp){
-            if(typeof bp[key] != "function"){
-                buf.push(encodeURIComponent(key), "=", encodeURIComponent(bp[key]), "&");
+        if(this.directFn){
+            buf.push(node.id);
+            if(bp){
+                if(this.paramOrder){
+                    for(var i = 0, len = this.paramOrder.length; i < len; i++){
+                        buf.push(bp[this.paramOrder[i]]);
+                    }
+                }else if(this.paramsAsHash){
+                    buf.push(bp);
+                }
             }
+            return buf;
+        }else{
+            for(var key in bp){
+                if(!Ext.isFunction(bp[key])){
+                    buf.push(encodeURIComponent(key), "=", encodeURIComponent(bp[key]), "&");
+                }
+            }
+            buf.push("node=", encodeURIComponent(node.id));
+            return buf.join("");
         }
-        buf.push("node=", encodeURIComponent(node.id));
-        return buf.join("");
     },
 
-    requestData : function(node, callback){
+    requestData : function(node, callback, scope){
         if(this.fireEvent("beforeload", this, node, callback) !== false){
-            this.transId = Ext.Ajax.request({
-                method:this.requestMethod,
-                url: this.dataUrl||this.url,
-                success: this.handleResponse,
-                failure: this.handleFailure,
-                scope: this,
-                argument: {callback: callback, node: node},
-                params: this.getParams(node)
-            });
+            if(this.directFn){
+                var args = this.getParams(node);
+                args.push(this.processDirectResponse.createDelegate(this, [{callback: callback, node: node, scope: scope}], true));
+                this.directFn.apply(window, args);
+            }else{
+                this.transId = Ext.Ajax.request({
+                    method:this.requestMethod,
+                    url: this.dataUrl||this.url,
+                    success: this.handleResponse,
+                    failure: this.handleFailure,
+                    scope: this,
+                    argument: {callback: callback, node: node, scope: scope},
+                    params: this.getParams(node)
+                });
+            }
         }else{
             // if the load is cancelled, make sure we notify
             // the node that we are done
-            if(typeof callback == "function"){
-                callback();
-            }
+            this.runCallback(callback, scope || node, []);
+        }
+    },
+
+    processDirectResponse: function(result, response, args){
+        if(response.status){
+            this.handleResponse({
+                responseData: Ext.isArray(result) ? result : null,
+                responseText: result,
+                argument: args
+            });
+        }else{
+            this.handleFailure({
+                argument: args
+            });
+        }
+    },
+
+    // private
+    runCallback: function(cb, scope, args){
+        if(Ext.isFunction(cb)){
+            cb.apply(scope, args);
         }
     },
 
     isLoading : function(){
-        return this.transId ? true : false;
+        return !!this.transId;
     },
 
     abort : function(){
@@ -167,7 +266,27 @@ Ext.extend(Ext.tree.TreeLoader, Ext.util.Observable, {
     },
 
     /**
-    * Override this function for custom TreeNode node implementation
+    * <p>Override this function for custom TreeNode node implementation, or to
+    * modify the attributes at creation time.</p>
+    * Example:<pre><code>
+new Ext.tree.TreePanel({
+    ...
+    new Ext.tree.TreeLoader({
+        url: 'dataUrl',
+        createNode: function(attr) {
+//          Allow consolidation consignments to have
+//          consignments dropped into them.
+            if (attr.isConsolidation) {
+                attr.iconCls = 'x-consol',
+                attr.allowDrop = true;
+            }
+            return Ext.tree.TreeLoader.prototype.call(this, attr);
+        }
+    }),
+    ...
+});
+</code></pre>
+    * @param attr {Object} The attributes from which to create the new node.
     */
     createNode : function(attr){
         // apply baseAttrs, nice idea Corey!
@@ -180,24 +299,28 @@ Ext.extend(Ext.tree.TreeLoader, Ext.util.Observable, {
         if(typeof attr.uiProvider == 'string'){
            attr.uiProvider = this.uiProviders[attr.uiProvider] || eval(attr.uiProvider);
         }
-        return(attr.leaf ?
+        if(attr.nodeType){
+            return new Ext.tree.TreePanel.nodeTypes[attr.nodeType](attr);
+        }else{
+            return attr.leaf ?
                         new Ext.tree.TreeNode(attr) :
-                        new Ext.tree.AsyncTreeNode(attr));
+                        new Ext.tree.AsyncTreeNode(attr);
+        }
     },
 
-    processResponse : function(response, node, callback){
+    processResponse : function(response, node, callback, scope){
         var json = response.responseText;
         try {
-            var o = eval("("+json+")");
+            var o = response.responseData || Ext.decode(json);
+            node.beginUpdate();
             for(var i = 0, len = o.length; i < len; i++){
                 var n = this.createNode(o[i]);
                 if(n){
                     node.appendChild(n);
                 }
             }
-            if(typeof callback == "function"){
-                callback(this, node);
-            }
+            node.endUpdate();
+            this.runCallback(callback, scope || node, [node]);
         }catch(e){
             this.handleFailure(response);
         }
@@ -206,7 +329,7 @@ Ext.extend(Ext.tree.TreeLoader, Ext.util.Observable, {
     handleResponse : function(response){
         this.transId = false;
         var a = response.argument;
-        this.processResponse(response, a.node, a.callback);
+        this.processResponse(response, a.node, a.callback, a.scope);
         this.fireEvent("load", this, a.node, response);
     },
 
@@ -214,8 +337,6 @@ Ext.extend(Ext.tree.TreeLoader, Ext.util.Observable, {
         this.transId = false;
         var a = response.argument;
         this.fireEvent("loadexception", this, a.node, response);
-        if(typeof a.callback == "function"){
-            a.callback(this, a.node);
-        }
+        this.runCallback(a.callback, a.scope || a.node, [a.node]);
     }
 });

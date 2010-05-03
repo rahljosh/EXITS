@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.ColorPalette
  * @extends Ext.Component
@@ -22,24 +20,28 @@ cp.on('select', function(palette, selColor){
  * @constructor
  * Create a new ColorPalette
  * @param {Object} config The config object
+ * @xtype colorpalette
  */
 Ext.ColorPalette = function(config){
     Ext.ColorPalette.superclass.constructor.call(this, config);
-    this.addEvents({
+    this.addEvents(
         /**
 	     * @event select
 	     * Fires when a color is selected
 	     * @param {ColorPalette} this
 	     * @param {String} color The 6-digit color hex code (without the # symbol)
 	     */
-        select: true
-    });
+        'select'
+    );
 
     if(this.handler){
         this.on("select", this.handler, this.scope, true);
     }
 };
 Ext.extend(Ext.ColorPalette, Ext.Component, {
+	/**
+	 * @cfg {String} tpl An existing XTemplate instance to be used in place of the default template for rendering the component.
+	 */
     /**
      * @cfg {String} itemCls
      * The CSS class to apply to the containing element (defaults to "x-color-palette")
@@ -56,7 +58,7 @@ Ext.extend(Ext.ColorPalette, Ext.Component, {
     ctype: "Ext.ColorPalette",
 
     /**
-     * @cfg {Boolean} allowReselect If set to true then reselecting a color that is already selected fires the selection event
+     * @cfg {Boolean} allowReselect If set to true then reselecting a color that is already selected fires the {@link #select} event
      */
     allowReselect : false,
 
@@ -88,21 +90,18 @@ cp.colors = ["000000", "993300", "333300"];
 
     // private
     onRender : function(container, position){
-        var t = new Ext.MasterTemplate(
-            '<tpl><a href="#" class="color-{0}" hidefocus="on"><em><span style="background:#{0}" unselectable="on">&#160;</span></em></a></tpl>'
+        var t = this.tpl || new Ext.XTemplate(
+            '<tpl for="."><a href="#" class="color-{.}" hidefocus="on"><em><span style="background:#{.}" unselectable="on">&#160;</span></em></a></tpl>'
         );
-        var c = this.colors;
-        for(var i = 0, len = c.length; i < len; i++){
-            t.add([c[i]]);
-        }
         var el = document.createElement("div");
+        el.id = this.getId();
         el.className = this.itemCls;
-        t.overwrite(el);
+        t.overwrite(el, this.colors);
         container.dom.insertBefore(el, position);
         this.el = Ext.get(el);
-        this.el.on(this.clickEvent, this.handleClick,  this, {delegate: "a"});
+        this.mon(this.el, this.clickEvent, this.handleClick, this, {delegate: 'a'});
         if(this.clickEvent != 'click'){
-            this.el.on('click', Ext.emptyFn,  this, {delegate: "a", preventDefault:true});
+        	this.mon(this.el, 'click', Ext.emptyFn, this, {delegate: 'a', preventDefault: true});
         }
     },
 
@@ -126,7 +125,7 @@ cp.colors = ["000000", "993300", "333300"];
     },
 
     /**
-     * Selects the specified color in the palette (fires the select event)
+     * Selects the specified color in the palette (fires the {@link #select} event)
      * @param {String} color A valid 6-digit color hex code (# will be stripped if included)
      */
     select : function(color){
@@ -141,4 +140,9 @@ cp.colors = ["000000", "993300", "333300"];
             this.fireEvent("select", this, color);
         }
     }
+
+    /**
+     * @cfg {String} autoEl @hide
+     */
 });
+Ext.reg('colorpalette', Ext.ColorPalette);

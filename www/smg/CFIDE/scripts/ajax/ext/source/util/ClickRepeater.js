@@ -1,38 +1,36 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  @class Ext.util.ClickRepeater
  @extends Ext.util.Observable
 
  A wrapper class which can be applied to any element. Fires a "click" event while the
  mouse is pressed. The interval between firings may be specified in the config but
- defaults to 10 milliseconds.
+ defaults to 20 milliseconds.
 
  Optionally, a CSS class may be applied to the element during the time it is pressed.
 
- @cfg {String/HTMLElement/Element} el The element to act as a button.
+ @cfg {Mixed} el The element to act as a button.
  @cfg {Number} delay The initial delay before the repeating event begins firing.
  Similar to an autorepeat key delay.
- @cfg {Number} interval The interval between firings of the "click" event. Default 10 ms.
+ @cfg {Number} interval The interval between firings of the "click" event. Default 20 ms.
  @cfg {String} pressClass A CSS class name to be applied to the element while pressed.
  @cfg {Boolean} accelerate True if autorepeating should start slowly and accelerate.
-           "interval" and "delay" are ignored. "immediate" is honored.
+           "interval" and "delay" are ignored.
  @cfg {Boolean} preventDefault True to prevent the default click event
  @cfg {Boolean} stopDefault True to stop the default click event
 
  @history
     2007-02-02 jvs Original code contributed by Nige "Animal" White
     2007-02-02 jvs Renamed to ClickRepeater
-    2007-02-03 jvs Modifications for FF Mac and Safari 
+    2007-02-03 jvs Modifications for FF Mac and Safari
 
  @constructor
- @param {String/HTMLElement/Element} el The element to listen on
+ @param {Mixed} el The element to listen on
  @param {Object} config
  */
 Ext.util.ClickRepeater = function(el, config)
@@ -42,37 +40,30 @@ Ext.util.ClickRepeater = function(el, config)
 
     Ext.apply(this, config);
 
-    this.addEvents({
+    this.addEvents(
     /**
      * @event mousedown
      * Fires when the mouse button is depressed.
      * @param {Ext.util.ClickRepeater} this
      */
-        "mousedown" : true,
+        "mousedown",
     /**
      * @event click
      * Fires on a specified interval during the time the element is pressed.
      * @param {Ext.util.ClickRepeater} this
      */
-        "click" : true,
+        "click",
     /**
      * @event mouseup
      * Fires when the mouse key is released.
      * @param {Ext.util.ClickRepeater} this
      */
-        "mouseup" : true
-    });
+        "mouseup"
+    );
 
-    this.el.on("mousedown", this.handleMouseDown, this);
-    if(this.preventDefault || this.stopDefault){
-        this.el.on("click", function(e){
-            if(this.preventDefault){
-                e.preventDefault();
-            }
-            if(this.stopDefault){
-                e.stopEvent();
-            }
-        }, this);
+    if(!this.disabled){
+        this.disabled = true;
+        this.enable();
     }
 
     // allow inline handler
@@ -90,6 +81,58 @@ Ext.extend(Ext.util.ClickRepeater, Ext.util.Observable, {
     stopDefault : false,
     timer : 0,
 
+    /**
+     * Enables the repeater and allows events to fire.
+     */
+    enable: function(){
+        if(this.disabled){
+            this.el.on('mousedown', this.handleMouseDown, this);
+            if(this.preventDefault || this.stopDefault){
+                this.el.on('click', this.eventOptions, this);
+            }
+        }
+        this.disabled = false;
+    },
+    
+    /**
+     * Disables the repeater and stops events from firing.
+     */
+    disable: function(/* private */ force){
+        if(force || !this.disabled){
+            clearTimeout(this.timer);
+            if(this.pressClass){
+                this.el.removeClass(this.pressClass);
+            }
+            Ext.getDoc().un('mouseup', this.handleMouseUp, this);
+            this.el.removeAllListeners();
+        }
+        this.disabled = true;
+    },
+    
+    /**
+     * Convenience function for setting disabled/enabled by boolean.
+     * @param {Boolean} disabled
+     */
+    setDisabled: function(disabled){
+        this[disabled ? 'disable' : 'enable']();    
+    },
+    
+    eventOptions: function(e){
+        if(this.preventDefault){
+            e.preventDefault();
+        }
+        if(this.stopDefault){
+            e.stopEvent();
+        }       
+    },
+    
+    // private
+    destroy : function() {
+        this.disable(true);
+        Ext.destroy(this.el);
+        this.purgeListeners();
+    },
+    
     // private
     handleMouseDown : function(){
         clearTimeout(this.timer);
@@ -99,44 +142,32 @@ Ext.extend(Ext.util.ClickRepeater, Ext.util.Observable, {
         }
         this.mousedownTime = new Date();
 
-        Ext.get(document).on("mouseup", this.handleMouseUp, this);
+        Ext.getDoc().on("mouseup", this.handleMouseUp, this);
         this.el.on("mouseout", this.handleMouseOut, this);
 
         this.fireEvent("mousedown", this);
         this.fireEvent("click", this);
-        
+
+//      Do not honor delay or interval if acceleration wanted.
+        if (this.accelerate) {
+            this.delay = 400;
+	    }
         this.timer = this.click.defer(this.delay || this.interval, this);
     },
 
     // private
     click : function(){
         this.fireEvent("click", this);
-        this.timer = this.click.defer(this.getInterval(), this);
+        this.timer = this.click.defer(this.accelerate ?
+            this.easeOutExpo(this.mousedownTime.getElapsed(),
+                400,
+                -390,
+                12000) :
+            this.interval, this);
     },
 
-    // private
-    getInterval: function(){
-        if(!this.accelerate){
-            return this.interval;
-        }
-        var pressTime = this.mousedownTime.getElapsed();
-        if(pressTime < 500){
-            return 400;
-        }else if(pressTime < 1700){
-            return 320;
-        }else if(pressTime < 2600){
-            return 250;
-        }else if(pressTime < 3500){
-            return 180;
-        }else if(pressTime < 4400){
-            return 140;
-        }else if(pressTime < 5300){
-            return 80;
-        }else if(pressTime < 6200){
-            return 50;
-        }else{
-            return 10;
-        }
+    easeOutExpo : function (t, b, c, d) {
+        return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
     },
 
     // private
@@ -150,7 +181,7 @@ Ext.extend(Ext.util.ClickRepeater, Ext.util.Observable, {
 
     // private
     handleMouseReturn : function(){
-        this.el.un("mouseover", this.handleMouseReturn);
+        this.el.un("mouseover", this.handleMouseReturn, this);
         if(this.pressClass){
             this.el.addClass(this.pressClass);
         }
@@ -160,9 +191,9 @@ Ext.extend(Ext.util.ClickRepeater, Ext.util.Observable, {
     // private
     handleMouseUp : function(){
         clearTimeout(this.timer);
-        this.el.un("mouseover", this.handleMouseReturn);
-        this.el.un("mouseout", this.handleMouseOut);
-        Ext.get(document).un("mouseup", this.handleMouseUp);
+        this.el.un("mouseover", this.handleMouseReturn, this);
+        this.el.un("mouseout", this.handleMouseOut, this);
+        Ext.getDoc().un("mouseup", this.handleMouseUp, this);
         this.el.removeClass(this.pressClass);
         this.fireEvent("mouseup", this);
     }

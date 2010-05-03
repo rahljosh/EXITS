@@ -1,277 +1,267 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
+Ext.debug = {};
 
-/*
- * These functions are only included in -debug files
- *
-*/Ext.debug = {
-    init : function(){
-        var CP = Ext.ContentPanel;
-        var bd = Ext.get(document.body);
+(function(){
 
-        // create the dialog
-        var dlg = new Ext.LayoutDialog('x-debug-browser', {
-            autoCreate:true,
-            width:800,
-            height:450,
-            title: 'Ext Debug Console &amp; Inspector',
-            proxyDrag:true,
-            shadow:true,
-            center:{alwaysShowTabs:true},
-            constraintoviewport:false
+var cp;
+
+function createConsole(){
+
+    var scriptPanel = new Ext.debug.ScriptsPanel();
+    var logView = new Ext.debug.LogPanel();
+    var tree = new Ext.debug.DomTree();
+    var compInspector = new Ext.debug.ComponentInspector();
+    var compInfoPanel = new Ext.debug.ComponentInfoPanel();
+    var storeInspector = new Ext.debug.StoreInspector();
+    var objInspector = new Ext.debug.ObjectInspector();
+
+    var tabs = new Ext.TabPanel({
+        activeTab: 0,
+        border: false,
+        tabPosition: 'bottom',
+        items: [{
+            title: 'Debug Console',
+            layout:'border',
+            items: [logView, scriptPanel]
+        },{
+            title: 'HTML Inspector',
+            layout:'border',
+            items: [tree]
+        },{
+            title: 'Component Inspector',
+            layout: 'border',
+            items: [compInspector,compInfoPanel]
+        },{
+            title: 'Object Inspector',
+            layout: 'border',
+            items: [objInspector]
+        },{
+            title: 'Data Stores',
+            layout: 'border',
+            items: [storeInspector]
+        }]
+    });
+
+    cp = new Ext.Panel({
+        id: 'x-debug-browser',
+        title: 'Console',
+        collapsible: true,
+        animCollapse: false,
+        style: 'position:absolute;left:0;bottom:0;z-index:101',
+        height:200,
+        logView: logView,
+        layout: 'fit',
+
+        tools:[{
+            id: 'close',
+            handler: function(){
+                cp.destroy();
+                cp = null;
+                Ext.EventManager.removeResizeListener(handleResize);
+            }
+        }],
+
+        items: tabs
+    });
+
+    cp.render(Ext.getBody());
+
+    cp.resizer = new Ext.Resizable(cp.el, {
+        minHeight:50,
+        handles: "n",
+        pinned: true,
+        transparent:true,
+        resizeElement : function(){
+            var box = this.proxy.getBox();
+            this.proxy.hide();
+            cp.setHeight(box.height);
+            return box;
+        }
+    });
+
+//     function handleResize(){
+//         cp.setWidth(Ext.getBody().getViewSize().width);
+//     }
+//     Ext.EventManager.onWindowResize(handleResize);
+//
+//     handleResize();
+
+    function handleResize(){
+        var b = Ext.getBody()
+        var size = b.getViewSize();
+        if(size.height < b.dom.scrollHeight) {
+            size.width -= 18;
+        }
+        cp.setWidth(size.width);
+    }
+    Ext.EventManager.onWindowResize(handleResize);
+    handleResize();
+}
+
+
+Ext.apply(Ext, {
+    log : function(){
+        if(!cp){
+            createConsole();
+        }
+        cp.logView.log.apply(cp.logView, arguments);
+    },
+
+    logf : function(format, arg1, arg2, etc){
+        Ext.log(String.format.apply(String, arguments));
+    },
+
+    dump : function(o){
+        if(typeof o == 'string' || typeof o == 'number' || typeof o == 'undefined' || Ext.isDate(o)){
+            Ext.log(o);
+        }else if(!o){
+            Ext.log("null");
+        }else if(typeof o != "object"){
+            Ext.log('Unknown return type');
+        }else if(Ext.isArray(o)){
+            Ext.log('['+o.join(',')+']');
+        }else{
+            var b = ["{\n"];
+            for(var key in o){
+                var to = typeof o[key];
+                if(to != "function" && to != "object"){
+                    b.push(String.format("  {0}: {1},\n", key, o[key]));
+                }
+            }
+            var s = b.join("");
+            if(s.length > 3){
+                s = s.substr(0, s.length-2);
+            }
+            Ext.log(s + "\n}");
+        }
+    },
+
+    _timers : {},
+
+    time : function(name){
+        name = name || "def";
+        Ext._timers[name] = new Date().getTime();
+    },
+
+    timeEnd : function(name, printResults){
+        var t = new Date().getTime();
+        name = name || "def";
+        var v = String.format("{0} ms", t-Ext._timers[name]);
+        Ext._timers[name] = new Date().getTime();
+        if(printResults !== false){
+            Ext.log('Timer ' + (name == "def" ? v : name + ": " + v));
+        }
+        return v;
+    }
+});
+
+})();
+
+
+Ext.debug.ScriptsPanel = Ext.extend(Ext.Panel, {
+    id:'x-debug-scripts',
+    region: 'east',
+    minWidth: 200,
+    split: true,
+    width: 350,
+    border: false,
+    layout:'anchor',
+    style:'border-width:0 0 0 1px;',
+
+    initComponent : function(){
+
+        this.scriptField = new Ext.form.TextArea({
+            anchor: '100% -26',
+            style:'border-width:0;'
         });
 
-        // prevent dialog events from bubbling
-        dlg.el.swallowEvent('click');
+        this.trapBox = new Ext.form.Checkbox({
+            id: 'console-trap',
+            boxLabel: 'Trap Errors',
+            checked: true
+        });
 
-        // build the layout
-        var mainLayout = dlg.getLayout();
-        mainLayout.beginUpdate();
-
-        // create the nested layouts
-        var clayout = mainLayout.add('center',
-            new Ext.debug.InnerLayout('x-debug-console', 400, {
-                title: 'Debug Console'
-            }
-        ));
-
-        var ilayout = mainLayout.add('center',
-            new Ext.debug.InnerLayout('x-debug-inspector', 250, {
-                title: 'DOM Inspector'
-            }
-        ));
-
-        var scriptPanel = clayout.add('east', new CP({
-            autoCreate:{
-                tag: 'div', children: [
-                    {tag: 'div'},
-                    {tag:'textarea'}
-                ]
+        this.toolbar = new Ext.Toolbar([{
+                text: 'Run',
+                scope: this,
+                handler: this.evalScript
+            },{
+                text: 'Clear',
+                scope: this,
+                handler: this.clear
             },
-            fitContainer:true,
-            fitToFrame:true,
-            title:'Script Console',
-            autoScroll: Ext.isGecko, // hideous block for firefox missing cursor AND bad sizing textareas
-            setSize : function(w, h){
-                Ext.ContentPanel.prototype.setSize.call(this, w, h);
-                if(Ext.isGecko && Ext.isStrict){
-                    var s = this.adjustForComponents(w, h);
-                    this.resizeEl.setSize(s.width-2, s.height-2);
-                }
+            '->',
+            this.trapBox,
+            ' ', ' '
+        ]);
+
+        this.items = [this.toolbar, this.scriptField];
+
+        Ext.debug.ScriptsPanel.superclass.initComponent.call(this);
+    },
+
+    evalScript : function(){
+        var s = this.scriptField.getValue();
+        if(this.trapBox.getValue()){
+            try{
+                var rt = eval(s);
+                Ext.dump(rt === undefined? '(no return)' : rt);
+            }catch(e){
+                Ext.log(e.message || e.descript);
             }
-        }));
-        var sel = scriptPanel.el;
-        var script = sel.child('textarea');
-        scriptPanel.resizeEl = script;
-        var sctb = scriptPanel.toolbar = new Ext.Toolbar(sel.child('div'));
-        sctb.add({
-            text: 'Run',
-            handler: function(){
-                var s = script.dom.value;
-                if(trap.checked){
-                    try{
-                        var rt = eval(s);
-                        Ext.debug.dump(rt === undefined? '(no return)' : rt);
-                    }catch(e){
-                        Ext.debug.log(e.message || e.descript);
-                    }
-                }else{
-                    var rt = eval(s);
-                    Ext.debug.dump(rt === undefined? '(no return)' : rt);
-                }
-            }
-        }, {
-            text: 'Clear',
-            handler: function(){
-                script.dom.value = '';
-                script.dom.focus();
-            }
-        });
-
-        var trap = Ext.DomHelper.append(sctb.el, {tag:'input', type:'checkbox', checked: 'checked'});
-        trap.checked = true;
-        sctb.add('-', trap, 'Trap Errors');
-
-
-        var stylesGrid = new Ext.grid.PropertyGrid(bd.createChild(), {
-            nameText: 'Style',
-            enableHdMenu: false,
-            enableColumnResize: false
-        });
-
-        var stylePanel = ilayout.add('east', new Ext.GridPanel(stylesGrid,
-            {title: '(No element selected)'}));
-
-        stylesGrid.render();
-
-        // hide the header
-        stylesGrid.getView().mainHd.setDisplayed(false);
-
-        clayout.tbar.add({
-            text: 'Clear',
-            handler: function(){
-                Ext.debug.console.jsonData = [];
-                Ext.debug.console.refresh();
-            }
-        });
-
-        var treeEl = ilayout.main.getEl();
-        // create main inspector toolbar
-        var tb = ilayout.tbar;
-
-        var inspectIgnore, inspecting;
-
-        function inspectListener(e, t){
-            if(!inspectIgnore.contains(e.getPoint())){
-                findNode(t);
-            }
+        }else{
+            var rt = eval(s);
+            Ext.dump(rt === undefined? '(no return)' : rt);
         }
+    },
 
-        function stopInspecting(e, t){
-            if(!inspectIgnore.contains(e.getPoint())){
-                inspect.toggle(false);
-                if(findNode(t) !== false){
-                    e.stopEvent();
-                }
-            }
-        }
+    clear : function(){
+        this.scriptField.setValue('');
+        this.scriptField.focus();
+    }
 
-        function stopInspectingEsc(e, t){
-            if(e.getKey() == e.ESC){
-                inspect.toggle(false);
-            }
-        }
+});
 
-        var inspect = tb.addButton({
-            text: 'Inspect',
-            enableToggle: true,
-            pressed:false,
-            toggleHandler: function(n, pressed){
-                var d = Ext.get(document);
-                if(pressed){
-                    d.on('mouseover', inspectListener, window, {buffer:50});
-                    d.on('mousedown', stopInspecting);
-                    d.on('keydown', stopInspectingEsc);
-                    inspectIgnore = dlg.el.getRegion();
-                    inspecting = true;
-                }else{
-                    d.un('mouseover', inspectListener);
-                    d.un('mousedown', stopInspecting);
-                    d.on('keydown', stopInspectingEsc);
-                    inspecting = false;
-                    var n = tree.getSelectionModel().getSelectedNode();
-                    if(n && n.htmlNode){
-                        onNodeSelect(tree, n, false);
-                    }
-                }
-            }
-        });
+Ext.debug.LogPanel = Ext.extend(Ext.Panel, {
+    autoScroll: true,
+    region: 'center',
+    border: false,
+    style:'border-width:0 1px 0 0',
 
-        tb.addSeparator();
+    log : function(){
+        var markup = [  '<div style="padding:5px !important;border-bottom:1px solid #ccc;">',
+                    Ext.util.Format.htmlEncode(Array.prototype.join.call(arguments, ', ')).replace(/\n/g, '<br/>').replace(/\s/g, '&#160;'),
+                    '</div>'].join('');
 
-        var frameEl = tb.addButton({
-            text: 'Highlight Selection',
-            enableToggle: true,
-            pressed:false,
-            toggleHandler: function(n, pressed){
-                var n = tree.getSelectionModel().getSelectedNode();
-                if(n && n.htmlNode){
-                    n[pressed ? 'frame' : 'unframe']();
-                }
-            }
-        });
+        this.body.insertHtml('beforeend', markup);
+        this.body.scrollTo('top', 100000);
+    },
 
-        tb.addSeparator();
+    clear : function(){
+        this.body.update('');
+        this.body.dom.scrollTop = 0;
+    }
+});
 
-        var reload = tb.addButton({
-            text: 'Refresh Children',
-            disabled:true,
-            handler: function(){
-                var n = tree.getSelectionModel().getSelectedNode();
-                if(n && n.reload){
-                    n.reload();
-                }
-            }
-        });
+Ext.debug.DomTree = Ext.extend(Ext.tree.TreePanel, {
+    enableDD:false ,
+    lines:false,
+    rootVisible:false,
+    animate:false,
+    hlColor:'ffff9c',
+    autoScroll: true,
+    region:'center',
+    border:false,
 
-        tb.add( '-', {
-            text: 'Collapse All',
-            handler: function(){
-                tree.root.collapse(true);
-            }
-        });
+    initComponent : function(){
 
-        // perform the main layout
-        mainLayout.endUpdate();
 
-        mainLayout.getRegion('center').showPanel(0);
-
-        stylesGrid.on('propertychange', function(s, name, value){
-            var node = stylesGrid.treeNode;
-            if(styles){
-                node.htmlNode.style[name] = value;
-            }else{
-                node.htmlNode[name] = value;
-            }
-            node.refresh(true);
-        });
-
-        // Create the style toolbar
-        var stb = new Ext.Toolbar(stylesGrid.view.getHeaderPanel(true));
-
-        var swap = stb.addButton({
-            text: 'DOM Attributes',
-            menu: {
-                items: [
-                    new Ext.menu.CheckItem({id:'dom', text:'DOM Attributes', checked: true, group:'xdb-styles'}),
-                    new Ext.menu.CheckItem({id:'styles', text:'CSS Properties', group:'xdb-styles'})
-                ]
-            }
-        });
-
-        swap.menu.on('click', function(){
-            styles = swap.menu.items.get('styles').checked;
-            showAll[styles? 'show' : 'hide']();
-            swap.setText(styles ? 'CSS Properties' : 'DOM Attributes');
-            var n = tree.getSelectionModel().getSelectedNode();
-            if(n){
-                onNodeSelect(tree, n);
-            }
-        });
-        
-        var addStyle = stb.addButton({
-            text: 'Add',
-            disabled: true,
-            handler: function(){
-                Ext.MessageBox.prompt('Add Property', 'Property Name:', function(btn, v){
-                    // store.store is disgusting TODO: clean up the API
-                    var store = stylesGrid.store.store;
-                    if(btn == 'ok' && v && !store.getById(v)){
-                        var r = new Ext.grid.PropertyRecord({name:v, value: ''}, v);
-                        store.add(r);
-                        stylesGrid.startEditing(store.getCount()-1, 1);
-                    }
-                });
-            }
-        });
-
-        var showAll = stb.addButton({
-            text: 'Computed Styles',
-            hidden: true,
-            pressed: false,
-            enableToggle: true,
-            toggleHandler: function(){
-                var n = tree.getSelectionModel().getSelectedNode();
-                if(n){
-                    onNodeSelect(tree, n);
-                }
-            }
-        });
+        Ext.debug.DomTree.superclass.initComponent.call(this);
 
         // tree related stuff
         var styles = false, hnode;
@@ -298,7 +288,7 @@
             }
             cn.select();
             var a = cn.ui.anchor;
-            treeEl.dom.scrollTop = Math.max(0 ,a.offsetTop-10);
+            this.getTreeEl().dom.scrollTop = Math.max(0 ,a.offsetTop-10);
             //treeEl.dom.scrollLeft = Math.max(0 ,a.offsetLeft-10); no likey
             cn.highlight();
             return true;
@@ -314,7 +304,9 @@
             return s;
         }
 
+        /*
         function onNodeSelect(t, n, last){
+            return;
             if(last && last.unframe){
                 last.unframe();
             }
@@ -369,27 +361,14 @@
             stylesGrid.treeNode = n;
             stylesGrid.view.fitColumns();
         }
+        */
 
-        // lets build a list of nodes to filter from the tree
-        // this is gonna be nasty
-        var filterIds = '^(?:';
-        var eds = stylesGrid.colModel.editors;
-        for(var edType in eds){
-            filterIds += eds[edType].id +'|';
-        }
-        Ext.each([dlg.shim? dlg.shim.id : 'noshim', dlg.proxyDrag.id], function(id){
-             filterIds += id +'|';
-        });
-        filterIds += dlg.el.id;
-        filterIds += ')$';
-        var filterRe = new RegExp(filterIds);
-
-        var loader = new Ext.tree.TreeLoader();
-        loader.load = function(n, cb){
-            var isBody = n.htmlNode == bd.dom;
+        this.loader = new Ext.tree.TreeLoader();
+        this.loader.load = function(n, cb){
+            var isBody = n.htmlNode == document.body;
             var cn = n.htmlNode.childNodes;
             for(var i = 0, c; c = cn[i]; i++){
-                if(isBody && filterRe.test(c.id)){
+                if(isBody && c.id == 'x-debug-browser'){
                     continue;
                 }
                 if(c.nodeType == 1){
@@ -404,136 +383,407 @@
             cb();
         };
 
-        var tree = new Ext.tree.TreePanel(treeEl, {
-            enableDD:false ,
-            loader: loader,
-            lines:false,
-            rootVisible:false,
-            animate:false,
-            hlColor:'ffff9c'
-        });
-        tree.getSelectionModel().on('selectionchange', onNodeSelect, null, {buffer:250});
+        //tree.getSelectionModel().on('selectionchange', onNodeSelect, null, {buffer:250});
 
-        var root = tree.setRootNode(new Ext.tree.TreeNode('Ext'));
+        this.root = this.setRootNode(new Ext.tree.TreeNode('Ext'));
 
-        hnode = root.appendChild(new Ext.debug.HtmlNode(
+        hnode = this.root.appendChild(new Ext.debug.HtmlNode(
                 document.getElementsByTagName('html')[0]
         ));
 
-        tree.render();
+    }
+});
 
-        Ext.debug.console = new Ext.JsonView(clayout.main.getEl(),
-                '<pre><xmp>> {msg}</xmp></pre>');
-        Ext.debug.console.jsonData = [];
-
-        Ext.debug.dialog = dlg;
-    },
-
-    show : function(){
-        var d = Ext.debug;
-        if(!d.dialog){
-            d.init();
-        }
-        if(!d.dialog.isVisible()){
-            d.dialog.show();
+Ext.debug.ComponentNodeUI = Ext.extend(Ext.tree.TreeNodeUI,{
+    onOver : function(e){
+        Ext.debug.ComponentNodeUI.superclass.onOver.call(this);
+        var cmp = this.node.attributes.component;
+        if (cmp.el && cmp.el.mask && cmp.id !='x-debug-browser') {
+            try { // Oddly bombs on some elements in IE, gets any we care about though
+                cmp.el.mask();
+            } catch(e) {}
         }
     },
 
-    hide : function(){
-        if(Ext.debug.dialog){
-            Ext.debug.dialog.hide();
+    onOut : function(e){
+        Ext.debug.ComponentNodeUI.superclass.onOut.call(this);
+        var cmp = this.node.attributes.component;
+        if (cmp.el && cmp.el.unmask && cmp.id !='x-debug-browser') {
+            try {
+                cmp.el.unmask();
+            } catch(e) {}
         }
+    }
+});
+
+Ext.debug.ComponentInspector = Ext.extend(Ext.tree.TreePanel, {
+    enableDD:false ,
+    lines:false,
+    rootVisible:false,
+    animate:false,
+    hlColor:'ffff9c',
+    autoScroll: true,
+    region:'center',
+    border:false,
+
+    initComponent : function(){
+        this.loader = new Ext.tree.TreeLoader();
+        this.bbar = new Ext.Toolbar([{
+            text: 'Refresh',
+            handler: this.refresh,
+            scope: this
+        }]);
+        Ext.debug.ComponentInspector.superclass.initComponent.call(this);
+
+        this.root = this.setRootNode(new Ext.tree.TreeNode({
+            text: 'Ext Components',
+            component: Ext.ComponentMgr.all,
+            leaf: false
+        }));
+        this.parseRootNode();
+
+        this.on('click', this.onClick, this);
     },
 
-    /**
-     * Debugging function. Prints all arguments to a resizable, movable, scrolling region without
-     * the need to include separate js or css. Double click it to hide it.
-     * @param {Mixed} arg1
-     * @param {Mixed} arg2
-     * @param {Mixed} etc
-     * @method print
-     */
-    log : function(arg1, arg2, etc){
-       Ext.debug.show();
-        var m = "";
-        for(var i = 0, len = arguments.length; i < len; i++){
-            m += (i == 0 ? "" : ", ") + arguments[i];
-        }
-        var cn = Ext.debug.console;
-        cn.jsonData.unshift({msg: m});
-        cn.refresh();
+    createNode: function(n,c) {
+        var leaf = (c.items && c.items.length > 0);
+        return n.appendChild(new Ext.tree.TreeNode({
+            text: c.id + (c.getXType() ? ' [ ' + c.getXType() + ' ]': '' ),
+            component: c,
+            uiProvider:Ext.debug.ComponentNodeUI,
+            leaf: !leaf
+        }));
     },
 
-    /**
-     * Applies the passed C#/DomHelper style format (e.g. "The variable {0} is equal to {1}") before calling Ext.debug.log
-     * @param {String} format
-     * @param {Mixed} arg1
-     * @param {Mixed} arg2
-     * @param {Mixed} etc
-     * @method printf
-     */
-    logf : function(format, arg1, arg2, etc){
-        Ext.debug.log(String.format.apply(String, arguments));
-    },
-
-    /**
-     * Dumps an object to Ext.debug.log
-     * @param {Object} o
-     * @method dump
-     */
-    dump : function(o){
-        if(typeof o == 'string' || typeof o == 'number' || typeof o == 'undefined' || o instanceof Date){
-            Ext.debug.log(o);
-        }else if(!o){
-            Ext.debug.log("null");
-        }else if(typeof o != "object"){
-            Ext.debug.log('Unknown return type');
-        }else if(o instanceof Array){
-            Ext.debug.log('['+o.join(',')+']');
-        }else{
-            var b = ["{\n"];
-            for(var key in o){
-                var to = typeof o[key];
-                if(to != "function" && to != "object"){
-                    b.push(String.format("  {0}: {1},\n", key, o[key]));
+    parseChildItems: function(n) {
+        var cn = n.attributes.component.items;
+        if (cn) {
+            for (var i = 0;i < cn.length; i++) {
+                var c = cn.get(i);
+                if (c.id != this.id && c.id != this.bottomToolbar.id) {
+                    var newNode = this.createNode(n,c);
+                    if (!newNode.leaf) {
+                        this.parseChildItems(newNode)
+                    }
                 }
             }
-            var s = b.join("");
-            if(s.length > 3){
-                s = s.substr(0, s.length-2);
+        }
+    },
+
+    parseRootNode: function() {
+        var n = this.root;
+        var cn = n.attributes.component.items;
+        for (var i = 0,c;c = cn[i];i++) {
+            if (c.id != this.id && c.id != this.bottomToolbar.id) {
+                if (!c.ownerCt) {
+                    var newNode = this.createNode(n,c);
+                    if (!newNode.leaf) {
+                        this.parseChildItems(newNode);
+                    }
+                }
             }
-            Ext.debug.log(s + "\n}");
         }
     },
 
-    _timers : {},
-    /**
-     * Starts a timer.
-     * @param {String} name (optional)
-     * @method timer
-     */
-    time : function(name){
-        name = name || "def";
-        Ext.debug._timers[name] = new Date().getTime();
+    onClick: function(node, e) {
+        var oi = Ext.getCmp('x-debug-objinspector');
+        oi.refreshNodes(node.attributes.component);
+        oi.ownerCt.show();
     },
 
-    /**
-     * Ends a timer, returns the results (formatted "{1} ms") and optionally prints them to Ext.print()
-     * @param {String} name (optional)
-     * @param {Boolean} printResults (optional) false to stop printing the results to Ext.print
-     * @method timerEnd
-     */
-    timeEnd : function(name, printResults){
-        var t = new Date().getTime();
-        name = name || "def";
-        var v = String.format("{0} ms", t-Ext.debug._timers[name]);
-        Ext.debug._timers[name] = new Date().getTime();
-        if(printResults !== false){
-            Ext.debug.log('Timer ' + (name == "def" ? v : name + ": " + v));
+    refresh: function() {
+        while (this.root.firstChild) {
+            this.root.removeChild(this.root.firstChild);
         }
-        return v;
+        this.parseRootNode();
+        var ci = Ext.getCmp('x-debug-compinfo');
+        if (ci) {
+            ci.message('refreshed component tree - '+Ext.ComponentMgr.all.length)
+        }
     }
-};
+});
+
+Ext.debug.ComponentInfoPanel = Ext.extend(Ext.Panel,{
+    id:'x-debug-compinfo',
+    region: 'east',
+    minWidth: 200,
+    split: true,
+    width: 350,
+    border: false,
+    autoScroll: true,
+    layout:'anchor',
+    style:'border-width:0 0 0 1px;',
+
+    initComponent: function() {
+        this.watchBox = new Ext.form.Checkbox({
+            id: 'x-debug-watchcomp',
+            boxLabel: 'Watch ComponentMgr',
+            listeners: {
+                check: function(cb, val) {
+                    if (val) {
+                        Ext.ComponentMgr.all.on('add', this.onAdd, this);
+                        Ext.ComponentMgr.all.on('remove', this.onRemove, this);
+                    } else {
+                        Ext.ComponentMgr.all.un('add', this.onAdd, this);
+                        Ext.ComponentMgr.all.un('remove', this.onRemove, this);
+                    }
+                },
+                scope: this
+            }
+        });
+
+        this.tbar = new Ext.Toolbar([{
+            text: 'Clear',
+            handler: this.clear,
+            scope: this
+        },'->',this.watchBox
+        ]);
+        Ext.debug.ComponentInfoPanel.superclass.initComponent.call(this);
+    },
+
+    onAdd: function(i, o, key) {
+        var markup = ['<div style="padding:5px !important;border-bottom:1px solid #ccc;">',
+                    'Added: '+o.id,
+                    '</div>'].join('');
+        this.insertMarkup(markup);
+    },
+
+    onRemove: function(o, key) {
+        var markup = ['<div style="padding:5px !important;border-bottom:1px solid #ccc;">',
+                    'Removed: '+o.id,
+                    '</div>'].join('');
+        this.insertMarkup(markup);
+    },
+
+    message: function(msg) {
+        var markup = ['<div style="padding:5px !important;border-bottom:1px solid #ccc;">',
+                    msg,
+                    '</div>'].join('');
+        this.insertMarkup(markup);
+    },
+    insertMarkup: function(markup) {
+        this.body.insertHtml('beforeend', markup);
+        this.body.scrollTo('top', 100000);
+    },
+    clear : function(){
+        this.body.update('');
+        this.body.dom.scrollTop = 0;
+    }
+});
+
+Ext.debug.ColumnNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
+    focus: Ext.emptyFn, // prevent odd scrolling behavior
+
+    renderElements : function(n, a, targetNode, bulkRender){
+        this.indentMarkup = n.parentNode ? n.parentNode.ui.getChildIndent() : '';
+
+        var t = n.getOwnerTree();
+        var cols = t.columns;
+        var bw = t.borderWidth;
+        var c = cols[0];
+
+        var buf = [
+             '<li class="x-tree-node"><div ext:tree-node-id="',n.id,'" class="x-tree-node-el x-tree-node-leaf ', a.cls,'">',
+                '<div class="x-tree-col" style="width:',c.width-bw,'px;">',
+                    '<span class="x-tree-node-indent">',this.indentMarkup,"</span>",
+                    '<img src="', this.emptyIcon, '" class="x-tree-ec-icon x-tree-elbow"/>',
+                    '<img src="', a.icon || this.emptyIcon, '" class="x-tree-node-icon',(a.icon ? " x-tree-node-inline-icon" : ""),(a.iconCls ? " "+a.iconCls : ""),'" unselectable="on"/>',
+                    '<a hidefocus="on" class="x-tree-node-anchor" href="',a.href ? a.href : "#",'" tabIndex="1" ',
+                    a.hrefTarget ? ' target="'+a.hrefTarget+'"' : "", '>',
+                    '<span unselectable="on">', n.text || (c.renderer ? c.renderer(a[c.dataIndex], n, a) : a[c.dataIndex]),"</span></a>",
+                "</div>"];
+         for(var i = 1, len = cols.length; i < len; i++){
+             c = cols[i];
+
+             buf.push('<div class="x-tree-col ',(c.cls?c.cls:''),'" style="width:',c.width-bw,'px;">',
+                        '<div class="x-tree-col-text">',(c.renderer ? c.renderer(a[c.dataIndex], n, a) : a[c.dataIndex]),"</div>",
+                      "</div>");
+         }
+         buf.push(
+            '<div class="x-clear"></div></div>',
+            '<ul class="x-tree-node-ct" style="display:none;"></ul>',
+            "</li>");
+
+        if(bulkRender !== true && n.nextSibling && n.nextSibling.ui.getEl()){
+            this.wrap = Ext.DomHelper.insertHtml("beforeBegin",
+                                n.nextSibling.ui.getEl(), buf.join(""));
+        }else{
+            this.wrap = Ext.DomHelper.insertHtml("beforeEnd", targetNode, buf.join(""));
+        }
+
+        this.elNode = this.wrap.childNodes[0];
+        this.ctNode = this.wrap.childNodes[1];
+        var cs = this.elNode.firstChild.childNodes;
+        this.indentNode = cs[0];
+        this.ecNode = cs[1];
+        this.iconNode = cs[2];
+        this.anchor = cs[3];
+        this.textNode = cs[3].firstChild;
+    }
+});
+
+Ext.debug.ObjectInspector = Ext.extend(Ext.tree.TreePanel, {
+    id: 'x-debug-objinspector',
+    enableDD:false ,
+    lines:false,
+    rootVisible:false,
+    animate:false,
+    hlColor:'ffff9c',
+    autoScroll: true,
+    region:'center',
+    border:false,
+    lines:false,
+    borderWidth: Ext.isBorderBox ? 0 : 2, // the combined left/right border for each cell
+    cls:'x-column-tree',
+
+    initComponent : function(){
+        this.showFunc = false;
+        this.toggleFunc = function() {
+            this.showFunc = !this.showFunc;
+            this.refreshNodes(this.currentObject);
+        }
+        this.bbar = new Ext.Toolbar([{
+            text: 'Show Functions',
+            enableToggle: true,
+            pressed: false,
+            handler: this.toggleFunc,
+            scope: this
+        }]);
+
+        Ext.apply(this,{
+            title: ' ',
+            loader: new Ext.tree.TreeLoader(),
+            columns:[{
+                header:'Property',
+                width: 300,
+                dataIndex:'name'
+            },{
+                header:'Value',
+                width: 900,
+                dataIndex:'value'
+            }]
+        });
+
+        Ext.debug.ObjectInspector.superclass.initComponent.call(this);
+
+        this.root = this.setRootNode(new Ext.tree.TreeNode({
+            text: 'Dummy Node',
+            leaf: false
+        }));
+
+        if (this.currentObject) {
+            this.parseNodes();
+        }
+    },
+
+    refreshNodes: function(newObj) {
+        this.currentObject = newObj;
+        var node = this.root;
+        while(node.firstChild){
+            node.removeChild(node.firstChild);
+        }
+        this.parseNodes();
+    },
+
+    parseNodes: function() {
+        for (var o in this.currentObject) {
+            if (!this.showFunc) {
+                if (Ext.isFunction(this.currentObject[o])) {
+                    continue;
+                }
+            }
+            this.createNode(o);
+        }
+    },
+
+    createNode: function(o) {
+        return this.root.appendChild(new Ext.tree.TreeNode({
+            name: o,
+            value: this.currentObject[o],
+            uiProvider:Ext.debug.ColumnNodeUI,
+            iconCls: 'x-debug-node',
+            leaf: true
+        }));
+    },
+
+    onRender : function(){
+        Ext.debug.ObjectInspector.superclass.onRender.apply(this, arguments);
+        this.headers = this.header.createChild({cls:'x-tree-headers'});
+
+        var cols = this.columns, c;
+        var totalWidth = 0;
+
+        for(var i = 0, len = cols.length; i < len; i++){
+             c = cols[i];
+             totalWidth += c.width;
+             this.headers.createChild({
+                 cls:'x-tree-hd ' + (c.cls?c.cls+'-hd':''),
+                 cn: {
+                     cls:'x-tree-hd-text',
+                     html: c.header
+                 },
+                 style:'width:'+(c.width-this.borderWidth)+'px;'
+             });
+        }
+        this.headers.createChild({cls:'x-clear'});
+        // prevent floats from wrapping when clipped
+        this.headers.setWidth(totalWidth);
+        this.innerCt.setWidth(totalWidth);
+    }
+});
+
+
+Ext.debug.StoreInspector = Ext.extend(Ext.tree.TreePanel, {
+    enableDD:false ,
+    lines:false,
+    rootVisible:false,
+    animate:false,
+    hlColor:'ffff9c',
+    autoScroll: true,
+    region:'center',
+    border:false,
+
+    initComponent: function() {
+        this.bbar = new Ext.Toolbar([{
+            text: 'Refresh',
+            handler: this.refresh,
+            scope: this
+        }]);
+        Ext.debug.StoreInspector.superclass.initComponent.call(this);
+
+        this.root = this.setRootNode(new Ext.tree.TreeNode({
+            text: 'Data Stores',
+            leaf: false
+        }));
+        this.on('click', this.onClick, this);
+
+        this.parseStores();
+    },
+
+    parseStores: function() {
+        var cn = Ext.StoreMgr.items;
+        for (var i = 0,c;c = cn[i];i++) {
+            this.root.appendChild({
+                text: c.storeId + ' - ' + c.totalLength + ' records',
+                component: c,
+                leaf: true
+            });
+        }
+    },
+
+    onClick: function(node, e) {
+        var oi = Ext.getCmp('x-debug-objinspector');
+        oi.refreshNodes(node.attributes.component);
+        oi.ownerCt.show();
+    },
+
+    refresh: function() {
+        while (this.root.firstChild) {
+            this.root.removeChild(this.root.firstChild);
+        }
+        this.parseStores();
+    }
+});
 
 // highly unusual class declaration
 Ext.debug.HtmlNode = function(){
@@ -654,79 +904,3 @@ Ext.debug.HtmlNode = function(){
 
     return HtmlNode;
 }();
-
-// subclass for the standard layout panels
-Ext.debug.InnerLayout = function(id, w, cfg){
-    // console layout
-    var el = Ext.DomHelper.append(document.body, {id:id});
-    var layout = new Ext.BorderLayout(el, {
-        north: {
-            initialSize:28
-        },
-        center: {
-            titlebar: false
-        },
-        east: {
-            split:true,
-            initialSize:w,
-            titlebar:true
-        }
-    });
-    Ext.debug.InnerLayout.superclass.constructor.call(this, layout, cfg);
-
-    layout.beginUpdate();
-
-    var tbPanel = layout.add('north', new Ext.ContentPanel({
-            autoCreate:true, fitToFrame:true}));
-
-    this.main = layout.add('center', new Ext.ContentPanel({
-            autoCreate:true, fitToFrame:true, autoScroll:true}));
-
-    this.tbar = new Ext.Toolbar(tbPanel.el);
-
-    var mtbEl = tbPanel.resizeEl = tbPanel.el.child('div.x-toolbar');
-    mtbEl.setStyle('border-bottom', '0 none');
-    layout.endUpdate(true);
-};
-
-Ext.extend(Ext.debug.InnerLayout, Ext.NestedLayoutPanel, {
-    add : function(){
-        return this.layout.add.apply(this.layout, arguments);
-    }
-});
-
-Ext.debug.cssList = ['background-color','border','border-color','border-spacing',
-'border-style','border-top','border-right','border-bottom','border-left','border-top-color',
-'border-right-color','border-bottom-color','border-left-color','border-top-width','border-right-width',
-'border-bottom-width','border-left-width','border-width','bottom','color','font-size','font-size-adjust',
-'font-stretch','font-style','height','left','letter-spacing','line-height','margin','margin-top',
-'margin-right','margin-bottom','margin-left','marker-offset','max-height','max-width','min-height',
-'min-width','orphans','outline','outline-color','outline-style','outline-width','overflow','padding',
-'padding-top','padding-right','padding-bottom','padding-left','quotes','right','size','text-indent',
-'top','width','word-spacing','z-index','opacity','outline-offset'];
-
-if(typeof console == 'undefined'){
-    console = Ext.debug;
-}
-/*
-if(Ext.isSafari || Ext.isIE || Ext.isOpera){
-    window.onerror = function(msg, url, line){
-        Ext.log.apply(Ext, arguments);
-    };
-}*/
-
-// attach shortcut key
-Ext.EventManager.on(window, 'load', function(){
-    Ext.get(document).on('keydown', function(e){
-        if(e.ctrlKey && e.shiftKey && e.getKey() == e.HOME){
-            Ext.debug.show();
-        }
-    });
-});
-
-// backwards compat
-Ext.print = Ext.log = Ext.debug.log;
-Ext.printf = Ext.logf = Ext.debug.logf;
-Ext.dump = Ext.debug.dump;
-Ext.timer = Ext.debug.time;
-Ext.timerEnd = Ext.debug.timeEnd;

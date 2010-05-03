@@ -1,15 +1,19 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.grid.CellSelectionModel
  * @extends Ext.grid.AbstractSelectionModel
- * This class provides the basic implementation for cell selection in a grid.
+ * This class provides the basic implementation for <i>single</i> <b>cell</b> selection in a grid.
+ * The object stored as the selection contains the following properties:
+ * <div class="mdetail-params"><ul>
+ * <li><b>cell</b> : see {@link #getSelectedCell} 
+ * <li><b>record</b> : Ext.data.record The {@link Ext.data.Record Record}
+ * which provides the data for the row containing the selection</li>
+ * </ul></div>
  * @constructor
  * @param {Object} config The object containing the configuration of this model.
  */
@@ -18,15 +22,15 @@ Ext.grid.CellSelectionModel = function(config){
 
     this.selection = null;
 
-    this.addEvents({
+    this.addEvents(
         /**
-	     * @event beforerowselect
-	     * Fires before a cell is selected.
+	     * @event beforecellselect
+	     * Fires before a cell is selected, return false to cancel the selection.
 	     * @param {SelectionModel} this
 	     * @param {Number} rowIndex The selected row index
 	     * @param {Number} colIndex The selected cell index
 	     */
-	    "beforecellselect" : true,
+	    "beforecellselect",
         /**
 	     * @event cellselect
 	     * Fires when a cell is selected.
@@ -34,27 +38,30 @@ Ext.grid.CellSelectionModel = function(config){
 	     * @param {Number} rowIndex The selected row index
 	     * @param {Number} colIndex The selected cell index
 	     */
-	    "cellselect" : true,
+	    "cellselect",
         /**
 	     * @event selectionchange
 	     * Fires when the active selection changes.
 	     * @param {SelectionModel} this
-	     * @param {Object} selection null for no selection or an object (o) with two properties
-	        <ul>
-	        <li>o.record: the record object for the row the selection is in</li>
-	        <li>o.cell: An array of [rowIndex, columnIndex]</li>
-	        </ul>
+	     * @param {Object} selection null for no selection or an object with two properties
+         * <div class="mdetail-params"><ul>
+         * <li><b>cell</b> : see {@link #getSelectedCell} 
+         * <li><b>record</b> : Ext.data.record<p class="sub-desc">The {@link Ext.data.Record Record}
+         * which provides the data for the row containing the selection</p></li>
+         * </ul></div>
 	     */
-	    "selectionchange" : true
-    });
+	    "selectionchange"
+    );
+
+    Ext.grid.CellSelectionModel.superclass.constructor.call(this);
 };
 
 Ext.extend(Ext.grid.CellSelectionModel, Ext.grid.AbstractSelectionModel,  {
 
     /** @ignore */
     initEvents : function(){
-        this.grid.on("mousedown", this.handleMouseDown, this);
-        this.grid.getGridEl().on(Ext.isIE ? "keydown" : "keypress", this.handleKeyDown, this);
+        this.grid.on("cellmousedown", this.handleMouseDown, this);
+        this.grid.getGridEl().on(Ext.EventManager.useKeydown ? "keydown" : "keypress", this.handleKeyDown, this);
         var view = this.grid.view;
         view.on("refresh", this.onViewChange, this);
         view.on("rowupdated", this.onRowUpdated, this);
@@ -83,16 +90,30 @@ Ext.extend(Ext.grid.CellSelectionModel, Ext.grid.AbstractSelectionModel,  {
     },
 
 	/**
-	 * Returns the currently selected cell,.
-	 * @return {Object} The selected cell or null if none selected.
+     * Returns an array containing the row and column indexes of the currently selected cell
+     * (e.g., [0, 0]), or null if none selected. The array has elements:
+     * <div class="mdetail-params"><ul>
+     * <li><b>rowIndex</b> : Number<p class="sub-desc">The index of the selected row</p></li>
+     * <li><b>cellIndex</b> : Number<p class="sub-desc">The index of the selected cell. 
+     * Due to possible column reordering, the cellIndex should <b>not</b> be used as an
+     * index into the Record's data. Instead, use the cellIndex to determine the <i>name</i>
+     * of the selected cell and use the field name to retrieve the data value from the record:<pre><code>
+// get name
+var fieldName = grid.getColumnModel().getDataIndex(cellIndex);
+// get data value based on name
+var data = record.get(fieldName);
+     * </code></pre></p></li>
+     * </ul></div>
+     * @return {Array} An array containing the row and column indexes of the selected cell, or null if none selected.
 	 */
     getSelectedCell : function(){
         return this.selection ? this.selection.cell : null;
     },
 
     /**
-     * Clears all selections.
-     * @param {Boolean} true to prevent the gridview from being notified about the change.
+     * If anything is selected, clears all selections and fires the selectionchange event.
+     * @param {Boolean} preventNotify <tt>true</tt> to prevent the gridview from
+     * being notified about the change.
      */
     clearSelections : function(preventNotify){
         var s = this.selection;
@@ -106,7 +127,7 @@ Ext.extend(Ext.grid.CellSelectionModel, Ext.grid.AbstractSelectionModel,  {
     },
 
     /**
-     * Returns true if there is a selection.
+     * Returns <tt>true</tt> if there is a selection.
      * @return {Boolean}
      */
     hasSelection : function(){
@@ -114,27 +135,30 @@ Ext.extend(Ext.grid.CellSelectionModel, Ext.grid.AbstractSelectionModel,  {
     },
 
     /** @ignore */
-    handleMouseDown : function(e, t){
-        var v = this.grid.getView();
-        if(this.isLocked()){
+    handleMouseDown : function(g, row, cell, e){
+        if(e.button !== 0 || this.isLocked()){
             return;
-        };
-        var row = v.findRowIndex(t);
-        var cell = v.findCellIndex(t);
-        if(row !== false && cell !== false){
-            this.select(row, cell);
         }
+        this.select(row, cell);
     },
 
     /**
-     * Selects a cell.
-     * @param {Number} rowIndex
-     * @param {Number} collIndex
+     * Selects a cell.  Before selecting a cell, fires the
+     * {@link #beforecellselect} event.  If this check is satisfied the cell
+     * will be selected and followed up by  firing the {@link #cellselect} and
+     * {@link #selectionchange} events.
+     * @param {Number} rowIndex The index of the row to select
+     * @param {Number} colIndex The index of the column to select
+     * @param {Boolean} preventViewNotify (optional) Specify <tt>true</tt> to
+     * prevent notifying the view (disables updating the selected appearance)
+     * @param {Boolean} preventFocus (optional) Whether to prevent the cell at
+     * the specified rowIndex / colIndex from being focused.
+     * @param {Ext.data.Record} r (optional) The record to select
      */
     select : function(rowIndex, colIndex, preventViewNotify, preventFocus, /*internal*/ r){
         if(this.fireEvent("beforecellselect", this, rowIndex, colIndex) !== false){
             this.clearSelections();
-            r = r || this.grid.dataSource.getAt(rowIndex);
+            r = r || this.grid.store.getAt(rowIndex);
             this.selection = {
                 record : r,
                 cell : [rowIndex, colIndex]
@@ -204,7 +228,7 @@ Ext.extend(Ext.grid.CellSelectionModel, Ext.grid.AbstractSelectionModel,  {
                     return;
                 }
              break;
-        };
+        }
         if(newCell){
             this.select(newCell[0], newCell[1]);
             e.stopEvent();
@@ -224,10 +248,11 @@ Ext.extend(Ext.grid.CellSelectionModel, Ext.grid.AbstractSelectionModel,  {
                 newCell = g.walkCells(ed.row, ed.col+1, 1, this.acceptsNav, this);
             }
             e.stopEvent();
-        }else if(k == e.ENTER && !e.ctrlKey){
+        }else if(k == e.ENTER){
             ed.completeEdit();
             e.stopEvent();
         }else if(k == e.ESC){
+        	e.stopEvent();
             ed.cancelEdit();
         }
         if(newCell){

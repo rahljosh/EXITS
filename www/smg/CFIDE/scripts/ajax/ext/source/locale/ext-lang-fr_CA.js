@@ -1,12 +1,10 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
-/*
+﻿/*
  * France (Canadian) translation
  * By BernardChhun
  * 04-08-2007, 03:07 AM
@@ -18,8 +16,8 @@ if(Ext.View){
    Ext.View.prototype.emptyText = "";
 }
 
-if(Ext.grid.Grid){
-   Ext.grid.Grid.prototype.ddText = "{0} ligne(s) sélectionné(s)";
+if(Ext.grid.GridPanel){
+   Ext.grid.GridPanel.prototype.ddText = "{0} ligne(s) sélectionné(s)";
 }
 
 if(Ext.TabPanelItem){
@@ -33,6 +31,25 @@ if(Ext.form.Field){
 if(Ext.LoadMask){
     Ext.LoadMask.prototype.msg = "En cours de chargement...";
 }
+
+Date.shortMonthNames = [
+   "Janv",
+   "Févr",
+   "Mars",
+   "Avr",
+   "Mai",
+   "Juin",
+   "Juil",
+   "Août",
+   "Sept",
+   "Oct",
+   "Nov",
+   "Déc"
+];
+
+Date.getShortMonthName = function(month) {
+  return Date.shortMonthNames[month];
+};
 
 Date.monthNames = [
    "Janvier",
@@ -49,6 +66,25 @@ Date.monthNames = [
    "Décembre"
 ];
 
+Date.monthNumbers = {
+  "Janvier" : 0,
+  "Février" : 1,
+  "Mars" : 2,
+  "Avril" : 3,
+  "Mai" : 4,
+  "Juin" : 5,
+  "Juillet" : 6,
+  "Août" : 7,
+  "Septembre" : 8,
+  "Octobre" : 9,
+  "Novembre" : 10,
+  "Décembre" : 11
+};
+
+Date.getMonthNumber = function(name) {
+  return Date.monthNumbers[Ext.util.Format.capitalize(name)];
+};
+
 Date.dayNames = [
    "Dimanche",
    "Lundi",
@@ -58,6 +94,10 @@ Date.dayNames = [
    "Vendredi",
    "Samedi"
 ];
+
+Date.getShortDayName = function(day) {
+  return Date.dayNames[day].substring(0, 3);
+};
 
 if(Ext.MessageBox){
    Ext.MessageBox.buttonText = {
@@ -145,8 +185,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
    Ext.apply(Ext.form.VTypes, {
-      emailText    : 'Ce champ doit contenir un courriel et doit être sous ce format: "usager@domaine.com"',
-      urlText      : 'Ce champ doit contenir une URL sous le format suivant: "http:/'+'/www.domaine.com"',
+      emailText    : 'Ce champ doit contenir un courriel et doit être sous ce format: "usager@example.com"',
+      urlText      : 'Ce champ doit contenir une URL sous le format suivant: "http:/'+'/www.example.com"',
       alphaText    : 'Ce champ ne peut contenir que des lettres et le caractère souligné (_)',
       alphanumText : 'Ce champ ne peut contenir que des caractères alphanumériques ainsi que le caractère souligné (_)'
    });
@@ -170,8 +210,8 @@ if(Ext.grid.PropertyColumnModel){
    });
 }
 
-if(Ext.SplitLayoutRegion){
-   Ext.apply(Ext.SplitLayoutRegion.prototype, {
+if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
+   Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
       splitTip            : "Cliquer et glisser pour redimensionner le panneau.",
       collapsibleSplitTip : "Cliquer et glisser pour redimensionner le panneau. Double-cliquer pour cacher le panneau."
    });

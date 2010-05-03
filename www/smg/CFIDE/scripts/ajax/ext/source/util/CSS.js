@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.util.CSS
  * Utility class for manipulating CSS rules
@@ -20,8 +18,8 @@ Ext.util.CSS = function(){
 
    return {
    /**
-    * Very simple dynamic creation of stylesheets from a text blob of rules.  The text will wrapped in a style
-    * tag and appended to the HEAD of the document.
+    * Creates a stylesheet from a text blob of rules.
+    * These rules will be wrapped in a STYLE tag and appended to the HEAD of the document.
     * @param {String} cssText The text containing the css rules
     * @param {String} id An id to add to the stylesheet for later removal
     * @return {StyleSheet}
@@ -42,7 +40,7 @@ Ext.util.CSS = function(){
            try{
                 rules.appendChild(doc.createTextNode(cssText));
            }catch(e){
-               rules.cssText = cssText; 
+               rules.cssText = cssText;
            }
            head.appendChild(rules);
            ss = rules.styleSheet ? rules.styleSheet : (rules.sheet || doc.styleSheets[doc.styleSheets.length-1]);
@@ -104,7 +102,7 @@ Ext.util.CSS = function(){
     * @return {Object} An object (hash) of rules indexed by selector
     */
    getRules : function(refreshCache){
-   		if(rules == null || refreshCache){
+   		if(rules === null || refreshCache){
    			rules = {};
    			var ds = doc.styleSheets;
    			for(var i =0, len = ds.length; i < len; i++){
@@ -124,7 +122,7 @@ Ext.util.CSS = function(){
     */
    getRule : function(selector, refreshCache){
    		var rs = this.getRules(refreshCache);
-   		if(!(selector instanceof Array)){
+   		if(!Ext.isArray(selector)){
    		    return rs[selector];
    		}
    		for(var i = 0; i < selector.length; i++){
@@ -144,7 +142,7 @@ Ext.util.CSS = function(){
     * @return {Boolean} true If a rule was found and updated
     */
    updateRule : function(selector, property, value){
-   		if(!(selector instanceof Array)){
+   		if(!Ext.isArray(selector)){
    			var rule = this.getRule(selector);
    			if(rule){
    				rule.style[property.replace(camelRe, camelFn)] = value;

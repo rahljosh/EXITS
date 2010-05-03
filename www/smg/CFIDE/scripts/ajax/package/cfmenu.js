@@ -9,18 +9,24 @@ written permission of Adobe.*/
 if(!ColdFusion.Menu){
 ColdFusion.Menu={};
 }
-ColdFusion.Menu.menuItemMouseOver=function(id,_2f){
-var _30=document.getElementById(id);
-_30.tempfontcolor=_30.firstChild.style.color;
-if(_2f){
-_30.firstChild.style.color=_2f;
+ColdFusion.Menu.menuItemMouseOver=function(id,_70){
+var _71=document.getElementById(id);
+_71.tempfontcolor=_71.firstChild.style.color;
+if(_70){
+_71.firstChild.style.color=_70;
 }
 };
 ColdFusion.Menu.menuItemMouseOut=function(id){
-var _32=document.getElementById(id);
-if(_32.tempfontcolor){
-_32.firstChild.style.color=_32.tempfontcolor;
+var _73=document.getElementById(id);
+if(_73.tempfontcolor){
+_73.firstChild.style.color=_73.tempfontcolor;
 }else{
-_32.firstChild.style.color="black";
+_73.firstChild.style.color="black";
 }
+};
+ColdFusion.Menu.initMenu=function(_74,_75){
+return new YAHOO.widget.Menu(_74,_75);
+};
+ColdFusion.Menu.initMenuBar=function(_76,_77){
+return new YAHOO.widget.MenuBar(_76,_77);
 };

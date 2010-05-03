@@ -11,138 +11,167 @@ ColdFusion.RichText={};
 }
 ColdFusion.RichText.editorState={};
 ColdFusion.RichText.buffer=null;
-ColdFusion.RichText.initialize=function(id,name,_350,_351,_352,_353,_354,_355,_356,skin,_358,_359,_35a,_35b,_35c){
-var _35d=new FCKeditor(id);
+ColdFusion.RichText.initialize=function(id,name,_369,_36a,_36b,_36c,_36d,_36e,_36f,skin,_371,_372,_373,_374,_375){
+var _376=new FCKeditor(id);
 ColdFusion.RichText.editorState[id]=false;
-_35d.Value=_350;
-_35d.richtextid=id;
-if(_351!=null){
-_35d.BasePath=_351;
+_376.Value=_369;
+_376.richtextid=id;
+if(_36a!=null){
+_376.BasePath=_36a;
 }
-if(_352!=null){
-_35d.Width=_352;
+if(_36b!=null){
+_376.Width=_36b;
 }
-if(_353!=null){
-_35d.Height=_353;
+if(_36c!=null){
+_376.Height=_36c;
 }
-if(_354!=null){
-_35d.Config.FontNames=_354;
+if(_36d!=null){
+_376.Config.FontNames=_36d;
 }
-if(_355!=null){
-_35d.Config.FontSizes=_355;
+if(_36e!=null){
+_376.Config.FontSizes=_36e;
 }
-if(_356!=null){
-_35d.Config.FontFormats=_356;
+if(_36f!=null){
+_376.Config.FontFormats=_36f;
+}
+_376.Config.LinkBrowserURL=_376.BasePath+"editor/filemanager/browser/default/browser.html?Connector=../../connectors/cfm/connector.cfm";
+_376.Config.LinkUploadURL=_376.BasePath+"editor/filemanager/connectors/cfm/upload.cfm";
+_376.Config.ImageBrowserURL=_376.BasePath+"editor/filemanager/browser/default/browser.html?Type=Image&Connector=../../connectors/cfm/connector.cfm";
+_376.Config.ImageUploadURL=_376.BasePath+"editor/filemanager/connectors/cfm/upload.cfm?Type=Image";
+_376.Config.FlashBrowserURL=_376.BasePath+"editor/filemanager/browser/default/browser.html?Type=Flash&Connector=../../connectors/cfm/connector.cfm";
+_376.Config.FlashUploadURL=_376.BasePath+"editor/filemanager/connectors/cfm/upload.cfm?Type=Flash";
+if(window._cf_clientid){
+_376.Config.LinkBrowserURL=_376.Config.LinkBrowserURL+"&_cf_clientid="+_cf_clientid;
+_376.Config.LinkUploadURL=_376.Config.LinkUploadURL+"?_cf_clientid="+_cf_clientid;
+_376.Config.ImageBrowserURL=_376.Config.ImageBrowserURL+"&_cf_clientid="+_cf_clientid;
+_376.Config.ImageUploadURL=_376.Config.ImageUploadURL+"&_cf_clientid="+_cf_clientid;
+_376.Config.FlashBrowserURL=_376.Config.FlashBrowserURL+"&_cf_clientid="+_cf_clientid;
+_376.Config.FlashUploadURL=_376.Config.FlashUploadURL+"&_cf_clientid="+_cf_clientid;
 }
 if(skin!=null){
-var _35e=_35d.BasePath+"editor/skins/"+skin+"/";
-_35d.Config.SkinPath=_35e;
+var _377=_376.BasePath+"editor/skins/"+skin+"/";
+_376.Config.SkinPath=_377;
 }
-if(_358==true){
-_35d.Config.ToolbarStartExpanded=false;
-_35d.Config.Toolbaronfocus=true;
+if(_371==true){
+_376.Config.ToolbarStartExpanded=false;
+_376.Config.Toolbaronfocus=true;
 }
-if(_359!=null){
-_35d.ToolbarSet=_359;
+if(_372!=null){
+_376.ToolbarSet=_372;
 }
-if(_35a!=null){
-_35d.Config.StylesXmlPath=_35a;
+if(_373!=null){
+_376.Config.StylesXmlPath=_373;
 }
-if(_35b!=null){
-_35d.Config.TemplatesXmlPath=_35b;
+if(_374!=null){
+_376.Config.TemplatesXmlPath=_374;
 }
-_35d.Config.AutoDetectLanguage=false;
-if(_35c!=null){
-_35d.Config.DefaultLanguage=_35c;
+_376.Config.AutoDetectLanguage=false;
+if(_375!=null){
+_376.Config.DefaultLanguage=_375;
 }
-_35d.ReplaceTextarea();
-var _35f=function(_360){
-ColdFusion.RichText.setValue(id,_360);
+_376.ReplaceTextarea();
+var _378=function(_379){
+ColdFusion.RichText.setValue(id,_379);
 };
-_35d._cf_setValue=_35f;
-var _361=function(){
+_376._cf_setValue=_378;
+var _37a=function(){
 if(ColdFusion.RichText.editorState[id]){
-var _362=FCKeditorAPI.GetInstance(id);
-return _362.GetXHTML();
+var _37b=FCKeditorAPI.GetInstance(id);
+return _37b.GetXHTML();
 }else{
 ColdFusion.Log.error("richtext.initialize.getvalue.notready","widget",[id]);
 return null;
 }
 };
-_35d._cf_getAttribute=_361;
-var _363=function(_364,_365,_366){
-var _367=document.getElementById(id);
-if(_367){
-ColdFusion.Event.addListener(_367,_364,_365,_366);
+_376._cf_getAttribute=_37a;
+var _37c=function(_37d,_37e,_37f){
+var _380=document.getElementById(id);
+if(_380){
+ColdFusion.Event.addListener(_380,_37d,_37e,_37f);
 }
 };
-_35d._cf_register=_363;
-_35d._cf_name=name;
-ColdFusion.objectCache[name]=_35d;
-ColdFusion.objectCache[id]=_35d;
+_376._cf_register=_37c;
+_376._cf_name=name;
+ColdFusion.objectCache[name]=_376;
+ColdFusion.objectCache[id]=_376;
 ColdFusion.RichText.registerAfterSet(id);
 ColdFusion.Log.info("richtext.initialize.success","widget",[name]);
 };
-ColdFusion.RichText.editor_onfocus=function(_368){
-_368.ToolbarSet.Expand();
+ColdFusion.RichText.editor_onfocus=function(_381){
+_381.ToolbarSet.Expand();
 };
-ColdFusion.RichText.editor_onblur=function(_369){
-_369.ToolbarSet.Collapse();
+ColdFusion.RichText.editor_onblur=function(_382){
+_382.ToolbarSet.Collapse();
 };
-ColdFusion.RichText.setChangeBuffer=function(_36a){
-ColdFusion.RichText.buffer=FCKeditorAPI.GetInstance(_36a.Name).GetXHTML();
+ColdFusion.RichText.setChangeBuffer=function(_383){
+ColdFusion.RichText.buffer=FCKeditorAPI.GetInstance(_383.Name).GetXHTML();
 };
-ColdFusion.RichText.resetChangeBuffer=function(_36b){
-if(ColdFusion.RichText.buffer!=FCKeditorAPI.GetInstance(_36b.Name).GetXHTML()){
-ColdFusion.RichText.fireChangeEvent(_36b.Name);
+ColdFusion.RichText.resetChangeBuffer=function(_384){
+if(ColdFusion.RichText.buffer!=FCKeditorAPI.GetInstance(_384.Name).GetXHTML()){
+ColdFusion.RichText.fireChangeEvent(_384.Name);
 }
 ColdFusion.RichText.buffer=null;
 };
-ColdFusion.RichText.registerAfterSet=function(_36c){
-if(ColdFusion.RichText.editorState[_36c]){
-var _36d=function(){
-ColdFusion.RichText.fireChangeEvent(_36c);
+ColdFusion.RichText.registerAfterSet=function(_385){
+if(ColdFusion.RichText.editorState[_385]){
+var _386=function(){
+ColdFusion.RichText.fireChangeEvent(_385);
 };
-var _36e=FCKeditorAPI.GetInstance(_36c);
-_36e.Events.AttachEvent("OnAfterSetHTML",_36d);
+var _387=FCKeditorAPI.GetInstance(_385);
+_387.Events.AttachEvent("OnAfterSetHTML",_386);
 }else{
-setTimeout("ColdFusion.RichText.registerAfterSet('"+_36c+"')",1000);
+setTimeout("ColdFusion.RichText.registerAfterSet('"+_385+"')",1000);
 }
 };
-ColdFusion.RichText.getEditorObject=function(_36f){
-if(!_36f){
+ColdFusion.RichText.getEditorObject=function(_388){
+if(!_388){
 ColdFusion.handleError(null,"richtext.geteditorobject.missingtextareaname","widget",null,null,null,true);
 return;
 }
-var _370=ColdFusion.objectCache[_36f];
-if(_370==null||FCKeditor.prototype.isPrototypeOf(_370)==false){
-ColdFusion.handleError(null,"richtext.geteditorobject.notfound","widget",[_36f],null,null,true);
+var _389=ColdFusion.objectCache[_388];
+if(_389==null||FCKeditor.prototype.isPrototypeOf(_389)==false){
+ColdFusion.handleError(null,"richtext.geteditorobject.notfound","widget",[_388],null,null,true);
 return;
 }
-return FCKeditorAPI.GetInstance(_370.richtextid);
+return FCKeditorAPI.GetInstance(_389.richtextid);
 };
-ColdFusion.RichText.setValue=function(_371,_372){
-if(ColdFusion.RichText.editorState[_371]){
-var _373=FCKeditorAPI.GetInstance(_371);
-_373.SetHTML(_372);
+ColdFusion.RichText.setValue=function(_38a,_38b){
+if(ColdFusion.RichText.editorState[_38a]){
+var _38c=FCKeditorAPI.GetInstance(_38a);
+_38c.SetHTML(_38b);
 }else{
-setTimeout("ColdFusion.RichText.setValue(\""+_371+"\",\""+_372+"\")",1000);
+setTimeout("ColdFusion.RichText.setValue(\""+_38a+"\",\""+_38b+"\")",1000);
 }
 };
-ColdFusion.RichText.fireChangeEvent=function(_374){
-var _375=ColdFusion.objectCache[_374];
-ColdFusion.Log.info("richtext.firechangeevent.firechange","widget",[_375._cf_name]);
-ColdFusion.Event.callBindHandlers(_374,null,"change");
-};
-function FCKeditor_OnComplete(_376){
-if(_376.Config.Toolbaronfocus){
-_376.Events.AttachEvent("OnBlur",ColdFusion.RichText.editor_onblur);
-_376.Events.AttachEvent("OnFocus",ColdFusion.RichText.editor_onfocus);
+ColdFusion.RichText.fireChangeEvent=function(_38d){
+var _38e=ColdFusion.objectCache[_38d];
+ColdFusion.Log.info("richtext.firechangeevent.firechange","widget",[_38e._cf_name]);
+var _38f=document.getElementById(_38d);
+if(_38f){
+if(_38f.fireEvent){
+_38f.fireEvent("onchange");
 }
-_376.Events.AttachEvent("OnFocus",ColdFusion.RichText.setChangeBuffer);
-_376.Events.AttachEvent("OnBlur",ColdFusion.RichText.resetChangeBuffer);
-ColdFusion.RichText.editorState[_376.Name]=true;
+if(document.createEvent){
+var evt=document.createEvent("HTMLEvents");
+if(evt.initEvent){
+evt.initEvent("change",true,true);
+}
+if(_38f.dispatchEvent){
+_38f.dispatchEvent(evt);
+}
+}
+}
+ColdFusion.Event.callBindHandlers(_38d,null,"change");
+};
+function FCKeditor_OnComplete(_391){
+if(_391.Config.Toolbaronfocus){
+_391.Events.AttachEvent("OnBlur",ColdFusion.RichText.editor_onblur);
+_391.Events.AttachEvent("OnFocus",ColdFusion.RichText.editor_onfocus);
+}
+_391.Events.AttachEvent("OnFocus",ColdFusion.RichText.setChangeBuffer);
+_391.Events.AttachEvent("OnBlur",ColdFusion.RichText.resetChangeBuffer);
+ColdFusion.RichText.editorState[_391.Name]=true;
 if(ColdFusion.RichText.OnComplete){
-ColdFusion.RichText.OnComplete(_376);
+ColdFusion.RichText.OnComplete(_391);
 }
 }

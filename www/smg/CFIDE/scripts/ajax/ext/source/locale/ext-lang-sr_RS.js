@@ -1,12 +1,10 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
-/*
+﻿/*
  * Serbian Cyrillic Translation
  * by Čolovic Vladan (cyrillic, utf8 encoding)
  * sr_RS (ex: sr_CS, sr_YU)
@@ -19,8 +17,8 @@ if(Ext.View){
    Ext.View.prototype.emptyText = "";
 }
 
-if(Ext.grid.Grid){
-   Ext.grid.Grid.prototype.ddText = "{0} изабраних редова";
+if(Ext.grid.GridPanel){
+   Ext.grid.GridPanel.prototype.ddText = "{0} изабраних редова";
 }
 
 if(Ext.TabPanelItem){
@@ -172,8 +170,8 @@ if(Ext.grid.PropertyColumnModel){
    });
 }
 
-if(Ext.SplitLayoutRegion){
-   Ext.apply(Ext.SplitLayoutRegion.prototype, {
+if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
+   Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
       splitTip            : "Повући за измену величине.",
       collapsibleSplitTip : "Повући за измену величине. Двоструки клик за сакривање."
    });

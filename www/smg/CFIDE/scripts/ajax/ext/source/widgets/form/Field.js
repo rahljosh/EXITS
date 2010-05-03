@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.form.Field
  * @extends Ext.BoxComponent
@@ -13,18 +11,38 @@
  * @constructor
  * Creates a new Field
  * @param {Object} config Configuration options
+ * @xtype field
  */
-Ext.form.Field = function(config){
-    Ext.form.Field.superclass.constructor.call(this, config);
-};
+Ext.form.Field = Ext.extend(Ext.BoxComponent,  {
+    /**
+     * @cfg {String} inputType The type attribute for input fields -- e.g. radio, text, password, file (defaults
+     * to "text"). The types "file" and "password" must be used to render those field types currently -- there are
+     * no separate Ext components for those. Note that if you use <tt>inputType:'file'</tt>, {@link #emptyText}
+     * is not supported and should be avoided.
+     */
+    /**
+     * @cfg {Number} tabIndex The tabIndex for this field. Note this only applies to fields that are rendered,
+     * not those which are built via applyTo (defaults to undefined).
+     */
+    /**
+     * @cfg {Mixed} value A value to initialize this field with (defaults to undefined).
+     */
+    /**
+     * @cfg {String} name The field's HTML name attribute (defaults to "").
+     * <b>Note</b>: this property must be set if this field is to be automatically included with
+     * {@link Ext.form.BasicForm#submit form submit()}.
+     */
+    /**
+     * @cfg {String} cls A custom CSS class to apply to the field's underlying element (defaults to "").
+     */
 
-Ext.extend(Ext.form.Field, Ext.BoxComponent,  {
     /**
      * @cfg {String} invalidClass The CSS class to use when marking a field invalid (defaults to "x-form-invalid")
      */
     invalidClass : "x-form-invalid",
     /**
-     * @cfg {String} invalidText The error text to use when marking a field invalid and no message is provided (defaults to "The value in this field is invalid")
+     * @cfg {String} invalidText The error text to use when marking a field invalid and no message is provided
+     * (defaults to "The value in this field is invalid")
      */
     invalidText : "The value in this field is invalid",
     /**
@@ -41,12 +59,15 @@ Ext.extend(Ext.form.Field, Ext.BoxComponent,  {
      */
     validateOnBlur : true,
     /**
-     * @cfg {Number} validationDelay The length of time in milliseconds after user input begins until validation is initiated (defaults to 250)
+     * @cfg {Number} validationDelay The length of time in milliseconds after user input begins until validation
+     * is initiated (defaults to 250)
      */
     validationDelay : 250,
     /**
-     * @cfg {String/Object} autoCreate A DomHelper element spec, or true for a default element spec (defaults to
-     * {tag: "input", type: "text", size: "20", autocomplete: "off"})
+     * @cfg {String/Object} autoCreate <p>A {@link Ext.DomHelper DomHelper} element spec, or true for a default
+     * element spec. Used to create the {@link Ext.Component#getEl Element} which will encapsulate this Component.
+     * See <tt>{@link Ext.Component#autoEl autoEl}</tt> for details.  Defaults to:</p>
+     * <pre><code>{tag: "input", type: "text", size: "20", autocomplete: "off"}</code></pre>
      */
     defaultAutoCreate : {tag: "input", type: "text", size: "20", autocomplete: "off"},
     /**
@@ -54,7 +75,8 @@ Ext.extend(Ext.form.Field, Ext.BoxComponent,  {
      */
     fieldClass : "x-form-field",
     /**
-     * @cfg {String} msgTarget The location where error text should display.  Should be one of the following values (defaults to 'qtip'):
+     * @cfg {String} msgTarget The location where error text should display.  Should be one of the following values
+     * (defaults to 'qtip'):
      *<pre>
 Value         Description
 -----------   ----------------------------------------------------------------------
@@ -67,72 +89,83 @@ side          Add an error icon to the right of the field with a popup on hover
      */
     msgTarget : 'qtip',
     /**
-     * @cfg {String} msgFx <b>Experimental</b> The effect used when displaying a validation message under the field (defaults to 'normal').
+     * @cfg {String} msgFx <b>Experimental</b> The effect used when displaying a validation message under the field
+     * (defaults to 'normal').
      */
     msgFx : 'normal',
-
     /**
-     * @cfg {Boolean} readOnly True to mark the field as readOnly in HTML (defaults to false) -- Note: this only sets the element's readOnly DOM attribute.
+     * @cfg {Boolean} readOnly <tt>true</tt> to mark the field as readOnly in HTML
+     * (defaults to <tt>false</tt>).
+     * <br><p><b>Note</b>: this only sets the element's readOnly DOM attribute.
+     * Setting <code>readOnly=true</code>, for example, will not disable triggering a
+     * ComboBox or DateField; it gives you the option of forcing the user to choose
+     * via the trigger without typing in the text box. To hide the trigger use
+     * <code>{@link Ext.form.TriggerField#hideTrigger hideTrigger}</code>.</p>
      */
     readOnly : false,
-
     /**
      * @cfg {Boolean} disabled True to disable the field (defaults to false).
+     * <p>Be aware that conformant with the <a href="http://www.w3.org/TR/html401/interact/forms.html#h-17.12.1">HTML specification</a>,
+     * disabled Fields will not be {@link Ext.form.BasicForm#submit submitted}.</p>
      */
     disabled : false,
 
-    /**
-     * @cfg {String} inputType The type attribute for input fields -- e.g. radio, text, password (defaults to "text").
-     */
-    inputType : undefined,
-    
-    /**
-     * @cfg {Number} tabIndex The tabIndex for this field. Note this only applies to fields that are rendered, not those which are built via applyTo (defaults to undefined).
-	 */
-	tabIndex : undefined,
-	
     // private
     isFormField : true,
 
     // private
     hasFocus : false,
 
-    /**
-     * @cfg {Mixed} value A value to initialize this field with.
-     */
-    value : undefined,
-
-    /**
-     * @cfg {String} name The field's HTML name attribute.
-     */
-    /**
-     * @cfg {String} cls A CSS class to apply to the field's underlying element.
-     */
-
-	// private ??
-	initComponent : function(){
+    // private
+    initComponent : function(){
         Ext.form.Field.superclass.initComponent.call(this);
-        this.addEvents({
+        this.addEvents(
             /**
              * @event focus
              * Fires when this field receives input focus.
              * @param {Ext.form.Field} this
              */
-            focus : true,
+            'focus',
             /**
              * @event blur
              * Fires when this field loses input focus.
              * @param {Ext.form.Field} this
              */
-            blur : true,
+            'blur',
             /**
              * @event specialkey
-             * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.  You can check
-             * {@link Ext.EventObject#getKey} to determine which key was pressed.
+             * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.
+             * To handle other keys see {@link Ext.Panel#keys} or {@link Ext.KeyMap}.
+             * You can check {@link Ext.EventObject#getKey} to determine which key was pressed.
+             * For example: <pre><code>
+var form = new Ext.form.FormPanel({
+    ...
+    items: [{
+            fieldLabel: 'Field 1',
+            name: 'field1',
+            allowBlank: false
+        },{
+            fieldLabel: 'Field 2',
+            name: 'field2',
+            listeners: {
+                specialkey: function(field, e){
+                    // e.HOME, e.END, e.PAGE_UP, e.PAGE_DOWN,
+                    // e.TAB, e.ESC, arrow keys: e.LEFT, e.RIGHT, e.UP, e.DOWN
+                    if (e.{@link Ext.EventObject#getKey getKey()} == e.ENTER) {
+                        var form = field.ownerCt.getForm();
+                        form.submit();
+                    }
+                }
+            }
+        }
+    ],
+    ...
+});
+             * </code></pre>
              * @param {Ext.form.Field} this
              * @param {Ext.EventObject} e The event object
              */
-            specialkey : true,
+            'specialkey',
             /**
              * @event change
              * Fires just before the field blurs if the field value has changed.
@@ -140,44 +173,47 @@ side          Add an error icon to the right of the field with a popup on hover
              * @param {Mixed} newValue The new value
              * @param {Mixed} oldValue The original value
              */
-            change : true,
+            'change',
             /**
              * @event invalid
              * Fires after the field has been marked as invalid.
              * @param {Ext.form.Field} this
              * @param {String} msg The validation message
              */
-            invalid : true,
+            'invalid',
             /**
              * @event valid
              * Fires after the field has been validated with no errors.
              * @param {Ext.form.Field} this
              */
-            valid : true
-        });
+            'valid'
+        );
     },
 
     /**
-     * Returns the name attribute of the field if available
-     * @return {String} name The field name
+     * Returns the {@link Ext.form.Field#name name} or {@link Ext.form.ComboBox#hiddenName hiddenName}
+     * attribute of the field if available.
+     * @return {String} name The field {@link Ext.form.Field#name name} or {@link Ext.form.ComboBox#hiddenName hiddenName}  
      */
     getName: function(){
-         return this.rendered && this.el.dom.name ? this.el.dom.name : (this.hiddenName || '');
+        return this.rendered && this.el.dom.name ? this.el.dom.name : this.name || this.id || '';
     },
 
     // private
     onRender : function(ct, position){
-        Ext.form.Field.superclass.onRender.call(this, ct, position);
         if(!this.el){
             var cfg = this.getAutoCreate();
+
             if(!cfg.name){
                 cfg.name = this.name || this.id;
             }
             if(this.inputType){
                 cfg.type = this.inputType;
             }
-            this.el = ct.createChild(cfg, position);
+            this.autoEl = cfg;
         }
+        Ext.form.Field.superclass.onRender.call(this, ct, position);
+        
         var type = this.el.dom.type;
         if(type){
             if(type == 'password'){
@@ -193,35 +229,42 @@ side          Add an error icon to the right of the field with a popup on hover
         }
 
         this.el.addClass([this.fieldClass, this.cls]);
-        this.initValue();
     },
 
-    /**
-     * Apply the behaviors of this component to an existing element. <b>This is used instead of render().</b>
-     * @param {String/HTMLElement/Element} el The id of the node, a DOM node or an existing Element
-     * @return {Ext.form.Field} this
-     */
-    applyTo : function(target){
-        this.allowDomMove = false;
-        this.el = Ext.get(target);
-        this.render(this.el.dom.parentNode);
-        return this;
+    // private
+    getItemCt : function(){
+        return this.el.up('.x-form-item', 4);
     },
 
     // private
     initValue : function(){
         if(this.value !== undefined){
             this.setValue(this.value);
-        }else if(this.el.dom.value.length > 0){
+        }else if(!Ext.isEmpty(this.el.dom.value) && this.el.dom.value != this.emptyText){
             this.setValue(this.el.dom.value);
         }
+        /**
+         * The original value of the field as configured in the {@link #value} configuration, or
+         * as loaded by the last form load operation if the form's {@link Ext.form.BasicForm#trackResetOnLoad trackResetOnLoad}
+         * setting is <code>true</code>.
+         * @type mixed
+         * @property originalValue
+         */
+        this.originalValue = this.getValue();
     },
 
     /**
-     * Returns true if this field has been changed since it was originally loaded and is not disabled.
+     * <p>Returns true if the value of this Field has been changed from its original value.
+     * Will return false if the field is disabled or has not been rendered yet.</p>
+     * <p>Note that if the owning {@link Ext.form.BasicForm form} was configured with
+     * {@link Ext.form.BasicForm}.{@link Ext.form.BasicForm#trackResetOnLoad trackResetOnLoad}
+     * then the <i>original value</i> is updated when the values are loaded by
+     * {@link Ext.form.BasicForm}.{@link Ext.form.BasicForm#setValues setValues}.</p>
+     * @return {Boolean} True if this field has been changed from its original value (and
+     * is not disabled), false otherwise.
      */
     isDirty : function() {
-        if(this.disabled) {
+        if(this.disabled || !this.rendered) {
             return false;
         }
         return String(this.getValue()) !== String(this.originalValue);
@@ -231,17 +274,19 @@ side          Add an error icon to the right of the field with a popup on hover
     afterRender : function(){
         Ext.form.Field.superclass.afterRender.call(this);
         this.initEvents();
+        this.initValue();
     },
 
     // private
     fireKey : function(e){
-        if(e.isNavKeyPress()){
+        if(e.isSpecialKey()){
             this.fireEvent("specialkey", this, e);
         }
     },
 
     /**
-     * Resets the current field value to the originally loaded value and clears any validation messages
+     * Resets the current field value to the originally loaded value and clears any validation messages.
+     * See {@link Ext.form.BasicForm}.{@link Ext.form.BasicForm#trackResetOnLoad trackResetOnLoad}
      */
     reset : function(){
         this.setValue(this.originalValue);
@@ -250,17 +295,17 @@ side          Add an error icon to the right of the field with a popup on hover
 
     // private
     initEvents : function(){
-        this.el.on(Ext.isIE ? "keydown" : "keypress", this.fireKey,  this);
-        this.el.on("focus", this.onFocus,  this);
-        this.el.on("blur", this.onBlur,  this);
+        this.mon(this.el, Ext.EventManager.useKeydown ? "keydown" : "keypress", this.fireKey,  this);
+        this.mon(this.el, 'focus', this.onFocus, this);
 
-        // reference to original value for reset
-        this.originalValue = this.getValue();
+        // fix weird FF/Win editor issue when changing OS window focus
+        var o = this.inEditor && Ext.isWindows && Ext.isGecko ? {buffer:10} : null;
+        this.mon(this.el, 'blur', this.onBlur, this, o);
     },
 
     // private
     onFocus : function(){
-        if(!Ext.isOpera && this.focusClass){ // don't touch in Opera
+        if(this.focusClass){
             this.el.addClass(this.focusClass);
         }
         if(!this.hasFocus){
@@ -270,12 +315,13 @@ side          Add an error icon to the right of the field with a popup on hover
         }
     },
 
+    // private
     beforeBlur : Ext.emptyFn,
 
     // private
     onBlur : function(){
         this.beforeBlur();
-        if(!Ext.isOpera && this.focusClass){ // don't touch in Opera
+        if(this.focusClass){
             this.el.removeClass(this.focusClass);
         }
         this.hasFocus = false;
@@ -317,6 +363,7 @@ side          Add an error icon to the right of the field with a popup on hover
         return false;
     },
 
+    // protected - should be overridden by subclasses if necessary to prepare raw values for validation
     processValue : function(value){
         return value;
     },
@@ -328,58 +375,28 @@ side          Add an error icon to the right of the field with a popup on hover
     },
 
     /**
-     * Mark this field as invalid
-     * @param {String} msg The validation message
+     * Mark this field as invalid, using {@link #msgTarget} to determine how to display the error and
+     * applying {@link #invalidClass} to the field's element.
+     * @param {String} msg (optional) The validation message (defaults to {@link #invalidText})
      */
     markInvalid : function(msg){
         if(!this.rendered || this.preventMark){ // not rendered
             return;
         }
-        this.el.addClass(this.invalidClass);
         msg = msg || this.invalidText;
-        switch(this.msgTarget){
-            case 'qtip':
-                this.el.dom.qtip = msg;
-                this.el.dom.qclass = 'x-form-invalid-tip';
-                if(Ext.QuickTips){ // fix for floating editors interacting with DND
-                    Ext.QuickTips.enable();
-                }
-                break;
-            case 'title':
-                this.el.dom.title = msg;
-                break;
-            case 'under':
-                if(!this.errorEl){
-                    var elp = this.el.findParent('.x-form-element', 5, true);
-                    this.errorEl = elp.createChild({cls:'x-form-invalid-msg'});
-                    this.errorEl.setWidth(elp.getWidth(true)-20);
-                }
-                this.errorEl.update(msg);
-                Ext.form.Field.msgFx[this.msgFx].show(this.errorEl, this);
-                break;
-            case 'side':
-                if(!this.errorIcon){
-                    var elp = this.el.findParent('.x-form-element', 5, true);
-                    this.errorIcon = elp.createChild({cls:'x-form-invalid-icon'});
-                }
-                this.alignErrorIcon();
-                this.errorIcon.dom.qtip = msg;
-                this.errorIcon.dom.qclass = 'x-form-invalid-tip';
-                this.errorIcon.show();
-                this.on('resize', this.alignErrorIcon, this);
-                break;
-            default:
-                var t = Ext.getDom(this.msgTarget);
+
+        var mt = this.getMessageHandler();
+        if(mt){
+            mt.mark(this, msg);
+        }else if(this.msgTarget){
+            this.el.addClass(this.invalidClass);
+            var t = Ext.getDom(this.msgTarget);
+            if(t){
                 t.innerHTML = msg;
                 t.style.display = this.msgDisplay;
-                break;
+            }
         }
         this.fireEvent('invalid', this, msg);
-    },
-
-    // private
-    alignErrorIcon : function(){
-        this.errorIcon.alignTo(this.el, 'tl-tr', [2, 0]);
     },
 
     /**
@@ -390,32 +407,34 @@ side          Add an error icon to the right of the field with a popup on hover
             return;
         }
         this.el.removeClass(this.invalidClass);
-        switch(this.msgTarget){
-            case 'qtip':
-                this.el.dom.qtip = '';
-                break;
-            case 'title':
-                this.el.dom.title = '';
-                break;
-            case 'under':
-                if(this.errorEl){
-                    Ext.form.Field.msgFx[this.msgFx].hide(this.errorEl, this);
-                }
-                break;
-            case 'side':
-                if(this.errorIcon){
-                    this.errorIcon.dom.qtip = '';
-                    this.errorIcon.hide();
-                    this.un('resize', this.alignErrorIcon, this);
-                }
-                break;
-            default:
-                var t = Ext.getDom(this.msgTarget);
+        var mt = this.getMessageHandler();
+        if(mt){
+            mt.clear(this);
+        }else if(this.msgTarget){
+            this.el.removeClass(this.invalidClass);
+            var t = Ext.getDom(this.msgTarget);
+            if(t){
                 t.innerHTML = '';
                 t.style.display = 'none';
-                break;
+            }
         }
         this.fireEvent('valid', this);
+    },
+
+    // private
+    getMessageHandler : function(){
+        return Ext.form.MessageTargets[this.msgTarget];
+    },
+
+    // private
+    getErrorCt : function(){
+        return this.el.findParent('.x-form-element', 5, true) || // use form element wrap if available
+            this.el.findParent('.x-form-field-wrap', 5, true);   // else direct field wrap
+    },
+
+    // private
+    alignErrorIcon : function(){
+        this.errorIcon.alignTo(this.el, 'tl-tr', [2, 0]);
     },
 
     /**
@@ -423,7 +442,7 @@ side          Add an error icon to the right of the field with a popup on hover
      * @return {Mixed} value The field value
      */
     getRawValue : function(){
-        var v = this.el.getValue();
+        var v = this.rendered ? this.el.getValue() : Ext.value(this.value, '');
         if(v === this.emptyText){
             v = '';
         }
@@ -435,6 +454,9 @@ side          Add an error icon to the right of the field with a popup on hover
      * @return {Mixed} value The field value
      */
     getValue : function(){
+        if(!this.rendered) {
+            return this.value;
+        }
         var v = this.el.getValue();
         if(v === this.emptyText || v === undefined){
             v = '';
@@ -445,52 +467,141 @@ side          Add an error icon to the right of the field with a popup on hover
     /**
      * Sets the underlying DOM field's value directly, bypassing validation.  To set the value with validation see {@link #setValue}.
      * @param {Mixed} value The value to set
+     * @return {Mixed} value The field value that is set
      */
     setRawValue : function(v){
-        return this.el.dom.value = (v === null || v === undefined ? '' : v);
+        return (this.el.dom.value = (Ext.isEmpty(v) ? '' : v));
     },
 
     /**
      * Sets a data value into the field and validates it.  To set the value directly without validation see {@link #setRawValue}.
      * @param {Mixed} value The value to set
+     * @return {Ext.form.Field} this
      */
     setValue : function(v){
         this.value = v;
         if(this.rendered){
-            this.el.dom.value = (v === null || v === undefined ? '' : v);
+            this.el.dom.value = (Ext.isEmpty(v) ? '' : v);
             this.validate();
         }
+        return this;
     },
 
+    // private, does not work for all fields
+    append : function(v){
+         this.setValue([this.getValue(), v].join(''));
+    },
+
+    // private
     adjustSize : function(w, h){
         var s = Ext.form.Field.superclass.adjustSize.call(this, w, h);
         s.width = this.adjustWidth(this.el.dom.tagName, s.width);
+        if(this.offsetCt){
+            var ct = this.getItemCt();
+            s.width -= ct.getFrameWidth('lr');
+            s.height -= ct.getFrameWidth('tb');
+        }
         return s;
     },
 
+    // private
     adjustWidth : function(tag, w){
-        tag = tag.toLowerCase();
-        if(typeof w == 'number' && Ext.isStrict && !Ext.isSafari){
-            if(Ext.isIE && (tag == 'input' || tag == 'textarea')){
-                if(tag == 'input'){
-                    return w + 2;
-                }
-                if(tag = 'textarea'){
-                    return w-2;
-                }
-            }else if(Ext.isOpera){
-                if(tag == 'input'){
-                    return w + 2;
-                }
-                if(tag = 'textarea'){
-                    return w-2;
-                }
-            }
+        if(typeof w == 'number' && (Ext.isIE && (Ext.isIE6 || !Ext.isStrict)) && /input|textarea/i.test(tag) && !this.inEditor){
+            return w - 3;
         }
         return w;
     }
+
+    /**
+     * @cfg {Boolean} autoWidth @hide
+     */
+    /**
+     * @cfg {Boolean} autoHeight @hide
+     */
+
+    /**
+     * @cfg {String} autoEl @hide
+     */
 });
 
+
+Ext.form.MessageTargets = {
+    'qtip' : {
+        mark: function(field, msg){
+            field.el.addClass(field.invalidClass);
+            field.el.dom.qtip = msg;
+            field.el.dom.qclass = 'x-form-invalid-tip';
+            if(Ext.QuickTips){ // fix for floating editors interacting with DND
+                Ext.QuickTips.enable();
+            }
+        },
+        clear: function(field){
+            field.el.removeClass(field.invalidClass);
+            field.el.dom.qtip = '';
+        }
+    },
+    'title' : {
+        mark: function(field, msg){
+            field.el.addClass(field.invalidClass);
+            field.el.dom.title = msg;
+        },
+        clear: function(field){
+            field.el.dom.title = '';
+        }
+    },
+    'under' : {
+        mark: function(field, msg){
+            field.el.addClass(field.invalidClass);
+            if(!field.errorEl){
+                var elp = field.getErrorCt();
+                if(!elp){ // field has no container el
+                    field.el.dom.title = msg;
+                    return;
+                }
+                field.errorEl = elp.createChild({cls:'x-form-invalid-msg'});
+                field.errorEl.setWidth(elp.getWidth(true)-20);
+            }
+            field.errorEl.update(msg);
+            Ext.form.Field.msgFx[field.msgFx].show(field.errorEl, field);
+        },
+        clear: function(field){
+            field.el.removeClass(field.invalidClass);
+            if(field.errorEl){
+                Ext.form.Field.msgFx[field.msgFx].hide(field.errorEl, field);
+            }else{
+                field.el.dom.title = '';
+            }
+        }
+    },
+    'side' : {
+        mark: function(field, msg){
+            field.el.addClass(field.invalidClass);
+            if(!field.errorIcon){
+                var elp = field.getErrorCt();
+                if(!elp){ // field has no container el
+                    field.el.dom.title = msg;
+                    return;
+                }
+                field.errorIcon = elp.createChild({cls:'x-form-invalid-icon'});
+            }
+            field.alignErrorIcon();
+            field.errorIcon.dom.qtip = msg;
+            field.errorIcon.dom.qclass = 'x-form-invalid-tip';
+            field.errorIcon.show();
+            field.on('resize', field.alignErrorIcon, field);
+        },
+        clear: function(field){
+            field.el.removeClass(field.invalidClass);
+            if(field.errorIcon){
+                field.errorIcon.dom.qtip = '';
+                field.errorIcon.hide();
+                field.un('resize', field.alignErrorIcon, field);
+            }else{
+                field.el.dom.title = '';
+            }
+        }
+    }
+};
 
 // anything other than normal should be considered experimental
 Ext.form.Field.msgFx = {
@@ -526,3 +637,4 @@ Ext.form.Field.msgFx = {
         }
     }
 };
+Ext.reg('field', Ext.form.Field);

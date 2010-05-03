@@ -1,11 +1,9 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /*
  * Simplified Chinese translation
  * By DavidHu
@@ -18,8 +16,8 @@ if(Ext.View){
    Ext.View.prototype.emptyText = "";
 }
 
-if(Ext.grid.Grid){
-   Ext.grid.Grid.prototype.ddText = "{0} 选择行";
+if(Ext.grid.GridPanel){
+   Ext.grid.GridPanel.prototype.ddText = "{0} 选择行";
 }
 
 if(Ext.TabPanelItem){
@@ -28,10 +26,6 @@ if(Ext.TabPanelItem){
 
 if(Ext.form.Field){
    Ext.form.Field.prototype.invalidText = "输入值非法";
-}
-
-if(Ext.LoadMask){
-    Ext.LoadMask.prototype.msg = "加载中...";
 }
 
 Date.monthNames = [
@@ -50,13 +44,13 @@ Date.monthNames = [
 ];
 
 Date.dayNames = [
-   "周日",
-   "周一",
-   "周二",
-   "周三",
-   "周四",
-   "周五",
-   "周六"
+   "日",
+   "一",
+   "二",
+   "三",
+   "四",
+   "五",
+   "六"
 ];
 
 if(Ext.MessageBox){
@@ -83,26 +77,28 @@ if(Ext.DatePicker){
       maxText           : "日期在最大日期之后",
       disabledDaysText  : "",
       disabledDatesText : "",
-      monthNames	: Date.monthNames,
-      dayNames		: Date.dayNames,      
+      monthNames        : Date.monthNames,
+      dayNames          : Date.dayNames,
       nextText          : '下月 (Control+Right)',
       prevText          : '上月 (Control+Left)',
       monthYearText     : '选择一个月 (Control+Up/Down 来改变年)',
-      todayTip          : "{0} (Spacebar)",
-      format            : "y年m月d日"
+      todayTip          : "{0} (空格键选择)",
+      format            : "y年m月d日",
+      okText            : "确定",
+      cancelText        : "取消"
    });
 }
 
 if(Ext.PagingToolbar){
    Ext.apply(Ext.PagingToolbar.prototype, {
       beforePageText : "页",
-      afterPageText  : "of {0}",
+      afterPageText  : "页共 {0} 页",
       firstText      : "第一页",
       prevText       : "前一页",
       nextText       : "下一页",
       lastText       : "最后页",
       refreshText    : "刷新",
-      displayMsg     : "显示 {0} - {1} of {2}",
+      displayMsg     : "显示 {0} - {1}，共 {2} 条",
       emptyMsg       : '没有数据需要显示'
    });
 }
@@ -145,8 +141,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
    Ext.apply(Ext.form.VTypes, {
-      emailText    : '该输入项必须是电子邮件地址，格式如： "user@domain.com"',
-      urlText      : '该输入项必须是URL地址，格式如： "http:/'+'/www.domain.com"',
+      emailText    : '该输入项必须是电子邮件地址，格式如： "user@example.com"',
+      urlText      : '该输入项必须是URL地址，格式如： "http:/'+'/www.example.com"',
       alphaText    : '该输入项只能包含字符和_',
       alphanumText : '该输入项只能包含字符,数字和_'
    });
@@ -170,8 +166,8 @@ if(Ext.grid.PropertyColumnModel){
    });
 }
 
-if(Ext.SplitLayoutRegion){
-   Ext.apply(Ext.SplitLayoutRegion.prototype, {
+if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
+   Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
       splitTip            : "拖动来改变尺寸.",
       collapsibleSplitTip : "拖动来改变尺寸. 双击隐藏."
    });

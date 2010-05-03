@@ -1,74 +1,42 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.Editor
  * @extends Ext.Component
  * A base editor field that handles displaying/hiding on demand and has some built-in sizing and event handling logic.
  * @constructor
  * Create a new Editor
- * @param {Ext.form.Field} field The Field object (or descendant)
  * @param {Object} config The config object
+ * @xtype editor
  */
 Ext.Editor = function(field, config){
+    if(field.field){
+        this.field = Ext.create(field.field, 'textfield');
+        config = Ext.apply({}, field); // copy so we don't disturb original config
+        delete config.field;
+    }else{
+        this.field = field;
+    }
     Ext.Editor.superclass.constructor.call(this, config);
-    this.field = field;
-    this.addEvents({
-        /**
-	     * @event beforestartedit
-	     * Fires when editing is initiated, but before the value changes.  Editing can be canceled by returning
-	     * false from the handler of this event.
-	     * @param {Editor} this
-	     * @param {Ext.Element} boundEl The underlying element bound to this editor
-	     * @param {Mixed} value The field value being set
-	     */
-        "beforestartedit" : true,
-        /**
-	     * @event startedit
-	     * Fires when this editor is displayed
-	     * @param {Ext.Element} boundEl The underlying element bound to this editor
-	     * @param {Mixed} value The starting field value
-	     */
-        "startedit" : true,
-        /**
-	     * @event beforecomplete
-	     * Fires after a change has been made to the field, but before the change is reflected in the underlying
-	     * field.  Saving the change to the field can be canceled by returning false from the handler of this event.
-	     * Note that if the value has not changed and ignoreNoChange = true, the editing will still end but this
-	     * event will not fire since no edit actually occurred.
-	     * @param {Editor} this
-	     * @param {Mixed} value The current field value
-	     * @param {Mixed} startValue The original field value
-	     */
-        "beforecomplete" : true,
-        /**
-	     * @event complete
-	     * Fires after editing is complete and any changed value has been written to the underlying field.
-	     * @param {Editor} this
-	     * @param {Mixed} value The current field value
-	     * @param {Mixed} startValue The original field value
-	     */
-        "complete" : true,
-        /**
-         * @event specialkey
-         * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.  You can check
-         * {@link Ext.EventObject#getKey} to determine which key was pressed.
-         * @param {Ext.form.Field} this
-         * @param {Ext.EventObject} e The event object
-         */
-        "specialkey" : true
-    });
 };
 
 Ext.extend(Ext.Editor, Ext.Component, {
     /**
-     * @cfg {Boolean/String} autosize
-     * True for the editor to automatically adopt the size of the underlying field, "width" to adopt the width only,
+    * @cfg {Ext.form.Field} field
+    * The Field object (or descendant) or config object for field
+    */
+    /**
+     * @cfg {Boolean} allowBlur
+     * True to {@link #completeEdit complete the editing process} if in edit mode when the
+     * field is blurred. Defaults to <tt>false</tt>.
+     */
+    /**
+     * @cfg {Boolean/String} autoSize
+     * True for the editor to automatically adopt the size of the element being edited, "width" to adopt the width only,
      * or "height" to adopt the height only (defaults to false)
      */
     /**
@@ -78,7 +46,7 @@ Ext.extend(Ext.Editor, Ext.Component, {
      */
     /**
      * @cfg {Boolean} ignoreNoChange
-     * True to skip the the edit completion process (no save, no events fired) if the user completes an edit and
+     * True to skip the edit completion process (no save, no events fired) if the user completes an edit and
      * the value has not changed (defaults to false).  Applies only to string values - edits for other data types
      * will never be ignored.
      */
@@ -106,6 +74,10 @@ Ext.extend(Ext.Editor, Ext.Component, {
      */
     constrain : false,
     /**
+     * @cfg {Boolean} swallowKeys Handle the keydown/keypress events so they don't propagate (defaults to true)
+     */
+    swallowKeys : true,
+    /**
      * @cfg {Boolean} completeOnEnter True to complete the edit when the enter key is pressed (defaults to false)
      */
     completeOnEnter : false,
@@ -118,6 +90,63 @@ Ext.extend(Ext.Editor, Ext.Component, {
      */
     updateEl : false,
 
+    initComponent : function(){
+        Ext.Editor.superclass.initComponent.call(this);
+        this.addEvents(
+            /**
+             * @event beforestartedit
+             * Fires when editing is initiated, but before the value changes.  Editing can be canceled by returning
+             * false from the handler of this event.
+             * @param {Editor} this
+             * @param {Ext.Element} boundEl The underlying element bound to this editor
+             * @param {Mixed} value The field value being set
+             */
+            "beforestartedit",
+            /**
+             * @event startedit
+             * Fires when this editor is displayed
+             * @param {Ext.Element} boundEl The underlying element bound to this editor
+             * @param {Mixed} value The starting field value
+             */
+            "startedit",
+            /**
+             * @event beforecomplete
+             * Fires after a change has been made to the field, but before the change is reflected in the underlying
+             * field.  Saving the change to the field can be canceled by returning false from the handler of this event.
+             * Note that if the value has not changed and ignoreNoChange = true, the editing will still end but this
+             * event will not fire since no edit actually occurred.
+             * @param {Editor} this
+             * @param {Mixed} value The current field value
+             * @param {Mixed} startValue The original field value
+             */
+            "beforecomplete",
+            /**
+             * @event complete
+             * Fires after editing is complete and any changed value has been written to the underlying field.
+             * @param {Editor} this
+             * @param {Mixed} value The current field value
+             * @param {Mixed} startValue The original field value
+             */
+            "complete",
+            /**
+             * @event canceledit
+             * Fires after editing has been canceled and the editor's value has been reset.
+             * @param {Editor} this
+             * @param {Mixed} value The user-entered field value that was discarded
+             * @param {Mixed} startValue The original field value that was set back into the editor after cancel
+             */
+            "canceledit",
+            /**
+             * @event specialkey
+             * Fires when any key related to navigation (arrows, tab, enter, esc, etc.) is pressed.  You can check
+             * {@link Ext.EventObject#getKey} to determine which key was pressed.
+             * @param {Ext.form.Field} this
+             * @param {Ext.EventObject} e The event object
+             */
+            "specialkey"
+        );
+    },
+
     // private
     onRender : function(ct, position){
         this.el = new Ext.Layer({
@@ -125,43 +154,52 @@ Ext.extend(Ext.Editor, Ext.Component, {
             cls: "x-editor",
             parentEl : ct,
             shim : this.shim,
-            shadowOffset:4,
+            shadowOffset: this.shadowOffset || 4,
             id: this.id,
             constrain: this.constrain
         });
+        if(this.zIndex){
+            this.el.setZIndex(this.zIndex);
+        }
         this.el.setStyle("overflow", Ext.isGecko ? "auto" : "hidden");
         if(this.field.msgTarget != 'title'){
             this.field.msgTarget = 'qtip';
         }
+        this.field.inEditor = true;
         this.field.render(this.el);
         if(Ext.isGecko){
             this.field.el.dom.setAttribute('autocomplete', 'off');
         }
-        this.field.on("specialkey", this.onSpecialKey, this);
+        this.mon(this.field, "specialkey", this.onSpecialKey, this);
         if(this.swallowKeys){
             this.field.el.swallowEvent(['keydown','keypress']);
         }
         this.field.show();
-        this.field.on("blur", this.onBlur, this);
+        this.mon(this.field, "blur", this.onBlur, this);
         if(this.field.grow){
-            this.field.on("autosize", this.el.sync,  this.el, {delay:1});
+        	this.mon(this.field, "autosize", this.el.sync,  this.el, {delay:1});
         }
     },
 
+    // private
     onSpecialKey : function(field, e){
-        if(this.completeOnEnter && e.getKey() == e.ENTER){
+        var key = e.getKey();
+        if(this.completeOnEnter && key == e.ENTER){
             e.stopEvent();
             this.completeEdit();
-        }else if(this.cancelOnEsc && e.getKey() == e.ESC){
+        }else if(this.cancelOnEsc && key == e.ESC){
             this.cancelEdit();
         }else{
             this.fireEvent('specialkey', field, e);
+        }
+        if(this.field.triggerBlur && (key == e.ENTER || key == e.ESC || key == e.TAB)){
+            this.field.triggerBlur();
         }
     },
 
     /**
      * Starts the editing process and shows the editor.
-     * @param {String/HTMLElement/Element} el The element to edit
+     * @param {Mixed} el The element to edit
      * @param {String} value (optional) A value to initialize the editor with. If a value is not provided, it defaults
       * to the innerHTML of el.
      */
@@ -179,25 +217,27 @@ Ext.extend(Ext.Editor, Ext.Component, {
         }
         this.startValue = v;
         this.field.setValue(v);
+        this.doAutoSize();
+        this.el.alignTo(this.boundEl, this.alignment);
+        this.editing = true;
+        this.show();
+    },
+
+    // private
+    doAutoSize : function(){
         if(this.autoSize){
             var sz = this.boundEl.getSize();
             switch(this.autoSize){
                 case "width":
-                this.setSize(sz.width,  "");
+                    this.setSize(sz.width,  "");
                 break;
                 case "height":
-                this.setSize("",  sz.height);
+                    this.setSize("",  sz.height);
                 break;
                 default:
-                this.setSize(sz.width,  sz.height);
+                    this.setSize(sz.width,  sz.height);
             }
         }
-        this.el.alignTo(this.boundEl, this.alignment);
-        this.editing = true;
-        if(Ext.QuickTips){
-            Ext.QuickTips.disable();
-        }
-        this.show();
     },
 
     /**
@@ -206,8 +246,13 @@ Ext.extend(Ext.Editor, Ext.Component, {
      * @param {Number} height The new height
      */
     setSize : function(w, h){
+        delete this.field.lastSize;
         this.field.setSize(w, h);
         if(this.el){
+            if(Ext.isGecko2 || Ext.isOpera){
+                // prevent layer scrollbars
+                this.el.setSize(w, h);
+            }
             this.el.sync();
         }
     },
@@ -228,23 +273,22 @@ Ext.extend(Ext.Editor, Ext.Component, {
             return;
         }
         var v = this.getValue();
-        if(this.revertInvalid !== false && !this.field.isValid()){
-            v = this.startValue;
-            this.cancelEdit(true);
+        if(!this.field.isValid()){
+            if(this.revertInvalid !== false){
+                this.cancelEdit(remainVisible);
+            }
+            return;
         }
         if(String(v) === String(this.startValue) && this.ignoreNoChange){
-            this.editing = false;
-            this.hide();
+            this.hideEdit(remainVisible);
             return;
         }
         if(this.fireEvent("beforecomplete", this, v, this.startValue) !== false){
-            this.editing = false;
+            v = this.getValue();
             if(this.updateEl && this.boundEl){
                 this.boundEl.update(v);
             }
-            if(remainVisible !== true){
-                this.hide();
-            }
+            this.hideEdit(remainVisible);
             this.fireEvent("complete", this, v, this.startValue);
         }
     },
@@ -279,10 +323,18 @@ Ext.extend(Ext.Editor, Ext.Component, {
      */
     cancelEdit : function(remainVisible){
         if(this.editing){
+            var v = this.getValue();
             this.setValue(this.startValue);
-            if(remainVisible !== true){
-                this.hide();
-            }
+            this.hideEdit(remainVisible);
+            this.fireEvent("canceledit", this, v, this.startValue);
+        }
+    },
+    
+    // private
+    hideEdit: function(remainVisible){
+        if(remainVisible !== true){
+            this.editing = false;
+            this.hide();
         }
     },
 
@@ -307,9 +359,6 @@ Ext.extend(Ext.Editor, Ext.Component, {
         if(this.hideEl !== false){
             this.boundEl.show();
         }
-        if(Ext.QuickTips){
-            Ext.QuickTips.enable();
-        }
     },
 
     /**
@@ -326,5 +375,11 @@ Ext.extend(Ext.Editor, Ext.Component, {
      */
     getValue : function(){
         return this.field.getValue();
+    },
+
+    beforeDestroy : function(){
+        Ext.destroy(this.field);
+        this.field = null;
     }
 });
+Ext.reg('editor', Ext.Editor);

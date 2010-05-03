@@ -405,7 +405,7 @@ if(_2e.length==0){
 return true;
 }
 }
-var _30=_CF_checkregex(_2e,/^(([0-1]?[0-9]|[2][0-3]):([0-5]?[0-9])(:[0-5]?[0-9])?).?([AP]M|[AP]m|[ap]m|[ap]M)?$/,_2f);
+var _30=_CF_checkregex(_2e,/^((([0-1]?\d)|(2[0-3])):[0-5]\d)?(:[0-5]\d)? ?([AP]M|[AP]m|[ap]m|[ap]M)?$/,_2f);
 return _30;
 };
 _CF_checkphone=function(_31,_32){

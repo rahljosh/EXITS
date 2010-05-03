@@ -1,25 +1,30 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.menu.TextItem
  * @extends Ext.menu.BaseItem
  * Adds a static text string to a menu, usually used as either a heading or group separator.
  * @constructor
  * Creates a new TextItem
- * @param {String} text The text to display
+ * @param {Object/String} config If config is a string, it is used as the text to display, otherwise it
+ * is applied as a config object (and should contain a <tt>text</tt> property).
+ * @xtype menutextitem
  */
-Ext.menu.TextItem = function(text){
-    this.text = text;
-    Ext.menu.TextItem.superclass.constructor.call(this);
+Ext.menu.TextItem = function(cfg){
+    if(typeof cfg == 'string'){
+        cfg = {text: cfg}
+    }
+    Ext.menu.TextItem.superclass.constructor.call(this, cfg);
 };
 
 Ext.extend(Ext.menu.TextItem, Ext.menu.BaseItem, {
+    /**
+     * @cfg {String} text The text to display for this item (defaults to '')
+     */
     /**
      * @cfg {Boolean} hideOnClick True to hide the containing menu after this item is clicked (defaults to false)
      */
@@ -38,3 +43,4 @@ Ext.extend(Ext.menu.TextItem, Ext.menu.BaseItem, {
         Ext.menu.TextItem.superclass.onRender.apply(this, arguments);
     }
 });
+Ext.reg('menutextitem', Ext.menu.TextItem);

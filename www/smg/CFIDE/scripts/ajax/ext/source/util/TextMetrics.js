@@ -1,15 +1,14 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.util.TextMetrics
  * Provides precise pixel measurements for blocks of text so that you can determine exactly how high and
- * wide, in pixels, a given block of text will be.
+ * wide, in pixels, a given block of text will be. Note that when measuring text, it should be plain text and
+ * should not contain any HTML, otherwise it may not be measured correctly.
  * @singleton
  */
 Ext.util.TextMetrics = function(){
@@ -78,7 +77,7 @@ Ext.util.TextMetrics.Instance = function(bindTo, fixedWidth){
          */
         bind : function(el){
             ml.setStyle(
-                Ext.fly(el).getStyles('font-size','font-style', 'font-weight', 'font-family','line-height')
+                Ext.fly(el).getStyles('font-size','font-style', 'font-weight', 'font-family','line-height', 'text-transform', 'letter-spacing')
             );
         },
 
@@ -117,5 +116,16 @@ Ext.util.TextMetrics.Instance = function(bindTo, fixedWidth){
     return instance;
 };
 
-// backwards compat
-Ext.Element.measureText = Ext.util.TextMetrics.measure;
+Ext.Element.addMethods({
+    /**
+     * Returns the width in pixels of the passed text, or the width of the text in this Element.
+     * @param {String} text The text to measure. Defaults to the innerHTML of the element.
+     * @param {Number} min (Optional) The minumum value to return.
+     * @param {Number} max (Optional) The maximum value to return.
+     * @return {Number} The text width in pixels.
+     * @member Ext.Element getTextWidth
+     */
+    getTextWidth : function(text, min, max){
+        return (Ext.util.TextMetrics.measure(this.dom, Ext.value(text, this.dom.innerHTML, true)).width).constrain(min || 0, max || 1000000);
+    }
+});

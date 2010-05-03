@@ -1,29 +1,30 @@
-/*
- * Ext JS Library 1.1.1
- * Copyright(c) 2006-2007, Ext JS, LLC.
+/*!
+ * Ext JS Library 3.0.0
+ * Copyright(c) 2006-2009 Ext JS, LLC
  * licensing@extjs.com
- * 
  * http://www.extjs.com/license
  */
-
 /**
  * @class Ext.Layer
  * @extends Ext.Element
  * An extended {@link Ext.Element} object that supports a shadow and shim, constrain to viewport and
  * automatic maintaining of shadow/shim positions.
  * @cfg {Boolean} shim False to disable the iframe shim in browsers which need one (defaults to true)
- * @cfg {String/Boolean} shadow True to create a shadow element with default class "x-layer-shadow", or
- * you can pass a string with a CSS class name. False turns off the shadow.
- * @cfg {Object} dh DomHelper object config to create element with (defaults to {tag: "div", cls: "x-layer"}).
+ * @cfg {String/Boolean} shadow True to automatically create an {@link Ext.Shadow}, or a string indicating the
+ * shadow's display {@link Ext.Shadow#mode}. False to disable the shadow. (defaults to false)
+ * @cfg {Object} dh DomHelper object config to create element with (defaults to {tag: 'div', cls: 'x-layer'}).
  * @cfg {Boolean} constrain False to disable constrain to viewport (defaults to true)
  * @cfg {String} cls CSS class to add to the element
  * @cfg {Number} zindex Starting z-index (defaults to 11000)
- * @cfg {Number} shadowOffset Number of pixels to offset the shadow (defaults to 3)
+ * @cfg {Number} shadowOffset Number of pixels to offset the shadow (defaults to 4)
+ * @cfg {Boolean} useDisplay
+ * Defaults to use css offsets to hide the Layer. Specify <tt>true</tt>
+ * to use css style <tt>'display:none;'</tt> to hide the Layer.
  * @constructor
  * @param {Object} config An object with config options.
  * @param {String/HTMLElement} existingEl (optional) Uses an existing DOM element. If the element is not found it creates it.
  */
-(function(){ 
+(function(){
 Ext.Layer = function(config, existingEl){
     config = config || {};
     var dh = Ext.DomHelper;
@@ -32,21 +33,21 @@ Ext.Layer = function(config, existingEl){
         this.dom = Ext.getDom(existingEl);
     }
     if(!this.dom){
-        var o = config.dh || {tag: "div", cls: "x-layer"};
+        var o = config.dh || {tag: 'div', cls: 'x-layer'};
         this.dom = dh.append(pel, o);
     }
     if(config.cls){
         this.addClass(config.cls);
     }
     this.constrain = config.constrain !== false;
-    this.visibilityMode = Ext.Element.VISIBILITY;
+    this.setVisibilityMode(Ext.Element.VISIBILITY);
     if(config.id){
         this.id = this.dom.id = config.id;
     }else{
         this.id = Ext.id(this.dom);
     }
     this.zindex = config.zindex || this.getZIndex();
-    this.position("absolute", this.zindex);
+    this.position('absolute', this.zindex);
     if(config.shadow){
         this.shadowOffset = config.shadowOffset || 4;
         this.shadow = new Ext.Shadow({
@@ -69,7 +70,7 @@ var shims = [];
 Ext.extend(Ext.Layer, Ext.Element, {
 
     getZIndex : function(){
-        return this.zindex || parseInt(this.getStyle("z-index"), 10) || 11000;
+        return this.zindex || parseInt((this.getShim() || this).getStyle('z-index'), 10) || 11000;
     },
 
     getShim : function(){
@@ -149,10 +150,10 @@ Ext.extend(Ext.Layer, Ext.Element, {
                     }
                     // fit the shim behind the shadow, so it is shimmed too
                     var a = sw.adjusts, s = sh.dom.style;
-                    s.left = (Math.min(l, l+a.l))+"px";
-                    s.top = (Math.min(t, t+a.t))+"px";
-                    s.width = (w+a.w)+"px";
-                    s.height = (h+a.h)+"px";
+                    s.left = (Math.min(l, l+a.l))+'px';
+                    s.top = (Math.min(t, t+a.t))+'px';
+                    s.width = (w+a.w)+'px';
+                    s.height = (h+a.h)+'px';
                 }
             }else if(sh){
                 if(doShow){
@@ -161,7 +162,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
                 sh.setSize(w, h);
                 sh.setLeftTop(l, t);
             }
-            
+
         }
     },
 
@@ -172,10 +173,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
             this.shadow.hide();
         }
         this.removeAllListeners();
-        var pn = this.dom.parentNode;
-        if(pn){
-            pn.removeChild(this.dom);
-        }
+        Ext.removeNode(this.dom);
         Ext.Element.uncache(this.id);
     },
 
@@ -207,20 +205,21 @@ Ext.extend(Ext.Layer, Ext.Element, {
         if(this.constrain){
             var vw = Ext.lib.Dom.getViewWidth(),
                 vh = Ext.lib.Dom.getViewHeight();
-            var s = Ext.get(document).getScroll();
+            var s = Ext.getDoc().getScroll();
 
             var xy = this.getXY();
-            var x = xy[0], y = xy[1];   
-            var w = this.dom.offsetWidth+this.shadowOffset, h = this.dom.offsetHeight+this.shadowOffset;
+            var x = xy[0], y = xy[1];
+            var so = this.shadowOffset;
+            var w = this.dom.offsetWidth+so, h = this.dom.offsetHeight+so;
             // only move it if it needs it
             var moved = false;
             // first validate right/bottom
             if((x + w) > vw+s.left){
-                x = vw - w - this.shadowOffset;
+                x = vw - w - so;
                 moved = true;
             }
             if((y + h) > vh+s.top){
-                y = vh - h - this.shadowOffset;
+                y = vh - h - so;
                 moved = true;
             }
             // then make sure top/left isn't negative
@@ -236,7 +235,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
                 if(this.avoidY){
                     var ay = this.avoidY;
                     if(y <= ay && (y+h) >= ay){
-                        y = ay-h-5;   
+                        y = ay-h-5;
                     }
                 }
                 xy = [x, y];
@@ -245,17 +244,18 @@ Ext.extend(Ext.Layer, Ext.Element, {
                 this.sync();
             }
         }
+        return this;
     },
 
     isVisible : function(){
-        return this.visible;    
+        return this.visible;
     },
 
     // private
     showAction : function(){
         this.visible = true; // track visibility to prevent getStyle calls
         if(this.useDisplay === true){
-            this.setDisplayed("");
+            this.setDisplayed('');
         }else if(this.lastXY){
             supr.setXY.call(this, this.lastXY);
         }else if(this.lastLT){
@@ -306,6 +306,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
                 this.hideAction();
             }
         }
+        return this;
     },
 
     storeXY : function(xy){
@@ -342,18 +343,21 @@ Ext.extend(Ext.Layer, Ext.Element, {
         this.storeLeftTop(left, this.getTop(true));
         supr.setLeft.apply(this, arguments);
         this.sync();
+        return this;
     },
 
     setTop : function(top){
         this.storeLeftTop(this.getLeft(true), top);
         supr.setTop.apply(this, arguments);
         this.sync();
+        return this;
     },
 
     setLeftTop : function(left, top){
         this.storeLeftTop(left, top);
         supr.setLeftTop.apply(this, arguments);
         this.sync();
+        return this;
     },
 
     setXY : function(xy, a, d, c, e){
@@ -365,6 +369,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
         if(!a){
             cb();
         }
+        return this;
     },
 
     // private
@@ -382,11 +387,13 @@ Ext.extend(Ext.Layer, Ext.Element, {
     // overridden Element method
     setX : function(x, a, d, c, e){
         this.setXY([x, this.getY()], a, d, c, e);
+        return this;
     },
 
     // overridden Element method
     setY : function(y, a, d, c, e){
         this.setXY([this.getX(), y], a, d, c, e);
+        return this;
     },
 
     // overridden Element method
@@ -397,6 +404,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
         if(!a){
             cb();
         }
+        return this;
     },
 
     // overridden Element method
@@ -407,6 +415,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
         if(!a){
             cb();
         }
+        return this;
     },
 
     // overridden Element method
@@ -417,6 +426,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
         if(!a){
             cb();
         }
+        return this;
     },
 
     // overridden Element method
@@ -433,7 +443,7 @@ Ext.extend(Ext.Layer, Ext.Element, {
         }
         return this;
     },
-    
+
     /**
      * Sets the z-index of this layer and adjusts any shadow and shim z-indexes. The layer z-index is automatically
      * incremented by two more than the value passed in so that it always shows above any shadow or shim (the shadow
@@ -443,13 +453,14 @@ Ext.extend(Ext.Layer, Ext.Element, {
      */
     setZIndex : function(zindex){
         this.zindex = zindex;
-        this.setStyle("z-index", zindex + 2);
+        this.setStyle('z-index', zindex + 2);
         if(this.shadow){
             this.shadow.setZIndex(zindex + 1);
         }
         if(this.shim){
-            this.shim.setStyle("z-index", zindex);
+            this.shim.setStyle('z-index', zindex);
         }
+        return this;
     }
 });
 })();
