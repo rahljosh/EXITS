@@ -69,7 +69,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
         
         <span class="MOtext" style="background-color: #ffefd6;"> 
         <strong>Be a Host Family:</strong><br /><br />
-        Hosting a foreign exchange stuent is a life changing experience that brings the world closer together.  See the world through the eyes of a foreign exchange student and exChange the world!
+        Hosting a foreign exchange student is a life changing experience that brings the world closer together.  See the world through the eyes of a foreign exchange student and exChange the world!
         <br /><br /><p align="center"<img src="images/buttons/OreadMore.png"></p></span>
         <span class="bigImage"><img src="images/subPages/subBahost.gif" /></span>
       </div>

@@ -288,22 +288,23 @@
             </cfif>
             
             <!--- Look Up Host Family --->
-            <cfquery name="qGetHostID" datasource="#application.dsn#">
-                SELECT 
-                    ID,
-                    lastName,
-                    email
+            <cfquery name="qGetHostInfo" datasource="#application.dsn#">
+                SELECT
+					hl.id,
+                    st.state
                 FROM 
-                    smg_host_lead 
+                    smg_host_lead hl
+                LEFT OUTER JOIN
+                	smg_states st ON st.id = hl.stateID
                 WHERE
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
             </cfquery>
     
             <cfscript>			
                 // Set CLIENT Variables 
-                CLIENT.hostID = qGetHostID.ID;
-                CLIENT.name = qGetHostID.lastName;
-                CLIENT.email = qGetHostID.email;
+                CLIENT.hostID = qGetHostInfo.ID;
+                CLIENT.name = FORM.lastName;
+                CLIENT.email = FORM.email;
             </cfscript>
             
             <!--- send email to Bob --->
@@ -315,11 +316,26 @@
                 </cfif>         
                      
                 The #FORM.lastname# family from #FORM.city# has submitted there information to view students.<br />
-                <Br />
-                View their information here: <a href="https://www.student-management.com/nsmg/index.cfm?curdoc=leads/hostInfo&ID=#qGetHostID.ID#">www.student-management.com/nsmg/index.cfm?curdoc=leads/hostInfo&ID=#qGetHostID.ID# </a>
+                
+                Please see the details below: <br /><br />
+                
+                Family Last Name: #FORM.lastName# <br />
+                First Name: #FORM.firstName# <br />
+                Address: #FORM.address# <br />
+                Address2: #FORM.address2# <br />
+                City: #FORM.city# <br />
+                State: #qGetHostInfo.state# <br />
+                Zip Code: #FORM.zipCode# <br />
+                Phone Number: #FORM.phone# <br />
+                Email: #FORM.email# <br />
+                How did you hear about us: #FORM.hearAboutUs# <br /> 
+                Would you like to join our mailing list? <cfif FORM.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
+
+                <!--- View their information here: <a href="https://www.student-management.com/nsmg/index.cfm?curdoc=leads/hostInfo&ID=#qGetHostInfo.ID#">www.student-management.com/nsmg/index.cfm?curdoc=leads/hostInfo&ID=#qGetHostInfo.ID# </a> 
                 <br /><br />
                 Once they choose to host, have them login at <a href="http://www.iseusa.com">www.iseusa.com</a> to fill out the host family application using their account login information.
                 <br /><br />
+				 --->
             
                 Regards,<Br />
                 International Student Exchange
@@ -383,7 +399,7 @@
 
         		    	<p> &nbsp; &nbsp; If you have already submited your contact information, please use the login information you received to login and view incoming students.</p>
 
-                        <cfform name="login" id="login" method="post" action="#cgi.SCRIPT_NAME#">
+                        <cfform name="login" id="login" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#">
                         <input type="hidden" name="type" value="login" />
 			            <table class="loginTable">
 							
