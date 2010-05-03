@@ -140,4 +140,11 @@
 	Constants.canadaAreas[8] = "Saskatoon";
 	Constants.canadaAreas[9] = "Southeast Kootenay";
 	Constants.canadaAreas[10] = "Winnipeg";
+	
+	
+	// This stores list of Users IDs that have access to certain areas of the system
+	APPLICATION.AllowedIDs = StructNew();
+	
+	// List of User IDs allowed to access ISE USA Leads
+	APPLICATION.AllowedIDs.hostLeads = "8743"; // 8743 - Robert Keegan
 </cfscript>

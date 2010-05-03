@@ -235,6 +235,10 @@
     
                         <li><a href="index.cfm?curdoc=tools/countries">Countries</a></li>
                     
+                    	<cfif ListFind(APPLICATION.AllowedIDs.hostLeads, CLIENT.userID) OR CLIENT.userType EQ 1>
+                            <li><a href="index.cfm?curdoc=tools/hostLeads">Host Family Leads</a></li>
+                        </cfif>
+                    
                         <li>
                             <a href="index.cfm?curdoc=insurance/insurance_menu">Insurance Menu</a>
                             <ul>
