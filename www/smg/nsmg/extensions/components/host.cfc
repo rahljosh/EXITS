@@ -201,4 +201,70 @@
 	</cffunction>
 
 
+	<cffunction name="getHostLeads" access="public" returntype="query" output="false" hint="Gets host leads entered from ISEUSA.com">
+        <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
+        <cfargument name="sortOrder" type="string" default="ASC" hint="sortOrder is not required">
+        
+        <cfquery 
+			name="qGetHostLeads" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					hl.id,
+                    hl.firstName,
+                    hl.lastName,
+                    hl.address,
+                    hl.address2,
+                    hl.city,
+                    hl.stateID,
+                    hl.zipCode,
+                    hl.phone,
+                    hl.email,
+                    hl.hearAboutUs,
+                    hl.isListSubscriber,
+                    hl.dateCreated,
+                    hl.dateUpdated,
+                    st.state
+                FROM 
+                    smg_host_lead hl
+                LEFT OUTER JOIN
+                	smg_states st ON st.id = hl.stateID
+                ORDER BY
+                
+        	<cfswitch expression="#ARGUMENTS.sortBy#">
+            	
+                <cfcase value="firstName">                    
+               		hl.firstName,
+                    hl.lastName
+                </cfcase>
+            
+                <cfcase value="lastName">
+                	hl.lastName,
+                    hl.firstName
+                </cfcase>
+
+                <cfcase value="city">
+					hl.city
+                </cfcase>
+
+                <cfcase value="state">
+                	st.state
+                </cfcase>
+
+                <cfcase value="dateCreated">
+					hl.dateCreated,
+                    hl.lastName
+                </cfcase>
+
+                <cfdefaultcase>
+					hl.dateCreated DESC,
+                    hl.lastName
+                </cfdefaultcase>
+
+            </cfswitch>   
+            
+		</cfquery>
+		   
+		<cfreturn qGetHostLeads>
+	</cffunction>
+    
 </cfcomponent>

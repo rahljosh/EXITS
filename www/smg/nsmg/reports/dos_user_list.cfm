@@ -12,6 +12,16 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- 
+		ISE		
+		<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">
+		p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
+		
+		CASE 
+		<cfqueryparam cfsqltype="cf_sql_integer" value="10" list="yes">
+		p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="284,292,300,278" list="yes"> )
+	--->
+
 	<!--- use cfsetting to block output of HTML outside of cfoutput tags --->
     <cfsetting requesttimeout="9999" enablecfoutputonly="yes">
     
@@ -26,9 +36,9 @@
    		FROM
         	smg_users u
         INNER JOIN
-        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
+        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="10" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
         INNER JOIN
-        	smg_programs p ON s.programID = p.programID AND p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
+        	smg_programs p ON s.programID = p.programID AND p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="284,292,300,278" list="yes"> )
 		
         UNION
         
@@ -41,9 +51,8 @@
   		FROM
         	smg_users u
         INNER JOIN
-        	smg_hosthistory h ON (h.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">) AND (h.placeRepID = u.userID OR h.areaRepID = u.userID) )
+        	smg_hosthistory h ON (h.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="10" list="yes">) AND (h.placeRepID = u.userID OR h.areaRepID = u.userID) )
         
-        <!---
         UNION
         
         <!--- Get inactive reps that were involved in placing/supervising kids --->
@@ -56,12 +65,11 @@
   		FROM
         	smg_users u
         INNER JOIN
-        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
+        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="10" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
         INNER JOIN
-        	smg_programs p ON s.programID = p.programID AND p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
+        	smg_programs p ON s.programID = p.programID AND p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="284,292,300,278" list="yes"> )
         WHERE
             u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">       
-		--->
         
         ORDER BY
         	lastName,
@@ -81,7 +89,7 @@
             AND 
             	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
 			AND
-            	uar.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">)             
+            	uar.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="10" list="yes">)             
 	</cfquery>
 
 
