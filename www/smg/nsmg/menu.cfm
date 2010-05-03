@@ -70,7 +70,7 @@
                      <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
                 <!--- ISE Store --->
                 <cfelse>
-                    <li><a href="/smgstore/index.htm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 </cfif>
                 
             </ul>
@@ -107,7 +107,7 @@
                      <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
                 <!--- ISE Store --->
                 <cfelse>
-                    <li><a href="/smgstore/index.htm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 </cfif>
             
             </ul>
@@ -166,7 +166,7 @@
                      <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
                 <!--- ISE Store --->
                 <cfelse>
-                    <li><a href="/smgstore/index.htm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 </cfif>
             
             </ul>
@@ -303,7 +303,7 @@
                      <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
                 <!--- ISE Store --->
                 <cfelse>
-                    <li><a href="/smgstore/index.htm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 </cfif>
             
             </ul>
