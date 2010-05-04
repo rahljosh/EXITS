@@ -491,7 +491,7 @@
             </cfquery>          
     
             <cfquery name="getCurrStudInfo" datasource="MySQL">
-            SELECT e.candidateid AS stuid, e.firstname, e.lastname, e.active AS stud_active, e.intrep AS agentid, e.programid, e.companyid, e.cancel_date AS canceldate, e.cancel_reason AS cancelreason, sp.programname, sp.type AS progType, su.extra_accepts_sevis_fee
+            SELECT e.candidateid AS stuid, e.firstname, e.lastname, e.status AS stud_active, e.intrep AS agentid, e.programid, e.companyid, e.cancel_date AS canceldate, e.cancel_reason AS cancelreason, sp.programname, sp.type AS progType, su.extra_accepts_sevis_fee
             FROM extra_candidates e
             LEFT JOIN smg_programs sp ON sp.programid = e.programid
             LEFT JOIN smg_users su ON su.userid = e.intrep
@@ -563,7 +563,7 @@
             <td></td>
             <td>
             <strong>Student status:</strong> 
-            <cfif getCurrStudInfo.stud_active EQ 1>
+            <cfif getCurrStudInfo.stud_active EQ 1 OR getCurrStudInfo.stud_active NEQ 'canceled'>
                 Active
                 <cfelse>
                     Canceled on #dateFormat(getCurrStudInfo.canceldate, 'mm/dd/yyyy')# <strong>Reason:</strong> #getCurrStudInfo.cancelreason#
