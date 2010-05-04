@@ -14,7 +14,7 @@
 	<cfparam name="FORM.phone" default="">
 	<cfparam name="FORM.email" default="">
 	<cfparam name="FORM.hearAboutUs" default="">
-	<cfparam name="FORM.representativeName" default="">
+	<cfparam name="FORM.hearAboutUsDetail" default="">
     <cfparam name="FORM.isListSubscriber" default="0">
 	<!--- Login --->
 	<cfparam name="FORM.loginEmail" default="">
@@ -128,7 +128,7 @@
             	
                 <cfscript>
 					// Set Login Error Message
-					ArrayAppend(pageMsg.Errors, "Invalid login. Use the forgot password below if you would like to retrieve your password.");
+					ArrayAppend(pageMsg.Errors, "Invalid login. If you would like to retrieve your password, please click on forgot password below.");
 				</cfscript>				
             
             </cfif>
@@ -171,14 +171,14 @@
                 <cfsavecontent variable="email_message">
                     Dear #qCheckEmail.firstName# #qCheckEmail.lastName#-
                     
-                    <br /><br />
+                    <br /> <br />
                     Please see your login information below.
-                    <br /><br />
+                    <br /> <br />
                     
                     User: #qCheckEmail.email#<br />
-                    Password: #qCheckEmail.password#<br /><br />
+                    Password: #qCheckEmail.password#<br /> <br />
 					
-                    Visit <a href="#APPLICATION.siteURL#meetStudents.cfm">#APPLICATION.siteURL#meetStudents.cfm</a> to meet our students. <br /><br />
+                    Visit <a href="#APPLICATION.siteURL#meetStudents.cfm">#APPLICATION.siteURL#meetStudents.cfm</a> to meet our students. <br /> <br />
                     
                     Best Regards-<br />
                     International Student Exchange
@@ -261,8 +261,12 @@
                 ArrayAppend(pageMsg.Errors, "Select how did you hear about us.");			
             }
 			
-			if ( FORM.hearAboutUs EQ "ISE Representative" AND NOT LEN(FORM.representativeName) ) {
+			if ( FORM.hearAboutUs EQ "ISE Representative" AND NOT LEN(FORM.hearAboutUsDetail) ) {
                 ArrayAppend(pageMsg.Errors, "Enter the ISE representative name");			
+			}
+			
+			if ( FORM.hearAboutUs EQ "Other" AND NOT LEN(FORM.hearAboutUsDetail) ) {
+                ArrayAppend(pageMsg.Errors, "Specify how did you hear about us");			
 			}
         </cfscript>
 
@@ -286,17 +290,19 @@
                 <cfoutput>
                 <cfsavecontent variable="email_message">
                     #FORM.firstname#-
-                    <br /><br />
-                    Based on your email address entered at <a href="http://www.iseusa.com">http://www.iseusa.com</a>, it appears you already have an account. 
-                    If you have ever hosted or applied to host with ISE*, or have already filled out the form, you have an account with us. <br /><Br />
-                    Your login information is below should you decide to log back in to view students or complete the host family application. 
-                    <br /><br />
-                    User: #qCheckAccount.email#<br />
-                    Password: #qCheckAccount.password#<br /><br />
+                    
+                    <p>
+                    	Based on your email address entered at <a href="http://www.iseusa.com">http://www.iseusa.com</a>, it appears you already have an account. 
+                        If you have ever hosted or applied to host with ISE*, or have already filled out the form, you have an account with us. <br /> <br />
+                        Your login information is below should you decide to log back in to view students or complete the host family application. 
+					</p>
+                    
+                    User: #qCheckAccount.email# <br />
+                    Password: #qCheckAccount.password# <br /> <br />
                     <!---
                     *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
                     <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
-                    <br /><br />
+                    <br /> <br />
                     --->
                     Best Regards-<br />
                     International Student Exchange
@@ -332,7 +338,7 @@
                         email,
                         password,
                         hearAboutUs,
-                        representativeName,
+                        hearAboutUsDetail,
                         isListSubscriber,
                         dateCreated
                     )
@@ -349,7 +355,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#setPassword#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hearAboutUs#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.representativeName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hearAboutUsDetail#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isListSubscriber#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )		
@@ -358,15 +364,15 @@
                 <cfoutput>
                 <cfsavecontent variable="email_message">
                     #FORM.firstname#-
-                    <br /><br />
-                    Thank you for registering with ISE.  Should you need to log back in to see profiles or to fill out the host family application you can use the information below.  
-                    <br /><br />
-                    User: #FORM.email#<br />
-                    Password: #setPassword#<br />
+                    
+                    <p> Thank you for registering with ISE. Should you need to log back in to see profiles or to fill out the host family application you can use the information below. </p>
+                    
+                    User: #FORM.email# <br />
+                    Password: #setPassword# <br /> <br />
                     <!---
                     *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
                     <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
-                    <br /><br />
+                    <br /> <br />
                     --->
                     Best Regards-<br />
                     International Student Exchange
@@ -408,12 +414,12 @@
             <cfsavecontent variable="email_message">
     
                 <cfif qCheckAccount.recordcount>
-                    <strong>THIS IS A RETURNING HOST FAMILY</strong><br />
+                    <strong>THIS IS A RETURNING HOST FAMILY</strong> <br /><br />
                 </cfif>         
                      
-                The #FORM.lastname# family from #FORM.city# has submitted there information to view students.<br />
+                <p>The #FORM.lastname# family from #FORM.city# has submitted their information to view students.</p>
                 
-                Please see the details below: <br /><br />
+                <p>Please see the details below:</p>
                 
                 Family Last Name: #FORM.lastName# <br />
                 First Name: #FORM.firstName# <br />
@@ -426,19 +432,21 @@
                 Email: #FORM.email# <br />
                 How did you hear about us: #FORM.hearAboutUs# <br /> 
                 
-				<cfif LEN(FORM.representativeName)>
-                    ISE representative name: #FORM.representativeName# <br /> 
+				<cfif LEN(FORM.hearAboutUsDetail) AND FORM.hearAboutUs EQ 'ISE Representative'>
+                	ISE Representative Name: #FORM.hearAboutUsDetail# <br /> 
+                <cfelseif LEN(FORM.hearAboutUsDetail) AND FORM.hearAboutUs EQ 'Other'>
+                    Other Specify: #FORM.hearAboutUsDetail# <br /> 
                 </cfif>
                 
                 Would you like to join our mailing list? <cfif FORM.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
 
 				<!--- View their information here: <a href="https://www.student-management.com/nsmg/index.cfm?curdoc=leads/hostInfo&ID=#qGetHostInfo.ID#">www.student-management.com/nsmg/index.cfm?curdoc=leads/hostInfo&ID=#qGetHostInfo.ID# </a> 
-                <br /><br />
+                <br /> <br />
                 Once they choose to host, have them login at <a href="http://www.iseusa.com">www.iseusa.com</a> to fill out the host family application using their account login information.
-                <br /><br />
+                <br /> <br />
                  --->
             
-                Regards,<Br />
+                Regards, <Br />
                 International Student Exchange
             </cfsavecontent>
             </cfoutput>
@@ -468,23 +476,33 @@
 <link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<cfoutput>#APPLICATION.jQueryPath#</cfoutput>"></script>
 <script language="javascript">
-	// When page is ready run the displayRepField function
+	// When page is ready run the displayExtraField function
 	$(document).ready(function() {
-		displayRepField();
+		displayExtraField();
 		// displayForgotPass();
 	});
 
-	// Display Representative Field
-	var displayRepField = function() { 
+	// Display Extra Field if option selected is ISE Rep or Other
+	var displayExtraField = function() { 
 		
 		selectedOption = $("#hearAboutUs").val();
-
+		
+		// ISE Representative Option
 		if( selectedOption == 'ISE Representative' ) {
-			$("#repName").fadeIn("fast");
-			$("#representativeName").focus();
+			$("#labelHearAboutUs").html("ISE representative name <span class='requiredField'>*</span>");
+			$("#spanHearAboutUs").html("If you do not remember, please enter unknown");
+			$("#divExtraField").fadeIn("fast");
+			$("#hearAboutUsDetail").focus();
+		// Other Option			
+		} else if (selectedOption == 'Other') {
+			$("#labelHearAboutUs").html("Please specify other <span class='requiredField'>*</span>");
+			$("#spanHearAboutUs").html("");
+			$("#divExtraField").fadeIn("fast");
+			$("#hearAboutUsDetail").focus();
 		} else {
-			$("#repName").fadeOut("fast");	
+			$("#divExtraField").fadeOut("fast");	
 		}
+	
 	}
 
 	// Slide down form field div
@@ -492,7 +510,7 @@
 		
 		if ($("#forgotPassForm").css("display") == "none") {
 			$("#loginForm").fadeOut("fast");
-			$("#forgotPassForm").fadeIn("fast");			
+			$("#forgotPassForm").fadeIn("fast");	
 		} else {
 			$("#forgotPassForm").fadeOut("fast");
 			$("#loginForm").fadeIn("fast");
@@ -669,17 +687,17 @@
                     <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address." validateat="onSubmit" validate="email" />
                     
                     <label for="hearAboutUs" class="inputLabel">How did you hear about us <span class="requiredField">*</span></label>
-                    <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayRepField(this.value);"> 			
+                    <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayExtraField(this.value);"> 			
                         <option value=""></option>
                         <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
                             <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>
                         </cfloop>
                     </cfselect>
-					
-                    <div id="repName" class="hiddenDiv">
-                        <label for="representativeName" class="inputLabel">ISE representative name <span class="requiredField">*</span></label>
-                        <span class="inputNote">If you do not remember, please enter unknown</span>
-                        <cfinput type="text" name="representativeName" id="representativeName" value="#FORM.representativeName#" maxlength="100" class="largeInput" />
+
+                    <div id="divExtraField" class="hiddenDiv">
+                        <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
+                        <span id="spanHearAboutUs" class="inputNote"></span>
+                        <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
 					</div>
                     
                     <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
