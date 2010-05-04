@@ -1,8 +1,13 @@
 <cfapplication 
 	name="ise-external" 
     clientmanagement="yes">
+    
+    <!---
 	<cferror type="EXCEPTION" template="AlertForm.cfm">
-<cferror type="REQUEST" template="AlertForm.cfm">  
+    
+    <cferror type="REQUEST" template="AlertForm.cfm">  
+	--->
+    
     <cfparam name="APPLICATION.DSN" default="MySQL">
 
 	<!--- Param Client Variables --->
@@ -14,6 +19,14 @@
 		// Site URL
 		APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
 		
+		
+		/* jQuery Latest Version 
+		http://code.jquery.com/jquery-latest.min.js
+		http://code.jquery.com/jquery.js
+		*/		
+		APPLICATION.jQueryPath = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';
+		
+
 		/***** Create APPLICATION.EMAIL structure *****/
 		APPLICATION.EMAIL = StructNew();		
 	
@@ -23,7 +36,7 @@
 		AppEmail.support = 'support@iseusa.com';
 		AppEmail.finance = 'marcel@iseusa.com';
 		AppEmail.errors = 'errors@student-management.com';
-		AppEmail.hostLead = 'bob@iseusa.com';
+		AppEmail.hostLead = 'bob@iseusa.com;lamonica@iseusa.com';
 
 
 		APPLICATION.Constants = StructNew();
