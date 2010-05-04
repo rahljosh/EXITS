@@ -913,57 +913,97 @@ body {
 	text-decoration: underline;
 }
 
-/* Meet Student Form */
-.form {
-	font-family: Arial, Helvetica, sans-serif;
+/* Meet Students Page */
+.meetStudentsForm {
 	font-size: 12px;
-	background-color: #8DC540;
 	height: auto;
 	width: 240px;
 	margin-left: 25px;
-	padding-top: 10px;
-	padding-right: 10px;
-	padding-bottom: 10px;
-	padding-left: 30px;
+	padding: 10px 15px 10px 25px;
+	background-color: #8DC540; 
 	border: 1px solid #000;
+	text-align:justify;
 }
-.loginBox {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;	
+.meetStudentsLogin {
+	font-size: 12px;
 	float: right;
-	/* height: 125px; */
+	height:auto;
 	width: 240px;
-	margin-top: 10px;
-	margin-right: 60px;
-	padding: 20px;
+	margin: 20px 60px 0px 0px;
+	padding: 10px 15px 10px 25px;
 	background-color: #b5d1e5; /* #CCC; */
 	border: 1px solid #000; /* #005dab; */
+	text-align:justify;
+}
+.meetStudentsLogin h1 {
+	font-size:1.1em;
+	color: #124162;
+	font-weight:bold;
+	text-decoration:underline;
+}
+.meetStudentsLogin a {
+	padding-top:10px;
+	float:right;
+	text-decoration:none;
+	color: #124162;
+	font-weight:bold;
+}
+.meetStudentsLogin a:link {
+	text-decoration: none;
+}
+.meetStudentsLogin a:hover {
+	text-decoration: underline;
+	color:#000;
+}
+.requiredField {
+	color: #d22329;
+	font-weight:bold;
+}
+.requiredFieldNote {
+	color: #d22329;
+	display:block;
+	font-size: 10px;
+	font-weight:bold;
+	margin:7px 0px 7px 0px;
+}
+.inputLabel {
+	display:block;
+	font-weight: bold;
+	color: #333;
+}
+.inputCheckbox {
+	font-weight: bold;
+	color: #333;
+}
+.inputNote {
+	font-size: 10px;
+	display:block;
 }
 .largeInput {
+	display:block;
 	width: 210px;
+	margin-bottom:7px;
 }
-.loginTable {
-	width:100%;
-	border:0;
+.hiddenDiv {
+	display:none;	
 }
-.loginTable td {
-	width:100%;
-	border:0;
-	padding-bottom:	5px;
-}
-.loginText {
-	text-align: center;
-	font-weight: bold;
-	color: #666;
+.pageMessage {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #124162;
+	font-weight:bold;
+	padding: 10px 0px 10px 0px;
 }
 .errorMessage {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	color: #d32229;
+	color: #d22329;
 	font-weight:bold;
+	padding: 10px 0px 10px 0px;
 }
-.errorMessage ul {
-	/* padding-left: 15px; */
+.errorMessage span {
+	display:block;
+	margin-bottom:5px;
 }
 /* End of Meet Student Form */
 
