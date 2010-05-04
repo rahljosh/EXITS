@@ -85,7 +85,7 @@ a:active {
             Religion: #get_students.religionname#<br />
             Interests:
                  <cfloop list=#get_students.interests# index=i>
-				<cfquery name="get_interests" datasource="caseusa">
+				<cfquery name="get_interests" datasource="#application.dsn#">
 				Select interest 
 				from smg_interests 
 				where interestid = #i#
