@@ -26,7 +26,7 @@ INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
 AND (sp.type = 7 OR sp.type = 8 OR sp.type = 9)
-AND e.active = 1
+AND e.status != 'canceled'
 AND e.entrydate > '2009-07-21' <!--- before this date, trainee invoices are manual --->
 AND e.candidateid NOT IN (SELECT sc.stuid
                         FROM smg_charges sc
@@ -44,7 +44,7 @@ INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
 AND (sp.type = 7 OR sp.type = 8 OR sp.type = 9)
-AND e.active = 1
+AND e.status != 'canceled'
 AND e.entrydate > '2009-07-21' <!---  before this date, trainee invoices are manual --->
 AND e.candidateid NOT IN (SELECT sc.stuid
                         FROM smg_charges sc
@@ -62,7 +62,7 @@ INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
 AND (sp.type = 7 OR sp.type = 8 OR sp.type = 9)
-AND e.active = 1
+AND e.status != 'canceled'
 AND e.entrydate > '2009-07-21' <!---  before this date, trainee invoices are manual --->
 AND e.candidateid NOT IN (SELECT sc.stuid
                         FROM smg_charges sc
