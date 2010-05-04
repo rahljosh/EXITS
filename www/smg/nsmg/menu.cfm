@@ -144,22 +144,24 @@
     
                 <li><a href="index.cfm?curdoc=support">Support</a></li>
                 
-                <!--- Webmail --->
-                <cfswitch expression="#CLIENT.companyid#">
-                    
-                    <cfcase value="1,2,3,4,12">
-                        <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
-                    </cfcase>
-                    
-                    <cfcase value="5">
-                        <li><a href="http://webmail.student-management.com/" target="_blank">Webmail</a></li>
-                    </cfcase>
-        
-                    <cfcase value="10">
-                        <li><a href="http://webmail.case-usa.org/" target="_blank">Webmail</a></li>
-                    </cfcase>
-        
-                </cfswitch>
+                <!--- Webmail | Only Office and Managers have email account --->
+                <cfif CLIENT.userType LTE 5>
+                    <cfswitch expression="#CLIENT.companyid#">
+                        
+                        <cfcase value="1,2,3,4,12">
+                            <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
+                        </cfcase>
+                        
+                        <cfcase value="5">
+                            <li><a href="http://webmail.student-management.com/" target="_blank">Webmail</a></li>
+                        </cfcase>
+            
+                        <cfcase value="10">
+                            <li><a href="http://webmail.case-usa.org/" target="_blank">Webmail</a></li>
+                        </cfcase>
+            
+                    </cfswitch>
+                </cfif>
                 
                 <!--- Case Store --->
                 <cfif CLIENT.companyID EQ 10>
@@ -281,23 +283,25 @@
                     </ul>
                 </li>
                 
-                <!--- Webmail --->
-                <cfswitch expression="#CLIENT.companyid#">
-                    
-                    <cfcase value="1,2,3,4,12">
-                        <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
-                    </cfcase>
-                    
-                    <cfcase value="5">
-                        <li><a href="http://webmail.student-management.com/" target="_blank">Webmail</a></li>
-                    </cfcase>
-        
-                    <cfcase value="10">
-                        <li><a href="http://webmail.case-usa.org/" target="_blank">Webmail</a></li>
-                    </cfcase>
-        
-                </cfswitch>
-                
+                <!--- Webmail | Only Office and Managers have email account --->
+                <cfif CLIENT.userType LTE 5>
+                    <cfswitch expression="#CLIENT.companyid#">
+                        
+                        <cfcase value="1,2,3,4,12">
+                            <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
+                        </cfcase>
+                        
+                        <cfcase value="5">
+                            <li><a href="http://webmail.student-management.com/" target="_blank">Webmail</a></li>
+                        </cfcase>
+            
+                        <cfcase value="10">
+                            <li><a href="http://webmail.case-usa.org/" target="_blank">Webmail</a></li>
+                        </cfcase>
+            
+                    </cfswitch>
+				</cfif>
+                                
                 <!--- Case Store --->
                 <cfif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>

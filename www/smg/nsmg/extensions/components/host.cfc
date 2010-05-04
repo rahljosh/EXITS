@@ -220,6 +220,7 @@
                     hl.phone,
                     hl.email,
                     hl.hearAboutUs,
+                    hl.hearAboutUsDetail,
                     hl.isListSubscriber,
                     hl.dateCreated,
                     hl.dateUpdated,

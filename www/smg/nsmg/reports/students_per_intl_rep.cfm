@@ -188,7 +188,10 @@
 			</cfoutput>	
 			</table><br>
 	</cfoutput><br>
-<cfelse><!--- pre ayp cfif --->
+    
+<!--- pre ayp cfif --->
+<cfelse>
+
 	<cfoutput query="get_students" group="intrep">
 			<table width='90%' cellpadding=6 cellspacing="0" align="center" frame="box">	
 			<tr><th width="75%"><a href="mailto:#email#">#businessname#</a></th>
@@ -201,17 +204,19 @@
 			</table>
 			<table width='90%' frame="below" cellpadding=6 cellspacing="0" align="center">
 				<tr><td width="6%" align="center"><b>ID</b></th>
-					<td width="20%"><b>Student</b></td>
+					<td width="18%"><b>Student</b></td>
 					<td width="8%" align="center"><b>Sex</b></td>
-					<td width="12" align="center"><b>DOB</b></td>
-					<td width="16%"><b>Country</b></td>
+					<td width="8" align="center"><b>DOB</b></td>
+					<td width="12%"><b>Country</b></td>
 					<cfif form.status is 1>
-						<td width="11%"><b>Family</b></td>
+						<td width="12%"><b>Family</b></td>
 					<cfelse>
-						<td width="11%"><b>Region</b></td>
+						<td width="12%"><b>Region</b></td>
 					</cfif>			
-					<td width="12%"><b>Entry Date</b></td>
-					<td width="%15%"><b>Pre-AYP Camp</b></td></tr>
+					<td width="16%"><b>Facilitator</b></td>
+                    <td width="12%"><b>Entry Date</b></td>
+					<td width="%8%"><b>Pre-AYP Camp</b></td>
+                </tr>
 			 <cfoutput>					
 				<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td align="center">#studentid#</td>
@@ -223,7 +228,8 @@
 						<td>#hostfamily#</td>	
 					<cfelse>
 						<td>#regionname#</td>	
-					</cfif>					
+					</cfif>	
+                    <td>#facFirstName# #facLastName#</td>					
 					<td>#DateFormat(dateapplication, 'mm/dd/yyyy')#</td>
 					<td>#englishcamp# #orientationcamp#</td></tr>							
 			</cfoutput>	

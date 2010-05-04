@@ -26,14 +26,14 @@
     
 </cfsilent>    
 
+<cfoutput>
+
 <!--- Table Header --->
 <gui:tableHeader
     imageName="family.gif"
-    tableTitle="ISEUSA.COM - Host Family Leads"
+    tableTitle="ISEUSA.COM - Host Family Leads - Total of #qGetHostLeads.recordCount# records"
     tableRightTitle=""
 />
-
-<cfoutput>
 
 <table width=100% class="section" cellpadding="4" cellspacing="2">
     <tr align="left">
@@ -47,6 +47,7 @@
         <th>Phone</th>
         <th>Email</th>
         <th>Hear About Us</th>
+        <th>Rep/Other</th>
         <th>Date Created</th>
     </tr>
     <cfloop query="qGetHostLeads">
@@ -61,12 +62,13 @@
             <td>#qGetHostLeads.phone#</td>
             <td>#qGetHostLeads.email#</td>
             <td>#qGetHostLeads.hearAboutUs#</td>
-            <td>#DateFormat(qGetHostLeads.dateCreated, 'mm/dd/yy')#</td>
+            <td>#qGetHostLeads.hearAboutUsDetail#</td>
+            <td>#DateFormat(qGetHostLeads.dateCreated, 'mm/dd/yy')# #TimeFormat(qGetHostLeads.dateCreated, 'hh:mm:ss tt')#</td>
         </tr>
     </cfloop>
 </table>
 
-</cfoutput>
-
 <!--- Table Footer --->
 <gui:tableFooter />
+
+</cfoutput>
