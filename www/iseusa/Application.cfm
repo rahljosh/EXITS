@@ -2,11 +2,9 @@
 	name="ise-external" 
     clientmanagement="yes">
     
-    <!---
 	<cferror type="EXCEPTION" template="AlertForm.cfm">
     
     <cferror type="REQUEST" template="AlertForm.cfm">  
-	--->
     
     <cfparam name="APPLICATION.DSN" default="MySQL">
 

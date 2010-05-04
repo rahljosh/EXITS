@@ -190,7 +190,7 @@
                     <cfinvokeargument name="email_to" value="#qCheckEmail.email#">
                     <cfinvokeargument name="email_subject" value="ISE - Host Family Account Information">
                     <cfinvokeargument name="email_message" value="#email_message#">
-                    <cfinvokeargument name="email_from" value="International Student Exchange <support@iseusa.com>">
+                    <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
 			
                 <cfscript>				
@@ -308,7 +308,7 @@
                     <cfinvokeargument name="email_to" value="#FORM.email#">
                     <cfinvokeargument name="email_subject" value="Host Family Account Information">
                     <cfinvokeargument name="email_message" value="#email_message#">
-                    <cfinvokeargument name="email_from" value="International Student Exchange <support@iseusa.com>">
+                    <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
                  
             <!--- Account Does Not Exists --->   
@@ -378,7 +378,7 @@
                     <cfinvokeargument name="email_to" value="#FORM.email#">
                     <cfinvokeargument name="email_subject" value="Host Family Account Information">
                     <cfinvokeargument name="email_message" value="#email_message#">
-                    <cfinvokeargument name="email_from" value="International Student Exchange <support@iseusa.com>">
+                    <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
             
             </cfif>
@@ -448,7 +448,7 @@
                 <cfinvokeargument name="email_to" value="#AppEmail.hostLead#">
                 <cfinvokeargument name="email_subject" value="Host Family Viewing Students Section">
                 <cfinvokeargument name="email_message" value="#email_message#">
-                <cfinvokeargument name="email_from" value="International Student Exchange <support@iseusa.com>">
+                <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
             </cfinvoke>
             
             <!--- Valid Login - Redirect to View Students --->
