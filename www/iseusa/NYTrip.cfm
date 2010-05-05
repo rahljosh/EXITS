@@ -76,8 +76,9 @@ a:active {
         <a href="comService.cfm">Service</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Thanksgiving.cfm">Thanksgiving</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Harvest.cfm"> Parties</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Rollerskating.cfm">Rollerskating</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="NYTrip.cfm">NY Trip</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Bowling.cfm">Bowling</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Bowling.cfm">Articles</a><img src="images/webStore_lines_06.gif" width="600" height="14" /></th>
        </tr>
       <tr>
-       <td height="158" scope="row" class="p2"><p>Here is a couple pictures of the group that went to New York this past week from the South Region.  These  were a great bunch of kids and so respectful.  This type of attitude of students where they are so well mannered makes trips so easy.  They have their adjustment issues but outside of that they are good kids.
-         </p></td>
+       	<td height="60px" scope="row" class="p2" valign="top">
+       		<p>A great weekend in NYC by the ISE South Region!</p>
+		</td>
        <td width="406" rowspan="2" class="p2" scope="row"><img src="images/studentSuccess/NY2.png" width="317" height="402" /></td>
       </tr>
        <tr>

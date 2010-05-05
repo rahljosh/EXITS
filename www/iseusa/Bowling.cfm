@@ -79,7 +79,11 @@ a:active {
               <td height="209" class="lightBlue" scope="row"><img src="images/studentSuccess/Bowling.png" width="500" height="216" border="1" /><br /></td>
               </tr>
               <tr>
-              <td height="200" scope="row"><span class="p2">Picture of the Great Plains Group of Reps, host families, and students that met for bowling in Hays, Ks yesterday. We bowled for 2 hours- and then ate Pizza. Pat- we did get our YES girl placed there yesterday. . . This will be the F-1, J-1 visa situation we discussed. Some left a bit earlier. . . we had a total of almost 60 people. </span><br /></td>
+              <td height="200" scope="row">
+				<span class="p2">
+					Great Plains Representatives, Host Families, and students all met for a bowling party! They bowled for two hours, ate pizza, and had a great time! A total of almost 60 people came.                
+                </span>              
+              </td>
             </tr>
           </table>
           <br />
