@@ -204,6 +204,7 @@
 	<cffunction name="getHostLeads" access="public" returntype="query" output="false" hint="Gets host leads entered from ISEUSA.com">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="ASC" hint="sortOrder is not required">
+        <cfargument name="isDeleted" type="string" default="0" hint="isDeleted is not required">
         
         <cfquery 
 			name="qGetHostLeads" 
@@ -229,6 +230,8 @@
                     smg_host_lead hl
                 LEFT OUTER JOIN
                 	smg_states st ON st.id = hl.stateID
+                WHERE
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isDeleted#">
                 ORDER BY
                 
         	<cfswitch expression="#ARGUMENTS.sortBy#">
