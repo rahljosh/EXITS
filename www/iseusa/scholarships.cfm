@@ -27,13 +27,27 @@
   <div class="whtMiddle">
     <p class="header1">Jordan Nagler Memorial Scholarship Fund</p>
     <div class="subPic"><img src="images/scholarship.gif" width="415" height="277" /></div>
-    <p class="p1">The Jordan Nagler Memorial Scholarship Fund was created to honor and commemorate the life and work of Jordan Nagler.  Jordan started to work in June of 2001 for ISE and in September of 2001, he was appointed the Assistant Director of IntoEdventures.  In August of 2002, Jordan became the Executive Director of International Student Exchange, a position he held until his death this past October.<br />
-      <br />
-&nbsp;&nbsp;To commemorate the hard work, effort and results that Jordan achieved in his brief eight years while with SMG, this scholarship was created to allow disadvantaged students to become part of the Academic Year Program.  The only other criterion that will be used to select the students is that the selected student must be considered an extremely diligent and hard worker.<br />
-<br />
-&nbsp;&nbsp;We feel that this is a scholarship of which Jordan would be most proud.  We all can recall the many nights that Jordan spent in his office until midnight, trying to help our regional managers, area representatives, students and families.  As well, Jordan was always trying to find ways to help students without financial resources be part of this exciting and beneficial program.<br />
-<br />
-&nbsp;&nbsp;Anyone can contribute to this fund.  The students will be selected on or about February 1, 2009.  As a local representative, you can also volunteer to either place and/or supervise one of these students and contribute some or all of the stipend to the scholarship fund.  Just let your manager know of your wish to participate.  Managers can also participate in a similar fashion.  All checks can be sent to:</p>
+    <p class="p1">
+    	The Jordan Nagler Memorial Scholarship Fund was created to honor and commemorate the life and work of Jordan Nagler.  
+        Jordan started to work in June of 2001 for ISE and in September of 2001, he was appointed the Assistant Director of IntoEdventures.  
+        In August of 2002, Jordan became the Executive Director of International Student Exchange, a position he held until his death in October 2008.
+        <br />
+        <br />
+        &nbsp;&nbsp;
+        To commemorate the hard work, effort and results that Jordan achieved in his brief eight years while with SMG, this scholarship was created to allow disadvantaged 
+        students to become part of the Academic Year Program.  The only other criterion that will be used to select the students is that the selected student must be considered 
+        an extremely diligent and hard worker.
+        <br />
+        <br />
+        &nbsp;&nbsp;We feel that this is a scholarship of which Jordan would be most proud.  We all can recall the many nights that Jordan spent in his office until midnight, 
+        trying to help our regional managers, area representatives, students and families.  As well, Jordan was always trying to find ways to help students without financial 
+        resources be part of this exciting and beneficial program.
+        <br />
+        <br />
+        &nbsp;&nbsp;Anyone can contribute to this fund.  The students will be selected on or about February.  As a local representative, you can also volunteer to either place 
+        and/or supervise one of these students and contribute some or all of the stipend to the scholarship fund. 
+        Just let your manager know of your wish to participate.  Managers can also participate in a similar fashion.  All checks can be sent to:
+     </p>
     <table width="386" border="0" align="center">
       <tr>
         <th width="229" class="leftJust" scope="row">Jordan Nagler Memorial Scholarship Fund<br />

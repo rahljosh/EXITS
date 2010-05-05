@@ -79,8 +79,7 @@ a:active {
         <a href="comService.cfm">Service</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Thanksgiving.cfm">Thanksgiving</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Harvest.cfm"> Parties</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Rollerskating.cfm">Rollerskating</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="NYTrip.cfm">NY Trip</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Bowling.cfm">Bowling</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="articles.cfm">Articles</a><img src="images/webStore_lines_06.gif" width="600" height="14" /></th>
        </tr>
       <tr>
-       <td height="44" colspan="2" scope="row" class="p2"><p>Pictures that were taken at our rollarskating party with our students<br />
-         </p></td>
+       <td height="44" colspan="2" scope="row" class="p2"><p>A few pictures of ISE students roller skating.</p></td>
       </tr>
        <tr>
          <td height="200" class="lightBlue" scope="row"><img src="images/studentSuccess/RS1.png" width="250" height="188" border="1"/></td>

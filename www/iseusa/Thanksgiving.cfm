@@ -76,15 +76,29 @@ a:active {
         <a href="comService.cfm">Service</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Thanksgiving.cfm">Thanksgiving</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Harvest.cfm"> Parties</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Rollerskating.cfm">Rollerskating</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="NYTrip.cfm">NY Trip</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Bowling.cfm">Bowling</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="articles.cfm">Articles</a><img src="images/webStore_lines_06.gif" width="600" height="14" /></th>
        </tr>
       <tr>
-       <td height="209" colspan="2" scope="row" class="p2">My group finished up their community service project that we were working on....Thanksgiving baskets...it was so rewarding and was a true blessing to the families. Because of my kids there will be 50 people eating Thanksgiving dinner that would not have without these baskets!!<br />
+       <td height="209" colspan="2" scope="row" class="p2">
+        My group finished up their community service project that we were working on: Thanksgiving baskets. It was so rewarding and was a true blessing to the families. 
+        Because of my kids there will be 50 people eating Thanksgiving dinner that would not have without these baskets!
         <br />
-        Our first family has 15 people coming for dinner. The father had a stroke this summer and is unable to work, and the mother has a nurse that comes in weekly to give her the medications that she needs through an IV. Neither of them are able to work right now......so as you can imagine Thanksgiving dinner was the last thing on their minds.<br />
         <br />
-        The second family has 20 people coming for dinner. This family adopts foster children, plus they have 9 of their own children. They had a house fire this past week, so they are now living in a hotel, and other family members homes.<br />
+        Our first family has 15 people coming for dinner. The father had a stroke this summer and is unable to work, and the mother has a nurse that comes in weekly to give
+        her the medications that she needs through an IV. Neither of them are able to work right now, so as you can imagine Thanksgiving dinner was the last thing on their minds.
         <br />
-        The third family was so gracious!! I cried when we delievered this basket, as did a couple of my students and parents. This family has 6 children, and the oldest is only in 1st grade!!  They are a Mexican American family that speaks very little English. The mother's mom was murdered this summer by a scorned lover...and they were not planning on having Thanksgiving dinner because they could not affford it. When I wished he a Happy Thanksgiving she started crying and thanked all of the kids for the food!!  WOW....very powerful!!<br />
         <br />
-       My group is going to save the 3 turkeys that we still have left to give away during Christmas....we could have done 6 families, but I could not get them to call me back to get their addresses.....so we will keep them for next month. We are also going to &quot;adopt&quot; that family with the 6 little ones. We are going to buy them a Christmas tree, presents, and dinner for Christmas!! I want to make sure that those little ones have presents to open this year!! <br /></td>
+        The second family has 20 people coming for dinner. This family adopts foster children, plus they have 9 of their own children. 
+        They had a house fire this past week, so they are now living in a hotel, and other family members' homes.
+        <br />
+        <br />
+        The third family was so gracious! I cried when we delievered this basket, as did a couple of my students and parents. 
+        This family has 6 children, and the oldest is only in 1st grade! 
+        They are a Mexican American family that speaks very little English. When I wished her a Happy Thanksgiving she started crying and thanked all of the kids for the food! 
+        It was a very touching moment.
+        <br />
+        <br />
+       	My group is going to save the 3 turkeys that we still have left to give away during Christmas. We are also going to "adopt" that family with the 6 little ones. 
+        We are going to buy a Christmas tree, presents, and dinner for Christmas! I want to make sure that those little ones have presents to open this year! 
+        <br />
+        </td>
       </tr>
        <tr>
        <td width="337" height="200" class="lightBlue" scope="row"><img src="images/studentSuccess/Thanks2.png" width="250" height="167" border="1" /><br /></td>

@@ -76,9 +76,9 @@ a:active {
         <a href="comService.cfm">Service</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Thanksgiving.cfm">Thanksgiving</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Harvest.cfm"> Parties</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Rollerskating.cfm">Rollerskating</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="NYTrip.cfm">NY Trip</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Bowling.cfm">Bowling</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="articles.cfm">Articles</a><img src="images/webStore_lines_06.gif" width="600" height="14" /></th>
        </tr>
       <tr>
-       <td height="209" colspan="2" scope="row" class="p2"><p>We must have had 60 people at my home that day. Fortunately it was sunny, allowing for soccer, badminton, volleyball and carving pumpkins outside, plus a great view from a remote cabin next door (kids standing on the rock).</p>
-         <p>No moose or bears joining us unfortunately. Lots of international food, even moose chili from a host father who just had shot a moose, providing for winter's meat.<br />
-         </p></td>
+       <td height="120px" colspan="2" scope="row" class="p2">
+			<p>Close to 60 people attended the Harvest Party! The sunny day allowed for soccer, badminton, volleyball, and pumpkin carving!</p>
+        </td>
       </tr>
        <tr>
          <td height="200" class="lightBlue" scope="row"><img src="images/studentSuccess/HP3.png" width="250" height="188" border="1"/></td>
