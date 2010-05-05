@@ -80,6 +80,11 @@
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
     AND
         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+	
+	<!---
+	AND
+    	s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="12538">
+	--->
 
     <!--- Get Current Division Students --->
     <!---
