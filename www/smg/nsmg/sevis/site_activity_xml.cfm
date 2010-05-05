@@ -67,9 +67,9 @@
 	<cfif IsDefined('form.pre_ayp')>
     	AND 
         	(
-            	s.aypenglish <> '0' 
+            	s.aypenglish != '0' 
              OR
-             	s.ayporientation <> '0'
+             	s.ayporientation != '0'
             )
     </cfif>
 
@@ -170,7 +170,7 @@
 
 <cfscript>
 	// Get Folder Path 
-	currentDirectory = "#AppPath.sevis##get_company.companyshort_nocolor#/school/";
+	currentDirectory = "#AppPath.sevis##qGetCompany.companyshort_nocolor#/school/";
 
 	// Make sure the folder Exists
 	AppCFC.UDF.createFolder(currentDirectory);
