@@ -18,6 +18,60 @@
 
 <!--- Process Form Submission --->
 <cfif isDefined("form.submitted")>
+	<!----Send email if address has changed---->
+	<cfif client.userid eq 1>
+		<cfif form.address neq form.prev_address or form.address2 neq form.prev_address2 or 
+                form.city neq form.prev_city or form.state neq form.prev_state or form.zip neq form.prev_zip>
+             <cfoutput>
+              <cfquery name="regional_Advisor_emails" datasource="#application.dsn#">
+              	select uar.regionid
+                from user_access_rights uar
+                where userid = #url.userid#
+              </cfquery>
+               <cfset advisor_emails = ''>
+               <cfloop query="regional_advisor_emails">
+               <cfquery name="get_email" datasource="#application.dsn#">
+               		select smg_users.email
+                    from smg_users
+                    left join user_access_rights on user_access_rights.userid = smg_users.userid
+                    where user_Access_rights.regionid = #regionid# and user_access_rights.usertype = 5
+               </cfquery>
+               <cfset advisor_emails = #ListAppend(advisor_emails, '#get_email.email#')#>
+               </cfloop>
+               
+                
+                
+              
+             </cfoutput>
+           <cfsavecontent variable="email_message">
+           <cfoutput>
+           NOTICE OF ADDRESS CHANGE<Br />
+           <strong>#form.firstname# #form.lastname# (#url.userid#)</strong> has made a change to there address.<Br />
+           <br />
+           NEW ADDRESSS<br />
+           #form.address#<br />
+          <cfif form.address2 is not ''>#form.address2#<br /></cfif>
+           #form.city# #form.state# #form.zip#<br /><br />
+           
+           PREVIOUS ADDRESS<br />
+           #form.prev_address#<br />
+          <cfif form.prev_address2 is not ''> #form.prev_address2#<br /></cfif>
+           #form.prev_city# #form.state# #form.prev_zip#<br /><br />
+           This is the only notification of this change that you will recieve.  Please update any records that do NOT pull information from EXITS.  
+                </cfoutput>
+           </cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="josh@pokytrails.com,thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
+                <cfinvokeargument name="email_subject" value="Notice of Address Change">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.support_email#">
+            </cfinvoke>
+            
+       
+        </cfif>
+	</cfif>
 
 	<!--- checkboxes, radio buttons aren't defined if not checked. --->
     <cfparam name="form.sex" default="">
@@ -483,23 +537,23 @@ function CopyEmail() {
 
             <tr>
             	<td align="right">Address: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="address" value="#form.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."></td>
+                <td><cfinput type="text" name="address" value="#form.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."> <input type="hidden"  name="prev_address" value="#form.address#" /></td>
             </tr>
             <tr>
             	<td align="right"></td>
-                <td><cfinput type="text" name="address2" value="#form.address2#" size="40" maxlength="150"></td>
+                <td><cfinput type="text" name="address2" value="#form.address2#" size="40" maxlength="150"><input type="hidden"  name="prev_address2" value="#form.address2#" /></td>
             </tr>
             <tr>
             	<td align="right">City: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="city" value="#form.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
+                <td><cfinput type="text" name="city" value="#form.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."><input type="hidden"  name="prev_city" value="#form.city#" /></td>
             </tr>
             <tr>
                 <td align="right">State:</td>
-                <td><cfinput type="text" name="state" value="#form.state#" size="20" maxlength="20"></td>
+                <td><cfinput type="text" name="state" value="#form.state#" size="20" maxlength="20"><input type="hidden"  name="prev_state" value="#form.state#" /></td>
             </tr>
             <tr>
             	<td align="right">Postal Code (Zip):</td>
-                <td><cfinput type="text" name="zip" value="#form.zip#" size="5" maxlength="5"></td>
+                <td><cfinput type="text" name="zip" value="#form.zip#" size="5" maxlength="5"><input type="hidden"  name="prev_zip" value="#form.zip#" /></td>
             </tr>
             <tr>
                 <td align="right">Country: <span class="redtext">*</span></td>
@@ -548,17 +602,17 @@ function CopyEmail() {
                 <tr>
                     <td align="right">Address: <span class="redtext">*</span></td>
                     <td>
-                    	<cfinput type="text" name="address" value="#form.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address.">
+                    	<cfinput type="text" name="address" value="#form.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."><cfinput type="hidden"  name="prev_address" value="#form.address#" />
 			            <font size="1">NO PO BOXES</font>
                     </td>
                 </tr>
                 <tr>
                     <td align="right"></td>
-                    <td><cfinput type="text" name="address2" value="#form.address2#" size="40" maxlength="150"></td>
+                    <td><cfinput type="text" name="address2" value="#form.address2#" size="40" maxlength="150"><cfinput type="hidden"  name="prev_address2" value="#form.address2#" /></td>
                 </tr>
                 <tr>
                     <td align="right">City: <span class="redtext">*</span></td>
-                    <td><cfinput type="text" name="city" value="#form.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
+                    <td><cfinput type="text" name="city" value="#form.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."><cfinput type="hidden"  name="prev_city" value="#form.city#" /></td>
                 </tr>
                 <tr>
                     <td align="right">State: <span class="redtext">*</span></td>
@@ -571,11 +625,12 @@ function CopyEmail() {
                         <cfselect NAME="state" query="get_states" value="state" display="statename" selected="#form.state#" queryPosition="below">
                             <option></option>
                         </cfselect>
+                        <cfinput type="hidden"  name="prev_state" value="#form.state#" />
                     </td>
                 </tr>
                 <tr>
                     <td align="right">Zip: <span class="redtext">*</span></td>
-                    <td><cfinput type="text" name="zip" value="#form.zip#" size="5" maxlength="5" required="yes" validate="zipcode" message="Please enter a valid Zip."></td>
+                    <td><cfinput type="text" name="zip" value="#form.zip#" size="5" maxlength="5" required="yes" validate="zipcode" message="Please enter a valid Zip."><cfinput type="hidden"  name="prev_zip" value="#form.zip#" /></td>
                 </tr>
 				<!--- address lookup - simple version. --->
                 <cfif application.address_lookup EQ 1>
