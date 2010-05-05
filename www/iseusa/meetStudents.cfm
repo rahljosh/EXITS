@@ -109,6 +109,8 @@
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginEmail)#">
                 AND
                     password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginPassword)#">
+				AND	
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             </cfquery>
         	
             <!--- Valid Login --->
@@ -162,6 +164,8 @@
                     smg_host_lead
                 WHERE 
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginEmail)#">
+				AND	
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">                    
             </cfquery>
   			
             <!---  Email not registered - Send Login Information --->
@@ -281,7 +285,9 @@
                 FROM
                     smg_host_lead
                 WHERE	
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">  
+				AND	
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">                                 
             </cfquery>
                 
             <!--- Account Exists - Email Information --->             
@@ -400,6 +406,8 @@
                 	smg_states st ON st.id = hl.stateID
                 WHERE
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
+				AND	
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">                    
             </cfquery>
     
             <cfscript>			
@@ -495,7 +503,7 @@
 			$("#hearAboutUsDetail").focus();
 		// Other Option			
 		} else if (selectedOption == 'Other') {
-			$("#labelHearAboutUs").html("Please specify other <span class='requiredField'>*</span>");
+			$("#labelHearAboutUs").html("Please specify <span class='requiredField'>*</span>");
 			$("#spanHearAboutUs").html("");
 			$("#divExtraField").fadeIn("fast");
 			$("#hearAboutUsDetail").focus();
