@@ -146,5 +146,5 @@
 	APPLICATION.AllowedIDs = StructNew();
 	
 	// List of User IDs allowed to access ISE USA Leads
-	APPLICATION.AllowedIDs.hostLeads = "8743,314"; // 8743 - Robert Keegan / 314 - Budge Lamonica
+	APPLICATION.AllowedIDs.hostLeads = "8743,314,12431"; // 8743 - Robert Keegan / 314 - Budge Lamonica / 12431 - Gary Lubrat
 </cfscript>
