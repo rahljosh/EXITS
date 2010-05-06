@@ -23,6 +23,7 @@
 Total of: #qGetActiveStudents.recordCount#
 <table width="80%">
     <tr>
+        <td><b>StudentID</b></td>
         <td><b>FirstName</b></td>
         <td><b>New FirstName</b></td>
         <td><b>familyLastName</b></td>
@@ -34,6 +35,7 @@ Total of: #qGetActiveStudents.recordCount#
     </tr>
     <cfloop query="qGetActiveStudents">
         <tr>
+            <td>###qGetActiveStudents.studentID#</td>
             <td>#qGetActiveStudents.firstName#</td>
             <td>#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(qGetActiveStudents.firstName))#</td>
             <td>#qGetActiveStudents.familyLastName#</td>
