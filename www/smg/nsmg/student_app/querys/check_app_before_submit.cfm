@@ -332,24 +332,29 @@ It looks like your applcations do not need to be verified through the checklist.
 		</cfif>
 	
 		<!--- PAGE 21 --->
-		<!--- PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
-		<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
-			<tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
-		<cfelse>
-			<!--- student has choosen state guarantee --->
-			<cfif smg_student_app_state_requested.recordcount GT 0 AND smg_student_app_state_requested.state1 GT 0>
-				<cfif check_21_upload.recordcount EQ 0>
-					<cfset countred = countred + 1>
-				</cfif>
-			<!--- student has not choosen if accetps state guarantee --->
-			<cfelseif smg_student_app_state_requested.recordcount EQ 0>
-				<cfloop query="page21">
-					<cfset get_field = #page21.table_located# &"."& #page21.field_name#>
-				</cfloop>	
-				<cfset countred = countred + 1>	
-			</cfif>
-		</cfif>
+        <!--- Not Available in April or May - PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
+        <cfif ListFind("4,5", DateFormat(now(), 'mm'))> <!---- AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')---->
 		
+			<!--- PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
+            <cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
+                <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
+            <cfelse>
+                <!--- student has choosen state guarantee --->
+                <cfif smg_student_app_state_requested.recordcount GT 0 AND smg_student_app_state_requested.state1 GT 0>
+                    <cfif check_21_upload.recordcount EQ 0>
+                        <cfset countred = countred + 1>
+                    </cfif>
+                <!--- student has not choosen if accetps state guarantee --->
+                <cfelseif smg_student_app_state_requested.recordcount EQ 0>
+                    <cfloop query="page21">
+                        <cfset get_field = #page21.table_located# &"."& #page21.field_name#>
+                    </cfloop>	
+                    <cfset countred = countred + 1>	
+                </cfif>
+            </cfif>
+
+		</cfif>		
+
 	</cfif>
 </cfoutput>
 
