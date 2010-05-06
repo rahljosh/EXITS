@@ -7,6 +7,14 @@
 
 <body>
 
+<cfsilent>
+
+    <cfparam name="FORM.batchid" default="">
+    <cfparam name="FORM.intRep" default="">
+    <cfparam name="FORM.insurance_typeid" default="0">
+
+</cfsilent>
+
 <cfinclude template="../querys/get_company_short.cfm">
 
 <cfquery name="get_insurance_type" datasource="MySql">
@@ -30,6 +38,7 @@
 		<td><b>Businessname</b></td>
 		<td><b>Student</b></td>
 		<td><b>Program</b></td>
+        <td><b>Division</b></td>
 		<td><b>Batch</b></td>
 		<td><b>Insured</b></td>
 	</tr>
@@ -38,23 +47,26 @@
 					s.active, s.ds2019_no, s.hostid AS s_hostid, s.regionassigned, s.arearepid,
 					u.businessname,
 					p.programname, p.programid,
-					type.type
+					type.type,
+                    c.companyShort
 			FROM smg_students s 
 			INNER JOIN smg_users u ON s.intrep = u.userid
 			INNER JOIN smg_programs p ON s.programid = p.programid
 			INNER JOIN smg_companies c ON s.companyid = c.companyid
 			LEFT JOIN smg_insurance_type type ON type.insutypeid = u.insurance_typeid 
 			WHERE s.active = '1'
-				<cfif form.intrep NEQ 0>
-					AND s.intrep = '#form.intrep#'
-				</cfif>
-				AND ( <cfloop list="#form.batchid#" index='batch'>
-						 s.sevis_batchid = #batch# 
-						<cfif batch is #ListLast(form.batchid)#><Cfelse>or</cfif>
-					</cfloop> )
+				AND
+                	s.sevis_batchid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.batchid#" list="yes"> )
+
+				<cfif LEN(form.intrep)>
+					AND 
+                    	s.intrep IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#" list="yes"> )
+				</cfif> 
+
 				<cfif form.insurance_typeid NEQ 0> 
 					AND u.insurance_typeid = '#form.insurance_typeid#'
 				</cfif>
+                
 			ORDER BY 
                 s.sevis_batchid, 
                 u.businessname, 
@@ -68,7 +80,8 @@
 				<td>#businessname#</td>
 				<td>#firstname# #familylastname# (###studentid#)</td>
 				<td>#programname#</td>
-				<td>#sevis_batchid#</td>
+				<td>#companyShort#</td>
+                <td>#sevis_batchid#</td>
 				<td>
 					<cfquery name="insured" datasource="MySql">
 						SELECT studentid

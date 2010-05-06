@@ -28,20 +28,25 @@
     
     <cfquery name="qGetBatches" datasource="MySql">
         SELECT 
-        	batchid, 
-            datecreated
+        	s.batchid, 
+            s.datecreated,
+            c.companyShort           
         FROM 
-        	smg_sevis
+        	smg_sevis s
+		LEFT OUTER JOIN
+        	smg_companies c ON c.companyID = s.companyID            
         WHERE 
         <cfif CLIENT.companyID EQ 10>
-        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
         <cfelse>
-        	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
+        	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
         </cfif>        
         AND 
-        	type = <cfqueryparam cfsqltype="cf_sql_varchar" value="new">
+        	s.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="new">
+        AND	
+        	s.dateCreated >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#DateAdd('m', -6, now())#">
         ORDER BY 
-        	batchid DESC
+        	s.batchid DESC
     </cfquery>
     
     <cfquery name="qInsuranceDates" datasource="MySql">
@@ -93,9 +98,9 @@
                             <tr>
                                 <td>Batch ID: </td>
                                 <td align="left">
-                                    <select name="batchid" multiple size="5">
+                                    <select name="batchid" multiple size="6">
                                         <cfloop query="qGetBatches">
-                                            <option value="#batchid#">#batchid# &nbsp; #DateFormat(datecreated,'mm/dd/yy')# </option>
+                                            <option value="#batchid#">#batchid# &nbsp; #DateFormat(datecreated,'mm/dd/yy')# &nbsp; #companyShort# &nbsp;</option>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -130,9 +135,9 @@
                             <tr>
                                 <td>Batch ID: </td>
                                 <td align="left">
-                                    <select name="batchid" multiple size="5">
+                                    <select name="batchid" multiple size="6">
                                         <cfloop query="qGetBatches">
-                                            <option value="#batchid#">#batchid# &nbsp; #DateFormat(datecreated,'mm/dd/yy')# &nbsp; </option>
+                                            <option value="#batchid#">#batchid# &nbsp; #DateFormat(datecreated,'mm/dd/yy')# &nbsp; #companyShort# &nbsp;</option>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -140,9 +145,7 @@
                             <tr align="left">
                                 <td>Intl. Rep:</td>
                                 <td>
-                                    <cfselect name="intRep" query="get_intl_rep" value="userid" display="businessname" queryPosition="below">
-                                        <option value=0>All Reps</option>
-                                    </cfselect>
+                                    <cfselect name="intRep" query="get_intl_rep" value="userid" display="businessname" queryPosition="below" multiple="yes" size="5"></cfselect>
                                 </td>
                             </tr>					
                             <tr>
