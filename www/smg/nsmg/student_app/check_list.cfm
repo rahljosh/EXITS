@@ -404,7 +404,7 @@
 		<cfelseif Evaluate(get_field) GT 0 AND check_18_upload.recordcount EQ 0>
 			<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
 			<cfset countred = countred + 1> 
-		<cfelseif (Evaluate(get_field) EQ 0) OR (Evaluate(get_field) GT 0 AND check_20_upload.recordcount NEQ 0)>
+		<cfelseif (Evaluate(get_field) EQ 0) OR (Evaluate(get_field) GT 0 AND check_18_upload.recordcount NEQ 0)>
 			<tr><td><font color="0000FF">Complete</font><br></td></tr>
 		</cfif>
 	</cfloop> 
