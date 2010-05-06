@@ -415,6 +415,7 @@
                 CLIENT.hostID = qGetHostInfo.ID;
                 CLIENT.name = FORM.lastName;
                 CLIENT.email = FORM.email;
+				CLIENT.isNewFamily = 1;
             </cfscript>
             
             <!--- send email to Bob --->

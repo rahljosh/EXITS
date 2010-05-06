@@ -11,7 +11,6 @@
 <style type="text/css">
 .mybox { width:741px; height:307px;padding:0px;background-image:url('images/white_background.png'); background-position:center; background-repeat:no-repeat; }
 .MOtext {
-	
 	z-index: 10;
 	height: 245px;
 	width: 260px;
@@ -21,7 +20,6 @@
 	margin-top: 20px;
  	padding: 10px;
 	text-align:left;
-	
 }
 .bigImage {
 	float: right;
@@ -29,11 +27,14 @@
 	margin-top: 20px;
 }
 </style>
+
 <!----Script to Swap div area---->
-<script type="text/javascript" language="JavaScript"><!--
+<script type="text/javascript" language="JavaScript">
+<!--
 function HideDIV(d) { document.getElementById(d).style.display = "none"; }
 function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
-//--></script>
+//-->
+</script>
 
 
 	<script type="text/javascript" src="jquery-1.2.6.min.js"></script> 
