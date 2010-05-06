@@ -374,46 +374,77 @@ ORDER BY businessname
 	<cfloop list="#form.selectInvoice#" index="iInvoiceNumber">
 	
 		<cfset paymBalance = #LSPARSECURRENCY(EVALUATE('form.payInv' & '#iInvoiceNumber#'))#>
-	
-		<cfquery name="qChargeBalance" datasource="MySQL"> 
-		SELECT t.invoiceid, t.chargeid, t.companyid, SUM( t.total ) AS totalPerCharge
+
+		<cfquery name="qTotalPerStudent" datasource="MySQL"> 
+		SELECT t.invoiceid, t.stuid, t.chargeid, t.companyid, SUM( t.total ) AS totalPerStud
 		FROM (
-		SELECT sch.invoiceid, sch.chargeid, sch.companyid, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
+		SELECT sch.invoiceid, sch.stuid, sch.chargeid, sch.companyid, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
 		FROM smg_charges sch
 		WHERE sch.invoiceid = #iInvoiceNumber#
-		GROUP BY sch.chargeid
+		GROUP BY sch.stuid
 		UNION ALL
-		SELECT sch.invoiceid, sch.chargeid, sch.companyid, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
+		SELECT sch.invoiceid, sch.stuid, sch.chargeid, sch.companyid, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
 		FROM smg_payment_charges spc
 		LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
 		WHERE sch.invoiceid = #iInvoiceNumber#
-		GROUP BY sch.chargeid
+		GROUP BY sch.stuid
 		) t
-		GROUP BY t.chargeid HAVING totalPerCharge > 0
-		ORDER BY t.invoiceid DESC    
+		GROUP BY t.stuid
+		ORDER BY t.stuid DESC  
 		</cfquery>
 		
-		<cfloop query="qChargeBalance">
+		<cfloop query="qTotalPerStudent">
+		
+			<cfset duePerStud = #qTotalPerStudent.totalPerStud#>
+		
+			<cfquery name="qChargeBalance" datasource="MySQL"> 
+			SELECT t.invoiceid, t.chargeid, t.companyid, SUM( t.total ) AS totalPerCharge
+			FROM (
+			SELECT sch.invoiceid, sch.chargeid, sch.companyid, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
+			FROM smg_charges sch
+			WHERE sch.invoiceid = #iInvoiceNumber#
+			AND sch.stuid = #qTotalPerStudent.stuid#
+			GROUP BY sch.chargeid
+			UNION ALL
+			SELECT sch.invoiceid, sch.chargeid, sch.companyid, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
+			FROM smg_payment_charges spc
+			LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
+			WHERE sch.invoiceid = #iInvoiceNumber#
+			AND sch.stuid = #qTotalPerStudent.stuid#
+			GROUP BY sch.chargeid
+			) t
+			GROUP BY t.chargeid HAVING totalPerCharge > 0
+			ORDER BY t.total ASC    
+			</cfquery>
 			
-				<cfif qChargeBalance.totalPerCharge LTE variables.paymBalance>
-					<cfset insertAmount = #qChargeBalance.totalPerCharge#>
-				<cfelse>
-					<cfset insertAmount = #variables.paymBalance#>
-				</cfif>
-				
+			<cfloop query="qChargeBalance">
+			
 				<cfif variables.paymBalance GT 0>
-			
+				
+					<cfif qChargeBalance.totalPerCharge LTE variables.duePerStud>
+						<cfset insertAmount = #qChargeBalance.totalPerCharge#>
+					<cfelse>
+						<cfset insertAmount = #variables.duePerStud#>
+					</cfif>
+					
+					<cfif variables.insertAmount GT variables.paymBalance>
+						<cfset insertAmount = #variables.paymBalance#>
+					</cfif>
+					
 					<cfquery name="pay_charges" datasource="MySQL">
 					insert into smg_payment_charges (paymentid, chargeid, amountapplied)
 									values(#paymentid.payid#, #qChargeBalance.chargeid#, #variables.insertAmount#)
 					</cfquery>
 					
-					<cfset paymBalance = #variables.paymBalance# - #qChargeBalance.totalPerCharge#>
+					<cfset duePerStud = #variables.duePerStud# - #variables.insertAmount#>
+					<cfset paymBalance = #variables.paymBalance# - #variables.insertAmount#>
 				
 				</cfif>
-			
-		</cfloop>
+				
+			</cfloop>
 		
+		</cfloop>
+			
 	</cfloop>
 	
 	<cfoutput>
