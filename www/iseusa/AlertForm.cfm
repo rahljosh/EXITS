@@ -132,7 +132,7 @@ body {
           <h1 class="enter">
           <table align="center">
           	<tr>
-            	<td><img src="images/shucks.jpg" width="70" height="71" /></td>
+            	<td><img src="http://www.iseusa.com/images/shucks.png" width="70" height="71" /></td>
             	<td>Shucks...</td>
             </tr>
           </table></h1>
