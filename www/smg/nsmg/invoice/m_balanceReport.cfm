@@ -1,13 +1,14 @@
-<!--- CHECK INVOICE RIGHTS ---->
-<cfinclude template="check_rights.cfm">
-
-<cfsetting requesttimeout="9999">
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Balance Report Per Program, includes Credit Notes</title>
+
+<!--- CHECK INVOICE RIGHTS ---->
+<cfinclude template="check_rights.cfm">
+
+<cfsetting requesttimeout="9999">
 
 <style type="text/css">
 
@@ -94,11 +95,11 @@ ORDER BY
             <option value="0">Charges not related to a program</option>
             <cfoutput query="getPrograms">
                 <cfswitch expression="#companyid#">
-                    <cfcase value="1"><cfset compId = 'WILLIAM'></cfcase>
-                    <cfcase value="2"><cfset compId = 'MARGARITA'></cfcase>
+                    <cfcase value="1"><cfset compId = 'High School'></cfcase>
+<!---                     <cfcase value="2"><cfset compId = 'MARGARITA'></cfcase>
                     <cfcase value="3"><cfset compId = 'DIANA'></cfcase>
                     <cfcase value="4"><cfset compId = 'GARY'></cfcase>
-                    <cfcase value="12"><cfset compId = 'BRIAN'></cfcase>
+                    <cfcase value="12"><cfset compId = 'BRIAN'></cfcase> --->
                     <cfcase value="7"><cfset compId = 'Trainee'></cfcase>
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
@@ -150,7 +151,11 @@ LEFT JOIN smg_users su ON su.userid = sc.agentid
 WHERE sc.active =1
 <cfif form.selectPrograms IS NOT 'All'>
     AND
-		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
+		(sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
+			<cfif ListFind(form.selectPrograms, 0) NEQ 0>
+				OR sch.programID IS NULL
+			</cfif>
+		)
 </cfif>
 GROUP BY sc.agentid
 ) t
@@ -187,7 +192,11 @@ LEFT JOIN smg_users su ON su.userid = sc.agentid
 WHERE sc.active =1
 <cfif form.selectPrograms IS NOT 'All'>
     AND
-		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
+		(sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
+			<cfif ListFind(form.selectPrograms, 0) NEQ 0>
+				OR sch.programID IS NULL
+			</cfif>
+		)
 </cfif>
 GROUP BY sc.agentid
 ) t
@@ -223,7 +232,7 @@ ORDER BY totalPerAgent ASC
                 <cfoutput query="getProgramsSelected">
                 
                 <cfswitch expression="#getProgramsSelected.companyid#">
-                    <cfcase value="1"><cfset compId = 'WILLIAM'></cfcase>
+                    <cfcase value="1"><cfset compId = 'High School'></cfcase>
                     <cfcase value="2"><cfset compId = 'MARGARITA'></cfcase>
                     <cfcase value="3"><cfset compId = 'DIANA'></cfcase>
                     <cfcase value="4"><cfset compId = 'GARY'></cfcase>
@@ -429,7 +438,11 @@ END) AS testCompId
         AND sc.agentid = #VAL(variables.intlAgentId)#
         <cfif form.selectPrograms IS NOT 'All'>
 			AND
-				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
+				(sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
+					<cfif ListFind(form.selectPrograms, 0) NEQ 0>
+						OR sch.programID IS NULL
+					</cfif>
+				)
         </cfif>
         GROUP BY testCompId HAVING testCompId = #indexCompId#
         ) t
@@ -646,7 +659,11 @@ END) AS testCompId
         AND sc.agentid = #VAL(variables.intlAgentId)#
         <cfif form.selectPrograms IS NOT 'All'>
 			AND
-				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
+				(sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
+					<cfif ListFind(form.selectPrograms, 0) NEQ 0>
+						OR sch.programID IS NULL
+					</cfif>
+				)
         </cfif>
         GROUP BY testCompId HAVING testCompId = #indexCompId#
         ) t
