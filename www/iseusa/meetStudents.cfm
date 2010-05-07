@@ -1,6 +1,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Param URL Variables --->
+    <cfparam name="URL.adw" default="0">
+
     <!--- Param FORM Variables --->
     <cfparam name="FORM.type" default="">
 	<!--- New Account --->
@@ -26,6 +29,11 @@
 		pageMsg.Errors = ArrayNew(1);
 		// Create Array to store page messages
 		pageMsg.Messages = ArrayNew(1);
+		
+		// Check if they are coming from our Google AdWords Campaign
+		if ( VAL(URL.adw) ) {
+			CLIENT.isAdWords = 1;	
+		}
 		
 		// Set which form needs to be displayed
 		if (FORM.type EQ "forgotPassword" ) {
@@ -346,6 +354,7 @@
                         hearAboutUs,
                         hearAboutUsDetail,
                         isListSubscriber,
+                        isAdWords,
                         dateCreated
                     )
                     VALUES                                
@@ -363,6 +372,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hearAboutUs#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hearAboutUsDetail#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isListSubscriber#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.isAdWords#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )		
                 </cfquery>
@@ -415,7 +425,6 @@
                 CLIENT.hostID = qGetHostInfo.ID;
                 CLIENT.name = FORM.lastName;
                 CLIENT.email = FORM.email;
-				CLIENT.isNewFamily = 1;
             </cfscript>
             
             <!--- send email to Bob --->
@@ -425,6 +434,10 @@
                 <cfif qCheckAccount.recordcount>
                     <strong>THIS IS A RETURNING HOST FAMILY</strong> <br /><br />
                 </cfif>         
+                
+                <cfif CLIENT.isAdWords>
+                    <strong>Google AdWords Campaign</strong> <br /><br />
+                </cfif>     
                      
                 <p>The #FORM.lastname# family from #FORM.city# has submitted their information to view students.</p>
                 
@@ -500,16 +513,16 @@
 		if( selectedOption == 'ISE Representative' ) {
 			$("#labelHearAboutUs").html("ISE representative name <span class='requiredField'>*</span>");
 			$("#spanHearAboutUs").html("If you do not remember, please enter unknown");
-			$("#divExtraField").fadeIn("fast");
+			$("#divExtraField").fadeIn("slow");
 			$("#hearAboutUsDetail").focus();
 		// Other Option			
 		} else if (selectedOption == 'Other') {
 			$("#labelHearAboutUs").html("Please specify <span class='requiredField'>*</span>");
 			$("#spanHearAboutUs").html("");
-			$("#divExtraField").fadeIn("fast");
+			$("#divExtraField").fadeIn("slow");
 			$("#hearAboutUsDetail").focus();
 		} else {
-			$("#divExtraField").fadeOut("fast");	
+			$("#divExtraField").fadeOut("slow");
 		}
 	
 	}
@@ -518,11 +531,11 @@
 	var displayForgotPass = function() { 
 		
 		if ($("#forgotPassForm").css("display") == "none") {
-			$("#loginForm").fadeOut("fast");
-			$("#forgotPassForm").fadeIn("fast");	
+			$("#loginForm").slideToggle(1000);
+			$("#forgotPassForm").slideToggle(1000);	
 		} else {
-			$("#forgotPassForm").fadeOut("fast");
-			$("#loginForm").fadeIn("fast");
+			$("#forgotPassForm").slideToggle(1000);	
+			$("#loginForm").slideToggle(1000);
 		}
 		
 	}

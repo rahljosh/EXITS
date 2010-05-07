@@ -12,7 +12,7 @@
 	<cfparam name="CLIENT.hostID" default="0">
 	<cfparam name="CLIENT.name" default="">
     <cfparam name="CLIENT.email" default="">
-    <cfparam name="CLIENT.isNewFamily" default="0">  
+    <cfparam name="CLIENT.isAdWords" default="0">  
 
 	<cfscript>
 		// Site URL

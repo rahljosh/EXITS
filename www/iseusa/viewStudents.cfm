@@ -121,7 +121,7 @@ a:active {
 </div> <!-- end footer -->
 
 <!--- Google AdWords Conversion Code --->
-<cfif CLIENT.isNewFamily>
+<cfif CLIENT.isAdWords>
     <!-- Google Code for Meet Our Students Conversion Page -->
     <script type="text/javascript">
     <!--
