@@ -192,7 +192,7 @@
         <table width=100% border=0 cellpadding=2 cellspacing=0>
             <tr align="center"><th colspan="8">Current Students</th></tr>
             <tr>
-            	<td><u>Company</u></td>
+            	<td><u>Program Manager</u></td>
             	<td><u>ID</u></td>
                 <td><u>Name</u></td>
                 <td><u>Sex</u></td>
@@ -221,7 +221,7 @@
         <table width=100% border=0 cellpadding=2 cellspacing=0>
             <tr align="center"><th colspan="8">School History</th></tr>
             <tr>
-            	<td><u>Company</u></td>
+            	<td><u>Program Manager</u></td>
             	<td><u>ID</u></td>
                 <td><u>Name</u></td>
                 <td><u>Sex</u></td>
