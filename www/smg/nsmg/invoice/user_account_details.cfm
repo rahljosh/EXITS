@@ -320,12 +320,14 @@ END) AS testCompId --->
 		WHERE companyid != 11
 		</cfquery>
 		
-		<cfform name="changeCompany" method="post" action="#cgi.SCRIPT_NAME#?#cgi.QUERY_STRING#">
-			<input type="hidden" name="submitted" value="1" />
-			Change company:
-			<cfselect name="companyid" query="qCompShort" display="companyshort" value="companyid" selected="#FORM.companyID#" onChange="javaScript:changeCompany.submit();">
-			</cfselect>
-		</cfform>
+		<cfif client.companyid NEQ 10>
+			<cfform name="changeCompany" method="post" action="#cgi.SCRIPT_NAME#?#cgi.QUERY_STRING#">
+				<input type="hidden" name="submitted" value="1" />
+				Change company:
+				<cfselect name="companyid" query="qCompShort" display="companyshort" value="companyid" selected="#FORM.companyID#" onChange="javaScript:changeCompany.submit();">
+				</cfselect>
+			</cfform>
+		</cfif>
 
 									</td>
 									
@@ -866,9 +868,14 @@ ORDER BY date DESC
 	
 <cfoutput query="payments_received">
 	<cfquery name="totals" datasource="MySQL">
-	select agentid, paymenttype, date, paymentref, paymenttype, sum(totalreceived) as payment_total
-	from smg_payment_received
-	where paymentref = '#paymentref#' and agentid = #url.userid#
+	select spr.agentid, spr.paymenttype, spr.date, spr.paymentref, spr.paymenttype, sum(spc.amountapplied) as payment_total, sc.companyid
+	from smg_payment_received spr
+	right join smg_payment_charges spc on spc.paymentid = spr.paymentid
+	right join smg_charges sc on sc.chargeid = spc.chargeid
+	where paymentref = '#paymentref#' and spr.agentid = #url.userid# 
+	<cfif client.companyid EQ 10>
+		and sc.companyid = #client.companyid#
+	</cfif>
 	group by agentid
 	</cfquery>
 
