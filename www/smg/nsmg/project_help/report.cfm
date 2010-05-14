@@ -22,6 +22,7 @@
     <cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.approvedStatus" default="">
 	<cfparam name="FORM.minimumHours" default="">
+    <cfparam name="FORM.maxHours" default="">
 	<cfparam name="FORM.isActive" default="1">
     <cfparam name="FORM.printExcel" default="0">
 
@@ -183,24 +184,47 @@
                                     </select>            
                                 </td>
                             </tr>
-							
+							<tr>
+                            	<td>
+                                    <label for="minimumHours">Student W/O Hours </label>
+                                </td>
+                                <td>                
+                                    <input type="checkbox" name="no_hours" />         
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     <label for="minimumHours">Minimum Hours </label>
                                 </td>
                                 <td>                
                                     <select name="minimumHours" id="minimumHours">
-                                        <option value="" <cfif NOT LEN(FORM.minimumHours)>selected</cfif>> All </option>
+                                       <!----
                                         <option value="20"> 20 </option>
-                                        <!---
-                                        <cfloop from="1" to="10" index="i">
+                                        ---->
+                                        <cfloop from="1" to="20" index="i">
                                         	<option value="#i#" <cfif FORM.minimumHours EQ i>selected</cfif> > #i# </option>
                                         </cfloop>
-										--->
+										
                                     </select>            
                                 </td>
                             </tr>
-    
+                             <tr>
+                                <td>
+                                    <label for="maxHours">Maximum Hours </label>
+                                </td>
+                                <td>                
+                                    <select name="maxHours" id="maxHours">
+                                       
+                                        <!----
+                                        <option value="20"> 20 </option>
+                                        ---->
+                                        <cfloop from="1" to="20" index="i">
+                                        	<option value="#i#" <cfif FORM.maxHours EQ i>selected</cfif> > #i# </option>
+                                        </cfloop>
+										 <option value="9999" <cfif NOT LEN(FORM.maxHours)>selected</cfif>> All </option>
+                                    </select>            
+                                </td>
+                            </tr>   
                             <tr>
                                 <td>
                                     <label for="isActive">Student Status </label>
@@ -282,7 +306,7 @@
                         <tr bgcolor="#IIF(qGetStudents.currentRow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
                             <td style="padding-left:60px;">#firstname# #familylastname# (###studentID#)</td>
                             <td>#programName#</td>
-                            <td>#hours#</td>
+                            <td><cfif not isDefined('hours')>0<cfelse>#hours#</cfif></td>
                         </tr>
                     </cfoutput> <!--- Students --->
  					

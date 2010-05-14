@@ -59,7 +59,7 @@
                             </cfif>
 
 							<!--- Filter for WEP Site --->
-                            <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyID)>
+                            <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyID)>
                                 AND 
                                     companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
                             </cfif>			

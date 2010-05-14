@@ -58,7 +58,12 @@ function OpenRefund(url)
 <cfquery name="get_companyname" datasource="MySql">
 	SELECT companyid, companyname
 	FROM smg_companies
-	WHERE companyid = '5'
+	WHERE companyid = 
+    <cfif client.companyid lte 5>
+    '5'
+    <cfelse>
+    #client.companyid#
+   </cfif>
 </cfquery>
 
 <cfoutput>
@@ -68,7 +73,7 @@ function OpenRefund(url)
 		<tr valign=middle height=24>
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 			<td width=26 background="pics/header_background.gif"><img src="pics/$.gif"></td>
-			<td background="pics/header_background.gif"><h2>SMG Detailed Statement</h2></td>
+			<td background="pics/header_background.gif"><h2>Detailed Statement</h2></td>
 			<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 		</tr>
 	</table>
@@ -78,7 +83,7 @@ function OpenRefund(url)
 			<td width="100%" valign="top" align="center">
 				<cfform action="invoice/reports/statement_detailed.cfm" method="POST" target="blank">
 					<Table class="nav_bar" cellpadding=6 cellspacing="0" width="60%" align="center">
-						<tr><th colspan="2" bgcolor="##e2efc7">SMG Detailed Statement</th></tr>
+						<tr><th colspan="2" bgcolor="##e2efc7">Detailed Statement</th></tr>
 						<tr align="left">
 							<td>Intl. Rep:</td>
 							<td><select name="userid" size="1">
@@ -118,7 +123,6 @@ function OpenRefund(url)
 
 	<!--- RUNNING BALANCE --->
 	<cfquery name="get_statement" datasource="MySql">
-
 		SELECT 
 			'invoice', 
 			'paymenttype', 
