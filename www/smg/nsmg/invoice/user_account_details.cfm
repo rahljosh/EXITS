@@ -55,7 +55,9 @@
 </cfif>
 
 
-<cfif FORM.companyID is 5><Cfoutput><div align="center"><a href="?curdoc=invoice/user_account_details&userid=#url.userid#">Show only SMG</a> :: <a href="?curdoc=invoice/user_account_details&userid=#url.userid#&invall">Include all company numbers</a></div></Cfoutput></cfif>
+<Cfoutput>
+	<div align="center"><a href="?curdoc=invoice/user_account_details&userid=#url.userid#">Show only this Company</a> :: <a href="?curdoc=invoice/user_account_details&userid=#url.userid#&invall">Include all company numbers</a></div>
+</Cfoutput>
 
 <Cfquery name="agent_details" datasource="MySQL">
 	select businessname, firstname, lastname, city, smg_countrylist.countryname
