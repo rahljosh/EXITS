@@ -205,7 +205,7 @@
                         <a href="index.cfm?curdoc=invoice/invoice_index&Requesttimeout=300">Invoicing</a>
                         <ul>
                             <!--- <li><a href="index.cfm?curdoc=invoice/reports/statement">Account Statement</a></li> --->
-                            <li><a href="index.cfm?curdoc=invoice/reports/statement_detailed" target="_blank">SMG Detailed Statement</a></li>
+                            <li><a href="index.cfm?curdoc=invoice/reports/statement_detailed" target="_blank">Detailed Statement</a></li>
                             <li><a href="index.cfm?curdoc=invoice/reports/check_fees_menu" target="_blank">Check Fees Per Intl. Rep</a></li>
                             <!--- <li><a href="index.cfm?curdoc=invoice/int_rep_rates">Intl. Rep. Rates</a></li> --->
                             <li><a href="index.cfm?curdoc=invoice/m_hs_invoiceBatch" target="_blank">HS Invoice Batch</a></li>
