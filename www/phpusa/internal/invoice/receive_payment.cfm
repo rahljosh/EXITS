@@ -111,6 +111,7 @@ function CalculateTotal() {
 							AND egom_invoice.intrepid = '#intrep#'
 							AND egom_charges.canceled = '0'
 						GROUP BY invoiceid
+						ORDER BY invoiceid DESC
 					</cfquery>
 					<!----Charges by Student---->
 					<cfquery name="open_students" datasource="mysql">
@@ -123,6 +124,7 @@ function CalculateTotal() {
 							AND e.full_paid = '0'
 							AND e.canceled = '0'
 						GROUP BY s.firstName
+						ORDER BY e.studentid DESC
 					</cfquery>
 					<tr><td colspan=4>Select by invoice or student, keep in mind that a student may have charges on multiple invoices.</td></tr>
 					<tr>
