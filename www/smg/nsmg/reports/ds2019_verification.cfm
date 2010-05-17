@@ -4,21 +4,47 @@
 <cfinclude template="../querys/get_company_short.cfm">
 
 <cfquery name="get_student" datasource="MySQL">
-	SELECT	 studentid, familylastname, firstname, middlename, sex, dob, citybirth, intrep,
-	birth.countryname as countrybirth,
-	resident.countryname as countryresident,
-	citizen.countryname as countrycitizen
-	FROM 	smg_students
-	LEFT JOIN smg_countrylist birth ON smg_students.countrybirth = birth.countryid
-	LEFT JOIN smg_countrylist resident ON smg_students.countryresident = resident.countryid
-	LEFT JOIN smg_countrylist citizen ON smg_students.countrycitizen = citizen.countryid
-	WHERE verification_received is null
-		AND companyid = #client.companyid# 
-		AND active = '1' 
-		AND programid = #form.programid# 
-		AND intrep = #form.intrep#
-		AND onhold_approved <= '4'
-	ORDER BY familylastname
+	SELECT	 
+    	studentid, 
+        familylastname, 
+        firstname, 
+        middlename, 
+        sex, 
+        dob, 
+        citybirth, 
+        intrep,
+        birth.countryname as countrybirth,
+        resident.countryname as countryresident,
+        citizen.countryname as countrycitizen
+	FROM 	
+    	smg_students
+	LEFT JOIN 
+    	smg_countrylist birth ON smg_students.countrybirth = birth.countryid
+	LEFT JOIN 
+    	smg_countrylist resident ON smg_students.countryresident = resident.countryid
+	LEFT JOIN 
+    	smg_countrylist citizen ON smg_students.countrycitizen = citizen.countryid
+	WHERE 
+    	verification_received IS NULL
+		
+	<cfif CLIENT.companyID EQ 5>
+        AND 
+            companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    <cfelse>
+        AND 
+            companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+    </cfif>
+        
+    AND 
+    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    AND 
+    	programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#"> 
+    AND 
+    	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
+    AND 
+    	onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+	ORDER BY 
+    	familylastname
 </cfquery>
 
 <!-----Intl. Agent----->
@@ -102,7 +128,7 @@
 	<tr>
 		<table>
 			<tr><td valign="top"><div align="justify">
-			Please review the report and make any necessary corrections. After you have made the corrections, sign the form and fax it back to me at #companyshort.fax#.
+			Please review the report and make any necessary corrections. After you have made the corrections, sign the form, scan and email it back to me at <a href="bhause@iseusa.com">bhause@iseusa.com</a>.
 			Once I receive the signed from, I will print the DS-2019 form for your student(s) and send them to you.
 			</div></td>
 			<td align="right">
