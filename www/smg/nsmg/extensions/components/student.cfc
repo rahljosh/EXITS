@@ -1048,16 +1048,16 @@
                         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.programID#" list="yes"> )                    
                 </cfif>
 
-				<cfif LEN(ARGUMENTS.statusKey)>
-                    AND
-                        ph.status_key = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.statusKey#">                    
-                </cfif>
-         		
                 <!--- Get Students with no hours --->
 				<cfif VAL(ARGUMENTS.noHours)>
                     AND  
                         s.studentID NOT IN (SELECT student_id FROM smg_project_help)
                 <cfelse>
+
+					<cfif LEN(ARGUMENTS.statusKey)>
+                        AND
+                            ph.status_key = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.statusKey#">                    
+                    </cfif>
                 
                     GROUP BY 
                         ph.id
