@@ -17,7 +17,6 @@
 	
     <!--- Param Variables --->
 	<cfparam name="FORM.submitted" default="0">
-
     <cfparam name="FORM.regionID" default="#CLIENT.regionID#">
     <cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.approvedStatus" default="">
@@ -26,7 +25,6 @@
     <Cfparam name="FORM.noHours" default="0">
 	<cfparam name="FORM.isActive" default="1">
     <cfparam name="FORM.printExcel" default="0">
-	<cfparam name="FORM.noHours" default="0">
     <cfparam name="URL.regionID" default="0">
 	<cfparam name="URL.isActive" default="">
 
@@ -191,10 +189,10 @@
                             </tr>
 							<tr>
                             	<td>
-                                    <label for="minimumHours">Student W/O Hours </label>
+                                    <label for="noHours">Student W/O Hours </label>
                                 </td>
                                 <td>                
-                                    <input type="checkbox" name="noHours" value=1 />         
+                                    <input type="checkbox" id="noHours" name="noHours" value=1 />         
                                 </td>
                             </tr>
                             <tr>
@@ -203,13 +201,9 @@
                                 </td>
                                 <td>                
                                     <select name="minimumHours" id="minimumHours">
-                                       <!----
-                                        <option value="20"> 20 </option>
-                                        ---->
                                         <cfloop from="1" to="20" index="i">
                                         	<option value="#i#" <cfif FORM.minimumHours EQ i>selected</cfif> > #i# </option>
                                         </cfloop>
-										
                                     </select>            
                                 </td>
                             </tr>
@@ -219,10 +213,6 @@
                                 </td>
                                 <td>                
                                     <select name="maxHours" id="maxHours">
-                                       
-                                        <!----
-                                        <option value="20"> 20 </option>
-                                        ---->
                                         <cfloop from="1" to="20" index="i">
                                         	<option value="#i#" <cfif FORM.maxHours EQ i></cfif> > #i# </option>
                                         </cfloop>
