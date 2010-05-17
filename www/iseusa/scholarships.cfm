@@ -28,25 +28,17 @@
     <p class="header1">Jordan Nagler Memorial Scholarship Fund</p>
     <div class="subPic"><img src="images/scholarship.gif" width="415" height="277" /></div>
     <p class="p1">
-    	The Jordan Nagler Memorial Scholarship Fund was created to honor and commemorate the life and work of Jordan Nagler.  
-        Jordan started to work in June of 2001 for ISE and in September of 2001, he was appointed the Assistant Director of IntoEdventures.  
-        In August of 2002, Jordan became the Executive Director of International Student Exchange, a position he held until his death in October 2008.
-        <br />
-        <br />
-        &nbsp;&nbsp;
-        To commemorate the hard work, effort and results that Jordan achieved in his brief eight years while with SMG, this scholarship was created to allow disadvantaged 
-        students to become part of the Academic Year Program.  The only other criterion that will be used to select the students is that the selected student must be considered 
-        an extremely diligent and hard worker.
-        <br />
-        <br />
-        &nbsp;&nbsp;We feel that this is a scholarship of which Jordan would be most proud.  We all can recall the many nights that Jordan spent in his office until midnight, 
-        trying to help our regional managers, area representatives, students and families.  As well, Jordan was always trying to find ways to help students without financial 
-        resources be part of this exciting and beneficial program.
-        <br />
-        <br />
-        &nbsp;&nbsp;Anyone can contribute to this fund.  The students will be selected on or about February.  As a local representative, you can also volunteer to either place 
-        and/or supervise one of these students and contribute some or all of the stipend to the scholarship fund. 
-        Just let your manager know of your wish to participate.  Managers can also participate in a similar fashion.  All checks can be sent to:
+ISE has announced the recipients of the annual Jordan Nagler Scholarship for the 2010-11 academic year.  The scholarship is in honor of Jordan Nagler who was the Executive Director of International Student Exchange from 2003 until his passing in October of 2008.  The criterion for this scholarship selection is a demonstration of academic excellence and a dedicated work ethic.</p>
+<ul class="p1"><li>
+<strong>Ricardo Fabian Martinez Isias</strong> is 17 years old and lives in Leon, in the central highlands of Mexico. Ricardo was selected based on his demonstrated desire to succeed, even in the face of adversity. Attending English language school is quite expensive, and his family could not afford to send him.  Rather than deterring Ricardo, this only encouraged him to teach himself English through reading and studying which he began doing at the age of 8. He now speaks English very well and will have no language problem in an American high school. He has proven that hard work and dedication pay off by maintaining an A average in all of his studies. In his free time he enjoys participating in gymnastics, basketball, and community service work. Although Ricardo is only 17, he has taken the hardships in his life and turned them into learning experiences. This has transformed him into a gracious and determined young man who appreciates and takes advantage of every opportunity available to him.
+  <br /><br />
+  <li>
+<strong>Andreas Jacob Svensson</strong> is 17 years old and lives in Uppsala, Sweden.  Uppsala is the fourth largest city in Sweden and is 50 miles from Stockholm, the nation’s capital.   Andreas is dedicated to both his studies and his sports.  Floorball has become a passion of his. Since he has become such a skilled player, he has decided to help teach and inspire others. In his spare time, he also trains and instructs younger students in soccer.  He speaks English at an advanced level and does well in his studies despite the challenges and obstacles he has had to overcome throughout the past few years.  While his family has tried to create a balance between work and support, it has become difficult for them financially. Understanding that his parents could not afford such a program as ours, Andreas searched for other means and was successful in connecting with ISE. Andreas is looking forward to not only creating a new experience for him but also plans to inspire his new friends and family.  He’s looking forward to his stay in America as the experience of a lifetime.<br /><br />
+<li>
+<strong>Duc Thien Ly</strong> is from Ben Tre Province in the Mekong Delta of Vietnam and attends Ben Tre Province’s High School for The Gifted where he maintains an A average due to his enormous work ethic.  He has a great self-learning ability and excels in all of his studies.  Whether it be at home or in school, Duc manages to lend a hand wherever it is needed.  He is glad to help with chores around his home and is always looking to help his peers at school. Based on his school classes and his own dedication to learning, Duc tutors English 3 times a week to a ninth grade student.  The money he earns from tutoring goes towards partially supporting his own schooling since his parents' multiple sources of income are still not enough to support the level of education Duc is capable of receiving.  He is 17 years old and enjoys soccer, badminton, music, and reading. Duc is not only a hardworking and respectful student and son but he is also exceptionally grateful for each and every opportunity that he is given.  </li></ul>
+
+<p class="p1">
+The young men chosen for this scholarship all work hard to be excellent students and have a full life.   These traits exemplify the work and life of Jordan Nagler, and ISE is proud to recognize and reward those characteristics through this scholarship.
      </p>
     <table width="386" border="0" align="center">
       <tr>

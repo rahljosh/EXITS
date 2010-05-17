@@ -107,9 +107,13 @@
             AND 
                 (
                     cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
+                   
                 OR 
                     cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 )
+                <cfif client.companyid gt 5>
+                and s.companyid = #client.companyid#                
+                </cfif>
 			ORDER BY 
             	cbcfamid DESC	
 		</cfquery>	

@@ -21,12 +21,12 @@ function areYouSure() {
 </script>
 
 <body>
-
+<!----
 <cfif NOT IsDefined('url.type')>
 	An error has ocurred. Please contact your system administrator.
 	<cfabort>
 </cfif>
-
+---->
 <!--- VIRTUAL FOLDER --->
 <cfquery name="get_company" datasource="MySQL">
     SELECT 
