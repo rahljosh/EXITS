@@ -62,7 +62,13 @@
             s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
          AND  
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
-         <cfif CLIENT.companyID EQ 5>
+         AND 
+         	s.countrybirth != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+         AND 
+         	s.countryresident != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+         AND 
+         	s.countrycitizen != <cfqueryparam cfsqltype="cf_sql_integer" value="232">		 
+		 <cfif CLIENT.companyID EQ 5>
              AND 
                 s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
          <cfelse>
@@ -208,8 +214,8 @@
                             By signing this form you are verifying that:<br>
 							1. Student has been personally interviewed (CSIET4)<br>
 							2. Student has not participated in F-1 or J-1  programs in the past (##14)<br>
-							3. Student was screened for background,  needs, experience and English							  </p>
-							After you have made the corrections, sign the form and  fax it back to me at #companyshort.fax#. Once I receive the corrected report, I can  issue the DS2019 forms for your students.<br>
+							3. Student was screened for background,  needs, experience and English</p>
+							After you have made the corrections, sign the form, scan and email it back to me at <a href="bhause@iseusa.com">bhause@iseusa.com</a>. Once I receive the corrected report, I can issue the DS2019 forms for your students.<br>
                             <strong>In order for the forms to be sent out in our next mailing, I will need the  corrected verification report back  </strong><b> 
                             <cfif LEN(FORM.deadline)>
 	                            by  #DateFormat(FORM.deadline, 'dddd mmmm dd')# at 5:00pm EST.
