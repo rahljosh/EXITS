@@ -962,7 +962,9 @@
         <cfargument name="statusKey" default="" hint="Project Help Status Key is not required">
         <cfargument name="minimumHours" default="" hint="Project Help Minimum number of hours">
 		<cfargument name="maxHours" default="" hint="Project Help Maximum number of hours">
-        
+        <cfargument name="noHours" default="" hint="To get students that havn't done any hours">
+		<cfdump var="#arguments#">
+      
         <cfquery 
 			name="qGetProjectHelpReport" 
 			datasource="#APPLICATION.dsn#">
@@ -999,7 +1001,7 @@
 	                AND 
                     	s.regionassigned = uar.regionID
 	                )
-               <cfif not isDefined('form.no_hours')>
+               <cfif ARGUMENTS.noHours eq 0 >
               	INNER JOIN
                 	smg_project_help ph ON ph.student_id = s.studentID                                    
           		INNER JOIN
@@ -1009,7 +1011,7 @@
 				</cfif>
                 
                 WHERE
-                    1 = 1
+                    1 = 1 
 
                 <!--- regional advisor sees only their reps or their students. --->
                 <cfif ARGUMENTS.userType EQ 6>
@@ -1039,21 +1041,22 @@
                     AND
                         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.programID#" list="yes"> )                    
                 </cfif>
-              <cfif not isDefined('form.no_hours')>
+             <cfif ARGUMENTS.noHours eq 0 >
+
               
                 <cfif LEN(ARGUMENTS.statusKey)>
                     AND
                         ph.status_key = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.statusKey#">                    
                 </cfif>
                 
-                GROUP BY
+                GROUP BY *
                 	ph.id
                 
                 <!--- Minimum Hours --->
                 
                     HAVING 
-                         sum(pha.hours) BETWEEN  <cfqueryparam cfsqltype="cf_sql_integer" value="#form.minimumHours#">
-                         AND <cfqueryparam cfsqltype="cf_sql_integer" value="#form.maxHours#">				                                         
+                         sum(pha.hours) BETWEEN  <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.minimumHours#">
+                         AND <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxHours#">				                                         
                </cfif>
                     
 				<!--- include the advisorID and arearepID because we're grouping by those in the output, just in case two have the same first and last name. --->

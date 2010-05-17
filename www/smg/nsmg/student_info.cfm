@@ -322,7 +322,10 @@
 							<tr><td width="135">
 								<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#qStudentInfo.studentID#.*">
 								<cfif file.recordcount>
-									<img src="uploadedfiles/web-students/#file.name#" width="135"><br>
+									<cfimage source="#AppPath.onlineApp.picture#/#file.name#" name="myImage">
+									<!----<cfset ImageScaleToFit(myimage, 250, 135)>
+                                    <cfimage source="images/editPencil_tl.png" name="topImage">---->
+                                    <cfimage source="#myImage#" action="writeToBrowser" border=0><br>
 									<cfif CLIENT.usertype lte 4><A href="qr_delete_picture.cfm?student=#file.name#&studentID=#studentID#">Remove Picture</a></cfif>
 								<cfelse>
 									<img src="pics/no_stupicture.jpg" width="135">
