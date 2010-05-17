@@ -59,7 +59,7 @@
 	AppPath.base = 'C:/websites/student-management/nsmg/';
 	
 	AppPath.companyLogo = AppPath.base & "pics/logos/"; 
-	AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';	
+	AppPath.uploadedFiles = AppPath.base & "uploadedfiles/";	
 	
 	// These are inside uploadedFiles folder
 	AppPath.cbcXML = AppPath.uploadedFiles & "xml_files/gis/";

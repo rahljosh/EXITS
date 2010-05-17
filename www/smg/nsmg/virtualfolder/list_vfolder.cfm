@@ -138,16 +138,21 @@ function PrintFile(url)
 		<cfif ListFind("jpg,peg,gif,tif,bmp", LCase(Right(name, 3)))>
 			<td><a href="javascript:PrintFile('print_file.cfm?studentid=#get_student_info.studentid#&file=#name#');">#name#</a></td>
 		<cfelse>
-			<td align="center"><a href="../uploadedfiles/virtualfolder/#get_student_info.studentid#/#name#" target="_blank">#name#</a></td>
+			<td align="center">
+            #name#</td>
 		</cfif>
 		<td>#Round(newsize)# kb</td>
-		<td>#dateLastModified#</td>
+		<td>#DateFormat(dateLastModified,'mmm d, yyyy')#</td>
 		<td>#get_category.category# <cfif get_category.other_category NEQ ''> &nbsp; - &nbsp; #get_category.other_category#</cfif></td>
 	  
 		<cfif ListFind("jpg,peg,gif,tif,bmp", LCase(Right(name, 3)))>
 			<td><a href="javascript:PrintFile('print_file.cfm?studentid=#get_student_info.studentid#&file=#name#');"><img src="vfolderview.gif" border="0" alt="View File"></img></a></td>
 		<cfelse>
-			<td align="center"><a href="../uploadedfiles/virtualfolder/#get_student_info.studentid#/#name#" target="_blank"><img src="vfolderview.gif" border="0" alt="View File"></img></a></td>
+			<td align="center">
+            <form method="post" action="view_file.cfm">
+            <input type="hidden" name="fPath" value="#AppPath.onlineApp.virtualFolder##get_student_info.studentid#/#name#">
+            <input type="hidden" name="fName" value="#name#">
+            <input type="image" src="vfolderview.gif" border="0" alt="View File"></form></a></td>
 		</cfif>
 	  
 		<cfif client.usertype EQ '8' OR client.usertype LTE '4'>

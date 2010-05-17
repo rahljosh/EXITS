@@ -23,9 +23,10 @@
 	<cfparam name="FORM.approvedStatus" default="">
 	<cfparam name="FORM.minimumHours" default="">
     <cfparam name="FORM.maxHours" default="">
+    <Cfparam name="FORM.noHours" default="0">
 	<cfparam name="FORM.isActive" default="1">
     <cfparam name="FORM.printExcel" default="0">
-
+	<cfparam name="FORM.noHours" default="0">
     <cfparam name="URL.regionID" default="0">
 	<cfparam name="URL.isActive" default="">
 
@@ -65,7 +66,9 @@
 					isActive=FORM.isActive,
 					programID=FORM.programID,
 					statusKey = FORM.approvedStatus,
-					minimumHours = FORM.minimumHours
+					minimumHours = FORM.minimumHours,
+					maxHours = FORM.maxHours,
+					noHours = FORM.noHours
 				);
 			}
 
@@ -99,7 +102,9 @@
 					isActive=FORM.isActive,
 					programID=FORM.programID,
 					statusKey = FORM.approvedStatus,
-					minimumHours = FORM.minimumHours
+					minimumHours = FORM.minimumHours,
+					maxHours = FORM.maxHours,
+					noHours = FORM.noHours
 				);
 			}
 		}
@@ -189,7 +194,7 @@
                                     <label for="minimumHours">Student W/O Hours </label>
                                 </td>
                                 <td>                
-                                    <input type="checkbox" name="no_hours" />         
+                                    <input type="checkbox" name="noHours" value=1 />         
                                 </td>
                             </tr>
                             <tr>
@@ -219,7 +224,7 @@
                                         <option value="20"> 20 </option>
                                         ---->
                                         <cfloop from="1" to="20" index="i">
-                                        	<option value="#i#" <cfif FORM.maxHours EQ i>selected</cfif> > #i# </option>
+                                        	<option value="#i#" <cfif FORM.maxHours EQ i></cfif> > #i# </option>
                                         </cfloop>
 										 <option value="9999" <cfif NOT LEN(FORM.maxHours)>selected</cfif>> All </option>
                                     </select>            
