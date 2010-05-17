@@ -563,7 +563,7 @@
             <td></td>
             <td>
             <strong>Student status:</strong> 
-            <cfif getCurrStudInfo.stud_active EQ 1 OR getCurrStudInfo.stud_active NEQ 'canceled'>
+            <cfif getCurrStudInfo.stud_active EQ 1 AND getCurrStudInfo.stud_active NEQ 'canceled'>
                 Active
                 <cfelse>
                     Canceled on #dateFormat(getCurrStudInfo.canceldate, 'mm/dd/yyyy')# <strong>Reason:</strong> #getCurrStudInfo.cancelreason#
