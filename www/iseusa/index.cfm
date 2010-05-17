@@ -11,6 +11,7 @@
 <style type="text/css">
 .mybox { width:741px; height:307px;padding:0px;background-image:url('images/white_background.png'); background-position:center; background-repeat:no-repeat; }
 .MOtext {
+	
 	z-index: 10;
 	height: 245px;
 	width: 260px;
@@ -20,6 +21,7 @@
 	margin-top: 20px;
  	padding: 10px;
 	text-align:left;
+	
 }
 .bigImage {
 	float: right;
@@ -27,14 +29,11 @@
 	margin-top: 20px;
 }
 </style>
-
 <!----Script to Swap div area---->
-<script type="text/javascript" language="JavaScript">
-<!--
+<script type="text/javascript" language="JavaScript"><!--
 function HideDIV(d) { document.getElementById(d).style.display = "none"; }
 function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
-//-->
-</script>
+//--></script>
 
 
 	<script type="text/javascript" src="jquery-1.2.6.min.js"></script> 
@@ -118,10 +117,14 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 </div>
 <!----End of Area that Mouse Overs will effect---->
 <div id="bottomInfoRight"><a href="hostStudent.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="projectHelp.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
-<table width="200" border="0">
+<table width="210" border="0" style="margin-left:15px;">
   <tr>
-    <th scope="row"><a href="http://www.esecutive.com/index.php"><img src="images/globalSec.gif" width="108" height="28" border="1" /></a></th>
-    <td>&nbsp;</td>
+    <th scope="row" align="left">
+    	<a href="http://www.esecutive.com/index.php" target="_blank"><img src="images/globalSec.gif" title="Global Secutive Insurance" width="108" height="28" border="1" /></a>
+    </th>
+    <th scope="row" align="right">
+    	<a href="pdfs/CSIET-certificate-10-11.pdf" target="_blank"><img src="images/csiet-10-11.gif" title="CSIET 2010-2011 Certificate of Acceptance" border="1" /></a>
+    </th>
   </tr>
 </table>
 <!-- end bottomInfoRight --></div>
