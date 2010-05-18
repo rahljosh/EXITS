@@ -118,14 +118,16 @@
 		<cfset errorMsg = "Please enter a valid SSN.">
 	<cfelseif trim(form.phone) EQ '' and trim(form.work_phone) EQ '' and trim(form.cell_phone) EQ ''>
 		<cfset errorMsg = "Please enter one of the Phone fields.">
-	<cfelseif form.usertype NEQ 8 and trim(form.phone) NEQ '' and not isValid("telephone", trim(form.phone))>
+    <!---    
+	<cfelseif form.usertype NEQ 8 and trim(form.phone) NEQ '' and not isValid("telephone", trim(form.phone))> 
 		<cfset errorMsg = "Please enter a valid Home Phone.">
-	<cfelseif form.usertype NEQ 8 and trim(form.work_phone) NEQ '' and not isValid("telephone", trim(form.work_phone))>
+	<cfelseif form.usertype NEQ 8 and trim(form.work_phone) NEQ '' and not isValid("telephone", trim(form.work_phone))> 
 		<cfset errorMsg = "Please enter a valid Work Phone.">
-	<cfelseif form.usertype NEQ 8 and trim(form.cell_phone) NEQ '' and not isValid("telephone", trim(form.cell_phone))>
+	<cfelseif form.usertype NEQ 8 and trim(form.cell_phone) NEQ '' and not isValid("telephone", trim(form.cell_phone))> 
 		<cfset errorMsg = "Please enter a valid Cell Phone.">
-	<cfelseif form.usertype NEQ 8 and trim(form.fax) NEQ '' and not isValid("telephone", trim(form.faX))>
+	<cfelseif form.usertype NEQ 8 and trim(form.fax) NEQ '' and not isValid("telephone", trim(form.faX)) >
 		<cfset errorMsg = "Please enter a valid Fax.">
+	--->		
 	<cfelseif not isValid("email", trim(form.email))>
 		<cfset errorMsg = "Please enter a valid Email.">
 	<cfelseif trim(form.email2) NEQ '' and not isValid("email", trim(form.email2))>
@@ -553,7 +555,7 @@ function CopyEmail() {
             </tr>
             <tr>
             	<td align="right">Postal Code (Zip):</td>
-                <td><cfinput type="text" name="zip" value="#form.zip#" size="5" maxlength="5"><input type="hidden"  name="prev_zip" value="#form.zip#" /></td>
+                <td><cfinput type="text" name="zip" value="#form.zip#" size="10" maxlength="10"><input type="hidden"  name="prev_zip" value="#form.zip#" /></td>
             </tr>
             <tr>
                 <td align="right">Country: <span class="redtext">*</span></td>
@@ -596,7 +598,7 @@ function CopyEmail() {
                 </tr>
                 <tr>
                     <td align="right">Zip:</td>
-                    <td><cfinput type="text" name="zip" value="#form.zip#" size="5" maxlength="5" readonly="readonly"></td>
+                    <td><cfinput type="text" name="zip" value="#form.zip#" size="10" maxlength="10" readonly="readonly"></td>
                 </tr>
             <cfelse>
                 <tr>
@@ -630,7 +632,7 @@ function CopyEmail() {
                 </tr>
                 <tr>
                     <td align="right">Zip: <span class="redtext">*</span></td>
-                    <td><cfinput type="text" name="zip" value="#form.zip#" size="5" maxlength="5" required="yes" validate="zipcode" message="Please enter a valid Zip."><cfinput type="hidden"  name="prev_zip" value="#form.zip#" /></td>
+                    <td><cfinput type="text" name="zip" value="#form.zip#" size="10" maxlength="10" required="yes" validate="zipcode" message="Please enter a valid Zip."><cfinput type="hidden"  name="prev_zip" value="#form.zip#" /></td>
                 </tr>
 				<!--- address lookup - simple version. --->
                 <cfif application.address_lookup EQ 1>
@@ -697,7 +699,7 @@ function CopyEmail() {
                         <cfif form.usertype EQ 8>
                     		<cfinput type="text" name="phone" value="#form.phone#" size="20" maxlength="25">
                     	<cfelse>
-							<cfinput type="text" name="phone" value="#form.phone#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Home Phone.">
+							<cfinput type="text" name="phone" value="#form.phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
 							<cfoutput>#form.phone#</cfoutput>
                         </cfif>
                         &nbsp; Ext. <cfinput type="text" name="phone_ext" value="#form.phone_ext#" size="5" maxlength="11">
@@ -710,7 +712,7 @@ function CopyEmail() {
                         <cfif form.usertype EQ 8>
                             <cfinput type="text" name="work_phone" value="#form.work_phone#" size="20" maxlength="25">
                     	<cfelse>
-							<cfinput type="text" name="work_phone" value="#form.work_phone#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Work Phone.">
+							<cfinput type="text" name="work_phone" value="#form.work_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Work Phone." --->
 							<cfoutput>#form.work_phone#</cfoutput>
                         </cfif>
                     	&nbsp; Ext. <cfinput type="text" name="work_ext" value="#form.work_ext#" size="5" maxlength="11">
@@ -723,7 +725,7 @@ function CopyEmail() {
                         <cfif form.usertype EQ 8>
                             <cfinput type="text" name="cell_phone" value="#form.cell_phone#" size="20" maxlength="25">
                     	<cfelse>
-							<cfinput type="text" name="cell_phone" value="#form.cell_phone#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Cell Phone.">
+							<cfinput type="text" name="cell_phone" value="#form.cell_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Cell Phone." --->
 							<cfoutput>#form.cell_phone#</cfoutput>
                         </cfif>
                     </td>
@@ -735,7 +737,7 @@ function CopyEmail() {
                         <cfif form.usertype EQ 8>
                             <cfinput type="text" name="fax" value="#form.fax#" size="20" maxlength="20">
                     	<cfelse>
-							<cfinput type="text" name="fax" value="#form.fax#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Fax.">
+							<cfinput type="text" name="fax" value="#form.fax#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Fax." ---> 
 							<cfoutput>#form.fax#</cfoutput>
                         </cfif>
                     </td>
