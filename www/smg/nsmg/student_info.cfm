@@ -323,8 +323,7 @@
 								<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#qStudentInfo.studentID#.*">
 								<cfif file.recordcount>
                                     <cfimage source="#AppPath.onlineApp.picture#/#file.name#" name="myImage">
-									<!----<cfset ImageScaleToFit(myimage, 250, 135)>
-                                    <cfimage source="images/editPencil_tl.png" name="topImage">---->
+									<!---- <cfset ImageScaleToFit(myimage, 250, 135)> ---->
                                     <cfimage source="#myImage#" action="writeToBrowser" border="0" width="135px"><br>
 									<cfif CLIENT.usertype lte 4><A href="qr_delete_picture.cfm?student=#file.name#&studentID=#studentID#">Remove Picture</a></cfif>
 								<cfelse>
