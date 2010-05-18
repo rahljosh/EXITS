@@ -1153,128 +1153,132 @@
     
     <br>
     
-    <!--- SIZING TABLE --->
-    <Table width="100%" border="0">	
-        <tr>
-            <td width="50%" valign="top">
-                
-				<!---- WebEx Training Information ---->
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
-                    <tr valign="middle" height="24">
-                        <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
-                        <td width="26" background="pics/header_background.gif"><img src="pics/notes.gif"></td>
-                        <td background="pics/header_background.gif"><h2>WebEX Training</h2></td>
-                        <cfif VAL(CLIENT.USERTYPE) LTE 4>
-	                        <td background="pics/header_background.gif" width="80"><a href="javascript:displayWebExForm();">Add Record</a></td>
-                        </cfif>
-                        <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
-                    </tr>
-                </table>
-                <table width="100%" cellpadding="4" cellspacing="0" border="0" class="section">
-                    <tr>
-                        <td colspan="3" style="line-height:20px;" valign="top">
-                            <div id="webExForm" <cfif NOT LEN(FORM.errors)> style="display:none;" </cfif> >
-                                <form name="webEx" action="#cgi.SCRIPT_NAME#?#cgi.QUERY_STRING#" method="post">
-                                    <input type="hidden" name="submitted" value="1" />
-                                    
-                                    <cfif LEN(FORM.errors)>
-                                        Please review the following: <br />
-                                        <div style="color:##F00">
-                                            #FORM.errors#
-                                        </div>
-									</cfif>
-                                                                        
-                                    <table width="100%">
-                                    	<tr>
-                                        	<td>
-                                            	<label for="webEx_dateTrained">Date Trained:</label>
-                                             </td>
-                                             <td>
-                                             	<input type="text" name="webEx_dateTrained" value="#DateFormat(FORM.webEx_dateTrained, 'mm/dd/yyyy')#" id="webEx_dateTrained" class="date-pick" maxlength="10" />  (mm/dd/yyyy)
-                                             </td>
-                                        </tr>
-                                    	<tr>
-                                        	<td valign="top">
-                                            	<label for="webEx_notes">Training:</label>
-                                             </td>
-                                             <td>
-                                                <select name="webEx_notes">
-                                                	<option value=""></option>
-                                                    <option value="Database Navigation">Database Navigation</option>
-                                                    <option value="Host Family Orientations">Host Family Orientations</option>
-                                                    <option value="Host Family Recruitment">Host Family Recruitment</option>
-                                                    <option value="New Area Reps">New Area Reps</option>
-                                                    <option value="Positive Supervisions">Positive Supervisions</option>
-                                                    <option value="Student Issues and Resolutions">Student Issues and Resolutions</option>
-                                                    <option value="Student Orientations">Student Orientations</option>
-												</select>
-                                             </td>
-                                        </tr>
-                                    	<tr>
-                                        	<td>&nbsp;
-                                            	                                            	
-                                             </td>
-                                             <td>
-                                             	<input name="Submit" type="image" src="pics/submit.gif" border=0 alt="submit">
-                                             </td>
-                                        </tr>
-                                	</table>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <strong>Date Trained</strong>
-                        </td>
-                        <td>
-                            <strong>Training</strong>
-                        </td>
-                        <td>
-                            <strong>Added By</strong>
-                        </td>       
-                        <td>
-                            <strong>Date Recorded</strong>
-                        </td>                            
-                    </tr>                        
-                    <cfloop query="qGetTraining">
+    <cfif CLIENT.companyID NEQ 10>
+    
+		<!--- SIZING TABLE --->
+        <Table width="100%" border="0">	
+            <tr>
+                <td width="50%" valign="top">
+                    
+                    <!---- WebEx Training Information ---->
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
+                        <tr valign="middle" height="24">
+                            <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
+                            <td width="26" background="pics/header_background.gif"><img src="pics/notes.gif"></td>
+                            <td background="pics/header_background.gif"><h2>WebEX Training</h2></td>
+                            <cfif VAL(CLIENT.USERTYPE) LTE 4>
+                                <td background="pics/header_background.gif" width="80"><a href="javascript:displayWebExForm();">Add Record</a></td>
+                            </cfif>
+                            <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
+                        </tr>
+                    </table>
+                    <table width="100%" cellpadding="4" cellspacing="0" border="0" class="section">
+                        <tr>
+                            <td colspan="3" style="line-height:20px;" valign="top">
+                                <div id="webExForm" <cfif NOT LEN(FORM.errors)> style="display:none;" </cfif> >
+                                    <form name="webEx" action="#cgi.SCRIPT_NAME#?#cgi.QUERY_STRING#" method="post">
+                                        <input type="hidden" name="submitted" value="1" />
+                                        
+                                        <cfif LEN(FORM.errors)>
+                                            Please review the following: <br />
+                                            <div style="color:##F00">
+                                                #FORM.errors#
+                                            </div>
+                                        </cfif>
+                                                                            
+                                        <table width="100%">
+                                            <tr>
+                                                <td>
+                                                    <label for="webEx_dateTrained">Date Trained:</label>
+                                                 </td>
+                                                 <td>
+                                                    <input type="text" name="webEx_dateTrained" value="#DateFormat(FORM.webEx_dateTrained, 'mm/dd/yyyy')#" id="webEx_dateTrained" class="date-pick" maxlength="10" />  (mm/dd/yyyy)
+                                                 </td>
+                                            </tr>
+                                            <tr>
+                                                <td valign="top">
+                                                    <label for="webEx_notes">Training:</label>
+                                                 </td>
+                                                 <td>
+                                                    <select name="webEx_notes">
+                                                        <option value=""></option>
+                                                        <option value="Database Navigation">Database Navigation</option>
+                                                        <option value="Host Family Orientations">Host Family Orientations</option>
+                                                        <option value="Host Family Recruitment">Host Family Recruitment</option>
+                                                        <option value="New Area Reps">New Area Reps</option>
+                                                        <option value="Positive Supervisions">Positive Supervisions</option>
+                                                        <option value="Student Issues and Resolutions">Student Issues and Resolutions</option>
+                                                        <option value="Student Orientations">Student Orientations</option>
+                                                    </select>
+                                                 </td>
+                                            </tr>
+                                            <tr>
+                                                <td>&nbsp;
+                                                                                                    
+                                                 </td>
+                                                 <td>
+                                                    <input name="Submit" type="image" src="pics/submit.gif" border=0 alt="submit">
+                                                 </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                         <tr>
                             <td>
-                                #DateFormat(qGetTraining.date_trained, 'mm/dd/yyyy')#
+                                <strong>Date Trained</strong>
                             </td>
                             <td>
-                                #qGetTraining.notes#
+                                <strong>Training</strong>
                             </td>
                             <td>
-                                #APPCFC.USER.getUserByID(userID=qGetTraining.office_user_id).firstName# #APPCFC.USER.getUserByID(userID=qGetTraining.office_user_id).lastName#
-                            </td>  
+                                <strong>Added By</strong>
+                            </td>       
                             <td>
-                                #DateFormat(qGetTraining.date_created, 'mm/dd/yyyy')#
-                            </td>
+                                <strong>Date Recorded</strong>
+                            </td>                            
                         </tr>                        
-                    </cfloop> 
-                    <cfif NOT VAL(qGetTraining.recordCount)>
-                        <tr>
-                            <td colspan="3">
-                                No training records.
-                            </td>
-                        </tr>                               
-                    </cfif>                      
-                </table>
-                <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                    <tr valign="bottom">
-                        <td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
-                        <td width="100%" background="pics/header_background_footer.gif"></td>
-                        <td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
-                    </tr>
-                </table>
-            
-            </td>
-            <td width="50%" valign="top">&nbsp;
-            	<!--- Free ---->    
-            </td>
-        </tr>
-    </Table>        
+                        <cfloop query="qGetTraining">
+                            <tr>
+                                <td>
+                                    #DateFormat(qGetTraining.date_trained, 'mm/dd/yyyy')#
+                                </td>
+                                <td>
+                                    #qGetTraining.notes#
+                                </td>
+                                <td>
+                                    #APPCFC.USER.getUserByID(userID=qGetTraining.office_user_id).firstName# #APPCFC.USER.getUserByID(userID=qGetTraining.office_user_id).lastName#
+                                </td>  
+                                <td>
+                                    #DateFormat(qGetTraining.date_created, 'mm/dd/yyyy')#
+                                </td>
+                            </tr>                        
+                        </cfloop> 
+                        <cfif NOT VAL(qGetTraining.recordCount)>
+                            <tr>
+                                <td colspan="3">
+                                    No training records.
+                                </td>
+                            </tr>                               
+                        </cfif>                      
+                    </table>
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr valign="bottom">
+                            <td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
+                            <td width="100%" background="pics/header_background_footer.gif"></td>
+                            <td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
+                        </tr>
+                    </table>
+                
+                </td>
+                <td width="50%" valign="top">&nbsp;
+                    <!--- Free ---->    
+                </td>
+            </tr>
+        </Table>        
+	
+    </cfif>
 
 </cfif>
 
