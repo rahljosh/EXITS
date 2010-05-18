@@ -69,7 +69,9 @@
 		// Get Facilitator for this Region
 		qGetFacilitator = APPCFC.USER.getUserByID(userID=VAL(qGetRegionAssigned.regionfacilitator));
 	</cfscript>
-   
+	
+    <!--- Student Picture --->
+	<cfdirectory directory="#AppPath.onlineApp.picture#" name="studentPicture" filter="#qStudentInfo.studentID#.*">
 
     <!----International Rep---->
     <cfquery name="qIntAgent" datasource="#application.dsn#">
@@ -319,17 +321,38 @@
 				<tr>
 					<td width="135" valign="top">
 						<table width="100%" cellpadding="2">
-							<tr><td width="135">
-								<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#qStudentInfo.studentID#.*">
-								<cfif file.recordcount>
-                                    <cfimage source="#AppPath.onlineApp.picture#/#file.name#" name="myImage">
-									<!---- <cfset ImageScaleToFit(myimage, 250, 135)> ---->
-                                    <cfimage source="#myImage#" action="writeToBrowser" border="0" width="135px"><br>
-									<cfif CLIENT.usertype lte 4><A href="qr_delete_picture.cfm?student=#file.name#&studentID=#studentID#">Remove Picture</a></cfif>
-								<cfelse>
-									<img src="pics/no_stupicture.jpg" width="135">
-								</cfif>
-							</td></tr>
+							<tr>
+                            	<td width="135">
+                                    <!--- Use a cftry instead of cfif. Using cfif when image is not available CF throws an error. --->
+                                    <cftry>
+                                    
+										<cfscript>
+											// CF throws errors if can't read head of the file "ColdFusion was unable to create an image from the specified source file". 
+											// Possible cause is a gif file renamed as jpg. Student #17567 per instance.
+										
+                                            // this file is really a gif, not a jpeg
+                                            pathToImage = AppPath.onlineApp.picture & studentPicture.name;
+                                            imageFile = createObject("java", "java.io.File").init(pathToImage);
+											
+                                            // read the image into a BufferedImage
+                                            ImageIO = createObject("java", "javax.imageio.ImageIO");
+                                            bi = ImageIO.read(imageFile);
+                                            img = ImageNew(bi);
+                                        </cfscript>              
+                                        
+                                        <cfimage source="#img#" name="myImage">
+                                        <!---- <cfset ImageScaleToFit(myimage, 250, 135)> ---->
+                                        <cfimage source="#myImage#" action="writeToBrowser" border="0" width="135px"><br>
+                                       
+                                        <cfif CLIENT.usertype lte 4><A href="qr_delete_picture.cfm?student=#studentPicture.name#&studentID=#studentID#">Remove Picture</a></cfif>
+                                        
+                                        <cfcatch type="any">
+                                            <img src="pics/no_stupicture.jpg" width="135">
+                                        </cfcatch>
+                                        
+                                    </cftry>
+								</td>
+                            </tr>
 						</table>
 					</td>
 					<td width="450" valign="top">
