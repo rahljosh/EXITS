@@ -92,10 +92,13 @@ window.location.href = URL;
 		<td><a href="?curdoc=reports/users_in_system">Users Privilege Report</a></td>
 	</tr>
     
+    <cfif CLIENT.companyID NEQ 10>
 	<tr>
 		<td>&nbsp;</td>
 		<td><a href="?curdoc=reports/webex_reports">WebEx Reports</a></td>
 	</tr>
+    </cfif>
+    
 </cfif>
 
 <!--- Compliance Reports --->
@@ -172,7 +175,9 @@ window.location.href = URL;
 	</tr>
 	<tr>
 		<td><a href="?curdoc=cbc/managers_menu">CBC Form Authorization Not Received</a></td>
-		<td><a href="?curdoc=reports/webex_reports">WebEx Reports</a></td>
+		<cfif CLIENT.companyID NEQ 10>
+	        <td><a href="?curdoc=reports/webex_reports">WebEx Reports</a></td>
+        </cfif>
 	</tr>	
 </cfif>
 
