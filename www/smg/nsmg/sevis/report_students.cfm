@@ -29,6 +29,7 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
         s.sevis_bulkid, 
         s.insurance, 
         s.sevis_fee_paid_date,
+        s.verification_received,
 		u.userid, 
         u.businessname, 
         u.email, 
@@ -110,21 +111,23 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
 	</table>
 	<table width='97%' frame="below" cellpadding=4 cellspacing="0" align="center">
 		<tr><td width="6%" align="center"><b>ID</b></th>
-			<td width="22%"><b>Student</b></td>
-			<td width="10%" align="center"><b>Sex</b></td>
-			<td width="12%"><b>Country</b></td>
-			<td width="10%" align="center"><b>SEVIS Batch ID</b></td>
-			<td width="10%" ><b>SEVIS Batch Date</b></td>
-			<td width="10%" align="center"><b>SEVIS Fee ID</b></td>
-			<td width="10%"><b>SEVIS Fee Date</b></td>
-			<td width="10%"><b>Insurance Date:</b></td></tr>
+			<td><b>Student</b></td>
+			<td align="center"><b>Sex</b></td>
+			<td><b>Country</b></td>
+            <td><b>Verification Received</b></td>
+			<td align="center"><b>SEVIS Batch ID</b></td>
+			<td><b>SEVIS Batch Date</b></td>
+			<td align="center"><b>SEVIS Fee ID</b></td>
+			<td><b>SEVIS Fee Date</b></td>
+			<td><b>Insurance Date:</b></td></tr>
 	 <cfoutput>					
 		<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 			<td align="center">###studentid#</td>
 			<td>#firstname# #familylastname#</td>
 			<td align="center">#sex#</td>
 			<td>#countryname#</td>
-			<td align="center"><cfif sevis_batchid is '0'><font color="FF0000">not issued</font><cfelse>###sevis_batchid#</cfif></td>
+			<td>#DateFormat(verification_received, 'mm/dd/yyyy')#</td>
+            <td align="center"><cfif sevis_batchid is '0'><font color="FF0000">not issued</font><cfelse>###sevis_batchid#</cfif></td>
 			<td><cfif sevisdate is ''><font color="FF0000">not issued</font><cfelse>#DateFormat(sevisdate, 'mm/dd/yyyy')#</cfif></td>
 			<td align="center">
 				<cfif accepts_sevis_fee is '0'>none
