@@ -21,6 +21,9 @@
 	<cfscript>
         // Get Programs
         qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
+		
+		// Get Users
+		qGetIntlRep = APPCFC.USER.getUsers(userType=8);
     </cfscript>
 
     <cfquery name="get_sevis_history" datasource="MySql">
@@ -52,10 +55,21 @@
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">
 	<tr><th colspan="2" bgcolor="ededed">DS-2019 Create XML Files (Up to 250 students)</th></tr>
 	<tr align="left">
-		<TD width="15%">Program :</td>
-		<TD><select name="programid" multiple  size="5">			
-			<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-			</select></td></tr>
+		<td width="15%">Program :</td>
+		<td>
+        	<select name="programid" multiple  size="5">			
+				<cfloop query="qGetPrograms"><option value="#qGetPrograms.ProgramID#">#qGetPrograms.programname#</option></cfloop>
+			</select>
+        </td>
+	</tr>
+	<tr align="left">
+		<td width="15%">Intl. Representative :</td>
+		<td>
+        	<select name="intRep" multiple  size="5">			
+				<cfloop query="qGetIntlRep"><option value="#qGetIntlRep.userID#">#qGetIntlRep.businessName#</option></cfloop>
+			</select>
+        </td>
+	</tr>
 	<tr><td colspan="2" align="center" bgcolor="ededed"><input type="image" src="pics/view.gif" align="center" border=0 <cfif client.usertype is not '1'>disabled</cfif>></td></tr>
 </table><br>
 </cfform>

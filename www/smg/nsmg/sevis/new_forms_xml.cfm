@@ -1,123 +1,133 @@
-<!-- get company info -->
-<cfquery name="qGetCompany" datasource="MySQL">
-    SELECT 
-        *
-    FROM 
-        smg_companies
-    WHERE 
-        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-</cfquery>
+<!--- Kill Extra Output --->
+<cfsilent>
 
-<cfquery name="qGetStudents" datasource="MySql"> 
-	SELECT 	
-    	s.studentid, 
-        s.ds2019_no, 
-        s.firstname, 
-        s.familylastname, 
-        s.middlename, 
-        s.dob, 
-        s.sex, 
-        s.citybirth, 
-        s.companyID,
-        s.ayporientation, 
-        s.aypenglish, 
-        s.hostid, 
-        s.schoolid, 
-        s.host_fam_approved, 
-        birth.seviscode as birthseviscode,
-        resident.seviscode as residentseviscode,
-        citizen.seviscode as citizenseviscode,
-        h.familylastname as hostlastname, 
-        h.fatherlastname, 
-        h.motherlastname, 
-        h.address as hostaddress, 
-        h.address2 as hostaddress2, 
-        h.city as hostcity, 
-        h.state as hoststate, 
-        h.zip as hostzip,
-        sc.schoolname, 
-        sc.address as schooladdress, 
-        sc.address2 as schooladdress2, 
-        sc.city as schoolcity,
-        sc.state as schoolstate, 
-        sc.zip as schoolzip,
-        p.sevis_startdate, 
-        p.sevis_enddate, 
-        p.preayp_date, 
-        p.type as programtype,
-        u.businessname
-	FROM 
-    	smg_students s 
-	INNER JOIN 
-    	smg_programs p ON s.programid = p.programid
-	INNER JOIN 
-    	smg_users u ON s.intrep = u.userid
-	INNER JOIN 
-    	smg_countrylist birth ON s.countrybirth = birth.countryid
-	INNER JOIN 
-    	smg_countrylist resident ON s.countryresident = resident.countryid
-	INNER JOIN 
-    	smg_countrylist citizen ON s.countrycitizen = citizen.countryid
-	LEFT JOIN 
-    	smg_hosts h ON s.hostid = h.hostid
-	LEFT JOIN 
-    	smg_schools sc ON s.schoolid = sc.schoolid
-	WHERE 
-		s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    AND 
-    	s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-    AND 
-    	s.countrybirth != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
-    AND 
-    	s.countryresident != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
-    AND 
-    	s.countrycitizen != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
-    AND 
-    	s.verification_received IS NOT NULL
-    AND 
-    	s.sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-    AND 
-        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
-    AND
-        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-	
-	<!---
-	AND
-    	s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="12538">
-	--->
+	<cfsetting requestTimeOut = "500">
 
-    <!--- Get Current Division Students --->
-    <!---
-    AND
-        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-    --->
+	<!--- Param Form Variables --->
+    <cfparam name="FORM.programID" default="">
+    <cfparam name="FORM.intRep" default="">
     
-    <!--- Get ISE students --->
-    <!---
-	<cfif CLIENT.companyID EQ 10>
-    AND
-        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-    <cfelse>
-    AND
-        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
-    </cfif>
-	--->
+    <!-- get company info -->
+    <cfquery name="qGetCompany" datasource="MySQL">
+        SELECT 
+            *
+        FROM 
+            smg_companies
+        WHERE 
+            companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+    </cfquery>
+    
+    <cfquery name="qGetStudents" datasource="MySql"> 
+        SELECT 	
+            s.studentid, 
+            s.ds2019_no, 
+            s.firstname, 
+            s.familylastname, 
+            s.middlename, 
+            s.dob, 
+            s.sex, 
+            s.citybirth, 
+            s.companyID,
+            s.ayporientation, 
+            s.aypenglish, 
+            s.hostid, 
+            s.schoolid, 
+            s.host_fam_approved, 
+            birth.seviscode as birthseviscode,
+            resident.seviscode as residentseviscode,
+            citizen.seviscode as citizenseviscode,
+            h.familylastname as hostlastname, 
+            h.fatherlastname, 
+            h.motherlastname, 
+            h.address as hostaddress, 
+            h.address2 as hostaddress2, 
+            h.city as hostcity, 
+            h.state as hoststate, 
+            h.zip as hostzip,
+            sc.schoolname, 
+            sc.address as schooladdress, 
+            sc.address2 as schooladdress2, 
+            sc.city as schoolcity,
+            sc.state as schoolstate, 
+            sc.zip as schoolzip,
+            p.sevis_startdate, 
+            p.sevis_enddate, 
+            p.preayp_date, 
+            p.type as programtype,
+            u.businessname
+        FROM 
+            smg_students s 
+        INNER JOIN 
+            smg_programs p ON s.programid = p.programid
+        INNER JOIN 
+            smg_users u ON s.intrep = u.userid
+        INNER JOIN 
+            smg_countrylist birth ON s.countrybirth = birth.countryid
+        INNER JOIN 
+            smg_countrylist resident ON s.countryresident = resident.countryid
+        INNER JOIN 
+            smg_countrylist citizen ON s.countrycitizen = citizen.countryid
+        LEFT JOIN 
+            smg_hosts h ON s.hostid = h.hostid
+        LEFT JOIN 
+            smg_schools sc ON s.schoolid = sc.schoolid
+        WHERE 
+            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND 
+            s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+        AND 
+            s.countrybirth != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+        AND 
+            s.countryresident != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+        AND 
+            s.countrycitizen != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+        AND 
+            s.verification_received IS NOT NULL
+        AND 
+            s.sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND 
+            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+		
+		<cfif VAL(FORM.intRep)>
+        AND
+            s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#">
+       	</cfif>
 
-	ORDER BY 
-    	u.businessname, 
-        s.firstname,
-        s.familyLastName,
-        s.studentID       
-	LIMIT 
-    	250
-</cfquery><!--- COUNTRY 232 = USA --->
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    
+        <!--- Get Current Division Students --->
+        <!---
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        --->
+        
+        <!--- Get ISE students --->
+        <!---
+        <cfif CLIENT.companyID EQ 10>
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfelse>
+        AND
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+        </cfif>
+        --->
+    
+        ORDER BY 
+            u.businessname, 
+            s.firstname,
+            s.familyLastName,
+            s.studentID       
+        LIMIT 
+            250
+    </cfquery><!--- COUNTRY 232 = USA --->
 
+</cfsilent>
+    
 <cfif NOT VAL(qGetStudents.recordcount)>
 	Sorry, there were no students to populate the XML file at this time.
 	<cfabort>
 </cfif>
-
-<cfsetting requestTimeOut = "500">
 
 <cfquery name="insert_batchid" datasource="MySqL">
 	INSERT INTO 
