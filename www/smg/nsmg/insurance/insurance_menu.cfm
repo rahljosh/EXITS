@@ -156,7 +156,7 @@
             <table cellpadding="6" cellspacing="0" align="center" width="96%">
                 <tr>
                     <td width="50%" valign="top">
-                        <cfform action="?curdoc=insurance/early_return" method="POST">
+                        <form action="insurance/early_return.cfm" method="POST">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Early Return</th></tr>
                                 <tr align="left">
@@ -181,7 +181,7 @@
                                 <tr><td colspan="2" align="center">&nbsp;</td></tr>					
                                 <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
                             </table>
-                        </cfform>
+                        </form>
                     </td>
                     <td width="50%" valign="top">&nbsp;
                         

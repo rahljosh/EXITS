@@ -1,7 +1,7 @@
 <cfsetting requesttimeout="300">
 
 <!-- get company info -->
-<cfquery name="qGetCompany" datasource="MySQL">
+<cfquery name="qGetCompany" datasource="caseusa">
     SELECT 
         companyID,
         companyName,
@@ -17,11 +17,10 @@
 </cfquery>
 
 
-<cfquery name="get_students" datasource="MySql"> 
+<cfquery name="get_students" datasource="caseusa"> 
 	SELECT 	
     	s.studentid, 
         s.dateapplication, 
-        s.ds2019_no, 
         s.firstname, 
         S.familylastname, 
         s.ds2019_no, 
@@ -94,13 +93,13 @@
 	<cfabort>
 </cfif>
 
-<cfquery name="insert_batchid" datasource="MySqL">
+<cfquery name="insert_batchid" datasource="caseusa">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
 	VALUES ('#qGetCompany.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#', 'school_update')
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
-<cfquery name="get_batchid" datasource="MySql">
+<cfquery name="get_batchid" datasource="caseusa">
 	SELECT MAX(batchid) as batchid
 	FROM smg_sevis
 </cfquery> 
@@ -138,7 +137,7 @@
 	</BatchHeader>
 	<UpdateEV>
 	<cfloop query="get_students">
-		<cfquery name="get_previous_info" datasource="MySql">
+		<cfquery name="get_previous_info" datasource="caseusa">
 			SELECT historyid, school_name, hostid, start_date, end_date FROM smg_sevis_history  WHERE studentid = '#get_students.studentid#' ORDER BY historyid DESC
 		</cfquery>
 		<ExchangeVisitor sevisID="#get_students.ds2019_no#" requestID="#get_students.studentid#" userID="#qGetCompany.sevis_userid#">
@@ -155,7 +154,7 @@
 				</Edit>
 			</SiteOfActivity>
 		</ExchangeVisitor>
-		<cfquery name="create_new_history" datasource="MySql">
+		<cfquery name="create_new_history" datasource="caseusa">
 			INSERT INTO smg_sevis_history (batchid, studentid, hostid, school_name, start_date, end_date)	
 			VALUES ('#get_batchid.batchid#', '#get_students.studentid#', '#get_previous_info.hostid#', '#get_students.schoolname#', <cfif get_previous_info.start_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.start_date)#</cfif>, <cfif get_previous_info.end_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.end_date)#</cfif>)
 		</cfquery>
