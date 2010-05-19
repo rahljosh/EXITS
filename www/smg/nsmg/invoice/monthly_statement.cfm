@@ -66,11 +66,11 @@ where smg_users.userid = #url.userid#
 				<Tr>
 				<td>
 				 <cfif client.companyid neq 10>
-						<img src="../pics/smg_banner.jpg" align="Center">
+						<img src="../pics/ise_banner.jpg" align="Center">
 						<cfelse>
 						<img src="..//pics/case_banner.jpg" align="Center">
 						</cfif>
-				<img src="../pics/smg_banner.jpg" align="Center"></Td>
+				<img src="../pics/ise_banner.jpg" align="Center"></Td>
 				</Tr>
 				<tr>
 					<td align="center"><h1>Summary Statement</h1></td>

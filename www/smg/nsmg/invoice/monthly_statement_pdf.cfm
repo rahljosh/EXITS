@@ -69,7 +69,7 @@ where smg_users.userid = #url.userid#
 			<div class="page-break">
 				<table align="center" >
 				<Tr>
-				<td><img src="http://www.student-management.com/nsmg/pics/smg_banner.jpg" align="Center"></Td>
+				<td><img src="http://www.student-management.com/nsmg/pics/ise_banner.jpg" align="Center"></Td>
 				</Tr>
 				<tr>
 					<td align="center"><h1>Summary Statement</h1></td>

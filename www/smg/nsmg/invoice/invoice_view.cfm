@@ -186,7 +186,7 @@ order by s.stuid, s.chargeid
                     </cfcase>
                     
                     <cfdefaultcase>
-						<img src="http#linkSSL#://www.student-management.com/nsmg/pics/smg_banner.jpg" align="Center">
+						<img src="http#linkSSL#://www.student-management.com/nsmg/pics/ise_banner.jpg" align="Center">
                     </cfdefaultcase>
                 </cfswitch>                        
             </cfif>                   
