@@ -380,7 +380,7 @@
 					<cfif CLIENT.usertype lte 4>
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets</td>
                     <!--- Field Users --->
-					<cfelseif ListFind("5,6,7,9", CLIENT.userType) AND CLIENT.companyID NEQ 10>
+					<cfelseif ListFind("5,6,7,9", CLIENT.userType)>
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> WebEx Calendar</td>
                     </cfif>
                 </tr>
@@ -389,7 +389,7 @@
                         <a href="index.cfm?curdoc=progress_reports">Progress Reports</a><br>
                         <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
                         <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a><br />
-                        <cfif CLIENT.userType LTE 4 AND CLIENT.companyID NEQ 10>
+                        <cfif CLIENT.userType LTE 4>
                         	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
                         </cfif>
                        <cfif client.companyid lte 5>
@@ -415,7 +415,7 @@
                             </table>
 						</td>
 					<!--- Field Users --->                        
-                    <cfelseif ListFind("5,6,7,9", CLIENT.userType) AND CLIENT.companyID NEQ 10>
+                    <cfelseif ListFind("5,6,7,9", CLIENT.userType)>
 						<td>
                             <table cellpadding=4 cellspacing =0 border=0>
                                 <tr>
