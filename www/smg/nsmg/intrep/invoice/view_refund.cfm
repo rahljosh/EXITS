@@ -65,7 +65,7 @@ table.nav_bar {  background-color: #ffffff; border: 1px solid #000000; }
 <cfloop query="intrep">
 	<div class="page-break">
 	<table align="center" >
-		<Tr><td><img src="../../pics/smg_banner.jpg" align="Center"></Td></Tr>
+		<Tr><td><img src="../../pics/ise_banner.jpg" align="Center"></Td></Tr>
 		<tr><td align="center"><h1>Refund Receipt</h1></td></tr>
 	</table>
 	<br><br>

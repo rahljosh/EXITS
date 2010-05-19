@@ -55,7 +55,7 @@
 
 <table align="center">
 <Tr>
-<td><img src="../../pics/smg_banner.jpg" align="Center"></Td>
+<td><img src="../../pics/ise_banner.jpg" align="Center"></Td>
 </Tr>
 </table>
 <br>
