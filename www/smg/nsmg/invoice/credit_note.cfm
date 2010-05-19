@@ -186,7 +186,7 @@ WHERE sc.creditid = #url.creditid#
 						<img src="http#linkSSL#://jan.case-usa.org/nsmg/pics/case_banner.jpg" width="665" height="113" align="Center">
                     </cfcase>
                     <cfdefaultcase>
-                        <img src="http#linkSSL#://www.student-management.com/nsmg/pics/smg_banner.jpg" align="Center">
+                        <img src="http#linkSSL#://www.student-management.com/nsmg/pics/ise_banner.jpg" align="Center">
 
                     </cfdefaultcase>
                 </cfswitch>                        
