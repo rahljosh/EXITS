@@ -21,6 +21,9 @@
 	</cfscript>
 
 
+    <cfparam name="APPLICATION.DSN" default="MySQL">
+
+
 	<!--- Define the page request properties. --->
 	<cfsetting
 		requesttimeout="20"
@@ -35,7 +38,7 @@
 		returntype="boolean"
 		output="false"
 		hint="Fires when the application is first created.">
-			
+			            
             <!--- Include Application Settings ---> 
 	 		<cfinclude template="extensions/config/_app_index.cfm" />
  
@@ -252,6 +255,8 @@
                        
         </cfif>
  		--->
+        
+        <cfdump var="#ARGUMENTS.Exception#">
         
 		<!--- Return out. --->
 		<cfreturn />

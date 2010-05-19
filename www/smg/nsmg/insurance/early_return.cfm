@@ -104,18 +104,18 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 </tr>
     
                 <cfif LEN(qGetStudents.policycode) AND IsDate(qGetStudents.dep_date)>
-                    
+
                     <cfscript>
                         // Update Insurace Record and Insert History
                         APPCFC.INSURANCE.insertInsuranceHistory(
                             studentID=qGetStudents.studentID,
                             type="R",
                             startDate=setStartDate,
-                            endDate=qGetStudents.enddate,
+                            endDate=qGetStudents.dep_date,
                             fileName=XLSFileName
                         );				
                     </cfscript>
-        
+
                 </cfif>
                 
 			</cfif>
