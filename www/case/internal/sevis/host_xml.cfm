@@ -1,13 +1,13 @@
 <cfsetting requesttimeout="300">
 
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySql">
+<cfquery name="get_company" datasource="caseusa">
 SELECT *
 FROM smg_companies
 WHERE companyid = '#client.companyid#'
 </cfquery>
 
-<cfquery name="get_students" datasource="MySql"> 
+<cfquery name="get_students" datasource="caseusa"> 
 	SELECT 	s.studentid, s.dateapplication, s.active, s.ds2019_no, s.firstname, s.familylastname, 
 			s.middlename, s.dob, s.sex,	s.citybirth, s.hostid, s.schoolid, s.host_fam_approved,
 			s.ayporientation, s.aypenglish,
@@ -43,13 +43,13 @@ Sorry, there were no students to populate the XML file at this time.
 <cfabort>
 </cfif>
 
-<cfquery name="insert_batchid" datasource="MySqL">
+<cfquery name="insert_batchid" datasource="caseusa">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
 	VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#', 'host_update')
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
-<cfquery name="get_batchid" datasource="MySql">
+<cfquery name="get_batchid" datasource="caseusa">
 	SELECT MAX(batchid) as batchid
 	FROM smg_sevis
 </cfquery>
@@ -98,10 +98,10 @@ Sorry, there were no students to populate the XML file at this time.
 				</USAddress>
 			</Biographical>
 		</ExchangeVisitor>
-		<cfquery name="get_previous_info" datasource="MySql">
+		<cfquery name="get_previous_info" datasource="caseusa">
 			SELECT historyid, school_name, hostid, start_date, end_date FROM smg_sevis_history  WHERE studentid = '#get_students.studentid#' ORDER BY historyid DESC
 		</cfquery>
-		<cfquery name="create_new_history" datasource="MySql">
+		<cfquery name="create_new_history" datasource="caseusa">
 			INSERT INTO smg_sevis_history (batchid, studentid, hostid, school_name, start_date, end_date)	
 			VALUES ('#get_batchid.batchid#', '#get_students.studentid#', '#get_students.hostid#', '#get_previous_info.school_name#', <cfif get_previous_info.start_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.start_date)#</cfif>, <cfif get_previous_info.end_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.end_date)#</cfif>)
 		</cfquery>
@@ -112,7 +112,13 @@ Sorry, there were no students to populate the XML file at this time.
 </cfxml>
 
 <cfoutput>
-<cffile action="write" file="/var/www/html/student-management/nsmg/sevis/xml/#get_company.companyshort#/host_family/#get_company.companyshort#_host_0#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+
+<cfscript>
+	// Get Folder Path 
+	currentDirectory = "C:/websites/case/internal/uploadedfiles/sevis/xml/host_family/";
+</cfscript>
+
+<cffile action="write" file="#currentDirectory##get_company.companyshort#_host_0#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
 	<th>#get_company.companyshort# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>

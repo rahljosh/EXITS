@@ -7,13 +7,13 @@
 <cfinclude template="../querys/get_active_programs.cfm">
 
 <!-----Company Information----->
-<Cfquery name="get_company" datasource="MySQL">
+<Cfquery name="get_company" datasource="caseusa">
 	select companyid, companyname, sevis_userid, iap_auth
 	from smg_companies
 	where companyid = #client.companyid#
 </Cfquery>
 
-<cfquery name="get_sevis_history" datasource="MySql">
+<cfquery name="get_sevis_history" datasource="caseusa">
 	SELECT s.batchid, s.companyid, s.createdby, s.datecreated, s.totalstudents, s.totalprint, s.received, 
 			c.companyshort,
 			u.firstname, u.lastname

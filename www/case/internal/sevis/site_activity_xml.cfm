@@ -1,40 +1,84 @@
 <cfsetting requesttimeout="300">
 
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySql">
-	SELECT *
-	FROM smg_companies
-	WHERE companyid = '#client.companyid#'
+<cfquery name="get_company" datasource="caseusa">
+    SELECT 
+        companyID,
+        companyName,
+        companyshort,
+        sevis_userid,
+        iap_auth
+    FROM 
+        smg_companies
+    WHERE 
+        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
 
-<cfquery name="get_students" datasource="MySql"> 
-	SELECT 	s.studentid, s.dateapplication, s.ds2019_no, s.firstname, s.familylastname, s.ds2019_no,
-			s.middlename, s.dob, s.sex,	s.hostid, s.schoolid, s.host_fam_approved,
-			s.ayporientation, s.aypenglish,
-			sc.schoolname, sc.address as schooladdress, sc.address2 as schooladdress2, sc.city as schoolcity,
-			sc.state as schoolstate, sc.zip as schoolzip,
-			p.startdate, p.enddate,
-			u.businessname
-	FROM smg_students s
-	INNER JOIN smg_programs p ON s.programid = p.programid
-	INNER JOIN smg_users u ON s.intrep = u.userid
-	INNER JOIN smg_schools sc ON s.schoolid = sc.schoolid
-	WHERE s.companyid = '#client.companyid#' 
-			AND s.active = '1'
-			AND s.host_fam_approved < '5'
-			AND s.sevis_batchid != '0'
-			AND s.sevis_activated != '0'
-			AND sc.schoolname NOT IN (SELECT school_name FROM smg_sevis_history WHERE studentid = s.studentid)
-			<cfif IsDefined('form.pre_ayp')>
-			AND (s.aypenglish <> '0' or s.ayporientation <> '0')
-			</cfif>
-			AND (
-			<cfloop list=#form.programid# index='prog'>
-	 	    	s.programid = #prog# 
-		   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-	   	   </cfloop> )
-	ORDER BY u.businessname, s.familylastname, s.firstname
-	LIMIT 250
+
+<cfquery name="get_students" datasource="caseusa"> 
+	SELECT 	
+    	s.studentid, 
+        s.dateapplication, 
+        s.firstname, 
+        S.familylastname, 
+        s.ds2019_no, 
+        s.companyID,
+        s.middlename, 
+        s.dob, 
+        s.sex,	
+        s.hostid, 
+        s.schoolid, 
+        s.host_fam_approved,
+        s.ayporientation, 
+        s.aypenglish,
+        sc.schoolname, 
+        sc.address as schooladdress, 
+        sc.address2 as schooladdress2, 
+        sc.city as schoolcity,
+        sc.state as schoolstate, 
+        sc.zip as schoolzip,
+        p.startdate, 
+        p.enddate,
+        u.businessname
+	FROM 
+    	smg_students s
+	INNER JOIN 
+    	smg_programs p ON s.programid = p.programid
+	INNER JOIN 
+    	smg_users u ON s.intrep = u.userid
+	INNER JOIN 
+    	smg_schools sc ON s.schoolid = sc.schoolid
+	WHERE  
+    	s.active = '1'
+    AND 
+    	s.host_fam_approved < '5'
+    AND 
+    	s.sevis_batchid != '0'
+    AND 
+    	s.sevis_activated != '0'
+    AND 
+    	sc.schoolname NOT IN (SELECT school_name FROM smg_sevis_history WHERE studentid = s.studentid)
+    AND 
+    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+
+	<cfif IsDefined('form.pre_ayp')>
+    	AND 
+        	(
+            	s.aypenglish != '0' 
+             OR
+             	s.ayporientation != '0'
+            )
+    </cfif>
+    
+    AND
+        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+
+	ORDER BY 	    
+    	u.businessname, 
+        s.familylastname, 
+        s.firstname
+	LIMIT 
+    	250
 </cfquery>
 
 <cfif get_students.recordcount is '0'>
@@ -42,13 +86,13 @@
 	<cfabort>
 </cfif>
 
-<cfquery name="insert_batchid" datasource="MySqL">
+<cfquery name="insert_batchid" datasource="caseusa">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
 	VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#', 'school_update')
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
-<cfquery name="get_batchid" datasource="MySql">
+<cfquery name="get_batchid" datasource="caseusa">
 	SELECT MAX(batchid) as batchid
 	FROM smg_sevis
 </cfquery> 
@@ -86,7 +130,7 @@
 	</BatchHeader>
 	<UpdateEV>
 	<cfloop query="get_students">
-		<cfquery name="get_previous_info" datasource="MySql">
+		<cfquery name="get_previous_info" datasource="caseusa">
 			SELECT historyid, school_name, hostid, start_date, end_date FROM smg_sevis_history  WHERE studentid = '#get_students.studentid#' ORDER BY historyid DESC
 		</cfquery>
 		<ExchangeVisitor sevisID="#get_students.ds2019_no#" requestID="#get_students.studentid#" userID="#get_company.sevis_userid#">
@@ -103,7 +147,7 @@
 				</Edit>
 			</SiteOfActivity>
 		</ExchangeVisitor>
-		<cfquery name="create_new_history" datasource="MySql">
+		<cfquery name="create_new_history" datasource="caseusa">
 			INSERT INTO smg_sevis_history (batchid, studentid, hostid, school_name, start_date, end_date)	
 			VALUES ('#get_batchid.batchid#', '#get_students.studentid#', '#get_previous_info.hostid#', '#get_students.schoolname#', <cfif get_previous_info.start_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.start_date)#</cfif>, <cfif get_previous_info.end_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.end_date)#</cfif>)
 		</cfquery>
@@ -116,11 +160,17 @@
 
 <cfoutput>
 
-<cffile action="write" file="/var/www/html/case/internal/uploadedfiles/sevis/xml/school/#get_company.companyshort#_school_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cfscript>
+	// Get Folder Path 
+	currentDirectory = "C:/websites/case/internal/uploadedfiles/sevis/xml/school/";
+</cfscript>
+
+<cffile action="write" file="#currentDirectory##get_company.companyshort#_school_00#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
-	<th>#get_company.companyshort# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
+	<th>#qGetCompany.companyshort# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
 	<th>BATCH CREATED.</th>
 </table>
 
 </cfoutput>
+

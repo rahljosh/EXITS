@@ -7,7 +7,7 @@
 </cfif>
 
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySql">
+<cfquery name="get_company" datasource="caseusa">
 	SELECT f.companyid, c.companyshort, datecreated
 	FROM smg_sevisfee f
 	INNER JOIN smg_companies c ON f.companyid = c.companyid
@@ -15,7 +15,7 @@
 </cfquery>
 
 <!--- Query the database and get students --->
-<cfquery name="get_students" datasource="MySql"> 
+<cfquery name="get_students" datasource="caseusa"> 
 	SELECT 	s.studentid, s.sevis_batchid, s.firstname, s.familylastname, s.middlename, 
 			p.programname, p.programid, 
 			c.companyname, c.usbank_iap_aut,
