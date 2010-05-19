@@ -1,11 +1,11 @@
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySql">
+<cfquery name="get_company" datasource="caseusa">
 	SELECT *
 	FROM smg_companies
 	WHERE companyid = '#client.companyid#'
 </cfquery>
 
-<cfquery name="get_students" datasource="MySql"> 
+<cfquery name="get_students" datasource="caseusa"> 
 	SELECT 	s.studentid, s.ds2019_no, s.firstname, s.familylastname, s.middlename, s.dob, s.sex, s.citybirth, 
 			s.ayporientation, s.aypenglish, s.hostid, s.schoolid, s.host_fam_approved, 
 			birth.seviscode as birthseviscode,
@@ -54,13 +54,13 @@
 
 <cfsetting requestTimeOut = "500">
 
-<cfquery name="insert_batchid" datasource="MySqL">
+<cfquery name="insert_batchid" datasource="caseusa">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
 	VALUES (#get_company.companyid#, #client.userid#, #CreateODBCDateTime(now())#, #get_students.recordcount#, 'new')
 </cfquery>
  
 <!--- BATCH ID MUST BE UNIQUE --->
-<cfquery name="get_batchid" datasource="MySql">
+<cfquery name="get_batchid" datasource="caseusa">
 	SELECT MAX(batchid) as batchid
 	FROM smg_sevis
 </cfquery>
@@ -177,9 +177,9 @@ END OF DISPLAY
 	   </SiteOfActivity>
 	</AddSiteOfActivity>
 	</ExchangeVisitor>
-	<cfquery name="upd_stu" datasource="MySql">
+	<cfquery name="upd_stu" datasource="caseusa">
 		UPDATE smg_students SET sevis_batchid = #get_batchid.batchid# WHERE studentid = #get_students.studentid#
-	</cfquery><cfquery name="insert_history" datasource="MySql">
+	</cfquery><cfquery name="insert_history" datasource="caseusa">
 		INSERT INTO smg_sevis_history (studentid, batchid, hostid, school_name, start_date, end_date)
 		VALUES (#studentid#,#get_batchid.batchid#,#hostid#, <cfif schoolid NEQ '0' and host_fam_approved LT '5'>'#schoolname#'<cfelse>'#get_company.companyname#'</cfif>, #CreateODBCDate(nstart_date)#, <cfif programtype EQ '3'>'2009-06-30'<cfelse>#CreateODBCDate(enddate)#</cfif>)
 	</cfquery>

@@ -9,7 +9,7 @@
 <body>
 
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySql">
+<cfquery name="get_company" datasource="caseusa">
 	SELECT *
 	FROM smg_companies
 	WHERE companyid = '#client.companyid#'
@@ -22,7 +22,7 @@
 
 <!--- END PROGRAM ACCORDING TO TERMINATION DATE --->
 <cfif form.type EQ 'termination'>
-	<cfquery name="get_students" datasource="MySql"> 
+	<cfquery name="get_students" datasource="caseusa"> 
 		SELECT DISTINCT s.studentid, s.ds2019_no, s.termination_date, s.firstname, s.familylastname, 
 				u.businessname
 		FROM smg_students s
@@ -43,7 +43,7 @@
 	</cfquery>
 <!--- END PROGRAM ACCORDING TO FLIGHT INFORMATION --->
 <cfelse>
-	<cfquery name="get_students" datasource="MySql"> 
+	<cfquery name="get_students" datasource="caseusa"> 
 		SELECT DISTINCT	s.studentid, s.ds2019_no, s.firstname, s.familylastname,
 				u.businessname
 		FROM smg_students s
@@ -73,13 +73,13 @@
 
 <cfsetting requestTimeOut = "500">
 
-<cfquery name="insert_batchid" datasource="MySqL">
+<cfquery name="insert_batchid" datasource="caseusa">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
 	VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#', 'end')
 </cfquery>
  
 <!--- BATCH ID MUST BE UNIQUE --->
-<cfquery name="get_batchid" datasource="MySql">
+<cfquery name="get_batchid" datasource="caseusa">
 	SELECT MAX(batchid) as batchid
 	FROM smg_sevis
 </cfquery>
@@ -125,7 +125,7 @@
 			</End>
 		</Status>
 	</ExchangeVisitor>
-	<cfquery name="upd_stu" datasource="MySql">
+	<cfquery name="upd_stu" datasource="caseusa">
 		UPDATE smg_students SET sevis_end_program = '#get_batchid.batchid#' WHERE studentid = '#get_students.studentid#'
 	</cfquery>
 	</cfloop>

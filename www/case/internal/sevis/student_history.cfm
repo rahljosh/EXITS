@@ -12,7 +12,7 @@
 	<cfinclude template="../forms/error_message.cfm">
 </cfif>
 
-<cfquery name="get_history" datasource="MySql">
+<cfquery name="get_history" datasource="caseusa">
 	SELECT hist.studentid, hist.batchid, hist.hostid, hist.school_name, hist.start_date, hist.end_date,
 		sevis.datecreated, sevis.type,
 		s.firstname, s.familylastname,

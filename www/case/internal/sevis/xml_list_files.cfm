@@ -28,7 +28,7 @@ function areYouSure() {
 </cfif>
 
 <!--- VIRTUAL FOLDER --->
-<Cfquery name="get_company" datasource="MySQL">
+<Cfquery name="get_company" datasource="caseusa">
 	select companyshort
 	from smg_companies
 	where companyid = #client.companyid#

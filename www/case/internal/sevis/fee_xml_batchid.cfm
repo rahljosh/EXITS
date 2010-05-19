@@ -6,14 +6,14 @@
 </cfif>
 
 <!-- get company info -->
-<cfquery name="get_company" datasource="MySql">
+<cfquery name="get_company" datasource="caseusa">
 	SELECT *
 	FROM smg_companies
 	WHERE companyid = '#client.companyid#'
 </cfquery>
 
 <!--- Query the database and get students --->
-<cfquery name="get_students" datasource="MySql"> 
+<cfquery name="get_students" datasource="caseusa"> 
 	SELECT 	s.dateapplication, s.active, s.ds2019_no, s.firstname, s.familylastname, s.dob, s.middlename, s.studentid,
 			p.programname, p.programid, 
 			c.companyname, c.usbank_iap_aut,
@@ -40,13 +40,13 @@
 <cfabort>
 </cfif>
 
-<cfquery name="insert_bulkid" datasource="MySqL">
+<cfquery name="insert_bulkid" datasource="caseusa">
 	INSERT INTO smg_sevisfee (companyid, createdby, datecreated, totalstudents)
 	VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#')
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
-<cfquery name="get_bulkid" datasource="MySql">
+<cfquery name="get_bulkid" datasource="caseusa">
 	SELECT MAX(bulkid) as bulkid
 	FROM smg_sevisfee
 </cfquery>
@@ -82,7 +82,7 @@
 		<fee>#LSCurrencyFormat(180, "none")#</fee>
 		</cfoutput>
 	</student>
-	<cfquery name="upd_stu" datasource="MySql">
+	<cfquery name="upd_stu" datasource="caseusa">
 		UPDATE smg_students SET sevis_fee_paid_date = #CreateODBCDate(now())#, sevis_bulkid = '#get_bulkid.bulkid#' 
 		WHERE studentid = '#get_students.studentid#'
 	</cfquery>

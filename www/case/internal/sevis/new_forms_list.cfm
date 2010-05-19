@@ -5,14 +5,14 @@
 	</table>
 <cfelse>
 	<!-- get company info -->
-	<cfquery name="get_company" datasource="MySql">
+	<cfquery name="get_company" datasource="caseusa">
 	SELECT s.companyid, c.companyshort
 	FROM smg_sevis s
 	INNER JOIN smg_companies c ON s.companyid = c.companyid
 	WHERE s.batchid = <cfqueryparam value="#url.batchid#" cfsqltype="cf_sql_integer">
 	</cfquery>
 	
-	<cfquery name="get_students" datasource="MySql"> 
+	<cfquery name="get_students" datasource="caseusa"> 
 		SELECT 	s.studentid, s.firstname, s.familylastname, s.middlename,
 				p.programname,
 				u.businessname

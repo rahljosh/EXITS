@@ -6,14 +6,14 @@
 
 <cfinclude template="../querys/get_active_programs.cfm">
 
-<cfquery name="get_batches" datasource="MySql">
+<cfquery name="get_batches" datasource="caseusa">
 	SELECT batchid, datecreated
 	FROM smg_sevis
 	WHERE companyid = '#client.companyid#' AND type = 'new'
 	ORDER BY batchid DESC
 </cfquery>
 
-<cfquery name="get_fee_history" datasource="MySql">
+<cfquery name="get_fee_history" datasource="caseusa">
 	SELECT s.bulkid, s.companyid, s.createdby, s.datecreated, s.totalstudents, 
 			c.companyshort,
 			u.firstname, u.lastname

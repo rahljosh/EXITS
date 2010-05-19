@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../reports/reports.css" type="text/css">
 
 <!--- Get Program --->
-<cfquery name="get_program" datasource="MYSQL">
+<cfquery name="get_program" datasource="caseusa">
 SELECT	*
 FROM 	smg_programs 
 LEFT OUTER JOIN smg_program_type ON type = programtypeid
@@ -15,7 +15,7 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
 <cfinclude template="../querys/get_company_short.cfm">
 
 <!--- get Students  --->
-<Cfquery name="get_students" datasource="MySQL">
+<Cfquery name="get_students" datasource="caseusa">
 	SELECT DISTINCT 
 		s.studentid, s.countryresident, s.firstname, s.familylastname, s.intrep, s.programid, s.sex, s.dateapplication,
 		s.sevis_batchid, s.sevis_bulkid, s.insurance, s.sevis_fee_paid_date,
@@ -62,7 +62,7 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
 <cfoutput query="get_students" group="intrep">
 	<table width='97%' cellpadding=4 cellspacing="0" align="center" frame="box">	
 	<tr><th width="75%"><a href="mailto:#email#">#businessname#</a></th>
-		<cfquery name="get_total" datasource="MYSQL">
+		<cfquery name="get_total" datasource="caseusa">
 		SELECT intrep, count(studentid) as total_stu
 		FROM smg_students
 		WHERE intrep = #intrep# 

@@ -17,7 +17,7 @@
 -->
 </style>
 
-<cfquery name="get_company" datasource="MySql">
+<cfquery name="get_company" datasource="caseusa">
 	SELECT *
 	FROM smg_companies
 	WHERE companyid = '#client.companyid#'
@@ -50,7 +50,7 @@
 	<cfset numItems = #mydoc.TransactionLog.BatchDetail.Process.RecordCount.Total.XmlText#>
 	<cfset numItems2 = (ArrayLen(mydoc.TransactionLog.BatchDetail.Process.XmlChildren) - 1)>
 	
-	<cfquery name="update_batch_table" datasource="MySql">
+	<cfquery name="update_batch_table" datasource="caseusa">
 		UPDATE smg_sevis
 		SET totalprint = #sucrequest#, received = 'yes', obs = 'automatic'
 		WHERE batchid = '#Right(batchid, 4)#'
@@ -75,7 +75,7 @@
 			<cfoutput>
 			<td align="center" class="style2">#stuID#</td><td align="center" class="style2">#SevisID#</td><td class="style2">&nbsp; OK &nbsp; - &nbsp; Student Active!</td>
 			</cfoutput>
-			<cfquery name="update_active_batch" datasource="MySql">
+			<cfquery name="update_active_batch" datasource="caseusa">
 				UPDATE smg_students
 				SET sevis_activated = '#Right(batchid, 4)#'
 				WHERE studentid = '#stuID#'
@@ -87,7 +87,7 @@
 			<td class="style1" align="center">#stuID#</td><td class="style1" align="center">Error Code: #errorcode#</td><td class="style1">&nbsp; #reason#</td>
 			</cfoutput>
 			<cfif find("status type is ACTIVE",reason) is '0'> <!--- non active errors --->
-				<cfquery name="update_ds2019" datasource="MySql"> <!--- UPDATE SEVIS ACTIVATED TO 0 --->
+				<cfquery name="update_ds2019" datasource="caseusa"> <!--- UPDATE SEVIS ACTIVATED TO 0 --->
 					UPDATE smg_students
 					SET sevis_activated ='0'
 					WHERE studentid = '#stuID#'
