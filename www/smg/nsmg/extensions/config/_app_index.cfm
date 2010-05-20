@@ -50,10 +50,9 @@
 </cftry>
 
 
-<!--- Set up Application variables --->
-<cfinclude template="_app.cfm" />
-
-
 <!--- Set up Components --->
 <cfinclude template="_app_components.cfm" />
 
+
+<!--- Set up Application variables --->
+<cfinclude template="_app.cfm" />
