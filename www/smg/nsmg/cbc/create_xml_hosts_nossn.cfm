@@ -121,18 +121,18 @@
 		</table>  <br /><br />                                
 	</cfif>	
 
-	<!--- Check if there are records --->    
-    <cfif qGetCBCHost.recordcount GT ListLen(skipHostIDs)>
+	<!--- Filter Query - Get only records that do not have any problems --->
+    <cfquery name="qGetCBCHost" dbtype="query">
+        SELECT 
+            *
+        FROM	
+            qGetCBCHost
+         WHERE	
+            hostID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#skipHostIDs#" list="yes">)            
+    </cfquery>
 
-    	<!--- Filter Query - Get only records that do not have any problems --->
-        <cfquery name="qGetCBCHost" dbtype="query">
-        	SELECT 
-            	*
-            FROM	
-            	qGetCBCHost
-             WHERE	
-             	hostID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#skipHostIDs#" list="yes">)            
-        </cfquery>
+	<!--- Check if there are records --->    
+    <cfif qGetCBCHost.recordcount>
 
 		<cfscript>
             // Create a batch ID - It must be unique
@@ -252,18 +252,18 @@
 		</table>                        
 	</cfif>	
 
-	<!--- Check if there are records --->    
-    <cfif qGetCBCMember.recordcount GT ListLen(skipMemberIDs)>
+	<!--- Filter Query - Get only records that do not have any problems --->
+    <cfquery name="qGetCBCMember" dbtype="query">
+        SELECT 
+            *
+        FROM	
+            qGetCBCMember
+         WHERE	
+            cbcfamID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#skipMemberIDs#" list="yes">)
+    </cfquery>
 
-    	<!--- Filter Query - Get only records that do not have any problems --->
-        <cfquery name="qGetCBCMember" dbtype="query">
-        	SELECT 
-            	*
-            FROM	
-            	qGetCBCMember
-             WHERE	
-             	cbcfamID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#skipMemberIDs#" list="yes">)
-        </cfquery>
+	<!--- Check if there are records --->    
+    <cfif qGetCBCMember.recordcount>
     
         <cfscript>
             // Create a batch ID - It must be unique
