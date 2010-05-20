@@ -28,8 +28,55 @@
 
 		// Skip IDs List if any information is missing;
 		skipUserIDs = 0;
+		
+		
+		
+		if ( userType EQ 'user' ) {
+			// Get User CBCs
+			qGetCBCUsers = APPCFC.CBC.getPendingCBCUser(
+				companyID=CLIENT.companyID,
+				seasonID=FORM.seasonID,
+				noSSN=1
+            );	
+		} else {
+			// Get Member CBCs
+			qGetCBCUsers = APPCFC.CBC.getPendingCBCUserMember(
+				companyID=CLIENT.companyID,
+				seasonID=FORM.seasonID,
+				noSSN=1
+            );	
+		}		
 	</cfscript>
-
+	
+    <!--- Data Validation --->
+    <cfloop query="qGetCBCUsers">
+    
+        <cfscript>
+            //First Name
+            if ( NOT LEN(qGetCBCUsers.firstName) ) {
+                ArrayAppend(Errors.Messages, "First Name is missing for user #firstName# #lastname# (###userid#).");			
+                if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
+                    skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
+                }
+            }
+            // Last Name
+            if ( NOT LEN(qGetCBCUsers.lastname) )  {
+                ArrayAppend(Errors.Messages, "Last Name is missing for user #firstName# #lastname# (###userid#).");
+                if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
+                    skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
+                }
+            }
+            // DOB
+            if ( NOT LEN(qGetCBCUsers.dob) OR NOT IsDate(qGetCBCUsers.dob) )  {
+                ArrayAppend(Errors.Messages, "DOB is missing for user #firstName# #lastname# (###userid#).");
+                if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
+                    skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
+                }
+            }
+        </cfscript>
+    
+    </cfloop>
+    
 </cfsilent>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -53,69 +100,10 @@
 	<cfabort>
 </cfif>
 
-<!--- 
-	OFFICE AND REP USERS 
---->
-<cfif FORM.userType EQ 'user'>
-
-    <cfscript>
-		// Get CBCs
-		qGetCBCUsers = APPCFC.CBC.getPendingCBCUser(
-			companyID=CLIENT.companyID,
-			seasonID=FORM.seasonID,
-			noSSN=1
-		);	
-	</cfscript>  
-    
-<!--- 
-	FAMILY USERS 
---->
-<cfelse>
-
-    <cfscript>
-		// Get CBCs
-		qGetCBCUsers = APPCFC.CBC.getPendingCBCUserMember(
-			companyID=CLIENT.companyID,
-			seasonID=FORM.seasonID,
-			noSSN=1
-		);	
-	</cfscript>  
-
-</cfif>
-
 <cfif NOT VAL(qGetCBCUsers.recordcount)>
 	Sorry, there were no users to populate the XML file at this time.
 	<cfabort>
 </cfif>
-
-<cfloop query="qGetCBCUsers">
-
-	<cfscript>
-		// Data Validation
-		//First Name
-        if ( NOT LEN(qGetCBCUsers.firstName) ) {
-            ArrayAppend(Errors.Messages, "First Name is missing for user #firstName# #lastname# (###userid#).");			
-            if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
-                skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
-            }
-        }
-    	// Last Name
-        if ( NOT LEN(qGetCBCUsers.lastname) )  {
-            ArrayAppend(Errors.Messages, "Last Name is missing for user #firstName# #lastname# (###userid#).");
-            if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
-                skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
-            }
-        }
-        // DOB
-        if ( NOT LEN(qGetCBCUsers.dob) OR NOT IsDate(qGetCBCUsers.dob) )  {
-            ArrayAppend(Errors.Messages, "DOB is missing for user #firstName# #lastname# (###userid#).");
-            if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
-                skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
-            }
-        }
-    </cfscript>
-
-</cfloop>
 
 <!--- Display Errors --->
 <cfif VAL(ArrayLen(Errors.Messages))>
@@ -132,18 +120,18 @@
 	</table>  <br /><br />                     
 </cfif>	
 
-<!--- Check if there are records --->    
-<cfif qGetCBCUsers.recordcount GT ListLen(skipUserIDs)>
+<!--- Filter Query - Get only records that do not have any problems --->
+<cfquery name="qGetCBCUsers" dbtype="query">
+	SELECT 
+		*
+	FROM	
+		qGetCBCUsers
+	 WHERE	
+		userID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#skipUserIDs#" list="yes">)
+</cfquery>
 
-	<!--- Filter Query - Get only records that do not have any problems --->
-    <cfquery name="qGetCBCUsers" dbtype="query">
-        SELECT 
-            *
-        FROM	
-            qGetCBCUsers
-         WHERE	
-            userID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#skipUserIDs#" list="yes">)
-    </cfquery>
+<!--- Check if there are records --->    
+<cfif qGetCBCUsers.recordcount>
     
     <cfscript>
         // Create a batch ID - It must be unique
@@ -201,5 +189,6 @@
 </cfif> <!--- Check if there are records --->  
 
 </cfoutput>
+
 </body>
 </html>
