@@ -808,6 +808,7 @@
         <cfargument name="DOBMonth" type="numeric" required="yes">
         <cfargument name="DOBDay" type="numeric" required="yes">
         <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
+        <cfargument name="isReRun" type="numeric" default="0" hint="Set to 1 if re running batches automtically">
                
 			<cfscript>
 				// declare variable
@@ -833,7 +834,7 @@
 				}
 				
 				// Get Company Information
-				qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
+				//qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
 			</cfscript>
         	
             <!--- Create XML --->
@@ -970,7 +971,8 @@
                         hostID=ARGUMENTS.hostID,
                         userID=ARGUMENTS.userID,
                         lastName=ARGUMENTS.lastName,
-                        firstName=ARGUMENTS.firstName
+                        firstName=ARGUMENTS.firstName,
+						isReRun=ARGUMENTS.isReRun
                     );				
     
                     // Get Report ID
@@ -1038,10 +1040,8 @@
                         <cfdump var="#requestXML#"> </p>
 						--->
                         
-                        <!---
                         <p>XML Received: <br>
                         <cfdump var="#responseXML#"> </p>
-                        --->
                         
                         <p>Error: <br>
                         <cfdump var="#cfcatch#"> </p>
@@ -1070,6 +1070,7 @@
         <cfargument name="userID" type="numeric" default="0" hint="Optional">        
         <cfargument name="firstName" type="string" default="" hint="Optional">
 		<cfargument name="lastName" type="string" default="" hint="Optional">
+        <cfargument name="isReRun" type="numeric" default="0" hint="Optional - Set to 1 if re running batches automtically">
         	
             <cfscript>
 				// Set return variable
@@ -1118,21 +1119,37 @@
 
 				// Get Company Information
 				qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
-
+				
+				// These are used in the email subject to display User, User Member, Host Father, Host Mother and Host Member
 				if ( VAL(ARGUMENTS.hostID) ) {
 					setCBCType = 'Host';	
 					setCBCID = ' (###ARGUMENTS.hostID#)';
+				} else if ( VAL(ARGUMENTS.userID) AND ARGUMENTS.userType EQ 'user' ) {
+					setCBCType = '';	
+					setCBCID = ' (###ARGUMENTS.userID#)';
 				} else if ( VAL(ARGUMENTS.userID) ) {
 					setCBCType = 'User';	
 					setCBCID = ' (###ARGUMENTS.userID#)';
 				}
 
-            	emailSubject = 'Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+				// Set Email To
+				if ( APPLICATION.isServerLocal ) {
+					emailTo = 'marcus@iseusa.com';
+				} else {
+					emailTo = qGetCompany.gis_email;
+				}
+
+				// Set Email Subject
+				if ( NOT VAL(ARGUMENTS.isReRun) ) {
+	            	emailSubject = 'Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+				} else {
+	            	emailSubject = 'Scheduled Re-Run Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+				}
 			</cfscript>
         		
             <cfmail 
             	from="#qGetCompany.support_email#" 
-                to="#qGetCompany.gis_email#"
+                to="#emailTo#"
                 subject="#emailSubject#" 
                 failto="#qGetCompany.support_email#"
                 type="html">
@@ -1259,7 +1276,7 @@
             
                 <table width="670" align="center">
 					<!--- Header --->
-                    <tr bgcolor="##CCCCCC"><th colspan="2"><cfif APPLICATION.isServerLocal>Development Server - </cfif> #qGetCompany.companyName#</th></tr>
+                    <tr bgcolor="##CCCCCC"><th colspan="2"><cfif APPLICATION.isServerLocal>DEVELOPMENT SERVER - </cfif> #qGetCompany.companyName#</th></tr>
                     <tr><td colspan="2">&nbsp;</td></tr>
 
                     <tr bgcolor="##CCCCCC"><th colspan="2">Criminal Backgroud Check &nbsp; -  &nbsp; Date Processed: #DateFormat(now(), 'mm/dd/yyyy')#</th></tr>
@@ -1516,6 +1533,158 @@
             </cfoutput>
 
 	</cffunction>
+    <!--- End of CBC Batch Functions --->
+
+	
+    <!--- CBC Re-Run Functions --->
+	<cffunction name="getExpiredUserCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
+        <cfargument name="cbcType" default="" hint="User or member">
+        
+		<cfscript>
+            //  Set expiration date - 11 months
+            var expirationDate = DateFormat(DateAdd('m', -11, now()),'yyyy-mm-dd');
+			
+			// Set Last Login
+			var lastLogin = DateFormat(DateAdd('yyyy', -1, now()),'yyyy-mm-dd');
+        </cfscript>
+    	      
+        <cfquery 
+        	name="qGetExpiredUserCBC" 
+        	datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT 
+                    cbc.userID,
+                    cbc.familyID,
+                    cbc.companyID,
+                    MAX(cbc.date_authorized) AS date_authorized,
+                    MAX(cbc.date_sent) AS date_sent,
+                    MAX(cbc.seasonID) AS seasonID,
+                    u.firstName,
+                    u.lastName,
+                    u.lastLogin
+                FROM 
+                    smg_users_cbc cbc 
+                INNER JOIN 
+                    smg_users u ON u.userID = cbc.userID 
+                    	AND u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        AND u.dateCancelled IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        AND u.lastLogin >= <cfqueryparam cfsqltype="cf_sql_date" value="#lastLogin#">
+                WHERE 
+                	cbc.userID NOT IN 
+                    ( 
+                    	SELECT 
+                        	userID 
+                        FROM 
+                        	smg_users_cbc 
+                        WHERE 
+                        	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+						<cfif ARGUMENTS.cbcType EQ 'user'>
+                            AND
+                                cbc.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        <cfelseif ARGUMENTS.cbcType EQ 'member'>
+                            AND
+                                cbc.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        </cfif>
+                    )   
+
+				<cfif ARGUMENTS.cbcType EQ 'user'>
+                	AND
+                    	cbc.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                <cfelseif ARGUMENTS.cbcType EQ 'member'>
+                	AND
+                    	cbc.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                </cfif>
+                
+                AND 
+                    (
+                        cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes"> 
+                    OR 
+                        cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    )
+                    
+                GROUP BY         
+                    cbc.userID                
+                
+                HAVING
+                	 date_sent <= <cfqueryparam cfsqltype="cf_sql_date" value="#expirationDate#"> 
+                     
+                ORDER BY                     
+                    date_sent
+        </cfquery>
+		
+    	<cfreturn qGetExpiredUserCBC>
+    </cffunction>    
     
+
+	<cffunction name="getExpiredHostCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
+        <cfargument name="cbcType" default="" hint="Father/Mother/Member">
+        
+		<cfscript>
+            //  Set expiration date - 11 months
+            var expirationDate = DateFormat(DateAdd('m', -11, now()),'yyyy-mm-dd');
+			
+			// Set Last Login
+			var lastLogin = DateFormat(DateAdd('yyyy', -1, now()),'yyyy-mm-dd');
+        </cfscript>
+    
+        <cfquery 
+        	name="qGetExpiredHostCBC" 
+        	datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT 
+                    cbc.hostID,
+                    cbc.familyID,
+                    cbc.companyID,
+                    cbc.cbc_type,
+                    MAX(cbc.date_authorized) AS date_authorized,
+                    MAX(cbc.date_sent) AS date_sent,
+                    MAX(cbc.seasonID) AS seasonID,
+                    h.familylastname
+                FROM 
+                   	smg_hosts_cbc cbc 
+                INNER JOIN 
+                    smg_hosts h ON h.hostid = cbc.hostid
+                INNER JOIN 
+                    smg_students s ON s.hostid = cbc.hostid AND s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                INNER JOIN	
+                	smg_programs p ON p.programID = s.programID AND p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                WHERE 
+                    cbc.hostID NOT IN 
+                    ( 
+                    	SELECT 
+                        	hostID 
+                        FROM 
+                        	smg_hosts_cbc 
+                        WHERE 
+                        	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">  
+						<cfif LEN(ARGUMENTS.cbcType)>
+                            AND
+                                cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+                        </cfif>   
+                    )   
+                AND 
+                    (
+                        cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
+                    OR 
+                        cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    )
+
+				<cfif LEN(ARGUMENTS.cbcType)>
+                	AND
+                    	cbc.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+                </cfif>
+                    
+                GROUP BY 
+                    cbc.hostid	
+                
+                HAVING
+                	 date_sent <= <cfqueryparam cfsqltype="cf_sql_date" value="#expirationDate#"> 
+
+                ORDER BY 
+                    date_sent 
+        </cfquery>
+	
+    	<cfreturn qGetExpiredHostCBC>
+    </cffunction>        
+    <!--- CBC Re-Run Functions --->
+
                     
 </cfcomponent>    
