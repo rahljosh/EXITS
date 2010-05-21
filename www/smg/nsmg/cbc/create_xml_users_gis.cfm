@@ -51,28 +51,28 @@
         <cfscript>
             //First Name
             if ( NOT LEN(qGetCBCUsers.firstName) ) {
-                ArrayAppend(Errors.Messages, "First Name is missing for user #firstName# #lastname# (###userid#).");			
+                ArrayAppend(Errors.Messages, "Missing first name for user #firstName# #lastname# (###userid#).");			
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // Last Name
             if ( NOT LEN(qGetCBCUsers.lastname) )  {
-                ArrayAppend(Errors.Messages, "Last Name is missing for user #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "Missing last name for user #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // DOB
             if ( NOT LEN(qGetCBCUsers.dob) OR NOT IsDate(qGetCBCUsers.dob) )  {
-                ArrayAppend(Errors.Messages, "DOB is missing for user #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "Missing DOB for user #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // SSN
             if ( NOT LEN(qGetCBCUsers.ssn) )  {
-                ArrayAppend(Errors.Messages, "SSN is missing for user #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "Missing SSN for user #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
