@@ -84,14 +84,14 @@
 			// Data Validation
 			// First Name
 			if ( NOT LEN(Evaluate(FORM.userType & "firstname")) ) {
-				ArrayAppend(Errors.Messages, "First Name is missing for host #FORM.userType# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");			
+				ArrayAppend(Errors.Messages, "Missing first name for host #FORM.userType# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");			
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
 			}
 			// Last Name
 			if ( NOT LEN(Evaluate(FORM.userType & "lastname")) )  {
-				ArrayAppend(Errors.Messages, "Last Name is missing for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# (###qGetCBCHost.hostid#).");
+				ArrayAppend(Errors.Messages, "Missing last name for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# (###qGetCBCHost.hostid#).");
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
@@ -105,7 +105,7 @@
 			}
 			// SSN
 			if ( NOT LEN(Evaluate(FORM.userType & "ssn")) )  {
-				ArrayAppend(Errors.Messages, "SSN is missing for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");
+				ArrayAppend(Errors.Messages, "Missing SSN for host #FORM.userType# #Evaluate(FORM.userType & "firstname")# #Evaluate(FORM.userType & "lastname")# (###qGetCBCHost.hostid#).");
 				if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
 					skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
 				}
@@ -219,28 +219,28 @@
         <cfscript>
 			// Data Validation
 			if ( NOT LEN(qGetCBCMember.name) ) {
-				ArrayAppend(Errors.Messages, "First Name is missing for #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");			
+				ArrayAppend(Errors.Messages, "Missing first name for #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");			
 				if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
 					skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
 				}
 			}
 		
 			if ( NOT LEN(qGetCBCMember.lastname) )  {
-				ArrayAppend(Errors.Messages, "Last Name is missing for #qGetCBCMember.name# member of (###qGetCBCMember.hostid#).");
+				ArrayAppend(Errors.Messages, "Missing last name for #qGetCBCMember.name# member of (###qGetCBCMember.hostid#).");
 				if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
 					skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
 				}
 			}
 			
 			if ( NOT LEN(qGetCBCMember.birthdate) OR NOT IsDate(qGetCBCMember.birthdate) )  {
-				ArrayAppend(Errors.Messages, "DOB is missing for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
+				ArrayAppend(Errors.Messages, "Missing DOB for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
 				if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
 					skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
 				}
 			}
 
 			if ( NOT LEN(qGetCBCMember.ssn) )  {
-				ArrayAppend(Errors.Messages, "SSN is missing for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
+				ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
 				if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
 					skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
 				}

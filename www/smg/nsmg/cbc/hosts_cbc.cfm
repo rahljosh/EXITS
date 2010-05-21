@@ -14,6 +14,9 @@
 <cfsilent>
 	
     <cfsetting requesttimeout="9999">
+
+	<!--- Import CustomTag --->
+    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
     
     <cftry>
 	    <!--- param variables --->
@@ -68,6 +71,11 @@
 		motherIDs = ValueList(qGetCBCMother.cbcfamID);
 		fatherIDs = ValueList(qGetCBCFather.cbcfamID);
 		memberIDs = ValueList(qGetHostMembers.childID);
+		
+		// Create Structure to store errors
+		Errors = StructNew();
+		// Create Array to store error messages
+		Errors.Messages = ArrayNew(1);
 	</cfscript>
     
     <!--- Form Submitted --->
@@ -188,11 +196,33 @@
 		<cfloop query="qGetCBCHost">
 			
             <cfscript>
+				// Set processCBC to 1, if error is found it is set to 0 and it does not validate.
+				processCBC = 1;
+			
 				// Data Validation
-				if (LEN(Evaluate(qGetCBCHost.cbc_type & "firstname"))
-					AND LEN(Evaluate(qGetCBCHost.cbc_type & "lastname"))
-					AND IsDate(Evaluate(qGetCBCHost.cbc_type & "dob")) 
-					AND LEN(Evaluate(qGetCBCHost.cbc_type & "ssn")) ) {
+				// First Name
+				if ( NOT LEN(Evaluate(qGetCBCHost.cbc_type & "firstname")) ) {
+					ArrayAppend(Errors.Messages, "Missing first name for host #qGetCBCHost.cbc_type# #Evaluate(qGetCBCHost.cbc_type & "lastname")# (###qGetCBCHost.hostid#).");			
+					processCBC = 0;
+				}
+				// Last Name
+				if ( NOT LEN(Evaluate(qGetCBCHost.cbc_type & "lastname")) )  {
+					ArrayAppend(Errors.Messages, "Missing last name for host #qGetCBCHost.cbc_type# #Evaluate(qGetCBCHost.cbc_type & "firstname")# (###qGetCBCHost.hostid#).");
+					processCBC = 0;
+				}
+				// DOB
+				if ( NOT LEN(Evaluate(qGetCBCHost.cbc_type & "dob")) OR NOT IsDate(Evaluate(qGetCBCHost.cbc_type & "dob")) )  {
+					ArrayAppend(Errors.Messages, "DOB is missing or is not a valid date for host #qGetCBCHost.cbc_type# #Evaluate(qGetCBCHost.cbc_type & "firstname")# #Evaluate(qGetCBCHost.cbc_type & "lastname")# (###qGetCBCHost.hostid#).");
+					processCBC = 0;
+				}
+				// SSN
+				if ( NOT LEN(Evaluate(qGetCBCHost.cbc_type & "ssn")) )  {
+					ArrayAppend(Errors.Messages, "Missing SSN for host #qGetCBCHost.cbc_type# #Evaluate(qGetCBCHost.cbc_type & "firstname")# #Evaluate(qGetCBCHost.cbc_type & "lastname")# (###qGetCBCHost.hostid#).");
+					processCBC = 0;
+				}
+				
+				// Data Validation
+				if ( VAL(processCBC) ) {
 
 					// Get Company ID
 					qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetCBCHost.companyID);
@@ -226,11 +256,32 @@
 		<cfloop query="qGetCBCMember">
 			
             <cfscript>
+				// Set processCBC to 1, if error is found it is set to 0 and it does not validate.
+				processCBC = 1;
+				
 				// Data Validation
-				if (LEN(qGetCBCMember.name)
-					AND LEN(qGetCBCMember.lastname)
-					AND IsDate(qGetCBCMember.birthdate) 
-					AND LEN(qGetCBCMember.SSN) ) {
+				if ( NOT LEN(qGetCBCMember.name) ) {
+					ArrayAppend(Errors.Messages, "Missing first name for #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");			
+					processCBC = 0;
+				}
+			
+				if ( NOT LEN(qGetCBCMember.lastname) )  {
+					ArrayAppend(Errors.Messages, "Missing last name for #qGetCBCMember.name# member of (###qGetCBCMember.hostid#).");
+					processCBC = 0;
+				}
+				
+				if ( NOT LEN(qGetCBCMember.birthdate) OR NOT IsDate(qGetCBCMember.birthdate) )  {
+					ArrayAppend(Errors.Messages, "Missing DOB for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
+					processCBC = 0;
+				}
+	
+				if ( NOT LEN(qGetCBCMember.ssn) )  {
+					ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
+					processCBC = 0;
+				}
+			
+				// Data Validation
+				if ( VAL(processCBC) ) {
 					
 					// Get Company ID
 					qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetCBCMember.companyID);
@@ -257,7 +308,7 @@
 
 				}
 			</cfscript>
-            					
+            		
         </cfloop>
         
     </cfif> <!--- VAL(FORM.submitted) --->
@@ -275,34 +326,19 @@
 
 <cfoutput>
 
-<!--- FORM submitted --->
-<cfif VAL(FORM.submitted)>
-
-	<script language="JavaScript">
-        <!-- 
-        alert("You have successfully updated this page. Thank You.");
-            location.replace("?curdoc=cbc/hosts_cbc&hostID=#hostID#");
-        //-->
-    </script>
-    
-</cfif>
-
 <cfif NOT VAL(hostID)>
 	Sorry, an error has ocurred. Please go back and try again.
 	<cfabort>
 </cfif>
 
-<!--- header of the table --->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
-<tr valign=middle height="24">
-	<td height="24" width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-	<td width="26" background="pics/header_background.gif"><img src="pics/school.gif"></td>
-	<td background="pics/header_background.gif"><h2>Criminal Background Check - Host Family and Members</h2></td>
-	<td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
-	</tr>
-</table>
+<!--- Table Header --->
+<gui:tableHeader
+	imageName="school.gif"
+	tableTitle="Criminal Background Check - Host Family and Members ###hostID#"
+	tableRightTitle=""
+/>
 
-<cfform action="?curdoc=cbc/hosts_cbc" method="post">
+<cfform action="?curdoc=cbc/hosts_cbc&hostID=#hostID#" method="post">
     <cfinput type="hidden" name="submitted" value="1">
     <cfinput type="hidden" name="hostID" value="#hostID#">
     <!--- list cbcs --->
@@ -311,7 +347,31 @@
     <cfinput type="hidden" name="memberIDs" value="#memberIDs#">
 
     <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-		<tr><th colspan="6" bgcolor="e2efc7">H O S T &nbsp; P A R E N T S</th><th bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_parents_info.cfm?hostID=#hostID#');">Edit Host Parents Info</a></th></tr>
+
+		<!--- FORM submitted --->
+        <cfif VAL(FORM.submitted)>
+
+			<!--- Display Errors --->
+            <cfif VAL(ArrayLen(Errors.Messages))>
+                <tr>
+                    <td colspan="6" style="padding:15px; line-height:1.5em;">
+                        <font color="##FF0000">
+                        	Criminal Background Checks could not be processed for one or more family members. <br> 
+                            Please review the following items: <br>
+                        </font>
+        
+                        <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
+                            #Errors.Messages[i]# <br>        	
+                        </cfloop>
+                    </td>
+                </tr>
+            <cfelse>
+                <tr><td colspan="6" style="padding:15px; line-height:1.5em;"><font color="##0000FF">Form Successfully Submitted.</font></td></tr>
+            </cfif>	
+            
+        </cfif>
+        	
+        <tr><th colspan="6" bgcolor="e2efc7">H O S T &nbsp; P A R E N T S</th><th bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_parents_info.cfm?hostID=#hostID#');">Edit Host Parents Info</a></th></tr>
         <tr><td colspan="6">&nbsp;</td></tr>
         
         <!--- HOST MOTHER --->
@@ -325,7 +385,6 @@
                 <th valign="top">CBC Received <br><font size="-2">mm/dd/yyyy</font></th>
                 <th valign="top">Request ID</th>
                 <th valign="top">Flag CBC</th>
-                <td width="20%">&nbsp;</td>
             </tr>
             <cfloop query="qGetCBCMother">
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
@@ -336,7 +395,6 @@
                     <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
                     <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostid#_rec.xml" target="_blank">#requestID#</a></td>
                     <td align="center"><input type="checkbox" name="motherFlagCBC#cbcfamID#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
-                    <td width="20%">&nbsp;</td>
                 </tr>
             </cfloop>
         
@@ -366,7 +424,6 @@
                         <td align="center">n/a</td>
                         <td align="center">n/a</td>
                         <td align="center">n/a</td>
-                        <td width="20%">&nbsp;</td>
                     </tr>
                     <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
                 </cfif>
@@ -387,7 +444,6 @@
                 <th valign="top">CBC Received <br><font size="-2">mm/dd/yyyy</font></th>
                 <th valign="top">Request ID</th>
                 <th valign="top">Flag CBC</th>
-                <td width="20%">&nbsp;</td>
             </tr>
             <cfloop query="qGetCBCFather">
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
@@ -398,7 +454,6 @@
                     <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
                     <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#qGetCBCFather.CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_mother_#qGetCBCFather.hostid#_rec.xml" target="_blank">#requestID#</a></td>
                     <td align="center"><input type="checkbox" name="fatherFlagCBC#cbcfamID#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
-                    <td width="20%">&nbsp;</td>
                 </tr>
             </cfloop>
         
@@ -428,7 +483,6 @@
                         <td align="center">n/a</td>
                         <td align="center">n/a</td>
                         <td align="center">n/a</td>
-                        <td width="20%">&nbsp;</td>
                     </tr>
                     <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
                 </cfif>
@@ -472,7 +526,6 @@
                     <th valign="top">CBC Sent <br><font size="-2">mm/dd/yyyy</font></th>		
                     <th valign="top">CBC Received <br><font size="-2">mm/dd/yyyy</font></th>
                     <th valign="top">Request ID</th>
-                    <td width="20%">&nbsp;</td>
                 </tr>
                 
                 <!--- UPDATE DATE RECEIVED --->
@@ -485,7 +538,6 @@
                             <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMember.hostID#&CBCFamID=#qGetCBCMember.CBCFamID#&file=batch_#qGetCBCMember.batchid#_host_mother_#qGetCBCMember.hostid#_rec.xml" target="_blank">#requestID#</a></td>
-                            <td width="20%">&nbsp;</td>
                         </tr>
                     </cfloop>
                 </cfif>
@@ -512,7 +564,6 @@
                         <td align="center">n/a</td>
                         <td align="center">n/a</td>
                         <td align="center">n/a</td>
-                        <td width="20%">&nbsp;</td>
                     </tr>
                     <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
                 <cfelse>
@@ -529,17 +580,12 @@
                 &nbsp;  &nbsp;  &nbsp;  &nbsp; &nbsp;  &nbsp;
                 <input name="Submit" type="image" src="pics/update.gif" border="0" alt="submit">
             </td>
-        <td width="20%">&nbsp;</td></tr>
     </table>
 </cfform>
 
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-	<tr valign=bottom >
-		<td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
-		<td width="100%" background="pics/header_background_footer.gif"></td>
-		<td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
-	</tr>
-</table>
+<!--- Table Footer --->
+<gui:tableFooter />
+
 </cfoutput>
 
 </body>

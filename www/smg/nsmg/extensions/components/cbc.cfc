@@ -1040,8 +1040,10 @@
                         <cfdump var="#requestXML#"> </p>
 						--->
                         
+                        <!---
                         <p>XML Received: <br>
                         <cfdump var="#responseXML#"> </p>
+						--->
                         
                         <p>Error: <br>
                         <cfdump var="#cfcatch#"> </p>
@@ -1141,9 +1143,9 @@
 
 				// Set Email Subject
 				if ( NOT VAL(ARGUMENTS.isReRun) ) {
-	            	emailSubject = 'Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+	            	emailSubject = 'Background Checks Search for #qGetCompany.companyshort# - #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
 				} else {
-	            	emailSubject = 'Scheduled Re-Run Background Checks Search for #qGetCompany.companyshort# #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+	            	emailSubject = 'Scheduled Re-Run Background Checks Search for #qGetCompany.companyshort# - #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
 				}
 			</cfscript>
         		
