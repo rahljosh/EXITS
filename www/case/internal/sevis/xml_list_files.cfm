@@ -36,7 +36,7 @@ function areYouSure() {
 
 <cfoutput>
 
-<cfset currentDirectory = "/var/www/html/case/internal/uploadedfiles/sevis/xml/#get_company.companyshort#/#url.type#">
+<cfset currentDirectory = "C:/websites/case/internal/uploadedfiles/sevis/xml/#url.type#/">
 <!--- Check to see if the Directory exists. --->
 <cfif NOT DirectoryExists(currentDirectory)>
    An error has ocurred. Please contact your system administrator.
@@ -92,7 +92,7 @@ function areYouSure() {
 	  <td><a href="xml/#get_company.companyshort#/#url.type#/#name#" target="_blank">#mydirectory.name#</a></td>
 	  <td>#mydirectory.size#</td>
 	  <td>#mydirectory.dateLastModified#</td>
-	  <td align="center"><a href="xml/#get_company.companyshort#/#url.type#/#name#" target="_blank"><img src="../virtualfolder/vfolderview.gif" border="0" alt="View File"></img></a></td>
+	  <td align="center"><a href="xml/#url.type#/#name#" target="_blank"><img src="../virtualfolder/vfolderview.gif" border="0" alt="View File"></img></a></td>
 	  <cfif client.usertype LTE '4'>
 	  <td align="center">
 		<cfform method="post" action="xml_delete_file.cfm" name="Delete">
