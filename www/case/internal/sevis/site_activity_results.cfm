@@ -32,7 +32,7 @@ WHERE companyid = '#client.companyid#'
 	</table>
 <cfelse>
 
-	<cffile action="read" file="/var/www/html/student-management/nsmg/sevis/xml/#get_company.companyshort#/school/#form.filename#" variable="myxml">
+	<cffile action="read" file="C:/websites/case/internal/uploadedfiles/sevis/xml/school/#form.filename#" variable="myxml">
 	<cfset mydoc = XmlParse(myxml)>
 	
 	<cfset batchid =#mydoc.TransactionLog.BatchHeader.BatchID.XmlText#> 
