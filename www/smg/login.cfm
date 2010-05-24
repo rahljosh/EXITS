@@ -1,129 +1,135 @@
-<cfif cgi.SERVER_NAME is 'jan.case-usa.org'>
-	<cflocation url="http://case.exitsapplication.com">
-</cfif>
-<cfquery name="get_company" datasource="mysql">
-select companyid, companyname
-from smg_companies where url_ref = '#cgi.server_name#' 
-</cfquery>
+<!--- Kill Extra Output --->
+<cfsilent>
 
-<cfif get_company.recordcount neq 0>
-	<cfset client.companyid = #get_company.companyid#>
-    <cfset client.companyname = '#get_company.companyname#'>
-<cfelse>
-	<cfset client.companyid = 0>
-    <cfset client.companyname = 'EXIT Group'>
-</cfif><head>
+	<!--- Param Form Variables --->
+    <cfparam name="FORM.username" default="">
+    <cfparam name="FORM.password" default="">
+    <cfparam name="FORM.email" default="">
+    <cfparam name="url.forgot" default="0">
+    <cfset errorMsg = ''>
+    
+	<cfif CGI.http_host is 'jan.case-usa.org'>
+        <cflocation url="http://case.exitsapplication.com">
+    </cfif>
+    
+    <cfquery name="qGetCompany" datasource="mysql">
+        SELECT 
+        	companyid, 
+            companyname,
+            support_email
+        FROM 
+        	smg_companies 
+        WHERE
+        	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_host#">
+    </cfquery>
+    
+    <cfif qGetCompany.recordcount>
+        <cfset CLIENT.companyid = qGetCompany.companyid>
+        <cfset CLIENT.companyname = qGetCompany.companyname>
+        <cfset CLIENT.emailFrom = qGetCompany.support_email>
+    <cfelse>
+        <cfset CLIENT.companyid = 0>
+        <cfset CLIENT.companyname = 'EXIT Group'>
+        <cfset CLIENT.emailFrom = 'support@iseusa.com'>
+    </cfif>
+    
+    <!--- Process Form Submission - login --->
+    <cfif isDefined("FORM.login_submitted")>
+    
+        <cfif TRIM(FORM.username) EQ "">
+            <cfset errorMsg = "Please enter the Username.">
+        <cfelseif TRIM(FORM.password) EQ "">
+            <cfset errorMsg = "Please enter the Password.">
+        <cfelse>
+        
+            <cfinvoke component="nsmg.cfc.user" method="login" returnvariable="errorMsg">
+                <cfinvokeargument name="username" value="#FORM.username#">
+                <cfinvokeargument name="password" value="#FORM.password#">
+            </cfinvoke>
+            
+        </cfif>
+    
+    <!--- Process Form Submission - forgot password --->
+    <cfelseif isDefined("FORM.forgot_submitted")>
+    
+        <cfif not isValid("email", TRIM(FORM.email))>
+            <cfset errorMsg = "Please enter a valid Email.">
+        <cfelse>
+    
+            <cfquery name="qCheckUsername" datasource="#application.dsn#">
+                SELECT 
+                	userID,
+                    firstName,
+                    lastName,
+                    userName,
+                    password
+                FROM 
+                	smg_users
+                WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.email)#">
+                	AND
+                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            </cfquery>
+                
+            <cfif NOT VAL(qCheckUsername.recordCount)>
+                <cfset errorMsg = "The email address entered was not found in our database.">
+            <cfelse>
+    
+                <cfsavecontent variable="email_message">
+                    <cfif qCheckUsername.recordCount GT 1>
+                        <p>(There were multiple accounts found with the email address entered.)</p>
+                    </cfif>
+                    <cfoutput query="qCheckUsername">				
+                        <p>
+                        	#qCheckUsername.firstname# #qCheckUsername.lastname#, a login information retrieval request was made from 
+                        	the <a href="http://#CGI.http_host#">http://#CGI.http_host#</a> website.
+           		            Your login information is:<br />
+                            Username: #qCheckUsername.username#<br />
+                            Password: #qCheckUsername.password#
+                        </p>
+                    </cfoutput>
+                    <!----
+                    <p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
+                    ---->
+                </cfsavecontent>
+                
+                <!--- send email --->
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="#FORM.email#">
+                    <cfinvokeargument name="email_subject" value="EXITS - Login Information">
+                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_from" value="#CLIENT.emailFrom#">
+                </cfinvoke>
+                
+                <!--- return to the login form, not forgot password FORM. --->
+                <cfset url.forgot = 0>
+                    
+                <script language="JavaScript">
+                	<cfset errorMsg = "Your login information has been sent to the email address entered.">
+                </script>
+            
+            </cfif>
+                
+        </cfif>
+     
+    </cfif>
+    
+</cfsilent>
+
+<head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><cfoutput>#client.companyname#/cfoutput></title>
-<cfif client.companyid eq 11>
-<link href="exitsapp_images/WEP.css" rel="stylesheet" type="text/css" media="screen"/>
-<cfelseif client.companyid eq 1>
-<link href="exitsapp_images/ISE.css" rel="stylesheet" type="text/css" media="screen"/>
+<title><cfoutput>#CLIENT.companyname#</cfoutput></title>
+<cfif CLIENT.companyid eq 11>
+	<link href="exitsapp_images/WEP.css" rel="stylesheet" type="text/css" media="screen"/>
+<cfelseif CLIENT.companyid eq 1>
+	<link href="exitsapp_images/ISE.css" rel="stylesheet" type="text/css" media="screen"/>
 <cfelse>
-<link href="exitsapp_images/STB.css" rel="stylesheet" type="text/css" media="screen"/>
+	<link href="exitsapp_images/STB.css" rel="stylesheet" type="text/css" media="screen"/>
 </cfif>
-
 <script src="SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
 <script src="SpryAssets/SpryValidationPassword.js" type="text/javascript"></script>
 <link href="SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
 <link href="SpryAssets/SpryValidationPassword.css" rel="stylesheet" type="text/css" />
 </head>
-
-
-
-
-
-<!--- this login page is for the new layout, and is the same as the flash/login.cfm include but modified to work as a separate page. --->
-<!----Set variables depending on company hitting site.
-    <cfparam name="client.companyname" default="STB Pacific">
-    <cfparam name="client.email" default="support@stbpacific.com">
-    <cfparam name="client.site_url" default="http://www.stbpacific.com">
-    <cfparam name="client.companyid" default="1">
-    <cfparam name="email_from" default="support@stbpacific.com">
-    <cfparam name="client.company_submitting" default="STB Pacific">
----->
-<cfparam name="form.username" default="">
-<cfparam name="form.password" default="">
-<cfparam name="form.email" default="">
-<cfparam name="url.forgot" default="0">
-<cfset errorMsg = ''>
-
-<!--- Process Form Submission - login --->
-<cfif isDefined("form.login_submitted")>
-
-	<cfif trim(form.username) EQ "">
-		<cfset errorMsg = "Please enter the Username.">
-	<cfelseif trim(form.password) EQ "">
-		<cfset errorMsg = "Please enter the Password.">
-	<cfelse>
-    
-        <cfinvoke component="nsmg.cfc.user" method="login" returnvariable="errorMsg">
-            <cfinvokeargument name="username" value="#form.username#">
-            <cfinvokeargument name="password" value="#form.password#">
-        </cfinvoke>
-        
-	</cfif>
-
-<!--- Process Form Submission - forgot password --->
-<cfelseif isDefined("form.forgot_submitted")>
-
-	<cfif not isValid("email", trim(form.email))>
-		<cfset errorMsg = "Please enter a valid Email.">
-	<cfelse>
-
-		<cfquery name="check_user" datasource="#application.dsn#">
-			SELECT *
-			FROM users
-			WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.email)#">
-		</cfquery>
-	 		
-		<cfif check_user.recordCount EQ 0>
-			<cfset errorMsg = "The email address entered was not found in our database.">
-		<cfelse>
-
-			<cfsavecontent variable="email_message">
-            	<cfif check_user.recordCount GT 1>
-                	<p>(There were multiple accounts found with the email address entered.)</p>
-                </cfif>
-				<cfoutput query="check_user">				
-					<p>#firstname# #lastname#, a login information retrieval request was made from the #client.company_submitting# website.
-					Your login information is:<br />
-					Username: #username#<br />
-					Password: #password#</p>
-				</cfoutput>
-                <!----
-				<p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
-				---->
-			</cfsavecontent>
-			
-			<!--- send email --->
-            <cfinvoke component="../nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#form.email#">
-                <cfinvokeargument name="email_subject" value="Login Information">
-                <cfinvokeargument name="email_message" value="#email_message#">
-                <cfinvokeargument name="email_from" value="#email_from#">
-            </cfinvoke>
-            
-            <!--- return to the login form, not forgot password form. --->
-            <cfset url.forgot = 0>
-				
-			<script language="JavaScript">
-                alert('Your login information has been sent to the email address entered.');
-            </script>
-		
-		</cfif>
-            
-	</cfif>
- 
-</cfif>
-
-<cfif errorMsg NEQ ''>
-	<script language="JavaScript">
-        alert('<cfoutput>#errorMsg#</cfoutput>');
-    </script>
-</cfif>
-
-
 
 <style type="text/css">
 <!--
@@ -159,6 +165,13 @@ a:active {
 </style>
 
 <cfoutput>
+
+<cfif errorMsg NEQ ''>
+	<script language="JavaScript">
+        alert('#errorMsg#');
+    </script>
+</cfif>
+
 <body>
 
 <div id="mainContent">
@@ -168,17 +181,13 @@ a:active {
     <table width="557" height="72" border="0">
       <tr>
         <td width="478" height="96" class="clientcompanyname">
-		<Cfif client.companyid eq 15>
-        <font size = px>#client.companyname#</font>
-        <!----
-        	#Left(client.companyname, 17)#<br>
-            #Right(client.companyname, 17)#---->
-        <cfelse>
-        
-        	<cfif client.companyid eq 11><font color="##000000"></cfif>#client.companyname#<cfif client.companyid eq 11></font></cfif>
-        </Cfif></td>
-        
-        <td align="right" width=100><img src="exitsapp_images/#client.companyid#.png" ></td>
+			<Cfif CLIENT.companyid eq 15>
+                <font size = px>#CLIENT.companyname#</font>
+            <cfelse>
+                <cfif CLIENT.companyid eq 11><font color="##000000"></cfif>#CLIENT.companyname#<cfif CLIENT.companyid eq 11></font></cfif>
+            </Cfif>
+        </td>
+        <td align="right" width=100><img src="exitsapp_images/#CLIENT.companyid#.png" ></td>
       </tr>
     </table>
   </div>
@@ -195,7 +204,7 @@ a:active {
           <tr>
             <td class="style1">Email:</td>
           
-            <td><cfinput type="text" name="email" value="#form.email#" class="style1" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email."></td>
+            <td><cfinput type="text" name="email" value="#FORM.email#" class="style1" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email."></td>
           </tr>
           <tr>
             <td>
@@ -219,12 +228,12 @@ a:active {
             </td>
             <td class="style1">Username:</td>
           
-            <td ><cfinput type="text" name="username" value="#form.username#" class="style1" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Username."></td>
+            <td ><cfinput type="text" name="username" value="#FORM.username#" class="style1" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Username."></td>
           </tr>
           <tr>
             <td class="style1">Password:</td>
             
-            <td><cfinput type="password" name="password" value="#form.password#" class="style1" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Password."></td>
+            <td><cfinput type="password" name="password" value="#FORM.password#" class="style1" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Password."></td>
           </tr>
           </table>
           <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
@@ -236,7 +245,6 @@ a:active {
         </table>
 	</cfif>
 
-  
 
   </div>
 </div>
