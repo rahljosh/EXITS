@@ -11,7 +11,8 @@
 
 		<!--- Import CustomTag --->
 		<cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
-	
+		
+		<!--- Table Header --->
 		<gui:tableHeader
 			imageName=""
 			tableTitle=""

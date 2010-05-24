@@ -12,6 +12,7 @@
 		<!--- Import CustomTag --->
 		<cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 	
+		<!--- Table Footer --->
 		<gui:tableFooter />
 	
 ----- ------------------------------------------------------------------------- --->
