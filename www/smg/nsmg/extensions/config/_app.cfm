@@ -47,16 +47,45 @@
 
 	}
 
+
 	/***** Create APPLICATION.PATH structure *****/
 	APPLICATION.PATH = StructNew();		
 	
 	// Set a short name for the APPLICATION.PATH
 	AppPath = APPLICATION.PATH;
+
+
+	/***** Set Settings based on Live or Dev Servers *****/
 	
-	// Getting error on querys/upload_logo.cfm. Getting full path including /query
-	// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
-	// Base Path eg. C:\websites\smg\nsmg\
-	AppPath.base = 'C:/websites/student-management/nsmg/';
+	// Check if this is Dev or Live 
+	if ( APPLICATION.isServerLocal ) {
+		// DEVELOPMENT Server Settings	
+
+		// Getting error on querys/upload_logo.cfm. Getting full path including /query
+		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		// Base Path eg. C:\websites\smg\nsmg\
+		AppPath.base = 'C:/websites/www/smg/nsmg/';
+
+		// Set Site URL
+		APPLICATION.site_url = 'http://dev.student-management.com';
+		
+	} else {
+		// PRODUCTION Server Settings
+
+		// Getting error on querys/upload_logo.cfm. Getting full path including /query
+		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		// Base Path eg. C:\websites\smg\nsmg\
+		AppPath.base = 'C:/websites/student-management/nsmg/';
+
+		// Set Site URL
+		APPLICATION.site_url = 'http://www.student-management.com';
+		
+	}
+
+	/* jQuery Latest Version 
+	http://code.jquery.com/jquery-latest.min.js
+	http://code.jquery.com/jquery.js */		
+	AppPath.jQuery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';	
 	
 	AppPath.companyLogo = AppPath.base & "pics/logos/"; 
 	AppPath.uploadedFiles = AppPath.base & "uploadedfiles/";	
@@ -76,8 +105,8 @@
 	// URL Used on Upload/Delete Files
 	AppPath.onlineApp.URL = 'https://www.student-management.com/nsmg/student_app/';		
 	AppPath.onlineApp.reloadURL = 'https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm';
-	
 	AppPath.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
+	
 	AppPath.onlineApp.picture = AppPath.uploadedFiles & "web-students/";
 	AppPath.onlineApp.letters = AppPath.uploadedFiles & "letters/";
 	AppPath.onlineApp.studentLetter = AppPath.uploadedFiles & "letters/students/";
@@ -86,24 +115,6 @@
 	AppPath.onlineApp.inserts = AppPath.uploadedFiles & "online_app/";
 	AppPath.onlineApp.virtualFolder = AppPath.uploadedFiles & "virtualfolder/";
 	AppPath.onlineApp.xmlApp = AppPath.uploadedFiles & "xml_app/";
-
-
-	/***** Set Settings based on Live or Dev Servers *****/
-	
-	// Check if this is Dev or Live 
-	if ( APPLICATION.isServerLocal ) {
-		// Development Server Settings	
-		
-		// Set Site URL
-		APPLICATION.site_url = 'http://dev.student-management.com';
-		
-	} else {
-		// Live Server Settings
-		
-		// Set Site URL
-		APPLICATION.site_url = 'http://www.student-management.com';
-		
-	}
 
 
 	/* 
