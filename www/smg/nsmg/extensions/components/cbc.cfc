@@ -95,6 +95,7 @@
                         h.date_received,
                         h.xml_received, 
                         h.requestID, 
+                        h.isNoSSN,
                         h.flagcbc,
                         h.seasonID, 
                         s.season,
@@ -152,6 +153,8 @@
                         smg_host_children 
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                    AND
+                    	liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">                    
                     AND 
                         (DATEDIFF(now( ) , birthdate)/365) > 17
                     ORDER BY 
@@ -168,6 +171,7 @@
         <cfargument name="cbcType" required="yes" hint="cbcType is required (mother, father or member)">
         <cfargument name="seasonID" required="yes" hint="SeasonID is required">
         <cfargument name="companyID" required="yes" hint="companyID is required">
+        <cfargument name="isNoSSN" default="0" hint="isNoSSN is not required">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
 
             <cfquery 
@@ -180,7 +184,8 @@
                         familyID, 
                         cbc_type, 
                         seasonID, 
-                        companyID, 
+                        companyID,
+                        isNoSSN, 
                         date_authorized
                     )
                     VALUES 
@@ -190,6 +195,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNoSSN#">,
                         <cfif LEN(ARGUMENTS.dateAuthorized)>
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
                         <cfelse>
@@ -201,16 +207,18 @@
 	</cffunction>
 
 
-	<cffunction name="updateHostFlagCBC" access="public" returntype="void" output="false" hint="Updates the flag field on the CBC record. It does not return a value">
+	<cffunction name="updateHostOptions" access="public" returntype="void" output="false" hint="Updates the flag and SSN field on the CBC record. It does not return a value">
 		<cfargument name="cbcFamID" required="yes" hint="cbcFamID is required">
-		<cfargument name="flagCBC" required="yes" hint="flagCBC is required. Values 0 or 1">
+        <cfargument name="isNoSSN" default="" hint="isNoSSN is not required. Values 0 or 1">
+		<cfargument name="flagCBC" default="0" hint="flagCBC is not required. Values 0 or 1">
         
             <cfquery 
-            	name="qUpdateHostFlagCBC" 
+            	name="qUpdateHostOptions" 
                 datasource="#APPLICATION.dsn#">
                     UPDATE 
                         smg_hosts_cbc
                     SET 
+                        isNoSSN = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isNoSSN#">,
                         flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">
                     WHERE 
                         cbcFamID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcFamID#">
@@ -236,6 +244,7 @@
                     cbc.seasonID,
                     cbc.companyID,
                     cbc.batchID,
+                    cbc.isNoSSN,
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
@@ -322,6 +331,7 @@
                     cbc.seasonID,
                     cbc.companyID,
                     cbc.batchID,                    
+                    cbc.isNoSSN,
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
@@ -1015,13 +1025,18 @@
                 </cfscript>
                 
                 <cfcatch type="any">
-                                       
+                    
+                    <!--- Store XML in a temp file --->
+                    <cffile action="write" file="#APPLICATION.PATH.temp#xmlReceived.xml" output="#responseXML#" nameconflict="overwrite" charset="utf-8">
+                    
                     <cfmail 
                     	from="#APPLICATION.EMAIL.support#"
                         to="#APPLICATION.EMAIL.errors#"
                         subject="CBC Error"
                         type="html">
-					
+						
+                        <cfmailparam file="#APPLICATION.PATH.temp#xmlReceived.xml" type="text">
+                        
                     	<p>#APPLICATION.site_url#</p>
                     
                         <p>
@@ -1207,8 +1222,8 @@
 					usOneSearchID = 1;					
 				}
 				
-				// Get USOneSearch Report ID
-                if ( readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
+				// Get USOneSearch Report ID                
+				if ( readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
                     ReportID = '#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
                 } else {
                     ReportID = '#readXML.bgc.XmlAttributes.orderId#';

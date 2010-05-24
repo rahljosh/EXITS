@@ -6,7 +6,9 @@
 	Desc:		Host CBC Management
 
 	Updated:  	10/12/09 - Combined qr_hosts_cbc.cfm to this file.
-				10/13/09 - Running CBCs on this page						
+				10/13/09 - Running CBCs on this page
+				05/21/10 - Adding CBCs error messages
+				05/24/10 - Adding run CBC without SSN option / Removing Flag CBC	
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -27,7 +29,16 @@
 		<cfparam name="FORM.motherSeasonID" default="0">
 		<cfparam name="FORM.fatherSeasonID" default="0">
 		<cfparam name="FORM.memberIDs" default="0">
-
+		
+        <cfparam name="FORM.mothercompanyID" default="0">
+        <cfparam name="FORM.motherSeasonID" default="0">
+        <cfparam name="FORM.motherdate_authorized" default="">
+        <cfparam name="FORM.motherIsNoSSN" default="0">
+        <cfparam name="FORM.fathercompanyID" default="0">
+        <cfparam name="FORM.fatherSeasonID" default="0">
+        <cfparam name="FORM.fatherdate_authorized" default="">
+        <cfparam name="FORM.fatherIsNoSSN" default="0">
+        
 	    <cfcatch type="any">
         
 			<cfscript>
@@ -91,7 +102,8 @@
 					cbcType='mother',
 					seasonID=FORM.motherSeasonID, 
 					companyID=FORM.mothercompanyID,
-					dateAuthorized=FORM.motherdate_authorized
+					dateAuthorized=FORM.motherdate_authorized,
+					isNoSSN=FORM.motherIsNoSSN
 				);		
 			}
 			
@@ -104,7 +116,8 @@
                     cbcType='father',
                     seasonID=FORM.fatherSeasonID, 
                     companyID=FORM.fathercompanyID,
-                    dateAuthorized=FORM.fatherdate_authorized
+                    dateAuthorized=FORM.fatherdate_authorized,
+					isNoSSN=FORM.fatherIsNoSSN
                 );	
             }
         </cfscript>
@@ -113,6 +126,12 @@
         <cfif VAL(FORM.memberIDs)>
         
             <cfloop list="#FORM.memberIDs#" index="memberID">
+                
+   				<!--- Param Form Variables / New Season --->
+                <cfparam name="FORM.#memberID#companyID" default="0">
+                <cfparam name="FORM.#memberID#seasonID" default="0">
+                <cfparam name="FORM.#memberID#date_authorized" default="">
+                <cfparam name="FORM.#memberID#IsNoSSN" default="0">
                 
                 <cfscript>
 					// Check if we have valid data for family members
@@ -124,7 +143,8 @@
 							cbcType='member',
 							seasonID=FORM[memberID & 'seasonID'],
 							companyID=FORM[memberID & 'companyID'],
-							dateAuthorized=FORM[memberID & "date_authorized"]
+							dateAuthorized=FORM[memberID & "date_authorized"],
+							isNoSSN=FORM[memberID & "isNoSSN"]
 						);	
 					}
 				</cfscript>
@@ -133,42 +153,56 @@
             
         </cfif>
         
-        <!--- CBC FLAG HOST MOTHER ---->
+        <!--- CBC FLAG/SSN HOST MOTHER ---->
         <cfloop list="#FORM.motherIDs#" index="cbcID">
             
+            <!--- Param Form Variables --->
+            <cfparam name="FORM.#cbcID#motherIsNoSSN" default="0">
+            
             <cfscript>
-				if ( IsDefined('motherFlagCBC' & cbcID) ) {
-					flagValue = 1;
-				} else {
-					flagValue = 0;
-				}
-			
-				// update Host Mother CBC Flag
-				APPCFC.CBC.updateHostFlagCBC(
+				// update Host Mother CBC Flag & SSN options
+				APPCFC.CBC.updateHostOptions(
 					cbcfamID=cbcID,
-					flagCBC=flagValue
+					isNoSSN=FORM[cbcID & "motherIsNoSSN"],
+					flagCBC=0
 				);			
 			</cfscript>
 
         </cfloop>
         
-        <!--- CBC FLAG HOST FATHER ---->
+        <!--- CBC FLAG/SSN HOST FATHER ---->
         <cfloop list="#FORM.fatherIDs#" index='cbcID'>
         
+            <!--- Param Form Variables --->
+            <cfparam name="FORM.#cbcID#fatherIsNoSSN" default="0">
+            
             <cfscript>
-				if ( IsDefined('fatherFlagCBC' & cbcID) ) {
-					flagValue = 1;
-				} else {
-					flagValue = 0;
-				}
-			
-				// update Host Father CBC Flag
-				APPCFC.CBC.updateHostFlagCBC(
+				// update Host Father CBC Flag & SSN options
+				APPCFC.CBC.updateHostOptions(
 					cbcfamID=cbcID,
-					flagCBC=flagValue
+					isNoSSN=FORM[cbcID & "fatherIsNoSSN"],
+					flagCBC=0
 				);			
 			</cfscript>
 
+        </cfloop>
+        
+        <!--- CBC FLAG/SSN HOST MEMBERS ---->
+        <cfloop list="#FORM.memberIDs#" index='cbcID'>
+        
+            <!--- Param Form Variables --->
+            <cfparam name="FORM.#cbcID#memberCBCFamID" default="0">
+            <cfparam name="FORM.#cbcID#memberIsNoSSN" default="0">
+
+            <cfscript>
+				// update Host Member CBC Flag & SSN options
+				APPCFC.CBC.updateHostOptions(
+					cbcfamID=FORM[cbcID & "memberCBCFamID"],					
+					isNoSSN=FORM[cbcID & "memberIsNoSSN"],
+					flagCBC=0
+				);			
+			</cfscript>
+			
         </cfloop>
         
         <!--- Submit Batch 10/20/2009 --->
@@ -178,14 +212,14 @@
 			// Set errorCount used in data validation
 			errorCount = 0;
 			
-			// Get CBCs Host Parents
+			// Get CBCs Host Parents Updated
             qGetCBCHost = APPCFC.CBC.getPendingCBCHost(
                 companyID=CLIENT.companyID,
 				hostID=FORM.hostID,
 				userType='mother,father'
             );	
 
-			// Get CBCs Host Member
+			// Get CBCs Host Members Updated
 			qGetCBCMember = APPCFC.CBC.getPendingCBCHostMember(
 				companyID=CLIENT.companyID,
 				hostID=FORM.hostID
@@ -216,7 +250,7 @@
 					processCBC = 0;
 				}
 				// SSN
-				if ( NOT LEN(Evaluate(qGetCBCHost.cbc_type & "ssn")) )  {
+				if ( NOT VAL(qGetCBCHost.isNoSSN) AND NOT LEN(Evaluate(qGetCBCHost.cbc_type & "ssn")) )  {
 					ArrayAppend(Errors.Messages, "Missing SSN for host #qGetCBCHost.cbc_type# #Evaluate(qGetCBCHost.cbc_type & "firstname")# #Evaluate(qGetCBCHost.cbc_type & "lastname")# (###qGetCBCHost.hostid#).");
 					processCBC = 0;
 				}
@@ -228,7 +262,7 @@
 					qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetCBCHost.companyID);
 				
                     // Process Batch
-                    CBCStatus = APPCFC.CBC.processBatch(
+					APPCFC.CBC.processBatch(
                         companyID=qGetCBCHost.companyID,
                         companyShort=qGetCompanyID.companyShort,
                         userType=qGetCBCHost.cbc_type,
@@ -244,8 +278,9 @@
                         middleName=Left(Evaluate(qGetCBCHost.cbc_type & 'middlename'),1),
                         DOBYear=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'yyyy'),
                         DOBMonth=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'mm'),
-                        DOBDay=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'dd')
-                    );	
+                        DOBDay=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'dd'),
+						noSSN=qGetCBCHost.isNoSSN
+                    );
 
 				}
 			</cfscript>
@@ -275,7 +310,7 @@
 					processCBC = 0;
 				}
 	
-				if ( NOT LEN(qGetCBCMember.ssn) )  {
+				if ( NOT VAL(qGetCBCMember.isNoSSN) AND NOT LEN(qGetCBCMember.ssn) )  {
 					ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
 					processCBC = 0;
 				}
@@ -287,7 +322,7 @@
 					qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetCBCMember.companyID);
 				
                     // Process Batch
-                    CBCStatus = APPCFC.CBC.processBatch(
+					APPCFC.CBC.processBatch(
                         companyID=qGetCompanyID.companyID,
                         companyShort=qGetCompanyID.companyShort,
                         userType='member',
@@ -303,13 +338,44 @@
                         middleName=Left(qGetCBCMember.middleName,1),
                         DOBYear=DateFormat(qGetCBCMember.birthdate, 'yyyy'),
                         DOBMonth=DateFormat(qGetCBCMember.birthdate, 'mm'),
-                        DOBDay=DateFormat(qGetCBCMember.birthdate, 'dd')
+                        DOBDay=DateFormat(qGetCBCMember.birthdate, 'dd'),
+						noSSN=qGetCBCMember.isNoSSN
                     );	
 
 				}
 			</cfscript>
             		
         </cfloop>
+    
+        <cfscript>
+			// We are not refreshing the page in order to keep the error message information so refresh queries to get CBCs that were just ran.
+			
+			// Get Host Mother CBC
+			qGetCBCMother = APPCFC.CBC.getCBCHostByID(
+				hostID=hostID, 
+				cbcType='mother'
+			);
+			
+			// Get Mother Available Seasons
+			qGetMotherSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMother.seasonID));
+			
+			// Gets Host Father CBC
+			qGetCBCFather = APPCFC.CBC.getCBCHostByID(
+				hostID=hostID, 
+				cbcType='father'
+			);
+			
+			// Get Father Available Seasons
+			qGetFatherSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCFather.seasonID));
+	
+			// Get Family Member CBC
+			qGetHostMembers = APPCFC.CBC.getEligibleHostMember(hostID=hostID);
+	
+			// Set Variables
+			motherIDs = ValueList(qGetCBCMother.cbcfamID);
+			fatherIDs = ValueList(qGetCBCFather.cbcfamID);
+			memberIDs = ValueList(qGetHostMembers.childID);
+		</cfscript>
         
     </cfif> <!--- VAL(FORM.submitted) --->
     
@@ -323,6 +389,13 @@
 <title>Host Family CBC Management</title>
 </head>
 <body>
+
+<style>
+	.columnHeader {
+		font-weight:bold;
+		vertical-align:top;
+	}
+</style>
 
 <cfoutput>
 
@@ -346,7 +419,7 @@
     <cfinput type="hidden" name="fatherIDs" value="#fatherIDs#">
     <cfinput type="hidden" name="memberIDs" value="#memberIDs#">
 
-    <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+    <table border="0" cellpadding="4" cellspacing="2" width="100%" class="section">
 
 		<!--- FORM submitted --->
         <cfif VAL(FORM.submitted)>
@@ -354,7 +427,7 @@
 			<!--- Display Errors --->
             <cfif VAL(ArrayLen(Errors.Messages))>
                 <tr>
-                    <td colspan="6" style="padding:15px; line-height:1.5em;">
+                    <td colspan="7" style="padding:15px; line-height:1.5em;">
                         <font color="##FF0000">
                         	Criminal Background Checks could not be processed for one or more family members. <br> 
                             Please review the following items: <br>
@@ -366,138 +439,140 @@
                     </td>
                 </tr>
             <cfelse>
-                <tr><td colspan="6" style="padding:15px; line-height:1.5em;"><font color="##0000FF">Form Successfully Submitted.</font></td></tr>
+                <tr><td colspan="7" style="padding:15px; line-height:1.5em;"><font color="##0000FF">Form Successfully Submitted.</font></td></tr>
             </cfif>	
             
         </cfif>
         	
-        <tr><th colspan="6" bgcolor="e2efc7">H O S T &nbsp; P A R E N T S</th><th bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_parents_info.cfm?hostID=#hostID#');">Edit Host Parents Info</a></th></tr>
-        <tr><td colspan="6">&nbsp;</td></tr>
+        <tr>
+        	<th colspan="6" bgcolor="e2efc7">H O S T &nbsp; P A R E N T S</th>
+            <th bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_parents_info.cfm?hostID=#hostID#');">Edit Host Parents Info</a></th>
+        </tr>
+        <tr><td colspan="7">&nbsp;</td></tr>
         
         <!--- HOST MOTHER --->
-        <cfif qGetHost.motherfirstname NEQ '' AND qGetHost.motherlastname NEQ ''>
-            <tr><td colspan="6" bgcolor="e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td><th bgcolor="e2efc7"></th></tr>
+        <cfif LEN(qGetHost.motherfirstname) AND LEN(qGetHost.motherlastname)>
+            <tr><td colspan="7" bgcolor="e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
             <tr>
-                <th valign="top">Company</th>
-                <th valign="top">Season</th>		
-                <th valign="top">Authorization Received <br><font size="-2">mm/dd/yyyy</font></th>		
-                <th valign="top">CBC Sent <br><font size="-2">mm/dd/yyyy</font></th>		
-                <th valign="top">CBC Received <br><font size="-2">mm/dd/yyyy</font></th>
-                <th valign="top">Request ID</th>
-                <th valign="top">Flag CBC</th>
+                <td class="columnHeader">Company</td>
+                <td class="columnHeader">Season</td>		
+                <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
+                <td class="columnHeader">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>		
+                <td class="columnHeader">CBC Received <br><font size="-2">mm/dd/yyyy</font></td>
+                <td class="columnHeader">Request ID</td>
+                <td class="columnHeader">Submit with no SSN</td>
             </tr>
             <cfloop query="qGetCBCMother">
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                    <td align="center">#companyshort#</td>
-                    <td align="center"><b>#season#</b></td>
-                    <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
-                    <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostid#_rec.xml" target="_blank">#requestID#</a></td>
-                    <td align="center"><input type="checkbox" name="motherFlagCBC#cbcfamID#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
+                    <td>#qGetCBCMother.companyshort#</td>
+                    <td>#qGetCBCMother.season#</td>
+                    <td>#DateFormat(qGetCBCMother.date_authorized, 'mm/dd/yyyy')#</td>
+                    <td><cfif NOT LEN(qGetCBCMother.date_sent)>in process<cfelse>#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')#</cfif></td>
+                    <td><cfif NOT LEN(qGetCBCMother.date_received)>in process<cfelse>#DateFormat(qGetCBCMother.date_received, 'mm/dd/yyyy')#</cfif></td>
+                    <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostid#_rec.xml" target="_blank">#qGetCBCMother.requestID#</a></td>
+                    <td>
+                    	<cfif LEN(qGetCBCMother.date_sent)>
+                        	#YesNoFormat(qGetCBCMother.isNoSSN)#
+                        <cfelse>
+	                        <input type="checkbox" name="#cbcfamID#motherIsNoSSN" value="1" <cfif VAL(qGetCBCMother.isNoSSN)>checked="checked"</cfif>>
+                    	</cfif>
+                    </td>
                 </tr>
             </cfloop>
         
 			<!--- NEW CBC - HOST MOTHER --->
             <cfif VAL(qGetMotherSeason.recordcount)>
-                <cfif qGetHost.motherssn EQ ''>
-                    <tr><td colspan="6">PS: Mother's SSN is missing.</td></tr>
-                </cfif>
-                <cfif qGetHost.motherdob EQ ''>
-                    <tr><td colspan="6">Mother's date of birth cannot be blank. Please check the DOB before you continue.</td></tr>
-                <cfelse>
-                    <tr>
-                        <td align="center">
-                            <cfselect name="mothercompanyID" required="yes" message="You must select a company">
-                                <cfloop query="qGetCompanies">
-                                <option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
-                                </cfloop>
-                            </cfselect>
-                        </td>		
-                        <td align="center">
-                            <cfselect name="motherSeasonID" required="yes" message="You must select a season">
-                                <option value="0">Select a Season</option>
-                                <cfloop query="qGetMotherSeason"><option value="#seasonID#">#season#</option></cfloop>
-                            </cfselect>
-                        </td>
-                        <td align="center"><cfinput type="Text" name="motherdate_authorized" size="8" value="" validate="date" maxlength="10"></td>
-                        <td align="center">n/a</td>
-                        <td align="center">n/a</td>
-                        <td align="center">n/a</td>
-                    </tr>
-                    <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
-                </cfif>
-            <cfelse>
-                <cfinput type="hidden" name="motherSeasonID" value="0">
+                <tr>
+                    <td>
+                        <select name="mothercompanyID">
+                            <cfloop query="qGetCompanies">
+                            <option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
+                            </cfloop>
+                        </select>
+                    </td>		
+                    <td>
+                        <select name="motherSeasonID">
+                            <option value="0">Select a Season</option>
+                            <cfloop query="qGetMotherSeason"><option value="#seasonID#">#season#</option></cfloop>
+                        </select>
+                    </td>
+                    <td><input type="Text" name="motherdate_authorized" value="" maxlength="10" class="date-pick"></td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td><input type="checkbox" name="motherIsNoSSN" value="1"></td>
+                </tr>
+                <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
             </cfif>
-            <tr><td colspan="6">&nbsp; <br></td></tr>
+            <tr><td colspan="7">&nbsp; <br></td></tr>
         </cfif>
         
         <!--- HOST FATHER --->
-        <cfif qGetHost.fatherfirstname NEQ '' AND qGetHost.fatherlastname NEQ ''>
-            <tr><td colspan="6" bgcolor="e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td><th bgcolor="e2efc7"></th></tr>
+        <cfif LEN(qGetHost.fatherfirstname) AND LEN(qGetHost.fatherlastname)>
+            <tr><td colspan="7" bgcolor="e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
             <tr>
-                <th valign="top">Company</th>
-                <th valign="top">Season</th>		
-                <th valign="top">Authorization Received <br><font size="-2">mm/dd/yyyy</font></th>		
-                <th valign="top">CBC Sent <br><font size="-2">mm/dd/yyyy</font></th>		
-                <th valign="top">CBC Received <br><font size="-2">mm/dd/yyyy</font></th>
-                <th valign="top">Request ID</th>
-                <th valign="top">Flag CBC</th>
+                <td class="columnHeader">Company</td>
+                <td class="columnHeader">Season</td>		
+                <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
+                <td class="columnHeader">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>		
+                <td class="columnHeader">CBC Received <br><font size="-2">mm/dd/yyyy</font></td>
+                <td class="columnHeader">Request ID</td>
+                <td class="columnHeader">Submit with no SSN</td>
             </tr>
             <cfloop query="qGetCBCFather">
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                    <td align="center">#companyshort#</td>
-                    <td align="center"><b>#season#</b></td>
-                    <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
-                    <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#qGetCBCFather.CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_mother_#qGetCBCFather.hostid#_rec.xml" target="_blank">#requestID#</a></td>
-                    <td align="center"><input type="checkbox" name="fatherFlagCBC#cbcfamID#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
+                    <td>#qGetCBCFather.companyshort#</td>
+                    <td>#qGetCBCFather.season#</td>
+                    <td>#DateFormat(qGetCBCFather.date_authorized, 'mm/dd/yyyy')#</td>
+                    <td><cfif NOT LEN(qGetCBCFather.date_sent)>in process<cfelse>#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')#</cfif></td>
+                    <td><cfif NOT LEN(qGetCBCFather.date_received)>in process<cfelse>#DateFormat(qGetCBCFather.date_received, 'mm/dd/yyyy')#</cfif></td>
+                    <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#qGetCBCFather.CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_mother_#qGetCBCFather.hostid#_rec.xml" target="_blank">#qGetCBCFather.requestID#</a></td>
+                    <td>
+                    	<cfif LEN(qGetCBCFather.date_sent)>
+                        	#YesNoFormat(qGetCBCFather.isNoSSN)#
+                        <cfelse>
+	                        <input type="checkbox" name="#cbcfamID#fatherIsNoSSN" value="1" <cfif VAL(qGetCBCFather.isNoSSN)>checked="checked"</cfif>>
+                    	</cfif>
+                    </td>
                 </tr>
             </cfloop>
         
 			<!--- NEW CBC --->
             <cfif VAL(qGetFatherSeason.recordcount)>
-                <cfif qGetHost.fatherssn EQ ''>
-                    <tr><td colspan="6">PS: Father's SSN is missing.</td></tr>
-                </cfif>
-                <cfif qGetHost.fatherdob EQ ''>
-                    <tr><td colspan="6">Father's date of birth cannot be blank. Please check the DOB before you continue.</td></tr>
-                <cfelse>
-                    <tr>
-                        <td align="center">
-                            <cfselect name="fathercompanyID" required="yes" message="You must select a company">
-                                <cfloop query="qGetCompanies">
-                                <option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
-                                </cfloop>
-                            </cfselect>
-                        </td>		
-                        <td align="center">
-                            <cfselect name="fatherSeasonID" required="yes" message="You must select a season">
-                                <option value="0">Select a Season</option>
-                                <cfloop query="qGetFatherSeason"><option value="#seasonID#">#season#</option></cfloop>
-                            </cfselect>
-                        </td>
-                        <td align="center"><cfinput type="Text" name="fatherdate_authorized" size="8" value="" validate="date" maxlength="10"></td>
-                        <td align="center">n/a</td>
-                        <td align="center">n/a</td>
-                        <td align="center">n/a</td>
-                    </tr>
-                    <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
-                </cfif>
-            <cfelse>
-                <cfinput type="hidden" name="fatherSeasonID" value="0">
+                <tr>
+                    <td>
+                        <select name="fathercompanyID">
+                            <cfloop query="qGetCompanies">
+                            <option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
+                            </cfloop>
+                        </select>
+                    </td>		
+                    <td>
+                        <select name="fatherSeasonID">
+                            <option value="0">Select a Season</option>
+                            <cfloop query="qGetFatherSeason"><option value="#seasonID#">#season#</option></cfloop>
+                        </select>
+                    </td>
+                    <td><input type="Text" name="fatherdate_authorized" value="" maxlength="10" class="date-pick"></td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td><input type="checkbox" name="fatherIsNoSSN" value="1"></td>
+                </tr>
+                <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
             </cfif>
-        	<tr><td colspan="6">&nbsp; <br></td></tr>
+        	<tr><td colspan="7">&nbsp; <br></td></tr>
         </cfif>
         
         <!--- OTHER FAMILY MEMBERS ---> 	
-        <tr><th colspan="6" bgcolor="e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; +17 &nbsp; Y E A R S &nbsp; OLD</th><th bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_fam_cbc.cfm?hostID=#hostID#');">Edit Family Members Info</a></th></tr>
-        <tr><td colspan="6">&nbsp;</td></tr>
-        <cfif qGetHostMembers.recordcount EQ '0'>
-            <tr><td colspan="6" align="center">There are no family members.</td></tr>
-            <tr><td colspan="6">&nbsp;</td></tr>
+        <tr>
+        	<th colspan="6" bgcolor="e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 17 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
+        	<td bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_fam_cbc.cfm?hostID=#hostID#');">Edit Family Members Info</a></td>
+		</tr>
+        <tr><td colspan="7">&nbsp;</td></tr>
+        <cfif NOT VAL(qGetHostMembers.recordcount)>
+            <tr><td colspan="7">There are no family members.</td></tr>
+            <tr><td colspan="7">&nbsp;</td></tr>
         <cfelse>	
             <cfloop query="qGetHostMembers">
                 
@@ -515,44 +590,50 @@
 					// Get Member Available Seasons
 					qGetMemberSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMember.seasonID));
 				</cfscript>
-   
+   				
    				<cfinput type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
    
-                <tr><td colspan="6" bgcolor="e2efc7"><b>#name# #lastname#</b></td><th bgcolor="e2efc7"></th></tr>
+                <tr><td colspan="7" bgcolor="e2efc7"><b>#name# #lastname#</b></td></tr>
                 <tr>
-                    <th valign="top">Company</th>
-                    <th valign="top">Season</th>		
-                    <th valign="top">Authorization Received <br><font size="-2">mm/dd/yyyy</font></th>		
-                    <th valign="top">CBC Sent <br><font size="-2">mm/dd/yyyy</font></th>		
-                    <th valign="top">CBC Received <br><font size="-2">mm/dd/yyyy</font></th>
-                    <th valign="top">Request ID</th>
+                    <td class="columnHeader">Company</td>
+                    <td class="columnHeader">Season</td>		
+                    <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
+                    <td class="columnHeader">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>		
+                    <td class="columnHeader">CBC Received <br><font size="-2">mm/dd/yyyy</font></td>
+                    <td class="columnHeader">Request ID</td>
+                    <td class="columnHeader">Submit with no SSN</td>
                 </tr>
                 
-                <!--- UPDATE DATE RECEIVED --->
-                <cfif qGetCBCMember.recordcount NEQ '0'>
-                    <cfloop query="qGetCBCMember">
-                        <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                            <td align="center">#companyshort#</td>
-                            <td align="center"><b>#season#</b></td>
-                            <td align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>
-                            <td align="center"><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center"><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center"><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMember.hostID#&CBCFamID=#qGetCBCMember.CBCFamID#&file=batch_#qGetCBCMember.batchid#_host_mother_#qGetCBCMember.hostid#_rec.xml" target="_blank">#requestID#</a></td>
-                        </tr>
-                    </cfloop>
-                </cfif>
-                
+                <cfloop query="qGetCBCMember">
+                    <input type="hidden" name="#familyID#memberCBCFamID" value="#qGetCBCMember.cbcFamID#">
+                    <tr bgcolor="#iif(qGetCBCMember.currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
+                        <td>#qGetCBCMember.companyshort#</td>
+                        <td>#qGetCBCMember.season#</td>
+                        <td>#DateFormat(qGetCBCMember.date_authorized, 'mm/dd/yyyy')#</td>
+                        <td><cfif NOT LEN(qGetCBCMember.date_sent)>in process<cfelse>#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#</cfif></td>
+                        <td><cfif NOT LEN(qGetCBCMember.date_received)>in process<cfelse>#DateFormat(qGetCBCMember.date_received, 'mm/dd/yyyy')#</cfif></td>
+                        <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMember.hostID#&CBCFamID=#qGetCBCMember.CBCFamID#&file=batch_#qGetCBCMember.batchid#_host_mother_#qGetCBCMember.hostid#_rec.xml" target="_blank">#qGetCBCMember.requestID#</a></td>
+                        <td>
+                            <cfif LEN(qGetCBCMember.date_sent)>
+                                #YesNoFormat(qGetCBCMember.isNoSSN)#
+                            <cfelse>
+                                <input type="checkbox" name="#familyID#memberIsNoSSN" value="1" <cfif VAL(qGetCBCMember.isNoSSN)>checked="checked"</cfif>>
+                            </cfif>
+                        </td>
+                    </tr>
+                </cfloop>
+
                 <!--- NEW CBC --->
-                <cfif qGetMemberSeason.recordcount GT '0'>
+                <cfif qGetMemberSeason.recordcount>
                     <tr>
-                        <td align="center">
+                        <td>
                             <cfselect name="#familyID#companyID" required="yes" message="You must select a company">
                                 <cfloop query="qGetCompanies">
-                                <option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
+                                	<option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
                                 </cfloop>
                             </cfselect>
                         </td>						
-                        <td align="center">
+                        <td>
                             <cfselect name="#familyID#seasonID" required="yes" message="You must select a season">
                                 <option value="0">Select a Season</option>
                                 <cfloop query="qGetMemberSeason">
@@ -560,16 +641,15 @@
                                 </cfloop>
                             </cfselect>
                         </td>
-                        <td align="center"><cfinput type="Text" name="#familyID#date_authorized" size="8" value="" validate="date" maxlength="10"></td>
-                        <td align="center">n/a</td>
-                        <td align="center">n/a</td>
-                        <td align="center">n/a</td>
+                        <td><input type="Text" name="#familyID#date_authorized" value="" maxlength="10" class="date-pick"></td>
+                        <td>n/a</td>
+                        <td>n/a</td>
+                        <td>n/a</td>
+                        <td><input type="checkbox" name="#familyID#IsNoSSN" value="1"></td>
                     </tr>
-                    <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
-                <cfelse>
-                    <cfinput type="hidden" name="#familyID#seasonID" value="0">
+                    <tr><td colspan="4"><font size="-2" color="##000099">* Season must be selected.</font></td></tr>
                 </cfif>
-            <tr><td colspan="6">&nbsp; <br><br></td></tr>			
+            <tr><td colspan="7">&nbsp; <br><br></td></tr>			
             </cfloop>
         </cfif>
     </table>
