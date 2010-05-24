@@ -1,12 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Untitled Document</title>
-</head>
-
-<body>
 <cfoutput>
 
 <cfloop From = "1" To = "#form.count#" Index = "x">
@@ -36,14 +27,14 @@
 	</cfif>
 </cfloop>
 
-<head>
 <script language="JavaScript">
-<!-- 
-alert("You have successfully updated this page. Thank You.");
-	location.replace("host_fam_cbc.cfm?hostid=#form.hostid#");
--->
+<!--
+  window.opener.location.href = window.opener.location.href;
+  if (window.opener.progressWindow) {
+    window.opener.progressWindow.close()
+  }
+  window.close();
+//-->
 </script>
-</head>
+
 </cfoutput>
-</body>
-</html>

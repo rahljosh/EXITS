@@ -7,7 +7,7 @@
 <title>Host Parents - Background Check</title>
 </head>
 
-<body onload="opener.location.reload()">
+<body> <!--- onload="opener.location.reload()" --->
 
 <cfif NOT IsDefined('url.hostid') OR url.hostid EQ ''>
 	An error has ocurred. Please go back and try again.
