@@ -81,7 +81,7 @@
                     <cfoutput query="qCheckUsername">				
                         <p>
                         	#qCheckUsername.firstname# #qCheckUsername.lastname#, a login information retrieval request was made from 
-                        	the <a href="http://#CGI.http_host#">http://#CGI.http_host#</a> website.
+                        	the <a href="http://#CGI.http_host#">http://#CGI.http_host#</a> website. <br>
            		            Your login information is:<br />
                             Username: #qCheckUsername.username#<br />
                             Password: #qCheckUsername.password#
