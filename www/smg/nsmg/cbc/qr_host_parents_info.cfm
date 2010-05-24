@@ -1,12 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Untitled Document</title>
-</head>
-
-<body>
 <cfoutput>
 	
 	<cfset fatherEncryptSSN = ''>
@@ -36,19 +27,19 @@
 			motherlastname = '#form.motherlastname#',
 			<cfif IsDefined('form.motherssn')>motherssn = '#motherEncryptSSN#',</cfif>
 			motherdob = <cfif form.motherdob EQ ''>null<cfelse>#CreateODBCDate(form.motherdob)#</cfif>
-		WHERE hostid = '#form.hostid#'
+		WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.hostid#">
 		LIMIT 1							
 	</cfquery>
 	</cftransaction>
 
-<head>
-<script language="JavaScript">
-<!-- 
-alert("You have successfully updated this page. Thank You.");
-	location.replace("host_parents_info.cfm?hostid=#form.hostid#");
--->
-</script>
-</head>
+	<script language="JavaScript">
+    <!--
+      window.opener.location.href = window.opener.location.href;
+      if (window.opener.progressWindow) {
+        window.opener.progressWindow.close()
+      }
+      window.close();
+    //-->
+    </script>
+
 </cfoutput>
-</body>
-</html>
