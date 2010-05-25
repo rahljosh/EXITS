@@ -58,15 +58,15 @@
                                     app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
                             </cfif>
 
-							<!--- Filter for WEP Site --->
-                      
-                        
-                           <cfif ListFind("5,10,12", CLIENT.companyID)>
-                                AND 
-                                    companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-                           <cfelse>
-                           		and (companyid = 0 or companyid = 5)
-							</cfif>	
+							<!--- Filter for Case and WEP --->
+                            <cfif ListFind("10,11", CLIENT.companyID)>
+                           		AND 
+                                	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                            <!--- show All but WEP (companyID 11) applications --->
+                            <cfelse>
+                            	AND
+                                	companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                            </cfif>	
                       		
                         </cfquery> 
                         
