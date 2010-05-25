@@ -59,13 +59,14 @@
 				cbcType=userType,
 				seasonID = newSeason,
 				companyID = qGetExpiredHostCBC.companyID,
-				dateAuthorized = qGetExpiredHostCBC.date_authorized
+				dateAuthorized = qGetExpiredHostCBC.date_authorized,
+				isReRun=1
 			);
 		</cfscript>
             
 	</cfloop>
 
-	<tr><td colspan="4">Total of users/members #qGetExpiredHostCBC.recordCount# records</td></tr>
+	<tr><td colspan="4">Total of host #userType# #qGetExpiredHostCBC.recordCount# records</td></tr>
 </table>
 </cfoutput>
 

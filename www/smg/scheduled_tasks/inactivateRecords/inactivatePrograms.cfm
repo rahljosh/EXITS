@@ -12,7 +12,7 @@
         AND
             companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes">)
         AND        
-            DATE_ADD(endDAte, INTERVAL 120 DAY) < now()
+            DATE_ADD(endDAte, INTERVAL 90 DAY) < now()
     </cfquery>
 
 </cfsilent>

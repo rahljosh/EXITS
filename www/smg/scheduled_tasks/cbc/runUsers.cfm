@@ -40,28 +40,28 @@
         <cfscript>
             //First Name
             if ( NOT LEN(qGetCBCUsers.firstName) ) {
-                ArrayAppend(Errors.Messages, "First Name is missing for user #firstName# #lastname# (###userid#).");			
+                ArrayAppend(Errors.Messages, "Missing first name for user #firstName# #lastname# (###userid#).");			
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // Last Name
             if ( NOT LEN(qGetCBCUsers.lastname) )  {
-                ArrayAppend(Errors.Messages, "Last Name is missing for user #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "Missing last name for user #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // DOB
             if ( NOT LEN(qGetCBCUsers.dob) OR NOT IsDate(qGetCBCUsers.dob) )  {
-                ArrayAppend(Errors.Messages, "DOB is missing for user #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "Missing DOB for user #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // SSN
             if ( NOT LEN(qGetCBCUsers.ssn) )  {
-                ArrayAppend(Errors.Messages, "SSN is missing for user #firstName# #lastname# (###userid#). <br> NOTE: Please run it manually.");
+                ArrayAppend(Errors.Messages, "Missing SSN for user #firstName# #lastname# (###userid#). <br> NOTE: Please run it manually.");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
@@ -94,7 +94,7 @@
     <cfif VAL(ArrayLen(Errors.Messages))>
         
         <cfsavecontent variable="errorMessage">
-            <p>Scheduled <cfif userType EQ 'member'>User</cfif> #userType# Re-Run CBCs</p>
+            <p>Scheduled <cfif userType EQ 'member'>User</cfif> #userType# CBCs</p>
             
             <font color="##FF0000">Please review the following issues:</font> <br />
         
@@ -110,7 +110,7 @@
         <cfmail 
             from="#APPLICATION.EMAIL.support#"
             to="#APPLICATION.EMAIL.support#" <!--- #qGetCompany.gis_email# / gary@iseusa.com --->
-            subject="Scheduled CBC #userType# Re-Run Issues"
+            subject="Scheduled CBC #userType# Issues"
             type="html">
                 <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
                     <tr>
@@ -147,7 +147,8 @@
                 companyID=qGetCBCUsers.companyID,
                 userID=CLIENT.userid,
                 cbcTotal=qGetCBCUsers.recordcount,
-                batchType='user'
+                batchType='user',
+				isReRun=1
             );	
         </cfscript>
     

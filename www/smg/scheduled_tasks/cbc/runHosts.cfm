@@ -65,14 +65,14 @@
                 // Data Validation
                 // First Name
                 if ( NOT LEN(Evaluate(userType & "firstname")) ) {
-                    ArrayAppend(Errors.Messages, "First Name is missing for host #userType# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");			
+                    ArrayAppend(Errors.Messages, "Missing first name for host #userType# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");			
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
                 }
                 // Last Name
                 if ( NOT LEN(Evaluate(userType & "lastname")) )  {
-                    ArrayAppend(Errors.Messages, "Last Name is missing for host #userType# #Evaluate(userType & "firstname")# (###qGetCBCHost.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing last name for host #userType# #Evaluate(userType & "firstname")# (###qGetCBCHost.hostid#).");
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
@@ -86,7 +86,7 @@
                 }
                 // SSN
                 if ( NOT LEN(Evaluate(userType & "ssn")) )  {
-                    ArrayAppend(Errors.Messages, "SSN is missing for host #userType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing SSN for host #userType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
@@ -99,7 +99,7 @@
         <cfif VAL(ArrayLen(Errors.Messages))>
             
             <cfsavecontent variable="errorMessage">
-                <p>Scheduled Host #userType# Re-Run CBCs</p>
+                <p>Scheduled Host #userType# CBCs</p>
                 
                 <font color="##FF0000">Please review the following issues:</font> <br />
             
@@ -115,7 +115,7 @@
             <cfmail 
                 from="#APPLICATION.EMAIL.support#"
                 to="#APPLICATION.EMAIL.support#" <!--- #qGetCompany.gis_email# / gary@iseusa.com --->
-                subject="Scheduled CBC Host #userType# Re-Run Issues"
+                subject="Scheduled CBC Host #userType# Issues"
                 type="html">
                     <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
                         <tr>
@@ -208,10 +208,7 @@
     
         <cfscript>
             // Get CBCs
-            qGetCBCMember = APPLICATION.CFC.CBC.getPendingCBCHostMember(
-                companyID=CLIENT.companyID,
-                seasonID=FORM.seasonID
-            );	
+            qGetCBCMember = APPLICATION.CFC.CBC.getPendingCBCHostMember();	
         </cfscript>  
     
 	    <cfif NOT VAL(qGetCBCMember.recordcount)>
@@ -224,28 +221,28 @@
             <cfscript>
                 // Data Validation
                 if ( NOT LEN(qGetCBCMember.name) ) {
-                    ArrayAppend(Errors.Messages, "First Name is missing for #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");			
+                    ArrayAppend(Errors.Messages, "Missing first name for #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");			
                     if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
                         skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
                     }
                 }
             
                 if ( NOT LEN(qGetCBCMember.lastname) )  {
-                    ArrayAppend(Errors.Messages, "Last Name is missing for #qGetCBCMember.name# member of (###qGetCBCMember.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing last name for #qGetCBCMember.name# member of (###qGetCBCMember.hostid#).");
                     if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
                         skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
                     }
                 }
                 
                 if ( NOT LEN(qGetCBCMember.birthdate) OR NOT IsDate(qGetCBCMember.birthdate) )  {
-                    ArrayAppend(Errors.Messages, "DOB is missing for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing DOB for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
                     if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
                         skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
                     }
                 }
     
                 if ( NOT LEN(qGetCBCMember.ssn) )  {
-                    ArrayAppend(Errors.Messages, "SSN is missing for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
                     if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
                         skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
                     }
@@ -258,7 +255,7 @@
         <cfif VAL(ArrayLen(Errors.Messages))>
 
             <cfsavecontent variable="errorMessage">
-                <p>Scheduled Host #userType# Re-Run CBCs</p>
+                <p>Scheduled Host #userType# CBCs</p>
                 
                 <font color="##FF0000">Please review the following issues:</font> <br />
             
@@ -274,7 +271,7 @@
             <cfmail 
                 from="#APPLICATION.EMAIL.support#"
                 to="#APPLICATION.EMAIL.support#" <!--- #qGetCompany.gis_email# / gary@iseusa.com --->
-                subject="Scheduled CBC Host #userType# Re-Run Issues"
+                subject="Scheduled CBC Host #userType# Issues"
                 type="html">
                     <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
                         <tr>
