@@ -197,25 +197,28 @@ END) AS testCompId
                     
                         <cfswitch expression="#getInvoicesCreditNotes.testCompId#">
                             <cfcase value="1">
-                                <cfset company = 'ISE RED'>
+                                <cfset company = 'ISE High School'>
                             </cfcase>
                             <cfcase value="2">
-                                <cfset company = 'ISE BLUE'>
+                                <cfset company = 'ISE High School'>
                             </cfcase>
                             <cfcase value="3">
-                                <cfset company = 'ISE GREEN'>
+                                <cfset company = 'ISE High School'>
                             </cfcase>
                             <cfcase value="4">
-                                <cfset company = 'ISE YELLOW'>
+                                <cfset company = 'ISE High School'>
                             </cfcase>
                             <cfcase value="5">
                                 <cfset company = 'SMG'>
                             </cfcase>
-                            <cfcase value="7,8">
-                                <cfset company = 'CSB'>
+                            <cfcase value="7">
+                                <cfset company = 'CSB Trainee'>
+                            </cfcase>
+                            <cfcase value="8">
+                                <cfset company = 'CSB Work & Travel'>
                             </cfcase>
                             <cfcase value="10">
-                                <cfset company = 'CASE'>
+                                <cfset company = 'CASE High School'>
                             </cfcase>
                         </cfswitch>
             
@@ -248,7 +251,7 @@ END) AS testCompId
                 
                 <small><strong>Notes:</strong><br/><br/>
                 
-                - <span style="font-size:medium; color:##0000A0">"You can "<span style="font-size:medium; color:##FF0000">view</span>" and "<span style="font-size:medium; color:##FF0000">print</span>" your invoices and credit notes by clicking on the "<strong><span style="font-size:medium; color:##000000">Docum Numb</span></strong>" on the table above. In order to do this, you need to log in into your EXITS account (<a href="http://www.student-management.com/flash/" target="_top"><strong>click here to log in</strong></a>, when the page pops up click on "EXITS login portal", then enter your username and password).</span><br/><br/>
+                <!--- - <span style="font-size:medium; color:##0000A0">"You can "<span style="font-size:medium; color:##FF0000">view</span>" and "<span style="font-size:medium; color:##FF0000">print</span>" your invoices and credit notes by clicking on the "<strong><span style="font-size:medium; color:##000000">Docum Numb</span></strong>" on the table above. In order to do this, you need to log in into your EXITS account (<a href="http://www.student-management.com/flash/" target="_top"><strong>click here to log in</strong></a>, when the page pops up click on "EXITS login portal", then enter your username and password).</span><br/><br/> --->
                 
                 - The amounts in <span style="font-size:small; font-weight:bolder; color:##FF0000">red</span> between parentheses are negative values that decrease your balance. They represent the credit notes that were issued to cancel/offset charges that are no longer due. If you wish to apply a credit note against an unpaid invoice, you can just send me an e-mail requesting it (credit notes must be applied against invoices under the same company).<br/><br/>
                 
