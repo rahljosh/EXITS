@@ -4,6 +4,8 @@
 <cfsilent>
 	
     <!--- Param Form Variables --->
+    <cfparam name="FORM.programID" default="">
+    <cfparam name="FORM.isUsCitizen" default="0">
     <cfparam name="FORM.id1" default="0">
     <cfparam name="FORM.id2" default="0">
     <cfparam name="FORM.intrep" default="0">
@@ -40,10 +42,13 @@
         	smg_hosts h ON s.hostid = h.hostid			
         WHERE 
         	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-		<!--- 
 		AND 
-			s.active = '1' 
-		--->
+			s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        
+        <cfif LEN(FORM.programID)>
+        	AND
+            	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+        </cfif>
         
 		<cfif VAL(FORM.id1) AND VAL(FORM.id2)>
         	AND 
@@ -59,14 +64,14 @@
             	s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
         </cfif>
         
-		<cfif IsDefined('FORM.usa')>
+		<cfif VAL(FORM.isUsCitizen)>
         	AND 
             	(
-                	s.countryresident = '232' 
+                	s.countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="232"> 
                 OR 
-                	s.countrycitizen = '232' 
+                	s.countrycitizen = <cfqueryparam cfsqltype="cf_sql_integer" value="232"> 
                 OR 
-                	countrybirth = '232'
+                	countrybirth = <cfqueryparam cfsqltype="cf_sql_integer" value="232">
                 )
         </cfif>
         
@@ -85,39 +90,18 @@
 </cfsilent>    
 
 <style>
-	@page Section1 {
-		size:8.5in 11.0in;
-		margin:0.4in 0.4in 0.46in;
-		/* margin:'0.3in' '0.3in' '0.46in' '0.3in'; */
-
-	}
-	
-	div.Section1 {		
-		page:Section1;
+	.tableHolder {		
+		width:7in; /* 17.7cm */		
+		/* height:10in; /* 25cm */
+		padding:0;
+		margin:0;	
+		/* border: 1px thin black; */
 	}
 
-	div.fullCol {
-		width:100%;
-		clear:both;
-		padding:0px;
-		display:block;
-	}
-
-	div.leftCol {
-		width:45%;
-		float:left;
-		padding:0px;
-	}
-	
-	div.rightCol {
-		width:55%;
-		float:right;
-		padding:0px;
-	}
-
-	td.label {
-		width:255.0pt; /* width:254.0pt; */
-		height:142.0pt;
+	.tableCell {
+		height:2in; /* 5.0cm */
+		width:3.5in; /* 8.9cm */	
+		vertical-align:top;
 	}
 	
 	p {
@@ -127,11 +111,33 @@
 		font-family:"Arial";
 	}
 	
-	.style1 {font-size: 6pt;}  /* company address */
-	.style2 {font-size: 7pt;}  /* host + rep info */
-	.style3 {font-size: 8pt;}  /* student's name */
+	.style1 {font-size: 6pt; padding:0px;}  /* company address */
+	.style2 {font-size: 7pt; padding:0px;}  /* host + rep info */
+	.style3 {font-size: 8pt; padding:0px;}  /* student's name */
 	.style4 {font-size: 10pt; font-weight:bold; padding-top:5px; } /* company name */
-	.style5 {font-size: 5pt;} 
+	.style5 {font-size: 5pt; padding:0px;} 
+
+	div.fullCol {
+		width:100%;
+		clear:both;
+		padding:0px;
+		margin:0px;
+		display:block;
+	}
+
+	div.leftCol {
+		width:45%;
+		float:left;
+		padding:0px;
+		margin:0px;
+	}
+	
+	div.rightCol {
+		width:55%;
+		float:right;
+		padding:0px;
+		margin:0px;
+	}
 </style>
 			
 <!--- Height = 5cm = 142 pixels = 1.96in / Width = 9cm = 255 pixels = 3.54in --->
@@ -143,8 +149,6 @@
 
 <cfoutput>
 
-<div class="Section1">
-	
     <cfloop query="qGetStudents">
 
 		<!--- get regional manager --->
@@ -185,7 +189,7 @@
                     
 		<cfif pagebreak EQ 0>				
 			<!--- Start a table for our labels --->
-            <table align="center" width="670px" cellspacing="2" cellpadding="0"> <!--- border="0" ---->
+            <table align="center" class="tableHolder" border="0">
 		</cfif>
         
 		  <!--- If this is the first column, then start a new row --->
@@ -194,7 +198,7 @@
 		</cfif>	
         			
 			<!--- Output label --->			
-			<td class="label" valign="top">
+			<td class="tableCell">
 					
 				<!--- HEADER --->
                 <table border="0" width="100%">
@@ -323,7 +327,5 @@
     </cfif>
     
     </table>
-
-</div>
 
 </cfoutput>

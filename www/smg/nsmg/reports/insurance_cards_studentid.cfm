@@ -4,6 +4,7 @@
     <!--- Param Form Variables --->
     <cfparam name="FORM.intRep" default="0">
     <cfparam name="FORM.programID" default="">
+    <cfparam name="FORM.isUsCitizen" default="0">
     <cfparam name="FORM.insurance_typeID" default="0">
     <cfparam name="FORM.id1" default="0">
     <cfparam name="FORM.id2" default="0">
@@ -56,6 +57,17 @@
         <cfif VAL(FORM.insurance_typeid)>
             AND 
                 u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.insurance_typeid#">
+        </cfif>
+
+		<cfif VAL(FORM.isUsCitizen)>
+        	AND 
+            	(
+                	s.countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="232"> 
+                OR 
+                	s.countrycitizen = <cfqueryparam cfsqltype="cf_sql_integer" value="232"> 
+                OR 
+                	countrybirth = <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+                )
         </cfif>
 
 		<cfif VAL(FORM.id1) AND VAL(FORM.id2)>

@@ -208,7 +208,12 @@
                     
                         <cfform action="reports/labels_student_idcards_id.cfm" method="post" target="_blank">
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
-                            <tr><th colspan="2" bgcolor="##e2efc7">Students ID Cards per ID<th></tr>
+                            <tr><th colspan="2" bgcolor="##e2efc7">Students ID Cards per Program/ID<th></tr>
+                            <tr>
+                                <td>Program:</td>
+                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="5"></cfselect></td>
+                            </tr>
+
                             <tr align="left">
                                 <td>Intl. Rep:</td>
                                 <td>
@@ -233,7 +238,10 @@
                                 	To: &nbsp; <input type="text" name="id2" size="4" maxlength="6">
                                 </td>
                             </tr>
-                            <tr><td align="right"><input type="checkbox" name="usa"></input></td><td>Only American Citizen Students</td></tr>
+                            <tr>	
+                            	<td align="right"><input type="checkbox" name="isUsCitizen" id="isUsCitizen" value="1"></input></td>
+                            	<td><label for="isUsCitizen">Only American Citizen Students</label></td>
+                            </tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
                         </table>
                         </cfform>	
@@ -242,9 +250,12 @@
                 </tr>
                 
                 <tr> 
-                    <td colspan="2"><div align="justify">
-                    <font color="FF0000">Note: </font>Make sure to redefine the margins and take out the header and footer page before you
-                     print the ID cards. Please redefine all margins (top, botton, left and right) to 0.3. </font></div>
+                    <td colspan="2">
+                    	<div align="justify">
+                            <font color="FF0000">Note: </font>
+                            Use Internet Explorer. Please Make sure to redefine the margins and take out the header and footer page before you
+                            print the ID cards. Please redefine all margins (top, botton, left and right) to 0.3.                             
+						</div>
                     </td>
                 </tr>
             </table>
@@ -322,6 +333,10 @@
                                     &nbsp;
                                 	To: &nbsp; <input type="text" name="id2" size="4" maxlength="6">
                                 </td>
+                            </tr>
+                            <tr>	
+                            	<td align="right"><input type="checkbox" name="isUsCitizen" id="isUsCitizen" value="1"></input></td>
+                            	<td><label for="isUsCitizen">Only American Citizen Students</label></td>
                             </tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
                         </table>
