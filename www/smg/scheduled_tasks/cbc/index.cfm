@@ -71,7 +71,6 @@
 <cfinclude template="runHosts.cfm">
 
 
-
 <!--- Host Member --->    
 <cfscript>
 	userType = 'member';

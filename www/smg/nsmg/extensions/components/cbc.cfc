@@ -173,6 +173,7 @@
         <cfargument name="companyID" required="yes" hint="companyID is required">
         <cfargument name="isNoSSN" default="0" hint="isNoSSN is not required">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
+        <cfargument name="isReRun" default="0" hint="isReRun is not required">
 
             <cfquery 
             	name="qInsertHostCBC" 
@@ -185,7 +186,8 @@
                         cbc_type, 
                         seasonID, 
                         companyID,
-                        isNoSSN, 
+                        isNoSSN,
+                        isReRun, 
                         date_authorized
                     )
                     VALUES 
@@ -196,6 +198,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNoSSN#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
                         <cfif LEN(ARGUMENTS.dateAuthorized)>
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
                         <cfelse>
@@ -529,6 +532,7 @@
         <cfargument name="familyMemberID" default="0" hint="Family Member ID is not required">
         <cfargument name="seasonID" required="yes" hint="SeasonID is required">
         <cfargument name="companyID" required="yes" hint="companyID is required">
+        <cfargument name="isReRun" default="0" hint="isReRun is not required">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
 
             <cfquery 
@@ -539,7 +543,8 @@
                     	userid, 
                         familyid, 
                         seasonid, 
-                        companyid, 
+                        companyid,
+                        isReRun, 
                         date_authorized
                     )
                     VALUES 
@@ -548,6 +553,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">,  
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
                         <cfif LEN(ARGUMENTS.dateAuthorized)>
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
                         <cfelse>
@@ -1555,11 +1561,11 @@
 	
     <!--- CBC Re-Run Functions --->
 	<cffunction name="getExpiredUserCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
-        <cfargument name="cbcType" default="" hint="User or member">
+        <cfargument name="cbcType" type="string" hint="cbcType is required. User or member">
         
 		<cfscript>
             //  Set expiration date - 11 months
-            var expirationDate = DateFormat(DateAdd('m', -11, now()),'yyyy-mm-dd');
+            var expirationDate = DateFormat(DateAdd('m', -12, now()),'yyyy-mm-dd');
 			
 			// Set Last Login
 			var lastLogin = DateFormat(DateAdd('yyyy', -1, now()),'yyyy-mm-dd');
@@ -1633,14 +1639,11 @@
     
 
 	<cffunction name="getExpiredHostCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
-        <cfargument name="cbcType" default="" hint="Father/Mother/Member">
+        <cfargument name="cbcType" type="string" hint="cbcType is required. Father/Mother/Member">
         
 		<cfscript>
             //  Set expiration date - 11 months
-            var expirationDate = DateFormat(DateAdd('m', -11, now()),'yyyy-mm-dd');
-			
-			// Set Last Login
-			var lastLogin = DateFormat(DateAdd('yyyy', -1, now()),'yyyy-mm-dd');
+            var expirationDate = DateFormat(DateAdd('m', -12, now()),'yyyy-mm-dd');
         </cfscript>
     
         <cfquery 
@@ -1660,9 +1663,17 @@
                 INNER JOIN 
                     smg_hosts h ON h.hostid = cbc.hostid
                 INNER JOIN 
-                    smg_students s ON s.hostid = cbc.hostid AND s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    smg_students s ON s.hostid = cbc.hostid 
+                    	AND 
+                        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                        AND 
+                        	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
                 INNER JOIN	
-                	smg_programs p ON p.programID = s.programID AND p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                	smg_programs p ON p.programID = s.programID 
+                    	AND 
+                        	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+						AND
+                        	p.endDate > now() 
                 WHERE 
                     cbc.hostID NOT IN 
                     ( 
@@ -1677,6 +1688,19 @@
                                 cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
                         </cfif>   
                     )   
+                
+                <cfif ARGUMENTS.cbcType EQ 'father'>
+                	AND
+                    	h.fatherFirstName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+					AND
+                    	h.fatherLastName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">      
+                <cfelseif ARGUMENTS.cbcType EQ 'mother'>
+                	AND
+                    	h.motherFirstName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+					AND
+                    	h.motherLastName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">      
+                </cfif>
+                
                 AND 
                     (
                         cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
@@ -1698,7 +1722,7 @@
                 ORDER BY 
                     date_sent 
         </cfquery>
-	
+		
     	<cfreturn qGetExpiredHostCBC>
     </cffunction>        
     <!--- CBC Re-Run Functions --->
