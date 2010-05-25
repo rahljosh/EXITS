@@ -46,11 +46,15 @@
                 s.branchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
         </cfif>
         
-        <!--- Filter for WEP Site --->
-        <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyID)>
+		<!--- Filter for Case and WEP --->
+        <cfif ListFind("10,11", CLIENT.companyID)>
             AND 
-                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-        </cfif>			
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <!--- show All but WEP (companyID 11) applications --->
+        <cfelse>
+            AND
+                s.companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+        </cfif>	
         
 		<!--- Display Branch Applications (3/4) in the Active list --->
         <cfif CLIENT.usertype NEQ 11 AND URL.status EQ 2>
