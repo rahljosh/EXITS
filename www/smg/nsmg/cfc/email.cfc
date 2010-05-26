@@ -34,7 +34,9 @@
 		<cfargument name="userid" type="string" required="false" default="">
 
 		<!--- optional attachment. --->
-		<cfargument name="email_file" type="string" required="false" default="">
+		<cfargument name="email_file" type="string" required="false" default="" hint="optional attachment">
+		<cfargument name="email_file2" type="string" required="false" default="" hint="optional attachment">        
+		<cfargument name="email_file3" type="string" required="false" default="" hint="optional attachment">
 
 		<cfset var template_file = ''>
         <cfset var get_user = ''>
@@ -45,7 +47,7 @@
 			
             <cfinclude template="../email/email_top.cfm">
             
-            <cfinclude template="../email_template.cfm">
+            <cfinclude template="../email/email_template.cfm">
 		
         	<cfinclude template="../email/email_bottom.cfm">
         
@@ -57,6 +59,16 @@
             <!--- Attach File --->
 			<cfif LEN(ARGUMENTS.email_file)>
 				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file#">                
+            </cfif>
+
+            <!--- Attach File 2 --->
+			<cfif LEN(ARGUMENTS.email_file2)>
+				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file2#">                
+            </cfif>
+
+            <!--- Attach File 3 --->
+			<cfif LEN(ARGUMENTS.email_file3)>
+				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file3#">                
             </cfif>
 			
             <!--- Email Body --->
