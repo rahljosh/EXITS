@@ -47,9 +47,9 @@ function OpenApp(url)
 }
 
 // Send online applications 
-function SendEmail(url)
+function SendEmail(url, setHeight, setWidth)
 {
-	newwindow=window.open(url, 'Application', 'height=410, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=no'); 
+	newwindow=window.open(url, 'Application', 'height=' + setHeight + ', width=' + setWidth + ', location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=no'); 
 	if (window.focus) {newwindow.focus()}
 }
 
