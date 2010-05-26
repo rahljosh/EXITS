@@ -335,8 +335,8 @@
                                 </td>
                             </tr>
                             <tr>	
-                            	<td align="right"><input type="checkbox" name="isUsCitizen" id="isUsCitizen" value="1"></input></td>
-                            	<td><label for="isUsCitizen">Only American Citizen Students</label></td>
+                            	<td align="right"><input type="checkbox" name="isUsCitizen" id="isUsCitizen2" value="1"></input></td>
+                            	<td><label for="isUsCitizen2">Only American Citizen Students</label></td>
                             </tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
                         </table>
