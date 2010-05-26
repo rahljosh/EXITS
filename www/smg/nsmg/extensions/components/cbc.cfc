@@ -255,17 +255,23 @@
                     h.fatherlastName, 
                     h.fatherfirstName, 
                     h.fathermiddlename, 
-                    fatherdob, 
-                    fatherssn,
+                    h.fatherdob, 
+                    h.fatherssn,
                     h.motherlastName, 
                     h.motherfirstName, 
                     h.mothermiddlename, 
-                    motherdob,
-                    motherssn
+                    h.motherdob,
+                    h.motherssn,
+                    c.companyShort,
+                    c.gis_username,
+                    c.gis_password,
+                    c.gis_account                                           
                 FROM 
                     smg_hosts_cbc cbc
                 INNER JOIN 
                     smg_hosts h ON h.hostID = cbc.hostID
+                LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = cbc.companyID
                 WHERE 
                     cbc.date_authorized IS NOT NULL                
 				AND
@@ -310,6 +316,9 @@
                     cbc.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
 				</cfif>
                 
+                ORDER BY	
+                	c.companyID
+                
                 <!--- If running batch, limit to 20 so we don't get time outs --->
                 LIMIT 20
         </cfquery>
@@ -344,11 +353,17 @@
                     child.lastName, 
                     child.birthdate, 
                     child.SSN, 
-                    child.hostID
+                    child.hostID,
+					c.companyShort,
+                    c.gis_username,
+                    c.gis_password,
+                    c.gis_account   
                 FROM 
                 	smg_hosts_cbc cbc
                 INNER JOIN 
                 	smg_host_children child ON child.childID = cbc.familyID
+                LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = cbc.companyID    
                 WHERE 
                 	cbc.date_authorized IS NOT NULL 
 				AND
@@ -384,6 +399,9 @@
                 AND 
                     child.SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 </cfif>            
+
+                ORDER BY	
+                	c.companyID
 
                 LIMIT 20
 			</cfquery>
@@ -607,13 +625,19 @@
                     u.lastName, 
                     u.middlename, 
                     u.dob, 
-                    u.ssn
+                    u.ssn,
+                    c.companyShort,
+                    c.gis_username,
+                    c.gis_password,
+                    c.gis_account                    
                 FROM 
                 	smg_users_cbc cbc
                 INNER JOIN 
                 	smg_users u ON u.userID = cbc.userID
                 INNER JOIN 
                 	user_access_rights uar ON uar.userID = u.userID
+				LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = cbc.companyID                    
                 WHERE 
                     cbc.date_authorized IS NOT NULL
 				AND                    
@@ -651,7 +675,10 @@
                 AND 
                     u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 				</cfif>
-
+				
+                ORDER BY
+                	cbc.companyID
+                
                 <!--- If running batch, limit to 20 so we don't get time outs --->
                 LIMIT 20
         </cfquery>
@@ -1643,7 +1670,7 @@
         
 		<cfscript>
             //  Set expiration date - 11 months
-            var expirationDate = DateFormat(DateAdd('m', -12, now()),'yyyy-mm-dd');
+            var expirationDate = DateFormat(DateAdd('m', -11, now()),'yyyy-mm-dd');
         </cfscript>
     
         <cfquery 

@@ -55,7 +55,6 @@
         <!--- NO CBC FOUND ---> 
         <cfif NOT VAL(qGetCBCHost.recordcount)>
             <tr><td>Sorry, there were no host #userType# to populate the XML file at this time.</td></tr>
-            <cfabort>
         </cfif>
     
         <!--- Data Validation --->
@@ -65,28 +64,28 @@
                 // Data Validation
                 // First Name
                 if ( NOT LEN(Evaluate(userType & "firstname")) ) {
-                    ArrayAppend(Errors.Messages, "Missing first name for host #userType# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");			
+                    ArrayAppend(Errors.Messages, "Missing first name for #qGetCBCHost.companyShort# - host #userType# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");			
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
                 }
                 // Last Name
                 if ( NOT LEN(Evaluate(userType & "lastname")) )  {
-                    ArrayAppend(Errors.Messages, "Missing last name for host #userType# #Evaluate(userType & "firstname")# (###qGetCBCHost.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing last name for #qGetCBCHost.companyShort# - host #userType# #Evaluate(userType & "firstname")# (###qGetCBCHost.hostid#).");
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
                 }
                 // DOB
                 if ( NOT LEN(Evaluate(userType & "dob")) OR NOT IsDate(Evaluate(userType & "dob")) )  {
-                    ArrayAppend(Errors.Messages, "DOB is missing or is not a valid date for host #userType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
+                    ArrayAppend(Errors.Messages, "DOB is missing or is not a valid date for #qGetCBCHost.companyShort# - host #userType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
                 }
                 // SSN
                 if ( NOT LEN(Evaluate(userType & "ssn")) )  {
-                    ArrayAppend(Errors.Messages, "Missing SSN for host #userType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCHost.companyShort# - host #userType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
@@ -159,21 +158,18 @@
             <cfloop query="qGetCBCHost"> 
             
 				<cfscript>
-					// Gets Current Company
-					qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=qGetCBCHost.companyID);
-	
                     // Process Batch
                     CBCStatus = APPLICATION.CFC.CBC.processBatch(
-                        companyID=qGetCompany.companyID,
-                        companyShort=qGetCompany.companyShort,
+                        companyID=qGetCBCHost.companyID,
+                        companyShort=qGetCBCHost.companyShort,
                         batchID=newBatchID,
                         userType=userType,
                         hostID=qGetCBCHost.hostID,
                         cbcID=qGetCBCHost.CBCFamID,
                         // XML variables
-                        username=qGetCompany.gis_username,
-                        password=qGetCompany.gis_password,
-                        account=qGetCompany.gis_account,
+                        username=qGetCBCHost.gis_username,
+                        password=qGetCBCHost.gis_password,
+                        account=qGetCBCHost.gis_account,
                         SSN=Evaluate(usertype & 'ssn'),
                         lastName=Evaluate(usertype & 'lastname'),
                         firstName=Evaluate(usertype & 'firstname'),
@@ -187,7 +183,7 @@
             
                 <!--- SUBMIT XML --->
                 <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
-                <tr><td>Submitting CBC for #qGetCompany.companyshort# HF #userType# - #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#)</td></tr>
+                <tr><td>Submitting CBC for #qGetCBCHost.companyshort# HF #userType# - #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#)</td></tr>
                 <tr>
                     <td>
                         <strong>Status: </strong> #CBCStatus.message#
@@ -212,8 +208,7 @@
         </cfscript>  
     
 	    <cfif NOT VAL(qGetCBCMember.recordcount)>
-            <tr><td><tr><td>Sorry, there were no host #userType# to populate the XML file at this time.</td></tr></td></tr>
-            <cfabort>
+            <tr><td>Sorry, there were no host #userType# to populate the XML file at this time.</td></tr>
         </cfif>
 
         <cfloop query="qGetCBCMember">
@@ -315,21 +310,18 @@
             <cfloop query="qGetCBCMember"> 
     
                 <cfscript>
-					// Gets Current Company
-					qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=qGetCBCHost.companyID);
-				
                     // Process Batch
                     CBCStatus = APPLICATION.CFC.CBC.processBatch(
-                        companyID=qGetCompany.companyID,
-                        companyShort=qGetCompany.companyShort,
+                        companyID=qGetCBCHost.companyID,
+                        companyShort=qGetCBCHost.companyShort,
                         batchID=newBatchID,
                         userType=userType,
                         hostID=qGetCBCMember.hostID,
                         cbcID=qGetCBCMember.CBCFamID,
                         // XML variables
-                        username=qGetCompany.gis_username,
-                        password=qGetCompany.gis_password,
-                        account=qGetCompany.gis_account,
+                        username=qGetCBCHost.gis_username,
+                        password=qGetCBCHost.gis_password,
+                        account=qGetCBCHost.gis_account,
                         SSN=qGetCBCMember.ssn,
                         lastName=qGetCBCMember.lastName,
                         firstName=qGetCBCMember.name,
@@ -343,7 +335,7 @@
         
                 <!--- SUBMIT XML --->
                 <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
-                <tr><td>Submitting CBC for #qGetCompany.companyshort# Host #userType# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###qGetCBCMember.hostid#)</td></tr>
+                <tr><td>Submitting CBC for #qGetCBCHost.companyshort# Host #userType# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###qGetCBCMember.hostid#)</td></tr>
                 <tr>
                     <td>
                         <b>Status: #CBCStatus.message#</b>

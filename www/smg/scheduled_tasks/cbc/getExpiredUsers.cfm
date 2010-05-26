@@ -60,7 +60,8 @@
 				familyMemberID = qGetExpiredUserCBC.familyID,
 				seasonID = newSeason,
 				companyID = qGetExpiredUserCBC.companyID,
-				dateAuthorized = qGetExpiredUserCBC.date_authorized
+				dateAuthorized = qGetExpiredUserCBC.date_authorized,
+				isReRun=1
 			);
 		</cfscript>
             

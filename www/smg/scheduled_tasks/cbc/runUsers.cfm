@@ -40,28 +40,28 @@
         <cfscript>
             //First Name
             if ( NOT LEN(qGetCBCUsers.firstName) ) {
-                ArrayAppend(Errors.Messages, "Missing first name for user #firstName# #lastname# (###userid#).");			
+                ArrayAppend(Errors.Messages, "Missing first name for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#).");			
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // Last Name
             if ( NOT LEN(qGetCBCUsers.lastname) )  {
-                ArrayAppend(Errors.Messages, "Missing last name for user #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "Missing last name for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // DOB
             if ( NOT LEN(qGetCBCUsers.dob) OR NOT IsDate(qGetCBCUsers.dob) )  {
-                ArrayAppend(Errors.Messages, "Missing DOB for user #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "Missing DOB for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // SSN
             if ( NOT LEN(qGetCBCUsers.ssn) )  {
-                ArrayAppend(Errors.Messages, "Missing SSN for user #firstName# #lastname# (###userid#). <br> NOTE: Please run it manually.");
+                ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#). <br> NOTE: Please run it manually.");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
@@ -87,7 +87,6 @@
 
 	<cfif NOT VAL(qGetCBCUsers.recordcount)>
         <tr><td>Sorry, there were no users to populate the XML file at this time.</td></tr>
-        <cfabort>
     </cfif>
 
 	<!--- Display Errors --->
@@ -147,29 +146,25 @@
                 companyID=qGetCBCUsers.companyID,
                 userID=CLIENT.userid,
                 cbcTotal=qGetCBCUsers.recordcount,
-                batchType='user',
-				isReRun=1
+                batchType='user'
             );	
         </cfscript>
     
         <cfloop query="qGetCBCUsers">
     
             <cfscript>
-                // Gets Current Company
-                qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=qGetCBCUsers.companyID);
-    
                 // Process Batch
                 CBCStatus = APPLICATION.CFC.CBC.processBatch(
-                    companyID=qGetCompany.companyID,
-                    companyShort=qGetCompany.companyShort,
+                    companyID=qGetCBCUsers.companyID,
+                    companyShort=qGetCBCUsers.companyShort,
                     batchID=newBatchID,
                     userType=userType,
                     userID=qGetCBCUsers.userID,
                     cbcID=qGetCBCUsers.cbcID,
                     // XML variables
-                    username=qGetCompany.gis_username,
-                    password=qGetCompany.gis_password,
-                    account=qGetCompany.gis_account,
+                    username=qGetCBCUsers.gis_username,
+                    password=qGetCBCUsers.gis_password,
+                    account=qGetCBCUsers.gis_account,
                     SSN=qGetCBCUsers.ssn,
                     lastName=qGetCBCUsers.lastName,
                     firstName=qGetCBCUsers.firstName,
@@ -183,7 +178,7 @@
         
             <!--- SUBMIT XML --->
             <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
-            <tr><td>Submitting CBC for #qGetCompany.companyshort# #userType# - #qGetCBCUsers.firstName# #qGetCBCUsers.lastName# (###userID#)</td></tr>
+            <tr><td>Submitting CBC for #qGetCBCUsers.companyshort# #userType# - #qGetCBCUsers.firstName# #qGetCBCUsers.lastName# (###userID#)</td></tr>
             <tr>
                 <td>
                     <strong>Status: </strong> #CBCStatus.message#
