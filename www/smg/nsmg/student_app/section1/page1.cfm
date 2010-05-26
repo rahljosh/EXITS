@@ -58,7 +58,7 @@
         country
     FROM 
         smg_student_app_programs
-    <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyid)>
+    <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyid)>
         WHERE
             companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     </cfif>

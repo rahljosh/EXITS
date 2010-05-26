@@ -10,7 +10,7 @@
 	WHERE
 		p.active = 1
 	AND        
-        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes">)
+        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
     AND	
     	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	<!----

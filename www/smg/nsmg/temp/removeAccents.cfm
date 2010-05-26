@@ -13,7 +13,7 @@
 	AND 
     	ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
  	AND
-    	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes"> )
+    	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes"> )
 	ORDER BY
     	studentID DESC
 </cfquery>

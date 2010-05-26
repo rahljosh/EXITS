@@ -60,7 +60,7 @@
             country
         FROM 
         	smg_student_app_programs
-        <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyid)>
+        <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyid)>
 	        WHERE
                 companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
@@ -258,7 +258,7 @@
                     branchid,  
                     app_sent_student, 
                     app_current_status, 
-                    <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyid)>
+                    <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyid)>
                         companyid,
                     </cfif>
                     application_expires
@@ -279,7 +279,7 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#setBranchID#">, 
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(currentStatus)#">, 
-                    <cfif NOT ListFind("1,2,3,4,5,10,12", CLIENT.companyid)>
+                    <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyid)>
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">, 
                     </cfif>
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#expiration_date#">

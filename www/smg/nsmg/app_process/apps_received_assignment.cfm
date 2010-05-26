@@ -36,7 +36,7 @@
 <cfquery name="get_company" datasource="MySQL">
 	SELECT companyid, companyname, companyshort, team_id
 	FROM smg_companies
-	WHERE companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes"> )
+	WHERE companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes"> )
 </cfquery>
  
 <cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#get_student_info.studentid#.*">

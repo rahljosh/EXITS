@@ -23,7 +23,7 @@
 	INNER JOIN smg_companies c ON p.companyid = c.companyid
 	WHERE <cfloop list="#form.seasonid#" index="season"> smgseasonid = #season# <cfif season EQ #ListLast(form.seasonid)#><Cfelse>or</cfif> </cfloop>
 	AND
-        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes">)
+        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
     AND	
     	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	
 </cfquery>
