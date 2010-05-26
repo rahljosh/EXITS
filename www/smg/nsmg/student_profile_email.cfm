@@ -114,24 +114,24 @@
         <cfif VAL(ArrayLen(Errors.Messages))>
             <tr>
                 <td>
-                    <font color="##FF0000">Please review the following items:</font> <br>
+                    <font color="##FF0000">Please review the following items:</font> <br />
         
                     <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
                         #Errors.Messages[i]#    	
-                    </cfloop> <br /><br />
+                    </cfloop> <br />
                 </td>
             </tr>
         </cfif>	
     
 		<tr>	
-			<td><b>Student: #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)</b><br /></td>
+			<td><b>Student: #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)</b></td>
 		</tr>
 		<tr>	
-			<td>Please enter an email address below and click on submit..<br /></td>
+			<td>Please enter an email address below and click on submit.</td>
 		</tr>
 		<tr>	
 			<td>
-            	<input type="text" name="emailTo" value="" size="30" maxlength="100" />			
+            	Email Address: &nbsp; <input type="text" name="emailTo" value="" size="30" maxlength="100" />			
 			</td>
 		</tr>
 		<tr>	

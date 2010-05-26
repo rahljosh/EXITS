@@ -364,8 +364,8 @@
                                     [ 
 										<cfif CLIENT.usertype LTE '4'><a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; </cfif> 
                                     	<a href='student_profile.cfm?uniqueid=#uniqueid#'>profile</a> &middot;
-										<cfif CLIENT.userType EQ 1 OR client.userID eq 12431>                               
-                                        <a href="javascript:SendEmail('student_profile_email.cfm?uniqueid=#uniqueid#');" title="Email Student Profile and Letters">email profile <img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"></a> &middot;
+										<cfif CLIENT.userType EQ 1 OR client.userID eq 12431>  <!--- Waiting for OK from Gary to push this live --->                             
+                                        <a href="javascript:SendEmail('student_profile_email.cfm?uniqueid=#uniqueid#', 300, 400);" title="Email Student Profile and Letters">email profile <img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"></a> &middot;
                                         </cfif>
                                         <a href='student_profile_pdf.cfm?studentID=#uniqueid#'> <img src="pics/pdficon_small.gif" border=0></a>
                                     ]
@@ -436,7 +436,7 @@
 												<a href="javascript:OpenApp('student_app/print_application.cfm?unqid=#uniqueid#');"><img src="pics/exits.jpg" border="0"></a>
 											</cfif>
 											<br><a href="javascript:OpenMediumW('student_app/section4/page22print.cfm?unqid=#uniqueid#');"><img src="pics/attached-files.gif" border="0"></a>	
-											<br><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#');"><img src="pics/send-email.gif" border="0"></a>	
+											<br><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"></a>	
 											</td>
 										</tr>
 										<cfelse>
