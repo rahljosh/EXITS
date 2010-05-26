@@ -25,7 +25,7 @@
 <cfoutput>
 
 <!--- Menu for ISE and Case --->
-<cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyID)>
+<cfif ListFind("1,2,3,4,5,10,12,13", CLIENT.companyID)>
 
     <cfswitch expression="#CLIENT.userType#">
     

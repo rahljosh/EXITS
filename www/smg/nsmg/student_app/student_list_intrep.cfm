@@ -130,7 +130,7 @@
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 		<td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
 		<td background="pics/header_background.gif"><h2>Students</h2></td>
-    	<cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyID)>
+    	<cfif ListFind("1,2,3,4,5,10,12,13", CLIENT.companyID)>
             <td background="pics/header_background.gif" align="right">
                 <a href="?curdoc=student_app/student_app_list&status=#URL.status#">All Students</a>
              </td>
