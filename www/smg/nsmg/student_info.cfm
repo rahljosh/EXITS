@@ -358,7 +358,20 @@
 					<td width="450" valign="top">
 						<table width="100%" cellpadding="2">
 							<tr><td align="center" colspan="2"><h1>#firstname# #middlename# #familylastname# (###studentID#)</h1></td></tr>
-							<tr><td align="center" colspan="2"><font size=-1><span class="edit_link">[ <cfif CLIENT.usertype LTE '4'><a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; </cfif> <a href='student_profile.cfm?uniqueid=#uniqueid#'>profile</a> <a href='student_profile_pdf.cfm?studentID=#uniqueid#'> <img src="pics/pdficon_small.gif" border=0></a>]</span></font></td></tr>
+							<tr>
+                            	<td align="center" colspan="2">
+                            		<font size=-1><span class="edit_link">
+                                    [ 
+										<cfif CLIENT.usertype LTE '4'><a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; </cfif> 
+                                    	<a href='student_profile.cfm?uniqueid=#uniqueid#'>profile</a> &middot;
+										<cfif CLIENT.userType EQ 1 OR client.userID eq 12431>                               
+                                        <a href="javascript:SendEmail('student_profile_email.cfm?uniqueid=#uniqueid#');" title="Email Student Profile and Letters">email profile <img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"></a> &middot;
+                                        </cfif>
+                                        <a href='student_profile_pdf.cfm?studentID=#uniqueid#'> <img src="pics/pdficon_small.gif" border=0></a>
+                                    ]
+                                    </span></font>
+                                </td>
+                            </tr>
 			 				<tr><td align="center" colspan="2"><cfif dob EQ ''>n/a<cfelse>#dateformat (dob, 'mm/dd/yyyy')# - #datediff('yyyy',dob,now())# year old #sex# </cfif></td></tr> 
 							<tr><td width="80">Intl. Rep. : </td>
 								<td><select name="intrep" <cfif FORM.edit EQ 'no'>disabled</cfif> >

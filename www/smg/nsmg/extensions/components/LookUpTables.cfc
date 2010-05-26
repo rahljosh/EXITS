@@ -38,15 +38,82 @@
                     continent
 				FROM
                 	smg_countrylist
-                WHERE 
-                    1 = 1
-                    <cfif VAL(ARGUMENTS.countryID)>
-                    AND
+				<cfif VAL(ARGUMENTS.countryID)>
+	                WHERE 
                         countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.countryID#">
-					</cfif>                        
+                </cfif>                        
         </cfquery> 
 
 		<cfreturn qGetCountry>
 	</cffunction>
+
+
+	<cffunction name="getInterest" access="public" returntype="query" output="false" hint="Returns a interest or a list of interests">
+    	<cfargument name="interestID" default="0" hint="interestID or a list of interestIDs - Not required">
+
+        <cfquery 
+        	name="qGetInterest"
+        	datasource="MySQL">
+                SELECT 
+                	interestID,
+                    interest,
+                    student_app
+				FROM
+                	smg_interests
+				<cfif VAL(ARGUMENTS.interestID)>
+                    WHERE 
+                        interestID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.interestID#" list="yes"> )
+                </cfif>                        
+        </cfquery> 
+
+		<cfreturn qGetInterest>
+	</cffunction>
+
+
+	<cffunction name="getPrivateSchool" access="public" returntype="query" output="false" hint="Returns a private school or a list of private school options">
+    	<cfargument name="privateSchoolID" default="0" hint="privateSchoolID is not required">
+
+        <cfquery 
+        	name="qGetPrivateSchool"
+        	datasource="MySQL">
+                SELECT 
+                	privateSchoolID,
+                    privateSchoolPrice,
+                    type
+				FROM
+                	smg_private_schools
+				<cfif VAL(ARGUMENTS.privateSchoolID)>
+                    WHERE 
+                        privateSchoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.privateSchoolID#">
+                </cfif>                        
+        </cfquery> 
+
+		<cfreturn qGetPrivateSchool>
+	</cffunction>
+
+
+	<cffunction name="getState" access="public" returntype="query" output="false" hint="Returns a state or list of states">
+    	<cfargument name="stateID" default="0" hint="stateID is not required">
+
+        <cfquery 
+        	name="qGetState"
+        	datasource="MySQL">
+                SELECT 
+                	ID,
+                    state,
+                    stateName,
+                    guarantee_fee
+				FROM
+                	smg_states
+				<cfif VAL(ARGUMENTS.stateID)>
+                    WHERE 
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateID#">
+                </cfif>                        
+        </cfquery> 
+
+		<cfreturn qGetState>
+	</cffunction>
+
+
 
 </cfcomponent>
