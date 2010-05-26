@@ -101,7 +101,7 @@
 <!--- Table Header --->
 <gui:tableHeader
 	imageName="students.gif"
-	tableTitle="Email Student Profile"
+	tableTitle="Email Student Profile and Letters"
 	tableRightTitle=""
 />
 
@@ -193,7 +193,7 @@
                     </div>
                 </td>
                 <td valign="top" width="660px">
-                    <span class="profileTitleSection">Student Profile</span>
+                    <span class="profileTitleSection">STUDENT PROFILE</span>
                     <table cellpadding="2" cellspacing="2" border="0">
                         <tr>
                             <td valign="top" width="330px">
@@ -242,7 +242,7 @@
         
         <!--- Academic and Language Evaluation --->
         <table align="center" class="profileTable">
-            <tr><td colspan="3"><span class="profileTitleSection">Academic and Language Evaluation</span></td></tr>     
+            <tr><td colspan="3"><span class="profileTitleSection">ACADEMIC AND LANGUAGE EVALUATION</span></td></tr>     
             <tr>
                 <td width="250px"><span class="title">Band:</span> <cfif qGetStudentInfo.band is ''><cfelse>#qGetStudentInfo.band#</cfif></td>
                 <td width="200px"><span class="title">Orchestra:</span> <cfif qGetStudentInfo.orchestra is ''><cfelse>#qGetStudentInfo.orchestra#</cfif></td>
@@ -281,7 +281,7 @@
         </table>
         
         <table align="center" class="profileTable">
-            <tr><td colspan="4"><span class="profileTitleSection">Personal Information</span></td></tr>            
+            <tr><td colspan="4"><span class="profileTitleSection">PERSONAL INFORMATION</span></td></tr>            
             <tr>
                 <td width="110px"><span class="title">Allergies</span></td>
                 <td width="140px"><span class="title">Animal:</span> <cfif qGetStudentInfo.animal_allergies is ''>no<cfelse>#qGetStudentInfo.animal_allergies#</cfif></td>
@@ -336,7 +336,7 @@
         <cfsavecontent variable="studentLetterContent">  
             <div style="page-break-after:always"></div>
             <table align="center" class="profileTable">
-                <tr><td><span class="profileTitleSection">Student Letter of Introduction</span></td></tr>
+                <tr><td><span class="profileTitleSection">STUDENT LETTER OF INTRODUCTION</span></td></tr>
                 <tr>
                     <td>
                         <div class="comments">
@@ -357,7 +357,7 @@
         <cfsavecontent variable="parentLetterContent"> 
             <div style="page-break-after:always"></div>
             <table align="center" class="profileTable">
-                <tr><td><span class="profileTitleSection">Parents Letter of Introduction</span></td></tr>
+                <tr><td><span class="profileTitleSection">PARENTS LETTER OF INTRODUCTION</span></td></tr>
                 <tr>
                     <td>
                         <div class="comments">
@@ -400,7 +400,7 @@
     
     
     <!--- Save PDF File --->
-    <cffile action="write" file="#AppPath.temp##qGetStudentInfo.studentID#studentProfile.pdf" output="#profile#" nameconflict="overwrite">    
+    <cffile action="write" file="#AppPath.temp##qGetStudentInfo.studentID#-profile.pdf" output="#profile#" nameconflict="overwrite">    
     
     
     <!--- send email --->
@@ -411,7 +411,7 @@
         <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
     
         <!--- Attach Students Profile --->
-        <cfinvokeargument name="email_file" value="#AppPath.temp##qGetStudentInfo.studentID#studentProfile.pdf">
+        <cfinvokeargument name="email_file" value="#AppPath.temp##qGetStudentInfo.studentID#-profile.pdf">
     
         <!--- Attach Students Letter --->
         <cfif studentLetter.recordcount>
