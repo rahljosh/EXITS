@@ -10,7 +10,7 @@
     AND	
     	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     AND 
-        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes">)
+        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
 	ORDER BY  
     	p.endDate DESC, 
         p.programname
