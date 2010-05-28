@@ -4,6 +4,7 @@
 
 <link href="internal/style.css" rel="stylesheet" type="text/css" />
 <title>EXTRA - Exchange Training Abroad</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script> <!-- jQuery -->
 
 <cfif isDefined('link')>
 	<cfset cookie.smglink = '#url.link#'>
@@ -12,7 +13,7 @@
 		<cflocation url="redirect_link.cfm" addtoken="no">
 	</cfif>
 	<cflocation url="index.cfm" addtoken="no">
-</Cfif> 
+</cfif> 
 
 <table width="100%" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
   <tr>
@@ -42,13 +43,13 @@
                                 <td bordercolor="#E9ECF1" bgcolor="#FF7E0D" class="style4"><span class="style2"><strong>&nbsp;&nbsp;User:</strong></span> </td>
                               </tr>
                               <tr>
-                                <td height="19" valign="top" bordercolor="#E9ECF1"><cfinput type="text" name="username" message="A username is required to login." required="yes" class="style1" size="35"></td>
+                                <td height="19" valign="top" bordercolor="#E9ECF1"><cfinput type="text" name="username" id="username" message="A username is required to login." required="yes" class="style1" size="35"></td>
                               </tr>
                               <tr>
                                 <td bordercolor="#E9ECF1" bgcolor="#FF7E0D"><span class="style2"><strong>&nbsp;&nbsp;Pass:</strong></span></td>
                               </tr>
                               <tr>
-                                <td height="19" valign="top" bordercolor="#E9ECF1"><cfinput type="password" name="password" message="A password is required to login." required="yes" class="style1" size="35"></td>
+                                <td height="19" valign="top" bordercolor="#E9ECF1"><cfinput type="password" name="password" id="password" message="A password is required to login." required="yes" class="style1" size="35"></td>
                               </tr>
                               <tr>
                                 <td bordercolor="#E9ECF1"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
@@ -70,3 +71,18 @@
     </table></td>
   </tr>
 </table>
+
+<script type="text/JavaScript">
+    <!--
+    // Set cursor to username field
+    $(document).ready(function() {
+        
+        if ( $("#username").val("") != '' ) {
+            $("#username").focus();
+        } else {
+            $("#password").focus();
+        }
+        
+    });
+    //-->
+</script>
