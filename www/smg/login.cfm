@@ -114,7 +114,6 @@
     </cfif>
     
 </cfsilent>
-
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><cfoutput>#CLIENT.companyname#</cfoutput></title>
@@ -125,6 +124,7 @@
 <cfelse>
 	<link href="exitsapp_images/STB.css" rel="stylesheet" type="text/css" media="screen"/>
 </cfif>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script> <!-- jQuery -->
 <script src="SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
 <script src="SpryAssets/SpryValidationPassword.js" type="text/javascript"></script>
 <link href="SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
@@ -195,54 +195,72 @@ a:active {
   <div class="exitLogo"></div>
   <div class="form1">
    <cfif url.forgot>
-        <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
         <cfform name="login" action="login.cfm?forgot=1" method="post">
         <input type="hidden" name="forgot_submitted" value="1">
-          <tr>
-            <td class="style3" colspan=2>Your login information will be sent to the address entered:</td>
-          </tr>
-          <tr>
-            <td class="style1">Email:</td>
-          
-            <td><cfinput type="text" name="email" value="#FORM.email#" class="style1" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email."></td>
-          </tr>
-          <tr>
-            <td>
-         </tr>
+        <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
+            <tr><td class="style3" colspan=2>Your login information will be sent to the address entered:</td></tr>
+            <tr>
+                <td class="style1">Email:</td>
+                <td><cfinput type="text" name="email" id="email" value="#FORM.email#" class="style1" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email."></td>
+            </tr>
+            <tr>
+	            <td>&nbsp;</td>
+            </tr>
         </table>
         <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
-        
-          <tr>
-            <td><a href="login.cfm" class="style2">Back to Login</a></td><td align="right"><input type="image" src="exitsapp_images/send.png" alt="Login" /></td>
-          </tr>
-          </cfform>
+			<tr><td><a href="login.cfm" class="style2">Back to Login</a></td><td align="right"><input type="image" src="exitsapp_images/send.png" alt="Login" /></td></tr>          
         </table>
+		</cfform>	
+        <script type="text/JavaScript">
+			<!--
+			// Set cursor to username field
+			$(document).ready(function() {
+				$("##email").focus();
+			});
+			//-->
+        </script>
+	
 	<!--- login form --->
     <cfelse>
-        <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
         <cfform name="login" action="login.cfm" method="post">
         <input type="hidden" name="login_submitted" value="1">
+        <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
           <tr>
           	<td rowspan=8 valign="top">
            
             </td>
             <td class="style1">Username:</td>
           
-            <td ><cfinput type="text" name="username" value="#FORM.username#" class="style1" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Username."></td>
+            <td ><cfinput type="text" name="username" id="username" value="#FORM.username#" class="style1" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Username."></td>
           </tr>
           <tr>
             <td class="style1">Password:</td>
             
-            <td><cfinput type="password" name="password" value="#FORM.password#" class="style1" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Password."></td>
+            <td><cfinput type="password" name="password" id="password" value="#FORM.password#" class="style1" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Password."></td>
           </tr>
           </table>
           <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
           <tr>
             <td><a href="login.cfm?forgot=1" class="style2" valign="middle" align="right">Forgot Login?</a></td><td align="right" width=100> <input type="image" src="exitsapp_images/button.png" alt="Login" /></td>
           </tr>
-        </cfform>
-         
         </table>
+        </cfform> 
+        
+        <script type="text/JavaScript">
+			<!--
+			// Set cursor to username field
+			$(document).ready(function() {
+				
+				if ( $("##username").val("") != '' ) {
+					$("##username").focus();
+				} else {
+					$("##password").focus();
+				}
+				
+			});
+			//-->
+        </script>
+        
 	</cfif>
 
 
