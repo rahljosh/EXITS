@@ -1,8 +1,11 @@
-<cfparam name="form.username" default="">
-<cfparam name="form.password" default="">
-<cfparam name="form.email" default="">
-<cfparam name="url.forgot" default="0">
-<cfset errorMsg = ''>
+<!--- Kill Extra Output --->
+<cfsilent>
+    <cfparam name="form.username" default="">
+    <cfparam name="form.password" default="">
+    <cfparam name="form.email" default="">
+    <cfparam name="url.forgot" default="0">
+    <cfset errorMsg = ''>
+</cfsilent>
 
 <!--- Process Form Submission - login --->
 <cfif isDefined("form.login_submitted")>
@@ -199,7 +202,7 @@ a:active {
             <td class="style1">Email:</td>
           </tr>
           <tr>
-            <td><cfinput type="text" name="email" value="#form.email#" class="style1" size="20" maxlength="150" required="yes" validate="email" message="Please enter a valid Email."></td>
+            <td><cfinput type="text" name="email" id="email" value="#form.email#" class="style1" size="20" maxlength="150" required="yes" validate="email" message="Please enter a valid Email."></td>
           </tr>
           <tr>
             <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
@@ -211,6 +214,16 @@ a:active {
           </tr>
         </cfform>
         </table>
+
+        <script type="text/JavaScript">
+			<!--
+			// Set cursor to username field
+			$(document).ready(function() {
+				$("#email").focus();
+			});
+			//-->
+        </script>
+        
 	<!--- login form --->
     <cfelse>
         <table width="90%" border="0" align="center" cellpadding="1" cellspacing="0">
@@ -220,13 +233,13 @@ a:active {
             <td class="style1">Username:</td>
           </tr>
           <tr>
-            <td><cfinput type="text" name="username" value="#form.username#" class="style1" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Username."></td>
+            <td><cfinput type="text" name="username" id="username" value="#form.username#" class="style1" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Username."></td>
           </tr>
           <tr>
             <td class="style1">Password:</td>
             </tr>
           <tr>
-            <td><cfinput type="password" name="password" value="#form.password#" class="style1" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Password."></td>
+            <td><cfinput type="password" name="password" id="password" value="#form.password#" class="style1" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Password."></td>
           </tr>
           <tr>
             <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
@@ -238,5 +251,21 @@ a:active {
           </tr>
         </cfform>
         </table>
+		
+        <script type="text/JavaScript">
+			<!--
+			// Set cursor to username field
+			$(document).ready(function() {
+				
+				if ( $("#username").val("") != '' ) {
+					$("#username").focus();
+				} else {
+					$("#password").focus();
+				}
+				
+			});
+			//-->
+        </script>
+        
 	</cfif>
 </cfif>
