@@ -215,288 +215,338 @@ smg_charges
     </cfquery>
    
     <cfloop query="getHSstud">
+		
+		<!--- check if programid charges have already been created and are still active --->
+		<cfquery name="checkProgramCharges" datasource="MYSQL">
+		SELECT 
+		   sc.stuid,   
+		   sc.programid,
+		(CASE 
+		WHEN sc.companyid = 1 THEN 1
+		WHEN sc.companyid = 2 THEN 1
+		WHEN sc.companyid = 3 THEN 1
+		WHEN sc.companyid = 4 THEN 1
+		WHEN sc.companyid = 12 THEN 1
+		ELSE sc.companyid
+		END)
+		AS 
+			chargeCompanyid,   
+		(CASE 
+		WHEN ss.companyid = 1 THEN 1
+		WHEN ss.companyid = 2 THEN 1
+		WHEN ss.companyid = 3 THEN 1
+		WHEN ss.companyid = 4 THEN 1
+		WHEN ss.companyid = 12 THEN 1
+		ELSE ss.companyid
+		END)
+		AS 
+			currentCompanyid
+		FROM
+			smg_charges sc
+		LEFT JOIN 
+			 smg_students ss ON ss.studentid = sc.stuid
+		WHERE 
+			  sc.stuid = #getHSstud.studentid#
+		AND 
+			sc.programid = #getHSstud.programid#
+		AND 
+			sc.active = 1
+		AND 
+			sc.type = '#chargeType#'
+		</cfquery>
+		
+		<!--- create charges for the current student programid only if
+		student does not have charges
+		or if 
+		student changed from ISE to CASE
+		or if
+		student changed from CASE to ISE --->
+		<cfif (checkProgramCharges.chargeCompanyid NEQ checkProgramCharges.currentCompanyid) OR checkProgramCharges.recordCount EQ 0>
    
-        <!--- define program price --->
-        <cfquery name="checkDeposit" datasource="MySQL">
-        SELECT invoiceid, amount_due, type
-        FROM smg_charges
-        WHERE stuid = #getHSstud.studentid#
-        AND type = 'deposit'
-        AND programid = #getHSstud.programid#
-        AND agentid = #getHSstud.intrep#
-        <!--- AND companyid = #getHSstud.companyid# --->
-        AND active = 1
-        </cfquery> 
-               
-        <cfif month(getHSstud.enddate) EQ 12>
-            <cfset amount = #getHSstud.12_month_price#>
-            <cfelseif  dateDiff('m',getHSstud.startdate, getHSstud.enddate) GT 6>
-                 <cfset amount = #getHSstud.10_month_price#>
-                 <cfelse>
-                    <cfset amount = #getHSstud.5_month_price#>
-        </cfif>
-       
-        <cfif checkDeposit.recordCount EQ 0>
-            <cfset amountDue = #variables.amount#>
-            <cfelse>
-                <cfset amountDue = #variables.amount# - #checkDeposit.amount_due#>
-        </cfif>
-       
-        <!--- define insurance cost --->
-        <cfif getHSstud.insurance_typeid NEQ 1>
-       
-            <cfif month(getHSstud.enddate) EQ 12>
-                <cfset insurance = #getHSstud.12_month_ins#>
-                <cfelseif dateDiff('m',getHSstud.startdate, getHSstud.enddate) GT 6>
-                    <cfset insurance = #getHSstud.10_month_ins#>
-                    <cfelse>
-                        <cfset insurance = #getHSstud.5_month_ins#>
-            </cfif>
-           
-        </cfif>
-       
-        <cfswitch expression="#chargeType#">
-           
-                <cfcase value="program fee">
-
-                <!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever selected --->
-                <cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
-               
-                    <cfquery name="insertProgramFee" datasource="MySQL">
-                    INSERT INTO smg_charges
-                        (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                    VALUES
-                        (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, #variables.amountDue#, #variables.amount#, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                    </cfquery>
-                   
-                    <cfif getHSstud.direct_placement EQ 1>
-                        <cfquery name="insertDiscount" datasource="MySQL">
-                        INSERT INTO smg_charges
-                            (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                        VALUES
-                            (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Direct Placement Discount', 'direct placement', #Now()#, -200, -200, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                        </cfquery>               
-                    </cfif>
-                   
-                    <!--- program fee exceptions --->
-                    <cfset thisYear = #year(getHSstud.startdate)#>
-                    <cfset lastYear = #thisYear# -1>
-                    <cfset discDeadLine = '#lastYear#-12-31'>
-                    <cfset may = '#thisYear#-05-01'>
-                    <cfset october = '#thisYear#-10-01'>
-                   
-                    <!--- FOR AUGUST STUDENTS ONLY THAT ARE NOT DIRECT PLACEMENT!!! --->
-                    <cfif getHSstud.startdate GT may AND getHSstud.startdate LT october AND getHSstud.direct_placement EQ 0>
-					
-						<!--- discount for early apps DISCONTINUED starting for AUG10 arriving students --->
-                       <!---  <!--- If app is received before Jan 1st of previous year from Intl Home Stud--->
-                        <cfif #getHSstud.dateapplication# LTE #variables.discDeadLine#>
-                           
-                            <cfif getHSstud.intrep EQ 33>
-                                <cfquery name="insertSpecAgreem" datasource="MySQL">
-                                INSERT INTO smg_charges
-                                    (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                                VALUES
-                                    (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Application received before Dec 31st', 'special discount', #Now()#, -100, -100, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                                </cfquery>                            
-                            </cfif>
-                           
-                            <!--- If app is received before Dec 31st of previous year from CLS--->
-                            <cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 0>
-                                <cfquery name="insertSpecAgreem" datasource="MySQL">
-                                INSERT INTO smg_charges
-                                    (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                                VALUES
-                                    (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Application received before Dec 31st', 'special discount', #Now()#, -150, -150, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                                </cfquery>                     
-                            </cfif>
-                           
-                        </cfif> --->
-                       
-                        <!--- discount for scholarship students from CLS --->
-                        <cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 1>
-                            <cfquery name="insertScholDisc" datasource="MySQL">
-                            INSERT INTO smg_charges
-                            (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                            VALUES
-                            (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Scholarship Student', 'scholarship discount', #Now()#, -200, -200, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                            </cfquery>                               
-                        </cfif>
-                       
-                    </cfif>
-                   
-                </cfif>
-                <!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
-               
-                </cfcase>
-               
-                <cfcase value="insurance">
-               
-                <!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
-                <cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
-                               
-                    <cfif getHSstud.insurance_typeid NEQ 1>
-                   
-                         <cfquery name="insertInsurance" datasource="MySQL">
-                        INSERT INTO smg_charges
-                            (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                        VALUES
-                            (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, #variables.insurance#, #variables.insurance#, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                        </cfquery>
-                                         
-                    </cfif>
-
-                </cfif>
-                <!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
-                   
-                </cfcase>
-               
-                <cfcase value="sevis">
-
-                <!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
-                <cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
-                   
-                    <!--- US citizens country code is 232 don't pay sevis--->
-                    <cfif getHSstud.accepts_sevis_fee EQ 1 AND (getHSstud.countrybirth NEQ 232 AND getHSstud.countryresident NEQ 232 AND getHSstud.countrycitizen NEQ 232)>
-                        <cfquery name="insertSevis" datasource="MySQL">
-                        INSERT INTO smg_charges
-                            (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                        VALUES
-                            (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, 180, 180, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                        </cfquery>
-                    </cfif>          
-
-                </cfif>
-                <!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
-               
-                </cfcase>
-               
-                <cfcase value="guarantee">
-
-                <!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
-                <cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
-               
-                    <cfif getHSstud.regionguar IS 'YES' AND getHSstud.direct_placement EQ 0>
-                   
-                        <cfif getHSstud.state_guarantee IS 0>
-                        
-                        	<cfquery name="getHostState" datasource="MySQL">
-                            SELECT ss.hostid, IFNULL( sst.state, 0 ) AS statePlaced
-                            FROM smg_students ss
-                            LEFT JOIN smg_hosts sh ON sh.hostid = ss.hostid
-                            LEFT JOIN smg_states sst ON sst.state = sh.state
-                            WHERE ss.studentid = #getHSstud.studentid#
-                            </cfquery>
-                            
-                            <cfoutput query="getHostState">
-                            
-                            	<cfswitch expression="#getHostState.statePlaced#">
-                                   <cfcase value="ME,VT,NH,MA,RI,CT,NJ,DE,MD,NY,PA,OH,WV,VA,KY">
-                                    	<cfset regionPlaced = 'East'>
-                                    </cfcase>
-                                    <cfcase value="OK,TX,AR,LA,TN,MS,AL,GA,SC,NC">
-                                    	<cfset regionPlaced = 'South'>
-                                    </cfcase>
-                                    <cfcase value="MN,WI,IA,NE,KS,MO,IL,IN,MI">
-                                    	<cfset regionPlaced = 'Central'>
-                                    </cfcase>
-                                    <cfcase value="MT,ND,ID,WY,SD,CO,NM">
-                                    	<cfset regionPlaced = 'Rocky Mountain'>
-                                    </cfcase>
-                                    <cfcase value="WA,OR,NV,UT,AZ">
-                                    	<cfset regionPlaced = 'West'>
-                                    </cfcase>
-									<cfdefaultcase>
-										<cfset regionPlaced = 0>
-									</cfdefaultcase>
-                                </cfswitch>
-                            
-                            </cfoutput>
-                            
-                            <cfif getHSstud.regionname EQ variables.regionPlaced OR variables.regionPlaced EQ 0>
-                       
-                                <cfquery name="insertRegionalGuarantee" datasource="MySQL">
-                                INSERT INTO smg_charges
-                                    (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                                VALUES
-                                    (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Regional Guarantee: #getHSstud.regionname#', '#chargeType#', #Now()#, #getHSstud.regional_guarantee#, #getHSstud.regional_guarantee#, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                                </cfquery>               
-
+			<!--- define program price --->
+			<cfquery name="checkDeposit" datasource="MySQL">
+			SELECT invoiceid, amount_due, type
+			FROM smg_charges
+			WHERE stuid = #getHSstud.studentid#
+			AND type = 'deposit'
+			AND programid = #getHSstud.programid#
+			AND agentid = #getHSstud.intrep#
+			<!--- AND companyid = #getHSstud.companyid# --->
+			AND active = 1
+			</cfquery> 
+				   
+			<cfif month(getHSstud.enddate) EQ 12>
+				<cfset amount = #getHSstud.12_month_price#>
+				<cfelseif  dateDiff('m',getHSstud.startdate, getHSstud.enddate) GT 6>
+					 <cfset amount = #getHSstud.10_month_price#>
+					 <cfelse>
+						<cfset amount = #getHSstud.5_month_price#>
+			</cfif>
+		   
+			<cfif checkDeposit.recordCount EQ 0>
+				<cfset amountDue = #variables.amount#>
+				<cfelse>
+					<cfset amountDue = #variables.amount# - #checkDeposit.amount_due#>
+			</cfif>
+		   
+			<!--- define insurance cost --->
+			<cfif getHSstud.insurance_typeid NEQ 1>
+		   
+				<cfif month(getHSstud.enddate) EQ 12>
+					<cfset insurance = #getHSstud.12_month_ins#>
+					<cfelseif dateDiff('m',getHSstud.startdate, getHSstud.enddate) GT 6>
+						<cfset insurance = #getHSstud.10_month_ins#>
+						<cfelse>
+							<cfset insurance = #getHSstud.5_month_ins#>
+				</cfif>
+			   
+			</cfif>
+		   
+			<cfswitch expression="#chargeType#">
+			   
+					<cfcase value="program fee">
+	
+					<!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever selected --->
+					<cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
+				   
+						<cfquery name="insertProgramFee" datasource="MySQL">
+						INSERT INTO smg_charges
+							(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+						VALUES
+							(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, #variables.amountDue#, #variables.amount#, #client.userid#, #Now()#, #getHSstud.companyid#)   
+						</cfquery>
+					   
+						<cfif getHSstud.direct_placement EQ 1>
+							<cfquery name="insertDiscount" datasource="MySQL">
+							INSERT INTO smg_charges
+								(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+							VALUES
+								(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Direct Placement Discount', 'direct placement', #Now()#, -200, -200, #client.userid#, #Now()#, #getHSstud.companyid#)   
+							</cfquery>               
+						</cfif>
+					   
+						<!--- program fee exceptions --->
+						<cfset thisYear = #year(getHSstud.startdate)#>
+						<cfset lastYear = #thisYear# -1>
+						<cfset discDeadLine = '#lastYear#-12-31'>
+						<cfset may = '#thisYear#-05-01'>
+						<cfset october = '#thisYear#-10-01'>
+					   
+						<!--- FOR AUGUST STUDENTS ONLY THAT ARE NOT DIRECT PLACEMENT!!! --->
+						<cfif getHSstud.startdate GT may AND getHSstud.startdate LT october AND getHSstud.direct_placement EQ 0>
+						
+							<!--- discount for early apps DISCONTINUED starting for AUG10 arriving students --->
+						   <!---  <!--- If app is received before Jan 1st of previous year from Intl Home Stud--->
+							<cfif #getHSstud.dateapplication# LTE #variables.discDeadLine#>
+							   
+								<cfif getHSstud.intrep EQ 33>
+									<cfquery name="insertSpecAgreem" datasource="MySQL">
+									INSERT INTO smg_charges
+										(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+									VALUES
+										(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Application received before Dec 31st', 'special discount', #Now()#, -100, -100, #client.userid#, #Now()#, #getHSstud.companyid#)   
+									</cfquery>                            
+								</cfif>
+							   
+								<!--- If app is received before Dec 31st of previous year from CLS--->
+								<cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 0>
+									<cfquery name="insertSpecAgreem" datasource="MySQL">
+									INSERT INTO smg_charges
+										(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+									VALUES
+										(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Application received before Dec 31st', 'special discount', #Now()#, -150, -150, #client.userid#, #Now()#, #getHSstud.companyid#)   
+									</cfquery>                     
+								</cfif>
+							   
+							</cfif> --->
+						   
+							<!--- discount for scholarship students from CLS --->
+							<cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 1>
+								<cfquery name="insertScholDisc" datasource="MySQL">
+								INSERT INTO smg_charges
+								(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+								VALUES
+								(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Scholarship Student', 'scholarship discount', #Now()#, -200, -200, #client.userid#, #Now()#, #getHSstud.companyid#)   
+								</cfquery>                               
 							</cfif>
-                                                   		
-                            <!--- This comment is to disable the regional guarantee discount for applications received prior to Jan 1st. This discount is no longer applicable --->
-                            <!--- <cfset thisYear = #year(getHSstud.startdate)#>
-                            <cfset lastYear = #thisYear# -1>
-                            <cfset discDeadLine = '#lastYear#-12-31'>
-                            <cfset may = '#thisYear#-05-01'>
-                            <cfset october = '#thisYear#-10-01'>               
-                            <!--- FOR AUGUST STUDENTS ONLY THAT ARE NOT DIRECT PLACEMENT!!! --->
-                            <cfif getHSstud.startdate GT may AND getHSstud.startdate LT october AND getHSstud.direct_placement EQ 0>
-                                <!--- If app is received before Jan 1st of previous year--->
-                                <cfif #getHSstud.dateapplication# LTE #variables.discDeadLine#>
-                                    <cfquery name="insertSpecAgreem" datasource="MySQL">
-                                    INSERT INTO smg_charges
-                                        (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                                    VALUES
-                                        (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Free Regional Guarantee', '#chargeType#', #Now()#, -#getHSstud.regional_guarantee#, -#getHSstud.regional_guarantee#, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                                    </cfquery>                   
-                                </cfif>
-                            </cfif> --->
-                           
-                        </cfif>
-                       
-                        <cfif getHSstud.state_guarantee IS NOT 0>
-                        
-                        	<cfquery name="getHostState" datasource="MySQL">
-                            SELECT ss.hostid, ss.state_guarantee, sst.id AS statePlaced
-                            FROM smg_students ss
-                            LEFT JOIN smg_hosts sh ON sh.hostid = ss.hostid
-                            LEFT JOIN smg_states sst ON sst.state = sh.state
-                            WHERE ss.studentid = #getHSstud.studentid#
-                            </cfquery>
-                            
-                        	<cfif getHostState.hostid EQ 0 OR getHostState.state_guarantee EQ getHostState.statePlaced>
-                                <cfquery name="insertStateGuarantee" datasource="MySQL">
-                                INSERT INTO smg_charges
-                                    (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                                VALUES
-                                    (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'State Guarantee: #getHSstud.statename#', '#chargeType#', #Now()#, #getHSstud.guarantee_Fee#, #getHSstud.guarantee_Fee#, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                                </cfquery>  
-                            </cfif>                  
-                        </cfif>
-                            
-                    </cfif>
-
-                </cfif>
-                <!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
-                      
-                </cfcase>
-                   
-            <cfcase value="deposit">
-           
-                <cfquery name="checkProgFee" datasource="MySQL">
-                SELECT stuid
-                FROM smg_charges
-                WHERE stuid = #getHSstud.studentid#
-                AND programid = #getHSstud.programid#
-                AND agentid = #getHSstud.intrep#
-                AND companyid = #getHSstud.companyid#
-                AND type = 'program fee'
-                AND active = 1
-                </cfquery>
-               
-                <cfif checkProgFee.recordCount EQ 0>
-                    <cfquery name="insertDeposit" datasource="MySQL">
-                    INSERT INTO smg_charges
-                        (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-                    VALUES
-                        (#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, 500, 500, #client.userid#, #Now()#, #getHSstud.companyid#)   
-                    </cfquery>               
-                </cfif>
-           
-            </cfcase>
-           
-        </cfswitch>
+						   
+						</cfif>
+					   
+					</cfif>
+					<!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
+				   
+					</cfcase>
+				   
+					<cfcase value="insurance">
+				   
+					<!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
+					<cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
+								   
+						<cfif getHSstud.insurance_typeid NEQ 1>
+					   
+							 <cfquery name="insertInsurance" datasource="MySQL">
+							INSERT INTO smg_charges
+								(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+							VALUES
+								(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, #variables.insurance#, #variables.insurance#, #client.userid#, #Now()#, #getHSstud.companyid#)   
+							</cfquery>
+											 
+						</cfif>
+	
+					</cfif>
+					<!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
+					   
+					</cfcase>
+				   
+					<cfcase value="sevis">
+	
+					<!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
+					<cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
+					   
+						<!--- US citizens country code is 232 don't pay sevis--->
+						<cfif getHSstud.accepts_sevis_fee EQ 1 AND (getHSstud.countrybirth NEQ 232 AND getHSstud.countryresident NEQ 232 AND getHSstud.countrycitizen NEQ 232)>
+							<cfquery name="insertSevis" datasource="MySQL">
+							INSERT INTO smg_charges
+								(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+							VALUES
+								(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, 180, 180, #client.userid#, #Now()#, #getHSstud.companyid#)   
+							</cfquery>
+						</cfif>          
+	
+					</cfif>
+					<!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
+				   
+					</cfcase>
+				   
+					<cfcase value="guarantee">
+	
+					<!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
+					<cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
+				   
+						<cfif getHSstud.regionguar IS 'YES' AND getHSstud.direct_placement EQ 0>
+					   
+							<cfif getHSstud.state_guarantee IS 0>
+							
+								<cfquery name="getHostState" datasource="MySQL">
+								SELECT ss.hostid, IFNULL( sst.state, 0 ) AS statePlaced
+								FROM smg_students ss
+								LEFT JOIN smg_hosts sh ON sh.hostid = ss.hostid
+								LEFT JOIN smg_states sst ON sst.state = sh.state
+								WHERE ss.studentid = #getHSstud.studentid#
+								</cfquery>
+								
+								<cfoutput query="getHostState">
+								
+									<cfswitch expression="#getHostState.statePlaced#">
+									   <cfcase value="ME,VT,NH,MA,RI,CT,NJ,DE,MD,NY,PA,OH,WV,VA,KY">
+											<cfset regionPlaced = 'East'>
+										</cfcase>
+										<cfcase value="OK,TX,AR,LA,TN,MS,AL,GA,SC,NC">
+											<cfset regionPlaced = 'South'>
+										</cfcase>
+										<cfcase value="MN,WI,IA,NE,KS,MO,IL,IN,MI">
+											<cfset regionPlaced = 'Central'>
+										</cfcase>
+										<cfcase value="MT,ND,ID,WY,SD,CO,NM">
+											<cfset regionPlaced = 'Rocky Mountain'>
+										</cfcase>
+										<cfcase value="WA,OR,NV,UT,AZ">
+											<cfset regionPlaced = 'West'>
+										</cfcase>
+										<cfdefaultcase>
+											<cfset regionPlaced = 0>
+										</cfdefaultcase>
+									</cfswitch>
+								
+								</cfoutput>
+								
+								<cfif getHSstud.regionname EQ variables.regionPlaced OR variables.regionPlaced EQ 0>
+						   
+									<cfquery name="insertRegionalGuarantee" datasource="MySQL">
+									INSERT INTO smg_charges
+										(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+									VALUES
+										(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Regional Guarantee: #getHSstud.regionname#', '#chargeType#', #Now()#, #getHSstud.regional_guarantee#, #getHSstud.regional_guarantee#, #client.userid#, #Now()#, #getHSstud.companyid#)   
+									</cfquery>               
+	
+								</cfif>
+															
+								<!--- This comment is to disable the regional guarantee discount for applications received prior to Jan 1st. This discount is no longer applicable --->
+								<!--- <cfset thisYear = #year(getHSstud.startdate)#>
+								<cfset lastYear = #thisYear# -1>
+								<cfset discDeadLine = '#lastYear#-12-31'>
+								<cfset may = '#thisYear#-05-01'>
+								<cfset october = '#thisYear#-10-01'>               
+								<!--- FOR AUGUST STUDENTS ONLY THAT ARE NOT DIRECT PLACEMENT!!! --->
+								<cfif getHSstud.startdate GT may AND getHSstud.startdate LT october AND getHSstud.direct_placement EQ 0>
+									<!--- If app is received before Jan 1st of previous year--->
+									<cfif #getHSstud.dateapplication# LTE #variables.discDeadLine#>
+										<cfquery name="insertSpecAgreem" datasource="MySQL">
+										INSERT INTO smg_charges
+											(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+										VALUES
+											(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Free Regional Guarantee', '#chargeType#', #Now()#, -#getHSstud.regional_guarantee#, -#getHSstud.regional_guarantee#, #client.userid#, #Now()#, #getHSstud.companyid#)   
+										</cfquery>                   
+									</cfif>
+								</cfif> --->
+							   
+							</cfif>
+						   
+							<cfif getHSstud.state_guarantee IS NOT 0>
+							
+								<cfquery name="getHostState" datasource="MySQL">
+								SELECT ss.hostid, ss.state_guarantee, sst.id AS statePlaced
+								FROM smg_students ss
+								LEFT JOIN smg_hosts sh ON sh.hostid = ss.hostid
+								LEFT JOIN smg_states sst ON sst.state = sh.state
+								WHERE ss.studentid = #getHSstud.studentid#
+								</cfquery>
+								
+								<cfif getHostState.hostid EQ 0 OR getHostState.state_guarantee EQ getHostState.statePlaced>
+									<cfquery name="insertStateGuarantee" datasource="MySQL">
+									INSERT INTO smg_charges
+										(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+									VALUES
+										(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'State Guarantee: #getHSstud.statename#', '#chargeType#', #Now()#, #getHSstud.guarantee_Fee#, #getHSstud.guarantee_Fee#, #client.userid#, #Now()#, #getHSstud.companyid#)   
+									</cfquery>  
+								</cfif>                  
+							</cfif>
+								
+						</cfif>
+	
+					</cfif>
+					<!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
+						  
+					</cfcase>
+					   
+				<cfcase value="deposit">
+			   
+					<cfquery name="checkProgFee" datasource="MySQL">
+					SELECT stuid
+					FROM smg_charges
+					WHERE stuid = #getHSstud.studentid#
+					AND programid = #getHSstud.programid#
+					AND agentid = #getHSstud.intrep#
+					AND companyid = #getHSstud.companyid#
+					AND type = 'program fee'
+					AND active = 1
+					</cfquery>
+				   
+					<cfif checkProgFee.recordCount EQ 0>
+						<cfquery name="insertDeposit" datasource="MySQL">
+						INSERT INTO smg_charges
+							(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+						VALUES
+							(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, 500, 500, #client.userid#, #Now()#, #getHSstud.companyid#)   
+						</cfquery>               
+					</cfif>
+			   
+				</cfcase>
+			   
+			</cfswitch>
+		
+		</cfif><!--- create charges for the current student programid only if student does not have charges or if 
+		student changed from ISE to CASE or if student changed from CASE to ISE --->
      
     </cfloop>
    
