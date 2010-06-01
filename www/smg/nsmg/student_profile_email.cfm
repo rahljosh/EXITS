@@ -5,7 +5,7 @@
 	Date:		March 25, 2010
 	Desc:		This page emails the simplified student profile, student letter and parent letter.
 
-	Updated:  	
+	Updated:	06/01/2010 - Letters contain personal information and should not be included in the email.	
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -390,12 +390,13 @@
         <!--- Student Profile --->
         #studentProfile#	
         
+        <!---  Do Not Include Letters - Personal Information 
         <!--- Student Letter --->
         #studentLetterContent#
         
         <!--- Parent Letter --->
         #parentLetterContent#  
-           
+        --->        
     </cfdocument>
     
     
@@ -412,7 +413,8 @@
     
         <!--- Attach Students Profile --->
         <cfinvokeargument name="email_file" value="#AppPath.temp##qGetStudentInfo.studentID#-profile.pdf">
-    
+ 
+ 		<!---  Do Not Include Letters - Personal Information 
         <!--- Attach Students Letter --->
         <cfif studentLetter.recordcount>
             <cfinvokeargument name="email_file2" value="#AppPath.onlineApp.studentLetter##studentLetter.name#">
@@ -422,7 +424,8 @@
         <cfif parentLetter.recordcount>
             <cfinvokeargument name="email_file3" value="#AppPath.onlineApp.parentLetter##parentLetter.name#">
         </cfif>
-    
+    	--->
+        
     </cfinvoke>
 
     <script language="JavaScript">
