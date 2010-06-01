@@ -1683,8 +1683,11 @@
                     cbc.cbc_type,
                     MAX(cbc.date_authorized) AS date_authorized,
                     MAX(cbc.date_sent) AS date_sent,
+                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 1 Year) AS expiration_date,
                     MAX(cbc.seasonID) AS seasonID,
-                    h.familylastname
+                    h.familylastname,
+                    p.endDate,
+                    IFNULL( (SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = 'departure'), p.endDate) AS dep_date
                 FROM 
                    	smg_hosts_cbc cbc 
                 INNER JOIN 
@@ -1695,6 +1698,8 @@
                         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
                         AND 
                         	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                        AND
+                        	s.host_fam_Approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
                 INNER JOIN	
                 	smg_programs p ON p.programID = s.programID 
                     	AND 
@@ -1710,10 +1715,8 @@
                         	smg_hosts_cbc 
                         WHERE 
                         	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">  
-						<cfif LEN(ARGUMENTS.cbcType)>
-                            AND
-                                cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
-                        </cfif>   
+                        AND
+                            cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
                     )   
                 
                 <cfif ARGUMENTS.cbcType EQ 'father'>
@@ -1735,17 +1738,18 @@
                         cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                     )
 
-				<cfif LEN(ARGUMENTS.cbcType)>
-                	AND
-                    	cbc.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
-                </cfif>
-                    
+                AND
+                    cbc.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+                
                 GROUP BY 
                     cbc.hostid	
                 
                 HAVING
                 	 date_sent <= <cfqueryparam cfsqltype="cf_sql_date" value="#expirationDate#"> 
-
+				AND                
+                     expiration_date <= p.endDate
+                AND	
+                	expiration_date <= dep_date 
                 ORDER BY 
                     date_sent 
         </cfquery>
