@@ -30,10 +30,11 @@
 	AppEmail = APPLICATION.EMAIL;
 
 	AppEmail.support = 'support@student-management.com';
-	AppEmail.finance = 'marcel@student-management.com';
 	AppEmail.errors = 'errors@student-management.com';
-	
-	
+	AppEmail.admissions = 'bhause@iseusa.com';
+	AppEmail.finance = 'marcel@iseusa.com';	
+
+
 	// Phase Out these variables
 	if ( cgi.http_host EQ 'jan.case-usa.org' OR cgi.http_host EQ 'www.case-usa.org' ) {
 		
