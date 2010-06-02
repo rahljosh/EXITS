@@ -82,12 +82,12 @@ a:active {
 																<INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
              
              <select name=size class="style1">
-																	<option value="Size: Small $15.00 each" selected>Small $15.00 </option>
-																	<option value="Size: Medium $15.00 each">Medium $15.00 </option>
-																	<option value="Size: Large $15.00 each">Large $15.00 </option>
-																	<option value="Size: XL $15.00 each">X-Large $15.00</option>
-																	<option value="Size: XXL $15.00 each">XX-Large $15.00 </option>
-																	<option value="Size: XXXL $15.00 each">XXX-Large $15.00 </option>
+																	<option value="Size: Small $12.00 each" selected>Small $12.00 </option>
+																	<option value="Size: Medium $12.00 each">Medium $12.00 </option>
+																	<option value="Size: Large $12.00 each">Large $12.00 </option>
+																	<option value="Size: XL $12.00 each">X-Large $12.00</option>
+																	<option value="Size: XXL $12.00 each">XX-Large $12.00 </option>
+																	<option value="Size: XXXL $12.00 each">XXX-Large $12.00 </option>
                              	  </select>  
               <Br />
               <input type="image" src="images/webstore/addtoCart.png" width="57" height="22" alt="cart button" /></FORM></td>
