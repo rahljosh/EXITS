@@ -140,12 +140,12 @@ a:active {
         <input type="hidden" class="product-title" value="Short Sleeve Tee " />
         <input type="hidden" class="product-image" value="http://www.case-usa.org/Store/storeimages/thumbnails/TshortSleeve.jpg" />
         <select name="select" class="product-attr-custom">
-          <option value="Small" googlecart-set-product-price="15.00" selected="selected">Small - USD15.00</option>
-          <option value="Medium" googlecart-set-product-price="15.00">Medium - USD15.00</option>
-          <option value="Large" googlecart-set-product-price="15.00">Large - USD15.00</option>
-          <option value="X-Large" googlecart-set-product-price="15.00">X-Large - USD15.00</option>
-          <option value="XX-Large" googlecart-set-product-price="15.00">XX-Large - USD15.00</option>
-          <option value="XXX-Large" googlecart-set-product-price="15.00">XXX-Large - USD15.00</option>
+          <option value="Small" googlecart-set-product-price="12.00" selected="selected">Small - USD12.00</option>
+          <option value="Medium" googlecart-set-product-price="12.00">Medium - USD12.00</option>
+          <option value="Large" googlecart-set-product-price="12.00">Large - USD12.00</option>
+          <option value="X-Large" googlecart-set-product-price="12.00">X-Large - USD12.00</option>
+          <option value="XX-Large" googlecart-set-product-price="12.00">XX-Large - USD12.00</option>
+          <option value="XXX-Large" googlecart-set-product-price="12.00">XXX-Large - USD12.00</option>
         </select>
         <input type="hidden" class="product-price" value="15.00" />
         <div class="googlecart-add-button" tabindex="0" role="button" title="Add to cart"></div>
