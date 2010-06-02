@@ -231,6 +231,7 @@
             from="#APPLICATION.EMAIL.support#"    	
             to="#APPLICATION.EMAIL.finance#"
             cc="#userCopyEmail#"
+            bcc="#APPLICATION.EMAIL.admissions#"
             subject="Student #qStudentInfo.firstName# #qStudentInfo.familyLastName# (###qStudentInfo.studentID#) Change Program Notification"
             type="html">
                 <table cellpadding="5" cellspacing="5" style="border-collapse: collapse; border: .05em solid ##000;">
