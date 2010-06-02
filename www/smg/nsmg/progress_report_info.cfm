@@ -161,7 +161,7 @@ function OpenLetter(url) {
 
 <!--- users are allowed access until they approve the report.  Also, if a higher level has already approved then they are not allowed access. --->
 <!--- supervising rep --->
-<cfif client.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ '' and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ '' or client.usertype LTE 4>
+<cfif client.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ '' and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
 	<cfset allow_reject = 1>
