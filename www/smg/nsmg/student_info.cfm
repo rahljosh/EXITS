@@ -362,10 +362,12 @@
                             	<td align="center" colspan="2">
                             		<font size=-1><span class="edit_link">
                                     [ 
-										<cfif CLIENT.usertype LTE '4'><a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; </cfif> 
+										<cfif CLIENT.usertype LTE 4>
+                                        	<a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; 
+                                        </cfif> 
                                     	<a href='student_profile.cfm?uniqueid=#uniqueid#'>profile</a> &middot;
-										<cfif CLIENT.userType EQ 1 OR client.userID eq 12431>  <!--- Waiting for OK from Gary to push this live --->                             
-                                        <a href="javascript:SendEmail('student_profile_email.cfm?uniqueid=#uniqueid#', 300, 400);" title="Email Student Profile and Letters">email profile <img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"></a> &middot;
+										<cfif CLIENT.userType LTE 4>  <!--- Only Office Users for Now --->
+	                                        <a href="javascript:SendEmail('student_profile_email.cfm?uniqueid=#uniqueid#', 300, 400);" title="Email Student Profile and Letters"><img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"> email profile </a> &middot;
                                         </cfif>
                                         <a href='student_profile_pdf.cfm?studentID=#uniqueid#'> <img src="pics/pdficon_small.gif" border=0></a>
                                     ]
