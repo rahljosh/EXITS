@@ -21,6 +21,7 @@
     <cfparam name="uniqueID" default="">
     
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.isIncludeLetters" default="0">
     <cfparam name="FORM.emailTo" default="">
 
     <cfscript>	
@@ -100,7 +101,8 @@
 
 <!--- Table Header --->
 <gui:tableHeader
-	imageName="students.gif"
+	width="380px"
+    imageName="students.gif"
 	tableTitle="Email Student Profile and Letters"
 	tableRightTitle=""
 />
@@ -108,7 +110,8 @@
 <form name="#cgi.SCRIPT_NAME#" method="post">
     <input type="hidden" name="submitted" value="1" />
     <input type="hidden" name="uniqueID" value="#uniqueID#" />
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="section" style="padding:15px;">
+    
+    <table width="380px" border="0" cellpadding="5" cellspacing="5" class="section" style="padding:15px;">
     
 		<!--- Display Errors --->
         <cfif VAL(ArrayLen(Errors.Messages))>
@@ -135,6 +138,22 @@
 			</td>
 		</tr>
 		<tr>	
+			<td>
+            	<input type="checkbox" name="isIncludeLetters" id="isIncludeLetters" value="1" <cfif FORM.isIncludeLetters> checked="checked" </cfif> /> 
+                &nbsp; 
+                <label for="isIncludeLetters">Include Student and Parent Letters</label>
+			</td>
+		</tr>
+        <!---
+        <tr>
+        	<td>
+            	<strong>Disclaimer: </strong>
+               	Morbi venenatis ultrices tortor non lacinia. Suspendisse ac tortor quis libero tristique fermentum quis in nisl. In hac habitasse platea dictumst. 
+                Maecenas eleifend felis ac mi semper egestas. Ut id quam ut orci lacinia placerat. Suspendisse potenti. Nam sed lacus a urna rhoncus placerat nec eget lacus. 
+            </td>
+		</tr>   
+		--->         
+        <tr>	
 			<td align="center">
             	<input name="Submit" type="image" src="pics/submit.gif" border=0 alt=" Send Email ">
 				&nbsp; &nbsp; &nbsp;
@@ -146,7 +165,9 @@
 </form>
     		
 <!--- Table Footer --->
-<gui:tableFooter />
+<gui:tableFooter
+	width="380px"
+/>
 
 
 <!--- FORM Submitted --->
@@ -390,13 +411,14 @@
         <!--- Student Profile --->
         #studentProfile#	
         
-        <!---  Do Not Include Letters - Personal Information 
-        <!--- Student Letter --->
-        #studentLetterContent#
-        
-        <!--- Parent Letter --->
-        #parentLetterContent#  
-        --->        
+        <cfif FORM.isIncludeLetters>
+			<!--- Student Letter --->
+            #studentLetterContent#
+            
+            <!--- Parent Letter --->
+            #parentLetterContent#  
+        </cfif>
+                
     </cfdocument>
     
     
@@ -414,17 +436,17 @@
         <!--- Attach Students Profile --->
         <cfinvokeargument name="email_file" value="#AppPath.temp##qGetStudentInfo.studentID#-profile.pdf">
  
- 		<!---  Do Not Include Letters - Personal Information 
-        <!--- Attach Students Letter --->
-        <cfif studentLetter.recordcount>
-            <cfinvokeargument name="email_file2" value="#AppPath.onlineApp.studentLetter##studentLetter.name#">
-        </cfif>
-        
-        <!--- Attach Parents Letter --->
-        <cfif parentLetter.recordcount>
-            <cfinvokeargument name="email_file3" value="#AppPath.onlineApp.parentLetter##parentLetter.name#">
-        </cfif>
-    	--->
+ 		<cfif FORM.isIncludeLetters>
+			<!--- Attach Students Letter --->
+            <cfif studentLetter.recordcount>
+                <cfinvokeargument name="email_file2" value="#AppPath.onlineApp.studentLetter##studentLetter.name#">
+            </cfif>
+            
+            <!--- Attach Parents Letter --->
+            <cfif parentLetter.recordcount>
+                <cfinvokeargument name="email_file3" value="#AppPath.onlineApp.parentLetter##parentLetter.name#">
+            </cfif>
+		</cfif>    	
         
     </cfinvoke>
 

@@ -14,6 +14,7 @@
 		
 		<!--- Table Header --->
 		<gui:tableHeader
+			width=""
 			imageName=""
 			tableTitle=""
 			tableRightTitle=""
@@ -25,6 +26,12 @@
 <cfsilent>
 
 	<!--- Param tag attributes --->
+	<cfparam 
+		name="ATTRIBUTES.width"
+		type="string"
+        default="100%"
+		/>
+    
 	<cfparam 
 		name="ATTRIBUTES.imageName"
 		type="string"
@@ -54,7 +61,7 @@
 <cfoutput>
 
 <!--- Header of Table --->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
+<table width="#ATTRIBUTES.width#" cellpadding="0" cellspacing="0" border="0" height="24">
     <tr valign="middle" height="24">
         <td width="13" height="24" background="pics/header_leftcap.gif">&nbsp;</td>
         <td width="26" background="pics/header_background.gif"><img src="pics/#ATTRIBUTES.imageName#"></td>

@@ -13,7 +13,9 @@
 		<cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 	
 		<!--- Table Footer --->
-		<gui:tableFooter />
+		<gui:tableFooter
+			width=""
+		/>
 	
 ----- ------------------------------------------------------------------------- --->
 
@@ -21,6 +23,11 @@
 <cfsilent>
 
 	<!--- Param tag attributes --->
+	<cfparam 
+		name="ATTRIBUTES.width"
+		type="string"
+        default="100%"
+		/>
         
 </cfsilent>
 
@@ -33,7 +40,7 @@
 <cfoutput>
 
 <!--- Footer of Table --->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<table width="#ATTRIBUTES.width#" cellpadding="0" cellspacing="0" border="0">
 	<tr valign="bottom">
 		<td width="9" valign="top" height=12><img src="pics/footer_leftcap.gif"></td>
 		<td width="100%" background="pics/header_background_footer.gif"></td>
