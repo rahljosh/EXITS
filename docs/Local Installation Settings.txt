@@ -18,7 +18,9 @@ Port 3306
 
 Apache httpd.conf file
 
-<Directory "C:\Sites">
+"C:\Program Files\Apache Software Foundation\Apache2.2\conf\httpd.conf"
+
+<Directory "C:\Websites">
 
   Order Deny,Allow
 
@@ -29,6 +31,8 @@ Apache httpd.conf file
 ---------------------------------------- 
 
 Apache Vhosts file
+
+"C:\Program Files\Apache Software Foundation\Apache2.2\conf\extra\httpd-vhosts.conf"
 
 <VirtualHost *:80>
 
@@ -48,6 +52,8 @@ Apache Vhosts file
 </VirtualHost>
 
 ---------------------------------------- 
+
+C:\Windows\System32\drivers\etc\hosts
 
 Windows\System32\Drivers\Hosts
 
