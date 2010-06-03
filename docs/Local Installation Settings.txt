@@ -18,45 +18,120 @@ Port 3306
 
 Apache httpd.conf file
 
-"C:\Program Files\Apache Software Foundation\Apache2.2\conf\httpd.conf"
+Location: C:\Program Files\Apache Software Foundation\Apache2.2\conf\httpd.conf
 
+
+# This should be changed to whatever you set DocumentRoot to.
+#
 <Directory "C:\Websites">
+    #<Directory "C:/Program Files/Apache Software Foundation/Apache2.2/htdocs">
+    #
+    # Possible values for the Options directive are "None", "All",
+    # or any combination of:
+    #   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
+    #
+    # Note that "MultiViews" must be named *explicitly* --- "Options All"
+    # doesn't give it to you.
+    #
+    # The Options directive is both complicated and important.  Please see
+    # http://httpd.apache.org/docs/2.2/mod/core.html#options
+    # for more information.
+    #
+    Options Indexes FollowSymLinks
 
-  Order Deny,Allow
+    #
+    # AllowOverride controls what directives may be placed in .htaccess files.
+    # It can be "All", "None", or any combination of the keywords:
+    #   Options FileInfo AuthConfig Limit
+    #
+    AllowOverride None
 
-  Allow from all
+    #
+    # Controls who can get stuff from this server.
+    #
+    Order allow,deny
+    Allow from all
 
 </Directory>
+
+
+# Added to let the browser access these folder - Marcus Melo
+<Directory "C:\Program Files\Apache Software Foundation\Apache2.2\htdocs">
+  Order Deny,Allow
+  Allow from all
+</Directory>
+
+<Directory "C:\Websites">
+  Order Deny,Allow
+  Allow from all
+</Directory>
+
 
 ---------------------------------------- 
 
 Apache Vhosts file
 
-"C:\Program Files\Apache Software Foundation\Apache2.2\conf\extra\httpd-vhosts.conf"
-
-<VirtualHost *:80>
-
-   DocumentRoot "C:\Program Files\Apache Software Foundation\Apache2.2\htdocs"
-
-   ServerName localhost
-
-</VirtualHost>
+Location: C:\Program Files\Apache Software Foundation\Apache2.2\conf\extra\httpd-vhosts.conf
 
  
 <VirtualHost *:80>
+   DocumentRoot "C:\Program Files\Apache Software Foundation\Apache2.2\htdocs"
+   ServerName localhost
+</VirtualHost>
 
-    DocumentRoot C:\Sites\www\smg
 
+<VirtualHost *:80>
+    DocumentRoot "C:\Websites\www\case"
+    ServerName csb.local
+</VirtualHost>
+
+
+<VirtualHost *:80>
+    DocumentRoot "C:\Websites\www\csb-usa"
+    ServerName csb.local
+</VirtualHost>
+
+
+<VirtualHost *:80>    
+    DocumentRoot "C:\Websites\www\smg\extra"
+    ServerName extra.local
+</VirtualHost>
+
+
+<VirtualHost *:80>    
+    DocumentRoot "C:\Websites\www\iseusa"
+    ServerName ise.local
+</VirtualHost>
+
+
+<VirtualHost *:80>    
+    DocumentRoot "C:\Websites\www\smg"
     ServerName smg.local
+</VirtualHost>
 
+
+<VirtualHost *:80>
+    DocumentRoot "C:\Websites\www\phpusa"
+    ServerName php.local
 </VirtualHost>
 
 ---------------------------------------- 
 
 C:\Windows\System32\drivers\etc\hosts
 
-Windows\System32\Drivers\Hosts
+Windows 7 --> Click Start – search for “Notepad“, right-click and select “Run as Administrator“. This should launch notepad
+with elevated privileges. Now, open the host file from the File menu, edit and save.
+
+Location: Windows\System32\Drivers\Hosts
 
 127.0.0.1       localhost
+
+127.0.0.1       case.local
+
+127.0.0.1       csb.local
+
+127.0.0.1       extra.local
+
+127.0.0.1       ise.local
 
 127.0.0.1       smg.local
