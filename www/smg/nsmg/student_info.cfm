@@ -366,7 +366,7 @@
                                         	<a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; 
                                         </cfif> 
                                     	<a href='student_profile.cfm?uniqueid=#uniqueid#'>profile</a> &middot;
-										<cfif CLIENT.userType LTE 4>  <!--- Only Office Users for Now --->
+										<cfif CLIENT.userType LTE 5>  <!--- Only Office & Managers --->
 	                                        <a href="javascript:SendEmail('student_profile_email.cfm?uniqueid=#uniqueid#', 300, 400);" title="Email Student Profile and Letters"><img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"> email profile </a> &middot;
                                         </cfif>
                                         <a href='student_profile_pdf.cfm?studentID=#uniqueid#'> <img src="pics/pdficon_small.gif" border=0></a>
