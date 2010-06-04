@@ -83,15 +83,15 @@
         	smg_students s 
         INNER JOIN 
         	smg_users u ON u.userid = s.intRep
-        INNER JOIN
+        LEFT OUTER JOIN
         	smg_student_app_programs appProgram ON appProgram.app_programID = s.app_indicated_program
-        LEFT JOIN 
+        LEFT OUTER JOIN 
         	smg_companies c ON c.companyid = s.companyid
-        LEFT JOIN 
+        LEFT OUTER JOIN 
         	smg_users branch ON branch.userid = s.branchid
-		LEFT JOIN
+		LEFT OUTER JOIN
         	smg_programs p ON p.programID = s.programID
-        LEFT JOIN
+        LEFT OUTER JOIN
         	smg_seasons season ON season.seasonID = p.seasonID            
         WHERE 
         	s.randid != <cfqueryparam cfsqltype="cf_sql_bit" value="0">         
