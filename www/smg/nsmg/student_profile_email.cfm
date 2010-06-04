@@ -172,16 +172,19 @@
         <!--- Header --->
         <table align="center" class="profileTable">
             <tr>
-                <td class="titleLeft">
-                    <span class="title">International Representative:</span> <br /> #qIntlRep.businessname# <br /><br /><br />
+                <td class="titleLeft" valign="bottom">
+                    <!--- <span class="title">International Representative:</span> <br /> #qIntlRep.businessname# <br /><br /><br /> --->
+                     <br /><br /><br />
                     <span class="title">Today's Date:</span> #DateFormat(now(), 'mmm d, yyyy')#<br />
                 </td> 
                 <td class="titleCenter">
                     <h1>#qGetCompany.companyName#</h1>                
                     <span class="title">Program:</span> #qGetProgram.programname#<br />
+                    <!---
                     <span class="title">Region:</span> #qGetRegion.regionname# 
                     <cfif qGetStudentInfo.regionguar EQ 'yes'><strong> - #qGetRegionGuaranteed.regionname# Guaranteed</strong> <br /></cfif>
                     <cfif VAL(qGetStudentInfo.state_guarantee)><strong> - #getStateGuranteed# Guaranteed</strong> <br /></cfif>
+					--->
                     <cfif VAL(qGetStudentInfo.scholarship)>Participant of Scholarship Program</cfif>
                 </td>
                 <td class="titleRight">
@@ -219,6 +222,10 @@
                                         <td><span class="title">Sex:</span></td>
                                         <td>#qGetStudentInfo.sex#</td>
                                     </tr>
+                                    <tr>
+                                        <td><span class="title">Age:</span></td>
+                                        <td>#DateDiff("yyyy", qGetStudentInfo.dob, now())#</td>
+                                    </tr>                                    
                                 </table>
                                 
                             </td>
