@@ -82,7 +82,7 @@
                     type
 				FROM
                 	smg_private_schools
-				<cfif VAL(ARGUMENTS.privateSchoolID)>
+				<cfif IsNumeric(ARGUMENTS.privateSchoolID)>
                     WHERE 
                         privateSchoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.privateSchoolID#">
                 </cfif>                        

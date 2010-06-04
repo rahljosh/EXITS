@@ -144,15 +144,6 @@
                 <label for="isIncludeLetters">Include Student and Parent Letters</label>
 			</td>
 		</tr>
-        <!---
-        <tr>
-        	<td>
-            	<strong>Disclaimer: </strong>
-               	Morbi venenatis ultrices tortor non lacinia. Suspendisse ac tortor quis libero tristique fermentum quis in nisl. In hac habitasse platea dictumst. 
-                Maecenas eleifend felis ac mi semper egestas. Ut id quam ut orci lacinia placerat. Suspendisse potenti. Nam sed lacus a urna rhoncus placerat nec eget lacus. 
-            </td>
-		</tr>   
-		--->         
         <tr>	
 			<td align="center">
             	<input name="Submit" type="image" src="pics/submit.gif" border=0 alt=" Send Email ">
@@ -332,8 +323,8 @@
                     <td colspan="4"><span class="title">IFF:</span>The Student Accepts IFF School.</td>
                 </tr>
             </cfif>
-            
-            <cfif qPrivateSchool.recordCount>
+                      
+            <cfif qGetStudentInfo.privateschool>
                 <tr>
                     <td colspan="4"><span class="title">Private HS:</span>The Student Accepts Private HS #qPrivateSchool.privateschoolprice#.</td>
                 </tr>
@@ -394,9 +385,14 @@
     
     
     <cfsavecontent variable="emailMessage">
-        <p>Please see attached student profile, student letter and parent letter.</p>
         
-        <p>Student Name: #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentid#) student profile attached.</p>
+        <cfif FORM.isIncludeLetters>
+	        <p>Please see attached student profile, student letter and parent letter.</p>
+        <cfelse>
+        	<p>Please see attached student profile.</p>
+        </cfif>
+        
+        <p>Student Name: #qGetStudentInfo.firstName# (###qGetStudentInfo.studentid#) student profile attached.</p>
         
         <p>
             Thank you, <br />
@@ -429,7 +425,7 @@
     <!--- send email --->
     <cfinvoke component="nsmg.cfc.email" method="send_mail">
         <cfinvokeargument name="email_to" value="#FORM.emailTo#">
-        <cfinvokeargument name="email_subject" value="#qGetCompany.companyShort_noColor# Student Profile - #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentid#)">
+        <cfinvokeargument name="email_subject" value="#qGetCompany.companyShort_noColor# Student Profile - #qGetStudentInfo.firstName# (###qGetStudentInfo.studentid#)">
         <cfinvokeargument name="email_message" value="#emailMessage#">
         <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
     
