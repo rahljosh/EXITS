@@ -1,12 +1,9 @@
-<!--- use cfsetting to block output of HTML outside of cfoutput tags --->
-<cfsetting enablecfoutputonly="Yes">
-
 <!--- Kill Extra Output --->
 <cfsilent>
 
 	<!--- Param FORM Variables --->
-    <cfparam name="FORM.programID" default="">
-    <cfparam name="FORM.policyID" default="">
+    <cfparam name="FORM.programID" default="0">
+    <cfparam name="FORM.policyID" default="0">
     
     <cfscript>
 		// Start Date must be Insurance End Date
