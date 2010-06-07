@@ -226,7 +226,7 @@
                     s.firstname, 
                     s.familyLastName, 
                     s.dob, 
-                    MIN(fi.dep_date) as dep_date,            
+                    DATE_ADD( MIN(fi.dep_date), INTERVAL 1 DAY) AS dep_date,
                     it.type,  
                     ic.policycode, 
                     p.startDate,
