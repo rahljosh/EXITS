@@ -247,7 +247,7 @@ END) AS testCompId
                             
                 </table><br/>
         
-                We will appreciate if you could please transfer the total amount <strong>#LsCurrencyFormat(getTotalBalancePerAgent.totalPerAgent)#</strong> as soon as possible. Please check the invoices for the correct bank account for payment (for example, all work programs' balances must be remitted to CSB's account while High School program balances must be remitted to SMG's account).<br/><br/>
+                We will appreciate if you could please transfer the total amount <strong>#LsCurrencyFormat(getTotalBalancePerAgent.totalPerAgent)#</strong> as soon as possible. Please check the invoices for the correct bank account for payment (for example, all work programs' balances must be remitted to CSB's account while High School program balances must be remitted to ISE's account).<br/><br/>
                 
                 <small><strong>Notes:</strong><br/><br/>
                 
