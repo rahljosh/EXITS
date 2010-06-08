@@ -120,7 +120,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <table width="210" border="0" style="margin-left:15px;">
   <tr>
     <th scope="row" align="left">
-    	<a href="http://www.esecutive.com/index.php" target="_blank"><img src="images/globalSec.gif" title="Global Secutive Insurance" width="108" height="28" border="1" /></a>
+    	<a href="https://www.esecutive.com/smg/" target="_blank"><img src="images/BaggageInsurance.jpg" title="Global Secutive Insurance" border="0" /></a>
     </th>
     <th scope="row" align="right">
     	<a href="pdfs/CSIET-certificate-10-11.pdf" target="_blank"><img src="images/csiet-10-11.gif" title="CSIET 2010-2011 Certificate of Acceptance" border="1" /></a>
