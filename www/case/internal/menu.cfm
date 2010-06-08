@@ -231,11 +231,7 @@
 				<a class="item2" href="index.cfm?curdoc=cbc/combine_hosts">Combining Hosts</a>
 				</cfif>
 				<a class="item2" href="index.cfm?curdoc=compliance/combine_schools">Combining Schools</a>
-				<a class="item2" href="index.cfm?curdoc=insurance/insurance_menu">Caremed Insurance Files</a>
-				<div class="section">
-					<a class="item2" href="index.cfm?curdoc=insurance/insurance_codes">Caremed Policy Codes</a>	
-				</div>
-				<a class="item2" href="index.cfm?curdoc=insurance/vsc_menu">VSC Insurance Files</a>
+				<a class="item2" href="index.cfm?curdoc=insurance/insurance_menu">Insurance</a>
 				<a class="item2" href="index.cfm?curdoc=forms/supervising_placement_payments">Rep Payments</a>
 				<a class="item2" href="index.cfm?curdoc=tools/countries">Countries</a>
 				<!---
