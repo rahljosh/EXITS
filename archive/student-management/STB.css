@@ -1,0 +1,135 @@
+body {
+	color: #8A9EA7;
+	background-image: url(exitsapp_image/background.png);
+	background-repeat: repeat;
+	height: 888px;
+	width: 1191px;
+	background-color: #BCC7CD;
+}
+#mainContent {
+	margin: 0px;
+	padding: 0px;
+	height: auto;
+	width: 1000px;
+	z-index: 1;
+	position: absolute;
+}
+.boxTop {
+	margin: 0px;
+	padding: 0px;
+	width: 700px;
+	background-image: url(exitsapp_image/loginTop.png);
+	background-repeat: no-repeat;
+	height: 55px;
+}
+.boxContainer {
+	padding: 0px;
+	height: auto;
+	width: 700px;
+	margin-top: 175px;
+	margin-right: 100px;
+	margin-bottom: 0px;
+	margin-left: 200px;
+}
+.boxTile {
+	background-image: url(exitsapp_image/loginTile.png);
+	background-repeat: repeat-y;
+	height: 275px;
+	width: 700px;
+}
+.boxBot {
+	background-image: url(exitsapp_image/loginBot.png);
+	height: 52px;
+	width: 700px;
+	background-repeat: no-repeat;
+}
+#loginBox {
+	background-color: #FFF;
+	padding: 0px;
+	width: 605px;
+	z-index: 10;
+	margin-top: 215px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 245px;
+	position: absolute;
+	height: 225px;
+}
+.loginTop {
+	background-image: url(exitsapp_image/colorTop.png);
+	background-repeat: no-repeat;
+	width: 608px;
+	height: 20px;
+	margin: 0px;
+	padding: 0px;
+}
+.loginMain {
+	background-color: #002F44;
+	margin: 0px;
+	width: 607px;
+	background-image: url(exitsapp_image/logTilecolor.png);
+	background-repeat: repeat-y;
+	height: 110px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+#logoContent {
+	height: 75px;
+	width: 560px;
+	position: absolute;
+	z-index: 10;
+	margin-top: 0px;
+	margin-left: 25px;
+
+}
+.clientcompanyname {
+       font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+       font-size: 1.5em;
+}
+.exitLogo {
+	background-image: url(exitsapp_image/EXITSlogo.png);
+	background-repeat: no-repeat;
+	padding: 0px;
+	float: left;
+	height: 150px;
+	width: 310px;
+	margin-top: 30px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+.form1 {
+	float: right;
+	height: 125px;
+	width: 230px;
+	margin-top: 30px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 20px;
+	padding-right: 30px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+	text-align: left;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	color: #999;
+}
+.button {
+	background-image: url(exitsapp_image/button.png);
+	background-repeat: no-repeat;
+	height: 40px;
+	width: 228px;
+	float: right;
+	background-position: right;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	color: #999;
+	text-align: left;
+	padding-top: 30px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}

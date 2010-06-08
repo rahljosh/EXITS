@@ -1,0 +1,192 @@
+body {
+	background-image: url(exitsapp_images/exitsapp_image/images/headerbanner_02.png);
+	background-repeat: repeat-x;
+	background-color: #FFF;
+	width: 100%;
+}
+#mainContent {
+	height: auto;
+	width: 90%;
+	text-align: right;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin: 0px;
+}
+.topFont {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #000;
+}
+.headerBar {
+	padding: 0px;
+	height: 25px;
+	width: 1092px;
+	margin-top: 115px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	text-align: center;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	color: #FFF;
+	word-spacing: 0em;
+}
+.bottompage {
+	background-color: #CCC;
+	margin: 0px;
+	padding: 0px;
+	height: 100px;
+	width: 125%;
+	text-align: center;
+	border-top-width: thin;
+	border-top-style: solid;
+	border-top-color: #666;
+}
+#tabs {
+	padding: 0px;
+	width: auto;
+	z-index: 10;
+	left: 14px;
+	top: 97px;
+	position: absolute;
+	margin: 0px;
+	height: 35px;
+	float: none;
+}
+.infoSection {
+	background-color: #FFF;
+	padding: 0px;
+	height: 500px;
+	width: 100%;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	text-align: left;
+	margin-top: 30px;
+}
+.toprightlinks1 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 90px;
+	text-align: center;
+	background-image: url(exitsapp_images/exitsapp_images/Tab1.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks1:hover{
+	background-image: url(exitsapp_images/exitsapp_images/Tab1_MO.png);
+}
+.toprightlinks2 {
+	color: #FF0;
+	text-align: right;
+	display: block;
+	float: left;
+	width: 90px;
+	text-align: center;
+	background-image: url(exitsapp_images/exitsapp_images/Tab2.png);
+	background-repeat: no-repeat;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks2:hover{
+	background-image: url(exitsapp_images/exitsapp_images/Tab2_MO.png);
+}
+.toprightlinks3 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 90px;
+	text-align: center;
+	background-image: url(exitsapp_images/exitsapp_images/Tab3.png);
+	background-repeat: no-repeat;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks3:hover{
+	background-image: url(exitsapp_images/exitsapp_images/Tab3_MO.png);
+}
+.toprightlinks4 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 90px;
+	text-align: center;
+	background-image: url(exitsapp_images/exitsapp_images/Tab4.png);
+	background-repeat: no-repeat;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks4:hover{
+	background-image: url(exitsapp_images/exitsapp_images/Tab4_MO.png);
+}
+.toprightlinks5 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 90px;
+	text-align: center;
+	background-image: url(exitsapp_images/exitsapp_images/Tab5.png);
+	background-repeat: no-repeat;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks5:hover{
+	background-image: url(exitsapp_images/exitsapp_images/Tab5_MO.png);
+}
+#bottomInfo {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000;
+	height: 25px;
+	width: 250px;
+	position: absolute;
+	z-index: 15;
+	margin-top: 20px;
+	text-align: center;
+	margin-left: 35%;
+}
+.X {
+	font-family: "Arial Black", Gadget, sans-serif;
+	color: #F60;
+}

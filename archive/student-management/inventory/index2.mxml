@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" backgroundGradientColors="[#408080, #2b5353]" initialize="wsLOWPOINT.Select.send(); wsRECENT.Select.send(); wsASA.Select.send(); wsISE.Select.send(); wsINTO.Select.send(); wsSMG.Select.send(); wsPHP.Select.send(); wsDMD.Select.send(); wsUPI.Select.send();">
+
+<mx:WebService id= "wsSMG" wsdl="http://www.student-management.com/inventory/cf/getitemsSMG.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:WebService id= "wsISE" wsdl="http://www.student-management.com/inventory/cf/getitemsISE.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:WebService id= "wsINTO" wsdl="http://www.student-management.com/inventory/cf/getitemsINTO.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:WebService id= "wsDMD" wsdl="http://www.student-management.com/inventory/cf/getitemsDMD.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:WebService id= "wsASA" wsdl="http://www.student-management.com/inventory/cf/getitemsASA.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:WebService id= "wsPHP" wsdl="http://www.student-management.com/inventory/cf/getitemsPHP.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:WebService id= "wsUPI" wsdl="http://www.student-management.com/inventory/cf/getitemsUPI.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:WebService id= "wsRECENT" wsdl="http://www.student-management.com/inventory/cf/getitemsRECENT.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:WebService id= "wsLOWPOINT" wsdl="http://www.student-management.com/inventory/cf/getitemsLOWPOINT.cfc?wsdl" showBusyCursor= "true"> 
+		<mx:operation name= "Select" /> 
+</mx:WebService>
+
+<mx:HTTPService id="login_user" result="checkLogin(event)" showBusyCursor="true" method="POST" url="http://www.student-management.com/inventory/cf/login.cfm" useProxy="false">
+	<mx:request xmlns="">
+		<username>{username.text}</username>
+		<password>{password.text}</password>
+	</mx:request>
+</mx:HTTPService>
+
+<mx:WebService id="wsHISTORY"  useProxy="false"  wsdl="http://www.student-management.com/inventory/cf/getitemsHISTORY.cfc?wsdl" result="handleQueryResult(event)"  showBusyCursor="true">
+ <mx:operation name="Select" fault="Alert.show(event.fault.message)" result="handleQueryResult(event)">
+ 	<mx:request xmlns="">
+ 		<itemid>{dg.selectedItem.ITEMID}</itemid>
+ 	</mx:request>
+ </mx:operation>
+</mx:WebService>
+
+<mx:HTTPService id="edit_Item" result="checkEdit(event)" showBusyCursor="true" method="POST" url="http://www.student-management.com/inventory/cf/editItem.cfm" useProxy="false">
+	<mx:request xmlns="">
+		<itemid_edit>{itemid_edit.text}</itemid_edit>
+		<companyid_edit>{companyid_edit.text}</companyid_edit>
+		<itemname_edit>{itemname_edit.text}</itemname_edit>
+		<description_edit>{description_edit.text}</description_edit>
+		<file_edit>{file_edit.text}</file_edit>
+		<stock_edit>{stock_edit.value}</stock_edit>
+		<printed_edit>{printed_edit.text}</printed_edit>
+		<sample_edit>{sample_edit.text}</sample_edit>
+		<lowpoint_edit>{lowpoint_edit.value}</lowpoint_edit>
+	</mx:request>
+</mx:HTTPService>
+
+<mx:HTTPService id="addItem" result="checkAdd(event)" showBusyCursor="true" method="POST" url="http://www.student-management.com/inventory/cf/addItem.cfm" useProxy="false">
+	<mx:request xmlns="">
+		<companyid>{companyid.text}</companyid>
+		<itemname>{itemname.text}</itemname>
+		<description>{description.text}</description>
+		<file>{file.text}</file>
+		<stock>{stock.value}</stock>
+		<printed>{printed.text}</printed>
+		<sample>{sample.text}</sample>
+		<lowpoint>{lowpoint.value}</lowpoint>
+	</mx:request>
+</mx:HTTPService>
+
+<mx:HTTPService id="edit_ItemHistory" result="checkEditHistory(event)" showBusyCursor="true" method="POST" url="http://www.student-management.com/inventory/cf/editItemHistory.cfm" useProxy="false">
+	<mx:request xmlns="">
+		<itemid_edit>{itemid_histedit.text}</itemid_edit>
+		<quantity>{quantity.value}</quantity>
+		<status>{selectedItem.label}</status>
+		<remark>{remark.text}</remark>
+	</mx:request>
+</mx:HTTPService>
+
+	
+	<mx:Script>
+		<![CDATA[
+		import mx.rpc.events.ResultEvent;
+		import mx.events.ItemClickEvent;
+	    import mx.controls.Alert;
+	    import mx.effects.*;
+        import mx.events.EffectEvent;
+        import mx.core.UIComponent;
+        
+        [Bindable]
+	    public var qResult:Array;
+        public var cards: Array = [ ,{label:"Creating"}, {label:"Sent to Printer"}, {label:"Waiting Approval"}, {label:"Ordered"}, {label:"Received"} ];
+        public var selectedItem:Object;
+        public var u:URLRequest = new URLRequest("logout.html");
+
+		private function checkLogin(evt:ResultEvent):void {
+				if(evt.result.loginsuccess == "yes"){
+					this.currentState = "welcome";
+				} else {
+					mx.controls.Alert.show('Invalid username/password');
+				}		
+		}
+			
+		private function changeDB(event:ItemClickEvent):void {
+   			this.currentState='list';
+   			topo.source="http://www.student-management.com/inventory/images/top-" + String(event.label) +  ".gif";
+			listPanel.title=":: " + String(event.label) + " ::";
+    		 if (String(event.label) == "ISE")  {
+    		    dg.dataProvider=wsISE.Select.lastResult;
+    		    companyid.text='1';
+    		 }
+    		 if (String(event.label) == "INTO")  {
+	    	 	dg.dataProvider=wsINTO.Select.lastResult;
+	    		companyid.text='2';
+	    	 }
+    		 if (String(event.label) == "ASA")  {
+    		    dg.dataProvider=wsASA.Select.lastResult;
+    		    companyid.text='3';
+    		 }
+			 if (String(event.label) == "DMD")  {
+			    dg.dataProvider=wsDMD.Select.lastResult;
+			    companyid.text='4';
+			 }
+			 if (String(event.label) == "PHP")  {
+				dg.dataProvider=wsPHP.Select.lastResult;
+				companyid.text='6';
+			 }
+			 if (String(event.label) == "UPI")  {
+				dg.dataProvider=wsUPI.Select.lastResult;
+				companyid.text='10';
+			 }
+			 if (String(event.label) == "SMG")  {
+				dg.dataProvider=wsSMG.Select.lastResult;
+				companyid.text='5';
+			 }
+		}
+        
+        public function handleQueryResult(event:ResultEvent):void {
+	     qResult=event.result as Array; 
+	    }
+	    
+	    private function checkEdit(evt:ResultEvent):void {
+			if(evt.result.addsuccess == "yes")
+			{
+				mx.controls.Alert.show('EDITED SUCCESSFULLY');
+				if (companyid_edit.text == "1")  {
+	    		   wsISE.Select.send();
+	    		}
+	    		if (companyid_edit.text == "2")  {
+	    		   wsINTO.Select.send();
+	    		}
+	    		if (companyid_edit.text == "3")  {
+	    		   wsASA.Select.send();
+	    		}
+	    		if (companyid_edit.text == "4")  {
+	    		   wsDMD.Select.send();
+	    		}
+	    		if (companyid_edit.text == "5")  {
+	    		   wsSMG.Select.send();
+	    		}
+	    		if (companyid_edit.text == "6")  {
+	    		   wsPHP.Select.send();
+	    		}
+	    		if (companyid_edit.text == "10")  {
+	    		   wsUPI.Select.send();
+	    		}
+				currentState = "welcome";
+				topo.source="http://www.student-management.com/inventory/images/top-SMG.gif";
+			} 
+			if(evt.result.addsuccess == "no")
+			{
+				mx.controls.Alert.show('Item NOT Edited, Please Try Again!');
+			}		
+		}
+		
+		private function checkEditHistory(evt:ResultEvent):void
+		{
+			if(evt.result.addsuccess == "yes")
+			{
+				mx.controls.Alert.show('EDITED SUCCESSFULLY');
+				currentState = "welcome";
+				topo.source="http://wwwv.student-management.com/inventory/images/top-SMG.gif";
+			} 
+			if(evt.result.addsuccess == "no")
+			{
+				mx.controls.Alert.show('Item History NOT Edited, Please Try Again!');
+			}		
+		}
+		
+		private function formValidation():void {
+			if (itemname.text=="") {
+				mx.controls.Alert.show('ITEM NAME is required!');
+			} else {
+				addItem.send()	
+			}
+		}
+		
+		private function checkAdd(evt:ResultEvent):void
+		{
+			if(evt.result.addsuccess == "yes")
+			{
+				mx.controls.Alert.show('ADDED SUCCESSFULLY');
+				if (companyid.text == "1")  {
+	    		   wsISE.Select.send();
+	    		}
+	    		if (companyid.text == "2")  {
+	    		   wsINTO.Select.send();
+	    		}
+	    		if (companyid.text == "3")  {
+	    		   wsASA.Select.send();
+	    		}
+	    		if (companyid.text == "4")  {
+	    		   wsDMD.Select.send();
+	    		}
+	    		if (companyid.text == "5")  {
+	    		   wsSMG.Select.send();
+	    		}
+	    		if (companyid.text == "6")  {
+	    		   wsPHP.Select.send();
+	    		}
+	    		if (companyid.text == "10")  {
+	    		   wsUPI.Select.send();
+	    		}
+				currentState = "welcome";
+				topo.source="http://www.student-management.com/inventory/images/top-SMG.gif";
+			} 
+			if(evt.result.addsuccess == "no")
+			{
+				mx.controls.Alert.show('Item NOT Added, Please Try Again!');
+			}		
+		}
+		
+		private function resetForm():void
+		{
+			itemname.text='';
+			description.text='';
+			file.text='';
+			stock.value=0;
+			printed.text='';
+			sample.text='';
+			lowpoint.value=0;
+		}
+        
+		]]>
+	</mx:Script>
+
+
+
+	<mx:states>
+		<mx:State name="welcome">
+			<mx:AddChild position="lastChild">
+				<mx:ButtonBar horizontalGap="5" itemClick="changeDB(event);" color="#ffffff" themeColor="#80ff00" id="menu" horizontalCenter="51" top="76" creationCompleteEffect="{myFade}">
+				        <mx:dataProvider>
+				            <mx:Array>
+				                <mx:String>ASA</mx:String>
+				                <mx:String>DMD</mx:String>
+				                <mx:String>INTO</mx:String>
+				                <mx:String>ISE</mx:String>
+				                <mx:String>PHP</mx:String>
+				                <mx:String>SMG</mx:String>
+				                <mx:String>UPI</mx:String>
+				            </mx:Array>
+				        </mx:dataProvider>
+				    </mx:ButtonBar>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{loginPanel}" position="before">
+				<mx:Button label="HOME" color="#004040" fillColors="[#ffffff, #ffffff]" fillAlphas="[1.0, 0.2]" top="76" horizontalCenter="-206" id="btnHome" click="this.currentState='welcome'; wsLOWPOINT.Select.send(); wsRECENT.Select.send(); topo.source='http://www.student-management.com/inventory/images/top-SMG.gif'" creationCompleteEffect="{myFade}"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{loginPanel}" position="before">
+				<mx:Button label="LOGOUT" color="#004040" fillColors="[#ffffff, #ffffff]" fillAlphas="[1.0, 0.2]" top="76" horizontalCenter="316.5" id="btnLogout" creationCompleteEffect="{myFade}"/>
+			</mx:AddChild>
+			<mx:RemoveChild target="{loginPanel}"/>
+			<mx:AddChild position="lastChild">
+				<mx:VDividedBox top="113" bottom="35" width="760" horizontalCenter="0" id="boxWelcome" verticalGap="25" liveDragging="true" creationCompleteEffect="{myWD}">
+					<mx:Panel width="100%" height="100%" layout="absolute" id="lowsupplyPanel" title=":: Low Sypply ::" color="#ffffff">
+						<mx:DataGrid left="10" top="10" bottom="10" right="10" color="#000000" id="gdLowsupply" dataProvider="{wsLOWPOINT.Select.lastResult}">
+							<mx:columns>
+									<mx:DataGridColumn headerText="ID" dataField="ITEMID" width="40"/>
+									<mx:DataGridColumn headerText="Company" dataField="COMPANYSHORT" width="100"/>
+									<mx:DataGridColumn headerText="Item" dataField="NAME" width="200"/>
+									<mx:DataGridColumn headerText="Stock" dataField="STOCK" width="100"/>
+								</mx:columns>
+						</mx:DataGrid>
+					</mx:Panel>
+					<mx:Panel width="100%" height="100%" layout="absolute" color="#ffffff" id="recentPanel" title=":: Recent History Files ::">
+						<mx:DataGrid top="10" left="10" bottom="10" right="10" color="#000000" id="dgRecent" dataProvider="{wsRECENT.Select.lastResult}">
+							<mx:columns>
+							<mx:DataGridColumn headerText="ID" dataField="ITEMID" width="40"/>
+							<mx:DataGridColumn headerText="Company" dataField="COMPANYSHORT" width="100"/>
+							<mx:DataGridColumn headerText="Item" dataField="NAME" width="300"/>
+							<mx:DataGridColumn headerText="Date" dataField="DATE" width="100"/>
+							<mx:DataGridColumn headerText="Status" dataField="STATUS" width="150"/>
+							</mx:columns>
+						</mx:DataGrid>
+					</mx:Panel>
+				</mx:VDividedBox>
+			</mx:AddChild>
+		</mx:State>
+		
+		
+		<mx:State name="list">
+			<mx:RemoveChild target="{loginPanel}"/>
+			<mx:AddChild position="lastChild">
+				<mx:Panel width="760" layout="absolute" color="#ffffff" id="listPanel" title=":: COMPANYNAME ::" horizontalCenter="0" top="113" bottom="35" creationCompleteEffect="myWD" resizeEffect="Resize" >
+					<mx:DataGrid left="10" top="10" bottom="10" right="10" color="#000000" id="dg" itemClick="this.currentState='details'" change="wsHISTORY.Select.send()">
+						<mx:columns>
+							<mx:DataGridColumn headerText="ID" dataField="ITEMID" width="20"/>
+							<mx:DataGridColumn headerText="Item" dataField="NAME" width="100"/>
+							<mx:DataGridColumn headerText="Description" dataField="DESCRIPTION" width="200"/>
+							<mx:DataGridColumn headerText="Stock" dataField="STOCK" width="60"/>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:Panel>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="HOME" color="#004040" fillColors="[#ffffff, #ffffff]" fillAlphas="[1.0, 0.2]" top="76" horizontalCenter="-206" id="btnHome0" click="this.currentState='welcome'; wsLOWPOINT.Select.send(); wsRECENT.Select.send(); topo.source='http://www.student-management.com/inventory/images/top-SMG.gif'" creationCompleteEffect="{myFade}"/>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="LOGOUT" color="#004040" fillColors="[#ffffff, #ffffff]" fillAlphas="[1.0, 0.2]" top="76" horizontalCenter="316.5" id="btnLogout0" creationCompleteEffect="{myFade}" click="this.currentState='logout'"/>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:ButtonBar horizontalGap="5" itemClick="changeDB(event);" color="#ffffff" themeColor="#80ff00" id="menu0" horizontalCenter="51" top="76" creationCompleteEffect="{myFade}">
+				        <mx:dataProvider>
+				            <mx:Array>
+				                <mx:String>ASA</mx:String>
+				                <mx:String>DMD</mx:String>
+				                <mx:String>INTO</mx:String>
+				                <mx:String>ISE</mx:String>
+				                <mx:String>PHP</mx:String>
+				                <mx:String>SMG</mx:String>
+				                <mx:String>UPI</mx:String>
+				            </mx:Array>
+				        </mx:dataProvider>
+				    </mx:ButtonBar>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="Add New Item" color="#ffffff" fillColors="[#004040, #ffffff]" top="117" themeColor="#80ff00" horizontalCenter="306.5" id="addNew" click="this.currentState='add'; resetForm()"/>
+			</mx:AddChild>
+		</mx:State>
+		
+		
+		<mx:State name="details" basedOn="list">
+			<mx:SetStyle target="{listPanel}" name="bottom" value="335"/>
+			<mx:AddChild position="lastChild">
+				<mx:Panel width="760" layout="absolute" horizontalCenter="0" bottom="31" title="DETAILS :: {dg.selectedItem.NAME}" color="#ffffff" id="detailPanel" height="296" creationCompleteEffect="myWD">
+					<mx:Image x="10" y="10" width="178" height="235" source="http://www.student-management.com/inventory/files/{dg.selectedItem.SAMPLE}"/>
+					<mx:Label x="219" y="40" text="Item ID:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="542" y="40" text="Stock:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="480" y="70" text="Printed Location:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="237" y="10" text="Item:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="201" y="100" text="Description:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="213" y="70" text="Company:" color="#000000" fontWeight="bold"/>
+					<mx:DataGrid width="533" color="#000000" horizontalCenter="93" bottom="10" id="dgHistory" height="88" dataProvider="{qResult}">
+						<mx:columns>
+							<mx:DataGridColumn headerText="Order ID" dataField="ORDERID" width="40"/>
+							<mx:DataGridColumn headerText="Date" dataField="DATE" width="70"/>
+							<mx:DataGridColumn headerText="Quantity" dataField="QUANTITY" width="40"/>
+							<mx:DataGridColumn headerText="Status" dataField="STATUS" width="70"/>
+							<mx:DataGridColumn headerText="Remarks" dataField="REMARKS" width="200"/>
+						</mx:columns>
+					</mx:DataGrid>
+					<mx:Text x="283" y="10" text="{dg.selectedItem.NAME}" color="#000000"/>
+					<mx:Text x="283" y="40" text="{dg.selectedItem.ITEMID}" color="#000000"/>
+					<mx:Text x="283" y="70" text="{dg.selectedItem.COMPANYSHORT}" color="#000000"/>
+					<mx:Text x="586" y="40" text="{dg.selectedItem.STOCK}" color="#000000"/>
+					<mx:Label x="520" y="10" text="Low Point:" color="#000000" fontWeight="bold"/>
+					<mx:Text x="586" y="10" text="{dg.selectedItem.LOW_POINT}" color="#000000"/>
+					<mx:Text x="586" y="70" text="{dg.selectedItem.PRINTED}" color="#000000" id="text1"/>
+					<mx:TextArea x="283" y="100" width="446" height="44" text="{dg.selectedItem.DESCRIPTION}" color="#000000" editable="false" borderStyle="none" id="textarea1"/>
+				</mx:Panel>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="Edit Item" color="#ffffff" fillColors="[#004040, #ffffff]" themeColor="#80ff00" horizontalCenter="189.5" id="editItem" bottom="301" click="this.currentState='edit'"/>
+			</mx:AddChild>
+			<mx:AddChild position="lastChild">
+				<mx:Button label="Edit Item History" color="#ffffff" fillColors="[#004040, #ffffff]" themeColor="#80ff00" horizontalCenter="299.5" id="editItem0" click="this.currentState='edithistory'" bottom="301"/>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="edit" basedOn="details">
+			<mx:RemoveChild target="{detailPanel}"/>
+			<mx:RemoveChild target="{listPanel}"/>
+			<mx:AddChild position="lastChild">
+				<mx:Panel width="759" layout="absolute" horizontalCenter="0" top="113" bottom="39" title=":: Edit Item ::" color="#ffffff">
+					<mx:Form top="0" bottom="0" id="editForm" width="487" horizontalCenter="0">
+						<mx:FormItem label="Item Name:" color="#000000" id="formitem0" required="true" fontWeight="bold" width="438">
+							<mx:TextInput color="#000000" id="itemname_edit" width="350" text="{dg.selectedItem.NAME}"/>
+						</mx:FormItem>
+						<mx:FormItem label="Description:" color="#000000" id="formitem9" fontWeight="bold">
+							<mx:TextInput color="#000000" id="description_edit" width="350" text="{dg.selectedItem.DESCRIPTION}"/>
+						</mx:FormItem>
+						<mx:FormItem label="File:" color="#000000" id="formitem10" fontWeight="bold">
+							<mx:TextInput width="350" id="file_edit" text="{dg.selectedItem.FILE}"/>
+						</mx:FormItem>
+						<mx:FormItem label="Stock:" color="#000000" id="formitem11" fontWeight="bold">
+							<mx:NumericStepper width="350" id="stock_edit"  minimum="0" maximum="2000000" value="{dg.selectedItem.STOCK}"/>
+						</mx:FormItem>
+						<mx:FormItem label="Printed at:" color="#000000" id="formitem12" fontWeight="bold">
+							<mx:TextInput width="350" id="printed_edit" text="{dg.selectedItem.PRINTED}"/>
+						</mx:FormItem>
+						<mx:FormItem label="Sample:" color="#000000" id="formitem13" fontWeight="bold">
+							<mx:TextInput width="350" id="sample_edit" text="{dg.selectedItem.SAMPLE}"/>
+						</mx:FormItem>
+						<mx:FormItem label="Low Point:" color="#000000" id="formitem14" fontWeight="bold">
+							<mx:NumericStepper width="350" id="lowpoint_edit"  value="{dg.selectedItem.LOW_POINT}" minimum="0" maximum="2000000"/>
+						</mx:FormItem>
+						<mx:FormItem id="formitem15" borderStyle="none">
+							<mx:TextInput id="companyid_edit" editable="false" borderStyle="none" text="{dg.selectedItem.COMPANYID}"/>
+						</mx:FormItem>
+						<mx:FormItem id="formitem16" borderStyle="none">
+							<mx:TextInput id="itemid_edit" editable="false" borderStyle="none" text="{dg.selectedItem.ITEMID}"/>
+						</mx:FormItem>
+					</mx:Form>
+					<mx:ControlBar id="controlbarEditHistory">
+					  		<mx:Button label="Back" color="#004000" fillColors="[#ffffff, #ffffff]" themeColor="#80ff00" fillAlphas="[1, 0.2]" id="btnBackEditHistory" icon="@Embed('bin/arrow.gif')" click="this.currentState='details'"/>
+					       <mx:Spacer width="100%" id="spacerHistory"/>
+					       <mx:Button label="Save" id="edithistoryButton" color="#004040" click="edit_Item.send()"/>
+					   </mx:ControlBar>
+				</mx:Panel>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="add" basedOn="list">
+			<mx:RemoveChild target="{listPanel}"/>
+			<mx:AddChild position="lastChild">
+				<mx:Panel width="760" layout="absolute" horizontalCenter="0" top="113" bottom="35" id="addPanel" title=":: Add New Item ::" color="#ffffff" resizeEffect="Resize" creationCompleteEffect="myWD">
+					<mx:Form top="0" bottom="0" id="addForm" width="487" horizontalCenter="0">
+						<mx:FormItem label="Item Name:" color="#000000" id="formitem2" required="true" fontWeight="bold" width="438">
+							<mx:TextInput color="#000000" id="itemname" width="350"/>
+						</mx:FormItem>
+						<mx:FormItem label="Description:" color="#000000" id="formitem8" fontWeight="bold">
+							<mx:TextInput color="#000000" id="description" width="350"/>
+						</mx:FormItem>
+						<mx:FormItem label="File:" color="#000000" id="formitem7" fontWeight="bold">
+							<mx:TextInput width="350" id="file"/>
+						</mx:FormItem>
+						<mx:FormItem label="Stock:" color="#000000" id="formitem6" fontWeight="bold">
+							<mx:NumericStepper width="350" id="stock"  minimum="0" maximum="2000000"/>
+						</mx:FormItem>
+						<mx:FormItem label="Printed at:" color="#000000" id="formitem5" fontWeight="bold">
+							<mx:TextInput width="350" id="printed"/>
+						</mx:FormItem>
+						<mx:FormItem label="Sample:" color="#000000" id="formitem4" fontWeight="bold">
+							<mx:TextInput width="350" id="sample"/>
+						</mx:FormItem>
+						<mx:FormItem label="Low Point:" color="#000000" id="formitem3" fontWeight="bold">
+							<mx:NumericStepper width="350" id="lowpoint"  minimum="0" maximum="2000000"/>
+						</mx:FormItem>
+						<mx:FormItem id="formitem1" borderStyle="none">
+							<mx:TextInput id="companyid" editable="false" borderStyle="none"/>
+						</mx:FormItem>
+					</mx:Form>
+					<mx:ControlBar id="controlbar1">
+					   <mx:Button label="Back" color="#004000" fillColors="[#ffffff, #ffffff]" themeColor="#80ff00" fillAlphas="[1, 0.2]" id="btnBack" icon="@Embed('bin/arrow.gif')" click="this.currentState='list'"/>
+					         <mx:Spacer width="100%" id="spacer2"/>
+					         <mx:Button label="Submit" id="addButton" color="#004040" click="formValidation()" fillColors="[#ffffff, #ffffff]" fillAlphas="[1, 0.2]"/>
+					     </mx:ControlBar>
+				</mx:Panel>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="logout">
+			<mx:RemoveChild target="{loginPanel}"/>
+			<mx:AddChild position="lastChild">
+				<mx:Panel title=":: Logout ::" id="logoutPanel" 
+				       horizontalScrollPolicy="off" verticalScrollPolicy="off"
+				       paddingTop="10" paddingLeft="10" paddingRight="10" paddingBottom="10" horizontalCenter="0.5" verticalCenter="0.5" width="400" color="#ffffff"  resizeEffect="Resize">
+				       <mx:Text text="You have successfully logged out from the system!" color="#000000" textAlign="center" width="365" height="39"/>
+				       
+				       <mx:ControlBar>
+				           <mx:Spacer width="100%" id="spacer0"/>
+				           <mx:Button label="Login" id="loginButton0" color="#004040">
+				               <mx:click>this.currentState=''</mx:click>
+				           </mx:Button>
+				       </mx:ControlBar>
+				   </mx:Panel>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="edithistory" basedOn="details">
+			<mx:RemoveChild target="{detailPanel}"/>
+			<mx:RemoveChild target="{listPanel}"/>
+			<mx:RemoveChild target="{editItem}"/>
+			<mx:RemoveChild target="{editItem0}"/>
+			<mx:RemoveChild target="{addNew}"/>
+			<mx:AddChild position="lastChild">
+				<mx:Panel width="760" layout="absolute" top="113" bottom="31" horizontalCenter="0" id="edithistoryPanel" title=":: Edit Item History ::" color="#ffffff" creationCompleteEffect="myWD">
+					<mx:Image x="10" y="10" width="172" height="186" source="http://www.student-management.com/inventory/files/{dg.selectedItem.SAMPLE}"/>
+					<mx:Label x="219" y="40" text="Item ID:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="542" y="40" text="Stock:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="480" y="70" text="Printed Location:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="237" y="10" text="Item:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="201" y="100" text="Description:" color="#000000" fontWeight="bold"/>
+					<mx:Label x="213" y="70" text="Company:" color="#000000" fontWeight="bold"/>
+					<mx:DataGrid width="719" color="#000000" horizontalCenter="0" id="dgHistory0" dataProvider="{qResult}" height="88" top="206">
+						<mx:columns>
+							<mx:DataGridColumn headerText="Order ID" dataField="ORDERID" width="40"/>
+							<mx:DataGridColumn headerText="Date" dataField="DATE" width="70"/>
+							<mx:DataGridColumn headerText="Quantity" dataField="QUANTITY" width="40"/>
+							<mx:DataGridColumn headerText="Status" dataField="STATUS" width="70"/>
+							<mx:DataGridColumn headerText="Remarks" dataField="REMARKS" width="200"/>
+						</mx:columns>
+					</mx:DataGrid>
+					<mx:Text x="283" y="10" text="{dg.selectedItem.NAME}" color="#000000"/>
+					<mx:Text x="283" y="40" text="{dg.selectedItem.ITEMID}" color="#000000"/>
+					<mx:Text x="283" y="70" text="{dg.selectedItem.COMPANYSHORT}" color="#000000"/>
+					<mx:Text x="586" y="40" text="{dg.selectedItem.STOCK}" color="#000000"/>
+					<mx:Label x="520" y="10" text="Low Point:" color="#000000" fontWeight="bold"/>
+					<mx:Text x="586" y="10" text="{dg.selectedItem.LOW_POINT}" color="#000000"/>
+					<mx:Text x="586" y="70" text="{dg.selectedItem.PRINTED}" color="#000000" id="text0"/>
+					<mx:TextArea x="283" y="100" width="446" height="67" text="{dg.selectedItem.DESCRIPTION}" color="#000000" editable="false" borderStyle="none"/>
+					<mx:Form left="0" right="10" top="302" bottom="4" id="editHistoryForm" color="#000000">
+						<mx:FormItem label="Quantity:" fontWeight="bold">
+							<mx:NumericStepper width="185" id="quantity" minimum="0" maximum="2000000"/>
+						</mx:FormItem>				
+						<mx:FormItem label="Status: " fontWeight="bold">
+							<mx:ComboBox dataProvider="{cards}" width="150" id="status" close="selectedItem=ComboBox(event.target).selectedItem"/>
+						</mx:FormItem>
+						<mx:FormItem label="Remark:" width="326" fontWeight="bold">
+							<mx:TextInput width="257" id="remark"/>
+						</mx:FormItem>
+						<mx:FormItem>
+							<mx:TextInput text="{dg.selectedItem.ITEMID}" id="itemid_histedit" color="#ffffff" borderStyle="none"/>
+						</mx:FormItem>
+					</mx:Form>
+					<mx:ControlBar id="controlbarEdit">
+					  		<mx:Button label="Back" color="#004000" fillColors="[#ffffff, #ffffff]" themeColor="#80ff00" fillAlphas="[1, 0.2]" id="btnBackEdit" icon="@Embed('bin/arrow.gif')" click="this.currentState='details'"/>
+					       <mx:Spacer width="100%" id="spacer3"/>
+					       <mx:Button label="Save" id="editButton" color="#004040" click="edit_ItemHistory.send()"/>
+					   </mx:ControlBar>
+				</mx:Panel>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+
+
+
+	<mx:Image width="770" height="100" id="topo" source="http://www.student-management.com/inventory/images/top-SMG.gif" horizontalCenter="0" top="5"/>
+	<mx:Panel title=":: Login ::" id="loginPanel" 
+	       horizontalScrollPolicy="off" verticalScrollPolicy="off"
+	       paddingTop="10" paddingLeft="10" paddingRight="10" paddingBottom="10" horizontalCenter="0.5" verticalCenter="11" width="400" color="#ffffff" resizeEffect="Resize">
+	       
+	       <mx:Form id="loginForm"  width="360">
+	           <mx:FormItem label="Username:" color="#004040" fontWeight="bold">
+	               <mx:TextInput width="247" id="username"/>
+	           </mx:FormItem>
+	           <mx:FormItem label="Password:" color="#004040" fontWeight="bold">
+	               <mx:TextInput width="247" id="password" displayAsPassword="true"/>
+	           </mx:FormItem>
+	       </mx:Form>
+	       <mx:ControlBar>
+	           <mx:Spacer width="100%" id="spacer1"/>
+	           <mx:Button label="Submit" id="loginButton" color="#004040" click="login_user.send();"/>
+	           <mx:Button label="Button" click="this.currentState='welcome'"/>
+	       </mx:ControlBar>
+	   </mx:Panel>
+	   <mx:Fade id="myFade" duration="500"/>
+	   <mx:WipeDown id="myWD" duration="700"/>
+	   <mx:Label text="Powered by EXIT GROUP" fontFamily="Arial" color="#ffffff" horizontalCenter="316" alpha="0.6" bottom="2"/>
+	   <mx:HRule strokeWidth="1" strokeColor="#ffffff" alpha="0.44" width="759" horizontalCenter="-1" height="20" bottom="11"/>
+	
+</mx:Application>
