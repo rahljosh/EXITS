@@ -1679,8 +1679,8 @@
                 SELECT DISTINCT 
                     cbc.hostID,
                     cbc.familyID,
-                    cbc.companyID,
                     cbc.cbc_type,
+                    h.companyID,
                     MAX(cbc.date_authorized) AS date_authorized,
                     MAX(cbc.date_sent) AS date_sent,
                     DATE_ADD(MAX(cbc.date_sent), INTERVAL 1 Year) AS expiration_date,
