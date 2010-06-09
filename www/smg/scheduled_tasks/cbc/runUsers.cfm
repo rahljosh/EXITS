@@ -108,7 +108,7 @@
         <!--- Email Errors --->
         <cfmail 
             from="#APPLICATION.EMAIL.support#"
-            to="#APPLICATION.EMAIL.support#" <!--- #qGetCompany.gis_email# / gary@iseusa.com --->
+            to="#APPLICATION.EMAIL.cbcNotifications#" 
             subject="Scheduled CBC #userType# Issues"
             type="html">
                 <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">

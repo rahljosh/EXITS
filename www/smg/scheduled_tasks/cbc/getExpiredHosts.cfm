@@ -34,7 +34,7 @@
 
 <cfoutput>
 
-<table width="80%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
+<table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
 	<tr bgcolor="##CCCCCC"><td colspan="4"><b>Get Expired CBCs for Host #userType#</b></td></tr>
 	<tr bgcolor="##CCCCCC">
     	<td><b>Host Family</b></td>

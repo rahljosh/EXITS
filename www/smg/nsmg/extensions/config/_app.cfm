@@ -33,7 +33,7 @@
 	AppEmail.errors = 'errors@student-management.com';
 	AppEmail.admissions = 'bhause@iseusa.com';
 	AppEmail.finance = 'marcel@iseusa.com';	
-
+	AppEmail.cbcNotifications = 'support@student-management.com;bill@iseusa.com;margarita@iseusa.com;diana@iseusa.com;gary@iseusa.com';
 
 	// Phase Out these variables
 	if ( cgi.http_host EQ 'jan.case-usa.org' OR cgi.http_host EQ 'www.case-usa.org' ) {
