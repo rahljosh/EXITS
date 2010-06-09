@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		new_transaction_programid.cfm
+	File:		candidate_info.cfm
 	Author:		Marcus Melo
 	Date:		October 07, 2009
-	Desc:		Gets a list with uninsured students, set them as insured.
+	Desc:		Candidate Information Screen.
 
 	Updated: 	
 
@@ -332,7 +332,7 @@
 
 <!--- candidate does not exist --->
 <cfif NOT VAL(get_candidate_unqID.recordcount)>
-	The candidate ID you are looking for, <cfoutput>#url.candidateID#</cfoutput>, was not found. This could be for a number of reasons.<br><br>
+	The candidate ID you are looking for was not found. This could be for a number of reasons.<br><br>
 	<ul>
 		<li>the candidate record was deleted or renumbered
 		<li>the link you are following is out of date
