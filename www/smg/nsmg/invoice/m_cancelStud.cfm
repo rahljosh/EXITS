@@ -431,18 +431,13 @@
             <cfquery name="getCreditsDiscounts" datasource="MySQL">
             SELECT sc.creditid, sc.stuid, sc.agentid, sc.companyid, sc.type, sc.amount, sc.description, sp.type AS programType
             FROM smg_credit sc
-            INNER JOIN smg_programs sp ON sc.credit_type = sp.programname
+            INNER JOIN smg_programs sp ON (sp.programname = sc.credit_type) AND sp.type NOT IN (7,8,9,11,22,23)
             WHERE sc.stuid =#student#
             AND sc.chargeid = 0        
             AND sc.agentid =#url.userid#
 <!---             AND sc.companyid =#client.companyid#
             AND sp.companyid =#client.companyid# --->        
-            AND (sp.type !=7
-                AND sp.type !=8
-                AND sp.type !=9
-                AND sp.type !=11
-                AND sp.type !=22
-                AND sp.type !=23)
+            GROUP BY sc.id
             </cfquery> 
             
             <cfquery name="getCurrStudInfo" datasource="MySQL">
