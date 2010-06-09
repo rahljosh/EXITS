@@ -113,7 +113,7 @@
 			<!--- Email Errors --->
             <cfmail 
                 from="#APPLICATION.EMAIL.support#"
-                to="#APPLICATION.EMAIL.support#" <!--- #qGetCompany.gis_email# / gary@iseusa.com --->
+                to="#APPLICATION.EMAIL.cbcNotifications#"
                 subject="Scheduled CBC Host #userType# Issues"
                 type="html">
                     <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
@@ -216,28 +216,28 @@
             <cfscript>
                 // Data Validation
                 if ( NOT LEN(qGetCBCMember.name) ) {
-                    ArrayAppend(Errors.Messages, "Missing first name for #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");			
+                    ArrayAppend(Errors.Messages, "Missing first name for #qGetCBCMember.companyShort# - #qGetCBCMember.lastname# member of host family (###qGetCBCMember.hostid#).");			
                     if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
                         skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
                     }
                 }
             
                 if ( NOT LEN(qGetCBCMember.lastname) )  {
-                    ArrayAppend(Errors.Messages, "Missing last name for #qGetCBCMember.name# member of (###qGetCBCMember.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing last name for #qGetCBCMember.companyShort# - #qGetCBCMember.name# member of host family (###qGetCBCMember.hostid#).");
                     if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
                         skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
                     }
                 }
                 
                 if ( NOT LEN(qGetCBCMember.birthdate) OR NOT IsDate(qGetCBCMember.birthdate) )  {
-                    ArrayAppend(Errors.Messages, "Missing DOB for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing DOB for #qGetCBCMember.companyShort# - #qGetCBCMember.name# #qGetCBCMember.lastname# member of host family (###qGetCBCMember.hostid#).");
                     if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
                         skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
                     }
                 }
     
                 if ( NOT LEN(qGetCBCMember.ssn) )  {
-                    ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
+                    ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCMember.companyShort# - #qGetCBCMember.name# #qGetCBCMember.lastname# member of host family (###qGetCBCMember.hostid#).");
                     if ( NOT ListFind(skipMemberIDs, qGetCBCMember.cbcfamID) ) {
                         skipMemberIDs = ListAppend(skipMemberIDs, qGetCBCMember.cbcfamID);
                     }
@@ -265,7 +265,7 @@
 			<!--- Email Errors --->
             <cfmail 
                 from="#APPLICATION.EMAIL.support#"
-                to="#APPLICATION.EMAIL.support#" <!--- #qGetCompany.gis_email# / gary@iseusa.com --->
+                to="#APPLICATION.EMAIL.cbcNotifications#"
                 subject="Scheduled CBC Host #userType# Issues"
                 type="html">
                     <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
