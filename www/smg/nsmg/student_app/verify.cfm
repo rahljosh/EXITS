@@ -9,8 +9,8 @@ body {font:Arial, Helvetica, sans-serif;}
 	<cfquery name="check_info" datasource="MySQL">
 		SELECT email, uniqueid, randid, phone, studentid, firstname, familylastname
 		FROM smg_students
-		WHERE randid = '#form.randid#'
-		AND email = '#form.email#'
+		WHERE randid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.randid#">
+		AND email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
 	</cfquery>
 	
 	<!----If account is not verfied, display verification form with error.---->
@@ -67,7 +67,7 @@ function checkPassword() {
 			<tr>
 				<td align="center" colspan=2><h1>Account Verification</h1></td>
 			</tr>
-						<cfoutput query=check_info>
+						<cfoutput query="check_info">
 						<tr>
 							<td colspan=2>
 							<form action="student_assign_pass.cfm" method="post" name="assign_password">
@@ -107,7 +107,7 @@ function checkPassword() {
 	<cfquery name="check_exist" datasource="MySQL">
 	select uniqueid
 	from smg_students
-	where uniqueid = '#url.s#'
+	where uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.s#">
 	</cfquery> 
 	
 	<cfif check_exist.recordcount eq 0>
