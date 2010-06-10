@@ -167,6 +167,7 @@ select s.*, sp.type AS progType, s.companyid,
 from smg_charges s
 LEFT JOIN smg_programs sp ON sp.programid = s.programid
 where s.invoiceid = #url.id#
+group by s.stuid
 order by s.stuid, s.chargeid
 </cfquery>
     
@@ -428,180 +429,82 @@ select *,
 
 </cfoutput>
 
-		<table width=100% cellspacing=0 cellpadding=2 class=thin-border border=0> 
-			<tr bgcolor="CCCCCC" >
-				<td class="thin-border-right-bottom">
-                Student
-                </td>
-                <td class="thin-border-right-bottom">
-                Description / Type
-                </td>
-                <td class="thin-border-right-bottom" align="right">
-                Charge
-                </td>
-                <td class="thin-border-bottom" align="right">
-                Total
-                </td>
-			</tr>
-
-			<cfset previous_student = 0>
-			<Cfset current_recordcount = 1>
-            
-		<cfoutput query="invoice_info">
-
-			<cfset current_student = #stuid#>
-            
-            <!--- select query to view high-school OR work invoice --->
-			<cfswitch expression="#progType#">
-            	<cfcase value="7,8,9,11,22,23"><!--- work programs --->            
-                    <cfquery name="student_name" datasource="mysql">
-                    SELECT firstname, lastname AS familylastname
-                    FROM extra_candidates
-                    WHERE candidateid = #stuid#
-                    </cfquery>
-                </cfcase>
-				<cfdefaultcase>
-                    <cfquery name="student_name" datasource="mysql">
-                    SELECT firstname, familylastname
-                    FROM smg_students
-                    WHERE studentid = #stuid#
-                    </cfquery>
-               	</cfdefaultcase>
-			</cfswitch>
-            
-			<cfquery name="charge_count" datasource="MySQL">
-			select chargeid from smg_charges
-			where invoiceid = #id# and stuid = #stuid#
-			</cfquery>
-            
-			<cfquery name="total_student" datasource="MySQL">
-			select sum(amount) as total_stu_amount
-			from smg_charges
-			where invoiceid = #id# and stuid = #stuid#
-			</cfquery>
-
-	<cfswitch expression="#progType#">
-      <cfcase value="7,8,9,11,22,23"><!--- work programs --->
-				<tr>
-					<td>
-					<cfif current_student is not #previous_student#>#student_name.firstname# #student_name.familylastname# (#stuid#)<cfelse></cfif>
-                    </td>
-                    <td>
-                    #description# / #type#
-                  </td>
-                    <td align="right">
-                    #LSCurrencyFormat(amount,'local')#
-                  </td>
-                    <td align="right">
-                    
-					<cfif current_student is previous_student>
-                    	<cfset current_recordcount = #current_recordcount# +1>
-                    	<cfelse>
-                    		<cfset current_recordcount = 1>
-                    </cfif>
-                    <cfset previous_student = #stuid#>
-                    
-					<cfif #current_recordcount# is #charge_count.recordcount#>#LSCurrencyFormat(total_student.total_stu_amount, 'local')#</cfif>
-                    </td>
-				</tr>
-      
-      </cfcase>
-      
-      <cfdefaultcase>
-
-				<tr>
-					<td>
-					<cfif current_student is not #previous_student#>#student_name.firstname# #student_name.familylastname# (#stuid#)<cfelse></cfif>
-                    </td>
-                    <td>
-                    #description# / #type#
-                  </td>
-                    <td align="right">
-                    #LSCurrencyFormat(amount,'local')#
-                  </td>
-                    <td align="right">
-					<cfif #current_recordcount# is #charge_count.recordcount#>#LSCurrencyFormat(total_student.total_stu_amount, 'local')#</cfif>
-                    </td>
-				</tr>
-                
-                <!--- only show deposit invoice in the FINAL invoice, where there's a program fee charge --->
-                <cfquery name="checkProgFee" datasource="MySQL">
-                SELECT type
-                FROM smg_charges
-                WHERE invoiceid = #url.id#
-                AND stuid = #stuid#
-                AND type = 'Program fee'
+<table width=100% cellspacing=0 cellpadding=2 class=thin-border border=0> 
+    <tr bgcolor="CCCCCC" >
+        <td class="thin-border-right-bottom">
+        Student
+        </td>
+        <td class="thin-border-right-bottom">
+        Description / Type
+        </td>
+        <td class="thin-border-right-bottom" align="right">
+        Charge
+        </td>
+        <td class="thin-border-bottom" align="right">
+        Total
+        </td>
+    </tr>
+        
+<cfoutput query="invoice_info">
+    
+        <cfset current_student = #stuid#>
+        
+        <!--- select query to view high-school OR work invoice --->
+        <cfswitch expression="#progType#">
+            <cfcase value="7,8,9,11,22,23"><!--- work programs --->            
+                <cfquery name="student_name" datasource="mysql">
+                SELECT firstname, lastname AS familylastname
+                FROM extra_candidates
+                WHERE candidateid = #invoice_info.stuid#
                 </cfquery>
-		
-        <cfif checkProgFee.recordCount GT 0>                      	
-			<cfif #current_recordcount# is #charge_count.recordcount#>
-                <!----Check for invoice with deposit amount on it---->
-                <cfquery name="deposit_invoice" datasource="MySQL">
-                select invoicedate, invoiceid, amount, description, type
-                from smg_charges where stuid = #stuid# and type = 'deposit' and programid = #programid# and invoiceid <> #url.id#
+            </cfcase>
+            <cfdefaultcase>
+                <cfquery name="student_name" datasource="mysql">
+                SELECT firstname, familylastname
+                FROM smg_students
+                WHERE studentid = #invoice_info.stuid#
                 </cfquery>
-                <!----Check for multiple invoices for THIS student.  If multiple invoices are found, only show deposit on invoice# that is lowest.
-                in case fees were generated on an invoice after the initial final invoice---->
-                <cfquery name="check_multiple_invoices" datasource="MySQL">
-                SELECT DISTINCT (s.invoiceid) AS invoiceid, s.type
-                FROM smg_charges s
-                WHERE s.stuid =#stuid#
-                AND programid = #programid#
-                AND (TYPE = 'deposit'
-                OR TYPE = 'program fee')
-                ORDER BY invoiceid
-                </cfquery>
-                <Cfset show_deposit = 1>
-                <cfif check_multiple_invoices.recordcount gt 2>
-                    <cfloop query="check_multiple_invoices">
-                        <cfif check_multiple_invoices.type IS 'deposit'>
-                            <cfset deposit_invoice_id = #invoiceid#>
-                        <cfelseif check_multiple_invoices.type IS 'program fee'>
-                            <cfset final_invoice_id =#invoiceid#>
-                        <cfelse>
-                        </cfif>
-                    </cfloop>
-                    <cfif #url.id# eq #deposit_invoice_id# or #url.id# eq #final_invoice_id#>
-                        <cfset show_deposit = 1>
-                    <cfelse>
-                        <cfset show_deposit = 0>
-                    </cfif>
+            </cfdefaultcase>
+        </cfswitch>
+        
+        <cfquery name="charge_count" datasource="MySQL">
+        select chargeid, stuid, description, type, amount_due from smg_charges
+        where invoiceid = #id# and stuid = #stuid#
+        </cfquery>
+        
+        <cfquery name="total_student" datasource="MySQL">
+        select sum(amount_due) as total_stu_amount
+        from smg_charges
+        where invoiceid = #id# and stuid = #stuid#
+        </cfquery>
+        
+        <cfloop query="charge_count">
+    
+            <tr>
+                <td>
+                <cfif charge_count.CurrentRow EQ 1>
+                    #student_name.firstname# #student_name.familylastname# (#charge_count.stuid#)
                 </cfif>
-                <cfif show_deposit is 1>
-                    <cfif deposit_invoice.recordcount is 0>
-                        <Cfset current_recordcount = 0>
-                        <cfelse>
-                            <cfif deposit_invoice.recordcount is 0>
-                                <cfset deposit_invoice.amount = 0>
-                            </cfif>
-                        
-                            <cfset neg_deposit = #deposit_invoice.amount# * -1>
-                        
-                        
-                        
-                            <tr>
-                                <td></td><td>#deposit_invoice.description# / #deposit_invoice.type# <font size=-2>- <a href="invoice_view.cfm?id=#deposit_invoice.invoiceid#">invoice ## #deposit_invoice.invoiceid#</a></font></td><td align="right">#LSCurrencyFormat(neg_deposit,'local')#</td><td align="right"><cfset new_line_bal = #total_student.total_stu_amount# + #neg_deposit#>#LSCurrencyFormat(new_line_bal, 'local')#<Cfset current_recordcount = 0></td>
-                            </tr>
-                    </cfif>
-                    <cfelse>
-                        <Cfset current_recordcount = 0>
+                </td>
+                <td>
+                #charge_count.description# / #charge_count.type#
+              </td>
+                <td align="right">
+                #LSCurrencyFormat(charge_count.amount_due,'local')#
+              </td>
+                <td align="right">
+                <cfif charge_count.CurrentRow EQ charge_count.recordCount>
+                    #LSCurrencyFormat(total_student.total_stu_amount, 'local')#
                 </cfif>
-            </cfif>
-        </cfif>
+                </td>
+            </tr>
+            
+		</cfloop>
         
-		<cfset previous_student = #stuid#>
-        
-		<cfif current_student is previous_student>
-			<cfset current_recordcount = #current_recordcount# +1>
-		</cfif>
-        
-    </cfdefaultcase>
-  </cfswitch>
-  
 </cfoutput>
 	
-			
-		</table>
+</table>
+        
 		<!----Retrieve Total Due from Invoice---->
 		<cfquery name="total_Due" datasource="MySQL">
 			select sum(amount_due) as total_due 
