@@ -468,12 +468,12 @@ select *,
         </cfswitch>
         
         <cfquery name="charge_count" datasource="MySQL">
-        select chargeid, stuid, description, type, amount_due from smg_charges
+        select chargeid, stuid, description, type, amount from smg_charges
         where invoiceid = #id# and stuid = #stuid#
         </cfquery>
         
         <cfquery name="total_student" datasource="MySQL">
-        select sum(amount_due) as total_stu_amount
+        select sum(amount) as total_stu_amount
         from smg_charges
         where invoiceid = #id# and stuid = #stuid#
         </cfquery>
@@ -490,7 +490,7 @@ select *,
                 #charge_count.description# / #charge_count.type#
               </td>
                 <td align="right">
-                #LSCurrencyFormat(charge_count.amount_due,'local')#
+                #LSCurrencyFormat(charge_count.amount,'local')#
               </td>
                 <td align="right">
                 <cfif charge_count.CurrentRow EQ charge_count.recordCount>
@@ -500,6 +500,49 @@ select *,
             </tr>
             
 		</cfloop>
+        
+        <cfquery name="verifyIfShowDeposit" datasource="MySQL">
+        SELECT sch.amount_due, sch.amount
+        FROM smg_charges sch
+        WHERE sch.stuid = #invoice_info.stuid#
+        AND sch.programid = #invoice_info.programid#
+        AND sch.agentid = #invoice_info.agentid#
+        AND sch.type = 'program fee'
+        AND sch.invoiceid = #url.id#
+        </cfquery>
+        
+        <!--- if amount_due is different than amount, it means that there is a deposit invoice --->
+        <cfif verifyIfShowDeposit.amount_due NEQ verifyIfShowDeposit.amount>
+        	
+            <cfquery name="findDepositInv" datasource="MySQL">
+            SELECT sch.invoiceid, sch.type, amount_due
+            FROM smg_charges sch
+            WHERE sch.stuid = #invoice_info.stuid#
+            AND sch.programid = #invoice_info.programid#
+            AND sch.agentid = #invoice_info.agentid#
+            AND sch.invoiceid < #url.id#
+            AND sch.type = 'deposit'
+            ORDER BY invoiceid DESC
+            </cfquery>
+            
+            
+            <cfif findDepositInv.type IS 'deposit' >
+                <tr>
+                    <td></td>
+                    <td>
+                    #charge_count.description# / #findDepositInv.type# - <a href="invoice_view.cfm?id=#findDepositInv.invoiceid#">invoice ###findDepositInv.invoiceid#</a>
+                  </td>
+                  <td align="right">
+                    <font color="##FF0000">(#LSCurrencyFormat(findDepositInv.amount_due,'local')#)</font>
+                  </td>
+                    <td align="right">
+                    	<cfset netAmount = total_student.total_stu_amount - 500>
+                        #LSCurrencyFormat(variables.netAmount, 'local')#
+                    </td>
+                </tr>
+            </cfif>
+            
+        </cfif>
         
 </cfoutput>
 	
