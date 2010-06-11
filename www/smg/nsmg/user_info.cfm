@@ -771,8 +771,11 @@
                                 INNER JOIN smg_users ON smg_students.intrep = smg_users.userid
                                 INNER JOIN smg_programs p ON p.programid = smg_students.programid
                                 WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
-                                <cfif CLIENT.companyid eq 10>
-                                and smg_students.companyid = 10
+                                AND 
+						        	smg_students.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+								<cfif CLIENT.companyid eq 10>
+	                                AND
+                                    	smg_students.companyid = 10
                                 </cfif>
                             </cfquery>
                             <!----Query for supervised students---->
@@ -786,14 +789,17 @@
                                  INNER JOIN smg_users ON smg_students.intrep = smg_users.userid
                                  INNER JOIN smg_programs p ON p.programid = smg_students.programid
                                  WHERE smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
-                                 <cfif CLIENT.companyid eq 10>
-                                and smg_students.companyid = 10
+                                 AND 
+						        	smg_students.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+								 <cfif CLIENT.companyid eq 10>
+	                                AND
+                                    	smg_students.companyid = 10
                                 </cfif>
                             </cfquery>				
                             <style type="text/css">
                             <!--
                             div.scroll1 {
-                                height: 75px;
+                                height: 120px;
                                 width: 490px;
                                 overflow: auto;
                             }
