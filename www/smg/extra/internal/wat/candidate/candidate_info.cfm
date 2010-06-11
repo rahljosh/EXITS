@@ -174,13 +174,13 @@
 	function readOnlyEditPage() {
 		if( $(".readOnly").css("display") == "none" ) {			
 			// Hide editPage and display readOnly
-			$(".editPage").fadeOut("slow");
-			$(".readOnly").fadeIn("slow");
+			$(".editPage").fadeOut("fast");
+			$(".readOnly").fadeIn("fast");
 			$(".formField").attr("disabled","disabled");
 		} else {
 			// Hide readOnly and display editPage
 			$(".readOnly").fadeOut("fast");
-			$(".editPage").fadeIn("slow");	
+			$(".editPage").fadeIn("fast");	
 			$(".formField").removeAttr("disabled");
 			$(".dp-choose-date").fadeIn("fast");
 		}
@@ -190,27 +190,27 @@
 		if (selectedValue == 'canceled') {
 			$("#divCancelation").slideDown(1000);
 		} else {
-			$("#divCancelation").fadeOut("slow");
+			$("#divCancelation").fadeOut("fast");
 		}
 	}
 
 	function displayProgramReason(currentProgramID, selectedProgramID) {
 		if ( currentProgramID > '0' && currentProgramID != selectedProgramID && $("#program_history").css("display") == "none" ) {
-			$("#program_history").fadeIn("slow");
+			$("#program_history").fadeIn("fast");
 			$("#reason").focus();
 		} else if (currentProgramID == selectedProgramID) {
-			$("#program_history").fadeOut("slow");
+			$("#program_history").fadeOut("fast");
 		}
 	}
 
 	function displayHostReason(currentHostPlaceID, selectedHostID) {
 		if ( currentHostPlaceID > '0' && currentHostPlaceID != selectedHostID && $("#host_history").css("display") == "none" ) {
-			$("#host_history").fadeIn("slow");
+			$("#host_history").fadeIn("fast");
 			$("#host_startdate").val("");
 			$("#host_enddate").val("");
 			$("#reason_host").focus();
 		} else if (currentHostPlaceID == selectedHostID) {
-			$("#host_history").fadeOut("slow");
+			$("#host_history").fadeOut("fast");
 		}
 	}
 	
@@ -775,10 +775,10 @@
                                         <tr>
                                             <td width="30%" class="style1" align="right"><b>Status:</b></td>
                                             <td class="style1">
-                                                <input type="radio" name="hostcompany_status" id="hostStatus1" value="1" class="formField" disabled <cfif VAL(qCandidatePlaceCompany.status)>checked="yes" </cfif>>
+                                                <input type="radio" name="hostcompany_status" id="hostStatus1" value="1" class="formField" disabled <cfif qCandidatePlaceCompany.status EQ 1>checked="yes" </cfif>>
                                                 <label for="hostStatus1">Active</label>
                                                 &nbsp;
-                                                <input type="radio" name="hostcompany_status" id="hostStatus0" value="0" class="formField" disabled <cfif NOT VAL(qCandidatePlaceCompany.status)>checked="yes" </cfif>>
+                                                <input type="radio" name="hostcompany_status" id="hostStatus0" value="0" class="formField" disabled <cfif qCandidatePlaceCompany.status EQ 0>checked="yes" </cfif>>
                                                 <label for="hostStatus0">Inactive</label>
                                             </td>
                                         </tr>
@@ -846,7 +846,7 @@
                                                     <option value="">Select....</option>
                                                     <option value="Self-Placement" <cfif get_candidate_unqid.wat_placement EQ 'Self-Placement'>selected="selected"</cfif>>Self-Placement</option>
                                                     <option value="CSB-Placement" <cfif get_candidate_unqid.wat_placement EQ 'CSB-Placement'>selected="selected"</cfif>>CSB-Placement</option>
-                                                     <option value="Walk-In" <cfif get_candidate_unqid.wat_placement EQ 'Walk-In'>selected="selected"</cfif>>Walk-In</option>
+                                                    <option value="Walk-In" <cfif get_candidate_unqid.wat_placement EQ 'Walk-In'>selected="selected"</cfif>>Walk-In</option>
                                                 </select>
 	                                        </td>
                                         </tr>		
