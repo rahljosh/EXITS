@@ -80,9 +80,9 @@ Type: 	<select name="type">
 
 <!----Retrieve students under the rep that have not had both deposit and final charges applied---->
 <cfquery name="students_under_rep_not_charged" datasource="MySQL">
-	select s.studentid, s.firstname, s.familylastname, s.programid, s.hostid, s.direct_placement, s.dateplaced, s.jan_app, s.state_guarantee, s.onhold_approved, s.verification_received
+	select s.studentid, s.intrep, s.firstname, s.familylastname, s.programid, s.hostid, s.direct_placement, s.dateplaced, s.jan_app, s.state_guarantee, s.onhold_approved, s.verification_received
 	from smg_students s
-	where s.intrep = #url.userid# and s.companyid = #client.companyid# and s.active = 1
+	where s.intrep = #url.userid# <!--- and s.companyid = #client.companyid# ---> and s.active = 1
 </cfquery>
 
 <Cfif students_under_rep_not_charged.recordcount is 0>
@@ -97,10 +97,25 @@ This agent does not have any students currently active OR all students have had 
 		<td></td><td>Student</td><td>Program</td>
 	</tr>
 		<cfoutput query=students_under_rep_not_charged>
+        
+        	<cfquery name="check_depositCharge" datasource="MySQL">
+				select type
+				from smg_charges
+				where stuid = #studentid# 
+                and type = 'deposit'
+                and programid = #students_under_rep_not_charged.programid#
+                and agentid = #students_under_rep_not_charged.intrep#
+                and active = 1
+				order by type
+			</cfquery>
+            
 			<cfquery name="check_charges" datasource="MySQL">
 				select amount, chargeid, invoiceid, type, description
 				from smg_charges
-				where stuid = #studentid# and active = 1
+				where stuid = #studentid# 
+                and active = 1
+                and programid = #students_under_rep_not_charged.programid#
+                and agentid = #students_under_rep_not_charged.intrep#
 				order by type
 			</cfquery>
 			<cfquery name="program_name_charge" datasource="MySQL">
@@ -118,7 +133,7 @@ This agent does not have any students currently active OR all students have had 
 				</tr>
 			<cfif (onhold_approved gte '5' and onhold_approved lte '7')>
 			<cfelse>
-				<cfif check_charges.recordcount is 0>
+				<cfif check_depositCharge.recordcount is 0>
 							<tr bgcolor=<cfif students_under_rep_not_charged.currentrow mod 2>ededed<cfelse>ffffff</cfif>>
 								<td bgcolor="ffffff"></td><td class="thin-border-left-bottom">Type: 
 								<input type="hidden" name=#students_under_rep_not_charged.studentid#deposit_type value='deposit'>Deposit</td><td class="thin-border-bottom">Charge: <input type=text name="#studentid#deposit_amount" value=500 size=6></td><td class="thin-border-right-bottom"> Desc: <input type="text" size="14" name="#studentid#deposit_description" value='#program_name_charge.programname#'>
