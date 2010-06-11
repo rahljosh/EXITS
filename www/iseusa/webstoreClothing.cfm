@@ -77,7 +77,7 @@ a:active {
 																<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
 																<INPUT TYPE="HIDDEN" NAME="ID" VALUE="5930 1 color">
 																<INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Short Sleeve Tee">
-																<INPUT TYPE="HIDDEN" NAME="Price" VALUE="15.00">
+																<INPUT TYPE="HIDDEN" NAME="Price" VALUE="12.00">
 																<INPUT TYPE="HIDDEN" NAME="Ship" VALUE="1">
 																<INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
              
