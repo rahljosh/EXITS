@@ -92,12 +92,12 @@
                 <cfif LEN(FORM.host_startdate)>
                 	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.host_startdate)#">,
                 <cfelse>
-                	<cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+                	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
                 <cfif LEN(FORM.host_enddate)>
                 	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.host_enddate)#">,
                 <cfelse>
-                	<cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+                	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">, 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">
@@ -114,12 +114,12 @@
 				<cfif LEN(FORM.host_startdate)>
                     startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.host_startdate)#">,
                 <cfelse>
-                    startdate = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+                    startdate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
 				<cfif LEN(FORM.host_enddate)>
                     enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.host_enddate)#">,
                 <cfelse>
-                    enddate = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+                    enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
                 status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">
             WHERE 
@@ -138,7 +138,11 @@
         firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">, 
         lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">, 
         middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#">,
-        dob = <cfif FORM.dob NEQ ''>#CreateODBCDate(FORM.dob)#<cfelse>NULL</cfif>,
+		<cfif isDate(FORM.dob)>
+        	dob = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.dob)#">,
+        <cfelse>
+        	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,        
+        </cfif>
         sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">, 
         intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">,
         birth_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.birth_city#">, 
@@ -161,16 +165,16 @@
         wat_participation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.wat_participation#">, 
         wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_placement#">,
 		
-		<cfif LEN(FORM.wat_vacation_start)>
+		<cfif isDate(FORM.wat_vacation_start)>
         	wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.wat_vacation_start)#">,
         <cfelse>
-        	<cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+        	wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
 		
-		<cfif LEN(FORM.wat_vacation_end)>
+		<cfif isDate(FORM.wat_vacation_end)>
         	wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.wat_vacation_end)#">,
         <cfelse>
-        	wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+        	wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
         
 		<!--- document control --->
@@ -182,10 +186,10 @@
         wat_doc_walk_in_agreement = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_walk_in_agreement#">,
         
 		<!---- form DS-2019 ---->
-        <cfif LEN(FORM.verification_received)>
+        <cfif isDate(FORM.verification_received)>
             verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.verification_received)#">,
         <cfelse>
-            verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+            verification_received = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
         
         <cfif IsDefined('FORM.agent_accepts_sevis')>
@@ -205,20 +209,20 @@
         	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.cancel_date)#">, 
             active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
         <cfelse>
-        	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+        	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
         cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancel_reason#">,
         
 		<cfif LEN(FORM.program_startdate)>
         	startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
         <cfelse>
-        	startdate = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+        	startdate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
        
 		<cfif LEN(FORM.program_enddate)>
         	enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
         <cfelse>
-       		enddate = <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">,
+       		enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
         
         <!---  Arrival Verification  --->

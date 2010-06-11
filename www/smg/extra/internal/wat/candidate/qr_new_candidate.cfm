@@ -1,10 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<title>Applicant Information</title>
-</head>
-<body>
+<cfparam name="FORM.wat_doc_walk_in_agreement" default="0">
 
 <cfquery name="check_new_candidate" datasource="mysql">
 	SELECT candidateid, firstname, lastname, dob
@@ -73,7 +67,7 @@
 			 ssn, wat_placement,  wat_vacation_start,
 			wat_vacation_end, <!---wat_length, --->
 			<!---- documents control --->
-			wat_doc_agreement, wat_doc_college_letter, wat_doc_passport_copy, wat_doc_job_offer, wat_doc_orientation, requested_placement, startdate, enddate)
+			wat_doc_agreement, wat_doc_college_letter, wat_doc_passport_copy, wat_doc_job_offer, wat_doc_orientation, wat_doc_walk_in_agreement, requested_placement, startdate, enddate)
 		VALUES ('#client.companyid#', '#form.uniqueid#', '1', '#form.programid#', '#form.intrep#', '#form.wat_participation#',
 				#CreateODBCDate(now())#, '#form.firstname#', '#form.middlename#', '#form.lastname#', '#form.sex#',
 				<cfif form.dob NEQ ''>#CreateODBCDate(form.dob)#<cfelse>NULL</cfif>, '#form.home_address#',
@@ -96,6 +90,7 @@
 				<cfif IsDefined('form.wat_doc_passport_copy')>1<cfelse>0</cfif>,
 				<cfif IsDefined('form.wat_doc_job_offer')>1<cfelse>0</cfif>,
 				<cfif IsDefined('form.wat_doc_orientation')>1<cfelse>0</cfif>,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_walk_in_agreement#">,
 				'#form.combo_request#', 
 				<cfif form.startdate NEQ ''>#CreateODBCDate(form.startdate)#<cfelse>NULL</cfif>,
 				<cfif form.enddate NEQ ''>#CreateODBCDate(form.enddate)#<cfelse>NULL</cfif>

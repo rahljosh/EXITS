@@ -170,19 +170,22 @@
 									
 										<table width="100%" cellpadding=5 cellspacing=0 border=0>
 											<tr bgcolor="##C2D1EF">
-												<td colspan="3" class="style2" bgcolor="8FB6C9">&nbsp;:: Documents Control</td>
+												<td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Documents Control</td>
 											</tr>
 											<tr>
-												<td width="46%" class="style1" colspan="2"><input type="checkbox" name="wat_doc_agreement"><font size="1"> Agreement</font></td>
-												<td width="54%" class="style1" colspan="2"><input type="checkbox" name="wat_doc_college_letter"><font size="1"> College Letter </font></td>
+												<td width="46%" class="style1"><input type="checkbox" name="wat_doc_agreement"><font size="1"> Agreement</font></td>
+												<td width="54%" class="style1"><input type="checkbox" name="wat_doc_college_letter"><font size="1"> College Letter </font></td>
 											</tr>
 											<tr>
-												<td class="style1" colspan="2"><input type="checkbox" name="wat_doc_passport_copy"><font size="1"> Passport Copy</font></td>
-												<td class="style1" colspan="2"><input type="checkbox" name="wat_doc_job_offer"><font size="1"> Job Offer</font></td>
+												<td class="style1"><input type="checkbox" name="wat_doc_passport_copy"><font size="1"> Passport Copy</font></td>
+												<td class="style1"><input type="checkbox" name="wat_doc_job_offer"><font size="1"> Job Offer</font></td>
 											</tr>
 											<tr>
-												<td class="style1" colspan="2"><input type="checkbox" name="wat_doc_orientation"><font size="1"> Orient. Sign Off</font></td>
-												<td class="style1" colspan="2">&nbsp;</td>
+												<td class="style1"><input type="checkbox" name="wat_doc_orientation"><font size="1"> Orient. Sign Off</font></td>
+                                                <td class="style1">
+                                                    <input type="checkbox" name="wat_doc_walk_in_agreement" id="wat_doc_walk_in_agreement" value="1"> 
+                                                    <label for="wat_doc_walk_in_agreement">Walk-In Agreement</label>
+                                                </td>
 											</tr>
 										</table>
 									</td>
@@ -349,10 +352,11 @@
 											  <td align="left" bordercolor="FFFFFF" class="style1"><font size="1"><b>Option:</b></font></td>
 											  <td class="style1" bordercolor="FFFFFF" colspan="3">
 												
-												<cfselect name="wat_placement"  class="style1" required="no">
+												<cfselect name="wat_placement" class="style1" required="no">
 														<option value="">Select....</option>
 														<option value="Self-Placement">Self-Placement</option>
 														<option value="CSB-Placement">CSB-Placement</option>
+                                                        <option value="Walk-In">Walk-In</option>
 												</cfselect>
 												
 												</td>
@@ -383,8 +387,16 @@
 										
 											
 											<tr>
-												<td bordercolor="FFFFFF" class="style1" align="left"><font size="1"><b>Participations<font color="FFFFFF">_</font>in<font color="FFFFFF">_</font>Program:</b></font> </td>
-												<td class="style1" bordercolor="FFFFFF" colspan="3"><cfinput type="text" name="wat_participation" size="5" maxlength="5"><font size="1"> times</font>
+												<td bordercolor="FFFFFF" class="style1" align="left"><font size="1">
+                                                	<b>Participations<font color="FFFFFF">_</font>in<font color="FFFFFF">_</font>Program:</b></font> 
+                                                </td>
+                                                <td class="style1" bordercolor="FFFFFF" colspan="3">
+                                                    <select name="wat_participation" class="style1">
+                                                        <cfloop from="0" to="15" index="i">
+                                                            <option value="#i#">#i#</option>                                                    
+                                                        </cfloop>
+                                                    </select>               
+                                                    <font size="1"> times</font>
 												</td>
 											</tr>
 											
