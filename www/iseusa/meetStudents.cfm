@@ -23,6 +23,9 @@
 	<cfparam name="FORM.loginEmail" default="">
     <cfparam name="FORM.loginPassword" default="0">
 
+	<!--- Allow Access for US Users --->
+	<cfparam name="allowAccess" default="1">
+
 	<cfscript>
 		pageMsg = StructNew();
 		// Create Array to store error messages
@@ -44,6 +47,26 @@
 			forgotPassClass = 'hiddenDiv';
 		}
 	</cfscript>
+
+
+    <!--- Get User Location - If not US, do not allow access --->
+    <cftry>
+        <cfhttp url="http://ipinfodb.com/ip_query_country.php?ip=#CGI.remote_addr#&timezone=false" method="get" throwonerror="yes"></cfhttp>
+        
+        <cfscript>
+            // Parse XML we received back to a variable
+            responseXML = XmlParse(cfhttp.filecontent);		
+        
+            if ( responseXML.response.CountryCode.XmlText NEQ 'US' ) {
+                allowAccess = 0;		
+            }
+        </cfscript>
+    
+        <cfcatch type="any">
+            <!--- Error - Allow Access --->
+        </cfcatch>
+    </cftry>        	
+
 
 	<cffunction name="generatePassword" access="public" returntype="string" hint="Generates a random password">
     	<cfargument name="PasswordLength" default="6">
@@ -355,6 +378,8 @@
                         hearAboutUsDetail,
                         isListSubscriber,
                         isAdWords,
+                        httpReferer,
+                        remoteAddress,
                         dateCreated
                     )
                     VALUES                                
@@ -373,6 +398,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hearAboutUsDetail#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isListSubscriber#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.isAdWords#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_referer#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.remote_addr#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )		
                 </cfquery>
@@ -653,84 +680,94 @@
 				</div><!-- end subPic -->
                 
                 <div class="meetStudentsForm">
-
-                    <!--- <h2> Register </h2> --->
-                    
-                    <p>&nbsp; &nbsp; Fill out this form to learn more about our students and hosting through ISE! Our students are great ambassadors of their home countries and are excited to bring their cultures to communities in the United States.</p>
-                    <p>&nbsp; &nbsp; In order to protect the privacy of our students, we do ask that you provide your name and address in order to ensure the utmost security of our students. </p>
-                    <p>&nbsp; &nbsp; Once you register, you will be permitted to view select student profiles. </p>
-                
-					<!--- Display Errors --->
-                    <cfif FORM.type EQ 'newAccount' AND VAL(ArrayLen(pageMsg.Errors))>
-                        <p class="errorMessage">
-                            
-                            <span>Please review the following item(s):</span>
-                        
-                            <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
-                               &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
-                            </cfloop>
-                        
-						</p>
-                    </cfif>	
-                
-                    <cfform name="newAccount" id="newAccount" method="post" action="#cgi.SCRIPT_NAME#">
-                    <input type="hidden" name="type" value="newAccount" />
-                    
-                    <label for="lastName" class="inputLabel">Family Last Name <span class="requiredField">*</span></label>
-                    <cfinput type="text" name="lastName" id="lastName" value="#FORM.lastName#" maxlength="100" class="largeInput" required="yes" message="Please enter a family last name."/> 
-                    
-                    <label for="firstName" class="inputLabel">Your First Name <span class="requiredField">*</span></label>
-                    <cfinput type="text" name="firstName" id="firstName" value="#FORM.firstName#" maxlength="100"  class="largeInput" required="yes" message="Please enter a first name." /> 
-                   
-                    <label for="address" class="inputLabel">Address <span class="requiredField">*</span></label>
-                    <cfinput type="text" name="address" id="address" value="#FORM.address#" maxlength="100" class="largeInput" required="yes" message="Please enter an address." />
-                    
-                    <label for="address2" class="inputLabel">Additional Address Info</label>
-                    <cfinput type="text" name="address2" id="address2" value="#FORM.address2#" maxlength="100" class="largeInput" /> 
-                    
-                    <label for="city" class="inputLabel">City <span class="requiredField">*</span></label>
-                    <cfinput type="text" name="city" id="city" value="#FORM.city#" maxlength="100" class="largeInput" required="yes" message="Please enter a city." />
-                    
-                    <label for="stateID" class="inputLabel">State <span class="requiredField">*</span></label>
-                    <cfselect name="stateID" id="stateID" class="largeInput" required="yes" message="Please select a state.">
-                        <option value="0"></option>
-                        <cfloop query="qStateList">
-                        	<option value="#qStateList.id#" <cfif FORM.stateID EQ qStateList.id> selected="selected" </cfif> >#qStateList.state# - #qStateList.statename#</option>
-                    	</cfloop>
-                    </cfselect>
-                    
-                    <label for="zipCode" class="inputLabel">Zipcode - 5 digits only <span class="requiredField">*</span></label>
-                    <cfinput type="text" name="zipCode" id="zipCode" value="#FORM.zipCode#" maxlength="5" class="largeInput" required="yes" message="Please enter a valid zip code." validateat="onSubmit" validate="zipcode" />
-                    
-                    <label for="phone" class="inputLabel">Phone Number <span class="requiredField">*</span></label>
-                    <cfinput type="text" name="phone" id="phone" value="#FORM.phone#" maxlength="20" class="largeInput" required="yes"  message="Please enter a phone number xxx xxx-xxxx." pattern="(999) 999-9999" validateat="onSubmit" validate="telephone"/>
-                    
-                    <label for="email" class="inputLabel">Email <span class="requiredField">*</span></label>
-                    <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address." validateat="onSubmit" validate="email" />
-                    
-                    <label for="hearAboutUs" class="inputLabel">How did you hear about us <span class="requiredField">*</span></label>
-                    <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayExtraField(this.value);"> 			
-                        <option value=""></option>
-                        <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
-                            <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>
-                        </cfloop>
-                    </cfselect>
-
-                    <div id="divExtraField" class="hiddenDiv">
-                        <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
-                        <span id="spanHearAboutUs" class="inputNote"></span>
-                        <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
-					</div>
-                    
-                    <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
-                    <label for="isListSubscriber" class="inputCheckbox">Would you like to join our mailing list?</label> 
 					
-                    <span class="requiredFieldNote">* Required Fields</span>
+                    <!--- Check if user is allowed to register --->
+                    <cfif allowAccess>
+                    	
+						<!--- <h2> Register </h2> --->
+                        
+                        <p>&nbsp; &nbsp; Fill out this form to learn more about our students and hosting through ISE! Our students are great ambassadors of their home countries and are excited to bring their cultures to communities in the United States.</p>
+                        <p>&nbsp; &nbsp; In order to protect the privacy of our students, we do ask that you provide your name and address in order to ensure the utmost security of our students. </p>
+                        <p>&nbsp; &nbsp; Once you register, you will be permitted to view select student profiles. </p>
                     
-                    <input type="image" src="images/submitRed.png" />
+                        <!--- Display Errors --->
+                        <cfif FORM.type EQ 'newAccount' AND VAL(ArrayLen(pageMsg.Errors))>
+                            <p class="errorMessage">
+                                
+                                <span>Please review the following item(s):</span>
+                            
+                                <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
+                                   &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
+                                </cfloop>
+                            
+                            </p>
+                        </cfif>	
                     
-                    </cfform>
-                
+                        <cfform name="newAccount" id="newAccount" method="post" action="#cgi.SCRIPT_NAME#">
+                        <input type="hidden" name="type" value="newAccount" />
+                        
+                        <label for="lastName" class="inputLabel">Family Last Name <span class="requiredField">*</span></label>
+                        <cfinput type="text" name="lastName" id="lastName" value="#FORM.lastName#" maxlength="100" class="largeInput" required="yes" message="Please enter a family last name."/> 
+                        
+                        <label for="firstName" class="inputLabel">Your First Name <span class="requiredField">*</span></label>
+                        <cfinput type="text" name="firstName" id="firstName" value="#FORM.firstName#" maxlength="100"  class="largeInput" required="yes" message="Please enter a first name." /> 
+                       
+                        <label for="address" class="inputLabel">Address <span class="requiredField">*</span></label>
+                        <cfinput type="text" name="address" id="address" value="#FORM.address#" maxlength="100" class="largeInput" required="yes" message="Please enter an address." />
+                        
+                        <label for="address2" class="inputLabel">Additional Address Info</label>
+                        <cfinput type="text" name="address2" id="address2" value="#FORM.address2#" maxlength="100" class="largeInput" /> 
+                        
+                        <label for="city" class="inputLabel">City <span class="requiredField">*</span></label>
+                        <cfinput type="text" name="city" id="city" value="#FORM.city#" maxlength="100" class="largeInput" required="yes" message="Please enter a city." />
+                        
+                        <label for="stateID" class="inputLabel">State <span class="requiredField">*</span></label>
+                        <cfselect name="stateID" id="stateID" class="largeInput" required="yes" message="Please select a state.">
+                            <option value="0"></option>
+                            <cfloop query="qStateList">
+                                <option value="#qStateList.id#" <cfif FORM.stateID EQ qStateList.id> selected="selected" </cfif> >#qStateList.state# - #qStateList.statename#</option>
+                            </cfloop>
+                        </cfselect>
+                        
+                        <label for="zipCode" class="inputLabel">Zipcode - 5 digits only <span class="requiredField">*</span></label>
+                        <cfinput type="text" name="zipCode" id="zipCode" value="#FORM.zipCode#" maxlength="5" class="largeInput" required="yes" message="Please enter a valid zip code." validateat="onSubmit" validate="zipcode" />
+                        
+                        <label for="phone" class="inputLabel">Phone Number <span class="requiredField">*</span></label>
+                        <cfinput type="text" name="phone" id="phone" value="#FORM.phone#" maxlength="20" class="largeInput" required="yes"  message="Please enter a phone number xxx xxx-xxxx." pattern="(999) 999-9999" validateat="onSubmit" validate="telephone"/>
+                        
+                        <label for="email" class="inputLabel">Email <span class="requiredField">*</span></label>
+                        <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address." validateat="onSubmit" validate="email" />
+                        
+                        <label for="hearAboutUs" class="inputLabel">How did you hear about us <span class="requiredField">*</span></label>
+                        <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayExtraField(this.value);"> 			
+                            <option value=""></option>
+                            <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
+                                <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>
+                            </cfloop>
+                        </cfselect>
+    
+                        <div id="divExtraField" class="hiddenDiv">
+                            <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
+                            <span id="spanHearAboutUs" class="inputNote"></span>
+                            <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
+                        </div>
+                        
+                        <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
+                        <label for="isListSubscriber" class="inputCheckbox">Would you like to join our mailing list?</label> 
+                        
+                        <span class="requiredFieldNote">* Required Fields</span>
+                        
+                        <input type="image" src="images/submitRed.png" />
+                        
+                        </cfform>
+                    
+                    <!--- Not US user --->
+					<cfelse>
+                    	<div style="height:500px;">
+	                        <p>&nbsp; &nbsp; We are sorry but only United States based users are allowed to register to meet our upcoming students.</p>
+    					</div>                
+                    </cfif>                    
+                    
                 </div>
      		
             	<br />
