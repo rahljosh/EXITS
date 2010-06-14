@@ -588,6 +588,15 @@
 <!--- Do not display Profiles for these agents --->    
 <cfif NOT ListFind(APPLICATION.displayProfileNotAllowed, qGetIntlRep.userid)>
 
+    <cfquery name="qGetHostID" datasource="MySQL">
+        SELECT 
+            hostid
+        FROM
+            smg_students
+        WHERE 
+            studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
+    </cfquery>
+
 	<!--- Student Profile  --->
     <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
         <tr valign=middle height=24>
@@ -631,20 +640,12 @@
     <table width=100% class="section">
         <tr>
             <td>
-                <cfquery name="host_fam" datasource="MySQL">
-                    SELECT 
-                    	hostid
-                    FROM
-                    	smg_students
-                    WHERE 
-                    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
-                </cfquery>
             
-                <cfif (host_fam.recordcount EQ 0 OR get_student_info.host_fam_approved GT 4)>
+                <cfif (qGetHostID.recordcount EQ 0 OR get_student_info.host_fam_approved GT 4)>
                     Information on your host family and location will be available here once you are assigned to a host family. <br><br>
                 <cfelse>
-                    <cfset CLIENT.hostid = host_fam.hostid>
-                    <cfset hostid = host_fam.hostid>
+                    <cfset CLIENT.hostid = qGetHostID.hostid>
+                    <cfset hostid = qGetHostID.hostid>
                     <img src="pics/external_link.png" border=0> indicates additional information from external site(s). <br>
                     <img src="pics/sat_image.png" border=0> satalite images of area. <br>SMG is not responsible for information received or available from the external sites linked below.  Some links may not be valid.<br><br>
                 
@@ -655,23 +656,48 @@
                     <cfquery name="host_children" datasource="MySQL">
                         SELECT *
                         FROM smg_host_children
-                        WHERE hostid = '#family_info.hostid#'
+                        WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostid#">
                         ORDER BY birthdate
                     </cfquery>
+
+                    <cfquery name="qGetInterests" datasource="mysql">
+                        select interest
+                        from smg_interests 
+                        where interestid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.interests#" list="yes"> )
+                    </cfquery>
+                    <cfset displayInterests = ValueList(qGetInterests.interest, ", ")>
                     
-                <!--- REGION --->
-                <cfquery name="get_region" datasource="MySQl">
-                    SELECT regionid, regionname
-                    FROM smg_regions
-                    WHERE regionid = '#family_info.regionid#'
-                </cfquery>
+					<!--- REGION --->
+                    <cfquery name="get_region" datasource="MySQl">
+                        SELECT regionid, regionname
+                        FROM smg_regions
+                        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.regionid#">
+                    </cfquery>
                 
-                <!--- SCHOOL ---->
-                <cfquery name="get_school" datasource="MySQL">
-                    SELECT schoolid, schoolname, address, city, state, begins, ends,url
-                    FROM smg_Schools
-                    WHERE schoolid = '#family_info.schoolid#'
-                </cfquery>
+					<!--- SCHOOL ---->
+                    <cfquery name="qGetSchoolInfo" datasource="MySQL">
+                        SELECT 
+                            sc.schoolName,
+                            sc.address,
+                            sc.city,
+                            sc.state,
+                            sc.url,
+                            scd.enrollment, 
+                            scd.year_begins, 
+                            scd.semester_ends, 
+                            scd.semester_begins, 
+                            scd.year_ends
+                        FROM
+                            smg_students s
+                        INNER JOIN
+                            smg_programs p ON p.programID = s.programID                                                
+                        INNER JOIN
+                        	smg_schools sc ON sc.schoolID = s.schoolID
+                        LEFT OUTER JOIN
+                            smg_school_dates scd ON s.schoolID = scd.schoolID AND scd.seasonID = p.seasonID
+                        WHERE 
+                            s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
+                    </cfquery>
                     
                 <style type="text/css">
                 <!--
@@ -791,12 +817,20 @@
                             </table>
                             <!--- BODY OF TABLE --->
                             <table width="100%" border=0 cellpadding=3 cellspacing=0 class="section">
-                                <tr><td>School:</td><td><cfif get_school.recordcount is '0'>there is no school assigned<cfelse>#get_school.schoolname#</cfif></td></tr>
-                                <tr><td>Address:</td><td><cfif get_school.address is ''>n/a<cfelse>#get_school.address#</cfif></td></tr>
-                                <tr><td>City:</td><td><cfif get_school.city is '' and get_school.state is ''>n/a<cfelse><a href="http://en.wikipedia.org/wiki/#get_school.city#%2C_#get_school.state#" target="_blank">#get_school.city# / #get_school.state# <img src="pics/external_link.png" border=0></a> <a href="http://maps.google.com/maps?f=q&hl=en&q=#get_school.city#+#get_school.state#&btnG=Search&t=h" target="_blank"> <img src=pics/sat_image.png border=0></a></cfif></td></tr>
-                                <tr><td>Start Date:</td><td><cfif get_school.begins is ''>n/a<cfelse>#DateFormat(get_school.begins, 'mm/dd/yyyy')#</cfif></td></tr>
-                                <tr><td>End Date:</td><td><cfif get_school.ends is ''>n/a<cfelse>#DateFormat(get_school.ends, 'mm/dd/yyyy')#</cfif></td></tr>			
-                                <tr><td>Web Site:</td><td><cfif get_school.url is ''>n/a<cfelse><a href="#get_school.url#" target="_blank">#get_school.url#</a></cfif></td></tr>
+                                <tr><td>School:</td><td><cfif LEN(qGetSchoolInfo.schoolname)>#qGetSchoolInfo.schoolname#<cfelse>there is no school assigned</cfif></td></tr>
+                                <tr><td>Address:</td><td><cfif LEN(qGetSchoolInfo.address)>#qGetSchoolInfo.address#<cfelse>n/a</cfif></td></tr>
+                                <tr><td>City:</td><td><cfif LEN(qGetSchoolInfo.city) AND LEN(qGetSchoolInfo.state)><a href="http://en.wikipedia.org/wiki/#qGetSchoolInfo.city#%2C_#qGetSchoolInfo.state#" target="_blank">#qGetSchoolInfo.city# / #qGetSchoolInfo.state# <img src="pics/external_link.png" border=0></a> <a href="http://maps.google.com/maps?f=q&hl=en&q=#qGetSchoolInfo.city#+#qGetSchoolInfo.state#&btnG=Search&t=h" target="_blank"> <img src=pics/sat_image.png border=0></a><cfelse>n/a</cfif></td></tr>
+                                <tr>
+                                	<td valign="top">School Dates</td>
+                                    <td>
+										<cfif LEN(qGetSchoolInfo.enrollment)>The school orientation will be on #DateFormat(qGetSchoolInfo.enrollment, 'mm-dd-yyyy')#. &nbsp;</cfif>
+                                        <cfif LEN(qGetSchoolInfo.year_begins)>School year will begin on #DateFormat(qGetSchoolInfo.year_begins, 'mm-dd-yyyy')#.</cfif> 
+                                        <cfif LEN(qGetSchoolInfo.semester_ends)>First semester will end on #DateFormat(qGetSchoolInfo.semester_ends, 'mm-dd-yyyy')#. &nbsp;</cfif>
+                                        <cfif LEN(qGetSchoolInfo.semester_begins)>Second semester will start on #DateFormat(qGetSchoolInfo.semester_begins, 'mm-dd-yyyy')#. &nbsp;</cfif>
+                                        <cfif LEN(qGetSchoolInfo.year_ends)>School year will end on #DateFormat(qGetSchoolInfo.year_ends, 'mm-dd-yyyy')#.</cfif>                                
+                                	</td>
+                                </tr>
+                                <tr><td>Web Site:</td><td><cfif LEN(qGetSchoolInfo.url)><a href="#qGetSchoolInfo.url#" target="_blank">#qGetSchoolInfo.url#</a><cfelse>n/a</cfif></td></tr>
                             </table>				
                             <!--- BOTTOM OF A TABLE --- SCHOOL  --->
                             <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -813,16 +847,7 @@
                             </table>
                             <!--- BODY OF TABLE --->
                             <table width="100%" border=0 cellpadding=3 cellspacing=0 class="section">
-                                <tr><td>
-                                <cfloop list="#family_info.interests#" index=i>
-                                <cfquery name="interest_label" datasource="mysql">
-                                select interest
-                                from smg_interests 
-                                where interestid = #i#
-                                </cfquery>
-                                #interest_label.interest#<cfif #i# eq #listlast(family_info.interests)#><cfelse>,</cfif> 
-                                </cfloop>
-                                </td></tr>
+                                <tr><td>#displayInterests#</td></tr>
                             </table>				
                             <!--- BOTTOM OF A TABLE --- interests  --->
                             <table width="100%" cellpadding="0" cellspacing="0" border="0">
