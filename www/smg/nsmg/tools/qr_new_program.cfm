@@ -9,12 +9,12 @@
 
 <cftransaction action="begin" isolation="serializable"> = 
 	 <cfquery name="add_program" datasource="mysql">
-		insert into smg_programs (programname, type , startdate, enddate, companyid, insurance_startdate, insurance_enddate, seasonid, smgseasonid, tripid)
+		insert into smg_programs (programname, type , startdate, enddate, companyid, insurance_startdate, insurance_enddate, seasonid, smgseasonid, tripid, hold)
 			values('#form.programname#', #form.type#, #CreateODBCDate(form.startdate)#, #CreateODBCDate(form.enddate)#, 
 				#client.companyid#, 
 				<cfif form.insurance_startdate is not ''>#CreateODBCDate(form.insurance_startdate)#<cfelse>null</cfif>,
 				<cfif form.insurance_enddate is not ''>#CreateODBCDate(form.insurance_enddate)#<cfelse>null</cfif>,
-				'#form.seasonid#', '#form.smgseasonid#', '#form.smg_trip#')
+				'#form.seasonid#', '#form.smgseasonid#', '#form.smg_trip#', 1)
 	</cfquery>
 	<cfquery name="prog_id" datasource="MySQL">
 		select MAX(programid) as newid
