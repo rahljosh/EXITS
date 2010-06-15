@@ -81,9 +81,11 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 			AND ( s.arearepid = 
 				<cfloop list="#ad_users#" index='i' delimiters = ",">
 				'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.arearepid = </cfif> </Cfloop>)	
-		</cfif>				
+		</cfif>		
+       	
 	GROUP BY s.studentid
 	ORDER BY r.regionname, u.lastname, s.firstname
+	
 	</cfquery>
 	
 	<cfif get_students.recordcount is '0'><cfelse>

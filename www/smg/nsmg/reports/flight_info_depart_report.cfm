@@ -51,6 +51,7 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 	INNER JOIN smg_regions r ON s.regionassigned = r.regionid
 	LEFT OUTER JOIN smg_users u ON s.arearepid = u.userid
 	WHERE s.active = 1 
+    <!----
 		AND s.regionassigned = #get_region.regionid# 
 		AND (<cfloop list=#form.programid# index='prog'>
 			s.programid = #prog# 
@@ -63,6 +64,28 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
    	<cfif client.usertype GT 4>
 		AND (s.placerepid = '#client.userid#' or s.arearepid = '#client.userid#' )
 	</cfif>
+	---->
+    AND s.regionassigned = #get_region.regionid# 
+		<cfif IsDefined('form.dates')>
+		AND (f.dep_date between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(form.date2)#) 
+		</cfif>
+		and f.flight_type = 'arrival'
+		AND (<cfloop list=#form.programid# index='prog'>
+			s.programid = #prog# 
+			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
+			</cfloop> )
+		<cfif client.usertype is '7'>
+			AND (s.placerepid = '#client.userid#' or s.arearepid = '#client.userid#' )
+		</cfif>
+		<cfif client.usertype is '6'>
+			AND ( s.placerepid = 
+			<cfloop list="#ad_users#" index='i' delimiters = ",">
+				'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.placerepid = </cfif> </Cfloop>)
+			AND ( s.arearepid = 
+				<cfloop list="#ad_users#" index='i' delimiters = ",">
+				'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.arearepid = </cfif> </Cfloop>)	
+		</cfif>		
+    
 	GROUP BY s.studentid
 	ORDER BY r.regionname, u.lastname, s.firstname
 	</cfquery>
