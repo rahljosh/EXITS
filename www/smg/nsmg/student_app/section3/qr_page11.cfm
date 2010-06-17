@@ -19,9 +19,48 @@
 
 
 		
+<!----Set variables for health issues, if any are Yes, require more info. ---->
+<cfif client.studentid eq 19638>
+		
+		<cfset need_add_info = ''>
+        <cfif IsDefined('form.had_epilepsy')><cfif form.had_epilepsy eq 1><cfset need_add_info = ListAppend(need_add_info, 'Epilepsy')></cfif></cfif>        
+        <cfif IsDefined('form.had_diabetes')><cfif form.had_diabetes eq 1><cfset need_add_info = ListAppend(need_add_info, 'Diabetes')></cfif></cfif> 
+        <cfif IsDefined('form.had_cancer')><cfif form.had_cancer eq 1><cfset need_add_info = ListAppend(need_add_info, 'Cancer')></cfif></cfif> 
+        <cfif IsDefined('form.had_broken_bones')><cfif form.had_broken_bones eq 1><cfset need_add_info = ListAppend(need_add_info, 'Broken Bones')></cfif></cfif> 
+        <cfif IsDefined('form.had_sexually_disease')><cfif form.had_sexually_disease eq 1><cfset need_add_info = ListAppend(need_add_info, 'Sexually Transmitted Disease')></cfif></cfif> 
+        <cfif IsDefined('form.had_strokes')><cfif form.had_strokes eq 1><cfset need_add_info = ListAppend(need_add_info, 'Strokes')></cfif></cfif> 
+        <cfif IsDefined('form.had_concussion')><cfif form.had_concussion eq 1><cfset need_add_info = ListAppend(need_add_info, 'Concussion')></cfif></cfif>
+        <cfif IsDefined('form.had_tuberculosis')><cfif form.had_tuberculosis eq 1><cfset need_add_info = ListAppend(need_add_info, 'Tuberculosis')></cfif></cfif> 
+        <cfif IsDefined('form.had_rheumatic_fever')><cfif form.had_rheumatic_fever eq 1><cfset need_add_info = ListAppend(need_add_info, 'Rheumatic Fever')></cfif></cfif> 
+        <!----ENT Stuff---->
+        <cfif IsDefined('form.have_eye_disease')><cfif form.have_eye_disease eq 1><cfset need_add_info = ListAppend(need_add_info, 'Eye Disease or Injury')></cfif></cfif> 
+        <cfif IsDefined('form.have_skin_disease')><cfif form.have_skin_disease eq 1><cfset need_add_info = ListAppend(need_add_info, 'Skin Disease, hove, exzama')></cfif></cfif> 
+		<cfif IsDefined('form.have_jaundice')><cfif form.have_jaundice eq 1><cfset need_add_info = ListAppend(need_add_info, 'Jaundice')></cfif></cfif> 
+        <cfif IsDefined('form.have_double_vision')><cfif form.have_double_vision eq 1><cfset need_add_info = ListAppend(need_add_info, 'Double Vision')></cfif></cfif> 
+        <cfif IsDefined('form.have_infection')><cfif form.have_infection eq 1><cfset need_add_info = ListAppend(need_add_info, 'Frequent infection or boils')></cfif></cfif>
+        <cfif IsDefined('form.have_headahes')><cfif form.have_headahes eq 1><cfset need_add_info = ListAppend(need_add_info, 'Chronic headaches')></cfif></cfif> 
+        <cfif IsDefined('form.have_pigmentation')><cfif form.have_pigmentation eq 1><cfset need_add_info = ListAppend(need_add_info, 'Abnormal pigmentation')></cfif></cfif> 
+        <cfif IsDefined('form.have_glaucoma')><cfif form.have_glaucoma eq 1><cfset need_add_info = ListAppend(need_add_info, 'Glaucoma')></cfif></cfif> 
+        <cfif IsDefined('form.have_nosebleeds')><cfif form.have_nosebleeds eq 1><cfset need_add_info = ListAppend(need_add_info, 'Chronic nosebleeds')></cfif></cfif> 
+        <cfif IsDefined('form.have_stiffness')><cfif form.have_stiffness eq 1><cfset need_add_info = ListAppend(need_add_info, 'Stiffness')></cfif></cfif> 
+        <cfif IsDefined('form.have_sinus')><cfif form.have_sinus eq 1><cfset need_add_info = ListAppend(need_add_info, 'Chronic sinus trouble')></cfif></cfif> 
+        <cfif IsDefined('form.have_thyroid_trouble')><cfif form.have_thyroid_trouble eq 1><cfset need_add_info = ListAppend(need_add_info, 'Thyroid Trouble')></cfif></cfif> 
+        <cfif IsDefined('form.have_ear_disease')><cfif form.have_ear_disease eq 1><cfset need_add_info = ListAppend(need_add_info, 'Ear Disease')></cfif></cfif> 
+        <cfif IsDefined('form.have_enlarged_gland')><cfif form.have_enlarged_gland eq 1><cfset need_add_info = ListAppend(need_add_info, 'Enlarged Glands')></cfif></cfif> 
+        <cfif IsDefined('form.have_impaired_hearing')><cfif form.have_impaired_hearing eq 1><cfset need_add_info = ListAppend(need_add_info, 'Impaired hearing')></cfif></cfif> 
+        <cfif IsDefined('form.wear_hearing_aids')><cfif form.wear_hearing_aids eq 1><cfset need_add_info = ListAppend(need_add_info, 'Do you wear hearing aids?')></cfif></cfif>
+        <cfif IsDefined('form.have_spitting_up_blood')><cfif form.have_spitting_up_blood eq 1><cfset need_add_info = ListAppend(need_add_info, 'Spitting up blood')></cfif></cfif> 
+        <cfif IsDefined('form.have_dizziness')><cfif form.have_dizziness eq 1><cfset need_add_info = ListAppend(need_add_info, 'Dizziness')></cfif></cfif> 
+        <cfif IsDefined('form.have_cough')><cfif form.have_cough eq 1><cfset need_add_info = ListAppend(need_add_info, 'Cronic or frequent cough')></cfif></cfif> 
+        <cfif IsDefined('form.have_unconsciousness')><cfif form.have_unconsciousness eq 1><cfset need_add_info = ListAppend(need_add_info, 'Episodes of unconsciousness')></cfif></cfif> 
+        <cfif IsDefined('form.have_asthma')><cfif form.have_asthma eq 1><cfset need_add_info = ListAppend(need_add_info, 'Asthma')></cfif></cfif> 
+<cfset client.need_add_info = '#need_add_info#'>
+ </cfif>
 
-            
 
+
+
+ 
 	<cftry>
 
 	<!--- UPDATE ROW --->
@@ -95,6 +134,14 @@
 	<cfif allergies_details eq 1>
     	<cflocation url="index.cfm?curdoc=section3/allergy_info_request">
     </cfif>
+    <cfif client.studentid eq 19638>
+   
+		<cfif client.need_add_info is not ''>
+        	<cflocation url="index.cfm?curdoc=section3/additional_health_answers">
+        </cfif>
+      
+    </cfif>
+    
 	<html>
 	<head>
 	<script language="JavaScript">
