@@ -68,11 +68,18 @@ where companyid = #client.org_code#
 	-->
 	</style>
 </head>
+<!----Check Allergy---->
 <cfquery name="check_allergy" datasource="#application.dsn#">
 select has_an_allergy
 from smg_student_app_health
 where studentid = #client.studentid#
 </cfquery>
+<!-----Check Additional Medical---->
+<cfquery name="additional_info" datasource="#application.dsn#">
+select *
+from smg_student_app_health_explanations
+</cfquery>
+
 <!--- check for attached files ---->
 <body onLoad="print();launchRemote();"> 
 
@@ -159,7 +166,15 @@ where studentid = #client.studentid#
 			<cfinclude template="section3/page11print.cfm">
 			<div style="page-break-after:always;"></div>	
 		</td>
-    </tr>		
+    </tr>	
+    <cfif additional_info.recordcount gt 0>
+    <Tr>
+    	<td valign="top">
+			<cfinclude template="section3/additional_info_print.cfm">
+			<div style="page-break-after:always;"></div>	
+        </td>
+    </Tr>
+    </cfif>	
     <tr>
     	<td valign="top">				
 			<cfinclude template="section3/page12print.cfm">
