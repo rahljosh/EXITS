@@ -603,9 +603,10 @@
                     <td class="columnHeader">Request ID</td>
                     <td class="columnHeader">Submit with no SSN</td>
                 </tr>
+      			
+                <input type="hidden" name="#familyID#memberCBCFamID" value="#qGetCBCMember.cbcFamID#">
                 
                 <cfloop query="qGetCBCMember">
-                    <input type="hidden" name="#familyID#memberCBCFamID" value="#qGetCBCMember.cbcFamID#">
                     <tr bgcolor="#iif(qGetCBCMember.currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                         <td>#qGetCBCMember.companyshort#</td>
                         <td>#qGetCBCMember.season#</td>
