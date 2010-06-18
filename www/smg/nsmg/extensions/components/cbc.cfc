@@ -176,37 +176,55 @@
         <cfargument name="isReRun" default="0" hint="isReRun is not required">
 
             <cfquery 
-            	name="qInsertHostCBC" 
+            	name="qCheckPending" 
             	datasource="#APPLICATION.dsn#">
-                    INSERT INTO 
-                        smg_hosts_cbc 
-                    (
-                        hostID, 
-                        familyID, 
-                        cbc_type, 
-                        seasonID, 
-                        companyID,
-                        isNoSSN,
-                        isReRun, 
-                        date_authorized
-                    )
-                    VALUES 
-                    (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">, 
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">, 
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">, 
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNoSSN#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
-                        <cfif LEN(ARGUMENTS.dateAuthorized)>
-                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
-                        <cfelse>
-                            NULL                            
-                        </cfif>
-                    )
-            </cfquery>	
-
+					SELECT
+                    	hostID
+                    FROM
+                    	smg_hosts_cbc
+                    WHERE
+                    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">	
+            		AND
+                    	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    AND
+                    	cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+            </cfquery>
+            	
+			<cfif NOT qCheckPending.recordCount>
+            
+                <cfquery 
+                    datasource="#APPLICATION.dsn#">
+                        INSERT INTO 
+                            smg_hosts_cbc 
+                        (
+                            hostID, 
+                            familyID, 
+                            cbc_type, 
+                            seasonID, 
+                            companyID,
+                            isNoSSN,
+                            isReRun, 
+                            date_authorized
+                        )
+                        VALUES 
+                        (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNoSSN#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
+                            <cfif LEN(ARGUMENTS.dateAuthorized)>
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
+                            <cfelse>
+                                NULL                            
+                            </cfif>
+                        )
+                </cfquery>	
+                
+			</cfif>
+            
 	</cffunction>
 
 
@@ -554,32 +572,51 @@
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
 
             <cfquery 
+            	name="qCheckPending" 
             	datasource="#APPLICATION.dsn#">
-                    INSERT INTO 
-                    	smg_users_cbc 
-                    (
-                    	userid, 
-                        familyid, 
-                        seasonid, 
-                        companyid,
-                        isReRun, 
-                        date_authorized
-                    )
-                    VALUES 
-                    (
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">, 
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">,  
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
-                        <cfif LEN(ARGUMENTS.dateAuthorized)>
-                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
-                        <cfelse>
-                            NULL                            
-                        </cfif>
-                    )
-            </cfquery>	
+					SELECT
+                    	userID
+                    FROM
+                    	smg_users_cbc
+                    WHERE
+                    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">	
+            		AND
+                    	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    AND
+                    	familyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">
+            </cfquery>
+            	
+			<cfif NOT qCheckPending.recordCount>
 
+                <cfquery 
+                    datasource="#APPLICATION.dsn#">
+                        INSERT INTO 
+                            smg_users_cbc 
+                        (
+                            userid, 
+                            familyid, 
+                            seasonid, 
+                            companyid,
+                            isReRun, 
+                            date_authorized
+                        )
+                        VALUES 
+                        (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">,  
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
+                            <cfif LEN(ARGUMENTS.dateAuthorized)>
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
+                            <cfelse>
+                                NULL                            
+                            </cfif>
+                        )
+                </cfquery>	
+			
+            </cfif>
+            
 	</cffunction>
 
 
