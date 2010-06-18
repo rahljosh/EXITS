@@ -57,7 +57,8 @@ body {
 	margin-right: 50px;
 }
 -->
-</style></head>
+</style>
+</head>
 
 <body class="oneColFixCtr">
 <div id="clear"></div>
@@ -70,5 +71,13 @@ body {
 <h2>Please visit the International Student Exchange (ISE) website at <a href="http://www.iseusa.com">www.iseusa.com</a> to access the EXITS application and for any information on the academic year (J-1) programs that ISE offers.</h2>
 	<!-- end #mainContent --></div>
 <!-- end #container --></div>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+_uacct = "UA-880717-1";
+urchinTracker();
+</script>
+
 </body>
 </html>
+
