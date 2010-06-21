@@ -4,9 +4,7 @@
 			smg_companies.companyshort
 	FROM smg_programs
 	INNER JOIN smg_companies ON smg_companies.companyid = smg_programs.companyid
-	<cfif #client.companyid# EQ 5><cfelse> 
-	WHERE smg_programs.programid = '#url.progid#'
-	</cfif>
+	WHERE smg_programs.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.progid#">
 	ORDER BY smg_companies.companyshort
 </cfquery>
 
