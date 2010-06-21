@@ -251,7 +251,7 @@ a:active {
 			// Set cursor to username field
 			$(document).ready(function() {
 				
-				if ( $("##username").val("") != '' ) {
+				if ( $("##username").val() != '' ) {
 					$("##username").focus();
 				} else {
 					$("##password").focus();
