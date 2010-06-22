@@ -27,7 +27,7 @@
 <table width="500" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr>
 		<td style="line-height:20px;" valign="top" colspan=3>
-			<cfform name="upload_form" action="qr_upload_page22.cfm" method="post" enctype="multipart/form-data" preloader="no">
+			<cfform action="qr_upload_page22.cfm?referrer=#URL.referrer#" name="upload_form" method="post" enctype="multipart/form-data" preloader="no">
 			<cfinput type="hidden" name="studentid" value="#url.studentid#">
 			Please upload your file here. <br>
 			EXITS Online Application accepts the following formats: JPG, JPEG, GIF, PDF AND DOC. <br>

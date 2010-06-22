@@ -9,6 +9,8 @@
 
 <cftry>
 
+<cfoutput>
+
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
@@ -23,7 +25,7 @@
 <table width="500" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr>
 		<td style="line-height:20px;" valign="top" colspan=3><br>
-			<cfform action="qr_upload_letter.cfm" method="post" name="upload_letter" enctype="multipart/form-data" preloader="no">
+			<cfform action="qr_upload_letter.cfm?referrer=#URL.referrer#" method="post" name="upload_letter" enctype="multipart/form-data" preloader="no">
 			<cfinput type="hidden" name="type" value="#url.type#">
 			<cfinput type="hidden" name="studentid" value="#url.studentid#">
 			Please upload your letter here. <br />
@@ -49,6 +51,8 @@
 		<td width="42"><img src="#AppPath.onlineApp.URL#pics/p_bottonright.gif" width="42"></td>
 	</tr>
 </table>
+
+</cfoutput>
 
 <cfcatch type="any">
 	<cfinclude template="error_message.cfm">	
