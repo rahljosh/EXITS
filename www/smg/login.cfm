@@ -251,7 +251,7 @@ a:active {
 			// Set cursor to username field
 			$(document).ready(function() {
 				
-				if ( $("##username").val() != '' ) {
+				if ( $("##username").val() == '' ) {
 					$("##username").focus();
 				} else {
 					$("##password").focus();
@@ -286,8 +286,8 @@ try {
 var pageTracker = _gat._getTracker("UA-11484433-1");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-</cfoutput>
-</body>
+</body></cfoutput>
+
 </html>
 
 <script type="text/javascript">
