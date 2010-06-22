@@ -6,9 +6,9 @@
 	<title>Upload File</title>
 </head>
 <body>
-<!----
-<cftry>
----->
+
+<cfoutput>
+
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
@@ -24,7 +24,7 @@
 <table width="500" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr>
 		<td style="line-height:20px;" valign="top" colspan=3>
-			<cfform action="qr_upload_file.cfm?folder=#url.folder#" method="post" enctype="multipart/form-data" preloader="no">
+			<cfform action="qr_upload_file.cfm?referrer=#URL.referrer#&folder=#url.folder#" method="post" enctype="multipart/form-data" preloader="no">
 			Please upload your file here. <br>
 			EXITS Online Application accepts the following formats: JPG, JPEG, GIF, TIF, PNG, PDF AND DOC. <br>
 			<strong>Please preferably upload image files such as JPG, JPEG, GIF, TIF OR PNG FILES.</strong><br>
@@ -56,11 +56,7 @@
 	</tr>
 </table>
 
+</cfoutput>
+
 </body>
 </html>
-<!----
-<cfcatch type="">
-	<cfinclude template="../email_message.cfm">
-</cfcatch>
-</cftry>  
----->

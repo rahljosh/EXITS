@@ -16,6 +16,8 @@ function GetFile() {
 //--->
 </script>
 
+<cfoutput>
+
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
@@ -30,7 +32,7 @@ function GetFile() {
 <table width="500" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr>
 		<td style="line-height:20px;" valign="top" colspan=3>
-		<cfform action="qr_upload_album.cfm" method="post" name="upload" enctype="multipart/form-data" preloader="no">
+		<cfform action="qr_upload_album.cfm?referrer=#URL.referrer#" method="post" name="upload" enctype="multipart/form-data" preloader="no">
 			<cfinput name="file_name" type="hidden"  value=""/>
 			<cfinput type="hidden" name="studentid" value="#url.studentid#">
 			Please upload recent pictures (within 2 years) of you, your family, and friends.  
@@ -56,6 +58,8 @@ function GetFile() {
 		<td width="42"><img src="#AppPath.onlineApp.URL#pics/p_bottonright.gif" width="42"></td>
 	</tr>
 </table>
+
+</cfoutput>
 
 <cfcatch type="any">
 	<cfinclude template="error_message.cfm">	

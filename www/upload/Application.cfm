@@ -50,11 +50,11 @@
 		
 		// URL Used on Upload/Delete Files
 		AppPath.onlineApp.URL = 'https://' & URL.referrer & '/nsmg/student_app/';				
-		AppPath.onlineApp.imageURL = 'http://' & URL.referrer & '/pics/';				
 		AppPath.onlineApp.reloadURL = 'https://' & URL.referrer & '/nsmg/student_app/querys/reload_window.cfm';		
-		
+		AppPath.onlineApp.imageURL = 'http://' & URL.referrer & '/nsmg/pics/';				
+
 		AppPath.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
-		
+
 		AppPath.onlineApp.picture = AppPath.uploadedFiles & "web-students/";
 		AppPath.onlineApp.letters = AppPath.uploadedFiles & "letters/";
 		AppPath.onlineApp.studentLetter = AppPath.uploadedFiles & "letters/students/";

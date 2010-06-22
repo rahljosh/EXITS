@@ -9,6 +9,8 @@
 
 <cftry>
 
+<cfoutput>
+
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
@@ -23,7 +25,7 @@
 <table width="500" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr>
 		<td style="line-height:20px;" valign="top" colspan=3>
-			<cfform action="qr_upload_page1.cfm" method="post" enctype="multipart/form-data" preloader="no">
+			<cfform action="qr_upload_page1.cfm?referrer=#URL.referrer#" method="post" enctype="multipart/form-data" preloader="no">
 			<cfinput type="hidden" name="studentid" value="#url.studentid#">
 			Please upload a photo of your self, preferably one smiling.  This picture should not be a picture that you will 
 			upload with your family in the photo album, but a picture of you.  School pictures are a great example of the type
@@ -49,8 +51,7 @@
 	</tr>
 </table>
 
-</body>
-</html>
+</cfoutput>
 
 <cfcatch type="">
 	<cfinclude template="error_message.cfm">

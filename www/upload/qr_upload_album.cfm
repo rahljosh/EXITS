@@ -56,7 +56,7 @@
 		//scaleX image to 1000px wide
 		scaleX800 = imageCFC.scaleX("", "#directory#/#CFFILE.serverfile#", "#directory#/#CFFILE.serverfile#", 800);
 	</cfscript>
-	
+    
 	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN --->
 	<cflocation url="#AppPath.onlineApp.reloadURL#" addtoken="no">
 
