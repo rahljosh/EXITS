@@ -102,7 +102,7 @@ function OpenDesc(url) {
 				You are not able to upload more photos unless you decide to delete one of the photos below.<br><br></b>
 			<cfelse>
 				<div align="center">
-					<a href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_album.cfm?studentid=#client.studentid#', 'UploadPics', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/uploadpic.gif" border=0></a>
+					<a href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_album.cfm?referrer=#CGI.HTTP_HOST#&studentid=#client.studentid#', 'UploadPics', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/uploadpic.gif" border=0></a>
 				</div>
 				<br><br>
 			</cfif>

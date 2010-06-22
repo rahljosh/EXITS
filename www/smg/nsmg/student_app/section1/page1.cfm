@@ -175,10 +175,10 @@ $(document).ready(function() {
 		<td width="150" rowspan="11" align="left" valign="top">
 			<cfif file.recordcount>
 				<img src="../uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
-				<a class=nav_bar href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page1.cfm?studentid=#studentid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/docs.gif" border=0>Upload</a> 
-				/<a href="#AppPath.onlineApp.uploadURL#qr_delete_page1.cfm?studentid=#client.studentid#" onClick="return areYouSure(this);"><img src="pics/button_drop.png" border=0>Delete</a>
+				<a class=nav_bar href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page1.cfm?referrer=#CGI.HTTP_HOST#&studentid=#studentid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/docs.gif" border=0>Upload</a> 
+				/<a href="#AppPath.onlineApp.uploadURL#qr_delete_page1.cfm?referrer=#CGI.HTTP_HOST#&studentid=#client.studentid#" onClick="return areYouSure(this);"><img src="pics/button_drop.png" border=0>Delete</a>
 			<cfelse>
-				<a class=nav_bar href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page1.cfm?studentid=#studentid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/no_image.gif" border=0></a>
+				<a class=nav_bar href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page1.cfm?referrer=#CGI.HTTP_HOST#&studentid=#studentid#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/no_image.gif" border=0></a>
 			</cfif>
 		</td>
 		<td colspan="3"><b>Student's Name</b> &nbsp; <font size="-2">PS: Please do not use any type of accent.</font></td>
