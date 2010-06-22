@@ -79,7 +79,7 @@ where studentid = #client.studentid#
 <table width="670" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr>
 		<td align="center">
-			<a href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page22.cfm?studentid=#client.studentid#', 'UploadFiles', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/upload-file.gif" border=0></a>
+			<a href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page22.cfm?referrer=#CGI.HTTP_HOST#&studentid=#client.studentid#', 'UploadFiles', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/upload-file.gif" border=0></a>
 		</td>
 	</tr>
 </table><br>
@@ -117,7 +117,7 @@ where studentid = #client.studentid#
 		</cfif>
 	  </td>	
 	  <td>
-		<cfform method="post" name="page22delete" action="#AppPath.onlineApp.uploadURL#qr_delete_page22.cfm">
+		<cfform method="post" name="page22delete" action="#AppPath.onlineApp.uploadURL#qr_delete_page22.cfm?referrer=#CGI.HTTP_HOST#">
 			<cfinput type="hidden" name="deletefile" value="#mydirectory.name#">
 			<cfinput type="hidden" name="studentid" value="#get_student_info.studentid#">
 			<cfinput type="image" name="submit" src="pics/delete.gif" alt="Delete this file" onclick="return areYouSure(this);"> 
@@ -140,8 +140,6 @@ where studentid = #client.studentid#
 <cfinclude template="../footer_table.cfm">
 
 </cfoutput>
-
-
 
 <!---
 <!--- CREATE NEW FOLDER AND MOVE FILES --->
