@@ -19,7 +19,7 @@
 </cfscript>
 
 <!----Upload File---->
-<cffile action="upload" fileField="FORM.letter" destination="#directory#" nameConflict="MakeUnique" mode="777">
+<cffile action="upload" fileField="FORM.letter" destination="#directory#" nameConflict="MakeUnique">
   
 <cfscript>
 	// Get File Size
@@ -72,13 +72,13 @@
             <cffile action="delete" file="#directory#/#CFFILE.serverfile#">
             
             <!--- rename resized file --->
-            <cffile action="rename" source="#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#" destination="#directory#/#FORM.studentid#.#LCase(CFFILE.ServerFileExt)#" attributes="normal" mode="777">
+            <cffile action="rename" source="#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#" destination="#directory#/#FORM.studentid#.#LCase(CFFILE.ServerFileExt)#" attributes="normal">
     
         </cfif>
     
     </cfif>
 
-	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#" mode="777" nameconflict="overwrite">
+	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#" nameconflict="overwrite">
 
 	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN--->
     <cflocation url="#AppPath.onlineApp.reloadURL#" addtoken="no">

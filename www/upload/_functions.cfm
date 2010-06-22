@@ -47,7 +47,6 @@
                 <cfdirectory 
                 	action="create" 
                     directory="#ARGUMENTS.fullPath#" 
-					mode="777"
                 	/>
             
             </cfif>

@@ -19,7 +19,7 @@
 </cfscript>
 
 <!----Upload File---->
-<cffile action = "upload" destination="#directory#" fileField="file_upload" nameConflict="makeunique" mode="777">
+<cffile action = "upload" destination="#directory#" fileField="file_upload" nameConflict="makeunique">
 
 <cfscript>
 	// Get File Size
@@ -74,8 +74,24 @@
 			
 		}
     </cfscript>
+	
+    <!---
+	<cfif form.studentID eq 22958>
+    	<cfdump var="#directory#"> <br /><br />
+    	<cfdump var="#cffile#"> <br /><br />
+    	<cfdump var="#directory#/#CFFILE.ServerFile#"> <br /><br />
+        <cfdump var="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#"> <br /><br />
+    </cfif>
 
-	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#" mode="777" nameconflict="overwrite">
+    <cfif CFFILE.SERVERFILENAME NEQ FORM.studentid>
+    
+        <cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#" nameconflict="overwrite">
+
+	</cfif>
+	--->
+
+	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#" nameconflict="overwrite">
+
 
 	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN--->
     <cflocation url="#AppPath.onlineApp.reloadURL#" addtoken="no">

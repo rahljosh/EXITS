@@ -12,10 +12,10 @@
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
-		<td width="8" class="tableside"><img src="http://www.student-management.com/nsmg/student_app/pics/p_topleft.gif" width="8"></td>
-		<td width="26" class="tablecenter"><img src="http://www.student-management.com/nsmg/student_app/pics/notes.gif"></td>
+		<td width="8" class="tableside"><img src="#AppPath.onlineApp.URL#pics/p_topleft.gif" width="8"></td>
+		<td width="26" class="tablecenter"><img src="#AppPath.onlineApp.URL#pics/notes.gif"></td>
 		<td class="tablecenter"><h2>Page [01] - Upload Passport Photo</h2></td>
-		<td width="42" class="tableside"><img src="http://www.student-management.com/nsmg/student_app/pics/p_topright.gif" width="42"></td>
+		<td width="42" class="tableside"><img src="#AppPath.onlineApp.URL#pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
 
@@ -32,7 +32,7 @@
 			<div align="center">
 			Browse for the file.. <cfinput type="file" name="passaport" size=35 required="yes" enctype="multipart/form-data" message="You must select a file in order to continue." validateat="onsubmit,onserver">
 			<br><br>
-			<cfinput type="image" name="upload" src="http://www.student-management.com/nsmg/student_app/pics/uploadpic.gif" alt="Upload File to Server"><br>
+			<cfinput type="image" name="upload" src="#AppPath.onlineApp.URL#pics/uploadpic.gif" alt="Upload File to Server"><br>
 			</div>
 			</cfform>
 		</td>
@@ -43,9 +43,9 @@
 <!--- FOOTER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="8">
-		<td width="8"><img src="http://www.student-management.com/nsmg/student_app/pics/p_bottonleft.gif" width="8"></td>
-		<td width="100%" class="tablebotton"><img src="http://www.student-management.com/nsmg/student_app/pics/p_spacer.gif"></td>
-		<td width="42"><img src="http://www.student-management.com/nsmg/student_app/pics/p_bottonright.gif" width="42"></td>
+		<td width="8"><img src="#AppPath.onlineApp.URL#pics/p_bottonleft.gif" width="8"></td>
+		<td width="100%" class="tablebotton"><img src="#AppPath.onlineApp.URL#pics/p_spacer.gif"></td>
+		<td width="42"><img src="#AppPath.onlineApp.URL#pics/p_bottonright.gif" width="42"></td>
 	</tr>
 </table>
 
