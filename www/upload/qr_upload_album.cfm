@@ -14,7 +14,7 @@
 	<cfset directory = '#AppPath.onlineApp.familyAlbum##form.studentid#'>
 
 	<cfif NOT DirectoryExists('#directory#')>
-		<cfdirectory action="create" directory="#directory#" mode="777">
+		<cfdirectory action="create" directory="#directory#">
 	</cfif>
 
 	<!--- RENAME FILE #createUUID()# --->

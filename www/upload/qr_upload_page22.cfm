@@ -12,7 +12,7 @@
 	<cfset directory = "#AppPath.onlineApp.virtualFolder##form.studentid#/page22">
 
 	<!----Upload File---->
-	<cffile action="upload" destination="#directory#" fileField="file_upload" nameConflict="makeunique" mode="777">
+	<cffile action="upload" destination="#directory#" fileField="file_upload" nameConflict="makeunique">
 	
 	<!--- check file size - 2mb limit --->
 	<cfset newfilesize = file.FileSize / 1024>
@@ -57,7 +57,7 @@
     </cfscript>
 
 	<!--- Rename File - Lower Case, remove foreign accents, javascript safe and remove blank spaces --->
-	<cffile action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#LCase(SafeJavascript(CFFILE.ServerFile))#" mode="777" attributes="normal" nameconflict="makeunique">
+	<cffile action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#LCase(SafeJavascript(CFFILE.ServerFile))#" attributes="normal" nameconflict="makeunique">
 		 
 	<!--- OPEN FROM MAIN SEVER IN ORDER TO REFRESH THE PAGE PROPERLY / JAVASCRIPT WOULD NOT REFRESH IF THEY ARE ON A DIFFERENT DOMAIN --->
 

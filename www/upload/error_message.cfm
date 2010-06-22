@@ -12,10 +12,10 @@
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0" align="center" border="0">
 	<tr height="33">
-		<td width="8" class="tableside"><img src="http://www.student-management.com/nsmg/pics/p_topleft.gif" width="8"></td>
-		<td width="26" class="tablecenter"><img src="http://www.student-management.com/nsmg/pics/students.gif"></td>
+		<td width="8" class="tableside"><img src="#AppPath.onlineApp.imageURL#p_topleft.gif" width="8"></td>
+		<td width="26" class="tablecenter"><img src="#AppPath.onlineApp.imageURL#students.gif"></td>
 		<td class="tablecenter"><h2>SMG - Upload Error</h2></td>
-		<td width="42" class="tableside"><img src="http://www.student-management.com/nsmg/pics/p_topright.gif" width="42"></td>
+		<td width="42" class="tableside"><img src="#AppPath.onlineApp.imageURL#p_topright.gif" width="42"></td>
 	</tr>
 </table>
 
@@ -25,7 +25,7 @@
 		 <p>An upload error has occurred. The error message and relative data has been sent to the system administrator.
 		 <p>We	re sorry for the inconvenience. </p>
 		 <p>Please try again. If the error persists contact support@student-management.com.</p> <br>
-		 <div align="center"><input name="back" type="image" src="http://www.student-management.com/nsmg/pics/close.gif" align="middle" border=0 onClick="window.close()"></div><br><br>
+		 <div align="center"><input name="back" type="image" src="#AppPath.onlineApp.imageURL#close.gif" align="middle" border=0 onClick="window.close()"></div><br><br>
 	</td></tr>
 </table>
 </div>
@@ -33,9 +33,9 @@
 <!--- FOOTER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="8">
-		<td width="8"><img src="http://www.student-management.com/nsmg/pics/p_bottonleft.gif" width="8"></td>
-		<td width="100%" class="tablebotton"><img src="http://www.student-management.com/nsmg/pics/p_spacer.gif"></td>
-		<td width="42"><img src="http://www.student-management.com/nsmg/pics/p_bottonright.gif" width="42"></td>
+		<td width="8"><img src="#AppPath.onlineApp.imageURL#p_bottonleft.gif" width="8"></td>
+		<td width="100%" class="tablebotton"><img src="#AppPath.onlineApp.imageURL#p_spacer.gif"></td>
+		<td width="42"><img src="#AppPath.onlineApp.imageURL#p_bottonright.gif" width="42"></td>
 	</tr>
 </table>
 
