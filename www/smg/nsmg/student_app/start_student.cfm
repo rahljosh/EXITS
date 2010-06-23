@@ -369,7 +369,10 @@
                         <br><br>
                         Click the link below to start your application process.  
                         <br><br>
-                        <a href="http://#CLIENT.exits_url#/nsmg/student_app/?s=#uniqueid#">http://#CLIENT.exits_url#/nsmg/student_app/?s=#uniqueid#</a>
+                        <a href="http://www.student-management.com/nsmg/student_app/?s=#uniqueid#">http://www.student-management.com/nsmg/student_app/?s=#uniqueid#</a>
+                        <!--- This link does not work - needs to be checked					
+							http://ise.exitsapplication.com/nsmg/student_app/?s=#uniqueid#
+						--->
                         <br><br>
                         You will need the following information to verify your account:<br>
                         *email address<br>
