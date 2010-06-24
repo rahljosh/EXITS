@@ -298,7 +298,8 @@
 
 <!---  CANCELLING A STUDENT --->
 <cfif IsDefined('FORM.student_cancel')>
-	
+
+
 	<cfif VAL(qStudentInfo.hostid) AND NOT LEN(qStudentInfo.canceldate)>
 		<cfquery name="hostchangereason" datasource="MySql">		
 			INSERT INTO 
@@ -338,9 +339,51 @@
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">
 		LIMIT 1
 	</cfquery>
+<!----Send Eail to Finace Email, ---->
+<cfoutput>
+<cfquery name="intagent" datasource="#application.dsn#">
+select businessname
+from smg_users
+where userid = #qStudentInfo.intrep#
+</cfquery>
+<cfquery name="programname" datasource="#application.dsn#">
+select programname
+from smg_programs
+where programid = #qStudentInfo.programid#
+</cfquery>
+<cfsavecontent variable="email_message">
+ #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been cancelled.
+ <br /><br />
+ Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#)</strong><br />
+ Int Agent: <strong>#intagent.businessname# (#qStudentInfo.intrep#)</strong><br />
+ Program: <strong>#programname.programname# (#qStudentInfo.programid#)</strong><br />
+ Cancel Date: <strong>#DateFormat(FORM.date_canceled,'mm/dd/yyyy')#</strong><br />
+ Reason: <strong>#FORM.cancelreason#</strong><br />
+ Placement Approved: #DateFormat(qStudentInfo.DATEASSIGNED, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.DATEASSIGNED, 'h:mm tt')# <br />
+ Sevis:  <cfif qStudentInfo.sevis_fee_paid_date is ''>Not Paid<cfelse>#DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</cfif><br />
+ Cancelled By: #client.name# - #client.email#<br /><br />
+ 
+ The following people received this notice:<br />
+ #client.projectmanager_email# #client.finance_email# #client.email#
+</cfsavecontent>
+			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#client.finance_email#">
+                <cfinvokeargument name="email_subject" value="Student Cancellation: #intagent.businessname# -(#qStudentInfo.intrep#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#) - #programname.programname# (#qStudentInfo.programid#)">
+                <cfinvokeargument name="email_message" value="#email_message#">
+               <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#">
+                <cfinvokeargument name="email_from" value="#client.name# <#client.email#>">
+            </cfinvoke>
+   
+    </cfoutput>
 
+<!----End of Email to ---->
     <cflocation url="../index.cfm?curdoc=student_info" addtoken="no">
 <cfelse>
+
+
+
     <cfquery name="cancel_student" datasource="MySql">
         UPDATE 
         	smg_students
