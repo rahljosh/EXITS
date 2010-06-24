@@ -20,7 +20,7 @@
 
 		
 <!----Set variables for health issues, if any are Yes, require more info. ---->
-<cfif client.studentid eq 19638>
+
 		
 		<cfset need_add_info = ''>
         <cfif IsDefined('form.had_epilepsy')><cfif form.had_epilepsy eq 1><cfset need_add_info = ListAppend(need_add_info, 'Epilepsy')></cfif></cfif>        
@@ -55,7 +55,7 @@
         <cfif IsDefined('form.have_unconsciousness')><cfif form.have_unconsciousness eq 1><cfset need_add_info = ListAppend(need_add_info, 'Episodes of unconsciousness')></cfif></cfif> 
         <cfif IsDefined('form.have_asthma')><cfif form.have_asthma eq 1><cfset need_add_info = ListAppend(need_add_info, 'Asthma')></cfif></cfif> 
 <cfset client.need_add_info = '#need_add_info#'>
- </cfif>
+
 
 
 
@@ -134,13 +134,13 @@
 	<cfif allergies_details eq 1>
     	<cflocation url="index.cfm?curdoc=section3/allergy_info_request">
     </cfif>
-    <cfif client.studentid eq 19638>
-   
+
+  
 		<cfif client.need_add_info is not ''>
         	<cflocation url="index.cfm?curdoc=section3/additional_health_answers">
         </cfif>
       
-    </cfif>
+
     
 	<html>
 	<head>

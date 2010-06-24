@@ -160,7 +160,7 @@
         
         <!--- companyname, programmanager and accesslevelname are used in header.cfm.  These are also set in forms/change_access_level.cfm. --->
         <cfquery name="qGetCompany" datasource="#APPLICATION.dsn#">
-            SELECT companyname, team_id, pm_email, support_email, url, companyshort_nocolor
+            SELECT companyname, team_id, pm_email, support_email, url, companyshort_nocolor, projectManager, financeEmail
             FROM smg_companies
             WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
         </cfquery>
@@ -169,6 +169,8 @@
         <cfset CLIENT.companyshort = qGetCompany.companyshort_nocolor>
 	    <cfset CLIENT.programmanager = qGetCompany.team_id>
         <cfset CLIENT.programmanager_email = qGetCompany.pm_email>
+        <cfset CLIENT.projectmanager_email = #qGetCompany.projectManager#>
+        <cfset CLIENT.finance_email = qGetCompany.financeEmail>
 		<cfset CLIENT.support_email = qGetCompany.support_email> 
         <cfset CLIENT.site_url = qGetCompany.url>
         

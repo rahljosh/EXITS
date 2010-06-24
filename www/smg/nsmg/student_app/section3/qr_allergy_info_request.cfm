@@ -28,6 +28,13 @@ other_allergies_list = <cfqueryparam value="#form.other_allergies_list#" cfsqlty
 allergic_cigs = <cfif IsDefined('form.allergic_cigs')>1<cfelse>0</cfif>
 where studentid = #client.studentid#
 </cfquery>
+
+   
+		<cfif client.need_add_info is not ''>
+        	<cflocation url="index.cfm?curdoc=section3/additional_health_answers">
+        </cfif>
+      
+
 	<html>
 	<head>
 	<script language="JavaScript">

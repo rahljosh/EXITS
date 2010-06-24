@@ -85,12 +85,12 @@
         
 	<cfelse>
 		<cfset client.isLoggedIn = "No">
-		<cflocation url = "contact.cfm" addtoken="no">
+		<cflocation url = "contactUs.cfm" addtoken="no">
 	</cfif>
     
 <cfelse>
 
 	<cfset client.isLoggedIn = "No">
-	<cflocation url = "contact.cfm" addtoken="no">
+	<cflocation url = "contactUs.cfm" addtoken="no">
 
 </cfif>

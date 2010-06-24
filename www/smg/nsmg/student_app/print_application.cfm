@@ -78,6 +78,7 @@ where studentid = #client.studentid#
 <cfquery name="additional_info" datasource="#application.dsn#">
 select *
 from smg_student_app_health_explanations
+where studentid = #client.studentid#
 </cfquery>
 
 <!--- check for attached files ---->

@@ -64,23 +64,23 @@ table {
                 <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
               </tr>
             <tr>
-              <th width="285" height="178" class="lightGreen" scope="row"><a href="tours.cfm?tour_id=10"><img src="images/trips_03.png" width="239" height="165" alt="LA Experience" border="0" /></a></th>
-              <td width="264" align="center" valign="middle" class="lightGreen"><a href="tours.cfm?tour_id=7"><img src="images/trips_04.png" width="239" height="166" alt="NYC Holiday" border="0"/></a><br /></td>
+              <th width="285" height="178" class="lightGreen" scope="row"><a href="tours.cfm?tour_id=10"><img src="images/trips_3.png" width="239" height="165" alt="LA Experience" border="0" /></a></th>
+              <td width="264" align="center" valign="middle" class="lightGreen"><a href="tours.cfm?tour_id=7"><img src="images/trips_4.png" width="239" height="166" alt="NYC Holiday" border="0"/></a><br /></td>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=1"><img src="images/trips_08.png" width="240" height="166" border="0"/></a></th>
-              <th class="lightGreen"><a href="tours.cfm?tour_id=2"><img src="images/trips_11.png" width="237" height="165" border="0"/></a></th>
+              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=1"><img src="images/trips_8.png" width="240" height="166" border="0"/></a></th>
+              <th class="lightGreen"><a href="tours.cfm?tour_id=2"><img src="images/trips_9.png" width="237" height="165" border="0"/></a></th>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=8"><img src="images/trips_13.png" width="241" height="168" border="0"/></a></th>
+              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=8"><img src="images/trips_11.png" width="241" height="168" border="0"/></a></th>
               <th class="lightGreen"><a href="tours.cfm?tour_id=9"><img src="images/trips_14.png" width="237" height="168" border="0"/></a></th>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=6"><img src="images/trips_09.png" width="244" height="166" border="0" /></a></th>
-              <td class="lightGreen" align="center"><a href="tours.cfm?tour_id=11"><img src="images/trips_05.png" width="244" height="165" alt="mousepad" border="0" /></a></td>
+              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=6"><img src="images/trips_10.png" width="244" height="166" border="0" /></a></th>
+              <td class="lightGreen" align="center"><a href="tours.cfm?tour_id=11"><img src="images/trips_5.png" width="244" height="165" alt="mousepad" border="0" /></a></td>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row"><img src="images/trips_15.png" width="245" height="168" /></th>
+              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=13"><img src="images/trips_15.png" width="245" height="168" border="0" /></th>
               <th class="lightGreen"></th>
             </tr>
             <tr>
