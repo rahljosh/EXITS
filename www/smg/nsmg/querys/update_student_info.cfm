@@ -359,7 +359,7 @@ where programid = #qStudentInfo.programid#
  Program: <strong>#programname.programname# (#qStudentInfo.programid#)</strong><br />
  Cancel Date: <strong>#DateFormat(FORM.date_canceled,'mm/dd/yyyy')#</strong><br />
  Reason: <strong>#FORM.cancelreason#</strong><br />
- Placement Approved: #DateFormat(qStudentInfo.DATEASSIGNED, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.DATEASSIGNED, 'h:mm tt')# <br />
+ Placement Approved: <cfif qStudentInfo.date_host_fam_approved is ''>Unplaced<cfelse>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</cfif> <br />
  Sevis:  <cfif qStudentInfo.sevis_fee_paid_date is ''>Not Paid<cfelse>#DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</cfif><br />
  Cancelled By: #client.name# - #client.email#<br /><br />
  
