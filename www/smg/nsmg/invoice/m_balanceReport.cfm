@@ -67,6 +67,15 @@
 
 </head>
 
+<cfparam name="FORM.selectPrograms" default="0">
+
+<cfscript>
+
+	qTotalAgentBalance = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms);						<!--- returns total balance per agent --->
+	qTotalAgentRefund = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms, balanceType = 0);		<!--- returns total balance per agent per program --->
+
+</cfscript>
+
 <cfquery name="getPrograms" datasource="MySQL">
 SELECT 
 	*
@@ -121,88 +130,6 @@ ORDER BY
 
 </div>
 </cfif>
-    
-<cfquery name="getAgentsReceivable" datasource="MySQL"> 
-SELECT t.agentid, t.businessname, SUM( t.total ) AS totalPerAgent
-FROM (
-SELECT sch.agentid, su.businessname, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
-FROM smg_charges sch
-LEFT JOIN smg_users su ON su.userid = sch.agentid
-<cfif form.selectPrograms IS NOT 'All'>
-    WHERE 
-		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-</cfif>
-GROUP BY agentid
-UNION ALL
-SELECT sch.agentid, su.businessname, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
-FROM smg_payment_charges spc
-LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
-LEFT JOIN smg_users su ON su.userid = sch.agentid
-<cfif form.selectPrograms IS NOT 'All'>
-    WHERE 
-		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-</cfif>
-GROUP BY sch.agentid
-UNION ALL
-SELECT sc.agentid, su.businessname, IFNULL( SUM( sc.amount - sc.amount_applied ) * -1, 0 ) AS total
-FROM smg_credit sc
-LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
-LEFT JOIN smg_users su ON su.userid = sc.agentid
-WHERE sc.active =1
-<cfif form.selectPrograms IS NOT 'All'>
-    AND
-		(sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-			<cfif ListFind(form.selectPrograms, 0) NEQ 0>
-				OR sch.programID IS NULL
-			</cfif>
-		)
-</cfif>
-GROUP BY sc.agentid
-) t
-GROUP BY t.agentid HAVING totalPerAgent > 0
-ORDER BY totalPerAgent DESC    
-</cfquery>
-
-<cfquery name="getAgentsRefund" datasource="MySQL"> 
-SELECT t.agentid, t.businessname, SUM( t.total ) AS totalPerAgent
-FROM (
-SELECT sch.agentid, su.businessname, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
-FROM smg_charges sch
-LEFT JOIN smg_users su ON su.userid = sch.agentid
-<cfif form.selectPrograms IS NOT 'All'>
-    WHERE 
-		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-</cfif>
-GROUP BY agentid
-UNION ALL
-SELECT sch.agentid, su.businessname, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
-FROM smg_payment_charges spc
-LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
-LEFT JOIN smg_users su ON su.userid = sch.agentid
-<cfif form.selectPrograms IS NOT 'All'>
-    WHERE 
-		sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-</cfif>
-GROUP BY sch.agentid
-UNION ALL
-SELECT sc.agentid, su.businessname, IFNULL( SUM( sc.amount - sc.amount_applied ) * -1, 0 ) AS total
-FROM smg_credit sc
-LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
-LEFT JOIN smg_users su ON su.userid = sc.agentid
-WHERE sc.active =1
-<cfif form.selectPrograms IS NOT 'All'>
-    AND
-		(sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-			<cfif ListFind(form.selectPrograms, 0) NEQ 0>
-				OR sch.programID IS NULL
-			</cfif>
-		)
-</cfif>
-GROUP BY sc.agentid
-) t
-GROUP BY t.agentid HAVING totalPerAgent < 0
-ORDER BY totalPerAgent ASC    
-</cfquery>
 
 <cfoutput>
 <div align="center"><h2>Outstanding balances as of #DateFormat(now(), 'mm-dd-yyyy')# at #TimeFormat(now(),'h:mm:ss tt')#<br></h2></div>
@@ -290,8 +217,8 @@ ORDER BY totalPerAgent ASC
 <br/>
 
 <cfset arrayEmailAgent = ArrayNew(1)>
-<cfloop query="getAgentsReceivable">
-	<cfset aEmailAgent = #arrayAppend(arrayEmailAgent, "#getAgentsReceivable.agentid#")#>
+<cfloop query="qTotalAgentBalance">
+	<cfset aEmailAgent = #arrayAppend(arrayEmailAgent, "#qTotalAgentBalance.agentid#")#>
 </cfloop>
 <cfoutput>
 	<script type="text/javascript">
@@ -326,7 +253,7 @@ ORDER BY totalPerAgent ASC
 <strong><small>RECEIVABLES</small></strong>
 <br/>
 
-<cfif getAgentsReceivable.recordCount EQ 0>
+<cfif qTotalAgentBalance.recordCount EQ 0>
 	<small>There are not receivables for the selected programs</small>
 <cfelse>
 <table class="frame">
@@ -364,11 +291,11 @@ ORDER BY totalPerAgent ASC
 <cfparam name="getBalancePerAgent.totalPerAgent" default="0">    
 <cfparam name="grandTotalBal" default="0">
 
-<cfoutput query="getAgentsReceivable">
+<cfoutput query="qTotalAgentBalance">
 
-    <cfinput type="hidden" name="agentId" value="#getAgentsReceivable.agentid#">
-    <cfinput type="hidden" name="balPerAgent#getAgentsReceivable.agentid#" value="#getAgentsReceivable.totalPerAgent#">    
-    <cfset intlAgentId = #getAgentsReceivable.agentid#>
+    <cfinput type="hidden" name="agentId" value="#qTotalAgentBalance.agentid#">
+    <cfinput type="hidden" name="balPerAgent#qTotalAgentBalance.agentid#" value="#qTotalAgentBalance.totalPerAgent#">    
+    <cfset intlAgentId = #qTotalAgentBalance.agentid#>
         
     <cfset iseBal = 0>
     <cfset blueBal = 0>
@@ -383,113 +310,52 @@ ORDER BY totalPerAgent ASC
 
     <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12">
     
-        <cfquery name="getBalancePerAgentReceivable" datasource="MySQL"> 
-        SELECT t.agentid, t.businessname, SUM(t.total) AS totalPerAgent
-        FROM (
-        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(sch.amount_due),0) AS total, (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sch.companyid
-END) AS testCompId
-        FROM smg_charges sch
-        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
-        LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE sch.agentid = #VAL(variables.intlAgentId)#
-        <cfif form.selectPrograms IS NOT 'All'>
-			AND
-				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-        </cfif>
-        GROUP BY testCompId HAVING testCompId = #indexCompId#
-        UNION ALL
-        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total,  
-(CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sch.companyid
-END) AS testCompId
-        FROM smg_payment_charges spc
-        LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
-        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
-        LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE  sch.agentid = #VAL(variables.intlAgentId)#
-        <cfif form.selectPrograms IS NOT 'All'>
-			AND
-				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-        </cfif>
-        GROUP BY testCompId HAVING testCompId = #indexCompId#
-        UNION ALL
-        SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, 
-(CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sc.companyid
-END) AS testCompId
-        FROM smg_credit sc
-        LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
-        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
-        LEFT JOIN smg_users su ON su.userid = sc.agentid
-        WHERE sc.active =1
-        AND sc.agentid = #VAL(variables.intlAgentId)#
-        <cfif form.selectPrograms IS NOT 'All'>
-			AND
-				(sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-					<cfif ListFind(form.selectPrograms, 0) NEQ 0>
-						OR sch.programID IS NULL
-					</cfif>
-				)
-        </cfif>
-        GROUP BY testCompId HAVING testCompId = #indexCompId#
-        ) t
-        GROUP BY t.agentid  
-        </cfquery>
+    	<!--- query qProgramBalance returns the balance per agent per program --->
+		<cfscript>
+			qProgramBalance = APPCFC.INVOICE.programBalance(agentId = qTotalAgentBalance.agentId, programChoice = FORM.selectPrograms, companyId = indexCompId);
+		</cfscript>
         
-        <cfif getBalancePerAgentReceivable.recordCount NEQ 0>          
+        <cfif qProgramBalance.recordCount NEQ 0>          
     
             <cfswitch expression="#indexCompId#">
                 <cfcase value="1">
-                    <cfset iseBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset iseBal = #qProgramBalance.totalPerAgent#>
                     <cfset totaliseBal = #variables.totaliseBal# + #variables.iseBal#>
                 </cfcase>
                 <cfcase value="2">
-                    <cfset blueBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset blueBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalBlueBal = #variables.totalBlueBal# + #variables.BlueBal#>
                 </cfcase>
                 <cfcase value="3">
-                    <cfset greenBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset greenBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalGreenBal = #variables.totalGreenBal# + #variables.GreenBal#>
                 </cfcase>
                 <cfcase value="4">
-                    <cfset yellowBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset yellowBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalYellowBal = #variables.totalYellowBal# + #variables.YellowBal#>
                 </cfcase>
                 <cfcase value="12">
-                    <cfset brianBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset brianBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalbrianBal = #variables.totalbrianBal# + #variables.brianBal#>
                 </cfcase>
                 <cfcase value="5">
-                    <cfset smgBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset smgBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalSmgBal = #variables.totalSmgBal# + #variables.smgBal#>
                 </cfcase>
                 <cfcase value="7">
-                    <cfset traineeBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset traineeBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalTraineeBal = #variables.totalTraineeBal# + #variables.TraineeBal#>
                 </cfcase>
                 <cfcase value="8">
-                    <cfset wandtBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset wandtBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalWandtBal = #variables.totalWandtBal# + #variables.WandtBal#>
                 </cfcase>
                 <cfcase value="9">
-                    <cfset h2bBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset h2bBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalH2bBal = #variables.totalH2bBal# + #variables.H2bBal#>
                 </cfcase>
                 <cfcase value="10">
-                    <cfset caseBal = #getBalancePerAgentReceivable.totalPerAgent#>
+                    <cfset caseBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalCaseBal = #variables.totalCaseBal# + #variables.CaseBal#>
                 </cfcase>
             </cfswitch>
@@ -498,15 +364,15 @@ END) AS testCompId
     
     </cfloop>
             
-    <cfset grandTotalBal = #variables.grandTotalBal# + #getAgentsReceivable.totalPerAgent#>
+    <cfset grandTotalBal = #variables.grandTotalBal# + #qTotalAgentBalance.totalPerAgent#>
             
-    <tr <cfif getAgentsReceivable.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
+    <tr <cfif qTotalAgentBalance.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
     	<cfif NOT ISDEFINED('form.printFormat')>
             <td align="center">
-                <cfinput name="email#getAgentsReceivable.agentid#" id="email#getAgentsReceivable.agentid#" type="checkbox" checked="yes" align="absmiddle">
+                <cfinput name="email#qTotalAgentBalance.agentid#" id="email#qTotalAgentBalance.agentid#" type="checkbox" checked="yes" align="absmiddle">
             </td>
         </cfif>
-        <td class="two">#getAgentsReceivable.businessname# (#getAgentsReceivable.agentid#)</td> 
+        <td class="two">#qTotalAgentBalance.businessname# (#qTotalAgentBalance.agentid#)</td> 
         <td class="two <cfif variables.iseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.iseBal)#</td>
         <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
         <td class="two <cfif variables.greenBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.greenBal)#</td>
@@ -517,7 +383,7 @@ END) AS testCompId
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
         <td class="two <cfif variables.h2bBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.h2bBal)#</td>
         <td class="two <cfif variables.caseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.caseBal)#</td>
-        <td class="two <cfif getAgentsReceivable.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(getAgentsReceivable.totalPerAgent)#</td>
+        <td class="two <cfif qTotalAgentBalance.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentBalance.totalPerAgent)#</td>
     </tr>
 
 </cfoutput>
@@ -552,7 +418,7 @@ END) AS testCompId
 <strong><small>REFUNDS DUE</small></strong>
 <br/>
 
-<cfif getAgentsRefund.recordCount EQ 0>
+<cfif qTotalAgentRefund.recordCount EQ 0>
 	<small>There are not refunds due for the selected programs</small>
 	<cfabort>
 </cfif>
@@ -587,9 +453,9 @@ END) AS testCompId
 <cfset getBalancePerAgent.totalPerAgent =0>
 <cfset grandTotalBal =0>   
 
-<cfoutput query="getAgentsRefund">
+<cfoutput query="qTotalAgentRefund">
 
-    <cfset intlAgentId = #getAgentsRefund.agentid#>
+    <cfset intlAgentId = #qTotalAgentRefund.agentid#>
         
     <cfset iseBal = 0>
     <cfset blueBal = 0>
@@ -604,113 +470,52 @@ END) AS testCompId
 
     <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12">
     
-        <cfquery name="getBalancePerAgentRefund" datasource="MySQL"> 
-        SELECT t.agentid, t.businessname, SUM(t.total) AS totalPerAgent
-        FROM (
-        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(sch.amount_due),0) AS total, (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sch.companyid
-END) AS testCompId
-        FROM smg_charges sch
-        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
-        LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE sch.agentid = #VAL(variables.intlAgentId)#
-        <cfif form.selectPrograms IS NOT 'All'>
-			AND
-				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-        </cfif>
-        GROUP BY testCompId HAVING testCompId = #indexCompId#
-        UNION ALL
-        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total,  
-(CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sch.companyid
-END) AS testCompId
-        FROM smg_payment_charges spc
-        LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
-        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
-        LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE  sch.agentid = #VAL(variables.intlAgentId)#
-        <cfif form.selectPrograms IS NOT 'All'>
-			AND
-				sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-        </cfif>
-        GROUP BY testCompId HAVING testCompId = #indexCompId#
-        UNION ALL
-        SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, 
-(CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sc.companyid
-END) AS testCompId
-        FROM smg_credit sc
-        LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
-        LEFT JOIN smg_programs sp ON sp.programid = sch.programid
-        LEFT JOIN smg_users su ON su.userid = sc.agentid
-        WHERE sc.active =1
-        AND sc.agentid = #VAL(variables.intlAgentId)#
-        <cfif form.selectPrograms IS NOT 'All'>
-			AND
-				(sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.selectPrograms#" list="yes"> )
-					<cfif ListFind(form.selectPrograms, 0) NEQ 0>
-						OR sch.programID IS NULL
-					</cfif>
-				)
-        </cfif>
-        GROUP BY testCompId HAVING testCompId = #indexCompId#
-        ) t
-        GROUP BY t.agentid    
-        </cfquery>
+    	<!--- query qProgramBalance returns the balance per agent per program --->
+		<cfscript>
+			qProgramBalance = APPCFC.INVOICE.programBalance(agentId = qTotalAgentBalance.agentId, programChoice = FORM.selectPrograms, companyId = indexCompId);
+		</cfscript>
         
-        <cfif getBalancePerAgentRefund.recordCount NEQ 0>          
+        <cfif qProgramBalance.recordCount NEQ 0>          
     
             <cfswitch expression="#indexCompId#">
                 <cfcase value="1">
-                    <cfset iseBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset iseBal = #qProgramBalance.totalPerAgent#>
                     <cfset totaliseBal = #variables.totaliseBal# + #variables.iseBal#>
                 </cfcase>
                 <cfcase value="2">
-                    <cfset blueBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset blueBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalBlueBal = #variables.totalBlueBal# + #variables.BlueBal#>
                 </cfcase>
                 <cfcase value="3">
-                    <cfset greenBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset greenBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalGreenBal = #variables.totalGreenBal# + #variables.GreenBal#>
                 </cfcase>
                 <cfcase value="4">
-                    <cfset yellowBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset yellowBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalYellowBal = #variables.totalYellowBal# + #variables.YellowBal#>
                 </cfcase>
                 <cfcase value="12">
-                    <cfset brianBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset brianBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalbrianBal = #variables.totalbrianBal# + #variables.brianBal#>
                 </cfcase>
                 <cfcase value="5">
-                    <cfset smgBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset smgBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalSmgBal = #variables.totalSmgBal# + #variables.smgBal#>
                 </cfcase>
                 <cfcase value="7">
-                    <cfset traineeBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset traineeBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalTraineeBal = #variables.totalTraineeBal# + #variables.TraineeBal#>
                 </cfcase>
                 <cfcase value="8">
-                    <cfset wandtBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset wandtBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalWandtBal = #variables.totalWandtBal# + #variables.WandtBal#>
                 </cfcase>
                 <cfcase value="9">
-                    <cfset h2bBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset h2bBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalH2bBal = #variables.totalH2bBal# + #variables.H2bBal#>
                 </cfcase>
                 <cfcase value="10">
-                    <cfset caseBal = #getBalancePerAgentRefund.totalPerAgent#>
+                    <cfset caseBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalCaseBal = #variables.totalCaseBal# + #variables.caseBal#>
                 </cfcase>
             </cfswitch>
@@ -719,10 +524,10 @@ END) AS testCompId
     
     </cfloop>
             
-    <cfset grandTotalBal = #variables.grandTotalBal# + #getAgentsRefund.totalPerAgent#>
+    <cfset grandTotalBal = #variables.grandTotalBal# + #qTotalAgentRefund.totalPerAgent#>
             
-    <tr <cfif getAgentsRefund.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
-        <td class="two">#getAgentsRefund.businessname# (#getAgentsRefund.agentid#)</td> 
+    <tr <cfif qTotalAgentRefund.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
+        <td class="two">#qTotalAgentRefund.businessname# (#qTotalAgentRefund.agentid#)</td> 
         <td class="two <cfif variables.iseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.iseBal)#</td>
         <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
         <td class="two <cfif variables.greenBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.greenBal)#</td>
@@ -733,7 +538,7 @@ END) AS testCompId
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
         <td class="two <cfif variables.h2bBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.h2bBal)#</td>
         <td class="two <cfif variables.caseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.caseBal)#</td>
-        <td class="two <cfif getAgentsRefund.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(getAgentsRefund.totalPerAgent)#</td>
+        <td class="two <cfif qTotalAgentRefund.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentRefund.totalPerAgent)#</td>
     </tr>
 
 </cfoutput>
