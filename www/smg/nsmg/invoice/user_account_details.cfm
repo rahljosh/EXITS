@@ -922,7 +922,7 @@ where agentid = #url.userid# <cfif (FORM.companyID EQ 10) AND form.view is not '
 								and sc.companyid = #FORM.companyID# 
 							 </cfif>
 and  active = 1
-ORDER BY creditid DESC
+ORDER BY creditid DESC, stuid DESC, chargeid ASC
 </cfquery>
 
 <cfform method="post">
@@ -991,7 +991,7 @@ where agentid = #url.userid# <cfif FORM.companyID EQ 10 AND form.view is not 'al
 								and smg_credit.companyid = #FORM.companyID# 
 							 </cfif>
 and active = 0
-ORDER BY creditid DESC
+ORDER BY creditid DESC, stuid DESC, chargeid ASC
 </Cfquery>
 
 <cfform method="post">
