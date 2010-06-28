@@ -122,15 +122,15 @@
     AND agentid = #url.userid#
     </cfquery>
     
-    <cfloop query="compId">
+    <cfquery name="getLastCredit" datasource="MySQL">
+    SELECT MAX(creditid) AS creditid
+    FROM smg_credit
+    </cfquery>
     
-        <cfquery name="getLastCredit" datasource="MySQL">
-        SELECT MAX(creditid) AS creditid
-        FROM smg_credit
-        </cfquery>
-        
-        <cfset lastCredit = getLastCredit.creditid>
-        <cfset creditNumb = variables.lastCredit + 1>
+    <cfset lastCredit = getLastCredit.creditid>
+    <cfset creditNumb = variables.lastCredit + 1>
+    
+    <cfloop query="compId">
         
         <cfquery name="credNumber" datasource="MySQL">
         UPDATE smg_credit
