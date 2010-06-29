@@ -1,0 +1,220 @@
+@charset "utf-8";
+/* CSS Document */
+
+/************************************************************************************
+
+Login Box
+
+************************************************************************************/
+body {
+	color: #8A9EA7;
+	background-image: url(../../images/onlineApp/background.jpg);
+	background-repeat: repeat;
+	background-color: #BCC7CD;
+	height: auto;
+	width: auto;
+}
+
+#mainContent {
+	margin: 0px;
+	padding: 0px;
+	height: auto;
+	width: 1000px;
+	z-index: 1;
+	position: absolute;
+}
+
+.boxContainer {
+	padding: 0px;
+	height: auto;
+	width: 700px;
+	margin:60px 100px 0px 200px;
+}
+
+.boxTop {
+	margin: 0px;
+	padding: 0px;
+	width: 700px;
+	background-image: url(../../images/onlineApp/loginTop.png);
+	background-repeat: no-repeat;
+	height: 55px;
+}
+
+.boxTile {
+	background-image: url(../../images/onlineApp/loginTile.png);
+	background-repeat: repeat-y;
+	width: 700px;
+	height: 450px;
+}
+
+.boxBot {
+	background-image: url(../../images/onlineApp/loginBot.png);
+	height: 52px;
+	width: 700px;
+	background-repeat: no-repeat;
+}
+
+#loginBox {
+	background-color: #FFF;
+	padding: 0px;
+	width: 605px;
+	z-index: 10;
+	margin:105px 0px 0px 245px;
+	position: absolute;
+	height: 225px;
+}
+
+.loginTop {
+	background-image: url(../../images/onlineApp/colorTop.png);
+	background-repeat: no-repeat;
+	width: 700px;
+	height: 20px;
+	margin: 0px;
+	padding: 0px;
+}
+
+.loginMain {
+	background-color: #002F44;
+	background-image: url(../../images/onlineApp/logTilecolor.png);
+	background-repeat: repeat-y;
+	margin: 0px;
+	padding:0px;
+	width: 608px;
+	height: 110px;
+}
+
+#logoContent {
+	height: 75px;
+	width: 560px;
+	position: absolute;
+	z-index: 10;
+	margin-top: 0px;
+	margin-left: 25px;
+}
+
+.schoolName {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 28px;
+}
+
+.newUserBox {
+	float: left;
+	height: 320px;
+	width: 290px;
+	margin:25px 0px 0px 2px;
+	text-align: left;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	color: #999;
+	border:1px solid #052f44; /* #d5d6d6; */
+}
+
+.returningUserBox {
+	float: right;
+	height: 320px;
+	width: 290px;
+	margin:25px 0px 0px 0px;
+	text-align: left;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 10px;
+	color: #999;
+	border:1px solid #052f44; /* #d5d6d6; */
+}
+
+.button {
+	background-image: url(../../images/onlineApp/button.png);
+	background-repeat: no-repeat;
+	height: 40px;
+	width: 230px;
+	float: right;
+	background-position: right;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 14px;
+	color: #999;
+	text-align: left;
+	padding:30px 0px 0px 0px;
+}
+
+
+/************************************************************************************
+
+Login Options
+
+************************************************************************************/
+.hiddenDiv {
+	display:none;	
+}
+
+/************************************************************************************
+
+Form / Password Strenght
+
+************************************************************************************/
+
+form .largeField {
+	font-size : 10px;
+	font-family: Verdana, Arial, Helvetica, sans-serif; /* font-family : arial, sans-serif; */
+	border : 1px solid #999;
+	width : 175px;
+}
+
+.password {
+	font-size : 10px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	border : 1px solid #999;
+	width : 175px;
+}
+
+.pstrength-minchar {
+	font-size : 10px;
+}
+
+/************************************************************************************
+
+Login Text
+
+************************************************************************************/
+
+.userTypeBox {
+	background-color: #052f44;
+	padding:2px;
+	margin-bottom:10px;
+}
+
+.userTypeBox h1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 1.3em;
+	font-weight: bold;	
+	color: #FFF; /* color: #003300; */
+	margin: 1px 0px 1px 0px;
+	padding:0px 0px 0px 10px;
+}
+
+.style1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.style2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #003300;
+}
+
+a:link {
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:active {
+	text-decoration: none;
+}
