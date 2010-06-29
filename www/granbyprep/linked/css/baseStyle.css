@@ -1,0 +1,62 @@
+@charset "utf-8";
+/* CSS Document */
+
+/***********************************************************************************
+
+Form Errors
+These are the styles used to display the form errors.
+
+************************************************************************************/
+table.form-errors {
+	/* margin-bottom: 12px;
+	float: inherit; 
+	padding-top: 10px;
+	*/
+	width: 100%;
+	display: block;
+}
+
+table.form-errors TD.errors {
+	color: #FF0000;
+	text-align: left;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	padding:0px 10px 0px 10px;
+}
+
+table.form-errors TD.errors DIV.header {
+	color: #AA0000;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+table.form-errors TD.errors UL.list {
+	padding-left:15px;
+}
+
+/************************************************************************************
+
+Page Messages
+These are the styles used to display the page messages.
+
+************************************************************************************/
+table.page-messages {
+	margin-bottom: 12px;
+	float: left;
+	width: 100%;
+	display: block;
+	padding-top: 10px;
+}
+
+table.page-messages TD.message {
+	color: #CC0000;
+	/*CC0000 | FF0000*/
+	text-align: left;
+}
+
+table.page-messages TD.message A {
+}
+
+table.page-messages TD.message IMG {
+}
+
