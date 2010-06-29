@@ -63,6 +63,8 @@ a:active {
 	WHERE 	   	active = '1' 
 			 	AND hostid = '0' 
 				AND direct_placement = '0'
+                <!--- Only ISE Students --->
+                AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">)
 	ORDER BY rand()
 	LIMIT 5
 </cfquery>
