@@ -372,7 +372,7 @@ where programid = #qStudentInfo.programid#
                 <cfinvokeargument name="email_to" value="#client.finance_email#">
                 <cfinvokeargument name="email_subject" value="Student Cancellation: #intagent.businessname# -(#qStudentInfo.intrep#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#) - #programname.programname# (#qStudentInfo.programid#)">
                 <cfinvokeargument name="email_message" value="#email_message#">
-               <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#">
+               <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#, pat@iseusa.com, ellen@iseusa.com">
                 <cfinvokeargument name="email_from" value="#client.name# <#client.email#>">
             </cfinvoke>
    

@@ -33,7 +33,8 @@
             <cfquery name="qGetCompany" datasource="mysql">
                 SELECT 
                     companyid, 
-                    companyname
+                    companyname,
+                    website
                 FROM 
                     smg_companies 
                 WHERE
@@ -160,7 +161,7 @@
         
         <!--- companyname, programmanager and accesslevelname are used in header.cfm.  These are also set in forms/change_access_level.cfm. --->
         <cfquery name="qGetCompany" datasource="#APPLICATION.dsn#">
-            SELECT companyname, team_id, pm_email, support_email, url, companyshort_nocolor, projectManager, financeEmail
+            SELECT companyname, team_id, pm_email, support_email, url, companyshort_nocolor, projectManager, financeEmail,website
             FROM smg_companies
             WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
         </cfquery>
@@ -173,6 +174,17 @@
         <cfset CLIENT.finance_email = qGetCompany.financeEmail>
 		<cfset CLIENT.support_email = qGetCompany.support_email> 
         <cfset CLIENT.site_url = qGetCompany.url>
+        <!----Get List of sub companies assigned to logged in company---->
+        <cfquery name="company_list" datasource="#APPLICATION.dsn#">
+        select companyid
+        from smg_companies
+        where website = '#qGetCompany.website#'
+        </cfquery>
+        <cfset compList = ''>
+        <cfloop query="company_list">
+        <cfset compList = #ListAppend(compList, companyid)#>
+        </cfloop>
+        <cfset CLIENT.globalCompanyList = '#compList#'>
         
         <cfquery name="get_usertype" datasource="#APPLICATION.dsn#">
             SELECT usertype
