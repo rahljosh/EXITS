@@ -773,10 +773,7 @@
                                 WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
                                 AND 
 						        	smg_students.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-								<cfif CLIENT.companyid eq 10>
-	                                AND
-                                    	smg_students.companyid = 10
-                                </cfif>
+								AND smg_students.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
                             </cfquery>
                             <!----Query for supervised students---->
                             <cfquery name="get_supervised_students" datasource="#application.dsn#">
@@ -791,10 +788,9 @@
                                  WHERE smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
                                  AND 
 						        	smg_students.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-								 <cfif CLIENT.companyid eq 10>
-	                                AND
-                                    	smg_students.companyid = 10
-                                </cfif>
+								 
+	                               AND smg_students.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
+                                
                             </cfquery>				
                             <style type="text/css">
                             <!--
@@ -805,6 +801,7 @@
                             }
                             -->
                             </style>
+                            
                             <table width="480" border="0">
                                 <Tr>
                                     <td width="30" align="left"><u>ID</u></td>
@@ -894,7 +891,7 @@
                                 from smg_rep_payments
                                 where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
                                 and transtype = 'supervision'
-                               
+                               AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
                                
                             </Cfquery>
                             <Cfquery name="place_payments" datasource="#application.dsn#">
@@ -902,7 +899,7 @@
                                 from smg_rep_payments
                                 where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
                                 and transtype = 'placement'
-                               
+                                AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
                             </Cfquery>		
                             <strong>Supervising Payments:</strong> <Cfif super_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(super_payments.amount, 'local')#</cfif><br>
                             <strong>Placement Payments:</strong> <Cfif place_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(place_payments.amount, 'local')#</cfif><br>

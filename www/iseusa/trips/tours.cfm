@@ -99,6 +99,19 @@ border:solid 1px;
 margin-right: 15px;
 margin-left: 0px;
 }
+.whtMiddletours{
+	background-image: url(../images/whtBoxMiddle.png);
+	background-repeat: repeat-y;
+	margin: 0px;
+	height: auto;
+	min-height: 50px;
+	text-align: justify;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	min-height: 1500px;
+}
 -->
 </style></head>
 
@@ -116,7 +129,7 @@ margin-left: 0px;
 <div id="mainContent">
     <div id="subPages">
       <div class="whtTop"></div>
-      <div class="whtMiddleStretch">
+      <div class="whtMiddletours">
         <div class="tripsTours">
           <h1 class="enter">ISE Student Tours</h1>
           <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.</p>
@@ -218,10 +231,11 @@ margin-left: 0px;
           <tr><td height="45" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
                 <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td></tr>
         </table>
+        <br />
         </cfoutput>
-        </div>
+        <!-- endtripTours --></div>
 
-        <!-- end whtMiddle --></div>
+        <!-- end whtMiddleTours --></div>
       <div class="whtBottom"></div>
       <!-- end subPages --></div>
     <!-- end mainContent --></div>
