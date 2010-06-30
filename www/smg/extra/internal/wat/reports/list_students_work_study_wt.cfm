@@ -44,7 +44,7 @@
         WHERE
         	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         AND
-        	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">		
+        	c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">		
         <cfif VAL(FORM.isSevisID)>
         AND 
         	c.ds2019 != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
