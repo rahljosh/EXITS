@@ -95,6 +95,7 @@ Starting Student Picture Transfer...
 
 	<cfhttp url='#StudentXMLFile.applications.application[i].page4_5.images.image[fampic].url.xmltext#'  method="get" path='#AppPath.onlineApp.familyAlbum##client.studentid#/' file='#StudentXMLFile.applications.application[i].page4_5.images.image[fampic].XmlAttributes.nr#.jpg' multipart="yes" getasbinary="yes" username="exits" password="34uFka">	
 
+
 		<cfquery name="pic_description" datasource="MySQL">
 				INSERT INTO smg_student_app_family_album (description, filename, studentid)
 					values ('#StudentXMLFile.applications.application[i].page4_5.images.image[fampic].description.XmlText#','#StudentXMLFile.applications.application[i].page4_5.images.image[fampic].XmlAttributes.nr#.jpg',#client.studentid#)		
