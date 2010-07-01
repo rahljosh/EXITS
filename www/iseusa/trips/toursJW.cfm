@@ -11,10 +11,21 @@
 <link href="../css/ISEstyle.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 <!--
+#footer3 {
+	clear: both;
+	height: 40%;
+	margin: 0;
+	background-color: #000;
+	padding-top: 0;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+	bottom: -8px;
+	display: block;
+}
 .tripsTours {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	height: 1600px;
 	width: 675px;
 	margin-left: 35px;
 	margin-top: 10px;
@@ -52,11 +63,23 @@ a:active {
 	font-weight: bold;
 	font-size: 14px;
 }
+.TitlesLG {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #000066;
+	font-weight: bold;
+	font-size: 20px;
+}
 .SubTitle {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	color: #2E4F7A;
 	font-weight: bold;
 	font-size: 12px;
+}
+.SubTitleLG {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #2E4F7A;
+	font-weight: bold;
+	font-size: 16px;
 }
 .BottonText {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -99,13 +122,29 @@ border:solid 1px;
 margin-right: 15px;
 margin-left: 0px;
 }
+.whtMiddletours2{
+	background-image: url(../images/whtBoxMiddle.png);
+	background-repeat: repeat-y;
+	margin: 0px;
+	text-align: justify;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+.bBackground {
+	background-color: #C5DCEA;
+	border: thin solid #000;
+	text-align: center;
+}
 -->
 </style></head>
 
 <body class="oneColFixCtr">
 <div id="topBar">
+<cfinclude template="../topBarLinks.cfm">
 <div id="logoBox"><a href="../index.cfm"><img src="../images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
-<cfinclude template="../topBarLinks.cfm"><!-- end topBar --></div>
+<!-- end topBar --></div>
 <div id="container">
 <div class="spacer2"></div>
 <div class="title"><cfinclude template="titleTrips.cfm"><!-- end title --></div>
@@ -113,14 +152,14 @@ margin-left: 0px;
   <cfinclude template="../tabsBar.cfm">
   <!-- end tabsBar --></div>
 <div id="mainContent">
-    <div id="subPages">
+<div id="subPages">
       <div class="whtTop"></div>
-      <div class="whtMiddleStretch">
+  <div class="whtMiddletours2">
         <div class="tripsTours">
           <h1 class="enter">ISE Student Tours</h1>
           <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.</p>
          <cfoutput>
-<cfset company = 'CASE'>
+<cfset company = 'ISE'>
  <br>
         <cfquery name="tours" datasource="mysql">
 			SELECT * FROM smg_tours WHERE tour_id = #url.tour_id#
@@ -130,34 +169,25 @@ margin-left: 0px;
         <tr><td height="45" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
                 <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td></tr>
           <tr>
-            <td width="665"><img src="http://www.student-management.com/nsmg/uploadedfiles/student-tours/#tours.tour_img1#.jpg" width="300" border="0" align="right" class="image-right">
-                <table width="50%" border="0" align="center" cellpadding="5" cellspacing="0">
-                  <tr>
-                    <td><span class="Titles">
+            <td width="665"><table width="101%" border="0" align="center" cellpadding="5" cellspacing="0" class="bBackground">
+              <tr>
+                    <td width="28%" height="62" align="center">
 					
 						<cfset tour_name = Replace(tours.tour_name, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  	<cfset tour_name = Replace(tour_name, ("!company!"), company, "ALL")>
-					  	#tour_name#
-						
-						</span><br>
-                      	<span class="SubTitle"><font size="1">
-					  
+                        <span class="TitlesLG">#tour_name#</span></td>
+                    <td width="48%">
 					  <cfset tour_date = Replace(tours.tour_date, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  <cfset tour_date = Replace(tour_date, ("!company!"), company, "ALL")>
-					  #tour_date#
-					  
-					  </font></span></td>
-                    <td><table width="90" class="Boxx" align="center" cellpadding="5" cellspacing="0">
-                        <tr>
-                          <td><div align="center">
-						  	<cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
+                      	  <span class="SubTitleLG">#tour_date#</span>
+<cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
-					  		#tour_price#
-					  </div></td>
-                        </tr>
-                    </table>
-					
-					</td>
+					  		<span class="SubTitle"><br />
+					  		#tours.tour_length#</span></td>
+                    <td width="24%"><a href="http://trips.exitsapplication.com/?tour_id=#tour_id#"><img src="images/reserve.png" width="146" height="38" alt="reserve spot" border="0" /></a><cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
+					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
+					  		<span class="SubTitle">
+					  		#tour_price#</span></td>
                   </tr>
                 </table>
               <span class="RegularText">
@@ -169,7 +199,7 @@ margin-left: 0px;
 				#tour_description#
 				</span><br>
               <br>
-                <span class="SubTitle"> <img src="http://www.student-management.com/nsmg/uploadedfiles/student-tours/#tours.tour_img2#.jpg" width="175" hspace="10" border="0" align="left" class="image-left"> Flights:</span><br>
+                <span class="SubTitle"> <img src="http://www.student-management.com/nsmg/uploadedfiles/student-tours/#tours.tour_img2#.jpg" width="215" hspace="10" border="0" align="left" class="image-left"> Flights:</span><br>
                 <span class="RegularText">
 				<cfset tour_flights = Replace(tours.tour_flights, (Chr(13) & Chr(10)), "<br />", "ALL")>
 				<cfset tour_flights = Replace(tour_flights, ("!company!"), company, "ALL")>
@@ -179,8 +209,7 @@ margin-left: 0px;
                 <span class="SubTitle">Payment:</span><br>
 				<cfset tour_payment = Replace(tours.tour_payment, (Chr(13) & Chr(10)), "<br />", "ALL")>
 				<cfset tour_payment = Replace(tour_payment, ("!company!"), company, "ALL")>
-				#tour_payment#
-                <br>
+				#tour_payment#<br>
                 <br>
 				<span class="SubTitle">Tour Cancellation Fees and Penalties:</span><br>
 				<cfset tour_cancelfee = Replace(tours.tour_cancelfee, (Chr(13) & Chr(10)), "<br />", "ALL")>
@@ -216,13 +245,15 @@ margin-left: 0px;
           </tr>
           <tr><td height="45" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
                 <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td></tr>
-        </table>
+        </table></div>
+        <br />
         </cfoutput>
-        </div>
-
-        <!-- end whtMiddle --></div>
+        <div id="main" class="clearfix"></div>
+      <!-- endtripTours --></div>
+      <div id="main" class="clearfix"></div>
+      <!-- end whtMiddle --></div>
       <div class="whtBottom"></div>
-      <!-- end subPages --></div>
+      <!-- end subpages --></div>
     <!-- end mainContent --></div>
 <!-- end container --></div>
 <div id="main" class="clearfix"></div>
