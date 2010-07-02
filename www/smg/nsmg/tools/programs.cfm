@@ -55,7 +55,6 @@
 		<td><b>End Date</b></td>
         <td><b>Insurance Start </b></td>
 		<td><b>Insurance End </b></td>
-        <td><b>Company</b></td>
 		<td><b>Season</b></td>
 		<td><b>SMG Season</b></td>
 		<td><b>Incentive Trip</b></td>
@@ -71,7 +70,6 @@
 		<td>#DateFormat(enddate, 'mm-dd-yyyy')#</td>
         <td>#DateFormat(insurance_startDate, 'mm-dd-yyyy')#</td>
 		<td>#DateFormat(insurance_endDate, 'mm-dd-yyyy')#</td>
-		<td>#companyshort#</td>
 		<td>#season#</td>
 		<td>#smgseason#</td>
 		<td>#trip_place# <cfif trip_year NEQ ''>- #DateFormat(trip_year, 'yyyy')#</cfif></td>
