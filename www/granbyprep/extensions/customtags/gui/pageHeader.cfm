@@ -96,11 +96,13 @@
                             </a>
 						</div>
                                                 
+						
+                                                                        
                         <div class="topRight">
-                            <a href="#CGI.SCRIPT_NAME#?action=initial" class="ui-corner-top">Home</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=help" class="ui-corner-top">Get Help</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=faq" class="ui-corner-top">FAQ</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=myAccount" class="ui-corner-top">Update Login</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=home" class="ui-corner-top <cfif Find("home", CGI.QUERY_STRING)> selected </cfif>">Home</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=help" class="ui-corner-top <cfif Find("help", CGI.QUERY_STRING)> selected </cfif>">Get Help</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=faq" class="ui-corner-top <cfif Find("faq", CGI.QUERY_STRING)> selected </cfif>">FAQ</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=myAccount" class="ui-corner-top <cfif Find("myAccount", CGI.QUERY_STRING)> selected </cfif>">Update Login</a>
                             <a href="#CGI.SCRIPT_NAME#?action=logoff" class="ui-corner-top">Logoff</a>
 
                             <div class="welcomeMessage">
@@ -121,6 +123,7 @@
                     <div class="leftSideBar ui-corner-all">
                         
                         <div class="insideBar form-container ">
+                        	<a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Online Application</a> 
                             <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Application CheckList</a> 
                                 <ul>
                                     <li>Student Information</li>

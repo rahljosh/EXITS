@@ -22,11 +22,11 @@ var displayForgotPass = function() {
 	if ($("#forgotPassForm").css("display") == "none") {
 		$("#loginForm").slideToggle(500);
 		$("#forgotPassForm").slideToggle(500);	
-		$("#email").focus();
+		$("#forgotEmail").focus();
 	} else {
 		$("#forgotPassForm").slideToggle(500);	
 		$("#loginForm").slideToggle(500);
-		$("#username").focus();
+		$("#loginEmail").focus();
 	}
 	
 }

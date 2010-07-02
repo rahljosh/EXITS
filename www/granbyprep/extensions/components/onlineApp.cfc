@@ -17,7 +17,7 @@
 	<cffunction name="Init" access="public" returntype="onlineApp" output="No" hint="Returns the initialized OnlineApp object">
 
 		<cfscript>
-			// There is nothing really to initiate, so just return this
+			// Return this initialized instance
 			return(this);
 		</cfscript>
 
@@ -26,14 +26,11 @@
 
 	<!--- Login --->
 	<cffunction name="doLogin" access="public" returntype="void" hint="Logs in a student">
-		<cfargument name="studentID" default="0">
+		<cfargument name="studentID" type="numeric" default="0">
 		
         <cfscript>
-			// set Student session variable 
-			SESSION.STUDENT.ID = ARGUMENTS.studentID;
-			
-			// Set Student Session Variables  (firstName / lastname / lastLoggedInDate)
-			APPLICATION.CFC.STUDENT.setStudentSession();
+			// Set Student Session Variables  (studentID / firstName / lastname / lastLoggedInDate / myUploadFolder )
+			APPLICATION.CFC.STUDENT.setStudentSession(ID=ARGUMENTS.studentID);
 			
 			// Record last logged in date
 			APPLICATION.CFC.STUDENT.updateLoggedInDate(ID=ARGUMENTS.studentID);

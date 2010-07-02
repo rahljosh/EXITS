@@ -14,48 +14,12 @@
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 
 	<!--- Param FORM Variables --->
-    <cfparam name="FORM.submittedSec3" default="0">
+    <cfparam name="FORM.submittedType" default="">
     <cfparam name="FORM.currentTabID" default="0">
     <!--- Student Details --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
-	<cfparam name="FORM.firstName" default="">
-	<cfparam name="FORM.middleName" default="">
-	<cfparam name="FORM.lastName" default="">
-	<cfparam name="FORM.preferredName" default="">
-    <cfparam name="FORM.gender" default="">
-    <cfparam name="FORM.dobMonth" default="">
-    <cfparam name="FORM.dobDay" default="">
-    <cfparam name="FORM.dobYear" default="">
-    <cfparam name="FORM.countryBirthID" default="">
-    <cfparam name="FORM.countryCitizenID" default="">
-	<!--- Login Information --->
-	<cfparam name="FORM.email" default="">
-    <cfparam name="FORM.password" default="">
-	<!--- Complete Home Address --->
-	<cfparam name="FORM.address" default="">
-	<cfparam name="FORM.address2" default="">
-	<cfparam name="FORM.city" default="">
-    <cfparam name="FORM.state" default="">
-    <cfparam name="FORM.zipCode" default="">
-    <cfparam name="FORM.countryID" default="">    
-	<!--- Contact Information ---> 
-    <cfparam name="FORM.homePhoneCountry" default="">
-    <cfparam name="FORM.homePhoneArea" default="">
-    <cfparam name="FORM.homePhonePrefix" default="">
-    <cfparam name="FORM.homePhoneNumber" default="">
-    <cfparam name="FORM.faxCountry" default="">
-    <cfparam name="FORM.faxArea" default="">
-    <cfparam name="FORM.faxPrefix" default="">
-    <cfparam name="FORM.faxNumber" default="">
-    <cfparam name="FORM.firstLanguage" default="">
     
     <cfscript>
-		// Get Current Student Information
-		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);
-
-		// Get Current Student Information
-		qGetCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry();
-
 		// Get Questions for this section
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section3');
 		
@@ -68,7 +32,7 @@
 		}
 	
 		// FORM Submitted
-		if ( FORM.submittedSec3 ) {
+		if ( FORM.submittedType EQ 'section3' ) {
 			
 			// FORM Validation
 			for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
@@ -76,7 +40,11 @@
 					SESSION.formErrors.Add(qGetQuestions.requiredMessage[i]);
 				}
 			}
-
+			
+			if (ListLen(FORM[qGetQuestions.fieldKey[1]], " #Chr(13)##Chr(10)#") LT 200) {
+				SESSION.formErrors.Add("Your essay must contain at least 200 words.");
+			}
+			
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
 
@@ -132,7 +100,7 @@
 	</cfif>
 
     <form action="#CGI.SCRIPT_NAME#?action=initial" method="post">
-    <input type="hidden" name="submittedSec3" value="1" />
+    <input type="hidden" name="submittedType" value="section3" />
     <input type="hidden" name="currentTabID" value="2" />
     
     <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
@@ -143,18 +111,18 @@
         <legend>Student Essay</legend>
         
         <!--- Student Essay --->
-        <!--- custom bar created for this text area and stored in CFIDE/scripts/ajax/FCKEditor/fckconfig.js file --->
-        <div>
+        <!--- custom bar created for this text area and stored in CFIDE/scripts/ajax/FCKEditor/fckconfig.js file // richtext="yes" toolbar="Basic" --->         
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label> 
-            <textarea name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]#">#FORM[qGetQuestions.fieldKey[1]]#</textarea>            
-            <p class="note">(In 200 words or more)</p> <!--- richtext="yes" toolbar="Basic" --->           
+            <textarea name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]# textAreaEssayCount">#FORM[qGetQuestions.fieldKey[1]]#</textarea>            
+            <p class="note">(In 200 words or more) <span id="#qGetQuestions.fieldKey[1]#Count" class="spanEssayCount"> </span> </p>  
         </div>
         
 		<!--- Attest --->
         <div class="controlset">
 			<span class="label"><cfif qGetQuestions.isRequired[2]><em>*</em></cfif> &nbsp;</span>
-            <div>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[2]#" id="essayAttest" value="1" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 1> checked="checked" </cfif> /> <label for="essayAttest">#qGetQuestions.displayField[2]#</label>
+            <div class="field">
+                <input type="checkbox" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="1" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 1> checked="checked" </cfif> /> <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]#</label>
             </div>
         </div>
         
@@ -169,3 +137,18 @@
 </div><!-- /form-container -->
 
 </cfoutput>
+
+<script type="text/javascript">
+	// Word Count
+	$(document).ready(function() {
+	
+		$('.textAreaEssayCount').each(function() {
+			var input = '.textAreaEssayCount';
+			var displayCount = '.spanEssayCount';
+			$(displayCount).show();
+			countWord(input, displayCount);
+			$(this).keyup(function() { countWord(input, displayCount) });
+		});
+	
+	});
+</script>

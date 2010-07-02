@@ -17,7 +17,7 @@
 	<cffunction name="Init" access="public" returntype="email" output="No" hint="Returns the initialized Email object">
 
 		<cfscript>
-			// There is nothing really to initiate, so just return this
+			// Return this initialized instance
 			return(this);
 		</cfscript>
 

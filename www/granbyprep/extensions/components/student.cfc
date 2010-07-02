@@ -17,7 +17,7 @@
 	<cffunction name="Init" access="public" returntype="student" output="No" hint="Returns the initialized Student object">
 
 		<cfscript>
-			// There is nothing really to initiate, so just return this
+			// Return this initialized instance
 			return(this);
 		</cfscript>
 
@@ -49,15 +49,24 @@
 
 	<!--- Set Student Session Variables --->
 	<cffunction name="setStudentSession" access="public" returntype="void" hint="Set student SESSION variables" output="no">
-
+		<cfargument name="ID" type="numeric" default="0">
+        
         <cfscript>
+			// Set student ID
+			SESSION.STUDENT.ID = ARGUMENTS.ID;
+
 			// Get Student Information
-			qGetStudentInfo = getStudentByID(ID=getStudentID());
+			qGetStudentInfo = getStudentByID(ID=ARGUMENTS.ID);
 		
-			// set customer session variables 
+			// Set student session variables 
 			SESSION.STUDENT.firstName = qGetStudentInfo.firstName;
 			SESSION.STUDENT.lastName = qGetStudentInfo.lastName;
 			SESSION.STUDENT.dateLastLoggedIn = qGetStudentInfo.dateLastLoggedIn;
+
+			// set up upload files path
+			SESSION.STUDENT.myUploadFolder = APPLICATION.PATH.uploadStudentDocuments & ARGUMENTS.ID;
+			// Make sure folder exists
+			APPLICATION.CFC.DOCUMENT.createFolder(SESSION.STUDENT.myUploadFolder);
 		</cfscript>
         
 	</cffunction>
@@ -143,7 +152,6 @@
 		<cfargument name="password" required="yes" hint="Password" />
 
 		<cfquery 
-			name="qInsertStudent" 
             result="newRecord"
 			datasource="#APPLICATION.DSN.Source#">
 				INSERT INTO

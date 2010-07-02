@@ -35,7 +35,7 @@
             	<li><a href="##studentInformation"><span>Student Information</span></a></li>
                 <li><a href="##familyInformation"><span>Family Information</span></a></li>
                 <li><a href="##studentEssay"><span>Student Essay</span></a></li>
-                <li><a href="##documents"><span>Documents</span></a></li>
+                <li><a href="##appDocuments"><span>Documents</span></a></li>
 			</ul>
              
             <div id="studentInformation">
@@ -49,11 +49,11 @@
             <div id="studentEssay">
                 <cfinclude template="_section3.cfm">
             </div>
-            
-            <div id="documents">
+
+            <div id="appDocuments">
                 <cfinclude template="_documents.cfm">
             </div>
-
+            
         </div>
 
 	<!--- Section Wrapper --->

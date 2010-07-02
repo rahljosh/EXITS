@@ -17,7 +17,7 @@
 	<cffunction name="Init" access="public" returntype="udf" output="No" hint="Returns the initialized UDF object">
 
 		<cfscript>
-			// There is nothing really to initiate, so just return this
+			// Return this initialized instance
 			return(this);
 		</cfscript>
 
@@ -42,31 +42,6 @@
 		</cfscript>
 	</cffunction>
 
-
-	<!--- Create Folder if it does not exist --->
-	<cffunction name="createFolder" access="public" returntype="void" output="no" hint="Check if folder exits, if it does not, it creates it">
-        <cfargument name="fullPath" type="string" required="yes" hint="Full Path is required" />
-        
-		<cftry>
-        
-			<!--- Make sure the directories are set up correctly --->
-            <cfif NOT directoryExists(ARGUMENTS.fullPath)>
-                
-                <cfdirectory 
-                	action="create" 
-                    directory="#ARGUMENTS.fullPath#" 
-                	/>
-            
-            </cfif>
-		
-            <cfcatch type="any">
-            	<!--- Error Handler --->
-				
-            </cfcatch>
-               
-        </cftry>
-        
-	</cffunction>
 
 	<!--- This removes foreign accents from online application fields --->
 	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents from a string">

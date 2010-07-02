@@ -14,7 +14,8 @@
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 
 	<!--- Param FORM Variables --->
-    <cfparam name="FORM.submittedSec1" default="0">
+    <cfparam name="FORM.submittedType" default="">
+    <cfparam name="FORM.currentTabID" default="0">
     <!--- Student Details --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
 	<cfparam name="FORM.firstName" default="">
@@ -58,7 +59,7 @@
 		qGetCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry();
 
 		// FORM Submitted
-		if ( FORM.submittedSec1 ) {
+		if ( FORM.submittedType EQ 'section1' ) {
 
 			// Parent Phone
 			FORM[qGetQuestions.fieldKey[7]] = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.homePhoneCountry, areaCode=FORM.homePhoneArea, prefix=FORM.homePhonePrefix, number=FORM.homePhoneNumber);
@@ -205,7 +206,7 @@
 	</cfif>
        
     <form action="#CGI.SCRIPT_NAME#?action=initial" method="post">
-    <input type="hidden" name="submittedSec1" value="1" />
+    <input type="hidden" name="submittedType" value="1" />
     <input type="hidden" name="currentTabID" value="0" />
     
     <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
@@ -215,27 +216,27 @@
        
         <legend>Student Details</legend>
             
-        <div>
+        <div class="field">
             <label for="firstName">First Name <em>*</em></label> 
             <input type="text" name="firstName" id="firstName" value="#FORM.firstName#" class="largeField" maxlength="100" /> <!--- class="error" --->
         </div>
 
-        <div>
+        <div class="field">
             <label for="middleName">Middle Name</label> 
             <input type="text" name="middleName" id="middleName" value="#FORM.middleName#" class="largeField" maxlength="100" />
         </div>
 
-        <div>
+        <div class="field">
             <label for="lastName">Family Name <em>*</em></label> 
             <input type="text" name="lastName" id="lastName" value="#FORM.lastName#" class="largeField" maxlength="100" />
         </div>
 
-        <div>
+        <div class="field">
             <label for="preferredName">Preferred Name or Nickname</label> 
             <input type="text" name="preferredName" id="preferredName" value="#FORM.preferredName#" class="largeField" maxlength="100" />
         </div>
 
-        <div>
+        <div class="field">
             <label for="gender">Gender <em>*</em></label> 
             <select name="gender" id="gender" class="smallField">
                 <option value=""></option> <!--- [select your gender] --->
@@ -244,7 +245,7 @@
             </select>
         </div>
         
-        <div>
+        <div class="field">
             <label for="dobMonth">Date of Birth <em>*</em></label> 
             <select name="dobMonth" id="dobMonth" class="smallField">
                 <option value="0"></option>
@@ -269,7 +270,7 @@
             <p class="note">(mm/dd/yyyy)</p>
         </div>
 
-        <div>
+        <div class="field">
             <label for="countryBirthID">Country of Birth <em>*</em></label> 
             <select name="countryBirthID" id="countryBirthID" class="mediumField">
                 <option value=""></option> <!--- [select a country] ---->
@@ -279,7 +280,7 @@
             </select>
         </div>
 
-        <div>
+        <div class="field">
             <label for="countryCitizenID">Country of Citizenship <em>*</em></label> 
             <select name="countryCitizenID" id="countryCitizenID" class="mediumField">
                 <option value=""></option>
@@ -289,7 +290,7 @@
             </select>
         </div>
         
-        <div>
+        <div class="field">
             <label for="firstLanguage">First language other than English </label> 
             <input type="text" name="firstLanguage" id="firstLanguage" value="#FORM.firstLanguage#" class="mediumField" maxlength="100" />
         </div>
@@ -303,37 +304,37 @@
         <legend>Complete Home Address</legend>
 
         <!--- Address --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label> 
             <input type="text" name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" value="#FORM[qGetQuestions.fieldKey[1]]#" class="#qGetQuestions.classType[1]#" maxlength="100" />
         </div>
 
         <!--- Address 2 --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label> 
             <input type="text" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="#FORM[qGetQuestions.fieldKey[2]]#" class="#qGetQuestions.classType[2]#" maxlength="100" />
         </div>
 
         <!--- City --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[3]#">#qGetQuestions.displayField[3]# <cfif qGetQuestions.isRequired[3]><em>*</em></cfif></label> 
             <input type="text" name="#qGetQuestions.fieldKey[3]#" id="#qGetQuestions.fieldKey[3]#" value="#FORM[qGetQuestions.fieldKey[3]]#" class="#qGetQuestions.classType[3]#" maxlength="100" />
         </div>
 
         <!--- State --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[4]#">#qGetQuestions.displayField[4]# <cfif qGetQuestions.isRequired[4]><em>*</em></cfif></label> 
             <input type="text" name="#qGetQuestions.fieldKey[4]#" id="#qGetQuestions.fieldKey[4]#" value="#FORM[qGetQuestions.fieldKey[4]]#" class="#qGetQuestions.classType[4]#" maxlength="100" />
         </div>
 
 		<!--- Zip --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[5]#">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" value="#FORM[qGetQuestions.fieldKey[5]]#" class="#qGetQuestions.classType[5]#" maxlength="50" />
 		</div>
 		
 		<!--- Coutry --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[6]#">#qGetQuestions.displayField[6]# <cfif qGetQuestions.isRequired[6]><em>*</em></cfif></label> 
 			<select name="#qGetQuestions.fieldKey[6]#" id="#qGetQuestions.fieldKey[6]#" class="mediumField">
 				<option value=""></option>
@@ -351,13 +352,13 @@
     
         <legend>Contact Information</legend>
 
-        <div>
+        <div class="field">
             <label for="email">Email Address <em>*</em></label> 
             <input type="text" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" disabled="disabled" />
         	<p class="note">Click on Update Login to update your email address.</p>
         </div>
 
-        <div>
+        <div class="field">
             <label for="homePhoneCountry">#qGetQuestions.displayField[7]# <cfif qGetQuestions.isRequired[7]><em>*</em></cfif></label> 
             <input type="text" name="homePhoneCountry" id="homePhoneCountry" value="#FORM.homePhoneCountry#" class="xxSmallField" maxlength="4" /> 
             -
@@ -369,7 +370,7 @@
             <p class="note">+#### - (######) - ###### - ########</p>
         </div>
 
-        <div>
+        <div class="field">
             <label for="faxCountry">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
             <input type="text" name="faxCountry" id="faxCountry" value="#FORM.faxCountry#" class="xxSmallField" maxlength="4" /> 
             - 
@@ -390,37 +391,37 @@
         <legend>Present School Information</legend>
         
         <!--- Present School Name --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[9]#">#qGetQuestions.displayField[9]# <cfif qGetQuestions.isRequired[9]><em>*</em></cfif></label> 
             <input type="text" name="#qGetQuestions.fieldKey[9]#" id="#qGetQuestions.fieldKey[9]#" value="#FORM[qGetQuestions.fieldKey[9]]#" class="#qGetQuestions.classType[9]#" maxlength="100" />
         </div>
         
         <!--- Present School Address --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[10]#">#qGetQuestions.displayField[10]# <cfif qGetQuestions.isRequired[10]><em>*</em></cfif></label> 
             <input type="text" name="#qGetQuestions.fieldKey[10]#" id="#qGetQuestions.fieldKey[10]#" value="#FORM[qGetQuestions.fieldKey[10]]#" class="#qGetQuestions.classType[10]#" maxlength="100" />
         </div>
         
         <!--- Present School City --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[11]#">#qGetQuestions.displayField[11]# <cfif qGetQuestions.isRequired[11]><em>*</em></cfif></label>  
             <input type="text" name="#qGetQuestions.fieldKey[11]#" id="#qGetQuestions.fieldKey[11]#" value="#FORM[qGetQuestions.fieldKey[11]]#" class="#qGetQuestions.classType[11]#" maxlength="100" />
         </div>
         
         <!--- Present School State --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[12]#">#qGetQuestions.displayField[12]# <cfif qGetQuestions.isRequired[12]><em>*</em></cfif></label> 
             <input type="text" name="#qGetQuestions.fieldKey[12]#" id="#qGetQuestions.fieldKey[12]#" value="#FORM[qGetQuestions.fieldKey[12]]#" class="#qGetQuestions.classType[12]#" maxlength="100" />
         </div>
 
         <!--- Present School Zip --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[13]#">#qGetQuestions.displayField[13]# <cfif qGetQuestions.isRequired[13]><em>*</em></cfif></label>  
             <input type="text" name="#qGetQuestions.fieldKey[13]#" id="#qGetQuestions.fieldKey[13]#" value="#FORM[qGetQuestions.fieldKey[13]]#" class="#qGetQuestions.classType[13]#" maxlength="50" />
         </div>
         
         <!--- Present School Country --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[14]#">#qGetQuestions.displayField[14]# <cfif qGetQuestions.isRequired[14]><em>*</em></cfif></label> 
             <select name="#qGetQuestions.fieldKey[14]#" id="#qGetQuestions.fieldKey[14]#" class="#qGetQuestions.classType[14]#">
                 <option value=""></option>
@@ -431,7 +432,7 @@
         </div>
         
         <!--- Present School Attendance --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[15]#">#qGetQuestions.displayField[15]# <cfif qGetQuestions.isRequired[15]><em>*</em></cfif></label>  
             <input type="text" name="#qGetQuestions.fieldKey[15]#" id="#qGetQuestions.fieldKey[15]#" value="#FORM[qGetQuestions.fieldKey[15]]#" class="#qGetQuestions.classType[15]#" maxlength="50" />
         </div>
@@ -445,7 +446,7 @@
         </div>			
 
         <!--- Current Grade --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[17]#">#qGetQuestions.displayField[17]# <cfif qGetQuestions.isRequired[17]><em>*</em></cfif></label>  
             <select name="#qGetQuestions.fieldKey[17]#" id="#qGetQuestions.fieldKey[17]#" class="#qGetQuestions.classType[17]#">
             	<option value=""></option>
@@ -456,7 +457,7 @@
         </div>
 
         <!--- Applying Grade --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label>  
             <select name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" class="#qGetQuestions.classType[18]#">
             	<option value=""></option>
@@ -467,7 +468,7 @@
         </div>
 
         <!--- Entrance Date --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[19]#">#qGetQuestions.displayField[19]# <cfif qGetQuestions.isRequired[19]><em>*</em></cfif></label>  
             <input type="text" name="#qGetQuestions.fieldKey[19]#" id="#qGetQuestions.fieldKey[19]#" value="#FORM[qGetQuestions.fieldKey[19]]#" class="#qGetQuestions.classType[19]#" maxlength="10" />
         </div>
@@ -480,7 +481,7 @@
         </div>			
 
         <!--- Past Schools --->
-        <div>
+        <div class="field">
             <label for="#qGetQuestions.fieldKey[21]#">#qGetQuestions.displayField[21]# <cfif qGetQuestions.isRequired[21]><em>*</em></cfif></label>  
             <textarea name="#qGetQuestions.fieldKey[21]#" id="#qGetQuestions.fieldKey[21]#" class="#qGetQuestions.classType[21]#">#FORM[qGetQuestions.fieldKey[21]]#</textarea>                                    	
         </div>

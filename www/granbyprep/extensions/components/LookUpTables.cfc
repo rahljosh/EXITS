@@ -17,7 +17,7 @@
 	<cffunction name="Init" access="public" returntype="LookUpTables" output="false" hint="Returns the initialized LookUpTables object">
 		
 		<cfscript>
-			// There is nothing really to initiate, so just return this
+			// Return this initialized instance
 			return(this);
 		</cfscript>
         

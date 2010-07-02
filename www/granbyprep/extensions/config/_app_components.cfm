@@ -22,6 +22,9 @@
 	// Store Application.IsServerLocal - This needs be declare before the other CFC components
 	APPLICATION.IsServerLocal = AppCFC.UDF.IsServerLocal();
 
+	// Store the initialized Document Library object in the Application scope
+	AppCFC.Document = CreateCFC("document").Init();
+
 	// Store the initialized Email Library object in the Application scope
 	AppCFC.Email = CreateCFC("email").Init();
 
@@ -30,6 +33,9 @@
 
 	// Store the initialized OnlineApp Library object in the Application scope
 	AppCFC.onlineApp = CreateCFC("onlineApp").Init();
+
+	// Store the initialized session Library object in the Application scope
+	AppCFC.SESSION = CreateCFC("session").Init();
 
 	// Store the initialized Student Library object in the Application scope
 	AppCFC.student = CreateCFC("student").Init();
