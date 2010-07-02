@@ -26,7 +26,7 @@
 	/***** Create APPLICATION.SCHOOL structure / Stores School Information *****/
 	APPLICATION.SCHOOL = StructNew();		
 	APPLICATION.SCHOOL.name = 'Granby Preparatory Academy';
-	APPLICATION.SCHOOL.address = '66 School Street, Granby MA 01033';
+	APPLICATION.SCHOOL.address = '66 School Street, Granby, MA 01033';
 	APPLICATION.SCHOOL.tollFree = '(800) 766-4656';
 	APPLICATION.SCHOOL.phone = '(631) 893-4540';
 
@@ -76,7 +76,7 @@
 		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		// Base Path eg. C:\websites\granbyprep\
 		AppPath.base = 'C:/websites/www/granbyprep/';
-
+		
 		// Set Site URL
 		APPLICATION.SITE.URL.main = 'http://granbyprep.local/';
 		APPLICATION.SITE.URL.admissions = 'http://granbyprep.local/admissions';
@@ -91,22 +91,37 @@
 
 		// Set Site URL
 		APPLICATION.SITE.URL.main = 'http://www.granbyprep.com/';
-		APPLICATION.SITE.URL.admission = 'http://www.granbyprep.com/admissions';
+		APPLICATION.SITE.URL.admissions = 'http://www.granbyprep.com/admissions';
 	}
 
+	// Path for CSS, JS and Images
 	AppPath.css = "linked/css/"; 
 	AppPath.js = "linked/js/"; 
 	AppPath.Images = "images/";
 	AppPath.onlineAppImages = AppPath.Images & "onlineApp/";
+	
+	
+	/***************
+		Set up folders used to uplaod documents in the application.
+	***************/
+	
+	// Upload Path
+	AppPath.UploadRoot = AppPath.base & "upload/";
+	// Documents Folder
+	AppPath.UploadDocuments = AppPath.UploadRoot & "documents/";
+	AppPath.UploadStudentDocuments = AppPath.UploadDocuments & "student/";
+	// Temp Folder 
+	AppPath.UploadRootTemp = AppPath.UploadDocuments & "temp/";
+
+	// Make sure folder exists
+	APPLICATION.CFC.DOCUMENT.createFolder(AppPath.UploadStudentDocuments);	
+	APPLICATION.CFC.DOCUMENT.createFolder(AppPath.UploadRootTemp);	
+
 
 	/* jQuery Latest Version 
 	http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
 	AppPath.jQuery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';	
 	AppPath.jQueryUI = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js';
-	
-	
-	// These are used in the student online application
-	AppPath.onlineApp = StructNew();
 	
 
 	/* 
@@ -119,9 +134,12 @@
 	Constants = APPLICATION.Constants;
 	
 	//Set up constant for project help statuses
+	/*
 	Constants.applicationFiles = ArrayNew(1);		
 	Constants.applicationFiles[1] = "Mathematics Teacher Recommendation";
 	Constants.applicationFiles[2] = "English Teacher Recommendation";
 	Constants.applicationFiles[3] = "Transcript for at least the last two years";
 	Constants.applicationFiles[4] = "Standardized test scores";
+	Constants.applicationFiles[5] = "Other";
+	*/
 </cfscript>

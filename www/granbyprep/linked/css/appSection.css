@@ -86,6 +86,11 @@ Page Header
 	background: #e69700 url(../../images/onlineApp/buttonOrange.png) 50% 50% repeat; 	
 }
 
+.topRight a.selected {
+	outline: none;
+	background: #e69700 url(../../images/onlineApp/buttonOrange.png) 50% 50% repeat; 	
+}
+
 .welcomeMessage {
 	margin-top:40px;
 	padding:5px 5px 0px 0px;
@@ -216,6 +221,15 @@ Online Application
 	height:400px;
 }
 
+.documentList {
+	width:96%;
+	margin:10px 0px 20px 0px;
+}
+
+.documentProperties {
+	display:none;	
+}
+
 /***********************************************************************************
 
 FAQ
@@ -324,30 +338,36 @@ p.legend em {
 	font-style: normal; 
 }
 
-div.form-container form p { 
+div.form-container p { 
 	margin: 0; 
 }
 
-div.form-container form p.note { 
+div.form-container p.note { 
 	margin-left: 210px; 
 	font-size: 90%; 
 	color: #333; 
 }
 
-div.form-container form fieldset { 
+div.form-container fieldset { 
 	margin: 10px 0; 
 	padding: 10px; 
 	border: #DDD 1px solid; 
 }
 
-div.form-container form legend { 
+div.form-container legend { 
 	font-weight: bold; 
 	color: #666; 
 }
 
-div.form-container form fieldset div { 
-	padding: 0.25em 0; 
+div.form-container fieldset div.field { 
+	padding: 0.25em 0;
 }
+
+/*
+div.form-container fieldset div { 
+	padding: 0.25em 0;
+}
+*/
 
 div.form-container label, 
 div.form-container span.label { 

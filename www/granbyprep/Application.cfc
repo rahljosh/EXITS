@@ -18,11 +18,7 @@
 
 
 	<!--- Define the page request properties. --->
-	<cfsetting
-		requesttimeout="20"
-		showdebugoutput="false"
-		enablecfoutputonly="false"
-		/>
+	<cfsetting requesttimeout="20" showdebugoutput="false" enablecfoutputonly="false" />
  
 
 	<cffunction
@@ -40,7 +36,6 @@
 	</cffunction>
 
     
-    
 	<cffunction
 		name="OnSessionStart"
 		access="public"
@@ -50,7 +45,7 @@
 		
 			<!--- Set up Session variables --->
             <cfinclude template="extensions/config/_session.cfm" />
-                
+			
 		<!--- Return out. --->
 		<cfreturn />
 	</cffunction>
@@ -64,20 +59,9 @@
 		hint="Fires at first part of page processing.">
  
 		<!--- Define arguments. --->
-		<cfargument
-			name="TargetPage"
-			type="string"
-			required="true"
-			/>
+		<cfargument name="TargetPage" type="string" required="true" />
 
 		<cfparam name="URL.init" default="0">
-		
-		<!--- DELETE THIS --->
-        <cfscript>
-        	//THIS.OnApplicationStart();
-		 	//THIS.OnSessionStart();
-		</cfscript>
-        <!--- DELETE THIS --->
         
 		<cfscript>
 			// Reset Application and Session
@@ -120,7 +104,7 @@
 		output="true"
 		hint="Fires after pre page processing is complete.">
 		
-			<!--- Include Maintanance Page Here --->
+			<!--- Include Maintenance Page Here --->
 				
 	</cffunction>
 	--->
@@ -146,19 +130,9 @@
 		hint="Fires when the session is terminated.">
  
 		<!--- Define arguments. --->
-		<cfargument
-			name="SessionScope"
-			type="struct"
-			required="true"
-			/>
- 
-		<cfargument
-			name="ApplicationScope"
-			type="struct"
-			required="false"
-			default="#StructNew()#"
-			/>
- 
+		<cfargument name="SessionScope" type="struct" required="true" />
+		<cfargument name="ApplicationScope" type="struct" required="false" default="#StructNew()#" />
+ 		
 		<!--- Return out. --->
 		<cfreturn />
 	</cffunction>
@@ -172,13 +146,8 @@
 		hint="Fires when the application is terminated.">
  
 		<!--- Define arguments. --->
-		<cfargument
-			name="ApplicationScope"
-			type="struct"
-			required="false"
-			default="#StructNew()#"
-			/>
- 
+		<cfargument name="ApplicationScope" type="struct" required="false" default="#StructNew()#" />
+		 
 		<!--- Return out. --->
 		<cfreturn />
 	</cffunction>
@@ -192,18 +161,8 @@
 		hint="Fires when an exception occures that is not caught by a try/catch.">
  
 		<!--- Define arguments. --->
-		<cfargument
-			name="Exception"
-			type="any"
-			required="true"
-			/>
- 
-		<cfargument
-			name="EventName"
-			type="string"
-			required="false"
-			default=""
-			/>
+		<cfargument name="Exception" type="any" required="true" />
+		<cfargument name="EventName" type="string" required="false" default=""	/>
  		
  		<cfif NOT APPLICATION.IsServerLocal>
 			

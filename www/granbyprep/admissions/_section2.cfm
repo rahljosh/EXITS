@@ -14,7 +14,7 @@
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 
 	<!--- Param FORM Variables --->
-    <cfparam name="FORM.submittedSec2" default="0">
+    <cfparam name="FORM.submittedType" default="">
     <cfparam name="FORM.currentTabID" default="0">
     <!--- Student Details --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
@@ -51,7 +51,7 @@
 		}
 	
 		// FORM Submitted
-		if ( FORM.submittedSec2 ) {
+		if ( FORM.submittedType EQ 'section2' ) {
 
 			// Parent Phone
 			FORM[qGetQuestions.fieldKey[11]] = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.homePhoneCountry, areaCode=FORM.homePhoneArea, prefix=FORM.homePhonePrefix, number=FORM.homePhoneNumber);
@@ -140,7 +140,7 @@
 	</cfif>
 
 	<form action="#CGI.SCRIPT_NAME#?action=initial" method="post">
-	<input type="hidden" name="submittedSec2" value="1" />
+	<input type="hidden" name="submittedType" value="section2" />
     <input type="hidden" name="currentTabID" value="1" />
 	
 	<p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
@@ -151,31 +151,31 @@
 		<legend>Parent/Guardian</legend>
 		
 		<!--- Parent Relationship --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" value="#FORM[qGetQuestions.fieldKey[1]]#" class="#qGetQuestions.classType[1]#" maxlength="100" />
 		</div>
 		
 		<!--- Parent First Name --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="#FORM[qGetQuestions.fieldKey[2]]#" class="#qGetQuestions.classType[2]#" maxlength="100" />
 		</div>
 		
 		<!--- Parent Middle Name --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[3]#">#qGetQuestions.displayField[3]# <cfif qGetQuestions.isRequired[3]><em>*</em></cfif></label>  
 			<input type="text" name="#qGetQuestions.fieldKey[3]#" id="#qGetQuestions.fieldKey[3]#" value="#FORM[qGetQuestions.fieldKey[3]]#" class="#qGetQuestions.classType[3]#" maxlength="100" />
 		</div>
 		
 		<!--- Parent Last Name --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[4]#">#qGetQuestions.displayField[4]# <cfif qGetQuestions.isRequired[4]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[4]#" id="#qGetQuestions.fieldKey[4]#" value="#FORM[qGetQuestions.fieldKey[4]]#" class="#qGetQuestions.classType[4]#" maxlength="100" />
 		</div>
 		
 		<!--- Parent Preferred Name ---> 
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[5]#">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" value="#FORM[qGetQuestions.fieldKey[5]]#" class="#qGetQuestions.classType[5]#" maxlength="100" />
 		</div>
@@ -189,31 +189,31 @@
 		<legend>Complete Home Address</legend>
 		
 		<!--- Parent Address --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[6]#">#qGetQuestions.displayField[6]# <cfif qGetQuestions.isRequired[6]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[6]#" id="#qGetQuestions.fieldKey[6]#" value="#FORM[qGetQuestions.fieldKey[6]]#" class="#qGetQuestions.classType[6]#" maxlength="100" />
 		</div>
 		
 		<!--- Parent City --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[7]#">#qGetQuestions.displayField[7]# <cfif qGetQuestions.isRequired[7]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[7]#" id="#qGetQuestions.fieldKey[7]#" value="#FORM[qGetQuestions.fieldKey[7]]#" class="#qGetQuestions.classType[7]#" maxlength="100" />
 		</div>
 		
 		<!--- Parent State --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[8]#">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" value="#FORM[qGetQuestions.fieldKey[8]]#" class="#qGetQuestions.classType[8]#" maxlength="100" />
 		</div>
 		
 		<!--- Parent Zip --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[9]#">#qGetQuestions.displayField[9]# <cfif qGetQuestions.isRequired[9]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[9]#" id="#qGetQuestions.fieldKey[9]#" value="#FORM[qGetQuestions.fieldKey[9]]#" class="#qGetQuestions.classType[9]#" maxlength="50" />
 		</div>
 		
 		<!--- Parent Coutry --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[10]#">#qGetQuestions.displayField[10]# <cfif qGetQuestions.isRequired[10]><em>*</em></cfif></label> 
 			<select name="#qGetQuestions.fieldKey[10]#" id="#qGetQuestions.fieldKey[10]#" class="mediumField">
 				<option value=""></option>
@@ -224,7 +224,7 @@
 		</div>
 
 		<!--- Parent Home Telephone --->
-		<div>
+		<div class="field">
 			<label for="homePhoneCountry">#qGetQuestions.displayField[11]# <cfif qGetQuestions.isRequired[11]><em>*</em></cfif></label> 
 			<input type="text" name="homePhoneCountry" id="homePhoneCountry" value="#FORM.homePhoneCountry#" class="xxSmallField" maxlength="4" /> 
 			-
@@ -237,7 +237,7 @@
 		</div>
 
 		<!--- Parent Fax Telephone --->
-		<div>
+		<div class="field">
 			<label for="faxCountry">#qGetQuestions.displayField[12]# <cfif qGetQuestions.isRequired[12]><em>*</em></cfif></label> 
 			<input type="text" name="faxCountry" id="faxCountry" value="#FORM.faxCountry#" class="xxSmallField" maxlength="4" /> 
 			- 
@@ -250,7 +250,7 @@
 		</div>
 
 		<!--- Parent Email --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[13]#">#qGetQuestions.displayField[13]# <cfif qGetQuestions.isRequired[13]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[13]#" id="#qGetQuestions.fieldKey[13]#" value="#FORM[qGetQuestions.fieldKey[13]]#" class="#qGetQuestions.classType[13]#" maxlength="50" />
 		</div>
@@ -264,43 +264,43 @@
 		<legend>Business Information</legend>
 		
 		<!--- Company Name --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[14]#">#qGetQuestions.displayField[14]# <cfif qGetQuestions.isRequired[14]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[14]#" id="#qGetQuestions.fieldKey[14]#" value="#FORM[qGetQuestions.fieldKey[14]]#" class="#qGetQuestions.classType[14]#" maxlength="100" />
 		</div>
 		
 		<!--- Business Position --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[15]#">#qGetQuestions.displayField[15]# <cfif qGetQuestions.isRequired[15]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[15]#" id="#qGetQuestions.fieldKey[15]#" value="#FORM[qGetQuestions.fieldKey[15]]#" class="#qGetQuestions.classType[15]#" maxlength="100" />
 		</div>
 		
 		<!--- Business Address --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[16]#">#qGetQuestions.displayField[16]# <cfif qGetQuestions.isRequired[16]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[16]#" id="#qGetQuestions.fieldKey[16]#" value="#FORM[qGetQuestions.fieldKey[16]]#" class="#qGetQuestions.classType[16]#" maxlength="100" />
 		</div>
 		
 		<!--- Business City --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[17]#">#qGetQuestions.displayField[17]# <cfif qGetQuestions.isRequired[17]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[17]#" id="#qGetQuestions.fieldKey[17]#" value="#FORM[qGetQuestions.fieldKey[17]]#" class="#qGetQuestions.classType[17]#" maxlength="50" />
 		</div>
 
 		<!--- Business State --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" value="#FORM[qGetQuestions.fieldKey[18]]#" class="#qGetQuestions.classType[18]#" maxlength="50" />
 		</div>
 
 		<!--- Business Zip --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[19]#">#qGetQuestions.displayField[19]# <cfif qGetQuestions.isRequired[19]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[19]#" id="#qGetQuestions.fieldKey[19]#" value="#FORM[qGetQuestions.fieldKey[19]]#" class="#qGetQuestions.classType[19]#" maxlength="50" />
 		</div>
 		
 		<!--- Business Coutry --->
-		<div>
+		<div class="field">
 			<label for="#qGetQuestions.fieldKey[20]#">#qGetQuestions.displayField[20]# <cfif qGetQuestions.isRequired[20]><em>*</em></cfif></label> 
 			<select name="#qGetQuestions.fieldKey[20]#" id="#qGetQuestions.fieldKey[20]#" class="mediumField">
 				<option value=""></option>
@@ -311,7 +311,7 @@
 		</div>
 
 		<!--- Business Telephone --->
-		<div>
+		<div class="field">
 			<label for="businessPhoneCountry">#qGetQuestions.displayField[21]# <cfif qGetQuestions.isRequired[21]><em>*</em></cfif></label> 
 			<input type="text" name="businessPhoneCountry" id="businessPhoneCountry" value="#FORM.homePhoneCountry#" class="xxSmallField" maxlength="4" /> 
 			-
@@ -344,18 +344,20 @@
 		<!--- Admission Materials --->
 		<div class="controlset">
 			<span class="label">#qGetQuestions.displayField[23]# <cfif qGetQuestions.isRequired[23]><em>*</em></cfif></span>
-			<div>
+			<div class="field">
                 <input type="radio" name="#qGetQuestions.fieldKey[23]#" id="materialFather" value="Father" <cfif FORM[qGetQuestions.fieldKey[23]] EQ 'Father'> checked="checked" </cfif> /> <label for="materialFather">Father</label>
                 <input type="radio" name="#qGetQuestions.fieldKey[23]#" id="materialMother" value="Mother" <cfif FORM[qGetQuestions.fieldKey[23]] EQ 'Mother'> checked="checked" </cfif> /> <label for="materialMother">Mother</label>
                 <input type="radio" name="#qGetQuestions.fieldKey[23]#" id="materialGuardian" value="Guardian" <cfif FORM[qGetQuestions.fieldKey[23]] EQ 'Guardian'> checked="checked" </cfif> /> <label for="materialGuardian">Guardian</label>
                 <input type="radio" name="#qGetQuestions.fieldKey[23]#" id="materialOther" value="Other" <cfif FORM[qGetQuestions.fieldKey[23]] EQ 'Other'> checked="checked" </cfif> /> <label for="materialOther">Other</label>
 			</div>
         </div>
-			
+		
+        <div style="clear:both;"></div>
+        	
 		<!--- Parent Lives --->
         <div class="controlset">
 			<span class="label">#qGetQuestions.displayField[24]# <cfif qGetQuestions.isRequired[24]><em>*</em></cfif></span>
-            <div>
+            <div class="field">
                 <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="fatherDeceased" value="fatherDeceased" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'fatherDeceased')> checked="checked" </cfif> /> <label for="fatherDeceased">Father Deceased</label>
                 <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="motherDeceased" value="motherDeceased" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'motherDeceased')> checked="checked" </cfif> /> <label for="motherDeceased">Mother Deceased</label>
                 <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="parentsDivorced" value="parentsDivorced" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'parentsDivorced')> checked="checked" </cfif> /> <label for="parentsDivorced">Parents Divorced</label>
@@ -368,7 +370,7 @@
         </div>
 
 		<!--- Parent Custody --->
-        <div>
+        <div class="field">
 			<label for="#qGetQuestions.fieldKey[25]#">#qGetQuestions.displayField[25]# <cfif qGetQuestions.isRequired[25]><em>*</em></cfif></label> 
 			<input type="text" name="#qGetQuestions.fieldKey[25]#" id="#qGetQuestions.fieldKey[25]#" value="#FORM[qGetQuestions.fieldKey[25]]#" class="#qGetQuestions.classType[25]#" maxlength="50" />
 		</div>
