@@ -44,7 +44,7 @@
 <table width='650' cellpadding=4 cellspacing="0" align="center" frame="box">
 <tr><td align="center">
 	Program(s) Included in this Report:<br>
-	<cfloop query="get_program"><b>#companyshort# - #programname# &nbsp; (#programID#)</b><br></cfloop>
+	<cfloop query="get_program"><b>#programname# &nbsp; (#programID#)</b><br></cfloop>
 	Total of students &nbsp; <cfif form.status is 1><b>placed</b><cfelseif form.status is 2><b>unplaced</b></cfif> in program <i><u>#get_total_students.recordcount#</u></i>
 	<br />*<cfif NOT IsDefined('form.all')> Only Active Students <cfelse> Includes All Students (active, inactive and canceled).</cfif> 
 	</td></tr>

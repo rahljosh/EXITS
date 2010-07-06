@@ -48,7 +48,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -78,7 +78,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -126,7 +126,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -156,7 +156,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -195,7 +195,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -222,7 +222,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -257,7 +257,7 @@
 				<tr align="left">
 					<TD>Program :</td>
 					<TD colspan=2><select name="programid" multiple size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>				  </td>
 				</tr>
 				<tr align="left">
@@ -294,7 +294,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -340,7 +340,7 @@
 							<TD>
 							<select name="programid" multiple size="5" selected>
 							<cfoutput query="get_program">
-                                <option value="#ProgramID#"> <cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option> </cfoutput>
+                                <option value="#ProgramID#"> #programname#</option> </cfoutput>
 							</select>
 							</td>
 						</tr>
@@ -376,7 +376,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -406,7 +406,7 @@
 					<TD>Program :</td>
 					<TD>
 					<select name="programid" multiple  size="5">
-					<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 					</select>
 					</td>
 				</tr>
@@ -446,7 +446,7 @@
 						<TD>Program :</td>
 						<TD>
 						<select name="programid" multiple  size="5">
-						<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+						<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 						</select>
 						</td>
 					</tr>
@@ -478,7 +478,7 @@
 						<TD>Program :</td>
 						<TD>
 						<select name="programid" multiple  size="5">
-						<cfoutput query="get_all_programs"><option value="#ProgramID#">#companyshort# - #programname#</option></cfoutput>
+						<cfoutput query="get_all_programs"><option value="#ProgramID#">#programname#</option></cfoutput>
 						</select>
 						</td>
 					</tr>
@@ -496,7 +496,7 @@
 						<TD>Program :</td>
 						<TD>
 						<select name="programid" multiple  size="5">
-						<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#programname#</option></cfoutput>
+						<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 						</select>
 						</td>
 					</tr>

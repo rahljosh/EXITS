@@ -103,7 +103,7 @@
 							--->
 				<td class="label">
 					<p>#familylastname#, #Firstname# (#studentid#)</p>
-					<p>#companyshort# - #programname#</p>
+					<p>#programname#</p>
 					<p>#businessname# / #regionname#</p>
 				</td>
 				

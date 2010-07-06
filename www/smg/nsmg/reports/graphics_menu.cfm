@@ -29,7 +29,7 @@
 					<td>
 						<select name="programid" multiple  size="6">
 						<cfif client.companyid is '5'>
-							<cfoutput query="get_program"><option value="#ProgramID#">#companyshort# - #ProgramName#</option></cfoutput>
+							<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 						<cfelse>
 							<cfoutput query="get_program"><option value="#ProgramID#">#ProgramName#</option></cfoutput>
 						</cfif>
@@ -55,7 +55,7 @@
 						<td>
 							<select name="programid" multiple  size="6">
 							<cfif client.companyid is '5'>
-								<cfoutput query="get_program"><option value="#ProgramID#">#companyshort# - #ProgramName#</option></cfoutput>
+								<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 							<cfelse>
 								<cfoutput query="get_program"><option value="#ProgramID#">#ProgramName#</option></cfoutput>
 							</cfif>
