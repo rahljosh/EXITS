@@ -1,0 +1,227 @@
+body {
+	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
+	padding: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 100%;
+	background-color: #FFF;
+	background-image: url(../images/backgroundbw.gif);
+	background-repeat: repeat-x;
+}
+.oneColFixCtrHdr #container {
+	width: 780px;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+	margin-top: 25;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	padding-top: 25px;
+}
+.oneColFixCtrHdr #mainContent {
+	border: medium solid #202554;
+	background-image: url(../images/gradientblue.png);
+	background-repeat: repeat-x;
+	background-position: left top;
+	padding-top: 10;
+	padding-right: 20px;
+	padding-bottom: 0;
+	padding-left: 0px;
+	background-color: #FFF;
+}
+.oneColFixCtrHdr #mainContentPad {
+	margin-left: 25px;
+}
+#outside {
+	background-color: #FFF;
+	width: 900px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 40px;
+}
+.oneColFixCtrHdr #header {
+	background-image: url(../images/topBar.png);
+	background-repeat: repeat-x;
+	height: 107px;
+	padding-top: 0;
+	padding-right: 10px;
+	padding-bottom: 0;
+	padding-left: 20px;
+}
+.oneColFixCtrHdr #container #header .text {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	padding-left: 25px;
+}
+.bold {
+	font-weight: bold;
+}
+.italic {
+	font-style: italic;
+}
+.orange {
+	color: #EE7D37;
+}
+p {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+}
+li {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	text-indent: 15px;
+}
+.oneColFixCtrHdr #header h1 {
+	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
+	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
+}
+.headline   {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	color: #051B58;
+	padding-top: 5px;
+	padding-left: 0px;
+}
+.spacer {
+	height: 15px;
+	display: block;
+	clear: both;
+}
+.spacerlg {
+	height: 65px;
+	display: block;
+	clear: both;
+}
+.bottomGradient {
+	background-image: url(../images/gradientBottom.png);
+	background-repeat: repeat-x;
+	margin: 0px;
+	padding: 0px;
+	height: 66px;
+	width: 775px;
+	clear: left;
+}
+.oneColFixCtrHdr #container #mainContent p {
+	padding-left: 25px;
+}
+.spacersm {
+	height: 8px;
+	display: block;
+	clear: both;
+}
+.oneColFixCtrHdr #footer {
+	background-image: url(../images/bottomBar.png);
+	background-repeat: repeat-x;
+	height: 53px;
+	padding-top: 0;
+	padding-right: 10px;
+	padding-bottom: 0;
+	padding-left: 10px;
+}
+.oneColFixCtrHdr #footer p {
+	margin: 0; /* zeroing the margins of the first element in the footer will avoid the possibility of margin collapse - a space between divs */
+	padding: 10px 0; /* padding on this element will create space, just as the the margin would have, without the margin collapse issue */
+}
+.ftext  {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 9px;
+	color: #000;
+	text-align: center;
+	font-weight: bold;
+}
+.photobox {
+	float: right;
+	width: 350px;
+	margin-top: 30px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+	text-align: center;
+	vertical-align: middle;
+}
+.testimonial {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 13px;
+	font-style: italic;
+	background-color: #FEE9AC;
+	padding: 10px;
+	width: 250px;
+	margin-left: 40px;
+	margin-top: 20px;
+	border: medium double #F9A623;
+	text-align: left;
+}
+.menu {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000;
+}
+.menu:link {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000;
+}
+.menu:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #F9A523;
+}
+.menu2 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #000;
+}
+.menu2:link {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #000;
+}
+.menu2:hover {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #F9A523;
+}
+.clearfix {
+	display: block;
+	clear: both;
+	position: fixed;
+	height: 20px;
+	padding: 5px;
+}
+.menu1 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000;
+	line-height: 13px;
+}
+.logo {
+	height: 108px;
+	width: 178px;
+	background-image: url(../images/logo.png);
+	background-repeat: no-repeat;
+}
+#menuTop {
+	float: right;
+	height: 97px;
+	width: 550px;
+	padding-top: 5px;
+	text-align: center;
+	clear: both;
+	display: block;
+	position: relative;
+	z-index: 30;
+}
+.center {
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+	width: 700px;
+}
