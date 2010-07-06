@@ -49,7 +49,7 @@
 				<tr><th colspan="2" bgcolor="e2efc7">Students Termination Date</th></tr>
 				<tr><td>Program(s):</td>
 					<td><select name="programid" multiple  size="6">
-						<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# &nbsp; </cfif>#programname#</option></cfoutput>
+						<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 						</select></td></tr>
 				<tr align="left">
 					<TD>Regions :</td>
@@ -68,7 +68,7 @@
 				<tr><th colspan="2" bgcolor="e2efc7">Students - Invoicing Extension Report</th></tr>
 				<tr><td>Program(s):</td>
 					<td><select name="programid" multiple  size="6">
-						<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# &nbsp; </cfif>#programname#</option></cfoutput>
+						<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 						</select>
 					</td></tr>
 				<tr align="left">
@@ -93,7 +93,7 @@
 				<tr><th colspan="2" bgcolor="e2efc7">Program Duration</th></tr>
 				<tr><td>Program(s):</td>
 					<td><select name="programid" multiple  size="6">
-						<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# &nbsp; </cfif>#programname#</option></cfoutput>
+						<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 						</select>
 					</td></tr>
 				<tr align="left">
@@ -113,7 +113,7 @@
 				<tr><th colspan="2" bgcolor="e2efc7">Students Not Covered as of Today</th></tr>
 				<tr><td>Program(s):</td>
 					<td><select name="programid" multiple  size="6">
-						<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# &nbsp; </cfif>#programname#</option></cfoutput>
+						<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 						</select>
 					</td></tr>
 				<tr align="left">
