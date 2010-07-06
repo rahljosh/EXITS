@@ -76,7 +76,7 @@
                                     <td>
                                         <select name="programID" size="6" multiple>
                                             <cfloop query="qGetPrograms">
-                                                <option value="#ProgramID#">#qGetPrograms.companyshort# - #qGetPrograms.programname#</option>
+                                                <option value="#ProgramID#">#qGetPrograms.programname#</option>
                                             </cfloop>
                                         </select>
                                     </td>
@@ -112,7 +112,7 @@
                                     <td>
                                         <select name="programID" size="6" multiple>
                                             <cfloop query="qGetPrograms">
-                                                <option value="#ProgramID#">#qGetPrograms.companyshort# - #qGetPrograms.programname#</option>
+                                                <option value="#ProgramID#">#qGetPrograms.programname#</option>
                                             </cfloop>
                                         </select>
                                     </td>
@@ -216,7 +216,7 @@
                             <td><select name="programID" size="1">
                                     <option value=00></option>
                                     <option value=0>All Programs</option>			
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
                                 </select>
                             </td></tr>
                         <tr><td colspan="2" align="center">&nbsp;</td></tr>			
@@ -234,7 +234,7 @@
                                     <option value=1></option>
                                     <option value=0>All Programs</option>			
                                     <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
                                 </select></td></tr>
                         <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
                         <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
@@ -260,7 +260,7 @@
                             <td><select name="programID" size="1">
                                     <option value=0>All Programs</option>			
                                     <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
                                 </select>
                             </td></tr>
                         <tr><td colspan="2" align="center">&nbsp;</td></tr>			
@@ -278,7 +278,7 @@
                                     <option value=1></option>
                                     <option value=0>All Programs</option>			
                                     <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
                                 </select></td></tr>
                         <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
                         <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
@@ -305,7 +305,7 @@
                             <td><select name="programID" size="1">
                                     <option value=0>All Programs</option>			
                                     <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
                                 </select></td></tr>
                         <tr><td colspan="2" align="center">&nbsp;</td></tr>					
                         <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
@@ -322,7 +322,7 @@
                                     <option value=1></option>
                                     <option value=0>All Programs</option>			
                                     <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
                                 </select></td></tr>
                         <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
                         <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
@@ -350,7 +350,7 @@
                                     <option value=1></option>
                                     <option value=0>All Programs</option>			
                                     <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
                                 </select></td></tr>
                         <tr><td colspan="2" align="center">&nbsp;</td></tr>					
                         <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
@@ -367,7 +367,7 @@
                                     <option value='zero'></option>
                                     <option value=0>All Programs</option>			
                                     <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
                                 </select></td></tr>
                         <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
                         <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
@@ -391,7 +391,7 @@
 						<tr align="left">
 							<td>Program :</td>
 							<td><cfselect name="programID" size="5" multiple required="yes" message="Please select a program.">
-									<cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+									<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 								</cfselect>
 							</td>
 						</tr>
@@ -406,7 +406,7 @@
 						<tr align="left">
 							<td>Program :</td>
 							<td><cfselect name="programID" size="5" multiple required="yes" message="Please select a program.">
-									<cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop>
+									<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 								</cfselect>
 							</td>
 						</tr>
@@ -459,7 +459,7 @@
                                 <tr align="left">
                                     <td>Program :</td>
                                     <td><cfselect name="programID" multiple  size="6">
-                                <cfloop query="qGetPrograms"><option value="#ProgramID#"><cfif client.companyid EQ 5>#qGetPrograms.companyshort# - </cfif>#programname#</option></cfloop></cfselect></td></tr>
+                                <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop></cfselect></td></tr>
                                 <tr align="left">
                                     <td>New Start Date :</td><td><cfinput type="text" size="7" name="newdate" required="yes" message="You must enter a date" validate="date"></td>
                                 </tr>
