@@ -1,0 +1,58 @@
+.oneColFixCtrHdr #container {
+	width: 780px;  /* using 20px less than a full 800px width allows for browser chrome and avoids a horizontal scroll bar */
+	background: #FFFFFF; /* the auto margins (in conjunction with a width) center the page */
+	border: 1px solid #000000;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+	margin-top: 25;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+}
+.oneColFixCtrHdr #header {
+	background-color: #FFF;
+	background-image: url(../images/topBar.png);
+	background-repeat: repeat-x;
+	height: 110px;
+	padding-top: 0;
+	padding-right: 10px;
+	padding-bottom: 0;
+	padding-left: 20px;
+}
+.oneColFixCtrHdr #container #header .text {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}
+.oneColFixCtrHdr #header h1 {
+	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
+	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
+}
+.oneColFixCtrHdr #mainContent {
+	padding: 0 20px; /* remember that padding is the space inside the div box and margin is the space outside the div box */
+	background: #FFFFFF;
+	border: medium solid #202554;
+}
+.spacer {
+	background-color: #FFF;
+	height: 15px;
+}
+.oneColFixCtrHdr #footer {
+	background-color: #FFF;
+	background-image: url(../images/bottomBar.png);
+	background-repeat: repeat-x;
+	height: 53px;
+	padding-top: 0;
+	padding-right: 10px;
+	padding-bottom: 0;
+	padding-left: 10px;
+}
+.ftext  {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 9px;
+	color: #FFF;
+	text-align: center;
+}
+.oneColFixCtrHdr #footer p {
+	margin: 0; /* zeroing the margins of the first element in the footer will avoid the possibility of margin collapse - a space between divs */
+	padding: 10px 0; /* padding on this element will create space, just as the the margin would have, without the margin collapse issue */
+}
