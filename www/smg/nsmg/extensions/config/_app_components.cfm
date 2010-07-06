@@ -35,7 +35,7 @@
 	AppCFC.Insurance = CreateCFC("insurance").Init();
 	
 	// Store the initialized Invoice object in the Application scope
-	AppCFC.invoice = CreateCFC("invoice").Init();
+	//AppCFC.invoice = CreateCFC("invoice").Init();
 
 	// Store the initialized Other object in the Application scope
 	AppCFC.LookUpTables = CreateCFC("lookUpTables").Init();
