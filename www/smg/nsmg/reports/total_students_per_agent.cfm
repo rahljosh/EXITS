@@ -53,7 +53,7 @@
 <table width='650' cellpadding=6 cellspacing="0" align="center" frame="box">
 	<tr><td align="left">
 		Program(s) Included in this Report:<br>
-		<cfloop query="get_program"><b>#companyshort# &nbsp; &nbsp; #programname# &nbsp; (#ProgramID#)</b><br></cfloop>
+		<cfloop query="get_program"><b>#programname# &nbsp; (#ProgramID#)</b><br></cfloop>
 		Total of #get_total_students.recordcount# International Agents
 		</td>
 	</tr>

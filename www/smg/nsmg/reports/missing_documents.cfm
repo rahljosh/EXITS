@@ -52,7 +52,7 @@
 	<table width='670' cellpadding=4 cellspacing="0" align="center" frame="box">	
 		<tr><td colspan="2">
 			<div align="center">Program(s) Included in this Report:</div><br>
-			<cfloop query="get_programs"><b>#companyshort# &nbsp; &nbsp; #programname# &nbsp; (###ProgramID#)</b><br></cfloop></td></tr>
+			<cfloop query="get_programs"><b>#programname# &nbsp; (###ProgramID#)</b><br></cfloop></td></tr>
 		<tr>
 			<td width="85%" class="style1">International Representative</th>
 			<td width="15%" align="center" class="style1">Total</th>

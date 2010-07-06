@@ -66,7 +66,7 @@
 <table width='90%' cellpadding=4 cellspacing="0" align="center" frame="box">
 <tr><td align="center">
 	Program(s) Included in this Report:<br>
-	<cfloop query="get_program"><b>#companyshort# - #programname# &nbsp; (#programID#)</b><br></cfloop>
+	<cfloop query="get_program"><b>#programname# &nbsp; (#programID#)</b><br></cfloop>
 	Total of Students <b>relocated</b> in program: #total_stu_relocated.recordcount#
 	</td></tr>
 </table>

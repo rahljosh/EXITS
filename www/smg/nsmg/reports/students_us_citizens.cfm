@@ -83,7 +83,7 @@
 <tr><th>US Citizens Students</th></tr>
 <tr><td align="center">
 	Program(s) Included in this Report:<br>
-	<cfloop query="get_program"><b>#companyshort# - #programname# &nbsp; (#programID#)</b><br></cfloop>
+	<cfloop query="get_program"><b>#programname# &nbsp; (#programID#)</b><br></cfloop>
 	Total of students &nbsp; <i>#get_us_citizens.recordcount#</i>
 	</td></tr>
 </table><br />

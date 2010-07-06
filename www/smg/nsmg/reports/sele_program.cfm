@@ -35,7 +35,7 @@
 				<tr>
 					<td>Program(s) :</td>
 					<td><select name="programid" multiple  size="8">
-						<cfoutput query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#companyshort# - </cfif>#ProgramName# </option></cfoutput>
+						<cfoutput query="get_program"><option value="#ProgramID#">#ProgramName# </option></cfoutput>
 						</select>
 					</td>
 				</tr>

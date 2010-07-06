@@ -53,7 +53,7 @@ WHERE
 <cfif get_country.recordcount>
 	<table width='650' cellpadding=6 cellspacing="0" align="center" frame="box">	
 	<tr><td colspan="2"><div align="center">Program(s) Included in this Report:</div><br>
-		<cfoutput query="get_programs"><b>#companyshort# &nbsp; &nbsp; #programname# &nbsp; (#ProgramID#)</b><br></cfoutput>
+		<cfoutput query="get_programs"><b>#programname# &nbsp; (#ProgramID#)</b><br></cfoutput>
 		<div align="center"><cfoutput>Total of #get_total_students.total# Students</cfoutput></div>
 	</td></tr>
 	<tr><th width="75%">Country</th> <th width="25%">Total of Students</th></tr>

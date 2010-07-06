@@ -41,7 +41,7 @@ WHERE 	s.active = '1' AND c.continent = '#form.continent#'
 <table width='650' cellpadding=6 cellspacing="0" align="center" frame="box">	
 <tr><th colspan="2">
 	<div align="center">Program(s) Included in this Report:</div><br>
-	<cfloop query="get_program"><b>#companyshort# &nbsp; &nbsp; #programname# &nbsp; (#ProgramID#)</b><br></cfloop>
+	<cfloop query="get_program"><b>#programname# &nbsp; (#ProgramID#)</b><br></cfloop>
 	<div align="center">Total of Students <cfif form.status is 1><b>placed</b></cfif><cfif form.status is 2><b>unplaced</b></cfif> in program (s): #total_students.recordcount#</div>
 	<cfif form.continent is not 0>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Continent: &nbsp; #form.continent#</cfif>
 </th></tr>

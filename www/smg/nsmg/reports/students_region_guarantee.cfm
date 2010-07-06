@@ -50,7 +50,7 @@ WHERE 	<cfloop list=#form.programid# index='prog'>
 <table width='90%' cellpadding=6 cellspacing="0" align="center" frame="box">
 <tr><td align="center">
 	<div align="center">Program(s) Included in this Report:</div><br>
-	<cfloop query="get_program"><b>#companyshort# &nbsp; &nbsp; #programname# &nbsp; (#ProgramID#)</b><br></cfloop>
+	<cfloop query="get_program"><b>#programname# &nbsp; (#ProgramID#)</b><br></cfloop>
 	<div align="center">Total of Students <cfif form.status is 1><b>placed</b></cfif><cfif form.status is 2><b>unplaced</b></cfif> in program: #get_total_students.recordcount#</div>
 </td></tr>
 </table>
