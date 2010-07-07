@@ -34,6 +34,8 @@
             <ul>                 
             	<li><a href="##studentInformation"><span>Student Information</span></a></li>
                 <li><a href="##familyInformation"><span>Family Information</span></a></li>
+                <li><a href="##familyInformation2"><span>Family Information II</span></a></li>
+                <li><a href="##other"><span>Other</span></a></li>
                 <li><a href="##studentEssay"><span>Student Essay</span></a></li>
                 <li><a href="##appDocuments"><span>Documents</span></a></li>
 			</ul>
@@ -45,9 +47,17 @@
             <div id="familyInformation">
                 <cfinclude template="_section2.cfm">
             </div>
+
+            <div id="familyInformation2">
+                <cfinclude template="_section3.cfm">
+            </div>
+            
+            <div id="other">
+                <cfinclude template="_section4.cfm">
+            </div>
             
             <div id="studentEssay">
-                <cfinclude template="_section3.cfm">
+                <cfinclude template="_section5.cfm">
             </div>
 
             <div id="appDocuments">

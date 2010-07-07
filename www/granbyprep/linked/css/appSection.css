@@ -133,8 +133,8 @@ Left Side / Right Side Content
 	padding:1px 10px 20px 5px;
 }
 
-.leftSideBar .insideBar a,
-.rightSideContent .insideBar a {
+.leftSideBar .insideBar a.itemLinks,
+.rightSideContent .insideBar a.itemLinks {
 	background: url(../../images/onlineApp/rightArrow.gif) no-repeat; 
 	display:block;
 	font-family: segoe ui, Arial, sans-serif; 
@@ -142,7 +142,7 @@ Left Side / Right Side Content
 	font-weight:bold;
 	color: #0069aa;
 	padding:0px 5px 0px 20px;
-	margin:20px 0px 5px 10px;
+	margin:15px 0px 5px 10px;
 	text-decoration:none;
 }
 
@@ -150,6 +150,31 @@ Left Side / Right Side Content
 .rightSideContent .insideBar a:hover{
 	color:#e69700;	
 	outline: none;
+}
+
+.leftSideBar .insideBar ul {
+	margin-left:10px;
+	font-size:1em;
+	font-weight:bold;
+	color: #0069aa;
+}
+
+.leftSideBar .insideBar li {
+	list-style:none;
+	padding:0px 0px 5px 0px;
+}
+
+.leftSideBar .insideBar li.on {
+	list-style-image: url(../../images/onlineApp/checkMark.gif); 
+}
+
+.leftSideBar .insideBar li.off {
+	list-style-image: url(../../images/onlineApp/notChecked.gif); 
+}
+
+.leftSideBar .insideBar li a {
+	color: #0069aa;
+	text-decoration:none;
 }
 
 /***********************************************************************************
@@ -204,7 +229,7 @@ Online Application
 .xxSmallField {
 	font-size:1.2em;
 	border : 1px solid #999;
-	width:45px;
+	width:48px;
 }
 
 .largeTextField {
@@ -228,6 +253,15 @@ Online Application
 
 .documentProperties {
 	display:none;	
+}
+
+.creditCardImageDiv {
+	width:300px; 
+	height:150px; 
+	border:1px solid #666; 
+	float:right; 
+	position:relative; 
+	margin:-150px 25px 0px 0px;
 }
 
 /***********************************************************************************
@@ -344,6 +378,15 @@ div.form-container p {
 
 div.form-container p.note { 
 	margin-left: 210px; 
+	font-size: 90%; 
+	color: #333; 
+}
+
+div.form-container .phoneNote {
+	width:48px;
+	text-align:center;
+	display:inline-block;
+	margin-right:10px;
 	font-size: 90%; 
 	color: #333; 
 }

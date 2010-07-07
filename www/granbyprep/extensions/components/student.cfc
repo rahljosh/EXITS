@@ -194,7 +194,6 @@
                     dob,
                     countryBirthID,
                     countryCitizenID,
-                    firstLanguage,
                     email,
                     password,
                     dateLastLoggedIn,
@@ -221,7 +220,6 @@
         <cfargument name="dob" default="" hint="Student Date of Birth">
         <cfargument name="countryBirthID" default="" hint="Student Country of Birth">
         <cfargument name="countryCitizenID" default="" hint="Student Country of Citizenship">
-        <cfargument name="firstLanguage" default="" hint="First Language Other than English">
 
 		<cfquery 
 			datasource="#APPLICATION.DSN.Source#">
@@ -239,8 +237,7 @@
                     	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     </cfif>
                     countryBirthID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryBirthID)#">,
-                    countryCitizenID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryCitizenID)#">,
-                    firstLanguage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstLanguage)#">
+                    countryCitizenID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryCitizenID)#">
 				WHERE
 	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>

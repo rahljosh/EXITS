@@ -34,7 +34,7 @@
         <div class="insideBar">
 			
             <cfloop query="qGetFaq">
-            	<a href="">#qGetFaq.question#</a>
+            	<a href="" class="itemLinks">#qGetFaq.question#</a>
                 
                 <div id="" class="faqAnswer">
                 	#qGetFaq.answer#
@@ -43,9 +43,10 @@
                 
             </cfloop>
             
-        </div>
+		</div><!-- /insideBar -->
         
-    </div>
+	</div><!-- rightSideContent -->        
+    
 
 <!--- Page Footer --->
 <gui:pageFooter

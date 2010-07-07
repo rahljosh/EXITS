@@ -322,8 +322,34 @@
 		
 	</cffunction>
 
+	
+    <!--- Check Required Fields --->
+	<cffunction name="checkRequiredSectionFields" access="public" returntype="query" output="false" hint="Query of queries. Returns an application question by field.">
+        <cfargument name="sectionName" type="string" required="yes" hint="Section name" />
 
-
+		<cfquery  
+			name="qCheckRequiredSectionFields" 
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+					aq.ID,
+                    aq.applicationID,
+                    aq.fieldKey,
+                    aq.displayField,
+                    aq.sectionName,
+                    aq.sortOrder,
+                    aq.classType
+				FROM
+					applicationQuestion aq
+                LEFT OUTER JOIN
+                	applicationAnswer aa ON aq.ID = aa.applicationQuestionID	    
+				WHERE
+                    aq.sectionName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sectionName#">    
+                AND	
+                	aq.isRequired = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+		</cfquery>
+		
+		<cfreturn qCheckRequiredSectionFields /> 
+	</cffunction>
 
 
 </cfcomponent>

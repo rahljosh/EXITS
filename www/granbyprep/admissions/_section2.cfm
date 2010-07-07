@@ -123,7 +123,7 @@
 <div class="form-container">
 	
     <!--- Only Display Messages if Current tab is updated --->
-  	<cfif currentTabID EQ 1>
+  	<cfif FORM.submittedType EQ 'section2'>
     
 		<!--- Page Messages --->
         <gui:displayPageMessages 
@@ -233,7 +233,12 @@
 			<input type="text" name="homePhonePrefix" id="homePhonePrefix" value="#FORM.homePhonePrefix#" class="xxSmallField" maxlength="4" /> 
 			- 
 			<input type="text" name="homePhoneNumber" id="homePhoneNumber" value="#FORM.homePhoneNumber#" class="xxSmallField" maxlength="6" />
-			<p class="note">+#### - (######) - ###### - ########</p>
+            <p class="note"> 
+            	<span class="phoneNote">country</span> 
+                <span class="phoneNote">area</span>  
+                <span class="phoneNote">prefix</span> 
+                <span class="phoneNote">number</span>
+            </p>
 		</div>
 
 		<!--- Parent Fax Telephone --->
@@ -246,7 +251,12 @@
 			<input type="text" name="faxPrefix" id="faxPrefix" value="#FORM.faxPrefix#" class="xxSmallField" maxlength="4" /> 
 			- 
 			<input type="text" name="faxNumber" id="faxNumber" value="#FORM.faxNumber#" class="xxSmallField" maxlength="6" />
-			<p class="note">+#### - (######) - ###### - ########</p>
+            <p class="note"> 
+            	<span class="phoneNote">country</span> 
+                <span class="phoneNote">area</span>  
+                <span class="phoneNote">prefix</span> 
+                <span class="phoneNote">number</span>
+            </p>
 		</div>
 
 		<!--- Parent Email --->
@@ -320,72 +330,16 @@
 			<input type="text" name="businessPhonePrefix" id="businessPhonePrefix" value="#FORM.homePhonePrefix#" class="xxSmallField" maxlength="4" /> 
 			- 
 			<input type="text" name="businessPhoneNumber" id="businessPhoneNumber" value="#FORM.homePhoneNumber#" class="xxSmallField" maxlength="6" />
-			<p class="note">+#### - (######) - ###### - ########</p>
+            <p class="note"> 
+            	<span class="phoneNote">country</span> 
+                <span class="phoneNote">area</span>  
+                <span class="phoneNote">prefix</span> 
+                <span class="phoneNote">number</span>
+            </p>
 		</div>
 
 	</fieldset>
 	
-
-	<!--- Other Information --->
-	<fieldset>
-	   
-		<legend>Other Information</legend>
-		
-		<!--- Applicant Lives --->
-		<div class="controlset">
-			<span class="label">#qGetQuestions.displayField[22]# <cfif qGetQuestions.isRequired[22]><em>*</em></cfif></span>
-            <input type="checkbox" name="#qGetQuestions.fieldKey[22]#" id="livesFather" value="Father" <cfif ListFind(FORM[qGetQuestions.fieldKey[22]], 'Father')> checked="checked" </cfif> /> <label for="livesFather">Father</label>
-            <input type="checkbox" name="#qGetQuestions.fieldKey[22]#" id="livesMother" value="Mother" <cfif ListFind(FORM[qGetQuestions.fieldKey[22]], 'Mother')> checked="checked" </cfif> /> <label for="livesMother">Mother</label>
-            <input type="checkbox" name="#qGetQuestions.fieldKey[22]#" id="livesGuardian" value="Guardian" <cfif ListFind(FORM[qGetQuestions.fieldKey[22]], 'Guardian')> checked="checked" </cfif> /> <label for="livesGuardian">Guardian</label>
-            <input type="checkbox" name="#qGetQuestions.fieldKey[22]#" id="livesOther" value="Other" <cfif ListFind(FORM[qGetQuestions.fieldKey[22]], 'Other')> checked="checked" </cfif> /> <label for="livesOther">Other</label>
-            <p class="note">(Mark all that apply)</p>
-		</div>			
-
-		<!--- Admission Materials --->
-		<div class="controlset">
-			<span class="label">#qGetQuestions.displayField[23]# <cfif qGetQuestions.isRequired[23]><em>*</em></cfif></span>
-			<div class="field">
-                <input type="radio" name="#qGetQuestions.fieldKey[23]#" id="materialFather" value="Father" <cfif FORM[qGetQuestions.fieldKey[23]] EQ 'Father'> checked="checked" </cfif> /> <label for="materialFather">Father</label>
-                <input type="radio" name="#qGetQuestions.fieldKey[23]#" id="materialMother" value="Mother" <cfif FORM[qGetQuestions.fieldKey[23]] EQ 'Mother'> checked="checked" </cfif> /> <label for="materialMother">Mother</label>
-                <input type="radio" name="#qGetQuestions.fieldKey[23]#" id="materialGuardian" value="Guardian" <cfif FORM[qGetQuestions.fieldKey[23]] EQ 'Guardian'> checked="checked" </cfif> /> <label for="materialGuardian">Guardian</label>
-                <input type="radio" name="#qGetQuestions.fieldKey[23]#" id="materialOther" value="Other" <cfif FORM[qGetQuestions.fieldKey[23]] EQ 'Other'> checked="checked" </cfif> /> <label for="materialOther">Other</label>
-			</div>
-        </div>
-		
-        <div style="clear:both;"></div>
-        	
-		<!--- Parent Lives --->
-        <div class="controlset">
-			<span class="label">#qGetQuestions.displayField[24]# <cfif qGetQuestions.isRequired[24]><em>*</em></cfif></span>
-            <div class="field">
-                <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="fatherDeceased" value="fatherDeceased" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'fatherDeceased')> checked="checked" </cfif> /> <label for="fatherDeceased">Father Deceased</label>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="motherDeceased" value="motherDeceased" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'motherDeceased')> checked="checked" </cfif> /> <label for="motherDeceased">Mother Deceased</label>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="parentsDivorced" value="parentsDivorced" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'parentsDivorced')> checked="checked" </cfif> /> <label for="parentsDivorced">Parents Divorced</label>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="parentsSeparated" value="parentsSeparated" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'parentsSeparated')> checked="checked" </cfif> /> <label for="parentsSeparated">Parents Separated</label> 
-                <br />        	
-                <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="fatherRemarried" value="fatherRemarried" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'fatherRemarried')> checked="checked" </cfif> /> <label for="fatherRemarried">Father Remarried</label>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="motherRemarried" value="motherRemarried" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'motherRemarried')> checked="checked" </cfif> /> <label for="motherRemarried">Mother Remarried</label>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[24]#" id="livingOutside" value="livingOutside" <cfif ListFind(FORM[qGetQuestions.fieldKey[24]], 'livingOutside')> checked="checked" </cfif> /> <label for="livingOutside">Living Outside U.S.</label>
-            </div>
-        </div>
-
-		<!--- Parent Custody --->
-        <div class="field">
-			<label for="#qGetQuestions.fieldKey[25]#">#qGetQuestions.displayField[25]# <cfif qGetQuestions.isRequired[25]><em>*</em></cfif></label> 
-			<input type="text" name="#qGetQuestions.fieldKey[25]#" id="#qGetQuestions.fieldKey[25]#" value="#FORM[qGetQuestions.fieldKey[25]]#" class="#qGetQuestions.classType[25]#" maxlength="50" />
-		</div>
-
-		<div style="clear:both;"></div>
-
-		<!--- Financial Aid --->
-        <div class="controlset">
-			<span class="label">#qGetQuestions.displayField[26]# <cfif qGetQuestions.isRequired[26]><em>*</em></cfif></span>
-            <input type="radio" name="#qGetQuestions.fieldKey[26]#" id="financialYes" value="1" <cfif FORM[qGetQuestions.fieldKey[26]] EQ 1> checked="checked" </cfif> /> <label for="financialYes">Yes</label>
-			<input type="radio" name="#qGetQuestions.fieldKey[26]#" id="financialNo" value="0" <cfif FORM[qGetQuestions.fieldKey[26]] EQ 0> checked="checked" </cfif> /> <label for="financialNo">No</label>
-        </div>
-
-	</fieldset>
-
 	<div class="buttonrow">
 		<input type="submit" value="Save" class="button ui-corner-top" />
 	</div>
