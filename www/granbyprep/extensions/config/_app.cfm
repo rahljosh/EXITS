@@ -132,14 +132,20 @@
 	
 	// Set the reference to the struct
 	Constants = APPLICATION.Constants;
-	
-	//Set up constant for project help statuses
+
+	//Set up constant for payment methods
+	Constants.paymentType = ArrayNew(1);		
+	Constants.paymentType[1] = "Credit Card";
 	/*
-	Constants.applicationFiles = ArrayNew(1);		
-	Constants.applicationFiles[1] = "Mathematics Teacher Recommendation";
-	Constants.applicationFiles[2] = "English Teacher Recommendation";
-	Constants.applicationFiles[3] = "Transcript for at least the last two years";
-	Constants.applicationFiles[4] = "Standardized test scores";
-	Constants.applicationFiles[5] = "Other";
+	Constants.paymentType[2] = "Personal Check";
+	Constants.paymentType[3] = "Wire Transfer";
+	Constants.paymentType[4] = "Money Order";
 	*/
+
+	//Set up constant for credit card types
+	Constants.creditCardType = ArrayNew(1);		
+	Constants.creditCardType[1] = "Visa";
+	Constants.creditCardType[2] = "MasterCard";
+	Constants.creditCardType[3] = "American Express";
+	Constants.creditCardType[4] = "Discovery";
 </cfscript>

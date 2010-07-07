@@ -96,8 +96,6 @@
                             </a>
 						</div>
                                                 
-						
-                                                                        
                         <div class="topRight">
                             <a href="#CGI.SCRIPT_NAME#?action=home" class="ui-corner-top <cfif Find("home", CGI.QUERY_STRING)> selected </cfif>">Home</a>
                             <a href="#CGI.SCRIPT_NAME#?action=help" class="ui-corner-top <cfif Find("help", CGI.QUERY_STRING)> selected </cfif>">Get Help</a>
@@ -116,29 +114,30 @@
 
                         </div>
                         
-                        
                     </div>
 
 					<!--- Side Bar --->
                     <div class="leftSideBar ui-corner-all">
                         
-                        <div class="insideBar form-container ">
-                        	<a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Online Application</a> 
-                            <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Application CheckList</a> 
+                        <div class="insideBar form-container">
+                        	<a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Start Application</a> 
+                            <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Application Checklist</a> 
                                 <ul>
-                                    <li>Student Information</li>
-                                    <li>Family Information</li>
-                                    <li>Student Essay</li>
-                                    <li>Application Fee</li>
-                                    <li>Mathematics Teacher Recommendation</li>
-                                    <li>English Teacher Recommendation</li>
-                                    <li>Transcript for at least the last two years</li>
-                                    <li>Standardized test scores</li>
-                                    <li>Interview</li>
-                                </ul>                
+                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Student Information</a></li>
+                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Family Information</a></li>
+                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">Family Information II</a></li>
+                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=3">Other</a></li>
+                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=4">Student Essay</a></li>
+                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Mathematics Teacher Recommendation</a></li>
+                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">English Teacher Recommendation</a></li>
+                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Transcript for at least the last two years</a></li>
+                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Standardized test scores</a></li>
+                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Interview</a></li>
+                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=applicationFee">Application Fee</a></li>
+                                </ul>    
                             <a href="#CGI.SCRIPT_NAME#?action=initial" class="itemLinks">Financial Aid</a>
                             <a href="#CGI.SCRIPT_NAME#?action=initial" class="itemLinks">Print Application</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=initial" class="itemLinks">Submit Application</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks">Submit Application</a>
                         </div>
                         
                     </div>

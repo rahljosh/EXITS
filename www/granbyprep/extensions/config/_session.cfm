@@ -18,7 +18,6 @@
 <!--- Folder to upload application files multiple files --->
 <cfparam name="SESSION.STUDENT.myUploadFolder" type="string" default="">
 
-
 <cftry>
 
 	<cfparam name="SESSION.STUDENT.ID" type="numeric" default="0">

@@ -115,7 +115,8 @@
                 width="650px"
                 pagesize="6"
                 bgcolor="##FFFFFF" 
-                highlighthref="yes">
+                highlighthref="yes"
+                align="left">
                                     
                 <cfgridcolumn name="ID" display="no">
                 <cfgridcolumn name="fileName" header="File Name" width="240">

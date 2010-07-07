@@ -16,11 +16,29 @@
 	<cfproperty 
 		name="My" 
 		type="struct" 
-		hint="A structure containing internal variables for this session controller" 
-		/>
+		hint="A structure containing internal variables for this session controller" />
+	
+    <!--- SESSION VARIABLES --->
+	<cfproperty
+    	name="SESSION.STUDENT.isSection1Completed"
+        type="numeric"
+        hint="Set to 1 if section 1 is completed"
+        default="0" />
+
+	<cfproperty
+    	name="SESSION.STUDENT.isSection2Completed"
+        type="numeric"
+        hint="Set to 1 if section 2 is completed"
+        default="0" />
+
+	<cfproperty
+    	name="SESSION.STUDENT.isSection3Completed"
+        type="numeric"
+        hint="Set to 1 if section 3 is completed"
+        default="0" />
         
 		
-	<!--- nitializes and returns a session instance --->
+	<!--- initializes and returns a session instance --->
 	<cffunction name="Init" access="public" returntype="session" output="No" hint="Returns the initialized session object">
 
 		<cfscript>
@@ -87,5 +105,19 @@
         </cftry>
 		
 	</cffunction>
-a
+
+
+	<!--- Set Session Variables --->
+	<cffunction name="setSessionVariables" access="public" returntype="numeric" hint="Sets session variables">
+	
+    	<cfscript>
+			SESSION.STUDENT.isSection1Completed = 0;	
+			
+			SESSION.STUDENT.isSection2Completed = 0;		
+			
+			SESSION.STUDENT.isSection3Completed = 0;		
+		</cfscript>
+    
+    </cffunction>
+
 </cfcomponent>
