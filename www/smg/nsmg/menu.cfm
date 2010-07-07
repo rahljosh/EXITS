@@ -94,7 +94,7 @@
                 <li>
                     <a href="index.cfm?curdoc=helpdesk/help_desk_list">Tools</a>
                     <ul>
-                        <li><a href="index.cfm?curdoc=intrep/int_flight_info">Flight Information</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/students_missing_flight_info">Flight Information</a></li>
                     </ul>
                 </li>
                 
