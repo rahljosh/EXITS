@@ -39,11 +39,4 @@
 
 	// Store the initialized Student Library object in the Application scope
 	AppCFC.student = CreateCFC("student").Init();
-
-
-	/***** Create APPLICATION.QUERY structure *****/
-	APPLICATION.QUERY = StructNew();
-
-	// Set a short name for the Queries
-	AppQuery = APPLICATION.QUERY;
 </cfscript>

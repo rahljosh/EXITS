@@ -15,7 +15,7 @@
 		
 		<!--- Page Header --->
 		<gui:pageHeader
-			headerType="login/application/email"
+			headerType="login/application/print/email"
 		/>
 	
 ----- ------------------------------------------------------------------------- --->
@@ -29,7 +29,7 @@
 		type="string"
         default=""
 		/>
-        
+
 </cfsilent>
 
 <!--- 
@@ -115,12 +115,13 @@
                         </div>
                         
                     </div>
-
+		
 					<!--- Side Bar --->
                     <div class="leftSideBar ui-corner-all">
                         
                         <div class="insideBar form-container">
-                        	<a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Start Application</a> 
+                            <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Start Application</a> 
+                            
                             <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Application Checklist</a> 
                                 <ul>
                                     <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Student Information</a></li>
@@ -128,21 +129,45 @@
                                     <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">Family Information II</a></li>
                                     <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=3">Other</a></li>
                                     <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=4">Student Essay</a></li>
-                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Mathematics Teacher Recommendation</a></li>
+                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Mathematics Teacher Recommendation</a></li>
                                     <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">English Teacher Recommendation</a></li>
                                     <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Transcript for at least the last two years</a></li>
                                     <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Standardized test scores</a></li>
-                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Interview</a></li>
-                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=applicationFee">Application Fee</a></li>
                                 </ul>    
-                            <a href="#CGI.SCRIPT_NAME#?action=initial" class="itemLinks">Financial Aid</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=initial" class="itemLinks">Print Application</a>
+                            
+                            <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
+                            <!--- <a href="#CGI.SCRIPT_NAME#?action=initial" class="itemLinks">Financial Aid</a> --->                                
+                            <a href="#CGI.SCRIPT_NAME#?action=applicationFee" id="itemLinks" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>                                 
                             <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks">Submit Application</a>
-                        </div>
-                        
+                        </div>                            
+                    
                     </div>
+                        
                     
             </cfcase>
+
+
+            <!--- Print Header --->
+            <cfcase value="Print">
+                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <cfoutput>
+                        <title>#APPLICATION.Metadata.pageTitle#</title>
+                        <meta name="description" content="#APPLICATION.Metadata.pageDescription#" />
+                        <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
+                        <link rel="stylesheet" href="../linked/css/appSection.css" type="text/css" />
+                        <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
+                        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+                        <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+                        <script src="../linked/js/appSection.js " type="text/javascript"></script>
+                    </cfoutput>
+                </head>
+                <body>
+
+			</cfcase>
             
             
             <!--- Email Header --->
@@ -177,12 +202,6 @@
                 <div style="width:100%; margin:5px 0px 5px 0px; padding:20px; background-color: ##FFF; border: ##EEE 1px solid; min-height:150px;">
                 
             </cfcase>
-            
-    
-            <!--- Default Footer --->
-            <cfdefaultcase>
-            
-            </cfdefaultcase>
     
         </cfswitch>
     

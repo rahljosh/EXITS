@@ -31,6 +31,13 @@
 	APPLICATION.SCHOOL.phone = '(631) 893-4540';
 
 
+	/***** Create APPLICATION.QUERY structure - This will hold queries that are used in the database and do not change frequently *****/
+	APPLICATION.QUERY = StructNew();
+
+	// Set a short name for the Queries
+	AppQuery = APPLICATION.QUERY;
+
+
 	/***** Create APPLICATION.METADATA structure / Stores Default Metadata Information *****/
 	APPLICATION.METADATA = StructNew();		
 	

@@ -188,7 +188,7 @@
                     <div class="field controlset">
                         <span class="label">Credit Card Type <em>*</em></span>
                         <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.creditCardType)#">
-                        	<input type="radio" name="creditCardType" id="#APPLICATION.CONSTANTS.creditCardType[i]#" value="#APPLICATION.CONSTANTS.creditCardType[i]#" <cfif APPLICATION.CONSTANTS.creditCardType[i] EQ FORM.creditCardType> checked="checked" </cfif> /> <label for="#APPLICATION.CONSTANTS.creditCardType[i]#">#APPLICATION.CONSTANTS.creditCardType[i]#</label>
+                        	<input type="radio" name="creditCardType" id="#APPLICATION.CONSTANTS.creditCardType[i]#" value="#i#" onclick="displayCreditCard(this.value);" <cfif APPLICATION.CONSTANTS.creditCardType[i] EQ FORM.creditCardType> checked="checked" </cfif> /> <label for="#APPLICATION.CONSTANTS.creditCardType[i]#">#APPLICATION.CONSTANTS.creditCardType[i]#</label>
                         </cfloop>
                     </div>
             
@@ -216,12 +216,13 @@
                     </div>
             
                     <div class="field">
-                        <label for="ccvCode">CCV Code <em>*</em></label> 
+                        <label for="ccvCode">CCV/CID Code <em>*</em></label> 
                         <input type="text" name="ccvCode" id="ccvCode" value="#FORM.ccvCode#" class="xSmallField" maxlength="4" />
+                    	<p class="note">See credit card image</p>
                     </div>
                   
                   	<div class="creditCardImageDiv">
-                    	Credit Card Image Goes Here
+                    	<div id="displayCardImage" class="card1"></div>
                     </div>
                     
                 </fieldset>
@@ -317,3 +318,12 @@
 />
 
 </cfoutput>
+
+<script type="text/javascript">
+	// Display Credit Card
+	$(document).ready(function() {
+		// Get Current Value
+		getSelected = $("input[@name='creditCardType']:checked").val();
+		displayCreditCard(getSelected);
+	});
+</script></script>

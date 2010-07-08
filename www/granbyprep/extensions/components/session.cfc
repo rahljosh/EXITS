@@ -9,6 +9,7 @@
 
 <cfcomponent 
 	displayname="session"
+    accessors="true"
 	output="false" 
 	hint="This holds functions for setting up session variables">
 
@@ -20,23 +21,23 @@
 	
     <!--- SESSION VARIABLES --->
 	<cfproperty
-    	name="SESSION.STUDENT.isSection1Completed"
+    	name="isSection1Completed"
         type="numeric"
         hint="Set to 1 if section 1 is completed"
         default="0" />
 
 	<cfproperty
-    	name="SESSION.STUDENT.isSection2Completed"
+    	name="isSection2Completed"
         type="numeric"
         hint="Set to 1 if section 2 is completed"
         default="0" />
 
 	<cfproperty
-    	name="SESSION.STUDENT.isSection3Completed"
+    	name="isSection3Completed"
         type="numeric"
         hint="Set to 1 if section 3 is completed"
         default="0" />
-        
+
 		
 	<!--- initializes and returns a session instance --->
 	<cffunction name="Init" access="public" returntype="session" output="No" hint="Returns the initialized session object">
@@ -65,12 +66,12 @@
 			Return the Unique ID
 		 --->
         <cftry>
-         
+        
             <cfquery 
                 result="newRecord"
                 datasource="#APPLICATION.DSN.Source#">
                 INSERT INTO
-                    session_information
+                    sessionInformation
                 (
                     httpReferer,
                     entryPage,
@@ -80,7 +81,7 @@
                     remoteHost,
                     httpHost,
                     https,
-                    dateCreated				
+                    dateCreated		
                 )
                 VALUES(
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.httpReferer#" maxlength="500">,
@@ -94,16 +95,16 @@
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                 )
             </cfquery>
-
+			
 			<cfreturn newRecord.GENERATED_KEY />
             
             <!--- ERROR --->
             <cfcatch>                
                 <cfreturn 0>
             </cfcatch>
-        
+        	
         </cftry>
-		
+        
 	</cffunction>
 
 
