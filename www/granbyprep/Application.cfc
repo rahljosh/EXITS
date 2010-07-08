@@ -42,7 +42,7 @@
 		returntype="void"
 		output="false"
 		hint="Fires when the session is first created.">
-		
+			
 			<!--- Set up Session variables --->
             <cfinclude template="extensions/config/_session.cfm" />
 			
@@ -62,6 +62,8 @@
 		<cfargument name="TargetPage" type="string" required="true" />
 
 		<cfparam name="URL.init" default="0">
+        <cfparam name="URL.initApp" default="0">
+        <cfparam name="URL.initSession" default="0">
         
 		<cfscript>
 			// Reset Application and Session
@@ -70,15 +72,25 @@
 				THIS.OnSessionStart();
 			}
 			
+			if ( URL.initApp EQ 1 ) {
+				THIS.OnApplicationStart();
+			}
+			
+			if ( URL.initSession EQ 1 ) {
+				THIS.OnSessionStart();
+			}
+			
+			THIS.OnSessionStart();
+			
 			// Set up Short Names
 			APPCFC = APPLICATION.CFC;
 			APPEMAIL = APPLICATION.EMAIL;
 		</cfscript>
         
 		<!--- 
-            Check to see if the current path is legal. The user cannot access 
-            files starting with "_" so throw error if need be. 
-        --->
+			Check to see if the current path is legal. The user cannot access 
+			files starting with "_" so throw error if need be. 
+		--->
         <cfset currentPage = APPLICATION.CFC.UDF.GetCurrentPageFromPath(CGI.cf_template_path)>        
 		
 		<cfif NOT Compare(Left(currentPage, 1), "_")>

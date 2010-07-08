@@ -13,6 +13,9 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 
+	<!--- It is set to 1 for the print application page --->
+	<cfparam name="printApplication" default="0">
+
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submittedType" default="">
     <cfparam name="FORM.currentTabID" default="0">
@@ -26,7 +29,7 @@
 		// Get Answers for this section
 		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section4', foreignID=FORM.studentID);
 
-		// Param Online Application Fields 
+		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 			param name="FORM[qGetQuestions.fieldKey[i]]" default="";
 		}
@@ -57,7 +60,7 @@
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
 				// Reload page with updated information
-				location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
+				//location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
 			
 			}
 			
@@ -171,9 +174,12 @@
 
 	</fieldset>
 
-	<div class="buttonrow">
-		<input type="submit" value="Save" class="button ui-corner-top" />
-	</div>
+    <!--- Save Button --->
+    <cfif NOT printApplication>
+        <div class="buttonrow">
+            <input type="submit" value="Save" class="button ui-corner-top" />
+        </div>
+	</cfif>
 
 	</form>
 

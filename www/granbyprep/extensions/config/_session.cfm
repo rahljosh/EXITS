@@ -21,14 +21,14 @@
 <cftry>
 
 	<cfparam name="SESSION.STUDENT.ID" type="numeric" default="0">
-	<cfparam name="SESSION.ID" type="numeric" default="0">
+	<cfparam name="SESSION.informationID" type="numeric" default="0">
         
     <cfcatch type="any">
     
 		<cfscript>
             // Set studentID to 0
             SESSION.STUDENT.ID = 0;
-			SESSION.ID = 0;
+			SESSION.informationID = 0;
         </cfscript>
         
     </cfcatch>
@@ -37,7 +37,7 @@
 			
 <cfscript>
 	// Store session information
-	SESSION.ID = APPLICATION.CFC.SESSION.InitSession(
+	SESSION.informationID = APPLICATION.CFC.SESSION.InitSession(
 		httpReferer = CGI.http_referer,
 		entryPage = 'http://' & CGI.server_name & '/' & CGI.script_name,
 		httpUserAgent = CGI.http_user_agent,
@@ -48,9 +48,7 @@
 		httpHost = CGI.http_host,
 		https = CGI.https
 	);
-</cfscript>
 
-<cfscript>
 	// Page Messages
 	SESSION.PageMessages = CreateCFC("pageMessages").Init();
 	

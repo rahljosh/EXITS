@@ -157,7 +157,7 @@
                     fieldKey,
                     displayField,
                     sectionName,
-                    sortOrder,
+                    orderKey,
                     classType,
                     requiredMessage,
                     isRequired,
@@ -173,7 +173,7 @@
                 ORDER BY
                 	<!--- Keep the same order as getAnswerByFilter --->
                 	sectionName,
-                    sortOrder                    
+                    orderKey                    
 		</cfquery>
 		
 		<cfreturn qgetQuestionByAppID /> 
@@ -190,7 +190,7 @@
 				 // Check if we have a query in the application scope, if not store the query.
 				var getQuery = APPLICATION.QUERY.qGetStudentQuestion;
 			} catch (Any e) {
-				// Declare Query
+				// Set Query
 				APPLICATION.QUERY.qGetStudentQuestion = getQuestionByAppID(applicationID=1);
 			}
 		</cfscript>
@@ -262,7 +262,7 @@
         		ORDER BY
                 	<!--- Keep the same order as getQuestionByFilter --->
                     aq.sectionName,
-                    aq.sortOrder                    
+                    aq.orderKey                    
 		</cfquery>
 		
 		<cfreturn qGetAnswerByFilter /> 
@@ -336,7 +336,7 @@
                     aq.fieldKey,
                     aq.displayField,
                     aq.sectionName,
-                    aq.sortOrder,
+                    aq.orderKey,
                     aq.classType
 				FROM
 					applicationQuestion aq

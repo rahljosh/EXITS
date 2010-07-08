@@ -152,6 +152,12 @@ Left Side / Right Side Content
 	outline: none;
 }
 
+.leftSideBar .insideBar a.selected,
+.rightSideContent .insideBar a.selected{
+	color:#e69700;	
+	outline: none;
+}
+
 .leftSideBar .insideBar ul {
 	margin-left:10px;
 	font-size:1em;
@@ -256,12 +262,47 @@ Online Application
 }
 
 .creditCardImageDiv {
-	width:300px; 
-	height:150px; 
-	border:1px solid #666; 
 	float:right; 
 	position:relative; 
-	margin:-150px 25px 0px 0px;
+	margin:-150px 100px 0px 0px;
+}
+
+/* Visa */
+.creditCardImageDiv .card1 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardVisa.gif) no-repeat; 
+}
+
+/* MasterCard */
+.creditCardImageDiv .card2 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardMaster.gif) no-repeat; 
+}
+
+/* American Express */
+.creditCardImageDiv .card3 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardAmex.gif) no-repeat; 
+}
+
+/* Discovery */
+.creditCardImageDiv .card4 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardDiscover.gif) no-repeat; 
+}
+
+.printField {
+	width:500px;
+	margin-left: 210px; 	
+	text-align:justify;
+	border-bottom:1px solid #999999;
+	/* display:block;
+	background: url(../../images/onlineApp/line.gif) repeat-x;  
+	*/
 }
 
 /***********************************************************************************

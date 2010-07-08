@@ -15,7 +15,7 @@
 	
 		<!--- Page Footer --->
 		<gui:pageFooter
-			footerType="login/application/email"
+			footerType="login/application/print/email"
 		/>
 	
 ----- ------------------------------------------------------------------------- --->
@@ -41,6 +41,12 @@
 	<cfoutput>
     
         <cfswitch expression="#ATTRIBUTES.footerType#">
+
+            <!--- Login Footer --->
+            <cfcase value="login">
+            
+            </cfcase>
+
         
             <!--- Application Footer --->
             <cfcase value="application">
@@ -52,11 +58,13 @@
                 </div>
                 
             </cfcase>
-            
-            <!--- Login Footer --->
-            <cfcase value="login">
+
+
+            <!--- Print Footer --->
+            <cfcase value="print">
             
             </cfcase>
+
     		
             <!--- Email Footer --->
             <cfcase value="email">
@@ -71,11 +79,6 @@
 
             </cfcase>
             
-            <!--- Default Footer --->
-            <cfdefaultcase>
-            
-            </cfdefaultcase>
-    
         </cfswitch>
     
     </body>

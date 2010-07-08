@@ -25,7 +25,6 @@
 
 
 	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
-    	<cfargument name="ID" default="0" hint="countryID is not required">
 
         <cfquery 
         	name="qGetCountry"
@@ -38,13 +37,31 @@
                     dateUpdated
 				FROM
                 	country
-				<cfif VAL(ARGUMENTS.ID)>
-	                WHERE 
-                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
-                </cfif>                        
         </cfquery> 
-
+		       
 		<cfreturn qGetCountry>
+	</cffunction>
+
+
+	<cffunction name="getCountryByID" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
+    	<cfargument name="ID" hint="countryID is required">
+		
+        <cfquery 
+        	name="qGetCountryByID"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	ID,
+                    name,
+                    code,
+                    dateCreated,
+                    dateUpdated
+				FROM
+                	country
+                WHERE 
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+        </cfquery> 
+		       
+		<cfreturn qGetCountryByID>
 	</cffunction>
 
 
@@ -99,6 +116,32 @@
         </cfquery> 
 
 		<cfreturn qGetFAQ>
+	</cffunction>
+
+
+	<cffunction name="getApplicationPaymentType" access="public" returntype="query" output="false" hint="Returns a list of payment types">
+    	<cfargument name="ID" default="0" hint="ID is not required.">
+
+        <cfquery 
+        	name="qGetApplicationPaymentType"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	ID,
+                    name,
+                    isActive,
+                    dateCreated,
+                    dateUpdated
+				FROM
+                	applicationPaymentType
+				WHERE
+                	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+				<cfif VAL(ARGUMENTS.ID)>
+					AND
+                        ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.ID#">
+                </cfif>                        
+        </cfquery> 
+
+		<cfreturn qGetApplicationPaymentType>
 	</cffunction>
 
 
