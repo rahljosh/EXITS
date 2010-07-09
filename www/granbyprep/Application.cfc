@@ -80,8 +80,6 @@
 				THIS.OnSessionStart();
 			}
 			
-			THIS.OnSessionStart();
-			
 			// Set up Short Names
 			APPCFC = APPLICATION.CFC;
 			APPEMAIL = APPLICATION.EMAIL;

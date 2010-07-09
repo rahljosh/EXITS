@@ -638,7 +638,7 @@
         <div class="field">
             <label for="#qGetQuestions.fieldKey[22]#">#qGetQuestions.displayField[22]# <cfif qGetQuestions.isRequired[22]><em>*</em></cfif></label>  
             <cfif printApplication>
-				<div class="printField">#FORM[qGetQuestions.fieldKey[22]]# &nbsp;</div>
+				<div class="printFieldText">#FORM[qGetQuestions.fieldKey[22]]# &nbsp;</div>
         	<cfelse>
                 <textarea name="#qGetQuestions.fieldKey[22]#" id="#qGetQuestions.fieldKey[22]#" class="#qGetQuestions.classType[22]#">#FORM[qGetQuestions.fieldKey[22]]#</textarea>                                    	
             </cfif>            

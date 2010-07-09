@@ -113,7 +113,7 @@
                 format="html"
                 bind="cfc:extensions.components.document.getDocumentsRemote({foreignTable},{studentID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection})"                    
                 width="650px"
-                pagesize="6"
+                pagesize="10"
                 bgcolor="##FFFFFF" 
                 highlighthref="yes"
                 align="left">

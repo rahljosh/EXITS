@@ -297,13 +297,74 @@ Online Application
 
 .printField {
 	width:500px;
-	margin-left: 210px; 	
+	margin:0px 0px 5px 210px;
 	text-align:justify;
+	vertical-align:bottom;
 	border-bottom:1px solid #999999;
 	/* display:block;
 	background: url(../../images/onlineApp/line.gif) repeat-x;  
 	*/
 }
+
+.printWrapper {
+	width:800px;	
+}
+
+.printPageBreak {
+	page-break-after:always;
+	margin:0px;
+	padding:0px;
+}
+
+.printFieldOption {
+	width:500px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+}
+
+.printFieldText {
+	width:500px;
+	min-height:50px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+	border-bottom:1px solid #999999;
+}
+
+.printFieldEssay {
+	width:500px;
+	min-height:200px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+	border-bottom:1px solid #999999;
+}
+
+.printFieldCheckYes {
+	display:block;	
+	padding:0px 0px 5px 18px;	
+	background: url(../../images/onlineApp/printCheckY.gif) no-repeat;
+}
+
+.printFieldCheckNo {
+	display:block;	
+	padding:0px 0px 5px 18px;	
+	background: url(../../images/onlineApp/printCheckN.gif) no-repeat;
+}
+
+.printFieldRadioYes {
+	display:block;	
+	padding:0px 0px 5px 18px;	
+	background: url(../../images/onlineApp/printRadioY.gif) no-repeat;
+}
+
+.printFieldRadioNo {
+	display:block;	
+	padding:0px 0px 5px 18px;	
+	background: url(../../images/onlineApp/printRadioN.gif) no-repeat;
+}
+
 
 /***********************************************************************************
 

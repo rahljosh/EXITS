@@ -142,7 +142,6 @@
                         </div>                            
                     
                     </div>
-                        
                     
             </cfcase>
 
@@ -159,13 +158,20 @@
                         <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
                         <link rel="stylesheet" href="../linked/css/appSection.css" type="text/css" />
                         <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
-                        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
-						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
-                        <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
                         <script src="../linked/js/appSection.js " type="text/javascript"></script>
                     </cfoutput>
                 </head>
                 <body>
+                    
+                    <div class="topBar">
+                        
+                        <div class="topLeft">
+                            <div class="mainLogo"></div>
+                            <div class="title">#APPLICATION.SCHOOL.name#</div>
+                            <div class="subTitle">Application for Admission</div>
+                        </div>
+                        
+                    </div>
 
 			</cfcase>
             
