@@ -117,16 +117,27 @@
         <!--- custom bar created for this text area and stored in CFIDE/scripts/ajax/FCKEditor/fckconfig.js file // richtext="yes" toolbar="Basic" --->         
         <div class="field">
             <label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label> 
-            <textarea name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]# textAreaEssayCount">#FORM[qGetQuestions.fieldKey[1]]#</textarea>            
-            <p class="note">(In 250 words or more) <span id="#qGetQuestions.fieldKey[1]#Count" class="spanEssayCount"> </span> </p>  
+            <cfif printApplication>
+            	<div class="printFieldEssay">#FORM[qGetQuestions.fieldKey[1]]# &nbsp;</div>
+        	<cfelse>
+                <textarea name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]# textAreaEssayCount">#FORM[qGetQuestions.fieldKey[1]]#</textarea>            
+                <p class="note">(In 250 words or more) <span id="#qGetQuestions.fieldKey[1]#Count" class="spanEssayCount"> </span> </p>  
+            </cfif>
         </div>
         
 		<!--- Attest --->
         <div class="field controlset">
 			<span class="label"><cfif qGetQuestions.isRequired[2]><em>*</em></cfif> &nbsp;</span>
-            <div class="field">
-                <input type="checkbox" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="1" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 1> checked="checked" </cfif> /> &nbsp; <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]#</label>
-            </div>
+            <cfif printApplication>
+            	<div class="printField">
+                    <span class="printFieldCheck#YesNoFormat(FORM[qGetQuestions.fieldKey[2]])#"> #qGetQuestions.displayField[2]# &nbsp; </span>
+                </div>
+        	<cfelse>
+                <div class="field">
+                    <input type="checkbox" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="1" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 1> checked="checked" </cfif> /> &nbsp; <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]#</label>
+                </div>
+            </cfif>
+            
         </div>
         
     </fieldset>
