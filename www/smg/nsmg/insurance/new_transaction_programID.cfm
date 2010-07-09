@@ -87,7 +87,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
             </td>
         </tr>
         <tr>
-            <td colspan="7" style="background-color:##CCCCCC; border:none;">&nbsp;</td>
+            <td colspan="8" style="background-color:##CCCCCC; border:none;">&nbsp;</td>
         </tr>
         <tr>
             <td style="width:200px; text-align:left; font-weight:bold;">Last Name</td>
@@ -97,6 +97,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
             <td style="width:80px; text-align:center; font-weight:bold;">End Date</td>
             <td style="width:1px;">&nbsp;</td>
             <td style="width:80px; text-align:center; font-weight:bold;">Days</td>
+            <td style="width:300px; text-align:left; font-weight:bold;">Email Address (optional)</td>
         </tr>
         
         <cfloop query="qGetStudents">
@@ -124,7 +125,10 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                   	<cfif IsDate(qGetStudents.dep_date) AND IsDate(qGetStudents.enddate)>
                     	#DateDiff("d", qGetStudents.dep_date, qGetStudents.enddate)#
                     </cfif>             
-                </td>                                
+                </td>  
+                <td>
+                	<cfif LEN(qGetStudents.email)>#qGetStudents.email#<cfelse>&nbsp;</cfif>
+                </td>                              
             </tr>
             
             <cfif LEN(qGetStudents.policycode) AND IsDate(qGetStudents.dep_date) AND IsDate(qGetStudents.enddate)>
