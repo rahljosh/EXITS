@@ -101,7 +101,8 @@
                 s.studentID, 
                 s.firstname, 
                 s.familyLastName, 
-                s.dob, 
+                s.dob,
+                s.email, 
                 MIN(fi.dep_date) as dep_date,            
                 it.type,  
                 ic.policycode, 
@@ -176,6 +177,7 @@
                 s.firstname, 
                 s.familyLastName, 
                 s.dob, 
+                s.email,
                 "#ARGUMENTS.startDate#" as dep_date,                
                 it.type,  
                 ic.policycode, 
@@ -207,7 +209,8 @@
             	ib.studentID IS NULL
             ORDER BY 
                 u.businessname, 
-                s.firstname        
+                s.familyLastName,
+                s.firstName        
         </cfquery>
     
 		<cfreturn qGetStudentsToInsureNoFlight>
@@ -271,7 +274,8 @@
                     fi.studentID
                 ORDER BY 
                     u.businessname, 
-                    s.firstname
+                    s.familyLastName,
+                    s.firstName        
             </cfquery>
         
         <cfreturn qGetStudentsReturnRecords> 
