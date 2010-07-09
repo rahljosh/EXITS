@@ -57,9 +57,9 @@
 	<cfif IsDefined('form.pre_ayp')>
 	    AND 
         	(
-        		s.aypenglish <> '0' 
+        		s.aypenglish != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             OR 
-            	s.ayporientation <> '0'
+            	s.ayporientation != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             )
     </cfif>
 
@@ -68,7 +68,7 @@
     	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     <cfelse>
     AND
-    	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
     </cfif>
 
 	ORDER BY 
