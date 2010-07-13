@@ -15,7 +15,8 @@
 		
 		<!--- Page Header --->
 		<gui:pageHeader
-			headerType="login/application/print/email"
+			headerType="login/application/print/email/cssOnly"
+			includeTopBar="1"
 		/>
 	
 ----- ------------------------------------------------------------------------- --->
@@ -28,6 +29,12 @@
 		name="ATTRIBUTES.headerType"
 		type="string"
         default=""
+		/>
+
+	<cfparam 
+		name="ATTRIBUTES.includeTopBar"
+		type="string"
+        default="1"
 		/>
 
 </cfsilent>
@@ -135,7 +142,7 @@
                                     <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Standardized test scores</a></li>
                                 </ul>    
                             
-                            <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=printApplication" target="_blank" class="itemLinks">Print Application</a>
                             <!--- <a href="#CGI.SCRIPT_NAME#?action=initial" class="itemLinks">Financial Aid</a> --->                                
                             <a href="#CGI.SCRIPT_NAME#?action=applicationFee" id="itemLinks" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>                                 
                             <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks">Submit Application</a>
@@ -163,16 +170,21 @@
                 </head>
                 <body>
                     
-                    <div class="topBar">
-                        
-                        <div class="topLeft">
-                            <div class="mainLogo"></div>
-                            <div class="title">#APPLICATION.SCHOOL.name#</div>
-                            <div class="subTitle">Application for Admission</div>
+                    <cfif ATTRIBUTES.includeTopBar>
+                        <div class="topBar">
+                            
+                            <div class="topLeft">
+                                <div class="printLogo">&nbsp;</div>
+                                <div class="title">#APPLICATION.SCHOOL.name#</div>
+                                <div class="subTitle">Application for Admission</div>
+                                <!---
+                                <div class="title">#APPLICATION.SCHOOL.name#</div>
+                                <div class="subTitle">Application for Admission</div>
+								--->
+                            </div>
+                            
                         </div>
-                        
-                    </div>
-
+					</cfif>
 			</cfcase>
             
             
