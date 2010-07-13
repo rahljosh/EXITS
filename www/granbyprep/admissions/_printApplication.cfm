@@ -20,113 +20,88 @@
 
 <cfoutput>
 
-<cfdocument format="PDF">
-
-	<!--- Page Header --->
-    <gui:pageHeader
-        headerType="print"
-    />
-            
-        <div class="printWrapper">
-            
+    <cfdocument format="pdf" localUrl="no" backgroundvisible="yes" saveasname="GranbyApplication">
+	
+        <cfdocumentsection name="Application">
+        
+            <!--- Page Header --->
+            <cfdocumentitem type="header">           	          
+                <gui:pageHeader
+                    headerType="print"
+                />
+            </cfdocumentitem> 
+        
+        
+            <!--- Page Footer ---> 
+            <cfdocumentitem type="footer"> 
+                <!--- CSS Information --->
+                <gui:pageHeader
+                    headerType="print"
+                    includeTopBar=0
+                />
+                        
+                <gui:pageFooter
+                    footerType="print"
+                />
+            </cfdocumentitem> 
+    
+            <!--- CSS Information For Section Pages --->
+            <gui:pageHeader
+                headerType="print"
+                includeTopBar=0
+            />
+    
             <!--- Section 1 --->
-            <cfinclude template="_section1.cfm">
-            
-        </div>
-            
-    <!--- Page Footer --->
-    <gui:pageFooter
-        footerType="application"
-    />
-        
-        
-    <!--- Page Break --->
-    <div class="printPageBreak"></div>
+            <div class="printWrapper">
+                <cfinclude template="_section1.cfm">
+            </div>
     
     
-    <!--- Page Header --->
-    <gui:pageHeader
-        headerType="print"
-    />
+            <!--- Page Break --->
+            <cfdocumentitem type="pagebreak"></cfdocumentitem>
     
-        <div class="printWrapper">
-        
+    
             <!--- Section 2 --->
-            <cfinclude template="_section2.cfm">
-    
-        </div>
-    
-    <!--- Page Footer --->
-    <gui:pageFooter
-        footerType="application"
-    />
+            <div class="printWrapper">
+                <cfinclude template="_section1.cfm">
+            </div>
     
     
-    <!--- Page Break --->
-    <div class="printPageBreak"></div>
+            <!--- Page Break --->
+            <cfdocumentitem type="pagebreak"></cfdocumentitem>
     
-    
-    <!--- Page Header --->
-    <gui:pageHeader
-        headerType="print"
-    />
-    
-        <div class="printWrapper">
-        
+                
             <!--- Section 3 --->
-            <cfinclude template="_section3.cfm">
-    
-        </div>
-        
-    <!--- Page Footer --->
-    <gui:pageFooter
-        footerType="application"
-    />
+            <div class="printWrapper">
+                <cfinclude template="_section3.cfm">
+            </div>
     
     
-    <!--- Page Break --->
-    <div class="printPageBreak"></div>
+            <!--- Page Break --->
+            <cfdocumentitem type="pagebreak"></cfdocumentitem>
     
-    
-    <!--- Page Header --->
-    <gui:pageHeader
-        headerType="print"
-    />
-    
-        <div class="printWrapper">
-        
+               
             <!--- Section 4 --->
-            <cfinclude template="_section4.cfm">
-        
-        </div>    
-    
-    <!--- Page Footer --->
-    <gui:pageFooter
-        footerType="application"
-    />
+            <div class="printWrapper">
+                <cfinclude template="_section4.cfm">
+            </div>
     
     
-    <!--- Page Break --->
-    <div class="printPageBreak"></div>
+            <!--- Page Break --->
+            <cfdocumentitem type="pagebreak"></cfdocumentitem>
+               
     
-    
-    <!--- Page Header --->
-    <gui:pageHeader
-        headerType="print"
-    />
-    
-        <div class="printWrapper">
-        
             <!--- Section 5 --->
-            <cfinclude template="_section5.cfm">
+            <div class="printWrapper">
+                <cfinclude template="_section5.cfm">
+            </div>
+            
+            <!--- Page Footer --->
+            <gui:pageFooter
+                footerType="print"
+            />
+        </cfdocumentsection>
     
-        </div>
-    
-    <!--- Page Footer --->
-    <gui:pageFooter
-        footerType="application"
-    />
-
-</cfdocument>
+    </cfdocument>
 
 </cfoutput>

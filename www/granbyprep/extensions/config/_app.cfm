@@ -154,5 +154,5 @@
 	Constants.creditCardType[1] = "Visa";
 	Constants.creditCardType[2] = "MasterCard";
 	Constants.creditCardType[3] = "American Express";
-	Constants.creditCardType[4] = "Discovery";
+	Constants.creditCardType[4] = "Discover";
 </cfscript>

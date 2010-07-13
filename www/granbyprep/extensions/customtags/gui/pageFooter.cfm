@@ -63,6 +63,10 @@
             <!--- Print Footer --->
             <cfcase value="print">
             
+                <div class="pageFooter">
+                    <div class="footerText">Copyright &copy; #Year(now())# #APPLICATION.SCHOOL.name#. ALL RIGHTS RESERVED.</div>
+                </div>
+                
             </cfcase>
 
     		
