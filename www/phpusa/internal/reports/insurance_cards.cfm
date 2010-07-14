@@ -30,9 +30,9 @@
             smg_programs p ON php.programid = p.programid
         WHERE 
         	php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        <cfif LEN(FORM.date1) AND LEN(FORM.date2)>
+        <cfif isDate(FORM.date1) AND isDate(FORM.date2)>
             AND 
-            	<cfqueryparam cfsqltype="cf_sql_date" value="php.datecreated between #CreateODBCDate(FORM.date1)#">
+            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.date1)#">
             AND 
             	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(DateAdd('d', 1, FORM.date2))#">
         </cfif>
