@@ -3,7 +3,7 @@
 	File:		initial_welcome.cfm
 	Author:		Marcus Melo
 	Date:		March 15, 2010
-	Desc:		Intial Welcome Screen
+	Desc:		Initial Welcome Screen
 
 	Updated:  	
 
@@ -32,12 +32,17 @@
         	startdate < #now()#
         AND
         	lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
-        AND
-        	(
-            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
-            OR 
-            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-            )
+        <cfif CLIENT.companyID EQ 10>
+        	AND
+            	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        <cfelse>
+            AND
+                (
+                    companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                OR 
+                    companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                )
+        </cfif>
         ORDER BY
         	startdate DESC
     </cfquery>
@@ -154,6 +159,9 @@
         	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
         AND 
         	u.datecreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#new_date#">
+        <!--- Do not display student view users. Managers shouldn't know who is looking at their kids --->
+        AND	
+        	uar.userType != <cfqueryparam cfsqltype="cf_sql_integer" value="9">
         ORDER BY 
         	u.datecreated DESC
     </cfquery>
@@ -285,9 +293,9 @@
             <td align="right">
                 <cfset tripcount = 7 - placed_students.Count>
                 <cfif placed_students.Count LT 7>
-                    You're only #tripcount# placements away from a trip to <A href="http://www.student-management.com/flash/images/incentiveTrip2010.pdf" target="_blank">#incentive_trip.trip_place#!</A>
+                    You're only #tripcount# placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip.pdf" target="_blank">#incentive_trip.trip_place#!</A>
                 <cfelse>
-                    You've earned a trip to <A href="http://www.student-management.com/flash/images/incentiveTrip2010.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
+                    You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
                 </cfif>
             </td>
         </tr>
