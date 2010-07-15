@@ -663,7 +663,7 @@
                     <cfquery name="qGetInterests" datasource="mysql">
                         select interest
                         from smg_interests 
-                        where interestid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.interests#" list="yes"> )
+                        where interestid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.interests)#" list="yes"> )
                     </cfquery>
                     <cfset displayInterests = ValueList(qGetInterests.interest, ", ")>
                     
