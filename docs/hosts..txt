@@ -1,0 +1,35 @@
+# copyright (c) 1993-2006 microsoft corp.
+#
+# this is a sample hosts file used by microsoft tcp/ip for windows.
+#
+# this file contains the mappings of ip addresses to host names. each
+# entry should be kept on an individual line. the ip address should
+# be placed in the first column followed by the corresponding host name.
+# the ip address and the host name should be separated by at least one
+# space.
+#
+# additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# for example:
+#
+#      102.54.94.97     rhino.acme.com          # source server
+#       38.25.63.10     x.acme.com              # x client host
+
+127.0.0.1       localhost
+::1             localhost
+
+127.0.0.1       case.local
+
+127.0.0.1       csb.local
+
+127.0.0.1       extra.local
+
+127.0.0.1       granbyprep.local
+
+127.0.0.1       ise.local
+
+127.0.0.1       php.local
+
+127.0.0.1       smg.local
+
