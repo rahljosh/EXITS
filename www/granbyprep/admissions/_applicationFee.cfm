@@ -44,7 +44,14 @@
 
 		// Get Current Student Information
 		qGetCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry();
-
+		
+		// Get Application Fee
+		getApplicationFee = APPLICATION.CFC.ONLINEAPP.getApplicationFee(studentID=FORM.studentID);
+		
+		if ( NOT VAL(getApplicationFee) ) {
+			SESSION.formErrors.Add(getApplicationFee);
+		}
+		
 		// FORM Submitted
 		if ( FORM.submitted ) {
 
@@ -106,7 +113,7 @@
 			}
 
 			if ( NOT LEN(FORM.paymentAgreement) ) {
-				SESSION.formErrors.Add("You must agree with payment statement");
+				SESSION.formErrors.Add("You must acknowledge the APPLICATION FEE IS NON REFUNDABLE.");
 			}
 
 			// Check if there are no errors
@@ -154,157 +161,173 @@
                     messageType="section"
                     />
                 
-                <form action="#CGI.SCRIPT_NAME#?action=applicationFee" method="post">
-                <input type="hidden" name="submitted" value="1" />
                 
-                <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
-                
-                <!--- Payment Information --->
-                <fieldset>
-                   
-                    <legend>Application Fee</legend>
-                        
-                    <div class="field controlset">
-                        <span class="label">Payment Method <em>*</em></span>
-                        <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.paymentType)#">
-                        	<input type="radio" name="paymentMethodID" id="#APPLICATION.CONSTANTS.paymentType[i]#" value="#APPLICATION.CONSTANTS.paymentType[i]#" <cfif APPLICATION.CONSTANTS.paymentType[i] EQ FORM.paymentMethodID> checked="checked" </cfif> /> <label for="#APPLICATION.CONSTANTS.paymentType[i]#">#APPLICATION.CONSTANTS.paymentType[i]#</label>
-                        </cfloop>
-                    </div>
-            
-				</fieldset>                
-                
-                <!--- Credit Card Information --->
-                <fieldset>
-                   
-                    <legend>Credit Card Information</legend>
-
-					<p class="note">Enter information for a Credit Card. Your session is secure.</p>
-                        
-                    <div class="field">
-                        <label for="nameOnCreditCard">Name on Credit Card <em>*</em></label> 
-                        <input type="text" name="nameOnCreditCard" id="nameOnCreditCard" value="#FORM.nameOnCreditCard#" class="largeField" maxlength="100" />
-                    </div>
-            
-                    <div class="field controlset">
-                        <span class="label">Credit Card Type <em>*</em></span>
-                        <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.creditCardType)#">
-                        	<input type="radio" name="creditCardType" id="#APPLICATION.CONSTANTS.creditCardType[i]#" value="#i#" onclick="displayCreditCard(this.value);" <cfif APPLICATION.CONSTANTS.creditCardType[i] EQ FORM.creditCardType> checked="checked" </cfif> /> <label for="#APPLICATION.CONSTANTS.creditCardType[i]#">#APPLICATION.CONSTANTS.creditCardType[i]#</label>
-                        </cfloop>
-                    </div>
-            
-                    <div class="field">
-                        <label for="creditCardNumber">Credit Card Number <em>*</em></label> 
-                        <input type="text" name="creditCardNumber" id="creditCardNumber" value="#FORM.creditCardNumber#" class="largeField" maxlength="100" />
-                        <p class="note">no spaces or dashes</p>
-                    </div>
-            
-                    <div class="field">
-                        <label for="expirationMonth">Expiration Date <em>*</em></label> 
-                        <select name="expirationMonth" id="expirationMonth" class="smallField">
-                            <option value=""></option>
-                            <cfloop from="1" to="12" index="i">
-                                <option value="#i#" <cfif FORM.expirationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
-                            </cfloop>
-                        </select>
-            			/
-                        <select name="expirationYear" id="expirationYear" class="xSmallField">
-                            <option value=""></option>
-                            <cfloop from="#Year(now())#" to="#Year(now()) + 8#" index="i">
-                                <option value="#i#" <cfif FORM.expirationYear EQ i> selected="selected" </cfif> >#i#</option>
-                            </cfloop>
-                        </select>
-                    </div>
-            
-                    <div class="field">
-                        <label for="ccvCode">CCV/CID Code <em>*</em></label> 
-                        <input type="text" name="ccvCode" id="ccvCode" value="#FORM.ccvCode#" class="xSmallField" maxlength="4" />
-                    	<p class="note">See credit card image</p>
-                    </div>
-                  
-                  	<div class="creditCardImageDiv">
-                    	<div id="displayCardImage" class="card1"></div>
-                    </div>
+                <cfif VAL(getApplicationFee)>  
+                    <form action="#CGI.SCRIPT_NAME#?action=applicationFee" method="post">
+                    <input type="hidden" name="submitted" value="1" />
                     
-                </fieldset>
-				
-                <!--- Billing Address --->
-                <fieldset>
-                   
-                    <legend>Billing Address</legend>
-                        
-                    <div class="field">
-                        <label for="billingFirstName">First Name <em>*</em></label> 
-                        <input type="text" name="billingFirstName" id="billingFirstName" value="#FORM.billingFirstName#" class="largeField" maxlength="100" />
-                    </div>
-            
-                    <div class="field">
-                        <label for="billingLastName">Last Name <em>*</em></label> 
-                        <input type="text" name="billingLastName" id="billingLastName" value="#FORM.billingLastName#" class="largeField" maxlength="100" />
-                    </div>
+                    <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
+                    
+                    <!--- Payment Information --->
+                    <fieldset>
+                       
+                        <legend>Payment Method</legend>
 
-                    <div class="field">
-                        <label for="billingCompany">Company Name </label> 
-                        <input type="text" name="billingCompany" id="billingCompany" value="#FORM.billingCompany#" class="largeField" maxlength="100" />
-                    </div>
-
-                    <div class="field">
-                        <label for="billingAddress">Address <em>*</em></label> 
-                        <input type="text" name="billingAddress" id="billingAddress" value="#FORM.billingAddress#" class="largeField" maxlength="100" />
-                    </div>
-
-                    <div class="field">
-                        <label for="billingAddress2">Address 2</label> 
-                        <input type="text" name="billingAddress2" id="billingAddress2" value="#FORM.billingAddress2#" class="largeField" maxlength="100" />
-                    </div>
-
-                    <div class="field">
-                        <label for="billingApt">Apt/Suite</label> 
-                        <input type="text" name="billingApt" id="billingApt" value="#FORM.billingApt#" class="smallField" maxlength="20" />
-                    </div>
-
-                    <div class="field">
-                        <label for="billingCity">City <em>*</em></label> 
-                        <input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="mediumField" maxlength="100" />
-                    </div>
-
-                    <div class="field">
-                        <label for="billingState">State/Province <em>*</em></label> 
-                        <input type="text" name="billingState" id="billingState" value="#FORM.billingState#" class="mediumField" maxlength="100" />
-                    </div>
-
-                    <div class="field">
-                        <label for="billingZipCode">Zip/Postal Code <em>*</em></label> 
-                        <input type="text" name="billingZipCode" id="billingZipCode" value="#FORM.billingZipCode#" class="smallField" maxlength="20" />
-                    </div>
-
-                    <div class="field">
-                        <label for="billingCountryID">Country <em>*</em></label> 
-                        <select name="billingCountryID" id="billingCountryID" class="mediumField">
-                            <option value=""></option> <!--- [select a country] ---->
-                            <cfloop query="qGetCountry">
-                                <option value="#qGetCountry.ID#" <cfif FORM.billingCountryID EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
-                            </cfloop>
-                        </select>
-                    </div>
-
-                </fieldset>
-
-                <fieldset>
-                   
-                    <div class="controlset">
-                        <span class="label"><em>*</em></span>
-                        <div class="field">
-                            <input type="checkbox" name="paymentAgreement" id="paymentAgreement" value="1" /> &nbsp; <label for="paymentAgreement">I authorize Granby Preparatory Academy to deduct an application fee of $xx.xx from my credit card.</label>
+                        <div class="field controlset">
+                            <span class="label">Application Fee <em>*</em></span>
+							<strong>#dollarFormat(getApplicationFee)#</strong>
                         </div>
-                    </div>
+                            
+                        <div class="field controlset">
+                            <span class="label">Payment Method <em>*</em></span>
+                            <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.paymentType)#">
+                                <input type="radio" name="paymentMethodID" id="#APPLICATION.CONSTANTS.paymentType[i]#" value="#APPLICATION.CONSTANTS.paymentType[i]#" <cfif APPLICATION.CONSTANTS.paymentType[i] EQ FORM.paymentMethodID> checked="checked" </cfif> /> <label for="#APPLICATION.CONSTANTS.paymentType[i]#">#APPLICATION.CONSTANTS.paymentType[i]#</label>
+                            </cfloop>
+                        </div>
+                
+                    </fieldset>                
                     
-				</fieldset>
-                                
-                <div class="buttonrow">
-                    <input type="submit" value="Submit" class="button ui-corner-top" />
-                </div>
-            
-                </form>
+                    <!--- Credit Card Information --->
+                    <fieldset>
+                       
+                        <legend>Credit Card Information</legend>
+    
+                        <p class="note">Enter information for a Credit Card. Your session is secure.</p>
+                            
+                        <div class="field">
+                            <label for="nameOnCreditCard">Name on Credit Card <em>*</em></label> 
+                            <input type="text" name="nameOnCreditCard" id="nameOnCreditCard" value="#FORM.nameOnCreditCard#" class="largeField" maxlength="100" />
+                        </div>
+                
+                        <div class="field controlset">
+                            <span class="label">Credit Card Type <em>*</em></span>
+                            <select name="creditCardType" id="creditCardType" class="mediumField">
+                                <option value=""></option>
+                                <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.creditCardType)#">
+                                    <option value="#i#" onclick="displayCreditCard(this.value);" <cfif APPLICATION.CONSTANTS.creditCardType[i] EQ FORM.creditCardType> selected="selected" </cfif> >#APPLICATION.CONSTANTS.creditCardType[i]#</option>
+                                </cfloop>
+                            </select>
+                        </div>
+                
+                        <div class="field">
+                            <label for="creditCardNumber">Credit Card Number <em>*</em></label> 
+                            <input type="text" name="creditCardNumber" id="creditCardNumber" value="#FORM.creditCardNumber#" class="largeField" maxlength="100" />
+                            <p class="note">no spaces or dashes</p>
+                        </div>
+                
+                        <div class="field">
+                            <label for="expirationMonth">Expiration Date <em>*</em></label> 
+                            <select name="expirationMonth" id="expirationMonth" class="smallField">
+                                <option value=""></option>
+                                <cfloop from="1" to="12" index="i">
+                                    <option value="#i#" <cfif FORM.expirationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
+                                </cfloop>
+                            </select>
+                            /
+                            <select name="expirationYear" id="expirationYear" class="xSmallField">
+                                <option value=""></option>
+                                <cfloop from="#Year(now())#" to="#Year(now()) + 8#" index="i">
+                                    <option value="#i#" <cfif FORM.expirationYear EQ i> selected="selected" </cfif> >#i#</option>
+                                </cfloop>
+                            </select>
+                        </div>
+                
+                        <div class="field">
+                            <label for="ccvCode">CCV/CID Code <em>*</em></label> 
+                            <input type="text" name="ccvCode" id="ccvCode" value="#FORM.ccvCode#" class="xSmallField" maxlength="4" />
+                            <p class="note">See credit card image</p>
+                        </div>
+                      
+                        <div class="creditCardImageDiv">
+                            <div id="displayCardImage" class="card1"></div>
+                        </div>
+                        
+                    </fieldset>
+                    
+                    <!--- Billing Address --->
+                    <fieldset>
+                       
+                        <legend>Billing Address</legend>
+                            
+                        <div class="field">
+                            <label for="billingFirstName">First Name <em>*</em></label> 
+                            <input type="text" name="billingFirstName" id="billingFirstName" value="#FORM.billingFirstName#" class="largeField" maxlength="100" />
+                        </div>
+                
+                        <div class="field">
+                            <label for="billingLastName">Last Name <em>*</em></label> 
+                            <input type="text" name="billingLastName" id="billingLastName" value="#FORM.billingLastName#" class="largeField" maxlength="100" />
+                        </div>
+    
+                        <div class="field">
+                            <label for="billingCompany">Company Name </label> 
+                            <input type="text" name="billingCompany" id="billingCompany" value="#FORM.billingCompany#" class="largeField" maxlength="100" />
+                        </div>
+    
+                        <div class="field">
+                            <label for="billingAddress">Address <em>*</em></label> 
+                            <input type="text" name="billingAddress" id="billingAddress" value="#FORM.billingAddress#" class="largeField" maxlength="100" />
+                        </div>
+    
+                        <div class="field">
+                            <label for="billingAddress2">Address 2</label> 
+                            <input type="text" name="billingAddress2" id="billingAddress2" value="#FORM.billingAddress2#" class="largeField" maxlength="100" />
+                        </div>
+    
+                        <div class="field">
+                            <label for="billingApt">Apt/Suite</label> 
+                            <input type="text" name="billingApt" id="billingApt" value="#FORM.billingApt#" class="smallField" maxlength="20" />
+                        </div>
+    
+                        <div class="field">
+                            <label for="billingCity">City <em>*</em></label> 
+                            <input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="mediumField" maxlength="100" />
+                        </div>
+    
+                        <div class="field">
+                            <label for="billingState">State/Province <em>*</em></label> 
+                            <input type="text" name="billingState" id="billingState" value="#FORM.billingState#" class="mediumField" maxlength="100" />
+                        </div>
+    
+                        <div class="field">
+                            <label for="billingZipCode">Zip/Postal Code <em>*</em></label> 
+                            <input type="text" name="billingZipCode" id="billingZipCode" value="#FORM.billingZipCode#" class="smallField" maxlength="20" />
+                        </div>
+    
+                        <div class="field">
+                            <label for="billingCountryID">Country <em>*</em></label> 
+                            <select name="billingCountryID" id="billingCountryID" class="mediumField">
+                                <option value=""></option> <!--- [select a country] ---->
+                                <cfloop query="qGetCountry">
+                                    <option value="#qGetCountry.ID#" <cfif FORM.billingCountryID EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
+                                </cfloop>
+                            </select>
+                        </div>
+    
+                    </fieldset>
+    
+                    <fieldset>
+                                           
+                        <div class="controlset">
+                            <span class="label"><em>*</em></span>
+                            <div class="field">
+                                <input type="checkbox" name="paymentAgreement" id="paymentAgreement" value="1" /> 
+                                &nbsp; 
+                                <label for="paymentAgreement">
+                                    Please acknowledge the APPLICATION FEE IS NON REFUNDABLE.
+                                </label>
+                            </div>
+                        </div>
+                        
+                    </fieldset>
+
+                    <div class="buttonrow">
+                        <input type="submit" value="Submit" class="button ui-corner-top" />
+                    </div>
+                
+                    </form>
+				
+                </cfif>                    
             
             </div><!-- /form-container -->
 
@@ -323,7 +346,8 @@
 	// Display Credit Card
 	$(document).ready(function() {
 		// Get Current Value
-		getSelected = $("input[@name='creditCardType']:checked").val();
+		getSelected = $("#creditCardType").val();
+		//getSelected = $("input[@name='creditCardType']:checked").val(); // CheckBox
 		displayCreditCard(getSelected);
 	});
-</script></script>
+</script>

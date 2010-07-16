@@ -8,7 +8,7 @@
 		THIS.Name = "GranbyPrepV1-" & Hash(GetCurrentTemplatePath()); // "GranbyPrepV1-" & Hash(GetCurrentTemplatePath());
 		THIS.ApplicationTimeout = CreateTimeSpan( 0, 1, 0, 0 );
 		THIS.SessionManagement = true;
-		THIS.sessionTimeout = CreateTimeSpan( 0, 2, 0, 0 ); // Session Expires in 2 hours
+		THIS.sessionTimeout = CreateTimeSpan( 0, 4, 0, 0 ); // Session Expires in 4 hours
 
 		// Create a function that let us create CFCs from any location
 		function CreateCFC(strCFCName){
@@ -60,7 +60,7 @@
  
 		<!--- Define arguments. --->
 		<cfargument name="TargetPage" type="string" required="true" />
-
+		
 		<cfparam name="URL.init" default="0">
         <cfparam name="URL.initApp" default="0">
         <cfparam name="URL.initSession" default="0">
@@ -203,7 +203,7 @@
             
             <cfset GetPageContext().GetOut().ClearBuffer() />
             
-            <!--- <cflocation url="/error.html" addtoken="no" /> --->
+            <cflocation url="/index.cfm" addtoken="no" />
         
         <cfelse>
 			

@@ -98,6 +98,41 @@
 	</cffunction>
 
 
+	<!--- Check to see if the given document exists --->
+	<cffunction name="DocumentExists" access="public" returntype="boolean" output="no" hint="Check to see if the given document exists">
+		<cfargument name="ID" type="numeric" required="yes" />
+		
+        <cfscript>
+			// Set up the local scope
+			var LOCAL = StructNew();
+		</cfscript>
+        
+		<!--- Query for document --->
+		<cfquery 
+        	name="qDocuments" 
+	        datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					ID,
+                    CONCAT(location, serverName, '.', serverExt) AS filePath
+                FROM 
+                    document d
+                WHERE
+                    id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#ARGUMENTS.ID#" />		
+		</cfquery>
+		
+        <cfscript>
+			// Check to see if we have a returned record 
+			if ( qDocuments.RecordCount ) {
+				// Document exists in database - Return file existence
+				return FileExists(qDocuments.filePath);
+			} else {				
+				return false;	
+			}
+		</cfscript>
+        
+	</cffunction>
+
+
 	<cffunction name="getDocumentType" access="public" returntype="query" output="false" hint="Returns a list of document types">
     	<cfargument name="ID" default="0" hint="ID is not required">
         <cfargument name="applicationID" default="0" hint="Application ID is required to get the correct file options">
@@ -129,7 +164,7 @@
 	</cffunction>
 
 
-	<cffunction name="getDocumentByID" access="remote" returntype="query" output="false" hint="Returns a document">
+	<cffunction name="getDocumentByID" access="public" returntype="query" output="false" hint="Returns a document">
         <cfargument name="ID" required="yes" hint="ID is required">
 
         <cfquery 
@@ -137,9 +172,43 @@
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
 					ID,
+                    hashID,
                     foreignTable,
                     foreignID,
                     documentTypeID,
+                    serverName,
+                    serverExt,
+                    clientName,
+                    clientExt,
+                    fileSize,
+                    location,
+                    CONCAT(location, serverName, '.', serverExt) AS filePath,
+                    isDeleted,
+                    dateCreated,
+                    dateUpdated
+                FROM 
+                    document
+                WHERE
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+		</cfquery>
+		   
+		<cfreturn qGetDocumentByID>
+	</cffunction>
+
+
+	<cffunction name="getDocumentsByFilter" access="public" returntype="query" output="false" hint="Returns a list of documents">
+        <cfargument name="documentTypeID" default="" hint="documentTypeID is not required">
+
+        <cfquery 
+			name="qGetDocumentsByFilter" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					ID,
+                    hashID,
+                    foreignTable,
+                    foreignID,
+                    documentTypeID,
+                    description,
                     serverName,
                     serverExt,
                     clientName,
@@ -152,10 +221,16 @@
                 FROM 
                     document
                 WHERE
-                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                    1 = 1
+                <cfif LEN(ARGUMENTS.documentTypeID)>
+                	AND
+                    	documentTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentTypeID#">
+                </cfif>
+              	ORDER BY
+                	serverName
 		</cfquery>
 		   
-		<cfreturn qGetDocumentByID>
+		<cfreturn qGetDocumentsByFilter>
 	</cffunction>
 
 
@@ -215,11 +290,12 @@
 			
 			<!--- Insert the document into the database --->
 			<cfquery 
-            	datasource="#APPLICATION.DSN.Source#">
+            	datasource="#APPLICATION.DSN.Source#"
+                result="newRecord">
 				INSERT INTO 
                 	document
 				(
-					foreignTable,
+                    foreignTable,
                     foreignID,
                     documentTypeID,
 					serverExt,
@@ -245,6 +321,17 @@
 				)
 			</cfquery>
 			
+            <!--- Insert hashID based on the document ID --->
+			<cfquery 
+            	datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	document
+				SET
+                	hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#hashID(newRecord.GENERATED_KEY)#">
+                WHERE
+                	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">
+			</cfquery>
+                        
         <cfelse>
         	
 			<!--- Delete File --->
@@ -275,7 +362,7 @@
                     d.dateCreated,
                     DATE_FORMAT(d.dateCreated, '%m/%d/%y') as displayDateCreated,
                     dt.name as documentType,
-					CONVERT(CONCAT('<a href=''javascript:displayFile(', d.ID, ');''>[Edit]</a> ', ' - <a href=''javascript:deleteFile(', d.ID, ');''>[Delete]</a> ') USING latin1) AS action
+					CONVERT(CONCAT('<a href=''publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[View]</a> ', ' - <a href=''javascript:displayFile(', d.ID, ');''>[Edit]</a> ', ' - <a href=''javascript:deleteFile(', d.ID, ');''>[Delete]</a> ') USING latin1) AS action
                 FROM 
                     document d
 				LEFT OUTER JOIN                      

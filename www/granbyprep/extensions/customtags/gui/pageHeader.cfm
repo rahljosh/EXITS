@@ -82,7 +82,7 @@
                         <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
                         <link rel="stylesheet" href="../linked/css/appSection.css" type="text/css" />
                         <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
-                        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+                        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
 						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
                         <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
                         <script src="../linked/js/appSection.js " type="text/javascript"></script>
@@ -131,19 +131,20 @@
                             
                             <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Application Checklist</a> 
                                 <ul>
-                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Student Information</a></li>
-                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Family Information</a></li>
-                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">Family Information II</a></li>
-                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=3">Other</a></li>
-                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=4">Student Essay</a></li>
-                                    <li class="off"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Mathematics Teacher Recommendation</a></li>
-                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">English Teacher Recommendation</a></li>
-                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Transcript for at least the last two years</a></li>
-                                    <li class="on"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=5">Standardized test scores</a></li>
+                                    <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection1Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Student Information</a></li>
+                                    <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection2Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Family Information</a></li>
+									
+									<!--- Only Display If Addtional Family Information is Checked --->
+                                    <cfif VAL(APPLICATION.CFC.STUDENT.getStudentSession().hasAddFamInfo)>
+                                    	<li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection3Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">Additional Family Information</a></li>
+                                    </cfif>
+                                    
+                                    <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection4Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=3">Other</a></li>
+                                    <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection5Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=4">Student Essay</a></li>
                                 </ul>    
                             
-                            <a href="#CGI.SCRIPT_NAME#?action=printApplication" target="_blank" class="itemLinks">Print Application</a>
-                            <!--- <a href="#CGI.SCRIPT_NAME#?action=initial" class="itemLinks">Financial Aid</a> --->                                
+                            <a href="#CGI.SCRIPT_NAME#?action=download" class="itemLinks <cfif Find("download", CGI.QUERY_STRING)> selected </cfif>">Download Forms</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
                             <a href="#CGI.SCRIPT_NAME#?action=applicationFee" id="itemLinks" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>                                 
                             <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks">Submit Application</a>
                         </div>                            

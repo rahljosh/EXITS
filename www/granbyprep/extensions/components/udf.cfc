@@ -170,6 +170,22 @@
         
 	</cffunction>
 
+	
+    <!--- Merge Two Arrays --->
+    <cffunction name="arrayMerge" access="public" returntype="array" output="false">
+        <cfargument name="array1" required="true" type="array">
+        <cfargument name="array2" required="true" type="array">
+        
+        <cfscript>
+			var mergedArray = ARGUMENTS.array1;
+			
+			mergedArray.addAll(ARGUMENTS.array2);
+			
+			return mergedArray;
+		</cfscript>
+        
+    </cffunction>
+
 
 	<!--- Rerturns a formatted phone number --->
 	<cffunction name="formatPhoneNumber" access="public" returntype="string" output="no" hint="Returns a formatted phone number">

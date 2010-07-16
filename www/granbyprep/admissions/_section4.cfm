@@ -27,7 +27,7 @@
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section4');
 		
 		// Get Answers for this section
-		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section4', foreignID=FORM.studentID);
+		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section4', foreignTable='student', foreignID=FORM.studentID);
 
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
@@ -51,16 +51,20 @@
 				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 					APPLICATION.CFC.ONLINEAPP.insertAnswer(	
 						applicationQuestionID=qGetQuestions.ID[i],
+						foreignTable='student',
 						foreignID=FORM.studentID,
 						fieldKey=qGetQuestions.fieldKey[i],
 						answer=FORM[qGetQuestions.fieldKey[i]]						
 					);	
 				}
-				
+
+				// Update Student Session Variables
+				APPLICATION.CFC.STUDENT.setStudentSession(ID=FORM.studentID);
+
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
 				// Reload page with updated information
-				//location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
+				location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
 			
 			}
 			
@@ -81,7 +85,7 @@
 <div class="form-container">
 	
     <!--- Only Display Messages if Current tab is updated --->
-  	<cfif FORM.submittedType EQ 'section4'>
+  	<cfif currentTabID EQ 3>
     
 		<!--- Page Messages --->
         <gui:displayPageMessages 
@@ -198,12 +202,12 @@
 		</div>
 
 		<div style="clear:both;"></div>
-
+		
 		<!--- Financial Aid --->
         <div class="field controlset">
 			<span class="label">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></span>
             <cfif printApplication>
-            	<div class="printField"><cfif FORM[qGetQuestions.fieldKey[5]]> Yes <cfelseif FORM[qGetQuestions.fieldKey[5]] EQ 0> No </cfif> &nbsp;</div>
+            	<div class="printField"><cfif VAL(FORM[qGetQuestions.fieldKey[5]])> Yes <cfelseif FORM[qGetQuestions.fieldKey[5]] EQ 0> No </cfif> &nbsp;</div>
         	<cfelse>
                 <input type="radio" name="#qGetQuestions.fieldKey[5]#" id="financialYes" value="1" <cfif FORM[qGetQuestions.fieldKey[5]] EQ 1> checked="checked" </cfif> /> <label for="financialYes">Yes</label>
                 <input type="radio" name="#qGetQuestions.fieldKey[5]#" id="financialNo" value="0" <cfif FORM[qGetQuestions.fieldKey[5]] EQ 0> checked="checked" </cfif> /> <label for="financialNo">No</label>

@@ -34,6 +34,7 @@
     <cfparam name="FORM.businessPhoneArea" default="">
     <cfparam name="FORM.businessPhonePrefix" default="">
     <cfparam name="FORM.businessPhoneNumber" default="">
+    <cfparam name="FORM.hasAddFamInfo" default="">
 
     <cfscript>
 		// Get Current Student Information
@@ -46,7 +47,7 @@
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section2');
 		
 		// Get Answers for this section
-		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section2', foreignID=FORM.studentID);
+		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section2', foreignTable='student', foreignID=FORM.studentID);
 
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
@@ -69,7 +70,11 @@
 					SESSION.formErrors.Add(qGetQuestions.requiredMessage[i]);
 				}
 			}
-			
+
+			if ( NOT LEN(FORM.hasAddFamInfo) ) {
+				SESSION.formErrors.Add("Please check if you would like to enter an additional family information");
+			}
+
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
 				
@@ -77,17 +82,31 @@
 				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 					APPLICATION.CFC.ONLINEAPP.insertAnswer(	
 						applicationQuestionID=qGetQuestions.ID[i],
+						foreignTable='student',
 						foreignID=FORM.studentID,
 						fieldKey=qGetQuestions.fieldKey[i],
 						answer=FORM[qGetQuestions.fieldKey[i]]						
 					);	
 				}
 				
+				// Update hasAddFamInfo
+				APPLICATION.CFC.STUDENT.updateHasAddFamInfo(
+					ID=FORM.studentID,
+					hasAddFamInfo=FORM.hasAddFamInfo
+				);
+				
+				// Update Student Session Variables
+				APPLICATION.CFC.STUDENT.setStudentSession(ID=FORM.studentID);
+				
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
 				// Reload page with updated information
-				// location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
-			
+				if ( FORM.hasAddFamInfo ) {
+					location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID + 1#", "no");
+				} else {
+					location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
+				}
+				
 			}
 			
 		} else {
@@ -96,6 +115,8 @@
 			for ( i=1; i LTE qGetAnswers.recordCount; i=i+1 ) {
 				FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
 			}
+
+			FORM.hasAddFamInfo = qGetStudentInfo.hasAddFamInfo;
 
 			// Break Down Phone Numbers
 			stHomePhone = APPLICATION.CFC.UDF.breakDownPhoneNumber(qGetAnswers.answer[11]);
@@ -114,7 +135,7 @@
 			FORM.businessPhoneArea = stBusinessPhone.areaCode;
 			FORM.businessPhonePrefix = stBusinessPhone.prefix;
 			FORM.businessPhoneNumber = stBusinessPhone.number;
-			
+
 		}
 	</cfscript>
     
@@ -126,7 +147,7 @@
 <div class="form-container">
 	
     <!--- Only Display Messages if Current tab is updated --->
-  	<cfif FORM.submittedType EQ 'section2'>
+  	<cfif currentTabID EQ 1>
     
 		<!--- Page Messages --->
         <gui:displayPageMessages 
@@ -442,6 +463,17 @@
                 </p>
             </cfif>
 		</div>
+
+		<!--- Additional Family Information --->
+        <div class="field controlset">
+            <span class="label">Would you like to add an additional Parent/Guardian? <em>*</em> </span>
+            <cfif printApplication>
+				<div class="printField">#YesNoFormat(FORM.hasAddFamInfo)#</div>
+        	<cfelse>
+                <input type="radio" name="hasAddFamInfo" id="hasAddFamInfo1" value="1" <cfif FORM.hasAddFamInfo EQ 1> checked="checked" </cfif> /> <label for="hasAddFamInfo1">Yes</label>
+                <input type="radio" name="hasAddFamInfo" id="hasAddFamInfo0" value="0" <cfif FORM.hasAddFamInfo EQ 0> checked="checked" </cfif> /> <label for="hasAddFamInfo0">No</label>
+            </cfif>            
+        </div>			
 
 	</fieldset>
 	

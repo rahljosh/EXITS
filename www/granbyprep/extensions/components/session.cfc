@@ -107,18 +107,4 @@
         
 	</cffunction>
 
-
-	<!--- Set Session Variables --->
-	<cffunction name="setSessionVariables" access="public" returntype="numeric" hint="Sets session variables">
-	
-    	<cfscript>
-			SESSION.STUDENT.isSection1Completed = 0;	
-			
-			SESSION.STUDENT.isSection2Completed = 0;		
-			
-			SESSION.STUDENT.isSection3Completed = 0;		
-		</cfscript>
-    
-    </cffunction>
-
 </cfcomponent>

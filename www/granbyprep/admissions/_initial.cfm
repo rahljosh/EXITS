@@ -16,6 +16,11 @@
 	<!--- Param Variables --->
 	<cfparam name="currentTabID" default="0">
 
+	<cfscript>
+		// Get Current Student Information
+		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=APPLICATION.CFC.STUDENT.getStudentID());
+	</cfscript>
+
 </cfsilent>
 
 <cfoutput>
@@ -34,7 +39,7 @@
             <ul>                 
             	<li><a href="##studentInformation"><span>Student Information</span></a></li>
                 <li><a href="##familyInformation"><span>Family Information</span></a></li>
-                <li><a href="##familyInformation2"><span>Family Information II</span></a></li>
+                <li><a href="##addFamilyInformation"><span>Additional Family Information</span></a></li>
                 <li><a href="##other"><span>Other</span></a></li>
                 <li><a href="##studentEssay"><span>Student Essay</span></a></li>
                 <li><a href="##appDocuments"><span>Documents</span></a></li>
@@ -48,10 +53,10 @@
                 <cfinclude template="_section2.cfm">
             </div>
 
-            <div id="familyInformation2">
+            <div id="addFamilyInformation">
                 <cfinclude template="_section3.cfm">
             </div>
-            
+                    
             <div id="other">
                 <cfinclude template="_section4.cfm">
             </div>
@@ -84,4 +89,13 @@
 	});  // end (document).ready
 </script>
 
+<cfif NOT VAL(APPLICATION.CFC.STUDENT.getStudentSession().hasAddFamInfo)>
+
+	<script type="text/javascript">
+		// Inactivate Tab if there is no additional information
+		$( "##tabs" ).tabs({ disabled: [2] });
+	</script>
+
+</cfif>
+    
 </cfoutput>

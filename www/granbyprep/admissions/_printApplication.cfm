@@ -20,7 +20,7 @@
 
 <cfoutput>
 
-    <cfdocument format="pdf" localUrl="no" backgroundvisible="yes" saveasname="GranbyApplication">
+    <cfdocument name="printApplication" format="pdf" localUrl="no" backgroundvisible="yes" saveasname="GranbyApplication">
 	
         <cfdocumentsection name="Application">
         
@@ -96,12 +96,34 @@
                 <cfinclude template="_section5.cfm">
             </div>
             
-            <!--- Page Footer --->
-            <gui:pageFooter
-                footerType="print"
-            />
         </cfdocumentsection>
     
     </cfdocument>
+	
+    
+    <!--- Add Applicant Copy Watermark --->
+	<cfpdf 
+    	action="addWatermark"  
+        text="<b>Applicant Copy</b>" 
+        source="printApplication" 
+        foreground="true" 
+        showonprint="true" 
+        opacity="1"
+        position="10,30" 
+        rotation="45" 
+        width="700" 
+        height="700">
+
+	
+    <!--- Set up the header info --->
+	<cfheader 
+    	name="content-disposition" 
+        value="attachment; filename=Granby-ApplicantCopy.pdf"/>
+
+
+	<!--- Set up the content type --->        
+    <cfcontent 
+    	type="application/pdf" 
+        variable="#toBinary(printApplication)#">
 
 </cfoutput>

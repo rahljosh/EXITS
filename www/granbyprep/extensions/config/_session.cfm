@@ -8,6 +8,11 @@
 
 ----- ------------------------------------------------------------------------- --->
 
+<cfscript>
+	// CLEAR SESSION VARIABLE
+	StructClear(SESSION);
+</cfscript>
+
 <!--- Param Session Variables --->
 <cfparam name="SESSION.started" default="#now()#">
 <cfparam name="SESSION.expires" default="#DateAdd('h', 2, now())#">
@@ -17,17 +22,25 @@
 <cfparam name="SESSION.STUDENT.dateLastLoggedIn" type="string" default="">
 <!--- Folder to upload application files multiple files --->
 <cfparam name="SESSION.STUDENT.myUploadFolder" type="string" default="">
+<!--- These are used on the checklist --->
+<cfparam name="SESSION.STUDENT.isSection1Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.isSection2Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.isSection3Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.isSection4Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.isSection5Complete" type="numeric" default="0">
 
 <cftry>
 
 	<cfparam name="SESSION.STUDENT.ID" type="numeric" default="0">
+    <cfparam name="SESSION.STUDENT.hasAddFamInfo" type="numeric" default="0">
 	<cfparam name="SESSION.informationID" type="numeric" default="0">
-        
+
     <cfcatch type="any">
     
 		<cfscript>
             // Set studentID to 0
             SESSION.STUDENT.ID = 0;
+			SESSION.STUDENT.hasAddFamInfo = 0;
 			SESSION.informationID = 0;
         </cfscript>
         

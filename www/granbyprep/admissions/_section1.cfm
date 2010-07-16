@@ -50,7 +50,7 @@
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section1');
 		
 		// Get Answers for this section
-		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignID=FORM.studentID);
+		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable='student', foreignID=FORM.studentID);
 
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
@@ -123,16 +123,20 @@
 				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 					APPLICATION.CFC.ONLINEAPP.insertAnswer(	
 						applicationQuestionID=qGetQuestions.ID[i],
+						foreignTable='student',
 						foreignID=FORM.studentID,
 						fieldKey=qGetQuestions.fieldKey[i],
 						answer=FORM[qGetQuestions.fieldKey[i]]						
 					);	
 				}
 				
+				// Update Student Session Variables
+				APPLICATION.CFC.STUDENT.setStudentSession(ID=FORM.studentID);
+				
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
 				// Reload page with updated information
-				//location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
+				location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
 				
 			}
 			
@@ -189,7 +193,7 @@
 <div class="form-container">
   
   	<!--- Only Display Messages if Current tab is updated --->
-  	<cfif FORM.submittedType EQ 'section1'>
+  	<cfif currentTabID EQ 0>
     
 		<!--- Page Messages --->
         <gui:displayPageMessages 

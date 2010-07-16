@@ -50,23 +50,38 @@
 	<!--- Set Student Session Variables --->
 	<cffunction name="setStudentSession" access="public" returntype="void" hint="Set student SESSION variables" output="no">
 		<cfargument name="ID" type="numeric" default="0">
+        <cfargument name="updateDateLastLoggedIn" type="numeric" default="0">
         
         <cfscript>
-			// Set student ID
-			SESSION.STUDENT.ID = ARGUMENTS.ID;
-
-			// Get Student Information
-			qGetStudentInfo = getStudentByID(ID=ARGUMENTS.ID);
-		
-			// Set student session variables 
-			SESSION.STUDENT.firstName = qGetStudentInfo.firstName;
-			SESSION.STUDENT.lastName = qGetStudentInfo.lastName;
-			SESSION.STUDENT.dateLastLoggedIn = qGetStudentInfo.dateLastLoggedIn;
-
-			// set up upload files path
-			SESSION.STUDENT.myUploadFolder = APPLICATION.PATH.uploadStudentDocuments & ARGUMENTS.ID;
-			// Make sure folder exists
-			APPLICATION.CFC.DOCUMENT.createFolder(SESSION.STUDENT.myUploadFolder);
+			if ( VAL(ARGUMENTS.ID) ) {
+			
+				// Set student ID
+				SESSION.STUDENT.ID = ARGUMENTS.ID;
+	
+				// Get Student Information
+				qGetStudentInfo = getStudentByID(ID=ARGUMENTS.ID);
+			
+				// Set student session variables 
+				SESSION.STUDENT.firstName = qGetStudentInfo.firstName;
+				SESSION.STUDENT.lastName = qGetStudentInfo.lastName;
+				SESSION.STUDENT.hasAddFamInfo = qGetStudentInfo.hasAddFamInfo;
+				
+				if ( VAL(ARGUMENTS.updateDateLastLoggedIn) ) {				
+					SESSION.STUDENT.dateLastLoggedIn = qGetStudentInfo.dateLastLoggedIn;
+				}
+				
+				// Set student session complete
+				SESSION.STUDENT.isSection1Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section1', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
+				SESSION.STUDENT.isSection2Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section2', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
+				SESSION.STUDENT.isSection3Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section3', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
+				SESSION.STUDENT.isSection4Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section4', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
+				SESSION.STUDENT.isSection5Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section5', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
+				
+				// set up upload files path
+				SESSION.STUDENT.myUploadFolder = APPLICATION.PATH.uploadDocumentStudent & ARGUMENTS.ID & '/';
+				// Make sure folder exists
+				APPLICATION.CFC.DOCUMENT.createFolder(SESSION.STUDENT.myUploadFolder);
+			}
 		</cfscript>
         
 	</cffunction>
@@ -157,15 +172,17 @@
 				INSERT INTO
 					student
 				(                    
+                    applicationStatusID,
                     firstName,
                     lastName,                    
                     email,
-                    password,
+                    password,                    
                     dateCreated
 				)
                 VALUES
                 (
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,	
+					<cfqueryparam cfsqltype="cf_sql_integer" value="1">,	
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,	
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,		
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">,		
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.password)#">,		
@@ -173,7 +190,54 @@
                 )                    
 		</cfquery>
 		
+        <cfscript>
+			// Insert Application History
+			insertApplicationHistory(
+				applicationStatusID=1,
+				studentID=newRecord.GENERATED_KEY,
+				foreignTable='student',
+				foreignID=newRecord.GENERATED_KEY,
+				description='Application Issued'
+			);
+		</cfscript>	
+        
 		<cfreturn newRecord.GENERATED_KEY /> 
+	</cffunction>
+
+
+    <!--- Insert Application History --->
+	<cffunction name="insertApplicationHistory" access="public" returntype="void" output="false" hint="Inserts a record into studentApplicationStatusJN">
+		<cfargument name="applicationStatusID" type="numeric" required="yes" hint="applicationStatusID is required" />		
+        <cfargument name="studentID" type="numeric" required="yes" hint="studentID is required" />	
+        <cfargument name="foreignTable" type="string" required="yes" hint="User/Student is updating status - is required." />	
+        <cfargument name="foreignID" type="numeric" required="yes" hint="ID of user/student updating status - is required" />		
+        <cfargument name="description" type="string" default="" hint="Reason is not required" />		
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				INSERT INTO
+                	studentApplicationStatusJN
+                (
+                	applicationStatusID,
+                    sessionInformationID,
+                    studentID,
+                    foreignTable,
+                    foreignID,
+                    description,
+                	dateCreated
+                )
+                VALUES 
+                (
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationStatusID)#">,	
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.informationID)#">,	
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.description#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                )
+        </cfquery>        
+        
 	</cffunction>
 
 
@@ -186,16 +250,22 @@
 			datasource="#APPLICATION.DSN.Source#">
 				SELECT
 					ID, 
+                    applicationStatusID,
+                    applicationPaymentID,
                     firstName,
                     middleName,                    
                     lastName,  
                     preferredName,
+                    email,
+                    password,
                     gender,
                     dob,
                     countryBirthID,
                     countryCitizenID,
-                    email,
-                    password,
+                    hasAddFamInfo,
+                    isActive,
+                    isDeleted,
+                    dateCanceled,
                     dateLastLoggedIn,
                     dateCreated,
                     dateupdated                  
@@ -242,14 +312,28 @@
 	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>
 		
-        <cfscript>
-			// Update Student Session Variables 
-			setStudentSession();
-		</cfscript>
-
 	</cffunction>
 
 
+	<!--- Update hasAddFamInfo --->
+	<cffunction name="updateHasAddFamInfo" access="public" returntype="void" output="false" hint="Update Student Information">
+		<cfargument name="ID" required="yes" hint="Student ID" />
+        <cfargument name="hasAddFamInfo" default="" hint="Set to 1 to display the second tab of student information">
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	student
+                SET
+                    hasAddFamInfo = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hasAddFamInfo)#">
+				WHERE
+	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+		</cfquery>
+		
+	</cffunction>
+
+
+	<!--- Update Student Email --->
 	<cffunction name="updateEmail" access="public" returntype="void" output="false" hint="Update Student Email">
 		<cfargument name="ID" required="yes" hint="Student ID" />
 		<cfargument name="email" required="yes" hint="Email Address / Username">
@@ -267,6 +351,7 @@
 	</cffunction>
     
     
+    <!--- Update Student Password --->
 	<cffunction name="updatePassword" access="public" returntype="void" output="false" hint="Update Student Password">
 		<cfargument name="ID" required="yes" hint="Student ID" />
         <cfargument name="password" required="yes" hint="Password">
@@ -284,6 +369,7 @@
 	</cffunction>
  
  
+ 	<!--- Update Logged In Date --->
  	<cffunction name="updateLoggedInDate" access="public" returntype="void" output="false" hint="Update Student last logged in date">
 		<cfargument name="ID" required="yes" hint="Student ID" />
 
@@ -297,6 +383,71 @@
                 	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
 		</cfquery>
 		
+	</cffunction>
+
+
+    <!--- Check Required Student Fields --->
+	<cffunction name="checkStudentRequiredFields" access="public" returntype="struct" output="false" hint="Check if required fields were answered">
+        <cfargument name="ID" type="string" required="yes" hint="Name of the Table">
+        <cfargument name="sectionName" type="string" required="yes" hint="Section name" />
+        
+        <cfscript>
+			// Declare structure
+			var stRequiredFields = StructNew();	
+
+			// Create an array and populate with the field name in case we need to display missing items
+			stRequiredFields.fieldList = ArrayNew(1);
+
+			// Set complete = 1
+			stRequiredFields.isComplete = 1;
+			
+			// Get Student Info
+			qGetStudentInfo = getStudentByID(ID=ARGUMENTS.ID);			
+		</cfscript>
+        
+        <cfscript>
+			switch(ARGUMENTS.sectionName) {
+				case "section1": {
+					
+					if ( NOT LEN(qGetStudentInfo.firstName) ) {
+						ArrayAppend(stRequiredFields.fieldList, "First Name");
+						stRequiredFields.isComplete = 0;
+					}
+						
+					if ( NOT LEN(qGetStudentInfo.lastName) ) {
+						ArrayAppend(stRequiredFields.fieldList, "Last Name");
+						stRequiredFields.isComplete = 0;
+					}
+
+					if ( NOT LEN(qGetStudentInfo.gender) ) {
+						ArrayAppend(stRequiredFields.fieldList, "Gender");
+						stRequiredFields.isComplete = 0;
+					}
+
+					if ( NOT LEN(qGetStudentInfo.dob) ) {
+						ArrayAppend(stRequiredFields.fieldList, "Date of Birth");
+						stRequiredFields.isComplete = 0;
+					}
+
+					if ( NOT VAL(qGetStudentInfo.countryBirthID) ) {
+						ArrayAppend(stRequiredFields.fieldList, "Country of Birth");
+						stRequiredFields.isComplete = 0;
+					}
+
+					if ( NOT VAL(qGetStudentInfo.countryCitizenID) ) {
+						ArrayAppend(stRequiredFields.fieldList, "Country of Citizenship");
+						stRequiredFields.isComplete = 0;
+					}
+
+					break;
+				}
+				  
+			}	
+			
+			// Return Structure
+			return stRequiredFields;
+		</cfscript>
+        
 	</cffunction>
    
 
