@@ -30,7 +30,10 @@
 		
         <cfscript>
 			// Set Student Session Variables  (studentID / firstName / lastname / lastLoggedInDate / myUploadFolder )
-			APPLICATION.CFC.STUDENT.setStudentSession(ID=ARGUMENTS.studentID);
+			APPLICATION.CFC.STUDENT.setStudentSession(
+				ID=ARGUMENTS.studentID,
+				updateDateLastLoggedIn=1
+			);
 			
 			// Record last logged in date
 			APPLICATION.CFC.STUDENT.updateLoggedInDate(ID=ARGUMENTS.studentID);
@@ -144,6 +147,34 @@
     </cffunction>
 
 
+    <!--- Calculate Application Fee --->
+	<cffunction name="getApplicationFee" access="public" returntype="string" output="false" hint="Calculates Application Fee based on Country of Citizenship">
+        <cfargument name="studentID" type="numeric" required="yes" hint="Student ID is required" />
+		
+        <cfscript>
+			// Declare Application Fee
+			var applicationFee = '';
+			
+			// Get Country Citizen ID
+			countryCitizenID = APPLICATION.CFC.STUDENT.getStudentByID(ID=ARGUMENTS.studentID).countryCitizenID;
+			
+			if ( countryCitizenID EQ 0 ) {
+				// Country is missing
+				applicationFee = 'Please select your country of citizenship in the student information section in order to submit your application fee payment.';
+			} else if ( countryCitizenID EQ 211 ) {
+				// US Citizens
+				applicationFee = 75;
+			} else {
+				// Non US Citizens
+				applicationFee = 150;
+			}
+			
+			return applicationFee;
+		</cfscript>
+
+	</cffunction>
+
+
 	<!--- Get Online Application Question --->
 	<cffunction name="getQuestionByAppID" access="public" returntype="query" output="false" hint="Returns a list with Application questions">
 		<cfargument name="applicationID" type="numeric" required="yes" hint="Application ID" />
@@ -222,10 +253,11 @@
 
 	<!--- Get Online Application Answer --->
 	<cffunction name="getAnswerByFilter" access="public" returntype="query" output="false" hint="Returns a list with Application Answers">
-		<cfargument name="foreignID" default="0" hint="This could be a student or host family ID" />
-        <cfargument name="applicationQuestionID" default="0" hint="Application Question ID" />
         <cfargument name="sectionName" type="string" default="" hint="Section name" />
-
+        <cfargument name="foreignTable" type="string"  default="" hint="Name of the Table">
+		<cfargument name="foreignID" type="numeric" default="0" hint="This could be a student or host family ID">
+        <cfargument name="applicationQuestionID" default="0" hint="Application Question ID" />
+		
 		<cfquery 
 			name="qGetAnswerByFilter" 
 			datasource="#APPLICATION.DSN.Source#">
@@ -243,6 +275,11 @@
                 	applicationQuestion aq ON aa.applicationQuestionID = aq.ID
 				WHERE
 	                aq.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+
+					<cfif VAL(ARGUMENTS.foreignTable)>
+						AND
+    	                    aa.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+					</cfif>
                     
 					<cfif VAL(ARGUMENTS.foreignID)>
 						AND
@@ -271,13 +308,18 @@
 
 	<cffunction name="insertAnswer" access="public" returntype="void" output="false" hint="Inserts/Updates an application answer">
         <cfargument name="applicationQuestionID" default="0" hint="Application Question ID" />
-		<cfargument name="foreignID" default="0" hint="This could be a student or host family ID" />
-        <cfargument name="fieldKey" default="" hint="Field Key" />
+        <cfargument name="foreignTable" type="string" required="yes" hint="Name of the Table">
+		<cfargument name="foreignID" type="numeric" required="yes" hint="This could be a student or host family ID">
+        <cfargument name="fieldKey" hint="Field Key" />
         <cfargument name="answer" default="" hint="Application Asnwer" />
         
         <cfscript>
 			// Check if we need to update or insert an answer
-			qCheckAnswer = getAnswerByFilter(applicationQuestionID=ARGUMENTS.applicationQuestionID,foreignID=ARGUMENTS.foreignID);
+			qCheckAnswer = getAnswerByFilter(
+				applicationQuestionID=ARGUMENTS.applicationQuestionID,
+				foreignTable=ARGUMENTS.foreignTable,
+				foreignID=ARGUMENTS.foreignID
+			);
 		</cfscript>
         
         <!--- Check if we need to insert or update the record --->
@@ -291,7 +333,7 @@
                     SET
                     	answer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.answer)#">
 					WHERE
-                    	ID =  <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckAnswer.ID#">
+                        ID =  <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckAnswer.ID#">
             </cfquery>                        
         
         <cfelse>
@@ -303,6 +345,7 @@
                     	applicationAnswer
                     (
 						applicationQuestionID,
+                        foreignTable,
                         foreignID,
                         fieldKey,
                         answer,
@@ -311,6 +354,7 @@
                     VALUES
                     (
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.applicationQuestionID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.foreignTable)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.foreignID)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.fieldKey)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.answer)#">,
@@ -323,32 +367,91 @@
 	</cffunction>
 
 	
-    <!--- Check Required Fields --->
-	<cffunction name="checkRequiredSectionFields" access="public" returntype="query" output="false" hint="Query of queries. Returns an application question by field.">
+    <!--- Check Required Section Fields --->
+	<cffunction name="checkRequiredSectionFields" access="public" returntype="struct" output="false" hint="Check if required fields were answered">
         <cfargument name="sectionName" type="string" required="yes" hint="Section name" />
+        <cfargument name="foreignTable" type="string" required="yes" hint="Name of the Table">
+		<cfargument name="foreignID" type="numeric" required="yes" hint="This could be a student or host family ID">
+        
+        <cfscript>
+			// Declare structure
+			var stRequiredFields = StructNew();	
+			
+			// List of query fields
+			var queryFieldList = '';
+			
+			// Create an array and populate with the field name in case we need to display missing items
+			stRequiredFields.fieldList = ArrayNew(1);
 
+			// Set complete = 1
+			stRequiredFields.isComplete = 1;
+		</cfscript>
+        
 		<cfquery  
 			name="qCheckRequiredSectionFields" 
 			datasource="#APPLICATION.DSN.Source#">
 				SELECT
-					aq.ID,
-                    aq.applicationID,
-                    aq.fieldKey,
-                    aq.displayField,
-                    aq.sectionName,
-                    aq.orderKey,
-                    aq.classType
+                    displayField,
+                    sectionName
 				FROM
 					applicationQuestion aq
-                LEFT OUTER JOIN
-                	applicationAnswer aa ON aq.ID = aa.applicationQuestionID	    
 				WHERE
-                    aq.sectionName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sectionName#">    
+                    sectionName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sectionName#">    
                 AND	
-                	aq.isRequired = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                	isRequired = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND
+                	ID NOT IN 
+                    (
+                    	SELECT 
+                        	applicationQuestionID 
+                        FROM 
+                        	applicationAnswer 
+                        WHERE 
+                            foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">    
+                        AND	
+                            foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">
+						AND                                    
+                        	LENGTH(answer) >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+					)                            
 		</cfquery>
-		
-		<cfreturn qCheckRequiredSectionFields /> 
+        
+        <cfscript>
+			if (qCheckRequiredSectionFields.recordCount) {
+				
+				// Set setion as not completed
+				stRequiredFields.isComplete = 0;
+
+				// Get all the missing items in a list
+				queryFieldList = ValueList(qCheckRequiredSectionFields.displayField);
+
+				// Store The List into an Array
+				stRequiredFields.fieldList = ListToArray(queryFieldList);
+			}
+
+			// section1 has required items in the student table as well.
+			if ( ARGUMENTS.foreignTable EQ 'student' ) {
+				
+				stCheckStudent = APPLICATION.CFC.STUDENT.checkStudentRequiredFields(
+					ID=ARGUMENTS.foreignID,
+					sectionName=ARGUMENTS.sectionName
+				);
+				
+				// Merge Arrays
+				if ( ARGUMENTS.sectionName EQ 'section1') {
+					// Section 1 - Student errors goes first
+					stRequiredFields.fieldList = APPLICATION.CFC.UDF.arrayMerge(array1=stCheckStudent.fieldList, array2=ListToArray(queryFieldList));
+				}
+				
+				if ( stCheckStudent.isComplete EQ 0 ) {
+					// Set setion as not completed
+					stRequiredFields.isComplete = 0;
+				}				
+			}
+
+			// Return Structure
+			return stRequiredFields;
+		</cfscript>
+        
 	</cffunction>
 
 

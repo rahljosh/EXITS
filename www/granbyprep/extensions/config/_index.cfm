@@ -7,6 +7,11 @@
 				
 ----- ------------------------------------------------------------------------- --->
 
+<cfscript>
+	// CLEAR SESSION VARIABLE
+	StructClear(APPLICATION);
+</cfscript>
+
 <!--- Set up init variables --->
 
 <!--- Stores the date of the last APPLICATION initialization --->

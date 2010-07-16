@@ -112,25 +112,29 @@
 		Set up folders used to uplaod documents in the application.
 	***************/
 	
-	// Upload Path
-	AppPath.UploadRoot = AppPath.base & "upload/";
-	// Documents Folder
-	AppPath.UploadDocuments = AppPath.UploadRoot & "documents/";
-	AppPath.UploadStudentDocuments = AppPath.UploadDocuments & "student/";
+	// Document Root
+	AppPath.UploadDocumentRoot = AppPath.base & "documents/";
+	
+	AppPath.uploadDocumentGranby = AppPath.UploadDocumentRoot & "granbyPrep/";
+	
+	AppPath.uploadDocumentStudent = AppPath.UploadDocumentRoot & "student/";
+	
 	// Temp Folder 
-	AppPath.UploadRootTemp = AppPath.UploadDocuments & "temp/";
+	AppPath.uploadDocumentTemp = AppPath.UploadDocumentRoot & "temp/";
 
 	// Make sure folder exists
-	APPLICATION.CFC.DOCUMENT.createFolder(AppPath.UploadStudentDocuments);	
-	APPLICATION.CFC.DOCUMENT.createFolder(AppPath.UploadRootTemp);	
+	APPLICATION.CFC.DOCUMENT.createFolder(AppPath.UploadDocumentRoot);
+	APPLICATION.CFC.DOCUMENT.createFolder(AppPath.uploadDocumentGranby);
+	APPLICATION.CFC.DOCUMENT.createFolder(AppPath.uploadDocumentStudent);	
+	APPLICATION.CFC.DOCUMENT.createFolder(AppPath.uploadDocumentTemp);	
 
 
 	/* jQuery Latest Version 
 	http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
-	AppPath.jQuery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';	
-	AppPath.jQueryUI = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js';
-	
-
+	AppPath.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';	
+	AppPath.jQueryUI = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js';
+	appPath.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css';
+		  
 	/* 
 		Create the constant object in the application scope - can be used to store states, countries and statuses 
 		that are often used in the system so we do not need to call the database to get them
@@ -142,7 +146,7 @@
 
 	//Set up constant for payment methods
 	Constants.paymentType = ArrayNew(1);		
-	Constants.paymentType[1] = "Credit Card";
+	Constants.paymentType[1] = "Credit Card";	
 	/*
 	Constants.paymentType[2] = "Personal Check";
 	Constants.paymentType[3] = "Wire Transfer";
@@ -151,8 +155,8 @@
 
 	//Set up constant for credit card types
 	Constants.creditCardType = ArrayNew(1);		
-	Constants.creditCardType[1] = "Visa";
-	Constants.creditCardType[2] = "MasterCard";
-	Constants.creditCardType[3] = "American Express";
-	Constants.creditCardType[4] = "Discover";
+	Constants.creditCardType[1] = "American Express";
+	Constants.creditCardType[2] = "Discover";
+	Constants.creditCardType[3] = "MasterCard";
+	Constants.creditCardType[4] = "Visa";
 </cfscript>

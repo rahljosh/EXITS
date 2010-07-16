@@ -131,7 +131,7 @@
         <div class="insideBar">
 			
             <!--- Application Body --->
-			<div class="form-container">
+			<div class="form-container-noBorder">
             
                 <!--- Page Messages --->
                 <gui:displayPageMessages 
@@ -185,9 +185,9 @@
                 
             </div>
             
-        </div>
+		</div><!-- /insideBar -->
         
-    </div>
+	</div><!-- rightSideContent -->        
 
 <!--- Page Footer --->
 <gui:pageFooter

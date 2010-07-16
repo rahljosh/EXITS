@@ -37,6 +37,8 @@
 <!--- Application Body --->
 <div class="form-container">
     
+    <p class="legend"><strong>OPTIONAL:</strong> Please upload supporting documents such as additional references, awards, artwork, etc. that you feel should be seen by the admission committee.</p>
+    
     <!--- Upload Documents --->    
     <fieldset>
 
@@ -54,7 +56,8 @@
                 maxuploadsize="3" 
                 bgcolor="##FFFFFF" 
                 align="center"
-                width="650px">
+                height="220"
+                width="650">
 
 		</div>
         
@@ -65,8 +68,8 @@
     <div id="pageMessages" class="pageMessages"></div>
     
     <form name="filePropertySection" id="filePropertySection" class="documentProperties" onsubmit="return updateFile();">
-    	 <input type="hidden" name="documentID" id="documentID" value="" />
-         
+    	<input type="hidden" name="documentID" id="documentID" value="" />
+        
         <fieldset>
     
            <legend>File Properties</legend>
@@ -109,7 +112,7 @@
             <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
 
             <cfgrid name="documentList" 
-                title="Uploaded Files - Click on Edit to update the file category information"
+                title="Click on Edit to update the category information"
                 format="html"
                 bind="cfc:extensions.components.document.getDocumentsRemote({foreignTable},{studentID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection})"                    
                 width="650px"
@@ -119,11 +122,11 @@
                 align="left">
                                     
                 <cfgridcolumn name="ID" display="no">
-                <cfgridcolumn name="fileName" header="File Name" width="240">
-                <cfgridcolumn name="documentType" header="Category" width="200">
+                <cfgridcolumn name="fileName" header="File Name" width="220">
+                <cfgridcolumn name="documentType" header="Category" width="180">
                 <cfgridcolumn name="fileSize" header="Size" width="60">
                 <cfgridcolumn name="displayDateCreated" header="Date" width="60">
-                <cfgridcolumn name="action" header="Actions" width="90">
+                <cfgridcolumn name="action" header="Actions" width="130">
             </cfgrid>
 			
             </cfform>
@@ -138,13 +141,19 @@
 <script type="text/javascript">
 	// this function is called after a file has been uploaded
 	var handleComplete = function(res) {		
+		// Refresh Grid
+		ColdFusion.Grid.refresh('documentList', true);
+	}
+	/* For some reason does not work on IE
+	var handleComplete = function(res) {		
 		console.dir(res);
 		if(res.STATUS==200) {
 			// Refresh Grid
 			ColdFusion.Grid.refresh('documentList', true);
 		}
 	}
-
+	*/
+	
 	// Function to find the index in an array of the first entry with a specific value. 
 	// It is used to get the index of a column in the column list. 
 	Array.prototype.findIdx = function(value){ 

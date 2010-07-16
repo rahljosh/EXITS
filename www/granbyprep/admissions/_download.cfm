@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_faq.cfm
+	File:		_download.cfm
 	Author:		Marcus Melo
 	Date:		June 25, 2010
-	Desc:		Frequently Asked Questions
+	Desc:		Download Granby Forms
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -12,12 +12,12 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
-
-	<cfscript>
-		// Get FAQ
-		qGetFaq = APPLICATION.CFC.LookUpTables.getFAQ();	
-	</cfscript>
-
+	
+    <cfscript>
+		// Get List of Documents - Download Forms = Type 1
+		qDocumentList = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(documentTypeID=1);
+	</cfscript>	
+    
 </cfsilent>
 
 
@@ -36,23 +36,26 @@
             <!--- Application Body --->
 			<div class="form-container-noBorder">
             
+				<p class="legend">
+                	<strong>Note:</strong> These forms need to be printed and givem to the school. Transcripts must be mailed from the school.
+                	Click on the forms to download them.
+                </p>            
+            
                 <fieldset>
                    
-                    <legend>Frequently Asked Questions</legend>
-                        
-                    <cfloop query="qGetFaq">
-                        <a href="" class="itemLinks">#qGetFaq.question#</a>
-                        
-                        <div id="" class="faqAnswer">
-                            #qGetFaq.answer#
-                        </div>
-                        
-                    </cfloop>
-
+                    <legend>Download Forms</legend>
+                    
+                    <!--- Loop Through Documents --->
+                    <cfloop query="qDocumentList">
+                    
+                    	<a href="publicDocument.cfm?ID=#qDocumentList.id#&Key=#APPLICATION.CFC.DOCUMENT.HashID(qDocumentList.id)#" class="itemLinks" title="Download #qDocumentList.description#">#qDocumentList.description#</a> 
+                    
+                    </cfloop> 
+    
                 </fieldset>
                             
             </div>
-            
+
 		</div><!-- /insideBar -->
         
 	</div><!-- rightSideContent -->        

@@ -20,6 +20,13 @@
 			action = 'login';
 		}
 	</cfscript>
+
+ 	<!--- Force SSL --->
+	<!---
+	<cfif NOT APPLICATION.IsServerLocal AND NOT CGI.SERVER_PORT_SECURE>
+        <cflocation url="https://#CGI.SERVER_NAME#?#CGI.QUERY_STRING#" addToken="no" />
+    </cfif>
+	--->
     
 </cfsilent>
 	
@@ -28,7 +35,7 @@
 --->
 <cfswitch expression="#action#">
 
-	<cfcase value="login,logOff,home,initial,section1,section2,section3,section4,section5,documents,help,faq,myAccount,printApplication,applicationFee,submit" delimiters=",">
+	<cfcase value="login,logOff,home,initial,section1,section2,section3,section4,section5,documents,help,faq,myAccount,printApplication,download,applicationFee,submit" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />

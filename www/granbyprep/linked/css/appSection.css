@@ -145,15 +145,15 @@ Left Side / Right Side Content
 
 .leftSideBar .insideBar a.itemLinks,
 .rightSideContent .insideBar a.itemLinks {
-	background: url(../../images/onlineApp/rightArrow.gif) no-repeat; 
 	display:block;
-	font-family: segoe ui, Arial, sans-serif; 
+	color: #0069aa;
 	font-size:1.2em;
 	font-weight:bold;
-	color: #0069aa;
+	font-family: segoe ui, Arial, sans-serif; 
 	padding:0px 5px 0px 20px;
 	margin:15px 0px 5px 10px;
 	text-decoration:none;
+	background: url(../../images/onlineApp/rightArrow.gif) no-repeat; 
 }
 
 .leftSideBar .insideBar a:hover,
@@ -180,11 +180,11 @@ Left Side / Right Side Content
 	padding:0px 0px 5px 0px;
 }
 
-.leftSideBar .insideBar li.on {
+.leftSideBar .insideBar li.Yes {
 	list-style-image: url(../../images/onlineApp/checkMark.gif); 
 }
 
-.leftSideBar .insideBar li.off {
+.leftSideBar .insideBar li.No {
 	list-style-image: url(../../images/onlineApp/notChecked.gif); 
 }
 
@@ -438,6 +438,12 @@ div.form-container {
 	border: #EEE 1px solid; 
 }
 
+div.form-container-noBorder { 
+	margin: 0px 0px 10px 0px; /* margin: 10px; */
+	padding: 5px; 
+	background-color: #FFF; 
+}
+
 /* Error messages */
 div.errors { 
 	margin: 0 0 10px 0; 
@@ -479,22 +485,29 @@ p.legend {
 	margin-bottom: 1em; 
 }
 
+p.legend strong {
+	font-weight:bold;	
+}
+
 p.legend em { 
 	color: #C00; 
 	font-style: normal; 
 }
 
-div.form-container p { 
+div.form-container p,
+div.form-container-noBorder p { 
 	margin: 0; 
 }
 
-div.form-container p.note { 
+div.form-container p.note,
+div.form-container-noBorder p.note { 
 	margin-left: 210px; 
 	font-size: 90%; 
 	color: #333; 
 }
 
-div.form-container .phoneNote {
+div.form-container .phoneNote,
+div.form-container-noBorder .phoneNote {
 	width:48px;
 	text-align:center;
 	display:inline-block;
@@ -503,18 +516,21 @@ div.form-container .phoneNote {
 	color: #333; 
 }
 
-div.form-container fieldset { 
+div.form-container fieldset,
+div.form-container-noBorder fieldset { 
 	margin: 10px 0; 
 	padding: 10px; 
 	border: #DDD 1px solid; 
 }
 
-div.form-container legend { 
+div.form-container legend,
+div.form-container-noBorder legend { 
 	font-weight: bold; 
 	color: #666; 
 }
 
-div.form-container fieldset div.field { 
+div.form-container fieldset div.field,
+div.form-container-noBorder div.field { 
 	padding: 0.25em 0;
 }
 
@@ -525,7 +541,9 @@ div.form-container fieldset div {
 */
 
 div.form-container label, 
-div.form-container span.label { 
+div.form-container span.label,
+div.form-container-noBorder label,
+div.form-container-noBorder span.label { 
 	margin-right: 10px; 
 	padding-right: 10px; 
 	width: 190px; 
@@ -536,12 +554,16 @@ div.form-container span.label {
 }
 
 div.form-container label.error, 
-div.form-container span.error { 
+div.form-container span.error,
+div.form-container-noBorder label.error,
+div.form-container-noBorder span.error { 
 	color: #C00; 
 }
 
 div.form-container label em, 
-div.form-container span.label em { 
+div.form-container span.label em,
+div.form-container-noBorder label em,
+div.form-container-noBorder span.label em { 
 	position: absolute; 
 	right: 0; 
 	font-size: 120%; 
@@ -549,7 +571,8 @@ div.form-container span.label em {
 	color: #C00; 
 }
 
-div.form-container input.error { 
+div.form-container input.error,
+div.form-container-noBorder input.error { 
 	border-color: #C00; 
 	background-color: #FEF; 
 }
@@ -557,26 +580,35 @@ div.form-container input.error {
 div.form-container input:focus,
 div.form-container input.error:focus, 
 div.form-container select:focus, 
-div.form-container textarea:focus {	
+div.form-container textarea:focus,
+div.form-container-noBorder input:focus,
+div.form-container-noBorder input.error:focus, 
+div.form-container-noBorder select:focus, 
+div.form-container-noBorder textarea:focus {	
 	background-color: #FFC; 
 	border-color: #FC6; 
 }
 
 div.form-container div.controlset label, 
-div.form-container div.controlset input { 
+div.form-container div.controlset input,
+div.form-container-noBorder div.controlset label,
+div.form-container-noBorder div.controlset input { 
 	display: inline; 
 	float: none; 
 }
 
-div.form-container div.controlset div { 
+div.form-container div.controlset div,
+div.form-container-noBorder div.controlset div { 
 	margin-left: 210px; 
 }
 
-div.form-container div.buttonrow { 
+div.form-container div.buttonrow,
+div.form-container-noBorder div.buttonrow{ 
 	margin-left: 350px; 
 }
 
-div.form-container div.buttonrow .button {
+div.form-container div.buttonrow .button,
+div.form-container-noBorder div.buttonrow .button {
 	cursor: pointer;
 	padding:5px;
 	border: 0px;
@@ -588,6 +620,7 @@ div.form-container div.buttonrow .button {
 	background: #1484e6 url(../../images/onlineApp/buttonBlue.png) 50% 50% repeat; 	
 }
 
-div.form-container div.buttonrow .button:hover {
+div.form-container div.buttonrow .button:hover,
+div.form-container-noBorder div.buttonrow .button:hover {
    	background: #e69700 url(../../images/onlineApp/buttonOrange.png) 50% 50% repeat;	
 }
