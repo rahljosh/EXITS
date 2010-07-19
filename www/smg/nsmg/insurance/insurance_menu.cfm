@@ -97,6 +97,15 @@
                                         Start Date: Arrival Date <br>
                                         End Date: Program End Date 
                                     </td>
+                                </tr>      
+                                <tr>
+                                    <td colspan="2">
+                                        <cfif ListFind("1,2,3,4,12", CLIENT.companyID)>
+                                        	PS: Change companies to SMG to get all ISE students.
+                                        <cfelseif CLIENT.companyID EQ 5>
+											PS: All ISE students will be included (Bill, Margarita, Diana, Gary and Brian divisions).
+										</cfif>
+                                    </td>
                                 </tr>                            
                                 <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
                             </table>
