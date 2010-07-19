@@ -240,6 +240,21 @@
             <cfset CLIENT.change_password = 1>      
 		</cfif>
 		
+        <!----Check if WebEX Training has been completed ---->
+     
+        <Cfif client.usertype gt 4>
+            <cfquery name="webexTraining" datasource="#application.dsn#">
+            select notes
+            from smg_users_training
+            where notes = 'New Area Reps'
+            and user_id = #client.userid#
+            </cfquery>
+            
+            <cfif webexTraining.recordcount eq 0>
+                <cfset CLIENT.trainingNeeded = 1>
+                <cflocation url="/nsmg/trainingNeeded.cfm">
+            </cfif>
+       </Cfif>
         <!--- Check if server is local, if it is do not redirect to SSL --->
 		<cfif APPLICATION.IsServerLocal>
 
