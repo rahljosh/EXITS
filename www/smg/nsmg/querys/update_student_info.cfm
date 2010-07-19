@@ -361,6 +361,7 @@ where programid = #qStudentInfo.programid#
  Reason: <strong>#FORM.cancelreason#</strong><br />
  Placement Approved: <cfif qStudentInfo.date_host_fam_approved is ''>Unplaced<cfelse>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</cfif> <br />
  Sevis:  <cfif qStudentInfo.sevis_fee_paid_date is ''>Not Paid<cfelse>#DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</cfif><br />
+ SEVIS No.: <cfif qStudentInfo.ds2019_no is ''><strong>No SEVIS Number on File</strong><cfelse> <strong> #qStudentInfo.ds2019_no#</strong></cfif><br />
  Cancelled By: #client.name# - #client.email#<br /><br />
  
  The following people received this notice:<br />
@@ -372,7 +373,7 @@ where programid = #qStudentInfo.programid#
                 <cfinvokeargument name="email_to" value="#client.finance_email#">
                 <cfinvokeargument name="email_subject" value="Student Cancellation: #intagent.businessname# -(#qStudentInfo.intrep#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#) - #programname.programname# (#qStudentInfo.programid#)">
                 <cfinvokeargument name="email_message" value="#email_message#">
-               <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#, pat@iseusa.com, ellen@iseusa.com">
+              <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#, pat@iseusa.com, ellen@iseusa.com">
                 <cfinvokeargument name="email_from" value="#client.name# <#client.email#>">
             </cfinvoke>
    
