@@ -242,7 +242,7 @@
 		
         <!----Check if WebEX Training has been completed ---->
      
-        <Cfif client.usertype gt 4>
+       <cfif listfind(client.usertype, '5,6,7')>
             <cfquery name="webexTraining" datasource="#application.dsn#">
             select notes
             from smg_users_training

@@ -178,8 +178,8 @@
                 r.regionfacilitator, 
                 r.regionid, 
                 r.company,
-                u.firstname, 
-                u.lastname, 
+                u.firstname as ufirstname, 
+                u.lastname ulastname, 
                 u.email,
                 intRep.businessName 
             FROM 
@@ -214,7 +214,7 @@
         <cfoutput>
         
         <cfsavecontent variable="email_message">
-        	Dear #qGetEmailInfo.firstname# #qGetEmailInfo.lastname#,<br><br>
+        	Dear #qGetEmailInfo.ufirstname# #qGetEmailInfo.ulastname#,<br><br>
         	This e-mail is just to let you know new or updated flight information for the student 
             #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#) has been recorded in EXITS by #qGetEmailInfo.businessname#.<br><br>
             Please click <a href="http://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentid=#qGetEmailInfo.studentid#">here</a>
