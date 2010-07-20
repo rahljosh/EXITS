@@ -248,6 +248,20 @@ Online Application
 	width:48px;
 }
 
+.mediumTextField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:400px;
+	height:75px;
+}
+
+.largeTextFieldPolicy {
+	font-size:1em;
+	border : 1px solid #999;
+	width:400px;
+	height:125px;
+}
+
 .largeTextField {
 	font-size:1.2em;
 	border : 1px solid #999;
@@ -271,38 +285,44 @@ Online Application
 	display:none;	
 }
 
+.creditCardAccepted {
+	height:27px;
+	background: url(../../images/onlineApp/creditCardsAccepted.jpg) no-repeat;
+}
+
 .creditCardImageDiv {
 	float:right; 
 	position:relative; 
 	margin:-150px 100px 0px 0px;
 }
 
-/* Visa */
-.creditCardImageDiv .card1 {
-	width:180px;
-	height:120px; 
-	background: url(../../images/onlineApp/cardVisa.gif) no-repeat; 
-}
-
-/* MasterCard */
-.creditCardImageDiv .card2 {
-	width:180px;
-	height:120px; 
-	background: url(../../images/onlineApp/cardMaster.gif) no-repeat; 
-}
-
 /* American Express */
-.creditCardImageDiv .card3 {
+.creditCardImageDiv .card1 {
 	width:180px;
 	height:120px; 
 	background: url(../../images/onlineApp/cardAmex.gif) no-repeat; 
 }
 
 /* Discover */
-.creditCardImageDiv .card4 {
+.creditCardImageDiv .card2 {
 	width:180px;
 	height:120px; 
 	background: url(../../images/onlineApp/cardDiscover.gif) no-repeat; 
+}
+
+/* MasterCard */
+.creditCardImageDiv .card3 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardMaster.gif) no-repeat; 	
+}
+
+
+/* Visa */
+.creditCardImageDiv .card4 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardVisa.gif) no-repeat; 
 }
 
 .printField {

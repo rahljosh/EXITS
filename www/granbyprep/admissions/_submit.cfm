@@ -74,7 +74,7 @@
                     formErrors="#SESSION.formErrors.GetCollection()#"
                     messageType="section"
                     />
-                
+                                
                 <form action="#CGI.SCRIPT_NAME#?action=submit" method="post">
                 <input type="hidden" name="submitted" value="1" />
                 
