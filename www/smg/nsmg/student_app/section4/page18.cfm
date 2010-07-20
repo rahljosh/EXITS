@@ -141,7 +141,7 @@ function CheckPrivate() {
 			</table>
 		</td>
 	</tr>
-	<tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
+<!---	<tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
 	<tr>
 		<td>
 			<table>
@@ -152,7 +152,7 @@ function CheckPrivate() {
 				<tr><td colspan="2">______________________________________________</td></tr>
 			</table>
 		</td>
-	</tr>
+	</tr>---->
 </table><br><br><br>
 
 </div>
