@@ -24,7 +24,11 @@
             AND 
                 s.active = 1
             AND 
-                s.companyid != 0
+            <Cfif client.companyid lte 5>
+                (s.companyid != 0 and s.companyid < 6)
+            <cfelse>
+             	(s.companyid != 0 and s.companyid = #client.companyid#)
+            </Cfif>
             AND 
                 s.hostid != '0'
             AND 
@@ -113,7 +117,11 @@
 			AND 
             	s.active = 1
 			AND 
-            	s.companyid != 0
+               <Cfif client.companyid lte 5>
+                (s.companyid != 0 and s.companyid < 6)
+           		 <cfelse>
+             	(s.companyid != 0 and s.companyid = #client.companyid#)
+          		  </Cfif>
 			AND 
             	s.hostid != '0'
 			AND 
