@@ -3,7 +3,7 @@
 	File:		student.cfc
 	Author:		Marcus Melo
 	Date:		June 14, 2010
-	Desc:		This holds the functions needed for the online application module
+	Desc:		This holds the functions needed for student online application module
 
 ----- ------------------------------------------------------------------------- --->
 

@@ -22,6 +22,9 @@
 	// Store Application.IsServerLocal - This needs be declare before the other CFC components
 	APPLICATION.IsServerLocal = AppCFC.UDF.IsServerLocal();
 
+	// Store the initialized Content Library object in the Application scope
+	AppCFC.Content = CreateCFC("content").Init();
+
 	// Store the initialized Document Library object in the Application scope
 	AppCFC.Document = CreateCFC("document").Init();
 

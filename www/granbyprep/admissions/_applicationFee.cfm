@@ -48,6 +48,9 @@
 		// Get Application Fee
 		getApplicationFee = APPLICATION.CFC.ONLINEAPP.getApplicationFee(studentID=FORM.studentID);
 		
+		// Get Policy
+		qGetApplicationFeePolicy = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="applicationFeePolicy");
+		
 		if ( NOT VAL(getApplicationFee) ) {
 			SESSION.formErrors.Add(getApplicationFee);
 		}
@@ -113,14 +116,13 @@
 			}
 
 			if ( NOT LEN(FORM.paymentAgreement) ) {
-				SESSION.formErrors.Add("You must acknowledge the APPLICATION FEE IS NON REFUNDABLE.");
+				SESSION.formErrors.Add("You must agree with the Terms and Conditions");
 			}
 
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
 				
 				// Submit Payment
-				
 				
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
@@ -130,7 +132,15 @@
 			}
 			
 		}
-	</cfscript>
+		
+		// Declare Application Fee Policy
+		savecontent variable="applicationFeePolicy" {
+			WriteOutput(qGetApplicationFeePolicy.content);
+		}    
+		
+		// Replace Variables 
+		applicationFeePolicy = ReplaceNoCase(applicationFeePolicy,"{applicationFee}",dollarFormat(getApplicationFee),"all");
+    </cfscript>
     
 </cfsilent>
 
@@ -167,17 +177,25 @@
                     <input type="hidden" name="submitted" value="1" />
                     
                     <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
+
+                    <!--- Application Fee --->
+                    <fieldset>
+                       
+                        <legend>Application Fee</legend>
+
+                        <div class="field controlset">
+                            <span class="label">Application Fee <em>*</em></span>
+							<strong>#dollarFormat(getApplicationFee)#</strong>
+                        </div>
+
+                    </fieldset>                
+
                     
                     <!--- Payment Information --->
                     <fieldset>
                        
                         <legend>Payment Method</legend>
 
-                        <div class="field controlset">
-                            <span class="label">Application Fee <em>*</em></span>
-							<strong>#dollarFormat(getApplicationFee)#</strong>
-                        </div>
-                            
                         <div class="field controlset">
                             <span class="label">Payment Method <em>*</em></span>
                             <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.paymentType)#">
@@ -192,19 +210,28 @@
                        
                         <legend>Credit Card Information</legend>
     
-                        <p class="note">Enter information for a Credit Card. Your session is secure.</p>
+                        <p class="note">Enter information for a Credit Card. Your session is <a href="#cgi.SCRIPT_NAME#?action=privacy" target="_blank">secure</a>.</p>
                             
                         <div class="field">
                             <label for="nameOnCreditCard">Name on Credit Card <em>*</em></label> 
                             <input type="text" name="nameOnCreditCard" id="nameOnCreditCard" value="#FORM.nameOnCreditCard#" class="largeField" maxlength="100" />
                         </div>
+  
+  
+
+                        <div class="field controlset">
+                            <span class="label">&nbsp;</span>
+                            <div class="creditCardAccepted">&nbsp;</div>
+                        </div>
+
+
                 
                         <div class="field controlset">
                             <span class="label">Credit Card Type <em>*</em></span>
-                            <select name="creditCardType" id="creditCardType" class="mediumField">
+                            <select name="creditCardType" id="creditCardType" class="mediumField" onchange="displayCreditCard(this.value);">
                                 <option value=""></option>
                                 <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.creditCardType)#">
-                                    <option value="#i#" onclick="displayCreditCard(this.value);" <cfif APPLICATION.CONSTANTS.creditCardType[i] EQ FORM.creditCardType> selected="selected" </cfif> >#APPLICATION.CONSTANTS.creditCardType[i]#</option>
+                                    <option value="#i#" <cfif APPLICATION.CONSTANTS.creditCardType[i] EQ FORM.creditCardType> selected="selected" </cfif> >#APPLICATION.CONSTANTS.creditCardType[i]#</option>
                                 </cfloop>
                             </select>
                         </div>
@@ -314,11 +341,17 @@
                                 <input type="checkbox" name="paymentAgreement" id="paymentAgreement" value="1" /> 
                                 &nbsp; 
                                 <label for="paymentAgreement">
-                                    Please acknowledge the APPLICATION FEE IS NON REFUNDABLE.
+                                    I Agree with the Terms and Conditions listed below.
                                 </label>
                             </div>
                         </div>
-                        
+
+						<!--- Policy --->
+                        <div class="field">
+                            <span class="label">&nbsp;</span>  
+                            <textarea name="granbyPolicy" id="granbyPolicy" class="largeTextFieldPolicy" readonly="readonly">#applicationFeePolicy#</textarea>                                    	
+                        </div>
+
                     </fieldset>
 
                     <div class="buttonrow">
@@ -351,3 +384,31 @@
 		displayCreditCard(getSelected);
 	});
 </script>
+
+
+<!---
+
+
+
+The fee to process your application is $40 per campus choice. The
+fee is non-refundable and is independent of an admission decision
+or decision to withdraw or decline an offer of acceptance. Your
+application will not be processed until full payment or authorized
+fee waiver request is received.
+Payment options are as follows:
+Credit or Debit card: To pay by MasterCard or VISA, complete the
+bottom of page A6.
+Check (or Money Order): To pay by check, send a single check
+for the total amount due to the Application Services Center (ASC).
+Checks must be made payable to SUNY ASC and must be drawn
+on a U.S. bank. Returned checks will be subject to an additional
+processing fee of $20.
+All appeals for refunds of overpayments must be put in writing to
+the Director of the Application Services Center.
+
+APPLICATION FEE PAYMENT – A $40 non-refundable application fee is required for each campus choice (please read instructions on page 3). You may pay either
+by credit or debit card or by check (please do not send cash). Your credit or debit card will be charged $40 for each campus choice ($40 for one campus choice; $80 for two
+campus choices, etc.). If paying by check, please send one check for total amount due ($40 for one campus choice; $80 for two campus choices, etc.). Checks
+from international applicants must be in U.S. dollars and be drawn on a U.S. bank. Make checks payable to SUNY ASC. Please include the applicant’s name on your check.
+Your application will not be processed until full payment or authorized fee waiver request is received. For information regarding an application fee waiver, see page 3.
+--->

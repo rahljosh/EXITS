@@ -187,6 +187,60 @@
     </cffunction>
 
 
+	<!---
+		Outputs text that we think came from the rich editor. Since it may have 
+		Paragraph tags, the last one is really the most important. Check to see if 
+		there is a P tag as the final element. If not, then we need to add the proper
+		spacing at the end for bottom margin. 
+	--->
+	<cffunction name="RichTextOutput" access="public" returntype="string" output="No" hint="Returns text that was formatted with a rich text editor">
+		<cfargument name="Text" type="string" required="Yes" />
+		
+		<cfscript>
+			// Set up local variables 
+			var sbText = CreateObject("java", "java.lang.StringBuffer").init();
+		
+			// Trim text since the last thing we want is the tag
+			ARGUMENTS.Text = Trim(ARGUMENTS.Text);
+			
+			// Make sure that it is a block element.
+			sbText.append("<div>");
+			sbText.append(ARGUMENTS.Text);
+			sbText.append("</div>");
+			
+			// Check to see if final element is p tag
+			if (CompareNoCase(Right(ARGUMENTS.Text, 4), "</p>")){
+				// Last element is NOT p tag, so add BR for bottom margin
+				sbText.append("<br />");
+			}
+			
+			// Return the rich formatted text as string
+			return(sbText.toString());
+		</cfscript>
+	</cffunction>
+
+
+	<!---
+		Adds line breaks from a textarea input. All "paragraph data is outputted with a bottom margin.
+	--->
+	<cffunction name="TextAreaOutput" access="public" returntype="string" output="No" hint="Outputs text from a textarea input">
+		<cfargument name="Text" type="string" required="Yes" />
+		
+		<cfscript>
+			// Set up local variables
+			var sbText = CreateObject("java", "java.lang.StringBuffer").init();
+			
+			// Make sure that it is a block element with bottom margin
+			sbText.append("<div>");
+			sbText.append(Replace(ARGUMENTS.Text, (Chr(13) & Chr(10)), "<br />", "ALL"));
+			sbText.append("</div><br />");		
+			
+			// Return the text and convert to string
+			return(sbText.toString());
+		</cfscript>
+	</cffunction>
+
+
 	<!--- Rerturns a formatted phone number --->
 	<cffunction name="formatPhoneNumber" access="public" returntype="string" output="no" hint="Returns a formatted phone number">
 		<cfargument name="countryCode" type="string" default="" />
