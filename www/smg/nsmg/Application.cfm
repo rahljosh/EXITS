@@ -107,11 +107,11 @@ used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
 </cfif>
 <!----If Training is needed, don't allow them to navigate around URL using curdoc---->
  <cfif isDefined("client.trainingNeeded")>
-		<!--- allow user only on user info and user form. 
+		
     	<cfif isDefined("url.curdoc") >
         	<cflocation url="/nsmg/trainingNeeded.cfm" addtoken="no">
         </cfif>
-		--->
+	
 </cfif>
 
 <!--- if "resume login" is used login is not run.  Automatically logout if not the same day, so change password and verify info can be checked when they login again.
