@@ -49,8 +49,16 @@
 		getApplicationFee = APPLICATION.CFC.ONLINEAPP.getApplicationFee(studentID=FORM.studentID);
 		
 		// Get Policy
-		qGetApplicationFeePolicy = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="applicationFeePolicy");
+		qGetContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="applicationFeePolicy");
+
+		// Declare Application Fee Policy
+		savecontent variable="applicationFeePolicy" {
+			WriteOutput(qGetContent.content);
+		}    
 		
+		// Replace Variables 
+		applicationFeePolicy = ReplaceNoCase(applicationFeePolicy,"{applicationFee}",dollarFormat(getApplicationFee),"all");
+
 		if ( NOT VAL(getApplicationFee) ) {
 			SESSION.formErrors.Add(getApplicationFee);
 		}
@@ -132,14 +140,6 @@
 			}
 			
 		}
-		
-		// Declare Application Fee Policy
-		savecontent variable="applicationFeePolicy" {
-			WriteOutput(qGetApplicationFeePolicy.content);
-		}    
-		
-		// Replace Variables 
-		applicationFeePolicy = ReplaceNoCase(applicationFeePolicy,"{applicationFee}",dollarFormat(getApplicationFee),"all");
     </cfscript>
     
 </cfsilent>

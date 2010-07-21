@@ -57,7 +57,7 @@ Page Header
 	font-family: segoe ui, Arial, sans-serif; 
 	font-weight:bold;
 	font-size: 2em; 
-	color:#0069aa;
+	color: #0069aa;
 }
 
 .topLeft .subTitle {
@@ -66,7 +66,7 @@ Page Header
 	font-family: segoe ui, Arial, sans-serif; 
 	font-weight:bold;
 	font-size: 1.2em; /*1.8em; */
-	color:#0069aa;
+	color: #0069aa;
 }
 
 .topRight {
@@ -121,7 +121,7 @@ Left Side / Right Side Content
 	float:left;
 	width:18%;
 	min-height:600px;
-	background-color:#eeeeee;
+	background-color: #eeeeee;
 	border:1px solid #aaaaaa;
 	margin:10px 0px 0px 10px;	
 }
@@ -130,7 +130,7 @@ Left Side / Right Side Content
 	float:right;
 	width:79%;
 	min-height:600px;
-	background-color:#eeeeee;
+	background-color: #eeeeee;
 	border:1px solid #aaaaaa;
 	margin:10px 15px 10px 0px;		
 }
@@ -138,7 +138,7 @@ Left Side / Right Side Content
 .leftSideBar .insideBar,
 .rightSideContent .insideBar {
 	min-height:535px;
-	background-color:#FFFFFF;
+	background-color: #FFFFFF;
 	margin:20px;
 	padding:1px 10px 20px 5px;
 }
@@ -158,13 +158,13 @@ Left Side / Right Side Content
 
 .leftSideBar .insideBar a:hover,
 .rightSideContent .insideBar a:hover{
-	color:#e69700;	
+	color: #e69700;	
 	outline: none;
 }
 
 .leftSideBar .insideBar a.selected,
 .rightSideContent .insideBar a.selected{
-	color:#e69700;	
+	color: #e69700;	
 	outline: none;
 }
 
@@ -180,6 +180,11 @@ Left Side / Right Side Content
 	padding:0px 0px 5px 0px;
 }
 
+.leftSideBar .insideBar li a {
+	color: #0069aa;
+	text-decoration:none;
+}
+
 .leftSideBar .insideBar li.Yes {
 	list-style-image: url(../../images/onlineApp/checkMark.gif); 
 }
@@ -188,10 +193,37 @@ Left Side / Right Side Content
 	list-style-image: url(../../images/onlineApp/notChecked.gif); 
 }
 
-.leftSideBar .insideBar li a {
+.checkListPage {
+	margin-left:10px;
+	color: #0069aa;
+}
+
+.checkListPage a {
+	font-size:1.2em;
+	font-weight:bold;
 	color: #0069aa;
 	text-decoration:none;
 }
+
+.checkListPage li.checkListYes {
+	padding:5px 0px 5px 0px;
+	list-style-image: url(../../images/onlineApp/checkMark.gif); 
+}
+
+.checkListPage li.checkListNo {
+	padding:5px 0px 5px 0px;
+	list-style-image: url(../../images/onlineApp/notChecked.gif); 
+}
+
+.checkListPage .fieldList {
+	display:block;
+	color: #e69700;
+	font-size:1em;
+	font-weight:bold;		
+	list-style:none;
+	padding:0px 0px 5px 0px;
+}
+
 
 /***********************************************************************************
 
@@ -431,7 +463,7 @@ Page Footer
 }
 
 .pageFooter .footerText {
-	color:#FFF;
+	color: #FFF;
 	text-align:center;
 	font-size:1em;
 	font-weight:bold;
@@ -462,6 +494,47 @@ div.form-container-noBorder {
 	margin: 0px 0px 10px 0px; /* margin: 10px; */
 	padding: 5px; 
 	background-color: #FFF; 
+}
+
+div.form-container-noBorder h1 {
+	font-size:1.2em;
+	color: #0069aa;
+}
+
+div.form-container-noBorder .instructionTitle {
+	margin-bottom:10px;
+	color: #0069aa;
+	font-weight:bold;
+	display:block;
+}
+
+div.form-container-noBorder .instructionItem {
+	margin:0px 0px 10px 20px;
+	display:block;
+}
+
+div.form-container-noBorder ul {
+	margin:0px;
+	padding:0px;
+}
+
+div.form-container-noBorder li {
+	margin:0px;
+	list-style:none;
+	padding:0px 0px 5px 0px;
+}
+
+div.form-container-noBorder em { 
+	color: #C00; 
+	font-style: normal; 
+}
+
+div.form-container-noBorder .checkMark {	
+	height:14px;
+	width:14px;
+	display:inline-block;
+	background-repeat:no-repeat;
+	background-image: url(../../images/onlineApp/checkMark.gif);
 }
 
 /* Error messages */
@@ -514,8 +587,7 @@ p.legend em {
 	font-style: normal; 
 }
 
-div.form-container p,
-div.form-container-noBorder p { 
+div.form-container p { 
 	margin: 0; 
 }
 

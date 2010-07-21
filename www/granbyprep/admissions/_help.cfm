@@ -27,7 +27,18 @@
     <div class="rightSideContent ui-corner-all">
         
         <div class="insideBar">
-			
+
+            <!--- Application Body --->
+			<div class="form-container-noBorder">
+            
+                <fieldset>
+                   
+                    <legend>Get Help</legend>
+                        
+
+                </fieldset>
+                            
+            </div>
             
         </div>
         

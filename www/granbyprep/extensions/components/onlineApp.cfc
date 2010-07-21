@@ -71,19 +71,19 @@
 			// Check Minimum Characters
 			if ( LEN(ARGUMENTS.password) LT 8 ) {
 				stResults.isValidPassword = false;
-				stResults.Errors = stResults.Errors & 'The minimum password lenght is 8 characters. <br>';		
+				stResults.Errors = stResults.Errors & 'The minimum password lenght is 8 characters. <br />';		
 			}
 
 			// Check Maximum Characters
 			if ( LEN(ARGUMENTS.password) GT 20 ) {
 				stResults.isValidPassword = false;
-				stResults.Errors = stResults.Errors & 'The maximum password lenght is 20 characters. <br>';					
+				stResults.Errors = stResults.Errors & 'The maximum password lenght is 20 characters. <br />';					
 			}
 			
 			// Check for valid characters
 			if (REFindNoCase("[^0-9a-zA-Z\~\!\@\$\$\%\^\&\*]{1,}", ARGUMENTS.Password)){
 				stResults.isValidPassword = false;
-				stResults.Errors = stResults.Errors & 'Password contains an invalid character. <br>';					
+				stResults.Errors = stResults.Errors & 'Password contains an invalid character. <br />';					
 			}
 			
 			return stResults;

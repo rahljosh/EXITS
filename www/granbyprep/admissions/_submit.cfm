@@ -44,6 +44,27 @@
 			}
 			
 		}
+		
+		// Check if Application is complete
+		if ( 
+			NOT VAL(SESSION.STUDENT.isSection1Complete)
+		OR
+			NOT VAL(SESSION.STUDENT.isSection2Complete)
+		OR
+			( VAL(SESSION.STUDENT.hasAddFamInfo) AND NOT VAL(SESSION.STUDENT.isSection3Complete) )
+		OR
+			NOT VAL(SESSION.STUDENT.isSection4Complete)
+		OR
+			NOT VAL(SESSION.STUDENT.isSection5Complete) ) {
+				// Application is not complete - go to checkList page
+				location("#CGI.SCRIPT_NAME#?action=checkList", "no");
+		}
+		
+		// Check if Application Fee has been paid
+		if ( NOT VAL(qGetStudentInfo.applicationPaymentID) ) {	
+			// Application fee has not been paid - go to the application fee page
+			location("#CGI.SCRIPT_NAME#?action=applicationFee", "no");
+		}
 	</cfscript>
     
 </cfsilent>
