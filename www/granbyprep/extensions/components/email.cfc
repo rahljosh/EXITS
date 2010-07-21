@@ -51,25 +51,26 @@
                 <cfsavecontent variable="stEmailStructure.message">
                 	<p>#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#-</p>
 
-                    You have successfully created an account at #APPLICATION.SCHOOL.name#. <br><br>
+                    You have successfully created an account at #APPLICATION.SCHOOL.name#. <br /><br />
 
-                    You can start your application at any time and do not need to complete it all at once. <br>                
-                    Once submitted, the application can no longer be edited. <br><br>
+                    You can start your application at any time and do not need to complete it all at once. <br />                
+                    Once submitted, the application can no longer be edited. <br /><br />
 
-                    Please visit <a href="#APPLICATION.SITE.URL.admissions#">#APPLICATION.SITE.URL.main#</a> to login into your application account. <br><br>
+                    Please visit <a href="#APPLICATION.SITE.URL.admissions#">#APPLICATION.SITE.URL.main#</a> to login into your application account. <br /><br />
 
-                    Please see below your login information: <br><br>
-                    Email: #qGetStudentInfo.email#<br>
-                    Password: #qGetStudentInfo.password# <br><br>
+                    Please see below your login information: <br /><br />
+                    Email: #qGetStudentInfo.email#<br />
+                    Password: #qGetStudentInfo.password# <br /><br />
 
-                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br><br>
+                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br><br>
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
 
-                    #APPLICATION.SCHOOL.name# <br>
-                    #APPLICATION.SCHOOL.address# <br>
-                    Phone: #APPLICATION.SCHOOL.phone# <br>
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br>                    
+                    #APPLICATION.SCHOOL.name# <br />
+                    #APPLICATION.SCHOOL.address# <br />
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode#
+                    Phone: #APPLICATION.SCHOOL.phone# <br />
+                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
                 </cfsavecontent>
             
             </cfcase>
@@ -84,18 +85,19 @@
                 <cfsavecontent variable="stEmailStructure.message">
                 	<p>#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#-</p>
 
-                    Please see below your login information: <br><br>
-                    Email Address: #qGetStudentInfo.email# <br>
-                    Password: #qGetStudentInfo.password# <br><br>
+                    Please see below your login information: <br /><br />
+                    Email Address: #qGetStudentInfo.email# <br />
+                    Password: #qGetStudentInfo.password# <br /><br />
 
-                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br><br>
+                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br><br>
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
 
-                    #APPLICATION.SCHOOL.name# <br>
-                    #APPLICATION.SCHOOL.address# <br>
-                    Phone: #APPLICATION.SCHOOL.phone# <br>
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br>                    
+                    #APPLICATION.SCHOOL.name# <br />
+                    #APPLICATION.SCHOOL.address# <br />
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode#
+                    Phone: #APPLICATION.SCHOOL.phone# <br />
+                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
                 </cfsavecontent>
             
             </cfcase>
@@ -110,19 +112,20 @@
                 <cfsavecontent variable="stEmailStructure.message">
                 	<p>#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#-</p>
 
-                    You have successfully updated your login information. Please see below: <br><br>
+                    You have successfully updated your login information. Please see below: <br /><br />
 
-                    Email Address: #qGetStudentInfo.email# <br>
-                    Password: #qGetStudentInfo.password# <br><br>
+                    Email Address: #qGetStudentInfo.email# <br />
+                    Password: #qGetStudentInfo.password# <br /><br />
 
-                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br><br>
+                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br><br>
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
 
-                    #APPLICATION.SCHOOL.name# <br>
-                    #APPLICATION.SCHOOL.address# <br>
-                    Phone: #APPLICATION.SCHOOL.phone# <br>
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br>                    
+                    #APPLICATION.SCHOOL.name# <br />
+                    #APPLICATION.SCHOOL.address# <br />
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode#
+                    Phone: #APPLICATION.SCHOOL.phone# <br />
+                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
                 </cfsavecontent>
             
             </cfcase>

@@ -16,18 +16,30 @@
 <!--- Param Session Variables --->
 <cfparam name="SESSION.started" default="#now()#">
 <cfparam name="SESSION.expires" default="#DateAdd('h', 2, now())#">
+
 <!--- Student Information --->
 <cfparam name="SESSION.STUDENT.firstName" type="string" default="">
 <cfparam name="SESSION.STUDENT.lastName" type="string" default="">
 <cfparam name="SESSION.STUDENT.dateLastLoggedIn" type="string" default="">
+
 <!--- Folder to upload application files multiple files --->
 <cfparam name="SESSION.STUDENT.myUploadFolder" type="string" default="">
+
 <!--- These are used on the checklist --->
 <cfparam name="SESSION.STUDENT.isSection1Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.section1FieldList" type="string" default="">
+
 <cfparam name="SESSION.STUDENT.isSection2Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.section2FieldList" type="string" default="">
+
 <cfparam name="SESSION.STUDENT.isSection3Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.section3FieldList" type="string" default="">
+
 <cfparam name="SESSION.STUDENT.isSection4Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.section4FieldList" type="string" default="">
+
 <cfparam name="SESSION.STUDENT.isSection5Complete" type="numeric" default="0">
+<cfparam name="SESSION.STUDENT.section5FieldList" type="string" default="">
 
 <cftry>
 

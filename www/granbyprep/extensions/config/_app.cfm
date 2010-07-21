@@ -26,7 +26,10 @@
 	/***** Create APPLICATION.SCHOOL structure / Stores School Information *****/
 	APPLICATION.SCHOOL = StructNew();		
 	APPLICATION.SCHOOL.name = 'Granby Preparatory Academy';
-	APPLICATION.SCHOOL.address = '66 School Street, Granby, MA 01033';
+	APPLICATION.SCHOOL.address = '66 School Street';
+	APPLICATION.SCHOOL.city = 'Granby';
+	APPLICATION.SCHOOL.state = 'MA';
+	APPLICATION.SCHOOL.zipCode = '01033';
 	APPLICATION.SCHOOL.tollFree = '(800) 766-4656';
 	APPLICATION.SCHOOL.phone = '(631) 893-4540';
 

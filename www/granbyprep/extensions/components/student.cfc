@@ -71,11 +71,25 @@
 				}
 				
 				// Set student session complete
-				SESSION.STUDENT.isSection1Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section1', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
-				SESSION.STUDENT.isSection2Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section2', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
-				SESSION.STUDENT.isSection3Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section3', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
-				SESSION.STUDENT.isSection4Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section4', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
-				SESSION.STUDENT.isSection5Complete = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section5', foreignTable='student', foreignID=ARGUMENTS.ID).isComplete;
+				stCheckSession1 = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section1', foreignTable='student', foreignID=ARGUMENTS.ID);
+				SESSION.STUDENT.isSection1Complete = stCheckSession1.isComplete;
+				SESSION.STUDENT.section1FieldList = stCheckSession1.fieldList;
+				
+				stCheckSession2 = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section2', foreignTable='student', foreignID=ARGUMENTS.ID);
+				SESSION.STUDENT.isSection2Complete = stCheckSession2.isComplete;
+				SESSION.STUDENT.section2FieldList = stCheckSession2.fieldList;
+				
+				stCheckSession3 = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section3', foreignTable='student', foreignID=ARGUMENTS.ID);
+				SESSION.STUDENT.isSection3Complete = stCheckSession3.isComplete;
+				SESSION.STUDENT.section3FieldList = stCheckSession3.fieldList;
+				
+				stCheckSession4 = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section4', foreignTable='student', foreignID=ARGUMENTS.ID);
+				SESSION.STUDENT.isSection4Complete = stCheckSession4.isComplete;
+				SESSION.STUDENT.section4FieldList = stCheckSession4.fieldList;
+				
+				stCheckSession5 = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section5', foreignTable='student', foreignID=ARGUMENTS.ID);
+				SESSION.STUDENT.isSection5Complete = stCheckSession5.isComplete;
+				SESSION.STUDENT.section5FieldList = stCheckSession5.fieldList;
 				
 				// set up upload files path
 				SESSION.STUDENT.myUploadFolder = APPLICATION.PATH.uploadDocumentStudent & ARGUMENTS.ID & '/';

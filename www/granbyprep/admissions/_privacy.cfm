@@ -15,7 +15,7 @@
 
 	<cfscript>
 		// Get Privacy Policy
-		qGetPrivacy = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="sitePolicy");
+		qGetContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="sitePolicy");
 	</cfscript>
 
 </cfsilent>
@@ -39,9 +39,9 @@
                 <fieldset>
                    
                     <legend>Privacy Policy</legend>
-                        
-                    #APPLICATION.CFC.UDF.RichTextOutput(qGetPrivacy.content)#
-
+                    
+                    #APPLICATION.CFC.UDF.RichTextOutput(qGetContent.content)#
+                    
                 </fieldset>
                             
             </div>

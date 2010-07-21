@@ -13,8 +13,19 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 
-</cfsilent>
+	<cfscript>
+		// Get Application Home
+		applicationHomeContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="applicationHome").content;
+		
+		// Replace Variables
+		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{schoolName}",APPLICATION.SCHOOL.name,"all");
+		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{address}",APPLICATION.SCHOOL.address,"all");
+		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{city}",APPLICATION.SCHOOL.city,"all");
+		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{state}",APPLICATION.SCHOOL.state,"all");
+		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{zipCode}",APPLICATION.SCHOOL.zipCode,"all");
+	</cfscript>
 
+</cfsilent>
 
 <cfoutput>
 
@@ -27,7 +38,19 @@
     <div class="rightSideContent ui-corner-all">
         
         <div class="insideBar">
-			
+
+            <!--- Application Body --->
+			<div class="form-container-noBorder">
+            
+                <fieldset>
+                   
+                    <legend>Welcome!</legend>
+                    
+                    #APPLICATION.CFC.UDF.RichTextOutput(applicationHomeContent)#
+					
+                </fieldset>
+                            
+            </div>
             
         </div>
         

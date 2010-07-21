@@ -186,15 +186,15 @@
                 
                 <h3>Error:</h3>
                 <cfdump var="#ARGUMENTS.Exception#">
-                <br><br>
+                <br /><br />
                 
                 <h3>SESSION:</h3>
                 <cfdump var="#SESSION#">
-                <br><br>
+                <br /><br />
                 
                 <h3>FORM:</h3>
                 <cfdump var="#FORM#">
-                <br><br>
+                <br /><br />
                 
                 <h3>URL:</h3>
                 <cfdump var="#URL#"> 

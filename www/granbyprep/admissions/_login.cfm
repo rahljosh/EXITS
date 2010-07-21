@@ -65,7 +65,7 @@
                     APPLICATION.CFC.ONLINEAPP.doLogin(studentID=qCheckLogin.ID);
                     
                     // Redirect User
-                    location("#CGI.SCRIPT_NAME#?action=initial", "no");
+                    location("#CGI.SCRIPT_NAME#?action=home", "no");
 
                 } else {
                     // Set Login Error Message
@@ -99,7 +99,7 @@
 					);
 				} else {
 					// Set email is not registered error message
-					ArrayAppend(pageMsg.Errors, "Email is not registered. <br> Please create an account.");	
+					ArrayAppend(pageMsg.Errors, "Email is not registered. <br /> Please create an account.");	
 				}
 				
             }
@@ -125,7 +125,7 @@
 
 			// Check if Email has been registered
 			if ( IsValid("email", FORM.email) AND APPLICATION.CFC.STUDENT.checkEmail(email=FORM.email).recordCount ) {
-				ArrayAppend(pageMsg.Errors, "Email address already registered. <br> Please click on forgot password to retrieve your information.");		
+				ArrayAppend(pageMsg.Errors, "Email address already registered. <br /> Please click on forgot password to retrieve your information.");		
 			}
 
             // Password

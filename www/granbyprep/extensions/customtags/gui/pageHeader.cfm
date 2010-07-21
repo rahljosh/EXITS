@@ -129,7 +129,7 @@
                         <div class="insideBar form-container">
                             <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Start Application</a> 
                             
-                            <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Application Checklist</a> 
+                            <a href="#CGI.SCRIPT_NAME#?action=checkList" id="itemLinks" class="itemLinks">Application Checklist</a> 
                                 <ul>
                                     <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection1Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Student Information</a></li>
                                     <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection2Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Family Information</a></li>
@@ -145,8 +145,10 @@
                             
                             <a href="#CGI.SCRIPT_NAME#?action=download" class="itemLinks <cfif Find("download", CGI.QUERY_STRING)> selected </cfif>">Download Forms</a>
                             <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=applicationFee" id="itemLinks" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>                                 
-                            <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks">Submit Application</a>
+                            <!---
+							<a href="#CGI.SCRIPT_NAME#?action=applicationFee" id="itemLinks" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>                                 
+                            --->
+							<a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks">Submit Application</a>
                         </div>                            
                     
                     </div>

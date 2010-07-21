@@ -112,7 +112,9 @@
                     OR    
                     	answer LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchKeyword#%">
                     )
-                </cfif>                        
+                </cfif>  
+				ORDER BY
+                	question                                   
         </cfquery> 
 
 		<cfreturn qGetFAQ>
