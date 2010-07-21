@@ -215,7 +215,7 @@
 							1. Student has been personally interviewed (CSIET4)<br>
 							2. Student has not participated in F-1 or J-1  programs in the past (##14)<br>
 							3. Student was screened for background,  needs, experience and English</p>
-							After you have made the corrections, sign the form, scan and email it back to me at <a href="bhause@iseusa.com">bhause@iseusa.com</a>. Once I receive the corrected report, I can issue the DS2019 forms for your students.<br>
+							After you have made the corrections, sign the form, scan and email it back to me at <a href="#client.projectmanager_email#">#client.projectmanager_email#</a>. Once I receive the corrected report, I can issue the DS2019 forms for your students.<br>
                             <strong>In order for the forms to be sent out in our next mailing, I will need the  corrected verification report back  </strong><b> 
                             <cfif LEN(FORM.deadline)>
 	                            by  #DateFormat(FORM.deadline, 'dddd mmmm dd')# at 5:00pm EST.
