@@ -339,7 +339,7 @@
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">
 		LIMIT 1
 	</cfquery>
-<!----Send Eail to Finace Email, ---->
+<!----Send Email to Finace Email, prgram manager, others---->
 <cfoutput>
 <cfquery name="intagent" datasource="#application.dsn#">
 select businessname
@@ -373,11 +373,12 @@ where programid = #qStudentInfo.programid#
                 <cfinvokeargument name="email_to" value="#client.finance_email#">
                 <cfinvokeargument name="email_subject" value="Student Cancellation: #intagent.businessname# -(#qStudentInfo.intrep#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#) - #programname.programname# (#qStudentInfo.programid#)">
                 <cfinvokeargument name="email_message" value="#email_message#">
-                <cfif client.companyid lte 5>
-              <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#, pat@iseusa.com, ellen@iseusa.com">
-              <cfelse>
-              <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#">
-              </cfif>
+            			
+			  <cfif client.companyid lte 5>
+              	<cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#, pat@iseusa.com, ellen@iseusa.com"> 
+			  <cfelse>
+               	<cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#">
+			  </cfif>
                 <cfinvokeargument name="email_from" value="#client.name# <#client.email#>">
             </cfinvoke>
    
