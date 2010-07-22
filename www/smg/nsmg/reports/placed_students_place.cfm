@@ -42,9 +42,18 @@
 
 <cfif client.usertype is '6'> <!--- advisors --->
 	<cfquery name="get_users_under_adv" datasource="MySql">
-		SELECT userid
-		FROM smg_users
-		WHERE advisor_id = '#client.userid#' and companyid like '%#client.companyid#%'
+		SELECT 
+        	u.userid
+		FROM 
+        	smg_users u
+        INNER JOIN
+        	user_access_rights uar ON uar.userID = u.userID
+		WHERE 
+        	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+		AND            
+            uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        AND
+        	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 	</cfquery>
 	<cfset ad_users = ValueList(get_users_under_adv.userid, ',')>
 	<cfset ad_users = ListAppend(ad_users, #client.userid#)>
