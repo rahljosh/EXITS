@@ -40,6 +40,9 @@
 		// Get Current Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);
 
+		// Gets a List of States
+		qGetStates = APPLICATION.CFC.LOOKUPTABLES.getState();
+
 		// Get Current Student Information
 		qGetCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry();
 
@@ -231,7 +234,22 @@
 	<fieldset>
 	   
 		<legend>Complete Home Address</legend>
-		
+
+		<!--- Parent Country --->
+		<div class="field">
+			<label for="#qGetQuestions.fieldKey[10]#">#qGetQuestions.displayField[10]# <cfif qGetQuestions.isRequired[10]><em>*</em></cfif></label> 
+            <cfif printApplication>
+            	<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM[qGetQuestions.fieldKey[10]]).name# &nbsp;</div>
+        	<cfelse>
+                <select name="#qGetQuestions.fieldKey[10]#" id="#qGetQuestions.fieldKey[10]#" class="mediumField" onchange="displayStateField(this.value, 'sec2HomeUsStDiv', 'sec2HomeNonUsStDiv', 'sec2HomeUsStField', 'sec2HomeNonUsStField');">
+                    <option value=""></option>
+                    <cfloop query="qGetCountry">
+                        <option value="#qGetCountry.ID#" <cfif FORM[qGetQuestions.fieldKey[10]] EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
+                    </cfloop>
+                </select>
+            </cfif>
+		</div>
+
 		<!--- Parent Address --->
 		<div class="field">
 			<label for="#qGetQuestions.fieldKey[6]#">#qGetQuestions.displayField[6]# <cfif qGetQuestions.isRequired[6]><em>*</em></cfif></label> 
@@ -251,14 +269,25 @@
                 <input type="text" name="#qGetQuestions.fieldKey[7]#" id="#qGetQuestions.fieldKey[7]#" value="#FORM[qGetQuestions.fieldKey[7]]#" class="#qGetQuestions.classType[7]#" maxlength="100" />
             </cfif>
 		</div>
+
+		<!--- Parent US State --->
+        <div class="field hiddenField" id="sec2HomeUsStDiv">
+            <label for="#qGetQuestions.fieldKey[8]#">State/Province <em>*</em></label> 
+            <select name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" class="mediumField sec2HomeUsStField">
+                <option value=""></option> <!--- [select a state] ---->
+                <cfloop query="qGetStates">
+                    <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[8]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                </cfloop>
+            </select>
+        </div>
 		
-		<!--- Parent State --->
-		<div class="field">
+		<!--- Parent Non US State --->
+		<div class="field hiddenField" id="sec2HomeNonUsStDiv">
 			<label for="#qGetQuestions.fieldKey[8]#">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
             <cfif printApplication>
             	<div class="printField">#FORM[qGetQuestions.fieldKey[8]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" value="#FORM[qGetQuestions.fieldKey[8]]#" class="#qGetQuestions.classType[8]#" maxlength="100" />
+                <input type="text" name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" value="#FORM[qGetQuestions.fieldKey[8]]#" class="#qGetQuestions.classType[8]# sec2HomeNonUsStField" maxlength="100" />
             </cfif>
 		</div>
 		
@@ -272,21 +301,6 @@
             </cfif>
 		</div>
 		
-		<!--- Parent Country --->
-		<div class="field">
-			<label for="#qGetQuestions.fieldKey[10]#">#qGetQuestions.displayField[10]# <cfif qGetQuestions.isRequired[10]><em>*</em></cfif></label> 
-            <cfif printApplication>
-            	<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM[qGetQuestions.fieldKey[10]]).name# &nbsp;</div>
-        	<cfelse>
-                <select name="#qGetQuestions.fieldKey[10]#" id="#qGetQuestions.fieldKey[10]#" class="mediumField">
-                    <option value=""></option>
-                    <cfloop query="qGetCountry">
-                        <option value="#qGetCountry.ID#" <cfif FORM[qGetQuestions.fieldKey[10]] EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
-                    </cfloop>
-                </select>
-            </cfif>
-		</div>
-
 		<!--- Parent Home Telephone --->
 		<div class="field">
 			<label for="homePhoneCountry">#qGetQuestions.displayField[11]# <cfif qGetQuestions.isRequired[11]><em>*</em></cfif></label> 
@@ -380,7 +394,22 @@
                 <input type="text" name="#qGetQuestions.fieldKey[15]#" id="#qGetQuestions.fieldKey[15]#" value="#FORM[qGetQuestions.fieldKey[15]]#" class="#qGetQuestions.classType[15]#" maxlength="100" />
             </cfif>
 		</div>
-		
+
+		<!--- Business Country --->
+		<div class="field">
+			<label for="#qGetQuestions.fieldKey[20]#">#qGetQuestions.displayField[20]# <cfif qGetQuestions.isRequired[20]><em>*</em></cfif></label> 
+            <cfif printApplication>
+            	<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM[qGetQuestions.fieldKey[20]]).name# &nbsp;</div>
+        	<cfelse>
+                <select name="#qGetQuestions.fieldKey[20]#" id="#qGetQuestions.fieldKey[20]#" class="mediumField" onchange="displayStateField(this.value, 'sec2BusUsStDiv', 'sec2BusNonUsStDiv', 'sec2UsBusStField', 'sec2BusNonUsStField');">
+                    <option value=""></option>
+                    <cfloop query="qGetCountry">
+                        <option value="#qGetCountry.ID#" <cfif FORM[qGetQuestions.fieldKey[20]] EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
+                    </cfloop>
+                </select>
+            </cfif>
+		</div>
+
 		<!--- Business Address --->
 		<div class="field">
 			<label for="#qGetQuestions.fieldKey[16]#">#qGetQuestions.displayField[16]# <cfif qGetQuestions.isRequired[16]><em>*</em></cfif></label> 
@@ -401,13 +430,24 @@
             </cfif>
 		</div>
 
-		<!--- Business State --->
-		<div class="field">
+		<!--- Business US State --->
+        <div class="field hiddenField" id="sec2BusUsStDiv">
+            <label for="#qGetQuestions.fieldKey[18]#">State/Province <em>*</em></label> 
+            <select name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" class="mediumField sec2UsBusStField">
+                <option value=""></option> <!--- [select a state] ---->
+                <cfloop query="qGetStates">
+                    <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[18]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                </cfloop>
+            </select>
+        </div>
+
+		<!--- Business Non Us State --->
+		<div class="field hiddenField" id="sec2BusNonUsStDiv">
 			<label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label> 
             <cfif printApplication>
             	<div class="printField">#FORM[qGetQuestions.fieldKey[18]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" value="#FORM[qGetQuestions.fieldKey[18]]#" class="#qGetQuestions.classType[18]#" maxlength="50" />
+                <input type="text" name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" value="#FORM[qGetQuestions.fieldKey[18]]#" class="#qGetQuestions.classType[18]# sec2BusNonUsStField" maxlength="50" />
             </cfif>
 		</div>
 
@@ -421,21 +461,6 @@
             </cfif>
 		</div>
 		
-		<!--- Business Country --->
-		<div class="field">
-			<label for="#qGetQuestions.fieldKey[20]#">#qGetQuestions.displayField[20]# <cfif qGetQuestions.isRequired[20]><em>*</em></cfif></label> 
-            <cfif printApplication>
-            	<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM[qGetQuestions.fieldKey[20]]).name# &nbsp;</div>
-        	<cfelse>
-                <select name="#qGetQuestions.fieldKey[20]#" id="#qGetQuestions.fieldKey[20]#" class="mediumField">
-                    <option value=""></option>
-                    <cfloop query="qGetCountry">
-                        <option value="#qGetCountry.ID#" <cfif FORM[qGetQuestions.fieldKey[20]] EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
-                    </cfloop>
-                </select>
-            </cfif>
-		</div>
-
 		<!--- Business Telephone --->
 		<div class="field">
 			<label for="businessPhoneCountry">#qGetQuestions.displayField[21]# <cfif qGetQuestions.isRequired[21]><em>*</em></cfif></label> 
@@ -487,5 +512,20 @@
 	</form>
 
 </div><!-- /form-container -->
+
+<script type="text/javascript">
+	// Display State Field
+	$(document).ready(function() {
+		
+		// Get Current Country Value
+		sec2GetHomeCountry = $("###qGetQuestions.fieldKey[10]#").val();
+		displayStateField(sec2GetHomeCountry, 'sec2HomeUsStDiv', 'sec2HomeNonUsStDiv', 'sec2HomeUsStField', 'sec2HomeNonUsStField');
+
+		// Get Current Country Value
+		sec2GetBusCountry = $("###qGetQuestions.fieldKey[20]#").val();
+		displayStateField(sec2GetBusCountry, 'sec2BusUsStDiv', 'sec2BusNonUsStDiv', 'sec2UsBusStField', 'sec2BusNonUsStField');
+
+	});
+</script>
 
 </cfoutput>
