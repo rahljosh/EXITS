@@ -13,6 +13,30 @@ var countWord = function(field, displayCount) {
 
 // Display Credit Card Image - Used on _applicationFee.cfm
 var displayCreditCard = function(selectedCard) {
+
 	$("#displayCardImage").removeClass();
 	$("#displayCardImage").addClass("card" + selectedCard); 
+
 }
+
+
+// Slide down steateform field div
+var displayStateField = function(countryValue, usDiv, nonUsDiv, usFieldClass, nonUsFieldClass) { 
+
+	if ( countryValue == 211 ) {
+		// US Selected	
+		$("#" + nonUsDiv).slideUp("slow");
+		$("#" + usDiv).slideDown("slow");
+		// clear the other value
+		$("." + nonUsFieldClass).val("");
+	} else {
+		// Non Us Selected
+		$("#" + usDiv).slideUp("slow");
+		$("#" + nonUsDiv).slideDown("slow");	
+		// clear the other value
+		$("." + usFieldClass).val("");
+	}
+
+}
+
+

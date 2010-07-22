@@ -67,7 +67,7 @@
 	<!--- File Options Successfull Message --->
     <div id="pageMessages" class="pageMessages"></div>
     
-    <form name="filePropertySection" id="filePropertySection" class="documentProperties" onsubmit="return updateFile();">
+    <form name="filePropertySection" id="filePropertySection" class="hiddenField" onsubmit="return updateFile();">
     	<input type="hidden" name="documentID" id="documentID" value="" />
         
         <fieldset>

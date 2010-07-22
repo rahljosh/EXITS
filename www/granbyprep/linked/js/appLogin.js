@@ -1,6 +1,6 @@
 // JavaScript Document
 
-// Set cursor to username field
+// Auto Focus - Set cursor to username field
 $(document).ready(function() {
 	
 	if ( $("#loginEmail").val() == '' ) {
@@ -30,5 +30,3 @@ var displayForgotPass = function() {
 	}
 	
 }
-
-// Auto Focus
