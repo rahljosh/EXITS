@@ -12,37 +12,190 @@
 	output="false" 
 	hint="A collection of functions for the payment gateway module">
 
-	<cffunction name="init" displayname="Init" hint="Sets up variables" access="public" output="false" returntype="void">
-		<cfargument name="tranKeyTesting" displayName="Transact key (testing)" type="string" hint="Transaction Key (testing)" required="true" />
-		<cfargument name="loginTesting" displayName="Login (testing)" type="string" hint="API Login (testing)" required="true" />
-		<cfargument name="tranKey" displayName="Transact key" type="string" hint="Transaction Key" required="true" />
-		<cfargument name="login" displayName="Login" type="string" hint="API Login" required="true" />
-		
-		<cfif ARGUMENTS.environment neq "testing" and ARGUMENTS.environment neq "live">
-			<cfthrow type="payment.authorizeNet.initialize" message="Invalid Environment Assignment" detail="Valid environment variables are Testing or Live">
-		</cfif>
-		
-		<cfif len(ARGUMENTS.login) gt 20>
-			<cfthrow type="payment.authorizeNet.authorizeAndCapture" message="Invalid Login ID" detail="Login ids can be up to 20 character in length.  Provided login is #len(ARGUMENTS.login)# characters">
-		</cfif>
-		
-		<cfif len(ARGUMENTS.tran_key) gt 16>
-			<cfthrow type="payment.authorizeNet.authorizeAndCapture" message="Invalid Transaction Key" detail="Transaction keys can be up to 16 character in length.  Provided key is #len(ARGUMENTS.login)# characters">
-		</cfif>
+	<!--- Return the initialized Student object --->
+	<cffunction name="Init" access="public" returntype="paymentGateway" output="false" hint="Sets up variables">
 		
 		<cfscript>
 			if ( APPLICATION.isServerLocal ) {
 				// Local Environment
 				VARIABLES.processing_url = 'https://test.authorize.net/gateway/transact.dll';				
-				VARIABLES.tran_key = ARGUMENTS.tranKeyTesting;
-				VARIABLES.login = ARGUMENTS.loginTesting;
+				VARIABLES.tran_key = '';
+				VARIABLES.login = '';
 			} else {
 				// Production Environment	
 				VARIABLES.processing_url = 'https://secure.authorize.net/gateway/transact.dll';	
-				VARIABLES.tran_key = ARGUMENTS.tranKey;
-				VARIABLES.login = ARGUMENTS.login;
+				VARIABLES.tran_key = '';
+				VARIABLES.login = '';
 			}
+
+			// Return this initialized instance
+			return(this);
 		</cfscript>
+        
+	</cffunction>
+
+
+	<!--- Insert Payment Information --->
+	<cffunction name="insertApplicationPayment" access="public" returntype="numeric" output="false" hint="Inserts a new payment information. Returns paymentID.">
+        <cfargument name="applicationID" required="yes" hint="applicationID is required" />		
+        <cfargument name="sessionInformationID" required="yes" hint="SESSION.informationID is required" />		
+		<cfargument name="foreignTable" required="yes" hint="foreignTable is required" />
+		<cfargument name="foreignID" required="yes" hint="foreignID is required" />
+		<cfargument name="authTransactionType" required="yes" hint="foreignID is required" />
+		<cfargument name="amount" required="yes" hint="foreignID is required" />
+        <cfargument name="paymentMethodID" required="yes" hint="paymentMethodID is required" />
+		<cfargument name="paymentMethodType" required="yes" hint="paymentMethod is required" />
+		<cfargument name="creditCardTypeID" required="yes" hint="creditCardTypeID is required" />
+		<cfargument name="creditCardType" required="yes" hint="creditCardType is required" />
+		<cfargument name="nameOnCard" required="yes" hint="nameOnCard is required" />
+		<cfargument name="lastDigits" required="yes" hint="lastDigits is required" />
+		<cfargument name="expirationMonth" required="yes" hint="expirationMonth is required" />
+		<cfargument name="expirationYear" required="yes" hint="expirationYear is required" />
+		<cfargument name="billingFirstName" required="yes" hint="billingFirstName is required" />
+		<cfargument name="billingLastName" required="yes" hint="billingLastName is required" />
+		<cfargument name="billingCompany" default="" hint="billingCompany is not required" />
+		<cfargument name="billingAddress" required="yes" hint="billingAddress is not required" />
+		<cfargument name="billingAddress2" default="" hint="billingAddress2 is not required" />
+		<cfargument name="billingApt"  default="" hint="billingApt is not required" />
+		<cfargument name="billingCity" required="yes" hint="billingCity is not required" />
+		<cfargument name="billingState" required="yes" hint="billingState is not required" />
+		<cfargument name="billingZipCode" required="yes" hint="billingZipCode is not required" />
+		<cfargument name="billingCountryID" required="yes" hint="billingCountryID is not required" />
+
+		<cfquery 
+            result="newRecord"
+			datasource="#APPLICATION.DSN.Source#">
+				INSERT INTO
+					applicationPayment
+				(                    
+					applicationID,
+					sessionInformationID,
+					foreignTable,
+					foreignID,
+                    authTransactionType,
+                    amount,
+					paymentMethodID,
+					paymentMethodType,
+					creditCardTypeID,
+					creditCardType,
+					nameOnCard,
+					lastDigits,
+					expirationMonth,
+					expirationYear,
+					billingFirstName,
+					billingLastName,
+					billingCompany,
+					billingAddress,
+					billingAddress2,
+					billingApt,
+					billingCity,
+					billingState,
+					billingZipCode,
+					billingCountryID,
+                    dateCreated
+				)
+                VALUES
+                (
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">,	
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.sessionInformationID#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">,  
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authTransactionType#">,
+                    <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.amount#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.paymentMethodID#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.paymentMethodType#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.creditCardTypeID#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.creditCardType#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.nameOnCard#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.lastDigits#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.expirationMonth#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.expirationYear#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingFirstName#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingLastName#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingCompany#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingAddress#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingAddress2#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingApt#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingCity#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingState#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingZipCode#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.billingCountryID#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">                
+                )                    
+		</cfquery>
+		
+		<cfreturn newRecord.GENERATED_KEY />
+	</cffunction>
+
+	
+	<!--- Update Authorize.Net Payment Information --->
+	<cffunction name="updateApplicationPayment" access="public" returntype="void" output="false" hint="Updates Authorize.net Payment Information.">
+        <cfargument name="ID" required="yes" hint="ID is required" />
+        <cfargument name="authTransactionID" default="" hint="authTransactionID is not required" />
+        <cfargument name="authApprovalCode" default="" hint="authApprovalCode is not required" />
+        <cfargument name="authResponse" default="" hint="authResponse is not required" />
+
+		<cfquery 
+            name="qGetApplicationPaymentByID"
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	applicationPayment
+                SET  
+                    authTransactionID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authTransactionID#">,
+                    authApprovalCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authApprovalCode#">,
+                    authResponse = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authResponse#">,
+                WHERE
+                	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+		</cfquery>
+		
+	</cffunction>
+
+
+	<!--- Get Payment Information --->
+	<cffunction name="getApplicationPaymentByID" access="public" returntype="query" output="false" hint="Gets a payment information.">
+        <cfargument name="ID" required="yes" hint="ID is required" />		
+
+		<cfquery 
+            name="qGetApplicationPaymentByID"
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT  
+                	ID,             
+					applicationID,
+					sessionInformationID,
+					foreignTable,
+					foreignID,
+                    authTransactionType,
+                    authTransactionID,
+                    authApprovalCode,
+                    authResponse,
+                    amount,
+					paymentMethodID,
+					paymentMethodType,
+					creditCardTypeID,
+					creditCardType,
+					nameOnCard,
+					lastDigits,
+					expirationMonth,
+					expirationYear,
+					billingFirstName,
+					billingLastName,
+					billingCompany,
+					billingAddress,
+					billingAddress2,
+					billingApt,
+					billingCity,
+					billingState,
+					billingZipCode,
+					billingCountryID,
+                    dateUpdated,
+                    dateCreated
+				FROM
+                	applicationPayment
+                WHERE
+                	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+		</cfquery>
+		
+		<cfreturn qGetApplicationPaymentByID />
 	</cffunction>
 
 

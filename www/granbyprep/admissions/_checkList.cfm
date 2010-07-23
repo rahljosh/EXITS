@@ -52,7 +52,7 @@
                         
                         <!--- Loop over Missing Fields --->
                         <cfloop from="1" to="#ArrayLen(APPLICATION.CFC.STUDENT.getStudentSession().section2FieldList)#" index="i">
-                           <li>#APPLICATION.CFC.STUDENT.getStudentSession().section2FieldList[i]#</li>        	
+                           <span class="fieldList">#APPLICATION.CFC.STUDENT.getStudentSession().section2FieldList[i]#</span>        	
                         </cfloop>
                         
                         
@@ -73,7 +73,7 @@
 
                         <!--- Loop over Missing Fields --->
                         <cfloop from="1" to="#ArrayLen(APPLICATION.CFC.STUDENT.getStudentSession().section4FieldList)#" index="i">
-                           <li>#APPLICATION.CFC.STUDENT.getStudentSession().section4FieldList[i]#</li>        	
+                           <span class="fieldList">#APPLICATION.CFC.STUDENT.getStudentSession().section4FieldList[i]#</span>        	
                         </cfloop>
 
                         
@@ -82,7 +82,7 @@
                     
                         <!--- Loop over Missing Fields --->
                         <cfloop from="1" to="#ArrayLen(APPLICATION.CFC.STUDENT.getStudentSession().section5FieldList)#" index="i">
-                           <li>#APPLICATION.CFC.STUDENT.getStudentSession().section5FieldList[i]#</li>        	
+                           <span class="fieldList">#APPLICATION.CFC.STUDENT.getStudentSession().section5FieldList[i]#</span>       	
                         </cfloop>
 
                     
