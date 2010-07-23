@@ -180,7 +180,7 @@
                             billing_fax, 
                             billing_email,
                         </cfif>
-                        comments)
+                        comments, whocreated, accountCreationVerified, dateAccountVerified)
                     VALUES (
                     <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
                     <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
@@ -231,6 +231,10 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.billing_email#" null="#yesNoFormat(trim(form.billing_email) EQ '')#">,
                     </cfif>
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.comments#" null="#yesNoFormat(trim(form.comments) EQ '')#">
+                   , #client.userid#,
+                   <cfif client.usertype lte 4>#client.userid#<cfelse>0</cfif>,
+                    <cfif client.usertype lte 4>#now()#<cfelse>null</cfif>
+                   
                     )  
                 </cfquery>
                 <cfquery name="get_id" datasource="#application.dsn#">
@@ -251,7 +255,7 @@
             </cfif>
             
 			<!--- send email --->
-            <cfif form.usertype NEQ 8>
+            <cfif (form.usertype NEQ 8 AND client.usertype neq 5) >
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#form.email#">
 					<cfinvokeargument name="email_replyto" value="#client.email#">
@@ -358,8 +362,12 @@
     <cfset form.confirm_password = temp_password>
     <cfset form.changepass = 1>
     <cfset form.datecreated = now()>
-    <cfset form.active = 1>
-
+    <!----If Regional Manager is creating account, set active to NO.  Once approved, account will be set to active.---->
+	<cfif client.usertype eq 5>
+    	<cfset form.active = 0>
+    <cfelse>
+		<cfset form.active = 1>
+	</cfif>
     <!--- International users don't have the lookup. --->
     <cfif form.usertype EQ 8>
 		<cfset form.lookup_success = 1>

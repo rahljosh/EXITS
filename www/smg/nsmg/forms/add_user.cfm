@@ -1,5 +1,5 @@
 <!--- ONLY OFFICE CAN ADD NEW USERS --->
-<cfif not client.usertype LTE 4>
+<cfif not client.usertype LTE 5>
 	you don't have access to add a user.
 	<cfabort>
 </cfif>
@@ -22,10 +22,16 @@
 <cfquery name="usertype" datasource="#application.dsn#">
 	SELECT usertypeid, usertype
 	FROM smg_usertype
-	WHERE usertypeid <= 9
-    <cfif not client.usertype LTE 4>
-    	AND usertypeid > <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
-    </cfif>
+	WHERE usertypeid <=
+    <cfif client.usertype eq 5>
+     7
+     <cfelse>
+     9
+     </cfif>
+		<cfif not client.usertype LTE 4>
+            AND usertypeid > <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
+        </cfif>
+   
     ORDER BY usertypeid
 </cfquery>
 
