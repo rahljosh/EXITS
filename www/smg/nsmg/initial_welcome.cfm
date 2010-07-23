@@ -150,13 +150,21 @@
             u.city, 
             u.state, 
             u.datecreated,
+            u.whocreated,
+            u.accountCreationVerified,
+            u.dateAccountVerified,
+            u.active,
             uar.advisorid
         FROM 
         	smg_users u
         INNER JOIN 
         	user_access_rights uar ON u.userid = uar.userid
         WHERE 
-        	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+        <cfif client.usertype gte 5>
+           	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+    	<cfelse>
+        	uar.companyid = #client.companyid#
+        </cfif>
         AND 
         	u.datecreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#new_date#">
         <!--- Do not display student view users. Managers shouldn't know who is looking at their kids --->
@@ -165,6 +173,7 @@
         ORDER BY 
         	u.datecreated DESC
     </cfquery>
+    
     
 </cfsilent>    
 
@@ -473,13 +482,22 @@
                             <cfset since_lastlogin = 0>
 							<!--- this is used to display the message if the user is the advisor of any new users. --->
                             <cfset is_advisor = 0>
+                             <table>
+                             	<Tr>
+                                	<Td></Td><td>Name & Location</td><Td>Account Status</Td>
+                                </Tr>
+                                
                             <cfloop query="get_new_users"> 
 								<!--- put * if user is the advisor for this user. --->
                                 <cfif advisorid EQ CLIENT.userid>
                                     <font color="FF0000" size="4"><strong>*</strong></font>
 			                        <cfset is_advisor = 1>
                                 </cfif>
-                            	<a href="mailto:#email#"><img src="pics/email.gif" border=0 align="absmiddle"></a>
+                               
+                                	<Tr>
+                                    	<td>
+                            	<a href="mailto:#email#"><img src="pics/email.gif" border=0 align="absmiddle"></a></td>
+                                	<td>
 								<!--- highlight if user was added since last login. --->
                                 <cfif datecreated GTE CLIENT.lastlogin>
                                     <a href="index.cfm?curdoc=user_info&userid=#userid#"><font color="FF0000">#firstname# #lastname#</font></a> <font color="FF0000">of #city#, #state#</font>
@@ -487,8 +505,10 @@
                                 <cfelse>
                                     <a href="index.cfm?curdoc=user_info&userid=#userid#">#firstname# #lastname#</a> of #city#, #state#
                                 </cfif>
-                                <br>
+                                </td><Td><cfif get_new_users.active eq 0>Not Active, <CFif client.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></Td>
+                                </Tr>
                             </cfloop>
+                            </table>
                             <cfif since_lastlogin>
                             	<br /><font color="FF0000">users in red were added since your last visit</font>
                             </cfif>

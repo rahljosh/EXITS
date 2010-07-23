@@ -85,6 +85,10 @@
                 AND 
                     uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             </cfif>      
+               <Cfif client.usertype eq 5>
+               AND uar.userid = #client.userid#
+               AND uar.usertype = 5
+               </Cfif>    
                           
             ORDER BY 
                 r.regionname,
