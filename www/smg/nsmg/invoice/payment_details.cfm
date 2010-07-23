@@ -74,7 +74,7 @@ SELECT sc.invoiceid, spc.*, SUM(amountapplied) AS amountapplied, spr.date_applie
 	FROM smg_payment_received
 	WHERE paymentref = '#url.ref#' 
 		 AND agentid = '#url.userid#'
-	GROUP BY agentid, paymentref
+	GROUP BY agentid, paymentref, paymenttype
 	<!--- WHERE paymentref = <cfqueryparam value="#url.ref#" cfsqltype="cf_sql_integer"> 
 		 AND agentid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer"> --->
 </Cfquery>

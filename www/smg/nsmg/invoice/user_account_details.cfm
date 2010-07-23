@@ -859,13 +859,14 @@ GROUP BY
 	</tr>
 	
 <Cfquery name="payments_received" datasource="mysql">
-select distinct paymentref
+select paymentref, paymenttype
 from smg_payment_received
 where agentid = #url.userid#
 			<!--- <cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10) AND form.view is not 'all'>
 			and companyid = #FORM.companyID#
 			</cfif> --->
-ORDER BY date DESC			
+GROUP BY paymentref, paymenttype
+ORDER BY date DESC		
 </Cfquery>
 	
 <cfoutput query="payments_received">
@@ -874,7 +875,7 @@ ORDER BY date DESC
 	from smg_payment_received spr
 	right join smg_payment_charges spc on spc.paymentid = spr.paymentid
 	right join smg_charges sc on sc.chargeid = spc.chargeid
-	where paymentref = '#paymentref#' and spr.agentid = #url.userid# 
+	where paymentref = '#paymentref#' and spr.agentid = #url.userid# and paymenttype = '#paymenttype#'
 	<cfif client.companyid EQ 10>
 		and sc.companyid = #client.companyid#
 	</cfif>
