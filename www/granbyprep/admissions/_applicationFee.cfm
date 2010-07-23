@@ -13,15 +13,17 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 
+	<!--- It is set to 1 for the print application page --->
+	<cfparam name="printApplication" default="0">
+
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <!--- Student ID --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
-    <cfparam name="FORM.paymentAgreement" default="">
 	<!--- Credit Card Information --->
     <cfparam name="FORM.paymentMethodID" default="">
-    <cfparam name="FORM.nameOnCreditCard" default="">
-	<cfparam name="FORM.creditCardType" default="">
+    <cfparam name="FORM.nameOnCard" default="">
+	<cfparam name="FORM.creditCardTypeID" default="">
 	<cfparam name="FORM.creditCardNumber" default="">
 	<cfparam name="FORM.expirationMonth" default="">
     <cfparam name="FORM.expirationYear" default="">
@@ -37,10 +39,26 @@
     <cfparam name="FORM.billingState" default="">
     <cfparam name="FORM.billingZipCode" default="">
     <cfparam name="FORM.billingCountryID" default="">
-       
+    <!--- Payment Agreement --->
+    <cfparam name="FORM.paymentAgreement" default="">
+    <!--- Authorize.net --->
+	<cfparam name="authIsSuccess" default="0" />
+    <cfparam name="authResponse" default="" />
+
+    
     <cfscript>
 		// Gets Current Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);
+
+		// Gets payment information
+		qGetPaymentInfo = APPLICATION.CFC.paymentGateway.getApplicationPaymentByID(ID=qGetStudentInfo.applicationPaymentID);
+
+		// Check if Application Fee has been paid
+		if ( VAL(qGetStudentInfo.applicationPaymentID) ) {	
+			// Application fee has not been paid - go to the application fee page
+			// location("#CGI.SCRIPT_NAME#?action=applicationFeeReceipt", "no");
+			printApplication = 1;
+		}
 
 		// Gets a List of States
 		qGetStates = APPLICATION.CFC.LOOKUPTABLES.getState();
@@ -74,16 +92,16 @@
 				SESSION.formErrors.Add("Please select a payment method");
 			}
 
-			if ( NOT LEN(FORM.nameOnCreditCard) ) {
+			if ( NOT LEN(FORM.nameOnCard) ) {
 				SESSION.formErrors.Add("Please enter name on credit card");
 			}
 
-			if ( NOT LEN(FORM.creditCardType) ) {
+			if ( NOT LEN(FORM.creditCardTypeID) ) {
 				SESSION.formErrors.Add("Please select a credit card type");
 			}
 
 			if ( NOT LEN(FORM.creditCardNumber) ) {
-				SESSION.formErrors.Add("Please enter a credit card number");
+				SESSION.formErrors.Add("Please enter a valid credit card number");
 			}
 
 			if ( NOT LEN(FORM.expirationMonth) ) {
@@ -103,7 +121,7 @@
 			}
 
 			if ( NOT LEN(FORM.billingLastName) ) {
-				SESSION.formErrors.Add("lease enter a last name");
+				SESSION.formErrors.Add("Please enter a last name");
 			}
 
 			if ( NOT LEN(FORM.billingAddress) ) {
@@ -119,7 +137,7 @@
 			}
 
 			if ( NOT LEN(FORM.billingZipCode) ) {
-				SESSION.formErrors.Add("Please enter a zip/postal code code");
+				SESSION.formErrors.Add("Please enter a zip/postal code");
 			}
 
 			if ( NOT LEN(FORM.billingCountryID) ) {
@@ -127,16 +145,49 @@
 			}
 
 			if ( NOT LEN(FORM.paymentAgreement) ) {
-				SESSION.formErrors.Add("You must agree with the Terms and Conditions");
+				SESSION.formErrors.Add("Please accept our Terms and Conditions");
 			}
 
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
 				
-				// Submit Payment
+				// Insert Payment Information
+				paymentID = APPLICATION.CFC.PAYMENTGATEWAY.insertApplicationPayment( 
+					applicationID=1,
+					sessionInformationID=SESSION.informationID,
+					foreignTable='student',
+					foreignID=FORM.studentID,
+					authTransactionType='authorizeAndCapture',
+					amount=getApplicationFee,
+					paymentMethodID=FORM.paymentMethodID,
+					paymentMethodType=APPLICATION.CONSTANTS.paymentMethod[FORM.paymentMethodID],
+					creditCardTypeID=FORM.creditCardTypeID,
+					creditCardType=APPLICATION.CONSTANTS.creditCardType[FORM.creditCardTypeID],
+					nameOnCard=FORM.nameOnCard,
+					lastDigits=Right(FORM.creditCardNumber, 4),
+					expirationMonth=FORM.expirationMonth,
+					expirationYear=FORM.expirationYear,
+					billingFirstName=FORM.billingFirstName,
+					billingLastName=FORM.billingLastName,
+					billingCompany=FORM.billingCompany,
+					billingAddress=FORM.billingAddress,
+					billingAddress2=FORM.billingAddress2,
+					billingApt=FORM.billingApt,
+					billingCity=FORM.billingCity,
+					billingState=FORM.billingState,
+					billingZipCode=FORM.billingZipCode,
+					billingCountryID=FORM.billingCountryID
+				);
+				
+				// Submit Payment - Authorize.Net
+				
+				// Payment Successfully Submitted - Update Student Table
+				APPLICATION.CFC.STUDENT.updateApplicationPaymentID(ID=FORM.studentID, applicationPaymentID=paymentID);
+				
+				// Update Authorize.net fields on the payment table
 				
 				// Set Page Message
-				SESSION.pageMessages.Add("Form successfully submitted.");
+				SESSION.pageMessages.Add("Payment successfully submitted.");
 				// Reload page with updated information
 				// location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
 				
@@ -147,50 +198,108 @@
     
 </cfsilent>
 
+
 <cfoutput>
 
 <!--- Page Header --->
 <gui:pageHeader
 	headerType="application"
 />
-    
+	
+	<script type="text/javascript">
+        // JQuery Validator
+        $().ready(function() {
+        
+            var container = $('div.errorContainer');
+            // validate the form when it is submitted
+            var validator = $("##applicationFeeForm").validate({
+                errorContainer: container,
+                errorLabelContainer: $("ol", container),
+                wrapper: 'li',
+                meta: "validate"
+            });
+        
+        });
+    </script>
+        
     <!--- Side Bar --->
     <div class="rightSideContent ui-corner-all">
         
         <div class="insideBar">
 
+			<!--- Page Messages --->
+            <gui:displayPageMessages 
+                pageMessages="#SESSION.pageMessages.GetCollection()#"
+                messageType="section"
+                />
+            
+            <!--- Form Errors --->
+            <gui:displayFormErrors 
+                formErrors="#SESSION.formErrors.GetCollection()#"
+                messageType="section"
+                />
+
+            <!---  Our jQuery error container --->
+            <div class="errorContainer">
+                <p><em>Oops... the following errors were encountered:</em></p>
+                
+                <ol>
+                    <li><label for="paymentMethodID" class="error">Please select a payment method</label></li>
+                    <li><label for="nameOnCard" class="error">Please enter name on credit card</label></li>  
+                    <li><label for="creditCardTypeID" class="error">Please select a credit card type</label></li>
+                    <li><label for="creditCardNumber" class="error">Please enter a valid credit card number</label></li> 
+                    <li><label for="expirationMonth" class="error">Please select an expiration month</label></li>
+                    <li><label for="expirationYear" class="error">Please select an expiration year</label></li>
+                    <li><label for="ccvCode" class="error">Please enter a CCV code</label></li>
+                    <li><label for="billingFirstName" class="error">Please enter a first name</label></li>
+                    <li><label for="billingLastName" class="error">Please enter a last name</label></li> 
+                    <li><label for="billingAddress" class="error">Please enter an address</label></li>
+                    <li><label for="billingCity" class="error">Please enter a city</label></li>
+                    <li><label for="billingState" class="error">Please enter a state</label></li>
+                    <li><label for="billingZipCode" class="error">Please enter a zip/postal code</label></li>
+                    <li><label for="billingCountryID" class="error">Please select a country</label></li>
+                    <li><label for="paymentAgreement" class="error">Please accept our Terms and Conditions</label></li>
+                </ol>
+                
+                <p>Data has <strong>not</strong> been saved.</p>
+            </div>
+
 			<!--- Application Body --->
             <div class="form-container">
-                
-				<!--- Page Messages --->
-                <gui:displayPageMessages 
-                    pageMessages="#SESSION.pageMessages.GetCollection()#"
-                    messageType="section"
-                    />
-                
-                <!--- Form Errors --->
-                <gui:displayFormErrors 
-                    formErrors="#SESSION.formErrors.GetCollection()#"
-                    messageType="section"
-                    />
-                
-                
-                <cfif VAL(getApplicationFee)>  
-                    <form action="#CGI.SCRIPT_NAME#?action=applicationFee" method="post">
-                    <input type="hidden" name="submitted" value="1" />
-                    
-                    <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
 
+                <cfif VAL(getApplicationFee)>  
+                    <form action="#CGI.SCRIPT_NAME#?action=applicationFee" id="applicationFeeForm" method="post">
+                    <input type="hidden" name="submitted" value="1" />
+					
+                    <cfif NOT printApplication>
+                    	<p class="legend"><strong>Note:</strong> fields are marked with an asterisk (<em>*</em>)</p>
+					<cfelse>
+                    	<p class="legend"><strong>Note:</strong> Application Fee has been paid. Please see your payment information below.</p>
+					</cfif>
+                    
                     <!--- Application Fee --->
                     <fieldset>
                        
                         <legend>Application Fee</legend>
-
+						
+                        <!--- Application Fee --->
                         <div class="field controlset">
                             <span class="label">Application Fee <em>*</em></span>
-							<strong>#dollarFormat(getApplicationFee)#</strong>
+							<cfif printApplication>
+                                <div class="printField">#dollarFormat(getApplicationFee)# &nbsp;</div>
+                            <cfelse>
+                                <strong>#dollarFormat(getApplicationFee)#</strong>
+                            </cfif>
                         </div>
-
+						
+                        <!--- Payment Information --->
+                        <cfif printApplication>
+                            <div class="field controlset">
+                                <span class="label">Payment Date <em>*</em></span>
+                                <div class="printField">#DateFormat(qGetPaymentInfo.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetPaymentInfo.dateCreated, 'hh:mm:ss tt')#</div>
+                            </div>
+                        </cfif>
+                        
                     </fieldset>                
 
                     
@@ -198,12 +307,18 @@
                     <fieldset>
                        
                         <legend>Payment Method</legend>
-
+						
+                        <!--- Payment Information --->
                         <div class="field controlset">
                             <span class="label">Payment Method <em>*</em></span>
-                            <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.paymentType)#">
-                                <input type="radio" name="paymentMethodID" id="#APPLICATION.CONSTANTS.paymentType[i]#" value="#APPLICATION.CONSTANTS.paymentType[i]#" <cfif APPLICATION.CONSTANTS.paymentType[i] EQ FORM.paymentMethodID> checked="checked" </cfif> /> <label for="#APPLICATION.CONSTANTS.paymentType[i]#">#APPLICATION.CONSTANTS.paymentType[i]#</label>
-                            </cfloop>
+							<cfif printApplication>
+                                <div class="printField">#APPLICATION.CONSTANTS.paymentMethod[qGetPaymentInfo.paymentMethodID]# &nbsp;</div>
+                            <cfelse>
+                                <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.paymentMethod)#">
+                                    <input type="radio" name="paymentMethodID" id="#APPLICATION.CONSTANTS.paymentMethod[i]#" value="#i#" class="{validate:{required:true}}" <cfif i EQ FORM.paymentMethodID> checked="checked" </cfif> /> 
+                                    <label for="#APPLICATION.CONSTANTS.paymentMethod[i]#">#APPLICATION.CONSTANTS.paymentMethod[i]#</label>
+                                </cfloop>
+                            </cfif>
                         </div>
                 
                     </fieldset>                
@@ -212,58 +327,86 @@
                     <fieldset>
                        
                         <legend>Credit Card Information</legend>
-    
-                        <p class="note">Enter information for a Credit Card. Your session is <a href="#cgi.SCRIPT_NAME#?action=privacy" target="_blank">secure</a>.</p>
-                            
+    					
+                        <cfif NOT printApplication>
+	                        <p class="note">Enter information for a Credit Card. Your session is <a href="#cgi.SCRIPT_NAME#?action=privacy" target="_blank">secure</a>.</p>
+                        </cfif>
+
+                        <!--- Name on Credit Card --->    
                         <div class="field">
-                            <label for="nameOnCreditCard">Name on Credit Card <em>*</em></label> 
-                            <input type="text" name="nameOnCreditCard" id="nameOnCreditCard" value="#FORM.nameOnCreditCard#" class="largeField" maxlength="100" />
+                            <label for="nameOnCard">Name on Credit Card <em>*</em></label> 
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.nameOnCard# &nbsp;</div>
+                            <cfelse>
+                                <input type="text" name="nameOnCard" id="nameOnCard" value="#FORM.nameOnCard#" class="largeField {validate:{required:true}}" maxlength="100" />
+                            </cfif>
                         </div>
-  
-                        <div class="field controlset">
-                            <span class="label">&nbsp;</span>
-                            <div class="creditCardAccepted">&nbsp;</div>
-                        </div>
-                
+  						                        
+                        <!--- Accepted Credit Card Logos --->
+                        <cfif NOT printApplication>
+                            <div class="field controlset">
+                                <span class="label">&nbsp;</span>
+                                <div class="creditCardAccepted">&nbsp;</div>
+                            </div>
+                		</cfif>
+                        
+                        <!--- Credit Card Type --->
                         <div class="field controlset">
                             <span class="label">Credit Card Type <em>*</em></span>
-                            <select name="creditCardType" id="creditCardType" class="mediumField" onchange="displayCreditCard(this.value);">
-                                <option value=""></option>
-                                <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.creditCardType)#">
-                                    <option value="#i#" <cfif APPLICATION.CONSTANTS.creditCardType[i] EQ FORM.creditCardType> selected="selected" </cfif> >#APPLICATION.CONSTANTS.creditCardType[i]#</option>
-                                </cfloop>
-                            </select>
+							<cfif printApplication>
+                                <div class="printField">#APPLICATION.CONSTANTS.creditCardType[qGetPaymentInfo.creditCardTypeID]# &nbsp;</div>
+                            <cfelse>
+                                <select name="creditCardTypeID" id="creditCardTypeID" class="mediumField {validate:{required:true}}" onchange="displayCreditCard(this.value);">
+                                    <option value=""></option>
+                                    <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.creditCardType)#">
+                                        <option value="#i#" <cfif i EQ FORM.creditCardTypeID> selected="selected" </cfif> >#APPLICATION.CONSTANTS.creditCardType[i]#</option>
+                                    </cfloop>
+                                </select>
+                            </cfif>
                         </div>
                 
+                		<!--- Credit Card Number --->
                         <div class="field">
                             <label for="creditCardNumber">Credit Card Number <em>*</em></label> 
-                            <input type="text" name="creditCardNumber" id="creditCardNumber" value="#FORM.creditCardNumber#" class="largeField" maxlength="20" />
-                            <p class="note">no spaces or dashes</p>
+							<cfif printApplication>
+                                <div class="printField">Last 4 Digits: #qGetPaymentInfo.lastDigits# &nbsp;</div>
+                            <cfelse>
+                                <input type="text" name="creditCardNumber" id="creditCardNumber" value="#FORM.creditCardNumber#" class="largeField {validate:{required:true,creditcard:true}}" maxlength="20" />
+                                <p class="note">no spaces or dashes</p>
+                            </cfif>
                         </div>
                 
+                		<!--- Credit Card Expiration Date --->
                         <div class="field">
                             <label for="expirationMonth">Expiration Date <em>*</em></label> 
-                            <select name="expirationMonth" id="expirationMonth" class="smallField">
-                                <option value=""></option>
-                                <cfloop from="1" to="12" index="i">
-                                    <option value="#i#" <cfif FORM.expirationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
-                                </cfloop>
-                            </select>
-                            /
-                            <select name="expirationYear" id="expirationYear" class="xSmallField">
-                                <option value=""></option>
-                                <cfloop from="#Year(now())#" to="#Year(now()) + 8#" index="i">
-                                    <option value="#i#" <cfif FORM.expirationYear EQ i> selected="selected" </cfif> >#i#</option>
-                                </cfloop>
-                            </select>
+							<cfif printApplication>
+                                <div class="printField">#MonthAsString(qGetPaymentInfo.expirationMonth)# / #qGetPaymentInfo.expirationYear# &nbsp;</div>
+                            <cfelse>
+                                <select name="expirationMonth" id="expirationMonth" class="smallField {validate:{required:true}}">
+                                    <option value=""></option>
+                                    <cfloop from="1" to="12" index="i">
+                                        <option value="#i#" <cfif FORM.expirationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
+                                    </cfloop>
+                                </select>
+                                /
+                                <select name="expirationYear" id="expirationYear" class="xSmallField {validate:{required:true}}">
+                                    <option value=""></option>
+                                    <cfloop from="#Year(now())#" to="#Year(now()) + 8#" index="i">
+                                        <option value="#i#" <cfif FORM.expirationYear EQ i> selected="selected" </cfif> >#i#</option>
+                                    </cfloop>
+                                </select>
+                            </cfif>
                         </div>
-                
-                        <div class="field">
-                            <label for="ccvCode">CCV/CID Code <em>*</em></label> 
-                            <input type="text" name="ccvCode" id="ccvCode" value="#FORM.ccvCode#" class="xSmallField" maxlength="4" />
-                            <p class="note">See credit card image</p>
-                        </div>
-                      
+                		
+                        <!--- Credit Card CCV/CID Code --->
+                        <cfif NOT printApplication>
+                            <div class="field">
+                                <label for="ccvCode">CCV/CID Code <em>*</em></label> 
+                                <input type="text" name="ccvCode" id="ccvCode" value="#FORM.ccvCode#" class="xSmallField {validate:{required:true}}" maxlength="4" />
+                                <p class="note">See credit card image</p>
+                            </div>
+                      	</cfif>
+                        
                         <div class="creditCardImageDiv">
                             <div id="displayCardImage" class="card1"></div>
                         </div>
@@ -274,101 +417,157 @@
                     <fieldset>
                        
                         <legend>Billing Address</legend>
-                            
+                        
+                        <!--- First Name --->    
                         <div class="field">
                             <label for="billingFirstName">First Name <em>*</em></label> 
-                            <input type="text" name="billingFirstName" id="billingFirstName" value="#FORM.billingFirstName#" class="largeField" maxlength="100" />
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.billingFirstName# &nbsp;</div>
+                            <cfelse>
+                                <input type="text" name="billingFirstName" id="billingFirstName" value="#FORM.billingFirstName#" class="largeField {validate:{required:true}}" maxlength="100" />
+                            </cfif>
                         </div>
-                
+                		
+                        <!--- Last Name --->
                         <div class="field">
                             <label for="billingLastName">Last Name <em>*</em></label> 
-                            <input type="text" name="billingLastName" id="billingLastName" value="#FORM.billingLastName#" class="largeField" maxlength="100" />
-                        </div>
-    
-                        <div class="field">
-                            <label for="billingCompany">Company Name </label> 
-                            <input type="text" name="billingCompany" id="billingCompany" value="#FORM.billingCompany#" class="largeField" maxlength="100" />
-                        </div>
-
-                        <div class="field">
-                            <label for="billingCountryID">Country <em>*</em></label> 
-                            <select name="billingCountryID" id="billingCountryID" class="mediumField" onchange="displayStateField(this.value, 'usStateField', 'nonUsStateField', 'usBillingState', 'nonUsBillingState');">
-                                <option value=""></option> <!--- [select a country] ---->
-                                <cfloop query="qGetCountries">
-                                    <option value="#qGetCountries.ID#" <cfif FORM.billingCountryID EQ qGetCountries.ID> selected="selected" </cfif> >#qGetCountries.name#</option>
-                                </cfloop>
-                            </select>
-                        </div>
-    
-                        <div class="field">
-                            <label for="billingAddress">Address <em>*</em></label> 
-                            <input type="text" name="billingAddress" id="billingAddress" value="#FORM.billingAddress#" class="largeField" maxlength="100" />
-                        </div>
-    
-                        <div class="field">
-                            <label for="billingAddress2">Address 2</label> 
-                            <input type="text" name="billingAddress2" id="billingAddress2" value="#FORM.billingAddress2#" class="largeField" maxlength="100" />
-                        </div>
-    
-                        <div class="field">
-                            <label for="billingApt">Apt/Suite</label> 
-                            <input type="text" name="billingApt" id="billingApt" value="#FORM.billingApt#" class="smallField" maxlength="20" />
-                        </div>
-    
-                        <div class="field">
-                            <label for="billingCity">City <em>*</em></label> 
-                            <input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="mediumField" maxlength="100" />
-                        </div>
-						
-                        <!--- US State --->
-                        <div class="field hiddenField" id="usStateField">
-                            <label for="billingState">State/Province <em>*</em></label> 
-                            <select name="billingState" id="billingState" class="mediumField usBillingState">
-                                <option value=""></option> <!--- [select a state] ---->
-                                <cfloop query="qGetStates">
-                                    <option value="#qGetStates.code#" <cfif FORM.billingState EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
-                                </cfloop>
-                            </select>
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.billingLastName# &nbsp;</div>
+                            <cfelse>
+                                <input type="text" name="billingLastName" id="billingLastName" value="#FORM.billingLastName#" class="largeField {validate:{required:true}}" maxlength="100" />
+                            </cfif>
                         </div>
     					
-                        <!--- Non US State --->
-                        <div class="field hiddenField" id="nonUsStateField">
-                            <label for="billingState">State/Province <em>*</em></label> 
-                            <input type="text" name="billingState" id="billingState" value="#FORM.billingState#" class="mediumField nonUsBillingState" maxlength="100" />
+                        <!--- Company Name --->
+                        <div class="field">
+                            <label for="billingCompany">Company Name </label> 
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.billingCompany# &nbsp;</div>
+                            <cfelse>
+                                <input type="text" name="billingCompany" id="billingCompany" value="#FORM.billingCompany#" class="largeField" maxlength="100" />
+                            </cfif>
                         </div>
-
+						
+                        <!--- Country --->
+                        <div class="field">
+                            <label for="billingCountryID">Country <em>*</em></label> 
+							<cfif printApplication>
+                                <div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=qGetPaymentInfo.billingCountryID).name# &nbsp;</div>
+                            <cfelse>
+                                <select name="billingCountryID" id="billingCountryID" class="mediumField {validate:{required:true}}" onchange="displayStateField(this.value, 'usStateField', 'nonUsStateField', 'usBillingState', 'nonUsBillingState');">
+                                    <option value=""></option> <!--- [select a country] ---->
+                                    <cfloop query="qGetCountries">
+                                        <option value="#qGetCountries.ID#" <cfif FORM.billingCountryID EQ qGetCountries.ID> selected="selected" </cfif> >#qGetCountries.name#</option>
+                                    </cfloop>
+                                </select>
+                            </cfif>
+                        </div>
+    					
+                        <!--- Address --->
+                        <div class="field">
+                            <label for="billingAddress">Address <em>*</em></label> 
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.billingAddress# &nbsp;</div>
+                            <cfelse>
+                                <input type="text" name="billingAddress" id="billingAddress" value="#FORM.billingAddress#" class="largeField {validate:{required:true}}" maxlength="100" />
+                            </cfif>
+                        </div>
+    					
+                        <!--- Address2 --->
+                        <div class="field">
+                            <label for="billingAddress2">Address 2</label> 
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.billingAddress2# &nbsp;</div>
+                            <cfelse>
+                                <input type="text" name="billingAddress2" id="billingAddress2" value="#FORM.billingAddress2#" class="largeField" maxlength="100" />
+                            </cfif>
+                        </div>
+    
+    					<!--- Apt/Suite --->
+                        <div class="field">
+                            <label for="billingApt">Apt/Suite</label> 
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.billingApt# &nbsp;</div>
+                            <cfelse>
+	                            <input type="text" name="billingApt" id="billingApt" value="#FORM.billingApt#" class="smallField" maxlength="20" />
+                            </cfif>
+                        </div>
+    				
+                    	<!--- City --->
+                        <div class="field">
+                            <label for="billingCity">City <em>*</em></label> 
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.billingCity# &nbsp;</div>
+                            <cfelse>
+	                            <input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="mediumField {validate:{required:true}}" maxlength="100" />
+                            </cfif>
+                        </div>
+						
+                        <cfif printApplication>
+							<!--- State/Province --->
+                            <div class="field">
+                                <label for="billingState">State/Province <em>*</em></label> 
+                        		<div class="printField">#qGetPaymentInfo.billingState# &nbsp;</div>
+                            </div>
+						<cfelse>
+							<!--- Non US State --->
+                            <div class="field hiddenField" id="nonUsStateField">
+                                <label for="billingState">State/Province <em>*</em></label> 
+                                <input type="text" name="billingState" id="billingState" value="#FORM.billingState#" class="mediumField nonUsBillingState" maxlength="100" />
+                            </div>
+    
+                            <!--- US State --->
+                            <div class="field hiddenField" id="usStateField">
+                                <label for="billingState">State/Province <em>*</em></label> 
+                                <select name="billingState" id="billingState" class="mediumField usBillingState">
+                                    <option value=""></option> <!--- [select a state] ---->
+                                    <cfloop query="qGetStates">
+                                        <option value="#qGetStates.code#" <cfif FORM.billingState EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                                    </cfloop>
+                                </select>
+                            </div>
+                        </cfif>
+                        
+                        <!--- Zip/Postal Code --->
                         <div class="field">
                             <label for="billingZipCode">Zip/Postal Code <em>*</em></label> 
-                            <input type="text" name="billingZipCode" id="billingZipCode" value="#FORM.billingZipCode#" class="smallField" maxlength="20" />
+							<cfif printApplication>
+                                <div class="printField">#qGetPaymentInfo.billingZipCode# &nbsp;</div>
+                            <cfelse>
+                                <input type="text" name="billingZipCode" id="billingZipCode" value="#FORM.billingZipCode#" class="smallField {validate:{required:true}}" maxlength="20" />
+                            </cfif>
                         </div>
-    
+    			
                     </fieldset>
-    
-                    <fieldset>
-                                           
-                        <div class="controlset">
-                            <span class="label"><em>*</em></span>
-                            <div class="field">
-                                <input type="checkbox" name="paymentAgreement" id="paymentAgreement" value="1" /> 
-                                &nbsp; 
-                                <label for="paymentAgreement">
-                                    I Agree with the Terms and Conditions listed below.
-                                </label>
+    				                    
+                    <cfif NOT printApplication>
+                        <fieldset>
+                                               
+                            <div class="controlset">
+                                <span class="label"><em>*</em></span>
+                                <div class="field">
+                                    <input type="checkbox" name="paymentAgreement" id="paymentAgreement" value="1" class="{validate:{required:true}}" /> 
+                                    &nbsp; 
+                                    <label for="paymentAgreement">
+                                        I Agree with the Terms and Conditions listed below.
+                                    </label>
+                                </div>
                             </div>
+    
+                            <!--- Policy --->
+                            <div class="field">
+                                <span class="label">&nbsp;</span>  
+                                <textarea name="granbyPolicy" id="granbyPolicy" class="largeTextFieldPolicy" readonly="readonly">#applicationFeePolicy#</textarea>                                    	
+                            </div>
+    
+                        </fieldset>
+
+						<!--- Save Button --->
+                        <div class="buttonrow">
+                            <input type="submit" value="Submit" class="button ui-corner-top" />
                         </div>
+					</cfif>
 
-						<!--- Policy --->
-                        <div class="field">
-                            <span class="label">&nbsp;</span>  
-                            <textarea name="granbyPolicy" id="granbyPolicy" class="largeTextFieldPolicy" readonly="readonly">#applicationFeePolicy#</textarea>                                    	
-                        </div>
-
-                    </fieldset>
-
-                    <div class="buttonrow">
-                        <input type="submit" value="Submit" class="button ui-corner-top" />
-                    </div>
-                
                     </form>
 				
                 </cfif>                    
@@ -389,9 +588,10 @@
 <script type="text/javascript">
 	// Display Credit Card and State Fields
 	$(document).ready(function() {
+		
 		// Get Current Credit Card Value
-		//getSelected = $("input[@name='creditCardType']:checked").val(); // CheckBox
-		getCCSelected = $("#creditCardType").val();		
+		//getSelected = $("input[@name='creditCardTypeID']:checked").val(); // CheckBox
+		getCCSelected = $("#creditCardTypeID").val();		
 		displayCreditCard(getCCSelected);
 		
 		// Get Current Country Value

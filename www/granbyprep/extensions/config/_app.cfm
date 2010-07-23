@@ -148,12 +148,12 @@
 	Constants = APPLICATION.Constants;
 
 	//Set up constant for payment methods
-	Constants.paymentType = ArrayNew(1);		
-	Constants.paymentType[1] = "Credit Card";	
+	Constants.paymentMethod = ArrayNew(1);		
+	Constants.paymentMethod[1] = "Credit Card";	
 	/*
-	Constants.paymentType[2] = "Personal Check";
-	Constants.paymentType[3] = "Wire Transfer";
-	Constants.paymentType[4] = "Money Order";
+	Constants.paymentMethod[2] = "Personal Check";
+	Constants.paymentMethod[3] = "Wire Transfer";
+	Constants.paymentMethod[4] = "Money Order";
 	*/
 
 	//Set up constant for credit card types

@@ -41,7 +41,7 @@
     <cfparam name="FORM.faxArea" default="">
     <cfparam name="FORM.faxPrefix" default="">
     <cfparam name="FORM.faxNumber" default="">
-       
+
     <cfscript>
 		// Get Current Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);

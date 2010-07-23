@@ -13,7 +13,7 @@
 	hint="A collection of functions for the student module">
 
 
-	<!--- Return the initialized UDF object --->
+	<!--- Return the initialized Student object --->
 	<cffunction name="Init" access="public" returntype="student" output="No" hint="Returns the initialized Student object">
 
 		<cfscript>
@@ -322,6 +322,24 @@
                     </cfif>
                     countryBirthID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryBirthID)#">,
                     countryCitizenID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryCitizenID)#">
+				WHERE
+	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+		</cfquery>
+		
+	</cffunction>
+
+
+	<!--- Update ApplicationPaymentID --->
+	<cffunction name="updateApplicationPaymentID" access="public" returntype="void" output="false" hint="Update Student Information">
+		<cfargument name="ID" required="yes" hint="Student ID" />
+        <cfargument name="applicationPaymentID" required="yes" hint="Application Payment ID is required.">
+			
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	student
+                SET
+                    applicationPaymentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationPaymentID#">
 				WHERE
 	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>

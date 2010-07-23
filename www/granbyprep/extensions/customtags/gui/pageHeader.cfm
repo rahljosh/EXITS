@@ -85,7 +85,10 @@
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
 						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
                         <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script src="../linked/js/appSection.js " type="text/javascript"></script>
+                        <script src="../linked/js/appSection.js " type="text/javascript"></script> <!-- UDF -->
+						<script src="../linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
+						<script src="../linked/js/jquery.validate.js " type="text/javascript"></script> <!-- JQuery Validation -->
+                        <!--- <script src="../linked/js/jquery.validate.creditcard2.js " type="text/javascript"></script> <!-- JQuery Credit Card Validation --> --->
                     </cfoutput>
                 </head>
                 <body>
@@ -145,14 +148,10 @@
                             
                             <a href="#CGI.SCRIPT_NAME#?action=download" class="itemLinks <cfif Find("download", CGI.QUERY_STRING)> selected </cfif>">Download Forms</a>
                             <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
-                            <!---
-							<a href="#CGI.SCRIPT_NAME#?action=applicationFee" id="itemLinks" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>                                 
-                            --->
 							<a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks">Submit Application</a>
                         </div>                            
                     
                     </div>
-                    
             </cfcase>
 
 
@@ -193,7 +192,6 @@
             
             <!--- Email Header --->
             <cfcase value="email">
-            
                 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
                 <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
@@ -221,7 +219,6 @@
             	
 				<!--- Application Body --->
                 <div style="width:100%; margin:5px 0px 5px 0px; padding:20px; background-color: ##FFF; border: ##EEE 1px solid; min-height:150px;">
-                
             </cfcase>
     
         </cfswitch>

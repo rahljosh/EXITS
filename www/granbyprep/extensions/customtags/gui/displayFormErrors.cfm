@@ -92,14 +92,14 @@
                     <div class="errors">
                         <p><em>Oops... the following errors were encountered:</em></p>
                 
-                        <ul>
+                        <ol>
     
                             <!--- Loop over the message --->
                             <cfloop from="1" to="#ArrayLen(ATTRIBUTES.formErrors)#" index="i">
                                <li>#ATTRIBUTES.formErrors[i]#</li>        	
                             </cfloop>
     
-                        </ul>
+                        </ol>
                         
                         <p>Data has <strong>not</strong> been saved.</p>
                     </div>

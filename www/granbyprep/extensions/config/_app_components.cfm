@@ -37,6 +37,9 @@
 	// Store the initialized OnlineApp Library object in the Application scope
 	AppCFC.onlineApp = CreateCFC("onlineApp").Init();
 
+	// Store the initialized paymentGateway Library object in the Application scope
+	AppCFC.paymentGateway = CreateCFC("paymentGateway").Init();
+
 	// Store the initialized session Library object in the Application scope
 	AppCFC.SESSION = CreateCFC("session").Init();
 

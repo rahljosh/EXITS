@@ -33,7 +33,7 @@
 --->
 <cfswitch expression="#action#">
 
-	<cfcase value="login,logOff,home,initial,section1,section2,section3,section4,section5,documents,help,faq,myAccount,printApplication,download,applicationFee,checkList,privacy,submit" delimiters=",">
+	<cfcase value="login,logOff,home,initial,section1,section2,section3,section4,section5,documents,help,faq,myAccount,printApplication,download,checkList,privacy,applicationFee,submit" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />
