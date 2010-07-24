@@ -66,11 +66,11 @@ Please make sure you answer all questions.  One wrong answer could hold your app
     </tr>
     
     <Tr>
-    	<td><input disabled  type="checkbox" name="allergic_dogs" value="dogs" <cfif get_health.allergic_dogs eq 1>checked</cfif>> Dogs </td>
-        <td><input disabled  type="checkbox" name="allergic_cats" value="cats" <cfif get_health.allergic_cats eq 1>checked</cfif>> Cats </td>
-        <td><input disabled  type="checkbox" name="allergic_horses" value="horses" <cfif get_health.allergic_horses eq 1>checked</cfif>> Horses </td>
-        <td><input disabled  type="checkbox" name="allergic_rabbits" value="rabbits" <cfif get_health.allergic_rabbits eq 1>checked</cfif>> Rabbits</td>
-        <td><input disabled  type="checkbox" name="allergic_birds" value="birds" <cfif get_health.allergic_birds eq 1>checked</cfif>> Birds</td>
+    	<td><cfif get_health.allergic_dogs eq 1><img src="../pics/check.jpg"></cfif> Dogs </td>
+        <td><cfif get_health.allergic_cats eq 1><img src="../pics/check.jpg"></cfif> Cats </td>
+        <td><cfif get_health.allergic_horses eq 1><img src="../pics/check.jpg"></cfif> Horses </td>
+        <td><cfif get_health.allergic_rabbits eq 1><img src="../pics/check.jpg"></cfif> Rabbits</td>
+        <td><cfif get_health.allergic_birds eq 1><img src="../pics/check.jpg"></cfif> Birds</td>
     </Tr>
 	
     <Tr>
@@ -123,11 +123,11 @@ Please make sure you answer all questions.  One wrong answer could hold your app
    	  <td colspan=5>Please indicate if you are allergicto the following:</td>
     </tr>
     <Tr>
-    	<td><input disabled  type="checkbox" name="allergic_dust" value="1" <cfif get_health.allergic_dust eq 1>checked</cfif>> Dust </td>
-        <td><input disabled  type="checkbox" name="allergic_grass" value="1" <cfif get_health.allergic_grass eq 1>checked</cfif>> Grass </td>
-        <td><input disabled  type="checkbox" name="allergic_pollen" value="1" <cfif get_health.allergic_pollen eq 1>checked</cfif>> Pollen </td>
-        <td><input disabled  type="checkbox" name="allergic_mold" value="1" <cfif get_health.allergic_mold eq 1>checked</cfif>> Mold</td>
-        <td><input disabled  type="checkbox" name="allergic_cigs" value="1" <cfif get_health.allergic_cigs eq 1>checked</cfif>> Cigarette Smoke</td>
+    	<td><cfif get_health.allergic_dust eq 1><img src="../pics/check.jpg"></cfif> Dust </td>
+        <td><cfif get_health.allergic_grass eq 1><img src="../pics/check.jpg"></cfif> Grass </td>
+        <td><cfif get_health.allergic_pollen eq 1><img src="../pics/check.jpg"></cfif>Pollen </td>
+        <td><cfif get_health.allergic_mold eq 1><img src="../pics/check.jpg"></cfif> Mold</td>
+        <td><cfif get_health.allergic_cigs eq 1><img src="../pics/check.jpg"></cfif> Cigarette Smoke</td>
     </Tr>
     <Tr>
     	<td colspan=5>Please describe your syptoms:<Br />
