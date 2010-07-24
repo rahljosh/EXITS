@@ -88,34 +88,29 @@ Please make sure you answer all questions.  One wrong answer could hold your app
    </tr>
    <tr>
    		<Td colspan=5>Can you live in a home with a dog, which lives indoors? 
-        <input disabled  type="radio" name="allergy_dog_indoors" value=1 <cfif get_health.allergy_dog_indoors eq 1>checked</cfif>>Yes 
-        <input disabled  type="radio" name="allergy_dog_indoors" value=0 <cfif get_health.allergy_dog_indoors eq 0>checked</cfif>>No
+         <cfif get_health.allergy_dog_indoors eq 1><strong>Yes</strong><cfelse><strong>No</strong></cfif> 
+        
         <br> 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How about outdoors? 
-        <input disabled  type="radio" name="allergy_dog_outdoors" value=1 <cfif get_health.allergy_dog_outdoors eq 1>checked</cfif>>Yes 
-        <input disabled  type="radio" name="allergy_dog_outdoors" value=0 <cfif get_health.allergy_dog_outdoors eq 0>checked</cfif>>No
+       <cfif get_health.allergy_dog_outdoors eq 1><strong>Yes</strong><cfelse><strong>No</strong></cfif>
    		 </Td>
        </tr>
    <tr>
     		<Td colspan=5>Can you live in a home with a cat, which lives indoors? 
-            <input disabled  type="radio" name="allergy_cat_indoors" value=1 <cfif get_health.allergy_cat_indoors eq 1>checked</cfif>>Yes 
-            <input disabled  type="radio" name="allergy_cat_indoors" value=0 <cfif get_health.allergy_cat_indoors eq 0>checked</cfif>>No <br>
+            <cfif get_health.allergy_cat_indoors eq 1><strong>Yes</strong><cfelse><strong>No</strong></cfif><br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How about outdoors? 
-            <input disabled  type="radio" name="allergy_cat_outdoors" value=1 <cfif get_health.allergy_cat_outdoors eq 1>checked</cfif>>Yes 
-            <input disabled  type="radio" name="allergy_cat_outdoors" value=0 <cfif get_health.allergy_cat_outdoors eq 0>checked</cfif>>No
+           <cfif get_health.allergy_cat_outdoors eq 1><strong>Yes</strong><cfelse><strong>No</strong></cfif>
    		 </Td>
         </tr>
    <tr>  
          <Td colspan=5>Can you live in a home with animals if the animal is not permitted in your bedroom?
-         <input disabled  type="radio" name="allergy_animal_not_bedroom" value=1 <cfif get_health.allergy_animal_not_bedroom eq 1>checked</cfif>>Yes 
-         <input disabled  type="radio" name="allergy_animal_not_bedroom" value=0 <cfif get_health.allergy_animal_not_bedroom eq 0>checked</cfif>>No
+         <cfif get_health.allergy_animal_not_bedroom eq 1><strong>Yes</strong> <cfelse><strong>No</strong></cfif>
      
    		 </Td>
        </tr>
    <tr>   
          <Td colspan=5>If placed in a home with animals, can medication control your symptoms?
-         <input disabled  type="radio" name="allergy_animal_med_control" value=1 <cfif get_health.allergy_animal_med_control eq 1>checked</cfif>>Yes 
-         <input disabled  type="radio" name="allergy_animal_med_control" value=0 <cfif get_health.allergy_animal_med_control eq 0>checked</cfif>>No
+         <cfif get_health.allergy_animal_med_control eq 1><strong>Yes</strong> <cfelse><strong>No</strong></cfif>
    		 </Td>
   </Table>
   <br>
@@ -140,8 +135,7 @@ Please make sure you answer all questions.  One wrong answer could hold your app
 	</Tr>
     <tr>
    		<Td colspan=5>Can your symptoms be controlled with medication? 
-        <input disabled  type="radio" name="allergy_living_conditions_symptoms" value=1 <cfif get_health.allergy_living_conditions_symptoms eq 1>checked</cfif>>Yes 
-        <input disabled  type="radio" name="allergy_living_conditions_symptoms" value=0 <cfif get_health.allergy_living_conditions_symptoms eq 0>checked</cfif>>No 
+       <cfif get_health.allergy_living_conditions_symptoms eq 1><strong>Yes</strong> <cfelse><strong>No</strong> </cfif>
 	  </Td>
   </tr>
    
@@ -162,8 +156,7 @@ Please make sure you answer all questions.  One wrong answer could hold your app
   </tr>
     <tr>
    		<Td colspan=5>Can you prepare your own foor to accommodate your allergy? 
-        <input disabled  name="allergy_prep_food" type="radio" value="1" <cfif get_health.allergy_prep_food eq 1>checked</cfif> />Yes 
-        <input disabled  type="radio" name="allergy_prep_food" value=0 <cfif get_health.allergy_prep_food eq 0>checked</cfif>>No
+        <cfif get_health.allergy_prep_food eq 1><strong>Yes</strong><cfelse> <strong>No</strong></cfif>
 	  </Td>
   </tr>
    
