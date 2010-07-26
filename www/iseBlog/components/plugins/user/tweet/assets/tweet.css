@@ -1,0 +1,33 @@
+/** Container for the tweets **/
+.tweet {
+	
+}
+
+/** List of tweets (UL) **/
+.tweet .tweet_list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+/** Individual tweet (LI) **/
+.tweet .tweet_list li {
+	overflow: auto;
+	padding: 2px;
+}
+
+/** Even tweets (used for alternating styles) **/
+.tweet .tweet_list .tweet_even {
+	
+}
+
+/** Avatar container **/
+.tweet .tweet_list .tweet_avatar {
+	padding-right: 3px;
+	float: left;
+}
+
+/** Avatar image **/
+.tweet .tweet_list .tweet_avatar img {
+	vertical-align: middle;
+}

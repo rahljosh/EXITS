@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.visual28.mango.plugins.twitter" name="twitter" version="1.3" provider-name="visual28" class="twitter.Handler">
+	<description>
+		<![CDATA[
+		Adds <a href="http://www.twitter.com/">twitter</a> feed to sidebar
+		]]>
+	</description>
+
+	<requiresVersion match="greaterOrEqual">1.3</requiresVersion>
+	
+	<listens>
+		<event name="getPods" type="synch" priority="5" />
+		<event name="beforeHtmlBodyEnd" type="synch" priority="5" />
+		<event name="getPodsList" type="synch" priority="1" />
+		<event name="settingsNav" type="synch" priority="5" />
+		<event name="showTwitterSettings" type="synch" priority="5" />
+	</listens>
+	
+	<assets>
+		<asset file="assets/twitterLinker.js" />
+	</assets>
+</plugin>

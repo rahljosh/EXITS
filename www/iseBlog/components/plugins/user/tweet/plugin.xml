@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.witheringtree.mango.plugins.tweet" name="Tweet" version="1.0" provider-name="David Freerksen" class="tweet.Handler">
+	
+	<description>
+		<![CDATA[
+			Adds <a href="http://www.twitter.com/">Twitter</a> feed pod to the sidebar. Based on <a href="http://tweet.seaofclouds.com/" target="_blank">Tweet</a> by <a href="http://seaofclouds.com/" target="_blank">seaofclouds</a> which uses jQuery to retrieve tweets.
+			<br /><br />
+			* Requires <a href="http://sebduggan.com/posts/jquery-plugin-for-mango" target="_blank">jQuery plugin</a> for Mango Blog.<br />
+			* Requires use of CFFile to write style data to stylesheet.
+		]]>
+	</description>
+	
+	<requiresVersion match="greaterOrEqual">1.3</requiresVersion>
+	
+	<listens>
+		<event name="beforeHtmlHeadEnd" type="synch" priority="5" />
+		<event name="getPods" type="synch" priority="5" />
+	</listens>
+
+	<listensAdmin>
+		<event name="settingsNav" type="synch" priority="5" />
+		<event name="showTweetSettings" type="synch" priority="5" />
+		<event name="getPodsList" type="synch" priority="1" />
+	</listensAdmin>
+	
+	<assets>
+		<asset dir="assets" dest="" />
+	</assets>
+	
+</plugin>
