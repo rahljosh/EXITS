@@ -21,7 +21,7 @@
     </span>
     
     <span onmouseover="HideDIV('initDiv');HideDIV('webstore');HideDIV('studentTrips');HideDIV('travelAbroad');HideDIV('hostFam');HideDIV('meetStudents');HideDIV('blog');DisplayDIV('blog')"   style="cursor:pointer;">
-		<a href="#APPLICATION.siteURL#blog/" class="tabs6" target="_blank"></a>
+		<a href="http://blog.iseusa.com/" class="tabs6" target="_blank"></a>
     </span>
 </div><!-- end tabsBar -->
 </cfoutput>
