@@ -412,7 +412,10 @@
                     
                     User: #FORM.email# <br />
                     Password: #setPassword# <br /> <br />
-                    <!---
+                    
+					Visit <a href="#APPLICATION.siteURL#meetStudents.cfm">#APPLICATION.siteURL#meetStudents.cfm</a> to meet our students. <br /> <br />
+                    
+					<!---
                     *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
                     <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
                     <br /> <br />
