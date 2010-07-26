@@ -6,9 +6,9 @@
 	<title>Check List</title>
 </head>
 <body>
-
+<!----
 <cftry>
-
+---->
 <cfquery name="smg_students" datasource="MySql">
 	SELECT s.*, u.businessname, u.businessname, u.master_accountid, app_indicated_program
 	FROM smg_students s
@@ -528,11 +528,11 @@
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="footer_table.cfm">
-
+<!----
 <cfcatch type="any">
 	<cfinclude template="error_message.cfm">
 </cfcatch>
 </cftry>
-
+---->
 </body>
 </html>
