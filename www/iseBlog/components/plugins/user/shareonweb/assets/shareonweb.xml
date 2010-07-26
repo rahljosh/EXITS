@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<shareonweb>
+<username></username>
+<sharelink>1</sharelink>
+<buttonstyle>3</buttonstyle>
+<code><![CDATA[<div class="addthis_toolbox addthis_default_style"><a href="http://www.addthis.com/bookmark.php?v=250&amp;username=xa-4b5354282d4fbfdf" class="addthis_button_compact">Share</a><span class="addthis_separator">|</span><a class="addthis_button_facebook"></a><a class="addthis_button_myspace"></a><a class="addthis_button_google"></a><a class="addthis_button_twitter"></a></div><script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#username=xa-4b53552355eca066"></script>]]></code>
+<rssFeed>0</rssFeed>
+<rssbuttonstyle>1</rssbuttonstyle>
+<rsscode><![CDATA[]]></rsscode>
+<feedurl><![CDATA[]]></feedurl>
+<addThisSharebar>0</addThisSharebar>
+<sidebarDiv><![CDATA[<div class="addthis_sharebar_config" style="display:none;">
+ * username: [Your addthis.com username (optional)]
+ * search url: http://[your_blog_address]//archives.cfm/search/?term=
+ * search label: Search [Your blog name]
+</div>]]></sidebarDiv>
+</shareonweb>
+

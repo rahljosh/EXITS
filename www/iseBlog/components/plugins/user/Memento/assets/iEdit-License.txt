@@ -1,0 +1,59 @@
+iEdit End-User License Agreement :
+
+You may use this software only as described in this license. If you do not agree to the terms of this license, you cannot use the software. 
+1. Software : 
+
+The term "Software" used below, whether in upper or lower case, refers to the software identified above, any updates to the software, any supplemental code provided to you by Developer Office (pvt) Ltd, the User's Guide, any associated software components, any related media and printed materials, and any "online" or electronic documentation. 
+
+
+2. Grant of License : 
+
+Licensor hereby grants You a license to do the following:
+You can USE, COPY, PUBLICLY DISPLAY AND PUBLICLY PERFORM the Original Work SO LONG AS YOU DO NOT DISTRIBUTE the Original Work, modified or unmodified.
+
+
+3. Restrictions:
+
+You may not reduce the Software to human readable form, reverse engineer, de-compile, or disassemble the Software, except and only to the extent that such activity is expressly permitted by applicable law notwithstanding this limitation. You may not rent, lease, or lend the Software. You may not use the Software to perform any illegal purpose.
+
+
+
+4. Support Services:
+
+Use of support services is governed by the user manual, online documentation, and other iEdit materials, as they may be modified from time to time. Developer Office (pvt) Ltd may use any information you provide as part of obtaining support services for its business purposes, including product support and development. 
+
+
+5. Termination:
+
+This license terminates if you fail to comply with its terms and conditions. If your license terminates, you must destroy all copies of the Software. The termination of this license does not limit Developer Office (pvt) Ltd to the other rights it may have by law. 
+
+
+6. Copyright:
+
+You acknowledge that you have only the limited, non-exclusive right to use and copy the Software as expressly stated in this license and that Developer Office (pvt) Ltd retains all other rights. You agree not to remove or modify any copyright, trademark or other proprietary notices which appear in the Software. The Software is protected by copyright law and international treaty provision.
+
+
+7. NO WARRANTIES:
+
+The Software is provided "as is" without warranty of any kind, either express or implied, including, without limitation, the implied warranties of merchantability, fitness for a particular purpose, or non infringement. The Software is provided with all faults and the entire risk as to satisfactory quality, performance, accuracy and effort is with you. 
+
+
+8. LIMITATION OF LIABILITY:
+
+Developer Office (pvt) Ltd is not liable to you for any consequential, special, incidental, or indirect damages of any kind arising out of the delivery, performance, or use of the Software, even if Developer Office (pvt) Ltd has been advised of the possibility of such damages.
+
+
+9. INFORMATION:
+
+Should you have any questions concerning this license, or if you desire to contact Developer Office (pvt) Ltd for any reason, please contact www.developeroffice.com or by electronic mail at: info@developeroffice.com.
+
+
+10. Miscellaneous. 
+This License represents the complete agreement concerning the subject matter hereof. If any provision of this License is held to be unenforceable, such provision shall be reformed only to the extent necessary to make it enforceable. 
+
+
+11. Definition of "You" in This License.
+"You" throughout this License, whether in upper or lower case, means an individual or a legal entity exercising rights under, and complying with all of the terms of, this License. For legal entities, "You" includes any entity that controls, is controlled by, or is under common control with you. For purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity. 
+
+
+Copyright ® 2005, Developer Office (pvt) Ltde. 

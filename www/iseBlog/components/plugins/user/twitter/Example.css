@@ -1,0 +1,32 @@
+/* 
+Since twitter updates are put into place by javascript it may be difficult 
+to see what the generated elements are. Viewing Source will not show you 
+everything that there is to see. Here I have compiled the more commonly needed
+id and classes so that you can style your twitter badge any way you like. If
+you use the Firebug extension for Firefox  you cna inspect the display item to 
+see other classes not listed here.
+
+Download Firebug: https://addons.mozilla.org/en-US/firefox/addon/1843
+ */
+ 
+ 
+/* Output: <h2 class="twitterUpdates">Twitter Updates</h2> */
+h2.twitterUpdates {}
+
+/* Wrapper around twitter data */
+#twitter_div {}
+
+/* Most people will want to set the list style to none */
+ul#twitter_update_list {}
+
+/* Twitter post is in the li */
+#twitter_div li {}
+
+/* Follow me link can be turned off or displayed above or below list items */
+#followMe {}
+
+/* I added support for auto linking usernames and hyperlinks with entry */
+#twitter_div a {}
+
+/* time block can be treated seperatly */
+.fuzzyTime {}
