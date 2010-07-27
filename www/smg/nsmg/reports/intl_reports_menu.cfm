@@ -62,7 +62,13 @@ obj.checked = false; }
                             	<option value="receivedDeparture">Received Departure Information</option>
 							</select>
                         </td>
-					</tr>					                    
+					</tr>		
+				<tr><td colspan=2>Date Placed (leave blank for no filter) :</td></tr>
+               	<tr>
+					<td width="5">Between : </td><td><cfinput type="text" name="place_date1" size="7" maxlength="10" validate="date"> mm-dd-yyyy</td>
+				</tr>
+				<tr>
+					<td width="5">And : </td><td><cfinput type="text" name="place_date2" size="7" maxlength="10" validate="date"> mm-dd-yyyy</td></tr>				                    
 					<tr><td colspan="2"><input type="checkbox" name="send_email" value="1" onClick="copy_user.checked = false">&nbsp; Send automated emails to Intl. Agents.</input></td></tr>
 					<tr><td colspan="2"><input type="checkbox" name="copy_user" value="1" onClick="checkEmail(this)">&nbsp; I would like to receive a copy of the emails</input></td></tr>
 					<tr><td colspan="2" align="center"><font color="FF6600">* Approved placements only.</font></td></tr>

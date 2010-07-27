@@ -94,6 +94,9 @@
 		<cfif VAL(FORM.intrep)>
             AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
         </cfif>
+          <cfif form.place_date1 is not '' and form.place_date2 is not ''>
+        	AND dateplaced between #CreateODBCDate(form.place_Date1)# and #CreateODBCDate(form.place_Date2)#
+        </cfif>
 
         <!--- Flight Option --->
         <cfswitch expression="#FORM.flightOption#">
