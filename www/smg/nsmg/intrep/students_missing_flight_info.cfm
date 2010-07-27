@@ -3,7 +3,7 @@
 	<!----Arrival Information---->
 <cfoutput>
 	<Cfquery name="qStudentsMissingArrival" datasource="mysql">
-		SELECT DISTINCT s.firstname, s.studentid, s.intrep, s.familylastname, s.uniqueid, s.host_fam_approved, 
+		SELECT DISTINCT s.firstname, s.studentid, s.intrep, s.familylastname, s.uniqueid, s.host_fam_approved, s.dateplaced,
 			p.programname, p.startdate, p.enddate, p.type,
 			h.familylastname, h.fatherlastname, h.motherlastname, h.state,
 			finfo.studentid as stu_flight, finfo.flight_type
@@ -73,7 +73,7 @@
 			<Cfloop query="qStudentsMissingArrival">
 			<tr bgcolor="#iif(qStudentsMissingArrival.currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
 				<td><a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qStudentsMissingArrival.uniqueid#">#firstname# #familylastname# (#studentid#)</a></td>
-				<td><Cfif host_fam_approved LTE 4> Yes <cfelse> Pending Approval </Cfif></td>
+				<td><Cfif host_fam_approved LTE 4> Yes - #DateFormat(dateplaced, 'mm/dd/yy')#<cfelse> Pending Approval </Cfif></td>
 				<td><cfif #fatherlastname# EQ #motherlastname#>
 						#fatherlastname# (#state#) 
 					<cfelse>
