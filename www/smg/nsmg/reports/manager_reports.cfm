@@ -123,7 +123,14 @@
 					<option value="english">English Camp</option>
 					<option value="orientation">Orientation Camp</option>
 					<option value="all">Both Camps</option>
-					</select></td></tr>									
+					</select></td></tr>	
+				<tr><td colspan=2>Date Placed (leave blank for no filter) :</td></tr>
+               	<tr>
+					<td width="5">Between : </td><td><cfinput type="text" name="place_date1" size="7" maxlength="10" validate="date"> mm-dd-yyyy</td>
+				</tr>
+				<tr>
+					<td width="5">And : </td><td><cfinput type="text" name="place_date2" size="7" maxlength="10" validate="date"> mm-dd-yyyy</td></tr>	
+									
 				<tr><TD colspan="2" align="center" bgcolor="#e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 			</table>
 		</cfform>

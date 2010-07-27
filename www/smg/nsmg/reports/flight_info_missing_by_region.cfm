@@ -53,7 +53,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 
 <cfloop query="get_region">
 	<cfquery name="get_students" datasource="MySql">
-	SELECT 	s.studentid, s.firstname, s.familylastname, s.arearepid,
+	SELECT 	s.studentid, s.firstname, s.familylastname, s.arearepid, s.dateplaced,
 			u.firstname as super_name, u.lastname as super_lastname,
 			h.familylastname as hostlastname, h.state, h.city, h.major_air_code,
 			intrep.businessname,
@@ -93,9 +93,15 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
  		<cfif client.usertype is '7'>
 			AND (s.placerepid = '#client.userid#' or s.arearepid = '#client.userid#' )
 		</cfif>
+        
+        <cfif form.place_date1 is not '' and form.place_date2 is not ''>
+        	AND dateplaced between #CreateODBCDate(form.place_Date1)# and #CreateODBCDate(form.place_Date2)#
+        </cfif>
+		
 	GROUP BY s.studentid
 	ORDER BY r.regionname, u.lastname, s.firstname
 	</cfquery>
+    
 	
 	<cfif get_students.recordcount is '0'><cfelse>
 	<table border="1" align="center" width='100%' bordercolor="C0C0C0" valign="top" cellpadding="3" cellspacing="1">
@@ -111,6 +117,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 			<th width="5%" align="left">State</th>
 			<th width="5%" align="left">Airport</th>
 			<th width="12%" align="center">Arrival Info</th>
+            <th align="Center">Date Placed</th>
 		</tr>
 		<cfloop query="get_students">
 			<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
@@ -120,7 +127,8 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 				<td>#city#</td>
 				<td align="center">#state#</td>
 				<td align="center">#major_air_code#</td>
-				<td align="center"></td>	
+				<td align="center"></td>
+                <td align="Center">#DateFormat(dateplaced,'mm/dd/yyyy')#</td>	
 			</tr>
 		</cfloop>
 	</table><br>
