@@ -16,7 +16,7 @@
 		<tr valign=middle height=24>
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 			<td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
-			<td background="pics/header_background.gif"><h2>Missing Documents Notification</h2></td>
+			<td background="pics/header_background.gif"><h2>On Hold Notification</h2></td>
 			<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 		</tr>
 	</table>
@@ -137,7 +137,8 @@ FROM="""#companyshort.companyshort# Support"" <#client.support_email#>"
 	</table><br>
 	
 	<table width="650" border="0" bgcolor="FFFFFF" cellpadding="3">
-		<tr><td colspan="2"><span class="application_section_header"><font size=+1><b><u>MISSING DOCUMENTS NOTIFICATION</u></b></font></span><br><br><br></td></tr>
+		<tr>
+		  <td colspan="2"><span class="application_section_header"><font size=+1><b><u>ON HOLD NOTIFICATION</u></b></font></span><br><br><br></td></tr>
 		<tr>
 			<td width="10%">TO:</td><td>#get_int_agent.businessname#</td>
 		</tr>
