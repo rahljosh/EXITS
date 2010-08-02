@@ -108,6 +108,14 @@ If you are not able to read this e-mail please contact #companyshort.companyshor
 	<span class="style1">#get_Student_info.other_missing_docs#</span>
 	</td></tr>
 	<td colspan=3><hr width=100% align="center"></td><br>
+    
+    <!--- Display Message if student is assigned to Brian - Approved region --->
+    <cfif get_student_info.regionAssigned EQ 1462>
+    	<tr>
+        	<td colspan="3">We thank you for submitting your application early but we have not begun assigning applications to regions for your program yet. Please be patient.</td>
+		</tr>                        
+    </cfif>
+    
 </table>
 
 <table width=650 border=0 align="center" bgcolor="FFFFFF">

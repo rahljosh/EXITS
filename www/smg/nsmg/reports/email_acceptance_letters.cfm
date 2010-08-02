@@ -98,13 +98,22 @@ If you are not able to read this e-mail please contact #companyshort.companyshor
 	</tr>
 	<!--- Get Students --->
 	<cfquery name="get_students" datasource="MySQL">
-		SELECT firstname, familylastname, studentid, other_missing_docs, dateapplication, programid, intrep
+		SELECT firstname, familylastname, studentid, other_missing_docs, dateapplication, programid, intrep, regionAssigned
 		FROM smg_students 
 		WHERE intrep = '#url.intrep#' and (dateapplication between #CreateODBCDateTime(url.date1)# and #CreateODBCDateTime(DateAdd('d', 1, url.date2))#) 
 		and active = '1' and companyid = '#client.companyid#' and programid = '#get_programs.programid#'
 		ORDER BY studentid
 	</cfquery>
-	
+    
+    <cfquery name="qGetStudentRegions" dbtype="query">
+    	SELECT
+        	regionAssigned
+        FROM
+        	get_students
+	</cfquery>        	
+    
+    <cfset regionList = ValueList(qGetStudentRegions.regionAssigned)>
+
 	<cfloop query="get_students">
 	<tr>
 		<td><span class="style1">#firstname# #familylastname# (#studentid#)</span></td>
@@ -112,6 +121,14 @@ If you are not able to read this e-mail please contact #companyshort.companyshor
 	</tr>
 	<tr><td colspan="2"><hr width=100% align="center"></td></tr>
 	</cfloop>
+
+    <!--- Display Message if at least one student is assigned to Brian - Approved region --->
+    <cfif ListFind(regionList, 1462)>
+    	<tr>
+        	<td colspan="2">We thank you for submitting your application early but we have not begun assigning applications to regions for your program yet. Please be patient.</td>
+		</tr>                        
+    </cfif>
+	
 </table>
 </cfloop>
 
