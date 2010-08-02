@@ -16,9 +16,17 @@
 	<!--- Param Variables --->
 	<cfparam name="currentTabID" default="0">
 
+	<!--- It is set to 1 for the print application page --->
+	<cfparam name="printApplication" default="0">
+
 	<cfscript>
 		// Get Current Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=APPLICATION.CFC.STUDENT.getStudentID());
+		
+		// Set Application Read Only
+		if ( APPLICATION.CFC.STUDENT.getStudentSession().isApplicationSubmitted )  {
+			printApplication = 1;
+		}
 	</cfscript>
 
 </cfsilent>

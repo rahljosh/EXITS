@@ -68,7 +68,7 @@
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
-                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode#
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
                     Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
                 </cfsavecontent>
@@ -95,7 +95,7 @@
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
-                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode#
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
                     Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
                 </cfsavecontent>
@@ -123,7 +123,34 @@
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
-                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode#
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
+                    Phone: #APPLICATION.SCHOOL.phone# <br />
+                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                </cfsavecontent>
+            
+            </cfcase>
+
+            <!--- Payment Submitted --->
+        	<cfcase value="paymentSubmitted">
+
+                <cfscript>
+					stEmailStructure.subject = APPLICATION.SCHOOL.name & ' - Application Fee Received';
+				</cfscript>
+
+                <cfsavecontent variable="stEmailStructure.message">
+                	<p>#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#-</p>
+
+                    You have successfully submitted an application payment of <br /><br />
+					
+                    Reference Number {referenceNumber} <br /><br />
+                    
+                    If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
+
+                    #APPLICATION.SCHOOL.name# <br />
+                    #APPLICATION.SCHOOL.address# <br />
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
                     Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
                 </cfsavecontent>
@@ -131,10 +158,53 @@
             </cfcase>
         
         	<!--- Application Submitted --->
+        	<cfcase value="applicationSubmitted">
+
+                <cfscript>
+					stEmailStructure.subject = APPLICATION.SCHOOL.name & ' - Application for Admission submitted';
+				</cfscript>
+
+                <cfsavecontent variable="stEmailStructure.message">
+                	<p>#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#-</p>
+
+                    You have successfully submitted your online application. <br /><br />
+					
+                    If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
+
+                    #APPLICATION.SCHOOL.name# <br />
+                    #APPLICATION.SCHOOL.address# <br />
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
+                    Phone: #APPLICATION.SCHOOL.phone# <br />
+                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                </cfsavecontent>
             
+            </cfcase>
+
+        	<!--- Application Submitted Admissions --->
+        	<cfcase value="applicationSubmittedAdmissions">
+
+                <cfscript>
+					stEmailStructure.subject = 'Application for student ' & qGetStudentInfo.firstName & ' ' & qGetStudentInfo.lastName & ' - has been submitted';
+				</cfscript>
+
+                <cfsavecontent variable="stEmailStructure.message">
+                	<p>Dear Admissions Officer,</p>
+
+                    Application for student #qGetStudentInfo.firstName# #qGetStudentInfo.lastName# ###qGetStudentInfo.ID# has been submitted. <br /><br />
+					
+                    Please find a copy of the application attached. <br /><br />
+                    
+                    #APPLICATION.SCHOOL.name# <br />
+                    #APPLICATION.SCHOOL.address# <br />
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
+                    Phone: #APPLICATION.SCHOOL.phone# <br />
+                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                </cfsavecontent>
             
-            <!--- Payment Processed --->
-        
+            </cfcase>
+            
         </cfswitch>
         
         </cfoutput>
@@ -152,7 +222,7 @@
         <cfargument name="emailCC" type="string" default="" hint="Email CC Field">
         <cfargument name="emailSubject" type="string" default="" hint="Email Subject">
         <cfargument name="emailMessage" type="string" default="" hint="Email Message">
-        <cfargument name="emailFile" type="string" default="" hint="Optional attachment file">
+        <cfargument name="emailFilePath" type="string" default="" hint="Optional attachment file">
         <cfargument name="emailType" type="string" default="" hint="newAccount/forgotPassword/ - If passed gets the email text accordingly">
         <cfargument name="studentID" type="numeric" default="0" hint="Used with the emailType to get the student information">        
 
@@ -167,7 +237,7 @@
 				ARGUMENTS.emailMessage = stGetEmailTemplate.message;
 			}
 		</cfscript>
-                
+		
 		<cfmail 
             from="#ARGUMENTS.emailFrom#" 
             to="#ARGUMENTS.emailTo#" 
@@ -177,8 +247,8 @@
             type="html">
 
             <!--- Attach File --->
-			<cfif LEN(ARGUMENTS.emailFile)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile#">                
+			<cfif LEN(ARGUMENTS.emailFilePath) AND APPLICATION.CFC.DOCUMENT.checkFileExists(filePath=ARGUMENTS.emailFilePath)>
+				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFilePath#">                
             </cfif>
             
 			<!--- Page Header --->
@@ -197,6 +267,5 @@
         </cfmail>
 
 	</cffunction>
-
 
 </cfcomponent>

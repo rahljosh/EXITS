@@ -25,6 +25,8 @@
 <!--- Folder to upload application files multiple files --->
 <cfparam name="SESSION.STUDENT.myUploadFolder" type="string" default="">
 
+<cfparam name="SESSION.STUDENT.isApplicationSubmitted" type="numeric" default="0">
+
 <!--- These are used on the checklist --->
 <cfparam name="SESSION.STUDENT.isSection1Complete" type="numeric" default="0">
 <cfparam name="SESSION.STUDENT.section1FieldList" type="string" default="">

@@ -40,3 +40,16 @@ var displayStateField = function(countryValue, usDiv, nonUsDiv, usFieldClass, no
 }
 
 
+// Slide down stateForm field div
+var displaySemesterDetail = function(semesterSelected) { 
+
+	if ( semesterSelected == 3 ) {
+		// Display Please Specify
+		$("#semesterDetailDiv").slideDown("slow");
+	} else {
+		// Hide Please Specify
+		$("#semesterDetailDiv").slideUp("slow");
+	}
+
+}
+

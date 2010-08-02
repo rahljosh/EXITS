@@ -24,6 +24,62 @@
 	</cffunction>
 
 
+	<cffunction name="getApplicationLoopUp" access="public" returntype="query" output="false" hint="Returns a list of payment types">
+    	<cfargument name="fieldKey" required="yes" hint="fieldKey is required.">
+    	<cfargument name="orderBy" default="ID" hint="orderBy is required.">
+
+        <cfquery 
+        	name="qGetApplicationLoopUp"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	ID,
+                    fieldKey,
+                    name,
+                    isActive
+                    dateCreated,
+                    dateUpdated
+				FROM
+                	applicationLookUp
+				WHERE
+                	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                    fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
+				<cfif ListFind('ID,fieldKey,name', ARGUMENTS.orderBy)>
+                ORDER BY
+                	#ARGUMENTS.orderBy#                    
+				</cfif>                    
+        </cfquery> 
+
+		<cfreturn qGetApplicationLoopUp>
+	</cffunction>
+
+
+	<cffunction name="getApplicationPaymentType" access="public" returntype="query" output="false" hint="Returns a list of payment types">
+    	<cfargument name="ID" default="0" hint="ID is not required.">
+
+        <cfquery 
+        	name="qGetApplicationPaymentType"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	ID,
+                    name,
+                    isActive,
+                    dateCreated,
+                    dateUpdated
+				FROM
+                	applicationPaymentType
+				WHERE
+                	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+				<cfif VAL(ARGUMENTS.ID)>
+					AND
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                </cfif>                        
+        </cfquery> 
+
+		<cfreturn qGetApplicationPaymentType>
+	</cffunction>
+
+
 	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
 
         <cfquery 
@@ -118,32 +174,6 @@
         </cfquery> 
 
 		<cfreturn qGetFAQ>
-	</cffunction>
-
-
-	<cffunction name="getApplicationPaymentType" access="public" returntype="query" output="false" hint="Returns a list of payment types">
-    	<cfargument name="ID" default="0" hint="ID is not required.">
-
-        <cfquery 
-        	name="qGetApplicationPaymentType"
-        	datasource="#APPLICATION.DSN.Source#">
-                SELECT 
-                	ID,
-                    name,
-                    isActive,
-                    dateCreated,
-                    dateUpdated
-				FROM
-                	applicationPaymentType
-				WHERE
-                	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-				<cfif VAL(ARGUMENTS.ID)>
-					AND
-                        ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.ID#">
-                </cfif>                        
-        </cfquery> 
-
-		<cfreturn qGetApplicationPaymentType>
 	</cffunction>
 
 

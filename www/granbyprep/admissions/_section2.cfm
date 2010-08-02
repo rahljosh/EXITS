@@ -38,7 +38,7 @@
 
     <cfscript>
 		// Get Current Student Information
-		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);
+		// qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);
 
 		// Gets a List of States
 		qGetStates = APPLICATION.CFC.LOOKUPTABLES.getState();
@@ -103,6 +103,7 @@
 				
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
+				
 				// Reload page with updated information
 				if ( FORM.hasAddFamInfo ) {
 					location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID + 1#", "no");
@@ -144,7 +145,37 @@
     
 </cfsilent>
 
+<script type="text/javascript">
+	// JQuery Validator
+	$().ready(function() {
+		var container = $('div.errorContainer');
+		// validate the form when it is submitted
+		var validator = $("#section2Form").validate({
+			errorContainer: container,
+			errorLabelContainer: $("ol", container),
+			wrapper: 'li',
+			meta: "validate"
+		});
+	
+	});
+</script>
+
 <cfoutput>
+
+<!---  Our jQuery error container --->
+<div class="errorContainer">
+	<p><em>Oops... the following errors were encountered:</em></p>
+					
+	<ol>
+		<cfloop query="qGetQuestions">
+        	<cfif qGetQuestions.isRequired>
+				<li><label for="#qGetQuestions.fieldKey#" class="error">#qGetQuestions.requiredMessage#</label></li>
+            </cfif>
+		</cfloop>
+	</ol>
+	
+	<p>Data has <strong>not</strong> been saved.</p>
+</div>
 
 <!--- Application Body --->
 <div class="form-container">
@@ -166,7 +197,7 @@
 
 	</cfif>
 
-	<form action="#CGI.SCRIPT_NAME#?action=initial" method="post">
+	<form id="section2Form" action="#CGI.SCRIPT_NAME#?action=initial" method="post">
 	<input type="hidden" name="submittedType" value="section2" />
     <input type="hidden" name="currentTabID" value="1" />
 	
@@ -270,27 +301,31 @@
             </cfif>
 		</div>
 
-		<!--- Parent US State --->
-        <div class="field hiddenField" id="sec2HomeUsStDiv">
-            <label for="#qGetQuestions.fieldKey[8]#">State/Province <em>*</em></label> 
-            <select name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" class="mediumField sec2HomeUsStField">
-                <option value=""></option> <!--- [select a state] ---->
-                <cfloop query="qGetStates">
-                    <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[8]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
-                </cfloop>
-            </select>
-        </div>
-		
-		<!--- Parent Non US State --->
-		<div class="field hiddenField" id="sec2HomeNonUsStDiv">
-			<label for="#qGetQuestions.fieldKey[8]#">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
-            <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[8]]# &nbsp;</div>
-        	<cfelse>
+        <cfif printApplication>
+	        <!--- State Print Application --->	
+            <div class="field">
+                <label for="#qGetQuestions.fieldKey[8]#">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
+                <div class="printField">#FORM[qGetQuestions.fieldKey[8]]# &nbsp;</div>
+            </div>
+		<cfelse>
+			<!--- Parent US State --->
+            <div class="field hiddenField" id="sec2HomeUsStDiv">
+                <label for="#qGetQuestions.fieldKey[8]#">State/Province <em>*</em></label> 
+                <select name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" class="mediumField sec2HomeUsStField">
+                    <option value=""></option> <!--- [select a state] ---->
+                    <cfloop query="qGetStates">
+                        <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[8]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                    </cfloop>
+                </select>
+            </div>
+            
+            <!--- Parent Non US State --->
+            <div class="field hiddenField" id="sec2HomeNonUsStDiv">
+                <label for="#qGetQuestions.fieldKey[8]#">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
                 <input type="text" name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" value="#FORM[qGetQuestions.fieldKey[8]]#" class="#qGetQuestions.classType[8]# sec2HomeNonUsStField" maxlength="100" />
-            </cfif>
-		</div>
-		
+            </div>
+		</cfif>
+
 		<!--- Parent Zip --->
 		<div class="field">
 			<label for="#qGetQuestions.fieldKey[9]#">#qGetQuestions.displayField[9]# <cfif qGetQuestions.isRequired[9]><em>*</em></cfif></label> 
@@ -430,26 +465,30 @@
             </cfif>
 		</div>
 
-		<!--- Business US State --->
-        <div class="field hiddenField" id="sec2BusUsStDiv">
-            <label for="#qGetQuestions.fieldKey[18]#">State/Province <em>*</em></label> 
-            <select name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" class="mediumField sec2UsBusStField">
-                <option value=""></option> <!--- [select a state] ---->
-                <cfloop query="qGetStates">
-                    <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[18]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
-                </cfloop>
-            </select>
-        </div>
-
-		<!--- Business Non Us State --->
-		<div class="field hiddenField" id="sec2BusNonUsStDiv">
-			<label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label> 
-            <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[18]]# &nbsp;</div>
-        	<cfelse>
+        <cfif printApplication>
+	        <!--- State Print Application --->	
+            <div class="field">
+                <label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label> 
+                <div class="printField">#FORM[qGetQuestions.fieldKey[18]]# &nbsp;</div>
+            </div>
+		<cfelse>
+			<!--- Business US State --->
+            <div class="field hiddenField" id="sec2BusUsStDiv">
+                <label for="#qGetQuestions.fieldKey[18]#">State/Province <em>*</em></label> 
+                <select name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" class="mediumField sec2UsBusStField">
+                    <option value=""></option> <!--- [select a state] ---->
+                    <cfloop query="qGetStates">
+                        <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[18]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                    </cfloop>
+                </select>
+            </div>
+    
+            <!--- Business Non Us State --->
+            <div class="field hiddenField" id="sec2BusNonUsStDiv">
+                <label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label> 
                 <input type="text" name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" value="#FORM[qGetQuestions.fieldKey[18]]#" class="#qGetQuestions.classType[18]# sec2BusNonUsStField" maxlength="50" />
-            </cfif>
-		</div>
+            </div>
+		</cfif>
 
 		<!--- Business Zip --->
 		<div class="field">

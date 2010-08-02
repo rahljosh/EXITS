@@ -16,7 +16,7 @@
 
     <cfscript>
 		// If user is not logged in, set action to the login page.
-		if ( NOT VAL(APPLICATION.CFC.student.getStudentID()) ) {
+		if ( NOT APPLICATION.CFC.ONLINEAPP.isCurrentUserLoggedIn() ) {
 			action = 'login';
 		}
 	</cfscript>

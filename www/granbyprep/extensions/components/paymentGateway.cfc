@@ -18,14 +18,18 @@
 		<cfscript>
 			if ( APPLICATION.isServerLocal ) {
 				// Local Environment
-				VARIABLES.processing_url = 'https://test.authorize.net/gateway/transact.dll';				
-				VARIABLES.tran_key = '';
-				VARIABLES.login = '';
+				VARIABLES.processingURL = 'https://test.authorize.net/gateway/transact.dll';				
+				// The merchant's unique API login ID
+				VARIABLES.loginID = '2E3jsfH7L5F'; 
+				// The merchant's unique transaction key
+				VARIABLES.transactionKey = '979cxZC5g8dDRf9b';
 			} else {
 				// Production Environment	
-				VARIABLES.processing_url = 'https://secure.authorize.net/gateway/transact.dll';	
-				VARIABLES.tran_key = '';
-				VARIABLES.login = '';
+				VARIABLES.processingURL = 'https://secure.authorize.net/gateway/transact.dll';
+				// The merchant's unique API login ID
+				VARIABLES.loginID = '7F9y6gHP'; 
+				// The merchant's unique transaction key
+				VARIABLES.transactionKey = '4359fXD8z58SDvrm';
 			}
 
 			// Return this initialized instance
@@ -41,7 +45,6 @@
         <cfargument name="sessionInformationID" required="yes" hint="SESSION.informationID is required" />		
 		<cfargument name="foreignTable" required="yes" hint="foreignTable is required" />
 		<cfargument name="foreignID" required="yes" hint="foreignID is required" />
-		<cfargument name="authTransactionType" required="yes" hint="foreignID is required" />
 		<cfargument name="amount" required="yes" hint="foreignID is required" />
         <cfargument name="paymentMethodID" required="yes" hint="paymentMethodID is required" />
 		<cfargument name="paymentMethodType" required="yes" hint="paymentMethod is required" />
@@ -55,8 +58,6 @@
 		<cfargument name="billingLastName" required="yes" hint="billingLastName is required" />
 		<cfargument name="billingCompany" default="" hint="billingCompany is not required" />
 		<cfargument name="billingAddress" required="yes" hint="billingAddress is not required" />
-		<cfargument name="billingAddress2" default="" hint="billingAddress2 is not required" />
-		<cfargument name="billingApt"  default="" hint="billingApt is not required" />
 		<cfargument name="billingCity" required="yes" hint="billingCity is not required" />
 		<cfargument name="billingState" required="yes" hint="billingState is not required" />
 		<cfargument name="billingZipCode" required="yes" hint="billingZipCode is not required" />
@@ -72,7 +73,6 @@
 					sessionInformationID,
 					foreignTable,
 					foreignID,
-                    authTransactionType,
                     amount,
 					paymentMethodID,
 					paymentMethodType,
@@ -86,8 +86,6 @@
 					billingLastName,
 					billingCompany,
 					billingAddress,
-					billingAddress2,
-					billingApt,
 					billingCity,
 					billingState,
 					billingZipCode,
@@ -100,7 +98,6 @@
 					<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.sessionInformationID#">,                    
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,                    
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">,  
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authTransactionType#">,
                     <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.amount#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.paymentMethodID#">,                    
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.paymentMethodType#">,                    
@@ -114,8 +111,6 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingLastName#">,                    
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingCompany#">,                    
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingAddress#">,                    
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingAddress2#">,                    
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingApt#">,                    
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingCity#">,                    
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingState#">,                    
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.billingZipCode#">,                    
@@ -133,17 +128,20 @@
         <cfargument name="ID" required="yes" hint="ID is required" />
         <cfargument name="authTransactionID" default="" hint="authTransactionID is not required" />
         <cfargument name="authApprovalCode" default="" hint="authApprovalCode is not required" />
-        <cfargument name="authResponse" default="" hint="authResponse is not required" />
+        <cfargument name="authResponseCode" default="" hint="authResponseCode is not required" />
+        <cfargument name="authResponseReason" default="" hint="authResponseReason is not required" />
+        <cfargument name="authIsSuccess" default="0" hint="authIsSuccess is not required" />
 
 		<cfquery 
-            name="qGetApplicationPaymentByID"
 			datasource="#APPLICATION.DSN.Source#">
 				UPDATE
                 	applicationPayment
                 SET  
                     authTransactionID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authTransactionID#">,
                     authApprovalCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authApprovalCode#">,
-                    authResponse = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authResponse#">,
+                    authResponseCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authResponseCode#">,
+                    authResponseReason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authResponseReason#">,
+                    authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.authIsSuccess)#">
                 WHERE
                 	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>
@@ -164,10 +162,11 @@
 					sessionInformationID,
 					foreignTable,
 					foreignID,
-                    authTransactionType,
                     authTransactionID,
                     authApprovalCode,
-                    authResponse,
+                    authResponseCode,
+                    authResponseReason,
+                    authIsSuccess,
                     amount,
 					paymentMethodID,
 					paymentMethodType,
@@ -181,8 +180,6 @@
 					billingLastName,
 					billingCompany,
 					billingAddress,
-					billingAddress2,
-					billingApt,
 					billingCity,
 					billingState,
 					billingZipCode,
@@ -201,31 +198,57 @@
 
 	<!--- Authorize and Capture --->
 	<cffunction name="authorizeAndCapture" displayname="Authorize and Capture" hint="Bills credit card Immediately" access="public" output="false" returntype="Struct">
-		<cfargument name="amount" displayName="Amount" type="string" hint="Transaction Amount" required="true" />
-		<cfargument name="cardNum" displayName="Card Number" type="string" hint="Customers Credit Card Number" required="true" />
-		<cfargument name="expDate" displayName="Expiration Date" type="string" hint="Customers Credit Card Expiration Date" required="true" />
-		<cfargument name="studentID" displayName="Student ID" type="string" hint="Student ID" required="true" />
+		<cfargument name="amount" displayName="Amount" type="string" hint="The amount of the transaction" required="true" />
+		<cfargument name="cardNumber" displayName="Card Number" type="string" hint="The customer's credit card number" required="true" />
+		<cfargument name="expirationDate" displayName="Expiration Date" type="string" hint="The customer's credit card expiration date" required="true" />
+        <cfargument name="invoiceNumber" displayName="Invoice Number" type="string" hint="Invoice Number" required="true" />
+        <cfargument name="description" displayName="Description" type="string" hint="Description" required="true" />
+        <cfargument name="studentID" displayName="Student ID" type="string" hint="Student ID" required="true" />
+        <cfargument name="email" displayName="Email Address" type="string" hint="Email Address" required="true" />
+        <cfargument name="billingFirstName" displayName="Billing First Name" type="string" hint="Billing First Name" required="true" />
+        <cfargument name="billingLastName" displayName="Billing Last Name" type="string" hint="Billing Last Name" required="true" />
+        <cfargument name="billingCompany" displayName="Billing Company" type="string" hint="Billing Company" required="true" />
+        <cfargument name="billingAddress" displayName="Billing Address" type="string" hint="Billing Address" required="true" />
+        <cfargument name="billingCity" displayName="Billing City" type="string" hint="Billing City" required="true" />
+        <cfargument name="billingState" displayName="Billing State" type="string" hint="Billing State" required="true" />
+        <cfargument name="billingZip" displayName="Billing Zip" type="string" hint="Billing Zip" required="true" />
+        <cfargument name="billingCountry" displayName="Billing Country" type="string" hint="Billing Country" required="true" />
         		
 		<cfif find("$",ARGUMENTS.amount) OR find(",",ARGUMENTS.amount)>
 			<cfthrow type="payment.authorizeNet.authorizeAndCapture" message="Invalid Amount" detail="The amount to be charged to the credit card can not have dollar signs ($) or Commas (,) in it. Only numbers and a1 decimal place">
 		</cfif>
 		
-		<cfhttp method="post" url="#variables.processing_url#">
+        <!--- Submit Payment --->
+		<cfhttp method="post" url="#VARIABLES.processingURL#">
 	
-			<cfhttpparam name="x_login" type="formfield" value="#ARGUMENTS.login#">
-			<cfhttpparam name="x_tran_key" type="formfield" value="#ARGUMENTS.tran_key#">
+			<cfhttpparam name="x_login" type="formfield" value="#TRIM(VARIABLES.loginID)#">
+			<cfhttpparam name="x_tran_key" type="formfield" value="#TRIM(VARIABLES.transactionKey)#">
 			<cfhttpparam name="x_method" type="formfield" value="CC">
 			<cfhttpparam name="x_type" type="formfield" value="AUTH_CAPTURE">
-			<cfhttpparam name="x_amount" type="formfield" value="#ARGUMENTS.amount#">
+			<cfhttpparam name="x_amount" type="formfield" value="#TRIM(ARGUMENTS.amount)#">
 			<cfhttpparam name="x_delim_data" type="formfield" value="TRUE">
 			<cfhttpparam name="x_delim_char" type="formfield" value="|">
 			<cfhttpparam name="x_relay_response" type="formfield" value="FALSE">
-			<cfhttpparam name="x_card_num" type="formfield" value="#ARGUMENTS.card_num#">
-			<cfhttpparam name="x_exp_date" type="formfield" value="#ARGUMENTS.exp_date#">
-			<cfhttpparam name="x_invoice_num" type="formfield" value="#ARGUMENTS.order_number#">
+			<cfhttpparam name="x_card_num" type="formfield" value="#TRIM(ARGUMENTS.cardNumber)#">
+			<cfhttpparam name="x_exp_date" type="formfield" value="#TRIM(ARGUMENTS.expirationDate)#">
+			<cfhttpparam name="x_invoice_num" type="formfield" value="#TRIM(ARGUMENTS.invoiceNumber)#">
+            <cfhttpparam name="x_description" type="formfield" value="#TRIM(ARGUMENTS.description)#">
+            <cfhttpparam name="x_cust_id" type="formfield" value="#TRIM(ARGUMENTS.studentID)#">
+			<cfhttpparam name="x_email" type="formfield" value="#TRIM(ARGUMENTS.email)#">
+			<cfhttpparam name="x_email_customer" type="formfield" value="TRUE">           
+			<cfhttpparam name="x_header_email_receipt" type="formfield" value="#APPLICATION.SCHOOL.NAME#">
+			<cfhttpparam name="x_footer_email_receipt" type="formfield" value="#APPLICATION.CFC.UDF.getschooladdress()#">
+            <cfhttpparam name="x_first_name" type="formfield" value="#TRIM(ARGUMENTS.billingFirstName)#">
+			<cfhttpparam name="x_last_name" type="formfield" value="#TRIM(ARGUMENTS.billingLastName)#">
+			<cfhttpparam name="x_company" type="formfield" value="#TRIM(ARGUMENTS.billingCompany)#">
+			<cfhttpparam name="x_address" type="formfield" value="#TRIM(ARGUMENTS.billingAddress)#">
+			<cfhttpparam name="x_city" type="formfield" value="#TRIM(ARGUMENTS.billingCity)#">
+			<cfhttpparam name="x_state" type="formfield" value="#TRIM(ARGUMENTS.billingState)#">
+			<cfhttpparam name="x_zip" type="formfield" value="#TRIM(ARGUMENTS.billingZip)#">
+			<cfhttpparam name="x_country" type="formfield" value="#TRIM(ARGUMENTS.billingCountry)#">        
                         
 		</cfhttp>
-
+		
 		<cfreturn parseResponse(cfhttp.filecontent)/>
 	</cffunction>
 
@@ -236,233 +259,202 @@
 		
 		<cfscript>
 			var stResponse = structNew();
+			
+			// Following code from the sample file
+			numOfDelims = ListLen(response, "|");
+			numOfDelims = IncrementValue(numOfDelims);
+			newText = Replace(response, "|", " |","ALL");
 		</cfscript>
 		
-		<!--- Following code from the sample file--->
-		<cfset numOfDelims = ListLen(response, "|")>
-		<cfset numOfDelims = IncrementValue(numOfDelims)>
-		<cfset newText = Replace(response, "|", " |","ALL")>
-
 		<cfloop index="Element" from="1" to="#numOfDelims#">
 
 			<cfswitch expression = "#Element#">
 		
 			   <cfcase value = "1">
-				  <cfscript>
-					rc = RTrim(ListFirst(newText, "|"));
-				  	stResponse["Response_Code"] = structNew();
-				  	stResponse["Response_Code"].element = "Response Code";
+					<cfscript>
+						rc = RTrim(ListFirst(newText, "|"));
+						stResponse["responseCode"] = structNew();
+						stResponse["responseCode"].element = "Response Code";
 				  	
+						switch(rc){
+								case 1:
+									stResponse["responseCode"].response = "Approved";
+								break;
+								
+								case 2:
+									stResponse["responseCode"].response = 'Declined';
+								break;
+								
+								case 3:
+									stResponse["responseCode"].response = 'Error';
+								break;
+	
+								case 4:
+									stResponse["responseCode"].response = 'Held for Review';
+								break;
+	
+								default:
+									stResponse["responseCode"].response = 'undefined';
+								break;
+							} 
 				  	
-				  	switch(rc){
-					  		case 1:
-					  			stResponse["Response_Code"].response = "Approved";
-					  		break;
-					  		
-					  		case 2:
-					  			stResponse["Response_Code"].response = 'Declined';
-					  		break;
-					  		
-					  		case 3:
-					  			stResponse["Response_Code"].response = 'Error';
-					  		break;
-					  		
-					  		default:
-					  			stResponse["Response_Code"].response = 'undefined';
-					  		break;
-					  	} 
-				  	
-				  	newList = ListDeleteAt(newText, 1, "|");
-				  	
-				  </cfscript>
+						newList = ListDeleteAt(newText, 1, "|");
+				  	</cfscript>
 			   </cfcase>
 		
 			   <cfcase value = "2">
 				    <cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						if(nextResp eq '' OR nextResp eq ' '){
-							stResponse["Response_SubCode"] = structNew();
-					  		stResponse["Response_SubCode"].element = "Response Subcode";
-					  		stResponse["Response_SubCode"].response = "No Value Returned";
+							stResponse["responseSubCode"] = structNew();
+					  		stResponse["responseSubCode"].element = "Response Subcode";
+					  		stResponse["responseSubCode"].response = "No Value Returned";
 						}else{
-							stResponse["Response_SubCode"] = structNew();
-					  		stResponse["Response_SubCode"].element = "Response Subcode";
-					  		stResponse["Response_SubCode"].response = nextResp;
+							stResponse["responseSubCode"] = structNew();
+					  		stResponse["responseSubCode"].element = "Response Subcode";
+					  		stResponse["responseSubCode"].response = nextResp;
 						}
-						
 						newList = ListDeleteAt(newList, 1, "|");
-					  	
-					  </cfscript>
+					</cfscript>
 				</cfcase>
 	
-			   <cfcase value = "3">
+			   	<cfcase value = "3">
 				    <cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["Response_Reason_code"] = structNew();
-					  	stResponse["Response_Reason_code"].element = "Response Reason Code";
-					  	stResponse["Response_Reason_code"].element = nextResp;	
+						stResponse["responseReasonCode"] = structNew();
+					  	stResponse["responseReasonCode"].element = "Response Reason Code";
+					  	stResponse["responseReasonCode"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-					  	
-					  </cfscript>
+					</cfscript>
 				</cfcase>
 				
 				<cfcase value = "4">
 				   <cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["response_reason_text"] = structNew();
-					  	stResponse["response_reason_text"].element = "Response Reason Text";
-					  	stResponse["response_reason_text"].element = nextResp;	
+						stResponse["responseReasonText"] = structNew();
+					  	stResponse["responseReasonText"].element = "Response Reason Text";
+					  	stResponse["responseReasonText"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
-				  </cfscript>
+				  	</cfscript>
 				</cfcase>
 				
-			   <cfcase value = "5">
+			   	<cfcase value = "5">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["approval_code"] = structNew();
-					  	stResponse["approval_code"].element = "Approval Code";
-					  	stResponse["approval_code"].element = nextResp;	
+						stResponse["approvalCode"] = structNew();
+					  	stResponse["approvalCode"].element = "Approval Code";
+					  	stResponse["approvalCode"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
-				  </cfscript>
+				 	</cfscript>
 				</cfcase>
 		
-			   <cfcase value = "6">
+			   	<cfcase value = "6">
 				   <cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["avs_result_code"] = structNew();
-					  	stResponse["avs_result_code"].element = "AVS Result Code";
-					  	stResponse["avs_result_code"].element = nextResp;	
+						stResponse["avsResultCode"] = structNew();
+					  	stResponse["avsResultCode"].element = "AVS Result Code";
+					  	stResponse["avsResultCode"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
-				  </cfscript>
+				  	</cfscript>
 				</cfcase>
 		
-		
-		
-			   <cfcase value = "7">
+			   	<cfcase value = "7">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["transaction_id"] = structNew();
-					  	stResponse["transaction_id"].element = "Transaction ID";
-					  	stResponse["transaction_id"].element = nextResp;	
+						stResponse["transactionID"] = structNew();
+					  	stResponse["transactionID"].element = "Transaction ID";
+					  	stResponse["transactionID"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
-				  </cfscript>
+				  	</cfscript>
 				</cfcase>
 		
-			   <cfcase value = "8">
+			   	<cfcase value = "8">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["invoice_number"] = structNew();
-					  	stResponse["invoice_number"].element = "Invoice Number";
-					  	stResponse["invoice_number"].element = nextResp;	
+						stResponse["invoiceNumber"] = structNew();
+					  	stResponse["invoiceNumber"].element = "Invoice Number";
+					  	stResponse["invoiceNumber"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
-				  </cfscript>
+				  	</cfscript>
 				</cfcase>
 		
 			   <cfcase value = "9">
-				<cfscript>
+					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["description"] = structNew();
 					  	stResponse["description"].element = "Description";
-					  	stResponse["description"].element = nextResp;	
+					  	stResponse["description"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
-				  </cfscript>
+					</cfscript>
 				</cfcase>
 		
-			   <cfcase value = "10">
+			   	<cfcase value = "10">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["amount"] = structNew();
 					  	stResponse["amount"].element = "Amount";
-					  	stResponse["amount"].element = nextResp;	
+					  	stResponse["amount"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 		
-			   <cfcase value = "11">
+			   	<cfcase value = "11">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["method"] = structNew();
 					  	stResponse["method"].element = "Method";
-					  	stResponse["method"].element = nextResp;	
+					  	stResponse["method"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 		
-			   <cfcase value = "12">
+			   	<cfcase value = "12">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["transaction_type"] = structNew();
-					  	stResponse["transaction_type"].element = "Transaction Type";
-					  	stResponse["transaction_type"].element = nextResp;	
+						stResponse["transactionType"] = structNew();
+					  	stResponse["transactionType"].element = "Transaction Type";
+					  	stResponse["transactionType"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 		
-			   <cfcase value = "13">
+			   	<cfcase value = "13">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["Customer_id"] = structNew();
-					  	stResponse["Customer_id"].element = "Customer ID";
-					  	stResponse["Customer_id"].element = nextResp;	
+						stResponse["customerID"] = structNew();
+					  	stResponse["customerID"].element = "Customer ID";
+					  	stResponse["customerID"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 		
-			   <cfcase value = "14">
+			   	<cfcase value = "14">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["cardholder_firstname"] = structNew();
-					  	stResponse["cardholder_firstname"].element = "Cardholder Firstname";
-					  	stResponse["cardholder_firstname"].element = nextResp;	
+						stResponse["cardHolderFirstName"] = structNew();
+					  	stResponse["cardHolderFirstName"].element = "Cardholder First Name";
+					  	stResponse["cardHolderFirstName"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
-			   </cfcase>
+			   	</cfcase>
 		
-			   <cfcase value = "15">
+			   	<cfcase value = "15">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["cardholder_lastname"] = structNew();
-					  	stResponse["cardholder_lastname"].element = "Cardholder Lastname";
-					  	stResponse["cardholder_lastname"].element = nextResp;	
+						stResponse["cardHolderLastName"] = structNew();
+					  	stResponse["cardHolderLastName"].element = "Cardholder Last Name";
+					  	stResponse["cardHolderLastName"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 		
-			   <cfcase value = "16">
+			   	<cfcase value = "16">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["company"] = structNew();
 					  	stResponse["company"].element = "Company";
-					  	stResponse["company"].element = nextResp;	
+					  	stResponse["company"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 		
@@ -470,9 +462,9 @@
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
 						
-						stResponse["company"] = structNew();
-					  	stResponse["company"].element = "Company";
-					  	stResponse["company"].element = nextResp;	
+						stResponse["address"] = structNew();
+					  	stResponse["address"].element = "Address";
+					  	stResponse["address"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
 				  	
 				  	</cfscript>
@@ -484,7 +476,7 @@
 						
 						stResponse["city"] = structNew();
 					  	stResponse["city"].element = "City";
-					  	stResponse["city"].element = nextResp;	
+					  	stResponse["city"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
 				  	
 				  	</cfscript>
@@ -493,265 +485,250 @@
 				<cfcase value = "19">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["state"] = structNew();
 					  	stResponse["state"].element = "State";
-					  	stResponse["state"].element = nextResp;	
+					  	stResponse["state"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "20">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["zip"] = structNew();
 					  	stResponse["zip"].element = "Zip";
-					  	stResponse["zip"].element = nextResp;	
+					  	stResponse["zip"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "21">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["country"] = structNew();
 					  	stResponse["country"].element = "Country";
-					  	stResponse["country"].element = nextResp;	
+					  	stResponse["country"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 		
 				<cfcase value = "22">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["phone"] = structNew();
 					  	stResponse["phone"].element = "Phone";
-					  	stResponse["phone"].element = nextResp;	
+					  	stResponse["phone"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "23">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["fax"] = structNew();
 					  	stResponse["fax"].element = "Fax";
-					  	stResponse["fax"].element = nextResp;	
+					  	stResponse["fax"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "24">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
 						stResponse["email"] = structNew();
 					  	stResponse["email"].element = "Email";
-					  	stResponse["email"].element = nextResp;	
+					  	stResponse["email"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "25">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["ship_to_first_name"] = structNew();
-					  	stResponse["ship_to_first_name"].element = "Ship-to First Name";
-					  	stResponse["ship_to_first_name"].element = nextResp;	
+						stResponse["shipToFirst"] = structNew();
+					  	stResponse["shipToFirst"].element = "Ship-to First";
+					  	stResponse["shipToFirst"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 			   
 			   <cfcase value = "26">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["ship_to_last_name"] = structNew();
-					  	stResponse["ship_to_last_name"].element = "Ship-to Last Name";
-					  	stResponse["ship_to_last_name"].element = nextResp;	
+						stResponse["shipToLast"] = structNew();
+					  	stResponse["shipToLast"].element = "Ship-to Last";
+					  	stResponse["shipToLast"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "27">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["ship_to_Company_name"] = structNew();
-					  	stResponse["ship_to_Company_name"].element = "Ship-to Company Name";
-					  	stResponse["ship_to_Company_name"].element = nextResp;	
+						stResponse["shipToCompany"] = structNew();
+					  	stResponse["shipToCompany"].element = "Ship-to Company";
+					  	stResponse["shipToCompany"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 		
 			   <cfcase value = "28">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["ship_to_Address_name"] = structNew();
-					  	stResponse["ship_to_Address_name"].element = "Ship-to Address Name";
-					  	stResponse["ship_to_Address_name"].element = nextResp;	
+						stResponse["shipToAddress"] = structNew();
+					  	stResponse["shipToAddress"].element = "Ship-to Address";
+					  	stResponse["shipToAddress"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "29">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["ship_to_City_name"] = structNew();
-					  	stResponse["ship_to_City_name"].element = "Ship-to City Name";
-					  	stResponse["ship_to_City_name"].element = nextResp;	
+						stResponse["shipToCity"] = structNew();
+					  	stResponse["shipToCity"].element = "Ship-to City";
+					  	stResponse["shipToCity"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
-		
 		
 				<cfcase value = "30">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["ship_to_State_name"] = structNew();
-					  	stResponse["ship_to_State_name"].element = "Ship-to State Name";
-					  	stResponse["ship_to_State_name"].element = nextResp;	
+						stResponse["shipToState"] = structNew();
+					  	stResponse["shipToState"].element = "Ship-to State";
+					  	stResponse["shipToState"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "31">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["ship_to_ZIP_name"] = structNew();
-					  	stResponse["ship_to_ZIP_name"].element = "Ship-to ZIP Name";
-					  	stResponse["ship_to_ZIP_name"].element = nextResp;	
+						stResponse["shipToZip"] = structNew();
+					  	stResponse["shipToZip"].element = "Ship-to ZIP";
+					  	stResponse["shipToZip"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "32">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["ship_to_Country_name"] = structNew();
-					  	stResponse["ship_to_Country_name"].element = "Ship-to Country Name";
-					  	stResponse["ship_to_Country_name"].element = nextResp;	
+						stResponse["shipToCountry"] = structNew();
+					  	stResponse["shipToCountry"].element = "Ship-to Country";
+					  	stResponse["shipToCountry"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "33">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["Tax_Amount"] = structNew();
-					  	stResponse["Tax_Amount"].element = "Tax Amount";
-					  	stResponse["Tax_Amount"].element = nextResp;	
+						stResponse["taxAmount"] = structNew();
+					  	stResponse["taxAmount"].element = "Tax Amount";
+					  	stResponse["taxAmount"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "34">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["Duty_Amount"] = structNew();
-					  	stResponse["Duty_Amount"].element = "Duty Amount";
-					  	stResponse["Duty_Amount"].element = nextResp;	
+						stResponse["dutyAmount"] = structNew();
+					  	stResponse["dutyAmount"].element = "Duty Amount";
+					  	stResponse["dutyAmount"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "35">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["Freight_Amount"] = structNew();
-					  	stResponse["Freight_Amount"].element = "Freight Amount";
-					  	stResponse["Freight_Amount"].element = nextResp;	
+						stResponse["freightAmount"] = structNew();
+					  	stResponse["freightAmount"].element = "Freight Amount";
+					  	stResponse["freightAmount"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "36">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["Tax_Exempt_Flag"] = structNew();
-					  	stResponse["Tax_Exempt_Flag"].element = "Tax Exempt Flag";
-					  	stResponse["Tax_Exempt_Flag"].element = nextResp;	
+						stResponse["taxExemptFlag"] = structNew();
+					  	stResponse["taxExemptFlag"].element = "Tax Exempt Flag";
+					  	stResponse["taxExemptFlag"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "37">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["PO_Number"] = structNew();
-					  	stResponse["PO_Number"].element = "PO Number";
-					  	stResponse["PO_Number"].element = nextResp;	
+						stResponse["PoNumber"] = structNew();
+					  	stResponse["PoNumber"].element = "PO Number";
+					  	stResponse["PoNumber"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "38">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["MD5_Hash"] = structNew();
-					  	stResponse["MD5_Hash"].element = "MD5 Hash";
-					  	stResponse["MD5_Hash"].element = nextResp;	
+						stResponse["Md5Hash"] = structNew();
+					  	stResponse["Md5Hash"].element = "MD5 Hash";
+					  	stResponse["Md5Hash"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
 				
 				<cfcase value = "39">
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["Card_Code_Response"] = structNew();
-					  	stResponse["Card_Code_Response"].element = "Card Code Response";
-					  	stResponse["Card_Code_Response"].element = nextResp;	
+						stResponse["cardCodeResponse"] = structNew();
+					  	stResponse["cardCodeResponse"].element = "Card Code Response";
+					  	stResponse["cardCodeResponse"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfcase>
-                
+
+				<cfcase value = "40">
+					<cfscript>
+					    nextResp = RTrim(ListFirst(newList, "|"));
+						stResponse["cardHolderAuthentication"] = structNew();
+					  	stResponse["cardHolderAuthentication"].element = "Cardholder Authentication Verification Response";
+					  	stResponse["cardHolderAuthentication"].response = nextResp;	
+						newList = ListDeleteAt(newList, 1, "|");
+				  	</cfscript>
+				</cfcase>
+
+				<cfcase value = "51">
+					<cfscript>
+					    nextResp = RTrim(ListFirst(newList, "|"));
+						stResponse["accountNumber"] = structNew();
+					  	stResponse["accountNumber"].element = "Account Number";
+					  	stResponse["accountNumber"].response = nextResp;	
+						newList = ListDeleteAt(newList, 1, "|");
+				  	</cfscript>
+				</cfcase>
+
+				<cfcase value = "52">
+					<cfscript>
+					    nextResp = RTrim(ListFirst(newList, "|"));
+						stResponse["cardType"] = structNew();
+					  	stResponse["cardType"].element = "Card Type";
+					  	stResponse["cardType"].response = nextResp;	
+						newList = ListDeleteAt(newList, 1, "|");
+				  	</cfscript>
+				</cfcase>
+
 				<cfdefaultcase>
 					<cfscript>
 					    nextResp = RTrim(ListFirst(newList, "|"));
-						
-						stResponse["Merchant_defined_value"] = structNew();
-					  	stResponse["Merchant_defined_value"].element = "Merchant defined value";
-					  	stResponse["Merchant_defined_value"].element = nextResp;	
+						stResponse["MerchantDefinedValue"] = structNew();
+					  	stResponse["MerchantDefinedValue"].element = "Merchant defined value";
+					  	stResponse["MerchantDefinedValue"].response = nextResp;	
 						newList = ListDeleteAt(newList, 1, "|");
-				  	
 				  	</cfscript>
 				</cfdefaultcase>
 		

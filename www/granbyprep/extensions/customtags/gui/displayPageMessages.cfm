@@ -90,7 +90,7 @@
 					
                     <script type="text/javascript">
 						// FadeIn and FadeOut Message
-                    	$(".pageMessages").fadeIn().fadeOut(4000);
+                    	$(".pageMessages").fadeIn().fadeOut(5000);
                     </script>
                     
 					<cfscript>

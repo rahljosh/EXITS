@@ -148,7 +148,8 @@
                             
                             <a href="#CGI.SCRIPT_NAME#?action=download" class="itemLinks <cfif Find("download", CGI.QUERY_STRING)> selected </cfif>">Download Forms</a>
                             <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
-							<a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks">Submit Application</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=applicationFee" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks <cfif Find("submit", CGI.QUERY_STRING)> selected </cfif>">Submit Application</a>
                         </div>                            
                     
                     </div>

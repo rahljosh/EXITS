@@ -573,11 +573,12 @@ div.errorContainer p em {
 
 /* Page Messages */
 div.pageMessages { 
+	display:none;
 	margin: 10px 0 10px 0; 
 	padding: 5px 10px; 
+	background-color: #c2d9e9;
 	border: #0069aa 1px solid; 
-	display:none;
-	/* background-color: #c2d9e9; */
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 div.pageMessages p { 
@@ -586,8 +587,7 @@ div.pageMessages p {
 
 div.pageMessages p em { 
 	color: #0069aa; 
-	font-style: normal; 
-	font-weight: bold; 
+	font-weight: bold;
 }
 
 p.legend { 

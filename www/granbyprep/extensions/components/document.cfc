@@ -102,11 +102,6 @@
 	<cffunction name="DocumentExists" access="public" returntype="boolean" output="no" hint="Check to see if the given document exists">
 		<cfargument name="ID" type="numeric" required="yes" />
 		
-        <cfscript>
-			// Set up the local scope
-			var LOCAL = StructNew();
-		</cfscript>
-        
 		<!--- Query for document --->
 		<cfquery 
         	name="qDocuments" 
@@ -128,6 +123,18 @@
 			} else {				
 				return false;	
 			}
+		</cfscript>
+        
+	</cffunction>
+
+
+	<!--- Check to see if the given file exists --->
+	<cffunction name="checkFileExists" access="public" returntype="boolean" output="no" hint="Check to see if the given file exists">
+		<cfargument name="filePath" type="string" required="yes" />
+        
+        <cfscript>
+			// Return file existence
+			return FileExists(ARGUMENTS.filePath);
 		</cfscript>
         
 	</cffunction>
@@ -341,6 +348,40 @@
 
 	</cffunction>
 
+
+    <!--- Function to get a document list for a student --->
+	<cffunction name="getDocuments" access="public" returntype="query" output="false" hint="Returns a list of documents">
+    	<cfargument name="foreignTable" required="yes" hint="Foreign Table Name">
+        <cfargument name="foreignID" required="yes" hint="Foreign ID">        
+
+        <cfquery 
+			name="qGetDocuments" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					d.ID,
+                    CONCAT(d.serverName, '.', d.serverExt) AS fileName,
+                    d.fileSize,
+                    d.location,
+                    d.dateCreated,
+                    DATE_FORMAT(d.dateCreated, '%m/%d/%y') as displayDateCreated,
+                    dt.name as documentType
+                FROM 
+                    document d
+				LEFT OUTER JOIN                      
+                	documentType dt ON dt.ID = d.documentTypeID
+				WHERE 
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                AND    
+                    foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+				AND
+                	foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">  
+                ORDER BY
+                    d.dateCreated DESC     
+		</cfquery>
+		
+		<cfreturn qGetDocuments />
+	</cffunction>
+
 	
     <!--- Remote function to get a document list for a student --->
 	<cffunction name="getDocumentsRemote" access="remote" returnFormat="json" output="false" hint="Returns a list of documents">
@@ -352,7 +393,7 @@
 		<cfargument name="gridSortDirection" default="DESC" hint="By Default DESC">
 
         <cfquery 
-			name="qGetDocuments" 
+			name="qGetDocumentsRemote" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
 					d.ID,
@@ -383,7 +424,7 @@
                 </cfif>
 		</cfquery>
 		
-		<cfreturn QueryconvertForGrid(qGetDocuments,page,pagesize)/>
+		<cfreturn QueryconvertForGrid(qGetDocumentsRemote,page,pagesize)/>
 	</cffunction>
 
 	
@@ -392,7 +433,7 @@
         <cfargument name="ID" required="yes" hint="ID is required">
 
         <cfquery 
-			name="qGetDocumentByID" 
+			name="qGetDocumentByIDRemote" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
 					ID,
@@ -404,7 +445,7 @@
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
 		</cfquery>
 		   
-		<cfreturn qGetDocumentByID>
+		<cfreturn qGetDocumentByIDRemote>
 	</cffunction>
 
 

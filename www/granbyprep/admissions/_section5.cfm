@@ -67,6 +67,7 @@
 
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
+				
 				// Reload page with updated information
 				location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
 
@@ -84,7 +85,37 @@
     
 </cfsilent>
 
+<script type="text/javascript">
+	// JQuery Validator
+	$().ready(function() {
+		var container = $('div.errorContainer');
+		// validate the form when it is submitted
+		var validator = $("#section5Form").validate({
+			errorContainer: container,
+			errorLabelContainer: $("ol", container),
+			wrapper: 'li',
+			meta: "validate"
+		});
+	
+	});
+</script>
+
 <cfoutput>
+
+<!---  Our jQuery error container --->
+<div class="errorContainer">
+	<p><em>Oops... the following errors were encountered:</em></p>
+					
+	<ol>
+		<cfloop query="qGetQuestions">
+        	<cfif qGetQuestions.isRequired>
+				<li><label for="#qGetQuestions.fieldKey#" class="error">#qGetQuestions.requiredMessage#</label></li>
+            </cfif>
+		</cfloop>
+	</ol>
+	
+	<p>Data has <strong>not</strong> been saved.</p>
+</div>
 
 <!--- Application Body --->
 <div class="form-container">
@@ -106,7 +137,7 @@
 
 	</cfif>
 
-    <form action="#CGI.SCRIPT_NAME#?action=initial" method="post">
+    <form id="section5Form" action="#CGI.SCRIPT_NAME#?action=initial" method="post">
     <input type="hidden" name="submittedType" value="section5" />
     <input type="hidden" name="currentTabID" value="4" />
     
@@ -138,7 +169,7 @@
                 </div>
         	<cfelse>
                 <div class="field">
-                    <input type="checkbox" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="1" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 1> checked="checked" </cfif> /> &nbsp; <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]#</label>
+                    <input type="checkbox" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="1" class="#qGetQuestions.classType[2]#" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 1> checked="checked" </cfif> /> &nbsp; <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]#</label>
                 </div>
             </cfif>
             
