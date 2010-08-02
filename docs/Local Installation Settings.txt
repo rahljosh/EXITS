@@ -6,9 +6,21 @@ https://smggroup.svn.cvsdude.com/smg/www
 
 Database
 
-Name mysql
+NY Office Local
 
-Database smg
+Name: mysql
+Database: smg
+
+IP: 192.168.100.151
+port: 3306
+
+username:
+password:
+
+---------------------------------------- 
+
+Name: mysql
+Database: smg
 
 Server 216.160.230.67
 
