@@ -15,7 +15,8 @@
 
 <!--- Kill extra output --->
 <cfsilent>
-	
+
+    
     <!--- Param Variables --->
 	<cftry>
 	    <cfparam name="studentID" type="numeric" default="0">
@@ -164,37 +165,8 @@
             </cfloop>
             
         </cfif> 
-		<!--- END OF DEPARTURE INFORMATION --->
-
-        <!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A NEW FLIGHT INFORMATION ---->
-        <cfquery name="qGetEmailInfo" datasource="MySQL">
-            SELECT 
-            	s.studentID,
-                s.firstName,
-                s.familyLastName,
-                s.regionassigned,
-                s.intRep,
-                r.regionname, 
-                r.regionfacilitator, 
-                r.regionid, 
-                r.company,
-                u.firstname as ufirstname, 
-                u.lastname ulastname, 
-                u.email,
-                intRep.businessName 
-            FROM 
-            	smg_students s 
-            INNER JOIN 
-            	smg_regions r ON s.regionassigned = r.regionid
-            INNER JOIN
-            	smg_users intRep ON s.intRep = intRep.userID
-            LEFT JOIN 
-            	smg_users u ON r.regionfacilitator = u.userid
-            WHERE 
-            	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
-        </cfquery>
-        
-        <cfquery name="qCheckPHP" datasource="MySql">
+        <!--- END OF DEPARTURE INFORMATION --->
+		<cfquery name="qCheckPHP" datasource="MySql">
             SELECT 
             	studentid
             FROM 
@@ -203,6 +175,28 @@
             	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
         </cfquery>
         
+        <!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A NEW FLIGHT INFORMATION ---->
+        <cfif qCheckPHP.recordcount eq 1>
+            <cfquery name="qGetEmailInfo" datasource="MySQL">
+            SELECT 
+            	s.studentID,
+                s.firstName,
+                s.familyLastName,
+                s.regionassigned,
+                s.intRep,
+                s.uniqueid,
+
+                intRep.businessName 
+            FROM 
+            	smg_students s 
+            INNER JOIN
+            	smg_users intRep ON s.intRep = intRep.userID
+
+            WHERE 
+            	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
+        </cfquery>
+        
+        
         <cfif qCheckPHP.recordcount>
             <cfset email_to = 'luke@phpusa.com'>
         <cfelseif qGetEmailInfo.email EQ ''>
@@ -210,10 +204,70 @@
         <cfelse>	
             <cfset email_to = '#qGetEmailInfo.email#'>
         </cfif>
-        
         <cfoutput>
+           <cfsavecontent variable="email_message">
+        	Dear Luke,<br><br>
+        	This e-mail is just to let you know new or updated flight information for the student 
+            #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#) has been recorded in EXITS by #qGetEmailInfo.businessname#.<br><br>
+            Please click <a href="http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetEmailInfo.uniqueid#">here</a> then click on Flight Information to see the student's flight information.<br><br>
         
-        <cfsavecontent variable="email_message">
+            Sincerely,<br>
+            EXITS Flight Info<br><br>
+        </cfsavecontent>
+        
+        
+                    
+		<!--- send email --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="#email_to#">
+            <cfinvokeargument name="email_subject" value="Flight Information for #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (#qGetEmailInfo.studentid#)">
+            <cfinvokeargument name="email_message" value="#email_message#">
+            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+        </cfinvoke>
+        </cfoutput>
+      
+     <cfelse>
+        
+        <cfquery name="qGetEmailInfo" datasource="MySQL">
+            SELECT 
+            	s.studentID,
+                s.firstName,
+                s.familyLastName,
+                s.regionassigned,
+                s.intRep,
+             
+                r.regionname, 
+                r.regionfacilitator, 
+                r.regionid, 
+                r.company,
+				
+                u.firstname as ufirstname, 
+                u.lastname ulastname, 
+                u.email,
+                intRep.businessName 
+            FROM 
+            	smg_students s 
+            INNER JOIN 
+            	smg_regions r ON s.regionassigned = r.regionid
+				
+            INNER JOIN
+            	smg_users intRep ON s.intRep = intRep.userID
+              
+            LEFT JOIN 
+            	smg_users u ON r.regionfacilitator = u.userid
+			
+            WHERE 
+            	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
+        </cfquery>
+                        <cfif qCheckPHP.recordcount>
+            <cfset email_to = 'luke@phpusa.com'>
+        <cfelseif qGetEmailInfo.email EQ ''>
+            <cfset email_to = 'support@student-management.com'>
+        <cfelse>	
+            <cfset email_to = '#qGetEmailInfo.email#'>
+        </cfif>
+        <cfoutput>
+           <cfsavecontent variable="email_message">
         	Dear #qGetEmailInfo.ufirstname# #qGetEmailInfo.ulastname#,<br><br>
         	This e-mail is just to let you know new or updated flight information for the student 
             #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#) has been recorded in EXITS by #qGetEmailInfo.businessname#.<br><br>
@@ -224,7 +278,7 @@
             EXITS Flight Info<br><br>
         </cfsavecontent>
         
-        </cfoutput>
+      
                     
 		<!--- send email --->
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
@@ -233,6 +287,13 @@
             <cfinvokeargument name="email_message" value="#email_message#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
         </cfinvoke>
+      
+      	</cfoutput>  
+        </cfif>
+    
+    
+   
+
 
         <!----End of Email---->
         
@@ -243,13 +304,23 @@
 	<cfif LEN(URL.unqid)>
         <cfquery name="qGetStudentID" datasource="MySQL">
         	SELECT
-            	studentid 
+            	studentid, companyid
 		    FROM	
             	smg_students       
             WHERE
             	uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.unqid#">
         </cfquery>
         <cfset CLIENT.studentID = qGetStudentID.studentid>
+        
+    <cfelse>
+      <cfquery name="qGetStudentID" datasource="MySQL">
+        	SELECT
+            	studentid, companyid
+		    FROM	
+            	smg_students       
+            WHERE
+            	studentid = #client.studentid#
+        </cfquery>
     </cfif> 
 	<!--- End of intrep\int_flight_info.cfm --->
 
@@ -263,20 +334,28 @@
             s.insurance, 
             s.termination_date,
             u.insurance_typeid, 
-            u.businessname,
+            u.businessname
+            <cfif qGetStudentID.companyid neq 6>,
             p.insurance_startdate,
             h.airport_city, 
             h.major_air_code
+            </cfif>
         FROM 
         	smg_students s
         INNER JOIN 
         	smg_users u ON u.userid = s.intrep
+            <cfif qGetStudentID.companyid neq 6>
         INNER JOIN 	
         	smg_programs p ON p.programid = s.programid
-        LEFT OUTER JOIN 
+	    LEFT OUTER JOIN 
         	smg_hosts h ON h.hostid = s.hostid
+    		<Cfelse>
+        LEFT JOIN php_students_in_program psip on psip.studentid = s.studentid
+        INNER JOIN 	
+        	smg_programs p ON p.programid = psip.programid
+            </cfif>
         WHERE 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
+        	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentID#">
     </Cfquery>
 
     <cfscript>
@@ -427,9 +506,11 @@
                     <th>Overnight <br /> Flight</th>
                     <th><font size="-2"><b>Status</b></font></th>
             	</tr>
+               <cfif qGetStudentID.companyid neq 6>
             	<tr bgcolor="##ACB9CD">
                 	<td colspan="11">The Airport Arrival is: &nbsp; #qGetStudentInfo.airport_city# - #qGetStudentInfo.major_air_code#</td>
                 </tr> 
+                </cfif>
 
 				<cfif NOT VAL(qGetArrival.recordcount) OR IsDefined('URL.add_arr')>
                     <input type="hidden" name="ar_update" value='new'>
