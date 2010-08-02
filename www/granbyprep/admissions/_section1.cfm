@@ -44,7 +44,7 @@
 
     <cfscript>
 		// Get Current Student Information
-		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);
+		// qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);
 
 		// Get Questions for this section
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section1');
@@ -138,6 +138,7 @@
 				
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
+				
 				// Reload page with updated information
 				location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
 				
@@ -188,9 +189,45 @@
 	$(function() {
 		$(".datepicker").datepicker();
 	});	
+
+	// JQuery Validator
+	$().ready(function() {
+		var container = $('div.errorContainer');
+		// validate the form when it is submitted
+		var validator = $("#section1Form").validate({
+			errorContainer: container,
+			errorLabelContainer: $("ol", container),
+			wrapper: 'li',
+			meta: "validate"
+		});
+	
+	});
 </script>
 
 <cfoutput>
+
+<!---  Our jQuery error container --->
+<div class="errorContainer">
+	<p><em>Oops... the following errors were encountered:</em></p>
+					
+	<ol>
+		<li><label for="firstName" class="error">Please enter your first name</label></li>  
+		<li><label for="lastName" class="error">Please enter your last name</label></li>  
+		<li><label for="gender" class="error">Please select a gender</label></li>  
+		<li><label for="dobMonth" class="error">Please select your month of birth</label></li>  
+		<li><label for="dobDay" class="error">Please select your day of birth</label></li>  
+		<li><label for="dobYear" class="error">Please select your year of birth</label></li>                  
+		<li><label for="countryBirthID" class="error">Please select a country of birth</label></li>                  
+		<li><label for="countryCitizenID" class="error">Please select a country of citizenship</label></li>                  
+		<cfloop query="qGetQuestions">
+        	<cfif qGetQuestions.isRequired>
+				<li><label for="#qGetQuestions.fieldKey#" class="error">#qGetQuestions.requiredMessage#</label></li>
+            </cfif>
+		</cfloop>
+	</ol>
+	
+	<p>Data has <strong>not</strong> been saved.</p>
+</div>
 
 <!--- Application Body --->
 <div class="form-container">
@@ -212,7 +249,7 @@
 		
 	</cfif>
        
-    <form action="#CGI.SCRIPT_NAME#?action=initial" method="post">
+    <form id="section1Form" action="#CGI.SCRIPT_NAME#?action=initial" method="post">
     <input type="hidden" name="submittedType" value="section1" />
     <input type="hidden" name="currentTabID" value="0" />
     
@@ -228,7 +265,7 @@
             <cfif printApplication>
             	<div class="printField">#FORM.firstName# &nbsp;</div>
         	<cfelse>
-            	<input type="text" name="firstName" id="firstName" value="#FORM.firstName#" class="largeField" maxlength="100" /> <!--- class="error" --->
+            	<input type="text" name="firstName" id="firstName" value="#FORM.firstName#" class="largeField {validate:{required:true}}" maxlength="100" /> <!--- class="error" --->
             </cfif>
         </div>
 
@@ -246,7 +283,7 @@
             <cfif printApplication>
 				<div class="printField">#FORM.lastName# &nbsp;</div>
         	<cfelse>
-				<input type="text" name="lastName" id="lastName" value="#FORM.lastName#" class="largeField" maxlength="100" />
+				<input type="text" name="lastName" id="lastName" value="#FORM.lastName#" class="largeField {validate:{required:true}}" maxlength="100" />
             </cfif>            
         </div>
 
@@ -268,7 +305,7 @@
                 	<div class="printField">Female
                 </cfif>
         	<cfelse>
-                <select name="gender" id="gender" class="smallField">
+                <select name="gender" id="gender" class="smallField {validate:{required:true}}">
                     <option value=""></option> <!--- [select your gender] --->
                     <option value="M" <cfif FORM.gender EQ 'M'> selected="selected" </cfif> >Male</option>
                     <option value="F" <cfif FORM.gender EQ 'F'> selected="selected" </cfif> >Female</option>
@@ -281,22 +318,22 @@
             <cfif printApplication>
 				<div class="printField">#MonthAsString(FORM.dobMonth)#/#FORM.dobDay#/#FORM.dobYear# &nbsp;</div>
         	<cfelse>
-                <select name="dobMonth" id="dobMonth" class="smallField">
-                    <option value="0"></option>
+                <select name="dobMonth" id="dobMonth" class="smallField {validate:{required:true}}">
+                    <option value=""></option>
                     <cfloop from="1" to="12" index="i">
                         <option value="#i#" <cfif FORM.dobMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
                     </cfloop>
                 </select>
                 /
-                <select name="dobDay" id="dobDay" class="xxSmallField">
-                    <option value="0"></option>
+                <select name="dobDay" id="dobDay" class="xxSmallField {validate:{required:true}}">
+                    <option value=""></option>
                     <cfloop from="1" to="31" index="i">
                         <option value="#i#" <cfif FORM.dobDay EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select>
                 / 
-                <select name="dobYear" id="dobYear" class="xSmallField">
-                    <option value="0"></option>
+                <select name="dobYear" id="dobYear" class="xSmallField {validate:{required:true}}">
+                    <option value=""></option>
                     <cfloop from="#Year(now())-10#" to="#Year(now())-90#" index="i" step="-1">
                         <option value="#i#" <cfif FORM.dobYear EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
@@ -310,7 +347,7 @@
             <cfif printApplication>
 				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.countryBirthID).name# &nbsp;</div>
         	<cfelse>
-                <select name="countryBirthID" id="countryBirthID" class="mediumField">
+                <select name="countryBirthID" id="countryBirthID" class="mediumField {validate:{required:true}}">
                     <option value=""></option> <!--- [select a country] ---->
                     <cfloop query="qGetCountry">
                         <option value="#qGetCountry.ID#" <cfif FORM.countryBirthID EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
@@ -324,7 +361,7 @@
             <cfif printApplication>
 				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.countryCitizenID).name# &nbsp;</div>
         	<cfelse>
-                <select name="countryCitizenID" id="countryCitizenID" class="mediumField">
+                <select name="countryCitizenID" id="countryCitizenID" class="mediumField {validate:{required:true}}">
                     <option value=""></option>
                     <cfloop query="qGetCountry">
                         <option value="#qGetCountry.ID#" <cfif FORM.countryCitizenID EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
@@ -396,26 +433,30 @@
             </cfif>            
         </div>
 
-		<!--- US State --->
-        <div class="field hiddenField" id="sec1HomeUsStDiv">
-            <label for="#qGetQuestions.fieldKey[5]#">State/Province <em>*</em></label> 
-            <select name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" class="mediumField sec1UsHomeStField">
-                <option value=""></option> <!--- [select a state] ---->
-                <cfloop query="qGetStates">
-                    <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[5]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
-                </cfloop>
-            </select>
-        </div>
-
-        <!--- Non US State --->
-        <div class="field hiddenField" id="sec1HomeNonUsStDiv">
-            <label for="#qGetQuestions.fieldKey[5]#">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label> 
-            <cfif printApplication>
-				<div class="printField">#FORM[qGetQuestions.fieldKey[5]]# &nbsp;</div>
-        	<cfelse>
-	            <input type="text" name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" value="#FORM[qGetQuestions.fieldKey[5]]#" class="#qGetQuestions.classType[5]# sec1HomeNonUsStField" maxlength="100" />
-            </cfif>            
-        </div>
+        <cfif printApplication>
+	        <!--- State Print Application --->	
+            <div class="field">
+                <label for="#qGetQuestions.fieldKey[5]#">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label> 
+                <div class="printField">#FORM[qGetQuestions.fieldKey[5]]# &nbsp;</div>
+            </div>
+		<cfelse>
+			<!--- US State --->
+            <div class="field hiddenField" id="sec1HomeUsStDiv">
+                <label for="#qGetQuestions.fieldKey[5]#">State/Province <em>*</em></label> 
+                <select name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" class="mediumField sec1UsHomeStField">
+                    <option value=""></option> <!--- [select a state] ---->
+                    <cfloop query="qGetStates">
+                        <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[5]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                    </cfloop>
+                </select>
+            </div>
+    
+            <!--- Non US State --->
+            <div class="field hiddenField" id="sec1HomeNonUsStDiv">
+                <label for="#qGetQuestions.fieldKey[5]#">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label> 
+                <input type="text" name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" value="#FORM[qGetQuestions.fieldKey[5]]#" class="#qGetQuestions.classType[5]# sec1HomeNonUsStField" maxlength="100" />
+            </div>
+		</cfif>
 
 		<!--- Zip --->
 		<div class="field">
@@ -554,28 +595,32 @@
                 <input type="text" name="#qGetQuestions.fieldKey[12]#" id="#qGetQuestions.fieldKey[12]#" value="#FORM[qGetQuestions.fieldKey[12]]#" class="#qGetQuestions.classType[12]#" maxlength="100" />
             </cfif>            
         </div>
-
-		<!--- Present School US State --->
-        <div class="field hiddenField" id="sec1SchoolUsStDiv">
-            <label for="#qGetQuestions.fieldKey[13]#">State/Province <em>*</em></label> 
-            <select name="#qGetQuestions.fieldKey[13]#" id="#qGetQuestions.fieldKey[13]#" class="mediumField sec1SchoolUsStField">
-                <option value=""></option> <!--- [select a state] ---->
-                <cfloop query="qGetStates">
-                    <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[13]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
-                </cfloop>
-            </select>
-        </div>
-        
-        <!--- Present School Non Us State --->
-        <div class="field hiddenField" id="sec1SchoolNonUsStDiv">
-            <label for="#qGetQuestions.fieldKey[13]#">#qGetQuestions.displayField[13]# <cfif qGetQuestions.isRequired[13]><em>*</em></cfif></label> 
-            <cfif printApplication>
-				<div class="printField">#FORM[qGetQuestions.fieldKey[13]]# &nbsp;</div>
-        	<cfelse>
+        		
+        <cfif printApplication>
+	        <!--- State Print Application --->	
+            <div class="field">
+                <label for="#qGetQuestions.fieldKey[13]#">#qGetQuestions.displayField[13]# <cfif qGetQuestions.isRequired[13]><em>*</em></cfif></label> 
+                <div class="printField">#FORM[qGetQuestions.fieldKey[13]]# &nbsp;</div>
+            </div>
+		<cfelse>
+			<!--- Present School US State --->
+            <div class="field hiddenField" id="sec1SchoolUsStDiv">
+                <label for="#qGetQuestions.fieldKey[13]#">State/Province <em>*</em></label> 
+                <select name="#qGetQuestions.fieldKey[13]#" id="#qGetQuestions.fieldKey[13]#" class="mediumField sec1SchoolUsStField">
+                    <option value=""></option> <!--- [select a state] ---->
+                    <cfloop query="qGetStates">
+                        <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[13]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                    </cfloop>
+                </select>
+            </div>
+            
+            <!--- Present School Non Us State --->
+            <div class="field hiddenField" id="sec1SchoolNonUsStDiv">
+                <label for="#qGetQuestions.fieldKey[13]#">#qGetQuestions.displayField[13]# <cfif qGetQuestions.isRequired[13]><em>*</em></cfif></label> 
                 <input type="text" name="#qGetQuestions.fieldKey[13]#" id="#qGetQuestions.fieldKey[13]#" value="#FORM[qGetQuestions.fieldKey[13]]#" class="#qGetQuestions.classType[13]# sec1SchoolNonUsStField" maxlength="100" />
-            </cfif>            
-        </div>
-
+            </div>
+		</cfif>
+                
         <!--- Present School Zip --->
         <div class="field">
             <label for="#qGetQuestions.fieldKey[14]#">#qGetQuestions.displayField[14]# <cfif qGetQuestions.isRequired[14]><em>*</em></cfif></label> 
@@ -656,7 +701,9 @@
                 	<div class="printField">Boarding Student</div>
                 <cfelseif FORM[qGetQuestions.fieldKey[21]] EQ 'DayStudent'>
                 	<div class="printField">Day Student</div>
-                </cfif>
+                <cfelse>
+                	<div class="printField">n/a</div>
+				</cfif>
         	<cfelse>
                 <input type="radio" name="#qGetQuestions.fieldKey[21]#" id="BoardingStudent" value="BoardingStudent" <cfif FORM[qGetQuestions.fieldKey[21]] EQ 'BoardingStudent'> checked="checked" </cfif> /> <label for="BoardingStudent">Boarding Student</label>
                 <input type="radio" name="#qGetQuestions.fieldKey[21]#" id="DayStudent" value="DayStudent" <cfif FORM[qGetQuestions.fieldKey[21]] EQ 'DayStudent'> checked="checked" </cfif> /> <label for="DayStudent">Day Student</label>

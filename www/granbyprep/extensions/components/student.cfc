@@ -70,6 +70,13 @@
 					SESSION.STUDENT.dateLastLoggedIn = qGetStudentInfo.dateLastLoggedIn;
 				}
 				
+				// Check if Application has been submitted
+				if ( ListFind("3,4,6,7", qGetStudentInfo.applicationStatusID) ) {
+					SESSION.STUDENT.isApplicationSubmitted = 1;
+				} else {
+					SESSION.STUDENT.isApplicationSubmitted = 0;
+				}
+				
 				// Set student session complete
 				stCheckSession1 = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(sectionName='section1', foreignTable='student', foreignID=ARGUMENTS.ID);
 				SESSION.STUDENT.isSection1Complete = stCheckSession1.isComplete;
@@ -128,9 +135,9 @@
 				FROM
 					student
 				WHERE
-                    email  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">
+                    email  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email))#">
                 AND 
-    	            password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.password)#">
+    	            password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.password))#">
 				AND
 					isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND    
@@ -196,19 +203,18 @@
                 VALUES
                 (
 					<cfqueryparam cfsqltype="cf_sql_integer" value="1">,	
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,	
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,		
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">,		
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.password)#">,		
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.firstName))#">,	
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.lastName))#">,		
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email))#">,		
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.password))#">,		
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                 )                    
 		</cfquery>
 		
         <cfscript>
 			// Insert Application History
-			insertApplicationHistory(
+			APPLICATION.CFC.ONLINEAPP.insertApplicationHistory(
 				applicationStatusID=1,
-				studentID=newRecord.GENERATED_KEY,
 				foreignTable='student',
 				foreignID=newRecord.GENERATED_KEY,
 				description='Application Issued'
@@ -216,42 +222,6 @@
 		</cfscript>	
         
 		<cfreturn newRecord.GENERATED_KEY /> 
-	</cffunction>
-
-
-    <!--- Insert Application History --->
-	<cffunction name="insertApplicationHistory" access="public" returntype="void" output="false" hint="Inserts a record into studentApplicationStatusJN">
-		<cfargument name="applicationStatusID" type="numeric" required="yes" hint="applicationStatusID is required" />		
-        <cfargument name="studentID" type="numeric" required="yes" hint="studentID is required" />	
-        <cfargument name="foreignTable" type="string" required="yes" hint="User/Student is updating status - is required." />	
-        <cfargument name="foreignID" type="numeric" required="yes" hint="ID of user/student updating status - is required" />		
-        <cfargument name="description" type="string" default="" hint="Reason is not required" />		
-
-		<cfquery 
-			datasource="#APPLICATION.DSN.Source#">
-				INSERT INTO
-                	studentApplicationStatusJN
-                (
-                	applicationStatusID,
-                    sessionInformationID,
-                    studentID,
-                    foreignTable,
-                    foreignID,
-                    description,
-                	dateCreated
-                )
-                VALUES 
-                (
-					<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationStatusID)#">,	
-					<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.informationID)#">,	
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.description#">,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                )
-        </cfquery>        
-        
 	</cffunction>
 
 
@@ -310,10 +280,10 @@
 				UPDATE
                 	student
                 SET
-                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,
-                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.middleName)#">,                    
-                    lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,  
-                    preferredName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.preferredName)#">,
+                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.firstName))#">,
+                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.middleName))#">,                    
+                    lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.lastName))#">,  
+                    preferredName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.preferredName))#">,
                     gender = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.gender)#">,
                     <cfif IsDate(ARGUMENTS.dob)>
 	                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">,
@@ -340,6 +310,24 @@
                 	student
                 SET
                     applicationPaymentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationPaymentID#">
+				WHERE
+	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+		</cfquery>
+		
+	</cffunction>
+
+
+	<!--- Update Application Status --->
+	<cffunction name="updateApplicationStatusID" access="public" returntype="void" output="false" hint="Update Student Information">
+		<cfargument name="ID" required="yes" hint="Student ID" />
+        <cfargument name="applicationStatusID" required="yes" hint="Application Status ID is required.">
+			
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	student
+                SET
+                    applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">
 				WHERE
 	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>
@@ -375,7 +363,7 @@
 				UPDATE
                 	student
                 SET
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email))#">
 				WHERE
 	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>
@@ -393,7 +381,7 @@
 				UPDATE
                 	student
                 SET
-                    password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.password)#">
+                    password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.password))#">
 				WHERE
 	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>

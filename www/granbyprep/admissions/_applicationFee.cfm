@@ -15,13 +15,13 @@
 
 	<!--- It is set to 1 for the print application page --->
 	<cfparam name="printApplication" default="0">
-
+    <cfparam name="includeHeader" default="1">
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <!--- Student ID --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
 	<!--- Credit Card Information --->
-    <cfparam name="FORM.paymentMethodID" default="">
+    <cfparam name="FORM.paymentMethodID" default="1">
     <cfparam name="FORM.nameOnCard" default="">
 	<cfparam name="FORM.creditCardTypeID" default="">
 	<cfparam name="FORM.creditCardNumber" default="">
@@ -33,8 +33,6 @@
     <cfparam name="FORM.billingLastName" default="">    
     <cfparam name="FORM.billingCompany" default="">    
     <cfparam name="FORM.billingAddress" default="">    
-    <cfparam name="FORM.billingAddress2" default="">
-    <cfparam name="FORM.billingApt" default="">
     <cfparam name="FORM.billingCity" default="">
     <cfparam name="FORM.billingState" default="">
     <cfparam name="FORM.billingZipCode" default="">
@@ -43,8 +41,6 @@
     <cfparam name="FORM.paymentAgreement" default="">
     <!--- Authorize.net --->
 	<cfparam name="authIsSuccess" default="0" />
-    <cfparam name="authResponse" default="" />
-
     
     <cfscript>
 		// Gets Current Student Information
@@ -55,8 +51,7 @@
 
 		// Check if Application Fee has been paid
 		if ( VAL(qGetStudentInfo.applicationPaymentID) ) {	
-			// Application fee has not been paid - go to the application fee page
-			// location("#CGI.SCRIPT_NAME#?action=applicationFeeReceipt", "no");
+			// Application fee has been paid - display print page
 			printApplication = 1;
 		}
 
@@ -67,21 +62,22 @@
 		qGetCountries = APPLICATION.CFC.LOOKUPTABLES.getCountry();
 
 		// Gets Application Fee
-		getApplicationFee = APPLICATION.CFC.ONLINEAPP.getApplicationFee(studentID=FORM.studentID);
+		getApplicationFee = VAL(APPLICATION.CFC.ONLINEAPP.getApplicationFee(studentID=FORM.studentID));
 		
 		// Gets Application Fee Policy Text
 		qGetContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="applicationFeePolicy");
 
 		// Declare Application Fee Policy
 		savecontent variable="applicationFeePolicy" {
-			WriteOutput(qGetContent.content);
+			writeOutput(qGetContent.content);
 		}    
 		
 		// Replace Variables 
 		applicationFeePolicy = ReplaceNoCase(applicationFeePolicy,"{applicationFee}",dollarFormat(getApplicationFee),"all");
-
+		
+		// There is not a valid application fee.
 		if ( NOT VAL(getApplicationFee) ) {
-			SESSION.formErrors.Add(getApplicationFee);
+			SESSION.formErrors.Add('Your application is incomplete. Please complete your application first before submitting your application fee payment');
 		}
 		
 		// FORM Submitted
@@ -112,6 +108,10 @@
 				SESSION.formErrors.Add("Please select an expiration year");
 			}
 
+			if ( LEN(FORM.expirationMonth) AND LEN(FORM.expirationYear) AND FORM.expirationMonth & '/' & FORM.expirationYear LT DateAdd('m', -1, now()) ) {
+				SESSION.formErrors.Add("Credit card has expired");
+			}
+			
 			if ( NOT LEN(FORM.ccvCode) ) {
 				SESSION.formErrors.Add("Please enter a CCV code");
 			}
@@ -157,7 +157,6 @@
 					sessionInformationID=SESSION.informationID,
 					foreignTable='student',
 					foreignID=FORM.studentID,
-					authTransactionType='authorizeAndCapture',
 					amount=getApplicationFee,
 					paymentMethodID=FORM.paymentMethodID,
 					paymentMethodType=APPLICATION.CONSTANTS.paymentMethod[FORM.paymentMethodID],
@@ -171,8 +170,6 @@
 					billingLastName=FORM.billingLastName,
 					billingCompany=FORM.billingCompany,
 					billingAddress=FORM.billingAddress,
-					billingAddress2=FORM.billingAddress2,
-					billingApt=FORM.billingApt,
 					billingCity=FORM.billingCity,
 					billingState=FORM.billingState,
 					billingZipCode=FORM.billingZipCode,
@@ -180,17 +177,66 @@
 				);
 				
 				// Submit Payment - Authorize.Net
+				stAuthorizeAndCapture = APPLICATION.CFC.PAYMENTGATEWAY.authorizeAndCapture(
+					amount=getApplicationFee,
+					cardNumber=FORM.creditCardNumber,
+					expirationDate=FORM.expirationMonth & FORM.expirationYear,
+					invoiceNumber='PaymentID-' & paymentID,
+                    description='Application fee for ' & qGetStudentInfo.firstName & ' ' & qGetStudentInfo.lastName & ' ' & '##' & Year(now()) & '-' & FORM.studentID,
+					studentID=FORM.studentID,
+					email=qGetStudentInfo.email,
+					billingFirstName=FORM.billingFirstName,
+					billingLastName=FORM.billingLastName,
+					billingCompany=FORM.billingCompany,
+					billingAddress=FORM.billingAddress,
+					billingCity=FORM.billingCity,
+					billingState=FORM.billingState,
+					billingZip=FORM.billingZipCode,
+					billingCountry=APPLICATION.CFC.lookUpTables.getCountryByID(ID=FORM.billingCountryID).name
+				);
 				
-				// Payment Successfully Submitted - Update Student Table
-				APPLICATION.CFC.STUDENT.updateApplicationPaymentID(ID=FORM.studentID, applicationPaymentID=paymentID);
-				
+				// Payment Successfully Submitted
+				if (stAuthorizeAndCapture.responseCode.response EQ "Approved") {
+					
+					// Payment Approved
+					authIsSuccess = true;
+					
+					// Payment Successfully Submitted - Update Student Table
+					APPLICATION.CFC.STUDENT.updateApplicationPaymentID(ID=FORM.studentID, applicationPaymentID=paymentID);
+					
+					// Set Page Message
+					SESSION.pageMessages.Add("Payment successfully submitted.");
+					SESSION.pageMessages.Add(stAuthorizeAndCapture.responseReasonText.response);
+					
+				// There was a problem processing the payment
+				} else {
+					
+					// Payment Not Approved
+					authIsSuccess = false;
+
+					// Set Error Message
+					SESSION.formErrors.Add(stAuthorizeAndCapture.responseReasonText.response);
+				}
+
 				// Update Authorize.net fields on the payment table
+				APPLICATION.CFC.paymentGateway.updateApplicationPayment(
+					ID=paymentID,						   
+					authTransactionID=stAuthorizeAndCapture.transactionID.response,						   
+					authApprovalCode=stAuthorizeAndCapture.approvalCode.response,
+					authResponseCode=stAuthorizeAndCapture.responseCode.response,
+					authResponseReason=stAuthorizeAndCapture.responseReasonText.response,
+					authIsSuccess=authIsSuccess
+				);
+
+				// Email Receipt to Student
+				// Using Authorize.net Receipt
 				
-				// Set Page Message
-				SESSION.pageMessages.Add("Payment successfully submitted.");
-				// Reload page with updated information
-				// location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
-				
+				// Check if Payment Approved
+				if ( authIsSuccess ) {
+					// Reload page with updated information
+					location("#CGI.SCRIPT_NAME#?action=applicationFee", "no");
+				}
+
 			}
 			
 		}
@@ -202,9 +248,11 @@
 <cfoutput>
 
 <!--- Page Header --->
-<gui:pageHeader
-	headerType="application"
-/>
+<cfif includeHeader>
+    <gui:pageHeader
+        headerType="application"
+    />
+</cfif>
 	
 	<script type="text/javascript">
         // JQuery Validator
@@ -221,9 +269,14 @@
         
         });
     </script>
-        
-    <!--- Side Bar --->
-    <div class="rightSideContent ui-corner-all">
+    
+    <cfif includeHeader>
+		<!--- Side Bar --->
+        <div class="rightSideContent ui-corner-all">
+    <cfelse>
+		<!--- Print Version There is no Float - Application Body --->
+        <div class="form-container">
+	</cfif>
         
         <div class="insideBar">
 
@@ -268,10 +321,10 @@
             <div class="form-container">
 
                 <cfif VAL(getApplicationFee)>  
-                    <form action="#CGI.SCRIPT_NAME#?action=applicationFee" id="applicationFeeForm" method="post">
+                    <form id="applicationFeeForm" action="#CGI.SCRIPT_NAME#?action=applicationFee" method="post">
                     <input type="hidden" name="submitted" value="1" />
 					
-                    <cfif NOT printApplication>
+                    <cfif printApplication>
                     	<p class="legend"><strong>Note:</strong> fields are marked with an asterisk (<em>*</em>)</p>
 					<cfelse>
                     	<p class="legend"><strong>Note:</strong> Application Fee has been paid. Please see your payment information below.</p>
@@ -295,8 +348,18 @@
                         <!--- Payment Information --->
                         <cfif printApplication>
                             <div class="field controlset">
-                                <span class="label">Payment Date <em>*</em></span>
-                                <div class="printField">#DateFormat(qGetPaymentInfo.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetPaymentInfo.dateCreated, 'hh:mm:ss tt')#</div>
+                                <span class="label">Payment Submitted <em>*</em></span>
+                                <div class="printField">#DateFormat(qGetPaymentInfo.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetPaymentInfo.dateCreated, 'hh:mm:ss tt')# EST</div>
+                            </div>
+                            
+                            <div class="field controlset">
+                                <span class="label">Transaction ID <em>*</em></span>
+                                <div class="printField">#qGetPaymentInfo.authTransactionID# &nbsp;</div>
+                            </div>
+
+                            <div class="field controlset">
+                                <span class="label">Authorization Code <em>*</em></span>
+                                <div class="printField">#qGetPaymentInfo.authApprovalCode# &nbsp;</div>
                             </div>
                         </cfif>
                         
@@ -369,7 +432,7 @@
                         <div class="field">
                             <label for="creditCardNumber">Credit Card Number <em>*</em></label> 
 							<cfif printApplication>
-                                <div class="printField">Last 4 Digits: #qGetPaymentInfo.lastDigits# &nbsp;</div>
+                                <div class="printField">XXXX#qGetPaymentInfo.lastDigits# &nbsp;</div>
                             <cfelse>
                                 <input type="text" name="creditCardNumber" id="creditCardNumber" value="#FORM.creditCardNumber#" class="largeField {validate:{required:true,creditcard:true}}" maxlength="20" />
                                 <p class="note">no spaces or dashes</p>
@@ -407,10 +470,12 @@
                             </div>
                       	</cfif>
                         
-                        <div class="creditCardImageDiv">
-                            <div id="displayCardImage" class="card1"></div>
-                        </div>
-                        
+                        <cfif NOT printApplication>
+                            <div class="creditCardImageDiv">
+                                <div id="displayCardImage" class="card1"></div>
+                            </div>
+						</cfif>
+                                                
                     </fieldset>
                     
                     <!--- Billing Address --->
@@ -473,26 +538,6 @@
                             </cfif>
                         </div>
     					
-                        <!--- Address2 --->
-                        <div class="field">
-                            <label for="billingAddress2">Address 2</label> 
-							<cfif printApplication>
-                                <div class="printField">#qGetPaymentInfo.billingAddress2# &nbsp;</div>
-                            <cfelse>
-                                <input type="text" name="billingAddress2" id="billingAddress2" value="#FORM.billingAddress2#" class="largeField" maxlength="100" />
-                            </cfif>
-                        </div>
-    
-    					<!--- Apt/Suite --->
-                        <div class="field">
-                            <label for="billingApt">Apt/Suite</label> 
-							<cfif printApplication>
-                                <div class="printField">#qGetPaymentInfo.billingApt# &nbsp;</div>
-                            <cfelse>
-	                            <input type="text" name="billingApt" id="billingApt" value="#FORM.billingApt#" class="smallField" maxlength="20" />
-                            </cfif>
-                        </div>
-    				
                     	<!--- City --->
                         <div class="field">
                             <label for="billingCity">City <em>*</em></label> 
@@ -578,10 +623,12 @@
         
 	</div><!-- rightSideContent -->        
 
-<!--- Page Footer --->
-<gui:pageFooter
-	footerType="application"
-/>
+<cfif includeHeader>
+	<!--- Page Footer --->
+    <gui:pageFooter
+        footerType="application"
+    />
+</cfif>
 
 </cfoutput>
 

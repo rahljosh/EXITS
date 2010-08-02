@@ -63,6 +63,7 @@
 
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
+				
 				// Reload page with updated information
 				location("#CGI.SCRIPT_NAME#?action=initial&currentTabID=#FORM.currentTabID#", "no");
 			
@@ -79,7 +80,37 @@
     
 </cfsilent>
 
+<script type="text/javascript">
+	// JQuery Validator
+	$().ready(function() {
+		var container = $('div.errorContainer');
+		// validate the form when it is submitted
+		var validator = $("#section4Form").validate({
+			errorContainer: container,
+			errorLabelContainer: $("ol", container),
+			wrapper: 'li',
+			meta: "validate"
+		});
+	
+	});
+</script>
+
 <cfoutput>
+
+<!---  Our jQuery error container --->
+<div class="errorContainer">
+	<p><em>Oops... the following errors were encountered:</em></p>
+					
+	<ol>
+		<cfloop query="qGetQuestions">
+        	<cfif qGetQuestions.isRequired>
+				<li><label for="#qGetQuestions.fieldKey#" class="error">#qGetQuestions.requiredMessage#</label></li>
+            </cfif>
+		</cfloop>
+	</ol>
+	
+	<p>Data has <strong>not</strong> been saved.</p>
+</div>
 
 <!--- Application Body --->
 <div class="form-container">
@@ -101,7 +132,7 @@
 
 	</cfif>
 
-	<form action="#CGI.SCRIPT_NAME#?action=initial" method="post">
+	<form id="section4Form" action="#CGI.SCRIPT_NAME#?action=initial" method="post">
 	<input type="hidden" name="submittedType" value="section4" />
     <input type="hidden" name="currentTabID" value="3" />
 	
@@ -123,10 +154,10 @@
                     <span class="printFieldCheck#YesNoFormat(ListFind(FORM[qGetQuestions.fieldKey[1]], 'Other'))#"> Other </span>
                 </div>
         	<cfelse>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[1]#" id="livesFather" value="Father" <cfif ListFind(FORM[qGetQuestions.fieldKey[1]], 'Father')> checked="checked" </cfif> /> <label for="livesFather">Father</label>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[1]#" id="livesMother" value="Mother" <cfif ListFind(FORM[qGetQuestions.fieldKey[1]], 'Mother')> checked="checked" </cfif> /> <label for="livesMother">Mother</label>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[1]#" id="livesGuardian" value="Guardian" <cfif ListFind(FORM[qGetQuestions.fieldKey[1]], 'Guardian')> checked="checked" </cfif> /> <label for="livesGuardian">Guardian</label>
-                <input type="checkbox" name="#qGetQuestions.fieldKey[1]#" id="livesOther" value="Other" <cfif ListFind(FORM[qGetQuestions.fieldKey[1]], 'Other')> checked="checked" </cfif> /> <label for="livesOther">Other</label>
+                <input type="checkbox" name="#qGetQuestions.fieldKey[1]#" id="livesFather" value="Father" class="#qGetQuestions.classType[1]#" <cfif ListFind(FORM[qGetQuestions.fieldKey[1]], 'Father')> checked="checked" </cfif> /> <label for="livesFather">Father</label>
+                <input type="checkbox" name="#qGetQuestions.fieldKey[1]#" id="livesMother" value="Mother" class="#qGetQuestions.classType[1]#" <cfif ListFind(FORM[qGetQuestions.fieldKey[1]], 'Mother')> checked="checked" </cfif> /> <label for="livesMother">Mother</label>
+                <input type="checkbox" name="#qGetQuestions.fieldKey[1]#" id="livesGuardian" value="Guardian" class="#qGetQuestions.classType[1]#" <cfif ListFind(FORM[qGetQuestions.fieldKey[1]], 'Guardian')> checked="checked" </cfif> /> <label for="livesGuardian">Guardian</label>
+                <input type="checkbox" name="#qGetQuestions.fieldKey[1]#" id="livesOther" value="Other" class="#qGetQuestions.classType[1]#" <cfif ListFind(FORM[qGetQuestions.fieldKey[1]], 'Other')> checked="checked" </cfif> /> <label for="livesOther">Other</label>
                 <p class="note">(Mark all that apply)</p>
             </cfif>
 		</div>			
@@ -143,10 +174,10 @@
                 </div>
         	<cfelse>
                 <div class="field">
-                    <input type="radio" name="#qGetQuestions.fieldKey[2]#" id="materialFather" value="Father" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 'Father'> checked="checked" </cfif> /> <label for="materialFather">Father</label>
-                    <input type="radio" name="#qGetQuestions.fieldKey[2]#" id="materialMother" value="Mother" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 'Mother'> checked="checked" </cfif> /> <label for="materialMother">Mother</label>
-                    <input type="radio" name="#qGetQuestions.fieldKey[2]#" id="materialGuardian" value="Guardian" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 'Guardian'> checked="checked" </cfif> /> <label for="materialGuardian">Guardian</label>
-                    <input type="radio" name="#qGetQuestions.fieldKey[2]#" id="materialOther" value="Other" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 'Other'> checked="checked" </cfif> /> <label for="materialOther">Other</label>
+                    <input type="radio" name="#qGetQuestions.fieldKey[2]#" id="materialFather" value="Father" class="#qGetQuestions.classType[2]#" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 'Father'> checked="checked" </cfif> /> <label for="materialFather">Father</label>
+                    <input type="radio" name="#qGetQuestions.fieldKey[2]#" id="materialMother" value="Mother" class="#qGetQuestions.classType[2]#" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 'Mother'> checked="checked" </cfif> /> <label for="materialMother">Mother</label>
+                    <input type="radio" name="#qGetQuestions.fieldKey[2]#" id="materialGuardian" value="Guardian" class="#qGetQuestions.classType[2]#" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 'Guardian'> checked="checked" </cfif> /> <label for="materialGuardian">Guardian</label>
+                    <input type="radio" name="#qGetQuestions.fieldKey[2]#" id="materialOther" value="Other" class="#qGetQuestions.classType[2]#" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 'Other'> checked="checked" </cfif> /> <label for="materialOther">Other</label>
                 </div>
             </cfif>
         </div>
@@ -209,8 +240,8 @@
             <cfif printApplication>
             	<div class="printField"><cfif VAL(FORM[qGetQuestions.fieldKey[5]])> Yes <cfelseif FORM[qGetQuestions.fieldKey[5]] EQ 0> No </cfif> &nbsp;</div>
         	<cfelse>
-                <input type="radio" name="#qGetQuestions.fieldKey[5]#" id="financialYes" value="1" <cfif FORM[qGetQuestions.fieldKey[5]] EQ 1> checked="checked" </cfif> /> <label for="financialYes">Yes</label>
-                <input type="radio" name="#qGetQuestions.fieldKey[5]#" id="financialNo" value="0" <cfif FORM[qGetQuestions.fieldKey[5]] EQ 0> checked="checked" </cfif> /> <label for="financialNo">No</label>
+                <input type="radio" name="#qGetQuestions.fieldKey[5]#" id="financialYes" value="1" class="#qGetQuestions.classType[5]#" <cfif FORM[qGetQuestions.fieldKey[5]] EQ 1> checked="checked" </cfif> /> <label for="financialYes">Yes</label>
+                <input type="radio" name="#qGetQuestions.fieldKey[5]#" id="financialNo" value="0" class="#qGetQuestions.classType[5]#" <cfif FORM[qGetQuestions.fieldKey[5]] EQ 0> checked="checked" </cfif> /> <label for="financialNo">No</label>
             </cfif>
         </div>
 

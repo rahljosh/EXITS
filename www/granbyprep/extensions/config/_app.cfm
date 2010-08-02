@@ -53,34 +53,28 @@
 	
 	/***** Create APPLICATION.EMAIL structure / Stores Email Information *****/
 	APPLICATION.EMAIL = StructNew();		
-
 	// Set up a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
 
-	AppEmail.contactUs = 'info@granbyprep.com';
-	AppEmail.support = 'support@granbyprep.com';
-	AppEmail.errors = 'errors@student-management.com';
-	AppEmail.admissions = 'bhause@iseusa.com';
-	AppEmail.finance = 'marcel@iseusa.com';	
-	
-	
+
 	/***** Create APPLICATION.PATH structure *****/
 	APPLICATION.PATH = StructNew();		
 	// Set a short name for the APPLICATION.PATH
 	AppPath = APPLICATION.PATH;
 
+
 	/***** Create APPLICATION.SITE structure *****/
 	APPLICATION.SITE = StructNew();		
 	// Set a short name for the APPLICATION.PATH
 	AppSite = APPLICATION.SITE;	
-	
+	// Create new structure to store site information
 	AppSite = APPLICATION.SITE.URL = StructNew();	
 
 	/***** Set Settings based on Live or Dev Servers *****/
 	
 	// Check if this is Dev or Live 
 	if ( APPLICATION.isServerLocal ) {
-		// DEVELOPMENT Server Settings	
+		// ***** DEVELOPMENT Server Settings *****
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
 		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
@@ -91,8 +85,15 @@
 		APPLICATION.SITE.URL.main = 'http://granbyprep.local/';
 		APPLICATION.SITE.URL.admissions = 'http://granbyprep.local/admissions';
 		
+		// Email Settings
+		AppEmail.contactUs = 'marcus@iseusa.com';
+		AppEmail.support = 'marcus@iseusa.com';
+		AppEmail.errors = 'marcus@iseusa.com';
+		AppEmail.admissions = 'marcus@iseusa.com';
+		AppEmail.finance = 'marcus@iseusa.com';	
+		
 	} else {
-		// PRODUCTION Server Settings
+		// ***** PRODUCTION Server Settings *****
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
 		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
@@ -102,6 +103,14 @@
 		// Set Site URL
 		APPLICATION.SITE.URL.main = 'http://www.granbyprep.com/';
 		APPLICATION.SITE.URL.admissions = 'http://www.granbyprep.com/admissions';
+		
+		// Email Settings
+		AppEmail.contactUs = 'info@granbyprep.com';
+		AppEmail.support = 'support@granbyprep.com';
+		AppEmail.errors = 'errors@granbyprep.com';
+		AppEmail.admissions = 'admissions@granbyprep.com';
+		AppEmail.finance = 'bchatterley@granbyprep.com';	
+		
 	}
 
 	// Path for CSS, JS and Images

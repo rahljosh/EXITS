@@ -40,6 +40,20 @@
 		</cfscript>
         
 	</cffunction>
+
+
+	<!--- Current Logged In --->
+	<cffunction name="isCurrentUserLoggedIn" output="false" access="public" returntype="boolean"  description="Returns whether or not user is logged in">
+		
+        <cfscript>
+			 if ( structkeyexists(SESSION,"STUDENT") AND VAL(SESSION.STUDENT.ID) ) {
+				return true;
+			 } else {
+				return false;				 
+			 }
+		</cfscript>
+        	
+	</cffunction>
 	
     
 	<!--- Logout --->
@@ -145,6 +159,135 @@
     	</cfscript>
     
     </cffunction>
+
+
+	<!--- Save application to a zip file --->
+	<cffunction name="saveApplicationToZip" access="public" returntype="string" hint="Saves application in ZIP format and returns file path">
+		<cfargument name="studentID" type="numeric" required="yes" hint="Student ID is required">
+        
+        <cfscript>
+			// Get Student Information	
+			var qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=ARGUMENTS.studentID);
+
+			// Get Student Documents
+			var qGetDocuments = APPLICATION.CFC.DOCUMENT.getDocuments(foreignTable='student', foreignID=ARGUMENTS.studentID);
+
+			var pdfPath = APPLICATION.PATH.uploadDocumentTemp & '##' & qGetStudentInfo.ID & qGetStudentInfo.firstName & qGetStudentInfo.lastName & '-Application.pdf';
+
+			var zipPath = APPLICATION.PATH.uploadDocumentTemp &  '##' & qGetStudentInfo.ID & qGetStudentInfo.firstName & qGetStudentInfo.lastName & '-ApplicationFiles.zip';
+			
+			// Remove watermark
+        	var printApplicationAdmissions = 1;
+        </cfscript>
+                        
+        <cftry>
+        
+			<!--- Include Print Application File --->
+            <cfinclude template="../../admissions/_printApplication.cfm">
+            
+            <!--- At this point we should have a variable called printPDFApplication / Save the file in a temp folder --->
+            
+            <!--- Create a PDF document in the temp folder --->
+            <cffile 
+                action="write"
+                file="#pdfPath#"
+                output="#printPDFApplication#"
+                nameconflict="overwrite">
+            
+            <!--- Create a ZIP file and include application in pdf format --->        
+            <cfzip 
+                action="zip" 
+                source="#pdfPath#"  
+                file="#zipPath#"> 
+            
+            <!--- Insert Uploaded Files to Zip File --->
+            <cfloop query="qGetDocuments">
+                
+                <cfzip 
+                    action="zip" 
+                    source="#qGetDocuments.location##qGetDocuments.fileName#"  
+                    file="#zipPath#"> 
+            
+            </cfloop>
+        
+	        <cfcatch type="any">
+            	<!--- Catch Errors / Return file path --->
+            </cfcatch>
+        
+        </cftry>
+        
+		<cfreturn zipPath>
+	</cffunction>
+
+
+    <!--- Insert Application History --->
+	<cffunction name="insertApplicationHistory" access="public" returntype="void" output="false" hint="Inserts a record into studentApplicationStatusJN">
+		<cfargument name="applicationStatusID" type="numeric" required="yes" hint="applicationStatusID is required" />		
+        <cfargument name="foreignTable" type="string" required="yes" hint="User/Student is updating status - is required." />	
+        <cfargument name="foreignID" type="numeric" required="yes" hint="ID of user/student updating status - is required" />		
+        <cfargument name="description" type="string" default="" hint="Reason is not required" />		
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				INSERT INTO
+                	applicationStatusJN
+                (
+                	applicationStatusID,
+                    sessionInformationID,
+                    foreignTable,
+                    foreignID,
+                    description,
+                	dateCreated
+                )
+                VALUES 
+                (
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationStatusID)#">,	
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.informationID)#">,	
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.description#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                )
+        </cfquery>        
+        
+	</cffunction>
+
+
+    <!--- Get Application History --->
+	<cffunction name="getApplicationHistory" access="public" returntype="query" output="false" hint="Inserts a record into studentApplicationStatusJN">
+		<cfargument name="applicationStatusID" type="numeric" default="0" hint="applicationStatusID is NOT required" />		
+        <cfargument name="foreignTable" type="string" required="yes" hint="User/Student is updating status - is required." />	
+        <cfargument name="foreignID" type="numeric" required="yes" hint="ID of user/student updating status - is required" />		
+
+		<cfquery 
+        	name="qGetApplicationHistory"
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+                	ID,
+                	applicationStatusID,
+                    sessionInformationID,
+                    foreignTable,
+                    foreignID,
+                    description,
+                	dateCreated,
+                    dateUpdated
+				FROM	
+                	applicationStatusJN
+				WHERE
+                	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+                AND
+					foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">
+				<cfif VAL(ARGUMENTS.applicationStatusID)>                
+                    AND
+                        applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationStatusID)#">
+				</cfif>
+				ORDER BY
+                	dateCreated DESC                    
+        </cfquery>        
+        
+        <cfreturn qGetApplicationHistory>
+	</cffunction>
+
 
 
     <!--- Calculate Application Fee --->

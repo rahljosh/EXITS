@@ -42,6 +42,27 @@
 		</cfscript>
 	</cffunction>
 
+	
+    <!--- Return School Address --->
+	<cffunction name="getSchoolAddress" access="public" returntype="string" output="false" hint="Returns the school address">
+		
+        <cfoutput>
+            <cfsavecontent variable="schoolAddress">
+                #APPLICATION.SCHOOL.name# <br />
+                #APPLICATION.SCHOOL.address# <br />
+                #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
+                Phone: #APPLICATION.SCHOOL.phone# <br />
+                Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+            </cfsavecontent>
+		</cfoutput>
+                
+		<cfscript>
+			// Return String
+			return(schoolAddress);
+        </cfscript>
+		   
+	</cffunction>
+
 
 	<!--- This removes foreign accents from online application fields --->
 	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents from a string">

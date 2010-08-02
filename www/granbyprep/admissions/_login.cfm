@@ -258,7 +258,8 @@
                     </tr>
                 </table>
                 <table border="0" align="center" cellpadding="4" cellspacing="0" width="95%">
-                    <tr>                        
+                    <tr>
+                        <td><a href="../privacy.cfm" class="style2" title="Forgot Login?" target="_blank">Privacy Policy</a></td>
                         <td align="right" width="100"> <input type="image" src="../images/onlineApp/button.png" alt="Login" /></td>
                     </tr>
                 </table>
