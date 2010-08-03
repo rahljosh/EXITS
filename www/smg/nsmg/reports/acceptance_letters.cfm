@@ -109,7 +109,10 @@
     <!--- Display Message if at least one student is assigned to Brian - Approved region --->
     <cfif ListFind(regionList, 1462)>
     	<tr>
-        	<td colspan="2">We thank you for submitting your application early but we have not begun assigning applications to regions for your program yet. Please be patient.</td>
+        	<td colspan="2">
+            	We thank you for submitting your application early but we have not begun assigning applications to regions for your program yet. 
+                Therefore, you will find that this application has been assigned to the approved region for the time being.
+            </td>
 		</tr>                        
     </cfif>
     

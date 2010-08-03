@@ -112,7 +112,10 @@ If you are not able to read this e-mail please contact #companyshort.companyshor
     <!--- Display Message if student is assigned to Brian - Approved region --->
     <cfif get_student_info.regionAssigned EQ 1462>
     	<tr>
-        	<td colspan="3">We thank you for submitting your application early but we have not begun assigning applications to regions for your program yet. Please be patient.</td>
+        	<td colspan="3">
+            	We thank you for submitting your application early but we have not begun assigning applications to regions for your program yet. 
+                Therefore, you will find that this application has been assigned to the approved region for the time being.
+            </td>
 		</tr>                        
     </cfif>
     
