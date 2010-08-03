@@ -41,12 +41,11 @@
                     <legend>Frequently Asked Questions</legend>
                         
                     <cfloop query="qGetFaq">
-                        <a href="" class="itemLinks">#qGetFaq.question#</a>
-                        
-                        <div id="" class="faqAnswer">
+                        <a href="###qGetFaq.ID#" class="itemLinks">#qGetFaq.question#</a>
+
+                        <div id="#qGetFaq.ID#" class="faqAnswer">
                             #qGetFaq.answer#
                         </div>
-                        
                     </cfloop>
 
                 </fieldset>

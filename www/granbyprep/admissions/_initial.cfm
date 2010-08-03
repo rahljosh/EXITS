@@ -50,7 +50,6 @@
                 <li><a href="##addFamilyInformation"><span>Additional Family Information</span></a></li>
                 <li><a href="##other"><span>Other</span></a></li>
                 <li><a href="##studentEssay"><span>Student Essay</span></a></li>
-                <li><a href="##appDocuments"><span>Documents</span></a></li>
 			</ul>
              
             <div id="studentInformation">
@@ -71,10 +70,6 @@
             
             <div id="studentEssay">
                 <cfinclude template="_section5.cfm">
-            </div>
-
-            <div id="appDocuments">
-                <cfinclude template="_documents.cfm">
             </div>
             
         </div>

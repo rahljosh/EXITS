@@ -146,6 +146,7 @@
                                     <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection5Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=4">Student Essay</a></li>
                                 </ul>    
                             
+                            <a href="#CGI.SCRIPT_NAME#?action=documents" class="itemLinks <cfif Find("documents", CGI.QUERY_STRING)> selected </cfif>">Upload Documents</a>
                             <a href="#CGI.SCRIPT_NAME#?action=download" class="itemLinks <cfif Find("download", CGI.QUERY_STRING)> selected </cfif>">Download Forms</a>
                             <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
                             <a href="#CGI.SCRIPT_NAME#?action=applicationFee" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>

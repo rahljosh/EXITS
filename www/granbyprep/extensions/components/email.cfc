@@ -56,15 +56,15 @@
                     You can start your application at any time and do not need to complete it all at once. <br />                
                     Once submitted, the application can no longer be edited. <br /><br />
 
-                    Please visit <a href="#APPLICATION.SITE.URL.admissions#">#APPLICATION.SITE.URL.main#</a> to login into your application account. <br /><br />
+                    Please visit <a href="#APPLICATION.SITE.URL.admissions#" style="text-decoration:none; color:##0069aa;">#APPLICATION.SITE.URL.main#</a> to login into your application account. <br /><br />
 
                     Please see below your login information: <br /><br />
                     Email: #qGetStudentInfo.email#<br />
                     Password: #qGetStudentInfo.password# <br /><br />
 
-                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
@@ -74,6 +74,7 @@
                 </cfsavecontent>
             
             </cfcase>
+        
         
         	<!--- Forgot Password --->
         	<cfcase value="forgotPassword">
@@ -89,9 +90,9 @@
                     Email Address: #qGetStudentInfo.email# <br />
                     Password: #qGetStudentInfo.password# <br /><br />
 
-                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
@@ -101,6 +102,7 @@
                 </cfsavecontent>
             
             </cfcase>
+
 
         	<!--- Login Updated --->
         	<cfcase value="loginUpdated">
@@ -117,9 +119,9 @@
                     Email Address: #qGetStudentInfo.email# <br />
                     Password: #qGetStudentInfo.password# <br /><br />
 
-                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
@@ -129,6 +131,7 @@
                 </cfsavecontent>
             
             </cfcase>
+
 
             <!--- Payment Submitted --->
         	<cfcase value="paymentSubmitted">
@@ -144,9 +147,9 @@
 					
                     Reference Number {referenceNumber} <br /><br />
                     
-                    If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
@@ -157,6 +160,7 @@
             
             </cfcase>
         
+        
         	<!--- Application Submitted --->
         	<cfcase value="applicationSubmitted">
 
@@ -166,12 +170,23 @@
 
                 <cfsavecontent variable="stEmailStructure.message">
                 	<p>#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#-</p>
-
-                    You have successfully submitted your online application. <br /><br />
 					
-                    If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    Thank you for applying to GPA. You have successfully submitted your online application for admission. <br /><br />
+					
+                    Please contact our Admissions Office to set up an interview. <br /><br />
+
+                    Admissions Department  <br />
+                    #APPLICATION.SCHOOL.admissions# <br />
+                    <a href="mailto:#APPLICATION.EMAIL.admissions#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.admissions#</a> <br />
+                    #APPLICATION.SCHOOL.name# <br />
+                    #APPLICATION.SCHOOL.address# <br />
+                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
+                    Phone: #APPLICATION.SCHOOL.phone# <br />
+                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br /><br />                 
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    
+                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
@@ -182,6 +197,7 @@
             
             </cfcase>
 
+
         	<!--- Application Submitted Admissions --->
         	<cfcase value="applicationSubmittedAdmissions">
 
@@ -190,7 +206,7 @@
 				</cfscript>
 
                 <cfsavecontent variable="stEmailStructure.message">
-                	<p>Dear Admissions Officer,</p>
+                	<p>Admissions Department,</p>
 
                     Application for student #qGetStudentInfo.firstName# #qGetStudentInfo.lastName# ###qGetStudentInfo.ID# has been submitted. <br /><br />
 					

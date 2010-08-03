@@ -13,9 +13,6 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
 
-	<!--- Param FORM Variables --->
-    <cfparam name="FORM.submittedType" default="">
-    <cfparam name="FORM.currentTabID" default="3">
     <!--- Student Details --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
     <cfparam name="FORM.foreignTable" default="student">
@@ -34,107 +31,128 @@
 
 <cfoutput>
 
-<!--- Application Body --->
-<div class="form-container">
-    
-    <p class="legend"><strong>OPTIONAL:</strong> Please upload supporting documents such as additional references, awards, artwork, etc. that you feel should be seen by the admission committee.</p>
-    
-    <!--- Upload Documents --->    
-    <fieldset>
+<!--- Page Header --->
+<gui:pageHeader
+    headerType="application"
+/>
 
-	   <legend>Upload Documents</legend>
 
-        <div class="documentList" align="center">
+	<!--- Side Bar --->
+    <div class="rightSideContent ui-corner-all">
         
-            <cffileupload 
-	            title="Select one or more files and click on Upload"
-                name="fileData" 
-                url="upload.cfm?#urlEncodedFormat(SESSION.URLToken)#"
-                extensionfilter="jpg,jpeg,gif,png,bmp,tiff,pdf" 
-                oncomplete="handleComplete"             
-                maxfileselect="5" 
-                maxuploadsize="3" 
-                bgcolor="##FFFFFF" 
-                align="center"
-                height="220"
-                width="650">
-
-		</div>
-        
-    </fieldset>
-	
-
-	<!--- File Options Successfull Message --->
-    <div id="pageMessages" class="pageMessages"></div>
-    
-    <form name="filePropertySection" id="filePropertySection" class="hiddenField" onsubmit="return updateFile();">
-    	<input type="hidden" name="documentID" id="documentID" value="" />
-        
-        <fieldset>
-    
-           <legend>File Properties</legend>
-    
-            <!--- File Name --->
-            <div class="field">
-                <label for="fileName">File Name <em>*</em></label> 
-                <input type="text" name="fileName" id="fileName" value="" class="largeField" maxlength="100" disabled="disabled" />
-            </div>
-            
-            <!--- File Category --->
-            <div class="field">
-                <label for="fileCategory">Category <em>*</em></label> 
-                <select name="documentTypeID" id="documentTypeID" class="largeField">
-                    <option value="0"></option>
-                    <cfloop query="qGetDocumentType">
-                        <option value="#qGetDocumentType.ID#">#qGetDocumentType.name#</option>
-                    </cfloop>
-                </select>
-            </div>
-            
-        </fieldset>
-
-        <div class="buttonrow">
-            <input type="submit" value="Save" class="button ui-corner-top" />
-        </div>
-    
-    </form>
-
-
-	<!--- Uploaded Documents --->
-    <fieldset>
-
-	   	<legend>Uploaded Documents</legend>
-
-		<div class="documentList" align="center">
-            <cfform>
-            <!--- These variables are used in the CFGrid --->
-            <input type="hidden" name="foreignTable" id="foreignTable" value="#FORM.foreignTable#" />
-            <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
-
-            <cfgrid name="documentList" 
-                title="Click on Edit to update the category information"
-                format="html"
-                bind="cfc:extensions.components.document.getDocumentsRemote({foreignTable},{studentID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection})"                    
-                width="650px"
-                pagesize="10"
-                bgcolor="##FFFFFF" 
-                highlighthref="yes"
-                align="left">
-                                    
-                <cfgridcolumn name="ID" display="no">
-                <cfgridcolumn name="fileName" header="File Name" width="220">
-                <cfgridcolumn name="documentType" header="Category" width="180">
-                <cfgridcolumn name="fileSize" header="Size" width="60">
-                <cfgridcolumn name="displayDateCreated" header="Date" width="60">
-                <cfgridcolumn name="action" header="Actions" width="130">
-            </cfgrid>
+        <div class="insideBar">
 			
-            </cfform>
-        </div>
-		
-	</fieldset>    
+			<!--- Application Body --->
+            <div class="form-container">
+            
+                <p class="legend"><strong>OPTIONAL:</strong> Please upload supporting documents such as additional references, awards, artwork, etc. that you feel should be seen by the admission committee.</p>
+                
+                <!--- Upload Documents --->    
+                <fieldset>
+            
+                   <legend>Upload Documents</legend>
+            
+                    <div class="documentList" align="center">
+                    
+                        <cffileupload 
+                            title="Select one or more files and click on Upload"
+                            name="fileData" 
+                            url="upload.cfm?#urlEncodedFormat(SESSION.URLToken)#"
+                            extensionfilter="jpg,jpeg,gif,png,bmp,tiff,pdf" 
+                            oncomplete="handleComplete"             
+                            maxfileselect="5" 
+                            maxuploadsize="3" 
+                            bgcolor="##FFFFFF" 
+                            align="center"
+                            height="220"
+                            width="650">
+            
+                    </div>
+                    
+                </fieldset>
+                
+            
+                <!--- File Options Successfull Message --->
+                <div id="pageMessages" class="pageMessages"></div>
+                
+                <form name="filePropertySection" id="filePropertySection" class="hiddenField" onsubmit="return updateFile();">
+                    <input type="hidden" name="documentID" id="documentID" value="" />
+                    
+                    <fieldset>
+                
+                       <legend>File Properties</legend>
+                
+                        <!--- File Name --->
+                        <div class="field">
+                            <label for="fileName">File Name <em>*</em></label> 
+                            <input type="text" name="fileName" id="fileName" value="" class="largeField" maxlength="100" disabled="disabled" />
+                        </div>
+                        
+                        <!--- File Category --->
+                        <div class="field">
+                            <label for="fileCategory">Category <em>*</em></label> 
+                            <select name="documentTypeID" id="documentTypeID" class="largeField">
+                                <option value="0"></option>
+                                <cfloop query="qGetDocumentType">
+                                    <option value="#qGetDocumentType.ID#">#qGetDocumentType.name#</option>
+                                </cfloop>
+                            </select>
+                        </div>
+                        
+                    </fieldset>
+            
+                    <div class="buttonrow">
+                        <input type="submit" value="Save" class="button ui-corner-top" />
+                    </div>
+                
+                </form>
+            
+            
+                <!--- Uploaded Documents --->
+                <fieldset>
+            
+                    <legend>Uploaded Documents</legend>
+            
+                    <div class="documentList" align="center">
+                        <cfform>
+                        <!--- These variables are used in the CFGrid --->
+                        <input type="hidden" name="foreignTable" id="foreignTable" value="#FORM.foreignTable#" />
+                        <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
+            
+                        <cfgrid name="documentList" 
+                            title="Click on Edit to update the category information"
+                            format="html"
+                            bind="cfc:extensions.components.document.getDocumentsRemote({foreignTable},{studentID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection})"                    
+                            width="650px"
+                            pagesize="10"
+                            bgcolor="##FFFFFF" 
+                            highlighthref="yes"
+                            align="left">
+                                                
+                            <cfgridcolumn name="ID" display="no">
+                            <cfgridcolumn name="fileName" header="File Name" width="220">
+                            <cfgridcolumn name="documentType" header="Category" width="180">
+                            <cfgridcolumn name="fileSize" header="Size" width="60">
+                            <cfgridcolumn name="displayDateCreated" header="Date" width="60">
+                            <cfgridcolumn name="action" header="Actions" width="130">
+                        </cfgrid>
+                        
+                        </cfform>
+                    </div>
+                    
+                </fieldset>    
+            
+            </div><!-- /form-container -->
+
+		</div><!-- /insideBar -->
         
-</div><!-- /form-container -->
+	</div><!-- rightSideContent -->        
+
+
+<!--- Page Footer --->
+<gui:pageFooter
+	footerType="application"
+/>
 
 </cfoutput>
 

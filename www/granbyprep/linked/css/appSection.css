@@ -631,6 +631,18 @@ div.form-container-noBorder fieldset {
 	border: #DDD 1px solid; 
 }
 
+div.form-container fieldset a,
+div.form-container-noBorder fieldset a { 
+	color: #0069aa;
+	text-decoration:none;
+}
+
+div.form-container fieldset a:hover,
+div.form-container-noBorder fieldset a:hover { 
+	color: #e69700;	
+	outline: none;
+}
+
 div.form-container legend,
 div.form-container-noBorder legend { 
 	font-weight: bold; 

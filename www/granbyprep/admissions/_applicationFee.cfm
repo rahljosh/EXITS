@@ -205,8 +205,7 @@
 					APPLICATION.CFC.STUDENT.updateApplicationPaymentID(ID=FORM.studentID, applicationPaymentID=paymentID);
 					
 					// Set Page Message
-					SESSION.pageMessages.Add("Payment successfully submitted.");
-					SESSION.pageMessages.Add(stAuthorizeAndCapture.responseReasonText.response);
+					SESSION.pageMessages.Add("Payment successfully submitted. " & stAuthorizeAndCapture.responseReasonText.response);
 					
 				// There was a problem processing the payment
 				} else {
@@ -325,9 +324,9 @@
                     <input type="hidden" name="submitted" value="1" />
 					
                     <cfif printApplication>
-                    	<p class="legend"><strong>Note:</strong> fields are marked with an asterisk (<em>*</em>)</p>
-					<cfelse>
                     	<p class="legend"><strong>Note:</strong> Application Fee has been paid. Please see your payment information below.</p>
+					<cfelse>
+                        <p class="legend"><strong>Note:</strong> fields are marked with an asterisk (<em>*</em>)</p>
 					</cfif>
                     
                     <!--- Application Fee --->

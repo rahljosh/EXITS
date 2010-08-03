@@ -30,7 +30,7 @@
 <div id="mainIndex">
 	<!-- end #mainContent --></div>
   <div id="footerIndex">
-    <div class="info"><img src="images/apply.png" width="78" height="21" alt="apply" /><img src="images/spacer.png" width="78" height="7" /><img src="images/request.png" width="78" height="20" alt="request" /></div>
+    <div class="info"><a href="/admissions"><img src="images/apply.png" width="78" height="21" alt="apply" border="0" /></a><img src="images/spacer.png" width="78" height="7" /><img src="images/request.png" width="78" height="20" alt="request" /></div>
   <!-- end #footer --></div>
 <!-- end #container --></div>
 <script type="text/javascript">
