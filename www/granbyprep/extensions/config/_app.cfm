@@ -32,7 +32,10 @@
 	APPLICATION.SCHOOL.zipCode = '01033';
 	APPLICATION.SCHOOL.tollFree = '(800) 766-4656';
 	APPLICATION.SCHOOL.phone = '(631) 893-4540';
-
+	
+	// School Departments
+	APPLICATION.SCHOOL.headMaster = 'Brian Chatterley ';
+	APPLICATION.SCHOOL.admissions = 'Anneke Skidmore';
 
 	/***** Create APPLICATION.QUERY structure - This will hold queries that are used in the database and do not change frequently *****/
 	APPLICATION.QUERY = StructNew();
@@ -86,10 +89,11 @@
 		APPLICATION.SITE.URL.admissions = 'http://granbyprep.local/admissions';
 		
 		// Email Settings
+		AppEmail.headMaster = 'marcus@iseusa.com';
+		AppEmail.admissions = 'marcus@iseusa.com';
 		AppEmail.contactUs = 'marcus@iseusa.com';
 		AppEmail.support = 'marcus@iseusa.com';
 		AppEmail.errors = 'marcus@iseusa.com';
-		AppEmail.admissions = 'marcus@iseusa.com';
 		AppEmail.finance = 'marcus@iseusa.com';	
 		
 	} else {
@@ -105,10 +109,11 @@
 		APPLICATION.SITE.URL.admissions = 'http://www.granbyprep.com/admissions';
 		
 		// Email Settings
+		AppEmail.headMaster = 'bchatterley@granbyprep.com';
+		AppEmail.admissions = 'askidmore@granbyprep.com';
 		AppEmail.contactUs = 'info@granbyprep.com';
 		AppEmail.support = 'support@granbyprep.com';
 		AppEmail.errors = 'errors@granbyprep.com';
-		AppEmail.admissions = 'admissions@granbyprep.com';
 		AppEmail.finance = 'bchatterley@granbyprep.com';	
 		
 	}

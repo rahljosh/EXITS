@@ -138,7 +138,7 @@
 				);
 				
 				// Set Page Message
-				SESSION.pageMessages.Add("Your application has successfully been submitted.");
+				SESSION.pageMessages.Add("Thank you for applying to GPA. Your application has successfully been submitted.");
 				
 				// Reload page with updated information
 				location("#CGI.SCRIPT_NAME#?action=submit", "no");
@@ -226,8 +226,8 @@
                 <input type="hidden" name="submitted" value="1" />
 				
 				<cfif printApplication>
-                    <p class="legend"><strong>Note:</strong> Application has been submitted.</p>
-                <cfelse>
+                    <p class="legend"><strong>Note:</strong> Thank you for applying to GPA. Your application has been submitted. </p>
+				<cfelse>
                     <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>). Once you submit your application you will no longer be able to make any changes. </p>
                 </cfif>
                 
@@ -264,7 +264,7 @@
 						</cfif>
                     </div>
 
-					<cfif printApplication>
+					<cfif printApplication AND LEN(FORM[qGetQuestions.fieldKey[2]])>
 						<!--- Semester Option Detail - Print Application --->
                         <div class="field">
                             <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <em>*</em></label> 
@@ -297,6 +297,26 @@
                     </div>
 
                 </fieldset>                
+
+				<cfif printApplication>
+					<!--- Interview Instructions --->
+                    <fieldset>
+                       
+                        <legend>Interview Instructions</legend>
+						
+                        Please contact the Admissions Department to set up an interview. <br /><br />
+                        
+                        Admissions Department  <br />
+                        #APPLICATION.SCHOOL.name# <br />
+                        #APPLICATION.SCHOOL.admissions#  <br />
+                        <a href="mailto:#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a> <br />
+                        #APPLICATION.SCHOOL.address# <br />
+                        #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
+                        Phone: #APPLICATION.SCHOOL.phone# <br />
+                        Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                        
+					</fieldset>
+                </cfif>
 					
 				<cfif NOT printApplication>                                                    
                     <div class="buttonrow">
