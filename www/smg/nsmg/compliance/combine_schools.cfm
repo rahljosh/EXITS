@@ -182,6 +182,15 @@
 		</cfquery>
 	
 		<cfif students.recordcount EQ 0 AND school_history.recordcount EQ 0>
+
+			<!--- DELETE SCHOOL DATES --->
+			<cfquery name="delete_dates" datasource="MySql">
+				DELETE 
+				FROM smg_school_dates
+				WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">
+				LIMIT 1
+			</cfquery>
+
 			<!--- DELETE SCHOOL --->
 			<cfquery name="delete_school" datasource="MySql">
 				DELETE 
@@ -190,13 +199,6 @@
 				LIMIT 1
 			</cfquery>
 			
-			<!--- DELETE SCHOOL DATES --->
-			<cfquery name="delete_dates" datasource="MySql">
-				DELETE 
-				FROM smg_school_dates
-				WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">
-				LIMIT 1
-			</cfquery>
 			<tr><td align="right">School deleted :</td><td>## #form.from#</td></tr>
 		<cfelse>
 		<tr><th colspan="2">## #form.from# School was not deleted.</th></tr>
