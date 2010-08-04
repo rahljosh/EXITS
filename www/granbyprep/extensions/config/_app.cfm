@@ -91,6 +91,7 @@
 		// Email Settings
 		AppEmail.headMaster = 'marcus@iseusa.com';
 		AppEmail.admissions = 'marcus@iseusa.com';
+		AppEmail.admissionsOfficer = 'marcus@iseusa.com';
 		AppEmail.contactUs = 'marcus@iseusa.com';
 		AppEmail.support = 'marcus@iseusa.com';
 		AppEmail.errors = 'marcus@iseusa.com';
@@ -110,7 +111,8 @@
 		
 		// Email Settings
 		AppEmail.headMaster = 'bchatterley@granbyprep.com';
-		AppEmail.admissions = 'askidmore@granbyprep.com';
+		AppEmail.admissionsOfficer = 'askidmore@granbyprep.com';
+		AppEmail.admissions = 'admissions@granbyprep.com';
 		AppEmail.contactUs = 'info@granbyprep.com';
 		AppEmail.support = 'support@granbyprep.com';
 		AppEmail.errors = 'errors@granbyprep.com';
