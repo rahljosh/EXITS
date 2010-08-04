@@ -392,7 +392,7 @@
 										<tr><td width="80">Date of Entry : </td><td>#DateFormat(dateapplication, 'mm/dd/yyyy')# </td></tr>
 										<tr><td><cfif randid EQ 0>Entered by : <cfelse>Approved by : </cfif> </td><td><cfif qEnteredBy.recordcount NEQ 0>#qEnteredBy.firstname# #qEnteredBy.lastname# (###qEnteredBy.userid#)<cfelse>n/a</cfif></td></tr>										
 										
-										<cfif CLIENT.usertype EQ 1 OR ListFind("8731,11245,8743,12313", CLIENT.userid)> <!--- Pat, Bill, Bob and Brian Hause --->
+										<cfif CLIENT.usertype EQ 1 OR ListFind("8731,11245,8743,12313,1077", CLIENT.userid)> <!--- Pat, Bill, Bob, Brian Hause and Diana --->
                                         <tr>
 											<td>Division:</td><td>
 											<cfif FORM.edit EQ 'no'>
