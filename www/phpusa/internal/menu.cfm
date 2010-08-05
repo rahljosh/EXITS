@@ -90,9 +90,10 @@
       <li><a href="#">Tools</a>
         <ul>
 		  <cfif CLIENT.usertype LTE 3>
-              <li><a href="index.cfm?curdoc=invoice/intl_rep_insurance">Intl. Rep Insurance</a></li>
+              <li><a href="index.cfm?curdoc=invoice/intl_rep_insurance">Intl. Rep Insurance Policy</a></li>
           </cfif>
-		  <!--- 
+		  <li><a href="index.cfm?curdoc=insurance/menu">Insurance Files</a></li>
+          <!--- 
 		  Removed - Marcus Melo 10/22/2009
           <li><a href="index.cfm?curdoc=insurance/caremed_menu">Caremed Insurance</a></li>
           <li><a href="index.cfm?curdoc=insurance/vsc_menu">VSC Insurance</a></li>

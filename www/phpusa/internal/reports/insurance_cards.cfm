@@ -32,9 +32,11 @@
         	php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         <cfif isDate(FORM.date1) AND isDate(FORM.date2)>
             AND 
-            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.date1)#">
-            AND 
-            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(DateAdd('d', 1, FORM.date2))#">
+            	php.dateCreated 
+                BETWEEN
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.date1)#">
+            	AND 
+            		<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(DateAdd('d', 1, FORM.date2))#">
         </cfif>
         <cfif VAL(FORM.intRep)>
         	AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#">
