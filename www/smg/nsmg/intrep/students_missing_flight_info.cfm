@@ -36,7 +36,66 @@
             AND 
                 s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')	
 	</Cfquery>
-    
+    <!----PHP flight info---->
+    	<Cfquery name="qStudentsMissingArrival_php" datasource="mysql">
+		SELECT DISTINCT s.firstname, s.studentid, s.intrep, s.familylastname, s.uniqueid,  s.dateplaced,
+			p.programname, p.startdate, p.enddate, p.type,
+			finfo.studentid as stu_flight, finfo.flight_type
+		FROM smg_students s
+		LEFT JOIN php_students_in_program psip on psip.studentid = s.studentid
+        INNER JOIN smg_programs p ON psip.programid = p.programid
+		LEFT JOIN smg_flight_info finfo ON s.studentid = finfo.studentid
+		WHERE 
+			<cfif CLIENT.userType EQ 8>
+                <!--- Intl Rep --->
+                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">            
+			<cfelseif CLIENT.userType EQ 11>
+            	<!--- Branch --->
+                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentCompany#">
+            AND    
+                s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+            </cfif>    
+            AND 
+                s.active = 1
+            AND 
+            	p.active = 1
+            AND
+         		p.enddate > now()
+            AND
+                (s.companyid != 0 and s.companyid = 6)
+            AND 
+                s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')	
+	</Cfquery>
+   
+<Cfquery name="qStudentsMissingDeparture_php" datasource="mysql">
+		SELECT DISTINCT s.firstname, s.studentid, s.intrep, s.familylastname, s.uniqueid,  s.dateplaced,
+			p.programname, p.startdate, p.enddate, p.type,
+			finfo.studentid as stu_flight, finfo.flight_type
+		FROM smg_students s
+		LEFT JOIN php_students_in_program psip on psip.studentid = s.studentid
+        INNER JOIN smg_programs p ON psip.programid = p.programid
+		LEFT JOIN smg_flight_info finfo ON s.studentid = finfo.studentid
+		WHERE 
+			<cfif CLIENT.userType EQ 8>
+                <!--- Intl Rep --->
+                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">            
+			<cfelseif CLIENT.userType EQ 11>
+            	<!--- Branch --->
+                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentCompany#">
+            AND    
+                s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+            </cfif>    
+            AND 
+                s.active = 1
+            AND 
+            	p.active = 1
+            AND
+         		p.enddate > now()
+            AND
+                (s.companyid != 0 and s.companyid = 6)
+            AND 
+                s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')	
+	</Cfquery>
 <cfif ListFind("20,21,28,109,115,628,701,6584,7199,7502,8913,9106,11480,11565,12038,12201", CLIENT.userID)>
 	<br>
 		<table width=100%>
@@ -60,8 +119,10 @@
 				</tr>
 			</table>
 </cfif>
+
 	<table width=100%>
-	<tr><td bgcolor="##e2efc7" colspan=2><span class="get_attention"><b>:: </b></span>Placed students without ARRIVING flight information</td></tr>
+	<tr>
+	  <td bgcolor="##e2efc7" colspan=2><span class="get_attention"><b>:: </b></span><strong>Public School</strong>  placed students without ARRIVING flight information</td></tr>
 	<tr>
 		<td valign="top" colspan=2>
 		<cfif qStudentsMissingArrival.recordcount EQ 0>
@@ -128,9 +189,11 @@
             	s.host_fam_approved <= 4
 			AND 
             	s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'departure')	
+            ORDER BY s.familylastname
 	</Cfquery>
 	<table width=100%>
-	<tr><td bgcolor="##e2efc7" colspan=2><span class="get_attention"><b>:: </b></span>Placed students without DEPARTING flight information</td></tr>
+	<tr>
+	  <td bgcolor="##e2efc7" colspan=2><span class="get_attention"><b>:: </b></span><strong>Public School</strong> placed students without DEPARTING flight information</td></tr>
 	<tr>
 		<td valign="top" colspan=2>
 		<cfif qStudentsMissingDeparture.recordcount EQ 0>
@@ -161,4 +224,65 @@
 		</td>
 	</tr>
 	</table>
+<Br /><br />
+	<table width=100%>
+	<tr>
+	  <td bgcolor="##e2efc7" colspan=2><span class="get_attention"><b>:: </b></span><strong>Private School</strong> students without ARRIVING flight information</td></tr>
+	<tr>
+		<td valign="top" colspan=2>
+		<cfif qStudentsMissingArrival_php.recordcount EQ 0>
+		<br><div align="center">You currently have no students in the Private High School program missing ARRIVING flight info.</div>
+		<cfelse>
+		<div class="int_scroll">
+		<table width=90% align="center" cellspacing="0" cellpadding=2 border=0>
+			<tr bgcolor="ABADFC"><td width=30%>Student Name (id)</td><td>Placed </td><td>Host </td><td>Program</td><td>Flight Info</td><td></td></tr>
+			<Cfloop query="qStudentsMissingArrival_php">
+			<tr bgcolor="#iif(qStudentsMissingArrival_php.currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
+				<td><a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qStudentsMissingArrival_php.uniqueid#">#firstname# #familylastname# (#studentid#)</a></td>
+				<td></td>
+				<td>
+				</td>
+				<td>#programname#</td>
+				<td><a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#qStudentsMissingArrival_php.uniqueid#&php', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+						<font color="Red">NEEDED - click to submit</font></a>
+				</td>
+			</tr>
+			</cfloop>
+		</table>
+		</div>
+		</cfif>
+		</td>
+	</tr>
+	</table>
+<Br /><br />
+	<table width=100%>
+	<tr>
+	  <td bgcolor="##e2efc7" colspan=2><span class="get_attention"><b>:: </b></span><strong>Private School</strong> students without DEPARTING flight information</td></tr>
+	<tr>
+		<td valign="top" colspan=2>
+		<cfif qStudentsMissingDeparture_php.recordcount EQ 0>
+		<br><div align="center">You currently have no students in the Private High School program missing DEPARTURE flight info.</div>
+		<cfelse>
+		<div class="int_scroll">
+		<table width=90% align="center" cellspacing="0" cellpadding=2 border=0>
+			<tr bgcolor="ABADFC"><td width=30%>Student Name (id)</td><td>Placed </td><td>Host </td><td>Program</td><td>Flight Info</td><td></td></tr>
+			<Cfloop query="qStudentsMissingArrival_php">
+			<tr bgcolor="#iif(qStudentsMissingDeparture_php.currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
+				<td><a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qStudentsMissingDeparture_php.uniqueid#">#firstname# #familylastname# (#studentid#)</a></td>
+				<td></td>
+				<td>
+				</td>
+				<td>#programname#</td>
+				<td><a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#qStudentsMissingDeparture_php.uniqueid#&php', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+						<font color="Red">NEEDED - click to submit</font></a>
+				</td>
+			</tr>
+			</cfloop>
+		</table>
+		</div>
+		</cfif>
+		</td>
+	</tr>
+	</table>
+
 	</cfoutput>

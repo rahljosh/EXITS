@@ -38,6 +38,8 @@
     <cfparam name="FORM.ar_update" default="">
     <cfparam name="FORM.dp_update" default="">
     <cfparam name="FORM.flight_notes" default="">
+    <
+    
 
 	<!--- Start of intrep\int_flight_info.cfm --->
     <cfparam name="URL.unqid" default="">
@@ -53,7 +55,7 @@
         
         <!--- ARRIVAL INFORMATION -  NEW FLIGHT ARRIVAL UP TO 4 LEGS--->
         <cfif FORM.ar_update EQ 'new'> 
-            
+        
             <cfloop From="1" To="4" Index="i">
                 
                 <!--- Param FORM Variables --->
@@ -174,9 +176,9 @@
             WHERE 
             	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
         </cfquery>
-        
+       
         <!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A NEW FLIGHT INFORMATION ---->
-        <cfif qCheckPHP.recordcount eq 1>
+        <cfif qCheckPHP.studentid eq #studentid#>
             <cfquery name="qGetEmailInfo" datasource="MySQL">
             SELECT 
             	s.studentID,
@@ -196,31 +198,34 @@
             	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
         </cfquery>
         
-        
-        <cfif qCheckPHP.recordcount>
-            <cfset email_to = 'luke@phpusa.com'>
-        <cfelseif qGetEmailInfo.email EQ ''>
-            <cfset email_to = 'support@student-management.com'>
-        <cfelse>	
-            <cfset email_to = '#qGetEmailInfo.email#'>
-        </cfif>
+           <cfset email_to = 'luke@phpusa.com'>
+
         <cfoutput>
+        
            <cfsavecontent variable="email_message">
-        	Dear Luke,<br><br>
-        	This e-mail is just to let you know new or updated flight information for the student 
-            #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#) has been recorded in EXITS by #qGetEmailInfo.businessname#.<br><br>
-            Please click <a href="http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetEmailInfo.uniqueid#">here</a> then click on Flight Information to see the student's flight information.<br><br>
+<cfif FORM.ar_update eq 'update'><strong>ARRIVAL INFORMATION HAS CHANGED</strong><br /></cfif>
+<cfif FORM.dp_update eq 'update'><strong>DEPARTURE INFORMATION HAS CHANGED</strong><Br /></cfif>
+<Br />
+
+What: Flight Information<BR />
+Student: #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#)<Br />
+Submitted By: #qGetEmailInfo.businessname#.<br><br>
+Please click <a href="http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetEmailInfo.uniqueid#">here</a> then click on Flight Information to see the student's flight information.<br><br>
         
             Sincerely,<br>
             EXITS Flight Info<br><br>
         </cfsavecontent>
         
-        
+   
                     
 		<!--- send email --->
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
             <cfinvokeargument name="email_to" value="#email_to#">
+            <Cfif form.dp_update eq 'update' or form.ar_update eq 'update'>
+            <cfinvokeargument name="email_subject" value="UPDATED Flight Information for #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (#qGetEmailInfo.studentid#)">
+            <cfelse>
             <cfinvokeargument name="email_subject" value="Flight Information for #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (#qGetEmailInfo.studentid#)">
+            </Cfif>
             <cfinvokeargument name="email_message" value="#email_message#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
         </cfinvoke>
@@ -235,6 +240,7 @@
                 s.familyLastName,
                 s.regionassigned,
                 s.intRep,
+                s.uniqueid,
              
                 r.regionname, 
                 r.regionfacilitator, 
@@ -259,32 +265,40 @@
             WHERE 
             	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
         </cfquery>
-                        <cfif qCheckPHP.recordcount>
-            <cfset email_to = 'luke@phpusa.com'>
-        <cfelseif qGetEmailInfo.email EQ ''>
+
+        <cfif qGetEmailInfo.email EQ ''>
             <cfset email_to = 'support@student-management.com'>
         <cfelse>	
             <cfset email_to = '#qGetEmailInfo.email#'>
         </cfif>
         <cfoutput>
            <cfsavecontent variable="email_message">
-        	Dear #qGetEmailInfo.ufirstname# #qGetEmailInfo.ulastname#,<br><br>
-        	This e-mail is just to let you know new or updated flight information for the student 
-            #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#) has been recorded in EXITS by #qGetEmailInfo.businessname#.<br><br>
+           
+<cfif FORM.ar_update eq 'update'><strong>ARRIVAL INFORMATION HAS CHANGED</strong><br /></cfif>
+<cfif FORM.dp_update eq 'update'><strong>DEPARTURE INFORMATION HAS CHANGED</strong><Br /></cfif>
+
+What: Flight Information<BR />
+Student: #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#)<Br />
+Submitted By: #qGetEmailInfo.businessname#.<br><br>
+Please click <a href="http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetEmailInfo.uniqueid#">here</a> then click on Flight Information to see the student's flight information.<br><br>
+
             Please click <a href="http://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentid=#qGetEmailInfo.studentid#">here</a>
             to see the student's flight information.<br><br>
         
             Sincerely,<br>
             EXITS Flight Info<br><br>
         </cfsavecontent>
-        
+             
       
                     
 		<!--- send email --->
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
             <cfinvokeargument name="email_to" value="#email_to#">
+         <Cfif form.dp_update eq 'update' or form.ar_update eq 'update'>
+            <cfinvokeargument name="email_subject" value="UPDATED Flight Information for #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (#qGetEmailInfo.studentid#)">
+            <cfelse>
             <cfinvokeargument name="email_subject" value="Flight Information for #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (#qGetEmailInfo.studentid#)">
-            <cfinvokeargument name="email_message" value="#email_message#">
+            </Cfif><cfinvokeargument name="email_message" value="#email_message#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
         </cfinvoke>
       

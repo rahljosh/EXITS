@@ -4,20 +4,25 @@
 	<Cfquery name="current_students_status" datasource="mysql">
 		SELECT DISTINCT s.firstname, s.studentid, s.intrep, s.familylastname, s.uniqueid, s.host_fam_approved, 
 			p.programname, p.startdate, p.enddate, p.type,
+            <!----
 			h.familylastname, h.fatherlastname, h.motherlastname, h.state,
+			---->
 			finfo.studentid as stu_flight, finfo.flight_type
 		FROM php_students_in_program psip
 		LEFT JOIN smg_students s on s.studentid = psip.studentid
 		INNER JOIN smg_programs p ON s.programid = p.programid
-		INNER JOIN smg_hosts h ON s.hostid = h.hostid
+
 		LEFT JOIN smg_flight_info finfo ON s.studentid = finfo.studentid
 		WHERE s.intrep = '#client.userid#'
 			AND psip.active = 1
 			AND psip.companyid != 0
-			AND psip.hostid != '0'
-			AND s.host_fam_approved <= 4
-			AND psip.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')	
+		
+			
+			AND psip.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')
+            
 	</Cfquery>
+    
+ 
 <cfif client.userid eq 20 or client.userid eq 21 or client.userid eq 28 or client.userid eq 109 or client.userid eq 115 or client.userid eq 628 or client.userid eq 701 or client.userid eq 6584 or client.userid eq 7199 or client.userid eq 7502 or client.userid eq 8913 or client.userid eq 9106 or client.userid eq 11480 or client.userid eq 11565  or client.userid eq 12038 or client.userid eq 12201>
 	<br>
 		<table width=100%>
