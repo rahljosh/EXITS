@@ -146,6 +146,19 @@ is this used?
 	WHERE programid = '#get_student_unqid.programid#'
 </cfquery>
 
+<cfquery name="qInsuranceInfo" datasource="mysql">
+    SELECT
+        startDate,
+        endDate
+    FROM 
+        php_insurance_batch
+    WHERE
+        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_unqid.studentID#">
+    AND	
+        assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_unqid.assignedID#">
+    AND
+        type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">    
+</cfquery>
 
 <!---- Header Table ---->
 <h2>&nbsp;&nbsp;&nbsp;&nbsp;S t u d e n t &nbsp;&nbsp;&nbsp;  I n f o r m a t i o n</h2>
@@ -268,7 +281,7 @@ is this used?
 				<a href="" onClick="javascript: win=window.open('student/evaluations.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=320, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Evaluations / Grades</a> 
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?unqid=#get_student_unqid.uniqueid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
 				<a href="" onClick="javascript: win=window.open('http://www.student-management.com/nsmg/virtualfolder/list_vfolder.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>						
-				<a href="" onClick="javascript: win=window.open('student/flight_info.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=500, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
+				<a href="" onClick="javascript: win=window.open('student/flight_info.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
 				<a href="" onClick="javascript: win=window.open('student/missing_documents.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
 				<a href="" onClick="javascript: win=window.open('forms/notes.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Notes</a> 				
 				<!--- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentid=#get_student_unqid.studentid#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Rep. Payments</a>  --->
@@ -393,30 +406,18 @@ is this used?
 					</td>
 				</tr>
 				<tr>
-					<td><Cfif insurancedate is ''><input type="checkbox" name="insured_date" disabled><Cfelse><input type="checkbox" name="insured_date" checked disabled></cfif></td>
+					<td><input type="checkbox" name="insured_date" disabled <Cfif qInsuranceInfo.recordcount> checked </cfif> ></td>
 					<td>Insured Date :</td>
 					<td>
-						<cfif int_Agent.php_insurance_typeid EQ '1'> 
-						n/a
+						<cfif int_Agent.php_insurance_typeid EQ 1> 
+                            n/a
 						<cfelse>
-							
-							<cfquery name="ins_info" datasource="mysql">
-								select distinct startdate 
-								from smg_insurance_batch
-								where studentid = #studentid#
-							</cfquery>
-							<cfif ins_info.recordcount eq 0>
-							not insured yet.
+							<cfif qInsuranceInfo.recordcount>
+                                From #DateFormat(qInsuranceInfo.startDate, 'mm/dd/yyyy')# To #DateFormat(qInsuranceInfo.endDate, 'mm/dd/yyyy')#
 							<cfelse>
-							#DateFormat(ins_info.startdate, 'mm/dd/yyyy')#
+								not insured yet.
 							</cfif>
 						</cfif>
-					<!----<cfif int_Agent.php_insurance_typeid EQ '1'> n/a
-						<cfelseif int_Agent.php_insurance_typeid GT '1' AND insurancedate EQ ''> 
-							not insured yet.
-						<cfelse> 
-							#DateFormat(insurancedate, 'mm/dd/yyyy')#
-						</cfif>---->
 					</td>
 				</tr>
 				<tr>
