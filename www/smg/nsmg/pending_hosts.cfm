@@ -231,7 +231,7 @@ div.scroll {
             <td><a class=nav_bar href="" onClick="javascript: win=window.open('forms/place_menu.cfm?studentid=#studentid#', 'Settings', 'height=550, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"> #fatherfirstname# <Cfif fatherfirstname is '' or motherfirstname is ''><cfelse>&</Cfif> #motherfirstname#</td>
     </tr>
     <tr>
-        <td>&nbsp;</td>
+        <td></td>
     </tr>
 </cfoutput>
 </table>

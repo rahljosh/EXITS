@@ -22,7 +22,35 @@
     <cfparam name="FORM.startDate" default="">
 	
     <cfscript>
+		// Create Structure to store errors
+		Errors = StructNew();
+		// Create Array to store error messages
+		Errors.Messages = ArrayNew(1);
+	
+		// FORM Validation
+		if ( FORM.programID EQ 0 ) {
+			ArrayAppend(Errors.Messages, "Please select at least one program");
+		}
+
+		if ( FORM.policyID EQ 0 ) {
+			ArrayAppend(Errors.Messages, "Please select a policy type");
+		}
+
+		if ( FORM.noFlight AND NOT IsDate(FORM.startDate) ) {
+			ArrayAppend(Errors.Messages, "Please enter a valid start date");
+		}
 		
+		// Display Errors
+		if ( ArrayLen(Errors.Messages) ) {
+			
+			WriteOutput('Review the following: <br />');
+			
+			For (i=1;i LTE ArrayLen(Errors.Messages); i=i+1)
+				WriteOutput(Errors.Messages[i]&'<BR>');
+			
+			abort;
+		}
+
 		// Get Students with flight information
 		if ( NOT VAL(FORM.noFlight) ) {
 		
@@ -45,24 +73,15 @@
 	
 		// Set XLS File Name
 		XLSFileName = '#companyShort#_#policyName#_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
+
+		// No Records
+		if ( NOT VAL(qGetStudents.recordCount) ) {
+			WriteOutput('There are no students that match your criteria at this time. <br />');
+			abort;
+		}
 	</cfscript>
  
 </cfsilent>	
-
-<cfif NOT VAL(FORM.programID)>
-	Please select at least one program.
-	<cfabort>
-</cfif>
-
-<cfif NOT VAL(FORM.policyID)>
-	Please select a policy type.
-	<cfabort>
-</cfif>
-
-<cfif NOT VAL(qGetStudents.recordCount)>
-	There are no students that match your criteria at this time.
-	<cfabort>
-</cfif>
 
 <!--- use cfsetting to block output of HTML outside of cfoutput tags --->
 <cfsetting enablecfoutputonly="Yes">
