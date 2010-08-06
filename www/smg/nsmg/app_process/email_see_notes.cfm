@@ -80,7 +80,7 @@
 	<cfabort>
 </cfif>
 
-<CFMAIL SUBJECT="Missing Documents Notification for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)"
+<CFMAIL SUBJECT="On Hold Notification for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)"
 	TO="#get_int_agent.email#"
 	bcc="#get_current_user.email#"
 FROM="""#companyshort.companyshort# Support"" <#client.support_email#>"
@@ -137,7 +137,7 @@ FROM="""#companyshort.companyshort# Support"" <#client.support_email#>"
 	</table><br>
 	
 	<table width="650" border="0" bgcolor="FFFFFF" cellpadding="3">
-		<tr><td colspan="2"><span class="application_section_header"><font size=+1><b><u>MISSING DOCUMENTS NOTIFICATION</u></b></font></span><br><br><br></td></tr>
+		<tr><td colspan="2"><span class="application_section_header"><font size=+1><b><u>ON HOLD NOTIFICATION</u></b></font></span><br><br><br></td></tr>
 		<tr>
 			<td width="10%">TO:</td><td>#get_int_agent.businessname#</td>
 		</tr>
@@ -179,14 +179,14 @@ FROM="""#companyshort.companyshort# Support"" <#client.support_email#>"
 <cfif NOT IsDefined('url.studentid')>
 	<script language="JavaScript">
 	<!-- 
-	alert("This student application is on hold. \n The Missing Documents Notification has been emailed to #get_int_agent.businessname# at #get_int_agent.email#. \n A copy has been sent to #get_current_user.email#.");
+	alert("This student application is on hold. \n The On Hold Notification has been emailed to #get_int_agent.businessname# at #get_int_agent.email#. \n A copy has been sent to #get_current_user.email#.");
 		location.replace("index.cfm?curdoc=app_process/apps_received&status=hold");
 	-->
 	</script>
 <cfelse>
 	<script language="JavaScript">
 	<!-- 
-	alert("The Missing Documents Notification has been emailed to #get_int_agent.businessname# at #get_int_agent.email#. \n A copy has been sent to #get_current_user.email#.");
+	alert("The On Hold Notification has been emailed to #get_int_agent.businessname# at #get_int_agent.email#. \n A copy has been sent to #get_current_user.email#.");
 		location.replace("index.cfm?curdoc=app_process/app_onhold_info&studentid=#url.studentid#");
 	-->
 	</script>
