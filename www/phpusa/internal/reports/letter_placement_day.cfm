@@ -123,14 +123,14 @@
 				<cfif get_hf.fatherfirstname NEQ ''>
 					<tr>
 						<td width="100">Host Father : </td>
-						<td>#get_hf.fatherfirstname# #get_hf.fatherlastname# <cfif get_hf.fatherdob NEQ ''>, (#DateDiff('yyyy', get_hf.fatherdob, now())#)</cfif></td>
+						<td>#get_hf.fatherfirstname# #get_hf.fatherlastname# <cfif LEN(get_hf.fatherbirth)>(#Year(now())-get_hf.fatherbirth#)</cfif></td>
 					</tr>
 					<tr><td>Occupation : </td><td>#get_hf.fatherworktype#</td></tr>
 				</cfif>
 				<cfif get_hf.motherfirstname NEQ ''>
 					<tr>
 						<td width="100">Host Mother : </td>
-						<td>#get_hf.motherfirstname# #get_hf.motherlastname# <cfif get_hf.motherdob NEQ ''>,(#DateDiff('yyyy', get_hf.motherdob, now())#)</cfif></td>
+						<td>#get_hf.motherfirstname# #get_hf.motherlastname# <cfif LEN(get_hf.motherBirth)>(#Year(now())-get_hf.motherBirth#)</cfif></td>
 					</tr>
 					<tr><td>Occupation : </td><td>#get_hf.motherworktype#</td></tr>
 				</cfif>
