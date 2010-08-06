@@ -7,7 +7,11 @@
         companyshort_nocolor,
         sevis_userid,
         iap_auth,
-        team_id
+        team_id,
+        address,
+        city,
+        state,
+        zip
     FROM 
         smg_companies
     WHERE 
