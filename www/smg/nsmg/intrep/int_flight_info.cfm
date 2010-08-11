@@ -14,8 +14,9 @@
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill extra output --->
+<!----
 <cfsilent>
-
+---->
     
     <!--- Param Variables --->
 	<cftry>
@@ -38,13 +39,24 @@
     <cfparam name="FORM.ar_update" default="">
     <cfparam name="FORM.dp_update" default="">
     <cfparam name="FORM.flight_notes" default="">
-    <
+
     
 
 	<!--- Start of intrep\int_flight_info.cfm --->
     <cfparam name="URL.unqid" default="">
     <!--- End of intrep\int_flight_info.cfm --->
 
+	<cfquery name="qCheckPHP" datasource="MySql">
+            SELECT 
+            	studentid, companyid
+            FROM 
+            	php_students_in_program
+            WHERE 
+            	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
+        </cfquery>
+     
+
+ 
 	<!--- FORM SUBMITTED --->
 	<cfif VAL(FORM.submitted)>
 		
@@ -280,9 +292,8 @@ Please click <a href="http://www.phpusa.com/internal/index.cfm?curdoc=student/st
 What: Flight Information<BR />
 Student: #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#)<Br />
 Submitted By: #qGetEmailInfo.businessname#.<br><br>
-Please click <a href="http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetEmailInfo.uniqueid#">here</a> then click on Flight Information to see the student's flight information.<br><br>
 
-            Please click <a href="http://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentid=#qGetEmailInfo.studentid#">here</a>
+            Please click <a href="http://#CLIENT.exits_url#/nsmg/forms/flight_info.cfm?unqid=#qGetEmailInfo.uniqueid#">here</a>
             to see the student's flight information.<br><br>
         
             Sincerely,<br>
@@ -382,9 +393,9 @@ Please click <a href="http://www.phpusa.com/internal/index.cfm?curdoc=student/st
 		// Get Departure
 		qGetDeparture = APPCFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="departure");
 	</cfscript>
-
+<!----
 </cfsilent>
-
+---->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

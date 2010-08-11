@@ -12,7 +12,14 @@
 				09/29/2005 - revised by Josh Rahl
 
 ----- ------------------------------------------------------------------------- --->
-
+<cfif isDefined('url.unqid')>
+<cfquery name="getStudentID" datasource="#application.dsn#">
+select studentid 
+from smg_students
+where uniqueid = '#url.unqid#'
+</cfquery>
+<cfset studentid = #getStudentID.studentid#>
+</cfif>
 <!--- Kill extra output --->
 <cfsilent>
 	

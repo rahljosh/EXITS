@@ -477,11 +477,14 @@ body {
 }
 #wrapper {
 	background-color: #FFF;
-	margin: 0px;
 	padding: 0px;
 	text-align: left;
 	width: 1024px;
 	height: 100%;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
 }
 .toprightlinks1 {
 	text-align: right;
@@ -589,6 +592,27 @@ body {
 }
 .toprightlinks5:hover{
 	background-image: url(../images/MOFAQ.png);
+}
+.toprightlinks6 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(../images/store.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks6:hover{
+	background-image: url(../images/MOStore.png);
 }
 #footer {
 	font-family: Arial, Helvetica, sans-serif;

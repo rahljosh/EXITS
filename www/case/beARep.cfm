@@ -62,7 +62,7 @@ a:active {
 <div id="wrapper">
   <div id="header">
     <div id="topBullets">
-      <p><a href= "https://www.google.com/a/case-usa.org/ServiceLogin?service=mail&passive=true&rm=false&continue=http%3A%2F%2Fmail.google.com%2Fa%2Fcase-usa.org%2F&bsv=zpwhtygjntrz&ltmpl=default&ltmplcache=2" class="toprightlinks2"></a><a href= "headquarterNews.cfm" class="toprightlinks3"></a><a href= "../contact.cfm"class="toprightlinks4"></a><a href= "../FAQ.cfm"class="toprightlinks5"></a></p>
+      <p><a href= "https://www.google.com/a/case-usa.org/ServiceLogin?service=mail&passive=true&rm=false&continue=http%3A%2F%2Fmail.google.com%2Fa%2Fcase-usa.org%2F&bsv=zpwhtygjntrz&ltmpl=default&ltmplcache=2" class="toprightlinks2"></a><a href= "headquarterNews.cfm" class="toprightlinks3"></a><a href= "../contact.cfm"class="toprightlinks4"></a><a href= "../FAQ.cfm"class="toprightlinks5"></a><a href= "http://www.case-usa.org/Store/store.cfm"class="toprightlinks6"></a></p>
     </div><!-- end topBullets -->
   </div><!-- end header -->
   <div id="main-nav"><a href="index.cfm" class="home1"></a><a href="aboutCase.cfm" class= "about2"></a> <a href="hostFamilies.cfm" class="hostfam3"></a><a href="students.cfm" class="students4"></a><a href="representatives.cfm" class="rep5"></a><a href="contact.cfm" class="contact6"></a> </div>
@@ -70,7 +70,9 @@ a:active {
   <div id= "mainbody">
     <div id="sidebar">
       <div id="AccountLogin">
-        <div id="loginInfo"><span class="Login">USER ID</span> <form method="post" action=" http://www.case-usa.org/internal/loginprocess.cfm">
+        <div id="loginInfo">
+        <cfif isDefined('url.jakegyllenhaal')>
+        <span class="Login">USER ID</span> <form method="post" action=" http://www.case-usa.org/internal/loginprocess.cfm">
           <input type="text" name="username" label="user id" message="A username is required to login." required="yes" />
         <br />
         <form id="form1" name="form1" method="post" action="">
@@ -80,8 +82,11 @@ a:active {
           <input name="Submit" type="submit" value="Login" />
           <br />
         </form>
-        <div class="LoginBut"><a href="http://jan.case-usa.org/"><img src="images/JanStudents.png" width="137" height="20" border=0 /></a>
+        <cfelse>
+        <div class="LoginBut"><a href="http://case.exitsapplication.com/"><img src="images/login.png"  border=0 /></a><br /><Br />
+        
         </div>
+        </cfif>
         <!-- end LoginBut -->
         </div><!-- end LoginInfo -->
       </div><!-- end AccountLogin -->
@@ -98,10 +103,7 @@ a:active {
            <ul>
            <li class="List"><a href="beARep.cfm">Become a Rep</a></li></ul>
       <div id="sidebarEnd"></div>
-      <div id="storeTag"></div>
-           <ul><li class="List"><a href="Store/store.cfm">Start Shopping</a></li></ul>
-      <div id="sidebarEnd2"></div>
-    </div><!-- end sidebar -->
+</div><!-- end sidebar -->
     <!-- InstanceBeginEditable name="MainContent" -->
 
 <!----Query to get states and id's---->
@@ -179,7 +181,7 @@ from smg_states
     </div><!-- end mainbody -->
     <!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />
 <div id="footer"><span class="footertext">264 Midland Avenue Unit 5&nbsp;&nbsp; I  &nbsp;&nbsp;Saddle Brook, NJ 07663 &nbsp;&nbsp; I  &nbsp;&nbsp; (201) 773-8299  &nbsp;&nbsp;  I  &nbsp;&nbsp;  (800) 458-8336<br />
-  <span class="copyright">U.S. Department of State – Toll free: (866) 283-9090 – jvisas@state.gov</span></span></div><!-- end footer -->
+  <span class="copyright">U.S. Department of State &ndash; Toll free: (866) 283-9090 &ndash; jvisas@state.gov</span></span></div><!-- end footer -->
   </div><!-- end #wrapper -->
 </body>
 <!-- InstanceEnd --></html>
