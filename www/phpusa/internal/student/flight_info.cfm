@@ -45,7 +45,7 @@
 	FROM smg_flight_info
 	WHERE studentid = '#get_student_unqid.studentid#' 
 		AND flight_type = 'arrival'
-		AND companyid = '#client.companyid#'
+		
 	ORDER BY flightid <!--- dep_date, dep_time --->
 </cfquery>
 
@@ -55,7 +55,7 @@
 	FROM smg_flight_info
 	WHERE studentid = '#get_student_unqid.studentid#' 
 	AND flight_type = 'departure'
-	AND companyid = '#client.companyid#'
+	
 	ORDER BY flightid <!--- dep_date, dep_time --->
 </cfquery>
 

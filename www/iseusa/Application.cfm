@@ -35,7 +35,7 @@
 		AppEmail.support = 'support@iseusa.com';
 		AppEmail.finance = 'marcel@iseusa.com';
 		AppEmail.errors = 'errors@student-management.com';
-		AppEmail.hostLead = 'bob@iseusa.com;lamonica@iseusa.com;bhause@iseusa.com';
+		AppEmail.hostLead = 'bob@iseusa.com;lamonica@iseusa.com';
 
 
 		APPLICATION.Constants = StructNew();

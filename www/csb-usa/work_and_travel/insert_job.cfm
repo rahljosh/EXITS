@@ -1,4 +1,4 @@
-<cfset currentDirectory = "/var/www/html/student-management/nsmg/uploadedfiles/extra_jobs/">
+<cfset currentDirectory = "c:\websites\student-management\nsmg\uploadedfiles\extra_jobs\">
 
 <!--- Uploading FILE --->
 <cfoutput>

@@ -487,6 +487,7 @@
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qStudentInfo.studentID#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
 				<a href="" onClick="javascript: win=window.open('forms/flight_info.cfm', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
 				<a href="" onClick="javascript: win=window.open('forms/double_place_docs.cfm', 'Settings', 'height=380, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Double Place Docs</a>
+                <a href="" onClick="javascript: win=window.open('forms/ssp.cfm?studentid=#client.studentid#', 'Settings', 'height=450, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Services Project</a>
 				<!---- GLOBAL OR COMPLIANCE USERS ---->
 				<cfif CLIENT.usertype EQ 1 OR qUserCompliance.compliance EQ 1>
 				<a href="" onClick="javascript: win=window.open('compliance/student_checklist.cfm?unqid=#qStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Compliance</a>

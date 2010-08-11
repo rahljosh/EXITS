@@ -45,7 +45,7 @@
 			arrival_aircode, arrival_time, overnight, flight_type
 	FROM smg_flight_info
 	WHERE studentid = '#get_student_unqid.studentid#' 
-		AND companyid = '#client.companyid#'
+	
 		AND flight_type = 'arrival'
 	ORDER BY flightid
 </cfquery>
@@ -55,7 +55,7 @@
 			arrival_aircode, arrival_time, overnight, flight_type
 	FROM smg_flight_info
 	WHERE studentid = '#get_student_unqid.studentid#' 
-		AND companyid = '#client.companyid#'
+	
 		AND flight_type = 'departure'
 	ORDER BY flightid
 </cfquery>
