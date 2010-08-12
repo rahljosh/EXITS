@@ -55,6 +55,28 @@ function CalculateTotal() {
 }
 //-->
 </script> 
+
+<!----Disable Form Field---->
+<script type="text/javascript">
+function findselected() { 
+   if (document.payment.credits.value == '0') {
+      
+	  document.payment.ref.readOnly=false;
+	  document.payment.payment_method.readOnly=false;
+	  document.payment.payment_amount.readOnly=false;
+
+//      return false;  // not sure this line is needed
+   } else {
+      document.payment.ref.readOnly=true;
+	  document.payment.ref.value= 'On Record';
+	  document.payment.date_received.value= '08/08/08';
+	  document.payment.payment_method.value= '5';
+	   document.payment.payment_method.readOnly=true;
+	   document.payment.payment_amount.readOnly=true;
+//      return false;  // not sure this line is needed
+   }
+} 
+</script>
 </head>
 
 <body>
@@ -72,12 +94,18 @@ function CalculateTotal() {
 	ORDER BY u.businessname, familylastname
 </cfquery>
 
+<!----Get Credits---->
+
 <cfif isDefined('url.intrep')>
 	<cfset intrep = #url.intrep#>
 <cfelse>
 	<cfset intrep = 0>
 </cfif>
-	
+<cfquery name="availCredits" datasource="#application.dsn#">
+	select *
+	from egom_credits
+	where intrep = #intrep#
+</cfquery>
 <cfoutput>
 
 <br />
@@ -147,6 +175,9 @@ function CalculateTotal() {
 							</select>
 						</td>
 					</tr>
+                    <Tr>
+                    	<td colspan=4><a href="" onClick="javascript: win=window.open('invoice/addCredit.cfm?intrep=#intrep#', 'Settings', 'height=300, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Add Credit</a></td>
+                    </Tr>
 					<CFIF isDefined('URL.INVOICE')>
 						<cfquery name="charges" datasource="mysql">
 							SELECT inv.invoiceid, inv.intrepid, inv.date,
@@ -267,9 +298,20 @@ function CalculateTotal() {
 					<tr>
 						<td>
 							<table border="0" cellpadding="3" cellspacing="0" width="100%">
-								<tr><th colspan="6" bgcolor="##C2D1EF">Payment Details</th></tr>
+								<tr><th colspan="8" bgcolor="##C2D1EF">Payment Details</th></tr>
 								<tr>
-									<td>Payment Method:</td>
+									 <td>Available Credits:</td>
+                                    <td>
+                           			
+                                    <select name="credits" onChange="findselected()">
+                                    	<option value="0"><cfif availCredits.recordcount eq 0>Non Available</cfif></option>
+                                        <cfloop query="availCredits">
+                                        <option value="#origPayID#">#LSCurrencyFormat(amount, 'local')#</option>
+                                        </cfloop>
+                                        </select>
+                                   
+                                       </td>
+                                    <td>Payment Method:</td>
 									<td>
 										<cfquery name="payment_methods" datasource="mysql">
 											SELECT *
@@ -278,15 +320,18 @@ function CalculateTotal() {
                                             	paymentType DESC			
 										</cfquery>
 										<select name="payment_method">
+                                        <option value="0"></option>
 										<cfloop query="payment_methods">
 										<option value="#paymenttypeid#">#paymenttype#</option>
 										</cfloop>
 										</select>
 									</td>
+                                   
 									<td>Reference:</td>
 									<td><cfinput type="text" name="ref" message="You must suplly a reference number. Please use check or wire transfer confermation number." validateat="onSubmit" required="yes" size=10></td>
 									<td>Amount:</td>
 									<td><cfinput type="text" name="payment_amount" size=10 value="#balance#"></td>
+                                    
 								</tr>
 								<tr>
 									<td>Date Received:</td><td><input type="text" name="date_received" value="" class="date-pick"/></td>

@@ -6,6 +6,17 @@
 </head>
 
 <body>
+<cfif form.credits neq 0>
+
+
+<Cfquery name="credit_amount" datasource="#application.dsn#">
+select *
+from egom_credits
+where origPayId = '#form.credits#'
+
+</Cfquery>
+
+</cfif>
 
 <cftransaction action="begin" isolation="serializable"> 
 
@@ -18,19 +29,27 @@
 </cfloop>
 
 <!--- INCLUDE PAYMENT --->
-<cfif totalcharges GT 0>
-	<cfquery name="payment_Details" datasource="MySQL">
-		INSERT INTO egom_payments 
-			(date_received, date_applied, transaction, paymenttypeid, userid, intrepid, total_amount, description, companyid)
-		VALUES 
-			(#CreateODBCDate(form.date_received)#, #CreateODBCDateTime(now())#, '#form.ref#', '#form.payment_method#', #client.userid#, #form.intrep#, '#form.payment_amount#', '#form.memo#', #client.companyid#)
-	</cfquery>
-	<cfquery name="paymentid" datasource="mysql">
-		SELECT max(paymentid) as payid 
-		FROM egom_payments
-	</cfquery>
-</cfif>
 
+
+<!----If paying with a credit, we don't want to add a new pay ref, since we will just be referencing the initial pay ref passed in via the credit---->
+<cfif form.credits eq 0>
+	<cfif totalcharges GT 0>
+        <cfquery name="payment_Details" datasource="#application.dsn#">
+            INSERT INTO egom_payments 
+                (date_received, date_applied, transaction, paymenttypeid, userid, intrepid, total_amount, description, companyid)
+            VALUES 
+                (#CreateODBCDate(form.date_received)#, #CreateODBCDateTime(now())#, '#form.ref#', '#form.payment_method#', #client.userid#, #form.intrep#, '#form.payment_amount#', '#form.memo#', #client.companyid#)
+        </cfquery>
+        <cfquery name="paymentid" datasource="#application.dsn#">
+            SELECT max(paymentid) as payid 
+            FROM egom_payments
+        </cfquery>
+    </cfif>
+<cfelse>
+	<cfset paymentid.payid = #form.credits#>
+</cfif> 
+
+<Cfset rem_credit = 0>
 <!--- INCLUDE CHARGES --->
 <cfloop list="#form.chargeid#" index="x">
 	<cfif #Evaluate("FORM.amount_" & x)# GT 0>
@@ -57,9 +76,39 @@
 			SET full_paid = 1
 			WHERE chargeid = '#x#'
 		</cfquery>
-	</cfif>
+     <cfelseif check_full_payment_due.amount_charged LT check_full_payment_paid.amount_paid>
+     	<cfquery name="mark_paid" datasource="mysql">
+			UPDATE egom_charges
+			SET full_paid = 1
+			WHERE chargeid = '#x#'
+		</cfquery>
+   </cfif>
+
 </cfloop>
 </cftransaction>
+
+<Cfoutput>
+
+</Cfoutput>
+<cfif form.credits neq 0>
+
+<cfset final_remaining_credit = #credit_amount.amount# - #form.payment_amount#>
+
+<cfif final_remaining_credit eq 0>
+	<cfquery datasource="#application.dsn#">
+    delete
+    from egom_credits 
+    where origPayID = '#form.credits#' 
+   
+    </cfquery>
+<cfelse>
+	<cfquery datasource="#application.dsn#">
+    update egom_credits set amount = '#final_remaining_credit#'
+    where origPayID = '#form.credits#' 
+    
+    </cfquery>
+</cfif>
+</cfif>
 
 <cfoutput>
 
