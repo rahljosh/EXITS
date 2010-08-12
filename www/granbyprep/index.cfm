@@ -16,23 +16,22 @@
 
 <div id="container">
   <div id="header">
-  <div class="events">Upcoming Events</div>
-  <div class="announcement">We are currently finalizing the changes to our site. <br /><br /> If you have any questions please click below
-    <br /><br /><!-- BEGIN ProvideSupport.com Graphics Chat Button Code -->
-<div id="ciQmQ6" style="z-index:100;position:absolute"></div><div id="scQmQ6" style="display:inline"></div><div id="sdQmQ6" style="display:none"></div><script type="text/javascript">var seQmQ6=document.createElement("script");seQmQ6.type="text/javascript";var seQmQ6s=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/granbyprep/safe-standard.js?ps_h=QmQ6&ps_t="+new Date().getTime();setTimeout("seQmQ6.src=seQmQ6s;document.getElementById('sdQmQ6').appendChild(seQmQ6)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=granbyprep">Live Support Chat</a></div></noscript>
-<!-- END ProvideSupport.com Graphics Chat Button Code --></div>
+  <div class="events">NEWS</div>
+  <div class="announcement">We are currently finalizing the changes to our site. <br /><br /> If you have any questions please email us at <br />
+  info@granbyprep.com <br /><br /></div>
   
-  <!-- end #header --></div>
+  <!-- end header --></div>
    <div id="menu">
 <cfinclude template ="menu.cfm">
   </div>
   <div class="clearfix"></div>
 <div id="mainIndex">
-	<!-- end #mainContent --></div>
+	<!-- end mainIndex --></div>
   <div id="footerIndex">
-    <div class="info"><a href="/admissions"><img src="images/apply.png" width="78" height="21" alt="apply" border="0" /></a><img src="images/spacer.png" width="78" height="7" /><img src="images/request.png" width="78" height="20" alt="request" /></div>
-  <!-- end #footer --></div>
-<!-- end #container --></div>
+    <div class="info"><a href="/admissions"><img src="images/apply.png" width="78" height="21" alt="apply" border="0" /></a><img src="images/spacer.png" width="78" height="7" /><a href="request_Info.cfm"><img src="images/request.png" width="78" height="20" alt="request" border="0" /></a></div>
+    <div class="infoLeft">International EC, LLC</div>
+<!-- end footer --></div>
+<!-- end container --></div>
 <script type="text/javascript">
 <!--
 var MenuBar1 = new Spry.Widget.MenuBar("MenuBar1", {imgDown:"SpryAssets/SpryMenuBarDownHover.gif", imgRight:"SpryAssets/SpryMenuBarRightHover.gif"});

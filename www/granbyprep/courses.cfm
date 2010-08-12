@@ -122,13 +122,12 @@ a:visited {
 <div id="mainContent">
   <div class="photo"><img src="images/courses.png" width="303" height="161" /></div>
     <h2>Courses Offered </h2>
-<ul><li>AP classes offered<br />
+<ul><li>Adavance Placement classes offered<br />
  <li> SAT and TOEFL Prep Courses<br />
  <li> College Prep Courses<br />
-  <li>ESL available<br />
-  <li>Pre-September English Courses
-    <br />
-    available in summer of 2010</li></ul>
+  <li>English as a Second Language (ESL) courses available<br />
+  <li>ESL Summer Courses (2011)</li>
+</ul>
     <p></p>
   <!-- end #mainContent --></div>
   <div id="footer">
