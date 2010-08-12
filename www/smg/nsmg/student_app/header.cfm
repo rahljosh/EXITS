@@ -3,6 +3,7 @@
 
 	<!--- Param Variables --->
     <cfparam name="URL.userType" default="0">
+    <cfparam name="CLIENT.companyID" default="0">
     <!--- 	
 		03/25/10 - Online App Pages check for IsDefined('URL.unqID') and they all include the same query.
 		Update that later on so the same query is not included twice. Make sure the print app works.

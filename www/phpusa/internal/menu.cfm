@@ -89,6 +89,7 @@
 
       <li><a href="#">Tools</a>
         <ul>
+        	<li><a href="index.cfm?curdoc=reports/manager_reports">Flight Reports</a></li>
 		  <cfif CLIENT.usertype LTE 3>
               <li><a href="index.cfm?curdoc=invoice/intl_rep_insurance">Intl. Rep Insurance Policy</a></li>
           </cfif>
