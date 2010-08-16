@@ -53,7 +53,8 @@
     	s.sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
     AND 
     	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
-
+	AND	
+    	s.ds2019_no LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="N%">
 	<cfif IsDefined('form.pre_ayp')>
 	    AND 
         	(
