@@ -1,160 +1,79 @@
 <!--- Kill extra output --->
 <cfsilent>
 
-	<cfsetting requesttimeout="99999">
+	<cfsetting requesttimeout="9999">
 
     <!--- Param FORM Variables --->
-    <cfparam name="FORM.submitted" default="0">
-	<cfparam name="FORM.print" default="">
-	<cfparam name="FORM.program" default="">
+	<cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.hostCompanyID" default="0">
+	<cfparam name="FORM.printOption" default="">
 
-    <!--- Param Variables --->
-    <cfparam name="intoPlacement" default="0">
-    <cfparam name="selfPlacement" default="0">
-    <cfparam name="grandTotal" default="0">
-
-    <cfquery name="get_program" datasource="MySql">
+    <cfquery name="qGetProgramList" datasource="MySql">
         SELECT 
-        	programname, 
-            programid
+        	programID,
+            programname             
         FROM 
         	smg_programs 
         WHERE 
         	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     </cfquery>
 
-    <cfquery name="get_host_company" datasource="MySql">
+    <cfquery name="qGetHostCompanyList" datasource="MySql">
         SELECT 
-        	extra_hostcompany.hostcompanyID, 
-            extra_hostcompany.name, 
-            extra_hostcompany.phone, 
-            extra_hostcompany.supervisor, 
-            extra_hostcompany.city, 
-            extra_hostcompany.state, 
-            extra_hostcompany.business_typeid, 
-            extra_typebusiness.business_type as typebusiness, 
-            smg_states.state as s
+        	hostcompanyID, 
+            name 
         FROM 
-        	extra_hostcompany
-        LEFT JOIN 
-        	smg_states ON smg_states.id = extra_hostcompany.state
-        LEFT JOIN 
-        	extra_typebusiness ON extra_typebusiness.business_typeid = extra_hostcompany.business_typeid
+        	extra_hostcompany 
         WHERE         	
             companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         AND 
-        	extra_hostcompany.name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        ORDER BY 
+        	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+        <!---
+        AND
+        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        --->
+		ORDER BY 
         	name
     </cfquery>
 
-</cfsilent>
+    <!--- FORM submitted --->
+    <cfif LEN(FORM.printOption)>
 
-<script language="JavaScript" type="text/javascript"> 
-	<!-- Begin
-	function formHandler2(form){
-	var URL = document.formagent.agent.options[document.formagent.agent.selectedIndex].value;
-	window.location.href = URL;
-	}
-	// End -->
-</script>
-
-<cfoutput>
-
-<form action="index.cfm?curdoc=reports/students_hired_per_company_wt" method="post">
-    <input type="hidden" name="submitted" value="1" />
-
-    <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
-        <tr valign="middle" height="24">
-            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>&nbsp;Students hired per company</td>
-        </tr>
-        <tr valign="middle" height="24">
-            <td valign="middle" colspan=2>&nbsp;</td>
-        </tr>
-        <tr valign="middle">
-            <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
-            <td valign="middle">  
-                <select name="hostCompanyID" class="style1">
-                    <option value="ALL">---  All Host Companies  ---</option>
-                    <cfloop query="get_host_company">
-                    	<option value="#hostcompanyID#" <cfif IsDefined('FORM.hostCompanyID')><cfif get_host_company.hostcompanyID eq FORM.hostCompanyID> selected</cfif></cfif>> #get_host_company.name# </option>
-                    </cfloop>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td valign="middle" align="right" class="style1"><b>Program: </b></td><td>
-                <select name="program" class="style1">
-                    <option></option>
-                    <cfloop query="get_program">
-                    	<option value="#programid#" <cfif get_program.programid eq FORM.program> selected </cfif> >#programname#</option>
-                    </cfloop>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td align="right" class="style1"><b>Format: </b></td>
-            <td class="style1"> 
-                <input type="radio" class="style1" name="print" value=0 checked>  Onscreen (View Only) 
-                <input type="radio" name="print" value=1> Print (PDF)
-                <input type="radio" name="print" value=2> Excel (XLS)
-            </td>            
-        </tr>
-        <tr>
-            <td colspan=2 align="center"><br />
-                <input type="submit" value="Generate Report" class="style1" /><br />
-                <br />
-            </td>
-        </tr>
-    </table>
-
-</form>
-
-</cfoutput>
-
-<br /><br />
-
-<!-----Display Reports---->
-<cfif VAL(FORM.submitted)>
-
-	<cfif NOT LEN(FORM.hostCompanyID)>
-        <table width=99% cellpadding="4" cellspacing=0 align="center">
-            <tr>
-                <td align="center" colspan=10> 
-                    <span class="style1">Please select report criteria and click on generate report. </span><br />
-                </td>
-            </tr>                
-        </table>
-        
-        <cfabort>
-    </cfif>                    
-    
-    <!--- PDF --->
-	<cfif FORM.print eq 1>
-
-		<cfoutput>
-            <span class="style1"><center><b>Results are being generated...</b></center></span><br /><br /><br />
-            <meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/students_hired_per_company_wt_flashpaper&program=#FORM.program#&hostCompanyID=#FORM.hostCompanyID#&format=PDF">
-		</cfoutput>
-
-	<!--- Excel --->        	
-	<cfelseif FORM.print eq 2>
-		
-        <cfoutput>
-            <span class="style1"><center><b>Results are being generated...</b></center></span><br /><br /><br />
-            <meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/students_hired_per_company_wt_excel&program=#FORM.program#&hostCompanyID=#FORM.hostCompanyID#">
-        </cfoutput>
-    
-    <!--- On Screen --->    
-	<cfelse>
-	
-        <!--- Get All Host Companies Current Hosting Students --->
+        <!--- Get Host Companies Assigned to Candidates --->
         <cfquery name="qGetHostCompany" datasource="MySQL">
             SELECT 
-                company.hostCompanyID,
-                company.name,
+                ehc.hostCompanyID,
+                ehc.name
+            FROM 
+            	extra_hostcompany ehc    
+			INNER JOIN
+            	extra_candidates ec ON ec.hostCompanyID = ehc.hostCompanyID
+                	AND
+                    	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+					AND
+                    	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                    AND 
+                        ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+            WHERE 
+                1 = 1
+                <!--- 
+				ehc.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+				--->
+			<cfif VAL(FORM.hostcompanyID)> 
+                AND
+                    ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+            </cfif>
+       		GROUP BY
+            	ehc.hostCompanyID
+            ORDER BY
+            	ehc.name
+		</cfquery>
+		
+        <!--- Get All Candidates --->
+        <cfquery name="qGetAllCandidates" datasource="MySQL">
+            SELECT 
                 c.candidateID,
+                c.hostCompanyID,
                 c.firstname,             
                 c.lastname, 
                 c.sex, 
@@ -168,168 +87,325 @@
                 c.status,
                 u.businessname,
                 country.countryname
-            FROM 
-            	extra_hostcompany company    
-            INNER JOIN
-                extra_candidates c ON company.hostcompanyID = c.hostcompanyID
-            INNER JOIN
-                smg_programs p on p.programid = c.programid
+            FROM   
+                extra_candidates c
             INNER JOIN
                 smg_users u on u.userid = c.intrep
+            INNER JOIN
+            	extra_hostCompany ehc ON ehc.hostCompanyID = c.hostCompanyID
             LEFT JOIN 
                 smg_countrylist country ON country.countryid = c.home_country
             WHERE 
-                c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">                      
-            <cfif VAL(FORM.hostcompanyID)> 
+                c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">    
+            AND 
+                c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+            AND 
+                c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+           <cfif VAL(FORM.hostcompanyID)> 
                 AND
                     c.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
 			</cfif>                
-            AND 
-                c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">
-            AND 
-                c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
        		ORDER BY
-            	company.name
+                ehc.name,
+                c.candidateID
 		</cfquery>
 
-        <cfoutput query="qGetHostCompany" group="hostCompanyID">
-        
-            <cfquery name="qHiredStudents" dbtype="query">
-                SELECT 
-                    candidateID,
-                    firstname,             
-                    lastname, 
-                    sex, 
-                    dob,                
-                    email, 
-                    ssn, 
-                    ds2019,
-                    startdate, 
-                    enddate, 
-                    wat_placement, 
-                    businessname,
-                    countryname
-                FROM 
-                    qGetHostCompany 
-                WHERE 
-                    hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompany.hostcompanyID#">
-                AND 
-                    wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
-            </cfquery> 
+        <cffunction name="filterGetAllCandidates" hint="Gets total by Host Company">
+        	<cfargument name="placementType" default="" hint="Placement Type is not required">
+            <cfargument name="hostCompanyID" default="0" hint="hostCompanyID is not required">
             
-            <cfquery name="qSelfCandidate" dbtype="query">
-                SELECT 
-                    candidateID,
-                    firstname,             
-                    lastname, 
-                    sex, 
-                    dob,                
-                    email, 
-                    ssn, 
-                    ds2019,
-                    startdate, 
-                    enddate, 
-                    wat_placement, 
-                    businessname,
-                    countryname
-                FROM 
-                	qGetHostCompany
-                WHERE 
-                	hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompany.hostcompanyID#"> 
-                AND 
-                	wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+            <cfquery name="qFilterGetAllCandidates" dbtype="query">
+                SELECT
+                    *
+                FROM	
+                    qGetAllCandidates
+                WHERE
+                	1 = 1
+                    
+				<cfif VAL(ARGUMENTS.hostcompanyID)> 
+                    AND
+                        hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostcompanyID#">                               
+                </cfif>                
+                
+                <cfif ARGUMENTS.placementType NEQ 'All'>
+                    AND
+                        wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.placementType#">
+            	</cfif>
+                
+                ORDER BY 
+                    candidateID
             </cfquery>
             
-            <cfset totalPerAgent = qHiredStudents.recordCount + qSelfCandidate.recordCount>
-            <cfset intoPlacement = intoPlacement + qHiredStudents.recordCount>
-            <cfset selfPlacement = selfPlacement + qSelfCandidate.recordCount>
-            <cfset grandTotal = grandTotal + totalPerAgent>
-        
+            <cfreturn qFilterGetAllCandidates>
+        </cffunction>
+
+		<cfscript>
+			// Get Overall Results
+			totalCSBPlacements = filterGetAllCandidates(placementType='CSB-Placement').recordCount;
+		
+			totalSelfPlacements = filterGetAllCandidates(placementType='Self-Placement').recordCount;
+
+			totalWalkInPlacements = filterGetAllCandidates(placementType='Walk-In').recordCount;
+        </cfscript>	
+
+	</cfif>
+
+</cfsilent>
+
+<script language="JavaScript" type="text/javascript"> 
+	<!-- Begin
+	function formHandler2(form){
+		var URL = document.formagent.agent.options[document.formagent.agent.selectedIndex].value;
+		window.location.href = URL;
+	}
+	// End -->
+</script>
+
+<style type="text/css">
+<!--
+.tableTitleView {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	padding:2px;
+	color:#FFFFFF;
+	background:#4F8EA4;
+}
+-->
+</style>
+
+<cfoutput>
+
+<form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+
+    <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
+        <tr valign="middle" height="24">
+            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>&nbsp; Students hired per company</td>
+        </tr>
+        <tr valign="middle" height="24">
+            <td valign="middle" colspan=2>&nbsp;</td>
+        </tr>
+        <tr valign="middle">
+            <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
+            <td valign="middle">  
+                <select name="hostCompanyID" class="style1">
+                    <option value="ALL">---  All Host Companies  ---</option>
+                    <cfloop query="qGetHostCompanyList">
+                    	<option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
+                    </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="right" class="style1"><b>Program: </b></td><td>
+                <select name="programID" class="style1">
+                    <option value="0"></option>
+                    <cfloop query="qGetProgramList">
+                    	<option value="#programID#" <cfif qGetProgramList.programID EQ FORM.programID> selected </cfif> >#programname#</option>
+                    </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" class="style1"><b>Format: </b></td>
+            <td class="style1"> 
+                <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked </cfif> > <label for="printOption1">Onscreen (View Only)</label>
+                <input type="radio" name="printOption" id="printOption2" value="2" <cfif FORM.printOption EQ 2> checked </cfif> > <label for="printOption2">Print (PDF)</label> 
+                <input type="radio" name="printOption" id="printOption3" value="3" <cfif FORM.printOption EQ 3> checked </cfif> > <label for="printOption3">Excel (XLS)</label>
+            </td>            
+        </tr>
+        <tr>
+            <td colspan=2 align="center"><br />
+                <input type="submit" value="Generate Report" class="style1" /><br />
+                <br />
+            </td>
+        </tr>
+    </table>
+
+</form>
+
+<br /><br />
+
+<!--- Print --->
+<cfif LEN(FORM.printOption)>
+	
+    <cfscript>
+		// On Screen
+		if (FORM.printOption EQ 1) {
+			tableTitleClass = 'tableTitleView';
+		} else {
+			tableTitleClass = 'style2';
+		}
+	</cfscript>
+
+	<cfsavecontent variable="reportContent">
+		
+        <cfloop query="qGetHostCompany">
+			            
+			<cfscript>
+                // Total By Agent
+                qTotalPerHostCompany = filterGetAllCandidates(placementType='ALL', hostCompanyID=qGetHostCompany.hostCompanyID);
+				
+				totalPerHostCompanyCSBPlacements = filterGetAllCandidates(placementType='CSB-Placement', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
+                
+                totalPerHostCompanySelfPlacements = filterGetAllCandidates(placementType='Self-Placement', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
+                
+                totalPerHostCompanyWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
+            </cfscript>
+
             <table width=99% cellpadding="4" cellspacing=0 align="center"> 
                 <tr>
                     <td colspan="12">
-                        <small><strong>#qGetHostCompany.name# - Total Candidates: #totalPerAgent#</strong> (#qHiredStudents.recordCount# CSB; #qSelfCandidate.recordCount# Self)</small>
+                        <small>
+                            <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
+                            (
+                                #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
+                                #totalPerHostCompanySelfPlacements# Self; &nbsp; 
+                                #totalPerHostCompanyWalkInPlacements# Walk-In 
+                            )
+                        </small>
                     </td>
                 </tr>
                 <tr>
-                    <td align="left" bgcolor="4F8EA4" class="style2">ID</Td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">Last Name</Td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">First Name</Td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">Sex</td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">DOB</Td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">Country</td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">Email</td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">SSN</Td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">Start Date</td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">End Date</td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">Intl. Rep.</td>
-                    <td align="left" bgcolor="4F8EA4" class="style2">Option</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">ID</Td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Sex</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">DOB</Td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Email</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">SSN</Td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Start Date</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">End Date</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Intl. Rep.</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Option</td>
                 </tr>
-            	
-                <cfloop query="qHiredStudents">
-                    <tr <cfif qHiredStudents.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
-                        <td><span class="style1">#candidateID#</span></td>
-                        <td><span class="style1">#lastname#</span></td>
-                        <td><span class="style1">#firstname# </span></td>
-                        <td><span class="style1">#sex#</span></td>
-                        <td><span class="style1">#dateformat (dob, 'mm/dd/yyyy')#</span></td>
-                        <td><span class="style1">#countryname#</span></td>
-                        <td><span class="style1">#email#</span></td>
-                        <td><span class="style1">#ssn#</span></td>
-                        <cfif LEN(ds2019)>
-                            <td><span class="style1">#dateformat (startdate, 'mm/dd/yyyy')#</span></td>
-                            <td><span class="style1">#dateformat (enddate, 'mm/dd/yyyy')# </span></td>
+                <cfloop query="qTotalPerHostCompany">
+                    <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
+                        <td><span class="style1">#qTotalPerHostCompany.candidateID#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.lastname#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.firstname# </span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.sex#</span></td>
+                        <td><span class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.countryname#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.email#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.ssn#</span></td>
+                        <cfif LEN(qTotalPerHostCompany.ds2019)>
+                            <td><span class="style1">#dateformat(qTotalPerHostCompany.startdate, 'mm/dd/yyyy')#</span></td>
+                            <td><span class="style1">#dateformat(qTotalPerHostCompany.enddate, 'mm/dd/yyyy')# </span></td>
                         <cfelse>
                             <td colspan=2 align="center"><span class="style1">Awaiting DS-2019</span></td>
                         </cfif>
-                        <td><span class="style1">#businessname#</span></td>
-                        <td><span class="style1">#wat_placement#</span></td>
-                    </tr>
-                </cfloop>
-
-                <cfloop query="qSelfCandidate">
-                    <tr <cfif qSelfCandidate.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
-                        <td><span class="style1">#candidateID#</span></td>
-                        <td><span class="style1">#lastname#</span></td>
-                        <td><span class="style1">#firstname# </span></td>
-                        <td><span class="style1">#sex#</span></td>
-                        <td><span class="style1">#dateformat (dob, 'mm/dd/yyyy')#</span></td>
-                        <td><span class="style1">#countryname#</span></td>
-                        <td><span class="style1">#email#</span></td>
-                        <td><span class="style1">#ssn#</span></td>
-                        <cfif LEN(ds2019)>
-                            <td><span class="style1">#dateformat (startdate, 'mm/dd/yyyy')#</span></td>
-                            <td><span class="style1">#dateformat (enddate, 'mm/dd/yyyy')# </span></td>
-                        <Cfelse>
-                            <td colspan=2 align="center"><span class="style1">Awaiting DS-2019</span></td>
-                        </cfif>
-                        <td><span class="style1">#businessname#</span></td>
-                        <td><span class="style1">#wat_placement#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
                     </tr>
                 </cfloop>
 
             </table>
             <br />
+         
+		</cfloop>
             
-        </cfoutput> <!--- Group by --->
+        <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #totalCSBPlacements#</div>	
+        <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
+        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>  		
+		    	
+    </cfsavecontent>
 
-		<cfoutput>
-		
-            <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #intoPlacement#</div>	
-            <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #selfPlacement#</div>
-            <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
-            <div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #grandTotal#</div>
-            <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>		  
-		
-        </cfoutput>
-                    	     
-    </cfif>
-   
-<cfelse>
-	<span class="style1">
-    	<center>
-        	Print results will replace the menu options and take a bit longer to generate.<br /> 
-            Onscreen will allow you to change criteria with out clicking your back button.
-        </center>
-    </span>
 </cfif>
+
+<!-----Display Reports---->
+<cfswitch expression="#FORM.printOption#">
+
+	<!--- Screen --->
+	<cfcase value="1">
+		<!--- Include Report --->
+		#reportContent#
+	</cfcase>
+
+	<!--- PDF --->
+	<cfcase value="2">   
+		<cfdocument format="pdf" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">          	
+			<style type="text/css">
+			<!--
+			.style1 {
+				font-family: Verdana, Arial, Helvetica, sans-serif;
+				font-size: 10px;
+				padding:2;
+			}
+			.style2 {
+				font-family: Verdana, Arial, Helvetica, sans-serif;
+				font-size: 8px;
+				padding:2;
+			}
+			.title1 {
+				font-family: Verdana, Arial, Helvetica, sans-serif;
+				font-size: 15px;
+				font-weight: bold;
+				padding:5;
+			}					
+			-->
+			</style>
+
+			<img src="../../pics/black_pixel.gif" width="100%" height="2">
+			<div class="title1">Students hired per company</div>
+			<img src="../../pics/black_pixel.gif" width="100%" height="2">
+			
+			<!--- Include Report --->
+			#reportContent#
+		</cfdocument>
+	</cfcase>
+
+	<!--- Excel --->
+	<cfcase value="3">
+
+		<!--- set content type --->
+        <cfcontent type="application/msexcel">
+        
+        <!--- suggest default name for XLS file --->
+        <cfheader name="Content-Disposition" value="attachment; filename=studentsHiredPerCompany.xls"> 
+
+        <style type="text/css">
+        <!--
+        .style1 {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            padding:2;
+        }
+        .style2 {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            padding:2;
+        }
+        .title1 {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            font-weight: bold;
+            padding:5;
+        }					
+        -->
+        </style>
+       
+        <img src="../../pics/black_pixel.gif" width="100%" height="2">
+        <div class="title1">Students hired per company</div>
+        <img src="../../pics/black_pixel.gif" width="100%" height="2">
+        
+        <!--- Include Report --->
+        #reportContent#
+        
+        <cfabort>
+
+	</cfcase>
+	
+	<cfdefaultcase>    
+		<div align="center" class="style1">
+			Print results will replace the menu options and take a bit longer to generate. <br />
+			Onscreen will allow you to change criteria with out clicking your back button.
+		</div>  <br />
+	</cfdefaultcase>
+	
+</cfswitch>
+
+</cfoutput>
