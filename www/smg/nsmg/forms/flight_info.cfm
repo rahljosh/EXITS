@@ -12,21 +12,25 @@
 				09/29/2005 - revised by Josh Rahl
 
 ----- ------------------------------------------------------------------------- --->
-<cfif isDefined('url.unqid')>
+<Cfif isDefined('url.unqid')>
 <cfquery name="getStudentID" datasource="#application.dsn#">
-select studentid 
+select studentid
 from smg_students
 where uniqueid = '#url.unqid#'
 </cfquery>
-<cfset studentid = #getStudentID.studentid#>
-</cfif>
+<cfset client.studentid = #getStudentId.studentid#>
+<cfset studentID = #getStudentId.studentid#>
+</Cfif>
 <!--- Kill extra output --->
 <cfsilent>
 	
     <!--- Param Variables --->
 	<cftry>
-	    <cfparam name="studentID" type="numeric" default="0">
-        
+		<Cfif isDefined('url.unqid')>>
+	    	<Cfset client.studentid = #getStudentId.studentid#>
+        <Cfelse>
+        	<cfparam name="studentID" type="numeric" default="0">
+        </Cfif>
         <cfcatch type="any">
             <cfscript>
                 // If it's not numeric, set ID to 0

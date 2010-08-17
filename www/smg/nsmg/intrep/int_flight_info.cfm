@@ -492,9 +492,8 @@ Submitted By: #qGetEmailInfo.businessname#.<br><br>
 		<td width="17" background="../pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
-
 <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
-    <tr>
+<tr>
     	<td>
     
     		<!--- Start of intrep\int_flight_info.cfm --->

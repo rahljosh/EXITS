@@ -124,7 +124,44 @@ function OpenPaymentDetail(url) {
 	</tr>
 </table>
 <br />
-
+<cfquery name="qCredits" datasource="#application.dsn#">
+select *
+from egom_credits
+where intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
+</cfquery>
+<table  width="95%" class="box" bgcolor="##ffffff" align="center" cellpadding="3" cellspacing="0">
+	<tr><td bgcolor="##C2D1EF"><b>Credits</b></td></tr>
+	<tr>
+		<td width="100%">
+			<table border="0" cellpadding="3" cellspacing="0" width="100%">				
+				<tr>
+					<td width="38%"><b>Original Payment Ref</b></td>
+					<td width="12%"><b>Date</b></td>
+					<td width="12%"><b>Ammount</b></td>
+		
+				
+				</tr>
+                <cfif qCredits.recordcount eq 0>
+                <tr>
+                	<td align="Center" colspan=3>No Credits Available</td>
+                 </tr>
+                  <Cfset total_credits = 0>
+                <cfelse>
+                <Cfset total_credits = 0>
+				<cfloop query="qCredits">
+                <tr bgcolor="#iif(qCredits.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+                	<td width="38%"><b>#originalPayRef#</b></td>
+					<td width="12%"><b>#DateFormat(date,'mm/dd/yy')#</b></td>
+					<td width="12%"><b>#LSCurrencyFormat(amount, 'local')#</b></td>
+                 </tr>
+                 <cfset total_credits = #total_credits# + #amount#>
+                 </cfloop>
+                 </cfif>
+                 </table>
+                </td>
+            </tr>
+ 		</table>
+        <br />
 <table  width="95%" class="box" bgcolor="##ffffff" align="center" cellpadding="3" cellspacing="0">
 	<tr><td bgcolor="##C2D1EF"><b>Students &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Total of #qGetStudents.recordcount# student(s)</b></td></tr>
 	<tr>
@@ -204,10 +241,22 @@ function OpenPaymentDetail(url) {
 				<cfset total_out = total_inv - total_rec>
                 
 				<tr>
-					<td colspan="3" align="right"><b>Total</b></td>
+					<td colspan="3" align="right"><b>Sub-Total</b></td>
 					<td align="right"><b>#LSCurrencyFormat(total_inv)#</b></td>
 					<td align="right"><b>#LSCurrencyFormat(total_rec)#</b></td>
 					<td align="right"><b>#LSCurrencyFormat(total_out)#</b></td>
+				</tr>
+                <tr>
+					<td colspan="3" align="right"><b>Unapplied Credits</b></td>
+					<td align="right"><b></b></td>
+					<td align="right"><b>#LSCurrencyFormat(total_credits)#</b></td>
+					<td align="right"></td>
+				</tr>
+                <tr>
+					<td colspan="3" align="right"><b>Totals</b></td>
+					<td align="right"><b>#LSCurrencyFormat(total_inv)#</b></td>
+					<td align="right"><cfset gtotal_rec = #total_rec# + #total_credits#><b>#LSCurrencyFormat(gtotal_rec)#</b></td>
+					<td align="right"><Cfset gtotalDue = #total_out# - #total_credits#><b>#LSCurrencyFormat(gTotalDue)#</b></td>
 				</tr>
 				<tr><td colspan="5">&nbsp;</td></tr>
 			</table>
