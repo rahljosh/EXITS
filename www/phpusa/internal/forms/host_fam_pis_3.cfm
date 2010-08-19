@@ -12,31 +12,31 @@ function areYouSurePet() {
 <cfquery name="get_host_religion" datasource="mysql">
 select religion, religious_participation
 from smg_hosts
-where hostid = #client.hostid#
+where hostid = #CLIENT.hostID#
 </cfquery>
 
 <cfquery name="get_pets" datasource="mysql">
 select *
 from smg_host_animals 
-where hostid = #client.hostid#
+where hostid = #CLIENT.hostID#
 </cfquery>
 
 <cfquery name="check_placed" datasource="mysql">
 select studentid 
 from smg_students
-where hostid = #client.hostid# and active = 1
+where hostid = #CLIENT.hostID# and active = 1
 </cfquery>
 
 <cfquery name="get_kids" datasource="mysql">
 select childid, name, shared
 from smg_host_children
-where hostid = #client.hostid#
+where hostid = #CLIENT.hostID#
 </cfquery>
 
 <cfinclude template="../querys/family_info.cfm">
 <cfform action="querys/insert_pis_3.cfm" method="post">
 <cfoutput>
-<h2>&nbsp;&nbsp;&nbsp;&nbsp;R o o m,  &nbsp;&nbsp;&nbsp; S m o k i n g  &nbsp;&nbsp;&nbsp;  &&nbsp;&nbsp;&nbsp; p e t s  <font size=-2>[ <cfoutput><a href="?curdoc=host_fam_info&hostid=#client.hostid#">overview</a></cfoutput> ] </font></h2>
+<h2>&nbsp;&nbsp;&nbsp;&nbsp;R o o m,  &nbsp;&nbsp;&nbsp; S m o k i n g  &nbsp;&nbsp;&nbsp;  &&nbsp;&nbsp;&nbsp; p e t s  <font size=-2>[ <cfoutput><a href="?curdoc=host_fam_info&hostid=#CLIENT.hostID#">overview</a></cfoutput> ] </font></h2>
 
 <table width="90%" border=1 align="center" cellpadding=8 cellspacing=8 bordercolor="##C7CFDC" bgcolor="##FFFFFF" class="section">
 <tr><td width="80%" class="box">
@@ -53,7 +53,7 @@ where hostid = #client.hostid#
 				<cfquery name="check_share" datasource="mysql">
 				select shared
 				from smg_host_children
-				where hostid = #client.hostid# and shared = 'yes'
+				where hostid = #CLIENT.hostID# and shared = 'yes'
 				</cfquery>
 			<tr><Td colspan="2">Will the student share a bedroom?</Td>
 				<td><cfif check_share.recordcount gt 0>
@@ -73,7 +73,7 @@ where hostid = #client.hostid#
 			<cfelse> <!--- check_placed.recordcount --->
 				<cfquery name="get_students_hosting_if_double" datasource="mysql">
 				select studentid, firstname, familylastname from smg_students
-				where hostid = #client.hostid# and active = 1
+				where hostid = #CLIENT.hostID# and active = 1
 				</cfquery>
 				<cfset stulist =''>
 				<cfloop query="get_students_hosting_if_double">
@@ -178,7 +178,7 @@ where hostid = #client.hostid#
 							<cfif #number# is 11><option value=11 selected>10+<cfelse><option value=11>10+</cfif>
 						</select>
 						&nbsp; &nbsp; &nbsp;
-						<a href="?curdoc=querys/delete_host_pet&petid=#animalid#" onClick="return areYouSurePet(this);"><img src="pics/deletex.gif" border="0" align="middle"></img></a>
+						<a href="?curdoc=querys/delete_host_pet&hostID=#CLIENT.hostID#&petid=#animalID#" onClick="return areYouSurePet(this);"><img src="pics/deletex.gif" border="0" align="middle"></img></a>
 					</td>
 					<td align="left"></td>
 				</tr>
