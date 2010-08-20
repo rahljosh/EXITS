@@ -53,24 +53,19 @@
         USE smg
     </CFQUERY>
     
-    <link rel="SHORTCUT ICON" href="pics/favicon.ico">
-    
-    <cfif IsDefined('url.client.usertype')>
-        You do not have rights to see this page.
+    <cfif NOT IsDefined('CLIENT.userType')>
+        You do not have rights to see this page. sadfs
         <cfabort>
     </cfif>
     
-    <cfif IsDefined('url.client.userid')>
-        You do not have rights to see this page.
+    <cfif NOT IsDefined('CLIENT.userID')>
+        You do not have rights to see this page.aa
         <cfabort>
     </cfif>
     
-    <cfif IsDefined('url.client.companyid')>
-        You do not have rights to see this page.
+    <cfif NOT IsDefined('CLIENT.companyID')>
+        You do not have rights to see this page.bb
         <cfabort>
     </cfif>
     
-    <cfif NOT IsDefined('client.usertype')>
-        You must log in to view this page.
-        <cfabort>
-    </cfif>
+    
