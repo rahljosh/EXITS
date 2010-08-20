@@ -82,10 +82,15 @@
 	<tr align="left">
 		<TD width="23%">Program Start Date :</td>
 		<TD><input type="text" name="start_date" value="08-20-#Year(now())#" maxlength="10" size="7"> (mm-dd-yyyy)</td></tr>
-	<tr align="left">
+    <tr align="left">
 		<TD width="23%">Program End Date :</td>
-		<TD><input type="text" name="end_date" value="06-30-#Year(now())+1#" maxlength="10" size="7"> (mm-dd-yyyy)</td>
-    </tr>		
+		<TD>
+        	End date on file.
+            <!---
+			<input type="text" name="end_date" value="06-30-#Year(now())+1#" maxlength="10" size="7"> (mm-dd-yyyy)
+			---->
+        </td>
+    </tr>
 	<tr>
     	<td colspan="2">PS: Exchange visitor's minimum duration must be at least 5 month(s)</td>
     </tr>
