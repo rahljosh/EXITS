@@ -1006,7 +1006,7 @@
             <br/>
 
 			<!---- EDIT/UPDATE BUTTONS ---->
-            <cfif client.usertype LTE 4>
+            <cfif VAL(CLIENT.usertype) LTE 4>
                 
                 <table width="800px" border="0" cellpadding="0" cellspacing="0" align="center">	
                     <tr>

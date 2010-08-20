@@ -52,6 +52,12 @@
                 AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             </cfif>
             
+            <!--- Intl Rep Account --->
+            <cfif VAL(CLIENT.userType) GT 4>
+            	AND
+                	ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">            
+            </cfif>
+            
         ORDER BY 
         	<cfswitch expression="#URL.order#">
             
@@ -122,11 +128,18 @@
 			<tr valign=middle height=24>
 				<td width="57%" valign="middle" bgcolor="##E4E4E4" class="title1">&nbsp;Candidates</td>
 				<td width="42%" align="right" valign="top" bgcolor="##E4E4E4" class="style1">
-					#qCandidates.recordcount# <b><cfif URL.status EQ 1>Active<cfelseif URL.status EQ 0>Canceled<cfelseif URL.status is 'all'>All</cfif></b>
-					candidate<cfif qCandidates.recordcount GT 1>s</cfif> found&nbsp;<br>
+					#qCandidates.recordcount#
+					<cfif URL.status EQ 1>
+                    	<b>Active</b>
+					<cfelseif URL.status EQ 0>
+                    	<b>Canceled</b>
+					<cfelseif URL.status is 'all'>
+                    	<b>All</b>
+					</cfif>
+					candidate<cfif qCandidates.recordcount GT 1>s</cfif> found &nbsp; <br>
 					Filter: &nbsp; <cfif URL.status NEQ 'All'><a href="?curdoc=candidate/candidates&placed=all&status=all" class="style4"></cfif>All</a> 
-					&nbsp; | &nbsp; <cfif URL.status NEQ '1'><a href="?curdoc=candidate/candidates&status=1" class="style4" ></cfif>Active</a> 
-					&nbsp; | &nbsp; <cfif URL.status NEQ '0'><a href="?curdoc=candidate/candidates&status=0" class="style4" ></cfif>Inactive</a> 					
+					&nbsp; | &nbsp; <cfif URL.status NEQ 1><a href="?curdoc=candidate/candidates&status=1" class="style4" ></cfif>Active</a> 
+					&nbsp; | &nbsp; <cfif URL.status NEQ 0><a href="?curdoc=candidate/candidates&status=0" class="style4" ></cfif>Inactive</a> 					
 					&nbsp; | &nbsp; <cfif URL.status NEQ 'canceled'><a href="?curdoc=candidate/candidates&status=canceled" class="style4" ></cfif>Cancelled</a>&nbsp;</td>
 				<td width="1%"></td>
 			</tr>
@@ -160,10 +173,13 @@
 		</cfloop>
 		</table>
 		<br><br>
-		<div align="center">
-		<a href="index.cfm?curdoc=candidate/new_candidate"><img src="../pics/add-candidate.gif" border="0" align="middle" alt="Add a Candidate"></img></a></div>
-		<br>
-
+		
+        <cfif VAL(CLIENT.userType) LTE 4>
+            <div align="center">
+                <a href="index.cfm?curdoc=candidate/new_candidate"><img src="../pics/add-candidate.gif" border="0" align="middle" alt="Add a Candidate"></img></a>
+            </div> <br>
+		</cfif>
+        
 	</td>
   </tr>
 </table>

@@ -1,0 +1,49 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		tableFooter.cfm
+	Author:		Marcus Melo
+	Date:		August 19, 2010
+	Desc:		This Tag displays the table footer used in the internal database.
+
+	Status:		In Development
+
+	Call Custom Tag: 
+
+		<!--- Import CustomTag --->
+		<cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+	
+		<!--- Table Footer --->
+		<gui:tableFooter
+			width=""
+		/>
+	
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill extra output --->
+<cfsilent>
+
+	<!--- Param tag attributes --->
+	<cfparam 
+		name="ATTRIBUTES.width"
+		type="string"
+        default="100%"
+		/>
+        
+</cfsilent>
+
+<!--- 
+	Check to see which tag mode we are in. We only want to output this 
+	in the start mode. 
+--->
+<cfif NOT CompareNoCase(THISTAG.ExecutionMode, "Start")>
+
+<cfoutput>
+
+		<!--- Footer of Table --->
+		</td>
+	</tr>
+</table>
+            
+</cfoutput>
+    	
+</cfif>
