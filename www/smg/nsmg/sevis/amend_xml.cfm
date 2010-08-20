@@ -1,4 +1,6 @@
-<cfif NOT IsDefined('form.start_date') or NOT IsDefined('form.end_date')>
+<cfparam name="FORM.start_date" default="">
+
+<cfif NOT IsDate(FORM.start_date)>
 	Please you must enter start and/or end date.
 	<cfabort>
 </cfif>
@@ -54,28 +56,43 @@
 	WHERE 
     	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     AND 
-    	s.sevis_amend_dates = '0'
+    	s.sevis_amend_dates = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
     AND 
-    	s.ds2019_no like 'N%'
+    	s.ds2019_no LIKE 'N%'
     AND 
-    	s.sevis_activated = '0'
+    	s.sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+    <!---
+    AND
+    	s.studentID NOT IN 
+        (
+        	SELECT
+            	sh.studentID
+            FROM
+            	smg_sevis_history sh
+            INNER JOIN
+            	smg_sevis s ON s.batchID = sh.batchID
+            WHERE
+            	type = <cfqueryparam cfsqltype="cf_sql_varchar" value="activate">
+        
+        )
+    --->
     AND 
-    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
                
-    <cfif IsDefined('form.pre_ayp')>
+    <cfif IsDefined('FORM.pre_ayp')>
     AND 
     	(
-        	s.aypenglish != '0' 
+        	s.aypenglish != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
         OR
-        	s.ayporientation != '0'
+        	s.ayporientation != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         )
     </cfif>
 
-    <cfif IsDefined('form.non_pre_ayp')>
+    <cfif IsDefined('FORM.non_pre_ayp')>
     AND 
-    	s.aypenglish = '0' 
+    	s.aypenglish = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
     AND 
-    	s.ayporientation = '0'
+    	s.ayporientation = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
     </cfif>
 
 	<cfif CLIENT.companyID EQ 10>
@@ -99,8 +116,23 @@
 </cfif>
 
 <cfquery name="insert_batchid" datasource="MySqL">
-	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type, newstartdate, newenddate)
-	VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#', 'amend', #CreateODBCDate(form.start_date)#, #CreateODBCDate(form.end_date)#)
+	INSERT INTO 
+    	smg_sevis 
+        (
+        	companyid,
+            createdby,
+            datecreated, 
+            totalstudents, 
+            type
+        )
+	VALUES 
+    	(
+			'#get_company.companyid#', 
+            '#client.userid#', 
+            #CreateODBCDateTime(now())#, 
+            '#get_students.recordcount#', 
+            'amend'
+       	)
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
@@ -138,22 +170,58 @@
 	</BatchHeader>
 	<UpdateEV>
 	<cfloop query="get_students">
-		<ExchangeVisitor sevisID="#get_students.ds2019_no#" requestID="#get_students.studentid#" userID="#get_company.sevis_userid#">
+		    	<cfsilent>
+            <cfquery datasource="MySql">
+            	UPDATE 
+                	smg_students 
+                SET 
+                	sevis_amend_dates = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_batchid.batchid#"> 
+                WHERE 
+                	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_students.studentid#">
+            </cfquery>	
+            <cfquery name="qGetPreviousInfo" datasource="MySql">
+                SELECT 
+                	hostid, 
+                    school_name, 
+                    start_date, 
+                    end_date 
+                FROM 
+                	smg_sevis_history  
+               	WHERE 
+                	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_students.studentid#">
+                ORDER BY
+                	historyid DESC
+            </cfquery>
+            <cfquery datasource="MySql">
+                INSERT INTO 
+                	smg_sevis_history 
+                (
+                	batchid, 
+                    studentid, 
+                    hostid, 
+                    school_name, 
+                    start_date, 
+                    end_date
+                )	
+                VALUES 
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#get_batchid.batchid#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#get_students.studentid#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPreviousInfo.hostid)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetPreviousInfo.school_name#">, 
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.start_date)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(qGetPreviousInfo.end_date)#">
+					)
+            </cfquery>
+		</cfsilent>            
+        <ExchangeVisitor sevisID="#get_students.ds2019_no#" requestID="#get_students.studentid#" userID="#get_company.sevis_userid#">
 			<Program>
 				<Amend printForm="false">
-					<PrgStartDate>#DateFormat(form.start_date, 'yyyy-mm-dd')#</PrgStartDate>
-					<PrgEndDate>#DateFormat(form.end_date, 'yyyy-mm-dd')#</PrgEndDate>  <!---- #DateFormat(enddate, 'yyyy-mm-dd')# --->
+					<PrgStartDate>#DateFormat(FORM.start_date, 'yyyy-mm-dd')#</PrgStartDate>
+					<PrgEndDate>#DateFormat(qGetPreviousInfo.end_date, 'yyyy-mm-dd')#</PrgEndDate>
 				</Amend>
 			</Program>
 		</ExchangeVisitor>
-    	<cfquery name="upd_stu" datasource="MySql">UPDATE smg_students SET sevis_amend_dates = '#get_batchid.batchid#' WHERE studentid = '#get_students.studentid#' LIMIT 1</cfquery>	
-		<cfquery name="get_previous_info" datasource="MySql">
-			SELECT hostid, school_name, start_date, end_date FROM smg_sevis_history  WHERE studentid = '#get_students.studentid#' ORDER BY historyid DESC
-		</cfquery>
-		<cfquery name="create_new_history" datasource="MySql">
-			INSERT INTO smg_sevis_history (batchid, studentid, hostid, school_name, start_date, end_date)	
-			VALUES ('#get_batchid.batchid#', '#get_students.studentid#', '#VAL(get_previous_info.hostid)#', '#get_previous_info.school_name#', #CreateODBCDate(form.start_date)#, #CreateODBCDate(form.end_date)#)
-		</cfquery>
 	</cfloop>
 	</UpdateEV>
 </SEVISBatchCreateUpdateEV>
