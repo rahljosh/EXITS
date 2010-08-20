@@ -90,6 +90,19 @@
 	</cffunction>
 
 
+	<!--- 
+		The entity name must immediately follow the '&' in the entity reference. 
+		Use &amp; instead of & in XML (and in XHTML). 
+	--->
+    <cffunction name="safeXML" returntype="string">
+		<cfargument name="Text" type="string" required="Yes" />
+		
+		<cfscript>
+			return(Replace(ARGUMENTS.Text, "&", "&amp;", "ALL"));
+		</cfscript>
+    </cffunction>
+
+
 	<!--- This converts text to standard case --->
 	<cffunction name="ProperCase" access="public" returntype="string" output="No" hint="Converts a string to proper case - first letters capital">
 		<cfargument name="Text" type="string" required="Yes" />

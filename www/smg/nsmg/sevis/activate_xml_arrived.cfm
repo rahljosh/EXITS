@@ -18,7 +18,6 @@
         companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
 
-
 <cfquery name="qGetStudents" datasource="MySql"> 
 	SELECT DISTINCT 
     	s.studentid, 
@@ -108,7 +107,7 @@ Sorry, there were no students to populate the XML file at this time.
 	FROM smg_sevis
 </cfquery> 
 
-<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#qGetCompany.companyshort_nocolor#)>
+<cfset add_zeros = 13 - len(get_batchid.batchid) - len(qGetCompany.companyshort_nocolor)>
 <!--- Batch id has to be numeric in nature A through Z a through z 0 through 9  --->
 
 <table align="center" width="100%" frame="box">
@@ -140,9 +139,9 @@ Sorry, there were no students to populate the XML file at this time.
 		<ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentid#" userID="#qGetCompany.sevis_userid#">
 			<Validate>
 				<USAddress>
-				<cfif hostid NEQ '0' and  host_fam_approved LT '5'>
-					<Address1><cfif hostlastname NEQ ''>#hostlastname#<cfelseif fatherlastname NEQ ''>#fatherlastname#<cfelseif motherlastname NEQ ''>#motherlastname#</cfif> Family</Address1> 	
-					<Address2>#hostaddress#</Address2> 	<!--- <cfif hostaddress2 NEQ ''><Address2>#hostaddress2#</Address2></cfif> --->
+				<cfif VAL(hostid) AND host_fam_approved LT 5>
+					<Address1><cfif LEN(hostlastname)>#hostlastname#<cfelseif LEN(fatherlastname)>#fatherlastname#<cfelseif LEN(motherlastname)>#motherlastname#</cfif> Family</Address1> 	
+					<Address2>#hostaddress#</Address2>
 					<City>#hostcity#</City> 
 					<State>#hoststate#</State> 
 					<PostalCode>#hostzip#</PostalCode>
@@ -155,15 +154,58 @@ Sorry, there were no students to populate the XML file at this time.
 				</USAddress>
 			</Validate>
 		</ExchangeVisitor>
-		<cfquery name="upd_stu" datasource="MySql">UPDATE smg_students SET sevis_activated = '#get_batchid.batchid#' WHERE studentid = '#qGetStudents.studentid#' LIMIT 1</cfquery>
-		<!--- CREATE NEW HISTORY --->
-		<cfquery name="get_previous_info" datasource="MySql">
-			SELECT school_name, start_date, end_date FROM smg_sevis_history  WHERE studentid = '#qGetStudents.studentid#' ORDER BY historyid DESC
-		</cfquery>
-		<cfquery name="create_new_history" datasource="MySql">
-			INSERT INTO smg_sevis_history (batchid, studentid, hostid, school_name, start_date, end_date)	
-			VALUES ('#get_batchid.batchid#', '#qGetStudents.studentid#', '#qGetStudents.hostid#', '#get_previous_info.school_name#', <cfif get_previous_info.start_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.start_date)#</cfif>, <cfif get_previous_info.end_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.end_date)#</cfif>)
-		</cfquery>		
+		<cfsilent>
+            <cfquery datasource="MySql">
+            	UPDATE 
+                	smg_students 
+                SET 
+                	sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_batchid.batchid#"> 
+                WHERE 
+                	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
+            </cfquery>
+            <!--- CREATE NEW HISTORY --->
+            <cfquery name="get_previous_info" datasource="MySql">
+                SELECT 
+                	school_name, 
+                    start_date, 
+                    end_date 
+                FROM 
+                	smg_sevis_history  
+                WHERE 
+                	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
+                ORDER BY 
+                	historyid DESC
+            </cfquery>
+            <cfquery name="create_new_history" datasource="MySql">
+                INSERT INTO 
+                    smg_sevis_history 
+                    (
+                    	batchid, 
+                        studentid, 
+                        hostid, 
+                        school_name, 
+                        start_date,
+                        end_date
+                    )	
+                VALUES 
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#get_batchid.batchid#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.hostid#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#get_previous_info.school_name#">, 
+						<cfif LEN(get_previous_info.start_date)>
+                        	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(get_previous_info.start_date)#">,
+						<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+						</cfif>
+						<cfif LEN(get_previous_info.end_date)>
+                        	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(get_previous_info.end_date)#">
+						<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_date" null="yes">
+						</cfif>
+                    )
+            </cfquery>	
+		</cfsilent>            
 	</cfloop>
 	</UpdateEV>
 </SEVISBatchCreateUpdateEV>
