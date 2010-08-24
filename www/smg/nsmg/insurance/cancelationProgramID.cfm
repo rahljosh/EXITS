@@ -137,7 +137,8 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 	
             </cfif>
             
-      </cfloop>
-</table>
+		</cfloop>
+        
+	</table>
 
 </cfoutput> 
