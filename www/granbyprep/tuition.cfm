@@ -5,7 +5,7 @@
 <link href="css/granby.css" rel="stylesheet" type="text/css" />
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Granby Preparatory Academy: Employment Opportunities</title>
+<title>About Granby Prep: Granby Preparatory Academy is a co-ed, independent boarding school located 70 miles west of Boston.</title>
 <style type="text/css">
 
 <!--
@@ -35,17 +35,38 @@ body {
 <cfinclude template ="menu.cfm">
   </div>
 <div id="mainContent">
-   
-    <h2>Employment Opportunities</h2>
-<p class="paragraphText">Thank you for your interest in employment at Granby Preparatory Academy. If you have any questions please email us at: <strong>info@granbyprep.com.</strong> <br /><br />
-  We do not officially open until September, 2011. However, we will begin interviewing to fill faculty and administrative positions in November and December and will post the positions on this page as they become available. Please check back periodically.<br /><br />
-  If you are interested in working in food services at GPA, please contact our dining services vendor, Sage Food Services, by clicking on the link below<a href="http://www.sagedining.com/applicationNEW.php">.</a></p>
-<p><a href="http://www.sagedining.com/applicationNEW.php"><img src="images/sageOnline_24.png" border="0" /></a></p><br />
-
+  <div class="photo"><img src="images/schoolgrounds.png" width="300" height="200" /></div>
+    <h2>Tuition and Financial Aid</h2>
+ 
+    <ul><ol>Boarding: $47,250</ol>
+<ol>Day: $24,500 </ol>
+<ol>International Fee: $3,000</ol><br /><br />
+<ol>
+  <strong>Tuition Refund Plan* </strong>(Mandatory): 
+</ol>
+<ol>Boarding: $650</ol>
+<ol>Day: $450</ol>
+<ol>Mandatory U.S. health insurance for <br /> international boarding students: $750</ol><br />
+<ol>
+  <span class="italic">*The Tuition Refund Plan provides an allowance of tuition charges in the event of withdrawal of a student for medical causes as well as other reasons, including dismissal by GPA</span>.
+</ol><br /><br />
+<ol><strong>Application Fees:</strong></ol>
+<ol>International: $150</ol>
+<ol>Domestic: $75</ol><br /><br />
+<ol>
+  <strong>Deposits**:</strong>
+</ol>
+<ol>Boarding: $5,000</ol>
+<ol>Day: $1,500</ol>
+<ol>
+  <span class="italic">**included in the prices listed above</span>.
+</ol><br /><br />
+<ol><strong>Laundry Service </strong>(mandatory for boarding students) $450 per semester.</ol></ul>
+<br /><br />
   <!-- end mainContent --></div>
   <div id="footer">
     <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
-    For more information contact us at info@granbyprep.com</p>
+    For more information contact us at info@granbyprep.com </p>
   <!-- end footer --></div>
 <!-- end container --></div>
 <script type="text/javascript">

@@ -48,8 +48,9 @@ body {
     <br />
     </strong><em>Headmaster </em><strong><br />
     </strong>Bchatterley@granbyprep.com</p>
-<p>&nbsp;</p>
-    <p></p>
+
+    <p><a href="requestInfo.cfm"><img src="images/requestInfo_21.png" width="85" height="22" border="0" /></a></p>
+    <p>&nbsp;</p>
   <!-- end mainContent --></div>
   <div id="footer">
     <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
