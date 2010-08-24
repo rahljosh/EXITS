@@ -63,23 +63,38 @@
 
 	<!--- Get Global Secutive History Only --->   
     <cffunction name="getInsuranceHistory" access="public" returntype="query" output="false" hint="Returns insurance history by date">
-        <cfargument name="type" default="N" hint="Type is not required.">
+        <cfargument name="type" default="" hint="Type is not required.">
+        <cfargument name="companyID" hint="companyID is required.">
              
         <cfquery 
         	name="qGetInsuranceHistory" 
             datasource="#APPLICATION.dsn#">
                 SELECT 
-                    count(studentID) as totalStudents,
-                    file,                
-                    date
+                    date,
+                    file,
+                    type,                    
+                    count(studentID) as totalStudents
                 FROM 
                     smg_insurance_batch 
                 WHERE
-                    type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.type#">               
+                
+                <cfif ARGUMENTS.companyID EQ 10>
+                    file LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%CASE%">
+                <cfelse>
+                    file LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%ISE%">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.type)>
+                	AND
+                    	type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.type#">               
+                </cfif>
+                
                 GROUP BY            
                     file                  
                 ORDER BY            
                     date DESC
+                LIMIT
+                	30
         </cfquery>
 		   
 		<cfreturn qGetInsuranceHistory>
@@ -129,6 +144,7 @@
                     s.familyLastName, 
                     s.dob,
                     s.email,
+                    ib.type,
                     ib.startDate,
                     ib.endDate
                 FROM 

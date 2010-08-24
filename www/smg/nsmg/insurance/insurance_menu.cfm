@@ -23,7 +23,7 @@
 		qGetInsurancePolicies = APPCFC.INSURANCE.getInsurancePolicies(provider="global");
 		
 		// Get Insurance History
-		//qGetInsuranceHistory = APPCFC.INSURANCE.getInsuranceHistory(companyID=CLIENT.companyID);
+		qGetInsuranceHistory = APPCFC.INSURANCE.getInsuranceHistory(companyID=CLIENT.companyID);
     </cfscript>
     
 </cfsilent>
@@ -94,7 +94,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        Start Date: Arrival Date <br>
+                                        Start Date: Arrival Date <br />
                                         End Date: Program End Date 
                                     </td>
                                 </tr>      
@@ -143,7 +143,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        Start Date: Today's Date or Given Date <br>
+                                        Start Date: Today's Date or Given Date <br />
                                         End Date: Program End Date 
                                     </td>
                                 </tr>                            
@@ -154,7 +154,7 @@
                 </tr>
             </table>
             
-            <br><br>
+            <br /><br />
 			
             <!--- Return Date Correction --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
@@ -198,12 +198,12 @@
                 </tr>
             </table>
             
-            <br><br>
+            <br /><br />
 
             <!--- Cancelation --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Cancelation</th></tr>
-                <tr><td colspan="2" align="center"><font size="-2">Canceled insured students that withdrew the program</font></td></tr>
+                <tr><td colspan="2" align="center"><font size="-2">Canceled students with active insurance</font></td></tr>
             </table>
             
             <table cellpadding="6" cellspacing="0" align="center" width="96%">
@@ -231,9 +231,44 @@
                 </tr>
             </table>
             
-            <br><br>
+            <br /><br />
             
             <!--- Insurance History --->
+            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
+                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Insurance Files History (Last 30 files)</th></tr>
+                <tr><td colspan="2" align="center"><font size="-2">Types: N = New | R = Return/Adjustment | X = Cancelation</font></td></tr>
+            </table>
+            
+            <br />
+            
+            <table cellpadding="6" cellspacing="0" align="center" width="96%">
+                <tr>
+                    <td width="100%" valign="top">
+
+                        <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <tr bgcolor="##e2efc7">
+                                <td width="20%"><strong>Date Created</strong></td>
+                                <td width="5%"><strong>Type</strong></td>
+                                <td width="35%"><strong>File Name</strong></td>
+                                <td width="20%"><strong>Total of Students</strong></td>
+                                <td width="20%"><strong>Actions</strong></td>
+                            </tr>
+                            <cfloop query="qGetInsuranceHistory">
+                                <tr bgcolor="#iif(qGetInsuranceHistory.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
+                                    <td>#DateFormat(qGetInsuranceHistory.date, 'mm/dd/yyyy')#</td>
+                                    <td>#qGetInsuranceHistory.type#</td>
+                                    <td>#qGetInsuranceHistory.file#</td>
+                                    <td>#qGetInsuranceHistory.totalStudents#</td>
+                                    <td><a href="insurance/downloadFile.cfm?file=#URLEncodedFormat(qGetInsuranceHistory.file)#&date=#URLEncodedFormat(DateFormat(qGetInsuranceHistory.date, 'mm/dd/yyyy'))#">[ Download ]</a></td>
+                                </tr>                            
+                            </cfloop>
+                        </table>
+                   
+                    </td>
+                </tr>
+            </table>
+            
+            <br /><br />
                    
 		</td>
 	</tr>
