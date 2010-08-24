@@ -5,7 +5,7 @@
 <link href="css/granby.css" rel="stylesheet" type="text/css" />
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Granby Preparatory Academy: Employment Opportunities</title>
+<title>Granby Preparatory Academy: Application Process</title>
 <style type="text/css">
 
 <!--
@@ -36,11 +36,23 @@ body {
   </div>
 <div id="mainContent">
    
-    <h2>Employment Opportunities</h2>
-<p class="paragraphText">Thank you for your interest in employment at Granby Preparatory Academy. If you have any questions please email us at: <strong>info@granbyprep.com.</strong> <br /><br />
-  We do not officially open until September, 2011. However, we will begin interviewing to fill faculty and administrative positions in November and December and will post the positions on this page as they become available. Please check back periodically.<br /><br />
-  If you are interested in working in food services at GPA, please contact our dining services vendor, Sage Food Services, by clicking on the link below<a href="http://www.sagedining.com/applicationNEW.php">.</a></p>
-<p><a href="http://www.sagedining.com/applicationNEW.php"><img src="images/sageOnline_24.png" border="0" /></a></p><br />
+    <h2>Application Process</h2>
+    <p class="paragraphText"> Below is a checklist of required items for application to GPA.  The application deadline for consideration in the first round is February 1st, 2011.  However, we do have a rolling admission policy which means that if you complete your application before January 1st, you will receive an admission decision early.  We will begin making admission decisions for the 2011-2012 school year on October 1st, 2010.</p>
+<h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Campus Visit</h4>
+ <p class="paragraphText"> We hope you'll be able to visit our campus and take a tour of our facilities.  At that time you can also have your interview with a member of the admission staff.  If you aren't able to visit, you can arrange to have a Skype interview by emailing the admission office at admission@granbyprep.com. </p>
+ 
+ <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Application</h4>
+ <p class="paragraphText"> Please create a login and complete your online application at the following link: <a href="https://www.granbyprep.com/admissions/index.cfm?"><strong>click here.</strong></a> </p>
+ 
+ <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Teacher Recommendations</h4>
+ <p class="paragraphText"> Teacher recommendations must be printed from the online application site and must be mailed, faxed or emailed by the teacher directly to GPA.</p>
+ 
+ <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;School Transcript</h4>
+ <p class="paragraphText"> School Transcripts from the last two years should be sent directly from the school to GPA.</p>
+ 
+  <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Standardized Testing</h4>
+ <p class="paragraphText"> Acceptable tests include National, State or Regional Tests.  TOEFL and SLEP tests are also acceptable.  Test results should be sent directly to GPA.</p>
+ <p><a href="https://www.granbyprep.com/admissions/index.cfm?"><img src="images/applyHere_25.png" width="85" height="22" border="0"/></a></p>
 
   <!-- end mainContent --></div>
   <div id="footer">

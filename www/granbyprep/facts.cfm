@@ -5,7 +5,7 @@
 <link href="css/granby.css" rel="stylesheet" type="text/css" />
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Granby Preparatory Academy: Employment Opportunities</title>
+<title>About Granby Prep: Granby Preparatory Academy is a co-ed, independent boarding school located 70 miles west of Boston.</title>
 <style type="text/css">
 
 <!--
@@ -16,6 +16,11 @@ body {
 	padding: 0;
 	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
 	color: #000000;
+}
+li {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	line-height: 19px;
 }
 -->
 </style></head>
@@ -35,17 +40,27 @@ body {
 <cfinclude template ="menu.cfm">
   </div>
 <div id="mainContent">
-   
-    <h2>Employment Opportunities</h2>
-<p class="paragraphText">Thank you for your interest in employment at Granby Preparatory Academy. If you have any questions please email us at: <strong>info@granbyprep.com.</strong> <br /><br />
-  We do not officially open until September, 2011. However, we will begin interviewing to fill faculty and administrative positions in November and December and will post the positions on this page as they become available. Please check back periodically.<br /><br />
-  If you are interested in working in food services at GPA, please contact our dining services vendor, Sage Food Services, by clicking on the link below<a href="http://www.sagedining.com/applicationNEW.php">.</a></p>
-<p><a href="http://www.sagedining.com/applicationNEW.php"><img src="images/sageOnline_24.png" border="0" /></a></p><br />
+  <div class="photo"><img src="images/facts.jpg" width="300" height="225" /></div>
+    <h2>Quick Facts</h2>
+ 
+    <ul><li>Main campus building built in 1927
+<li>Campus built as a Franciscan Seminary
+<li>110,000 square feet of indoor space
+<li>All buildings are connected so you don't have to go outside in the winter!
+<li>30 classrooms
+<li>Dormitories have a capacity of 165 boarders in single, double and triple rooms
+<li>Every square foot of the campus will be renovated in 2010-2011, including all new furniture and technology throughout<br /><br />
 
+<li>Traditional college prep curriculum with an international emphasis
+<li>Class sizes of 15 or less
+<li>Latest teaching technology in each classroom
+<li>State of the art key-less security system campus-wide monitored by municipal police and on site security staff
+<li>All levels of English as a Second Language (ESL) instruction</li></ul>
+<br /><br />
   <!-- end mainContent --></div>
   <div id="footer">
     <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
-    For more information contact us at info@granbyprep.com</p>
+    For more information contact us at info@granbyprep.com </p>
   <!-- end footer --></div>
 <!-- end container --></div>
 <script type="text/javascript">

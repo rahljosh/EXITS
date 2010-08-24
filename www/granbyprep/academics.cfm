@@ -5,7 +5,7 @@
 <link href="css/granby.css" rel="stylesheet" type="text/css" />
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Granby Preparatory Academy: Employment Opportunities</title>
+<title>Granby Preparatory Academy: Athletics</title>
 <style type="text/css">
 
 <!--
@@ -35,13 +35,18 @@ body {
 <cfinclude template ="menu.cfm">
   </div>
 <div id="mainContent">
-   
-    <h2>Employment Opportunities</h2>
-<p class="paragraphText">Thank you for your interest in employment at Granby Preparatory Academy. If you have any questions please email us at: <strong>info@granbyprep.com.</strong> <br /><br />
-  We do not officially open until September, 2011. However, we will begin interviewing to fill faculty and administrative positions in November and December and will post the positions on this page as they become available. Please check back periodically.<br /><br />
-  If you are interested in working in food services at GPA, please contact our dining services vendor, Sage Food Services, by clicking on the link below<a href="http://www.sagedining.com/applicationNEW.php">.</a></p>
-<p><a href="http://www.sagedining.com/applicationNEW.php"><img src="images/sageOnline_24.png" border="0" /></a></p><br />
-
+   <div class="photo"><img src="images/courses.png" width="303" height="161" /></div>
+    <h2>Courses Offered </h2>
+<ul><li>AP classes offered<br />
+ <li> SAT and TOEFL Prep Courses<br />
+ <li> College Prep Courses<br />
+  <li>ESL available<br />
+  <li>Pre-September English Courses
+    <br />
+    available in summer of 2010</li></ul>
+    <p></p>
+    <p></p>
+    <p></p>
   <!-- end mainContent --></div>
   <div id="footer">
     <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />

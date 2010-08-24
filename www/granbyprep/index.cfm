@@ -16,9 +16,16 @@
 
 <div id="container">
   <div id="header">
-  <div class="events">NEWS</div>
+  <div class="events"><h2>NEWS</h2>
+    <img src="images/blackline_21.png" width="111" height="3" />
+    <p class="news">Our online application is now <strong>LIVE</strong> for the<br />2011 / 2012 school year </p>
+      <p><a href="https://www.granbyprep.com/admissions/index.cfm?"><img src="images/applyHere_25.png" width="85" height="22" border="0" /> </a></p>
+    <img src="images/blackline_21.png" width="111" height="3" />
+    </div>
+    
+    <!---- announcement 
   <div class="announcement">We are currently finalizing the changes to our site. <br /><br /> If you have any questions please email us at <br />
-  info@granbyprep.com <br /><br /></div>
+  info@granbyprep.com <br /><br /></div>---->
   
   <!-- end header --></div>
    <div id="menu">
@@ -28,7 +35,8 @@
 <div id="mainIndex">
 	<!-- end mainIndex --></div>
   <div id="footerIndex">
-    <div class="info"><a href="/admissions"><img src="images/apply.png" width="78" height="21" alt="apply" border="0" /></a><img src="images/spacer.png" width="78" height="7" /><a href="request_Info.cfm"><img src="images/request.png" width="78" height="20" alt="request" border="0" /></a></div>
+    <div class="info"><a href="/admissions"><img src="images/apply.png" width="78" height="21" alt="apply" border="0" /></a><img src="images/spacer.png" width="78" height="7" /><a href="requestInfo.cfm"><img src="images/request.png" width="78" height="20" alt="request" border="0" /></a></div>
+    <div class="twitter"><a href="http://twitter.com/GranbyPrep"><img src="images/twitter.png" width="29" height="31" alt="twitter" border="0" /></a></div>
     <div class="infoLeft">International EC, LLC</div>
 <!-- end footer --></div>
 <!-- end container --></div>
