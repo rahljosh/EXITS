@@ -29,128 +29,188 @@
         <cfargument name="provider" default="" hint="Provider Name eg. Global">
         <cfargument name="isActive" default="1">
         
-        <cfquery name="qGetInsurancePolicies" datasource="#APPLICATION.dsn#">
-            SELECT 
-            	insuTypeID,
-                type,
-                shortType,
-                provider,
-                ayp5,
-                ayp10,
-                ayp12,
-                active 
-            FROM 
-            	smg_insurance_type 
-            WHERE
-            	active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
-            
-            <cfif VAL(ARGUMENTS.insuTypeID)>
-            	AND
-                	insuTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.insuTypeID#">
-            </cfif>
-            
-            <cfif LEN(ARGUMENTS.provider)>
-            	AND
-                	provider = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.provider#">
-            </cfif>
+        <cfquery 
+        	name="qGetInsurancePolicies" 
+            datasource="#APPLICATION.dsn#">
+                SELECT 
+                    insuTypeID,
+                    type,
+                    shortType,
+                    provider,
+                    ayp5,
+                    ayp10,
+                    ayp12,
+                    active 
+                FROM 
+                    smg_insurance_type 
+                WHERE
+                    active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
                 
+                <cfif VAL(ARGUMENTS.insuTypeID)>
+                    AND
+                        insuTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.insuTypeID#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.provider)>
+                    AND
+                        provider = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.provider#">
+                </cfif>
         </cfquery>
 		   
 		<cfreturn qGetInsurancePolicies>
 	</cffunction>
 
-	
-	<!--- Get Global Secutive History Only
+
+	<!--- Get Global Secutive History Only --->   
     <cffunction name="getInsuranceHistory" access="public" returntype="query" output="false" hint="Returns insurance history by date">
-        <cfargument name="companyID" type="numeric" hint="CompanyID is required">
-              
-        <cfquery name="qGetInsuranceHistory" datasource="#APPLICATION.dsn#">>
-            SELECT 
-                s.insurance, 
-                COUNT(s.studentID) AS total
-            FROM 
-                smg_students s
-            WHERE 
-                s.insurance IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-            
-            <cfif VAL(ARGUMENTS.companyID) AND ARGUMENTS.companyID LTE 4>
-                AND
-                    s.companyID <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-            <cfelseif VAL(ARGUMENTS.companyID)>
-                AND
-                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">    
-            </cfif>
-                
-            GROUP BY  
-                s.insurance 
-            ORDER BY  
-                s.insurance 
+        <cfargument name="type" default="N" hint="Type is not required.">
+             
+        <cfquery 
+        	name="qGetInsuranceHistory" 
+            datasource="#APPLICATION.dsn#">
+                SELECT 
+                    count(studentID) as totalStudents,
+                    file,                
+                    date
+                FROM 
+                    smg_insurance_batch 
+                WHERE
+                    type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.type#">               
+                GROUP BY            
+                    file                  
+                ORDER BY            
+                    date DESC
         </cfquery>
 		   
 		<cfreturn qGetInsuranceHistory>
 	</cffunction>
-	--->
+
+
+    <cffunction name="getInsuranceHistoryByStudent" access="public" returntype="query" output="false" hint="Returns insurance history by date">
+        <cfargument name="studentID" hint="Student ID is required.">
+        <cfargument name="type" default="N" hint="List value is not required.">
+             
+        <cfquery 
+        	name="qGetInsuranceHistoryByStudent" 
+        	datasource="#APPLICATION.dsn#">
+                SELECT 
+                    ID,
+                    date,
+                    studentID,
+                    type,
+                    startDate,
+                    endDate,
+                    file
+                FROM 
+                    smg_insurance_batch 
+                WHERE
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                AND  
+                    type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.type#" list="yes"> )                       
+                GROUP BY            
+                    file                  
+                ORDER BY            
+                    date DESC
+        </cfquery>
+		   
+		<cfreturn qGetInsuranceHistoryByStudent>
+	</cffunction>
+
+
+    <cffunction name="getStudentsHistory" access="public" returntype="query" output="false" hint="Returns insurance history by date">
+        <cfargument name="file" hint="file is required.">
+        <cfargument name="date" hint="date is required.">
+             
+        <cfquery 
+        	name="qGetStudentsHistory" 
+            datasource="#APPLICATION.dsn#">
+                SELECT 
+                    s.firstname, 
+                    s.familyLastName, 
+                    s.dob,
+                    s.email,
+                    ib.startDate,
+                    ib.endDate
+                FROM 
+                    smg_insurance_batch ib
+                INNER JOIN
+                    smg_students s ON s.studentID = ib.studentID
+                INNER JOIN
+                    smg_users u ON u.userID = s.intRep                
+                WHERE
+                    ib.file = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.file#">
+                AND
+                    ib.date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#">                               
+                ORDER BY 
+                    u.businessname, 
+                    s.firstname
+        </cfquery>
+		   
+		<cfreturn qGetStudentsHistory>
+	</cffunction>
 
 
 	<cffunction name="getStudentsToInsure" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
         <cfargument name="programID" hint="List of program IDs. Required.">
         <cfargument name="PolicyID" hint="Policy ID required">
 
-        <cfquery name="qGetStudentsToInsure" datasource="#APPLICATION.dsn#">
-            SELECT DISTINCT
-                s.studentID, 
-                s.firstname, 
-                s.familyLastName, 
-                s.dob,
-                s.email, 
-                MIN(fi.dep_date) as dep_date,            
-                it.type,  
-                ic.policycode, 
-                p.startDate,
-                p.endDate,
-                p.insurance_startdate, 
-                p.insurance_enddate
-            FROM
-                smg_flight_info fi
-            INNER JOIN
-                smg_students s ON fi.studentID = s.studentID 
-					AND
-                    	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                	AND 
-                    	s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
-					<cfif CLIENT.companyID EQ 5>
-                        AND          
-                            s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
-                    <cfelse>
-                        AND          
-                            s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
-                    </cfif>
-            INNER JOIN 
-                smg_users u ON u.userid = s.intrep 
-                    AND 
-                        u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
-            INNER JOIN
-                smg_insurance_type it ON it.insutypeid = u.insurance_typeid
-            INNER JOIN 
-                smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
-            INNER JOIN  
-                smg_programs p ON p.programID = s.programID
-
-			LEFT OUTER JOIN 
-            	smg_insurance_batch ib ON ib.studentID = fi.studentID 
-                    AND 
-                        ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
-                
-            WHERE 
-                fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
-            AND
-            	ib.studentID IS NULL
-                
-            GROUP BY 
-                fi.studentID
-            ORDER BY 
-                u.businessname, 
-                s.firstname
+        <cfquery 
+        	name="qGetStudentsToInsure" 
+            datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                    s.studentID, 
+                    s.firstname, 
+                    s.familyLastName, 
+                    s.dob,
+                    s.email, 
+                    MIN(fi.dep_date) as dep_date,            
+                    it.type,  
+                    ic.policycode, 
+                    p.startDate,
+                    p.endDate,
+                    p.insurance_startdate, 
+                    p.insurance_enddate
+                FROM
+                    smg_flight_info fi
+                INNER JOIN
+                    smg_students s ON fi.studentID = s.studentID 
+                        AND
+                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        AND 
+                            s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
+                        <cfif CLIENT.companyID EQ 5>
+                            AND          
+                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                        <cfelse>
+                            AND          
+                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+                        </cfif>
+                INNER JOIN 
+                    smg_users u ON u.userid = s.intrep 
+                        AND 
+                            u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
+                INNER JOIN
+                    smg_insurance_type it ON it.insutypeid = u.insurance_typeid
+                INNER JOIN 
+                    smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
+                INNER JOIN  
+                    smg_programs p ON p.programID = s.programID
+    
+                LEFT OUTER JOIN 
+                    smg_insurance_batch ib ON ib.studentID = fi.studentID 
+                        AND 
+                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                    
+                WHERE 
+                    fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                AND
+                    ib.studentID IS NULL
+                    
+                GROUP BY 
+                    fi.studentID
+                ORDER BY 
+                    u.businessname, 
+                    s.firstname
         </cfquery>
     
 		<cfreturn qGetStudentsToInsure>
@@ -171,49 +231,106 @@
 			}
 		</cfscript>
 
-        <cfquery name="qGetStudentsToInsureNoFlight" datasource="#APPLICATION.dsn#">
-            SELECT DISTINCT
-                s.studentID, 
-                s.firstname, 
-                s.familyLastName, 
-                s.dob, 
-                s.email,
-                "#ARGUMENTS.startDate#" as dep_date,                
-                it.type,  
-                ic.policycode, 
-                p.startDate,
-                p.endDate,
-                p.insurance_startdate, 
-                p.insurance_enddate
-           	FROM
-           		smg_students s  
-            INNER JOIN 
-                smg_users u ON u.userid = s.intrep 
-                    AND 
-                        u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
-            INNER JOIN
-                smg_insurance_type it ON it.insutypeid = u.insurance_typeid
-            INNER JOIN 
-                smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
-            INNER JOIN  
-                smg_programs p ON p.programID = s.programID
-			LEFT OUTER JOIN 
-            	smg_insurance_batch ib ON ib.studentID = s.studentID 
-                    AND 
-                        ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
-            WHERE 
-                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-            AND 
-                s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)  
-            AND
-            	ib.studentID IS NULL
-            ORDER BY 
-                u.businessname, 
-                s.familyLastName,
-                s.firstName        
-        </cfquery>
+        <cfquery 
+        	name="qGetStudentsToInsureNoFlight" 
+            datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                    s.studentID, 
+                    s.firstname, 
+                    s.familyLastName, 
+                    s.dob, 
+                    s.email,
+                    "#ARGUMENTS.startDate#" as dep_date,                
+                    it.type,  
+                    ic.policycode, 
+                    p.startDate,
+                    p.endDate,
+                    p.insurance_startdate, 
+                    p.insurance_enddate
+                FROM
+                    smg_students s  
+                INNER JOIN 
+                    smg_users u ON u.userid = s.intrep 
+                        AND 
+                            u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
+                INNER JOIN
+                    smg_insurance_type it ON it.insutypeid = u.insurance_typeid
+                INNER JOIN 
+                    smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
+                INNER JOIN  
+                    smg_programs p ON p.programID = s.programID
+                LEFT OUTER JOIN 
+                    smg_insurance_batch ib ON ib.studentID = s.studentID 
+                        AND 
+                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                WHERE 
+                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)  
+                AND
+                    ib.studentID IS NULL
+                ORDER BY 
+                    u.businessname, 
+                    s.familyLastName,
+                    s.firstName        
+		</cfquery>
     
 		<cfreturn qGetStudentsToInsureNoFlight>
+	</cffunction>
+
+
+	<cffunction name="getStudentsToCancel" access="public" returntype="query" output="false" hint="Returns canceled students with active insurance that needs to be canceled">
+        <cfargument name="programID" hint="List of program IDs. Required.">
+
+        <cfquery 
+        	name="qGetStudentsToCancel" 
+            datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                    s.studentID, 
+                    s.firstname, 
+                    s.familyLastName, 
+                    s.dob,
+                    s.email,
+                    s.cancelDate, 
+                    ib.startDate,
+                    ib.endDate
+                FROM
+                    smg_insurance_batch ib
+                INNER JOIN
+                    smg_students s ON s.studentID = ib.studentID   
+                        AND	
+                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        AND
+                            cancelDate IS NOT NULL
+                        AND 
+                            s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
+                        <cfif CLIENT.companyID EQ 5>
+                            AND          
+                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                        <cfelse>
+                            AND          
+                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+                        </cfif>
+                INNER JOIN 
+                    smg_users u ON u.userid = s.intrep 
+                INNER JOIN  
+                    smg_programs p ON p.programID = s.programID
+                LEFT OUTER JOIN 
+                    smg_insurance_batch ibc ON ibc.studentID = s.studentID 
+                        AND 
+                            ibc.type != <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                WHERE 
+                    ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                AND
+                    ibc.studentID IS NULL                            
+                GROUP BY 
+                    s.studentID
+                ORDER BY 
+                    u.businessname, 
+                    s.firstname
+        </cfquery>
+    
+		<cfreturn qGetStudentsToCancel>
 	</cffunction>
 
 
@@ -276,7 +393,7 @@
                     u.businessname, 
                     s.familyLastName,
                     s.firstName        
-            </cfquery>
+		</cfquery>
         
         <cfreturn qGetStudentsReturnRecords> 
            
@@ -290,30 +407,29 @@
         <cfargument name="endDate" hint="endDate is required">
         <cfargument name="fileName" hint="fileName is required">
               
-        <cfquery datasource="#APPLICATION.dsn#">
-            INSERT INTO 
-                smg_insurance_batch
-            (
-                studentID,
-                date,
-                type,
-                startDate,
-                endDate,
-                file
-            )
-            VALUES
-            (
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">, 
-                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.type#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.startDate#">, 
-                <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.endDate#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fileName#">
-            )	
+        <cfquery 
+        	datasource="#APPLICATION.dsn#">
+                INSERT INTO 
+                    smg_insurance_batch
+                (
+                    studentID,
+                    date,
+                    type,
+                    startDate,
+                    endDate,
+                    file
+                )
+                VALUES
+                (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">, 
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.type#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.startDate#">, 
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.endDate#">, 
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fileName#">
+                )	
         </cfquery>
            
 	</cffunction>
-    
-    
 
 </cfcomponent>

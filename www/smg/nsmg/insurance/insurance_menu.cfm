@@ -68,7 +68,7 @@
             <table cellpadding="6" cellspacing="0" align="center" width="96%">
                 <tr>
                     <td width="50%" valign="top">
-                        <form action="insurance/new_transaction_programID.cfm" method="POST">
+                        <form action="insurance/newTransactionProgramID.cfm" method="POST">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">New Transaction - Based on Flight Arrival Information</th></tr>
                                 <tr align="left">
@@ -112,7 +112,7 @@
                         </form>
                     </td>
                     <td width="50%" valign="top">
-                        <form action="insurance/new_transaction_programID.cfm" method="POST">
+                        <form action="insurance/newTransactionProgramID.cfm" method="POST">
                         	<input type="hidden" name="noFlight" value="1" />
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">New Transaction - Based on Given Start Date</th></tr>
@@ -156,18 +156,18 @@
             
             <br><br>
 			
-            <!--- EARLY RETURN HEADER --->
+            <!--- Return Date Correction --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Early Return</th></tr>
-                <tr><td colspan="2" align="center"><font size="-2">According to Flight Departure Info</font></td></tr>
+                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Return Date Correction</th></tr>
+                <tr><td colspan="2" align="center"><font size="-2">Active students returning home at the end of the program</font></td></tr>
             </table>
             
             <table cellpadding="6" cellspacing="0" align="center" width="96%">
                 <tr>
                     <td width="50%" valign="top">
-                        <form action="insurance/early_return.cfm" method="POST">
+                        <form action="insurance/earlyReturn.cfm" method="POST">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Early Return</th></tr>
+                                <tr><th colspan="2" bgcolor="##e2efc7">Return Date Correction - Based on Flight Departure Information</th></tr>
                                 <tr align="left">
                                     <td>Program :</td>
                                     <td>
@@ -199,293 +199,44 @@
             </table>
             
             <br><br>
-            
-            <!--- Need to be re-done 01/26/2010 --->
-            
-            <!---
-            	
-			<!--- CORRECTION HEADER --->
-            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-            	<tr></tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> INSURANCE MANAGEMENT SCREEN</th></tr>
-            </table><br>
-	
-			<!--- CORRECTION - FIRST ROW --->
-            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-            	<tr></tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> New Transaction</th></tr>
-            </table>
-            
-            <table cellpadding="6" cellspacing="0" align="center" width="96%">
-            <tr>
-                <td width="50%" valign="top">
-                    <cfform action="?curdoc=insurance/new_transaction_manual" method="POST">	
-                    <table class="nav_bar" cellpadding="6" cellspacing="0" align="right" width="100%">
-                    <tr><th colspan="2" bgcolor="##e2efc7">New Transaction</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=00></option>
-                                    <option value=0>All Programs</option>			
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-                                </select>
-                            </td></tr>
-                        <tr><td colspan="2" align="center">&nbsp;</td></tr>			
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
-                    </table>
-                    </cfform>
-                </td>
-                <td width="50%" valign="top">
-                    <cfform action="?curdoc=insurance/new_manual_update" method="POST">
-                    <table class="nav_bar"  cellpadding="6" cellspacing="0" align="right" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Update New Transactions</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=1></option>
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-                                </select></td></tr>
-                        <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
-                    </table>
-                    </cfform>
-                </td>
-            </tr>
-            </table><br><br>
 
-			<!--- CORRECTION HEADER --->
+            <!--- Cancelation --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-            <tr></tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Correction</th></tr>
+                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Cancelation</th></tr>
+                <tr><td colspan="2" align="center"><font size="-2">Canceled insured students that withdrew the program</font></td></tr>
             </table>
             
             <table cellpadding="6" cellspacing="0" align="center" width="96%">
-            <tr>
-                <td width="50%" valign="top">
-                    <cfform action="?curdoc=insurance/correction" method="POST">
-                    <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Correction</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-                                </select>
-                            </td></tr>
-                        <tr><td colspan="2" align="center">&nbsp;</td></tr>			
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
-                    </table>
-                    </cfform>
-                </td>
-                <td width="50%" valign="top">
-                    <cfform action="?curdoc=insurance/correction_update" method="POST">
-                    <table class="nav_bar"  cellpadding="6" cellspacing="0" align="right" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Update Correction Records</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=1></option>
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-                                </select></td></tr>
-                        <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
-                    </table>
-                    </cfform>
-                </td>
-            </tr>
-            </table><br><br>
-                
-            
-            <!--- EXTENSION HEADER ---><!--- EXTENSION - FIRST ROW --->
-            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-            <tr></tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Extension</th></tr>
-            </table>
-            
-            <table cellpadding="6" cellspacing="0" align="center" width="96%">
-            <tr>
-                <td width="50%" valign="top">
-                    <cfform action="?curdoc=insurance/extension" method="POST">
-                    <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Extension</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-                                </select></td></tr>
-                        <tr><td colspan="2" align="center">&nbsp;</td></tr>					
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
-                    </table>
-                    </cfform>
-                </td>
-                <td width="50%" valign="top">
-                    <cfform action="?curdoc=insurance/extension_update" method="POST">
-                    <table class="nav_bar"  cellpadding="6" cellspacing="0" align="right" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Update Extension Records</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=1></option>
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-                                </select></td></tr>
-                        <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
-                    </table>
-                    </cfform>
-                </td>
-            </tr>
-            </table><br><br>
-            
-            <!--- CANCELATION HEADER ---> <!--- CANCELATION - FIRST ROW --->
-            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-            <tr></tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Cancelation</th></tr>
-            <tr><td colspan="2" align="center"><font size="-2">Students must be inactive (canceled) and must have insurance info (insured date)</font></td></tr>
-            </table>
-            
-            <table cellpadding="6" cellspacing="0" align="center" width="96%">
-            <tr>
-                <td width="50%" valign="top">
-                    <cfform action="?curdoc=insurance/cancelation" method="POST">
-                    <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Cancelation</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value=1></option>
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-                                </select></td></tr>
-                        <tr><td colspan="2" align="center">&nbsp;</td></tr>					
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
-                    </table>
-                    </cfform>
-                </td>
-                <td width="50%" valign="top">
-                    <cfform action="?curdoc=insurance/cancelation_update" method="POST">
-                    <table class="nav_bar"  cellpadding="6" cellspacing="0" align="right" width="100%">
-                        <tr><th colspan="2" bgcolor="##e2efc7">Update Cancelation Records</th></tr>
-                        <tr align="left">
-                            <td>Program :</td>
-                            <td><select name="programID" size="1">
-                                    <option value='zero'></option>
-                                    <option value=0>All Programs</option>			
-                                    <!--- <option value=0></option> --->
-                                    <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-                                </select></td></tr>
-                        <tr><td colspan="2" align="center"><font color="##CC0000"><b>* See Warning</b></font></td></tr>
-                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/update.gif" align="center" border="0" onClick="return areYouSure(this);"></td></tr>
-                    </table>
-                    </cfform>
-                </td>
-            </tr>
-            </table><br><br>
-	
-			<!--- CREATE EXTENSION / EARLY RETURN ACCORDING TO FLIGHT  --->
-			<table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-			<tr></tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Extensions / Early Returns According to Flight Info.</th></tr>
-			</table>
-			
-			<table cellpadding="6" cellspacing="0" align="center" width="96%">
-			<tr>
-				<td width="50%" valign="top">
-					<cfform action="?curdoc=insurance/upd_corrections" method="POST">
-					<table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-						<tr><th colspan="2" bgcolor="##e2efc7">Create Corrections According to Flight</th></tr>
-						<tr align="left">
-							<td>Program :</td>
-							<td><cfselect name="programID" size="5" multiple required="yes" message="Please select a program.">
-									<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-								</cfselect>
-							</td>
-						</tr>
-						<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
-					</table>
-					</cfform>		
-				</td>
-				<td width="50%" valign="top">
-					<cfform action="?curdoc=insurance/upd_extensions" method="POST">
-					<table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-						<tr><th colspan="2" bgcolor="##e2efc7">Create Extensions / New Transactions / Early Returns Data</th></tr>
-						<tr align="left">
-							<td>Program :</td>
-							<td><cfselect name="programID" size="5" multiple required="yes" message="Please select a program.">
-									<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
-								</cfselect>
-							</td>
-						</tr>
-						<tr><td><cfinput type="checkbox" name="manual"> Extension Date:</td><td><cfinput name="extensiondate" size="7" validate="date" maxlength="10"> mm/dd/yyyy</td></tr>
-						<tr><td colspan="2" align="center">Use an extension date for kids with no flight information.</td></tr>
-						<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
-					</table>
-					</cfform>
-				</td>
-			</tr>
-			</table><br><br>
-			--->
-            
-			<table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-			<tr><th colspan="7" bgcolor="##e2efc7">
-				<span class="get_attention"><b>::</b></span> New Transaction Insurance History &nbsp; &nbsp;
-				<Cfif URL.history is 'no'>
-					<a href="index.cfm?curdoc=insurance/insurance_menu&history=yes">(show list)</a>
-				<cfelseif URL.history is 'yes'>
-					<a href="index.cfm?curdoc=insurance/insurance_menu&history=no">(hide list)</a>
-				</Cfif>
-			</th></tr>
-			<cfif VAL(URL.history)>
-				<tr bgcolor="##e2efc7">
-					<td width="20%" align="left"><b>Date Insured</b></td>
-					<td width="20%" align="center"><b>Total of Students</b></td>
-					<td width="20%" align="center"><b>Batch ID</b></td>			
-					<td width="20%" align="center"><b>Excel File</b></td>
-				</tr>
-				<cfloop query="qGetInsuranceHistory">
-					<tr bgcolor="#iif(qGetInsuranceHistory.currentrow MOD 2 ,DE("white") ,DE("ededed"))#">
-						<td align="left"><a href="insurance/insurance_list.cfm?insudate=#DateFormat(insurance, 'yyyy-mm-dd')#" target="_blank">#DateFormat(insurance, 'mm/dd/yyyy')#</a></td>
-						<td align="center"><a href="insurance/insurance_list.cfm?insudate=#DateFormat(insurance, 'yyyy-mm-dd')#" target="_blank">#total#</a></td>
-						<td align="center"><a href="insurance/insurance_excel_list.cfm?insudate=#DateFormat(insurance, 'yyyy-mm-dd')#" target="_blank"><img src="pics/excelico.jpg" border="0"></a></td>
-					</tr>
-				</cfloop>
-				<tr><td colspan="4">* Click in the link(s) above to see the list of students.</td></tr>  
-			</cfif>
-			</table><br>
-
-        	<!--- 
-			<cfif client.usertype EQ '1'>
-                <table cellpadding="6" cellspacing="0" align="center" width="96%">
                 <tr>
                     <td width="50%" valign="top">
-                        <cfform action="?curdoc=insurance/upd_corrections_no_flight" method="POST">
-                        <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                            <tr><th colspan="2" bgcolor="##e2efc7">Update Insurance Dates</th></tr>
-                            <tr><td colspan="2">Update all students that do not have flight arrival information</td></tr>
+                        <form action="insurance/cancelationProgramID.cfm" method="POST">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                                <tr><th colspan="2" bgcolor="##e2efc7">Cancelation - Based on cancelation date</th></tr>
                                 <tr align="left">
                                     <td>Program :</td>
-                                    <td><cfselect name="programID" multiple  size="6">
-                                <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop></cfselect></td></tr>
-                                <tr align="left">
-                                    <td>New Start Date :</td><td><cfinput type="text" size="7" name="newdate" required="yes" message="You must enter a date" validate="date"></td>
+                                    <td>
+                                    	<select name="programID" size="6" multiple>
+                                            <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
+                                        </select>
+                                    </td>
                                 </tr>
-                            <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
-                        </table>
-                        </cfform>	
+                                <tr><td colspan="2" align="center">&nbsp;</td></tr>					
+                                <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
+                            </table>
+                        </form>
                     </td>
-                    
                     <td width="50%" valign="top">&nbsp;
-                                
+                        
                     </td>
                 </tr>
-                </table>
-            </cfif>
-			--->
-
-</td></tr>
+            </table>
+            
+            <br><br>
+            
+            <!--- Insurance History --->
+                   
+		</td>
+	</tr>
 </table>
 
 </cfoutput>

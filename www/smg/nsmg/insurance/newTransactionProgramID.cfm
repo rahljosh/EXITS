@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		new_transaction_programID.cfm
+	File:		newTransactionProgramID.cfm
 	Author:		Marcus Melo
 	Date:		January 06, 2010
 	Desc:		Gets a list with uninsured students, creates the xls file and 

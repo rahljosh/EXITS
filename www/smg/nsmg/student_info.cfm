@@ -37,7 +37,13 @@
 		qAssignedCompany = AppCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID);
 
 		// Get Student Region Assigned
-		qGetRegionAssigned = AppCFC.REGION.getRegions(regionID=qStudentInfo.regionAssigned);
+		qRegionAssigned = AppCFC.REGION.getRegions(regionID=qStudentInfo.regionAssigned);
+		
+		// Insurance Information
+		qInsuranceHistory = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qStudentInfo.studentID, type='N,R');
+
+		// Insurance Information
+		qInsuranceCancelation = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qStudentInfo.studentID, type='X');
 		
 		// Get Private Schools Prices
 		qPrivateSchools = APPCFC.SCHOOL.getPrivateSchools();
@@ -67,7 +73,7 @@
 		virtualDirectory = "#AppPath.onlineApp.virtualFolder##qStudentInfo.studentID#";
 		
 		// Get Facilitator for this Region
-		qGetFacilitator = APPCFC.USER.getUserByID(userID=VAL(qGetRegionAssigned.regionfacilitator));
+		qFacilitator = APPCFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
 	</cfscript>
 	
     <!--- Student Picture --->
@@ -539,8 +545,8 @@
 					<td><cfif NOT VAL(regionassigned)>	
 	                    	<div class="get_attention">No Region Assigned</div>
                         <cfelse>
-							<cfif VAL(qGetFacilitator.recordCount)>
-		                        <a href="index.cfm?curdoc=user_info&userid=#qGetFacilitator.userid#">#qGetFacilitator.firstname# #qGetFacilitator.lastname#</a>                        
+							<cfif VAL(qFacilitator.recordCount)>
+		                        <a href="index.cfm?curdoc=user_info&userid=#qFacilitator.userid#">#qFacilitator.firstname# #qFacilitator.lastname#</a>                        
 	                        <cfelse>
                         		<div class="get_attention">Region doesn't have Fac. Assigned.</div>
 							</cfif>
@@ -699,9 +705,14 @@
 				<tr bgcolor="EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Insurance</td></tr>
 				<tr>
 					<td width="10"><cfif qIntAgent.insurance_typeid LTE '1'><input type="checkbox" name="insurance_check" value="0" disabled><cfelse><input type="checkbox" name="insurance_check" value="1" checked disabled></cfif></td>
-					<td align="left" colspan="2"><cfif qIntAgent.insurance_typeid EQ '0'> <font color="FF0000">Insurance Information is missing</font>
-						<cfelseif qIntAgent.insurance_typeid EQ 1> Does not take Insurance Provided by #qCompanyShort.companyshort#
-						<cfelse> Takes Insurance Provided by #qCompanyShort.companyshort# </cfif>
+					<td align="left" colspan="2">
+						<cfif qIntAgent.insurance_typeid EQ '0'> 
+                        	<font color="FF0000">Intl. Rep. Insurance Information is missing</font>
+						<cfelseif qIntAgent.insurance_typeid EQ 1> 
+                        	Does not take Insurance Provided by #qCompanyShort.companyshort#
+						<cfelse> 
+                        	Takes Insurance Provided by #qCompanyShort.companyshort# 
+						</cfif>
 					</td>
 				</tr>
 				<tr>
@@ -713,36 +724,41 @@
 						<cfelse> #qIntAgent.type#	</cfif>		
 					</td>
 				</tr>
-				<tr>
-					<td><Cfif insurance is ''><input type="checkbox" name="insured_date" value="0" disabled><Cfelse><input type="checkbox" name="insured_date" value="1" checked disabled></cfif></td>
-					<td>Insured Date :</td>
+				<!--- Insurance Information --->
+                <tr>
 					<td>
-					<cfif qIntAgent.insurance_typeid EQ 1> 
-						n/a
-						<cfelse>
-							
-							<cfquery name="ins_info" datasource="#application.dsn#">
-								select distinct startdate 
-								from smg_insurance_batch
-								where 
-                                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
-                                AND 
-                                	type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
-							</cfquery>
-							<cfif ins_info.recordcount eq 0>
-							not insured yet.
-							<cfelse>
-							#DateFormat(ins_info.startdate, 'mm/dd/yyyy')#
-							</cfif>
-						</cfif>
-					
+                    	<input type="checkbox" name="insured_date" value="1" <Cfif qInsuranceHistory.recordCount> checked </cfif> disabled>
+                    </td>
+					<td>Insured on :</td>
+					<td>
+						<cfif qIntAgent.insurance_typeid EQ 1>
+                            n/a
+                        <cfelseif qInsuranceHistory.recordCount>
+                            #DateFormat(qInsuranceHistory.date, 'mm/dd/yyyy')# <br />
+                        <cfelse>
+                            not insured yet.
+                        </cfif>
 					</td>
 				</tr>
-				<tr>
-					<td><Cfif cancelinsurancedate is ''><input type="checkbox" name="insurance_Cancel" value="0" disabled><Cfelse><input type="checkbox" name="insurance_Cancel" value="1" checked disabled></cfif></td>
-					<td>Canceled on :</td>
-					<td><a href="javascript:OpenLetter('insurance/insurance_history.cfm?studentID=#studentID#');">#DateFormat(cancelinsurancedate, 'mm/dd/yyyy')#</a></td>
-					</tr>
+                <cfif qInsuranceHistory.recordCount>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>Dates :</td>
+                        <td>
+                            From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')#
+                        </td>
+                    </tr>
+                </cfif>
+                <!--- Cancelation --->
+                <tr>
+                    <td>
+                        <input type="checkbox" name="insurance_Cancel" value="1" <cfif qInsuranceCancelation.recordCount> checked </cfif> disabled>
+                    </td>
+                    <td>Canceled on :</td>
+                    <td>                    	
+                        #DateFormat(qInsuranceCancelation.date, 'mm/dd/yyyy')#
+                    </td>
+                </tr>
 			</table>
 		</td>	
 	</tr>
