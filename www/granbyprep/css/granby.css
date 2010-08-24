@@ -22,6 +22,13 @@ body {
 	margin-bottom: 0;
 	margin-left: auto;
 }
+.picture {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #666;
+	text-align: right;
+}
 .oneColElsCtrHdr #header {
 	padding: 0;  /* this padding matches the left alignment of the elements in the divs that appear beneath it. If an image is used in the #header instead of text, you may want to remove the padding. */
 	background-color: #FFF;
@@ -46,9 +53,19 @@ body {
 	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
 }
 .oneColElsCtrHdr #mainContent {
-	padding: 0 20px;
-	background-image: url(../images/gradient.png);
 	background-repeat: repeat-x;
+	padding-top: 0;
+	padding-right: 30px;
+	padding-bottom: 0;
+	padding-left: 30px;
+}
+.oneColElsCtrHdr #mainContentCenter {
+	background-repeat: repeat-x;
+	padding-top: 0;
+	padding-right: 50px;
+	padding-bottom: 0;
+	padding-left: 50px;
+	text-align: center;
 }
 .oneColElsCtrHdr #mainIndex {
 	padding: 0;
@@ -130,12 +147,18 @@ a:active {
 	margin: 0px;
 	padding: 0px;
 }
+#clickright {
+	height: 212px;
+	width: 190px;
+	margin: 0px;
+	padding: 0px;
+	float: right;
+}
 .photo {
 	float: right;
-	height: 150px;
-	width: 300px;
-	margin-right: 50px;
+	margin-right: 20px;
 	margin-top: 10px;
+	margin-left: 20px;
 }
 .clearfix {
 	display: block;
@@ -144,13 +167,24 @@ a:active {
 }
 .info {
 	float: right;
-	height: 100px;
+	height: 60px;
 	width: 100px;
 	margin-top: 23px;
 	z-index: 25;
+	padding-left: 25px;
+}
+.infoLeft {
+	float: left;
+	height: 25px;
+	width: 200px;
+	margin-top: 58px;
+	z-index: 25;
+	margin-left: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFF;
 }
 .events {
-	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	height: 275px;
 	width: 150px;
@@ -159,7 +193,6 @@ a:active {
 	padding: 0px;
 	text-align: center;
 	background-repeat: no-repeat;
-	font-weight: bold;
 	margin-left: 20px;
 }
 .announcement {
@@ -174,4 +207,43 @@ a:active {
 	background-image: url(../images/eventbox.png);
 	background-repeat: no-repeat;
 	font-weight: bold;
+}
+.paragraphText {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #000;
+	line-height: 16px;
+}
+.paragraphItalic {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #000;
+	line-height: 16px;
+	font-style: italic;
+}
+.formText {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #000;
+}
+.news {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 17px;
+	color: #000;
+	text-align: center;
+}
+.twitter {
+	float: right;
+	height: 30px;
+	width: 30px;
+	margin-top: 48px;
+	z-index: 25;
+}
+.italic {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: italic;
+	line-height: 8px;
+	color: #000;
 }
