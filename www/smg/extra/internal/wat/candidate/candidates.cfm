@@ -16,7 +16,7 @@
         WHERE 
             status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND
-            endDate < <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+            endDate < <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(now(), 'yyyy-mm-dd')#">
     </cfquery> 
     
     <!--- Get Candidates --->   
