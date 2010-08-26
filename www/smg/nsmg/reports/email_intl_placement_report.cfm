@@ -304,7 +304,9 @@
                     <cfif LEN(FORM.flightOption)>
                         <p>&nbsp; &nbsp; &nbsp; <b>Please also send all flight information that may be shown on the report below. You can submit Flight Information thru EXITS.</b></p>
                     </cfif>
-                    <p>&nbsp; &nbsp; &nbsp; Also remember that you can log on to EXITS yourself and check all placement information at your convenience. Please visit #CLIENT.site_url# to login.</p>
+                    <p>&nbsp; &nbsp; &nbsp; Also remember that you can log on to EXITS yourself and check all placement information at your convenience. 
+                    	Please visit <a href="http://ise.exitsapplication.com">http://ise.exitsapplication.com</a> <!--- #CLIENT.site_url# ---> to login.
+                    </p>
                     
                     <!--- Display Program Header --->
                     <!--- #programHeader# --->
