@@ -29,12 +29,20 @@
 	INNER JOIN smg_programs p ON s.programid = p.programid
 	LEFT JOIN smg_hosts h ON s.hostid = h.hostid		
 	LEFT JOIN smg_schools sch ON s.schoolid = sch.schoolid
-	WHERE s.active = '1' AND s.companyid = '#client.companyid#'   
-	<cfif form.regionid is 0><cfelse>AND regionassigned = '#form.regionid#'</cfif> 
-	AND	( <cfloop list=#form.programid# index='prog'>
-		s.programid = #prog# 
-		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )
+	WHERE 
+    	s.active = '1' 
+	<cfif VAL(form.regionid)>
+    	AND regionassigned = '#form.regionid#'
+	</cfif> 
+    AND	
+        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+    <cfif CLIENT.companyID EQ 5>
+        AND	
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    <cfelse>
+        AND	
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
 </cfquery>
 
 <div class="Section1">

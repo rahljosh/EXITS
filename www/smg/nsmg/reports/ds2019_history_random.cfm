@@ -42,13 +42,18 @@
 	LEFT JOIN smg_users u ON s.intrep = u.userid
 	LEFT JOIN smg_programs p ON s.programid = p.programid
 	LEFT JOIN smg_regions r ON r.regionid = history.regionid
-	WHERE history.companyid = '#client.companyid#' 
-		AND s.ds2019_no LIKE 'N%'
-		AND history.datecreated = '#form.datecreated#'
-		AND	( <cfloop list="#form.random#" index='randn'>
-		history.csietid = '#randn#' 
-		<cfif randn EQ #ListLast(form.random)#><Cfelse>or</cfif>
-		</cfloop> )
+	WHERE 
+    <cfif CLIENT.companyID EQ 5>
+        history.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    <cfelse>
+        history.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
+    AND 
+    	s.ds2019_no LIKE 'N%'
+    AND 
+    	history.datecreated = '#form.datecreated#'
+    AND	
+    	history.csietid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.random#" list="yes"> )
 	ORDER BY history.csietid
 </cfquery>
 

@@ -33,13 +33,21 @@
 	LEFT JOIN smg_schools sch ON s.schoolid = sch.schoolid
 	LEFT JOIN smg_users place ON s.placerepid = place.userid
 	LEFT JOIN smg_users area ON s.arearepid = area.userid
-	WHERE s.active = '1' 
-		AND s.ds2019_no LIKE 'N%'
-		AND	( <cfloop list=#form.programid# index='prog'>
-		s.programid = #prog# 
-		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )
-	ORDER BY s.familylastname
+	WHERE 
+    	s.active = '1' 
+	AND 
+    	s.ds2019_no LIKE 'N%'
+    AND	
+        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+    <cfif CLIENT.companyID EQ 5>
+        AND	
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    <cfelse>
+        AND	
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
+	ORDER BY 
+    	s.familylastname
 </cfquery>
 
 <div style="section1">
