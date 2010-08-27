@@ -40,7 +40,16 @@
 <tr><td>
 
 <table width=100% border=0 cellpadding=4 cellspacing=0>
-	<tr><th colspan="2" bgcolor="e2efc7">R E P O R T S</th></tr>
+	<tr>
+    	<th colspan="2" bgcolor="e2efc7">
+            R E P O R T S 
+             <cfif ListFind("1,2,3,4,12", CLIENT.companyID)>
+                <font size="0.8em">
+                	<br> (PS: Change to SMG to include all ISE students - William, Margarita, Diana, Gary and Brian)
+                </font>
+            </cfif>
+    	</th>
+    </tr>
 	<tr>
 		<td align="center" width="50%" valign="top">
 			<cfform action="reports/ds2019_report_excel.cfm" method="POST">

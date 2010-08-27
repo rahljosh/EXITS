@@ -32,10 +32,15 @@
 	WHERE s.active = '1' 
 		AND direct_placement = '1'
 		AND s.ds2019_no LIKE 'N%'
-		AND	( <cfloop list=#form.programid# index='prog'>
-			s.programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
+    AND	
+        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+    <cfif CLIENT.companyID EQ 5>
+        AND	
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    <cfelse>
+        AND	
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
 	ORDER BY st.statename, s.familylastname
 </cfquery>
 

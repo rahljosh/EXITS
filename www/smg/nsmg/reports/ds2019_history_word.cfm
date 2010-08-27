@@ -53,10 +53,18 @@
 	FROM smg_csiet_history history
 	LEFT JOIN smg_students s ON s.studentid = history.studentid
 	LEFT JOIN smg_programs p ON s.programid = p.programid
-	WHERE history.companyid = '#client.companyid#' 
-		AND history.datecreated = '#form.datecreated#'
-		AND s.ds2019_no LIKE 'N%'
-	ORDER BY history.csietid
+	WHERE 
+    <cfif CLIENT.companyID EQ 5>
+        history.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    <cfelse>
+        history.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
+	AND 
+    	history.datecreated = '#form.datecreated#'
+	AND 
+    	s.ds2019_no LIKE 'N%'
+	ORDER BY 
+    	history.csietid
 </cfquery>
 
 <cfinclude template="../querys/get_company_short.cfm">
