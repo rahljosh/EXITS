@@ -215,6 +215,8 @@
 					
                     Visit <a href="#APPLICATION.siteURL#meetStudents.cfm">#APPLICATION.siteURL#meetStudents.cfm</a> to meet our students. <br /> <br />
                     
+                    PS: DO NOT click on "Log In" at the top right of the page. Use the form at the bottom of the meet our students page to login to view our upcoming students. <br /> <br />
+                    
                     Best Regards-<br />
                     International Student Exchange
                 </cfsavecontent>
