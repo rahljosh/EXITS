@@ -85,7 +85,7 @@ function checkPassword() {
 						<tr>
 							<td colspan=2 align="center"><br>
 								<input name="Submit" type="image" src="pics/submit.gif" border=0 alt="Start Application" onClick="return checkPassword();">
-								</form><cfset client.studentid = #check_info.studentid#></td>
+								</form><cfset client.studentid = check_info.studentid></td>
 							</tr>					
 			
 			
@@ -105,9 +105,9 @@ function checkPassword() {
 			
 
 	<cfquery name="check_exist" datasource="MySQL">
-	select uniqueid
-	from smg_students
-	where uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.s#">
+        select uniqueid
+        from smg_students
+        where uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.s#">
 	</cfquery> 
 	
 	<cfif check_exist.recordcount eq 0>

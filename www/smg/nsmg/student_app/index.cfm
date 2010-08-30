@@ -1,8 +1,7 @@
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 
 <cfif isdefined("url.s")>
-
-	<cflocation url="verify.cfm?s=#url.s#">
+	<cflocation url="verify.cfm?s=#url.s#" addtoken="no">
 </cfif>
 
 <CFIF not isdefined("url.curdoc")>
