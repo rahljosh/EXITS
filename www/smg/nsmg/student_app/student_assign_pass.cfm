@@ -48,7 +48,7 @@ Login ID (User ID) : #email#<br>
 Password: #password1#
 <br><br>
 You can log in and out of the EXITS Online Application System at any time using this login information.
-To login to the EXITS Online Application, go to the EXITS Login Portal at #client.exits_url#
+To login to the EXITS Online Application, go to the EXITS Login Portal at <a href="http://www.iseusa.com/">http://www.iseusa.com/</a> and click on Log In. <!--- #client.exits_url# --->
 <br><br>
 Please remember that if your application will expire on #DateFormat(application_expires, 'mmm dd, yyyy')# at #TimeFormat(application_expires, 'h:mm tt')# MST.  
 <br><br>
@@ -78,15 +78,19 @@ Sincerely-<br>
 				Here are a few things to keep in mind:
 				<ul>
 				<li>Your application will expire on #DateFormat(application_expires, 'mmm dd, yyyy')# at #TimeFormat(application_expires, 'h:mm tt')# MST
-				<li>You can check on the current status of your application at any time by logging into EXITS through the EXITS Login Portal at <a href="#client.site_url#">#client.site_url#</a>
+				<li>You can check on the current status of your application at any time by logging into EXITS through the EXITS Login Portal at 
+                <a href="http://ise.exitsapplication.com/">http://ise.exitsapplication.com</a> and click on Log In.
+				<!--- <a href="#client.site_url#">#client.site_url#</a> --->
 				<li>If you forget your password, you can click on the "Forgot your login?" link on the EXITS Login Portal to retrieve your account information.
 				<li>If you are having problems with the EXITS system, please contact support via the Support link on the student application.
 				
 				<li>If you are having problems with the application, or do not understand what the applicatiion is asking for, please contact your international representative.  Your representatives contact information is located at the 
 				top of your application.
 				</ul>
-				Click the Start Application Process button if you are ready to start your application.<br><br><div align="center">
-				<form method=post action="#client.site_url#"><input type="hidden" value=#email# name="username"><input type="hidden" name="password" value="#password1#"><input type="image" src="pics/start-application.gif" border=0 alt="Start Application"></div></form>
+				Click the Start Application Process button if you are ready to start your application.<br><br>
+                <div align="center">
+                	 <a href="http://ise.exitsapplication.com/"><img src="pics/start-application.gif" border="0" /></a>
+                </div>  <br />
 				</td>
 			</tr>
 </table>
