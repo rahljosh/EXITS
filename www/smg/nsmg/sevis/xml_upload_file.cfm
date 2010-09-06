@@ -24,7 +24,7 @@
 <cfoutput>
 <script language="JavaScript">
 <!-- 
-alert("You have successfully uploaded this file.");
+	// alert("You have successfully uploaded this file.");
 	location.replace("xml_list_files.cfm?type=#form.type#");
 -->
 </script>
