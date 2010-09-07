@@ -5,7 +5,7 @@ body {font:Arial, Helvetica, sans-serif;}
 .dashed-border {border: 1px dashed #FF9933;}
 </style>
 
-<cfparam name="CLIENT.exits_url" default="http://www.student-management.com">
+<cfparam name="CLIENT.exits_url" default="http://ise.exitsapplication.com">
 
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfparam name="client.support_email" default="support@case-usa.org">
@@ -13,8 +13,8 @@ body {font:Arial, Helvetica, sans-serif;}
     <cfparam name="client.companyname" default ="Cultural Academic Student Exchange">
 <cfelse>
     <cfparam name="client.support_email" default="support@student-management.com">
-    <cfparam name="client.site_url" default="http://www.student-management.com">
-    <cfparam name="client.companyname" default ="Student Management Group">
+    <cfparam name="client.site_url" default="http://ise.exitsapplication.com">
+    <cfparam name="client.companyname" default ="International Student Exchange">
 </cfif>
 
 <cfquery name="get_name" datasource="mysql">

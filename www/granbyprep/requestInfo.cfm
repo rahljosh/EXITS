@@ -27,33 +27,33 @@ td, th {
 
 <body class="oneColElsCtrHdr">
 <Cfif isDefined('form.sendEmail')>
-<cfmail  to="jeimi@exitgroup.org, bchatterley@granbyprep.com" replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
+<cfmail  to="jeimi@exitgroup.org" replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
 <p> The info submitted was:
   <br /><br />
   <strong>Student Information</strong><br />
   Name:#form.firstname# #form.lastname#<br />
-  Email:#form.email#<br />
-  Sex:#form.sex# 
+  Sex: #form.sex# 
   <br />
-  Date of Birth:#form.birth#<br />
-  Current School:#form.current#<br />
+  Date of Birth: #form.birth#<br />
+  Current School: #form.current#<br />
   Current Grade: #form.grade# <br />
   Admission for what grade: #form.admission#<br />
   Admission for what grade: #form.admYear#<br />
-  Day / Boarding school:#form.school#<br />
-  Academic Interests:#form.academicInt#<br />
-  Other Interests:#form.interests#<br />
+  Day / Boarding school: #form.school#<br />
+  Academic Interests: #form.academicInt#<br />
+  Other Interests: #form.interests#<br />
   Sports Interests:#form.sportsInt#
-  Comments:#form.comments#<br /><br /><br />
+  Comments: #form.comments#<br /><br /><br />
   
   <strong>Parent / Guardian Information</strong><br />
-   Name:#form.ptfirstname# #form.ptlastname#<Br />
-  Address:#form.address#<br />
-  City:#form.city#<Br />
-  State:#form.state#<br />
-  Zip:#form.zip#<br />
+   Name: #form.ptfirstname# #form.ptlastname#<Br />
+  Address: #form.address#<br />
+  City: #form.city#<Br />
+  State: #form.state#<br />
+  Zip: #form.zip#<br />
   Country: #form.country#<br />
-  Phone: #form.phone#<br /><br />
+  Phone: #form.phone#<br />
+  Email: #form.email#<br /><br />
   
   Have a rockin day.</p>
 
@@ -92,10 +92,6 @@ td, th {
     <th bgcolor="##FFFFFF" scope="row"><span class="formText">Students Last Name</span></th>
     <td bgcolor="##FFFFFF"><cfinput name="lastname" type="text" /></td>
     </tr>
-     <tr>
- <th bgcolor="##FFFFFF" scope="row"><span class="formText">Email Address</span></th>
- <td bgcolor="##FFFFFF"><cfinput name="email" type="text" /></td>
- </tr>
   <tr>
     <th bgcolor="##FFFFFF" scope="row">&nbsp; </th>
     <td bgcolor="##FFFFFF"><span class="formText">male</span>
@@ -213,6 +209,10 @@ td, th {
  <tr>
  <th bgcolor="##FFFFFF" scope="row"><span class="formText">Home Phone</span></th>
  <td bgcolor="##FFFFFF"><cfinput name="phone" type="text" /></td>
+ </tr>
+ <tr>
+ <th bgcolor="##FFFFFF" scope="row"><span class="formText">Email Address</span></th>
+ <td bgcolor="##FFFFFF"><cfinput name="email" type="text" /></td>
  </tr>
  </table>
  <table width="425" border="0">

@@ -58,6 +58,8 @@ table {
         <div class="trips">
           <h1 class="enter">ISE Student Tours</h1>
           <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.</p>
+          
+          
           <table width="573" height="333" border="0">
             <tr>
               <td height="45" colspan="3" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
@@ -87,6 +89,8 @@ table {
               <th colspan="3" scope="row" align="center"><img src="../images/webStore_lines_06.gif" width="600" height="14" /><a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /></th>
               </tr>
           </table>
+		  
+         <!----<h3> The ISE Tours Reservation system is being re-worked and will be available shortly. <Br /><Br /> Please check back soon to reserve your spot.</h3>--->
         </div>
 
         <!-- end whtMiddle --></div>

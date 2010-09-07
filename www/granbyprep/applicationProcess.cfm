@@ -37,22 +37,21 @@ body {
 <div id="mainContent">
    
     <h2>Application Process</h2>
-    <p class="paragraphText"> Below is a checklist of required items for application to GPA.  The application deadline for consideration in the first round is February 1st, 2011.  However, we do have a rolling admission policy which means that if you complete your application before January 1st, you will receive an admission decision early.  We will begin making admission decisions for the 2011-2012 school year on October 1st, 2010.</p>
-<h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Campus Visit</h4>
+<h4>Campus Visit</h4>
  <p class="paragraphText"> We hope you'll be able to visit our campus and take a tour of our facilities.  At that time you can also have your interview with a member of the admission staff.  If you aren't able to visit, you can arrange to have a Skype interview by emailing the admission office at admission@granbyprep.com. </p>
  
- <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Application</h4>
- <p class="paragraphText"> Please create a login and complete your online application at the following link: <a href="https://www.granbyprep.com/admissions/index.cfm?"><strong>click here.</strong></a> </p>
+ <h4>Application</h4>
+ <p class="paragraphText"> Please create a login and complete your online application at the following link: click here. </p>
  
- <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Teacher Recommendations</h4>
+ <h4>Teacher Recommendations</h4>
  <p class="paragraphText"> Teacher recommendations must be printed from the online application site and must be mailed, faxed or emailed by the teacher directly to GPA.</p>
  
- <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;School Transcript</h4>
+ <h4>School Transcript</h4>
  <p class="paragraphText"> School Transcripts from the last two years should be sent directly from the school to GPA.</p>
  
-  <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Standardized Testing</h4>
+  <h4>Standardized Testing</h4>
  <p class="paragraphText"> Acceptable tests include National, State or Regional Tests.  TOEFL and SLEP tests are also acceptable.  Test results should be sent directly to GPA.</p>
- <p><a href="https://www.granbyprep.com/admissions/index.cfm?"><img src="images/applyHere_25.png" width="85" height="22" border="0"/></a></p>
+ <p>&nbsp;</p>
 
   <!-- end mainContent --></div>
   <div id="footer">
