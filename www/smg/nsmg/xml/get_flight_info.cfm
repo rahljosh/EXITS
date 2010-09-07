@@ -159,17 +159,20 @@ where soid = '#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.st
 			<cfif isDefined('form.display_results')><br></cfif><cfflush>
 	</cfif>
  <!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A NEW FLIGHT INFORMATION ---->
-        <cfquery name="qGetEmailInfo" datasource="MySQL">
+    <cfquery name="qGetEmailInfo" datasource="MySQL">
             SELECT 
             	s.studentID,
                 s.firstName,
                 s.familyLastName,
                 s.regionassigned,
                 s.intRep,
+                s.uniqueid,
+             
                 r.regionname, 
                 r.regionfacilitator, 
                 r.regionid, 
                 r.company,
+				
                 u.firstname as ufirstname, 
                 u.lastname ulastname, 
                 u.email,
@@ -178,53 +181,47 @@ where soid = '#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.st
             	smg_students s 
             INNER JOIN 
             	smg_regions r ON s.regionassigned = r.regionid
+				
             INNER JOIN
             	smg_users intRep ON s.intRep = intRep.userID
+              
             LEFT JOIN 
             	smg_users u ON r.regionfacilitator = u.userid
+			
             WHERE 
-            	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
+            	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_studentid.studentid#">
         </cfquery>
-        
-        <cfquery name="qCheckPHP" datasource="MySql">
-            SELECT 
-            	studentid
-            FROM 
-            	php_students_in_program
-            WHERE 
-            	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
-        </cfquery>
-        
-        <cfif qCheckPHP.recordcount>
-            <cfset email_to = 'luke@phpusa.com'>
-        <cfelseif qGetEmailInfo.email EQ ''>
+
+        <cfif qGetEmailInfo.email EQ ''>
             <cfset email_to = 'support@student-management.com'>
         <cfelse>	
             <cfset email_to = '#qGetEmailInfo.email#'>
         </cfif>
-        
-        <cfoutput>
-        
-        <cfsavecontent variable="email_message">
-        	Dear #qGetEmailInfo.ufirstname# #qGetEmailInfo.ulastname#,<br><br>
-        	This e-mail is just to let you know new or updated flight information for the student 
-            #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#) has been recorded in EXITS by #qGetEmailInfo.businessname#.<br><br>
-            Please click <a href="http://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentid=#qGetEmailInfo.studentid#">here</a>
+       
+           <cfsavecontent variable="email_message">
+           
+
+What: Flight Information<BR />
+Student: #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#)<Br />
+Submitted By: #qGetEmailInfo.businessname#.<br><br>
+
+            Please click <a href="http://#CLIENT.exits_url#/nsmg/forms/flight_info.cfm?unqid=#qGetEmailInfo.uniqueid#">here</a>
             to see the student's flight information.<br><br>
         
             Sincerely,<br>
             EXITS Flight Info<br><br>
         </cfsavecontent>
-        
-        </cfoutput>
+             
+      
                     
 		<!--- send email --->
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="josh@pokytrails.com">
-            <cfinvokeargument name="email_subject" value="Flight Information for #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (#qGetEmailInfo.studentid#)">
-            <cfinvokeargument name="email_message" value="#email_message#">
-            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+           <cfinvokeargument name="email_to" value="#email_to#">
+           <cfinvokeargument name="email_subject" value="Flight Information for #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (#qGetEmailInfo.studentid#)">
+           <cfinvokeargument name="email_message" value="#email_message#">
+           <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
         </cfinvoke>
+      
 
         <!----End of Email---->
 </cfloop>

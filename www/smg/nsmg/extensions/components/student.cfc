@@ -260,6 +260,7 @@
         <cfargument name="arrivalTime" default="" hint="arrivalTime is not required">
         <cfargument name="overNight" default="0" hint="overNight is not required">
         <cfargument name="flightType" hint="Arrival/Departure is required">
+         <cfargument name="assignedCompanyID" default=0 hint="Company Student is assigned to">
 
 		<cfquery datasource="MySQL">
             INSERT INTO 
@@ -275,7 +276,8 @@
                 arrival_aircode, 
                 arrival_time,
             	overnight, 
-                flight_type
+                flight_type,
+                companyid
             )
             VALUES 
             (
@@ -306,7 +308,8 @@
                 </cfif>
 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.overNight)#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#"> 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.assignedCompanyID#"> 
             )
         </cfquery>
 
@@ -355,6 +358,7 @@
                 </cfif>
             	
                 overnight = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.overNight)#">
+                
             WHERE 
             	flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
             LIMIT 1

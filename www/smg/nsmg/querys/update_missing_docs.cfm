@@ -7,7 +7,10 @@ update smg_students
 		health = "#form.health#",
 		immunization = "#form.immunization#",
 		minorauthorization = "#form.minorauthorization#",
-		other_missing_docs = '#form.other_missing#'
+		<cfif client.companyid eq 10>
+        classschedule = "#form.classschedule#",
+        </cfif>
+        other_missing_docs = '#form.other_missing#'
 	where studentid = "#client.studentid#"
 </cfquery>
 </cftransaction>

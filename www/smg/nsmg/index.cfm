@@ -1,5 +1,9 @@
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 
+<cfif client.userid eq 15019 and not isDefined('url.curdoc')>
+	<cfset url.curdoc = "tours/mpdtours">
+</cfif>
+
 <cfif not isdefined("url.curdoc")>
 	<CFSET url.curdoc = "initial_welcome">
 </cfif>

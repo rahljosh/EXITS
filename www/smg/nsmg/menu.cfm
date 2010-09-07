@@ -25,7 +25,7 @@
 <cfoutput>
 
 <!--- Menu for ISE and Case --->
-<cfif ListFind("1,2,3,4,5,10,12,13", CLIENT.companyID)>
+<cfif ListFind("1,2,3,4,5,10,12,13,25", CLIENT.companyID)>
 
     <cfswitch expression="#CLIENT.userType#">
     
@@ -64,6 +64,38 @@
                 <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
                 
                 <li><a href="index.cfm?curdoc=helpdesk/help_desk_list">Support</a></li>
+                
+                <!--- Case Store --->
+                <cfif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+                <!--- ISE Store --->
+                <cfelse>
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                </cfif>
+                
+            </ul>
+        </cfcase>
+    
+        <!--- Menu for MPD Tours--->
+        <cfcase value="25">
+            <ul id="MenuBar1" class="MenuBarHorizontal">
+            
+                <li>
+                    <a href="index.cfm?curdoc=tours/mpdtours">Students</a>
+
+                </li>
+            
+            
+                <li>
+                    <a href="##">Tools</a>
+                    <ul>
+                        <li><a href="index.cfm?curdoc=tools/student-tours/index">Student Tours</a></li>
+                    </ul>
+                </li>
+            
+                <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
+                
+              
                 
                 <!--- Case Store --->
                 <cfif CLIENT.companyID EQ 10>

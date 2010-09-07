@@ -184,7 +184,7 @@ margin-left: 0px;
 					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
 					  		<span class="SubTitle"><br />
 					  		#tours.tour_length#</span></td>
-                    <td width="24%"><a href="http://trips.exitsapplication.com/?tour_id=#tour_id#"><img src="images/reserve.png" width="146" height="38" alt="reserve spot" border="0" /></a><cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
+                    <td width="24%"><a href="register.cfm?tour_id=#tour_id#"><img src="images/reserve.png" width="146" height="38" alt="reserve spot" border="0" /></a><cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
 					  		<span class="SubTitle">
 					  		#tour_price#</span></td>

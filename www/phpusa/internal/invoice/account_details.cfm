@@ -6,6 +6,7 @@
     <cfparam name="total_rec" default="0">
     <cfparam name="total_gen_inv" default="0">
     <cfparam name="total_gen_rec" default="0">
+    <cfparam name="total_credits" default="0">
     
     <cfquery name="qGetAgent" datasource="MySql">
         SELECT 
@@ -145,7 +146,6 @@ where intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
                 <tr>
                 	<td align="Center" colspan=3>No Credits Available</td>
                  </tr>
-                  <Cfset total_credits = 0>
                 <cfelse>
                 <Cfset total_credits = 0>
 				<cfloop query="qCredits">

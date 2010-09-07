@@ -61,6 +61,7 @@ a:active {
 	INNER JOIN 	smg_countrylist ON smg_countrylist.countryid = smg_students.countryresident
 	LEFT JOIN 	smg_religions ON smg_religions.religionid = smg_students.religiousaffiliation
 	WHERE 	   	active = '1' 
+    			and ( programid = 316 or programid =314) 
 			 	AND hostid = '0' 
 				AND direct_placement = '0'
                 <!--- Only ISE Students --->

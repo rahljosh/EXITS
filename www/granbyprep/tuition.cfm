@@ -41,28 +41,17 @@ body {
     <ul><ol>Boarding: $47,250</ol>
 <ol>Day: $24,500 </ol>
 <ol>International Fee: $3,000</ol><br /><br />
-<ol>
-  <strong>Tuition Refund Plan* </strong>(Mandatory): 
-</ol>
+<ol><strong>Tuition Refund Plan </strong>(manadatory): </ol>
 <ol>Boarding: $650</ol>
 <ol>Day: $450</ol>
-<ol>Mandatory U.S. health insurance for <br /> international boarding students: $750</ol><br />
-<ol>
-  <span class="italic">*The Tuition Refund Plan provides an allowance of tuition charges in the event of withdrawal of a student for medical causes as well as other reasons, including dismissal by GPA</span>.
-</ol><br /><br />
+<ol>Mandatory U.S. health insurance for <br /> international boarding students: $750</ol><br /><br />
 <ol><strong>Application Fees:</strong></ol>
 <ol>International: $150</ol>
 <ol>Domestic: $75</ol><br /><br />
-<ol>
-  <strong>Deposits**:</strong>
-</ol>
+<ol><strong>Deposits:</strong></ol>
 <ol>Boarding: $5,000</ol>
-<ol>Day: $1,500</ol>
-<ol>
-  <span class="italic">**included in the prices listed above</span>.
-</ol><br /><br />
+<ol>Day: $1,500</ol><br /><br />
 <ol><strong>Laundry Service </strong>(mandatory for boarding students) $450 per semester.</ol></ul>
-<br /><br />
   <!-- end mainContent --></div>
   <div id="footer">
     <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />

@@ -422,6 +422,37 @@
 		   
 		<cfreturn qReportTrainingByRegion>
 	</cffunction>
-
-
+	
+    <!----Studet Services Project----> 
+	<cffunction name="getStudentServices" access="public" returntype="query" output="false" hint="Gets a list of problem records for a studentID">
+    	<cfargument name="studentID" default="0" hint="studentID is not required">
+              
+        <cfquery 
+			name="qGetInitialProblem" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					sp.idServicesProject,
+                    sp.studentID,
+                    sp.problemID,
+                    sp.info,
+                    sp.file,
+                    sp.userID,
+                    sp.date,
+                    sp.summary,
+                    sp.fk_idServicesProjectType,
+                    st.firstname,
+                    st.familylastname,
+                    u.firstname as userFirst,
+                    u.lastname as userLast                    
+                FROM 
+                    services_project sp
+                LEFT JOIN smg_users u on u.userid = sp.userid
+                LEFT JOIN smg_students st on st.studentid = sp.studentid
+                WHERE
+                    sp.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                
+		</cfquery>
+		   
+		<cfreturn qGetInitialProblem>
+	</cffunction>
 </cfcomponent>

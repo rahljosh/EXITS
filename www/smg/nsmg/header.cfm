@@ -205,7 +205,9 @@
 </table>
 <table width="100%" cellspacing=0 cellpadding=0 bgcolor="eeeeee">
 	<tr> 
-		<td><cfinclude template="menu.cfm"></td>
+		<td>
+           <cfinclude template="menu.cfm">
+		</td>
 	</tr>
 </table>
 <table width="100%" cellspacing=0 cellpadding=0>

@@ -28,6 +28,13 @@
 	margin-right: 25px;
 	margin-top: 20px;
 }
+.videoClip {
+	float: right;
+	margin-right: 25px;
+	margin-top: 20px;
+	height: 265px;
+	width: 400px;
+}
 </style>
 <!----Script to Swap div area---->
 <script type="text/javascript" language="JavaScript"><!--
@@ -55,12 +62,13 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <div id="mainContent">
 <!---area that mouse overs will affect---->
 <div id="lead">
+
+
     <div id="initDiv" class="mybox">
-      <span class="MOtext" style="background-color: #E6F2D5;">
-        <strong>Meet our Students</strong><br /><br />
-         ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meetStudents.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
-        <span class="bigImage"><img src="images/subPages/subMeetStudents.gif" /></span>
-	</div>
+      <span class="MOtext" style="background-color: #F1D0D1;">
+        <strong>Secretary of State Encourages Americans to Host Exchange Students </strong><br /><br />
+         Secretary Clinton sends a great video message promoting hosting international exchange students, while thanking host families who have already experienced the joy of opening their hearts and homes.<br /><p align="center"><a href="http://exchanges.state.gov/"><img src="images/buttons/RlearnMore.png" border="0"></a></p></span>
+   <div class="videoClip"><object width="320" height="265"><param name="movie" value="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="320" height="265"></embed></object></div></div>
          <!---Meet our Students---->
      
         <div id="meetStudents" class="mybox" style="display:none;":>
@@ -68,7 +76,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
         <span class="MOtext" style="background-color: #E6F2D5;">
         <strong>Meet our Students</strong><br /><br />
          ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meetStudents.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
-        <span class="bigImage"><img src="images/subPages/subMeetStudents.gif" /></span>
+        <span class="bigImage"><img src="images/subPages/subMeetStudents_03.gif" /></span>
       	</div>
            
 	
@@ -120,17 +128,17 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <table width="210" border="0" style="margin-left:15px;">
   <tr>
     <th scope="row" align="left">
-    	<a href="https://www.esecutive.com/smg/" target="_blank"><img src="images/BaggageInsurance.jpg" title="Global Secutive Insurance" border="0" /></a>
+    	<a href="https://www.esecutive.com/smg/" target="_blank"><img src="images/BaggageInsurance.png" title="Global Secutive Insurance" border="0" /></a>
     </th>
     <th scope="row" align="right">
-    	<a href="pdfs/CSIET-certificate-10-11.pdf" target="_blank"><img src="images/csiet-10-11.gif" title="CSIET 2010-2011 Certificate of Acceptance" border="1" /></a>
+    	<a href="pdfs/CSIET-certificate-10-11.pdf" target="_blank"><img src="images/csiet-10-11.png" title="CSIET 2010-2011 Certificate of Acceptance" border="0" /></a>
     </th>
   </tr>
 </table>
 <!-- end bottomInfoRight --></div>
 <div id="bottomInfoLeft">
   <div class="top"><!-- end top --></div>
-  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="sSuccess.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://blog.iseusa.com/" target="_blank"><img src="images/Blog.gif" width="469" height="167" alt="blog" border="0"/></a></div>
+  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="sSuccess.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://blog.iseusa.com/" target="_blank"><img src="images/blog_12.gif"alt="blog" border="0"/></a><a href="http://www.youtube.com/watch?v=YRP3PbaE-cA"><img src="images/video_13.gif" width="236" height="171" border="0" /></a></div>
   <div class="bottom"></div>
 <!-- end bottomInfoLeft --></div>
 <h1>&nbsp;</h1>

@@ -151,8 +151,9 @@ relatively correct Internet Explorer behavior. --->
 						<cfquery name="local_contact" datasource="MySQL">
 							SELECT 	firstname, lastname, businessphone, phone
 							FROM 	smg_users
-							WHERE	userid = #get_students.arearepid# AND usertype BETWEEN 5 and 7		
-						</cfquery>						
+							WHERE	userid = #get_students.arearepid#
+						</cfquery>					
+                        	
 						<!--- check if there's an area rep --->
 						<cfif get_students.arearepid is 0> 
 							<p class="style2">&nbsp;</p>
