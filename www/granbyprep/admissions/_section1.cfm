@@ -657,7 +657,7 @@
         <div class="field">
             <label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label>  
             <cfif printApplication>
-				<div class="printField">#FORM[qGetQuestions.fieldKey[18]]#th &nbsp;</div>
+				<div class="printField">#FORM[qGetQuestions.fieldKey[18]]#<cfif LEN(FORM[qGetQuestions.fieldKey[18]])>th</cfif> &nbsp;</div>
         	<cfelse>
                 <select name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" class="#qGetQuestions.classType[18]#">
                     <option value=""></option>
@@ -672,7 +672,7 @@
         <div class="field">
             <label for="#qGetQuestions.fieldKey[19]#">#qGetQuestions.displayField[19]# <cfif qGetQuestions.isRequired[19]><em>*</em></cfif></label>  
             <cfif printApplication>
-				<div class="printField">#FORM[qGetQuestions.fieldKey[19]]#th &nbsp;</div>
+				<div class="printField">#FORM[qGetQuestions.fieldKey[19]]#<cfif LEN(FORM[qGetQuestions.fieldKey[19]])>th</cfif> &nbsp;</div>
         	<cfelse>
                 <select name="#qGetQuestions.fieldKey[19]#" id="#qGetQuestions.fieldKey[19]#" class="#qGetQuestions.classType[19]#">
                     <option value=""></option>
