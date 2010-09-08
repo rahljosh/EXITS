@@ -24,12 +24,12 @@
 	</cffunction>
 
 
-	<cffunction name="getApplicationLoopUp" access="public" returntype="query" output="false" hint="Returns a list of payment types">
+	<cffunction name="getApplicationLookUp" access="public" returntype="query" output="false" hint="Returns a list of payment types">
     	<cfargument name="fieldKey" required="yes" hint="fieldKey is required.">
     	<cfargument name="orderBy" default="ID" hint="orderBy is required.">
 
         <cfquery 
-        	name="qGetApplicationLoopUp"
+        	name="qGetApplicationLookUp"
         	datasource="#APPLICATION.DSN.Source#">
                 SELECT 
                 	ID,
@@ -50,7 +50,7 @@
 				</cfif>                    
         </cfquery> 
 
-		<cfreturn qGetApplicationLoopUp>
+		<cfreturn qGetApplicationLookUp>
 	</cffunction>
 
 

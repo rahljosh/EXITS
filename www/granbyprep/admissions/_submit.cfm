@@ -35,7 +35,7 @@
 		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='submit', foreignTable='student', foreignID=FORM.studentID);
  
 		// Get Semester Options
-		qGetSemesters = APPLICATION.CFC.LOOKUPTABLES.getApplicationLoopUp(fieldKey='semester');
+		qGetSemesters = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='semester');
 		
 		qGetApplicationHistory = APPLICATION.CFC.ONLINEAPP.getApplicationHistory(applicationStatusID=3, foreignTable='student', foreignID=FORM.studentID);
 		
