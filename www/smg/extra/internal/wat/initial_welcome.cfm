@@ -1,305 +1,277 @@
-<cfquery name="news_messages" datasource="mysql">
-	select *
-	from smg_news_messages
-	where messagetype = 'news'  and  (expires > #now()# and startdate < #now()#)
-	and companyid = #client.companyid#
-</cfquery>
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		initial_welcome.cfm
+	Author:		Marcus Melo
+	Date:		August 24, 2010
+	Desc:		Initial Welcome page that includes news, students and host companies.
 
-<Cfquery name="new_hostcompanies" datasource="mysql">
-	select extra_hostcompany.hostcompanyid, extra_hostcompany.name, extra_hostcompany.city, extra_hostcompany.state, extra_hostcompany.homepage, smg_states.statename
-	from extra_hostcompany
-	LEFT JOIN smg_states ON smg_states.id = extra_hostcompany.state 
-	where entrydate > '#client.lastlogin#'
-</Cfquery>
+----- ------------------------------------------------------------------------- --->
 
-<Cfquery name="new_candidates" datasource="mysql">
-	select extra_candidates.firstname, extra_candidates.lastname, extra_candidates.residence_country, extra_candidates.uniqueid,
-	smg_countrylist.countryname
-	from extra_candidates
-	LEFT JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.residence_country 
-	where entrydate > '#client.lastlogin#'
-	AND  extra_candidates.companyid = '#client.companyid#'
-</Cfquery>
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<!--- Import CustomTag --->
+    <cfimport taglib="../../extensions/customtags/gui/" prefix="gui" />	
+
+	<cfscript>
+		// Get Application Status
+		qStatus = APPLICATION.CFC.onlineApp.getApplicationStatus(applicationID=4);
+		
+		if ( VAL(CLIENT.usertype) LTE 4 ) {
+			// Get Totals
+			qGetTotalByStaus = APPLICATION.CFC.candidate.getTotalByStatus(); 
+		} else { 
+			// Get Totals
+			qGetTotalByStaus = APPLICATION.CFC.candidate.getTotalByStatus(intRep=CLIENT.userID); 
+		}
+	</cfscript>
+
+    <cfquery name="qNewsMessages" datasource="mysql">
+        SELECT
+        	*
+        FROM
+       		smg_news_messages
+        WHERE
+        	messagetype = <cfqueryparam cfsqltype="cf_sql_varchar" value="news">
+        AND
+        	expires > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+        AND
+        	startdate < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+        AND 
+        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+    </cfquery>
+    
+    <cfquery name="qNewHostCompanies" datasource="mysql">
+        SELECT 
+        	ehc.hostcompanyid, 
+            ehc.name, 
+            ehc.city, 
+            ehc.state, 
+            ehc.homepage, 
+            s.statename
+        FROM 
+        	extra_hostcompany ehc
+        LEFT JOIN 
+        	smg_states s ON s.id = ehc.state 
+        WHERE 
+        	ehc.entrydate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
+    </cfquery>
+    
+    <cfquery name="qNewCandidates" datasource="mysql">
+        SELECT 
+        	ec.firstname, 
+            ec.lastname, 
+            ec.residence_country, 
+            ec.uniqueid,
+        	cl.countryname
+        FROM 
+        	extra_candidates ec
+        LEFT JOIN 
+        	smg_countrylist cl ON cl.countryid = ec.residence_country 
+        WHERE 
+        	ec.entrydate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
+        AND  
+        	ec.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        <cfif VAL(CLIENT.usertype) LTE 4>
+            AND
+                ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+        <cfelseif CLIENT.userType EQ 8>
+            AND
+                ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+        <cfelseif CLIENT.userType EQ 11>
+            AND
+                ec.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+		</cfif>
+    </cfquery>
+
+</cfsilent>
+
 <cfoutput>
 
-<!--- <cfdump var="#session.auth#"> --->
-<table  bgcolor="##FFFFFF" bordercolor="##CCCCCC" border="1" height="100%" width="100%">
-	<tr bordercolor="##FFFFFF">
-		<td>
-
-			<TABLE cellSpacing="0" cellPadding="0" align="center" class="regContainer" width="700">
-				<tr>
-					<td width="10">&nbsp;</td>
-					<td>
-										
-							<!-- Error Message / Validation Summary -->
-							<cfif update_messages.recordcount eq 0>
-							<div id="divInvalidFormMsg" style="DISPLAY: none">
-							<cfelse>
-							<div id="divInvalidFormMsg" style="DISPLAY: inline">
-							
-								<!-- Error Message -->
-								<table cellSpacing="0" cellPadding="0" width="100%" border="0" class="style1">
-									<tr>
-										<td width="6"><img height=6 src="../pics/table-borders/red-err-lefttopcorner.gif" width=6></td>
-										<td bgColor="##bb0000" height="6"><img height=6 src="spacer.gif" width=1 ></td>
-										<td width="6"><img height=6 src="../pics/table-borders/red-err-righttopcorner.gif" width=6></td>
-									</tr>
-		
-									<tr>
-										<td class="errMessageGradientStyle" bgColor="##bb0000"><img height=45 src="spacer.gif" width=1 >
-										</td>
-										<td class="errMessageGradientStyle" bgColor="##bb0000">
-											
-											<table cellSpacing="0" cellPadding="10" width="100%" border="0">
-												<tr>
-													<td vAlign="middle" align="center"><img src="../pics/error-exclamate.gif" ></td>
-													<td vAlign="middle" align="left"><font color="white"><strong><span class=upper>ALERT!&nbsp;&nbsp; ALARM!&nbsp;&nbsp;  Alarma!&nbsp;&nbsp;  Alerte!&nbsp;&nbsp;  Allarme!&nbsp;&nbsp;  Alerta!</span> </strong><br>
-													
-													
-													<cfloop query="alert_messages">
-													<b><a class=nav_bar href="" onClick="javascript: win=window.open('message_details.cfm?id=#alert_messages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><font color="##ffffff">#message#</font></a></b><br>
-													</cfloop></font><br>
-													</td>
-												</tr>
-											</table>
-											
-										</td>
-										<td class="errMessageGradientStyle" bgColor="##bb0000"><img height=45 src="spacer.gif" width=1 >
-										</td>
-									</tr>
-		
-									<tr>
-										<td><img height=6 src="../pics/table-borders/red-err-leftbottcorner.gif" width=6></td>
-										<td bgColor="##bb0000"><img height=6 src="spacer.gif" width=1 ></td>
-										<td><img height=6 src="../pics/table-borders/red-err-rightbottomcorner.gif" width=6></td>
-									</tr>
-								</table>
-							</div>
-							</cfif>
-							<!-- End error message end -->						
-						
-				</td>
-				<td width="10">&nbsp;</td>
-				</tr>
-				<tr borderColor="##d3d3d3">
-					<td width="10">&nbsp;</td>
-					<td>
-							
-							<!---- Outer Table (outline and title ---->
-							<table cellspacing="0" cellpadding="3" width="100%" border="0" class="style1">
-								<tr>
-									<td class="groupTopLeft">&nbsp;</td>
-									<td class="groupCaption" nowrap="true"><b>News & Announcements</b></td>
-									<td class="groupTop" width="95%">&nbsp;</td><td class="groupTopRight">&nbsp;</td>
-								</tr>
-								<tr>					
-									<td class="groupLeft">&nbsp;</td>
-									<td colspan="2">
-									
-												<table id="rgbPersonalDetails" cellpadding="0" cellspacing="0" border="0" width="100%" class="style1">
-													<tr>
-														<td>
-															
-															<!----Table with Info in It---->
-															<TABLE cellSpacing="0" cellPadding="0" width="100%" border="0" class="style1">
-																<TBODY>
-																	<TR>
-																		<TD valign="center">
-																			
-																				<!----News & Announcements---->
-																				<table border=0 width=100%>
-																					<tr>
-																						<td valign="top" class="style1">
-																							<cfif news_messages.recordcount eq 0>
-																							<strong>#DateFormat(now(), 'mmm. d, yyyy')#</strong><br>
-																								There are currently no announcements or news items.
-																							<cfelse>
-																								<cfloop query="news_messages">
-																									<b>#message#</b><br>
-																									#DateFormat(startdate, 'MMMM D, YYYY')# - #ParagraphFormat(details)#
-																								</cfloop>
-																							</cfif>
-																						</td>
-																						<td align="right">
-																							<div align="right"><img src="../pics/tower.gif" width="31" height="51"></div>
-																						</td>
-																					</tr>
-																				</table>
-																		
-																		</TD>
-																	</TR>
-																</TBODY>
-															</table>
-															
-														</td>
-													</tr>
-												</table>
-												
-									</td>
-									<td class="groupRight">&nbsp;</td>
-								</tr>
-								<tr>
-									<td class="groupBottomLeft"><img height=5 src='spacer.gif' width=1 ></td>
-									<td class="groupBottom" colspan="2"><img height=1 src='spacer.gif' width=1 ></td>
-									<td class="groupBottomRight"><img height=1 src='spacer.gif' width=1 ></td>
-						
-									<!--- End of News & Anoucements --->
-										
-								</tr>
-								<tr>
-									<td>&nbsp;</td>
-								</tr>
-						</table> 
-								 
-											<!---- Outer Table (outline and title ---->
-											<table cellspacing="0" cellpadding="3" width="100%" border="0" class="style1">
-												<tr>
-													<td class="groupTopLeft">&nbsp;</td>
-													<td class="groupCaption" nowrap="true"><b>New Students</b></td>
-													<td class="groupTop" width="95%">&nbsp;</td>
-													<td class="groupTopRight">&nbsp;</td>
-												</tr>
-												<tr>
-													<td class="groupLeft">&nbsp;</td>
-													<td colspan="2">
-													
-													<table id="rgbPersonalDetails" cellpadding="0" cellspacing="0" border="0" width="100%">
-														<tr>
-															<td>
-																
-																<!----Table with Info in It---->
-																<TABLE cellSpacing="0" cellPadding="0" width="100%" border="0" class="style1">
-																	<TBODY>
-																		<TR>
-																			<TD valign="center">
-																				<!----New Students---->
-																								
-																				<cfif new_candidates.recordcount eq 0>
-																					No new students have been added.
-																				<cfelse>
-																					<Cfloop query="new_candidates">
-																						<a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#firstname# #lastname#</a> of #countryname#<br>
-																					</Cfloop>
-																				</cfif>
-																								
-																			</TD>
-																		</TR>
-																	</TBODY>
-																</table>
-																	
-															</td>
-														</tr>
-													</table>
-													
-													</td>
-													<td class="groupRight">&nbsp;</td>
-												</tr>
-												<tr>
-													<td class="groupBottomLeft"><img height=5 src='spacer.gif' width=1 ></td>
-													<td class="groupBottom" colspan="2"><img height=1 src='spacer.gif' width=1 ></td>
-													<td class="groupBottomRight"><img height=1 src='spacer.gif' width=1 ></td>
-												</TR>
-												<tr>
-													<td colspan="4">
-							
-													<br />
-							
-														<!---- Outer Table (outline and title ---->
-														<table cellspacing="0" cellpadding="3" width="100%" border="0" class="style1">
-															<tr>
-																<td class="groupTopLeft">&nbsp;</td>
-																<td class="groupCaption" nowrap="true"><b>New Host Companies</b></td>
-																<td class="groupTop" width="95%">&nbsp;</td>
-																<td class="groupTopRight">&nbsp;</td>
-															</tr>
-															<tr>
-																<td class="groupLeft">&nbsp;</td>
-																<td colspan="2">
-																
-																<table id="rgbPersonalDetails" cellpadding="0" cellspacing="0" border="0" width="100%">
-																	<tr>
-																		<td>
-													
-																				<!----Table with Info in It---->
-																				<TABLE cellSpacing="0" cellPadding="0" width="100%" border="0" class="style1">
-																					<TBODY>
-																						<TR>
-																							<TD valign="center">
-																								<!----New HOST COMPANIES ---->
-																									
-																								<cfif new_hostcompanies.recordcount eq 0>
-																								No new host companies have been added.
-																							<cfelse>
-																								<Cfloop query="new_hostcompanies">
-																									<A href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#hostcompanyid#" class="style4">#name# in  #city#, #statename#</A> <cfif homepage is not ''>:: <a href="#homepage#">homepage</a></cfif><br>
-																								</Cfloop>
-																							</cfif>
-																							
-																								</TD>
-																							</TR>
-																						</TBODY>
-																					</table>
-																						
-																		</td>
-																	</tr>
-																</table>
-																		
-																</td>
-																<td class="groupRight">&nbsp;</td>
-															</tr>
-															<tr>
-																<td class="groupBottomLeft"><img height=5 src='spacer.gif' width=1 ></td>
-																<td class="groupBottom" colspan="2"><img height=1 src='spacer.gif' width=1 ></td>
-																<td class="groupBottomRight"><img height=1 src='spacer.gif' width=1 ></td>
-															</TR>
-														</table> 
-																
-													</td>
-												</tr>
-											</table>
-											
-
-							
-							<br />
-							
-					</td>
-				</tr>
-			</table>
-
-<!------******************************************************---->
-
-		<cfif update_messages.recordcount neq 0>
-		
-			<table width=93% border="1" align="center" cellpadding="4" cellspacing="4" bgcolor="##009966" class="style1">
-				<tr>
-					<td bordercolor="##009966"><b><u><font color="##ffffff">System Updates:</u></b><br>
-						<cfloop query="update_messages">
-						<b><a class=nav_bar href="" onClick="javascript: win=window.open('message_details.cfm?id=#update_messages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><font color="##ffffff">#message#</font></b><br>
-						</cfloop>
-				 	</td>
-				</tr>
-			</table>
+<!--- Table Header --->
+<table width="100%" style="border:1px solid ##CCCCCC">
+    <tr>
+        <td style="padding:15px;" width="40%" valign="top">
 			
-		</cfif>
-		<cfif alert_messages.recordcount neq 0>
+            <!--- System Messages --->
+            <table cellspacing="0" cellpadding="3" width="100%" align="center" border="0" class="style1">
+ 						
+				<!--- News & Announcements --->
+                <tr>
+                    <td colspan="2" style="font-weight:bold; text-decoration:underline;">News & Announcements</td>
+                </tr>
+                <tr>
+                    <td valign="top" width="100%" class="style1" style="padding:10px 15px 15px 15px;">
+                        <cfif qNewsMessages.recordCount>
+                            <cfloop query="qNewsMessages">
+                                <strong>#message#</strong><br>
+                                #DateFormat(startdate, 'MMMM D, YYYY')# - #ParagraphFormat(details)#
+                            </cfloop>
+                        <cfelse>
+                            <strong>#DateFormat(now(), 'mmm. d, yyyy')#</strong><br>
+                            There are currently no announcements or news items.
+                        </cfif>
+                    </td>
+                    <td align="right" valign="top">
+                        <div align="right"><img src="../pics/tower.gif" width="31" height="51"></div>
+                    </td>
+                </tr>
+
+                <!--- New Students --->
+                <tr>
+                    <td colspan="2" style="font-weight:bold; text-decoration:underline;">New Students</td>
+                </tr>
+                <tr>
+                    <td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
+                        <cfif qNewCandidates.recordCount>
+                            <cfloop query="qNewCandidates">
+                                <a href="?curdoc=candidate/candidate_info&uniqueid=#qNewCandidates.uniqueid#" class="style4">
+                                    #qNewCandidates.firstname# #qNewCandidates.lastname#
+                                </a> 
+                                <cfif LEN(qNewCandidates.countryName)>
+                                	of #qNewCandidates.countryname# 
+                                </cfif>
+                                <br>
+                            </cfloop>
+                        <cfelse>
+                            No new students have been added.
+                        </cfif>
+                    </td>
+                </tr>
+
+                <!--- New Host Companies --->
+                <cfif CLIENT.userType LTE 4>
+                    <tr>
+                        <td colspan="2" style="font-weight:bold; text-decoration:underline;">New Host Companies</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
+                            <cfif qNewHostCompanies.recordCount>
+                                <cfloop query="qNewHostCompanies">
+                                    <a href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#hostcompanyid#" class="style4">
+                                        #qNewHostCompanies.name# in  #qNewHostCompanies.city#, #qNewHostCompanies.statename#
+                                    </a> 
+                                    <cfif LEN(qNewHostCompanies.homepage)>
+                                        &nbsp; :: &nbsp; <a href="#qNewHostCompanies.homepage#" class="style4">Site</a>
+                                    </cfif><br>
+                                </cfloop>
+                            <cfelse>
+                                No new host companies have been added.
+                            </cfif>
+                        </td>
+                    </tr>
+				</cfif>
+                
+				<!--- Update Messages --->
+				<cfif qUpdateMessages.recordCount>
+					<tr>
+						<td colspan="2" style="font-weight:bold; text-decoration:underline;">System Updates</td>
+					</tr>
+					<tr>
+						<td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
+							<cfloop query="qUpdateMessages">
+								<a class="style4"  href="" class="style4" onClick="javascript: win=window.open('message_details.cfm?id=#qUpdateMessages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+									<font style="font-weight:bold">#message#</font>
+								</a> <br>
+							</cfloop>
+						</td>
+					</tr>
+				</cfif>
+				
+				<!--- Alert Messages --->
+				<cfif qAlertMessages.recordCount>
+					<tr>
+						<td colspan="2" style="font-weight:bold; text-decoration:underline; color:##FF0000">Alerts</td>
+					</tr>
+					<tr>
+						<td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
+							<cfloop query="qAlertMessages">
+								<a class="style4" href="" onClick="javascript: win=window.open('message_details.cfm?id=#qAlertMessages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+									<font style="font-weight:bold">#message#</font>
+								</a> <br>
+							</cfloop>
+						</td>
+					</tr>
+				</cfif>
+        	</table>
+
+        </td>
 		
-			<table width=93% border="1" align="center" cellpadding="4" cellspacing="4" bgcolor="##CC3300" class="style1">
-				<tr>
-					<td bordercolor="##CC3300">
-						<b><u><font color="##ffffff">Alerts:</u></b><br>
-						<cfloop query="alert_messages">
-						<b><a class=nav_bar href="" onClick="javascript: win=window.open('message_details.cfm?id=#alert_messages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><font color="##ffffff">#message#</font></a></b><br>
-						</cfloop>
-						</div>
-				  </td>
-				</tr>
-			</table>
-			
-		</cfif>
-		
-		
-		</td>
-	</tr>
+        <!--- Application Stats --->
+        <td style="padding:15px;" width="60%" valign="top">
+            
+			<!--- Page Messages --->
+            <gui:displayPageMessages 
+                pageMessages="#SESSION.pageMessages.GetCollection()#"
+                messageType="section"
+                />
+            
+            <table cellspacing="0" cellpadding="3" width="100%" align="center" border="0" class="style1">
+                <tr>
+                    <td colspan="2" style="font-weight:bold; text-decoration:underline">Online Application Stats</td>
+                </tr>
+                <tr>
+                    <td valign="top" class="style1" style="padding:5px 0px 15px 0px;">
+                    
+						<table width="100%" class="applicationStatsTable" cellspacing="0" cellpadding="5" valign="top">
+                            <tr style="min-height:12px;">
+                                <th colspan="2" class="applicationStatsStudent">Waiting on Student</th>
+                                <th colspan="2" class="applicationStatsBranch">Waiting on Branch</th>
+                                <th colspan="2" class="applicationStatsIntlRep">Waiting on Intl. Rep.</th>
+                                <th colspan="3" class="applicationStatsCSB">Waiting on CSB</th>
+                            </tr>
+                            <tr>
+                                <cfloop query="qStatus">
+                                    <th class="ApplicationStatsTitle"> 
+                                    	<a href="index.cfm?curdoc=onlineApplication/index&action=list&statusID=#qStatus.statusID#">#qStatus.name#</a></th>
+                                </cfloop>
+     						</tr>
+                            <tr>
+                                <cfloop query="qGetTotalByStaus">
+                                    <td align="center">
+                                    	<a href="index.cfm?curdoc=onlineApplication/index&action=list&statusID=#qGetTotalByStaus.statusID#">#qGetTotalByStaus.total#</a>
+                                    </td>
+                                </cfloop>
+     						</tr>
+                            
+                            <!--- Intl. Reps --->
+                            <cfif CLIENT.userType EQ 8>
+                                <tr>
+                                    <td colspan="4" align="right">Applications you are entering can be found here </td>
+                                    <td class="applicationStatsEnterHere"></td>
+                                </tr>
+                                <tr>
+                                	<td colspan="9" align="center">
+                                        <a href="index.cfm?curdoc=onlineApplication/index&action=createApplication">
+                                        	<img src="../pics/onlineApp/start-application.gif" border="0">
+                                        </a>
+                                	</td>
+                                </tr>
+                            </cfif>
+                            
+                            <!--- Intl. Branches --->
+                            <cfif CLIENT.userType EQ 11>
+                                <tr>
+                                    <td colspan="2" align="right">Applications you are <br /> entering can be found here </td>
+                                    <td class="applicationStatsEnterHere"></td>
+                                </tr>
+                                <tr>
+                                	<td colspan="9" align="center">
+                                        <a href="index.cfm?curdoc=onlineApplication/index&action=createApplication">
+                                        	<img src="../pics/onlineApp/start-application.gif" border="0">
+                                        </a>
+                                	</td>
+                                </tr>
+                            </cfif>
+                    	</table>
+                                               
+                    </td>
+                </tr>
+                
+            </table>        
+        
+        </td>
+    </tr>
 </table>
+
 </cfoutput>

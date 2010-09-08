@@ -1,3 +1,13 @@
-@charset "utf-8";
-/* CSS Document */
+.divPageBox {
+	width:100%;
+	padding:0px;
+	border:1px solid #CCCCCC;
+}
+
+.pageTitle {
+	width:95%;
+	padding:3px 0px 3px 10px;
+	margin:0px 25px 0px 22px;
+	background-color:#E4E4E4;
+}
 

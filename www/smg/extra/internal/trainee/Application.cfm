@@ -29,22 +29,18 @@
 		AppPath.candidatePicture = AppPath.baseRoot & "uploadedfiles/web-candidates/";
 		AppPath.hostLogo = AppPath.baseRoot & "uploadedfiles/web-hostlogo/";
     </cfscript>
-    
-    <CFQUERY name="selectdb" datasource="MySQL" >
-        USE smg
-    </CFQUERY>
-    
-    <cfif NOT IsDefined('CLIENT.userType')>
-        You do not have rights to see this page. sadfs
+        
+    <cfif NOT VAL(CLIENT.userType)>
+        You do not have rights to see this page.
         <cfabort>
     </cfif>
     
-    <cfif NOT IsDefined('CLIENT.userID')>
-        You do not have rights to see this page.aa
+    <cfif NOT VAL(CLIENT.userID)>
+        You do not have rights to see this page.
         <cfabort>
     </cfif>
     
-    <cfif NOT IsDefined('CLIENT.companyID')>
-        You do not have rights to see this page.bb
+    <cfif NOT VAL(CLIENT.companyID)>
+        You do not have rights to see this page.
         <cfabort>
     </cfif>

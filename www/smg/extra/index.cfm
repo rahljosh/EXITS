@@ -3,12 +3,15 @@
 	File:		index.cfm
 	Author:		Marcus Melo
 	Date:		August 18, 2010
-	Desc:		Login Page
+	Desc:		Login Page - Users and Candidates
 
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill Extra Output --->
 <cfsilent>
+
+	<!--- Import CustomTag --->
+    <cfimport taglib="extensions/customtags/gui/" prefix="gui" />	
 	
 	<!--- Param Form Variables --->
     <cfparam name="FORM.submitted" default="0">
@@ -26,6 +29,7 @@
 		}
 		
 		if ( LEN(URL.link) ) {
+			
 			COOKIE.smglink = URL.link;
 			
 			// relocate if user is logged in
@@ -41,18 +45,21 @@
     <cfif FORM.submitted>
                 
 		<cfscript>
-			// Data Validation
-					
-            FORM.username = Replace(FORM.username, '"', "", "all");
-            FORM.username = Replace(FORM.username, "'", "", "all");
-            FORM.password = Replace(FORM.password, '"', "", "all");
-            FORM.password = Replace(FORM.password, "'", "", "all");
+			// FORM Validation
+			if ( NOT LEN(FORM.username) ) {
+				SESSION.formErrors.Add("Please enter an username");
+			}
+			
+			if ( NOT LEN(FORM.password) ) {
+				SESSION.formErrors.Add("Please enter a password");
+			}
         </cfscript>
 		
-        <cfif LEN(FORM.userName) AND LEN(FORM.password)>
-            
-            <!--- Authenticate and Get Default Company --->
-            <cfquery name="qAuthenticate" datasource="mysql">
+        <!--- Check if there are no errors --->
+        <cfif NOT SESSION.formErrors.length()>
+                        
+            <!--- User - Authenticate and Get Default Company --->
+            <cfquery name="qAuthenticateUser" datasource="mysql">
                 SELECT 
                     u.userID,
                     u.firstName,
@@ -78,9 +85,18 @@
                 ORDER BY 
                     uar.default_region DESC
             </cfquery>
-    		                          
-			<!--- Valid Login --->
-            <cfif qAuthenticate.recordcount>
+    		
+            <!--- Candidate - Authenticate and Get Company --->
+            <cfscript>
+				//Check Candidate Login
+                qAuthenticateCandidate = APPLICATION.CFC.CANDIDATE.checkLogin(
+                    email=FORM.username,
+                    password=FORM.password
+                );
+			</cfscript>
+                                                  
+			<!--- Valid User Login --->
+            <cfif qAuthenticateUser.recordcount>
                 
                 <cfquery name="lastLogin" datasource="mysql">
                     UPDATE 
@@ -88,7 +104,7 @@
                     SET 
                         lastLogin = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     WHERE 
-                        userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticate.userID#">
+                        userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
                 </cfquery>
 
                 <cfscript>				
@@ -96,57 +112,57 @@
 					SESSION.auth = structNew();
 					
 					// Set Up Client Variables
-					CLIENT.isLoggedIn = 'Yes';
-					CLIENT.userID = qAuthenticate.userID;
-					CLIENT.firstName = qAuthenticate.firstName;
-					CLIENT.lastname =  qAuthenticate.lastname;
-					CLIENT.lastLogin = qAuthenticate.lastLogin;
-					CLIENT.userType =  qAuthenticate.userType;
-					CLIENT.email = qAuthenticate.email;
-					CLIENT.companyID = qAuthenticate.companyID;
-	
-					// If user is following a link and they are already logged in, bypass login info-
-					//if ( isDefined('cookie.smglink') AND CLIENT.companyID NEQ 99 ) {
-					//	location("redirect_link.cfm", "no");
-					//}
-
-                    // SET LINKS                    
-					switch(qAuthenticate.companyID) {
-						case 7: {
-							location("internal/trainee/index.cfm", "no");
-							break;
-						}
-						case 8: {
-							location("internal/wat/index.cfm", "no");
-							break;
-						}
-						case 9: {
-							location("internal/h2b/index.cfm", "no");
-							break;
-						}
-						default: {
-							location("index.cfm", "no");
-							break;
-						}
-					}
+					CLIENT.isLoggedIn = 1;
+					CLIENT.loginType = 'user';
+					CLIENT.userID = qAuthenticateUser.userID;
+					CLIENT.firstName = qAuthenticateUser.firstName;
+					CLIENT.lastname =  qAuthenticateUser.lastname;
+					CLIENT.lastLogin = qAuthenticateUser.lastLogin;
+					CLIENT.userType =  qAuthenticateUser.userType;
+					CLIENT.email = qAuthenticateUser.email;
+					CLIENT.companyID = qAuthenticateUser.companyID;
+						
+					// SET LINKS        
+					getLink = APPLICATION.CFC.onlineApp.setLoginLinks(
+						companyID=qAuthenticateUser.companyID,
+						loginType='user'
+					);
 					
-					// Once more of site is complete, change this to an appropriate welcome page.
-					// location("internal/index.cfm?curdoc=initial_welcome", "no");
+					// Redirect User to appropriate page
+					location(getLink, "no");
                 </cfscript>		
+            
+            <!--- Valid Candidate Login --->
+            <cfelseif VAL(qAuthenticateCandidate.recordCount)>
+
+				<cfscript>
+					// Do Login / Set SESSION variables / Update Last Logged in Date
+                    APPLICATION.CFC.ONLINEAPP.doLogin(candidateID=qAuthenticateCandidate.candidateID);
+                    				
+					// SET LINKS        
+					getLink = APPLICATION.CFC.onlineApp.setLoginLinks(
+						companyID=qAuthenticateCandidate.companyID,
+						loginType='candidate'
+					);
+					
+					// Redirect Candidate to appropriate page
+					location(getLink, "no");
+				</cfscript>
+                            
                             
             <!--- User does not have access to extra --->    
             <cfelse>
                 
                 <cfscript>
                     // User does not have access to extra
-                    CLIENT.isLoggedIn = "No";
-                    
-                    location("index.cfm", "no");	
+					CLIENT.isLoggedIn = "No";
+					
+					SESSION.formErrors.Add("Please check your account credentials");
                </cfscript> 
             
             </cfif>
     
-		</cfif> <!--- LEN(FORM.userName) AND LEN(FORM.password) --->
+		</cfif> <!--- NOT SESSION.formErrors.length() --->
    
     </cfif> <!--- FORM SUBMITTED --->
 
@@ -158,6 +174,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>EXTRA - Exchange Training Abroad</title>
     <link href="internal/style.css" rel="stylesheet" type="text/css" />
+    <link href="internal/linked/css/login.css" rel="stylesheet" type="text/css" />
     <link rel="SHORTCUT ICON" href="pics/favicon.ico">
     <cfoutput><script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script></cfoutput> <!-- jQuery -->
 </head>
@@ -180,7 +197,13 @@
                         <table width="250"  border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="##999999">
                             <tr>
                                 <td bgcolor="##FFFFFF" class="style1">
-                                
+
+									<!--- Form Errors --->
+                                    <gui:displayFormErrors 
+                                        formErrors="#SESSION.formErrors.GetCollection()#"
+                                        messageType="login"
+                                        />
+                                    
                                     <table width="100%"  border="0" align="center" cellpadding="5" cellspacing="1" bordercolor="##DDE0E5">
                                         <cfif VAL(URL.user)>
                                             <tr>
@@ -196,7 +219,7 @@
                                         </tr>
                                         <tr>
                                             <td height="19" valign="top" bordercolor="##E9ECF1">
-                                                <cfinput type="text" name="username" id="username" message="Username is required to login." required="yes" class="style1" size="40" maxlength="100">
+                                                <cfinput type="text" name="username" id="username" value="#FORM.userName#" message="Username is required to login." required="yes" class="style1" size="40" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
@@ -206,7 +229,7 @@
                                         </tr>
                                         <tr>
                                             <td height="19" valign="top" bordercolor="##E9ECF1">
-                                                <cfinput type="password" name="password" id="password" message="Password is required to login." required="yes" class="style1" size="40" maxlength="20"> 
+                                                <cfinput type="password" name="password" id="password" value="#FORM.password#" message="Password is required to login." required="yes" class="style1" size="40" maxlength="20"> 
                                             </td>
                                         </tr>
                                         <tr>
