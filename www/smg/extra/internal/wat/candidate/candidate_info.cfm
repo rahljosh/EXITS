@@ -127,8 +127,6 @@
         FROM 
         	extra_hostcompany
         WHERE 
-        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND
             extra_hostcompany.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
         AND 
         	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
