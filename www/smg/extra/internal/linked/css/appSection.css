@@ -1,0 +1,750 @@
+@charset "utf-8";
+/* CSS Document */
+
+html, body {
+	height: 100%;
+	padding:0px;
+	margin:0px;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size:11px; /* 0.8em */
+}
+
+/***********************************************************************************
+
+Page Header
+
+************************************************************************************/
+.topBar {
+	background-color: #c2d9e9; /* Light Blue #c2d9e9; #FFFFFF; */
+	border-bottom:10px solid #0069aa; /* Blue #0069aa; | Extra Orange #FF7E0D; */
+	width:100%;
+	height:70px;
+}
+
+.topLeft {
+	float:left;
+	height:65px;
+	/* border:1px solid #FFC; */
+}
+
+.topLeft .mainLogo {
+	width: 60px;
+	height:60px;
+	float:left;
+	display:block;
+	margin:5px 0px 0px 10px;
+	background-repeat:no-repeat;
+	background-image:url(../../images/onlineApp/logoSmall.gif);
+}
+
+.topLeft .printLogo {
+	width: 60px;
+	height:60px;
+	top:0px;
+	left:5px;
+	position:absolute;
+	background-image:url(../../images/onlineApp/logoSmall.gif);
+	background-repeat:no-repeat;
+}
+
+.topLeft a {
+	text-decoration:none;	
+}
+
+.topLeft .title {
+	margin:5px 0px 0px 80px;
+	display:block;
+	font-family: segoe ui, Arial, sans-serif; 
+	font-weight:bold;
+	font-size: 2em; 
+	color: #0069aa;
+}
+
+.topLeft .subTitle {
+	margin:2px 0px 0px 80px;
+	display:block;
+	font-family: segoe ui, Arial, sans-serif; 
+	font-weight:bold;
+	font-size: 1.2em; /*1.8em; */
+	color: #0069aa;
+}
+
+.topRight {
+	float:right;
+	height:35px;
+	margin:10px 15px 0px 0px;
+	/* border:1px solid #FFC; */
+}
+
+.topRight a {
+	width:80px;	
+	padding:5px;
+	margin:5px 5px 0px 5px;
+	float:left;
+	text-align:center;
+	text-decoration:none;
+	font-family: segoe ui, Arial, sans-serif; 
+	font-size:1.1em;
+	font-weight:bold;
+	color: #ffffff; 
+	outline: none;	
+	background: #1484e6 url(../../images/onlineApp/buttonBlue.png) 50% 50% repeat; 	
+}
+
+.topRight a:hover {
+	outline: none;
+	background: #e69700 url(../../images/onlineApp/buttonOrange.png) 50% 50% repeat; 	
+}
+
+.topRight a.selected {
+	outline: none;
+	background: #e69700 url(../../images/onlineApp/buttonOrange.png) 50% 50% repeat; 	
+}
+
+.welcomeMessage {
+	margin-top:40px;
+	padding:5px 5px 0px 0px;
+	font-family: segoe ui, Arial, sans-serif; 
+	font-size:1em;
+	font-weight:bold;
+	color: #0069aa; 
+	text-align:right;
+}
+
+/***********************************************************************************
+
+Left Side / Right Side Content
+
+************************************************************************************/
+.leftSideBar {
+	/* position:absolute; */
+	float:left;
+	width:18%;
+	min-height:600px;
+	background-color: #eeeeee;
+	border:1px solid #aaaaaa;
+	margin:10px 0px 0px 10px;	
+}
+
+.rightSideContent {
+	float:right;
+	width:79%;
+	min-height:600px;
+	background-color: #eeeeee;
+	border:1px solid #aaaaaa;
+	margin:10px 15px 10px 0px;		
+}
+
+.leftSideBar .insideBar,
+.rightSideContent .insideBar {
+	min-height:535px;
+	background-color: #FFFFFF;
+	margin:20px;
+	padding:1px 10px 20px 5px;
+}
+
+.leftSideBar .insideBar a.itemLinks,
+.rightSideContent .insideBar a.itemLinks {
+	display:block;
+	color: #0069aa;
+	font-size:1.2em;
+	font-weight:bold;
+	font-family: segoe ui, Arial, sans-serif; 
+	padding:0px 5px 0px 20px;
+	margin:15px 0px 5px 10px;
+	text-decoration:none;
+	background: url(../../images/onlineApp/rightArrow.gif) no-repeat; 
+}
+
+.leftSideBar .insideBar a:hover,
+.rightSideContent .insideBar a:hover{
+	color: #e69700;	
+	outline: none;
+}
+
+.leftSideBar .insideBar a.selected,
+.rightSideContent .insideBar a.selected{
+	color: #e69700;	
+	outline: none;
+}
+
+.leftSideBar .insideBar ul {
+	margin-left:10px;
+	font-size:1em;
+	font-weight:bold;
+	color: #0069aa;
+}
+
+.leftSideBar .insideBar li {
+	list-style:none;
+	padding:0px 0px 5px 0px;
+}
+
+.leftSideBar .insideBar li a {
+	color: #0069aa;
+	text-decoration:none;
+}
+
+.leftSideBar .insideBar li.Yes {
+	list-style-image: url(../../images/onlineApp/checkMark.gif); 
+}
+
+.leftSideBar .insideBar li.No {
+	list-style-image: url(../../images/onlineApp/notChecked.gif); 
+}
+
+.checkListPage {
+	margin-left:10px;
+	color: #0069aa;
+}
+
+.checkListPage a {
+	font-size:1.2em;
+	font-weight:bold;
+	color: #0069aa;
+	text-decoration:none;
+}
+
+.checkListPage li.checkListYes {
+	padding:5px 0px 5px 0px;
+	list-style-image: url(../../images/onlineApp/checkMark.gif); 
+}
+
+.checkListPage li.checkListNo {
+	padding:5px 0px 5px 0px;
+	list-style-image: url(../../images/onlineApp/notChecked.gif); 
+}
+
+.checkListPage .fieldList {
+	display:block;
+	color: #e69700;
+	font-size:1em;
+	font-weight:bold;		
+	list-style:none;
+	padding:0px 0px 5px 0px;
+}
+
+
+/***********************************************************************************
+
+Online Application
+
+************************************************************************************/
+
+.wrapApplication {
+	width:79%;	
+	float:right;
+	margin:10px 15px 10px 0px;
+	/* border:1px solid #CCC; */
+}
+
+.tableBody {
+	width:100%;
+	margin-top:15px;
+}
+
+.tableBody .fieldTitle {
+	font-size:1.2em;
+	font-weight:bold;
+	margin-bottom:0px;
+	padding-bottom:0px;
+}
+
+.largeField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width : 300px;
+}
+
+.mediumField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:200px;
+}
+
+.smallField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:100px;
+}
+
+.xSmallField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:60px;
+}
+
+.xxSmallField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:48px;
+}
+
+.mediumTextField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:400px;
+	height:75px;
+}
+
+.largeTextFieldPolicy {
+	font-size:1em;
+	border : 1px solid #999;
+	width:400px;
+	height:125px;
+}
+
+.largeTextField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:400px;
+	height:150px;
+}
+
+.xlTextField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:600px;
+	height:400px;
+}
+
+.documentList {
+	width:96%;
+	margin:10px 0px 20px 0px;
+}
+
+.hiddenField {
+	display:none;	
+}
+
+.creditCardAccepted {
+	height:27px;
+	background: url(../../images/onlineApp/creditCardsAccepted.jpg) no-repeat;
+}
+
+.creditCardImageDiv {
+	float:right; 
+	position:relative; 
+	margin:-150px 100px 0px 0px;
+}
+
+/* American Express */
+.creditCardImageDiv .card1 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardAmex.gif) no-repeat; 
+}
+
+/* Discover */
+.creditCardImageDiv .card2 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardDiscover.gif) no-repeat; 
+}
+
+/* MasterCard */
+.creditCardImageDiv .card3 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardMaster.gif) no-repeat; 	
+}
+
+
+/* Visa */
+.creditCardImageDiv .card4 {
+	width:180px;
+	height:120px; 
+	background: url(../../images/onlineApp/cardVisa.gif) no-repeat; 
+}
+
+.printField {
+	width:500px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+	border-bottom:1px solid #999999;
+	/* display:block;
+	background: url(../../images/onlineApp/line.gif) repeat-x;  
+	*/
+}
+
+.printWrapper {
+	width:800px;	
+}
+
+.printPageBreak {
+	page-break-after:always;
+	margin:0px;
+	padding:0px;
+}
+
+.printFieldOption {
+	width:500px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+}
+
+.printFieldText {
+	width:500px;
+	min-height:50px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+	border-bottom:1px solid #999999;
+}
+
+.printFieldEssay {
+	width:500px;
+	min-height:200px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+	border-bottom:1px solid #999999;
+}
+
+.printFieldCheckYes {
+	display:block;	
+	padding:0px 0px 5px 18px;	
+	background: url(../../images/onlineApp/printCheckY.gif) no-repeat;
+}
+
+.printFieldCheckNo {
+	display:block;	
+	padding:0px 0px 5px 18px;	
+	background: url(../../images/onlineApp/printCheckN.gif) no-repeat;
+}
+
+.printFieldRadioYes {
+	display:block;	
+	padding:0px 0px 5px 18px;	
+	background: url(../../images/onlineApp/printRadioY.gif) no-repeat;
+}
+
+.printFieldRadioNo {
+	display:block;	
+	padding:0px 0px 5px 18px;	
+	background: url(../../images/onlineApp/printRadioN.gif) no-repeat;
+}
+
+
+/***********************************************************************************
+
+FAQ
+
+************************************************************************************/
+.faqAnswer {
+	padding:0px 0px 0px 20px;
+	margin:10px 0px 5px 10px;	
+	font-family: segoe ui, Arial, sans-serif; 
+	font-size:1.2em;
+	/* display:none; */
+}
+
+/***********************************************************************************
+
+Page Footer
+
+************************************************************************************/
+/* Wraps the content */
+.wrapper {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto 0px; /* the bottom margin is the negative value of the footer's height */
+}
+
+.pageFooter, .push {
+	width:100%;
+	height: 20px; /* .push must be the same height as .footer */
+	background-color: #0069aa; /* #020D1E */
+	/* Multicolumn Layout With Sticky Footer | Add clear to the .push div | clear: both; */ 
+	clear: both;
+}
+
+.pageFooter .footerText {
+	color: #FFF;
+	text-align:center;
+	font-size:1em;
+	font-weight:bold;
+	padding-top:0.3em;
+}
+
+/*
+**********************************************************************************
+
+FORM Style
+
+************************************************************************************/
+
+/* General styles */
+/* 
+body { margin: 0; padding: 0; font: 80%/1.5 Arial,Helvetica,sans-serif; color: #111; background-color: #FFF; }
+*/
+
+/* Form styles */
+div.form-container { 
+	margin: 10px 0px 10px 0px; /* margin: 10px; */
+	padding: 5px; 
+	background-color: #FFF; 
+	border: #EEE 1px solid; 
+}
+
+div.form-container-noBorder { 
+	margin: 0px 0px 10px 0px; /* margin: 10px; */
+	padding: 5px; 
+	background-color: #FFF; 
+}
+
+div.form-container-noBorder h1 {
+	font-size:1.2em;
+	color: #0069aa;
+}
+
+div.form-container-noBorder .instructionTitle {
+	margin-bottom:10px;
+	color: #0069aa;
+	font-weight:bold;
+	display:block;
+}
+
+div.form-container-noBorder .instructionItem {
+	margin:0px 0px 10px 20px;
+	display:block;
+}
+
+div.form-container-noBorder ul {
+	margin:0px;
+	padding:0px;
+}
+
+div.form-container-noBorder li {
+	margin:0px;
+	list-style:none;
+	padding:0px 0px 5px 0px;
+}
+
+div.form-container-noBorder em { 
+	color: #C00; 
+	font-style: normal; 
+}
+
+div.form-container-noBorder .checkMark {	
+	height:14px;
+	width:14px;
+	display:inline-block;
+	background-repeat:no-repeat;
+	background-image: url(../../images/onlineApp/checkMark.gif);
+}
+
+/* Error messages */
+div.errorContainer { 
+	display: none; 
+	margin: 10px 0 10px 0; 
+	padding: 5px 10px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+}
+
+div.errors { 
+	margin: 0 0 10px 0; 
+	padding: 5px 10px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+}
+
+div.errorContainer label,
+div.errors label { 
+	color:#000;
+}
+
+div.errors p,
+div.errorContainer p { 
+	margin: 0; 
+}
+
+div.errors p em,
+div.errorContainer p em { 
+	color: #C00; 
+	font-style: normal; 
+	font-weight: bold; 
+}
+
+
+/* Page Messages */
+div.pageMessages { 
+	display:none;
+	margin: 10px 0 10px 0; 
+	padding: 5px 10px; 
+	background-color: #c2d9e9;
+	border: #0069aa 1px solid; 
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+div.pageMessages p { 
+	margin: 0; 
+}
+
+div.pageMessages p em { 
+	color: #0069aa; 
+	font-weight: bold;
+}
+
+p.legend { 
+	margin-bottom: 1em; 
+}
+
+p.legend strong {
+	font-weight:bold;	
+}
+
+p.legend em { 
+	color: #C00; 
+	font-style: normal; 
+}
+
+div.form-container p { 
+	margin: 0; 
+}
+
+div.form-container p.note,
+div.form-container-noBorder p.note { 
+	margin-left: 210px; 
+	font-size: 90%; 
+	color: #333; 
+}
+
+div.form-container .phoneNote,
+div.form-container-noBorder .phoneNote {
+	width:48px;
+	text-align:center;
+	display:inline-block;
+	margin-right:10px;
+	font-size: 90%; 
+	color: #333; 
+}
+
+div.form-container fieldset,
+div.form-container-noBorder fieldset { 
+	margin: 10px 0; 
+	padding: 10px; 
+	border: #DDD 1px solid; 
+}
+
+div.form-container fieldset a,
+div.form-container-noBorder fieldset a { 
+	color: #0069aa;
+	text-decoration:none;
+}
+
+div.form-container fieldset a:hover,
+div.form-container-noBorder fieldset a:hover { 
+	color: #e69700;	
+	outline: none;
+}
+
+div.form-container legend,
+div.form-container-noBorder legend { 
+	font-weight: bold; 
+	color: #666; 
+}
+
+div.form-container fieldset div.field,
+div.form-container-noBorder div.field { 
+	padding: 0.25em 0;
+}
+
+/*
+div.form-container fieldset div { 
+	padding: 0.25em 0;
+}
+*/
+
+div.form-container label, 
+div.form-container span.label,
+div.form-container-noBorder label,
+div.form-container-noBorder span.label { 
+	margin-right: 10px; 
+	padding-right: 10px; 
+	width: 190px; 
+	display: block; 
+	float: left; 
+	text-align: right; 
+	position: relative; 
+}
+
+div.form-container label.error, 
+div.form-container span.error,
+div.form-container li.error,
+div.form-container-noBorder label.error,
+div.form-container-noBorder span.error,
+div.form-container-noBorder li.error { 
+	color: #C00; 
+}
+
+div.form-container label em, 
+div.form-container span.label em,
+div.form-container-noBorder label em,
+div.form-container-noBorder span.label em { 
+	position: absolute; 
+	right: 0; 
+	font-size: 120%; 
+	font-style: normal; 
+	color: #C00; 
+}
+
+div.form-container input.error,
+div.form-container select.error,
+div.form-container-noBorder input.error,
+div.form-container-noBorder select.error { 
+	border-color: #C00; 
+	background-color: #FEF; 
+}
+
+div.form-container input:focus,
+div.form-container input.error:focus, 
+div.form-container select:focus, 
+div.form-container textarea:focus,
+div.form-container-noBorder input:focus,
+div.form-container-noBorder input.error:focus, 
+div.form-container-noBorder select:focus, 
+div.form-container-noBorder textarea:focus {	
+	background-color: #FFC; 
+	border-color: #FC6; 
+}
+
+div.form-container div.controlset label, 
+div.form-container div.controlset input,
+div.form-container-noBorder div.controlset label,
+div.form-container-noBorder div.controlset input { 
+	display: inline; 
+	float: none; 
+}
+
+div.form-container div.controlset div,
+div.form-container-noBorder div.controlset div { 
+	margin-left: 210px; 
+}
+
+div.form-container div.buttonrow,
+div.form-container-noBorder div.buttonrow{ 
+	margin-left: 350px; 
+}
+
+div.form-container div.buttonrow .button,
+div.form-container-noBorder div.buttonrow .button {
+	cursor: pointer;
+	padding:5px;
+	border: 0px;
+   	width:80px;
+	font-family: segoe ui, Arial, sans-serif; 
+	font-size:1.1em;
+	font-weight:bold;
+	color: #ffffff; 
+	background: #1484e6 url(../../images/onlineApp/buttonBlue.png) 50% 50% repeat; 	
+}
+
+div.form-container div.buttonrow .button:hover,
+div.form-container-noBorder div.buttonrow .button:hover {
+   	background: #e69700 url(../../images/onlineApp/buttonOrange.png) 50% 50% repeat;	
+}

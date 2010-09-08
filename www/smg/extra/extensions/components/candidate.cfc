@@ -24,6 +24,48 @@
 	</cffunction>
 
 
+	<!--- Set Candidate Session Variables --->
+	<cffunction name="setCandidateSession" access="public" returntype="void" hint="Set candidate SESSION variables" output="no">
+		<cfargument name="ID" type="numeric" default="0">
+        <cfargument name="updateDateLastLoggedIn" type="numeric" default="0">
+        
+        <cfscript>
+			if ( VAL(ARGUMENTS.ID) ) {
+			
+				// Set candidate ID
+				SESSION.CANDIDATE.ID = ARGUMENTS.ID;
+	
+				// Get Candidate Information
+				qGetCandidateInfo = getCandidateByID(candidateID=ARGUMENTS.ID);
+			
+				// Set candidate session variables 
+				SESSION.CANDIDATE.firstName = qGetCandidateInfo.firstName;
+				SESSION.CANDIDATE.lastName = qGetCandidateInfo.lastName;
+				
+				if ( VAL(ARGUMENTS.updateDateLastLoggedIn) ) {				
+					SESSION.CANDIDATE.dateLastLoggedIn = qGetCandidateInfo.dateLastLoggedIn;
+				}
+				
+				// set up upload files path
+				//SESSION.CANDIDATE.myUploadFolder = APPLICATION.PATH.uploadDocumentCandidate & ARGUMENTS.ID & '/';
+				// Make sure folder exists
+				//APPLICATION.CFC.DOCUMENT.createFolder(SESSION.CANDIDATE.myUploadFolder);
+			}
+		</cfscript>
+        
+	</cffunction>
+
+	
+    <!--- Get Candidate Session Variables --->
+	<cffunction name="getCandidateSession" access="public" returntype="struct" hint="Get candidate SESSION variables" output="no">
+
+        <cfscript>
+			return SESSION.CANDIDATE;
+		</cfscript>
+        
+	</cffunction>
+
+
 	<cffunction name="getCandidateByID" access="public" returntype="query" output="false" hint="Gets a candidate by candidateID or uniqueID">
     	<cfargument name="candidateID" default="0" hint="candidateID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
@@ -38,21 +80,347 @@
                 WHERE
                 	1 = 1
 					
-					<cfif VAL(ARGUMENTS.candidateID)>
-	                    AND
-                        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
-					</cfif>
-                    
-					<cfif LEN(ARGUMENTS.uniqueID)>
-	                    AND
-                        	uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
-					</cfif>
+				<cfif VAL(ARGUMENTS.candidateID)>
+                    AND
+                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.uniqueID)>
+                    AND
+                        uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                </cfif>
 		</cfquery>
 		   
 		<cfreturn qGetCandidateByID>
 	</cffunction>
 
 
+	<!--- Check Login --->
+	<cffunction name="checkLogin" access="public" returntype="query" output="false" hint="Check candidate credentials">
+		<cfargument name="email" required="yes" hint="Email Address" />
+		<cfargument name="password" required="yes" hint="Password" />		
+
+		<cfquery 
+			name="qCheckLogin" 
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+					candidateID,
+                    companyID, 
+                    firstName,
+                    lastName,                    
+                    email,
+                    password
+				FROM
+					extra_candidates
+				WHERE
+                    email  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email))#">
+                AND 
+    	            password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.password))#">
+				AND
+					status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND
+                	applicationStatusID > <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+				<!---
+                AND    
+                   	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">					
+				--->
+		</cfquery>
+		
+		<cfreturn qCheckLogin /> 
+	</cffunction>
+
+
+	<cffunction name="doesAccountExist" access="public" returntype="numeric" output="false" hint="Returns 1 if email is already registered in the system.">
+    	<cfargument name="email" hint="email is required">
+        <cfargument name="candidateID" default="0" hint="candidateID is not required">
+              
+        <cfquery 
+			name="qDoesAccountExist" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					candidateID
+                FROM 
+                    extra_candidates
+                WHERE
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.email#">
+
+                <cfif VAL(ARGUMENTS.candidateID)>
+                    AND
+                        candidateID != <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+                </cfif>
+		</cfquery>
+		
+        <cfscript>
+			if ( NOT LEN(ARGUMENTS.email) ) {
+				return 0;
+			} else if ( qDoesAccountExist.recordCount ) {
+				return 1;
+			} else {
+				return 0;
+			}
+		</cfscript>
+	</cffunction>
+
+	
+    <!--- Create Online Application Account --->
+	<cffunction name="createApplication" access="public" returntype="void" output="false" hint="Inserts a new candidate. Returns candidate ID.">
+		<cfargument name="type" type="string" required="yes" hint="Type: Candidate or Office" />
+        <cfargument name="companyID" type="numeric" required="yes" hint="companyID" />	
+        <cfargument name="userType" type="numeric" required="yes" hint="userType" />
+        <cfargument name="intlRepID" type="numeric" required="yes" hint="intlRepID" />
+        <cfargument name="branchID" type="numeric" required="yes" hint="branchID" />
+        <cfargument name="firstName" type="string" required="yes" hint="First Name" />
+        <cfargument name="middleName"  type="string"required="yes" hint="Middle Name" />		
+        <cfargument name="lastName" type="string" required="yes" hint="Last Name" />	
+        <cfargument name="gender" type="string" required="yes" hint="Gender" />			
+		<cfargument name="email" type="string" default="" hint="Email" />	
+        
+        <cfscript>
+			var applicationStatusID = 1;
+			var setPassword = '';		
+		
+			// Check if we need to create an account
+			if ( ARGUMENTS.type EQ 'Candidate' ) {
+			
+				setPassword = APPLICATION.CFC.onlineApp.generatePassword();	
+			
+			// Set Application Status Based on who is creating the application
+			} else if ( ARGUMENTS.type EQ 'Office') {
+				
+				// Intl. Rep.
+				if ( ARGUMENTS.userType EQ 8 ) {
+					applicationStatusID = 5;
+				// Branch
+				} else if ( ARGUMENTS.userType EQ 11 ) {
+					applicationStatusID = 3;
+				}
+			
+			}
+		</cfscript>
+
+		<cfquery 
+            result="newRecord"
+			datasource="#APPLICATION.DSN.Source#">
+				INSERT INTO
+					extra_candidates
+				(                    
+                    companyID,
+                    uniqueID,
+                    applicationStatusID,
+                    intRep,
+                    branchID, 
+                    status,                   
+                    firstName,
+                    middleName,
+                    lastName,  
+                    sex,                  
+                    email,
+                    password,
+                    entryDate,                    
+                    dateCreated
+				)
+                VALUES
+                (
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#applicationStatusID#">,	
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intlRepID#">,	
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.branchID#">,	
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.firstName))#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.middleName))#">,	
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.lastName))#">,		
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.gender#">,		
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email))#">,	
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#setPassword#">,		
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                )                    
+		</cfquery>
+		
+        <cfscript>
+			// Email the candidate
+			if ( ARGUMENTS.type EQ 'Candidate' ) {
+
+				APPLICATION.CFC.email.sendEmail(
+					emailFrom=APPLICATION.EMAIL.contactUs,
+					emailTo=APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email)),
+					emailType='newAccount',
+					candidateID=newRecord.GENERATED_KEY
+				);
+	
+			}
+						
+			// Insert History
+			APPLICATION.CFC.ONLINEAPP.insertApplicationHistory(
+				applicationStatusID=applicationStatusID,
+				foreignTable='extra_candidates',
+				foreignID=newRecord.GENERATED_KEY,
+				description='Application Created'
+			);
+		</cfscript>
+
+	</cffunction>
+
+
+ 	<!--- Update Logged In Date --->
+ 	<cffunction name="updateLoggedInDate" access="public" returntype="void" output="false" hint="Update Candidate last logged in date">
+		<cfargument name="candidateID" required="yes" hint="candidate ID" />
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE 
+                	extra_candidates
+                SET
+                	dateLastLoggedIn =  <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+				WHERE
+                	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+		</cfquery>
+		
+	</cffunction>
+
+
+	<!--- Update Candidate Application Status --->
+	<cffunction name="updateApplicationStatus" access="public" returntype="void" output="false" hint="Update application status and record into the history">
+        <cfargument name="candidateID" type="numeric" required="yes" hint="CandidateID is required" />
+        <cfargument name="applicationStatusID" type="numeric" required="yes" hint="CandidateID is required" />	
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+					extra_candidates
+				SET
+                	applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">
+				WHERE
+                	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+		</cfquery>
+		
+        <cfscript>
+			// Insert History
+			APPLICATION.CFC.ONLINEAPP.insertApplicationHistory(
+				applicationID=4,
+				applicationStatusID=ARGUMENTS.applicationStatusID,
+				foreignTable='extra_candidates',
+				foreignID=ARGUMENTS.candidateID,
+				description='Application Activated'
+			);
+		</cfscript>
+        
+	</cffunction>
+
+
+    <!--- Activate Online Application Account --->
+	<cffunction name="activateApplication" access="public" returntype="void" output="false" hint="Activate an account">
+        <cfargument name="candidateID" type="numeric" required="yes" hint="CandidateID is required" />
+        <cfargument name="email" type="string" required="yes" hint="email is required" />	
+		
+        <cfscript>
+			// Update Status and record history
+			updateApplicationStatus(
+				candidateID=ARGUMENTS.candidateID,
+				applicationStatusID=2
+			);
+			
+			// Email the candidate
+			APPLICATION.CFC.email.sendEmail(
+				emailFrom=APPLICATION.EMAIL.contactUs,
+				emailTo=ARGUMENTS.email,
+				emailType='activateAccount',
+				candidateID=ARGUMENTS.candidateID
+			);
+		</cfscript>
+
+	</cffunction>
+
+
+	<!--- Get Total of Online Applications --->
+	<cffunction name="getTotalByStatus" access="public" returntype="query" output="false" hint="Returns total of applications grouped by status">
+    	<cfargument name="intRep" type="numeric" default="0" hint="International Representative is not required">
+        <cfargument name="applicationStatusID" type="numeric" default="0" hint="applicationStatusID is not required">
+
+        <cfquery 
+			name="qGetTotalByStatus" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                    aps.statusID,
+                    count(candidateID) AS total              
+                FROM 
+                    applicationStatus aps               
+                LEFT OUTER JOIN                
+                    extra_candidates ec ON aps.StatusID = ec.applicationStatusID 
+                    	AND 
+                        	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        <cfif VAL(ARGUMENTS.intRep)>
+                        AND
+                        	ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                		</cfif>
+                WHERE            
+                    aps.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">        
+                
+				<cfif VAL(ARGUMENTS.applicationStatusID)>
+                	AND
+                    	aps.statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">
+                </cfif>                
+                
+                GROUP BY            
+                	statusID                                   
+                ORDER BY            
+                	aps.statusID  
+		</cfquery>
+		   
+		<cfreturn qGetTotalByStatus>
+    </cffunction>
+  
+  
+	<cffunction name="getApplicationListbyStatusID" access="public" returntype="query" output="false" hint="Returns a list of candidates by statusID">
+    	<cfargument name="applicationStatusID" type="numeric" default="0" hint="applicationStatusID is not required">
+        <cfargument name="intRep" type="numeric" default="0" hint="International Representative is not required">
+
+        <cfquery 
+			name="qGetApplicationListbyStatusID" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT DISTINCT
+                    c.candidateID,
+                    c.firstName,
+                    c.lastName,
+                    c.sex,
+                    c.email,
+                    u.businessName,
+                    branch.businessName as branchName,
+                    ast.dateCreated
+                FROM 
+                    extra_candidates c
+                INNER JOIN	
+                	smg_users u ON u.userID = c.intRep
+                INNER JOIN                
+                      applicationStatusJn ast ON ast.foreignID = c.candidateID
+                      AND
+                         ast.foreignTable = 'extra_candidates' 
+					  AND 
+                    	ast.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">                                              
+                LEFT OUTER JOIN 
+        			smg_users branch ON branch.userid = c.branchid                
+                WHERE            
+                    c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND 
+                    c.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#"> 
+                <cfif VAL(ARGUMENTS.intRep)>
+                	AND	
+                    	c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+                GROUP BY
+                	c.candidateID
+                ORDER BY            
+                	c.candidateID
+		</cfquery>
+		   
+		<cfreturn qGetApplicationListbyStatusID>
+    </cffunction>
+  
+
+	<!--- 
+		DS-2019 Online Verification Report 
+	--->
 	<cffunction name="getVerificationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         <cfargument name="receivedDate" default="" hint="Filter by verification received date">

@@ -54,7 +54,7 @@
                 </div> <!--- End of <div class="wrapper"> placed on the header --->
                 
                 <div class="pageFooter">
-                    <div class="footerText">Copyright &copy; #Year(now())# #APPLICATION.SCHOOL.name#. ALL RIGHTS RESERVED.</div>
+                    <div class="footerText">Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.</div>
                 </div>
                 
             </cfcase>
@@ -64,7 +64,7 @@
             <cfcase value="print">
             
                 <div class="pageFooter">
-                    <div class="footerText">Copyright &copy; #Year(now())# #APPLICATION.SCHOOL.name#. ALL RIGHTS RESERVED.</div>
+                    <div class="footerText">Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.</div>
                 </div>
                 
             </cfcase>
@@ -75,9 +75,9 @@
 					
                 </div>  <!--- End of class="form-container" --->
 
-                <div style="width:100%; height:20px; background-color:##0069aa;">
+                <div style="width:100%; height:20px; background-color:##fb7f18;">
                     <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
-                    	Copyright &copy; #Year(now())# #APPLICATION.SCHOOL.name#. ALL RIGHTS RESERVED.
+                    	Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
                     </div>
                 </div>
 

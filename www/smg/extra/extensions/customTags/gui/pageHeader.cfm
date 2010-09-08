@@ -2,7 +2,7 @@
 	
 	File:		pageHeader.cfm
 	Author:		Marcus Melo
-	Date:		June 15, 2010
+	Date:		September 7, 2010
 	Desc:		This Tag displays the page header used in the login and student
 				application.
 
@@ -48,7 +48,7 @@
 	<cfoutput>
     
         <cfswitch expression="#ATTRIBUTES.headerType#">
-    
+    	
             <!--- Login Header --->
             <cfcase value="login">
                 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -72,23 +72,22 @@
     
             <!--- Application Header --->
             <cfcase value="application">
-                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-                <html xmlns="http://www.w3.org/1999/xhtml">
+               	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+				<html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <cfoutput>
                         <title>#APPLICATION.Metadata.pageTitle#</title>
                         <meta name="description" content="#APPLICATION.Metadata.pageDescription#" />
                         <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
-                        <link rel="stylesheet" href="../linked/css/appSection.css" type="text/css" />
-                        <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
+                        <link rel="stylesheet" href="../../../internal/linked/css/appSection.css" type="text/css" />
+                        <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
 						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
                         <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script src="../linked/js/appSection.js " type="text/javascript"></script> <!-- UDF -->
-						<script src="../linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
-						<script src="../linked/js/jquery.validate.js " type="text/javascript"></script> <!-- JQuery Validation -->
-                        <!--- <script src="../linked/js/jquery.validate.creditcard2.js " type="text/javascript"></script> <!-- JQuery Credit Card Validation --> --->
+                        <script src="../../../internal/linked/js/appSection.js " type="text/javascript"></script> <!-- UDF -->
+						<script src="../../../internal/linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
+						<script src="../../../internal/linked/js/jquery.validate.js " type="text/javascript"></script> <!-- JQuery Validation -->
                     </cfoutput>
                 </head>
                 <body>
@@ -99,10 +98,10 @@
                     <div class="topBar">
                         
                         <div class="topLeft">
-                            <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.SCHOOL.name# Application For Admission">
+                            <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.CSB.name# Application For Admission">
                                 <div class="mainLogo"></div>
-                                <div class="title">#APPLICATION.SCHOOL.name#</div>
-                                <div class="subTitle">Application for Admission</div>
+                                <div class="title">#APPLICATION.CSB.name#</div>
+                                <div class="subTitle">#APPLICATION.CSB.programName#</div>
                             </a>
 						</div>
                                                 
@@ -114,11 +113,11 @@
                             <a href="#CGI.SCRIPT_NAME#?action=logoff" class="ui-corner-top">Logoff</a>
 
                             <div class="welcomeMessage">
-                                <cfif IsDate(APPLICATION.CFC.STUDENT.getStudentSession().dateLastLoggedIn)>
-                                    Welcome Back #APPLICATION.CFC.STUDENT.getStudentSession().firstName# #APPLICATION.CFC.STUDENT.getStudentSession().lastName#! &nbsp;
-                                    Your last login was on #DateFormat(APPLICATION.CFC.STUDENT.getStudentSession().dateLastLoggedIn, 'mm/dd/yyyy')# at #TimeFormat(APPLICATION.CFC.STUDENT.getStudentSession().dateLastLoggedIn, 'hh:mm tt')# EST
+                                <cfif IsDate(APPLICATION.CFC.CANDIDATE.getCandidateSession().dateLastLoggedIn)>
+                                    Welcome Back #APPLICATION.CFC.CANDIDATE.getCandidateSession().firstName# #APPLICATION.CFC.CANDIDATE.getCandidateSession().lastName#! &nbsp;
+                                    Your last login was on #DateFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().dateLastLoggedIn, 'mm/dd/yyyy')# at #TimeFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().dateLastLoggedIn, 'hh:mm tt')# EST
                                 <cfelse>
-									Welcome #APPLICATION.CFC.STUDENT.getStudentSession().firstName# #APPLICATION.CFC.STUDENT.getStudentSession().lastName#!    
+									Welcome #APPLICATION.CFC.CANDIDATE.getCandidateSession().firstName# #APPLICATION.CFC.CANDIDATE.getCandidateSession().lastName#!    
 								</cfif>
                             </div>
 
@@ -134,16 +133,12 @@
                             
                             <a href="#CGI.SCRIPT_NAME#?action=checkList" id="itemLinks" class="itemLinks">Application Checklist</a> 
                                 <ul>
-                                    <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection1Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Student Information</a></li>
-                                    <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection2Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Family Information</a></li>
-									
-									<!--- Only Display If Addtional Family Information is Checked --->
-                                    <cfif VAL(APPLICATION.CFC.STUDENT.getStudentSession().hasAddFamInfo)>
-                                    	<li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection3Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">Additional Family Information</a></li>
-                                    </cfif>
-                                    
-                                    <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection4Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=3">Other</a></li>
-                                    <li class="#YesNoFormat(APPLICATION.CFC.STUDENT.getStudentSession().isSection5Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=4">Student Essay</a></li>
+                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Candidate Information</a></li>
+                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Family Information</a></li>
+                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=3">Other</a></li>
+                                    <!---
+										<li class="#YesNoFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection5Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=4">Candidate Essay</a></li>
+									--->
                                 </ul>    
                             
                             <a href="#CGI.SCRIPT_NAME#?action=documents" class="itemLinks <cfif Find("documents", CGI.QUERY_STRING)> selected </cfif>">Upload Documents</a>
@@ -179,10 +174,10 @@
                             
                             <div class="topLeft">
                                 <div class="printLogo">&nbsp;</div>
-                                <div class="title">#APPLICATION.SCHOOL.name#</div>
+                                <div class="title">#APPLICATION.CSB.name#</div>
                                 <div class="subTitle">Application for Admission</div>
                                 <!---
-                                <div class="title">#APPLICATION.SCHOOL.name#</div>
+                                <div class="title">#APPLICATION.CSB.name#</div>
                                 <div class="subTitle">Application for Admission</div>
 								--->
                             </div>
@@ -203,17 +198,17 @@
                 <body>
 
                 <!--- Start of Div Wrapper --->
-                <table cellpadding="2" cellspacing="2" style="width:100%; background-color:##c2d9e9; border-bottom:10px solid ##0069aa; height:70px;">
+                <table cellpadding="2" cellspacing="2" style="width:100%; border-bottom:10px solid ##fb7f18; height:70px;">
                     <tr>
                         <td width="70px" align="center">
-                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# Application For Admission">
-                                <img src="#APPLICATION.SITE.URL.main#/images/onlineApp/logoSmall.gif" border="0" />
+                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#">
+                                <img src="#APPLICATION.SITE.URL.main#/internal/pics/extra-logo.jpg" border="0" />
                             </a>
                         </td>
                         <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
-                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# Application For Admission" style="text-decoration:none; color:##0069aa;">
-                                <span style="font-size: 1.4em;">#APPLICATION.SCHOOL.name#</span> <br />
-                                <span style="font-size: 0.9em;">Application for Admission</span>
+                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#" style="text-decoration:none; color:##000000;">
+                                <span style="font-size: 1.4em;">#APPLICATION.CSB.name#</span> <br />
+                                <span style="font-size: 0.9em;">#APPLICATION.CSB.programName#</span>
                             </a>
                         </td>
                     </tr>

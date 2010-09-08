@@ -6,6 +6,20 @@ $(function() {
 	$('.date-pick').datePicker({startDate:'01/01/2006'});
 });	
 
+
+// Show/hide email address fields
+var startApplicationType = function(selectedType) { 
+
+	if ( selectedType == 'Candidate' ) {
+		// Display Email Fields
+		$(".divEmailAddress").slideDown("slow");
+	} else {
+		// Hide Email Fields
+		$(".divEmailAddress").slideUp("slow");
+	}
+
+}
+
 function getCurrentDate() {
 	var d = new Date();
 	var curr_day = d.getDate();
