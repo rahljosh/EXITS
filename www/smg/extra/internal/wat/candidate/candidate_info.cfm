@@ -127,7 +127,11 @@
         FROM 
         	extra_hostcompany
         WHERE 
-        	extra_hostcompany.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND
+            extra_hostcompany.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+        AND 
+        	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
         ORDER BY 
         	name
     </cfquery>
@@ -284,7 +288,7 @@
 						</table>
     
                         <!--- CANDIDATE INFO - READ ONLY --->
-                        <table width="635px" align="right" cellpadding="2" class="readOnly">
+                        <table width="600px" align="right" cellpadding="2" class="readOnly">
                             <tr>
                                 <td align="center" colspan="2" class="title1">#get_candidate_unqID.firstname# #get_candidate_unqID.middlename# #get_candidate_unqID.lastname# (###get_candidate_unqID.candidateID#)</td>
                             </tr>
@@ -325,7 +329,7 @@
                         </table>
                         
                         <!--- CANDIDATE INFO - EDIT PAGE --->
-                        <table width="635px" align="right" cellpadding="2" class="editPage">
+                        <table width="600px" align="right" cellpadding="2" class="editPage">
                             <tr>
                                 <td align="right" class="style1"><b>Last Name:</b> </td>
                                 <td><input type="text" name="lastname" class="style1" size="32" value="#get_candidate_unqID.lastname#" maxlength="100"></td>
@@ -394,7 +398,7 @@
                                                                 	
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Personal Information</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Personal Information</td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right" width="50%"><b>Place of Birth:</b></td>
@@ -449,7 +453,7 @@
                                         <tr>				
                                             <td class="style1" colspan="2">
             
-                                                <table width="100%" cellpadding="3" cellspacing="3" bordercolor="##C7CFDC" bgcolor="F7F7F7">
+                                                <table width="100%" cellpadding="3" cellspacing="3" bordercolor="##C7CFDC" bgcolor="##F7F7F7">
                                                     <tr>
                                                         <td colspan="4" class="style1">
                                                         	<b>Mailing Address:</b> 
@@ -534,7 +538,7 @@
                         
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                        	<td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Dates of the Official Vacation</td>
+                                        	<td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Dates of the Official Vacation</td>
                                         </tr>
                                         <tr>
                                             <td width="23%" class="style1" align="right"><b>Start Date:</b></td>
@@ -567,7 +571,7 @@
                         
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                            <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Emergency Contact</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Emergency Contact</td>
                                         </tr>
                                         <tr>
                                             <td width="15%" class="style1" align="right"><b>Name:</b></td>
@@ -598,7 +602,7 @@
                         
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Documents Control</td>
+                                            <td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Documents Control</td>
                                         </tr>
                                         <tr>
                                             <td width="46%" class="style1">
@@ -645,9 +649,9 @@
                         
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                            <td colspan="3" class="style2" bgcolor="8FB6C9">
+                                            <td colspan="3" class="style2" bgcolor="##8FB6C9">
                                                 &nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; 
-                                                [ <a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);"><font class="style2" color="FFFFFF">Insurance Management</font></a> ]
+                                                [ <a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);"><font class="style2" color="##FFFFFF">Insurance Management</font></a> ]
                                             </td>
                                         </tr>
                                         <tr>
@@ -710,7 +714,7 @@
                                 
                                         <table width="100%" cellpadding=5 cellspacing="0" border="0">
                                             <tr bgcolor="##C2D1EF">
-                                                <td colspan="3" class="style2" bgcolor="8FB6C9">&nbsp;:: Cancelation	</td>
+                                                <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Cancelation	</td>
                                             </tr>
                                             <tr>
                                                 <td width="12%" class="style1"><b>Date: </b></td>
@@ -743,7 +747,7 @@
                         
                                     <table width="100%" cellpadding=5 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-            	                            <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Placement Information [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#get_candidate_unqid.uniqueid#', 400, 750);" class="style2"> History </a> ]</span></td>
+            	                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Placement Information [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#get_candidate_unqid.uniqueid#', 400, 750);" class="style2"> History </a> ]</span></td>
                                         </tr>
                                         <tr>
                                         	<td class="style1" align="Left" colspan=2><b>Company Name:</b></td>
@@ -819,7 +823,7 @@
                         
                                     <table width="100%" cellpadding=5 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                        	<td class="style2" bgcolor="8FB6C9" colspan="4">&nbsp;:: Program Information &nbsp;  [<a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);"><font class="style3" color="FFFFFF"> History </font></a> ]</span></td>
+                                        	<td class="style2" bgcolor="##8FB6C9" colspan="4">&nbsp;:: Program Information &nbsp;  [ <a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);"> <font class="style2" color="##FFFFFF"> History </font> </a> ]</span></td>
                                         </tr>						
                                         <tr>
                                         	<td class="style1" align="right" width="27%"><b>Program:</b></td>
@@ -917,7 +921,7 @@
                         
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                     	<tr bgcolor="##C2D1EF">
-                                    		<td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Form DS-2019</td>
+                                    		<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Form DS-2019</td>
                                     	</tr>	
                                         <tr>
                                             <td class="style1" align="left" colspan="2"><strong>Sponsor</strong>&nbsp; 
@@ -968,7 +972,7 @@
                         
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                        	<td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Arrival Verification</td>
+                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Verification</td>
                                         </tr>	
                                         <tr>
                                         	<td class="style1" width="52%" align="right"><label for="verification_address"><strong>House Address Verified:</strong></label></td>
