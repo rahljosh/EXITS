@@ -314,9 +314,22 @@
         AND 
         	s.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
         AND 
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
         	t.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
+		<!--- Get active students or students canceled after July 31st that either withdrewl or terminated the program --->
+        AND 
+            (
+                s.cancelDate IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+            OR
+                (
+                    s.cancelDate > <cfqueryparam cfsqltype="cf_sql_date" value="#Year(now())#-07-31">                
+                AND    
+                    (
+                        s.cancelReason = <cfqueryparam cfsqltype="cf_sql_varchar" value="Withdrawl">   
+                    OR
+                        s.cancelReason = <cfqueryparam cfsqltype="cf_sql_varchar" value="Termination">   
+                    )
+                )
+             )
     </cfquery>
 
 	<!--- 
@@ -391,7 +404,7 @@
 		}
 		
 		// Check if setMinCurrent goal has been reached, if yes user won a bonus and we need to reset setMinCurrent
-		if ( setPlacedCurrent >= setMinCurrent ) {
+		if ( setPlacedCurrent GTE setMinCurrent ) {
 			
 			// Calculate how many times bonus needs to be multiplied
 			setFirstBonusMultiplier = fix( (setPlacedCurrent - setPlacedPrevious) / 3);
@@ -639,7 +652,7 @@
 											awayMessage = 'placements';	
 										}
 										
-                                        if ( (setPlacedCurrent >= i AND setPlacedCurrent < i + 3)  ) {
+                                        if ( (setPlacedCurrent GTE i AND setPlacedCurrent < i + 3)  ) {
                                             // Check if setPlacedCurrent is bigger than current bonus and smaller than next bonus
                                             bonusMessage = "<h2>Congratulations! You've won a bonus of #DollarFormat(setAddtionalBonus)#.</h2>";	
                                         } else if ( currentRow EQ 1 AND setAwayPlacements GT 0 AND NOT LEN(firstBonusMessage) ) {
