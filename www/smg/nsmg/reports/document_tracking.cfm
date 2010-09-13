@@ -145,7 +145,7 @@
 		<Cfquery name="get_students_region" datasource="MySQL">
 			SELECT studentid, countryresident, firstname, familylastname, sex, programid, placerepid,
 			date_pis_received, doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date, doc_photos_rec_date, doc_school_accept_date, doc_school_profile_rec,
-			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_form_2, stu_arrival_orientation, host_arrival_orientation
+			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_form_2, stu_arrival_orientation, host_arrival_orientation, classschedule
 			FROM smg_students
 			WHERE active = '1' AND regionassigned = '#current_region#' AND companyid = '#client.companyid#' 
 				 AND onhold_approved <= '4'
@@ -194,6 +194,9 @@
 							<cfif doc_ref_form_2 is ''>Ref. 2 &nbsp; &nbsp;</cfif>
 							<cfif stu_arrival_orientation is ''>Student Orientation &nbsp; &nbsp;</cfif>
 							<cfif host_arrival_orientation is ''>HF Orientation &nbsp; &nbsp;</cfif>
+                            <Cfif client.companyid eq 10>
+                           		 <cfif classschedule is ''>Class Schedule &nbsp; &nbsp;</cfif>
+                            </Cfif>
 						</font></i></td>		
 					</tr>								
 				</cfoutput>	

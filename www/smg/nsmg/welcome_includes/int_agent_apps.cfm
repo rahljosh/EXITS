@@ -66,7 +66,7 @@
                                     app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
                             </cfif>
                         </cfquery>
-                        
+                     
                         <cfoutput><a href="index.cfm?curdoc=student_app/student_app_list&status=#i#">#apps.count#</a></cfoutput>
 					</td>
 				</cfloop>
