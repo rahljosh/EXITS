@@ -31,9 +31,15 @@
           <td width="10%" valign="top"><div align="right"><b>Date:</b></div></td>
           <td valign="top"><cfinput type="text" name="tour_date" value="#tours.tour_date#" size="70" required="yes" message="Please enter a Tour Date"></td>
         </tr>
+        
         <tr>
           <td width="10%" valign="top"><div align="right"><b>Price:</b></div></td>
           <td valign="top"><cfinput type="text" name="tour_price" value="#tours.tour_price#" size="70" required="yes" message="Please enter a Tour Price"></td>
+        </tr>
+		<tr>
+          <td valign="top"><div align="right"><b>Flight Arrival Details: (for travel agent use)</b> <br />Please airport and  arrival/departure time window at final destination. 
+          </div></td>
+          <td valign="top"><textarea name="tour_flightdetails" cols="70" rows="7">#tours.tour_flightdetails#</textarea></td>
         </tr>
         <tr>
           <td valign="top"><div align="right"><b>Description:</b> <br />
@@ -45,6 +51,7 @@
           </div></td>
           <td valign="top"><textarea name="tour_flights" cols="70" rows="7">#tours.tour_flights#</textarea></td>
         </tr>
+
 		<tr>
           <td valign="top"><div align="right"><b>Payment:</b> <br />
           </div></td>

@@ -121,7 +121,8 @@
             </cfif>
             
 			<!--- Filter for Case and WEP --->
-            <cfif ListFind("10,11", CLIENT.companyID)>
+            <!---Reomoved WEP filter, as a student isn't assigned to WEP as a oompany, only as an int rep---->
+            <cfif ListFind("10", CLIENT.companyID)>
                 AND 
                     s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             <!--- show All but WEP (companyID 11) applications --->
@@ -196,7 +197,9 @@
     </cfquery>
 
 </cfsilent>    
-
+<Cfif client.companyid eq 11>
+11
+</Cfif>
 <script language="JavaScript" type="text/JavaScript">
 	<!--
 	function displayAppList(seasonID) {

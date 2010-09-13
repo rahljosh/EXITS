@@ -35,12 +35,33 @@ a:active {
 table {
 	width: 600px;
 }
+.whtMiddleTrips {
+	background-image: url(../images/whtBoxMiddle.png);
+	background-repeat: repeat-y;
+	margin: 0px;
+	height: auto;
+	text-align: justify;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	min-height: 1300px;
+}
 
 
 -->
-</style></head>
+</style>
+
+
+
+
+</head>
 
 <body class="oneColFixCtr">
+
+ <cfquery name="tours" datasource="mysql">
+			SELECT * FROM smg_tours where tour_status <> 'inactive'
+		</cfquery>
 <div id="topBar">
 <cfinclude template="../topBarLinks.cfm">
 <div id="logoBox"><a href="../index.cfm"><img src="../images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
@@ -54,44 +75,63 @@ table {
 <div id="mainContent">
     <div id="subPages">
       <div class="whtTop"></div>
-      <div class="whtMiddleStretch">
+      <div class="whtMiddleTrips">
         <div class="trips">
           <h1 class="enter">ISE Student Tours</h1>
           <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.</p>
           
-          
           <table width="573" height="333" border="0">
             <tr>
               <td height="45" colspan="3" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
+               <!---- <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a>----><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
               </tr>
             <tr>
-              <th width="285" height="178" class="lightGreen" scope="row"><a href="tours.cfm?tour_id=10"><img src="images/trips_3.png" width="239" height="165" alt="LA Experience" border="0" /></a></th>
-              <td width="264" align="center" valign="middle" class="lightGreen"><a href="tours.cfm?tour_id=7"><img src="images/trips_4.png" width="239" height="166" alt="NYC Holiday" border="0"/></a><br /></td>
+            <Cfif cgi.remote_addr neq '96.56.128.58'>
+             <td width="570" height="178" class="lightGreen" scope="row" align="Center"><h3>MPD Tour America trips are being updated by ISE for the 2010-2011 season please check back with us on Sept. 15, 2010 to book a tour.</h3></td>
+            <cfelse>
+            <cfoutput>
+            	<cfloop query="tours">
+              
+              <td width="285" height="178" class="lightGreen" scope="row"><a href="tours.cfm?tour_id=#tour_id#">
+              <img src="images/trips_#tour_id#.png" width="239" height="165" alt="#tour_name#" border="0" /></a><br />
+              #tour_name#<br />
+              #tour_date#<br />
+              Status: <cfif tour_status eq 'Active'>Seats Available<cfelse>#tour_status#</cfif></td>
+					<cfif currentrow mod 2 eq 0> 
+                    </tr>
+                    <tr>
+                </cfif>
+                </cfloop>    
+           </cfoutput>
+           </cfif>
+            	</tr>
+      		
+            <!----
+              <th width="285" height="178" class="lightGreen" scope="row"><a href="tours.cfm?tour_id=10"><img src="images/trips_03.png" width="239" height="165" alt="LA Experience" border="0" /></a></th>
+              <td width="264" align="center" valign="middle" class="lightGreen"><a href="tours.cfm?tour_id=7"><img src="images/trips_04.png" width="239" height="166" alt="NYC Holiday" border="0"/></a><br /></td>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=1"><img src="images/trips_8.png" width="240" height="166" border="0"/></a></th>
-              <th class="lightGreen"><a href="tours.cfm?tour_id=2"><img src="images/trips_9.png" width="237" height="165" border="0"/></a></th>
+              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=1"><img src="images/trips_08.png" width="240" height="166" border="0"/></a></th>
+              <th class="lightGreen"><a href="tours.cfm?tour_id=2"><img src="images/trips_11.png" width="237" height="165" border="0"/></a></th>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=8"><img src="images/trips_11.png" width="241" height="168" border="0"/></a></th>
+              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=8"><img src="images/trips_13.png" width="241" height="168" border="0"/></a></th>
               <th class="lightGreen"><a href="tours.cfm?tour_id=9"><img src="images/trips_14.png" width="237" height="168" border="0"/></a></th>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=6"><img src="images/trips_10.png" width="244" height="166" border="0" /></a></th>
-              <td class="lightGreen" align="center"><a href="tours.cfm?tour_id=11"><img src="images/trips_5.png" width="244" height="165" alt="mousepad" border="0" /></a></td>
+              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=6"><img src="images/trips_09.png" width="244" height="166" border="0" /></a></th>
+              <td class="lightGreen" align="center"><a href="tours.cfm?tour_id=11"><img src="images/trips_05.png" width="244" height="165" alt="mousepad" border="0" /></a></td>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=13"><img src="images/trips_15.png" width="245" height="168" border="0" /></th>
+              <th class="lightGreen" scope="row"><img src="images/trips_15.png" width="245" height="168" /></th>
               <th class="lightGreen"></th>
             </tr>
             <tr>
-              <th colspan="3" scope="row" align="center"><img src="../images/webStore_lines_06.gif" width="600" height="14" /><a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /></th>
+			---->
+              <th colspan="3" scope="row" align="center"><img src="../images/webStore_lines_06.gif" width="600" height="14" /><!----<a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a>----><br /><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /></th>
               </tr>
           </table>
-		  
-         <!----<h3> The ISE Tours Reservation system is being re-worked and will be available shortly. <Br /><Br /> Please check back soon to reserve your spot.</h3>--->
-        </div>
+                   </div>
 
         <!-- end whtMiddle --></div>
       <div class="whtBottom"></div>

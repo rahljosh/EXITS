@@ -199,7 +199,7 @@
 
     
     <!--- Email Finance Department --->
-	<cfmail to="#AppEmail.finance#" 
+	<cfmail to="#AppEmail.finance#, bmccready@iseusa.com" 
     	from="#AppEmail.support#" 
         subject="PHP Cancelation - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)" 
         type="html" 

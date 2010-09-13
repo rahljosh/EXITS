@@ -31,7 +31,7 @@ where studentid = #client.studentid#
 
    
 		<cfif client.need_add_info is not ''>
-        	<cflocation url="index.cfm?curdoc=section3/additional_health_answers">
+        	<cflocation url="../index.cfm?curdoc=section3/additional_health_answers">
         </cfif>
       
 
