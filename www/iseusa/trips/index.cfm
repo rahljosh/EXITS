@@ -78,17 +78,16 @@ table {
       <div class="whtMiddleTrips">
         <div class="trips">
           <h1 class="enter">ISE Student Tours</h1>
-          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.</p>
+          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.<br /><br />
+          <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE.  Once you are registered for a tour, you will be contacted regarding airfare.</strong></p>
           
           <table width="573" height="333" border="0">
             <tr>
               <td height="45" colspan="3" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-               <!---- <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a>----><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
+             <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
               </tr>
             <tr>
-            <Cfif cgi.remote_addr neq '96.56.128.58'>
-             <td width="570" height="178" class="lightGreen" scope="row" align="Center"><h3>MPD Tour America trips are being updated by ISE for the 2010-2011 season please check back with us on Sept. 15, 2010 to book a tour.</h3></td>
-            <cfelse>
+           
             <cfoutput>
             	<cfloop query="tours">
               
@@ -103,7 +102,9 @@ table {
                 </cfif>
                 </cfloop>    
            </cfoutput>
+           <!----
            </cfif>
+		   ---->
             	</tr>
       		
             <!----
@@ -128,8 +129,7 @@ table {
             </tr>
             <tr>
 			---->
-              <th colspan="3" scope="row" align="center"><img src="../images/webStore_lines_06.gif" width="600" height="14" /><!----<a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a>----><br /><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /></th>
-              </tr>
+             
           </table>
                    </div>
 

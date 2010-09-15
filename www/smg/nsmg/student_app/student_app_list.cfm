@@ -198,7 +198,7 @@
 
 </cfsilent>    
 <Cfif client.companyid eq 11>
-11
+
 </Cfif>
 <script language="JavaScript" type="text/JavaScript">
 	<!--

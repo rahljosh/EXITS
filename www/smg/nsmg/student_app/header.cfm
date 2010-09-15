@@ -10,7 +10,7 @@
 		Update that later on so the same query is not included twice. Make sure the print app works.
 		<cfparam name="URL.unqID" default=""> 
 	--->
-    
+   
     <cfscript>
 		if ( VAL(URL.userType) AND NOT IsDefined('CLIENT.usertype') )  {
 			CLIENT.userType = URL.userType;	
@@ -27,6 +27,9 @@
 			bgcolor ='B5D66E';			
 		} 
     </cfscript>
+    <cfif client.companyid eq 11>
+    <Cfset client.org_code=11>
+    </cfif>
 
 	<cfif isDefined('URL.unqID')>
         
@@ -51,6 +54,7 @@
         	companyID,
             companyName,
             companyShort_noColor
+            
         FROM
         	smg_companies
         WHERE 
@@ -154,7 +158,7 @@
 		<td valign="top">
         	<div style="font: bold 150% Arial,sans-serif; color: ##000000;	margin:0px; padding: 2px;">
                 #qOrgInfo.companyname# Online Application
-            </div>
+       </div>
             
             <div style="padding: 2px;">
                 <cfif isDefined('CLIENT.rep_filling_app')>
@@ -165,7 +169,7 @@
                 
                 #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentID#)
                 
-				<cfif isDefined('CLIENT.rep_filling_app')>
+		  <cfif isDefined('CLIENT.rep_filling_app')>
                     [<a class="item1" href="../index.cfm">Home</a>]
                 <cfelse>
                     [ <a class="item1" href="?curdoc=initial_welcome">Home</a> ]  [ <a href="logout.cfm">Logout</a> ]
@@ -201,7 +205,7 @@
                 
                 <u>Your Local Representative</u><br>
                 
-                #qStudentIntlRepInfo.businessname#<br>
+              #qStudentIntlRepInfo.businessname#<br>
                 
 				<cfif LEN(qStudentIntlRepInfo.studentcontactemail)>
                 	Email: <a href="mailto:#qStudentIntlRepInfo.studentcontactemail#">#qStudentIntlRepInfo.studentcontactemail#</a><br>
@@ -209,7 +213,7 @@
                 
                 <cfif LEN(qStudentIntlRepInfo.phone)>
                 	Phone: #qStudentIntlRepInfo.phone#
-                </cfif>
+              </cfif>
                 
             </cfif>
 		</td>
@@ -225,14 +229,14 @@
                 <cfif NOT LEN(logo.logo)>
                     <!--- SMG LOGO --->
                     <img src="../pics/logos/#CLIENT.org_code#_header_logo.png">
-                <cfelse>
                     <!--- INTL. AGENT LOGO --->
+                    <cfelse>
                     <img src="../pics/logos/#logo.logo#" height=71>
                 </cfif>
             <cfelse>
                 <img src="../pics/logos/#CLIENT.org_code#_header_logo.png">
             </cfif>		
-		</td>
+	  </td>
         
         <cfif cgi.SERVER_PORT EQ 443>
         	<td align="right" width="85">
