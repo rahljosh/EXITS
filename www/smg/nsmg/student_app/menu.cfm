@@ -29,7 +29,7 @@ body {
 </cfif>
 
 <cfoutput>
-<table width=100% cellpadding=0 cellspacing=0 border="0" id="menu1" bgcolor="#bgcolor#">
+<table width=100% cellpadding=0 cellspacing=0 border="0" id="menu1" bgcolor=<Cfif client.companyid eq 11>"##f7941d" <cfelse>"#bgcolor#"</cfif>>
 	<tr>
 		<td height=31 width=13 background="pics/menuback.gif"></td>
         <td width="75" background="pics/menuback.gif">

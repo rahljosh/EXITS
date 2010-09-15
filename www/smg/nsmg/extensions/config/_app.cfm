@@ -98,7 +98,8 @@
 	AppPath.sevis = AppPath.uploadedFiles & "sevis/";
 	AppPath.temp = AppPath.uploadedFiles & "temp/";	
 	AppPath.welcomePics = AppPath.uploadedFiles & "welcome_pics/";	
-	AppPath.xmlFiles = AppPath.uploadedFiles & "xml_files/";	
+	AppPath.xmlFiles = AppPath.uploadedFiles & "xml_files/";
+	AppPath.tours = AppPath.uploadedFiles & "tours/";
 
 	// These are used in the student online application
 	AppPath.onlineApp = StructNew();

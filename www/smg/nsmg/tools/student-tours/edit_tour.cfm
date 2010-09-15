@@ -36,6 +36,11 @@
           <td width="10%" valign="top"><div align="right"><b>Price:</b></div></td>
           <td valign="top"><cfinput type="text" name="tour_price" value="#tours.tour_price#" size="70" required="yes" message="Please enter a Tour Price"></td>
         </tr>
+                <tr>
+          <td valign="top"><div align="right"><b>Welcome Packet:</b></div></td>
+          <td valign="top">Current File: <cfif val(tours.packetfile)><A href="uploadedfiles/tours/#tours.packetfile#">#tours.packetfile#</A><cfelse>None</cfif><Br />
+          <cfinput type="file" name="packet" size="150"></td>
+        </tr>
 		<tr>
           <td valign="top"><div align="right"><b>Flight Arrival Details: (for travel agent use)</b> <br />Please airport and  arrival/departure time window at final destination. 
           </div></td>
