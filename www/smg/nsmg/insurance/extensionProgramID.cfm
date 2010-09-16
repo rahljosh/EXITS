@@ -1,10 +1,10 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		cancelationProgramID.cfm
+	File:		extensionProgramID.cfm
 	Author:		Marcus Melo
-	Date:		August 23, 2010
-	Desc:		Gets a list with insured students, creates the xls file and 
-				set them as insurance canceled.
+	Date:		September 09, 2010
+	Desc:		Gets a list of students that extended their program from 1st semester
+				to a 10 month program. Extend insurance accordingly.
 
 	Updated: 	
 
@@ -41,13 +41,13 @@
 		}
 
 		// Get Students that needs to be insured
-		qGetStudents = APPCFC.INSURANCE.getStudentsToCancel(programID=FORM.programID);
+		qGetStudents = APPCFC.INSURANCE.getStudentsToExtend(programID=FORM.programID);
 
 		// Get Company Short
 		companyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
 			
 		// Set XLS File Name
-		XLSFileName = '#companyShort#_Cancelation_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
+		XLSFileName = '#companyShort#_Extension_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
 
 		// No Records
 		if ( NOT VAL(qGetStudents.recordCount) ) {
@@ -101,36 +101,26 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
             <td>&nbsp;</td>
         </tr>
         
-        <cfloop query="qGetStudents">
-      		<cfscript>
-				if ( qGetStudents.cancelDate < qGetStudents.startDate ) {
-					// Set start date as new end date
-					newEndDate = qGetStudents.startDate;
-				} else {
-					// Set cancelation date as new end date
-					newEndDate = qGetStudents.cancelDate;
-				}
-			</cfscript>
-            
+        <cfloop query="qGetStudents">           
             <tr>
                 <td>#qGetStudents.familyLastName#</td>
                 <td>#qGetStudents.firstName#</td>
                 <td>#DateFormat(qGetStudents.dob, 'dd/mmm/yyyy')#</td>
-                <td>#DateFormat(newEndDate, 'dd/mmm/yyyy')#</td>
+                <td>#DateFormat(qGetStudents.endDate, 'dd/mmm/yyyy')#</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
             </tr>
             
-            <cfif IsDate(qGetStudents.startDate)>
+            <cfif IsDate(qGetStudents.endDate)>
 				
 				<cfscript>
 					// Update Insurace Record and Insert History
 					APPCFC.INSURANCE.insertInsuranceHistory(
 						studentID=qGetStudents.studentID,
-						type="X",
-						startDate=qGetStudents.startDate,
-						endDate=newEndDate,
+						type="EP",
+						startDate=qGetStudents.insuranceStartDate,
+						endDate=endDate,
 						fileName=XLSFileName
 					);	
 				</cfscript>
