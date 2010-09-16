@@ -61,7 +61,17 @@
         
 			<!--- NEW TRANSACTION HEADER --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> New Transaction</th></tr>
+                <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Insure Students</th></tr>
+                <tr><td align="center">Gets students that were never insured under a program</td></tr>
+                <tr>
+                    <td align="center">
+                        <cfif ListFind("1,2,3,4,12", CLIENT.companyID)>
+                            PS: Change companies to SMG to get all ISE students.
+                        <cfelseif CLIENT.companyID EQ 5>
+                            PS: All ISE students will be included (Bill, Margarita, Diana, Gary and Brian divisions).
+                        </cfif>
+                    </td>
+                </tr>                            
             </table>
 		
 			<!--- NEW TRANSACTION - FIRST ROW - 2 REPORTS --->
@@ -70,7 +80,7 @@
                     <td width="50%" valign="top">
                         <form action="insurance/newTransactionProgramID.cfm" method="POST">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">New Transaction - Based on Flight Arrival Information</th></tr>
+                                <tr><th colspan="2" bgcolor="##e2efc7">Insure Students - Based on Flight Arrival Information</th></tr>
                                 <tr align="left">
                                     <td>Program :</td>
                                     <td>
@@ -98,15 +108,6 @@
                                         End Date: Program End Date 
                                     </td>
                                 </tr>      
-                                <tr>
-                                    <td colspan="2">
-                                        <cfif ListFind("1,2,3,4,12", CLIENT.companyID)>
-                                        	PS: Change companies to SMG to get all ISE students.
-                                        <cfelseif CLIENT.companyID EQ 5>
-											PS: All ISE students will be included (Bill, Margarita, Diana, Gary and Brian divisions).
-										</cfif>
-                                    </td>
-                                </tr>                            
                                 <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
                             </table>
                         </form>
@@ -115,7 +116,7 @@
                         <form action="insurance/newTransactionProgramID.cfm" method="POST">
                         	<input type="hidden" name="noFlight" value="1" />
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">New Transaction - Based on Given Start Date</th></tr>
+                                <tr><th colspan="2" bgcolor="##e2efc7">Insure Students - Based on Given Start Date</th></tr>
                                 <tr align="left">
                                     <td>Program :</td>
                                     <td>
@@ -153,13 +154,13 @@
                     </td>
                 </tr>
             </table>
-            
+
             <br /><br />
-			
+						
             <!--- Return Date Correction --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Return Date Correction</th></tr>
-                <tr><td colspan="2" align="center"><font size="-2">Active students returning home at the end of the program</font></td></tr>
+                <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Return Date Correction</th></tr>
+                <tr><td align="center">Active students returning home at the end of the program</td></tr>
             </table>
             
             <table cellpadding="6" cellspacing="0" align="center" width="96%">
@@ -200,10 +201,43 @@
             
             <br /><br />
 
+            <!--- Program Extension Correction --->
+            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
+                <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Extend Insurance</th></tr>
+                <tr><td align="center">Active students that extended their program from 5 to 10 month program and need their insurance extended</td></tr>
+            </table>
+            
+            <table cellpadding="6" cellspacing="0" align="center" width="96%">
+                <tr>
+                    <td width="50%" valign="top">
+                        <form action="insurance/extensionProgramID.cfm" method="POST">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                                <tr><th colspan="2" bgcolor="##e2efc7">Program Extension</th></tr>
+                                <tr align="left">
+                                    <td>Program :</td>
+                                    <td>
+                                    	<select name="programID" size="6" multiple>
+                                            <cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="2" align="center">&nbsp;</td></tr>					
+                                <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
+                            </table>
+                        </form>
+                    </td>
+                    <td width="50%" valign="top">&nbsp;
+                        
+                    </td>
+                </tr>
+            </table>
+
+            <br /><br />
+
             <!--- Cancelation --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Cancelation</th></tr>
-                <tr><td colspan="2" align="center"><font size="-2">Canceled students with active insurance</font></td></tr>
+                <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Cancel Insurance</th></tr>
+                <tr><td align="center">Canceled students with active insurance</td></tr>
             </table>
             
             <table cellpadding="6" cellspacing="0" align="center" width="96%">
@@ -211,7 +245,7 @@
                     <td width="50%" valign="top">
                         <form action="insurance/cancelationProgramID.cfm" method="POST">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Cancelation - Based on cancelation date</th></tr>
+                                <tr><th colspan="2" bgcolor="##e2efc7">Cancel Insurance - Based on cancelation/withdrew date</th></tr>
                                 <tr align="left">
                                     <td>Program :</td>
                                     <td>
@@ -235,8 +269,8 @@
             
             <!--- Insurance History --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-                <tr><th colspan="2" bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Insurance Files History (Last 30 files)</th></tr>
-                <tr><td colspan="2" align="center"><font size="-2">Types: N = New | R = Return/Adjustment | X = Cancelation</font></td></tr>
+                <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Insurance Files History (Last 30 files)</th></tr>
+                <tr><td align="center">Types: N = New | R = Return/Adjustment | X = Cancelation | EP = Extension Program</td></tr>
             </table>
             
             <br />

@@ -131,7 +131,7 @@
 		<cfreturn qGetInsuranceHistoryByStudent>
 	</cffunction>
 
-
+	
     <cffunction name="getStudentsHistory" access="public" returntype="query" output="false" hint="Returns insurance history by date">
         <cfargument name="file" hint="file is required.">
         <cfargument name="date" hint="date is required.">
@@ -166,6 +166,7 @@
 	</cffunction>
 
 
+	<!--- Insure Students --->
 	<cffunction name="getStudentsToInsure" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
         <cfargument name="programID" hint="List of program IDs. Required.">
         <cfargument name="PolicyID" hint="Policy ID required">
@@ -183,9 +184,11 @@
                     it.type,  
                     ic.policycode, 
                     p.startDate,
-                    p.endDate,
-                    p.insurance_startdate, 
-                    p.insurance_enddate
+                    p.endDate
+                    <!---
+					p.insurance_startDate,
+					p.insurance_endDate
+					--->
                 FROM
                     smg_flight_info fi
                 INNER JOIN
@@ -233,6 +236,7 @@
 	</cffunction>
 
 
+	<!--- Insure Students --->
 	<cffunction name="getStudentsToInsureNoFlight" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
         <cfargument name="programID" hint="List of program IDs. Required.">
         <cfargument name="PolicyID" hint="Policy ID required">
@@ -260,9 +264,11 @@
                     it.type,  
                     ic.policycode, 
                     p.startDate,
-                    p.endDate,
-                    p.insurance_startdate, 
-                    p.insurance_enddate
+                    p.endDate
+                    <!---
+					p.insurance_startDate,
+					p.insurance_endDate
+					--->
                 FROM
                     smg_students s  
                 INNER JOIN 
@@ -294,7 +300,77 @@
 		<cfreturn qGetStudentsToInsureNoFlight>
 	</cffunction>
 
+	
+    <!--- End Date Correction --->
+	<cffunction name="getStudentsReturnRecords" access="public" returntype="query" output="false" hint="Returns students list with depature flight information">
+        <cfargument name="programID" hint="List of program IDs. Required.">
+        <cfargument name="PolicyID" hint="Policy ID required">
+              
+        <cfquery 
+        	name="qGetStudentsReturnRecords" 
+            datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                    s.studentID, 
+                    s.firstname, 
+                    s.familyLastName, 
+                    s.dob, 
+                    DATE_ADD( MIN(fi.dep_date), INTERVAL 1 DAY) AS dep_date,
+                    it.type,  
+                    ic.policycode, 
+                    p.startDate,
+                    p.endDate
+                    <!---
+					p.insurance_startDate,
+					p.insurance_endDate
+					--->
+                FROM
+                    smg_flight_info fi
+                INNER JOIN
+                    smg_students s ON fi.studentID = s.studentID 
+                        AND
+                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        AND 
+                            s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+						<cfif CLIENT.companyID EQ 5>
+                            AND          
+                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                        <cfelse>
+                            AND          
+                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+                        </cfif>
+                INNER JOIN 
+                    smg_users u ON u.userid = s.intrep 
+                        AND 
+                            u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
+                INNER JOIN
+                    smg_insurance_type it ON it.insutypeid = u.insurance_typeid
+                INNER JOIN 
+                    smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
+                INNER JOIN  
+                    smg_programs p ON p.programID = s.programID
+                LEFT OUTER JOIN 
+                    smg_insurance_batch ib ON ib.studentID = fi.studentID 
+                        AND 
+                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="R">
+                WHERE 
+                    fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                AND
+                    ib.studentID IS NULL
+                    
+                GROUP BY 
+                    fi.studentID
+                ORDER BY 
+                    u.businessname, 
+                    s.familyLastName,
+                    s.firstName        
+		</cfquery>
+        
+        <cfreturn qGetStudentsReturnRecords> 
+           
+	</cffunction>
 
+
+    <!--- Cancel Insurance --->
 	<cffunction name="getStudentsToCancel" access="public" returntype="query" output="false" hint="Returns canceled students with active insurance that needs to be canceled">
         <cfargument name="programID" hint="List of program IDs. Required.">
 
@@ -350,29 +426,30 @@
 	</cffunction>
 
 
-	<cffunction name="getStudentsReturnRecords" access="public" returntype="query" output="false" hint="Returns students list with depature flight information">
+	<!--- Extend insurance based on program extension --->
+	<cffunction name="getStudentsToExtend" access="public" returntype="query" output="false" hint="Extend insurance based on program extension">
         <cfargument name="programID" hint="List of program IDs. Required.">
-        <cfargument name="PolicyID" hint="Policy ID required">
-              
+
         <cfquery 
-        	name="qGetStudentsReturnRecords" 
+        	name="qGetStudentsToExtend" 
             datasource="#APPLICATION.dsn#">
                 SELECT DISTINCT
                     s.studentID, 
                     s.firstname, 
                     s.familyLastName, 
                     s.dob, 
-                    DATE_ADD( MIN(fi.dep_date), INTERVAL 1 DAY) AS dep_date,
-                    it.type,  
-                    ic.policycode, 
-                    p.startDate,
-                    p.endDate,
-                    p.insurance_startdate, 
-                    p.insurance_enddate
+                    ib.type,
+                    ib.startDate AS insuranceStartDate,
+                    MAX(ib.endDate) AS insuranceEndDate,
+                    p.endDate
+                    <!---
+					p.insurance_startDate,
+					p.insurance_endDate
+					--->
                 FROM
-                    smg_flight_info fi
+                    smg_insurance_batch ib
                 INNER JOIN
-                    smg_students s ON fi.studentID = s.studentID 
+                    smg_students s ON ib.studentID = s.studentID 
                         AND
                             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         AND 
@@ -386,39 +463,34 @@
                         </cfif>
                 INNER JOIN 
                     smg_users u ON u.userid = s.intrep 
-                        AND 
-                            u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
-                INNER JOIN
-                    smg_insurance_type it ON it.insutypeid = u.insurance_typeid
-                INNER JOIN 
-                    smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
                 INNER JOIN  
                     smg_programs p ON p.programID = s.programID
                 LEFT OUTER JOIN 
-                    smg_insurance_batch ib ON ib.studentID = fi.studentID 
+                    smg_insurance_batch ibc ON ibc.studentID = ib.studentID 
                         AND 
-                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="R">
+                            ibc.type = "EP"                    
                 WHERE 
-                    fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                    ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
                 AND
-                    ib.studentID IS NULL
-                    
+                	ib.endDate < p.endDate 
+                AND
+                    ibc.studentID IS NULL                                                
                 GROUP BY 
-                    fi.studentID
+                    ib.studentID
                 ORDER BY 
                     u.businessname, 
                     s.familyLastName,
                     s.firstName        
-		</cfquery>
-        
-        <cfreturn qGetStudentsReturnRecords> 
-           
+        </cfquery>
+    
+		<cfreturn qGetStudentsToExtend>
 	</cffunction>
 
 
+	<!--- Insert History --->
 	<cffunction name="insertInsuranceHistory" access="public" returntype="void" output="false" hint="Sets student insurance date">
         <cfargument name="studentID" type="numeric" hint="studentID is required">
-        <cfargument name="type" hint="type is required">
+        <cfargument name="type" hint="type is required N = New | R = Return/Adjustment | X = Cancelation | EP = Extension Program">
         <cfargument name="startDate" hint="startDate is required">
         <cfargument name="endDate" hint="endDate is required">
         <cfargument name="fileName" hint="fileName is required">

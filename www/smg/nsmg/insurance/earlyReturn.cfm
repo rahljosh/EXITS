@@ -3,8 +3,8 @@
 	File:		earlyReturn.cfm
 	Author:		Marcus Melo
 	Date:		January 06, 2010
-	Desc:		Gets a list with uninsured students, creates the xls file and 
-				set them as insured.
+	Desc:		Gets a list with insured students that have an updated return date, 
+				creates the xls file to correct their insurance information
 
 	Updated: 	
 
@@ -89,7 +89,8 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
         
         <cfloop query="qGetStudents">
       		
-            <cfif qGetStudents.dep_date NEQ setStartDate AND qGetStudents.dep_date LTE setStartDate> <!--- Do not display extensions --->
+            <!--- Do not display extensions --->
+            <cfif qGetStudents.dep_date NEQ setStartDate AND qGetStudents.dep_date LTE setStartDate> 
             
                 <tr>
                     <!--- <td>#qGetStudents.studentID#</td> --->

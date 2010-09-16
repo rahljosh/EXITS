@@ -40,7 +40,7 @@
 		qRegionAssigned = AppCFC.REGION.getRegions(regionID=qStudentInfo.regionAssigned);
 		
 		// Insurance Information
-		qInsuranceHistory = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qStudentInfo.studentID, type='N,R');
+		qInsuranceHistory = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qStudentInfo.studentID, type='N,R,EP');
 
 		// Insurance Information
 		qInsuranceCancelation = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qStudentInfo.studentID, type='X');

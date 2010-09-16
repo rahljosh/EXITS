@@ -3,7 +3,7 @@
 	File:		newTransactionProgramID.cfm
 	Author:		Marcus Melo
 	Date:		January 06, 2010
-	Desc:		Gets a list with uninsured students, creates the xls file and 
+	Desc:		Gets a list with active uninsured students, creates the xls file and 
 				set them as insured.
 
 	Updated: 	
