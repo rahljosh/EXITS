@@ -125,7 +125,7 @@
                 GROUP BY            
                     file                  
                 ORDER BY            
-                    date DESC
+                    date
         </cfquery>
 		   
 		<cfreturn qGetInsuranceHistoryByStudent>
@@ -439,9 +439,8 @@
                     s.familyLastName, 
                     s.dob, 
                     ib.type,
-                    ib.startDate AS insuranceStartDate,
-                    MAX(ib.endDate) AS insuranceEndDate,
-                    p.endDate
+                    DATE_ADD(ib.endDate, INTERVAL 1 DAY) AS extensionStartDate,
+                    p.endDate AS extensionEndDate
                     <!---
 					p.insurance_startDate,
 					p.insurance_endDate
@@ -468,7 +467,7 @@
                 LEFT OUTER JOIN 
                     smg_insurance_batch ibc ON ibc.studentID = ib.studentID 
                         AND 
-                            ibc.type = "EP"                    
+                            ibc.type = "EX"                    
                 WHERE 
                     ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
                 AND
@@ -490,7 +489,7 @@
 	<!--- Insert History --->
 	<cffunction name="insertInsuranceHistory" access="public" returntype="void" output="false" hint="Sets student insurance date">
         <cfargument name="studentID" type="numeric" hint="studentID is required">
-        <cfargument name="type" hint="type is required N = New | R = Return/Adjustment | X = Cancelation | EP = Extension Program">
+        <cfargument name="type" hint="type is required N = New | R = Return/Adjustment | X = Cancelation | EX = Extension Program">
         <cfargument name="startDate" hint="startDate is required">
         <cfargument name="endDate" hint="endDate is required">
         <cfargument name="fileName" hint="fileName is required">

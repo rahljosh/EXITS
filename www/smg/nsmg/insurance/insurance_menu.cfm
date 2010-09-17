@@ -270,7 +270,7 @@
             <!--- Insurance History --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Insurance Files History (Last 30 files)</th></tr>
-                <tr><td align="center">Types: N = New | R = Return/Adjustment | X = Cancelation | EP = Extension Program</td></tr>
+                <tr><td align="center">Types: N = New | R = Return/Adjustment | X = Cancelation | EX = Extension Program</td></tr>
             </table>
             
             <br />

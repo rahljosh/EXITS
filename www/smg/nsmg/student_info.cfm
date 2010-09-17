@@ -40,7 +40,7 @@
 		qRegionAssigned = AppCFC.REGION.getRegions(regionID=qStudentInfo.regionAssigned);
 		
 		// Insurance Information
-		qInsuranceHistory = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qStudentInfo.studentID, type='N,R,EP');
+		qInsuranceHistory = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qStudentInfo.studentID, type='N,R,EX');
 
 		// Insurance Information
 		qInsuranceCancelation = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qStudentInfo.studentID, type='X');
@@ -740,15 +740,15 @@
                         </cfif>
 					</td>
 				</tr>
-                <cfif qInsuranceHistory.recordCount>
+                <cfloop query="qInsuranceHistory">
                     <tr>
                         <td>&nbsp;</td>
-                        <td>Dates :</td>
+                        <td>#qInsuranceHistory.type#</td>
                         <td>
-                            From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')#
+                            From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')# 
                         </td>
                     </tr>
-                </cfif>
+                </cfloop>
                 <!--- Cancelation --->
                 <tr>
                     <td>
