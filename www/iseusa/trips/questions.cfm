@@ -54,7 +54,7 @@ a:active {
           <table width="603" height="229" border="0">
             <tr>
               <td width="597" height="45" align="center" scope="row" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
+                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
               </tr>
             <tr>
               <td height="178" class="lightGreen" scope="row"> <a name="Gquestions" id="Gquestions"></a><p class="boldLJ">General Questions</p>
@@ -91,11 +91,23 @@ a:active {
 </ul>
                 
                 <p class="boldLJ"><a name="bookTour" id= "bookTour"></a>How to book a tour?</p>
-                  <ul><li class="leftJust">Choose your trip.</li>
-                  <li class="leftJust">Get permission from your host family, exchange representative, and school to travel.</li>
-                  <li class="leftJust">Apply online, (www.iseusa.com/trips) and download forms. You must send $100.00 for a deposit but you can also choose to pay full amount of a tour. You can make a deposit or payment online, fax, or mail. Total payment is due at least 60 days before the trip.</li>
-                <li class="leftJust">Once we confirm you on a tour then you have to book an airplane ticket. Just be sure to book your flight according to our flight information on each tour of arrival dates and times and departure dates and times. Be sure you know what cities to arrive and depart from before booking.</li></ul>
-                  <p class="rightJust"><a name="Gquestions" id="Gquestions">Back to top</a></p>
+                <table>
+                	<Tr>
+                    	<Td></Td>
+                        <Td align="left">
+                  <ol>
+                  <li><a href="http://www.iseusa.com/trips/">Reserve your spot</a> on your tour on ISE Trips Website</li>
+                  <li>You will receive an email with both a Payment Form and Permission Form attached.</li>
+                  <li>You must fully complete both forms and submit them</li>
+                  <li>Once submitted, you will receive a confirmation email that all necessary paperwork has been submitted.</li>
+                  <li>You will then receive an email from our Authorized Travel Agent to book your flight.</li>
+                  <li>Once flight booked, you will receive your final trip confirmation from MPD</li>
+               	  <li> ENJOY YOUR TRIP!!</li>
+                </ol>	
+                	</Td>
+                    </Tr>
+                </table>
+    <p class="rightJust"><a name="Gquestions" id="Gquestions">Back to top</a></p>
                   <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question2" id= "question2"></a>What's included in the tour cost?</span><br />
                   Breakfast, dinner, entrance fees to all listed attractions, airport transfers, transportation while on tour, hotel accommodations, professional tour staff, chaperones, taxes and tips.<br />
@@ -109,12 +121,18 @@ a:active {
                   Hotel rooms are (Quad) 4 students assigned to a room &ndash; all same gender. If you request a friend, host brother or host sister (of high school age 15-19 of same gender) you can be assigned together if you request early enough when signing up for a tour. Just complete this request on your permission form online and mail out completed form to MPD Tour America, Inc. Also, a lot of students do not know anyone before tour begins, but everyone makes a lot of new friends.<br />
                 <p class="rightJust"><a name="Gquestions" id="Gquestions">Back to top</a></p>
                   <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
-                <p class="p2"><span class="bold"><a name="question5" id= "question5"></a>Who do I send my deposit form, payments and permission form to? NOT TO ISE!</span><br />
+                <p class="p2"><span class="bold"><a name="question5" id= "question5"></a>Who do I send my  permission form to? NOT TO ISE!</span><br />
                   <br />
-                  Please send your deposit form and payments and permission forms completed to:<br />
+                Please send your permission forms completed to:<br />
+                	<u>Postal Mail</u><br />
 					&nbsp;&nbsp;&nbsp;&nbsp;MPD Tour America, Inc.<br />
 					&nbsp;&nbsp;&nbsp;&nbsp;9101 Shore Road, Suite 203<br />
 					&nbsp;&nbsp;&nbsp;&nbsp;Brooklyn, New York   11209<br />
+                    <u>Email</u><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;info@mpdtours.com<Br />
+                    <u>Fax</u><br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;(718) 439-8565
+                    
                 <p class="rightJust">Back to top</p>
                 <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question6" id= "question6"></a>Who do I contact to ask questions about tour, payments, etc.?</span><br />
@@ -123,19 +141,15 @@ a:active {
                 <p class="rightJust"><a href"Gquestions">Back to top</a></p>
                   <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question7" id= "question7"></a>How do I know I am accepted on a tour?</span><br />
-                  Once you make a deposit and your credit card or check etc., are cleared we will notify you by e-mail or telephone and confirm you on a tour. Also, do not book an airline ticket until you are confirmed on a tour by MPD Tour America, Inc.<br />
+                 Once you submit full payment for a trip along with your signed Permission form, you will be notified by email to confirm you on a tour. You then will be contacted by our authorized travel agent to book your flight.<br />
                 <p class="rightJust"><a href"Gquestions">Back to top</a></p>
                   <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question8" id= "question8"></a>How do I book a flight?  (We do not book flights, only assist).</span><br />
-                  You can go online or a travel agent, or call an airline directly and book a flight on your own. Also, complete a &quot;Flight Quote Form&quot; and submit it to sasha@troikaviagens.com.<br />
+                  Once you’re Payment and Permission forms are submitted and confirmed, you will be contacted by our Authorized Travel Agent.
                 <p class="rightJust"><a href"Gquestions">Back to top</a></p>
                   <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question9" id= "question9"></a>Is my airplane ticket refundable?</span><br />
                   Most airline tickets are non-refundable, which means that you will not get a refund for the ticket if you do not travel. Most airlines will allow you to use the value of ticket to purchase another ticket later but they will charge a fee to change the ticket, which is usually is approximately $100.00 fee<br />
-                <p class="rightJust"><a href"Gquestions">Back to top</a></p>
-                  <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
-                <p class="p2"><span class="bold"><a name="question10" id= "question10"></a>Where can I purchase airline tickets other than online?</span><br />
-                  You can call any airline company direct or a local travel agency. You can find telephone numbers in the yellow pages or online, or you can dial information on your cell or home telephone. Also, complete a &quot;Flight Quote Form&quot; and fax it to Troika Turismo &amp; Intercambio at 011 55 11 4195-9335.<br />
                 <p class="rightJust"><a href"Gquestions">Back to top</a></p>
                   <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question11" id= "question11"></a>Can I go on more than one tour?</span><br />
@@ -179,7 +193,7 @@ a:active {
                 </p>
                 <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question19" id= "question19"></a>I paid you online and you didn't respond?</span><br />
-                  Sometimes it takes a few weeks until we process all the students. It does not mean that we automatically take payments immediately as soon as you submit it online. Your deposit form gets processed through credit card companies, banks, etc., and this takes time to complete all the students applying for trips.<br />
+                  Sometimes it takes a few weeks until we process all the students. It does not mean that we automatically take payments immediately as soon as you submit it online.<br />
                 <p class="rightJust"><a href"Gquestions">Back to top</a></p>
                 </p>
                 <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
@@ -189,19 +203,17 @@ a:active {
                 </p>
                 <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question21" id= "question21"></a>Can I make several payments?</span><br />
-                  Yes, after we receive your deposit form and the first $100.00, the balance can be paid by credit card, check, money order up until 60 days before the tour date begins. If you submitted a deposit form online, you may log back in and make payments anytime. Final payment will be automatically taken from credit card number on file unless otherwise indicated.<br />
+                  No, you must submit a full payment to hold your spot on your chosen trip.<br />
                 <p class="rightJust"><a href"Gquestions">Back to top</a></p>
                 </p>
                 <img src="../images/webstore/greenLine.gif" width="400" height="20" align="center" />
                 <p class="p2"><span class="bold"><a name="question22" id= "question22"></a>What happens if I change my mind about a tour selection or want to cancel a trip?</span><br />
-                  If you cancel more than 60 days before the tour date, you will receive a full refund, less a $25.00 processing fee. If you cancel between 45-60 days before the tour, there will be a $100.00 cancellation fee. If you cancel less than 45 days before the tour date, there will absolutely be no refunds under any circumstances.<br />
-                  Refunds on your airline tickets are your responsibility, and you will need to notify the airline directly Most airline tickets are non-refundable.<br />
+                  There is a $100 cancellation fee up to 60 days prior to your chosen trip. After 60 days, there are NO Refunds.<br />
                 <p class="rightJust"><a href"Gquestions">Back to top</a></p>
                   <p> </p>
               </td>
               </tr>
-              <td width="597" height="45" align="center" scope="row" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
+              
           </table>
           <div class="clear"></div>
         <!-- end trips --></div>
