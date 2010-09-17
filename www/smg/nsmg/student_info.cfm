@@ -478,7 +478,6 @@
 	
 				<!--- OFFICE USERS ONLY --->
 				<cfif CLIENT.usertype LTE 4> 
-					<a href="" onClick="javascript:win=window.open('insurance2/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance</a> 	
 					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
 					<a href="" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Rep. Payments</a> 					
 					<a href="" onClick="javascript: win=window.open('forms/missing_documents.cfm', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
