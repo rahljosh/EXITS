@@ -106,21 +106,21 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 <td>#qGetStudents.familyLastName#</td>
                 <td>#qGetStudents.firstName#</td>
                 <td>#DateFormat(qGetStudents.dob, 'dd/mmm/yyyy')#</td>
-                <td>#DateFormat(qGetStudents.endDate, 'dd/mmm/yyyy')#</td>
+                <td>#DateFormat(qGetStudents.extensionEndDate, 'dd/mmm/yyyy')#</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
             </tr>
             
-            <cfif IsDate(qGetStudents.endDate)>
+            <cfif IsDate(qGetStudents.extensionEndDate)>
 				
 				<cfscript>
 					// Update Insurace Record and Insert History
 					APPCFC.INSURANCE.insertInsuranceHistory(
 						studentID=qGetStudents.studentID,
-						type="EP",
-						startDate=qGetStudents.insuranceStartDate,
-						endDate=endDate,
+						type="EX",
+						startDate=qGetStudents.extensionStartDate,
+						endDate=extensionEndDate,
 						fileName=XLSFileName
 					);	
 				</cfscript>
