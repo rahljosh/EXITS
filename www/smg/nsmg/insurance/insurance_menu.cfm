@@ -204,7 +204,7 @@
             <!--- Program Extension Correction --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Extend Insurance</th></tr>
-                <tr><td align="center">Active students that extended their program from 5 to 10 month program and need their insurance extended</td></tr>
+                <tr><td align="center">Active students that extended their program from 5 to 10 month and need their insurance extended</td></tr>
             </table>
             
             <table cellpadding="6" cellspacing="0" align="center" width="96%">
