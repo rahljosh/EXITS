@@ -57,7 +57,7 @@ a:active {
                     <cfset desc= 'SMG Trip Deposit Form'>
 									
 					  
-					 <cfmail to="josh@pokytrails.com"  from="trips@student-management.com" subject="SMG Trip Deposit Form">
+					 <cfmail to="josh@pokytrails.com"  from="trips@student-management.com" subject="SMG Trip Deposit Form - after new live">
 					 
 #desc# from the SMG Trip web site on #dateformat(Now())#.
 

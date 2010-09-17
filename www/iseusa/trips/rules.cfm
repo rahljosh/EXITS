@@ -51,15 +51,33 @@ a:active {
           <table width="603" height="229" border="0">
             <tr>
               <td width="597" height="45" align="center" scope="row" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
+              <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
               </tr>
             <tr>
-              <td height="178" class="lightGreen" scope="row" padding="10px"><p>&nbsp;</p>
-                <p><span class="bold">Instructions</span><br />
-                 <ul class="leftJust"> 1. Fill out &amp; send the deposit form as soon as you choose your trip(s). You must include a full payment (no cash, only checks or credit cards) or a deposit of $100 or more.
-                 </ul>
-                <ul class="leftJust">2. Get your Permission form completed and send to us ASAP. Send this in with final payment. We must have this form 30 days before travel. <span class="bold">Trip Questions: info@mpdtoursamerica.com</span><br />
-                </ul>
+              <td height="178" class="lightGreen" scope="row" padding="10px">
+               	<table width=100%>
+                	<Tr>
+                    	<td align="left">
+                        <br />
+                <h3 align="Center">Rules and Policies</h3>
+                
+                	<ul>
+                  	<li>**All Flights must be booked through our Travel Agent</li>
+                  	<li>**All paperwork must be submitted before we are able to book your flight</li>
+                  </ul>
+                  <h3 align="Center">Instructions:</h3>
+                  <ol>
+                  <li><a href="http://www.iseusa.com/trips/">Reserve your spot</a> on your tour on ISE Trips Website</li>
+                  <li>You will receive an email with both a Payment Form and Permission Form attached.</li>
+                  <li>You must fully complete both forms and submit them</li>
+                  <li>Once submitted, you will receive a confirmation email that all necessary paperwork has been submitted.</li>
+                  <li>You will then receive an email from our Authorized Travel Agent to book your flight.</li>
+                  <li>Once flight booked, you will receive your final trip confirmation from MPD</li>
+               	  <li> ENJOY YOUR TRIP!!</li>
+                </ol>	
+                    	</td>
+                	</tr>
+                </table>               
                 <p><img src="../images/webstore/greenLine.gif" width="400" height="20" /></p>
                 <p class="bold">Terms and Conditions</p><br />
                   <li class="paragraphRules">The tour member and guardians agree to abide by all of ISE &amp; MPD Tour America, Inc. policies and rules in order to ensure each participant’s safety, health, welfare and our smooth management of tours.<br />
