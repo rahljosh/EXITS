@@ -129,7 +129,7 @@ a:active {
 					&nbsp;&nbsp;&nbsp;&nbsp;9101 Shore Road, Suite 203<br />
 					&nbsp;&nbsp;&nbsp;&nbsp;Brooklyn, New York   11209<br />
                     <u>Email</u><br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;info@mpdtours.com<Br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<A href="info@mpdtoursamerica.com">info@mpdtoursamerica.com</a><Br />
                     <u>Fax</u><br />
                     &nbsp;&nbsp;&nbsp;&nbsp;(718) 439-8565
                     

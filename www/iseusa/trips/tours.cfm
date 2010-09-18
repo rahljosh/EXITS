@@ -167,7 +167,7 @@ margin-left: 0px;
         <div class="tours"> 
         <table width="665" border="0" align="center" cellpadding="2" cellspacing="0">
         <tr><td height="45" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td></tr>
+                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td></tr>
           <tr>
             <td width="665"><table width="101%" border="0" align="center" cellpadding="5" cellspacing="0" class="bBackground">
               <tr>
@@ -175,7 +175,13 @@ margin-left: 0px;
 					
 						<cfset tour_name = Replace(tours.tour_name, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  	<cfset tour_name = Replace(tour_name, ("!company!"), company, "ALL")>
-                        <span class="TitlesLG">#tour_name#</span></td>
+                        <span class="TitlesLG">#tour_name#</span><br />
+                        <cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
+						<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
+					  		
+                            <span class="SubTitle">
+			  		    #LSCurrencyFormat(tour_price, 'local')#</span>
+                        </td>
                     <td width="48%">
 					  <cfset tour_date = Replace(tours.tour_date, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  <cfset tour_date = Replace(tour_date, ("!company!"), company, "ALL")>
@@ -184,10 +190,10 @@ margin-left: 0px;
 					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
 					  		<span class="SubTitle"><br />
 					  		#tours.tour_length#</span></td>
-                    <td width="24%"><a href="selectTrips.cfm?tour_id=#tour_id#"><img src="images/reserve.png" width="146" height="38" alt="reserve spot" border="0" /></a><cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
-					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
-					  		<span class="SubTitle">
-					  		#LSCurrencyFormat(tour_price, 'local')#</span></td>
+                    <td width="24%"><a href="selectTrips.cfm?tour_id=#tour_id#"><img src="images/reserve.png" width="146" height="38" alt="reserve spot" border="0" /></a>
+                     
+                     <a href="selectTripQuote.cfm?tour_id=#tour_id#"> <img src="images/FlightQuote_07.png" width="139" height="35" /></a>
+                    </td>
                   </tr>
                 </table>
               <span class="RegularText">
@@ -243,8 +249,7 @@ margin-left: 0px;
                 </center>
               </span></td>
           </tr>
-          <tr><td height="45" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td></tr>
+
         </table></div>
         <br />
         </cfoutput>

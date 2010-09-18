@@ -80,9 +80,9 @@ a:active {
                 </table>               
                 <p><img src="../images/webstore/greenLine.gif" width="400" height="20" /></p>
                 <p class="bold">Terms and Conditions</p><br />
-                  <li class="paragraphRules">The tour member and guardians agree to abide by all of ISE &amp; MPD Tour America, Inc. policies and rules in order to ensure each participant’s safety, health, welfare and our smooth management of tours.<br />
+                  <li class="paragraphRules">The tour member and guardians agree to abide by all of ISE &amp; MPD Tour America, Inc. policies and rules in order to ensure each participant's safety, health, welfare and our smooth management of tours.<br />
                     <br />
-                </span><li class="paragraphRules">Participants and guardians acknowledge that ISE or MPD Tour America may terminate any participant’s tour at its sole discretion. Tour termination may be caused by rule violations that ISE or MPD Tour America, Inc. deems to endanger anyone or impedes the success of the tour. In such a case the participant will be sent home at his or her own expense and there will be no refund whatsoever.<br />
+                </span><li class="paragraphRules">Participants and guardians acknowledge that ISE or MPD Tour America may terminate any participant's tour at its sole discretion. Tour termination may be caused by rule violations that ISE or MPD Tour America, Inc. deems to endanger anyone or impedes the success of the tour. In such a case the participant will be sent home at his or her own expense and there will be no refund whatsoever.<br />
                   <br />
                 <li class="paragraphRules"> All program participants are required to have medical coverage at the time of travel. ISE &amp; MPD Tour America, Inc. do not assume any medical costs.<br />
                   <br />
