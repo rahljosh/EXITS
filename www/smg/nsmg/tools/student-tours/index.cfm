@@ -25,11 +25,12 @@
 	
 	<cfloop query="tours">
 	<table border=0 cellpadding=4 cellspacing=2 width=100% class="section">
-	<tr>
+	<tr  <cfif packetfile is ''>bgcolor="##FFCCCC"</cfif>>
 	  <td width="120"><img src="http://www.student-management.com/nsmg/uploadedfiles/student-tours/#tour_img2#.jpg" width="100px" height="100px" />	</td>
 	  <td><b><u>#tour_name#</u></b> <br />
         <b>Status:</b> #tour_status#<br />
-        <b>Date:</b> #tour_date#</td>
+        <b>Date:</b> #tour_date#<br />
+        <b>Packet File:</b> <Cfif packetfile is ''>NO FILE ON RECORD<cfelse>#packetfile#</Cfif></td>
 	  <td width="10%"><div align="center"><a href="?curdoc=tools/student-tours/edit_tour&tour_id=#tour_id#"><img src="pics/edit.gif" border="0" /></a></div></td>
 	  <td width="10%"><div align="center"><a href="?curdoc=tools/student-tours/delete_tour&tour_id=#tour_id#"><img src="pics/delete.gif" border="0" /></a></div></td>
 	</tr>
