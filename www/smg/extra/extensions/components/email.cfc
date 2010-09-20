@@ -129,21 +129,25 @@
 				</cfscript>
 
                 <cfsavecontent variable="stEmailStructure.message">
-                	<p>#qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
+                	<p>Dear #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
 
                     Please see below your login information: <br /><br />
                     Email Address: #qGetCandidateInfo.email# <br />
                     Password: #qGetCandidateInfo.password# <br /><br />
 
-                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    If you have any questions about filling out the online application please contact us at 
+                    <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
-
+                    For technical issues please email support at 
+                    <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                                        
                     #APPLICATION.CSB.name# <br />
-                    #APPLICATION.SCHOOL.address# <br />
-                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
-                    Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    #APPLICATION.CSB.programName# <br />
+                    #APPLICATION.CSB.address# <br />
+                    #APPLICATION.CSB.city#, #APPLICATION.CSB.state# #APPLICATION.CSB.zipCode# <br />
+                    Phone: #APPLICATION.CSB.phone# <br />
+                    Toll Free: #APPLICATION.CSB.toolFreePhone# <br /> 
+                    <a href="#APPLICATION.SITE.URL.main#">#APPLICATION.SITE.URL.main#</a> <br /> 
                 </cfsavecontent>
             
             </cfcase>
@@ -157,22 +161,26 @@
 				</cfscript>
 
                 <cfsavecontent variable="stEmailStructure.message">
-                	<p>#qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
+                	<p>Dear #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
 
                     You have successfully updated your login information. Please see below: <br /><br />
 
                     Email Address: #qGetCandidateInfo.email# <br />
                     Password: #qGetCandidateInfo.password# <br /><br />
 
-                    If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    If you have any questions about filling out the online application please contact us at 
+                    <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
-
+                    For technical issues please email support at 
+                    <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                                        
                     #APPLICATION.CSB.name# <br />
-                    #APPLICATION.SCHOOL.address# <br />
-                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
-                    Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    #APPLICATION.CSB.programName# <br />
+                    #APPLICATION.CSB.address# <br />
+                    #APPLICATION.CSB.city#, #APPLICATION.CSB.state# #APPLICATION.CSB.zipCode# <br />
+                    Phone: #APPLICATION.CSB.phone# <br />
+                    Toll Free: #APPLICATION.CSB.toolFreePhone# <br /> 
+                    <a href="#APPLICATION.SITE.URL.main#">#APPLICATION.SITE.URL.main#</a> <br /> 
                 </cfsavecontent>
             
             </cfcase>
@@ -193,23 +201,20 @@
                     Please contact our Admissions Office to set up an interview. <br /><br />
 
                     Admissions Department  <br />
-                    #APPLICATION.SCHOOL.admissions# <br />
-                    <a href="mailto:#APPLICATION.EMAIL.admissions#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.admissions#</a> <br />
-                    #APPLICATION.CSB.name# <br />
-                    #APPLICATION.SCHOOL.address# <br />
-                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
-                    Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br /><br />                 
                     
-                    If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    If you have any questions about filling out the online application please contact us at 
+                    <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
-
+                    For technical issues please email support at 
+                    <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                                        
                     #APPLICATION.CSB.name# <br />
-                    #APPLICATION.SCHOOL.address# <br />
-                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
-                    Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    #APPLICATION.CSB.programName# <br />
+                    #APPLICATION.CSB.address# <br />
+                    #APPLICATION.CSB.city#, #APPLICATION.CSB.state# #APPLICATION.CSB.zipCode# <br />
+                    Phone: #APPLICATION.CSB.phone# <br />
+                    Toll Free: #APPLICATION.CSB.toolFreePhone# <br /> 
+                    <a href="#APPLICATION.SITE.URL.main#">#APPLICATION.SITE.URL.main#</a> <br /> 
                 </cfsavecontent>
             
             </cfcase>
@@ -229,11 +234,19 @@
 					
                     Please find a copy of the application attached. <br /><br />
                     
+                    If you have any questions about filling out the online application please contact us at 
+                    <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
+                    
+                    For technical issues please email support at 
+                    <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                                        
                     #APPLICATION.CSB.name# <br />
-                    #APPLICATION.SCHOOL.address# <br />
-                    #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
-                    Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    #APPLICATION.CSB.programName# <br />
+                    #APPLICATION.CSB.address# <br />
+                    #APPLICATION.CSB.city#, #APPLICATION.CSB.state# #APPLICATION.CSB.zipCode# <br />
+                    Phone: #APPLICATION.CSB.phone# <br />
+                    Toll Free: #APPLICATION.CSB.toolFreePhone# <br /> 
+                    <a href="#APPLICATION.SITE.URL.main#">#APPLICATION.SITE.URL.main#</a> <br /> 
                 </cfsavecontent>
             
             </cfcase>

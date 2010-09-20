@@ -8,6 +8,8 @@
         USE smg
     </CFQUERY>
     
+	<cfparam name="APPLICATION.applicationID" default="0">
+    
 	<!--- Param URL variables --->
 	<cfparam name="URL.init" default="0">
 	<cfparam name="URL.link" default="">
@@ -29,7 +31,7 @@
         // Check if we need to initialize Application scope
 		if ( VAL(URL.init) ) {
 			// Clear the Application structure	
-			StructClear(APPLICATION.CFC);	
+			StructClear(APPLICATION);	
 		}
 		
 		// Create a function that let us create CFCs from any location
@@ -53,7 +55,7 @@
 		/***** Create APPLICATION.CFC structure *****/
 		APPLICATION.CFC = StructNew();
 		
-		// Set a short name for the APPLICATION.PATH
+		// Set a short name for the APPLICATION.CFC
 		AppCFC = APPLICATION.CFC;
 
 		// Store the initialized UDF Library object in the Application scope
@@ -64,7 +66,13 @@
 		
 		// Store the initialized candidate Library object in the Application scope
 		AppCFC.candidate = CreateCFC("candidate").Init();
-		
+
+		// Store the initialized content Library object in the Application scope
+		AppCFC.content = CreateCFC("content").Init();
+
+		// Store the initialized document Library object in the Application scope
+		AppCFC.document = CreateCFC("document").Init();
+
 		// Store the initialized email Library object in the Application scope
 		AppCFC.email = CreateCFC("email").Init();
 
@@ -80,7 +88,7 @@
 
 		/***** Create APPLICATION.SITE structure *****/
 		APPLICATION.SITE = StructNew();		
-		// Set a short name for the APPLICATION.PATH
+		// Set a short name for the APPLICATION.SITE
 		AppSite = APPLICATION.SITE;	
 		// Create new structure to store site information
 		AppSite = APPLICATION.SITE.URL = StructNew();	
@@ -90,6 +98,12 @@
 		APPLICATION.EMAIL = StructNew();		
 		// Set up a short name for the APPLICATION.EMAIL
 		AppEmail = APPLICATION.EMAIL;
+
+
+		/***** Create APPLICATION.PATH structure *****/
+		APPLICATION.PATH = StructNew();		
+		// Set a short name for the APPLICATION.PATH
+		AppPath = APPLICATION.PATH;
 
 
 		// Check if this is Dev or Live 
@@ -104,6 +118,9 @@
 			AppEmail.contactUs = 'marcus@iseusa.com';
 			AppEmail.support = 'marcus@iseusa.com';
 			AppEmail.errors = 'marcus@iseusa.com';
+
+			// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
+			AppPath.base = 'C:/Websites/www/smg/extra/internal/';
 			
 		} else {
 			// ***** PRODUCTION Server Settings *****
@@ -116,22 +133,42 @@
 			AppEmail.contactUs = 'info@csb-usa.com';
 			AppEmail.support = 'support@student-management.com';
 			AppEmail.errors = 'errors@student-management.com';
+
+			// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
+			AppPath.base = 'C:/Websites/student-management/extra/internal/';
 			
 		}
-		
+
 
 		// Page Messages
 		SESSION.PageMessages = CreateCFC("pageMessages").Init();
 		
 		// Form Errors
 		SESSION.formErrors = CreateCFC("formErrors").Init();
-		
-		
-		/***** Create APPLICATION.PATH structure *****/
-		APPLICATION.PATH = StructNew();		
-		// Set a short name for the APPLICATION.PATH
-		AppPath = APPLICATION.PATH;
 
+
+		/***************
+			Set up folders used to uplaod documents in the application.
+		***************/
+		
+		// Document Root
+		AppPath.UploadDocumentRoot = AppPath.base & "uploadedFiles/";
+		
+		// Candidate Picture
+		AppPath.uploadCandidatePicture = AppPath.UploadDocumentRoot & "web-candidates/";
+		
+		// Candidate Application Files		
+		AppPath.uploadDocumentCandidate = AppPath.UploadDocumentRoot & "candidate/";
+		
+		// Temp Folder 
+		AppPath.uploadDocumentTemp = AppPath.UploadDocumentRoot & "temp/";
+	
+		// Make sure folder exists
+		APPLICATION.CFC.DOCUMENT.createFolder(AppPath.UploadDocumentRoot);
+		APPLICATION.CFC.DOCUMENT.createFolder(AppPath.uploadCandidatePicture);
+		APPLICATION.CFC.DOCUMENT.createFolder(AppPath.uploadDocumentCandidate);	
+		APPLICATION.CFC.DOCUMENT.createFolder(AppPath.uploadDocumentTemp);	
+		
 		/* jQuery Latest Version 
 		http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
 		AppPath.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';	

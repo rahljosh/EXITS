@@ -27,16 +27,16 @@
 	<!--- Login --->
 	<cffunction name="doLogin" access="public" returntype="void" hint="Logs in a candidate">
 		<cfargument name="candidateID" type="numeric" default="0">
+        <cfargument name="updateDateLastLoggedIn" type="numeric" default="1">
 		
         <cfscript>
 			// Set Candidate Session Variables  (candidateID / firstName / lastname / lastLoggedInDate / myUploadFolder )
-			APPLICATION.CFC.CANDIDATE.setCandidateSession(
-				ID=ARGUMENTS.candidateID,
-				updateDateLastLoggedIn=1
-			);
+			APPLICATION.CFC.CANDIDATE.setCandidateSession(ID=ARGUMENTS.candidateID);
 			
 			// Record last logged in date
-			APPLICATION.CFC.CANDIDATE.updateLoggedInDate(candidateID=ARGUMENTS.candidateID);
+			if ( VAL(ARGUMENTS.updateDateLastLoggedIn) ) {
+				APPLICATION.CFC.CANDIDATE.updateLoggedInDate(candidateID=ARGUMENTS.candidateID);
+			}
 		</cfscript>
         
 	</cffunction>
@@ -106,7 +106,7 @@
 
 
 	<!--- Check if Password is valid --->
-	<cffunction name="IsValidPassword" access="public" returntype="struct" hint="Determines if the password is of valid format">
+	<cffunction name="isValidPassword" access="public" returntype="struct" hint="Determines if the password is of valid format">
 		<cfargument name="Password" type="string" required="Yes" />
 
         <cfscript>
@@ -389,7 +389,7 @@
 		<cfargument name="applicationID" type="numeric" required="yes" hint="Application ID" />
 		
 		<cfquery 
-			name="qgetQuestionByAppID" 
+			name="qGetQuestionByAppID" 
 			datasource="#APPLICATION.DSN.Source#">
 				SELECT
 					ID, 
@@ -416,7 +416,7 @@
                     orderKey                    
 		</cfquery>
 		
-		<cfreturn qgetQuestionByAppID /> 
+		<cfreturn qGetQuestionByAppID /> 
 	</cffunction>
 
 
@@ -431,7 +431,7 @@
 				var getQuery = APPLICATION.QUERY.qGetCandidateQuestion;
 			} catch (Any e) {
 				// Set Query
-				APPLICATION.QUERY.qGetCandidateQuestion = getQuestionByAppID(applicationID=4);
+				APPLICATION.QUERY.qGetCandidateQuestion = getQuestionByAppID(applicationID=APPLICATION.applicationID);
 			}
 		</cfscript>
 

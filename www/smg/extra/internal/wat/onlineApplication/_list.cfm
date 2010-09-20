@@ -72,9 +72,9 @@
         
         <cfloop query="qGetCandidates">
             <tr bgcolor="###iif(qGetCandidates.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
-                <td><a href="" class="style4">#qGetCandidates.candidateID#</a></td>
-                <td><a href="" class="style4">#qGetCandidates.lastName#</a></td>
-                <td><a href="" class="style4">#qGetCandidates.firstName#</a></td>
+                <td><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpOnlineApplication">#qGetCandidates.candidateID#</a></td>
+                <td><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpOnlineApplication">#qGetCandidates.lastName#</a></td>
+                <td><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpOnlineApplication">#qGetCandidates.firstName#</a></td>
                 <td class="style5"><cfif qGetCandidates.sex EQ 'm'>Male<cfelse>Female</cfif></td>
                 <td class="style5">#qGetCandidates.email#</td>
                 <td class="style5">#DateFormat(qGetCandidates.dateCreated, 'mm/dd/yyyy')#</td>		
@@ -103,3 +103,13 @@
 </div>
 
 </cfoutput>
+
+<script type="text/javascript">
+// Pop Up Application 
+$('.popUpOnlineApplication').popupWindow({ 
+	height:600, 
+	width:1100, 
+	top:50, 
+	left:50
+}); 
+</script>

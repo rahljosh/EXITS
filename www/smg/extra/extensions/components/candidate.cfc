@@ -41,15 +41,12 @@
 				// Set candidate session variables 
 				SESSION.CANDIDATE.firstName = qGetCandidateInfo.firstName;
 				SESSION.CANDIDATE.lastName = qGetCandidateInfo.lastName;
-				
-				if ( VAL(ARGUMENTS.updateDateLastLoggedIn) ) {				
-					SESSION.CANDIDATE.dateLastLoggedIn = qGetCandidateInfo.dateLastLoggedIn;
-				}
-				
+				SESSION.CANDIDATE.dateLastLoggedIn = qGetCandidateInfo.dateLastLoggedIn;
+								
 				// set up upload files path
-				//SESSION.CANDIDATE.myUploadFolder = APPLICATION.PATH.uploadDocumentCandidate & ARGUMENTS.ID & '/';
+				SESSION.CANDIDATE.myUploadFolder = APPLICATION.PATH.uploadDocumentCandidate & ARGUMENTS.ID & '/';
 				// Make sure folder exists
-				//APPLICATION.CFC.DOCUMENT.createFolder(SESSION.CANDIDATE.myUploadFolder);
+				APPLICATION.CFC.DOCUMENT.createFolder(SESSION.CANDIDATE.myUploadFolder);
 			}
 		</cfscript>
         
@@ -61,6 +58,29 @@
 
         <cfscript>
 			return SESSION.CANDIDATE;
+		</cfscript>
+        
+	</cffunction>
+
+
+	<!--- Get Current Candidate from SESSION --->
+	<cffunction name="getCandidateID" access="public" returntype="numeric" hint="Get candidate ID from session. Returns 0 if it's not found." output="no">
+        
+        <cftry>
+	        <cfparam name="SESSION.CANDIDATE.ID" type="numeric" default="0">
+            <cfcatch type="any">
+                <cfset SESSION.CANDIDATE.ID = 0>
+            </cfcatch>
+        </cftry>
+
+		<cfscript>
+			if (VAL(SESSION.CANDIDATE.ID)) {
+				// return CandidateID 
+				return SESSION.CANDIDATE.ID;
+			} else {
+				// CandidateID not found
+				return 0;
+			}
 		</cfscript>
         
 	</cffunction>
@@ -92,6 +112,90 @@
 		</cfquery>
 		   
 		<cfreturn qGetCandidateByID>
+	</cffunction>
+
+
+	<!--- Update Candidate --->
+	<cffunction name="updateCandidate" access="public" returntype="void" output="false" hint="Update Candidate Information">
+		<cfargument name="candidateID" required="yes" hint="Candidate ID" />
+		<cfargument name="lastName" default="" hint="Candidate Last Name">
+        <cfargument name="firstName" default="" hint="Candidate First Name">
+        <cfargument name="middleName" default="" hint="Candidate Middle Name">
+        <cfargument name="sex" default="" hint="Candidate sex">
+        <cfargument name="dob" default="" hint="Candidate Date of Birth">
+        <cfargument name="birth_city" default="" hint="Candidate City of Birth">
+        <cfargument name="birth_country" default="" hint="Candidate Country of Birth">
+        <cfargument name="residence_country" default="" hint="Candidate Country of Residence">
+        <cfargument name="citizen_country" default="" hint="Candidate Country of Citizenship">
+        <cfargument name="home_address" default="" hint="Candidate Home Address">
+        <cfargument name="home_city" default="" hint="Candidate Home City">
+        <cfargument name="home_country" default="" hint="Candidate Home Country">
+        <cfargument name="home_zip" default="" hint="Candidate Home Zip">
+        <cfargument name="home_phone" default="" hint="Candidate Home Phone">
+        <cfargument name="passport_number" default="" hint="Candidate Passport Number">
+        <cfargument name="emergency_name" default="" hint="Candidate Emergency Name">
+        <cfargument name="emergency_phone" default="" hint="Candidate Emergency Phone">
+        <cfargument name="wat_vacation_start" default="" hint="Start of Official Vacation">
+        <cfargument name="wat_vacation_end" default="" hint="End of Official Vacation">
+        <cfargument name="startDate" default="" hint="Program Start Date">
+        <cfargument name="endDate" default="" hint="Program End Date">
+        <cfargument name="wat_placement" default="" hint="Program Option">
+        <cfargument name="wat_participation" default="" hint="Number of participations in program">
+        <cfargument name="ssn" default="" hint="Social Security Number">
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	extra_candidates
+                SET
+                    lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.lastName))#">,  
+                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.firstName))#">,
+                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.middleName))#">,                    
+                    sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.sex)#">,
+                    <cfif IsDate(ARGUMENTS.dob)>
+	                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">,
+                    <cfelse>
+                    	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    birth_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.birth_city))#">,
+                    birth_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.birth_country)#">,
+                    residence_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.residence_country)#">,
+                    citizen_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.citizen_country)#">,
+                    home_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.home_address))#">,
+                    home_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.home_city))#">,
+                    home_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.home_country)#">,
+                    home_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.home_zip))#">,
+                    home_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.home_phone))#">,
+                    passport_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.passport_number))#">,
+                    emergency_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_name))#">,
+                    emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_phone))#">,
+                    <cfif IsDate(ARGUMENTS.wat_vacation_start)>
+	                    wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_start)#">,
+                    <cfelse>
+                    	wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    <cfif IsDate(ARGUMENTS.wat_vacation_end)>
+	                    wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_end)#">,
+                    <cfelse>
+                    	wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    <cfif IsDate(ARGUMENTS.startDate)>
+	                    startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.startDate)#">,
+                    <cfelse>
+                    	startDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    <cfif IsDate(ARGUMENTS.endDate)>
+	                    endDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.endDate)#">,
+                    <cfelse>
+                    	endDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.wat_placement))#">,
+                    wat_participation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.wat_participation))#">,
+                    ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.ssn))#">
+				WHERE
+	                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+		</cfquery>
+		
 	</cffunction>
 
 
@@ -280,6 +384,42 @@
 	</cffunction>
 
 
+	<!--- Update Candidate Email --->
+	<cffunction name="updateEmail" access="public" returntype="void" output="false" hint="Update Candidate Email">
+		<cfargument name="candidateID" required="yes" hint="Candidate ID" />
+		<cfargument name="email" required="yes" hint="Email Address / Username">
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	extra_candidates
+                SET
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email))#">
+				WHERE
+	                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+		</cfquery>
+		
+	</cffunction>
+    
+    
+    <!--- Update Candidate Password --->
+	<cffunction name="updatePassword" access="public" returntype="void" output="false" hint="Update Candidate Password">
+		<cfargument name="candidateID" required="yes" hint="Candidate ID" />
+        <cfargument name="password" required="yes" hint="Password">
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	extra_candidates
+                SET
+                    password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.password))#">
+				WHERE
+	                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+		</cfquery>
+
+	</cffunction>
+
+
 	<!--- Update Candidate Application Status --->
 	<cffunction name="updateApplicationStatus" access="public" returntype="void" output="false" hint="Update application status and record into the history">
         <cfargument name="candidateID" type="numeric" required="yes" hint="CandidateID is required" />
@@ -298,7 +438,7 @@
         <cfscript>
 			// Insert History
 			APPLICATION.CFC.ONLINEAPP.insertApplicationHistory(
-				applicationID=4,
+				applicationID=APPLICATION.applicationID,
 				applicationStatusID=ARGUMENTS.applicationStatusID,
 				foreignTable='extra_candidates',
 				foreignID=ARGUMENTS.candidateID,
@@ -381,6 +521,7 @@
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT DISTINCT
                     c.candidateID,
+                    c.uniqueID,
                     c.firstName,
                     c.lastName,
                     c.sex,

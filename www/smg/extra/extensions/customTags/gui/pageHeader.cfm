@@ -7,6 +7,7 @@
 				application.
 
 	Status:		In Development
+				Need to combine javascripts into one file using combine.cfc
 
 	Call Custom Tag: 
 
@@ -86,6 +87,7 @@
 						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
                         <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
                         <script src="../../../internal/linked/js/appSection.js " type="text/javascript"></script> <!-- UDF -->
+                        <script src="../../../internal/linked/js/ajaxUpload.js " type="text/javascript"></script> <!-- Ajax - Upload File -->
 						<script src="../../../internal/linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
 						<script src="../../../internal/linked/js/jquery.validate.js " type="text/javascript"></script> <!-- JQuery Validation -->
                     </cfoutput>
@@ -134,17 +136,12 @@
                             <a href="#CGI.SCRIPT_NAME#?action=checkList" id="itemLinks" class="itemLinks">Application Checklist</a> 
                                 <ul>
                                     <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Candidate Information</a></li>
-                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Family Information</a></li>
-                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=3">Other</a></li>
-                                    <!---
-										<li class="#YesNoFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection5Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=4">Candidate Essay</a></li>
-									--->
+                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Agreement</a></li>
+                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">English Assessment</a></li>
                                 </ul>    
                             
                             <a href="#CGI.SCRIPT_NAME#?action=documents" class="itemLinks <cfif Find("documents", CGI.QUERY_STRING)> selected </cfif>">Upload Documents</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=download" class="itemLinks <cfif Find("download", CGI.QUERY_STRING)> selected </cfif>">Download Forms</a>
                             <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=applicationFee" class="itemLinks <cfif Find("applicationFee", CGI.QUERY_STRING)> selected </cfif>">Application Fee</a>
                             <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks <cfif Find("submit", CGI.QUERY_STRING)> selected </cfif>">Submit Application</a>
                         </div>                            
                     
@@ -198,7 +195,7 @@
                 <body>
 
                 <!--- Start of Div Wrapper --->
-                <table cellpadding="2" cellspacing="2" style="width:100%; border-bottom:10px solid ##fb7f18; height:70px;">
+                <table cellpadding="2" cellspacing="2" style="width:100%; border-bottom:10px solid ##FF7E0D; height:70px;">
                     <tr>
                         <td width="70px" align="center">
                             <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#">
@@ -215,7 +212,7 @@
                 </table>                                                                    
             	
 				<!--- Application Body --->
-                <div style="width:100%; margin:5px 0px 5px 0px; padding:20px; background-color: ##FFF; border: ##EEE 1px solid; min-height:150px;">
+                <div style="width:95%; margin:0px; padding:20px; background-color: ##FFF; border: ##EEE 1px solid; min-height:150px;">
             </cfcase>
     
         </cfswitch>

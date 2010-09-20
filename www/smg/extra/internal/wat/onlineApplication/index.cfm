@@ -12,8 +12,33 @@
 	
 	<!--- Param local variables --->
 	<cfparam name="action" default="home">
-
+    <!--- Param URL variables --->
+	<cfparam name="URL.uniqueID" default="">
+    
     <cfscript>
+		// Check if Office or Intl. Rep are opening an application
+		if ( LEN(URL.uniqueID) ) {
+			// Get Candidate Information
+			qAuthenticateCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
+						
+			// Check if we have a valid student
+			if ( qAuthenticateCandidate.recordCount ) {
+					
+				// Login Candidat / Set SESSION variables / Update Last Logged in Date
+				APPLICATION.CFC.ONLINEAPP.doLogin(
+					candidateID=qAuthenticateCandidate.candidateID,
+					updateDateLastLoggedIn=0
+				);
+								
+				// SET LINKS        
+				getLink = APPLICATION.CFC.onlineApp.setLoginLinks(
+					companyID=qAuthenticateCandidate.companyID,
+					loginType='candidate'
+				);	
+							
+			}
+		}
+		
 		// If user is not logged in, set action to the login page.
 		if ( CLIENT.loginType EQ 'candidate' AND NOT APPLICATION.CFC.ONLINEAPP.isCurrentUserLoggedIn() ) {
 			action = 'login';
@@ -32,7 +57,7 @@
 --->
 <cfswitch expression="#action#">
 
-    <cfcase value="list,createApplication,home,section1,section2,section3,logOff" delimiters=",">
+    <cfcase value="list,createApplication,initial,home,section1,section2,section3,documents,faq,myAccount,printApplication,help,logOff" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />

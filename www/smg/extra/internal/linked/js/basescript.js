@@ -1,6 +1,8 @@
 // JavaScript Document
 // Stores base javascript functions that can be used in any page of the application
 
+// PS: USE CSS SPRITE TO COMBINE IMAGES
+
 // Date-Pick Function
 $(function() {
 	$('.date-pick').datePicker({startDate:'01/01/2006'});

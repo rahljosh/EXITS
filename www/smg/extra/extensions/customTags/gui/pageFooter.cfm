@@ -75,7 +75,7 @@
 					
                 </div>  <!--- End of class="form-container" --->
 
-                <div style="width:100%; height:20px; background-color:##fb7f18;">
+                <div style="width:100%; height:20px; background-color:##FF7E0D;">
                     <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
                     	Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
                     </div>
