@@ -4,6 +4,7 @@
     <cfsetting requesttimeout="9999">
 
     <cfinclude template="querys/get_latest_status.cfm">
+    <cfinclude template="querys/get_student_info.cfm">	
     
     <cfscript>
 		get_field = '';
@@ -597,9 +598,7 @@
 	<cfelse>
 		<tr><td>This page will be completed and uploaded by <b><i>#smg_students.businessname#.</i></b></td></tr>
 	</cfif> 	
-	
-    <cfinclude template="querys/get_student_info.cfm">	
-	
+		
     <tr><td>&nbsp;</td></tr>	
 	
 	<!--- PAGE 20 --->
