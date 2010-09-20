@@ -134,6 +134,16 @@
         	name
     </cfquery>
     
+    <cfquery name="qRequestedPlacement" dbtype="query">
+        SELECT 
+        	hostcompanyID,
+            name 
+        FROM 
+        	qHostCompanyList
+        WHERE 
+            hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqid.requested_placement)#">
+    </cfquery>
+    
 </cfsilent>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -868,7 +878,10 @@
                                         </tr>
                                         <tr>
                                         	<td class="style1" colspan="4"> 
-												<span class="readOnly">#qCandidatePlaceCompany.name#</span>
+                                            	<span class="readOnly">
+                                                    <a href="?curdoc=hostcompany/hostcompany_profile&hostcompanyID=#qRequestedPlacement.hostcompanyID#" class="style4"><b>#qRequestedPlacement.name#</b></a>
+                                                </span>
+                                                
                                                 <select name="requested_placement" class="style1 editPage">
                                                     <option value="0"></option>
                                                     <cfloop query="qHostCompanyList">
