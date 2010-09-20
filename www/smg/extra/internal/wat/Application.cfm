@@ -8,6 +8,9 @@
         // Stores Into & CSB Information
         APPLICATION.Constants = StructNew();
         
+		// Work and Travel ID
+		APPLICATION.applicationID = 4;
+		
 		// Set INTO Information
         APPLICATION.INTO = StructNew();		
         APPLICATION.INTO.name = "Into EdVentures";
@@ -52,10 +55,12 @@
 		
 
         // Base Path eg. C:\websites\smg\nsmg\
-        AppPath.base = getDirectoryFromPath(getBaseTemplatePath());
+        // AppPath.base = getDirectoryFromPath(getBaseTemplatePath());
+		AppPath.base = 'C:/Websites/www/smg/extra/internal/';
 		// Remove the last item from Base (trainee, h2b or wat)
-		AppPath.base = ListDeleteAt(AppPath.base, ListLen(APPPath.base, '\'), '\') & '/';
+		// AppPath.base = ListDeleteAt(AppPath.base, ListLen(APPPath.base, '\'), '\') & '/';
 
+		// DELETE THESE 
 		AppPath.uploadedFiles = AppPath.base & 'uploadedfiles/';
         AppPath.pdfDocs = AppPath.uploadedFiles & 'pdf_docs/wat/';
 		AppPath.candidatePicture = AppPath.uploadedFiles & "web-candidates/";

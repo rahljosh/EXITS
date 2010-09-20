@@ -100,12 +100,16 @@
 <link rel="stylesheet" href="../linked/css/onlineApplication.css" type="text/css">
 <link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css">
 <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css">
-<script src="../linked/js/jquery.js" type="text/javascript"></script> <!-- jQuery -->
-<script src="../linked/js/basescript.js" type="text/javascript"></script> <!-- baseScript -->
+<!-- Combine these into one single file -->
+<cfoutput>
+<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+</cfoutput>
+<script src="../linked/js/jquery.popupWindow.js" type="text/javascript"></script> <!-- Jquery PopUp Window -->
 <script src="../linked/js/date.js " type="text/javascript"></script> <!-- required plugins -->
 <script src="../linked/js/jquery.datePicker.js " type="text/javascript"></script> <!-- jquery.datePicker.js -->
 <script src="../linked/js/jquery.validate.js " type="text/javascript"></script> <!-- jquery validation -->
 <script src="../linked/js/jquery.metadata.js " type="text/javascript"></script> <!-- jquery validation -->
+<script src="../linked/js/basescript.js" type="text/javascript"></script> <!-- baseScript -->
 <script type="text/javascript" language="javascript">
 	$(function() {
 		$('.date-pick').datePicker({startDate:'01/01/2009'});

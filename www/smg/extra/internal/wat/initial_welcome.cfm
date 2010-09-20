@@ -15,7 +15,7 @@
 
 	<cfscript>
 		// Get Application Status
-		qStatus = APPLICATION.CFC.onlineApp.getApplicationStatus(applicationID=4);
+		qStatus = APPLICATION.CFC.onlineApp.getApplicationStatus(applicationID=APPLICATION.applicationID);
 		
 		if ( VAL(CLIENT.usertype) LTE 4 ) {
 			// Get Totals

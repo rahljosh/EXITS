@@ -24,12 +24,41 @@
 	</cffunction>
 
 
+	<cffunction name="getApplicationLookUp" access="public" returntype="query" output="false" hint="Returns a list of look up fields">
+    	<cfargument name="fieldKey" required="yes" hint="fieldKey is required.">
+    	<cfargument name="orderBy" default="ID" hint="orderBy is required.">
+
+        <cfquery 
+        	name="qGetApplicationLookUp"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	ID,
+                    fieldKey,
+                    name,
+                    isActive
+                    dateCreated,
+                    dateUpdated
+				FROM
+                	applicationLookUp
+				WHERE
+                	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                    fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
+				<cfif ListFind('ID,fieldKey,name', ARGUMENTS.orderBy)>
+                ORDER BY
+                	#ARGUMENTS.orderBy#                    
+				</cfif>                    
+        </cfquery> 
+
+		<cfreturn qGetApplicationLookUp>
+	</cffunction>
+
+
 	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
-    	<cfargument name="countryID" default="0" hint="countryID is not required">
 
         <cfquery 
         	name="qGetCountry"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN.Source#">
                 SELECT 
                 	countryID,
                     countryName,
@@ -37,23 +66,41 @@
                     sevisCode,
                     continent
 				FROM
-                	smg_countrylist
-				<cfif VAL(ARGUMENTS.countryID)>
-	                WHERE 
-                        countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.countryID#">
-                </cfif>                        
+                	smg_countryList
         </cfquery> 
-
+		       
 		<cfreturn qGetCountry>
 	</cffunction>
 
 
+	<cffunction name="getCountryByID" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
+    	<cfargument name="ID" hint="countryID is required">
+		
+        <cfquery 
+        	name="qGetCountryByID"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	countryID,
+                    countryName,
+                    countryCode,
+                    sevisCode,
+                    continent
+				FROM
+                	smg_countryList
+                WHERE 
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+        </cfquery> 
+		       
+		<cfreturn qGetCountryByID>
+	</cffunction>
+
+
 	<cffunction name="getState" access="public" returntype="query" output="false" hint="Returns a state or list of states">
-    	<cfargument name="stateID" default="0" hint="stateID is not required">
+    	<cfargument name="ID" default="0" hint="countryID is not required">
 
         <cfquery 
         	name="qGetState"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN.Source#">
                 SELECT 
                 	ID,
                     state,
@@ -61,15 +108,46 @@
                     guarantee_fee
 				FROM
                 	smg_states
-				<cfif VAL(ARGUMENTS.stateID)>
-                    WHERE 
-                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateID#">
+				<cfif VAL(ARGUMENTS.ID)>
+	                WHERE 
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
                 </cfif>                        
         </cfquery> 
 
 		<cfreturn qGetState>
 	</cffunction>
 
+
+	<cffunction name="getFAQ" access="public" returntype="query" output="false" hint="Returns a list of FAQs">
+    	<cfargument name="searchKeyword" default="" hint="Search Keyword is not required">
+
+        <cfquery 
+        	name="qGetFAQ"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	ID,
+                    question,
+                    answer,
+                    dateCreated,
+                    dateUpdated
+				FROM
+                	faq
+				WHERE
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+				<cfif LEN(ARGUMENTS.searchKeyword)>
+					AND
+                    (
+                        question LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchKeyword#%">
+                    OR    
+                    	answer LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchKeyword#%">
+                    )
+                </cfif>  
+				ORDER BY
+                	question                                   
+        </cfquery> 
+
+		<cfreturn qGetFAQ>
+	</cffunction>
 
 
 </cfcomponent>
