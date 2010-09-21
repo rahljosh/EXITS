@@ -121,7 +121,7 @@
                     FROM smg_hosts
                 </cfquery>
             </cflock>
-            <!--- the client variable should be phased out after host_fam_pis_2, etc. are modified to use url.hostid --->
+            <!--- the client variable should be phased out after host_fam_mem_form, etc. are modified to use url.hostid --->
 			<cfset client.hostid = get_id.hostid>
             <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#get_id.hostid#" addtoken="No">
 		<!--- edit --->

@@ -51,7 +51,7 @@ where hostid = #client.hostid#
 			<tr><td colspan="3">
 			<cfif get_kids.recordcount is 0> <!--- host family kids --->
 				<div class="get_Attention">Since you don't have any kids or other family memebers living at home, it is assumend the student will not be sharing a room.  If this is wrong, 
-											you will need to go to <a href="index.cfm?curdoc=forms/host_fam_pis_2&add=1">add a family member</a></div>
+											you will need to go to <a href="index.cfm?curdoc=forms/host_fam_mem_form&hostid=#client.hostid#&add=1">add a family member</a></div>
 			<cfelse> <!--- host family kids --->
 				<div class="get_Attention">The student may share a bedroom with one of the same sex and within a reasonable age difference, but must have his/her own bed.</div>
 			</cfif> <!--- host family kids --->
