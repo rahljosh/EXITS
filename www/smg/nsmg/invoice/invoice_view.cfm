@@ -179,7 +179,7 @@ order by s.stuid, s.chargeid
             <cfelse>
                 <cfswitch expression="#invoice_info.testCompId#">
                     <cfcase value="8">
-                        <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
+                        <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.jpg"/>
                     </cfcase>
                     
                     <cfcase value="10">

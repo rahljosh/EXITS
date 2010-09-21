@@ -243,21 +243,22 @@
         <!----For Accounts Created after Sept 1, 2010---->
         
         <Cfif #authenticate.datecreated# gt '2010-09-01'>
-       
-  			<!----Check if WebEX Training has been completed ---->
-            <cfif listfind('5,6,7', client.usertype)>
-                <cfquery name="webexTraining" datasource="#application.dsn#">
-                select notes
-                from smg_users_training
-                where notes = 'New Area Reps'
-                and user_id = #client.userid#
-                </cfquery>
-               
-                <cfif webexTraining.recordcount eq 0>
-                    <cfset CLIENT.trainingNeeded = 1>
-                    <cflocation url="/nsmg/trainingNeeded.cfm">
-                </cfif>
-           </Cfif>
+       		<cfif #DateDiff('d',authenticate.datecreated, now())# gte 21>
+				<!----Check if WebEX Training has been completed ---->
+                <cfif listfind('5,6,7', client.usertype)>
+                    <cfquery name="webexTraining" datasource="#application.dsn#">
+                    select notes
+                    from smg_users_training
+                    where notes = 'New Area Reps'
+                    and user_id = #client.userid#
+                    </cfquery>
+                   
+                    <cfif webexTraining.recordcount eq 0>
+                        <cfset CLIENT.trainingNeeded = 1>
+                        <cflocation url="/nsmg/trainingNeeded.cfm">
+                    </cfif>
+               </Cfif>
+           </cfif>
         <cfelse>
         	<cfif isDefined('client.trainingNeeded')>
         		<cfset temp = StructDelete(client.trainingNeeded,1)>
