@@ -102,7 +102,7 @@ where date_started > #now()#
 limit  30
 </cfquery>
 
-Don't worry, you didn't do anything wrong, all new accounts are suspended until you've completed the 'New Area Reps' training session. <Br /><Br />
+Don't worry, you didn't do anything wrong, all new accounts are suspended if you haven't completed the 'New Area Reps' training session within 21 days of your account being created. <Br /><Br />
 This hour long WebEx session will go over the requirments and procedures that are expected of all Area Representatives.   This training is all online via a shared desktop, so please pick a time when you can be near a computer, phone, and cup of coffee.
 
 <br /><Br />
