@@ -15,7 +15,7 @@
     <div id="subMenuLinks">  
     <cfoutput>
     <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_form&hostid=#currentHostID#">Host Family Infomation</A>  
-    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_2&hostid=#currentHostID#">Other Family Members</A>
+    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_mem_form&hostid=#currentHostID#">Other Family Members</A>
     <a class="nav_bar" href="index.cfm?curdoc=forms/family_app_7_pis&hostid=#currentHostID#">Community Information</a> 
     <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_5&hostid=#currentHostID#">School Information</a> 
     <cfif CLIENT.userType LTE 4>
