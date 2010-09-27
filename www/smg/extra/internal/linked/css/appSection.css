@@ -262,6 +262,10 @@ Online Application
 	margin-left:210px;
 }
 
+.h2Message {
+	margin:5px 0px 15px 210px;
+}
+
 .largeField {
 	font-size:1.2em;
 	border: 1px solid #999;

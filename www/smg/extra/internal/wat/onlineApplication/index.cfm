@@ -57,7 +57,7 @@
 --->
 <cfswitch expression="#action#">
 
-    <cfcase value="list,createApplication,initial,home,section1,section2,section3,documents,faq,myAccount,printApplication,help,logOff" delimiters=",">
+    <cfcase value="list,createApplication,initial,home,section1,section2,section3,submit,documents,faq,myAccount,printApplication,help,logOff" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />
