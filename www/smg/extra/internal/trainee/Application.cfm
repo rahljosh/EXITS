@@ -6,7 +6,7 @@
 
     <cfscript>
 		/***** Create APPLICATION.PATH structure *****/
-		APPLICATION.PATH = StructNew();		
+		// APPLICATION.PATH = StructNew();		
 	
         // Set a short name for the APPLICATION.PATH
         AppPath = APPLICATION.PATH;
