@@ -3,6 +3,10 @@
     clientmanagement="yes" 
     sessionmanagement="yes" 
     sessiontimeout="#CreateTimeSpan(0,10,40,1)#">
+
+    <!--- Param CLIENT variables --->
+    <cfparam name="CLIENT.isLoggedIn" default="">
+    <cfparam name="CLIENT.loginType" default="">
     
 	<cfscript>
         // Stores Into & CSB Information

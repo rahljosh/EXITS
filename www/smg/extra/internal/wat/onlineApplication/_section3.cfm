@@ -31,7 +31,11 @@
     <cfscript>
 		// Get Current Candidate Information
 		// qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(candidateID=FORM.candidateID);
-
+		
+		if ( CLIENT.loginType NEQ 'user' ) {
+			printApplication = 1;
+		}
+		
 		// Get Intl Rep / Branch Name
 		if ( VAL(qGetCandidateInfo.branchID) ) {
 			FORM.intlRep = APPLICATION.CFC.USER.getUserByID(userID=qGetCandidateInfo.branchID).businessName;
@@ -175,7 +179,11 @@
     <fieldset>
        
         <legend>English Assessment</legend>
-
+		
+        <cfif CLIENT.loginType NEQ 'user'>
+       		<h3 class="h2Message">This page must be completed by #FORM.intlRep#.</h3>
+        </cfif>
+        
         <div class="field">
             <label>CSB International Representative <em>*</em></label> 
             <div class="printField">#FORM.intlRep# &nbsp;</div>
