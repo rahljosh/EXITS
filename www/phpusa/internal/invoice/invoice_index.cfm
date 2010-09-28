@@ -113,7 +113,7 @@ div.scrollAgent {
 						<table border="0" cellpadding="3" cellspacing="0" width="100%">
 							<tr>
 								<td width="50%">Account Statement</td>
-								<td width="50%">Balance Report</td>
+								<td width="50%"><a href="?curdoc=invoice/m_balance_report">Balance Report</a></td>
 							</tr>
 						</table>
 					</td>					
