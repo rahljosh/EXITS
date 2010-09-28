@@ -139,26 +139,7 @@
         </cfquery>
         
     </cfloop>
-
-	<!--- Check for Uploaded Files --->
-    
-    <!--- Passport Photo --->
-    <cfdirectory directory="#AppPath.onlineApp.picture#" name="check_01_upload" filter="#smg_students.studentid#.*">
-    
-    <!--- Family Album --->
-    <cfdirectory name="page04_family_album" directory="#AppPath.onlineApp.familyAlbum##smg_students.studentid#">
-    
-    <!--- Students Letter --->
-    <cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="check_05_upload" filter="#smg_students.studentid#.*">
-    
-    <!--- Parents Letter --->
-    <cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="check_06_upload" filter="#smg_students.studentid#.*">
-    
-    <!--- Inserts --->
-    <cfloop list="08,09,10,11,12,13,14,15,16,17,18,19,20,21" index="i">
-        <cfdirectory directory="#AppPath.onlineApp.inserts#page#i#" name="check_#i#_upload" filter="#smg_students.studentid#.*">	
-    </cfloop>
-    
+   
     <!--- Check for Uploaded Files --->
     
     <!--- Passport Photo --->
