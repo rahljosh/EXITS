@@ -98,7 +98,7 @@ ORDER BY
         <br/>
         <cfinput name="printFormat" type="checkbox" checked="yes"> <strong><small>Display print format?</small></strong>
         <br/>
-        <cfinput name="submit" type="image" src="../pics/submit.gif">
+        <cfinput name="submit" type="image" src="pics/submit.gif">
     
     </cfform>
 
