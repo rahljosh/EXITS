@@ -164,7 +164,7 @@ function OpenRefund(url)
 			'credits', 
 			type, 
 			smg_users.businessname, 
-			smg_credit.amount AS total_amount, 
+			sum(smg_credit.amount) AS total_amount, 
 			smg_credit.date as orderdate, 
 			CONVERT(invoiceid USING latin1) AS invoiceID, 
 			'paymentref', 
@@ -176,6 +176,7 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+        GROUP BY creditid
 		UNION
 		SELECT 
 			'refund', 
