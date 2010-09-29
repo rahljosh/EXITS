@@ -1,0 +1,150 @@
+body {
+	font: 100% Verdana, Arial, Helvetica, sans-serif;
+	background: #666666;
+	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
+	padding: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+}
+.oneColFixCtrHdr #container {
+	width: 780px;  /* using 20px less than a full 800px width allows for browser chrome and avoids a horizontal scroll bar */
+	background: #FFFFFF;
+	margin: 0 auto; /* the auto margins (in conjunction with a width) center the page */
+	border: thick solid #125DAB;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+}
+.center {
+	text-align: center;
+}
+.logo {
+	float: left;
+	height: 140px;
+	width: 200px;
+	margin-left: 15px;
+}
+.oneColFixCtrHdr #header {
+	height: 85px;
+	padding-top: 0;
+	padding-right: 10px;
+	padding-bottom: 0;
+	padding-left: 20px;
+	margin-top: 20px;
+	background-color: #125DAB;
+	margin-right: 20px;
+	margin-left: 20px;
+	margin-bottom: 0px;
+}
+.oneColFixCtrHdr #container .menu {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #000;
+	height: 25px;
+	margin-top: 0px;
+	border-bottom-width: medium;
+	border-bottom-style: double;
+	border-bottom-color: #CCC;
+	margin-right: 30px;
+	margin-left: 30px;
+	border-top-width: medium;
+	border-top-style: double;
+	border-top-color: #CCC;
+	padding-top: 8px;
+}
+.clearfix {
+	display: block;
+	clear: both;
+	height: 20px;
+}
+.oneColFixCtrHdr #header h1 {
+	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
+	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
+}
+.oneColFixCtrHdr #mainContent {
+	background: #FFFFFF;
+	margin-top: 35px;
+	padding-top: 0;
+	padding-right: 20px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.space {
+	word-spacing: .75em;
+}
+.oneColFixCtrHdr #footer {
+	background-color: #125DAB;
+	margin-right: 20px;
+	margin-left: 20px;
+	padding-top: 0;
+	padding-right: 10px;
+	padding-bottom: 0;
+	padding-left: 10px;
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+.oneColFixCtrHdr #footer p {
+	margin: 0; /* zeroing the margins of the first element in the footer will avoid the possibility of margin collapse - a space between divs */
+	padding: 10px 0; /* padding on this element will create space, just as the the margin would have, without the margin collapse issue */
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFF;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+}
+a:link {
+	color: #000;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #000;
+}
+a:hover {
+	text-decoration: underline;
+	color: #2174B7;
+}
+a:active {
+	text-decoration: none;
+	color: #000;
+}
+.photo {
+	float: right;
+	height: 200px;
+	width: 300px;
+	margin-left: 30px;
+	border: thin solid #000;
+}
+.photoLG {
+	float: right;
+	height: 232px;
+	width: 300px;
+	margin-left: 30px;
+	border: thin solid #000;
+}
+.photoLeft {
+	float: left;
+	height: 200px;
+	width: 300px;
+	border: thin solid #000;
+	margin-right: 30px;
+	margin-left: 10px;
+}
+.bold {
+	font-weight: bold;
+}
+.border {
+	border: thin ridge #999;
+}
+.2Line {
+	border-bottom-width: medium;
+	border-bottom-style: double;
+	border-bottom-color: #999;
+}
+.PicText {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #666;
+	text-align: right;
+}

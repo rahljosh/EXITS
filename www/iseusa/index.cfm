@@ -33,9 +33,35 @@
 	margin-right: 25px;
 	margin-top: 20px;
 	height: 265px;
-	width: 400px;
+	width: 350px;
+}
+.SStext {
+	z-index: 10;
+	height: 245px;
+	width: 310px;
+	clear: none;
+	float: left;
+	margin-left: 25px;
+	margin-top: 20px;
+	text-align:left;
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+}
+.smText {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
 }
 </style>
+<script type="text/javascript" language="JavaScript">
+    var GB_ROOT_DIR = "http://www.iseusa.com/greybox/";
+</script>
+<script type="text/javascript" src="greybox/AJS.js"></script>
+<script type="text/javascript" src="greybox/AJS_fx.js"></script>
+<script type="text/javascript" src="greybox/gb_scripts.js"></script>
+<link href="greybox/gb_styles.css" rel="stylesheet" type="text/css" />
 <!----Script to Swap div area---->
 <script type="text/javascript" language="JavaScript"><!--
 function HideDIV(d) { document.getElementById(d).style.display = "none"; }
@@ -47,12 +73,31 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 	<script type="text/javascript" src="jquery.badBrowser.js"></script> 
 
 <link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
-</head>
+<style type="text/css">
+<!--
+a:link {
+	color: #165EA9;
+	text-decoration: none;
+}
+a:visited {
+	color: #165EA9;
+	text-decoration: none;
+}
+a:hover {
+	color: #009244;
+	text-decoration: none;
+}
+a:active {
+	color: #165EA9;
+	text-decoration: none;
+}
+-->
+</style></head>
 
 <body class="oneColFixCtr">
 <div id="topBar">
 <cfinclude template="topBarLinks.cfm">
-<div id="logoBox"><a href="index.cfm"><img src="images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
+<div id="logoBox"><a href="/"><img src="images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
 <!-- end topBar --></div>
 <div id="container">
 <div class="spacer2"></div>
@@ -62,12 +107,10 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <div id="mainContent">
 <!---area that mouse overs will affect---->
 <div id="lead">
-
-
     <div id="initDiv" class="mybox">
-      <span class="MOtext" style="background-color: #F1D0D1;">
-        <strong>Secretary of State Encourages Americans to Host Exchange Students </strong><br /><br />
-         Secretary Clinton sends a great video message promoting hosting international exchange students, while thanking host families who have already experienced the joy of opening their hearts and homes.<br /><p align="center"><a href="http://exchanges.state.gov/"><img src="images/buttons/RlearnMore.png" border="0"></a></p></span>
+      <span class="SStext" style="background-color: #F1D0D1;">
+        <strong>Secretary of State Encourages the Hosting of Exchange Students </strong><br /><br />
+        On the heels of this message <strong>Assistant Secretary of State for Educational and Cultural Affairs, Ann Stock,</strong> followed up with<a href="/AnnStock.cfm" title="Ann Stock's Message" rel="gb_page_center[675,600]"> her own message</a> encouraging more Americans to &quot;[open] their homes and hearts and personally [engage] with people from all over the world&quot;<br /><p class="smText"><a href="/AnnStock.cfm" title="Ann Stock's Message" rel="gb_page_center[675,600]">Read Ann Stock's Entire Message</a><br /><a href="http://exchanges.state.gov/" target ="blank">More on Secretary Clinton's Message</a><br /></p></span>
    <div class="videoClip"><object width="320" height="265"><param name="movie" value="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="320" height="265"></embed></object></div></div>
          <!---Meet our Students---->
      
@@ -125,20 +168,21 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 </div>
 <!----End of Area that Mouse Overs will effect---->
 <div id="bottomInfoRight"><a href="hostStudent.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="projectHelp.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
-<table width="210" border="0" style="margin-left:15px;">
+<table width="210" border="0" style="margin-left:0px;">
   <tr>
     <th scope="row" align="left">
-    	<a href="https://www.esecutive.com/smg/" target="_blank"><img src="images/BaggageInsurance.png" title="Global Secutive Insurance" border="0" /></a>
+    	<a href="https://www.esecutive.com/smg/" target="_blank"><img src="images/BaggageInsurance.png" width="91" height="40" border="0" title="Global Secutive Insurance" /></a>
     </th>
+    <th scope="row" align="right"><a href="http://www.esecutive.com/index.php"><img src="images/GSlogo.png" width="79" height="34" /></a></th>
     <th scope="row" align="right">
-    	<a href="pdfs/CSIET-certificate-10-11.pdf" target="_blank"><img src="images/csiet-10-11.png" title="CSIET 2010-2011 Certificate of Acceptance" border="0" /></a>
+    	<a href="pdfs/CSIET-certificate-10-11.pdf" target="_blank"><img src="images/csiet-10-11.png" width="64" height="43" border="0" title="CSIET 2010-2011 Certificate of Acceptance" /></a>
     </th>
   </tr>
 </table>
 <!-- end bottomInfoRight --></div>
 <div id="bottomInfoLeft">
   <div class="top"><!-- end top --></div>
-  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="sSuccess.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://blog.iseusa.com/" target="_blank"><img src="images/blog_12.gif"alt="blog" border="0"/></a><a href="http://www.youtube.com/watch?v=YRP3PbaE-cA"><img src="images/video_13.gif" width="236" height="171" border="0" /></a></div>
+  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="sSuccess.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://www.america.gov/multimedia/video.html?videoId=221196877001" target="_blank"><img src="images/YESprogram_12.gif"alt="blog" border="0"/></a><a href="http://www.youtube.com/watch?v=YRP3PbaE-cA"><img src="images/video_13.gif" width="236" height="171" border="0" /></a></div>
   <div class="bottom"></div>
 <!-- end bottomInfoLeft --></div>
 <h1>&nbsp;</h1>
@@ -148,6 +192,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <div id="footer">
   <div class="clear"></div>
 <cfinclude template="bottomLinks.cfm">
-<!-- end footer --></div>
+<!-- end footer -->
+</div>
 </body>
 </html>
