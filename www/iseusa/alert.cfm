@@ -45,7 +45,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <body class="oneColFixCtr">
 <div id="topBar">
 <cfinclude template="topBarLinks.cfm">
-<div id="logoBox"><a href="index.cfm"><img src="images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
+<div id="logoBox"><a href="/"><img src="images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
 <!-- end topBar --></div>
 <div id="container">
 <div class="spacer2"></div>
