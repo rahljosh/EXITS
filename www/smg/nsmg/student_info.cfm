@@ -481,7 +481,8 @@
 					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
 					<a href="" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Rep. Payments</a> 					
 					<a href="" onClick="javascript: win=window.open('forms/missing_documents.cfm', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
-					<a href="" onClick="javascript: win=window.open('forms/notes.cfm', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif LEN(qStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 		
+					<a href="" onClick="javascript: win=window.open('forms/notes.cfm', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif LEN(qStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 	
+                    <a href="" onClick="javascript: win=window.open('forms/ssp.cfm?studentid=#client.studentid#', 'Settings', 'height=450, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Services Project</a>	
 				</cfif> 
 				<!--- OFFICE - MANAGERS ONLY --->
 				<cfif CLIENT.usertype LTE 5> 
@@ -492,7 +493,7 @@
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qStudentInfo.studentID#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
 				<a href="" onClick="javascript: win=window.open('forms/flight_info.cfm', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
 				<a href="" onClick="javascript: win=window.open('forms/double_place_docs.cfm', 'Settings', 'height=380, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Double Place Docs</a>
-                <a href="" onClick="javascript: win=window.open('forms/ssp.cfm?studentid=#client.studentid#', 'Settings', 'height=450, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Services Project</a>
+                
                 <a href="" onClick="javascript: win=window.open('tours/trips.cfm', 'Settings', 'height=450, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Trips</a>
 				<!---- GLOBAL OR COMPLIANCE USERS ---->
 				<cfif CLIENT.usertype EQ 1 OR qUserCompliance.compliance EQ 1>

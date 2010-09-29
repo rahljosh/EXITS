@@ -66,15 +66,26 @@ a:active {
                   	<li>**All paperwork must be submitted before we are able to book your flight</li>
                   </ul>
                   <h3 align="Center">Instructions:</h3>
-                  <ol>
-                  <li><a href="http://www.iseusa.com/trips/">Reserve your spot</a> on your tour on ISE Trips Website</li>
-                  <li>You will receive an email with both a Payment Form and Permission Form attached.</li>
-                  <li>You must fully complete both forms and submit them</li>
-                  <li>Once submitted, you will receive a confirmation email that all necessary paperwork has been submitted.</li>
-                  <li>You will then receive an email from our Authorized Travel Agent to book your flight.</li>
-                  <li>Once flight booked, you will receive your final trip confirmation from MPD</li>
-               	  <li> ENJOY YOUR TRIP!!</li>
-                </ol>	
+                  			 <ol>
+                                       <li>Visit iseusa.com to book and pay for your trip.
+                                        <li>Once your payment has been processed (up to 72 hours), you will receive an email with:
+                                        <ul><li>payment confirmation
+                                        	<li>required permission form
+                                        </ul>
+                                        <li>Submit permission form with all signatures to MPD Tours.
+                                        	<ul><li>info@mpdtoursamerica.com
+                                        		<li>mail:  9101 Shore Road, #203 - Brooklyn, NY 11209
+                                        	</ul>
+                                        <li>When permission form is processed (up to 72 hours), you will receive an email with:
+                                        	<ul><li>confirmation that permission for was received
+                                        		<li>travel packet with specific information for your tour
+                                        	</li></ul>
+                                        <li>You will be contacted shortly after you permission form is processed by our authorized Travel Agent regarding your travel arrangements. You do not need to contact the agent yourself.
+                                        <li>Once you select a flight itinerary, you will need to purchase this itinerary THROUGH OUR TRAVEL AGENT.
+                                <li> Enjoy Your Trip!!!
+                               </ol>	
+                               <div align="Center">DO NOT BOOK YOUR OWN AIRFARE. You will be contated regarding airfare.</div>
+                               
                     	</td>
                 	</tr>
                 </table>               

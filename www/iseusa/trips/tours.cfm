@@ -190,9 +190,9 @@ margin-left: 0px;
 					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
 					  		<span class="SubTitle"><br />
 					  		#tours.tour_length#</span></td>
-                    <td width="24%"><a href="selectTrips.cfm?tour_id=#tour_id#"><img src="images/reserve.png" width="146" height="38" alt="reserve spot" border="0" /></a>
+                    <td width="24%"><a href="selectTrips.cfm?tour_id=#tour_id#"><img src="images/reserve.png" alt="reserve spot" border="0" /></a>
                      
-                     <a href="selectTripQuote.cfm?tour_id=#tour_id#"> <img src="images/FlightQuote_07.png" width="139" height="35" border=0 /></a>
+                     <a href="selectTripQuote.cfm?tour_id=#tour_id#"> <img src="images/FlightQuote_07.png"  border=0 /></a>
                     </td>
                   </tr>
                 </table>

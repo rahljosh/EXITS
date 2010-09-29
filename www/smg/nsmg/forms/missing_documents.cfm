@@ -51,12 +51,12 @@
 		<Td><cfif minorauthorization is 'no'><input type="radio" name="minorauthorization" value="yes">Yes <input type="radio" name="minorauthorization" value="no" checked>No<cfelse>
 			<input type="radio" name="minorauthorization"  value="yes" checked>Yes <input type="radio" name="minorauthorization" value="no">No</cfif> &nbsp;&nbsp;&nbsp;Authorization to Treat a Minor</td>
 	</tr>
-    <Cfif client.companyid eq 10>
+    
 	<tr>
 		<Td><cfif classschedule is 'no'><input type="radio" name="classschedule" value="yes">Yes <input type="radio" name="classschedule" value="no" checked>No<cfelse>
 			<input type="radio" name="classschedule"  value="yes" checked>Yes <input type="radio" name="classschedule" value="no">No</cfif> &nbsp;&nbsp;&nbsp;Class Schedule</td>
 	</tr>	
-    </Cfif>
+    
 	<tr>
 		<Td>Missing Documents:<br>
            <textarea cols="40" rows="6" name="other_missing" wrap="VIRTUAL">#other_missing_docs#</textarea></Td>
