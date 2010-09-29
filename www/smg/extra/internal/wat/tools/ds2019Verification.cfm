@@ -87,7 +87,9 @@
             tableHeader += "<td class='listTitle style2'>City of <br /> Birth</td>";                                                          
             tableHeader += "<td class='listTitle style2'>Country of <br /> Birth</td>";                                                           
             tableHeader += "<td class='listTitle style2'>Country of <br /> Citizenship</td>"; 
-            tableHeader += "<td class='listTitle style2'>Country of <br /> Residence</td>";  
+            tableHeader += "<td class='listTitle style2'>Country of <br /> Residence</td>"; 
+			tableHeader += "<td class='listTitle style2'>Program <br /> Start Date</td>";
+			tableHeader += "<td class='listTitle style2'>Program <br /> End Date</td>";
             tableHeader += "<td class='listTitle style2' align='center'>Actions</td>";                                                          
 		tableHeader += "</tr>";
 		
@@ -112,7 +114,9 @@
 			var countryBirth = verList.DATA[i][verList.COLUMNS.findIdx('BIRTHCOUNTRY')];
 			var countryCitizen = verList.DATA[i][verList.COLUMNS.findIdx('CITIZENCOUNTRY')];
 			var countryResident = verList.DATA[i][verList.COLUMNS.findIdx('RESIDENTCOUNTRY')];
-			
+			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
+			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
+
 			// Create Table Rows
 			var tableBody = '';	
 			
@@ -131,6 +135,8 @@
 				tableBody += "<td class='style5'>" + countryBirth + "</td>"
 				tableBody += "<td class='style5'>" + countryCitizen + "</td>"
 				tableBody += "<td class='style5'>" + countryResident + "</td>"
+				tableBody += "<td class='style5'>" + startDate + "</td>"
+				tableBody += "<td class='style5'>" + endDate + "</td>"
 				tableBody += "<td align='center' class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>[Edit]</a> | <a href='javascript:setVerificationReceived(" + candidateID + ");' class='style4'>[Received]</a></td>"
 			tableBody += "</tr>";
 			// Append table rows
@@ -171,7 +177,9 @@
 		var countryBirth = candidate.DATA[0][candidate.COLUMNS.findIdx('BIRTH_COUNTRY')];
 		var countryCitizen = candidate.DATA[0][candidate.COLUMNS.findIdx('CITIZEN_COUNTRY')];
 		var countryResident = candidate.DATA[0][candidate.COLUMNS.findIdx('RESIDENCE_COUNTRY')];
-		
+		var startDate = candidate.DATA[0][candidate.COLUMNS.findIdx('STARTDATE')];
+		var endDate = candidate.DATA[0][candidate.COLUMNS.findIdx('ENDDATE')];
+
 		// Populate fields
 		$("#candidateID").val(candidateID);
 		$("#firstName").val(firstName);
@@ -183,7 +191,9 @@
 		$("#countryBirth").val(countryBirth);
 		$("#countryCitizen").val(countryCitizen);
 		$("#countryResident").val(countryResident);
-		
+		$("#startDate").val(startDate);
+		$("#endDate").val(endDate);
+
 		// Slide down form field div
 		if ($("#candidateDetailDiv").css("display") == "none") {
 			$("#candidateDetailDiv").slideDown("fast");			
@@ -227,6 +237,14 @@
 		if($("#countryResident").val() == ''){
 			list_errors = (list_errors + 'Please select a country of residence \n')
 		}
+		// StartDate			
+		if($("#StartDate").val() == ''){
+			list_errors = (list_errors + 'Please provide a valid start date (mm/dd/yyyy) \n')
+		}
+		// EndDate			
+		if($("#EndDate").val() == ''){
+			list_errors = (list_errors + 'Please provide a valid end date (mm/dd/yyyy) \n')
+		}
 		
 		// check if there are errors
 		if (list_errors != '') {
@@ -261,7 +279,9 @@
 		  $("#birthCity").val(),
 		  $("#countryBirth").val(),
 		  $("#countryCitizen").val(),
-		  $("#countryResident").val()
+		  $("#countryResident").val(),
+		  $("#startDate").val(),
+		  $("#endDate").val()
 		);
 		
 	}
@@ -286,6 +306,8 @@
 			$("#countryBirth").val("");
 			$("#countryCitizen").val("");
 			$("#countryResident").val("");
+			$("#startDate").val("");
+			$("#endDate").val("");
 		});
 		
 		// Refresh Search List
@@ -330,7 +352,7 @@
 <style>
 	input { 
 		border: 1px solid #999; 
-		margin-bottom: .5em;  
+		margin-bottom: 0.5em;  
 	}
 	
 	select {
@@ -370,7 +392,7 @@
 	}
 
 	.smallField {
-		width:80px;
+		width:100px;
 	}
 
 	.pageMessage {
@@ -386,6 +408,8 @@
 	}
 
 	.candidateDetail {
+		font-size:0.8em;
+		font-family:Georgia, "Times New Roman", Times, serif;
 		display:none;
 		padding-top:10px;
 	}
@@ -414,13 +438,18 @@
                     <td class="formTitle"><label for="firstName">First Name</label></td>
                     <td class="formTitle"><label for="middleName">Middle Name</label></td>
                     <td class="formTitle"><label for="lastName">Last Name</label></td>
-                    <td class="formTitle"><label for="sex">Gender</label></td>
-                    <td class="formTitle"><label for="dob">DOB (mm/dd/yy)</label></td> 
-				</tr>
+                 </tr>   
                 <tr>
                     <td><input type="text" name="firstName" id="firstName" value="" class="largeField" maxlength="100" /></td>
                     <td><input type="text" name="middleName" id="middleName" value="" class="largeField" maxlength="100" /></td>
                     <td><input type="text" name="lastName" id="lastName" value="" class="largeField" maxlength="100" /></td>
+            	</tr> 
+                <tr>   
+                    <td class="formTitle"><label for="sex">Gender</label></td>
+                    <td class="formTitle"><label for="dob">DOB (mm/dd/yy)</label></td>
+                    <td class="formTitle"><label for="birthCity">City of Birth</label></td> 
+				</tr>
+                <tr>
                     <td>
                     	<select name="sex" id="sex">
                         	<option value=""></option>
@@ -429,16 +458,14 @@
 						</select>                            
                     </td>
                     <td><input type="text" name="dob" id="dob" value="" class="smallField" maxlength="10" /></td>
+                    <td><input type="text" name="birthCity" id="birthCity" value="" class="largeField" maxlength="100" /></td>
             	</tr> 
                 <tr>                    
-                    <td class="formTitle"><label for="birthCity">City of Birth</label></td>                                                            
                     <td class="formTitle"><label for="countryBirth">Country of Birth</label></td>                                                            
                     <td class="formTitle"><label for="countryCitizen">Country of Citizenship</label></td> 
                     <td class="formTitle"><label for="countryResident">Country of Residence</label></td>   
-                    <td class="formTitle">&nbsp;</td>                                                          
                 </tr>            
 				<tr>	
-                    <td><input type="text" name="birthCity" id="birthCity" value="" class="largeField" maxlength="100" /></td>
                     <td>
                     	<select name="countryBirth" id="countryBirth">
                         	<option value=""></option>
@@ -463,8 +490,17 @@
                             </cfloop>
                         </select>
                     </td>
+				</tr>
+                <tr>   
+                    <td class="formTitle"><label for="startDate">Start Date</label></td>
+                    <td class="formTitle"><label for="endDate">End Date</label></td>
+                    <td class="formTitle">&nbsp;</td>     
+				</tr>
+                <tr>
+                    <td><input type="text" name="startDate" id="startDate" value="" class="date-pick smallField" maxlength="10" /></td>
+                    <td><input type="text" name="endDate" id="endDate" value="" class="date-pick smallField" maxlength="10" /></td>
                     <td><input type="submit" name="submit" value="Submit" /></td>
-				</tr>                    
+                </tr>
             </table>
         </form>
         

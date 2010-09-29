@@ -47,6 +47,21 @@
 				SESSION.CANDIDATE.myUploadFolder = APPLICATION.PATH.uploadDocumentCandidate & ARGUMENTS.ID & '/';
 				// Make sure folder exists
 				APPLICATION.CFC.DOCUMENT.createFolder(SESSION.CANDIDATE.myUploadFolder);
+				
+				// Set student SESSION complete
+				stCheckSession1 = checkCandidateRequiredFields(candidateID=ARGUMENTS.ID, FORM=StructNew(), sectionName='section1');
+								
+				SESSION.CANDIDATE.isSection1Complete = stCheckSession1.isComplete;
+				SESSION.CANDIDATE.section1FieldList = stCheckSession1.fieldList;
+				
+				// REPLACE THIS
+				stCheckSession2 = checkCandidateRequiredFields(candidateID=ARGUMENTS.ID, FORM=StructNew(), sectionName='section2');
+				SESSION.CANDIDATE.isSection2Complete = 1;
+				SESSION.CANDIDATE.section2FieldList = '';
+
+				stCheckSession3 = checkCandidateRequiredFields(candidateID=ARGUMENTS.ID, FORM=StructNew(), sectionName='section3');
+				SESSION.CANDIDATE.isSection3Complete = 1;
+				SESSION.CANDIDATE.section3FieldList = '';
 			}
 		</cfscript>
         
@@ -557,10 +572,228 @@
 		   
 		<cfreturn qGetApplicationListbyStatusID>
     </cffunction>
-  
+ 
+ 
+	<!--- 
+		Check Required Candidate and Section Fields 
+	--->
+	<cffunction name="checkCandidateRequiredFields" access="public" returntype="struct" output="false" hint="Check if required fields were answered">
+        <cfargument name="candidateID" type="numeric" required="yes" hint="candidateID" />
+        <cfargument name="sectionName" type="string" required="yes" hint="Section name" />
+        <cfargument name="foreignTable" type="string" default="extra_candidates" hint="Foreign Table" />
+        
+        <cfscript>
+			// Set if we need to check form or table fields for the section questions
+			var checkRequiredSection = 0;
+			
+			// Declare structure that will store the result
+			var stRequiredFields = StructNew();	
+			
+			// Create an array that will be populated with the validation message in case we need to display missing items
+			stRequiredFields.fieldList = ArrayNew(1);
+
+			// Set complete = 1
+			stRequiredFields.isComplete = 1;
+
+			// Get Questions for this section
+			qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName=ARGUMENTS.sectionName);
+
+			// If FORM is not passed, used the table fields instead
+			if ( StructIsEmpty(ARGUMENTS.FORM) ) {
+				
+				// In this case we need to check the required section fields 
+				checkRequiredSection = 1;
+				
+				// Get Student Information
+				qGetStudentInfo = getCandidateByID(candidateID=ARGUMENTS.candidateID);
+
+				// Convert query fields to a structure
+				ARGUMENTS.FORM = APPLICATION.CFC.UDF.QueryToStruct(qGetStudentInfo);
+
+				// Set up section1 additional FORM variables
+				ARGUMENTS.FORM.dobMonth = Month(qGetCandidateInfo.dob);
+				ARGUMENTS.FORM.dobDay = Day(qGetCandidateInfo.dob);
+				ARGUMENTS.FORM.dobYear = Year(qGetCandidateInfo.dob);
+				
+				ARGUMENTS.FORM.watStartVacationMonth = Month(qGetCandidateInfo.wat_vacation_start);
+				ARGUMENTS.FORM.watStartVacationDay = Day(qGetCandidateInfo.wat_vacation_start);
+				ARGUMENTS.FORM.watStartVacationYear = Year(qGetCandidateInfo.wat_vacation_start);
+				
+				ARGUMENTS.FORM.watEndVacationMonth = Month(qGetCandidateInfo.wat_vacation_end);
+				ARGUMENTS.FORM.watEndVacationDay = Day(qGetCandidateInfo.wat_vacation_end);
+				ARGUMENTS.FORM.watEndVacationYear = Year(qGetCandidateInfo.wat_vacation_end);
+				
+				ARGUMENTS.FORM.programStartMonth = Month(qGetCandidateInfo.startDate);
+				ARGUMENTS.FORM.programStartDay = Day(qGetCandidateInfo.startDate);
+				ARGUMENTS.FORM.programStartYear = Year(qGetCandidateInfo.startDate);
+				
+				ARGUMENTS.FORM.programEndMonth = Month(qGetCandidateInfo.endDate);
+				ARGUMENTS.FORM.programEndDay = Day(qGetCandidateInfo.endDate);
+				ARGUMENTS.FORM.programEndYear = Year(qGetCandidateInfo.endDate);
+
+				// Get Answers for this section
+				qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName=ARGUMENTS.sectionName, foreignTable=ARGUMENTS.foreignTable, foreignID=FORM.candidateID);
+
+				// Online Application Fields 
+				for ( i=1; i LTE qGetAnswers.recordCount; i=i+1 ) {
+					ARGUMENTS.FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
+				}
+
+			} else {
+
+				// Param Online Application FORM Variables 
+				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
+					param name="ARGUMENTS.FORM[qGetQuestions.fieldKey[i]]" default="";
+				}
+				
+			}
+			
+			// Check in which section we are in and validate section specific fields        
+			switch(ARGUMENTS.sectionName) {
+				case 'section1': {
+
+					// Check required Fields
+					if ( NOT LEN(ARGUMENTS.FORM.lastName) ) {
+						// Get all the missing items in a list
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter your last name');
+					}
+
+					if ( NOT LEN(ARGUMENTS.FORM.firstName) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter your first name');
+					}
+		
+					if ( NOT LEN(ARGUMENTS.FORM.sex) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please select a gender');
+					}
+	
+					if ( NOT IsDate(ARGUMENTS.FORM.dobMonth & '/' & ARGUMENTS.FORM.dobDay & '/' & ARGUMENTS.FORM.dobYear) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid date of birth');
+					}
+		
+					if ( NOT LEN(ARGUMENTS.FORM.birth_city) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter your place of birth');
+					}
+		
+					if ( NOT VAL(ARGUMENTS.FORM.birth_country) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please select a country of birth');
+					}
+		
+					if ( NOT VAL(ARGUMENTS.FORM.residence_country) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please select a country of residence');
+					}
+		
+					if ( NOT VAL(ARGUMENTS.FORM.citizen_country) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please select a country of citizenship');
+					}
+					
+					if ( NOT LEN(ARGUMENTS.FORM.home_address) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter your mailing address');
+					}
+		
+					if ( NOT LEN(ARGUMENTS.FORM.home_city) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter your mailing city');
+					}
+		
+					if ( NOT VAL(ARGUMENTS.FORM.home_country) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please select your mailing country');
+					}
+		
+					if ( NOT LEN(ARGUMENTS.FORM.passport_number) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter your passport number');
+					}
+		
+					if ( NOT LEN(ARGUMENTS.FORM.emergency_name) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter your emergency contact name');
+					}
+		
+					if ( NOT LEN(ARGUMENTS.FORM.emergency_phone) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter your emergency contact phone');
+					}
+		
+					if ( NOT IsDate(ARGUMENTS.FORM.watStartVacationMonth & '/' & ARGUMENTS.FORM.watStartVacationDay & '/' & ARGUMENTS.FORM.watStartVacationYear) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid vacation start date');
+					}
+					
+					if ( NOT IsDate(ARGUMENTS.FORM.watEndVacationMonth & '/' & ARGUMENTS.FORM.watEndVacationDay & '/' & ARGUMENTS.FORM.watEndVacationYear) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid vacation end date');
+					}
+					
+					if ( NOT IsDate(ARGUMENTS.FORM.programStartMonth & '/' & ARGUMENTS.FORM.programStartDay & '/' & ARGUMENTS.FORM.programStartYear) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid program start date');
+					}
+					
+					if ( NOT IsDate(ARGUMENTS.FORM.programEndMonth & '/' & ARGUMENTS.FORM.programEndDay & '/' & ARGUMENTS.FORM.programEndYear) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid program end date');
+					}
+					
+					if ( NOT LEN(ARGUMENTS.FORM.wat_placement) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please select a program option');
+					}
+					
+					if ( ARGUMENTS.FORM.wat_placement EQ 'CSB-Placement' AND NOT LEN(ARGUMENTS.FORM[qGetQuestions.fieldKey[2]]) ) {
+					 	ArrayAppend(stRequiredFields.fieldList, 'Please enter a requested placement');
+					}
+					
+					if ( NOT LEN(ARGUMENTS.FORM.wat_participation) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please select number of previous participations in the program');
+					}
+					break;
+				}
+
+				case 'section2': {
+					break;
+				}
+				
+				case 'section3': {
+					break;
+				}
+				
+				default: {
+					break;
+				}
+			}
+			
+			// Check Required Table Fields
+			if ( checkRequiredSection ) {
+			
+				// Section Fields are checked on this function
+				stRequiredSection = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(
+										sectionName=ARGUMENTS.sectionName, 
+										foreignTable=ARGUMENTS.foreignTable, 
+										foreignID=ARGUMENTS.candidateID
+									);
+				
+				// Merge Arrays
+				stRequiredFields.fieldList = APPLICATION.CFC.UDF.arrayMerge(array1=stRequiredFields.fieldList, array2=stRequiredSection.fieldList);
+				
+			// Check required FORM fields
+			} else {
+
+				// Loop Over Application Questions Fields
+				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
+					
+					if (qGetQuestions.isRequired[i] AND NOT LEN(ARGUMENTS.FORM[qGetQuestions.fieldKey[i]]) ) {
+						ArrayAppend(stRequiredFields.fieldList, qGetQuestions.requiredMessage[i]);
+					}
+				}
+				
+			}
+
+			// Check if there are errors
+			if ( ArrayLen(stRequiredFields.fieldList) ) {
+				// Set setion as not completed
+				stRequiredFields.isComplete = 0;
+			}
+		
+			// Return Structure
+			return stRequiredFields;
+		</cfscript>
+        
+	</cffunction>
+ 
 
 	<!--- 
-		DS-2019 Online Verification Report 
+		DS-2019 Online Verification Tool 
 	--->
 	<cffunction name="getVerificationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
@@ -580,6 +813,8 @@
                     ec.birth_country,
                     ec.citizen_country,
                     ec.residence_country,
+                    DATE_FORMAT(ec.startDate, '%m/%e/%Y') as startDate,
+                    DATE_FORMAT(ec.endDate, '%m/%e/%Y') as endDate,
                     birth.countryName as birthCountry,
                     citizen.countryName as citizenCountry,
                     resident.countryName as residentCountry
@@ -608,7 +843,7 @@
                     	ec.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.receivedDate#">
 				<cfelse>
                 	AND
-                    	ec.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" value="" null="yes">
+                    	ec.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 </cfif>
 			ORDER BY
             	ec.candidateID
@@ -634,7 +869,9 @@
                     ec.birth_city,
                     ec.birth_country,
                     ec.citizen_country,
-                    ec.residence_country
+                    ec.residence_country,
+                    DATE_FORMAT(ec.startDate, '%m/%e/%Y') as startDate,
+                    DATE_FORMAT(ec.endDate, '%m/%e/%Y') as endDate
                 FROM 
                     extra_candidates ec
                 WHERE
@@ -656,21 +893,37 @@
         <cfargument name="birthCountry" required="yes" hint="birthCountry is required">
         <cfargument name="citizenCountry" required="yes" hint="citizenCountry is required">
         <cfargument name="residenceCountry" required="yes" hint="residenceCountry is required">
+        <cfargument name="startDate" required="yes" hint="citizenCountry is required">
+        <cfargument name="endDate" required="yes" hint="residenceCountry is required">
 
         <cfquery 
 			datasource="#APPLICATION.DSN.Source#">
                 UPDATE
 					extra_candidates
 				SET
-                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.firstName#">,
-                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.middleName#">,
-                    lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.lastName#">,
+                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,
+                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.middleName)#">,
+                    lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,
                     sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sex#">,
-                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dob#">,
+                    <cfif IsDate(ARGUMENTS.dob)>
+	                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">,
+                    <cfelse>
+                    	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
                     birth_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.birthCity#">,
                     birth_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.birthCountry)#">,
                     citizen_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.citizenCountry)#">,
-                    residence_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.residenceCountry)#">
+                    residence_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.residenceCountry)#">,
+                    <cfif IsDate(ARGUMENTS.startDate)>
+	                    startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.startDate)#">,
+                    <cfelse>
+                    	startDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    <cfif IsDate(ARGUMENTS.endDate)>
+	                    endDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.endDate)#">
+                    <cfelse>
+                    	endDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    </cfif>
                 WHERE
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
 		</cfquery>
@@ -692,5 +945,8 @@
 		</cfquery>
 		   
 	</cffunction>
+	<!--- 
+		End of DS-2019 Online Verification Tool 
+	--->
 
 </cfcomponent>
