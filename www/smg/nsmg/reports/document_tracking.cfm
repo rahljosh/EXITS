@@ -120,7 +120,7 @@
 		   AND (doc_full_host_app_date IS NULL or doc_letter_rec_date IS NULL or doc_rules_rec_date IS NULL or
 				 doc_photos_rec_date IS NULL or doc_school_accept_date IS NULL or doc_school_profile_rec IS NULL or
 				 doc_conf_host_rec IS NULL or doc_date_of_visit IS NULL or doc_ref_form_1 IS NULL or doc_ref_form_2 IS NULL
-				 or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL)
+				 or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL or classschedule is NULL)
 		<cfif client.usertype is '6'>
 			AND ( placerepid = 
 			<cfloop list="#ad_users#" index='i' delimiters = ",">
@@ -156,7 +156,7 @@
 						</cfloop> )
 				 AND (doc_full_host_app_date IS NULL or doc_letter_rec_date IS NULL or doc_rules_rec_date IS NULL or doc_photos_rec_date IS NULL or 
 				  doc_school_accept_date IS NULL or doc_school_profile_rec IS NULL or doc_conf_host_rec IS NULL or doc_date_of_visit IS NULL or
-				  doc_ref_form_1 IS NULL or doc_ref_form_2 IS NULL or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL) 
+				  doc_ref_form_1 IS NULL or doc_ref_form_2 IS NULL or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL or classschedule is NULL) 
 		</cfquery> 
 		
 		<cfif get_students_region.recordcount is not 0> 
@@ -194,9 +194,8 @@
 							<cfif doc_ref_form_2 is ''>Ref. 2 &nbsp; &nbsp;</cfif>
 							<cfif stu_arrival_orientation is ''>Student Orientation &nbsp; &nbsp;</cfif>
 							<cfif host_arrival_orientation is ''>HF Orientation &nbsp; &nbsp;</cfif>
-                            <Cfif client.companyid eq 10>
-                           		 <cfif classschedule is ''>Class Schedule &nbsp; &nbsp;</cfif>
-                            </Cfif>
+                           <cfif classschedule is ''>Class Schedule &nbsp; &nbsp;</cfif>
+                          
 						</font></i></td>		
 					</tr>								
 				</cfoutput>	
