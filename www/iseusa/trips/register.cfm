@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>(ISE) International Student Exchange - Foreign Exchange S</title>
+<title>(ISE) International Student Exchange - Foreign Exchange</title>
 <style type="text/css">
 <!--
 -->
@@ -188,6 +188,7 @@ from smg_states
 </cfquery>
 
 <cfoutput>
+
 <cfif isDefined('form.process')>
 
 <cfsavecontent variable="email_message">
@@ -723,23 +724,24 @@ Registration information has been submitted:<Br />
                 <td><cfinput type="text"  name="local_Air_Code" value="#hostInfo.local_Air_Code#"> <input type="hidden" name="ret_local_Air_Code" value="#hostInfo.local_Air_Code#" /></td>
            	</Tr>
            	</Table>
-            
-             <cfif kids.recordcount gt 0>
-             <h2>Siblings</h2>
-				<em>Do any of your host siblings want to join you?</em>
-               
-           <Table width=100% cellspacing=0 cellpadding=2 class="border">
-           		<Cfloop query="kids">
-                <tr <CFif kids.currentrow mod 2>bgcolor="##deeaf3"</cfif>>
-                <cfset oktogo = 1>
-                <Cfset kidsage = #DateDiff('yyyy', kids.birthdate, now())#>
-                	<Cfif ListFind('15,16,17,18', '#kidsage#')> <cfset oktogo = 0></Cfif>
-                    
-                    <td><cfif oktogo neq 0><input type="checkbox" value="#childid#" name="host_siblings" ></cfif></td><td>#name#</td><Td>#DateDiff('yyyy', kids.birthdate, now())# <Cfif oktogo eq 0>- Must be between 15 and 18 to participate.</Cfif> </Td><Td>#kids.sex#</Td>
-                </tr>
-                </Cfloop>
-           </table>     
-           </cfif>
+			
+			<cfif stuInfo.recordcount eq 1 and stuInfo.hostid gt 0>            
+				<cfif kids.recordcount gt 0>
+                <h2>Siblings</h2>
+                <em>Do any of your host siblings want to join you?</em>
+                <Table width=100% cellspacing=0 cellpadding=2 class="border">
+                    <Cfloop query="kids">
+                    <tr <CFif kids.currentrow mod 2>bgcolor="##deeaf3"</cfif>>
+                    <cfset oktogo = 1>
+                    <Cfset kidsage = #DateDiff('yyyy', kids.birthdate, now())#>
+                        <Cfif ListFind('15,16,17,18', '#kidsage#')> <cfset oktogo = 0></Cfif>
+                        
+                        <td><cfif oktogo neq 0><input type="checkbox" value="#childid#" name="host_siblings" ></cfif></td><td>#name#</td><Td>#DateDiff('yyyy', kids.birthdate, now())# <Cfif oktogo eq 0>- Must be between 15 and 18 to participate.</Cfif> </Td><Td>#kids.sex#</Td>
+                    </tr>
+                    </Cfloop>
+                </table>     
+                </cfif>
+			</cfif>
                 
            <h2>Personal Information</h2>
 				<em>Couple of things to help make your tour better</em>
