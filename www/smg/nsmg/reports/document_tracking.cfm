@@ -120,7 +120,7 @@
 		   AND (doc_full_host_app_date IS NULL or doc_letter_rec_date IS NULL or doc_rules_rec_date IS NULL or
 				 doc_photos_rec_date IS NULL or doc_school_accept_date IS NULL or doc_school_profile_rec IS NULL or
 				 doc_conf_host_rec IS NULL or doc_date_of_visit IS NULL or doc_ref_form_1 IS NULL or doc_ref_form_2 IS NULL
-				 or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL or classschedule is NULL)
+				 or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL or doc_class_schedule is NULL)
 		<cfif client.usertype is '6'>
 			AND ( placerepid = 
 			<cfloop list="#ad_users#" index='i' delimiters = ",">
@@ -145,7 +145,7 @@
 		<Cfquery name="get_students_region" datasource="MySQL">
 			SELECT studentid, countryresident, firstname, familylastname, sex, programid, placerepid,
 			date_pis_received, doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date, doc_photos_rec_date, doc_school_accept_date, doc_school_profile_rec,
-			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_form_2, stu_arrival_orientation, host_arrival_orientation, classschedule
+			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_form_2, stu_arrival_orientation, host_arrival_orientation, doc_class_schedule
 			FROM smg_students
 			WHERE active = '1' AND regionassigned = '#current_region#' AND companyid = '#client.companyid#' 
 				 AND onhold_approved <= '4'
@@ -156,7 +156,7 @@
 						</cfloop> )
 				 AND (doc_full_host_app_date IS NULL or doc_letter_rec_date IS NULL or doc_rules_rec_date IS NULL or doc_photos_rec_date IS NULL or 
 				  doc_school_accept_date IS NULL or doc_school_profile_rec IS NULL or doc_conf_host_rec IS NULL or doc_date_of_visit IS NULL or
-				  doc_ref_form_1 IS NULL or doc_ref_form_2 IS NULL or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL or classschedule is NULL) 
+				  doc_ref_form_1 IS NULL or doc_ref_form_2 IS NULL or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL or doc_class_schedule is NULL) 
 		</cfquery> 
 		
 		<cfif get_students_region.recordcount is not 0> 
@@ -194,7 +194,7 @@
 							<cfif doc_ref_form_2 is ''>Ref. 2 &nbsp; &nbsp;</cfif>
 							<cfif stu_arrival_orientation is ''>Student Orientation &nbsp; &nbsp;</cfif>
 							<cfif host_arrival_orientation is ''>HF Orientation &nbsp; &nbsp;</cfif>
-                           <cfif classschedule is ''>Class Schedule &nbsp; &nbsp;</cfif>
+                           <cfif doc_class_schedule is ''>Class Schedule &nbsp; &nbsp;</cfif>
                           
 						</font></i></td>		
 					</tr>								
