@@ -52,10 +52,7 @@
 			<input type="radio" name="minorauthorization"  value="yes" checked>Yes <input type="radio" name="minorauthorization" value="no">No</cfif> &nbsp;&nbsp;&nbsp;Authorization to Treat a Minor</td>
 	</tr>
     
-	<tr>
-		<Td><cfif classschedule is 'no'><input type="radio" name="classschedule" value="yes">Yes <input type="radio" name="classschedule" value="no" checked>No<cfelse>
-			<input type="radio" name="classschedule"  value="yes" checked>Yes <input type="radio" name="classschedule" value="no">No</cfif> &nbsp;&nbsp;&nbsp;Class Schedule</td>
-	</tr>	
+	
     
 	<tr>
 		<Td>Missing Documents:<br>

@@ -7,7 +7,6 @@ update smg_students
 		health = "#form.health#",
 		immunization = "#form.immunization#",
 		minorauthorization = "#form.minorauthorization#",
-		classschedule = "#form.classschedule#",
         other_missing_docs = '#form.other_missing#'
 	where studentid = "#client.studentid#"
 </cfquery>
