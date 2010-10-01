@@ -2,7 +2,7 @@
 
 <cfset grant_access = 0>
 
-<cfif client.usertype LTE 4 OR client.userid EQ url.userid>
+<cfif client.usertype LTE 5 OR client.userid EQ url.userid>
 	<cfset grant_access = 1>
 </cfif>
 

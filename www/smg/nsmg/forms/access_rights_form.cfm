@@ -296,7 +296,7 @@
 
 <cfoutput>
 
-<cfif NOT CLIENT.usertype LTE 5>
+<cfif CLIENT.usertype GT 5>
 	<p>You do not have access to this page.</p>
     <cfabort>
 </cfif>
