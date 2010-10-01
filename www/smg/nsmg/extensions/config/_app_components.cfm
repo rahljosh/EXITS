@@ -33,6 +33,9 @@
 
 	// Store the initialized Host object in the Application scope
 	AppCFC.Insurance = CreateCFC("insurance").Init();
+	
+	// Store the initialized invoice object in the Application scope
+	AppCFC.Invoice = CreateCFC("invoice").Init();
 
 	// Store the initialized Other object in the Application scope
 	AppCFC.LookUpTables = CreateCFC("lookUpTables").Init();
@@ -57,5 +60,4 @@
 
 	// Store the initialized User object in the Application scope
 	AppCFC.User = CreateCFC("user").Init();
-
 </cfscript>
