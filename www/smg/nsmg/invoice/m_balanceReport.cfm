@@ -472,7 +472,7 @@ ORDER BY
     
     	<!--- query qProgramBalance returns the balance per agent per program --->
 		<cfscript>
-			qProgramBalance = APPCFC.INVOICE.programBalance(agentId = qTotalAgentBalance.agentId, programChoice = FORM.selectPrograms, companyId = indexCompId);
+			qProgramBalance = APPCFC.INVOICE.programBalance(agentId = qTotalAgentRefund.agentId, programChoice = FORM.selectPrograms, companyId = indexCompId);
 		</cfscript>
         
         <cfif qProgramBalance.recordCount NEQ 0>          
