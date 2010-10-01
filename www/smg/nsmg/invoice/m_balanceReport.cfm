@@ -70,10 +70,10 @@
 <cfparam name="FORM.selectPrograms" default="0">
 
 <cfscript>
-
-	qTotalAgentBalance = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms);						<!--- returns total balance per agent --->
-	qTotalAgentRefund = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms, balanceType = 0);		<!--- returns total balance per agent per program --->
-
+	// returns total balance per agent
+	qTotalAgentBalance = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms);	
+	// returns total balance per agent per program 	
+	qTotalAgentRefund = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms, balanceType = 0);		
 </cfscript>
 
 <cfquery name="getPrograms" datasource="MySQL">
