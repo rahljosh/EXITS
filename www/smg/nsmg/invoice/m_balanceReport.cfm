@@ -244,7 +244,7 @@ ORDER BY
 
 <cfif NOT ISDEFINED('form.printFormat')>
     <div align="center">
-        <cfinput type="submit" name="sendEmail" src="../pics/send-email.gif">
+        <cfinput type="image" name="sendEmail" src="../pics/send-email.gif">
     </div>
 </cfif>
 
