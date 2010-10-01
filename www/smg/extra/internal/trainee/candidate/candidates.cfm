@@ -31,7 +31,9 @@
             ec.programid,
         	ec.intrep, 
             ec.status, 
-            ec.uniqueid, 
+            ec.uniqueid,
+            ec.ds2019_startDate,
+            ec.ds2019_endDate, 
             c.countryname, 
             p.programname, 
             u.businessname
@@ -92,27 +94,24 @@
 		<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=95%>
 			<tr>
 				<th width="5%"  bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=candidateid&status=#url.status#" class="style2">ID</a></th>
-				<th width="15%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=firstname&status=#url.status#" class="style2">First Name</a></th>
-				<th width="15%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=lastname&status=#url.status#" class="style2">Last Name</a></th>
+				<th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=firstname&status=#url.status#" class="style2">First Name</a></th>
+				<th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=lastname&status=#url.status#" class="style2">Last Name</a></th>
 				<th width="10%"  bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=sex&status=#url.status#" class="style2">Sex</a></th>
-				<th width="15%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=countryname&status=#url.status#" class="style2">Country</a></th>
-				<th width="15%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=programname&status=#url.status#" class="style2">Program</a></th>		
+				<th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=countryname&status=#url.status#" class="style2">Country</a></th>
+				<th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=programname&status=#url.status#" class="style2">Program</a></th>		
 				<th width="25%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=businessname&status=#url.status#" class="style2">Intl. Rep.</a></th>
+                <th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=businessname&status=#url.status#" class="style2">Program Dates</a></th>
 			</tr>
 		<cfloop query="qCandidatesList">
 			<tr bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-				  <div align="left"><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#candidateid#</a></div></td>
-				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-				  <div align="left"><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#firstname#</a></div></td>
-				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-				  <div align="left"><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#lastname#</a></div></td>
-				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left"><cfif sex EQ 'm'>Male<cfelse>Female</cfif></div></td>
-				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#countryname#</div></td>
-				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#programname#</div></td>		
-				<td bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5"><div align="left">#businessname#
-				  </option>
-				  </div></td>
+				<td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#candidateid#</a></td>
+				<td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#firstname#</a></td>
+				<td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#lastname#</a></td>
+				<td class="style5"><cfif sex EQ 'm'>Male<cfelse>Female</cfif></div></td>
+				<td class="style5">#countryname#</td>
+				<td class="style5">#programname#</td>		
+				<td class="style5">#businessname#</td>
+				<td class="style5">#DateFormat(ds2019_startDate, 'mm/dd/yy')# - #DateFormat(ds2019_endDate, 'mm/dd/yy')#</td>                
 			</tr>
 		</cfloop>
 		</table>
