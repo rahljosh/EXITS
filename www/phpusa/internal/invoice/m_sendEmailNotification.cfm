@@ -245,8 +245,8 @@
             </cfif>
             
             <cfif getAgentInfo.billing_email IS NOT "" AND getTotalBalancePerAgent.recordCount NEQ 0>
-            													<!--- #getAgentInfo.php_conctact_email# --->
-                <cfmail from="marcel@student-management.com" to="marcel@student-management.com" bcc="marcel@student-management.com" subject="#getAgentInfo.businessname# (#getAgentInfo.userid#) - PHP PROGRAM - Balance Due" type="html">
+            													
+                <cfmail from="marcel@student-management.com" to="#getAgentInfo.php_conctact_email#" bcc="marcel@student-management.com" subject="#getAgentInfo.businessname# (#getAgentInfo.userid#) - PHP PROGRAM - Balance Due" type="html">
                 
                     <style type="text/css">
         
