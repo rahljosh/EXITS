@@ -49,7 +49,7 @@
         AND 
             s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
         ORDER BY 
-            p.programname, 
+            p.startdate, p.programid, 
             familylastname
     </cfquery>
 
