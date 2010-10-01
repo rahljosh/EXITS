@@ -19,16 +19,16 @@
     <cfset approve_field = ''>
 	<!--- in case the user has multiple approval levels, check them in order and just do the first one. --->
 	<!--- supervising rep --->
-	<cfif client.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ ''>
+	<cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ ''>
     	<cfset approve_field = 'pr_sr_approved_date'>
     <!--- regional advisor --->
-    <cfelseif client.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ ''>
+    <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ ''>
     	<cfset approve_field = 'pr_ra_approved_date'>
     <!--- regional director --->
-    <cfelseif client.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ ''>
+    <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ ''>
     	<cfset approve_field = 'pr_rd_approved_date'>
     <!--- facilitator --->
-    <cfelseif client.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
+    <cfelseif CLIENT.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
     	<cfset approve_field = 'pr_ny_approved_date'>
     </cfif>
     <cfif approve_field NEQ ''>
@@ -153,38 +153,38 @@ function OpenLetter(url) {
 <!--- used to display the pending message for the supervising rep. --->
 <cfset pending_msg = 0>
 
-<!--- these users can always edit/reject even if they're an approval user who's already approved. 
-<cfif client.usertype LTE 4>
-	<cfset allow_edit = 1>
-	<cfset allow_reject = 1>
-</cfif>--->
-
 <!--- users are allowed access until they approve the report.  Also, if a higher level has already approved then they are not allowed access. --->
 <!--- supervising rep --->
-<cfif client.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ '' and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+<cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ '' and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
 	<cfset allow_reject = 1>
 	<cfset allow_delete = 1>
 	<cfset pending_msg = 1>
 <!--- regional advisor --->
-<cfelseif client.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+<cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
 	<cfset allow_reject = 1>
 	<cfset allow_delete = 1>
 <!--- regional director --->
-<cfelseif client.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+<cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
 	<cfset allow_reject = 1>
 	<cfset allow_delete = 1>
 <!--- facilitator --->
-<cfelseif client.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
+<cfelseif CLIENT.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
 	<cfset allow_reject = 1>
 	<cfset allow_delete = 1>
+<!--- Program Manager - Office User - Gary request - 10/01/2010 - Managers should be able to approve progress reports --->
+<cfelseif CLIENT.userType EQ 3 AND NOT LEN(get_report.pr_ny_approved_date)>
+    <cfset allow_edit = 1>
+	<cfset allow_approve = 1>
+	<cfset allow_reject = 1>
+    <cfset allow_delete = 1>
 </cfif>
 
 <!--- certain things are required for approval. --->
@@ -626,7 +626,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                 </form>
                 <!---<A href="progress_report_info.cfm?pr_id=#form.pr_id#&report_mode=print" title="Print Report" target="_blank"><img src="pics/printer.gif" border=0 align="absmiddle"> Print</A>--->
               </td>
-            <cfif client.usertype LTE 4>
+            <cfif CLIENT.usertype LTE 4>
                 <td width="15">&nbsp;</td>
                 <td>
                     <!--- email --->
