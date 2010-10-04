@@ -19,6 +19,10 @@
 	<cfparam name="FORM.hearAboutUs" default="">
 	<cfparam name="FORM.hearAboutUsDetail" default="">
     <cfparam name="FORM.isListSubscriber" default="0">
+    <cfparam name="FORM.remoteCountry" default="">
+    <cfparam name="FORM.captcha" default="">
+    <cfparam name="FORM.strCaptcha" default="">
+    <cfparam name="FORM.captchaHash" default="">    
 	<!--- Login --->
 	<cfparam name="FORM.loginEmail" default="">
     <cfparam name="FORM.loginPassword" default="0">
@@ -26,46 +30,23 @@
 	<!--- Allow Access for US Users --->
 	<cfparam name="allowAccess" default="1">
 
-	<cfscript>
-		pageMsg = StructNew();
-		// Create Array to store error messages
-		pageMsg.Errors = ArrayNew(1);
-		// Create Array to store page messages
-		pageMsg.Messages = ArrayNew(1);
-		
-		// Check if they are coming from our Google AdWords Campaign
-		if ( VAL(URL.adw) ) {
-			CLIENT.isAdWords = 1;	
-		}
-		
-		// Set which form needs to be displayed
-		if (FORM.type EQ "forgotPassword" ) {
-			loginFormClass = 'hiddenDiv';
-			forgotPassClass = '';
-		} else {
-			loginFormClass = '';
-			forgotPassClass = 'hiddenDiv';
-		}
-	</cfscript>
-
-
-    <!--- Get User Location - If not US, do not allow access --->
-    <cftry>
-        <cfhttp url="http://ipinfodb.com/ip_query_country.php?ip=#CGI.remote_addr#&timezone=false" method="get" throwonerror="yes"></cfhttp>
+    <cffunction name="makeRandomString" returnType="string" output="false">
         
         <cfscript>
-            // Parse XML we received back to a variable
-            responseXML = XmlParse(cfhttp.filecontent);		
-        
-            if ( responseXML.response.CountryCode.XmlText NEQ 'US' ) {
-                allowAccess = 0;		
-            }
+			var chars = "23456789ABCDEFGHJKMNPQRS";
+			var length = randRange(4,7);
+			var result = "";
+			var i = "";
+			var char = "";
+			
+			for(i=1; i <= length; i++) {
+				char = mid(chars, randRange(1, len(chars)),1);
+				result&=char;
+			}
         </cfscript>
-    
-        <cfcatch type="any">
-            <!--- Error - Allow Access --->
-        </cfcatch>
-    </cftry>        	
+            
+        <cfreturn result>
+    </cffunction>
 
 
 	<cffunction name="generatePassword" access="public" returntype="string" hint="Generates a random password">
@@ -97,6 +78,57 @@
 			return setPassword;
 		</cfscript>
 	</cffunction>        
+
+
+	<cfscript>
+		pageMsg = StructNew();
+		// Create Array to store error messages
+		pageMsg.Errors = ArrayNew(1);
+		// Create Array to store page messages
+		pageMsg.Messages = ArrayNew(1);
+		
+		// Check if they are coming from our Google AdWords Campaign
+		if ( VAL(URL.adw) ) {
+			CLIENT.isAdWords = 1;	
+		}
+		
+		// Set which form needs to be displayed
+		if (FORM.type EQ "forgotPassword" ) {
+			loginFormClass = 'hiddenDiv';
+			forgotPassClass = '';
+		} else {
+			loginFormClass = '';
+			forgotPassClass = 'hiddenDiv';
+		}
+		
+		if ( NOT LEN(FORM.type) ) {
+			// Set Captcha String
+			FORM.strCaptcha = makeRandomString();
+			// Encrypt String
+			FORM.captchaHash = Hash(FORM.strCaptcha);
+		}
+	</cfscript>
+
+    <!--- Get User Location - If not US, do not allow access --->
+    <cftry>
+        <cfhttp url="http://www.ipinfodb.com/ip_query_country.php?ip=#CGI.remote_addr#&timezone=false" method="get" throwonerror="yes"></cfhttp>
+        
+        <cfscript>
+            // Parse XML we received back to a variable
+            responseXML = XmlParse(cfhttp.filecontent);		
+        
+            if ( responseXML.response.CountryCode.XmlText NEQ 'US' ) {
+                allowAccess = 0;		
+            }
+			
+			// Set remoteCountry
+			FORM.remoteCountry = responseXML.response.CountryCode.XmlText;
+        </cfscript>
+    	
+        <cfcatch type="any">
+            <!--- Error - Allow Access --->
+        </cfcatch>
+    </cftry>
 
 	<!--- List of States --->
     <cfquery name="qStateList" datasource="#application.dsn#">
@@ -229,7 +261,7 @@
                     <cfinvokeargument name="email_message" value="#email_message#">
                     <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
-			
+                
                 <cfscript>				
 					// Set Page Message
 					ArrayAppend(pageMsg.Messages, "Login information has been sent to your email address.");
@@ -258,18 +290,38 @@
                 ArrayAppend(pageMsg.Errors, "Enter a family last name.");			
             }
 
+            // Family Last Name
+            if ( LEN(FORM.lastName) LT 2 ) {
+                ArrayAppend(pageMsg.Errors, "Enter a family last name.");			
+            }
+
             // First Name
             if ( NOT LEN(FORM.firstName) ) {
                 ArrayAppend(pageMsg.Errors, "Enter a first name.");			
             }
-			
+
+            // First Name
+            if ( LEN(FORM.firstName) LT 2 ) {
+                ArrayAppend(pageMsg.Errors, "Enter a first name.");			
+            }
+
             // Address
             if ( NOT LEN(FORM.address) ) {
                 ArrayAppend(pageMsg.Errors, "Enter an address.");			
             }
 			
+            // Address
+            if ( LEN(FORM.address) LT 5 ) {
+                ArrayAppend(pageMsg.Errors, "Enter an address.");			
+            }
+
             // City
             if ( NOT LEN(FORM.city) ) {
+                ArrayAppend(pageMsg.Errors, "Enter a city.");			
+            }
+
+            // City
+            if ( LEN(FORM.city) LT 3 ) {
                 ArrayAppend(pageMsg.Errors, "Enter a city.");			
             }
 
@@ -283,11 +335,21 @@
                 ArrayAppend(pageMsg.Errors, "Enter a zip code.");			
             }
 
+            // Zip Code
+            if ( LEN(FORM.zipCode) LT 5 ) {
+                ArrayAppend(pageMsg.Errors, "Enter a 5 digits zip code.");			
+            }
+
             // Phone Number
             if ( NOT LEN(FORM.phone) ) {
                 ArrayAppend(pageMsg.Errors, "Enter a phone number.");			
             }
-			
+
+			// Phone Number
+            if ( LEN(FORM.phone) LT 7 ) {
+                ArrayAppend(pageMsg.Errors, "Enter a phone number.");			
+            }
+
             // EMAIL
             if ( NOT LEN(FORM.email) OR NOT IsValid("email", FORM.email) ) {
                 ArrayAppend(pageMsg.Errors, "Enter a valid email address.");			
@@ -298,13 +360,20 @@
                 ArrayAppend(pageMsg.Errors, "Select how did you hear about us.");			
             }
 			
+			// Heard About Us
 			if ( FORM.hearAboutUs EQ "ISE Representative" AND NOT LEN(FORM.hearAboutUsDetail) ) {
                 ArrayAppend(pageMsg.Errors, "Enter the ISE representative name");			
 			}
 			
+			// Heard About Us
 			if ( FORM.hearAboutUs EQ "Other" AND NOT LEN(FORM.hearAboutUsDetail) ) {
                 ArrayAppend(pageMsg.Errors, "Specify how did you hear about us");			
 			}
+			
+			// Captcha
+			if ( Hash(UCase(FORM.captcha)) NEQ FORM.captchaHash ) {
+                ArrayAppend(pageMsg.Errors, "Enter text as displayed in the image");			
+			}			
         </cfscript>
 
        <!--- There are no errors --->
@@ -382,6 +451,7 @@
                         isAdWords,
                         httpReferer,
                         remoteAddress,
+                        remoteCountry,
                         dateCreated
                     )
                     VALUES                                
@@ -402,6 +472,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.isAdWords#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_referer#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.remote_addr#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.remoteCountry#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )		
                 </cfquery>
@@ -549,6 +620,7 @@
 			$("#hearAboutUsDetail").focus();
 		// Other Option			
 		} else if (selectedOption == 'Other') {
+
 			$("#labelHearAboutUs").html("Please specify <span class='requiredField'>*</span>");
 			$("#spanHearAboutUs").html("");
 			$("#divExtraField").fadeIn("slow");
@@ -710,6 +782,8 @@
                     
                         <cfform name="newAccount" id="newAccount" method="post" action="#cgi.SCRIPT_NAME#">
                         <input type="hidden" name="type" value="newAccount" />
+                        <input type="hidden" name="strCaptcha" value="#FORM.strCaptcha#">
+                        <input type="hidden" name="captchaHash" value="#FORM.captchaHash#">
                         
                         <label for="lastName" class="inputLabel">Family Last Name <span class="requiredField">*</span></label>
                         <cfinput type="text" name="lastName" id="lastName" value="#FORM.lastName#" maxlength="100" class="largeInput" required="yes" message="Please enter a family last name."/> 
@@ -742,7 +816,7 @@
                         
                         <label for="email" class="inputLabel">Email <span class="requiredField">*</span></label>
                         <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address." validateat="onSubmit" validate="email" />
-                        
+
                         <label for="hearAboutUs" class="inputLabel">How did you hear about us <span class="requiredField">*</span></label>
                         <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayExtraField(this.value);"> 			
                             <option value=""></option>
@@ -750,17 +824,23 @@
                                 <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>
                             </cfloop>
                         </cfselect>
-    
-                        <div id="divExtraField" class="hiddenDiv">
-                            <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
-                            <span id="spanHearAboutUs" class="inputNote"></span>
-                            <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
-                        </div>
+    					
+                        <div style="clear:both;">&nbsp;</div>
                         
+                        <!--- Captcha --->
+                        <cfimage action="captcha" width="215" height="75" text="#FORM.strCaptcha#" difficulty="medium" fonts="verdana,arial,times new roman,courier" fontsize="28">
+						
+                        <div style="clear:both;">&nbsp;</div>
+                        
+                        <label for="captcha" class="inputLabel">Please enter text in image above <span class="requiredField">*</span></label>
+                        <cfinput type="text" name="captcha" id="captcha" class="largeInput" required="yes" message="Please enter text as displayed in the image above">
+                        
+                        <div style="clear:both;">&nbsp;</div>
+
                         <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
                         <label for="isListSubscriber" class="inputCheckbox">Would you like to join our mailing list?</label> 
                         
-                        <span class="requiredFieldNote">* Required Fields</span>
+						<span class="requiredFieldNote">* Required Fields</span>
                         
                         <input type="image" src="images/submitRed.png" />
                         
