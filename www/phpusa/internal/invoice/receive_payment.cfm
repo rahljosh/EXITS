@@ -105,6 +105,7 @@ function findselected() {
 	select *
 	from egom_credits
 	where intrep = #intrep#
+    order by originalPayRef
 </cfquery>
 <cfoutput>
 
