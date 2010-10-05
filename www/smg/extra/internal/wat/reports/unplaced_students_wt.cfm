@@ -1,6 +1,10 @@
 <cfif IsDefined('form.program')>
 	<cfquery name="get_students" datasource="mysql">
-	SELECT c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, smg_programs.programname, smg_users.companyid, smg_users.businessname, c.companyid, c.hostcompanyid, smg_countrylist.countryname, extra_hostcompany.name, c.wat_placement, c.candidateid, c.wat_placement
+	SELECT 
+    	c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, 
+        smg_programs.programname, smg_users.companyid, smg_users.businessname, 
+        c.companyid, c.hostcompanyid, smg_countrylist.countryname, extra_hostcompany.name, 
+        c.wat_placement, c.candidateid, c.wat_placement, c.change_requested_comment
 	FROM extra_candidates c
 	INNER JOIN smg_users ON smg_users.userid = c.intrep
 	INNER JOIN smg_programs ON smg_programs.programid = c.programid
@@ -15,7 +19,10 @@
 	</cfquery>
 	
 	<cfquery name="get_students_self" datasource="mysql">
-	SELECT c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, smg_programs.programname, smg_users.companyid, smg_users.businessname, c.companyid, c.hostcompanyid, smg_countrylist.countryname, extra_hostcompany.name, c.wat_placement, c.candidateid, c.wat_placement
+	SELECT 
+    	c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, 
+        smg_programs.programname, smg_users.companyid, smg_users.businessname, c.companyid, c.hostcompanyid, 
+        smg_countrylist.countryname, extra_hostcompany.name, c.wat_placement, c.candidateid, c.wat_placement, c.change_requested_comment
 	FROM extra_candidates c
 	INNER JOIN smg_users ON smg_users.userid = c.intrep
 	INNER JOIN smg_programs ON smg_programs.programid = c.programid
@@ -33,9 +40,7 @@
 </cfif>
 
 
-<cfoutput >
-
-
+<cfoutput>
 
 <form action="index.cfm?curdoc=reports/unplaced_students_wt" method="post">
 <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
@@ -128,6 +133,7 @@
       <th align="left" bgcolor="4F8EA4" class="style2">Sex</th>
       <th align="left" bgcolor="4F8EA4" class="style2">Country</th>
       <th align="left" bgcolor="4F8EA4" class="style2">Req. Placement</th>
+      <th align="left" bgcolor="4F8EA4" class="style2">Comments</th>
 	  <th align="left" bgcolor="4F8EA4" class="style2">Intl. Rep.</th>
 	  <th align="left" bgcolor="4F8EA4" class="style2">Option</th>
     </tr>	
@@ -149,8 +155,9 @@
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
 					<td class="style1">#name#</td>
-					<td class="style1">#businessname#</td>
-					<td class="style1">#wat_placement#</td>
+					<td class="style1">#change_requested_comment#</td>
+                    <td class="style1">#businessname#</td>
+					<td class="style1">#wat_placement#</td>                    
 				  </tr>
 				  <cfset into = into + 1 >
 				</cfloop>
@@ -161,6 +168,7 @@
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
 					<td class="style1">#name#</td>
+                    <td class="style1">#change_requested_comment#</td>
 					<td class="style1">#businessname#</td>
 					<td class="style1">#wat_placement#</td>
 				  </tr>		
