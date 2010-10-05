@@ -306,7 +306,7 @@ function findselected() {
                                     <select name="credits" onChange="findselected()">
                                     	<option value="0"><cfif availCredits.recordcount eq 0>Non Available</cfif></option>
                                         <cfloop query="availCredits">
-                                        <option value="#origPayID#">Wire Ref #originalPayRef# ##LSCurrencyFormat(amount, 'local')#</option>
+                                        <option value="#origPayID#">Wire Ref #originalPayRef# - #LSCurrencyFormat(amount, 'local')#</option>
                                         </cfloop>
                                         </select>
                                    
@@ -320,8 +320,7 @@ function findselected() {
                                             	paymentType DESC			
 										</cfquery>
 										<select name="payment_method">
-                                        <option value="0"></option>
-										<cfloop query="payment_methods">
+                                        <cfloop query="payment_methods">
 										<option value="#paymenttypeid#">#paymenttype#</option>
 										</cfloop>
 										</select>
