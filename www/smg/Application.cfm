@@ -50,13 +50,13 @@
 			// Development Server Settings	
 			
 			// Set Site URL
-			APPLICATION.site_url = 'http://dev.student-management.com';
+			APPLICATION.site_url = 'http://smg.local';
 			
 		} else {
 			// Live Server Settings
 			
 			// Set Site URL
-			APPLICATION.site_url = 'http://www.student-management.com';
+			APPLICATION.site_url = 'http://ise.exitsapplication.com';
 			
 		}		
 	</cfscript>
