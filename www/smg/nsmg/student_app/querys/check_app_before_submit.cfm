@@ -41,6 +41,8 @@
 
 <!--- Copy of check_list.cfm --->
 <cfsilent>
+
+    <cfsetting requesttimeout="9999">
 	
     <!--- These need to be updated --->
     <cfinclude template="../querys/get_latest_status.cfm">    
@@ -194,7 +196,7 @@
     <!--- Parents Letter --->
     <cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="check_06_upload" filter="#smg_students.studentid#.*">
     
-    <!--- Inserts --->
+	<!--- Inserts --->
     <cfloop list="08,09,10,11,12,13,14,15,16,17,18,19,20,21" index="i">
         <cfdirectory directory="#AppPath.onlineApp.inserts#page#i#" name="check_#i#_upload" filter="#smg_students.studentid#.*">	
     </cfloop>

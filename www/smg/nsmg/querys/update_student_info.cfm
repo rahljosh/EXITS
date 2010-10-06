@@ -218,80 +218,95 @@
     
 	<!--- EMAIL FINANCE DEPARTMENT ONLY IF PREVIOUS PROGRAM IS VALID --->
     <cfif VAL(qStudentInfo.programid)>
-    
-    	<cfscript>			
+    	
+    	<cfscript>	
+			// Always send a copy of the email to Admissions
+			emailCC = APPLICATION.EMAIL.admissions;
+			
+			// If there is a valid email, send a copy to the current user
 			if ( IsValid("email", APPCFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
-				userCopyEmail = APPCFC.USER.getUserByID(userID=CLIENT.userID).email;				
-			} else {
-				userCopyEmail = APPLICATION.EMAIL.finance;	
+				emailCC = emailCC & ';' & APPCFC.USER.getUserByID(userID=CLIENT.userID).email;				
 			}
 		</cfscript>
-    
-        <cfmail
-            from="#APPLICATION.EMAIL.support#"    	
-            to="#APPLICATION.EMAIL.finance#"
-            cc="#userCopyEmail#"
-            bcc="#APPLICATION.EMAIL.admissions#"
-            subject="Student #qStudentInfo.firstName# #qStudentInfo.familyLastName# (###qStudentInfo.studentID#) Change Program Notification"
-            type="html">
-                <table cellpadding="5" cellspacing="5" style="border-collapse: collapse; border: .05em solid ##000;">
-                    <tr>
-                        <td>
-                            <p>
-                                <h2>Finance Department</h2>
-                            </p>
-                            
-                            <p>
-                                This email is to let you know student 
-                                #qStudentInfo.firstName# #qStudentInfo.familyLastName# (###qStudentInfo.studentID#) - 
-                                #APPCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).companyShort# was assigned to a new program.
-                            	<br />
-                            </p> 
+		
+        <cfoutput>
+        <cfsavecontent variable="emailChangeProgram">
+            <p>
+                <h2>Finance Department</h2>
+            </p>
+            
+            <p>
+                This email is to let you know student 
+                #qStudentInfo.firstName# #qStudentInfo.familyLastName# (###qStudentInfo.studentID#) - 
+                #APPCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).companyShort# was assigned to a new program.
+            </p> 
+            
+            <p>
+                SEVIS No.: 
+				<cfif NOT LEN(qStudentInfo.ds2019_no)>
+                	<strong>No SEVIS Number on File</strong>
+				<cfelse>
+                	<strong>#qStudentInfo.ds2019_no#</strong>
+				</cfif>                            
+            </p>
+            
+            <p>
+                Intl. Agent: #APPCFC.USER.getUserByID(userID=qStudentInfo.intRep).businessName# (###qStudentInfo.intRep#)
+            </p>
+        
+            <p>
+                Previous Program Information:
+                #APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programid).programName# (###APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programid).programID#)                         
+            </p>
+            
+            <p>
+                New Program Information: 
+                <cfif VAL(FORM.program)>
+                    #APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program).programName# (###APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program).programID#)
+                <cfelse>
+                    Unassigned
+                </cfif>                                
+            </p>
+        
+            <p>
+                Reason for changing the program: 
+                #FORM.program_reason#
+            </p>
+        
+            <p>
+                Assigned By: 
+                #APPCFC.USER.getUserByID(userID=CLIENT.userID).firstName# #APPCFC.USER.getUserByID(userID=CLIENT.userID).lastName# (###CLIENT.userID#)
+                <a href="mailto:#APPCFC.USER.getUserByID(userID=CLIENT.userID).email#">#APPCFC.USER.getUserByID(userID=CLIENT.userID).email#</a>
+            </p>
+            
+            <p>
+                Date/Time: #DateFormat(now(), 'mm/dd/yy')# #TimeFormat(now(), 'hh:mm:ss tt')#
+            </p>                            
+            
+            <p>
+                The following people received this notice:<br />
+                #APPLICATION.EMAIL.finance#;#emailCC#
+            </p>
+            
+            <p>
+                <cfif APPLICATION.IsServerLocal>
+                    PS: Development Server
+                <cfelse>
+                    PS: Production Server
+                </cfif>
+            </p>
+        </cfsavecontent>
+        </cfoutput>
 
-                            <p>
-                                Intl. Agent: #APPCFC.USER.getUserByID(userID=qStudentInfo.intRep).businessName#
-                            </p>
-
-                            <p>
-                                Previous Program Information:
-                                #APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programid).programName# (###APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programid).programID#)                         
-                            </p>
-                            
-                            <p>
-                                New Program Information: 
-                                <cfif VAL(FORM.program)>
-	                                #APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program).programName# (###APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program).programID#)
-                                <cfelse>
-                                	Unassigned
-                                </cfif>                                
-                            </p>
-
-                            <p>
-                                Reason for changing the program: 
-                                #FORM.program_reason#
-                            </p>
-
-                            <p>
-                                Assigned By: 
-                                #APPCFC.USER.getUserByID(userID=CLIENT.userID).firstName# #APPCFC.USER.getUserByID(userID=CLIENT.userID).lastName# (###CLIENT.userID#)
-                                <a href="mailto:#APPCFC.USER.getUserByID(userID=CLIENT.userID).email#">#APPCFC.USER.getUserByID(userID=CLIENT.userID).email#</a>
-                            </p>
-                            
-                            <p>
-                                Date/Time: #DateFormat(now(), 'mm/dd/yy')# #TimeFormat(now(), 'hh:mm:ss tt')#
-                            </p>                            
-                            
-                            <p>
-								<cfif APPLICATION.IsServerLocal>
-                                    PS: Development Server
-                                <cfelse>
-                                    PS: Production Server
-                                </cfif>
-                            </p>
-                        </td>
-                    </tr>
-                </table>    
-        </cfmail>
+		<!--- send email --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.support#">
+            <cfinvokeargument name="email_to" value="#APPLICATION.EMAIL.finance#">
+            <cfinvokeargument name="email_cc" value="#emailCC#">
+            <cfinvokeargument name="email_subject" value="Student #qStudentInfo.firstName# #qStudentInfo.familyLastName# (###qStudentInfo.studentID#) Change Program Notification">
+            <cfinvokeargument name="email_message" value="#emailChangeProgram#">
+        </cfinvoke>
+	
 	</cfif>    
 
 </cfif>
@@ -341,54 +356,62 @@
 	</cfquery>
 <!----Send Email to Finace Email, prgram manager, others---->
 <cfoutput>
-<cfquery name="intagent" datasource="#application.dsn#">
-select businessname
-from smg_users
-where userid = #qStudentInfo.intrep#
-</cfquery>
-<cfquery name="programname" datasource="#application.dsn#">
-select programname
-from smg_programs
-where programid = #qStudentInfo.programid#
-</cfquery>
-<cfsavecontent variable="email_message">
- #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been cancelled.
- <br /><br />
- Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#)</strong><br />
- Int Agent: <strong>#intagent.businessname# (#qStudentInfo.intrep#)</strong><br />
- Program: <strong>#programname.programname# (#qStudentInfo.programid#)</strong><br />
- Cancel Date: <strong>#DateFormat(FORM.date_canceled,'mm/dd/yyyy')#</strong><br />
- Reason: <strong>#FORM.cancelreason#</strong><br />
- Placement Approved: <cfif qStudentInfo.date_host_fam_approved is ''>Unplaced<cfelse>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</cfif> <br />
- Sevis:  <cfif qStudentInfo.sevis_fee_paid_date is ''>Not Paid<cfelse>#DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</cfif><br />
- SEVIS No.: <cfif qStudentInfo.ds2019_no is ''><strong>No SEVIS Number on File</strong><cfelse> <strong> #qStudentInfo.ds2019_no#</strong></cfif><br />
- Cancelled By: #client.name# - #client.email#<br /><br />
- 
- The following people received this notice:<br />
- #client.projectmanager_email# #client.finance_email# #client.email#
-</cfsavecontent>
+
+    <cfquery name="intagent" datasource="#application.dsn#">
+        select businessname
+        from smg_users
+        where userid = #qStudentInfo.intrep#
+    </cfquery>
+    
+    <cfquery name="programname" datasource="#application.dsn#">
+        select programname
+        from smg_programs
+        where programid = #qStudentInfo.programid#
+    </cfquery>
+    
+    <cfsavecontent variable="email_message">
+        #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been cancelled.
+        <br /><br />
+        Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#)</strong><br />
+        Int Agent: <strong>#intagent.businessname# (#qStudentInfo.intrep#)</strong><br />
+        Program: <strong>#programname.programname# (#qStudentInfo.programid#)</strong><br />
+        Cancel Date: <strong>#DateFormat(FORM.date_canceled,'mm/dd/yyyy')#</strong><br />
+        Reason: <strong>#FORM.cancelreason#</strong><br />
+        Placement Approved: <cfif qStudentInfo.date_host_fam_approved is ''>Unplaced<cfelse>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</cfif> <br />
+        Sevis:  <cfif qStudentInfo.sevis_fee_paid_date is ''>Not Paid<cfelse>#DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</cfif><br />
+        SEVIS No.: <cfif qStudentInfo.ds2019_no is ''><strong>No SEVIS Number on File</strong><cfelse> <strong> #qStudentInfo.ds2019_no#</strong></cfif><br />
+        Cancelled By: #client.name# - #client.email#<br /><br />
+        
+        The following people received this notice:<br />
+        #client.projectmanager_email# #client.finance_email# #client.email#
+     
+        <p>
+            <cfif APPLICATION.IsServerLocal>
+                PS: Development Server
+            <cfelse>
+                PS: Production Server
+            </cfif>
+        </p>
+    </cfsavecontent>
 			
-			<!--- send email --->
-            <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#client.finance_email#">
-                <cfinvokeargument name="email_subject" value="Student Cancellation: #intagent.businessname# -(#qStudentInfo.intrep#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#) - #programname.programname# (#qStudentInfo.programid#)">
-                <cfinvokeargument name="email_message" value="#email_message#">
-            			
-			  <cfif client.companyid lte 5>
-              	<cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#, pat@iseusa.com, ellen@iseusa.com"> 
-			  <cfelse>
-               	<cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#">
-			  </cfif>
-                <cfinvokeargument name="email_from" value="#client.name# <#client.email#>">
-            </cfinvoke>
+<!--- send email --->
+<cfinvoke component="nsmg.cfc.email" method="send_mail">
+	<cfinvokeargument name="email_to" value="#client.finance_email#">
+	<cfinvokeargument name="email_subject" value="Student Cancellation: #intagent.businessname# -(#qStudentInfo.intrep#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#) - #programname.programname# (#qStudentInfo.programid#)">
+	<cfinvokeargument name="email_message" value="#email_message#">
+	<cfif client.companyid lte 5>
+	    <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#, pat@iseusa.com, ellen@iseusa.com"> 
+    <cfelse>
+    	<cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#">
+    </cfif>
+    <cfinvokeargument name="email_from" value="#client.name# <#client.email#>">
+</cfinvoke>
    
     </cfoutput>
 
 <!----End of Email to ---->
     <cflocation url="../index.cfm?curdoc=student_info" addtoken="no">
 <cfelse>
-
-
 
     <cfquery name="cancel_student" datasource="MySql">
         UPDATE 
