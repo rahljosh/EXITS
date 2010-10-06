@@ -122,13 +122,13 @@
         INSERT INTO 
         	smg_active_stu_reasons 
         (
-        	studentid,
+        	studentID,
             userid, 
             reason
         )
         VALUES 
         (
-        	<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">,
+        	<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.active_reason#">
         )
@@ -141,7 +141,7 @@
 		INSERT INTO 
         	smg_regionhistory
 		(
-            studentid, 
+            studentID, 
             regionid, 
             rguarenteeid,	
             stateguaranteeid, 
@@ -152,7 +152,7 @@
         )
 		VALUES
 			(
-            	<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">,
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.region#">,
 				<cfif FORM.regionGuar EQ 'no'>
                     <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
@@ -183,30 +183,30 @@
 		SET 
         	dateassigned = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">
 		WHERE 
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
 		LIMIT 1
 	</cfquery>
 </cfif>
 
 <!--- PROGRAM UPDATED --->
-<cfif qStudentInfo.programid NEQ FORM.program>
+<cfif qStudentInfo.programID NEQ FORM.program>
 
 	<!--- INSERT PROGRAM HISTORY --->
     <cfquery name="program_history" datasource="MySql">
 		INSERT INTO 
         	smg_programhistory
 		(
-        	studentid, 
-            programid, 
+        	studentID, 
+            programID, 
             reason, 
             changedby,  
             date
         )
 		VALUES
         (
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">, 
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">, 
             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">, 
-        	<cfif VAL(qStudentInfo.programid)>
+        	<cfif VAL(qStudentInfo.programID)>
             	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.program_reason#">, 
             <cfelse>
             	<cfqueryparam cfsqltype="cf_sql_varchar" value="Student was unassigned">, 
@@ -217,9 +217,18 @@
 	</cfquery>
     
 	<!--- EMAIL FINANCE DEPARTMENT ONLY IF PREVIOUS PROGRAM IS VALID --->
-    <cfif VAL(qStudentInfo.programid)>
+    <cfif VAL(qStudentInfo.programID)>
     	
     	<cfscript>	
+			// Get Intl. Rep. Info
+			qGetIntlRep = APPCFC.USER.getUserByID(userID=qStudentInfo.intRep);
+
+			// Get Current Program
+			qGetPreviousProgram = APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programID);
+
+			// Get Current Program
+			qGetNewProgram = APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program);
+		
 			// Always send a copy of the email to Admissions
 			emailCC = APPLICATION.EMAIL.admissions;
 			
@@ -227,75 +236,59 @@
 			if ( IsValid("email", APPCFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
 				emailCC = emailCC & ';' & APPCFC.USER.getUserByID(userID=CLIENT.userID).email;				
 			}
+			
+			// Display All Emails Involved
+			emailList = APPLICATION.EMAIL.finance & ';' & emailCC;
+			
+			// Replace ';' with a <br />
+			emailList = ReplaceNoCase(emailList, ';', '<br />', "ALL");
 		</cfscript>
 		
         <cfoutput>
-        <cfsavecontent variable="emailChangeProgram">
-            <p>
-                <h2>Finance Department</h2>
-            </p>
-            
-            <p>
-                This email is to let you know student 
-                #qStudentInfo.firstName# #qStudentInfo.familyLastName# (###qStudentInfo.studentID#) - 
-                #APPCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).companyShort# was assigned to a new program.
-            </p> 
-            
-            <p>
-                SEVIS No.: 
-				<cfif NOT LEN(qStudentInfo.ds2019_no)>
-                	<strong>No SEVIS Number on File</strong>
-				<cfelse>
-                	<strong>#qStudentInfo.ds2019_no#</strong>
-				</cfif>                            
-            </p>
-            
-            <p>
-                Intl. Agent: #APPCFC.USER.getUserByID(userID=qStudentInfo.intRep).businessName# (###qStudentInfo.intRep#)
-            </p>
-        
-            <p>
-                Previous Program Information:
-                #APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programid).programName# (###APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programid).programID#)                         
-            </p>
-            
-            <p>
-                New Program Information: 
+            <cfsavecontent variable="emailChangeProgram">
+                #qStudentInfo.firstName# #qStudentInfo.familyLastName# has been assigned to a new program. <br /><br />
+
+                Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (###qStudentInfo.Studentid#)</strong> <br />
+
+                Division: <strong>#APPCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).companyShort#</strong> <br />
+                
+                Intl. Agent: <strong>#qGetIntlRep.businessName# (###qGetIntlRep.userID#)</strong><br />
+    
+                Previous Program:
+                <strong>#qGetPreviousProgram.programName# (###qGetPreviousProgram.programID#)</strong> <br />                         
+    
+                New Program: 
                 <cfif VAL(FORM.program)>
-                    #APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program).programName# (###APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program).programID#)
+                    <strong>#qGetNewProgram.programName# (###qGetNewProgram.programID#)</strong>
                 <cfelse>
-                    Unassigned
-                </cfif>                                
-            </p>
-        
-            <p>
-                Reason for changing the program: 
-                #FORM.program_reason#
-            </p>
-        
-            <p>
+                    <strong>Unassigned</strong>
+                </cfif> <br />                            
+                
+                Date/Time: <strong>#DateFormat(now(), 'mm/dd/yy')# #TimeFormat(now(), 'hh:mm:ss tt')#</strong> <br />
+    
+                Reason: <strong> #FORM.program_reason# </strong> <br />
+    
+                SEVIS No.: 
+                <cfif NOT LEN(qStudentInfo.ds2019_no)>
+                    <strong>No SEVIS Number on File</strong>
+                <cfelse>
+                    <strong>#qStudentInfo.ds2019_no#</strong>
+                </cfif> <br />                         
+                
                 Assigned By: 
-                #APPCFC.USER.getUserByID(userID=CLIENT.userID).firstName# #APPCFC.USER.getUserByID(userID=CLIENT.userID).lastName# (###CLIENT.userID#)
-                <a href="mailto:#APPCFC.USER.getUserByID(userID=CLIENT.userID).email#">#APPCFC.USER.getUserByID(userID=CLIENT.userID).email#</a>
-            </p>
-            
-            <p>
-                Date/Time: #DateFormat(now(), 'mm/dd/yy')# #TimeFormat(now(), 'hh:mm:ss tt')#
-            </p>                            
-            
-            <p>
-                The following people received this notice:<br />
-                #APPLICATION.EMAIL.finance#;#emailCC#
-            </p>
-            
-            <p>
-                <cfif APPLICATION.IsServerLocal>
-                    PS: Development Server
-                <cfelse>
-                    PS: Production Server
-                </cfif>
-            </p>
-        </cfsavecontent>
+                <strong>#APPCFC.USER.getUserByID(userID=CLIENT.userID).firstName# #APPCFC.USER.getUserByID(userID=CLIENT.userID).lastName# (###CLIENT.userID#)</strong> <br /><br />
+                
+                The following people received this notice: <br /> 
+                <strong>#emailList#</strong> <br /> <br />
+                
+                <p>
+                    <cfif APPLICATION.IsServerLocal>
+                        PS: Development Server
+                    <cfelse>
+                        PS: Production Server
+                    </cfif>
+                </p>
+            </cfsavecontent>
         </cfoutput>
 
 		<!--- send email --->
@@ -307,13 +300,13 @@
             <cfinvokeargument name="email_message" value="#emailChangeProgram#">
         </cfinvoke>
 	
-	</cfif>    
+	</cfif> 
+    <!--- END OF EMAIL FINANCE DEPARTMENT ONLY IF PREVIOUS PROGRAM IS VALID --->   
 
 </cfif>
 
 <!---  CANCELLING A STUDENT --->
 <cfif IsDefined('FORM.student_cancel')>
-
 
 	<cfif VAL(qStudentInfo.hostid) AND NOT LEN(qStudentInfo.canceldate)>
 		<cfquery name="hostchangereason" datasource="MySql">		
@@ -321,7 +314,7 @@
             	smg_hosthistory	
             (
             	hostid, 
-                studentid, 
+                studentID, 
                 schoolid, 
                 dateofchange, 
                 arearepid, 
@@ -332,7 +325,7 @@
 			VALUES
             (
 				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.hostid#">, 
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">,                 
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">,                 
 				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.schoolid#">,                 
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">,              
 				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.arearepid#">,                 
@@ -351,66 +344,99 @@
 			cancelreason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancelreason#">, 
 			active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 		WHERE 
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
 		LIMIT 1
 	</cfquery>
-<!----Send Email to Finace Email, prgram manager, others---->
-<cfoutput>
-
-    <cfquery name="intagent" datasource="#application.dsn#">
-        select businessname
-        from smg_users
-        where userid = #qStudentInfo.intrep#
-    </cfquery>
     
-    <cfquery name="programname" datasource="#application.dsn#">
-        select programname
-        from smg_programs
-        where programid = #qStudentInfo.programid#
-    </cfquery>
+	<!--- Send Cancelation Email to finance, program manager, others | Only Send if student is current active --->
+	<cfif NOT LEN(qStudentInfo.canceldate)>
+	
+		<cfscript>
+            // Get Intl. Rep. Info
+            qGetIntlRep = APPCFC.USER.getUserByID(userID=qStudentInfo.intRep);
     
-    <cfsavecontent variable="email_message">
-        #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been cancelled.
-        <br /><br />
-        Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#)</strong><br />
-        Int Agent: <strong>#intagent.businessname# (#qStudentInfo.intrep#)</strong><br />
-        Program: <strong>#programname.programname# (#qStudentInfo.programid#)</strong><br />
-        Cancel Date: <strong>#DateFormat(FORM.date_canceled,'mm/dd/yyyy')#</strong><br />
-        Reason: <strong>#FORM.cancelreason#</strong><br />
-        Placement Approved: <cfif qStudentInfo.date_host_fam_approved is ''>Unplaced<cfelse>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</cfif> <br />
-        Sevis:  <cfif qStudentInfo.sevis_fee_paid_date is ''>Not Paid<cfelse>#DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</cfif><br />
-        SEVIS No.: <cfif qStudentInfo.ds2019_no is ''><strong>No SEVIS Number on File</strong><cfelse> <strong> #qStudentInfo.ds2019_no#</strong></cfif><br />
-        Cancelled By: #client.name# - #client.email#<br /><br />
+            // Get Current Program
+            qGetProgramInfo = APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programID);		
+            
+            // Email CC List
+            if ( CLIENT.companyID LTE 5 ) {
+                emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email & ';' & 'pat@iseusa.com;ellen@iseusa.com';
+            } else { 
+                emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
+            }
+                
+            // Display All Emails Involved
+            emailList = CLIENT.finance_email & ';' & emailCC;
+            
+            // Replace ';' with a <br />
+            emailList = ReplaceNoCase(emailList, ';', '<br />', "ALL");
+        </cfscript>
+    
+        <cfoutput>
+            <cfsavecontent variable="email_message">
+                #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been cancelled. <br /><br />
+                
+                Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (###qStudentInfo.Studentid#)</strong><br />
+                
+                Intl. Agent: <strong>#qGetIntlRep.businessName# (###qGetIntlRep.userID#)</strong><br />
+                
+                Program: 
+                <strong>#qGetProgramInfo.programName# (###qGetProgramInfo.programID#)</strong> <br />
+                
+                Cancel Date: <strong>#DateFormat(FORM.date_canceled,'mm/dd/yyyy')#</strong><br />
+                
+                Reason: <strong>#FORM.cancelreason#</strong><br />
+                
+                Placement Approved: 
+                <cfif qStudentInfo.date_host_fam_approved is ''>
+                    <strong>Unplaced</strong>
+                <cfelse>
+                    <strong>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</strong>
+                </cfif> <br />
+    
+                SEVIS No.: 
+                <cfif NOT LEN(qStudentInfo.ds2019_no)>
+                    <strong>No SEVIS Number on File</strong>
+                <cfelse>
+                    <strong>#qStudentInfo.ds2019_no#</strong>
+                </cfif> <br />                         
+            
+                SEVIS Fee: 
+                <cfif qStudentInfo.sevis_fee_paid_date is ''>
+                    <strong>Not Paid</strong>
+                <cfelse>
+                    <strong>Paid on #DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</strong>
+                </cfif> <br />
+                
+                Cancelled By: <strong>#CLIENT.name# - #CLIENT.email#</strong> <br /><br />
+                
+                The following people received this notice: <br /> 
+                <strong>#emailList#</strong> <br /> <br />
+             
+                <p>
+                    <cfif APPLICATION.IsServerLocal>
+                        PS: Development Server
+                    <cfelse>
+                        PS: Production Server
+                    </cfif>
+                </p>
+            </cfsavecontent>
+        </cfoutput>
+    	
+        <!--- send email --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_from" value="#CLIENT.name# <#CLIENT.email#>">
+            <cfinvokeargument name="email_to" value="#CLIENT.finance_email#">
+            <cfinvokeargument name="email_cc" value="#emailCC#"> 
+            <cfinvokeargument name="email_subject" value="Student Cancellation: #qGetIntlRep.businessname# (###qGetIntlRep.userID#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (###qStudentInfo.Studentid#) - #qGetProgramInfo.programname# (###qGetProgramInfo.programID#)">
+            <cfinvokeargument name="email_message" value="#email_message#">
+        </cfinvoke>
         
-        The following people received this notice:<br />
-        #client.projectmanager_email# #client.finance_email# #client.email#
-     
-        <p>
-            <cfif APPLICATION.IsServerLocal>
-                PS: Development Server
-            <cfelse>
-                PS: Production Server
-            </cfif>
-        </p>
-    </cfsavecontent>
-			
-<!--- send email --->
-<cfinvoke component="nsmg.cfc.email" method="send_mail">
-	<cfinvokeargument name="email_to" value="#client.finance_email#">
-	<cfinvokeargument name="email_subject" value="Student Cancellation: #intagent.businessname# -(#qStudentInfo.intrep#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (#qStudentInfo.Studentid#) - #programname.programname# (#qStudentInfo.programid#)">
-	<cfinvokeargument name="email_message" value="#email_message#">
-	<cfif client.companyid lte 5>
-	    <cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#, pat@iseusa.com, ellen@iseusa.com"> 
-    <cfelse>
-    	<cfinvokeargument name="email_cc" value="#client.projectmanager_email#,  #client.email#">
     </cfif>
-    <cfinvokeargument name="email_from" value="#client.name# <#client.email#>">
-</cfinvoke>
-   
-    </cfoutput>
-
-<!----End of Email to ---->
+    <!--- End of Send Cancelation Email to finance, program manager, others | Only Send if student is current active --->
+    
     <cflocation url="../index.cfm?curdoc=student_info" addtoken="no">
+
 <cfelse>
 
     <cfquery name="cancel_student" datasource="MySql">
@@ -421,9 +447,10 @@
             cancelreason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">, 
             active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         WHERE 
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentid#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
         LIMIT 1
     </cfquery>
+
 </cfif>
 
 <cftransaction>
@@ -445,7 +472,7 @@
         <cfelse>
 	        jan_app = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.jan_app#">,
         </cfif>
-		<cfif isDefined('FORM.team_id')>companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.team_id#">, </cfif>	
+		<cfif isDefined('FORM.team_id')>companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.team_id#">, </cfif>	
 		iffschool = <cfif IsDefined('FORM.iff_check')>'#FORM.iffschool#'<cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,		
         scholarship = <cfif IsDefined('FORM.scholarship')> <cfqueryparam cfsqltype="cf_sql_integer" value="1"> <cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,                      
 		privateschool = <cfif IsDefined('FORM.privateschool_check')>'#FORM.privateschool#'<cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,
@@ -455,10 +482,10 @@
 		direct_place_nature = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.direct_place_nature#">,
 		verification_received =  <cfif FORM.verification_form EQ ''>null<cfelse>#CreateODBCDate(FORM.verification_form)#</cfif>,	
 		ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_no#">,
-		programid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.program#">,
+		programID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.program#">,
 		intrep = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.intrep#">
 	WHERE 
-    	studentid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qStudentInfo.studentid#">
+    	studentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qStudentInfo.studentID#">
 	LIMIT 1
 </cfquery>
 
