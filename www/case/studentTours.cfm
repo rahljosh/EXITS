@@ -250,7 +250,7 @@ provided for real emergencies only!</p></span>
 
 <p>Are these tours chaperoned?</p>
 <span class="normtext">
-<p>Our programs are chaperoned and supervised by our professional tour staff as well as chaperones from our partner exchange programs.</p></span>
+<p>Our programs are chaperoned and supervised by our professional tour staff as well as chaperones from our exchange program.</p></span>
 <span class="backToTop"><a href= #gQuestions><p>Back to top</p></a></span>
 
 <p>Are there areas and times that  students are not supervised?</p>
