@@ -1,6 +1,2 @@
-<!--- Redirect users to http://blog.iseusa.com/ --->
-<cfsilent>
-	
-    <cflocation url="http://blog.iseusa.com/" addtoken="no">
-    
-</cfsilent>
+<cfheader statuscode="301" statustext="Moved Permanently">
+<cfheader name="Location" value="http://blog.iseusa.com/">

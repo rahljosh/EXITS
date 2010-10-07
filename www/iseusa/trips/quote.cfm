@@ -140,7 +140,9 @@ margin-left: 0px;
 .border{border:solid 1px;}
 h3{text-indent:10px;}	
 -->
-</style></head>
+</style>
+</head>
+
 <cfparam name="url.tour_id" default="1">
 <cfparam name="form.select_trip" default="#url.tour_id#">
 <cfparam name="form.select_trip" default="#url.tour_id#">
@@ -275,7 +277,7 @@ A flight quote has been requested by this student:<Br />
                     <Cfset row = 0>
                     <cfloop list="#form.select_trip#" index="i">
                     	<cfset row = #row# + 1>
-                        <cfquery name="tripInfo" datasource="#application.dsn#">
+                        <cfquery name="tripInfo" datasource="#APPLICATION.DSN.Source#">
                         select *
                         from smg_tours
                         where tour_id = #i#
@@ -318,14 +320,14 @@ A flight quote has been requested by this student:<Br />
 </cfoutput>
 <!----Check if Info is available---->
 <cfif isDefined('form.lookup')>
-    <Cfquery name="stuInfo" datasource="#application.dsn#">
+    <Cfquery name="stuInfo" datasource="#APPLICATION.DSN.Source#">
     SELECT s.studentid, s.dob, s.sex, s.arearepid, s.hostid, s.studentid, s.email, s.familylastname, s.firstname, s.med_allergies, s.other_allergies
     FROM smg_students s
     WHERE email = '#form.email#'
     </Cfquery>
     <cfset acctVerified = #stuInfo.recordcount#>
 	<cfif stuInfo.recordcount eq 1 and stuInfo.hostid gt 0>
-        <cfquery name="hostInfo" datasource="#application.dsn#">
+        <cfquery name="hostInfo" datasource="#APPLICATION.DSN.Source#">
         select h.familylastname, h.fatherlastname, h.fatherfirstname, h.motherlastname, h.motherfirstname,
         h.address, h.address2, h.city, h.state, h.zip, h.email, h.phone, h.local_air_code, h.major_air_code, h.father_cell, h.mother_cell
         from smg_hosts h
@@ -357,7 +359,7 @@ A flight quote has been requested by this student:<Br />
             <h2>Please be sure to keep an eye on your email. You'll receive your requsted quote shortly.</cfoutput>  </h2>
         <cfelse>   
         
-        <cfquery name="trips" datasource="#application.dsn#">
+        <cfquery name="trips" datasource="#APPLICATION.DSN.Source#">
         select *
         from smg_tours
         where tour_status = 'active'

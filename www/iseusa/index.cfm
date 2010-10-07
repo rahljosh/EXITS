@@ -1,14 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>(ISE) International Student Exchange - A Non-profit Organization for Tomorrow's Leaders</title>
-<meta name="description" content="International Student Exchange, Helping kids in a more diverse world, Non-Profit"/>
-
-<meta name="keywords" content="foreign exchange, Cultural Diversity, Student Exchange. Travel Abroad, Meet our Students, Be a Host Family "/>
-<link rel="shortcut icon" href="favicon.ico" />
-<!---This defines the area of the div area to swap---->
+<cfinclude template="extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
+<script type="text/javascript" language="JavaScript">
+    var GB_ROOT_DIR = "http://www.iseusa.com/greybox/";
+</script>
+<script type="text/javascript" src="greybox/AJS.js"></script>
+<script type="text/javascript" src="greybox/AJS_fx.js"></script>
+<script type="text/javascript" src="greybox/gb_scripts.js"></script>
+<link href="greybox/gb_styles.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" language="JavaScript">
+<!-- Script to Swap div area
+	function HideDIV(d) { document.getElementById(d).style.display = "none"; }
+	function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
+//-->
+</script>
 <style type="text/css">
+<!--
+/*** This defines the area of the div area to swap  ***/
 .mybox { width:741px; height:307px;padding:0px;background-image:url('images/white_background.png'); background-position:center; background-repeat:no-repeat; }
 .MOtext {
 	
@@ -54,27 +60,8 @@
 	font-size: 10px;
 	font-weight: bold;
 }
-</style>
-<script type="text/javascript" language="JavaScript">
-    var GB_ROOT_DIR = "http://www.iseusa.com/greybox/";
-</script>
-<script type="text/javascript" src="greybox/AJS.js"></script>
-<script type="text/javascript" src="greybox/AJS_fx.js"></script>
-<script type="text/javascript" src="greybox/gb_scripts.js"></script>
-<link href="greybox/gb_styles.css" rel="stylesheet" type="text/css" />
-<!----Script to Swap div area---->
-<script type="text/javascript" language="JavaScript"><!--
-function HideDIV(d) { document.getElementById(d).style.display = "none"; }
-function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
-//--></script>
+/*** ***/
 
-
-	<script type="text/javascript" src="jquery-1.2.6.min.js"></script> 
-	<script type="text/javascript" src="jquery.badBrowser.js"></script> 
-
-<link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
-<!--
 a:link {
 	color: #165EA9;
 	text-decoration: none;
@@ -92,7 +79,8 @@ a:active {
 	text-decoration: none;
 }
 -->
-</style></head>
+</style>
+</head>
 
 <body class="oneColFixCtr">
 <div id="topBar">
@@ -118,7 +106,7 @@ a:active {
         
         <span class="MOtext" style="background-color: #E6F2D5;">
         <strong>Meet our Students</strong><br /><br />
-         ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meetStudents.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
+         ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meet-our-students.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
         <span class="bigImage"><img src="images/subPages/subMeetStudents_03.gif" /></span>
       	</div>
            
@@ -129,7 +117,7 @@ a:active {
         <span class="MOtext" style="background-color: #ffefd6;"> 
         <strong>Be a Host Family</strong><br /><br />
         Hosting a foreign exchange student is a life changing experience that brings the world closer together.  See the world through the eyes of a foreign exchange student and exchange the world!
-        <br /><br /><p align="center"><a href="beAhost.cfm"><img src="images/buttons/OreadMore.png" border="0"></a></p></span>
+        <br /><br /><p align="center"><a href="become-a-host-family.cfm"><img src="images/buttons/OreadMore.png" border="0"></a></p></span>
         <span class="bigImage"><img src="images/subPages/subBahost.gif" /></span>
       </div>
         <!---Travel Abroad---->
@@ -143,7 +131,7 @@ a:active {
         <span class="MOtext" style="background-color: #D0EDF9;"> 
         <strong>Student Trips</strong><br /><br />
         We offer many trips for our students throughout the school year.
-        <br /><br /><p align="center"><a href="trips/index.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
+        <br /><br /><p align="center"><a href="trips/exchange-student-trips.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
         <span class="bigImage"><img src="images/subPages/subStudentTrips.gif" /></span>
         </div>
         <!---webstore---->
@@ -167,7 +155,7 @@ a:active {
 
 </div>
 <!----End of Area that Mouse Overs will effect---->
-<div id="bottomInfoRight"><a href="hostStudent.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="projectHelp.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
+<div id="bottomInfoRight"><a href="hostStudent.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
 <table width="210" border="0" style="margin-left:0px;">
   <tr>
     <th scope="row" align="left">
@@ -182,7 +170,7 @@ a:active {
 <!-- end bottomInfoRight --></div>
 <div id="bottomInfoLeft">
   <div class="top"><!-- end top --></div>
-  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="sSuccess.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://www.america.gov/multimedia/video.html?videoId=221196877001" target="_blank"><img src="images/YESprogram_12.gif"alt="blog" border="0"/></a><a href="http://www.youtube.com/watch?v=YRP3PbaE-cA"><img src="images/video_13.gif" width="236" height="171" border="0" /></a></div>
+  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://www.america.gov/multimedia/video.html?videoId=221196877001" target="_blank"><img src="images/YESprogram_12.gif"alt="blog" border="0"/></a><a href="http://www.youtube.com/watch?v=YRP3PbaE-cA" target="_blank"><img src="images/video_13.gif" width="236" height="171" border="0" /></a></div>
   <div class="bottom"></div>
 <!-- end bottomInfoLeft --></div>
 <h1>&nbsp;</h1>

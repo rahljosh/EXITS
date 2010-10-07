@@ -48,8 +48,8 @@ table {
 	width: 600px;
 }
 -->
-</style></head>
-
+</style>
+</head>
 <body class="oneColFixCtr">
 <div id="topBar">
 <cfinclude template="../topBarLinks.cfm">
@@ -68,7 +68,7 @@ table {
           <table width="603" height="229" border="0">
             <tr>
               <td width="597" height="45" align="center" scope="row" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-                <a href="/">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
+                <a href="/trips">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
               </tr>
             <tr>
               <td height="178" class="lightGreen" scope="row"><H2>ALL FIELDS ARE REQUIRED  </h2>
@@ -95,7 +95,7 @@ table {
               </td>
               </tr>
               <td width="597" height="45" align="center" scope="row" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-                <a href="/">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
+                <a href="/trips">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="forms.cfm">Forms</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
           </table>
           <div class="clear"></div>
         <!-- end trips --></div>

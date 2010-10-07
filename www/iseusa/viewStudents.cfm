@@ -1,14 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>(ISE) International Student Exchange - Foreign Exchange S</title>
-<style type="text/css">
-<!--
--->
-</style>
-
-<link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
+<cfinclude template="extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
 <style type="text/css">
 <!--
 a:link {
@@ -27,8 +17,8 @@ a:active {
 	text-decoration: none;
 }
 -->
-</style></head>
-
+</style>
+</head>
 <body class="oneColFixCtr">
 <div id="topBar">
 <cfinclude template="topBarLinks.cfm">
@@ -47,15 +37,18 @@ a:active {
           <table width="600" border="0" color="8DC540"> 
           
    <Cfif not isdefined('client.hostid') or client.hostid eq 0>
-   	<tr>
-    	<td> 
-   		You must be logged into to view students. If you have your login or need to register, visit <a href="http://www.iseusa.com/meetStudents.cfm">http://www.iseusa.com/meetStudents.cfm</a>.
+   	<cfoutput>
+    <tr>
+    	<td>
+   			You must be logged into to view students. <br />
+			If you have your login or need to register, visit <a href="http://#cgi.SERVER_NAME#/meet-our-students.cfm">http://#cgi.SERVER_NAME#/meet-our-students.cfm</a>.
         </td>
      </tr>
      </table>
+     </cfoutput>
    <cfelse>
    
-   	<cfquery name="get_students" datasource="#application.dsn#">
+   	<cfquery name="get_students" datasource="#APPLICATION.DSN.Source#">
 	SELECT     	studentid,  dob, firstname, interests, interests_other, smg_countrylist.countryname, smg_religions.religionname
 	FROM       	smg_students
 	INNER JOIN 	smg_countrylist ON smg_countrylist.countryid = smg_students.countryresident
@@ -88,7 +81,7 @@ a:active {
             Religion: #get_students.religionname#<br />
             Interests:
                  <cfloop list=#get_students.interests# index=i>
-				<cfquery name="get_interests" datasource="#application.dsn#">
+				<cfquery name="get_interests" datasource="#APPLICATION.DSN.Source#">
 				Select interest 
 				from smg_interests 
 				where interestid = #i#

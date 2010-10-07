@@ -33,8 +33,8 @@ a:active {
 	text-decoration: none;
 }
 -->
-</style></head>
-
+</style>
+</head>
 <body class="oneColFixCtr">
 <div id="topBar">
 <div id="logoBox"><a href="/"><img src="../images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>

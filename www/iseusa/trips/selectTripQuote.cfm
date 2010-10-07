@@ -140,7 +140,9 @@ margin-left: 0px;
 .border{border:solid 1px;}
 h3{text-indent:10px;}	
 -->
-</style></head>
+</style>
+</head>
+
 <cfparam name="url.tour_id" default="1">
 <cfparam name="stuEdit" default="1">
 <!----Student Info---->
@@ -172,7 +174,7 @@ h3{text-indent:10px;}
   <div class="whtMiddletours2">
         <div class="tripsTours">
            
-        <cfquery name="trips" datasource="#application.dsn#">
+        <cfquery name="trips" datasource="#APPLICATION.DSN.Source#">
         select *
         from smg_tours
         where tour_status = 'active'

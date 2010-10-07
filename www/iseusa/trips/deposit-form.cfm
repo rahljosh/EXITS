@@ -45,7 +45,9 @@ a:active {
 	padding-left: 0px;
 }
 -->
-</style></head>
+</style>
+</head>
+
 <script src="../flash/menu.js"></script>
 
 <script language="JavaScript">

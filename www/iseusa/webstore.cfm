@@ -1,14 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>(ISE) International Student Exchange - Foreign Exchange S</title>
-<style type="text/css">
-<!--
--->
-</style>
-
-<link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
+<cfinclude template="extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
 <style type="text/css">
 <!--
 a:link {
@@ -40,7 +30,8 @@ a:active {
 	min-height: 400px;
 }
 -->
-</style></head>
+</style>
+</head>
 
 <body class="oneColFixCtr">
 <div id="topBar">
@@ -80,9 +71,6 @@ a:active {
     <h1>&nbsp;</h1>
     <!-- end mainContent --></div>
 <!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer1">
-<cfinclude template="bottomLinks.cfm">
-<!-- end footer --></div>
-</body>
-</html>
+
+<!--- Include Page Header --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">

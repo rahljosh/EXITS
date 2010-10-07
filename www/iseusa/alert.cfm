@@ -56,7 +56,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
     <div id="initDiv" class="mybox">
       <span class="MOtext" style="background-color: #E6F2D5;">
         <strong>Meet our Students</strong><br /><br />
-         ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meetStudents.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
+         ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meet-our-students.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
         <span class="bigImage"><img src="images/subPages/subMeetStudents.gif" /></span>
 	</div>
          <!---Meet our Students---->
@@ -65,7 +65,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
         
         <span class="MOtext" style="background-color: #E6F2D5;">
         <strong>Meet our Students</strong><br /><br />
-         ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meetStudents.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
+         ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meet-our-students.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
         <span class="bigImage"><img src="images/subPages/subMeetStudents.gif" /></span>
       	</div>
            
@@ -76,7 +76,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
         <span class="MOtext" style="background-color: #ffefd6;"> 
         <strong>Be a Host Family</strong><br /><br />
         Hosting a foreign exchange student is a life changing experience that brings the world closer together.  See the world through the eyes of a foreign exchange student and exchange the world!
-        <br /><br /><p align="center"><a href="beAhost.cfm"><img src="images/buttons/OreadMore.png" border="0"></a></p></span>
+        <br /><br /><p align="center"><a href="become-a-host-family.cfm"><img src="images/buttons/OreadMore.png" border="0"></a></p></span>
         <span class="bigImage"><img src="images/subPages/subBahost.gif" /></span>
       </div>
         <!---Travel Abroad---->
@@ -90,7 +90,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
         <span class="MOtext" style="background-color: #D0EDF9;"> 
         <strong>Student Trips</strong><br /><br />
         We offer many trips for our students throughout the school year.
-        <br /><br /><p align="center"><a href="trips/index.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
+        <br /><br /><p align="center"><a href="trips/exchange-student-trips.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
         <span class="bigImage"><img src="images/subPages/subStudentTrips.gif" /></span>
         </div>
         <!---webstore---->
@@ -114,7 +114,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 
 </div>
 <!----End of Area that Mouse Overs will effect---->
-<div id="bottomInfoRight"><a href="hostStudent.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="projectHelp.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
+<div id="bottomInfoRight"><a href="hostStudent.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
 <table width="200" border="0">
   <tr>
     <th scope="row"><a href="http://www.esecutive.com/index.php"><img src="images/globalSec.gif" width="108" height="28" border="1" /></a></th>
@@ -124,16 +124,12 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <!-- end bottomInfoRight --></div>
 <div id="bottomInfoLeft">
   <div class="top"><!-- end top --></div>
-  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="sSuccess.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://blog.iseusa.com/" target="_blank"><img src="images/Blog.gif" width="469" height="167" alt="blog" border="0"/></a></div>
+  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://blog.iseusa.com/" target="_blank"><img src="images/Blog.gif" width="469" height="167" alt="blog" border="0"/></a></div>
   <div class="bottom"></div>
 <!-- end bottomInfoLeft --></div>
 <h1>&nbsp;</h1>
   <!-- end mainContent --></div>
 <!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer">
-  <div class="clear"></div>
-<cfinclude template="bottomLinks.cfm">
-<!-- end footer --></div>
-</body>
-</html>
+
+<!--- Include Page Header --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">

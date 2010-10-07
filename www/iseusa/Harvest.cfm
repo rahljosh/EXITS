@@ -1,14 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>(ISE) International Student Exchange - Student Success Stories</title>
-<style type="text/css">
-<!--
--->
-</style>
-
-<link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
+<cfinclude template="extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
 <style type="text/css">
 <!--
 table {
@@ -53,8 +43,8 @@ a:active {
 	text-decoration: none;
 }
 -->
-</style></head>
-
+</style>
+</head>
 <body class="oneColFixCtr">
 <div id="topBar">
 <cfinclude template="topBarLinks.cfm">
@@ -73,7 +63,7 @@ a:active {
      <table width="633">
       <tr>
        <td height="45" colspan="2" align="center" scope="row" ><img src="images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-        <a href="comService.cfm">Service</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Thanksgiving.cfm">Thanksgiving</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Harvest.cfm"> Parties</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Rollerskating.cfm">Rollerskating</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="NYTrip.cfm">NY Trip</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Bowling.cfm">Bowling</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="articles.cfm">Articles</a><img src="images/webStore_lines_06.gif" width="600" height="14" /></th>
+        <a href="community-service.cfm">Service</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Thanksgiving.cfm">Thanksgiving</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Harvest.cfm"> Parties</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Rollerskating.cfm">Rollerskating</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="NYTrip.cfm">NY Trip</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Bowling.cfm">Bowling</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="in-the-news.cfm">Articles</a><img src="images/webStore_lines_06.gif" width="600" height="14" /></th>
        </tr>
       <tr>
        <td height="120px" colspan="2" scope="row" class="p2">
@@ -96,9 +86,6 @@ a:active {
    <!-- end lead --></div>
   <!-- end mainContent --></div>
 <!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer1">
-<cfinclude template="bottomLinks.cfm">
-<!-- end footer --></div>
-</body>
-</html>
+
+<!--- Include Page Header --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">

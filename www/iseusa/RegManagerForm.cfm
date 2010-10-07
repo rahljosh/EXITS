@@ -36,7 +36,7 @@
 </head>
 <!----Query to get states and id's---->
 
-<cfquery name="states" datasource="#application.dsn#">
+<cfquery name="states" datasource="#APPLICATION.DSN.Source#">
 select id, state
 from smg_states
 </cfquery>

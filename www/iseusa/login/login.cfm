@@ -22,8 +22,8 @@ a:active {
 	color: #666;
 }
 -->
-</style></head>
-
+</style>
+</head>
 <body>
 <div id="spacer"></div>
 <div id="header"><!-- end topbuttons -->
