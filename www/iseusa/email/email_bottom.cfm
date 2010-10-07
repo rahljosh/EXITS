@@ -3,7 +3,7 @@
     </table>
 <cfoutput>
 
- <Cfquery name="company_info" datasource="#application.dsn#">
+ <Cfquery name="company_info" datasource="#APPLICATION.DSN.Source#">
  select fax, toll_free, phone, company_color
  from smg_companies
  where companyid = #client.companyid#

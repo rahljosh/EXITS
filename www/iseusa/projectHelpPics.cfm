@@ -76,9 +76,6 @@ table {
 <!-- end lead --></div>
   <!-- end mainContent --></div>
 <!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer1">
-<cfinclude template="bottomLinks.cfm">
-<!-- end footer --></div>
-</body>
-</html>
+
+<!--- Include Page Header --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">

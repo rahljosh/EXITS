@@ -1,14 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>(ISE) International Student Exchange - Foreign Exchange S</title>
-<style type="text/css">
-<!--
--->
-</style>
-
-<link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
+<cfinclude template="extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
 <style type="text/css">
 <!--
 a:link {
@@ -26,22 +16,45 @@ a:hover {
 a:active {
 	text-decoration: none;
 }
-.whtMiddle1 {
+under {
+	color: #900;
+	text-decoration: underline;
+}
+
+under:link {
+	color: #900;
+	text-decoration: underline;
+}
+under:visited {
+	text-decoration: underline;
+	color: #000;
+}
+under:hover {
+	text-decoration: underline;
+	color: #999;
+}
+under:active {
+	text-decoration: underline;
+}
+.whtMiddleAcc {
 	background-image: url(images/whtBoxMiddle.png);
 	background-repeat: repeat-y;
 	margin: 0px;
-	height: auto;
-	min-height: 50px;
 	text-align: justify;
 	padding-top: 20px;
 	padding-right: 0px;
 	padding-bottom: 0px;
 	padding-left: 0px;
-	min-height: 1250px;
+	height: 1825px;
+}
+.clearFixLG {
+	display: block;
+	clear: both;
+	height: 20px;
 }
 -->
-</style></head>
-
+</style>
+</head>
 <body class="oneColFixCtr">
 
 <div id="topBar">
@@ -55,7 +68,7 @@ a:active {
 <div id="mainContent">
     <div id="subPages">
       <div class="whtTop"></div>
-      <div class="whtMiddle1">
+      <div class="whtMiddleAcc">
         <div class="shopping">
           <h1 class="enter">Accessories</h1>
           <table width="593" height="333" border="0" cellpading=0 cellspacing="0">
@@ -89,11 +102,11 @@ a:active {
                 <img src="images/webstore/greenLine.gif" width="208" height="20" /><br /> 
                 <FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="mug" id="mug" target="loja">               
                <INPUT NAME="Qty" class="style1" VALUE="" size=2> 
-                Quantity - <strong>$0.75</strong> each      
+                Quantity - <strong>$0.40</strong> each      
                 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'> 
                 <INPUT TYPE="HIDDEN" NAME="ID" VALUE="IP">
                 <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Pens">
-                <INPUT TYPE="HIDDEN" NAME="Price" VALUE="0.75">
+                <INPUT TYPE="HIDDEN" NAME="Price" VALUE="0.40">
                 <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
                 <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y"> <br />
 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
@@ -134,11 +147,11 @@ a:active {
                 blue with white logo. 2 3/8&quot; h x 4 1/8&quot; w.<br /><br /><img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
                 
                   <INPUT NAME="Qty" class="style1" VALUE="" size=3>
-      Quantity - <strong>$1.50</strong> each  
+      Quantity - <strong>$1.25</strong> each  
  			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="LT">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Luggage Tag">
-            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="1.50">
+            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="1.25">
             <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
             <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
                   
@@ -189,10 +202,13 @@ a:active {
                 </FORM>
 </th>
             </tr>
+            <tr>
+            	<td>&nbsp;</td>
+            </tr>
                      <tr>
               <th class="lightGreen" scope="row"><img src="images/webstore/keychain.jpg" width="190" height="160" /></th>
               <td>&nbsp;</td>
-              <td class="lightGreen" align="center">&nbsp;</td>
+              <td class="lightGreen" align="center"><img src="images/webstore/2917ntopperscapsmall.jpg" width="150" height="150" alt="ise hat" /></td>
             </tr>
             <tr>
               <th class="lightGreen" scope="row">
@@ -203,7 +219,7 @@ a:active {
 			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
      		 Quantity - <strong>$1.25</strong> each 
  			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
-            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="GMRC">
+            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="KC">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Key Chain">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="1.25">
             <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
@@ -214,52 +230,113 @@ a:active {
                 </FORM>
               </th>
               <td>&nbsp;</td>
-              <th class="lightGreen">
-              <FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="mug" id="mug" target="loja">
-              </FORM>
-</th>
+              <th class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="cap" id="cap" target="loja">
+              ISE Ball Cap - Relaxed golf cap - <br />
+              khaki with Navy ISE logo. Low profile<br />
+                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
+			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
+     		 Quantity - <strong>$9.00</strong> each 
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="BC">
+            <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Ball Cap">
+            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="9.00">
+            <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+            <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
+                
+                <br />
+                 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
+              </FORM></th>
             </tr>
             <tr>
             
             	<td>&nbsp;</td>
             </tr>
-            <!----
+         
             <tr>
-              <th class="lightGreen" scope="row"><img src="images/335albumsmall.jpg" width="191" height="150" border="1" /></th>
+              <th class="lightGreen" scope="row"><img src="images/webstore/tote.jpg" width="200" height="150" border="1" /></th>
               <td>&nbsp;</td>
               <th class="lightGreen"><img src="images/webstore/calendar.jpg" width="172" height="150" border="1" /></th>
             </tr>
             <tr>
-              <th class="lightGreen" scope="row">
-              
-              Photo Album
-                <br />   	Khaki with White Logo and Black Spine<br />
-                $6.00 each<br /><a href="https://www.e-junkie.com/ecom/gb.php?c=cart&i=691191&cl=115784&ejc=2" target="ej_ejc" class="ec_ejc_thkbx" onClick="javascript:return EJEJC_lc(this);"><img src="http://www.e-junkie.com/ej/ej_add_to_cart.gif" border="0" alt="Add to Cart"/></a></th>
+              <th class="lightGreen" scope="row"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="bag" id="bag" target="loja">
+              Tote Bag - Natural with Royal ISE Logo<br />
+                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
+			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
+     		 Quantity - <strong>$4.50</strong> each 
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="TBG">
+            <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Tote Bag">
+            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="4.50">
+            <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+            <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
+                
+                <br />
+                 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
+                </FORM></th>
               <td>&nbsp;</td>
-              <th class="lightGreen">Pocket Calendar
+              <th class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="bag" id="bag" target="loja">
+              Monthly Calendar -<br />
+              7&quot; x 10&quot; with large Boxes
+              <br />
+                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
+			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
+     		 Quantity - <strong>$3.00</strong> each 
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="CDR">
+            <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Calendar">
+            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="3.00">
+            <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+            <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
+                
                 <br />
-                   	Black cover with white logo pocket calenders for the calender year 2010.
+                 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
+              </FORM></th>
+            </tr>
+            <tr>
+            	<td>&nbsp;</td>
+            </tr>
+            <tr>
+              <th class="lightGreen" scope="row"><img src="images/webstore/carmagnet-01.jpg" width="225" height="150" border="1" /></th>
+              <td>&nbsp;</td>
+              <th class="lightGreen"><p>If you are ordering the magnet, <br />
+                please&nbsp;<a href="pdfs/carmagnetInfo.pdf" title="Car Magnet Info" target="_blank" class="under"><u>download this pdf</u></a>,<br />
+                  fill in the
+              information and send to <a href="mailto:budge@iseusa.com">budge@iseusa.com</a><a href="pdfs/carmagnetInfo.pdf" title="Car Magnet Info" target="_blank"></a></p></th>
+            </tr>
+            <tr>
+              <th class="lightGreen" scope="row"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="bag" id="bag" target="loja">
+              Magnets - Fully Personalized 12&quot; x 18&quot;<br />
+                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
+			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
+     		 Quantity - <strong>$19.00</strong> each 
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="MGT">
+            <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Car Magnet">
+            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="19.00">
+            <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+            <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
+                
                 <br />
-                $1.49 each<br /><a href="https://www.e-junkie.com/ecom/gb.php?c=cart&i=691193&cl=115784&ejc=2" target="ej_ejc" class="ec_ejc_thkbx" onClick="javascript:return EJEJC_lc(this);"><img src="http://www.e-junkie.com/ej/ej_add_to_cart.gif" border="0" alt="Add to Cart"/></a></th>
+                 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
+                </FORM></th>
+              <td>&nbsp;</td>
+              <th class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="bag" id="bag" target="loja">
+              </FORM></th>
             </tr>
             <tr>
               <th colspan="3" scope="row" align="center"><img src="images/webStore_lines_06.gif" width="600" height="15" alt="line" /><a href="webstoreClothing.cfm">Clothing</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="webstoreAccessories.cfm">Accessories</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="fee.cfm">Program Fee</a><img src="images/webStore_lines_03.gif" width="600" height="15" alt="line" /></th>
-              </tr>
-			  ---->
+            </tr>
+	
           </table>
+          <div class="clearFixLG"></div>
           <p class="p1">&nbsp;</p>
         </div>
-        
-        <!-- end whtMiddle -->
-      </div>
+<!-- end whtMiddle --></div>
       <div class="whtBottom"></div>
       <!-- end lead --></div>
     <!-- end mainContent --></div>
-<!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer">
-  <div class="clear"></div>
-<cfinclude template="bottomLinks.cfm">
-<!-- end footer --></div>
-</body>
-</html>
+<!-- end container -->
+</div>
+
+<!--- Include Page Header --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">

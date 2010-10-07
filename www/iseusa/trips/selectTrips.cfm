@@ -154,8 +154,8 @@ li{
 		
 }
 -->
-</style></head>
-
+</style>
+</head>
 
 <cfparam name="form.rulesread" default="0">
 <cfparam name="form.booktravel" default="0">
@@ -182,7 +182,7 @@ li{
   <div class="whtMiddletours2">
         <div class="tripsTours">
            
-        <cfquery name="trips" datasource="#application.dsn#">
+        <cfquery name="trips" datasource="#APPLICATION.DSN.Source#">
         select *
         from smg_tours
         where tour_status = 'active'

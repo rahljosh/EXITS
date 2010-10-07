@@ -40,8 +40,8 @@ a:active {
 	min-height: 500px;
 }
 -->
-</style></head>
-
+</style>
+</head>
 <body class="oneColFixCtr">
 
 <div id="topBar">
@@ -98,10 +98,6 @@ a:active {
       <!-- end lead --></div>
     <!-- end mainContent --></div>
 <!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer">
-  <div class="clear"></div>
-<cfinclude template="bottomLinks.cfm">
-<!-- end footer --></div>
-</body>
-</html>
+
+<!--- Include Page Header --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">

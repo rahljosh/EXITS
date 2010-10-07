@@ -7,17 +7,17 @@
 		<priority>1.00</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/aboutUs.cfm</loc>
+		<loc>http://www.iseusa.com/about-ISE.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/contactUs.cfm</loc>
+		<loc>http://www.iseusa.com/contact-ISE.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/jobOpps.cfm</loc>
+		<loc>http://www.iseusa.com/job-opportunities.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
@@ -27,17 +27,17 @@
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/meetStudents.cfm</loc>
+		<loc>http://www.iseusa.com/meet-our-students.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/beAhost.cfm</loc>
+		<loc>http://www.iseusa.com/become-a-host-family.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/trips/index.cfm</loc>
+		<loc>http://www.iseusa.com/trips/exchange-student-trips.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
@@ -57,7 +57,7 @@
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/projectHelp.cfm</loc>
+		<loc>http://www.iseusa.com/project-help.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
@@ -67,7 +67,7 @@
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/sSuccess.cfm</loc>
+		<loc>http://www.iseusa.com/international-student-success-stories.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
@@ -77,17 +77,17 @@
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/grants.cfm</loc>
+		<loc>http://www.iseusa.com/international-student-grants.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/beArep.cfm</loc>
+		<loc>http://www.iseusa.com/Become-An-Area-Rep.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.64</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/beAmanager.cfm</loc>
+		<loc>http://www.iseusa.com/become-a-regional-manager.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.64</priority>
 	</url>
@@ -262,12 +262,12 @@
 		<priority>0.64</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/articles.cfm</loc>
+		<loc>http://www.iseusa.com/in-the-news.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.64</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/comService.cfm</loc>
+		<loc>http://www.iseusa.com/community-service.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.64</priority>
 	</url>

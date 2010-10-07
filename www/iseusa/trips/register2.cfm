@@ -140,7 +140,9 @@ margin-left: 0px;
 .border{border:solid 1px;}
 h3{text-indent:10px;}	
 -->
-</style></head>
+</style>
+</head>
+
 <cfparam name="url.tour_id" default="1">
 <cfparam name="form.select_trip" default="#url.tour_id#">
 <cfparam name="form.select_trip" default="#url.tour_id#">
@@ -186,7 +188,7 @@ This account was found in EXITS.  Trip information has been recorded but not ver
 <!----Loop through selected trips and record in db---->
 <Cfloop list="#form.select_trip#" index=x>
 <cfif form.studentid is ''><cfset form.studentid = 0></cfif>
-<cfquery datasource="#application.dsn#">
+<cfquery datasource="#APPLICATION.DSN.Source#">
 insert into student_tours (studentid, tripid, cc, cc_year, billingAddress, billingCity, billingState, billingZip, cc_month, date, ip)
 			values (#form.ret_studentid#, #x#, '#form.cc#', #form.cc_year#, '#form.billingAddress#', '#form.billingCity#', '#form.billingState#', '#form.billingZip#', #form.cc_month#, now(), '#cgi.REMOTE_ADDR#')
 </cfquery>
@@ -461,7 +463,7 @@ Registration information has been submitted:<Br />
                     <Cfset row = 0>
                     <cfloop list="#form.select_trip#" index="i">
                     	<cfset row = #row# + 1>
-                        <cfquery name="tripInfo" datasource="#application.dsn#">
+                        <cfquery name="tripInfo" datasource="#APPLICATION.DSN.Source#">
                         select *
                         from smg_tours
                         where tour_id = #i#
@@ -518,14 +520,14 @@ Registration information has been submitted:<Br />
 </cfoutput>
 <!----Check if Info is available---->
 <cfif isDefined('form.lookup')>
-    <Cfquery name="stuInfo" datasource="#application.dsn#">
+    <Cfquery name="stuInfo" datasource="#APPLICATION.DSN.Source#">
     SELECT s.studentid, s.dob, s.sex, s.arearepid, s.hostid, s.studentid, s.email, s.familylastname, s.firstname, s.med_allergies, s.other_allergies
     FROM smg_students s
     WHERE email = '#form.email#'
     </Cfquery>
     <cfset acctVerified = #stuInfo.recordcount#>
 	<cfif stuInfo.recordcount eq 1 and stuInfo.hostid gt 0>
-        <cfquery name="hostInfo" datasource="#application.dsn#">
+        <cfquery name="hostInfo" datasource="#APPLICATION.DSN.Source#">
         select h.familylastname, h.fatherlastname, h.fatherfirstname, h.motherlastname, h.motherfirstname,
         h.address, h.address2, h.city, h.state, h.zip, h.email, h.phone, h.local_air_code, h.major_air_code, h.father_cell, h.mother_cell
         from smg_hosts h
@@ -558,7 +560,7 @@ Registration information has been submitted:<Br />
             <h2>Please be sure to keep an eye on your email.  Once your information has been verified, you will recieve an email at <strong>#form.email#</strong> with additional information and  forms that MUST be signed and returned to MPD Tours.</cfoutput>  </h2>
         <cfelse>   
         
-        <cfquery name="trips" datasource="#application.dsn#">
+        <cfquery name="trips" datasource="#APPLICATION.DSN.Source#">
         select *
         from smg_tours
         where tour_status = 'active'
@@ -735,7 +737,7 @@ Registration information has been submitted:<Br />
                     </Tr>
                     <cfset amount_due = 0>
                     <cfloop list="#SELECT_TRIP#" index=t>
-                    <Cfquery name="strips" datasource="#application.dsn#">
+                    <Cfquery name="strips" datasource="#APPLICATION.DSN.Source#">
                     select *
                     from smg_tours 
                     where tour_id = #t#

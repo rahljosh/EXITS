@@ -18,7 +18,7 @@
 <cfswitch expression="#include_content#">
 <!--- Send/resend login info:  used when called by: forms/user_form.cfm, user_info.cfm --->
 <cfcase value="send_login,resend_login">
-    <cfquery name="get_user" datasource="#application.dsn#">
+    <cfquery name="get_user" datasource="#APPLICATION.DSN.Source#">
         SELECT smg_users.*, smg_companies.companyname
         FROM smg_users LEFT JOIN smg_companies ON smg_users.defaultcompany = smg_companies.companyid
         WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">
