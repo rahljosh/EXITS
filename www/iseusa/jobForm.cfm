@@ -73,7 +73,7 @@ The following information was submitted from www.iseusa.com in regards to job op
 <Br />
 <table>
 	<tr>
-    	<td>Posistion:</td><td>#form.job_type#</td>
+    	<td>Position:</td><td>#form.job_type#</td>
     </tr>  
    	<tr>
     	<td>Submitted:</td><td>#DateFormat(now(), 'mm/dd/yy')# at #TimeFormat(now(),'h:m tt')#</td>
