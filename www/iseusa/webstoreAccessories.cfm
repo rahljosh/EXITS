@@ -338,5 +338,5 @@ under:active {
 <!-- end container -->
 </div>
 
-<!--- Include Page Header --->
+<!--- Include Page Footer --->
 <cfinclude template="extensions/includes/_pageFooter.cfm">

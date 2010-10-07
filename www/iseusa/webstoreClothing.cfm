@@ -291,5 +291,5 @@ Great value in a solid color nylon hooded anorak with flannel lining (upper body
     <!-- end mainContent --></div>
 <!-- end container --></div>
 
-<!--- Include Page Header --->
+<!--- Include Page Footer --->
 <cfinclude template="extensions/includes/_pageFooter.cfm">

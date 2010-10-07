@@ -110,11 +110,9 @@ a:active {
       <!-- end lead --></div>
     <!-- end mainContent --></div>
 <!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer">
-  <div class="clear"></div>
-<cfinclude template="bottomLinks.cfm">
-</div> <!-- end footer -->
+
+<!--- Include Page Footer --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">
 
 <!--- Google AdWords Conversion Code --->
 <cfif CLIENT.isAdWords>

@@ -176,11 +176,6 @@ a:active {
 <h1>&nbsp;</h1>
   <!-- end mainContent --></div>
 <!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer">
-  <div class="clear"></div>
-<cfinclude template="bottomLinks.cfm">
-<!-- end footer -->
-</div>
-</body>
-</html>
+
+<!--- Include Page Footer --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">

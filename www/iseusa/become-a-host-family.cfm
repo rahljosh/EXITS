@@ -53,8 +53,6 @@ a:active {
     <!-- end mainContent --></div>
 </cfoutput>
 <!-- end container --></div>
-<div id="main" class="clearfix"></div>
 
-
-<!--- Include Page Header --->
+<!--- Include Page Footer --->
 <cfinclude template="extensions/includes/_pageFooter.cfm">
