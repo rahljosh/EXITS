@@ -45,8 +45,9 @@ from smg_states
 <cfoutput>
 <body class="oneColFixCtr">
 <div id="topBar">
+<cfinclude template="topBarLinks.cfm">
 <div id="logoBox"><a href="/"><img src="images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
-<cfinclude template="topBarLinks.cfm"><!-- end topBar --></div>
+<!-- end topBar --></div>
 <div id="container">
 <div class="spacer2"></div>
 <div class="title"><cfinclude template="title.cfm"><!-- end title --></div>
