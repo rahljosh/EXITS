@@ -862,14 +862,7 @@
     
 </div> <!-- end container -->
 
-<div id="main" class="clearfix"></div>
-
-<div id="footer">
-	<div class="clear"></div>
-	<cfinclude template="bottomLinks.cfm">
-</div> <!-- end footer -->
-
 </cfoutput>
 
-</body>
-</html>
+<!--- Include Page Footer --->
+<cfinclude template="extensions/includes/_pageFooter.cfm">

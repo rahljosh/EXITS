@@ -37,5 +37,5 @@ ISE is very proud to have Aown and all the other YES students as part of our aca
   <!-- end mainContent --></div>
 <!-- end container --></div>
 
-<!--- Include Page Header --->
+<!--- Include Page Footer --->
 <cfinclude template="extensions/includes/_pageFooter.cfm">

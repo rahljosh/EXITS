@@ -58,5 +58,5 @@ Your reasons for volunteering are your own, but no matter what your reasons volu
   <!-- end mainContent --></div>
 <!-- end container --></div>
 
-<!--- Include Page Header --->
+<!--- Include Page Footer --->
 <cfinclude template="extensions/includes/_pageFooter.cfm">
