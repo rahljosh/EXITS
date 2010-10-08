@@ -4,7 +4,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><cfoutput>
 <title>#APPLICATION.METADATA.pageTitle#</title>
 <meta name="description" content="#APPLICATION.METADATA.pageDescription#" />
-<meta name="keywords" content="#APPLICATION.METADATA.pageKeywords#" />
 <link rel="shortcut icon" href="favicon.ico" />
 <link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script></cfoutput>

@@ -33,7 +33,6 @@
 				SELECT
 					ID, 
                     site,
-                    metadataKey,
                     URL,
                     pageTitle,
                     pageDescription,
