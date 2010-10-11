@@ -10,6 +10,9 @@
 <!-----Company Information----->
 <cfinclude template="../querys/get_company_short.cfm">
 
+<cfparam name="FORM.programID" default="0">
+<cfparam name="FORM.regionID" default="">
+
 <cfquery name="get_students" datasource="mysql">
 	SELECT s.hostid, s.familylastname, s.firstname, s.arearepid, s.regionassigned, s.dateplaced,
 			h.familylastname as hostlastname, h.address, h.address2, h.city, h.state, h.zip,  
@@ -31,9 +34,13 @@
 		</cfif>
 	AND 
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
-		<cfif form.insurance_typeid NEQ 0>
-			AND u.insurance_typeid = '#form.insurance_typeid#'
-		</cfif>
+	<cfif LEN(FORM.regionID)>
+        AND 
+            s.regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+    </cfif>
+	<cfif form.insurance_typeid NEQ 0>
+        AND u.insurance_typeid = '#form.insurance_typeid#'
+    </cfif>
 	ORDER BY h.familylastname, s.familylastname, s.firstname
 </cfquery>
 

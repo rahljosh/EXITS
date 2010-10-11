@@ -533,6 +533,10 @@
                                 <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="5"></cfselect></td>
                             </tr>
                             <tr>
+                            	<td>Region:</td>
+                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" multiple="yes" size="5" queryPosition="below"></cfselect></td>
+                            </tr>
+                            <tr>
                                 <td>Insurance Type:</td>
                                 <td>
                                 	<cfselect name="insurance_typeid" query="insurance_policies" value="insuTypeID" display="type" queryPosition="below">
@@ -563,6 +567,10 @@
                             <tr>
                                 <td>Program:</td>
                                 <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="5"></cfselect></td>
+                            </tr>
+                            <tr>
+                            	<td>Region:</td>
+                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" multiple="yes" size="5" queryPosition="below"></cfselect></td>
                             </tr>
                             <tr>
                                 <td>Insurance Type:</td>

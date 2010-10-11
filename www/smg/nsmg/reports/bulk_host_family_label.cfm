@@ -1,3 +1,6 @@
+<cfparam name="FORM.programID" default="0">
+<cfparam name="FORM.regionID" default="">
+
 <!--- Generate Avery Standard 5160 labels for our contacts. --->
 <html>
 <head>
@@ -69,6 +72,10 @@
 					</cfif>
                     AND 
                         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+                    <cfif LEN(FORM.regionID)>
+                    AND 
+                        s.regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+                    </cfif>
 					<cfif form.insurance_typeid NEQ 0>
 						AND u.insurance_typeid = '#form.insurance_typeid#'
 					</cfif>				
