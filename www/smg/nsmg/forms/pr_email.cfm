@@ -31,7 +31,7 @@
                 
         <cfsavecontent variable="email_message">
         <cfoutput>				
-            <p>This progress report was sent from the SMG website.</p>
+            <p>This progress report was sent from the ISE website.</p>
             <p>Please reference the attached PDF file.</p>
         </cfoutput>
         </cfsavecontent>
