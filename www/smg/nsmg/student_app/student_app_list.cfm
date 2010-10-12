@@ -385,7 +385,7 @@
                                     <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
                                     <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
                                     <td>#email#</td>
-                                    <td align="center"><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');"><img src="student_app/pics/info.gif" border="0" alt="Login Information"></a></td>
+                                    <td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
                                     <td>#phone#</td>
                                     <td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
                                     
@@ -485,7 +485,7 @@
             <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
             <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
             <td>#email#</td>
-            <td align="center"><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');"><img src="student_app/pics/info.gif" border="0" alt="Login Information"></a></td>
+            <td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
             
             <cfif CLIENT.usertype GTE 5>
                 <td>#phone#</td>
@@ -561,7 +561,7 @@
 			<td><a href="#setURL('firstName')#" title="Sort by First Name"><strong>First Name</strong></a></td>
 			<td><a href="#setURL('sex')#" title="Sort by Gender"><strong>Gender</strong></a></td>
 			<td><a href="#setURL('email')#" title="Sorty by Email"><strong>Email</strong></a></td>
-            <td><strong>Login</strong></td>
+            <td><strong>Login Info</strong></td>
             <td><strong>Future</strong></td>
 			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Received</strong></a></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
@@ -577,7 +577,7 @@
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
 				<td>#email#</td>
-				<td align="center"><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');"><img src="student_app/pics/info.gif" border="0" alt="Login Information"></a></td>
+				<td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
                 <td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#URL.status#" >Change</a></td>
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
 				<td>#businessname#</td>
@@ -606,7 +606,7 @@
 			<td><a href="#setURL('firstName')#" title="Sort by First Name"><strong>First Name</strong></a></td>
 			<td><a href="#setURL('sex')#" title="Sort by Gender"><strong>Gender</strong></a></td>
 			<td><a href="#setURL('email')#" title="Sorty by Email"><strong>Email</strong></a></td>
-			<td><strong>Login</strong></td>
+			<td><strong>Login Info</strong></td>
             <td><strong>Future</strong></td>
 			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Submitted</strong></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
@@ -621,7 +621,7 @@
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
 				<td>#email#</td>
-				<td align="center"><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');"><img src="student_app/pics/info.gif" border="0" alt="Login Information"></a></td>
+				<td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
                 <td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#URL.status#" >Change</a></td>
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
 				<td>#businessname#</td>
