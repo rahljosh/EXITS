@@ -180,7 +180,7 @@ function OpenLetter(url) {
 	<cfset allow_reject = 1>
 	<cfset allow_delete = 1>
 <!--- Program Manager - Office User - Gary request - 10/01/2010 - Managers should be able to approve progress reports --->
-<cfelseif CLIENT.userType EQ 3 AND NOT LEN(get_report.pr_ny_approved_date)>
+<cfelseif CLIENT.userType LTE 4 AND NOT LEN(get_report.pr_ny_approved_date)>
     <cfset allow_edit = 1>
 	<cfset allow_approve = 1>
 	<cfset allow_reject = 1>
