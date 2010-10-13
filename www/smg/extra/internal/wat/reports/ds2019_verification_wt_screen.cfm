@@ -82,12 +82,12 @@
     </cfquery>
 
 	<cfscript>
-		if ( LEN(qGetProgram.extra_sponsor) ) {
+		if ( qGetProgram.extra_sponsor EQ 'INTO' ) {
 			// Set Sponsor
 			setSponsor = qGetProgram.extra_sponsor;
 		} else {
 			// Default Sponsor
-			setSponsor = CSB;	
+			setSponsor = 'WAT';	
 		}
 	</cfscript>
     
@@ -165,16 +165,16 @@
                         </span>
                     </td>
                     <td class="style1">
-                        <img src="../../../../#APPLICATION[setSponsor].logo#" />
+                        <img src="../../../../#APPLICATION.CSB[setSponsor].logo#" />
                     </td>	
                     <td align="right" valign="top" class="style1"> 
                         <div align="right">
                             <span id="titleleft">
-                                #APPLICATION[setSponsor].shortProgramName# <br> <!--- #companyshort.companyshort# --->
+                                #APPLICATION.CSB[setSponsor].shortProgramName# <br> <!--- #companyshort.companyshort# --->
                                 #companyshort.address#<br>
                                 #companyshort.city#, #companyshort.state# #companyshort.zip#<br><br>
-                                Phone: #APPLICATION[setSponsor].phone# <br> <!--- #companyshort.phone# --->
-                                Toll Free: #APPLICATION[setSponsor].toolFreePhone# <br> <!--- #companyshort.toll_free# --->
+                                Phone: #APPLICATION.CSB[setSponsor].phone# <br> <!--- #companyshort.phone# --->
+                                Toll Free: #APPLICATION.CSB[setSponsor].toolFreePhone# <br> <!--- #companyshort.toll_free# --->
                                 Fax: #companyshort.fax# <br>
                             </span>
                         </div>	
@@ -241,7 +241,7 @@
                             <table>
                                 <tr><td class="style1"><b>Our best regards,</b></td></tr>
                                 <tr><td class="style1"><b>#companyshort.verification_letter#</b><br></td></tr>
-                                <tr><td class="style1"><b>#APPLICATION[setSponsor].name#</b></td></tr>
+                                <tr><td class="style1"><b>#APPLICATION.CSB[setSponsor].name#</b></td></tr>
                             </table>
                         </td>
                         <td align="right">

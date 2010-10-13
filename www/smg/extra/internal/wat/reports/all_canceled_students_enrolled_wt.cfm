@@ -4,7 +4,8 @@
     <!--- Param FORM variables --->
 	<cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.userID" default="0">
-	<cfparam name="FORM.printOption" default="">
+	<cfparam name="FORM.printOption" default="1">
+    <cfparam name="FORM.submitted" default="0">
     
     <cfquery name="qGetIntlRepList" datasource="MySql">
         SELECT 
@@ -31,7 +32,7 @@
     </cfquery>
     
     <!--- FORM submitted --->
-    <cfif LEN(FORM.printOption)>
+    <cfif FORM.submitted>
 		
         <!--- Get Intl Reps --->
 		<cfquery name="qGetIntlReps" datasource="MySQL">
@@ -70,6 +71,7 @@
         <cfquery name="qGetAllCandidates" datasource="MySql">
             SELECT 
                 ec.candidateID,
+                ec.uniqueID,
                 ec.firstname, 
                 ec.lastname, 
                 ec.placedby, 
@@ -104,8 +106,7 @@
         <cffunction name="filterGetAllCandidates" hint="Gets total by Intl. Rep">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
             <cfargument name="intRep" default="0" hint="IntRep is not required">
-            <cfargument name="noDSCount" default="0" hint="noDSCount is not required">
-            <cfargument name="dsCount" default="0" hint="dsCount is not required">
+            <cfargument name="hasDS" default="" hint="0/1">
             
             <cfquery name="qFilterGetAllCandidates" dbtype="query">
                 SELECT
@@ -125,15 +126,13 @@
                         wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.placementType#">
             	</cfif>
 
-                <cfif ARGUMENTS.noDSCount NEQ 0>
-                    AND
-                        ds2019 = ''
-            	</cfif>
-                
-                <cfif ARGUMENTS.dsCount NEQ 0>
+                <cfif VAL(ARGUMENTS.hasDS)>
                     AND
                         ds2019 != ''
-            	</cfif>
+                <cfelseif ARGUMENTS.hasDS EQ 0>
+                    AND
+                        ds2019 = ''
+				</cfif>
                 
                 ORDER BY 
                 	wat_placement,
@@ -153,9 +152,9 @@
 
 			totalUnassigned = filterGetAllCandidates(placementType='').recordCount;
 			
-			totalDSissued = filterGetAllCandidates(placementType='All', dsCount=1).recordCount;
+			totalDSissued = filterGetAllCandidates(placementType='All', hasDS=1).recordCount;
 			
-			totalDSNotIssued = filterGetAllCandidates(placementType='All', noDSCount=1).recordCount;
+			totalDSNotIssued = filterGetAllCandidates(placementType='All', hasDS=0).recordCount;
         </cfscript>	
     
     </cfif>       
@@ -202,6 +201,7 @@
 
 <!--- Form --->
 <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="form" onSubmit="return formValidation()">
+<input type="hidden" name="submitted" value="1" />
 
 <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
     <tr valign="middle" height="24">
@@ -253,7 +253,7 @@
 </form>
 
 <!--- Print --->
-<cfif LEN(FORM.printOption)>
+<cfif FORM.submitted>
 	
     <cfscript>
 		// On Screen
@@ -272,11 +272,10 @@
         <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
         <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
         <div class="style1"><strong>&nbsp; &nbsp; Unassigned:</strong> #totalUnassigned#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; -----------------------------------</strong></div>
-        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; -----------------------------------</strong></div>
-
         <div class="style1"><strong>&nbsp; &nbsp; --------------------------------------</strong></div>        
+        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; --------------------------------------</strong></div>        
+
         <div class="style1"><strong>&nbsp; &nbsp; DS-2019 Forms issued:</strong> #totalDSissued#</div>
         <div class="style1"><strong>&nbsp; &nbsp; DS-2019 Forms to be issued:</strong> #totalDSNotIssued#</div> 
         <div class="style1"><strong>&nbsp; &nbsp; --------------------------------------</strong></div>		
@@ -285,7 +284,7 @@
                 
         <div class="style1">&nbsp; &nbsp; Report Prepared on #DateFormat(now(), 'dddd, mmm, d, yyyy')#</div>
         
-        <img src="../../pics/black_pixel.gif" alt="." width="100%" height="2"> <br /><br /><br />
+        <img src="../../pics/black_pixel.gif" alt="." width="100%" height="2"> <br />
     	
         <cfloop query="qGetIntlReps">
 		
@@ -301,9 +300,9 @@
                 
                 totalPerAgentUnassigned = filterGetAllCandidates(placementType='', intRep=qGetIntlReps.userID).recordCount; 
 				
-				totalPerAgentDSissued = filterGetAllCandidates(placementType='ALL', DSCount=1, intRep=qGetIntlReps.userID).recordCount;
+				totalPerAgentDSissued = filterGetAllCandidates(placementType='ALL', hasDS=1, intRep=qGetIntlReps.userID).recordCount;
 				
-				totalPerAgentDSNotIssued = filterGetAllCandidates(placementType='ALL', noDSCount=1, intRep=qGetIntlReps.userID).recordCount;          
+				totalPerAgentDSNotIssued = filterGetAllCandidates(placementType='ALL', hasDS=0, intRep=qGetIntlReps.userID).recordCount;          
             </cfscript>
         		
             <table width="99%" cellpadding="4" cellspacing=0 align="center">
@@ -344,7 +343,11 @@
 				</cfif>
                 <cfloop query="qTotalPerAgent">
                     <tr <cfif qTotalPerAgent.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>                    
-                        <td class="style1">#qTotalPerAgent.firstname# #qTotalPerAgent.lastname# (###qTotalPerAgent.candidateID#)</td>
+                        <td class="style1">
+                        	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
+                        		#qTotalPerAgent.firstname# #qTotalPerAgent.lastname# (###qTotalPerAgent.candidateID#)
+							</a>                                
+                        </td>
                         <td class="style1">#qTotalPerAgent.sex#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
@@ -370,91 +373,102 @@
         </cfif>
         
     </cfsavecontent>
+
+
+	<!-----Display Reports---->
+    <cfswitch expression="#FORM.printOption#">
     
+        <!--- Screen --->
+        <cfcase value="1">
+            <!--- Include Report --->
+            #reportContent#
+        </cfcase>
+    
+        <!--- Flash Paper --->
+        <cfcase value="2">
+            <cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">
+                <style type="text/css">
+                <!--
+                .style1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2;
+                }
+                .style2 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2;
+                }
+                .title1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 15px;
+                    font-weight: bold;
+                    padding:5;
+                }					
+                -->
+                </style>
+               
+                <img src="../../pics/black_pixel.gif" width="100%" height="2">
+                <div class="title1">All active students enrolled in the program by Intl. Rep. and Program</div>
+                <img src="../../pics/black_pixel.gif" width="100%" height="2">
+                
+                <!--- Include Report --->
+                #reportContent#
+            </cfdocument>
+        </cfcase>
+        
+        <!--- PDF --->
+        <cfcase value="3">   
+            <cfdocument format="pdf" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">          	
+                <style type="text/css">
+                <!--
+                .style1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2;
+                }
+                .style2 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 8px;
+                    padding:2;
+                }
+                .title1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 15px;
+                    font-weight: bold;
+                    padding:5;
+                }					
+                -->
+                </style>
+    
+                <img src="../../pics/black_pixel.gif" width="100%" height="2">
+                <div class="title1">All active students enrolled in the program by Intl. Rep. and Program</div>
+                <img src="../../pics/black_pixel.gif" width="100%" height="2">
+                
+                <!--- Include Report --->
+                #reportContent#
+            </cfdocument>
+        </cfcase>
+    
+        <cfdefaultcase>    
+            <div align="center" class="style1">
+                <br />
+                Print results will replace the menu options and take a bit longer to generate. <br />
+                Onscreen will allow you to change criteria with out clicking your back button.
+            </div>  <br />
+        </cfdefaultcase>
+        
+    </cfswitch>
+
+<cfelse>
+
+    <div align="center" class="style1">
+        <br />
+        Print results will replace the menu options and take a bit longer to generate. <br />
+        Onscreen will allow you to change criteria with out clicking your back button.
+    </div>  <br />
+
 </cfif>    
 
-<!-----Display Reports---->
-<cfswitch expression="#FORM.printOption#">
-
-	<!--- Screen --->
-	<cfcase value="1">
-		<!--- Include Report --->
-		#reportContent#
-	</cfcase>
-
-	<!--- Flash Paper --->
-	<cfcase value="2">
-		<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">
-			<style type="text/css">
-			<!--
-			.style1 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 10px;
-				padding:2;
-			}
-			.style2 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 10px;
-				padding:2;
-			}
-			.title1 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 15px;
-				font-weight: bold;
-				padding:5;
-			}					
-			-->
-			</style>
-		   
-			<img src="../../pics/black_pixel.gif" width="100%" height="2">
-			<div class="title1">All active students enrolled in the program by Intl. Rep. and Program</div>
-			<img src="../../pics/black_pixel.gif" width="100%" height="2">
-			
-			<!--- Include Report --->
-			#reportContent#
-		</cfdocument>
-	</cfcase>
-	
-	<!--- PDF --->
-	<cfcase value="3">   
-		<cfdocument format="pdf" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">          	
-			<style type="text/css">
-			<!--
-			.style1 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 10px;
-				padding:2;
-			}
-			.style2 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 8px;
-				padding:2;
-			}
-			.title1 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 15px;
-				font-weight: bold;
-				padding:5;
-			}					
-			-->
-			</style>
-
-			<img src="../../pics/black_pixel.gif" width="100%" height="2">
-			<div class="title1">All active students enrolled in the program by Intl. Rep. and Program</div>
-			<img src="../../pics/black_pixel.gif" width="100%" height="2">
-			
-			<!--- Include Report --->
-			#reportContent#
-		</cfdocument>
-	</cfcase>
-
-	<cfdefaultcase>    
-		<div align="center" class="style1">
-			Print results will replace the menu options and take a bit longer to generate. <br />
-			Onscreen will allow you to change criteria with out clicking your back button.
-		</div>  <br />
-	</cfdefaultcase>
-	
-</cfswitch>
 
 </cfoutput>
