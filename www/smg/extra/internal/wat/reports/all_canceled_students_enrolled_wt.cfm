@@ -104,6 +104,8 @@
         <cffunction name="filterGetAllCandidates" hint="Gets total by Intl. Rep">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
             <cfargument name="intRep" default="0" hint="IntRep is not required">
+            <cfargument name="noDSCount" default="0" hint="noDSCount is not required">
+            <cfargument name="dsCount" default="0" hint="dsCount is not required">
             
             <cfquery name="qFilterGetAllCandidates" dbtype="query">
                 SELECT
@@ -122,6 +124,17 @@
                     AND
                         wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.placementType#">
             	</cfif>
+
+                <cfif ARGUMENTS.noDSCount NEQ 0>
+                    AND
+                        ds2019 = ''
+            	</cfif>
+                
+                <cfif ARGUMENTS.dsCount NEQ 0>
+                    AND
+                        ds2019 != ''
+            	</cfif>
+                
                 ORDER BY 
                 	wat_placement,
                     candidateID
@@ -139,6 +152,10 @@
 			totalWalkInPlacements = filterGetAllCandidates(placementType='Walk-In').recordCount;
 
 			totalUnassigned = filterGetAllCandidates(placementType='').recordCount;
+			
+			totalDSissued = filterGetAllCandidates(placementType='All', dsCount=1).recordCount;
+			
+			totalDSNotIssued = filterGetAllCandidates(placementType='All', noDSCount=1).recordCount;
         </cfscript>	
     
     </cfif>       
@@ -248,6 +265,27 @@
 	</cfscript>
     
 	<cfsavecontent variable="reportContent">
+    
+        <img src="../../pics/black_pixel.gif" alt="." width="100%" height="2"> <br /><br /><br />
+                
+        <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #totalCSBPlacements#</div>	
+        <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; Unassigned:</strong> #totalUnassigned#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; -----------------------------------</strong></div>
+        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; -----------------------------------</strong></div>
+
+        <div class="style1"><strong>&nbsp; &nbsp; --------------------------------------</strong></div>        
+        <div class="style1"><strong>&nbsp; &nbsp; DS-2019 Forms issued:</strong> #totalDSissued#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; DS-2019 Forms to be issued:</strong> #totalDSNotIssued#</div> 
+        <div class="style1"><strong>&nbsp; &nbsp; --------------------------------------</strong></div>		
+        
+        <br />
+                
+        <div class="style1">&nbsp; &nbsp; Report Prepared on #DateFormat(now(), 'dddd, mmm, d, yyyy')#</div>
+        
+        <img src="../../pics/black_pixel.gif" alt="." width="100%" height="2"> <br /><br /><br />
     	
         <cfloop query="qGetIntlReps">
 		
@@ -261,20 +299,26 @@
                 
                 totalPerAgentWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', intRep=qGetIntlReps.userID).recordCount;
                 
-                totalPerAgentUnassigned = filterGetAllCandidates(placementType='', intRep=qGetIntlReps.userID).recordCount;            
+                totalPerAgentUnassigned = filterGetAllCandidates(placementType='', intRep=qGetIntlReps.userID).recordCount; 
+				
+				totalPerAgentDSissued = filterGetAllCandidates(placementType='ALL', DSCount=1, intRep=qGetIntlReps.userID).recordCount;
+				
+				totalPerAgentDSNotIssued = filterGetAllCandidates(placementType='ALL', noDSCount=1, intRep=qGetIntlReps.userID).recordCount;          
             </cfscript>
         		
             <table width="99%" cellpadding="4" cellspacing=0 align="center">
                     <tr>
                         <td colspan="8">
                             <small>
-                                <strong>#qGetIntlReps.businessname# - Total candidates: #qTotalPerAgent.recordCount#</strong> 
+                                <strong>#qGetIntlReps.businessname# - Total candidates: #qTotalPerAgent.recordCount# &nbsp;</strong> 
                                 (
                                     #totalPerAgentCSBPlacements# CSB; &nbsp; 
                                     #totalPerAgentSelfPlacements# Self; &nbsp; 
                                     #totalPerAgentWalkInPlacements# Walk-In; &nbsp; 
-                                    #totalPerAgentUnassigned# Unassigned
-                                )
+                                    #totalPerAgentUnassigned# Unassigned &nbsp;
+                                ) &nbsp; | &nbsp;
+                                <strong>DS-2019 Forms issued: &nbsp;</strong> #totalPerAgentDSissued#  &nbsp; | &nbsp;
+                                <strong>DS-2019 Forms to be issued: &nbsp;</strong> #totalPerAgentDSNotIssued#
                             </small>
                         </td>
                     </tr>
@@ -324,20 +368,6 @@
 				</cfif>
             </div>
         </cfif>
-        
-        <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #totalCSBPlacements#</div>	
-        <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; Unassigned:</strong> #totalUnassigned#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
-        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>  		
-        
-        <br />
-                
-        <div class="style1">&nbsp; &nbsp; Report Prepared on #DateFormat(now(), 'dddd, mmm, d, yyyy')#</div>
-        
-        <img src="../../pics/black_pixel.gif" alt="." width="100%" height="2"> <br /><br /><br />
         
     </cfsavecontent>
     
