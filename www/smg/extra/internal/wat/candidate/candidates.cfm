@@ -3,7 +3,7 @@
 
 	<cfsetting requesttimeout="9999">
 
-	<!--- Param Form Variable --->
+	<!--- Param URL Variable --->
 	<cfparam name="URL.status" default="1">
 	<cfparam name="URL.order" default="lastName">
 
@@ -126,6 +126,7 @@
                     	<b>All</b>
 					</cfif>
 					candidate<cfif qCandidates.recordcount GT 1>s</cfif> found &nbsp; <br>
+                    
 					Filter: &nbsp; <cfif URL.status NEQ 'All'><a href="?curdoc=candidate/candidates&placed=all&status=all" class="style4"></cfif>All</a> 
 					&nbsp; | &nbsp; <cfif URL.status NEQ 1><a href="?curdoc=candidate/candidates&status=1" class="style4" ></cfif>Active</a> 
 					&nbsp; | &nbsp; <cfif URL.status NEQ 0><a href="?curdoc=candidate/candidates&status=0" class="style4" ></cfif>Inactive</a> 					
@@ -133,7 +134,15 @@
 				<td width="1%"></td>
 			</tr>
 		</table>
-		<br>
+
+        <cfif VAL(CLIENT.userType) LTE 4>
+            <br />
+            <div align="center">
+                <a href="index.cfm?curdoc=candidate/new_candidate"><img src="../pics/add-candidate.gif" border="0" align="middle" alt="Add a Candidate"></img></a>
+            </div>
+		</cfif>
+		<br />
+        
 		<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=95%>
 			<tr bgcolor="##4F8EA4" >
 				<th width="5%" align="left"><a href="?curdoc=candidate/candidates&order=candidateID&status=#URL.status#" class="style2">ID</a></th>
@@ -142,24 +151,25 @@
 				<th width="10%" align="left"><a href="?curdoc=candidate/candidates&order=sex&status=#URL.status#" class="style2">Sex</a></th>
 				<th width="13%" align="left"><a href="?curdoc=candidate/candidates&order=countryName&status=#URL.status#" class="style2">Country</a></th>
 				<th width="20%" align="left"><a href="?curdoc=candidate/candidates&order=programName&status=#URL.status#" class="style2">Program</a></th>		
-				<th width="25%" bgcolor="##4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=businessName&status=#URL.status#" class="style2">Intl. Rep.</a></th>
+				<th width="25%" bgcolor="##4F8EA4"><a href="?curdoc=candidate/candidates&order=businessName&status=#URL.status#" class="style2">Intl. Rep.</a></th>
 			</tr>
-		<cfloop query="qCandidates">
-			<tr bgcolor="###iif(qCandidates.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
-				<td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#candidateID#</a></td>
-				<td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#lastName#</a></td>
-				<td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#firstName#</a></td>
-				<td class="style5"><cfif sex EQ 'm'>Male<cfelse>Female</cfif></td>
-				<td class="style5">#countryName#</td>
-				<td class="style5">#programName#</td>		
-				<td class="style5">#businessName#</td>
-			</tr>
-		</cfloop>
-        <cfif NOT qCandidates.recordCount>
-			<tr bgcolor="##e9ecf1">
-            	<td class="style5" colspan="7">There are no records.</td>
-        	</tr>
-        </cfif>
+            <cfloop query="qCandidates">
+                <tr bgcolor="###iif(qCandidates.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
+                    <td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#candidateID#</a></td>
+                    <td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#lastName#</a></td>
+                    <td><a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueid#" class="style4">#firstName#</a></td>
+                    <td class="style5"><cfif sex EQ 'm'>Male<cfelse>Female</cfif></td>
+                    <td class="style5">#countryName#</td>
+                    <td class="style5">#programName#</td>		
+                    <td class="style5">#businessName#</td>
+                </tr>
+            </cfloop>
+        
+			<cfif NOT qCandidates.recordCount>
+                <tr bgcolor="##e9ecf1">
+                    <td class="style5" colspan="7">There are no records.</td>
+                </tr>
+            </cfif>
 		</table>
 		
         <br><br>
