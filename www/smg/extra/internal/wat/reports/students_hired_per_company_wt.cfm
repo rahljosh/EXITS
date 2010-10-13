@@ -179,7 +179,7 @@
 
     <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
         <tr valign="middle" height="24">
-            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>&nbsp; Students hired per company</td>
+            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>&nbsp; Host Company Reports -> All active students</td>
         </tr>
         <tr valign="middle" height="24">
             <td valign="middle" colspan=2>&nbsp;</td>
