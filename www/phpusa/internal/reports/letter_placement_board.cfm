@@ -16,24 +16,47 @@
 <cfinclude template="../querys/get_company_short.cfm">
 
 <cfquery name="get_student_unqid" datasource="MySql">
-	SELECT s.studentid, s.firstname, s.familylastname, s.uniqueid, s.intrep,
+	SELECT 
+    	s.studentid, s.firstname, s.familylastname, s.uniqueid, s.intrep,
 		sc.schoolid, sc.schoolname, sc.address as schooladdress, sc.address2 as schooladdress2, sc.city as schoolcity, sc.zip as schoolzip,
 		sc.email as schoolemail, sc.contact as schoolcontact, sc.phone as schoolphone, sc.major_air_code, sc.airport_city, sc.airport_state,
 		sc.nearbigcity,
+        sc.fk_ny_user,
 		sta.state as schoolstate,
 		p.programid, p.programname, p.startdate,
 		u.businessname, u.php_contact_name, u.fax, u.php_contact_email, u.php_contact_phone,
 		<!--- FROM THE NEW TABLE PHP_STUDENTS_IN_PROGRAM --->		
 		stu_prog.assignedid, stu_prog.companyid, stu_prog.programid, stu_prog.hostid, stu_prog.schoolid, stu_prog.placerepid, stu_prog.arearepid,
 		stu_prog.dateplaced, stu_prog.school_acceptance, stu_prog.active, stu_prog.i20no
-	FROM smg_students s
-	INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
-	INNER JOIN smg_users u ON u.userid = s.intrep
-	LEFT JOIN smg_programs p ON stu_prog.programid = p.programid
-	LEFT JOIN php_schools sc ON stu_prog.schoolid = sc.schoolid 
-	LEFT JOIN smg_states sta ON sc.state = sta.id 
-	WHERE s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
-	AND stu_prog.assignedid = <cfqueryparam value="#url.assignedid#" cfsqltype="cf_sql_integer">
+	FROM 
+    	smg_students s
+	INNER JOIN 
+    	php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
+	INNER JOIN 
+    	smg_users u ON u.userid = s.intrep
+	LEFT JOIN 
+    	smg_programs p ON stu_prog.programid = p.programid
+	LEFT JOIN 
+    	php_schools sc ON stu_prog.schoolid = sc.schoolid 
+	LEFT JOIN 
+    	smg_states sta ON sc.state = sta.id 
+	WHERE 
+    	s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
+	AND 
+    	stu_prog.assignedid = <cfqueryparam value="#url.assignedid#" cfsqltype="cf_sql_integer">
+</cfquery>
+
+<!--- Get NY Facilitator --->
+<cfquery name="qGetNYFacilitator" datasource="mySql">
+	SELECT
+    	u.userID,
+        u.firstName,
+        u.lastName,
+        u.email
+	FROM
+    	smg_users u
+	WHERE
+    	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_unqid.fk_ny_user#">                      
 </cfquery>
 
 <cfif get_student_unqid.schoolid EQ ''>
@@ -81,6 +104,15 @@
 <!--- HEADER - OTHER INFORMATION --->
 <table width=670 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
 	<tr><td>We are pleased to give you the placement information for #get_student_unqid.firstname# #get_student_unqid.familylastname# (###get_student_unqid.studentid#).</td></tr>
+	<cfif VAL(qGetNYFacilitator.recordCount)>
+    	<tr>	
+        	<td> 
+            	<br>
+            	Please note for the Agent and Student, the Main Office Student Services Facilitator will be #qGetNYFacilitator.firstName# #qGetNYFacilitator.lastName#. <br>                
+			    You may contact this person by email at <a href="mailto:#qGetNYFacilitator.email#">#qGetNYFacilitator.email#</a>
+            </td>
+       </tr>
+    </cfif>
 </table><br>
 
 <!--- SCHOOL INFORMATION --->
