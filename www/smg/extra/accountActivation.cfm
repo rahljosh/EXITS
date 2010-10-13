@@ -20,10 +20,21 @@
 		// Activate Account
 		if ( qGetCandidate.recordCount AND qGetCandidate.applicationStatusID EQ 1 ) {
 			
+			// Update Candidate Session Variables
+			APPLICATION.CFC.CANDIDATE.setCandidateSession(
+				candidateID=qGetCandidate.candidateID,
+				doLogin=0
+			);
+
+			// Activate Application
+			APPLICATION.CFC.ONLINEAPP.submitApplication(candidateID=qGetCandidate.candidateID);
+			
+			/*
 			APPLICATION.CFC.candidate.activateApplication(
 				candidateID=qGetCandidate.candidateID,
 				email=qGetCandidate.email
 			);
+			*/
 						
 		}
 	</cfscript>

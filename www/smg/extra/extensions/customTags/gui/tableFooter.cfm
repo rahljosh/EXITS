@@ -14,7 +14,7 @@
 	
 		<!--- Table Footer --->
 		<gui:tableFooter
-			width=""
+			footerType=""
 		/>
 	
 ----- ------------------------------------------------------------------------- --->
@@ -24,9 +24,9 @@
 
 	<!--- Param tag attributes --->
 	<cfparam 
-		name="ATTRIBUTES.width"
+		name="ATTRIBUTES.footerType"
 		type="string"
-        default="100%"
+        default=""
 		/>
         
 </cfsilent>
@@ -37,13 +37,13 @@
 --->
 <cfif NOT CompareNoCase(THISTAG.ExecutionMode, "Start")>
 
-<cfoutput>
-
-		<!--- Footer of Table --->
-		</td>
-	</tr>
-</table>
-            
-</cfoutput>
+	<cfoutput>
+    
+				<!--- Footer of Table --->
+                </td>
+            </tr>
+        </table>
+                
+    </cfoutput>
     	
 </cfif>

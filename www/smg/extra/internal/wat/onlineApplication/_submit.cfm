@@ -11,59 +11,47 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
 
 	<!--- It is set to 1 for the print application page --->
-	<cfparam name="printApplication" default="0">
+	<cfparam name="printApplication" default="#SESSION.CANDIDATE.isReadOnly#">
     <cfparam name="includeHeader" default="1">
 	
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.submissionType" default="">
     
-	<!--- Student ID --->
-    <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getStudentID()#">
+	<!--- Candidate ID --->
+    <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getCandidateID()#">
 	
-	<!--- Semester Information --->
-    <cfparam name="FORM.semesterID" default="">
-    <cfparam name="FORM.academicYear" default="">
-       
     <cfscript>
-		// Get Current Student Information
-		qGetStudentInfo = APPLICATION.CFC.CANDIDATE.getStudentByID(ID=FORM.candidateID);
+		// Get Current Candidate Information
+		qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(candidateID=FORM.candidateID);
 
 		// Get Questions for this section
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='submit');
 		
 		// Get Answers for this section
-		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='submit', foreignTable='extra_candidates', foreignID=FORM.candidateID);
+		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='submit', foreignTable=APPLICATION.foreignTable, foreignID=FORM.candidateID);
  		
-		qGetApplicationHistory = APPLICATION.CFC.ONLINEAPP.getApplicationHistory(applicationStatusID=3, foreignTable='extra_candidates', foreignID=FORM.candidateID);
+		// Get Application History
+		qGetApplicationHistory = APPLICATION.CFC.ONLINEAPP.getApplicationHistory(foreignTable=APPLICATION.foreignTable, foreignID=FORM.candidateID);
 		
 		// Check if Application is complete, if not redirect to check list page.
+		
 		if ( 
-			NOT VAL(SESSION.CANDIDATE.isSection1Complete)
-		OR
-			NOT VAL(SESSION.CANDIDATE.isSection2Complete)
-		OR
-			( VAL(SESSION.CANDIDATE.hasAddFamInfo) AND NOT VAL(SESSION.CANDIDATE.isSection3Complete) )
-		OR
-			NOT VAL(SESSION.CANDIDATE.isSection4Complete)
-		OR
-			NOT VAL(SESSION.CANDIDATE.isSection5Complete) ) {
+			CLIENT.loginType NEQ 'user' 
+		AND (
+				NOT VAL(SESSION.CANDIDATE.isSection1Complete)
+			OR
+				NOT VAL(SESSION.CANDIDATE.isSection2Complete)
+			OR
+				NOT VAL(SESSION.CANDIDATE.isSection3Complete) 
+			) ) {
 				// Application is not complete - go to checkList page
 				location("#CGI.SCRIPT_NAME#?action=checkList", "no");
 		}
-		
-		// Check if Application Fee has been paid, if not redirect to application fee page.
-		if ( NOT VAL(qGetStudentInfo.applicationPaymentID) ) {	
-			// Application fee has not been paid - go to the application fee page
-			location("#CGI.SCRIPT_NAME#?action=applicationFee", "no");
-		}
-
-		// Set Application Read Only
-		if ( APPLICATION.CFC.CANDIDATE.getStudentSession().isApplicationSubmitted )  {
-			printApplication = 1;
-		}
+	
 		
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
@@ -74,17 +62,25 @@
 		if ( FORM.submitted ) {
 
 			// FORM Validation
+
+			// Submission Type
+			if ( NOT LEN(FORM.submissionType) ) {
+				// Get all the missing items in a list
+				SESSION.formErrors.Add('You must select an action in order to submit your application');
+			}
+			
+			// Comments
+			if ( FORM.submissionType EQ 'denied' AND NOT LEN(FORM[qGetQuestions.fieldKey[1]]) ) {
+				// Get all the missing items in a list
+				SESSION.formErrors.Add('You must enter a reason in the comments box for denying this application.');
+			}
+
 			for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 				if (qGetQuestions.isRequired[i] AND NOT LEN(FORM[qGetQuestions.fieldKey[i]]) ) {
 					SESSION.formErrors.Add(qGetQuestions.requiredMessage[i]);
 				}
 			}
 			
-			// Please Specify
-			if ( FORM[qGetQuestions.fieldKey[1]] EQ 3 AND NOT LEN(FORM[qGetQuestions.fieldKey[2]]) ) {
-				SESSION.formErrors.Add("Please specify other time during the school year");
-			}
-
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
 				
@@ -92,50 +88,25 @@
 				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 					APPLICATION.CFC.ONLINEAPP.insertAnswer(	
 						applicationQuestionID=qGetQuestions.ID[i],
-						foreignTable='extra_candidates',
+						foreignTable=APPLICATION.foreignTable,
 						foreignID=FORM.candidateID,
 						fieldKey=qGetQuestions.fieldKey[i],
 						answer=FORM[qGetQuestions.fieldKey[i]]						
 					);	
 				}
 
-				// Submit Application				
-				APPLICATION.CFC.CANDIDATE.updateApplicationStatusID(
-					ID=FORM.candidateID,
-					applicationStatusID=3
-				);
-
-				// Update Student Session Variables
-				APPLICATION.CFC.CANDIDATE.setStudentSession(ID=FORM.candidateID);
-
-				// Insert Application History
-				APPLICATION.CFC.ONLINEAPP.insertApplicationHistory(
-					applicationStatusID=3,
-					foreignTable='extra_candidates',
-					foreignID=FORM.candidateID,
-					description='Application Submitted'
-				);
-
-				// Email Student 
-				APPLICATION.CFC.EMAIL.sendEmail(
-					emailTo=qGetStudentInfo.email,						
-					emailType='applicationSubmitted',
-					candidateID=FORM.candidateID
-				);
-
-				// Create Zip file and include application documents
-				applicationZipFile = APPLICATION.CFC.onlineApp.saveApplicationToZip(candidateID=FORM.candidateID);
-				
-				// Email Admissions Office
-				APPLICATION.CFC.EMAIL.sendEmail(
-					emailTo=APPLICATION.EMAIL.admissions,						
-					emailType='applicationSubmittedAdmissions',
-					emailFilePath=applicationZipFile,
-					candidateID=FORM.candidateID
+				// Submit Application & Email Candidate/Branch/Intl. Rep/NY Office			
+				APPLICATION.CFC.ONLINEAPP.submitApplication(
+					candidateID=FORM.candidateID,
+					submissionType=FORM.submissionType,
+					comments=FORM[qGetQuestions.fieldKey[1]]
 				);
 				
+				// Update Candidate Session Variables
+				APPLICATION.CFC.CANDIDATE.setCandidateSession(candidateID=FORM.candidateID);
+							
 				// Set Page Message
-				SESSION.pageMessages.Add("Thank you for applying to GPA. Your application has successfully been submitted.");
+				SESSION.pageMessages.Add("Your application has been successfully submitted.");
 				
 				// Reload page with updated information
 				location("#CGI.SCRIPT_NAME#?action=submit", "no");
@@ -223,7 +194,7 @@
                 <input type="hidden" name="submitted" value="1" />
 				
 				<cfif printApplication>
-                    <p class="legend"><strong>Note:</strong> Thank you for applying to GPA. Your application has been submitted. </p>
+                    <p class="legend"><strong>Note:</strong> Your application has been submitted. </p>
 				<cfelse>
                     <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>). Once you submit your application you will no longer be able to make any changes. </p>
                 </cfif>
@@ -231,13 +202,13 @@
 				<!--- Submit Application --->
                 <fieldset>
                    
-                    <legend>Application Options</legend>
+                    <legend>Submit Application</legend>
 
 					<!--- Submitted Information --->
                     <cfif printApplication>
                         <div class="field controlset">
-                            <span class="label">Student </span>
-                            <div class="printField">#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#</div>
+                            <span class="label">Candidate </span>
+                            <div class="printField">#qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#</div>
                         </div>
                         
                         <div class="field controlset">
@@ -246,36 +217,64 @@
                         </div>
                     </cfif>
                     
-					<cfif printApplication AND LEN(FORM[qGetQuestions.fieldKey[2]])>
-						<!--- Semester Option Detail - Print Application --->
+                    
+                    <!--- Action --->
+                    <cfif NOT printApplication>
                         <div class="field">
-                            <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <em>*</em></label> 
-                            <div class="printField">#FORM[qGetQuestions.fieldKey[2]]# &nbsp;</div>
-                        </div>
-                    <cfelse>
-						<!--- Semester Option Detail --->
-                        <div id="semesterDetailDiv" class="field hiddenField">
-                            <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <em>*</em></label> 
-                            <input type="text" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="#FORM[qGetQuestions.fieldKey[2]]#" class="#qGetQuestions.classType[2]#" maxlength="100" />
-                        </div>
-                    </cfif>
+                            <label for="sex">Action <em>*</em></label> 
+							<cfif CLIENT.loginType NEQ 'user'> 
+                                <!--- Candidate - Submit Button --->                      
+                                <select name="submissionType" id="submissionType" class="mediumField">
+                                    <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Submit Application</option>
+                                </select>
+                            <cfelseif CLIENT.userID EQ qGetCandidateInfo.branchID>
+                                <!--- Branch - Deny / Approve Button --->
+                                <select name="submissionType" id="submissionType" class="mediumField">
+                                    <option value=""></option> <!--- [select an action] --->
+                                    <!--- Only display approve if section 3 is complete --->
+									<cfif SESSION.CANDIDATE.isSection3Complete>
+	                                    <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
+                                    </cfif>
+                                    <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
+                                </select>
+                            <cfelseif CLIENT.userID EQ qGetCandidateInfo.intRep>
+                                <!--- Intl. Rep. - Deny / Approve Button --->
+                                <select name="submissionType" id="submissionType" class="mediumField">
+                                    <option value=""></option> <!--- [select an action] --->
+									<!--- Only display approve if section 3 is complete --->
+									<cfif SESSION.CANDIDATE.isSection3Complete>
+    	                                <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
+                                    </cfif>
+                                    <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
+                                </select>
+                            <cfelseif CLIENT.userType LTE 4>
+                                <!--- NY Office - Received / On Hold / Deny / Approve Button --->
+                                <select name="submissionType" id="submissionType" class="mediumField">
+                                    <option value=""></option> <!--- [select an action] --->
+                                    <!--- <option value="received" <cfif FORM.submissionType EQ 'received'> selected="selected" </cfif> >Application Received</option> --->
+                                    <option value="onhold" <cfif FORM.submissionType EQ 'onhold'> selected="selected" </cfif> >Application On Hold</option>
+                                    <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
+                                    <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
+                                </select>
+                            </cfif>  
 
-                    <!--- Academic Year --->            
+							<cfif NOT SESSION.CANDIDATE.isSection3Complete>
+                                <p class="note"><strong>Note:</strong> 
+                                You can only deny an application at this moment. <br />
+                                There are still some items missing. Click on <a href="#CGI.SCRIPT_NAME#?action=checkList">Checklist</a> to view them. </p>
+                            </cfif>
+                        </div>
+                        
+					</cfif>                    
+                        
+					<!--- Comments --->
                     <div class="field">
-                        <label for="#qGetQuestions.fieldKey[3]#">#qGetQuestions.displayField[3]# <cfif qGetQuestions.isRequired[3]><em>*</em></cfif></label> 
+                        <label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label>  
                         <cfif printApplication>
-                            <div class="printField">#FORM[qGetQuestions.fieldKey[3]]# &nbsp;</div>
+                            <div class="printFieldText">#FORM[qGetQuestions.fieldKey[1]]# &nbsp;</div>
                         <cfelse>
-                            <select name="#qGetQuestions.fieldKey[3]#" id="#qGetQuestions.fieldKey[3]#" class="#qGetQuestions.classType[3]#">
-                            	<option value=""></option>
-                            	<cfloop from="#Year(now())#" to="#Year(now()) + 3#" index="i">
-                            		<!--- Remove this IF in 2011 --->
-									<cfif i NEQ 2010>
-	                                    <option value="#i#" <cfif FORM[qGetQuestions.fieldKey[3]] EQ i> selected="selected" </cfif> >#i#</option>
-                                    </cfif>    
-                                </cfloop>
-							</select>                                
-						</cfif>
+                            <textarea name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]#">#FORM[qGetQuestions.fieldKey[1]]#</textarea>                                    	
+                        </cfif>            
                     </div>
 
                 </fieldset>                
@@ -284,19 +283,14 @@
 					<!--- Interview Instructions --->
                     <fieldset>
                        
-                        <legend>Interview Instructions</legend>
+                        <legend>Application Submission History</legend>
 						
-                        Please contact the Admissions Department to set up an interview. <br /><br />
-                        
-                        Admissions Department  <br />
-                        #APPLICATION.SCHOOL.name# <br />
-                        #APPLICATION.SCHOOL.admissions#  <br />
-                        <a href="mailto:#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a> <br />
-                        #APPLICATION.SCHOOL.address# <br />
-                        #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
-                        Phone: #APPLICATION.SCHOOL.phone# <br />
-                        Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
-                        
+                        <cfloop query="qGetApplicationHistory">                        
+                        	#DateFormat(qGetApplicationHistory.dateCreated, 'mm/dd/yyyy')# 
+                            #TimeFormat(qGetApplicationHistory.dateCreated, 'hh-mm-ss tt')# EST 
+                            &nbsp; - &nbsp;
+                            #qGetApplicationHistory.description# <br />                        
+                        </cfloop>
 					</fieldset>
                 </cfif>
 					
@@ -322,4 +316,3 @@
 </cfif>
 
 </cfoutput>
-

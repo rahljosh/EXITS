@@ -31,7 +31,7 @@
 		
         <cfscript>
 			// Set Candidate Session Variables  (candidateID / firstName / lastname / lastLoggedInDate / myUploadFolder )
-			APPLICATION.CFC.CANDIDATE.setCandidateSession(ID=ARGUMENTS.candidateID);
+			APPLICATION.CFC.CANDIDATE.setCandidateSession(candidateID=ARGUMENTS.candidateID);
 			
 			// Record last logged in date
 			if ( VAL(ARGUMENTS.updateDateLastLoggedIn) ) {
@@ -46,7 +46,7 @@
 	<cffunction name="isCurrentUserLoggedIn" output="false" access="public" returntype="boolean"  description="Returns whether or not user is logged in">
 		
         <cfscript>
-			 if ( structkeyexists(SESSION,"CANDIDATE") AND VAL(SESSION.CANDIDATE.ID) ) {
+			 if ( structkeyexists(SESSION,"CANDIDATE") AND VAL(SESSION.CANDIDATE.isLoggedIn) ) {
 				return true;
 			 } else {
 				return false;				 
@@ -72,24 +72,33 @@
 		<cfargument name="loginType" type="string" required="yes" hint="User/Candidate is required">
 		
 		<cfscript>
-			var candidateFolder = '';
+			var applicationFolder = '';
 		
 			if ( ARGUMENTS.loginType EQ 'candidate' ) {
-				candidateFolder = 'onlineApplication/';
+				applicationFolder = 'onlineApplication/';
 			}
 			
 			// SET LINKS                    
 			switch(ARGUMENTS.companyID) {
+				// Trainee
 				case 7: {
-					return("internal/trainee/" & candidateFolder & "index.cfm");
+					APPLICATION.applicationID = 5;
+					APPLICATION.foreignTable = 'extra_candidates';
+					return("internal/trainee/" & applicationFolder & "index.cfm");
 					break;
 				}
+				// Work and Travel
 				case 8: {
-					return("internal/wat/" & candidateFolder & "index.cfm");
+					APPLICATION.applicationID = 4;
+					APPLICATION.foreignTable = 'extra_candidates';
+					return("internal/wat/" & applicationFolder & "index.cfm");
 					break;
 				}
+				// H2B
 				case 9: {
-					return("internal/h2b/" & candidateFolder & "index.cfm");
+					// APPLICATION.applicationID = 6;
+					APPLICATION.foreignTable = 'extra_candidates';
+					return("internal/h2b/" & applicationFolder & "index.cfm");
 					break;
 				}
 				default: {
@@ -253,6 +262,307 @@
 	</cffunction>
 
 
+	<!--- Submit Application --->
+	<cffunction name="whoIsSubmittingApplication" access="public" returntype="struct" output="false" hint="Sets the current user that is submitting the application">
+    
+    	<cfscript>
+			var result = StructNew();
+    
+			// Set who is submitting the application (candidate/branch or intl. rep)
+			if ( CLIENT.loginType NEQ 'user' ) {
+				// Candidate is submitting the application
+				result.foreignTable=APPLICATION.foreignTable;
+				result.foreignID=APPLICATION.CFC.CANDIDATE.getCandidateID();
+			} else {
+				// Branch or Intl. Rep. is submitting the application	
+				result.foreignTable='smg_users';
+				result.foreignID=CLIENT.userID;
+			}
+			
+			return result;
+		</cfscript>			
+	</cffunction>
+
+
+	<!--- Submit Application --->
+	<cffunction name="submitApplication" access="public" returntype="void" output="false" hint="Submit Application">
+		<cfargument name="candidateID" required="yes" hint="candidateID is required">
+        <cfargument name="submissionType" default="" hint="received,onhold,approved,denied">
+        <cfargument name="comments" default="" hint="Comments by submitting user">
+        		
+        <cfscript>
+			// Get Current Status
+			var currentApplicationStatusID = APPLICATION.CFC.CANDIDATE.getCandidateSession().applicationStatusID;
+
+			// Set New Status as Current Status
+			var newApplicationStatusID = currentApplicationStatusID;
+			
+			// Get who is submitting the application
+			var setSubmittedBy = whoIsSubmittingApplication();
+			
+			// Stores the email template
+			var emailTemplate = '';
+			
+			// Set Next Status               
+			switch(currentApplicationStatusID) {
+				
+				// Application Issued - Student can activate application
+				case 1: {
+					
+					// Application activated by candidate
+					newApplicationStatusID = 2;
+					// Set Email Template
+					emailTemplate = 'activateAccount';
+					/*** 
+						Set extra_candidates as the foreignTable. Candidates alwayas activate themselves.
+						These are defined in the internal/wat/application.cfm since we are calling from / we need to set them.
+					***/
+					APPLICATION.applicationID = 4;
+					APPLICATION.foreignTable = 'extra_candidates';
+					setSubmittedBy.foreignTable = 'extra_candidates';
+					ARGUMENTS.comments = getApplicationStatusByID(statusID=newApplicationStatusID).description;
+					break;
+				}
+				
+				// Application Active - Student can submit the application to branch or Intl. Rep.
+				case 2: {
+					
+					if ( VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().branchID) ) {
+						// application submitted by candidate to branch
+						newApplicationStatusID = 3;			
+					} else {
+						// application submitted by candidate to Intl. Rep.
+						newApplicationStatusID = 5;
+					}
+					// Set Email Template
+					emailTemplate = 'submittedByCandidate';
+					break;		
+				}
+				
+				// Application Submitted by Student to Branch - Branch can approve/deny the application
+				case 3: {
+					
+					if ( ARGUMENTS.submissionType EQ 'approved' ) {
+						// Application approved by branch
+						newApplicationStatusID = 5;		
+						// Set Email Template
+						emailTemplate = 'approvedByBranch';
+					} else if ( ARGUMENTS.submissionType EQ 'denied' ) {
+						// Application denied by branch
+						newApplicationStatusID = 4;		
+						// Set Email Template
+						emailTemplate = 'deniedByBranch';
+					}
+					break;
+				}
+				
+				// Application Denied by Branch - Student can re-submit the application
+				case 4: {
+					
+					// Application re-submitted by candidate
+					newApplicationStatusID = 3;		
+					// Set Email Template
+					emailTemplate = 'submittedByCandidate';
+					break;
+				}
+				
+				// Application Submitted by candidate/branch to Intl. Rep. - Intl. Rep. can approve/deny the application
+				case 5: {
+				
+					if ( ARGUMENTS.submissionType EQ 'approved' ) {
+						// Application approved by Intl. Rep.
+						newApplicationStatusID = 7;		
+						// Set Email Template
+						emailTemplate = 'approvedByIntlRep';
+					} else if ( ARGUMENTS.submissionType EQ 'denied' ) {
+						// Application denied by Intl. Rep.
+						newApplicationStatusID = 6;	
+						// Set Email Template
+						emailTemplate = 'deniedByIntlRep';
+					}
+					break;
+				}
+				
+				// Application Denied By Intl. Rep. - Student can re-submit the application - Branch can re-approve/deny the application
+				case 6: {
+					
+					// Student can re-submit, branch could deny/re-submit application
+					if ( VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().branchID) ) {
+
+						if ( ARGUMENTS.submissionType EQ 'approved' ) {
+							// Application re-submitted by branch
+							newApplicationStatusID = 5;		
+							// Set Email Template
+							emailTemplate = 'approvedByBranch';
+						} else if ( ARGUMENTS.submissionType EQ 'denied' ) {
+							// Application denied by branch
+							newApplicationStatusID = 4;		
+							// Set Email Template
+							emailTemplate = 'deniedByBranch';
+						}
+
+					} else {
+						
+						// Application re-submitted by candidate
+						newApplicationStatusID = 5;		
+						// Set Email Template
+						emailTemplate = 'submittedByCandidate';
+					}
+					break;
+				}
+				
+				// Application Submitted by Intl. Rep. - NY Office can receive, put on hold, approve/deny the application
+				case 7: {
+					
+					if ( ARGUMENTS.submissionType EQ 'received' ) {
+						// Application received by NY office
+						newApplicationStatusID = 8;		
+						// Set Email Template
+						emailTemplate = 'receivedByOffice';						
+					} else if ( ARGUMENTS.submissionType EQ 'onhold' ) {
+						// Application onhold by NY office
+						newApplicationStatusID = 10;		
+						// Set Email Template
+						emailTemplate = 'onHoldByOffice';
+					} else if ( ARGUMENTS.submissionType EQ 'approved' ) {
+						// Application denied by NY office
+						newApplicationStatusID = 11;		
+						// Set Email Template
+						emailTemplate = 'approvedByOffice';
+					} else if ( ARGUMENTS.submissionType EQ 'denied' ) {
+						// Application denied by NY office
+						newApplicationStatusID = 9;		
+						// Set Email Template
+						emailTemplate = 'deniedByOffice';
+					}
+					break;
+				}
+				
+				// Application Received By NY Office - NY office can put on hold, approve/deny the application
+				case 8: {
+					
+					if ( ARGUMENTS.submissionType EQ 'onhold' ) {
+						// Application onhold by NY office
+						newApplicationStatusID = 10;	
+						// Set Email Template
+						emailTemplate = 'onHoldByOffice';
+					} else if ( ARGUMENTS.submissionType EQ 'approved' ) {
+						// Application denied by NY office
+						newApplicationStatusID = 11;	
+						// Set Email Template
+						emailTemplate = 'approvedByOffice';
+					} else if ( ARGUMENTS.submissionType EQ 'denied' ) {
+						// Application denied by NY office
+						newApplicationStatusID = 9;	
+						// Set Email Template
+						emailTemplate = 'deniedByOffice';
+					}
+					break;
+				}
+				
+				// Application Denied By NY Office - Intl. Rep. can re-submit or deny the application
+				case 9: {
+					
+					if ( ARGUMENTS.submissionType EQ 'approved' ) {
+						// Application denied by NY office
+						newApplicationStatusID = 7;		
+						// Set Email Template
+						emailTemplate = 'approvedByOffice';
+					} else if ( ARGUMENTS.submissionType EQ 'denied' ) {
+						// Application denied by NY office
+						newApplicationStatusID = 6;	
+						// Set Email Template
+						emailTemplate = 'deniedByOffice';
+					}
+					break;
+				}
+				
+				// Application On Hold By NY Office - NY office can approve/deny the application
+				case 10: {
+					
+					if ( ARGUMENTS.submissionType EQ 'approved' ) {
+						// Application denied by NY office
+						newApplicationStatusID = 11;	
+						// Set Email Template
+						emailTemplate = 'approvedByOffice';
+					} else if ( ARGUMENTS.submissionType EQ 'denied' ) {
+						// Application denied by NY office
+						newApplicationStatusID = 9;		
+						// Set Email Template
+						emailTemplate = 'deniedByOffice';
+					}
+					break;
+				}
+				
+				// Approved By NY Office
+				case 11: {
+					// Do Nothing
+					break;
+				}
+				
+				default: {
+					// Do Nothing
+					break;
+				}
+			}
+			
+			/* Debug
+			writedump(currentApplicationStatusID);
+			writedump(newApplicationStatusID);
+			writedump(emailTemplate);
+			abort;
+			*/
+
+			// Check if we are updating the status of the application
+			if ( currentApplicationStatusID NEQ newApplicationStatusID ) {
+				
+				// Update Candidate Status
+				APPLICATION.CFC.CANDIDATE.updateApplicationStatus(
+					candidateID=ARGUMENTS.candidateID,
+					applicationStatusID=newApplicationStatusID
+				);
+			
+				// Insert Application History
+				insertApplicationHistory(
+					applicationID=APPLICATION.applicationID,
+					applicationStatusID=newApplicationStatusID,
+					foreignTable=APPLICATION.foreignTable,
+					foreignID=ARGUMENTS.candidateID,
+					submittedByForeignTable=setSubmittedBy.foreignTable,
+					submittedByforeignID=setSubmittedBy.foreignID,
+					comments=ARGUMENTS.comments
+				);
+				
+				// Email the candidate
+				APPLICATION.CFC.email.sendEmail(
+					emailFrom=APPLICATION.EMAIL.contactUs,
+					emailTo=APPLICATION.CFC.CANDIDATE.getCandidateSession().email,
+					emailTemplate=emailTemplate,
+					candidateID=ARGUMENTS.candidateID,
+					companyID=APPLICATION.CFC.CANDIDATE.getCandidateSession().companyID
+				);
+
+				// Email Branch
+				
+				// Email Intl. Rep.
+				
+				// Email Admissions Office
+				/*
+				APPLICATION.CFC.EMAIL.sendEmail(
+					emailTo=APPLICATION.EMAIL.admissions,						
+					emailTemplate='applicationSubmittedAdmissions',
+					emailFilePath=applicationZipFile,
+					candidateID=FORM.candidateID,
+					companyID=APPLICATION.CFC.CANDIDATE.getCandidateSession().companyID
+				);
+				*/
+
+			}
+		</cfscript>
+		
+	</cffunction>
+
+
 	<!--- Save application to a zip file --->
 	<cffunction name="saveApplicationToZip" access="public" returntype="string" hint="Saves application in ZIP format and returns file path">
 		<cfargument name="candidateID" type="numeric" required="yes" hint="Candidate ID is required">
@@ -262,7 +572,7 @@
 			var qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(ID=ARGUMENTS.candidateID);
 
 			// Get Candidate Documents
-			var qGetDocuments = APPLICATION.CFC.DOCUMENT.getDocuments(foreignTable='candidate', foreignID=ARGUMENTS.candidateID);
+			var qGetDocuments = APPLICATION.CFC.DOCUMENT.getDocuments(foreignTable=APPLICATION.foreignTable, foreignID=ARGUMENTS.candidateID);
 
 			var pdfPath = APPLICATION.PATH.uploadDocumentTemp & '##' & qGetCandidateInfo.ID & qGetCandidateInfo.firstName & qGetCandidateInfo.lastName & '-Application.pdf';
 
@@ -318,7 +628,9 @@
 		<cfargument name="applicationStatusID" type="numeric" required="yes" hint="applicationStatusID is required" />		
         <cfargument name="foreignTable" type="string" required="yes" hint="User/Candidate is updating status - is required." />	
         <cfargument name="foreignID" type="numeric" required="yes" hint="ID of user/candidate updating status - is required" />		
-        <cfargument name="description" type="string" default="" hint="Reason is not required" />		
+        <cfargument name="submittedByForeignTable" type="string" required="yes" hint="User/Candidate is updating status - is required." />	
+        <cfargument name="submittedByForeignID" type="numeric" required="yes" hint="ID of user/candidate updating status - is required" />		
+        <cfargument name="comments" type="string" default="" hint="Comments is not required" />
 
 		<cfquery 
 			datasource="#APPLICATION.DSN.Source#">
@@ -330,7 +642,9 @@
                     <!--- sessionInformationID, --->
                     foreignTable,
                     foreignID,
-                    description,
+                    submittedByForeignTable,
+                    submittedByForeignID,
+                    comments,
                 	dateCreated
                 )
                 VALUES 
@@ -340,7 +654,9 @@
 					<!--- <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.informationID)#">, --->	
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.description#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.submittedByForeignTable#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.submittedByForeignID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.comments#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                 )
         </cfquery>        
@@ -358,26 +674,32 @@
         	name="qGetApplicationHistory"
 			datasource="#APPLICATION.DSN.Source#">
 				SELECT
-                	ID,
-                	applicationStatusID,
-                    sessionInformationID,
-                    foreignTable,
-                    foreignID,
-                    description,
-                	dateCreated,
-                    dateUpdated
+                	apsJN.ID,
+                	apsJN.applicationStatusID,
+                    apsJN.sessionInformationID,
+                    apsJN.foreignTable,
+                    apsJN.foreignID,
+                    apsJN.submittedByForeignTable,
+                    apsJN.submittedByForeignID,
+                    apsJN.comments,
+                	apsJN.dateCreated,
+                    apsJN.dateUpdated,
+                    aps.name,
+                    aps.description
 				FROM	
-                	applicationStatusJN
+                	applicationStatusJN apsJN
+                LEFT OUTER JOIN
+                	applicationStatus aps ON aps.statusID = apsJN.applicationStatusID
 				WHERE
-                	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+                	apsJN.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
                 AND
-					foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">
+					apsJN.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">
 				<cfif VAL(ARGUMENTS.applicationStatusID)>                
                     AND
-                        applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationStatusID)#">
+                        apsJN.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationStatusID)#">
 				</cfif>
 				ORDER BY
-                	dateCreated DESC                    
+                	apsJN.dateCreated DESC                    
         </cfquery>        
         
         <cfreturn qGetApplicationHistory>
@@ -607,7 +929,9 @@
 				WHERE
                     sectionName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sectionName#">    
                 AND	
-                	isRequired = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                	isRequired = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 AND
                 	ID NOT IN 
                     (
@@ -636,27 +960,17 @@
 				// Store The List into an Array
 				stRequiredFields.fieldList = ListToArray(queryFieldList);
 			}
+			
+			// Section 3 is filled out by the Intl. Rep/Branch - Set them as complete if candidate is logged in
+			if ( ARGUMENTS.sectionName EQ 'section3' AND CLIENT.loginType NEQ 'user' ) {
+				
+				// Create an array and populate with the field name in case we need to display missing items
+				stRequiredFields.fieldList = ArrayNew(1);
 
-			// section1 has required items in the candidate table as well.
-			if ( ARGUMENTS.foreignTable EQ 'candidate' ) {
-				
-				stCheckCandidate = APPLICATION.CFC.CANDIDATE.checkCandidateRequiredFields(
-					ID=ARGUMENTS.foreignID,
-					sectionName=ARGUMENTS.sectionName
-				);
-				
-				// Merge Arrays
-				if ( ARGUMENTS.sectionName EQ 'section1') {
-					// Section 1 - Candidate errors goes first
-					stRequiredFields.fieldList = APPLICATION.CFC.UDF.arrayMerge(array1=stCheckCandidate.fieldList, array2=ListToArray(queryFieldList));
-				}
-				
-				if ( stCheckCandidate.isComplete EQ 0 ) {
-					// Set setion as not completed
-					stRequiredFields.isComplete = 0;
-				}				
+				// Set complete = 1
+				stRequiredFields.isComplete = 1;
 			}
-
+			
 			// Return Structure
 			return stRequiredFields;
 		</cfscript>

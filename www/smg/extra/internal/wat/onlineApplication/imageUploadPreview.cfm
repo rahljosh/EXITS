@@ -47,7 +47,13 @@
         <cfimage action="resize" width="150" height="150" source="#newFilePath#" destination="#jpgVersion#" overwrite="true">
 		<!--- Delete File --->
         <cffile action="delete" file="#newFilePath#">            
-        <cfoutput>#getFileFromPath(jpgVersion)#</cfoutput>
+        
+        <cfscript>
+			// Update Candidate Session Variables
+			APPLICATION.CFC.CANDIDATE.setCandidateSession(candidateID=URL.candidateID);
+		</cfscript>
+		
+		<cfoutput>#getFileFromPath(jpgVersion)#</cfoutput>
         
 	<cfelse>
 		

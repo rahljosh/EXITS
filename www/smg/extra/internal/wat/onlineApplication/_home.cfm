@@ -14,17 +14,17 @@
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
 
 	<cfscript>
-		/*
 		// Get Application Home
-		applicationHomeContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="applicationHome").content;
-		
-		// Replace Variables
-		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{schoolName}",APPLICATION.CSB.name,"all");
-		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{address}",APPLICATION.SCHOOL.address,"all");
-		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{city}",APPLICATION.SCHOOL.city,"all");
-		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{state}",APPLICATION.SCHOOL.state,"all");
-		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{zipCode}",APPLICATION.SCHOOL.zipCode,"all");
-		*/
+		qGetContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="watApplicationHome");
+
+		// Save content into a variable
+		savecontent variable="watApplicationHome" {
+			writeOutput(qGetContent.content);
+		}    
+
+		// Replace Variables 
+		watApplicationHome = ReplaceNoCase(watApplicationHome,"{csbName}",APPLICATION.CSB.WAT.name,"all");
+		watApplicationHome = ReplaceNoCase(watApplicationHome,"{csbProgramName}",APPLICATION.CSB.WAT.programName,"all");
 	</cfscript>
 
 </cfsilent>
@@ -48,7 +48,8 @@
                    
                     <legend>Welcome!</legend>
                     
-                    <!--- #APPLICATION.CFC.UDF.RichTextOutput(applicationHomeContent)# --->
+					<!--- Application Home --->
+                    #APPLICATION.CFC.UDF.RichTextOutput(watApplicationHome)#
 					
                 </fieldset>
                             

@@ -26,48 +26,97 @@
 
 	<!--- Set Candidate Session Variables --->
 	<cffunction name="setCandidateSession" access="public" returntype="void" hint="Set candidate SESSION variables" output="no">
-		<cfargument name="ID" type="numeric" default="0">
+		<cfargument name="candidateID" type="numeric" default="0">
+        <cfargument name="doLogin" type="numeric" default="1">
         <cfargument name="updateDateLastLoggedIn" type="numeric" default="0">
         
         <cfscript>
-			if ( VAL(ARGUMENTS.ID) ) {
-			
-				// Set candidate ID
-				SESSION.CANDIDATE.ID = ARGUMENTS.ID;
-	
+			if ( VAL(ARGUMENTS.candidateID) ) {
+
+				// Set Logged In Flag
+				if ( VAL(ARGUMENTS.doLogin) ) {
+					SESSION.CANDIDATE.isLoggedIn = 1;
+				} else {
+					SESSION.CANDIDATE.isLoggedIn = 0;
+				}
+				
 				// Get Candidate Information
-				qGetCandidateInfo = getCandidateByID(candidateID=ARGUMENTS.ID);
-			
+				qGetCandidateInfo = getCandidateByID(candidateID=ARGUMENTS.candidateID);
+				
 				// Set candidate session variables 
+				SESSION.CANDIDATE.ID = qGetCandidateInfo.candidateID;
+				SESSION.CANDIDATE.companyID = qGetCandidateInfo.companyID;
 				SESSION.CANDIDATE.firstName = qGetCandidateInfo.firstName;
 				SESSION.CANDIDATE.lastName = qGetCandidateInfo.lastName;
 				SESSION.CANDIDATE.dateLastLoggedIn = qGetCandidateInfo.dateLastLoggedIn;
-								
+				SESSION.CANDIDATE.applicationStatusID = qGetCandidateInfo.applicationStatusID;
+				SESSION.CANDIDATE.email = qGetCandidateInfo.email;
+				
 				// set up upload files path
-				SESSION.CANDIDATE.myUploadFolder = APPLICATION.PATH.uploadDocumentCandidate & ARGUMENTS.ID & '/';
+				SESSION.CANDIDATE.myUploadFolder = APPLICATION.PATH.uploadDocumentCandidate & ARGUMENTS.candidateID & '/';
 				// Make sure folder exists
 				APPLICATION.CFC.DOCUMENT.createFolder(SESSION.CANDIDATE.myUploadFolder);
 				
 				// Set student SESSION complete
-				stCheckSession1 = checkCandidateRequiredFields(candidateID=ARGUMENTS.ID, FORM=StructNew(), sectionName='section1');
-								
+				stCheckSession1 = checkCandidateRequiredFields(candidateID=ARGUMENTS.candidateID, sectionName='section1');
 				SESSION.CANDIDATE.isSection1Complete = stCheckSession1.isComplete;
 				SESSION.CANDIDATE.section1FieldList = stCheckSession1.fieldList;
 				
-				// REPLACE THIS
-				stCheckSession2 = checkCandidateRequiredFields(candidateID=ARGUMENTS.ID, FORM=StructNew(), sectionName='section2');
-				SESSION.CANDIDATE.isSection2Complete = 1;
-				SESSION.CANDIDATE.section2FieldList = '';
+				stCheckSession2 = checkCandidateRequiredFields(candidateID=ARGUMENTS.candidateID, sectionName='section2');
+				SESSION.CANDIDATE.isSection2Complete = stCheckSession2.isComplete;
+				SESSION.CANDIDATE.section2FieldList =  stCheckSession2.fieldList;
 
-				stCheckSession3 = checkCandidateRequiredFields(candidateID=ARGUMENTS.ID, FORM=StructNew(), sectionName='section3');
-				SESSION.CANDIDATE.isSection3Complete = 1;
-				SESSION.CANDIDATE.section3FieldList = '';
+				stCheckSession3 = checkCandidateRequiredFields(candidateID=ARGUMENTS.candidateID, sectionName='section3');
+				SESSION.CANDIDATE.isSection3Complete = stCheckSession3.isComplete;
+				SESSION.CANDIDATE.section3FieldList = stCheckSession3.fieldList;
+				
+				// Set Intl Rep ID / Branch ID / Intl Rep/Branch Name
+				SESSION.CANDIDATE.intlRepID = qGetCandidateInfo.intRep;
+				SESSION.CANDIDATE.branchID = qGetCandidateInfo.branchID;
+				if ( VAL(qGetCandidateInfo.branchID) ) {
+					SESSION.CANDIDATE.intlRepName = APPLICATION.CFC.USER.getUserByID(userID=qGetCandidateInfo.branchID).businessName;
+				} else {
+					SESSION.CANDIDATE.intlRepName = APPLICATION.CFC.USER.getUserByID(userID=qGetCandidateInfo.intRep).businessName;
+				}
+				
+				// Set Application as readOnly
+				if ( qGetCandidateInfo.applicationStatusID EQ 1 )
+					// Issued Application - ReadOnly
+					SESSION.CANDIDATE.isReadOnly = 1;
+				else if ( CLIENT.loginType NEQ 'user' AND ListFind("3,5,7,8,9,10,11", qGetCandidateInfo.applicationStatusID) ) {
+					// Candidate logged in and application submitted
+					SESSION.CANDIDATE.isReadOnly = 1;
+				} else if ( CLIENT.loginType EQ 'user' AND CLIENT.userID EQ qGetCandidateInfo.branchID AND ListFind("5,7,8,9,10,11", qGetCandidateInfo.applicationStatusID) ) {
+					// Branch logged in and application submitted
+					SESSION.CANDIDATE.isReadOnly = 1;
+				} else if ( CLIENT.loginType EQ 'user' AND CLIENT.userID EQ qGetCandidateInfo.intRep AND ListFind("7,8,9,10,11", qGetCandidateInfo.applicationStatusID) ) {
+					// Intl. Rep. logged in and application submitted
+					SESSION.CANDIDATE.isReadOnly = 1;
+				} else {
+					SESSION.CANDIDATE.isReadOnly = 0;
+				}
+				
 			}
 		</cfscript>
         
 	</cffunction>
 
-	
+
+	<cffunction name="setCandidateSessionRemote" access="remote" returntype="void" hint="Set candidate SESSION variables" output="no">
+		<cfargument name="candidateID" type="numeric" default="0">
+        <cfargument name="updateDateLastLoggedIn" type="numeric" default="0">
+        
+        <cfscript>
+			// Calls setCandidateSession
+			setCandidateSession(
+				candidateID=ARGUMENTS.candidateID,
+				updateDateLastLoggedIn=ARGUMENTS.updateDateLastLoggedIn
+			);
+		</cfscript>
+        
+	</cffunction>
+
+
     <!--- Get Candidate Session Variables --->
 	<cffunction name="getCandidateSession" access="public" returntype="struct" hint="Get candidate SESSION variables" output="no">
 
@@ -117,12 +166,12 @@
 					
 				<cfif VAL(ARGUMENTS.candidateID)>
                     AND
-                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.candidateID)#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.uniqueID)>
                     AND
-                        uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                        uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.uniqueID)#">
                 </cfif>
 		</cfquery>
 		   
@@ -205,10 +254,30 @@
                     	endDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     </cfif>
                     wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.wat_placement))#">,
-                    wat_participation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.wat_participation))#">,
+                    <cfif LEN(ARGUMENTS.wat_participation)>
+                    	wat_participation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.wat_participation#">,
+                    </cfif>
                     ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.ssn))#">
 				WHERE
 	                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+		</cfquery>
+		
+	</cffunction>
+
+
+	<!--- Update Application Status --->
+	<cffunction name="updateApplicationStatusID" access="public" returntype="void" output="false" hint="Update Candidate Information">
+		<cfargument name="candidateID" required="yes" hint="candidate ID" />
+        <cfargument name="applicationStatusID" required="yes" hint="Application Status ID is required.">
+			
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	extra_candidates
+                SET
+                    applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">
+				WHERE
+	                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>
 		
 	</cffunction>
@@ -297,7 +366,10 @@
         <cfscript>
 			var applicationStatusID = 1;
 			var setPassword = '';		
-		
+
+			// Get who is submitting the application
+			var submittedBy = APPLICATION.CFC.ONLINEAPP.whoIsSubmittingApplication();
+
 			// Check if we need to create an account
 			if ( ARGUMENTS.type EQ 'Candidate' ) {
 			
@@ -306,11 +378,12 @@
 			// Set Application Status Based on who is creating the application
 			} else if ( ARGUMENTS.type EQ 'Office') {
 				
-				// Intl. Rep.
+				
 				if ( ARGUMENTS.userType EQ 8 ) {
+					// Intl. Rep.
 					applicationStatusID = 5;
-				// Branch
 				} else if ( ARGUMENTS.userType EQ 11 ) {
+					// Branch
 					applicationStatusID = 3;
 				}
 			
@@ -364,18 +437,22 @@
 				APPLICATION.CFC.email.sendEmail(
 					emailFrom=APPLICATION.EMAIL.contactUs,
 					emailTo=APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email)),
-					emailType='newAccount',
-					candidateID=newRecord.GENERATED_KEY
+					emailTemplate='newAccount',
+					candidateID=newRecord.GENERATED_KEY,
+					companyID=ARGUMENTS.companyID
 				);
 	
 			}
-						
+			
 			// Insert History
 			APPLICATION.CFC.ONLINEAPP.insertApplicationHistory(
+				applicationID=APPLICATION.applicationID,											   
 				applicationStatusID=applicationStatusID,
-				foreignTable='extra_candidates',
+				foreignTable=APPLICATION.foreignTable,
 				foreignID=newRecord.GENERATED_KEY,
-				description='Application Created'
+				submittedByForeignTable=submittedBy.foreignTable,
+				submittedByforeignID=submittedBy.foreignID,
+				comments=APPLICATION.CFC.ONLINEAPP.getApplicationStatusByID(applicationStatusID).description
 			);
 		</cfscript>
 
@@ -450,41 +527,6 @@
                 	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
 		</cfquery>
 		
-        <cfscript>
-			// Insert History
-			APPLICATION.CFC.ONLINEAPP.insertApplicationHistory(
-				applicationID=APPLICATION.applicationID,
-				applicationStatusID=ARGUMENTS.applicationStatusID,
-				foreignTable='extra_candidates',
-				foreignID=ARGUMENTS.candidateID,
-				description='Application Activated'
-			);
-		</cfscript>
-        
-	</cffunction>
-
-
-    <!--- Activate Online Application Account --->
-	<cffunction name="activateApplication" access="public" returntype="void" output="false" hint="Activate an account">
-        <cfargument name="candidateID" type="numeric" required="yes" hint="CandidateID is required" />
-        <cfargument name="email" type="string" required="yes" hint="email is required" />	
-		
-        <cfscript>
-			// Update Status and record history
-			updateApplicationStatus(
-				candidateID=ARGUMENTS.candidateID,
-				applicationStatusID=2
-			);
-			
-			// Email the candidate
-			APPLICATION.CFC.email.sendEmail(
-				emailFrom=APPLICATION.EMAIL.contactUs,
-				emailTo=ARGUMENTS.email,
-				emailType='activateAccount',
-				candidateID=ARGUMENTS.candidateID
-			);
-		</cfscript>
-
 	</cffunction>
 
 
@@ -551,7 +593,7 @@
                 INNER JOIN                
                       applicationStatusJn ast ON ast.foreignID = c.candidateID
                       AND
-                         ast.foreignTable = 'extra_candidates' 
+                         ast.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.foreignTable#"> 
 					  AND 
                     	ast.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">                                              
                 LEFT OUTER JOIN 
@@ -580,9 +622,15 @@
 	<cffunction name="checkCandidateRequiredFields" access="public" returntype="struct" output="false" hint="Check if required fields were answered">
         <cfargument name="candidateID" type="numeric" required="yes" hint="candidateID" />
         <cfargument name="sectionName" type="string" required="yes" hint="Section name" />
-        <cfargument name="foreignTable" type="string" default="extra_candidates" hint="Foreign Table" />
+        <cfargument name="foreignTable" type="string" default="#APPLICATION.foreignTable#" hint="Foreign Table" />
         
+		<!--- Candidate Picture --->
+        <cfdirectory name="candidatePicture" directory="#APPLICATION.PATH.uploadCandidatePicture#" filter="#ARGUMENTS.candidateID#.*">
+            
         <cfscript>
+			// Get Student Information
+			qGetStudentInfo = getCandidateByID(candidateID=ARGUMENTS.candidateID);
+			
 			// Set if we need to check form or table fields for the section questions
 			var checkRequiredSection = 0;
 			
@@ -598,153 +646,135 @@
 			// Get Questions for this section
 			qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName=ARGUMENTS.sectionName);
 
-			// If FORM is not passed, used the table fields instead
-			if ( StructIsEmpty(ARGUMENTS.FORM) ) {
-				
-				// In this case we need to check the required section fields 
-				checkRequiredSection = 1;
-				
-				// Get Student Information
-				qGetStudentInfo = getCandidateByID(candidateID=ARGUMENTS.candidateID);
+			// Get Answers for this section
+			qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName=ARGUMENTS.sectionName, foreignTable=ARGUMENTS.foreignTable, foreignID=ARGUMENTS.candidateID);
 
-				// Convert query fields to a structure
-				ARGUMENTS.FORM = APPLICATION.CFC.UDF.QueryToStruct(qGetStudentInfo);
-
-				// Set up section1 additional FORM variables
-				ARGUMENTS.FORM.dobMonth = Month(qGetCandidateInfo.dob);
-				ARGUMENTS.FORM.dobDay = Day(qGetCandidateInfo.dob);
-				ARGUMENTS.FORM.dobYear = Year(qGetCandidateInfo.dob);
-				
-				ARGUMENTS.FORM.watStartVacationMonth = Month(qGetCandidateInfo.wat_vacation_start);
-				ARGUMENTS.FORM.watStartVacationDay = Day(qGetCandidateInfo.wat_vacation_start);
-				ARGUMENTS.FORM.watStartVacationYear = Year(qGetCandidateInfo.wat_vacation_start);
-				
-				ARGUMENTS.FORM.watEndVacationMonth = Month(qGetCandidateInfo.wat_vacation_end);
-				ARGUMENTS.FORM.watEndVacationDay = Day(qGetCandidateInfo.wat_vacation_end);
-				ARGUMENTS.FORM.watEndVacationYear = Year(qGetCandidateInfo.wat_vacation_end);
-				
-				ARGUMENTS.FORM.programStartMonth = Month(qGetCandidateInfo.startDate);
-				ARGUMENTS.FORM.programStartDay = Day(qGetCandidateInfo.startDate);
-				ARGUMENTS.FORM.programStartYear = Year(qGetCandidateInfo.startDate);
-				
-				ARGUMENTS.FORM.programEndMonth = Month(qGetCandidateInfo.endDate);
-				ARGUMENTS.FORM.programEndDay = Day(qGetCandidateInfo.endDate);
-				ARGUMENTS.FORM.programEndYear = Year(qGetCandidateInfo.endDate);
-
-				// Get Answers for this section
-				qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName=ARGUMENTS.sectionName, foreignTable=ARGUMENTS.foreignTable, foreignID=FORM.candidateID);
-
-				// Online Application Fields 
-				for ( i=1; i LTE qGetAnswers.recordCount; i=i+1 ) {
-					ARGUMENTS.FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
-				}
-
-			} else {
-
-				// Param Online Application FORM Variables 
-				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
-					param name="ARGUMENTS.FORM[qGetQuestions.fieldKey[i]]" default="";
-				}
-				
-			}
-			
 			// Check in which section we are in and validate section specific fields        
 			switch(ARGUMENTS.sectionName) {
 				case 'section1': {
-
+				
 					// Check required Fields
-					if ( NOT LEN(ARGUMENTS.FORM.lastName) ) {
-						// Get all the missing items in a list
+					if ( NOT candidatePicture.recordCount ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please upload a picture');
+					}
+					
+					if ( NOT LEN(qGetStudentInfo.lastName) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter your last name');
 					}
 
-					if ( NOT LEN(ARGUMENTS.FORM.firstName) ) {
+					if ( NOT LEN(qGetStudentInfo.firstName) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter your first name');
 					}
 		
-					if ( NOT LEN(ARGUMENTS.FORM.sex) ) {
+					if ( NOT LEN(qGetStudentInfo.sex) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please select a gender');
 					}
 	
-					if ( NOT IsDate(ARGUMENTS.FORM.dobMonth & '/' & ARGUMENTS.FORM.dobDay & '/' & ARGUMENTS.FORM.dobYear) ) {
+					if ( NOT IsDate(qGetStudentInfo.dob) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid date of birth');
 					}
 		
-					if ( NOT LEN(ARGUMENTS.FORM.birth_city) ) {
+					if ( NOT LEN(qGetStudentInfo.birth_city) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter your place of birth');
 					}
 		
-					if ( NOT VAL(ARGUMENTS.FORM.birth_country) ) {
+					if ( NOT VAL(qGetStudentInfo.birth_country) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please select a country of birth');
 					}
 		
-					if ( NOT VAL(ARGUMENTS.FORM.residence_country) ) {
+					if ( NOT VAL(qGetStudentInfo.residence_country) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please select a country of residence');
 					}
 		
-					if ( NOT VAL(ARGUMENTS.FORM.citizen_country) ) {
+					if ( NOT VAL(qGetStudentInfo.citizen_country) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please select a country of citizenship');
 					}
 					
-					if ( NOT LEN(ARGUMENTS.FORM.home_address) ) {
+					if ( NOT LEN(qGetStudentInfo.home_address) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter your mailing address');
 					}
 		
-					if ( NOT LEN(ARGUMENTS.FORM.home_city) ) {
+					if ( NOT LEN(qGetStudentInfo.home_city) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter your mailing city');
 					}
 		
-					if ( NOT VAL(ARGUMENTS.FORM.home_country) ) {
+					if ( NOT VAL(qGetStudentInfo.home_country) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please select your mailing country');
 					}
 		
-					if ( NOT LEN(ARGUMENTS.FORM.passport_number) ) {
+					if ( NOT LEN(qGetStudentInfo.passport_number) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter your passport number');
 					}
 		
-					if ( NOT LEN(ARGUMENTS.FORM.emergency_name) ) {
+					if ( NOT LEN(qGetStudentInfo.emergency_name) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter your emergency contact name');
 					}
 		
-					if ( NOT LEN(ARGUMENTS.FORM.emergency_phone) ) {
+					if ( NOT LEN(qGetStudentInfo.emergency_phone) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter your emergency contact phone');
 					}
 		
-					if ( NOT IsDate(ARGUMENTS.FORM.watStartVacationMonth & '/' & ARGUMENTS.FORM.watStartVacationDay & '/' & ARGUMENTS.FORM.watStartVacationYear) ) {
+					if ( NOT IsDate(qGetStudentInfo.wat_vacation_start) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid vacation start date');
 					}
 					
-					if ( NOT IsDate(ARGUMENTS.FORM.watEndVacationMonth & '/' & ARGUMENTS.FORM.watEndVacationDay & '/' & ARGUMENTS.FORM.watEndVacationYear) ) {
+					if ( NOT IsDate(qGetStudentInfo.wat_vacation_end) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid vacation end date');
 					}
 					
-					if ( NOT IsDate(ARGUMENTS.FORM.programStartMonth & '/' & ARGUMENTS.FORM.programStartDay & '/' & ARGUMENTS.FORM.programStartYear) ) {
+					if ( NOT IsDate(qGetCandidateInfo.startDate) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid program start date');
 					}
 					
-					if ( NOT IsDate(ARGUMENTS.FORM.programEndMonth & '/' & ARGUMENTS.FORM.programEndDay & '/' & ARGUMENTS.FORM.programEndYear) ) {
+					if ( NOT IsDate(qGetCandidateInfo.endDate) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please enter a valid program end date');
 					}
 					
-					if ( NOT LEN(ARGUMENTS.FORM.wat_placement) ) {
+					if ( NOT LEN(qGetCandidateInfo.wat_placement) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please select a program option');
 					}
 					
-					if ( ARGUMENTS.FORM.wat_placement EQ 'CSB-Placement' AND NOT LEN(ARGUMENTS.FORM[qGetQuestions.fieldKey[2]]) ) {
+					if ( qGetCandidateInfo.wat_placement EQ 'CSB-Placement' AND NOT LEN(qGetAnswers.answer[2]) ) {
 					 	ArrayAppend(stRequiredFields.fieldList, 'Please enter a requested placement');
 					}
 					
-					if ( NOT LEN(ARGUMENTS.FORM.wat_participation) ) {
+					if ( NOT LEN(qGetCandidateInfo.wat_participation) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please select number of previous participations in the program');
 					}
 					break;
 				}
 
 				case 'section2': {
+					// It also requires a document to be uploaded - Agreement ID=1
+					qAgreement = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(
+						foreignTable=APPLICATION.foreignTable,
+						foreignID=ARGUMENTS.candidateID,
+						documentTypeID=1
+					);
+					
+					// Check if Agreement has been uploaded
+					if ( NOT qAgreement.recordCount AND NOT APPLICATION.CFC.DOCUMENT.DocumentExists(ID=VAL(qAgreement.ID)) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please print, sign and upload the Agreement');
+					}
 					break;
 				}
 				
 				case 'section3': {
+					// It also requires a document to be uploaded - English Assessment ID=2
+					if ( CLIENT.loginType EQ 'user' ) {
+						
+						qEnglishAssessment = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(
+							foreignTable=APPLICATION.foreignTable,
+							foreignID=ARGUMENTS.candidateID,
+							documentTypeID=2
+						);
+						
+						// Check if English Assessment has been uploaded
+						if ( NOT qEnglishAssessment.recordCount AND NOT APPLICATION.CFC.DOCUMENT.DocumentExists(ID=VAL(qEnglishAssessment.ID)) ) {
+							ArrayAppend(stRequiredFields.fieldList, 'Please print, sign and upload the English Assessment');
+						}
+						
+                    }
 					break;
 				}
 				
@@ -753,32 +783,16 @@
 				}
 			}
 			
-			// Check Required Table Fields
-			if ( checkRequiredSection ) {
+			  // Section Fields are checked on this function
+			stRequiredSection = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(
+									sectionName=ARGUMENTS.sectionName, 
+									foreignTable=ARGUMENTS.foreignTable, 
+									foreignID=ARGUMENTS.candidateID
+								);
 			
-				// Section Fields are checked on this function
-				stRequiredSection = APPLICATION.CFC.ONLINEAPP.checkRequiredSectionFields(
-										sectionName=ARGUMENTS.sectionName, 
-										foreignTable=ARGUMENTS.foreignTable, 
-										foreignID=ARGUMENTS.candidateID
-									);
-				
-				// Merge Arrays
-				stRequiredFields.fieldList = APPLICATION.CFC.UDF.arrayMerge(array1=stRequiredFields.fieldList, array2=stRequiredSection.fieldList);
-				
-			// Check required FORM fields
-			} else {
-
-				// Loop Over Application Questions Fields
-				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
-					
-					if (qGetQuestions.isRequired[i] AND NOT LEN(ARGUMENTS.FORM[qGetQuestions.fieldKey[i]]) ) {
-						ArrayAppend(stRequiredFields.fieldList, qGetQuestions.requiredMessage[i]);
-					}
-				}
-				
-			}
-
+			// Merge Arrays
+			stRequiredFields.fieldList = APPLICATION.CFC.UDF.arrayMerge(array1=stRequiredFields.fieldList, array2=stRequiredSection.fieldList);
+			
 			// Check if there are errors
 			if ( ArrayLen(stRequiredFields.fieldList) ) {
 				// Set setion as not completed

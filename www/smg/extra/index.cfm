@@ -136,15 +136,15 @@
             <cfelseif VAL(qAuthenticateCandidate.recordCount)>
 
 				<cfscript>
-					// Do Login / Set SESSION variables / Update Last Logged in Date
-                    APPLICATION.CFC.ONLINEAPP.doLogin(candidateID=qAuthenticateCandidate.candidateID);
-                    				
 					// SET LINKS        
 					getLink = APPLICATION.CFC.onlineApp.setLoginLinks(
 						companyID=qAuthenticateCandidate.companyID,
 						loginType='candidate'
 					);
-					
+
+					// Do Login / Set SESSION variables / Update Last Logged in Date
+                    APPLICATION.CFC.ONLINEAPP.doLogin(candidateID=qAuthenticateCandidate.candidateID);
+                    				
 					// Redirect Candidate to appropriate page
 					location(getLink, "no");
 				</cfscript>

@@ -88,7 +88,7 @@
 				FROM
                 	smg_countryList
                 WHERE 
-                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+                    countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
         </cfquery> 
 		       
 		<cfreturn qGetCountryByID>
@@ -126,14 +126,18 @@
         	datasource="#APPLICATION.DSN.Source#">
                 SELECT 
                 	ID,
+                    applicationID,
                     question,
                     answer,
+                    isDeleted,
                     dateCreated,
                     dateUpdated
 				FROM
-                	faq
+                	applicationFaq
 				WHERE
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                	applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.applicationID#">
+                AND	
+                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 				<cfif LEN(ARGUMENTS.searchKeyword)>
 					AND
                     (
@@ -145,9 +149,8 @@
 				ORDER BY
                 	question                                   
         </cfquery> 
-
+        
 		<cfreturn qGetFAQ>
 	</cffunction>
-
 
 </cfcomponent>

@@ -13,8 +13,8 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
 
-	<!--- Param Variables --->
-	<cfparam name="currentTabID" default="0">
+	<!--- It is set to 1 for the print application page --->
+	<cfparam name="printApplication" default="#SESSION.CANDIDATE.isReadOnly#">
 
 	<!--- It is set to 1 for the print application page --->
 	<cfparam name="printApplication" default="0">
@@ -42,7 +42,7 @@
 
 	<!--- Section Wrapper --->
     <div class="wrapApplication">
-
+		
 		<!--- Application Tabs --->
         <div id="tabs">
         
@@ -51,7 +51,7 @@
                 <li><a href="##agreement"><span>Agreement</span></a></li>
                 <li><a href="##englishAssessment"><span>English Assessment</span></a></li>
 			</ul>
-             
+                        
             <div id="candidateInformation">
                 <cfinclude template="_section1.cfm">
             </div>

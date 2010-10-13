@@ -38,6 +38,21 @@
         default="1"
 		/>
 
+	<cfparam 
+		name="ATTRIBUTES.companyID"
+		type="integer"
+        default="0"
+		/>
+
+	<cfscript>
+		// Get what company candidate/user is logged in
+		if ( StructKeyExists(SESSION.CANDIDATE, "companyID") AND VAL(SESSION.CANDIDATE.companyID) ) {
+			ATTRIBUTES.companyID = SESSION.CANDIDATE.companyID;
+		} else if ( StructKeyExists(CLIENT, "companyID") AND VAL(CLIENT.companyID) ) {
+			ATTRIBUTES.companyID = CLIENT.companyID;
+		}
+	</cfscript>
+
 </cfsilent>
 
 <!--- 
@@ -47,6 +62,90 @@
 <cfif NOT CompareNoCase(THISTAG.ExecutionMode, "Start")>
 
 	<cfoutput>
+    	
+        <!--- Set Up Header Information According to Program --->
+        <cfswitch expression="#ATTRIBUTES.companyID#">
+        	
+            <!--- Trainee --->
+            <cfcase value="7">
+
+				<cfsavecontent variable="csbMetaData">            
+                    <title>#APPLICATION.METADATA.Trainee.pageTitle#</title>
+                    <meta name="description" content="#APPLICATION.METADATA.Trainee.pageDescription#" />
+                    <meta name="keywords" content="#APPLICATION.METADATA.Trainee.pageKeywords#" />
+				</cfsavecontent>   
+            
+				<cfsavecontent variable="csbHeader">            
+                    <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.CSB.Trainee.name# #APPLICATION.CSB.Trainee.programName#">
+                        <div class="mainLogo"></div>
+                        <div class="title">#APPLICATION.CSB.Trainee.name#</div>
+                        <div class="subTitle">#APPLICATION.CSB.Trainee.programName#</div>
+                    </a>
+				</cfsavecontent>   
+
+            	<cfsavecontent variable="csbEmailHeader">
+                    <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.Trainee.name#" style="text-decoration:none; color:##000000;">
+                        <span style="font-size: 1.4em;">#APPLICATION.CSB.Trainee.name#</span> <br />
+                        <span style="font-size: 0.9em;">#APPLICATION.CSB.Trainee.programName#</span>
+                    </a>
+				</cfsavecontent>                
+                                 
+            </cfcase>
+    		
+            <!--- WAT --->
+            <cfcase value="8">
+
+				<cfsavecontent variable="csbMetaData">            
+                    <title>#APPLICATION.METADATA.WAT.pageTitle#</title>
+                    <meta name="description" content="#APPLICATION.METADATA.WAT.pageDescription#" />
+                    <meta name="keywords" content="#APPLICATION.METADATA.WAT.pageKeywords#" />
+				</cfsavecontent>   
+            
+				<cfsavecontent variable="csbHeader">	            
+                    <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.CSB.WAT.name# #APPLICATION.CSB.WAT.programName#">
+                        <div class="mainLogo"></div>
+                        <div class="title">#APPLICATION.CSB.WAT.name#</div>
+                        <div class="subTitle">#APPLICATION.CSB.WAT.programName#</div>
+                    </a>
+				</cfsavecontent>   
+                
+            	<cfsavecontent variable="csbEmailHeader">
+                    <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.WAT.name#" style="text-decoration:none; color:##000000;">
+                        <span style="font-size: 1.4em;">#APPLICATION.CSB.WAT.name#</span> <br />
+                        <span style="font-size: 0.9em;">#APPLICATION.CSB.WAT.programName#</span>
+                    </a>
+				</cfsavecontent>                
+                                 
+            </cfcase>
+    		
+            <!--- Default Header --->
+            <cfdefaultcase>
+
+				<cfsavecontent variable="csbMetaData">            
+                    <title>#APPLICATION.METADATA.pageTitle#</title>
+                    <meta name="description" content="#APPLICATION.METADATA.pageDescription#" />
+                    <meta name="keywords" content="#APPLICATION.METADATA.pageKeywords#" />
+				</cfsavecontent>   
+            
+            	<cfsavecontent variable="csbHeader">
+                    <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.CSB.name# #APPLICATION.CSB.programName#">
+                        <div class="mainLogo"></div>
+                        <div class="title">#APPLICATION.CSB.name#</div>
+                        <div class="subTitle">&nbsp;</div>
+                    </a>
+				</cfsavecontent>     
+
+            	<cfsavecontent variable="csbEmailHeader">
+                    <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#" style="text-decoration:none; color:##000000;">
+                        <span style="font-size: 1.4em;">#APPLICATION.CSB.name#</span> <br />
+                        <span style="font-size: 0.9em;">&nbsp;</span>
+                    </a>
+				</cfsavecontent>                
+                               
+            </cfdefaultcase>
+            
+        </cfswitch>                            
+    
     
         <cfswitch expression="#ATTRIBUTES.headerType#">
     	
@@ -57,14 +156,12 @@
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <cfoutput>
-                        <title>#APPLICATION.Metadata.pageTitle#</title>
-                        <meta name="description" content="#APPLICATION.Metadata.pageDescription#" />
-                        <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
-                        <link rel="stylesheet" href="../linked/css/appLogin.css" type="text/css" />
-                        <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
+                        #csbMetaData#
+                        <link rel="stylesheet" href="../../../internal/linked/css/appLogin.css" type="text/css" />
+                        <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
                         <script src="#APPLICATION.Path.jQuery#" type="text/javascript"></script> <!-- jQuery -->
-                        <script src="../linked/js/jquery.pstrength-min.1.2.js" type="text/javascript"></script>
-                        <script src="../linked/js/appLogin.js" type="text/javascript"></script>
+                        <script src="../../../internal/linked/js/jquery.pstrength-min.1.2.js" type="text/javascript"></script>
+                        <script src="../../../internal/linked/js/appLogin.js" type="text/javascript"></script>
                     </cfoutput>
                 </head>
                 <body>
@@ -78,9 +175,7 @@
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <cfoutput>
-                        <title>#APPLICATION.Metadata.pageTitle#</title>
-                        <meta name="description" content="#APPLICATION.Metadata.pageDescription#" />
-                        <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
+                        #csbMetaData#
                         <link rel="stylesheet" href="../../../internal/linked/css/appSection.css" type="text/css" />
                         <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
@@ -100,11 +195,7 @@
                     <div class="topBar">
                         
                         <div class="topLeft">
-                            <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.CSB.name# Application For Admission">
-                                <div class="mainLogo"></div>
-                                <div class="title">#APPLICATION.CSB.name#</div>
-                                <div class="subTitle">#APPLICATION.CSB.programName#</div>
-                            </a>
+                            #csbHeader#                     
 						</div>
                                                 
                         <div class="topRight">
@@ -135,14 +226,19 @@
                             
                             <a href="#CGI.SCRIPT_NAME#?action=checkList" id="itemLinks" class="itemLinks">Application Checklist</a> 
                                 <ul>
-                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Candidate Information</a></li>
-                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Agreement</a></li>
-                                    <li class="no"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">English Assessment</a></li>
+                                    <li class="#YesNoFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection1Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=0">Candidate Information</a></li>
+                                    <li class="#YesNoFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection2Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Agreement</a></li>
+                                    <li class="#YesNoFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">English Assessment</a></li>
                                 </ul>    
-                            
+
                             <a href="#CGI.SCRIPT_NAME#?action=documents" class="itemLinks <cfif Find("documents", CGI.QUERY_STRING)> selected </cfif>">Upload Documents</a>
                             <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks <cfif Find("submit", CGI.QUERY_STRING)> selected </cfif>">Submit Application</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=flightInfo" class="itemLinks <cfif Find("flightInfo", CGI.QUERY_STRING)> selected </cfif>">Flight Information</a>                            
+							<cfif CLIENT.loginType NEQ 'user'>
+                            	<a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks <cfif Find("submit", CGI.QUERY_STRING)> selected </cfif>">Submit Application</a>
+                            <cfelse>    
+                                <a href="#CGI.SCRIPT_NAME#?action=submit" class="itemLinks <cfif Find("submit", CGI.QUERY_STRING)> selected </cfif>">Approve/Deny Application</a>
+                            </cfif> 
                         </div>                            
                     
                     </div>
@@ -156,27 +252,18 @@
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <cfoutput>
-                        <title>#APPLICATION.Metadata.pageTitle#</title>
-                        <meta name="description" content="#APPLICATION.Metadata.pageDescription#" />
-                        <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
-                        <link rel="stylesheet" href="../linked/css/appSection.css" type="text/css" />
-                        <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
-                        <script src="../linked/js/appSection.js " type="text/javascript"></script>
+                        #csbMetaData#
+                        <link rel="stylesheet" href="../../../internal/linked/css/appSection.css" type="text/css" />
+                        <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
+                        <script src="../../../internal/linked/js/appSection.js " type="text/javascript"></script>
                     </cfoutput>
                 </head>
                 <body>
-                    
                     <cfif ATTRIBUTES.includeTopBar>
                         <div class="topBar">
-                            
+                                
                             <div class="topLeft">
-                                <div class="printLogo">&nbsp;</div>
-                                <div class="title">#APPLICATION.CSB.name#</div>
-                                <div class="subTitle">Application for Admission</div>
-                                <!---
-                                <div class="title">#APPLICATION.CSB.name#</div>
-                                <div class="subTitle">Application for Admission</div>
-								--->
+                                #csbHeader#                     
                             </div>
                             
                         </div>
@@ -190,7 +277,7 @@
                 <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                    <title>#APPLICATION.Metadata.pageTitle#</title>
+                    <title>#APPLICATION.METADATA.pageTitle#</title>
                 </head>
                 <body>
 
@@ -203,10 +290,7 @@
                             </a>
                         </td>
                         <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
-                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#" style="text-decoration:none; color:##000000;">
-                                <span style="font-size: 1.4em;">#APPLICATION.CSB.name#</span> <br />
-                                <span style="font-size: 0.9em;">#APPLICATION.CSB.programName#</span>
-                            </a>
+                            #csbEmailHeader#
                         </td>
                     </tr>
                 </table>                                                                    

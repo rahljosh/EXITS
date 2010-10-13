@@ -246,6 +246,24 @@
 	</cffunction>
 
 	
+    <!---
+		Query to Struct
+	--->
+    <cffunction name="QueryToStruct" returntype="struct" output="false">
+        <cfargument name="query" type="query" required="true">
+        
+        <cfscript>
+			s = StructNew();
+		</cfscript>
+		
+        <cfloop index="i" list="#ARGUMENTS.query.ColumnList#">
+        	<cfset StructInsert (s, i, ARGUMENTS.query[i])>
+        </cfloop>
+        
+        <cfreturn s>
+    </cffunction>
+
+	
     <!--- Merge Two Arrays --->
     <cffunction name="arrayMerge" access="public" returntype="array" output="false">
         <cfargument name="array1" required="true" type="array">
