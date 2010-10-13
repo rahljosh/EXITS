@@ -108,8 +108,10 @@
 // Pop Up Application 
 $('.popUpOnlineApplication').popupWindow({ 
 	height:600, 
-	width:1100, 
-	top:50, 
-	left:50
+	width:1100,
+	centerBrowser:1,
+	scrollbars:1,
+	resizable:1,
+	windowName:'onlineApplication'
 }); 
 </script>

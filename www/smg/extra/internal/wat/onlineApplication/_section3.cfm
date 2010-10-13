@@ -14,19 +14,18 @@
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
     
 	<!--- It is set to 1 for the print application page --->
-	<cfparam name="printApplication" default="0">
+	<cfparam name="printApplication" default="#SESSION.CANDIDATE.isReadOnly#">
     
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submittedType" default="">
     <cfparam name="FORM.currentTabID" default="2">
     <!--- Interview Date --->
+    <cfparam name="FORM.dateInterview" default="">
     <cfparam name="FORM.dateInterviewMonth" default="">
     <cfparam name="FORM.dateInterviewDay" default="">
     <cfparam name="FORM.dateInterviewYear" default="">
     <!--- Candidate Details --->
     <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getCandidateID()#">
-	<!--- Print Application --->
-    <cfparam name="FORM.intlRep" default="">
 
     <cfscript>
 		// Get Current Candidate Information
@@ -36,18 +35,11 @@
 			printApplication = 1;
 		}
 		
-		// Get Intl Rep / Branch Name
-		if ( VAL(qGetCandidateInfo.branchID) ) {
-			FORM.intlRep = APPLICATION.CFC.USER.getUserByID(userID=qGetCandidateInfo.branchID).businessName;
-		} else {
-			FORM.intlRep = APPLICATION.CFC.USER.getUserByID(userID=qGetCandidateInfo.intRep).businessName;
-		}
-
 		// Get Questions for this section
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section3');
 		
 		// Get Answers for this section
-		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section3', foreignTable='candidate', foreignID=FORM.candidateID);
+		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section3', foreignTable=APPLICATION.foreignTable, foreignID=FORM.candidateID);
 
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
@@ -57,15 +49,8 @@
 		// FORM Submitted
 		if ( FORM.submittedType EQ 'section3' ) {
 
-			// Parent Phone
+			// Date Interview
 			FORM[qGetQuestions.fieldKey[5]] = FORM.dateInterviewMonth & '/' & FORM.dateInterviewDay & '/' & FORM.dateInterviewYear;
-
-			// FORM Validation
-			for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
-				if (qGetQuestions.isRequired[i] AND NOT LEN(FORM[qGetQuestions.fieldKey[i]]) ) {
-					SESSION.formErrors.Add(qGetQuestions.requiredMessage[i]);
-				}
-			}
 
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
@@ -74,15 +59,15 @@
 				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 					APPLICATION.CFC.ONLINEAPP.insertAnswer(	
 						applicationQuestionID=qGetQuestions.ID[i],
-						foreignTable='candidate',
+						foreignTable=APPLICATION.foreignTable,
 						foreignID=FORM.candidateID,
 						fieldKey=qGetQuestions.fieldKey[i],
 						answer=FORM[qGetQuestions.fieldKey[i]]						
 					);	
 				}
-				
+
 				// Update Candidate Session Variables
-				APPLICATION.CFC.CANDIDATE.setCandidateSession(ID=FORM.candidateID);
+				APPLICATION.CFC.CANDIDATE.setCandidateSession(candidateID=FORM.candidateID);
 				
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
@@ -98,14 +83,18 @@
 			for ( i=1; i LTE qGetAnswers.recordCount; i=i+1 ) {
 				FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
 			}
-
-			// Break down interview date						
-			if ( IsDate(FORM[qGetAnswers.fieldKey[5]]) ) {
-				FORM.dateInterviewMonth = Month(FORM[qGetAnswers.fieldKey[5]]);
-				FORM.dateInterviewDay = Day(FORM[qGetAnswers.fieldKey[5]]);
-				FORM.dateInterviewYear = Year(FORM[qGetAnswers.fieldKey[5]]);
-			}
 			
+			if ( qGetAnswers.recordCount ) {
+				
+				FORM.dateInterview = FORM[qGetAnswers.fieldKey[5]];
+				// Break down interview date						
+				if ( IsDate(FORM[qGetAnswers.fieldKey[5]]) ) {
+					FORM.dateInterviewMonth = Month(FORM[qGetAnswers.fieldKey[5]]);
+					FORM.dateInterviewDay = Day(FORM[qGetAnswers.fieldKey[5]]);
+					FORM.dateInterviewYear = Year(FORM[qGetAnswers.fieldKey[5]]);
+				} 
+				
+			}
 		}
 	</cfscript>
     
@@ -116,37 +105,9 @@
 	$(function() {
 		$(".datepicker").datepicker();
 	});	
-
-	// JQuery Validator
-	$().ready(function() {
-		var container = $('div.errorContainer');
-		// validate the form when it is submitted
-		var validator = $("#section3Form").validate({
-			errorContainer: container,
-			errorLabelContainer: $("ol", container),
-			wrapper: 'li',
-			meta: "validate"
-		});
-	
-	});
 </script>
 
 <cfoutput>
-
-<!---  Our jQuery error container --->
-<div class="errorContainer">
-	<p><em>Oops... the following errors were encountered:</em></p>
-					
-	<ol>
-		<cfloop query="qGetQuestions">
-        	<cfif qGetQuestions.isRequired>
-				<li><label for="#qGetQuestions.fieldKey#" class="error">#qGetQuestions.requiredMessage#</label></li>
-            </cfif>
-		</cfloop>
-	</ol>
-	
-	<p>Data has <strong>not</strong> been saved.</p>
-</div>
 
 <!--- Application Body --->
 <div class="form-container">
@@ -173,7 +134,12 @@
     <input type="hidden" name="currentTabID" value="2" />
     <input type="hidden" name="candidateID" id="candidateID" value="#FORM.candidateID#" />
     
-    <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
+    <p class="legend">
+    	<strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)
+	    <cfif NOT printApplication>
+	        <a href="#CGI.SCRIPT_NAME#?action=printApplication&sectionName=section3"><img src="../../pics/onlineApp/printhispage.gif" border="0"/></a> 
+        </cfif>
+    </p>
     
     <!--- Personal Data --->
     <fieldset>
@@ -181,12 +147,12 @@
         <legend>English Assessment</legend>
 		
         <cfif CLIENT.loginType NEQ 'user'>
-       		<h3 class="h2Message">This page must be completed by #FORM.intlRep#.</h3>
+       		<h3 class="h2Message">This page must be completed by #SESSION.CANDIDATE.intlRepName#.</h3>
         </cfif>
         
         <div class="field">
             <label>CSB International Representative <em>*</em></label> 
-            <div class="printField">#FORM.intlRep# &nbsp;</div>
+            <div class="printField">#SESSION.CANDIDATE.intlRepName# &nbsp;</div>
         </div>
 
         <div class="field">
@@ -214,12 +180,6 @@
             </cfif>
 		</div>
 
-		<!--- Scale Score Information --->
-        <div class="field">
-            <label>&nbsp;</label> 
-            <div class="printField">#FORM.intlRep# &nbsp;</div>
-        </div>
-        
 		<!--- Slep Score --->
 		<div class="field">
 			<label for="#qGetQuestions.fieldKey[3]#">#qGetQuestions.displayField[3]# <cfif qGetQuestions.isRequired[3]><em>*</em></cfif></label> 
@@ -243,14 +203,19 @@
 		<!--- Interviewer Signature --->
         <div class="field">
             <label>Interviewer Signature <em>*</em></label> 
-            <div class="printField"> &nbsp;</div>
+            <div class="printField"> &nbsp; </div>
         </div>
        
         <!--- Date --->
         <div class="field">
 			<label for="dateInterviewMonth">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label>            
             <cfif printApplication>
-				<div class="printField">#MonthAsString(FORM.dateInterviewMonth)#/#FORM.dateInterviewDay#/#FORM.dateInterviewYear# &nbsp;</div>
+				<div class="printField">
+                	<cfif IsDate(FORM.dateInterview)>	
+                        #MonthAsString(FORM.dateInterviewMonth)#/#FORM.dateInterviewDay#/#FORM.dateInterviewYear# 
+                    </cfif>    
+					&nbsp;
+				</div>
         	<cfelse>
                 <select name="dateInterviewMonth" id="dateInterviewMonth" class="smallField {validate:{required:true}}">
                     <option value=""></option>

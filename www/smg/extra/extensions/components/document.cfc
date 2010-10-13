@@ -204,6 +204,8 @@
 
 
 	<cffunction name="getDocumentsByFilter" access="public" returntype="query" output="false" hint="Returns a list of documents">
+        <cfargument name="foreignTable" default="" hint="foreignTable is not required">
+        <cfargument name="foreignID" default="" hint="foreignID is not required">
         <cfargument name="documentTypeID" default="" hint="documentTypeID is not required">
 
         <cfquery 
@@ -229,6 +231,14 @@
                     document
                 WHERE
                     1 = 1
+                <cfif LEN(ARGUMENTS.foreignTable)>
+                	AND
+                    	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+                </cfif>
+                <cfif LEN(ARGUMENTS.foreignID)>
+                	AND
+                    	foreignID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignID#">
+                </cfif>
                 <cfif LEN(ARGUMENTS.documentTypeID)>
                 	AND
                     	documentTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentTypeID#">

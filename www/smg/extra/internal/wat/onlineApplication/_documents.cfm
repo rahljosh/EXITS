@@ -15,9 +15,11 @@
 
     <!--- Candidate Details --->
     <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getcandidateID()#">
-    <cfparam name="FORM.foreignTable" default="extra_candidates">
+    <cfparam name="FORM.foreignTable" default="#APPLICATION.foreignTable#">
 
 	<cfajaxproxy cfc="extra.extensions.components.document" jsclassname="proxyDocument">
+    
+    <cfajaxproxy cfc="extra.extensions.components.candidate" jsclassname="proxyCandidate">
 
     <cfscript>
 		// Get Current Candidate Information
@@ -45,7 +47,17 @@
 			<!--- Application Body --->
             <div class="form-container">
             
-                <p class="legend">Please upload supporting documents such as additional references, awards, artwork, etc. that you feel should be seen by the admission committee.</p>
+                <p class="legend">Please upload supporting documents on this page. After upload, click on edit to select a category for the file.</p>
+                
+                <p class="legend">
+                    Besides the agreement and English Assessment (uploaded by your International Representative). You also need to upload: <br /><br />
+                    
+                    1. Enrollment confirmation from the school (proof of student status) <br />
+                    2. Translation after the enrollment confirmation from the school <br />
+                    3. Passport copy <br />
+                    4. Job offer agreement  (only for the Self-placement participants) <br />
+                    5. Walk-in agreement (only for the Walk-in participants) <br />
+                </p>
                 
                 <!--- Upload Documents --->    
                 <fieldset>
@@ -112,7 +124,9 @@
                 <fieldset>
             
                     <legend>Uploaded Documents</legend>
-            
+            		
+                    <p class="legend">After upload, click on edit to select the category information of a file.</p>
+                    
                     <div class="documentList" align="center">
                         <cfform>
                         <!--- These variables are used in the CFGrid --->
@@ -162,6 +176,7 @@
 		// Refresh Grid
 		ColdFusion.Grid.refresh('documentList', true);
 	}
+
 	/* For some reason does not work on IE
 	var handleComplete = function(res) {		
 		console.dir(res);
@@ -242,6 +257,11 @@
 		
 		// Refresh Grid
 		ColdFusion.Grid.refresh('documentList', true);
+		
+		// Update Candidate Session Variables
+		var candidateCFC = new proxyCandidate();
+		
+		candidateCFC.setCandidateSessionRemote($("#candidateID").val());
 	}
 
 	/* Delete File */

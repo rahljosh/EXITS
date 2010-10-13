@@ -11,7 +11,7 @@
 <cfsilent>
 
 	<!--- Param Variables --->
-    <cfparam name="URL.foreignTable" default="extra_candidates">
+    <cfparam name="URL.foreignTable" default="#APPLICATION.foreignTable#">
     <cfparam name="URL.foreignID" default="">
 	
 </cfsilent>
@@ -34,5 +34,6 @@
 	// We must pass this back otherwise it won't upload multiple files.
 	str.STATUS = 200;
 	str.MESSAGE = "passed";
-	WriteOutput(serializeJSON(str));
+	// for some reason this last line is throwing an error
+	// WriteOutput(serializeJSON(str));
 </cfscript>

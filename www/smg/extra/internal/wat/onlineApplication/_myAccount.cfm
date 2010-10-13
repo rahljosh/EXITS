@@ -95,10 +95,14 @@
 					// Send out Email Confirmation
 					APPLICATION.CFC.EMAIL.sendEmail(
 						emailTo=FORM.email,
-						emailType='loginUpdated',
-						candidateID=FORM.candidateID
+						emailTemplate='loginUpdated',
+						candidateID=FORM.candidateID,
+						companyID=APPLICATION.CFC.CANDIDATE.getCandidateSession().companyID
 					);
 				}
+
+				// Update Candidate Session Variables
+				APPLICATION.CFC.CANDIDATE.setCandidateSession(candidateID=FORM.candidateID);
 
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");

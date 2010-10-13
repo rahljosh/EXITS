@@ -14,7 +14,7 @@
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
     
 	<!--- It is set to 1 for the print application page --->
-	<cfparam name="printApplication" default="0">
+	<cfparam name="printApplication" default="#SESSION.CANDIDATE.isReadOnly#">
     
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submittedType" default="">
@@ -26,6 +26,7 @@
     <cfparam name="FORM.firstName" default="">
 	<cfparam name="FORM.middleName" default="">
     <cfparam name="FORM.sex" default="">
+    <cfparam name="FORM.dob" default="">
     <cfparam name="FORM.dobMonth" default="">
     <cfparam name="FORM.dobDay" default="">
     <cfparam name="FORM.dobYear" default="">
@@ -51,16 +52,20 @@
     <cfparam name="FORM.emergencyPhonePrefix" default="">
     <cfparam name="FORM.emergencyPhoneNumber" default="">
 	<!--- Dates of Official Vacation --->
+    <cfparam name="FORM.watStartVacation" default="">
     <cfparam name="FORM.watStartVacationMonth" default="">
     <cfparam name="FORM.watStartVacationDay" default="">
     <cfparam name="FORM.watStartVacationYear" default="">
+    <cfparam name="FORM.watEndVacation" default="">    
     <cfparam name="FORM.watEndVacationMonth" default="">
     <cfparam name="FORM.watEndVacationDay" default="">
     <cfparam name="FORM.watEndVacationYear" default="">
     <!--- Program Information --->
+    <cfparam name="FORM.programStart" default="">
     <cfparam name="FORM.programStartMonth" default="">
     <cfparam name="FORM.programStartDay" default="">
     <cfparam name="FORM.programStartYear" default="">
+    <cfparam name="FORM.programEnd" default="">
     <cfparam name="FORM.programEndMonth" default="">
     <cfparam name="FORM.programEndDay" default="">
     <cfparam name="FORM.programEndYear" default="">
@@ -72,125 +77,63 @@
     <cfparam name="FORM.ssnGroupNumber" default="">
     <cfparam name="FORM.ssnSerialNumber" default="">
 
+	<!--- Candidate Picture --->
+    <cfdirectory name="candidatePicture" directory="#APPLICATION.PATH.uploadCandidatePicture#" filter="#FORM.candidateID#.*">
+    
     <cfscript>
 		// Get Current Candidate Information
 		// qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(candidateID=FORM.candidateID);
+
+		// Get Current Candidate Information
+		qGetCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry();
 
 		// Get Questions for this section
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section1');
 		
 		// Get Answers for this section
-		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable='candidate', foreignID=FORM.candidateID);
+		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=FORM.candidateID);
 
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 			param name="FORM[qGetQuestions.fieldKey[i]]" default="";
 		}
 
-		// Get Current Candidate Information
-		qGetCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry();
-
 		// FORM Submitted
 		if ( FORM.submittedType EQ 'section1' ) {
-
+			
 			// Home Phone
 			FORM.home_phone = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.homePhoneCountry, areaCode=FORM.homePhoneArea, prefix=FORM.homePhonePrefix, number=FORM.homePhoneNumber);
 			// Emergency Phone
 			FORM.emergency_phone = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.emergencyPhoneCountry, areaCode=FORM.emergencyPhoneArea, prefix=FORM.emergencyPhonePrefix, number=FORM.emergencyPhoneNumber);					
 			// SSN
 			FORM.SSN = APPLICATION.CFC.UDF.formatSSN(areaNumber=FORM.ssnAreaNumber, groupNumber=FORM.ssnGroupNumber, serialNumber=FORM.ssnSerialNumber);
+			// WAT Start and End Dates
+			FORM.watStartVacation = FORM.watStartVacationMonth & "/" & FORM.watStartVacationDay & "/" & FORM.watStartVacationYear;
+			FORM.watEndVacation = FORM.watEndVacationMonth & "/" & FORM.watEndVacationDay & "/" & FORM.watEndVacationYear;
+			// Program Start and End Dates
+			FORM.programStart = FORM.programStartMonth & "/" & FORM.programStartDay & "/" & FORM.programStartYear;
+			FORM.programEnd = FORM.programEndMonth & "/" & FORM.programEndDay & "/" & FORM.programEndYear;
 			
-			// FORM Validation
+			// Check required Fields
 			if ( NOT LEN(FORM.lastName) ) {
-				SESSION.formErrors.Add("Please enter your last name");
+				// Get all the missing items in a list
+				SESSION.formErrors.Add('Please enter your last name');
 			}
-
+  
 			if ( NOT LEN(FORM.firstName) ) {
-				SESSION.formErrors.Add("Please enter your first name");
-			}
-
-			if ( NOT LEN(FORM.sex) ) {
-				SESSION.formErrors.Add("Please select a gender");
-			}
-
-			if ( NOT IsDate(FORM.dobMonth & '/' & FORM.dobDay & '/' & FORM.dobYear) ) {
-				SESSION.formErrors.Add("Please enter a valid date of birth");
-			}
-
-			if ( NOT LEN(FORM.birth_city) ) {
-				SESSION.formErrors.Add("Please enter your place of birth");
-			}
-
-			if ( NOT VAL(FORM.birth_country) ) {
-				SESSION.formErrors.Add("Please select a country of birth");
-			}
-
-			if ( NOT VAL(FORM.residence_country) ) {
-				SESSION.formErrors.Add("Please select a country of residence");
-			}
-
-			if ( NOT VAL(FORM.citizen_country) ) {
-				SESSION.formErrors.Add("Please select a country of citizenship");
+				SESSION.formErrors.Add('Please enter your first name');
 			}
 			
-			if ( NOT LEN(FORM.home_address) ) {
-				SESSION.formErrors.Add("Please enter your mailing address");
-			}
-
-			if ( NOT LEN(FORM.home_city) ) {
-				SESSION.formErrors.Add("Please enter your mailing city");
-			}
-
-			if ( NOT VAL(FORM.home_country) ) {
-				SESSION.formErrors.Add("Please select your mailing country");
-			}
-
-			if ( NOT LEN(FORM.passport_number) ) {
-				SESSION.formErrors.Add("Please enter your passport number");
-			}
-
-			if ( NOT LEN(FORM.emergency_name) ) {
-				SESSION.formErrors.Add("Please enter your emergency contact name");
-			}
-
-			if ( NOT LEN(FORM.emergency_phone) ) {
-				SESSION.formErrors.Add("Please enter your emergency contact phone");
-			}
-
-			if ( NOT IsDate(FORM.watStartVacationMonth & '/' & FORM.watStartVacationDay & '/' & FORM.watStartVacationYear) ) {
-				SESSION.formErrors.Add("Please enter a valid vacation start date");
+			// Vacation Dates
+			if ( isDate(FORM.watStartVacation) AND isDate(FORM.watEndVacation) AND (FORM.watStartVacation GTE FORM.watEndVacation) ) {
+				SESSION.formErrors.Add('Vacation must end after start date');
 			}
 			
-			if ( NOT IsDate(FORM.watEndVacationMonth & '/' & FORM.watEndVacationDay & '/' & FORM.watEndVacationYear) ) {
-				SESSION.formErrors.Add("Please enter a valid vacation end date");
+			// Program Dates
+			if ( isDate(FORM.programStart) AND isDate(FORM.programEnd) AND (FORM.programStart GTE FORM.programEnd) ) {
+				SESSION.formErrors.Add('Program must end after start date');
 			}
 			
-			if ( NOT IsDate(FORM.programStartMonth & '/' & FORM.programStartDay & '/' & FORM.programStartYear) ) {
-				SESSION.formErrors.Add("Please enter a valid program start date");
-			}
-			
-			if ( NOT IsDate(FORM.programEndMonth & '/' & FORM.programEndDay & '/' & FORM.programEndYear) ) {
-				SESSION.formErrors.Add("Please enter a valid program end date");
-			}
-			
-			if ( NOT LEN(FORM.wat_placement) ) {
-				SESSION.formErrors.Add("Please select a program option");
-			}
-
-			if ( FORM.wat_placement EQ 'CSB-Placement' AND NOT LEN(FORM[qGetQuestions.fieldKey[2]]) ) {
-				SESSION.formErrors.Add("Please enter a requested placement");
-			}
-			
-			if ( NOT LEN(FORM.wat_participation) ) {
-				SESSION.formErrors.Add("Please select number of previous participations in the program");
-			}
-
-			for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
-				if (qGetQuestions.isRequired[i] AND NOT LEN(FORM[qGetQuestions.fieldKey[i]]) ) {
-					SESSION.formErrors.Add(qGetQuestions.requiredMessage[i]);
-				}
-			}			
-				
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
 				
@@ -214,10 +157,10 @@
 					passport_number = FORM.passport_number,
 					emergency_name = FORM.emergency_name,
 					emergency_phone = FORM.emergency_phone,
-					wat_vacation_start = FORM.watStartVacationMonth & "/" & FORM.watStartVacationDay & "/" & FORM.watStartVacationYear,
-					wat_vacation_end = FORM.watEndVacationMonth & "/" & FORM.watEndVacationDay & "/" & FORM.watEndVacationYear,
-					startDate = FORM.programStartMonth & "/" & FORM.dobDay & "/" & FORM.programStartYear,
-					endDate = FORM.programEndMonth & "/" & FORM.programEndDay & "/" & FORM.programEndYear,
+					wat_vacation_start = FORM.watStartVacation,
+					wat_vacation_end = FORM.watEndVacation,
+					startDate = FORM.programStart,
+					endDate = FORM.programEnd,
 					wat_placement = FORM.wat_placement,
 					wat_participation = FORM.wat_participation,
 					ssn = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN)
@@ -227,7 +170,7 @@
 				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 					APPLICATION.CFC.ONLINEAPP.insertAnswer(	
 						applicationQuestionID=qGetQuestions.ID[i],
-						foreignTable='candidate',
+						foreignTable=APPLICATION.foreignTable,
 						foreignID=FORM.candidateID,
 						fieldKey=qGetQuestions.fieldKey[i],
 						answer=FORM[qGetQuestions.fieldKey[i]]						
@@ -235,7 +178,7 @@
 				}
 				
 				// Update Candidate Session Variables
-				APPLICATION.CFC.CANDIDATE.setCandidateSession(ID=FORM.candidateID);
+				APPLICATION.CFC.CANDIDATE.setCandidateSession(candidateID=FORM.candidateID);
 				
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
@@ -253,6 +196,7 @@
 			FORM.middleName = qGetCandidateInfo.middleName;
 			FORM.lastName = qGetCandidateInfo.lastName;
 			FORM.sex = qGetCandidateInfo.sex;
+			FORM.dob = qGetCandidateInfo.dob;
 			if ( IsDate(qGetCandidateInfo.dob) ) {
 				FORM.dobMonth = Month(qGetCandidateInfo.dob);
 				FORM.dobDay = Day(qGetCandidateInfo.dob);
@@ -282,22 +226,26 @@
 			FORM.emergencyPhonePrefix = stEmergencyPhone.prefix;
 			FORM.emergencyPhoneNumber = stEmergencyPhone.number;
 			// Dates of Official Vacation
+			FORM.watStartVacation = qGetCandidateInfo.wat_vacation_start;
 			if ( IsDate(qGetCandidateInfo.wat_vacation_start) ) {
 				FORM.watStartVacationMonth = Month(qGetCandidateInfo.wat_vacation_start);
 				FORM.watStartVacationDay = Day(qGetCandidateInfo.wat_vacation_start);
 				FORM.watStartVacationYear = Year(qGetCandidateInfo.wat_vacation_start);
 			}
+			FORM.watEndVacation = qGetCandidateInfo.wat_vacation_end;
 			if ( IsDate(qGetCandidateInfo.wat_vacation_end) ) {
 				FORM.watEndVacationMonth = Month(qGetCandidateInfo.wat_vacation_end);
 				FORM.watEndVacationDay = Day(qGetCandidateInfo.wat_vacation_end);
 				FORM.watEndVacationYear = Year(qGetCandidateInfo.wat_vacation_end);
 			}
 			// Program Information
+			FORM.programStart = qGetCandidateInfo.startDate;
 			if ( IsDate(qGetCandidateInfo.startDate) ) {
 				FORM.programStartMonth = Month(qGetCandidateInfo.startDate);
 				FORM.programStartDay = Day(qGetCandidateInfo.startDate);
 				FORM.programStartYear = Year(qGetCandidateInfo.startDate);
 			}
+			FORM.programEnd = qGetCandidateInfo.endDate;
 			if ( IsDate(qGetCandidateInfo.endDate) ) {
 				FORM.programEndMonth = Month(qGetCandidateInfo.endDate);
 				FORM.programEndDay = Day(qGetCandidateInfo.endDate);
@@ -332,21 +280,11 @@
 
 	// JQuery Validator
 	$().ready(function() {
-		var container = $('div.errorContainer');
-		// validate the form when it is submitted
-		var validator = $("#section1Form").validate({
-			errorContainer: container,
-			errorLabelContainer: $("ol", container),
-			wrapper: 'li',
-			meta: "validate"
-		});
-	
-	
+		
 		// Get current program option
 		selectedOption = $(":radio[name=wat_placement]").filter(":checked").val();
 		// Display Request Placement
 		showHideRequestPlacement(selectedOption);
-	
 	
 		// Ajax Image Upload
 		var thumb = $('img#thumb');	
@@ -384,54 +322,6 @@
 </script>
 
 <cfoutput>
-
-<!---  Our jQuery error container --->
-<div class="errorContainer">
-	<p><em>Oops... the following errors were encountered:</em></p>
-					
-	<ol>
-		<li><label for="lastName" class="error">Please enter your last name</label></li>  
-        <li><label for="firstName" class="error">Please enter your first name</label></li>  
-		<li><label for="sex" class="error">Please select a gender</label></li>  
-		<li><label for="dobMonth" class="error">Please select your month of birth</label></li>  
-		<li><label for="dobDay" class="error">Please select your day of birth</label></li>  
-		<li><label for="dobYear" class="error">Please select your year of birth</label></li>                  
-		<li><label for="birth_city" class="error">Please enter your place of birth</label></li>
-        <li><label for="birth_country" class="error">Please select a country of birth</label></li>                  
-        <li><label for="residence_country" class="error">Please select a country of residence</label></li>                  
-        <li><label for="citizen_country" class="error">Please select a country of citizenship</label></li>
-        <li><label for="home_address" class="error">Please enter your mailing address</label></li>  
-        <li><label for="home_city" class="error">Please enter your mailing city</label></li>   
-        <li><label for="home_country" class="error">Please select your mailing country</label></li> 
-        <li><label for="passport_number" class="error">Please enter your passport number</label></li>          
-        <li><label for="emergency_name" class="error">Please enter your emergency contact name</label></li>                   
-        <li><label for="emergency_phone" class="error">Please enter your emergency contact phone</label></li>                   
-		<li><label for="watStartVacationMonth" class="error">Please select your vacation start month</label></li>  
-		<li><label for="watStartVacationDay" class="error">Please select your vacation start day</label></li>  
-		<li><label for="watStartVacationYear" class="error">Please select your vacation start year</label></li>                  
-		<li><label for="watEndVacationMonth" class="error">Please select your vacation end month</label></li>  
-		<li><label for="watEndVacationDay" class="error">Please select your vacation end day</label></li>  
-		<li><label for="watEndVacationYear" class="error">Please select your vacation end year</label></li>                  
-		<li><label for="programStartMonth" class="error">Please select your program start month</label></li>  
-		<li><label for="programStartDay" class="error">Please select your program start day</label></li>  
-		<li><label for="programStartYear" class="error">Please select your program start year</label></li>                  
-        <li><label for="programEndMonth" class="error">Please select your program end month</label></li>  
-		<li><label for="programEndDay" class="error">Please select your program end day</label></li>  
-		<li><label for="programEndYear" class="error">Please select your program end year</label></li>
-        <li><label for="wat_placement" class="error">Please select a program option</label></li>                  
-        <li><label for="wat_participation" class="error">Please select number of previous participations in the program</label></li>                  
-
-        <cfloop query="qGetQuestions">
-        	<cfif qGetQuestions.isRequired>
-				<li><label for="#qGetQuestions.fieldKey#" class="error">#qGetQuestions.requiredMessage#</label></li>
-            </cfif>
-		</cfloop>
-
-	</ol>
-	
-	<p>Data has <strong>not</strong> been saved.</p>
-</div>
-
 
 <!--- Application Body --->
 <div class="form-container">
@@ -472,10 +362,10 @@
             <div class="pictureMessage"></div>
             
             <div class="divPicture">	            
-				<cfif FileExists("#AppPath.candidatePicture##FORM.candidateID#.jpg")>
-                    <img id="thumb" src="../../uploadedfiles/web-candidates/#FORM.candidateID#.jpg">
+				<cfif candidatePicture.recordCount>
+                    <img id="thumb" src="../../uploadedfiles/web-candidates/#candidatePicture.name#">
                 <cfelse>
-                    <img id="thumb" width="150" height="150">
+                    <img id="thumb" width="150" height="150" src="../../pics/onlineApp/noPicture.jpg">
                 </cfif>            
             </div>
 
@@ -493,7 +383,7 @@
             <cfif printApplication>
 				<div class="printField">#FORM.lastName# &nbsp;</div>
         	<cfelse>
-				<input type="text" name="lastName" id="lastName" value="#FORM.lastName#" class="largeField {validate:{required:true}}" maxlength="100" />
+				<input type="text" name="lastName" id="lastName" value="#FORM.lastName#" class="largeField" maxlength="100" />
             </cfif>            
         </div>
 
@@ -503,7 +393,7 @@
             <cfif printApplication>
             	<div class="printField">#FORM.firstName# &nbsp;</div>
         	<cfelse>
-            	<input type="text" name="firstName" id="firstName" value="#FORM.firstName#" class="largeField {validate:{required:true}}" maxlength="100" /> <!--- class="error" --->
+            	<input type="text" name="firstName" id="firstName" value="#FORM.firstName#" class="largeField" maxlength="100" /> <!--- class="error" --->
             </cfif>
         </div>
 
@@ -522,12 +412,12 @@
             <label for="sex">Gender <em>*</em></label> 
             <cfif printApplication>
 				<cfif FORM.sex EQ 'M'>
-                	<div class="printField">Male &nbsp;<</div>
+                	<div class="printField">Male &nbsp;</div>
                 <cfelseif FORM.sex EQ 'F'>
-                	<div class="printField">Female &nbsp;<</div>
+                	<div class="printField">Female &nbsp;</div>
                 </cfif>
         	<cfelse>
-                <select name="sex" id="sex" class="smallField {validate:{required:true}}">
+                <select name="sex" id="sex" class="smallField">
                     <option value=""></option> <!--- [select your gender] --->
                     <option value="M" <cfif FORM.sex EQ 'M'> selected="selected" </cfif> >Male</option>
                     <option value="F" <cfif FORM.sex EQ 'F'> selected="selected" </cfif> >Female</option>
@@ -539,23 +429,27 @@
         <div class="field">
             <label for="dobMonth">Date of Birth <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#MonthAsString(FORM.dobMonth)#/#FORM.dobDay#/#FORM.dobYear# &nbsp;</div>
+				<div class="printField">
+                	<cfif isDate(FORM.dob)>
+                    	#MonthAsString(FORM.dobMonth)#/#FORM.dobDay#/#FORM.dobYear#
+                    </cfif> &nbsp;
+                </div>
         	<cfelse>
-                <select name="dobMonth" id="dobMonth" class="smallField {validate:{required:true}}">
+                <select name="dobMonth" id="dobMonth" class="smallField">
                     <option value=""></option>
                     <cfloop from="1" to="12" index="i">
                         <option value="#i#" <cfif FORM.dobMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
                     </cfloop>
                 </select>
                 /
-                <select name="dobDay" id="dobDay" class="xxSmallField {validate:{required:true}}">
+                <select name="dobDay" id="dobDay" class="xxSmallField">
                     <option value=""></option>
                     <cfloop from="1" to="31" index="i">
                         <option value="#i#" <cfif FORM.dobDay EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select>
                 / 
-                <select name="dobYear" id="dobYear" class="xSmallField {validate:{required:true}}">
+                <select name="dobYear" id="dobYear" class="xSmallField">
                     <option value=""></option>
                     <cfloop from="#Year(now())-10#" to="#Year(now())-90#" index="i" step="-1">
                         <option value="#i#" <cfif FORM.dobYear EQ i> selected="selected" </cfif> >#i#</option>
@@ -571,7 +465,7 @@
             <cfif printApplication>
 				<div class="printField">#FORM.birth_city# &nbsp;</div>
         	<cfelse>
-				<input type="text" name="birth_city" id="birth_city" value="#FORM.birth_city#" class="largeField {validate:{required:true}}" maxlength="100" />
+				<input type="text" name="birth_city" id="birth_city" value="#FORM.birth_city#" class="largeField" maxlength="100" />
             </cfif>            
         </div>
         
@@ -579,9 +473,9 @@
         <div class="field">
             <label for="birth_country">Country of Birth <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.birth_country).name# &nbsp;</div>
+				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.birth_country).countryName# &nbsp;</div>
         	<cfelse>
-                <select name="birth_country" id="birth_country" class="mediumField {validate:{required:true}}">
+                <select name="birth_country" id="birth_country" class="mediumField">
                     <option value=""></option> <!--- [select a country] ---->
                     <cfloop query="qGetCountry">
                         <option value="#qGetCountry.countryID#" <cfif FORM.birth_country EQ qGetCountry.countryID> selected="selected" </cfif> >#qGetCountry.countryName#</option>
@@ -594,9 +488,9 @@
         <div class="field">
             <label for="residence_country">Country of Legal Permanent Residence <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.residence_country).name# &nbsp;</div>
+				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.residence_country).countryName# &nbsp;</div>
         	<cfelse>
-                <select name="residence_country" id="residence_country" class="mediumField {validate:{required:true}}">
+                <select name="residence_country" id="residence_country" class="mediumField">
                     <option value=""></option>
                     <cfloop query="qGetCountry">
                         <option value="#qGetCountry.countryID#" <cfif FORM.residence_country EQ qGetCountry.countryID> selected="selected" </cfif> >#qGetCountry.countryName#</option>
@@ -611,9 +505,9 @@
         <div class="field">
             <label for="citizen_country">Country of Citizenship <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.citizen_country).name# &nbsp;</div>
+				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.citizen_country).countryName# &nbsp;</div>
         	<cfelse>
-                <select name="citizen_country" id="citizen_country" class="mediumField {validate:{required:true}}">
+                <select name="citizen_country" id="citizen_country" class="mediumField">
                     <option value=""></option>
                     <cfloop query="qGetCountry">
                         <option value="#qGetCountry.countryID#" <cfif FORM.citizen_country EQ qGetCountry.countryID> selected="selected" </cfif> >#qGetCountry.countryName#</option>
@@ -628,7 +522,7 @@
             <cfif printApplication>
             	<div class="printField">#FORM.home_address# &nbsp;</div>
         	<cfelse>
-            	<input type="text" name="home_address" id="home_address" value="#FORM.home_address#" class="largeField {validate:{required:true}}" maxlength="100" />
+            	<input type="text" name="home_address" id="home_address" value="#FORM.home_address#" class="largeField" maxlength="100" />
             </cfif>
         </div>
 
@@ -638,7 +532,7 @@
             <cfif printApplication>
             	<div class="printField">#FORM.home_city# &nbsp;</div>
         	<cfelse>
-            	<input type="text" name="home_city" id="home_city" value="#FORM.home_city#" class="largeField {validate:{required:true}}" maxlength="100" />
+            	<input type="text" name="home_city" id="home_city" value="#FORM.home_city#" class="largeField" maxlength="100" />
             </cfif>
         </div>
 
@@ -646,9 +540,9 @@
         <div class="field">
             <label for="home_country">Country <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.birth_country).name# &nbsp;</div>
+				<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM.birth_country).countryName# &nbsp;</div>
         	<cfelse>
-                <select name="home_country" id="home_country" class="mediumField {validate:{required:true}}">
+                <select name="home_country" id="home_country" class="mediumField">
                     <option value=""></option>
                     <cfloop query="qGetCountry">
                         <option value="#qGetCountry.countryID#" <cfif FORM.home_country EQ qGetCountry.countryID> selected="selected" </cfif> >#qGetCountry.countryName#</option>
@@ -712,7 +606,7 @@
             <cfif printApplication>
 				<div class="printField">#FORM.passport_number# &nbsp;</div>
         	<cfelse>
-				<input type="text" name="passport_number" id="passport_number" value="#FORM.passport_number#" class="largeField {validate:{required:true}}" maxlength="100" />
+				<input type="text" name="passport_number" id="passport_number" value="#FORM.passport_number#" class="largeField" maxlength="100" />
             </cfif>            
         </div>
 		
@@ -732,13 +626,13 @@
             <cfif printApplication>
 				<div class="printField">#FORM.emergency_name# &nbsp;</div>
         	<cfelse>
-				<input type="text" name="emergency_name" id="emergency_name" value="#FORM.emergency_name#" class="largeField  {validate:{required:true}}" maxlength="100" />
+				<input type="text" name="emergency_name" id="emergency_name" value="#FORM.emergency_name#" class="largeField " maxlength="100" />
             </cfif>            
         </div>
 		
         <!--- Emergency Telephone Number --->
         <div class="field">
-            <label for="emergencyPhoneCountry">Emergency Telephone Number </label> 
+            <label for="emergencyPhoneCountry">Emergency Telephone Number <em>*</em></label> 
             <cfif printApplication>
 				<div class="printField">
                 	#APPLICATION.CFC.UDF.formatPhoneNumber(
@@ -774,58 +668,68 @@
 
         <!--- Start Date --->
         <div class="field">
-            <label for="programStartMonth">Start Date <em>*</em></label> 
+            <label for="watStartVacationMonth">Start Date <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#MonthAsString(FORM.programStartMonth)#/#FORM.programStartDay#/#FORM.programStartYear# &nbsp;</div>
+				<div class="printField">
+                	<cfif isDate(FORM.watStartVacation)>
+                    	#MonthAsString(FORM.watStartVacationMonth)#/#FORM.watStartVacationDay#/#FORM.watStartVacationYear# 
+                    </cfif>    
+                    &nbsp;
+                </div>
         	<cfelse>
-                <select name="programStartMonth" id="programStartMonth" class="smallField {validate:{required:true}}">
+                <select name="watStartVacationMonth" id="watStartVacationMonth" class="smallField">
                     <option value=""></option>
                     <cfloop from="1" to="12" index="i">
-                        <option value="#i#" <cfif FORM.programStartMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
+                        <option value="#i#" <cfif FORM.watStartVacationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
                     </cfloop>
                 </select>
                 /
-                <select name="programStartDay" id="programStartDay" class="xxSmallField {validate:{required:true}}">
+                <select name="watStartVacationDay" id="watStartVacationDay" class="xxSmallField">
                     <option value=""></option>
                     <cfloop from="1" to="31" index="i">
-                        <option value="#i#" <cfif FORM.programStartDay EQ i> selected="selected" </cfif> >#i#</option>
+                        <option value="#i#" <cfif FORM.watStartVacationDay EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select>
                 / 
-                <select name="programStartYear" id="programStartYear" class="xSmallField {validate:{required:true}}">
+                <select name="watStartVacationYear" id="watStartVacationYear" class="xSmallField">
                     <option value=""></option>
                     <cfloop from="#Year(now())+3#" to="#Year(now())#" index="i" step="-1">
-                        <option value="#i#" <cfif FORM.programStartYear EQ i> selected="selected" </cfif> >#i#</option>
+                        <option value="#i#" <cfif FORM.watStartVacationYear EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select> 
                 <!--- <p class="note">(mm/dd/yyyy)</p> --->               
             </cfif>            
         </div>
 
-        <!--- End Date --->
+        <!--- End Date  --->
         <div class="field">
-            <label for="programEndMonth">End Date <em>*</em></label> 
+            <label for="watEndVacationMonth">End Date <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#MonthAsString(FORM.programEndMonth)#/#FORM.programEndDay#/#FORM.programEndYear# &nbsp;</div>
+				<div class="printField">
+                	<cfif isDate(FORM.watEndVacation)>
+                    	#MonthAsString(FORM.watEndVacationMonth)#/#FORM.watEndVacationDay#/#FORM.watEndVacationYear# 
+                    </cfif>
+                    &nbsp;
+                </div>
         	<cfelse>
-                <select name="programEndMonth" id="programEndMonth" class="smallField {validate:{required:true}}">
+                <select name="watEndVacationMonth" id="watEndVacationMonth" class="smallField">
                     <option value=""></option>
                     <cfloop from="1" to="12" index="i">
-                        <option value="#i#" <cfif FORM.programEndMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
+                        <option value="#i#" <cfif FORM.watEndVacationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
                     </cfloop>
                 </select>
                 /
-                <select name="programEndDay" id="programEndDay" class="xxSmallField {validate:{required:true}}">
+                <select name="watEndVacationDay" id="watEndVacationDay" class="xxSmallField">
                     <option value=""></option>
                     <cfloop from="1" to="31" index="i">
-                        <option value="#i#" <cfif FORM.programEndDay EQ i> selected="selected" </cfif> >#i#</option>
+                        <option value="#i#" <cfif FORM.watEndVacationDay EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select>
                 / 
-                <select name="programEndYear" id="programEndYear" class="xSmallField {validate:{required:true}}">
+                <select name="watEndVacationYear" id="watEndVacationYear" class="xSmallField">
                     <option value=""></option>
                     <cfloop from="#Year(now())+3#" to="#Year(now())#" index="i" step="-1">
-                        <option value="#i#" <cfif FORM.programEndYear EQ i> selected="selected" </cfif> >#i#</option>
+                        <option value="#i#" <cfif FORM.watEndVacationYear EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select> 
                 <!--- <p class="note">(mm/dd/yyyy)</p> --->               
@@ -842,58 +746,68 @@
 
         <!--- Start Date --->
         <div class="field">
-            <label for="watStartVacationMonth">Start Date <em>*</em></label> 
+            <label for="programStartMonth">Start Date <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#MonthAsString(FORM.watStartVacationMonth)#/#FORM.watStartVacationDay#/#FORM.watStartVacationYear# &nbsp;</div>
+				<div class="printField">
+                	<cfif isDate(FORM.programStart)>
+                    	#MonthAsString(FORM.programStartMonth)#/#FORM.programStartDay#/#FORM.programStartYear# 
+                    </cfif>
+                	&nbsp;
+                </div>
         	<cfelse>
-                <select name="watStartVacationMonth" id="watStartVacationMonth" class="smallField {validate:{required:true}}">
+                <select name="programStartMonth" id="programStartMonth" class="smallField">
                     <option value=""></option>
                     <cfloop from="1" to="12" index="i">
-                        <option value="#i#" <cfif FORM.watStartVacationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
+                        <option value="#i#" <cfif FORM.programStartMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
                     </cfloop>
                 </select>
                 /
-                <select name="watStartVacationDay" id="watStartVacationDay" class="xxSmallField {validate:{required:true}}">
+                <select name="programStartDay" id="programStartDay" class="xxSmallField">
                     <option value=""></option>
                     <cfloop from="1" to="31" index="i">
-                        <option value="#i#" <cfif FORM.watStartVacationDay EQ i> selected="selected" </cfif> >#i#</option>
+                        <option value="#i#" <cfif FORM.programStartDay EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select>
                 / 
-                <select name="watStartVacationYear" id="watStartVacationYear" class="xSmallField {validate:{required:true}}">
+                <select name="programStartYear" id="programStartYear" class="xSmallField">
                     <option value=""></option>
                     <cfloop from="#Year(now())+3#" to="#Year(now())#" index="i" step="-1">
-                        <option value="#i#" <cfif FORM.watStartVacationYear EQ i> selected="selected" </cfif> >#i#</option>
+                        <option value="#i#" <cfif FORM.programStartYear EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select> 
                 <!--- <p class="note">(mm/dd/yyyy)</p> --->               
             </cfif>            
         </div>
 
-        <!--- End Date  --->
+        <!--- End Date --->
         <div class="field">
-            <label for="watEndVacationMonth">End Date <em>*</em></label> 
+            <label for="programEndMonth">End Date <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#MonthAsString(FORM.watEndVacationMonth)#/#FORM.watEndVacationDay#/#FORM.watEndVacationYear# &nbsp;</div>
+				<div class="printField">
+                	<cfif isDate(FORM.programEnd)>
+                    	#MonthAsString(FORM.programEndMonth)#/#FORM.programEndDay#/#FORM.programEndYear# 
+                    </cfif>
+                    &nbsp;
+                </div>
         	<cfelse>
-                <select name="watEndVacationMonth" id="watEndVacationMonth" class="smallField {validate:{required:true}}">
+                <select name="programEndMonth" id="programEndMonth" class="smallField">
                     <option value=""></option>
                     <cfloop from="1" to="12" index="i">
-                        <option value="#i#" <cfif FORM.watEndVacationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
+                        <option value="#i#" <cfif FORM.programEndMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
                     </cfloop>
                 </select>
                 /
-                <select name="watEndVacationDay" id="watEndVacationDay" class="xxSmallField {validate:{required:true}}">
+                <select name="programEndDay" id="programEndDay" class="xxSmallField">
                     <option value=""></option>
                     <cfloop from="1" to="31" index="i">
-                        <option value="#i#" <cfif FORM.watEndVacationDay EQ i> selected="selected" </cfif> >#i#</option>
+                        <option value="#i#" <cfif FORM.programEndDay EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select>
                 / 
-                <select name="watEndVacationYear" id="watEndVacationYear" class="xSmallField {validate:{required:true}}">
+                <select name="programEndYear" id="programEndYear" class="xSmallField">
                     <option value=""></option>
                     <cfloop from="#Year(now())+3#" to="#Year(now())#" index="i" step="-1">
-                        <option value="#i#" <cfif FORM.watEndVacationYear EQ i> selected="selected" </cfif> >#i#</option>
+                        <option value="#i#" <cfif FORM.programEndYear EQ i> selected="selected" </cfif> >#i#</option>
                     </cfloop>
                 </select> 
                 <!--- <p class="note">(mm/dd/yyyy)</p> --->               
@@ -949,9 +863,9 @@
         <div class="field">
             <label for="wat_participation">Number of previous participations in the program <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#FORM.wat_participation# times &nbsp;</div>
+				<div class="printField"><cfif LEN(FORM.wat_participation)>#FORM.wat_participation# time(s)</cfif> &nbsp;</div>
         	<cfelse>
-                <select name="wat_participation" id="wat_participation" class="smallField {validate:{required:true}}">
+                <select name="wat_participation" id="wat_participation" class="smallField">
                     <option value=""></option>
                     <cfloop from="0" to="15" index="i">
                         <option value="#i#" <cfif FORM.wat_participation EQ i> selected="selected" </cfif> >#i# time(s)</option>
@@ -966,7 +880,7 @@
             <label for="ssnAreaNumber">Social Security Number </label> 
             <cfif printApplication>
 				<div class="printField">
-                	- - &nbsp;
+                	<cfif LEN(FORM.SSN)> #FORM.SSN# <cfelse> n/a </cfif> &nbsp;
 				</div>
         	<cfelse>
                 <input type="text" name="ssnAreaNumber" id="ssnAreaNumber" value="#FORM.ssnAreaNumber#" class="xxSmallField" maxlength="3" /> 

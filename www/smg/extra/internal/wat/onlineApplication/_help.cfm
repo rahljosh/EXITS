@@ -15,18 +15,22 @@
 
 	<cfscript>
 		// Gets Application Fee Policy Text
-		qGetContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="applicationGetHelp");
+		qGetContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="watApplicationGetHelp");
 
 		// Declare Application Fee Policy
-		savecontent variable="applicationGetHelp" {
+		savecontent variable="watApplicationGetHelp" {
 			writeOutput(qGetContent.content);
 		}    
 		
 		// Replace Variables 
-		/*
-		applicationGetHelp = ReplaceNoCase(applicationGetHelp,"{schoolName}",APPLICATION.SCHOOL.name,"all");
-		applicationGetHelp = ReplaceNoCase(applicationGetHelp,"{address}",APPLICATION.SCHOOL.address,"all");
-		*/
+		watApplicationGetHelp = ReplaceNoCase(watApplicationGetHelp,"{csbName}",APPLICATION.CSB.WAT.name,"all");
+		watApplicationGetHelp = ReplaceNoCase(watApplicationGetHelp,"{csbAddress}",APPLICATION.CSB.WAT.address,"all");
+		watApplicationGetHelp = ReplaceNoCase(watApplicationGetHelp,"{csbCity}",APPLICATION.CSB.WAT.city,"all");
+		watApplicationGetHelp = ReplaceNoCase(watApplicationGetHelp,"{csbState}",APPLICATION.CSB.WAT.state,"all");
+		watApplicationGetHelp = ReplaceNoCase(watApplicationGetHelp,"{csbZipCode}",APPLICATION.CSB.WAT.zipCode,"all");
+		watApplicationGetHelp = ReplaceNoCase(watApplicationGetHelp,"{csbPhone}",APPLICATION.CSB.WAT.phone,"all");
+		watApplicationGetHelp = ReplaceNoCase(watApplicationGetHelp,"{csbTollFree}",APPLICATION.CSB.WAT.toolFreePhone,"all");
+		watApplicationGetHelp = ReplaceNoCase(watApplicationGetHelp,"{csbEmail}",APPLICATION.EMAIL.contactUs,"all");
 	</cfscript>
 
 </cfsilent>
@@ -51,7 +55,8 @@
                    
                     <legend>Get Help</legend>
                     
-                    #APPLICATION.CFC.UDF.RichTextOutput(applicationGetHelp)#    
+                    <!--- Get Help --->
+                    #APPLICATION.CFC.UDF.RichTextOutput(watApplicationGetHelp)#    
 
                 </fieldset>
                             

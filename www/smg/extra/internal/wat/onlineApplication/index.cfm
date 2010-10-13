@@ -18,6 +18,7 @@
     <cfscript>
 		// Check if Office or Intl. Rep are opening an application
 		if ( LEN(URL.uniqueID) ) {
+			
 			// Get Candidate Information
 			qAuthenticateCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
 						
@@ -40,16 +41,16 @@
 		}
 		
 		// If user is not logged in, set action to the login page.
-		if ( CLIENT.loginType EQ 'candidate' AND NOT APPLICATION.CFC.ONLINEAPP.isCurrentUserLoggedIn() ) {
+		if ( CLIENT.loginType NEQ 'user' AND NOT APPLICATION.CFC.ONLINEAPP.isCurrentUserLoggedIn() ) {
 			action = 'login';
 		}
+		
+		// Force SSL
+		if ( NOT APPLICATION.IsServerLocal AND NOT CGI.SERVER_PORT_SECURE ) {
+			location("https://#CGI.SERVER_NAME##CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");
+		}
 	</cfscript>
-
- 	<!--- Force SSL --->
-	<cfif NOT APPLICATION.IsServerLocal AND NOT CGI.SERVER_PORT_SECURE>
-        <cflocation url="https://#CGI.SERVER_NAME##CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" addToken="no" />
-    </cfif>
-    
+    	
 </cfsilent>
 
 <!--- 
@@ -57,7 +58,7 @@
 --->
 <cfswitch expression="#action#">
 
-    <cfcase value="list,createApplication,initial,home,section1,section2,section3,submit,documents,faq,myAccount,printApplication,help,logOff" delimiters=",">
+    <cfcase value="list,createApplication,initial,home,section1,section2,section3,checkList,submit,documents,faq,myAccount,printApplication,flightInfo,help,logOff" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />

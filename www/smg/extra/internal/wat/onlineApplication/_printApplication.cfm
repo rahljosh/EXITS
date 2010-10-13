@@ -2,8 +2,8 @@
 	
 	File:		_printApplication.cfm
 	Author:		Marcus Melo
-	Date:		June 14, 2010
-	Desc:		Section 1 of the Online Application
+	Date:		October 06, 2010
+	Desc:		Print Application
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -11,16 +11,17 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
 	
     <!--- Declare Print Application Variable --->
 	<cfparam name="printApplication" default="1">
     <cfparam name="printApplicationAdmissions" default="0">
 	<cfparam name="includeHeader" default="0">
+    <cfparam name="sectionName" default="">
     
 	<cfscript>
-		// Gets Current Student Information
-		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=APPLICATION.CFC.STUDENT.getStudentID());
+		// Gets Current Candidate Information
+		qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(candidateID=APPLICATION.CFC.CANDIDATE.getCandidateID());
 		
 		// Make sure they are not going to process any updates
 		FORM.submittedType = '';
@@ -30,8 +31,8 @@
 </cfsilent>
 
 <cfoutput>
-
-    <cfdocument name="printPDFApplication" format="pdf" localUrl="no" backgroundvisible="yes" saveasname="GranbyApplication">
+	
+    <cfdocument name="printPDFApplication" format="pdf" localUrl="no" backgroundvisible="yes" saveasname="CSB-Application">
 	
         <cfdocumentsection name="Application">
         
@@ -62,114 +63,75 @@
                 includeTopBar=0
             />
 
-
-            <!--- Include Semester Option --->            
-			<cfif APPLICATION.CFC.STUDENT.getStudentSession().isApplicationSubmitted>
-
-                <div class="printWrapper">
-                    <cfinclude template="_submit.cfm">
-                </div>
-
-				<!--- Page Break --->
-                <cfdocumentitem type="pagebreak"></cfdocumentitem>
-                       
-            </cfif>
-
-    
-            <!--- Section 1 --->
-            <div class="printWrapper">
-                <cfinclude template="_section1.cfm">
-            </div>
-    
-    
-            <!--- Page Break --->
-            <cfdocumentitem type="pagebreak"></cfdocumentitem>
-    
-    
-            <!--- Section 2 --->
-            <div class="printWrapper">
-                <cfinclude template="_section2.cfm">
-            </div>
-    
-
-			<!--- Only Display If Addtional Family Information is Checked --->
-            <cfif VAL(APPLICATION.CFC.STUDENT.getStudentSession().hasAddFamInfo)>
-
-				<!--- Page Break --->
-                <cfdocumentitem type="pagebreak"></cfdocumentitem>
-        
-                    
-                <!--- Section 3 --->
-                <div class="printWrapper">
-                    <cfinclude template="_section3.cfm">
-                </div>
-
-            </cfif>
-
-    
-            <!--- Page Break --->
-            <cfdocumentitem type="pagebreak"></cfdocumentitem>
-    
-               
-            <!--- Section 4 --->
-            <div class="printWrapper">
-                <cfinclude template="_section4.cfm">
-            </div>
-    		
-    
-            <!--- Page Break --->
-            <cfdocumentitem type="pagebreak"></cfdocumentitem>
-
-    
-            <!--- Section 5 --->
-            <div class="printWrapper">
-                ><cfinclude template="_section5.cfm">
-            </div>
-			
-			
-			<!--- Include Payment Receipt --->
-            <cfif VAL(qGetStudentInfo.applicationPaymentID)>
-
-				<!--- Page Break --->
-                <cfdocumentitem type="pagebreak"></cfdocumentitem>
-                   
-                <div class="printWrapper">
-                    <cfinclude template="_applicationFee.cfm">
-                </div>
+            <cfswitch expression="#sectionName#">
+            
+            	<cfcase value="section1">
                 
-			</cfif>
+					<!--- Section 1 --->
+                    <div class="printWrapper">
+                        <cfinclude template="_section1.cfm">
+                    </div>
+                    
+                </cfcase>
+                
+            	<cfcase value="section2">
+                
+                    <!--- Section 2 --->
+                    <div class="printWrapper">
+                        <cfinclude template="_section2.cfm">
+                    </div>
+                    
+                </cfcase>
+                
+            	<cfcase value="section3">
+                
+                    <!--- Section 3 --->
+                    <div class="printWrapper">
+                        <cfinclude template="_section3.cfm">
+                    </div>
+                    
+                </cfcase>
+            
+            	<cfdefaultcase>
+
+					<!--- Section 1 --->
+                    <div class="printWrapper">
+                        <cfinclude template="_section1.cfm">
+                    </div>
+            
+                    <!--- Page Break --->
+                    <cfdocumentitem type="pagebreak"></cfdocumentitem>
+            
+                    <!--- Section 2 --->
+                    <div class="printWrapper">
+                        <cfinclude template="_section2.cfm">
+                    </div>
+            
+                    <!--- Page Break --->
+                    <cfdocumentitem type="pagebreak"></cfdocumentitem>
+            
+                    <!--- Section 3 --->
+                    <div class="printWrapper">
+                        <cfinclude template="_section3.cfm">
+                    </div>
+                
+                </cfdefaultcase>
+            
+            </cfswitch>
            
         </cfdocumentsection>
     
     </cfdocument>
 	
-    
-    <!--- Add Applicant Copy Watermark --->
-	<cfif NOT VAL(printApplicationAdmissions)>
-    
-        <cfpdf 
-            action="addWatermark"  
-            text="<b>Applicant Copy</b>" 
-            source="printPDFApplication" 
-            foreground="true" 
-            showonprint="true" 
-            opacity="1"
-            position="10,30" 
-            rotation="45" 
-            width="700" 
-            height="700">
+	<!--- Set up the header info --->
+    <cfheader 
+        name="content-disposition" 
+        value="attachment; filename=CBS-CandidateCopy.pdf"/>
 
-		<!--- Set up the header info --->
-        <cfheader 
-            name="content-disposition" 
-            value="attachment; filename=Granby-ApplicantCopy.pdf"/>
-    
-    
-        <!--- Set up the content type --->        
-        <cfcontent 
-            type="application/pdf" 
-            variable="#toBinary(printPDFApplication)#">
-            
-	</cfif>
 
+    <!--- Set up the content type --->        
+    <cfcontent 
+        type="application/pdf" 
+        variable="#toBinary(printPDFApplication)#">
+    
 </cfoutput>

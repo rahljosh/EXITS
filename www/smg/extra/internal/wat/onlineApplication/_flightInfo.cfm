@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_faq.cfm
+	File:		_flightInformation.cfm
 	Author:		Marcus Melo
 	Date:		August 9, 2010
 	Desc:		Frequently Asked Questions
@@ -14,11 +14,11 @@
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
 
 	<cfscript>
-		// Get FAQ
-		qGetFaq = APPLICATION.CFC.LookUpTables.getFAQ();	
+
 	</cfscript>
 
 </cfsilent>
+
 
 <cfoutput>
 
@@ -37,24 +37,16 @@
             
                 <fieldset>
                    
-                    <legend>Frequently Asked Questions</legend>
-                        
-                    <cfloop query="qGetFaq">
-                        <a href="###qGetFaq.ID#" class="itemLinks">#qGetFaq.question#</a>
-
-                        <div id="#qGetFaq.ID#" class="faqAnswer">
-                            #qGetFaq.answer#
-                        </div>
-                    </cfloop>
+                    <legend>Flight Information</legend>
+                    
 
                 </fieldset>
                             
             </div>
             
-		</div><!-- /insideBar -->
+        </div>
         
-	</div><!-- rightSideContent -->        
-    
+    </div>
 
 <!--- Page Footer --->
 <gui:pageFooter
