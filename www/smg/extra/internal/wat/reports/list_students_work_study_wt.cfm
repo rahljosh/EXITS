@@ -70,18 +70,18 @@
                 c.ds2019
         </cfquery>
 
-        <cfquery name="qGetProgram" datasource="MySQL">
-            SELECT 
-                programID,
-                programName,
-                extra_sponsor
-            FROM 
-                smg_programs
-            WHERE
-                programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
-        </cfquery>
-	
     </cfif>
+
+    <cfquery name="qGetProgram" datasource="MySQL">
+        SELECT 
+            programID,
+            programName,
+            extra_sponsor
+        FROM 
+            smg_programs
+        WHERE
+            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+    </cfquery>
     
 	<cfscript>
 		if ( qGetProgram.extra_sponsor EQ 'INTO' ) {
@@ -146,27 +146,27 @@
 </table>
 </form>
 
-<cfsavecontent variable="reportHeader">
-    <table width=100% align="center" border="0">
-        <tr>
-            <td valign="top">
-                <img src="../../../../#APPLICATION.CSB[setSponsor].logo#" />
-            </td>	
-            <td align="center" valign="top"> 
-                #APPLICATION.CSB[setSponsor].name# Summer Work Travel Program / #APPLICATION.CSB[setSponsor].programNumber# <br />
-                Placement Report
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p> Season #qGetProgram.programName# </p>
-                <p> Total Number of Participants: #qGetStudents.recordcount# </p> 
-            </td>	
-        </tr>		
-    </table> <br />
-</cfsavecontent>
-
 <cfif FORM.submitted>
+
+    <cfsavecontent variable="reportHeader">
+        <table width=100% align="center" border="0">
+            <tr>
+                <td valign="top">
+                    <img src="../../../../#APPLICATION.CSB[setSponsor].logo#" />
+                </td>	
+                <td align="center" valign="top"> 
+                    #APPLICATION.CSB[setSponsor].name# Summer Work Travel Program / #APPLICATION.CSB[setSponsor].programNumber# <br />
+                    Placement Report
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p> Season #qGetProgram.programName# </p>
+                    <p> Total Number of Participants: #qGetStudents.recordcount# </p> 
+                </td>	
+            </tr>		
+        </table> <br />
+    </cfsavecontent>
 
     <cfsavecontent variable="reportContent">
     
