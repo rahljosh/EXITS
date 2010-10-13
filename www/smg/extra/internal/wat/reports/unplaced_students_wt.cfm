@@ -1,7 +1,7 @@
 <cfif IsDefined('form.program')>
 	<cfquery name="get_students" datasource="mysql">
 	SELECT 
-    	c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, 
+    	c.uniqueID, c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid,
         smg_programs.programname, smg_users.companyid, smg_users.businessname, 
         c.companyid, c.hostcompanyid, smg_countrylist.countryname, extra_hostcompany.name, 
         c.wat_placement, c.candidateid, c.wat_placement, c.change_requested_comment
@@ -20,7 +20,7 @@
 	
 	<cfquery name="get_students_self" datasource="mysql">
 	SELECT 
-    	c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, 
+	    c.uniqueID, c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, 
         smg_programs.programname, smg_users.companyid, smg_users.businessname, c.companyid, c.hostcompanyid, 
         smg_countrylist.countryname, extra_hostcompany.name, c.wat_placement, c.candidateid, c.wat_placement, c.change_requested_comment
 	FROM extra_candidates c
@@ -36,7 +36,7 @@
 	ORDER BY businessname
 	</cfquery>
 	
-	<cfset total = #get_students_self.recordcount# + #get_students.recordcount#>
+	<cfset total = get_students_self.recordcount + get_students.recordcount>
 </cfif>
 
 
@@ -153,7 +153,11 @@
 				<cfset into = 1 >
 				<cfloop query="get_students">
 				 <tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
-					<td class="style1">#firstname# #lastname# (#candidateid#)</td>
+					<td class="style1">
+                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#get_students.uniqueID#" target="_blank" class="style4">
+                    		#firstname# #lastname# (#candidateid#)
+						</a>
+                    </td>
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
 					<td class="style1">#name#</td>
@@ -166,7 +170,11 @@
 				
 				<cfloop query="get_students_self">
 				 <tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
-					<td class="style1">#firstname# #lastname# (#candidateid#)</td>
+					<td class="style1">
+                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#get_students_self.uniqueID#" target="_blank" class="style4">
+	                    	#firstname# #lastname# (#candidateid#)
+    					</a>
+                    </td>
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
 					<td class="style1">#name#</td>

@@ -83,12 +83,16 @@
         	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
     </cfquery>
 
-	<cfif LEN(qGetProgram.extra_sponsor)>
-        <cfset setSponsor = qGetProgram.extra_sponsor>
-    <cfelse>
-        <cfset setSponsor = CSB>
-    </cfif>
-
+	<cfscript>
+		if ( qGetProgram.extra_sponsor EQ 'INTO' ) {
+			// Set Sponsor
+			setSponsor = qGetProgram.extra_sponsor;
+		} else {
+			// Default Sponsor
+			setSponsor = 'WAT';	
+		}
+	</cfscript>
+    
 </cfsilent>
     
 <style type="text/css">
@@ -130,16 +134,16 @@
             </span>
         </td>
         <td class="style1">
-            <img src="../../../../#APPLICATION[setSponsor].logo#" />
+            <img src="../../../../#APPLICATION.CSB[setSponsor].logo#" />
         </td>	
         <td align="right" valign="top" class="style1"> 
             <div align="right">
                 <span id="titleleft">
-                    #APPLICATION[setSponsor].shortProgramName# <br> <!--- #companyshort.companyshort# --->
+                    #APPLICATION.CSB[setSponsor].shortProgramName# <br> <!--- #companyshort.companyshort# --->
                     #companyshort.address#<br>
                     #companyshort.city#, #companyshort.state# #companyshort.zip#<br><br>
-                    Phone: #APPLICATION[setSponsor].phone# <br> <!--- #companyshort.phone# --->
-                    Toll Free: #APPLICATION[setSponsor].toolFreePhone# <br> <!--- #companyshort.toll_free# --->
+                    Phone: #APPLICATION.CSB[setSponsor].phone# <br> <!--- #companyshort.phone# --->
+                    Toll Free: #APPLICATION.CSB[setSponsor].toolFreePhone# <br> <!--- #companyshort.toll_free# --->
                     Fax: #companyshort.fax# <br>
                 </span>
             </div>	
@@ -206,7 +210,7 @@
                 <table>
                     <tr><td class="style1"><b>Our best regards,</b></td></tr>
                     <tr><td class="style1"><b>#companyshort.verification_letter#</b><br></td></tr>
-                    <tr><td class="style1"><b>#APPLICATION[setSponsor].name#</b></td></tr>
+                    <tr><td class="style1"><b>#APPLICATION.CSB[setSponsor].name#</b></td></tr>
                 </table>
             </td>
             <td align="right">

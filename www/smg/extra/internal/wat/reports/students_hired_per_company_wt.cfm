@@ -6,7 +6,8 @@
     <!--- Param FORM Variables --->
 	<cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.hostCompanyID" default="0">
-	<cfparam name="FORM.printOption" default="">
+	<cfparam name="FORM.printOption" default="1">
+    <cfparam name="FORM.submitted" default="0">
 
     <cfquery name="qGetProgramList" datasource="MySql">
         SELECT 
@@ -37,7 +38,7 @@
     </cfquery>
 
     <!--- FORM submitted --->
-    <cfif LEN(FORM.printOption)>
+    <cfif FORM.submitted>
 
         <!--- Get Host Companies Assigned to Candidates --->
         <cfquery name="qGetHostCompany" datasource="MySQL">
@@ -73,6 +74,7 @@
         <cfquery name="qGetAllCandidates" datasource="MySQL">
             SELECT 
                 c.candidateID,
+                c.uniqueID,
                 c.hostCompanyID,
                 c.firstname,             
                 c.lastname, 
@@ -152,15 +154,6 @@
 
 </cfsilent>
 
-<script language="JavaScript" type="text/javascript"> 
-	<!-- Begin
-	function formHandler2(form){
-		var URL = document.formagent.agent.options[document.formagent.agent.selectedIndex].value;
-		window.location.href = URL;
-	}
-	// End -->
-</script>
-
 <style type="text/css">
 <!--
 .tableTitleView {
@@ -176,6 +169,7 @@
 <cfoutput>
 
 <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+<input type="hidden" name="submitted" value="1" />
 
     <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
         <tr valign="middle" height="24">
@@ -208,15 +202,14 @@
         <tr>
             <td align="right" class="style1"><b>Format: </b></td>
             <td class="style1"> 
-                <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked </cfif> > <label for="printOption1">Onscreen (View Only)</label>
-                <input type="radio" name="printOption" id="printOption2" value="2" <cfif FORM.printOption EQ 2> checked </cfif> > <label for="printOption2">Print (PDF)</label> 
-                <input type="radio" name="printOption" id="printOption3" value="3" <cfif FORM.printOption EQ 3> checked </cfif> > <label for="printOption3">Excel (XLS)</label>
+                <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked="checked" </cfif> > <label for="printOption1">Onscreen (View Only)</label>
+                <input type="radio" name="printOption" id="printOption2" value="2" <cfif FORM.printOption EQ 2> checked="checked" </cfif> > <label for="printOption2">Print (PDF)</label> 
+                <input type="radio" name="printOption" id="printOption3" value="3" <cfif FORM.printOption EQ 3> checked="checked" </cfif> > <label for="printOption3">Excel (XLS)</label>
             </td>            
         </tr>
         <tr>
             <td colspan=2 align="center"><br />
                 <input type="submit" value="Generate Report" class="style1" /><br />
-                <br />
             </td>
         </tr>
     </table>
@@ -226,7 +219,7 @@
 <br /><br />
 
 <!--- Print --->
-<cfif LEN(FORM.printOption)>
+<cfif FORM.submitted>
 	
     <cfscript>
 		// On Screen
@@ -281,9 +274,9 @@
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
                     <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
-                        <td><span class="style1">#qTotalPerHostCompany.candidateID#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.lastname#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.firstname# </span></td>
+                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
+                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
+                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
                         <td><span class="style1">#qTotalPerHostCompany.sex#</span></td>
                         <td><span class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.countryname#</span></td>
@@ -314,98 +307,105 @@
 		    	
     </cfsavecontent>
 
-</cfif>
-
-<!-----Display Reports---->
-<cfswitch expression="#FORM.printOption#">
-
-	<!--- Screen --->
-	<cfcase value="1">
-		<!--- Include Report --->
-		#reportContent#
-	</cfcase>
-
-	<!--- PDF --->
-	<cfcase value="2">   
-		<cfdocument format="pdf" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">          	
-			<style type="text/css">
-			<!--
-			.style1 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 10px;
-				padding:2;
-			}
-			.style2 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 8px;
-				padding:2;
-			}
-			.title1 {
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				font-size: 15px;
-				font-weight: bold;
-				padding:5;
-			}					
-			-->
-			</style>
-
-			<img src="../../pics/black_pixel.gif" width="100%" height="2">
-			<div class="title1">Students hired per company</div>
-			<img src="../../pics/black_pixel.gif" width="100%" height="2">
-			
-			<!--- Include Report --->
-			#reportContent#
-		</cfdocument>
-	</cfcase>
-
-	<!--- Excel --->
-	<cfcase value="3">
-
-		<!--- set content type --->
-        <cfcontent type="application/msexcel">
+	<!-----Display Reports---->
+    <cfswitch expression="#FORM.printOption#">
+    
+        <!--- Screen --->
+        <cfcase value="1">
+            <!--- Include Report --->
+            #reportContent#
+        </cfcase>
+    
+        <!--- PDF --->
+        <cfcase value="2">   
+            <cfdocument format="pdf" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">          	
+                <style type="text/css">
+                <!--
+                .style1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2;
+                }
+                .style2 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 8px;
+                    padding:2;
+                }
+                .title1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 15px;
+                    font-weight: bold;
+                    padding:5;
+                }					
+                -->
+                </style>
+    
+                <img src="../../pics/black_pixel.gif" width="100%" height="2">
+                <div class="title1">Students hired per company</div>
+                <img src="../../pics/black_pixel.gif" width="100%" height="2">
+                
+                <!--- Include Report --->
+                #reportContent#
+            </cfdocument>
+        </cfcase>
+    
+        <!--- Excel --->
+        <cfcase value="3">
+    
+            <!--- set content type --->
+            <cfcontent type="application/msexcel">
+            
+            <!--- suggest default name for XLS file --->
+            <cfheader name="Content-Disposition" value="attachment; filename=studentsHiredPerCompany.xls"> 
+    
+            <style type="text/css">
+            <!--
+            .style1 {
+                font-family: Verdana, Arial, Helvetica, sans-serif;
+                font-size: 10px;
+                padding:2;
+            }
+            .style2 {
+                font-family: Verdana, Arial, Helvetica, sans-serif;
+                font-size: 10px;
+                padding:2;
+            }
+            .title1 {
+                font-family: Verdana, Arial, Helvetica, sans-serif;
+                font-size: 15px;
+                font-weight: bold;
+                padding:5;
+            }					
+            -->
+            </style>
+           
+            <img src="../../pics/black_pixel.gif" width="100%" height="2">
+            <div class="title1">Students hired per company</div>
+            <img src="../../pics/black_pixel.gif" width="100%" height="2">
+            
+            <!--- Include Report --->
+            #reportContent#
+            
+            <cfabort>
+    
+        </cfcase>
         
-        <!--- suggest default name for XLS file --->
-        <cfheader name="Content-Disposition" value="attachment; filename=studentsHiredPerCompany.xls"> 
-
-        <style type="text/css">
-        <!--
-        .style1 {
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 10px;
-            padding:2;
-        }
-        .style2 {
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 10px;
-            padding:2;
-        }
-        .title1 {
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 15px;
-            font-weight: bold;
-            padding:5;
-        }					
-        -->
-        </style>
-       
-        <img src="../../pics/black_pixel.gif" width="100%" height="2">
-        <div class="title1">Students hired per company</div>
-        <img src="../../pics/black_pixel.gif" width="100%" height="2">
+        <cfdefaultcase>    
+            <div align="center" class="style1">
+                Print results will replace the menu options and take a bit longer to generate. <br />
+                Onscreen will allow you to change criteria with out clicking your back button.
+            </div>  <br />
+        </cfdefaultcase>
         
-        <!--- Include Report --->
-        #reportContent#
-        
-        <cfabort>
+    </cfswitch>
 
-	</cfcase>
-	
-	<cfdefaultcase>    
-		<div align="center" class="style1">
-			Print results will replace the menu options and take a bit longer to generate. <br />
-			Onscreen will allow you to change criteria with out clicking your back button.
-		</div>  <br />
-	</cfdefaultcase>
-	
-</cfswitch>
+<cfelse>
+
+    <div align="center" class="style1">
+        Print results will replace the menu options and take a bit longer to generate. <br />
+        Onscreen will allow you to change criteria with out clicking your back button.
+    </div>  <br />
+
+</cfif>    
 
 </cfoutput>
