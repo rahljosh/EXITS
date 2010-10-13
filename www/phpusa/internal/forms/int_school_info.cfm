@@ -117,13 +117,29 @@
         </cfquery>
 		<!---- NY ---->
         <cfquery name="get_ny" datasource="#application.dsn#">
-            SELECT DISTINCT smg_users.userid, CONCAT(smg_users.firstname,' ',smg_users.lastname) AS user_name
-            FROM smg_users
-            INNER JOIN user_access_rights on smg_users.userid = user_access_rights.userid
-            INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-            WHERE smg_companies.website = 'PHP'
-            AND user_access_rights.usertype IN (2,3,4)
-            ORDER BY smg_users.lastname, smg_users.firstname
+            SELECT DISTINCT 
+            	smg_users.userid, 
+                CONCAT(smg_users.firstname,' ',smg_users.lastname) AS user_name
+            FROM 
+            	smg_users
+            INNER JOIN 
+            	user_access_rights on smg_users.userid = user_access_rights.userid
+            INNER JOIN 
+            	smg_companies ON user_access_rights.companyid = smg_companies.companyid
+            WHERE 
+            (
+            	smg_companies.website = 'PHP'
+            AND 
+            	user_access_rights.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,4" list="yes"> )
+            AND 
+            	smg_users.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+			)
+			<!--- Include current user assigned in case user is inactive --->
+            OR
+            	smg_users.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_school.fk_ny_user#">               
+            ORDER BY 
+            	smg_users.lastname, 
+                smg_users.firstname
         </cfquery>
 		<table border=0 cellpadding=4 cellspacing=0 align="left">
             <tr>
@@ -138,7 +154,7 @@
                 </td>
             </tr>
             <tr>
-                <td>NY:</td>
+                <td>NY Facilitator:</td>
                 <td colspan=2>
                     <cfselect NAME="fk_ny_user" query="get_ny" value="userid" display="user_name" selected="#get_school.fk_ny_user#" />
                 </td>
