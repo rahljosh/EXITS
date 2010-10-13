@@ -44,7 +44,7 @@
         	u.businessname, 
             c.candidateid
 
-		LIMIT 12            
+		LIMIT 14            
     </cfquery>
 
 </cfsilent>

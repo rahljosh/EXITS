@@ -189,7 +189,7 @@
 <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
     <tr valign="middle" height="24">
         <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
-        	<span class="style1">&nbsp;All active students enrolled in the program by Intl. Rep. and Program</span>
+            <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp;Intl. Rep. Reports -> All cancelled students</font>
         </td>
     </tr>
     <tr valign="middle" height="24">
