@@ -143,7 +143,7 @@
             </td>
        </tr>
     </cfif>
-</table><br>
+</table>
 
 <!--- PLACEMENT INFORMATION --->
 <table width=670 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
@@ -201,7 +201,7 @@
 			</table>
 		</td>
 	</tr>
-</table><br>
+</table>
 
 <!--- CHILDREN, INTERESTS AND PETS INFORMATION --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
@@ -256,7 +256,7 @@
 					</cfloop>
 				</table><br>
 		<cfif get_hf.interests_other NEQ ''><tr><td><div align="justify">Other Interests: #get_hf.interests_other#</div></tr></td></cfif>
-</table><br>
+</table>
 
 <!--- SCHOOL INFORMATION --->
 <table width=670 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
@@ -306,7 +306,7 @@
 	<tr><td><img src="../pics/lukesign.jpg" border="0"></td></tr>
 	<tr><td>Luke Davis</td></tr>	
 	<tr><td>#companyshort.companyname#</td></tr>			
-</table><br />
+</table>
 
 </cfoutput>
 
