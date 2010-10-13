@@ -99,7 +99,7 @@
 			<cfif companyshort.fax NEQ ''> Fax: #companyshort.fax#<br></cfif>
 		</td>
 	</tr>
-</table><br>
+</table>
 
 <!--- HEADER - OTHER INFORMATION --->
 <table width=670 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
@@ -113,7 +113,7 @@
             </td>
        </tr>
     </cfif>
-</table><br>
+</table>
 
 <!--- SCHOOL INFORMATION --->
 <table width=670 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
@@ -134,7 +134,7 @@
 		</td>
 	</tr>
 	<tr><td><cfif get_student_unqid.nearbigcity NEQ ''>The nearest big city is #get_student_unqid.nearbigcity#. &nbsp;</cfif> The closest arrival airport is #get_student_unqid.airport_city#, #get_student_unqid.airport_state# <cfif get_student_unqid.major_air_code NEQ ''>(#get_student_unqid.major_air_code#)</cfif>.</td></tr>
-</table><br>
+</table>
 
 <!--- STUDENT INFORMATION --->
 <table width=670 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
@@ -151,7 +151,7 @@
 	<tr><td><img src="../pics/lukesign.jpg" border="0"></td></tr>
 	<tr><td>Luke Davis</td></tr>	
 	<tr><td>#companyshort.companyname#</td></tr>			
-</table><br />
+</table>
 
 </cfoutput>
 
