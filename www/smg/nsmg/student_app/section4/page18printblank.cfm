@@ -101,18 +101,7 @@
 					</cfloop>
 			</table>
 		</td>
-	</tr>
-	<tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
-	<tr>
-		<td>
-			<table>
-				<tr></tr><td><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></td>
-					<td><em>Consider my child for the following 3 choices from the J-1 Private Schools List:</em></td></tr>
-				<tr><td></td><td><br><img src="#path#pics/line.gif" width="300" height="1" border="0" align="absmiddle"></td></tr>
-				<tr><td></td><td><br><img src="#path#pics/line.gif" width="300" height="1" border="0" align="absmiddle"></td></tr>
-				<tr><td></td><td><br><img src="#path#pics/line.gif" width="300" height="1" border="0" align="absmiddle"></td></tr>
-			</table>
-		</td>
+
 	</tr>
 </table><br><br><br>
 
