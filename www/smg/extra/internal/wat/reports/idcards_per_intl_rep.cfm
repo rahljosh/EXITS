@@ -117,6 +117,16 @@
 					
     <cfloop query="qGetCandidates">
 		
+		<cfscript>
+            if ( qGetCandidates.extra_sponsor EQ 'INTO' ) {
+                // Set Sponsor
+                setSponsor = qGetCandidates.extra_sponsor;
+            } else {
+                // Default Sponsor
+                setSponsor = 'WAT';	
+            }
+    	</cfscript>    
+	        
 		<cfif NOT VAL(pagebreak)>				
 			<!--- Start a table for our labels --->
             <table align="center" width="670" border="0" cellspacing="2" cellpadding="0">	
@@ -134,14 +144,14 @@
             <table border="0" width="100%">
                 <tr> 
                     <td align="center">
-                        <img src="../../../../#APPLICATION[qGetCandidates.extra_sponsor].smallLogo#" border="0">
+                        <img src="../../../../#APPLICATION.CSB[setSponsor].smallLogo#" border="0">
                     </td>
                     <td align="center" width="100%"> 
                         <p class="style5">&nbsp;</p>
-                        <p class="style4"><b>#APPLICATION[qGetCandidates.extra_sponsor].programName#</b>
+                        <p class="style4"><b>#APPLICATION.CSB[setSponsor].programName#</b>
                         <p class="style1">#c_address#</p>
                         <p class="style1">#c_city#, #c_state# &nbsp; #c_zip#</p>
-                        <p class="style1">#APPLICATION[qGetCandidates.extra_sponsor].phoneIDCard#</p>
+                        <p class="style1">#APPLICATION.CSB[setSponsor].phoneIDCard#</p>
                         <p class="style5">&nbsp;</p>
                         <p class="style3">Student: <b>#Firstname# #lastname# (###candidateid#)</b></p>
                         <p class="style1">Please see reverse for the insurance information.</p>
@@ -161,17 +171,17 @@
                                     <p class="style2">#hostcity#, #hoststate# #hostzip#</p>						
                                     <p class="style2">&nbsp;</p>	
                                     <p class="style2">Exchange Visitor Program Number:</p>															
-                                    <p class="style2">#APPLICATION[qGetCandidates.extra_sponsor].programNumber#</p>
+                                    <p class="style2">#APPLICATION.CSB[setSponsor].programNumber#</p>
                                     <p class="style2">&nbsp;</p>
                                 </td>
                                 <td width="50%" align="right" valign="top">
                                     <!---
                                     <p class="style2">Head Office Contact: Anca</p>
-                                    <p class="style2">#APPLICATION[qGetCandidates.extra_sponsor].phoneIDCard#</p><br />
+                                    <p class="style2">#APPLICATION.CSB[setSponsor].phoneIDCard#</p><br />
 									--->
                                     <p class="style2">Department of State Exchange Visitor Program:</p>
                                     <p class="style2">1-202-401-5810</p>
-                                    <p class="style2">Emergency Contact Phone Number: #APPLICATION[qGetCandidates.extra_sponsor].phoneIDCard#</p>
+                                    <p class="style2">Emergency Contact Phone Number: #APPLICATION.CSB[setSponsor].phoneIDCard#</p>
                                     <p class="style2">&nbsp;</p>
                                 </td>
                             </tr>
