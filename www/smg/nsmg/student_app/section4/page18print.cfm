@@ -81,37 +81,8 @@
 					<td><em>Do not consider my child for J-1 Private Schools</em></td></tr>
 			</table>
 		</td>
-	</tr>
-	<tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
-	<tr>
-		<td>
-			<table>
-				<tr><td><cfif privateschool GTE '1' AND privateschool LTE '4'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse> <img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif></td>
-					<td><em>Consider my child for any school in the following tuition range: (select one)</em></td></tr>
-					<tr><td></td><td>Tuition Range: (select one)</td></tr>
-					<cfloop query="private_schools">
-					<tr><td></td><td>	
-						<cfif get_student_info.privateschool EQ privateschoolid>
-							<img src="#path#pics/checkY.gif" width="13" height="13" border="0">
-						<cfelse>
-							<img src="#path#pics/checkN.gif" width="13" height="13" border="0">
-						</cfif>
-						&nbsp; #privateschoolprice#<br><img src="#path#pics/line.gif" width="300" height="1" border="0" align="absmiddle"></td></tr>
-					</cfloop>
-			</table>
-		</td>
-	</tr>
-	<tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
-	<tr>
-		<td>
-			<table>
-				<tr><td><cfif privateschool GT 4><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse> <img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif></td>
-					<td><em>Consider my child for the following 3 choices from the J-1 Private Schools List:</em></td></tr>
-				<tr><td></td><td><br><img src="#path#pics/line.gif" width="300" height="1" border="0" align="absmiddle"></td></tr>
-				<tr><td></td><td><br><img src="#path#pics/line.gif" width="300" height="1" border="0" align="absmiddle"></td></tr>
-				<tr><td></td><td><br><img src="#path#pics/line.gif" width="300" height="1" border="0" align="absmiddle"></td></tr>
-			</table>
-		</td>
+
+	
 	</tr>
 </table><br><br><br>
 
