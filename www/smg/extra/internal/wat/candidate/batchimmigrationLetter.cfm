@@ -39,6 +39,16 @@
             programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_program#">
     </cfquery>
 
+	<cfscript>
+		if ( qGetProgram.extra_sponsor EQ 'INTO' ) {
+			// Set Sponsor
+			setSponsor = qGetProgram.extra_sponsor;
+		} else {
+			// Default Sponsor
+			setSponsor = 'WAT';	
+		}
+	</cfscript>
+
 </cfsilent>
 
 <style type="text/css" media="print">
@@ -67,18 +77,18 @@
 <cfoutput>
 
     <cfloop query="qGetCandidate">
-    
+
         <!--- Header --->
         <table width="700px" border="0">
             <tr>
                 <td class="style1">
-                    <img src="../../../../#APPLICATION[qGetProgram.extra_sponsor].logo#"> <br />
+                    <img src="../../../../#APPLICATION.CSB[setSponsor].logo#"> <br />
                 </td>
                 <td class="style2" width="100%" align="right">
-                    #APPLICATION[qGetProgram.extra_sponsor].name# <br />
+                    #APPLICATION.CSB[setSponsor].name# <br />
                     119 Cooper Street <br />
                     Babylon, New York 11702 <br />
-                    #APPLICATION[qGetProgram.extra_sponsor].toolFreePhone#
+                    #APPLICATION.CSB[setSponsor].toolFreePhone#
                 </td>
             </tr>
         </table>
@@ -99,7 +109,7 @@
                     Craig Brewer <br />
                     Executive Director <br />
                     Responsible Officer <br />
-                    United States Department of State Designated Sponsor #APPLICATION[qGetProgram.extra_sponsor].programNumber#
+                    United States Department of State Designated Sponsor #APPLICATION.CSB[setSponsor].programNumber#
                </td>
             </tr>
         </table>
@@ -116,11 +126,11 @@
                     <p class="style1">
                         Please accept this letter as an official document attesting to the fact that 
                         <strong>#qGetCandidate.firstname# #qGetCandidate.middlename# #qGetCandidate.lastname#</strong> 
-                        is a participant in the #APPLICATION[qGetProgram.extra_sponsor].name# Summer Work Travel Program. <br />
+                        is a participant in the #APPLICATION.CSB[setSponsor].name# Summer Work Travel Program. <br />
                         Form DS-2019 number #qGetCandidate.ds2019# has been issued for the above mentioned participant. <br /> <br />
                         
-                        #APPLICATION[qGetProgram.extra_sponsor].name# is a sponsor of exchange visitors to the United States, participating in 
-                        Exchange Visitor Program #APPLICATION[qGetProgram.extra_sponsor].programNumber#, designated by the United States Department of State. 
+                        #APPLICATION.CSB[setSponsor].name# is a sponsor of exchange visitors to the United States, participating in 
+                        Exchange Visitor Program #APPLICATION.CSB[setSponsor].programNumber#, designated by the United States Department of State. 
                         Such participants have been admitted under Section 101 (A) (15) (J) of the Immigration and Nationality Act. 
                         Their J-1 visa status is evidenced by the DS-2019 Form and the J-1 visa in their passports. <br /> <br />
                         
@@ -128,10 +138,10 @@
                         The participants of this program are also entitled to receive compensation from employers for theirs efforts while they are on the 
                         program. For payroll purposes, the participants must obtain Social Security Numbers. <br /> <br />
                         
-                        Each participant has been sponsored by #APPLICATION[qGetProgram.extra_sponsor].name# as indicated on the DS-2019 Form. <br /> <br />
+                        Each participant has been sponsored by #APPLICATION.CSB[setSponsor].name# as indicated on the DS-2019 Form. <br /> <br />
         
-                        #APPLICATION[qGetProgram.extra_sponsor].name# would like to thank you in advance for your cooperation. 
-                        If you should have any questions or concerns, please feel free to contact us at #APPLICATION[qGetProgram.extra_sponsor].toolFreePhone#. <br /> <br /> <br /> 
+                        #APPLICATION.CSB[setSponsor].name# would like to thank you in advance for your cooperation. 
+                        If you should have any questions or concerns, please feel free to contact us at #APPLICATION.CSB[setSponsor].toolFreePhone#. <br /> <br /> <br /> 
                     </p>
         
                     <p class="style1">
