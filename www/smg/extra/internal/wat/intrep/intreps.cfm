@@ -33,20 +33,20 @@
 </table>
 <br>
 <table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=95%>
-	<tr>
-		<td width="6%" bgcolor="4F8EA4"><a href="?curdoc=intrep/intreps&order=userid&active=1" class="style2">ID</a></td>
-		<td width="30%" bgcolor="4F8EA4"><a href="?curdoc=intrep/intreps&order=businessname&active=1" class="style2">International Rep.</a></td>
-		<td width="22%" bgcolor="4F8EA4"><a href="?curdoc=intrep/intreps&order=firstname&active=1" class="style2">First Name</a></td>
-		<td width="22%" bgcolor="4F8EA4"><a href="?curdoc=intrep/intreps&order=lastname&active=1" class="style2">Last Name</a></td>
-		<td width="20%" bgcolor="4F8EA4"><a href="?curdoc=intrep/intreps&order=countryname&active=1" class="style2">Country</a></td>
+	<tr bgcolor="##4F8EA4">
+		<td width="6%"><a href="?curdoc=intrep/intreps&order=userid&active=1" class="style2">ID</a></td>
+		<td width="30%"><a href="?curdoc=intrep/intreps&order=businessname&active=1" class="style2">International Rep.</a></td>
+		<td width="22%"><a href="?curdoc=intrep/intreps&order=firstname&active=1" class="style2">First Name</a></td>
+		<td width="22%"><a href="?curdoc=intrep/intreps&order=lastname&active=1" class="style2">Last Name</a></td>
+		<td width="20%"><a href="?curdoc=intrep/intreps&order=countryname&active=1" class="style2">Country</a></td>
 	</tr>
 	<cfloop query="intagent">
-		<tr bgcolor="#iif(intagent.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style5">
-			<td><a href="?curdoc=intrep/intrep_info&uniqueid=#uniqueid#" class="style4">#userid#</a></td>
-			<td><a href="?curdoc=intrep/intrep_info&uniqueid=#uniqueid#" class="style4">#businessname#</a></td>
-			<td>#firstname#</td>
-			<td>#lastname#</td>
-			<td>#countryname#</td>
+    	<tr bgcolor="###iif(intagent.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
+			<td class="style4"><a href="?curdoc=intrep/intrep_info&uniqueid=#uniqueid#" class="style4">#userid#</a></td>
+			<td class="style4"><a href="?curdoc=intrep/intrep_info&uniqueid=#uniqueid#" class="style4">#businessname#</a></td>
+			<td class="style5">#firstname#</td>
+			<td class="style5">#lastname#</td>
+			<td class="style5">#countryname#</td>
 		</tr>
 	</cfloop>
 </table>
