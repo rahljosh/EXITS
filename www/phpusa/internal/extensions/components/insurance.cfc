@@ -160,7 +160,7 @@
                     AND
                     	ib.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)  
             WHERE 
-                fi.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                fi.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
             AND            	    
                 fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
             AND
