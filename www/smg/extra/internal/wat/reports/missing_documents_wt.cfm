@@ -20,6 +20,7 @@
         <cfquery name="qGetCandidates" datasource="mysql">
             SELECT 
                 c.candidateID,
+                c.uniqueID,
                 c.firstname, 
                 c.lastname, 
                 c.candidateid, 
@@ -173,7 +174,11 @@
             <cfloop query="qGetCandidates">
                 <tr <cfif qGetCandidates.currentrow mod 2>bgcolor="##E4E4E4"</cfif>>
                     <td valign="top" class="style1">#qGetCandidates.businessname#</td>
-                    <td valign="top" class="style1">#qGetCandidates.firstname# #qGetCandidates.lastname# (###qGetCandidates.candidateid#)</td>		
+                    <td valign="top" class="style1">
+                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#qGetCandidates.uniqueID#" target="_blank" class="style4">
+	                        #qGetCandidates.firstname# #qGetCandidates.lastname# (###qGetCandidates.candidateid#)
+                        </a>
+                    </td>		
                     <td valign="top" class="style1">#qGetCandidates.companyname#</td>
                     <td valign="top" class="style1">
                         <cfif NOT VAL(qGetCandidates.wat_doc_agreement)><font color="##CC0000">- Agreement</font><br /></cfif>
