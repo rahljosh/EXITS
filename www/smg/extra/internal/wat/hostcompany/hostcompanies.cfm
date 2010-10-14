@@ -107,9 +107,9 @@
 			</tr>
             <cfloop query="qGetHostCompanies">
                 <tr bgcolor="###iif(qGetHostCompanies.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
-                    <td><a href="?curdoc=hostcompany/hostcompany_info&hostCompanyID=#hostCompanyID#" class="style4">#hostCompanyID#</a></td>
-                    <td><a href="?curdoc=hostcompany/hostcompany_info&hostCompanyID=#hostCompanyID#" class="style4">#name#</a></td>
-                    <td><a href="?curdoc=hostcompany/hostcompany_info&hostCompanyID=#hostCompanyID#" class="style4">#phone#</a></td>
+                    <td><a href="?curdoc=hostcompany/hostcompany_profile&hostCompanyID=#hostCompanyID#" class="style4">#hostCompanyID#</a></td>
+                    <td><a href="?curdoc=hostcompany/hostcompany_profile&hostCompanyID=#hostCompanyID#" class="style4">#name#</a></td>
+                    <td><a href="?curdoc=hostcompany/hostcompany_profile&hostCompanyID=#hostCompanyID#" class="style4">#phone#</a></td>
                     <td class="style5">#supervisor#</td>
                     <td class="style5">#city#</td>
                     <td class="style5">#stateName#</td>

@@ -1,0 +1,194 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		_app.cfm
+	Author:		Marcus Melo
+	Date:		October, 14 2010
+	Desc:		Sets App-related  variables such as web address, webmaster 
+				email, company name, etc.
+
+	Updated:  	
+
+----- ------------------------------------------------------------------------- --->
+
+<cfscript>
+	// Set up DSN information
+	APPLICATION.DSN = StructNew();
+	APPLICATION.DSN.Source = "mySql";
+	APPLICATION.DSN.Username = "";
+	APPLICATION.DSN.Password = "";
+
+
+	// Stores Company Information
+	APPLICATION.CSB = StructNew();	
+
+	// SET CSB Default Information
+	APPLICATION.CSB.name = "CSB International, Inc.";
+	APPLICATION.CSB.phone = "(631) 893-4549";
+	APPLICATION.CSB.toolFreePhone = "1-877-669-0717";		
+	APPLICATION.CSB.address = '119 Cooper Street';
+	APPLICATION.CSB.city = 'Babylon';
+	APPLICATION.CSB.state = 'NY';
+	APPLICATION.CSB.zipCode = '11702';
+	
+	// Set CSB WAT Information
+	APPLICATION.CSB.WAT = StructNew();		
+	APPLICATION.CSB.WAT.name = "CSB International, Inc.";
+	APPLICATION.CSB.WAT.programName = "Summer Work Travel Program";
+	APPLICATION.CSB.WAT.shortProgramName = "CSB SWT";
+	APPLICATION.CSB.WAT.programNumber = "P-4-13299";
+	APPLICATION.CSB.WAT.phone = "(631) 893-4549";
+	APPLICATION.CSB.WAT.toolFreePhone = "1-877-669-0717";		
+	APPLICATION.CSB.WAT.phoneIDCard = "1-877-669-0717";
+	APPLICATION.CSB.WAT.logo = "8.gif";
+	APPLICATION.CSB.WAT.smallLogo = "8s.gif";
+	APPLICATION.CSB.WAT.address = '119 Cooper Street';
+	APPLICATION.CSB.WAT.city = 'Babylon';
+	APPLICATION.CSB.WAT.state = 'NY';
+	APPLICATION.CSB.WAT.zipCode = '11702';
+
+	// Set INTO Information
+	APPLICATION.CSB.INTO = StructNew();		
+	APPLICATION.CSB.INTO.name = "Into EdVentures";
+	APPLICATION.CSB.INTO.programName = "Into EdVentures Work &amp; Travel";
+	APPLICATION.CSB.INTO.shortProgramName = "INTO WAT";
+	APPLICATION.CSB.INTO.programNumber = "P-3-06010";
+	APPLICATION.CSB.INTO.phone = "(631) 893-8059";
+	APPLICATION.CSB.INTO.toolFreePhone = "1-888-INTO USA";
+	APPLICATION.CSB.INTO.phoneIDCard = "1-888-468-6872";
+	APPLICATION.CSB.INTO.logo = "2.gif";
+	APPLICATION.CSB.INTO.smallLogo = "2.gif";
+	APPLICATION.CSB.INTO.address = '119 Cooper Street';
+	APPLICATION.CSB.INTO.city = 'Babylon';
+	APPLICATION.CSB.INTO.state = 'NY';
+	APPLICATION.CSB.INTO.zipCode = '11702';
+
+	// Set CSB Trainee Information
+	APPLICATION.CSB.Trainee = StructNew();		
+	APPLICATION.CSB.Trainee.name = "CSB International, Inc.";
+	APPLICATION.CSB.Trainee.programName = "Trainee Program";
+	APPLICATION.CSB.Trainee.shortProgramName = "CSB Trainee";
+	APPLICATION.CSB.Trainee.programNumber = "";
+	APPLICATION.CSB.Trainee.phone = "(631) 893-4549";
+	APPLICATION.CSB.Trainee.toolFreePhone = "1-877-669-0717";		
+	APPLICATION.CSB.Trainee.phoneIDCard = "1-877-669-0717";
+	APPLICATION.CSB.Trainee.logo = "7.gif";
+	APPLICATION.CSB.Trainee.smallLogo = "7s.gif";
+	APPLICATION.CSB.Trainee.address = '119 Cooper Street';
+	APPLICATION.CSB.Trainee.city = 'Babylon';
+	APPLICATION.CSB.Trainee.state = 'NY';
+	APPLICATION.CSB.Trainee.zipCode = '11702';
+
+
+	/***** Create APPLICATION.METADATA structure / Stores Default Metadata Information *****/
+	APPLICATION.METADATA = StructNew();		
+	
+	// SET CSB Default Information
+	APPLICATION.METADATA.pageTitle = 'CSB International, Inc.';
+	APPLICATION.METADATA.pageDescription = '';
+	APPLICATION.METADATA.pageKeywords = 'Trainee Program, Work and Travel Program, Work Experience';
+	
+	// Set CSB Trainee Information
+	APPLICATION.METADATA.Trainee.pageTitle = 'CSB International, Inc. - Trainee Program';
+	APPLICATION.METADATA.Trainee.pageDescription = '';
+	APPLICATION.METADATA.Trainee.pageKeywords = 'Trainee Program';
+	
+	// Set CSB WAT Information
+	APPLICATION.METADATA.WAT.pageTitle = 'CSB International, Inc. - Summer Work and Travel Program';
+	APPLICATION.METADATA.WAT.pageDescription = '';
+	APPLICATION.METADATA.WAT.pageKeywords = 'Work and Travel Program';
+
+
+	/***** Create APPLICATION.QUERY structure - This will hold queries that are used in the database and do not change frequently *****/
+	APPLICATION.QUERY = StructNew();
+
+
+	/***** Create APPLICATION.SITE structure *****/
+	APPLICATION.SITE = StructNew();		
+	// Create new structure to store site information
+	APPLICATION.SITE.URL = StructNew();	
+
+	
+	/***** Create APPLICATION.EMAIL structure / Stores Email Information *****/
+	APPLICATION.EMAIL = StructNew();		
+
+	/***** Create APPLICATION.PATH structure *****/
+	APPLICATION.PATH = StructNew();		
+
+	/* jQuery Latest Version 
+	http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
+	APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';	
+	APPLICATION.PATH.jQueryUI = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js';
+	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css';
+
+
+	/***** Set Settings based on Live or Dev Servers *****/
+	
+	// Check if this is Dev or Live 
+	if ( APPLICATION.isServerLocal ) {
+		// ***** DEVELOPMENT Server Settings *****
+
+		// Set Site URL
+		APPLICATION.SITE.URL.main = 'http://brazil/extra/';
+		APPLICATION.SITE.URL.activation = 'http://brazil/extra/accountActivation.cfm';
+		//APPLICATION.SITE.URL.main = 'http://smg.local/extra/';
+		//APPLICATION.SITE.URL.activation = 'http://smg.local/extra/accountActivation.cfm';
+		
+		// Email Settings
+		APPLICATION.EMAIL.contactUs = 'marcus@iseusa.com';
+		APPLICATION.EMAIL.support = 'marcus@iseusa.com';
+		APPLICATION.EMAIL.errors = 'marcus@iseusa.com';
+
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		APPLICATION.PATH.base = 'C:/Websites/www/smg/extra/internal/';
+	
+	} else {
+		// ***** PRODUCTION Server Settings *****
+
+		// Set Site URL
+		APPLICATION.SITE.URL.main = 'http://www.student-management.com/extra';
+		APPLICATION.SITE.URL.activation = 'http://www.student-management.com/extra/accountActivation.cfm';
+		
+		// Email Settings
+		APPLICATION.EMAIL.contactUs = 'info@csb-usa.com';
+		APPLICATION.EMAIL.support = 'support@student-management.com';
+		APPLICATION.EMAIL.errors = 'errors@student-management.com';
+		
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		APPLICATION.PATH.base = 'C:/Websites/student-management/extra/internal/';
+		
+	}
+
+
+	/***************
+		Set up folders used to uplaod documents in the application.
+	***************/
+
+
+	// Document Root
+	APPLICATION.PATH.UploadDocumentRoot = APPLICATION.PATH.base & "uploadedFiles/";
+
+	// DELETE THESE 
+	/*
+	APPLICATION.PATH.uploadedFiles = = APPLICATION.PATH.base & "uploadedFiles/";
+	APPLICATION.PATH.pdfDocs = APPLICATION.PATH.UploadDocumentRoot & 'pdf_docs/wat/';
+	APPLICATION.PATH.candidatePicture = APPLICATION.PATH.UploadDocumentRoot & "web-candidates/";
+	*/
+	
+	// Host Company Logo
+	APPLICATION.PATH.hostLogo = APPLICATION.PATH.UploadDocumentRoot & "web-hostlogo/";
+
+	// Candidate Picture
+	APPLICATION.PATH.uploadCandidatePicture = APPLICATION.PATH.UploadDocumentRoot & "web-candidates/";
+	
+	// Candidate Application Files		
+	APPLICATION.PATH.uploadDocumentCandidate = APPLICATION.PATH.UploadDocumentRoot & "candidate/";
+	
+	// Temp Folder 
+	APPLICATION.PATH.uploadDocumentTemp = APPLICATION.PATH.UploadDocumentRoot & "temp/";
+
+	// Make sure folder exists
+	APPLICATION.CFC.DOCUMENT.createFolder(APPLICATION.PATH.UploadDocumentRoot);
+	APPLICATION.CFC.DOCUMENT.createFolder(APPLICATION.PATH.uploadCandidatePicture);
+	APPLICATION.CFC.DOCUMENT.createFolder(APPLICATION.PATH.uploadDocumentCandidate);	
+	APPLICATION.CFC.DOCUMENT.createFolder(APPLICATION.PATH.uploadDocumentTemp);	
+</cfscript>

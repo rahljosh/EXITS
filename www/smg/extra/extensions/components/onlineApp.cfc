@@ -62,6 +62,7 @@
 		<cfscript>
 			// Re-set customer session variables 
 			SESSION.CANDIDATE.ID = 0;
+			SESSION.CANDIDATE.isLoggedIn = 0;
 		</cfscript>
         
 	</cffunction>
