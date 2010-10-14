@@ -1,3 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+
 <cfquery name="get_student_info" datasource="MySQL">
   SELECT 	s.firstname, s.familylastname, s.sex, s.dob, s.studentid, s.intrep
   FROM smg_students s
@@ -107,8 +116,10 @@
 <script language="JavaScript">
 <!-- 
 alert("You have successfully updated the flight information for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#). Thank You.");
-	location.replace("flight_info.cfm?unqid=#form.uniqueid#&assignedID=#FORM.assignedID#");
+	location.replace("flight_info.cfm?unqid=#form.uniqueid#");
 -->
 </script>
 
 </cfoutput>
+</body>
+</html>
