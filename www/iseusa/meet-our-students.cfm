@@ -488,6 +488,9 @@
                     
 					Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
                     
+                    PS: Use the login box in the <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> page. 
+                    Do NOT click on "Log-In" top right corner. <br /><br />
+                    
 					<!---
                     *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
                     <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
