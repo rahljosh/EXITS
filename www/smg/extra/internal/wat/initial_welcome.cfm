@@ -215,10 +215,10 @@
                     
 						<table width="100%" class="applicationStatsTable" cellspacing="0" cellpadding="5" valign="top">
                             <tr style="min-height:12px;">
-                                <th colspan="2" class="applicationStatsStudent">Waiting on Student</th>
-                                <th colspan="2" class="applicationStatsBranch">Waiting on Branch</th>
-                                <th colspan="2" class="applicationStatsIntlRep">Waiting on Intl. Rep.</th>
-                                <th colspan="3" class="applicationStatsCSB">Waiting on CSB</th>
+                                <th colspan="2" class="applicationStatsStudent">Student</th>
+								<th colspan="2" class="applicationStatsBranch">Intl. Branch</th>
+                                <th colspan="2" class="applicationStatsIntlRep">Intl. Rep.</th>
+                                <th colspan="3" class="applicationStatsCSB">CSB</th>
                             </tr>
                             <tr>
                                 <cfloop query="qStatus">

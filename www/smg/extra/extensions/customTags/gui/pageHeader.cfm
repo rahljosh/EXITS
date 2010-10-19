@@ -34,7 +34,7 @@
 
 	<cfparam 
 		name="ATTRIBUTES.includeTopBar"
-		type="string"
+		type="integer"
         default="1"
 		/>
 
@@ -167,6 +167,29 @@
                 <body>
             </cfcase>
     
+    	
+            <!--- Display Login --->
+            <cfcase value="displayLogin">
+               	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+				<html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <cfoutput>
+                        #csbMetaData#
+                        <link rel="stylesheet" href="../../../internal/linked/css/appSection.css" type="text/css" />
+                        <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
+                        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+                        <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+                        <script src="../../../internal/linked/js/appSection.js " type="text/javascript"></script> <!-- UDF -->
+                        <script src="../../../internal/linked/js/ajaxUpload.js " type="text/javascript"></script> <!-- Ajax - Upload File -->
+						<script src="../../../internal/linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
+						<script src="../../../internal/linked/js/jquery.validate.js " type="text/javascript"></script> <!-- JQuery Validation -->
+                    </cfoutput>
+                </head>
+                <body>
+            </cfcase>
+
     
             <!--- Application Header --->
             <cfcase value="application">
@@ -190,7 +213,7 @@
                 <body>
                 
                 <!--- Start of Div Wrapper --->
-                <div class="wrapper">
+                <div class="wrapper"> <!-- Start of Div Wrapper -->  
                     
                     <div class="topBar">
                         
@@ -219,7 +242,7 @@
                     </div>
 		
 					<!--- Side Bar --->
-                    <div class="leftSideBar ui-corner-all">
+                    <div class="leftSideBar ui-corner-all"> <!-- Side Bar -->  
                         
                         <div class="insideBar form-container">
                             <a href="#CGI.SCRIPT_NAME#?action=initial" id="itemLinks" class="itemLinks">Start Application</a> 

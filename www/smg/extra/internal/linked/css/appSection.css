@@ -143,6 +143,21 @@ Left Side / Right Side Content
 	padding:1px 10px 20px 5px;
 }
 
+.smallSideContent {
+	width:100%;
+	min-height:220px;
+	background-color: #eeeeee;
+	border:1px solid #aaaaaa;
+	margin:3px 15px 0px 0px;		
+}
+
+.smallSideContent .insideBar {
+	min-height:200px;
+	background-color: #FFFFFF;
+	margin:20px;
+	padding:1px 10px 0px 5px;
+}
+
 .leftSideBar .insideBar a.itemLinks,
 .rightSideContent .insideBar a.itemLinks {
 	display:block;
@@ -350,6 +365,17 @@ Online Application
 	*/
 }
 
+.printFieldSmall {
+	width:250px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+	border-bottom:1px solid #999999;
+	/* display:block;
+	background: url(../../pics/onlineApp/line.gif) repeat-x;  
+	*/
+}
+
 .printWrapper {
 	width:800px;	
 }
@@ -450,6 +476,61 @@ Page Footer
 	font-size:1em;
 	font-weight:bold;
 	padding-top:0.3em;
+}
+
+
+
+/*
+**********************************************************************************
+
+Submission History
+
+************************************************************************************/
+span.submissionDateTitle {
+	width:160px; 
+	padding-top:5px;
+	margin-bottom:3px;
+	font-weight:bold;
+	display:inline-block;
+	border-bottom:1px solid #CCC;
+}
+
+span.submissionStatusTitle {
+	width:180px; 
+	padding-top:5px;
+	margin-bottom:3px;
+	font-weight:bold;
+	display:inline-block;
+	border-bottom:1px solid #CCC;
+}
+
+span.submissionCommentsTitle {
+	clear:both;
+	min-width:300px;
+	padding-top:5px;
+	margin-bottom:3px;
+	font-weight:bold;
+	display:inline-block;
+	border-bottom:1px solid #CCC;
+}
+
+span.submissionDateField {
+	width:160px; 
+	margin-bottom:3px;	
+	display:inline-block;
+}
+
+span.submissionStatusField {
+	width:180px; 
+	margin-bottom:3px;	
+	display:inline-block;
+}
+
+span.submissionCommentsField {
+	clear:both;
+	min-width:300px;
+	margin-bottom:3px;	
+	display:inline-block;
 }
 
 /*
@@ -747,7 +828,8 @@ div.form-container-noBorder div.controlset div {
 
 div.form-container div.buttonrow,
 div.form-container-noBorder div.buttonrow{ 
-	margin-left: 350px; 
+	text-align:center;
+	/* margin-left: 350px; */
 }
 
 div.form-container div.buttonrow .button,

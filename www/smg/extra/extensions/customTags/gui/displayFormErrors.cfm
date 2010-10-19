@@ -83,6 +83,14 @@
                         </td>
                     </tr>
                     </table>
+
+					<cfscript>
+                        // Check to see if we are supposed to clear the queue 
+                        if ( ATTRIBUTES.Clear ) {
+							ATTRIBUTES.formErrors.Clear();
+							SESSION.formErrors.Clear();
+                        }
+                    </cfscript>
                 
                 </cfcase>
             
@@ -108,6 +116,7 @@
                         // Check to see if we are supposed to clear the queue 
                         if ( ATTRIBUTES.Clear ) {
 							ATTRIBUTES.formErrors.Clear();
+							SESSION.formErrors.Clear();
                         }
                     </cfscript>
                 

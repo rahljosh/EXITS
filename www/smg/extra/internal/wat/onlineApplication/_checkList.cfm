@@ -65,7 +65,7 @@
                         </cfloop>
                 
                         <cfif CLIENT.loginType NEQ 'user'>
-                            <span class="fieldList">This page must be completed by #SESSION.CANDIDATE.intlRepName#.</span>
+                            <span class="fieldList">This page must be completed by #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName#.</span>
                         </cfif>
                         
                     </ul>    

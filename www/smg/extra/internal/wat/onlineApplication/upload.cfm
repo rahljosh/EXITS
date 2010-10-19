@@ -16,24 +16,22 @@
 	
 </cfsilent>
 
-<cfif structKeyExists(FORM, "fileData")>
-	
-    <cfscript>
-		// Upload Document		
-		APPLICATION.CFC.DOCUMENT.upload(
-			foreignTable=URL.foreignTable,
-			foreignID=APPLICATION.CFC.CANDIDATE.getCandidateID(),
-			formField=FORM.fileData,
-			uploadPath=SESSION.CANDIDATE.myUploadFolder
-		);
-	</cfscript>
-    
-</cfif>
 
 <cfscript>
+    if ( structKeyExists(FORM, "fileData") ) {
+    
+        // Upload Document		
+        APPLICATION.CFC.DOCUMENT.upload(
+            foreignTable=URL.foreignTable,
+            foreignID=APPLICATION.CFC.CANDIDATE.getCandidateID(),
+            formField=FORM.fileData,
+            uploadPath=APPLICATION.CFC.CANDIDATE.getCandidateSession().myUploadFolder
+        );
+    
+	}
+	
 	// We must pass this back otherwise it won't upload multiple files.
 	str.STATUS = 200;
 	str.MESSAGE = "passed";
-	// for some reason this last line is throwing an error
-	// WriteOutput(serializeJSON(str));
+	WriteOutput(serializeJSON(str));
 </cfscript>

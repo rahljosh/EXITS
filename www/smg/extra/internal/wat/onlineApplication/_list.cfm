@@ -90,9 +90,9 @@
                     </td>
                 </cfif>                
                 <td class="style5">
-                	<a href="" class="style4">[Login]</a>
+                    <a href="onlineApplication/index.cfm?action=displayLogin&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpDisplayLogin">[View Login]</a>
                     &nbsp;
-                    <a href="" class="style4">[Delete]</a>
+                    <a href="onlineApplication/index.cfm?action=delete&uniqueID=#qGetCandidates.uniqueID#" class="style4">[Delete]</a>
                 </td>
             </tr>
         </cfloop>
@@ -113,5 +113,15 @@ $('.popUpOnlineApplication').popupWindow({
 	scrollbars:1,
 	resizable:1,
 	windowName:'onlineApplication'
+}); 
+
+// Pop Up Application 
+$('.popUpDisplayLogin').popupWindow({ 
+	height:250, 
+	width:600,
+	centerBrowser:1,
+	scrollbars:0,
+	resizable:1,
+	windowName:'loginInformation'
 }); 
 </script>

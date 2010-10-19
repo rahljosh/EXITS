@@ -55,7 +55,7 @@
 				// set up upload files path
 				SESSION.CANDIDATE.myUploadFolder = APPLICATION.PATH.uploadDocumentCandidate & ARGUMENTS.candidateID & '/';
 				// Make sure folder exists
-				APPLICATION.CFC.DOCUMENT.createFolder(SESSION.CANDIDATE.myUploadFolder);
+				APPLICATION.CFC.DOCUMENT.createFolder(APPLICATION.CFC.CANDIDATE.getCandidateSession().myUploadFolder);
 				
 				// Set student SESSION complete
 				stCheckSession1 = checkCandidateRequiredFields(candidateID=ARGUMENTS.candidateID, sectionName='section1');
@@ -80,19 +80,32 @@
 				}
 				
 				// Set Application as readOnly
-				if ( qGetCandidateInfo.applicationStatusID EQ 1 )
+				if ( qGetCandidateInfo.applicationStatusID EQ 1 ) {
 					// Issued Application - ReadOnly
 					SESSION.CANDIDATE.isReadOnly = 1;
-				else if ( CLIENT.loginType NEQ 'user' AND ListFind("3,5,7,8,9,10,11", qGetCandidateInfo.applicationStatusID) ) {
-					// Candidate logged in and application submitted
+				
+				} else if ( CLIENT.loginType NEQ 'user' AND VAL(qGetCandidateInfo.branchID) AND NOT ListFind("1,2,4", qGetCandidateInfo.applicationStatusID) ) {
+					// Candidate logged in / there is a branch / application submitted
 					SESSION.CANDIDATE.isReadOnly = 1;
-				} else if ( CLIENT.loginType EQ 'user' AND CLIENT.userID EQ qGetCandidateInfo.branchID AND ListFind("5,7,8,9,10,11", qGetCandidateInfo.applicationStatusID) ) {
+				
+				} else if ( CLIENT.loginType NEQ 'user' AND NOT ListFind("1,2,4,6", qGetCandidateInfo.applicationStatusID) ) {
+					// Candidate logged / no branch / application submitted
+					SESSION.CANDIDATE.isReadOnly = 1;
+				
+				} else if ( CLIENT.userID EQ qGetCandidateInfo.branchID AND NOT ListFind("1,2,3,4,6", qGetCandidateInfo.applicationStatusID) ) {
 					// Branch logged in and application submitted
 					SESSION.CANDIDATE.isReadOnly = 1;
-				} else if ( CLIENT.loginType EQ 'user' AND CLIENT.userID EQ qGetCandidateInfo.intRep AND ListFind("7,8,9,10,11", qGetCandidateInfo.applicationStatusID) ) {
+				
+				} else if ( CLIENT.userID EQ qGetCandidateInfo.intRep AND NOT ListFind("1,2,3,4,5,6,9", qGetCandidateInfo.applicationStatusID) ) {
 					// Intl. Rep. logged in and application submitted
 					SESSION.CANDIDATE.isReadOnly = 1;
+				
+				} else if ( VAL(CLIENT.userType) AND CLIENT.userType LTE 4 AND NOT ListFind("7,8,10", qGetCandidateInfo.applicationStatusID) ) {
+					// Office logged in
+					SESSION.CANDIDATE.isReadOnly = 1;
+				
 				} else {
+					// Application can be edited
 					SESSION.CANDIDATE.isReadOnly = 0;
 				}
 				
@@ -572,7 +585,7 @@
 	<cffunction name="getApplicationListbyStatusID" access="public" returntype="query" output="false" hint="Returns a list of candidates by statusID">
     	<cfargument name="applicationStatusID" type="numeric" default="0" hint="applicationStatusID is not required">
         <cfargument name="intRep" type="numeric" default="0" hint="International Representative is not required">
-
+		
         <cfquery 
 			name="qGetApplicationListbyStatusID" 
 			datasource="#APPLICATION.DSN.Source#">
@@ -583,6 +596,7 @@
                     c.lastName,
                     c.sex,
                     c.email,
+                    c.password,
                     u.businessName,
                     branch.businessName as branchName,
                     ast.dateCreated
@@ -611,7 +625,7 @@
                 ORDER BY            
                 	c.candidateID
 		</cfquery>
-		   
+           
 		<cfreturn qGetApplicationListbyStatusID>
     </cffunction>
  
