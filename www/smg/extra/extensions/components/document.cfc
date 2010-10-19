@@ -499,7 +499,7 @@
         <cftry>
         
 			<!--- Delete File --->
-            <cffile action="delete" file="#SESSION.CANDIDATE.myUploadFolder#/#qGetDoc.serverName#.#qGetDoc.serverExt#">            
+            <cffile action="delete" file="#APPLICATION.CFC.CANDIDATE.getCandidateSession().myUploadFolder#/#qGetDoc.serverName#.#qGetDoc.serverExt#">            
         
             <cfcatch type="any">
 				<!--- Error --->            

@@ -303,7 +303,10 @@
 			
 			// Stores the email template
 			var emailTemplate = '';
-			
+
+			// Get Intl. Rep. Information
+			qGetIntlRep = APPLICATION.CFC.USER.getUserByID(userID=APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepID);
+
 			// Set Next Status               
 			switch(currentApplicationStatusID) {
 				
@@ -468,12 +471,12 @@
 						// Application denied by NY office
 						newApplicationStatusID = 7;		
 						// Set Email Template
-						emailTemplate = 'approvedByOffice';
+						emailTemplate = 'approvedByIntlRep';
 					} else if ( ARGUMENTS.submissionType EQ 'denied' ) {
 						// Application denied by NY office
 						newApplicationStatusID = 6;	
 						// Set Email Template
-						emailTemplate = 'deniedByOffice';
+						emailTemplate = 'deniedByIntlRep';
 					}
 					break;
 				}
@@ -535,29 +538,35 @@
 				);
 				
 				// Email the candidate
-				APPLICATION.CFC.email.sendEmail(
-					emailFrom=APPLICATION.EMAIL.contactUs,
-					emailTo=APPLICATION.CFC.CANDIDATE.getCandidateSession().email,
-					emailTemplate=emailTemplate,
-					candidateID=ARGUMENTS.candidateID,
-					companyID=APPLICATION.CFC.CANDIDATE.getCandidateSession().companyID
-				);
-
-				// Email Branch
+				if ( ListFind("1,2,3,4,6", newApplicationStatusID) ) {
+				
+					APPLICATION.CFC.email.sendEmail(
+						emailFrom=APPLICATION.EMAIL.contactUs,
+						emailTo=APPLICATION.CFC.CANDIDATE.getCandidateSession().email,
+						emailTemplate=emailTemplate,
+						candidateID=ARGUMENTS.candidateID,
+						companyID=APPLICATION.CFC.CANDIDATE.getCandidateSession().companyID
+					);
+				
+				}
+				
+				// Email Branch - No need for now
 				
 				// Email Intl. Rep.
+				if ( ListFind("7,9,10,11", newApplicationStatusID) ) {
+					
+					APPLICATION.CFC.email.sendEmail(
+						emailFrom=APPLICATION.EMAIL.contactUs,
+						emailTo=qGetIntlRep.email,
+						emailTemplate=emailTemplate,
+						candidateID=ARGUMENTS.candidateID,
+						companyID=APPLICATION.CFC.CANDIDATE.getCandidateSession().companyID
+					);
 				
-				// Email Admissions Office
-				/*
-				APPLICATION.CFC.EMAIL.sendEmail(
-					emailTo=APPLICATION.EMAIL.admissions,						
-					emailTemplate='applicationSubmittedAdmissions',
-					emailFilePath=applicationZipFile,
-					candidateID=FORM.candidateID,
-					companyID=APPLICATION.CFC.CANDIDATE.getCandidateSession().companyID
-				);
-				*/
+				}
 
+				// Email Admissions Office - No need for now
+				
 			}
 		</cfscript>
 		
@@ -756,6 +765,11 @@
 				// Set Query
 				APPLICATION.QUERY.qGetCandidateQuestion = getQuestionByAppID(applicationID=APPLICATION.applicationID);
 			}
+			
+			if ( NOT VAL(APPLICATION.QUERY.qGetCandidateQuestion.recordCount) ) {
+				// Set Query
+				APPLICATION.QUERY.qGetCandidateQuestion = getQuestionByAppID(applicationID=APPLICATION.applicationID);
+			}			
 		</cfscript>
 
 		<cfquery  

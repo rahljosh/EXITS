@@ -111,6 +111,30 @@
 					// Redirect to login
 					Location(APPLICATION.SITE.URL.main, "no");
 			}
+			
+			/*** 
+				Set APPLICATION.applicationID based on the path.
+				This is set when users log in			
+			***/
+			if ( NOT VAL(APPLICATION.applicationID) ) {
+				
+				if ( ListFind(CGI.SCRIPT_NAME, "wat", "/" ) ) {
+					// WAT Application
+					APPLICATION.applicationID = 4;
+				} else if ( ListFind(CGI.SCRIPT_NAME, "trainee", "/") ) {
+					// Trainee Application
+					APPLICATION.applicationID = 5;
+				}
+
+			}
+			
+			/*** 
+				Set APPLICATION.foreignTable
+				This is set when users log in			
+			***/
+			if ( NOT LEN(APPLICATION.foreignTable) ) {
+				APPLICATION.foreignTable = 'extra_candidates';
+			}
 		</cfscript>
         
 		<!--- 

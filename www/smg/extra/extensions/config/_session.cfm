@@ -26,7 +26,7 @@
 <cfparam name="SESSION.CANDIDATE.lastName" default="">
 <cfparam name="SESSION.CANDIDATE.email" default="">
 <cfparam name="SESSION.CANDIDATE.dateLastLoggedIn" default="">
-<cfparam name="SESSION.CANDIDATE.isReadOnly" default="0">
+<cfparam name="APPLICATION.CFC.CANDIDATE.getCandidateSession().isReadOnly" default="0">
 <cfparam name="SESSION.CANDIDATE.isSection1Complete" default="0">
 <cfparam name="SESSION.CANDIDATE.section1FieldList" default="">
 <cfparam name="SESSION.CANDIDATE.isSection2Complete" default="0">

@@ -14,7 +14,7 @@
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
     
 	<!--- It is set to 1 for the print application page --->
-	<cfparam name="printApplication" default="#SESSION.CANDIDATE.isReadOnly#">
+	<cfparam name="printApplication" default="#APPLICATION.CFC.CANDIDATE.getCandidateSession().isReadOnly#">
    
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submittedType" default="">

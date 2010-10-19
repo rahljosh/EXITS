@@ -73,6 +73,14 @@
                         </td>
                     </tr>
                     </table>
+
+					<cfscript>
+                        // Check to see if we are supposed to clear the queue 
+                        if ( ATTRIBUTES.Clear ) {
+							ATTRIBUTES.pageMessages.Clear();
+							SESSION.pageMessages.clear();
+                        }
+                    </cfscript>
                 
                 </cfcase>
             
@@ -97,6 +105,7 @@
                         // Check to see if we are supposed to clear the queue 
                         if ( ATTRIBUTES.Clear ) {
 							ATTRIBUTES.pageMessages.Clear();
+							SESSION.pageMessages.clear();
                         }
                     </cfscript>
                 

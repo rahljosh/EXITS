@@ -12,14 +12,16 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
-
+		
 	<!--- It is set to 1 for the print application page --->
-	<cfparam name="printApplication" default="#SESSION.CANDIDATE.isReadOnly#">
+	<cfparam name="printApplication" default="#APPLICATION.CFC.CANDIDATE.getCandidateSession().isReadOnly#">
     <cfparam name="includeHeader" default="1">
+    <cfparam name="displaySubmit" default="0">
 	
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.submissionType" default="">
+    <cfparam name="FORM.forcePrintApplication" default="0">
     
 	<!--- Candidate ID --->
     <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getCandidateID()#">
@@ -36,22 +38,20 @@
  		
 		// Get Application History
 		qGetApplicationHistory = APPLICATION.CFC.ONLINEAPP.getApplicationHistory(foreignTable=APPLICATION.foreignTable, foreignID=FORM.candidateID);
-		
-		// Check if Application is complete, if not redirect to check list page.
-		
+			
+		// Check if Application is complete, if not redirect to check list page.		
 		if ( 
 			CLIENT.loginType NEQ 'user' 
 		AND (
-				NOT VAL(SESSION.CANDIDATE.isSection1Complete)
+				NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection1Complete)
 			OR
-				NOT VAL(SESSION.CANDIDATE.isSection2Complete)
+				NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection2Complete)
 			OR
-				NOT VAL(SESSION.CANDIDATE.isSection3Complete) 
+				NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete) 
 			) ) {
 				// Application is not complete - go to checkList page
 				location("#CGI.SCRIPT_NAME#?action=checkList", "no");
 		}
-	
 		
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
@@ -111,14 +111,21 @@
 				// Reload page with updated information
 				location("#CGI.SCRIPT_NAME#?action=submit", "no");
 				
+			} else {
+				
+				// Reset print application
+				printApplication = APPLICATION.CFC.CANDIDATE.getCandidateSession().isReadOnly;
+	
 			}
 			
 		} else {
 		
 			// Online Application Fields 
+			/*
 			for ( i=1; i LTE qGetAnswers.recordCount; i=i+1 ) {
 				FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
 			}
+			*/
 		
 		}
 	</cfscript>
@@ -222,79 +229,174 @@
                     <cfif NOT printApplication>
                         <div class="field">
                             <label for="sex">Action <em>*</em></label> 
+							
+							<!--- Candidate --->
 							<cfif CLIENT.loginType NEQ 'user'> 
-                                <!--- Candidate - Submit Button --->                      
-                                <select name="submissionType" id="submissionType" class="mediumField">
-                                    <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Submit Application</option>
-                                </select>
-                            <cfelseif CLIENT.userID EQ qGetCandidateInfo.branchID>
-                                <!--- Branch - Deny / Approve Button --->
-                                <select name="submissionType" id="submissionType" class="mediumField">
-                                    <option value=""></option> <!--- [select an action] --->
-                                    <!--- Only display approve if section 3 is complete --->
-									<cfif SESSION.CANDIDATE.isSection3Complete>
-	                                    <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
-                                    </cfif>
-                                    <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
-                                </select>
-                            <cfelseif CLIENT.userID EQ qGetCandidateInfo.intRep>
-                                <!--- Intl. Rep. - Deny / Approve Button --->
-                                <select name="submissionType" id="submissionType" class="mediumField">
-                                    <option value=""></option> <!--- [select an action] --->
-									<!--- Only display approve if section 3 is complete --->
-									<cfif SESSION.CANDIDATE.isSection3Complete>
-    	                                <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
-                                    </cfif>
-                                    <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
-                                </select>
-                            <cfelseif CLIENT.userType LTE 4>
-                                <!--- NY Office - Received / On Hold / Deny / Approve Button --->
-                                <select name="submissionType" id="submissionType" class="mediumField">
-                                    <option value=""></option> <!--- [select an action] --->
-                                    <!--- <option value="received" <cfif FORM.submissionType EQ 'received'> selected="selected" </cfif> >Application Received</option> --->
-                                    <option value="onhold" <cfif FORM.submissionType EQ 'onhold'> selected="selected" </cfif> >Application On Hold</option>
-                                    <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
-                                    <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
-                                </select>
-                            </cfif>  
 
-							<cfif NOT SESSION.CANDIDATE.isSection3Complete>
+                                <cfif ListFind("2,4,6", APPLICATION.CFC.CANDIDATE.getCandidateSession().applicationStatusID)>
+
+                                    <cfscript>
+										// Display submit button
+										displaySubmit = 1;
+									</cfscript>
+                                	
+                                    <select name="submissionType" id="submissionType" class="mediumField">
+                                        <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Submit Application</option>
+                                    </select>
+                            
+                            	<cfelse>
+                                
+                                    <p><strong>Note:</strong> 
+                                    	Application has been submitted. <br />
+                                	</p>
+
+                                </cfif>
+                            
+							<!--- Branch ---> 
+							<cfelseif qGetCandidateInfo.branchID EQ CLIENT.userID>
+                            	   
+                                <cfif ListFind("3,6", APPLICATION.CFC.CANDIDATE.getCandidateSession().applicationStatusID)>
+
+                                    <cfscript>
+										// Display submit button
+										displaySubmit = 1;
+									</cfscript>
+                                	
+									<!--- Branch / Intl. Rep - Deny / Approve Button --->
+                                    <select name="submissionType" id="submissionType" class="mediumField">
+                                        <option value=""></option> <!--- [select an action] --->
+                                        <!--- Only display approve if section 3 is complete --->
+                                        <cfif APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete>
+                                            <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
+                                        </cfif>
+                                        <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
+                                    </select>
+                            
+                            	<cfelse>
+                                
+                                    <p><strong>Note:</strong> 
+                                    	Application has NOT been submitted for your approval. <br />
+                                	</p>
+
+                                </cfif>
+							
+                            <!--- Intl. Rep --->
+							<cfelseif qGetCandidateInfo.intRep EQ CLIENT.userID>
+									
+                                <cfif ListFind("5,9", APPLICATION.CFC.CANDIDATE.getCandidateSession().applicationStatusID)>
+
+                                    <cfscript>
+										// Display submit button
+										displaySubmit = 1;
+									</cfscript>
+                                	
+									<!--- Branch / Intl. Rep - Deny / Approve Button --->
+                                    <select name="submissionType" id="submissionType" class="mediumField">
+                                        <option value=""></option> <!--- [select an action] --->
+                                        <!--- Only display approve if section 3 is complete --->
+                                        <cfif APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete>
+                                            <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
+                                        </cfif>
+                                        <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
+                                    </select>
+                            
+                            	<cfelse>
+                                
+                                    <p><strong>Note:</strong> 
+                                    	Application has NOT been submitted for your approval. <br />
+                                	</p>
+
+                                </cfif>
+                            
+                            <!--- NY Office --->                           
+                            <cfelseif CLIENT.userType LTE 4>
+                                
+                                
+                                <cfif ListFind("7,8,9,10", APPLICATION.CFC.CANDIDATE.getCandidateSession().applicationStatusID)>
+
+                                    <cfscript>
+										// Display submit button
+										displaySubmit = 1;
+									</cfscript>
+                                    
+									<!--- NY Office - Received / On Hold / Deny / Approve Button --->
+                                    <select name="submissionType" id="submissionType" class="mediumField">
+                                        <option value=""></option> <!--- [select an action] --->
+                                        <!--- 
+										<option value="received" <cfif FORM.submissionType EQ 'received'> selected="selected" </cfif> >Application Received</option>
+										<option value="onhold" <cfif FORM.submissionType EQ 'onhold'> selected="selected" </cfif> >Application On Hold</option>
+										 --->
+                                        <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
+                                        <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
+                                    </select>
+								
+                                <cfelse>
+                                	
+                                    <p><strong>Note:</strong> 
+                                    	Application has NOT been submitted to NY Office. <br />
+                                        You can only approve/deny this application once it's been submitted by #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName#.
+                                	</p>
+                                    
+                                </cfif>
+                                	                                
+                            </cfif>  
+							
+                            <!--- Deny Only Note --->
+							<cfif NOT APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete AND displaySubmit>
                                 <p class="note"><strong>Note:</strong> 
                                 You can only deny an application at this moment. <br />
-                                There are still some items missing. Click on <a href="#CGI.SCRIPT_NAME#?action=checkList">Checklist</a> to view them. </p>
+                                There are still some missing items. Click on <a href="#CGI.SCRIPT_NAME#?action=checkList">Checklist</a> to view them. </p>
                             </cfif>
                         </div>
                         
 					</cfif>                    
-                        
+                    
 					<!--- Comments --->
-                    <div class="field">
-                        <label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label>  
-                        <cfif printApplication>
-                            <div class="printFieldText">#FORM[qGetQuestions.fieldKey[1]]# &nbsp;</div>
-                        <cfelse>
-                            <textarea name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]#">#FORM[qGetQuestions.fieldKey[1]]#</textarea>                                    	
-                        </cfif>            
-                    </div>
-
+                    <cfif displaySubmit>
+                        <div class="field">
+                            <label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label>  
+                            <cfif printApplication>
+                                <div class="printFieldText">#FORM[qGetQuestions.fieldKey[1]]# &nbsp;</div>
+                            <cfelse>
+                                <textarea name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]#">#FORM[qGetQuestions.fieldKey[1]]#</textarea>                                    	
+                            </cfif>            
+                        </div>
+					</cfif>
+                    
                 </fieldset>                
 
-				<cfif printApplication>
-					<!--- Interview Instructions --->
-                    <fieldset>
-                       
-                        <legend>Application Submission History</legend>
-						
-                        <cfloop query="qGetApplicationHistory">                        
-                        	#DateFormat(qGetApplicationHistory.dateCreated, 'mm/dd/yyyy')# 
+				<!--- Submission History --->
+                <fieldset>
+                   
+                    <legend>Application Submission History</legend>
+
+                    <span class="submissionDateTitle">
+                        Date 
+                    </span>
+                    <span class="submissionStatusTitle">
+                        Status
+                    </span>
+                    <span class="submissionCommentsTitle">
+                        Comments                
+                    </span> <br />             
+                    
+                    <cfloop query="qGetApplicationHistory">                        
+                        <span class="submissionDateField">
+                            #DateFormat(qGetApplicationHistory.dateCreated, 'mm/dd/yyyy')# 
                             #TimeFormat(qGetApplicationHistory.dateCreated, 'hh-mm-ss tt')# EST 
-                            &nbsp; - &nbsp;
-                            #qGetApplicationHistory.description# <br />                        
-                        </cfloop>
-					</fieldset>
-                </cfif>
-					
-				<cfif NOT printApplication>                                                    
+                        </span>
+
+                        <span class="submissionStatusField">
+                        	#qGetApplicationHistory.description#
+                        </span>
+						
+                        <span class="submissionCommentsField">
+                            #qGetApplicationHistory.comments#                    
+                        </span> <br />
+                    </cfloop>
+                </fieldset>
+				
+				<cfif NOT printApplication AND displaySubmit>                                                    
                     <div class="buttonrow">
                         <input type="submit" value="Submit" class="button ui-corner-top" />
                     </div>

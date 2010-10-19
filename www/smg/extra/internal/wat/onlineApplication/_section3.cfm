@@ -14,7 +14,7 @@
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
     
 	<!--- It is set to 1 for the print application page --->
-	<cfparam name="printApplication" default="#SESSION.CANDIDATE.isReadOnly#">
+	<cfparam name="printApplication" default="#APPLICATION.CFC.CANDIDATE.getCandidateSession().isReadOnly#">
     
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submittedType" default="">
@@ -147,12 +147,12 @@
         <legend>English Assessment</legend>
 		
         <cfif CLIENT.loginType NEQ 'user'>
-       		<h3 class="h2Message">This page must be completed by #SESSION.CANDIDATE.intlRepName#.</h3>
+       		<h3 class="h2Message">This page must be completed by #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName#.</h3>
         </cfif>
         
         <div class="field">
             <label>CSB International Representative <em>*</em></label> 
-            <div class="printField">#SESSION.CANDIDATE.intlRepName# &nbsp;</div>
+            <div class="printField">#APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName# &nbsp;</div>
         </div>
 
         <div class="field">

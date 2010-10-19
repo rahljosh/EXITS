@@ -145,8 +145,8 @@
 		// ***** PRODUCTION Server Settings *****
 
 		// Set Site URL
-		APPLICATION.SITE.URL.main = 'http://www.student-management.com/extra';
-		APPLICATION.SITE.URL.activation = 'http://www.student-management.com/extra/accountActivation.cfm';
+		APPLICATION.SITE.URL.main = 'http://www.student-management.com/extra/';
+		APPLICATION.SITE.URL.activation =  APPLICATION.SITE.URL.main & 'accountActivation.cfm';
 		
 		// Email Settings
 		APPLICATION.EMAIL.contactUs = 'info@csb-usa.com';
@@ -165,7 +165,7 @@
 
 
 	// Document Root
-	APPLICATION.PATH.UploadDocumentRoot = APPLICATION.PATH.base & "uploadedFiles/";
+	APPLICATION.PATH.UploadDocumentRoot = APPLICATION.PATH.base & 'uploadedFiles/';
 
 	// DELETE THESE 
 	/*
@@ -175,16 +175,16 @@
 	*/
 	
 	// Host Company Logo
-	APPLICATION.PATH.hostLogo = APPLICATION.PATH.UploadDocumentRoot & "web-hostlogo/";
+	APPLICATION.PATH.hostLogo = APPLICATION.PATH.UploadDocumentRoot & 'web-hostlogo/';
 
 	// Candidate Picture
-	APPLICATION.PATH.uploadCandidatePicture = APPLICATION.PATH.UploadDocumentRoot & "web-candidates/";
+	APPLICATION.PATH.uploadCandidatePicture = APPLICATION.PATH.UploadDocumentRoot & 'web-candidates/';
 	
 	// Candidate Application Files		
-	APPLICATION.PATH.uploadDocumentCandidate = APPLICATION.PATH.UploadDocumentRoot & "candidate/";
+	APPLICATION.PATH.uploadDocumentCandidate = APPLICATION.PATH.UploadDocumentRoot & 'candidate/';
 	
 	// Temp Folder 
-	APPLICATION.PATH.uploadDocumentTemp = APPLICATION.PATH.UploadDocumentRoot & "temp/";
+	APPLICATION.PATH.uploadDocumentTemp = APPLICATION.PATH.UploadDocumentRoot & 'temp/';
 
 	// Make sure folder exists
 	APPLICATION.CFC.DOCUMENT.createFolder(APPLICATION.PATH.UploadDocumentRoot);

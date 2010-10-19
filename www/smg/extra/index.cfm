@@ -203,7 +203,7 @@
                                         formErrors="#SESSION.formErrors.GetCollection()#"
                                         messageType="login"
                                         />
-                                    
+									                                   
                                     <table width="100%"  border="0" align="center" cellpadding="5" cellspacing="1" bordercolor="##DDE0E5">
                                         <cfif VAL(URL.user)>
                                             <tr>

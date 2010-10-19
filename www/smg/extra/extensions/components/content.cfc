@@ -32,13 +32,14 @@
         	datasource="#APPLICATION.DSN.Source#">
                 SELECT 
                 	ID,
+                    applicationID,
                     contentKey,
                     name,
                     content,
                     dateCreated,
                     dateUpdated
 				FROM
-                	content
+                	applicationContent
                 WHERE
                 	contentKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.contentKey#">
         </cfquery> 

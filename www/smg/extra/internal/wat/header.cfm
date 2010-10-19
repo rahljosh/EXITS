@@ -182,8 +182,8 @@
             </td>
     	</cfif>
         
-        <td width="174" align="right" valign="top" bordercolor="##FFFFFF" class="style5">
-        	<strong>Last Login:</strong> #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')#<br>
+        <td align="right" valign="top" bordercolor="##FFFFFF" class="style5">
+        	<strong>Last Login:</strong> #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')#
         	<strong>at</strong> #TimeFormat(CLIENT.lastlogin, 'h:mm tt')# 
         </td>
 	</tr>

@@ -134,7 +134,8 @@
             <!--- Application Footer --->
             <cfcase value="application">
     			
-                </div> <!--- End of <div class="wrapper"> placed on the header --->
+                <!--- End of <div class="wrapper"> placed on the header --->
+                </div> <!-- End of <div class="wrapper"> placed on the header -->   
                 
                 <div class="pageFooter">
                     <div class="footerText">Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.</div>

@@ -44,6 +44,7 @@
 			// Get Branch Information
 			
 			// Get Intl. Rep. Information
+			qGetIntlRep = APPLICATION.CFC.USER.getUserByID(userID=qGetCandidateInfo.intRep);
 			
 			// Get Application History
 			qGetApplicationHistory = APPLICATION.CFC.ONLINEAPP.getApplicationHistory(foreignTable=APPLICATION.foreignTable, foreignID=ARGUMENTS.candidateID);
@@ -76,7 +77,7 @@
                 <cfscript>
 					csbEmailSubject = APPLICATION.CSB.Trainee.name & ' - ' & APPLICATION.CSB.Trainee.programName;
 					
-					accountCreatedMessage = 'An account has been successfully created at #APPLICATION.CSB.Trainee.name# - #APPLICATION.CSB..TraineeprogramName#. <br /><br />';
+					accountCreatedMessage = 'An account has been successfully created at #APPLICATION.CSB.Trainee.name# - #APPLICATION.CSB.TraineeprogramName#. <br /><br />';
 				</cfscript>
                 
             </cfcase>
@@ -144,7 +145,7 @@
             
             </cfcase>
 
-            <!--- New Account - Send Activation Email--->
+            <!--- statusID=1 - New Account - Send Activation Email--->
             <cfcase value="newAccount">
             	
                 <cfscript>
@@ -166,7 +167,7 @@
             
             </cfcase>
             
-            <!--- Account Activated --->
+            <!--- statusID=2 - Account Activated --->
             <cfcase value="activateAccount">
             	
                 <cfscript>
@@ -194,7 +195,7 @@
             
             </cfcase>
 			
-			<!--- Application Submitted By Candidate --->
+			<!--- statusID=3/5 - Application Submitted by Candidate --->
         	<cfcase value="submittedByCandidate">
 
                 <cfscript>
@@ -202,19 +203,19 @@
 				</cfscript>
 
                 <cfsavecontent variable="stEmailStructure.message">
-                	<p>#qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
+                	<p>Dear #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
 					
-                    Your application has been submitted to #SESSION.CANDIDATE.intlRepName#. <br /><br />
+                    Your application has been submitted to #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName#. <br /><br />
                     
-                    #SESSION.CANDIDATE.intlRepName# is going to review your application soon. <br /><br />
+                    #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName# is going to review your application soon. <br /><br />
                     
                     Please note from this point on, you no longer are able to edit the application.
-                    If you need to make any changes please contact #SESSION.CANDIDATE.intlRepName#. <br /><br />
+                    If you need to make any changes please contact #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName#. <br /><br />
                 </cfsavecontent>
             
             </cfcase>
             
-			<!--- Application Denied By Branch/Intl. Rep. --->
+			<!--- statusID=4/6 - Application Denied by Branch/Intl. Rep. --->
         	<cfcase value="deniedByBranch,deniedByIntlRep">
 
                 <cfscript>
@@ -222,9 +223,74 @@
 				</cfscript>
 
                 <cfsavecontent variable="stEmailStructure.message">
-                	<p>#qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
+                	<p>Dear #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
 					
-                    Your application has been denied by #SESSION.CANDIDATE.intlRepName#. <br /><br />
+                    Your application has been denied by #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName#. <br /><br />
+                    
+                    <!--- Comments --->
+                    <cfif LEN(qGetApplicationHistory.comments)>
+                        See comments below: <br /><br />
+                                           
+                        <strong> #qGetApplicationHistory.comments# </strong> <br /><br />
+					</cfif>
+                    
+                    Please login to your application and make the necessary changes and re-submit the application. <br /><br />
+                </cfsavecontent>
+            
+            </cfcase>
+		
+            <!--- statusID=7 - Application Submitted to CSB --->
+        	<cfcase value="approvedByIntlRep">
+
+                <cfscript>
+					stEmailStructure.subject = csbEmailSubject & ' - Application Submitted to CSB';
+				</cfscript>
+
+                <cfsavecontent variable="stEmailStructure.message">
+                	<p>Dear #qGetIntlRep.businessName#-</p>
+					
+                    Application for #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# has been submitted to CSB. <br /><br />
+                     
+                    Please note from this point on, you no longer are able to edit the application.
+                    If you need to make any changes please contact #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName#. <br /><br />
+                </cfsavecontent>
+            
+            </cfcase>
+
+            <!--- statusID=8 - Application Received by CSB --->
+        	<cfcase value="receivedByOffice">
+
+                <cfscript>
+					stEmailStructure.subject = csbEmailSubject & ' - Application has been received by CSB';
+				</cfscript>
+
+                <cfsavecontent variable="stEmailStructure.message">
+                	<p>Dear #qGetIntlRep.businessName#-</p>
+					
+                    Application for #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# has been received and it's being reviewed by CSB. <br /><br />
+                    
+                    <!--- Comments --->
+                    <cfif LEN(qGetApplicationHistory.comments)>
+                        See comments below: <br /><br />
+                                           
+                        <strong> #qGetApplicationHistory.comments# </strong> <br /><br />
+					</cfif>
+                    
+                </cfsavecontent>
+            
+            </cfcase>
+
+            <!--- statusID=9 - Application Denied by CSB --->
+        	<cfcase value="deniedByOffice">
+
+                <cfscript>
+					stEmailStructure.subject = csbEmailSubject & ' - Application Denied by CSB';
+				</cfscript>
+
+                <cfsavecontent variable="stEmailStructure.message">
+                	<p>Dear #qGetIntlRep.businessName#-</p>
+					
+                    Application for #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# has been denied by CSB. <br /><br />
                     
                     <!--- Comments --->
                     <cfif LEN(qGetApplicationHistory.comments)>
@@ -238,42 +304,40 @@
             
             </cfcase>
 
-
-
-
-        	<!--- Application Submitted --->
-        	<cfcase value="applicationSubmitted">
+            <!--- statusID=10 - Application On Hold by CSB --->
+        	<cfcase value="onHoldByOffice">
 
                 <cfscript>
-					stEmailStructure.subject = csbEmailSubject & ' - Application for Admission submitted';
+					stEmailStructure.subject = csbEmailSubject & ' - Application On Hold by CSB';
 				</cfscript>
 
                 <cfsavecontent variable="stEmailStructure.message">
-                	<p>#qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
+                	<p>Dear #qGetIntlRep.businessName#-</p>
 					
-                    Thank you for applying to GPA. You have successfully submitted your online application for admission. <br /><br />
-					
-                    Please contact our Admissions Office to set up an interview. <br /><br />
-
-                    Admissions Department  <br />
+                    Application for #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# has been placed on hold by CSB. <br /><br />
+                    
+                    <!--- Comments --->
+                    <cfif LEN(qGetApplicationHistory.comments)>
+                        See comments below: <br /><br />
+                                           
+                        <strong> #qGetApplicationHistory.comments# </strong> <br /><br />
+					</cfif>
+                    
                 </cfsavecontent>
             
             </cfcase>
 
-
-        	<!--- Application Submitted Admissions --->
-        	<cfcase value="applicationSubmittedAdmissions">
+            <!--- statusID=11 - Application Approved by CSB --->
+        	<cfcase value="approvedByOffice">
 
                 <cfscript>
-					stEmailStructure.subject = 'Application for student ' & qGetCandidateInfo.firstName & ' ' & qGetCandidateInfo.lastName & ' - has been submitted';
+					stEmailStructure.subject = csbEmailSubject & ' - Application Approved by CSB';
 				</cfscript>
 
                 <cfsavecontent variable="stEmailStructure.message">
-                	<p>Admissions Department,</p>
-
-                    Application for student #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# ###qGetCandidateInfo.ID# has been submitted. <br /><br />
+                	<p>Dear #qGetIntlRep.businessName#-</p>
 					
-                    Please find a copy of the application attached. <br /><br />
+                    Application for #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# has been approved by CSB. <br /><br />
                 </cfsavecontent>
             
             </cfcase>
