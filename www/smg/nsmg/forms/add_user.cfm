@@ -20,19 +20,23 @@
 </cfif>
 
 <cfquery name="usertype" datasource="#application.dsn#">
-	SELECT usertypeid, usertype
-	FROM smg_usertype
-	WHERE usertypeid <=
-    <cfif client.usertype eq 5>
-     7
-     <cfelse>
-     9
-     </cfif>
-		<cfif not client.usertype LTE 4>
-            AND usertypeid > <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
-        </cfif>
-   
-    ORDER BY usertypeid
+	SELECT 
+    	usertypeid, 
+        usertype
+	FROM 
+    	smg_usertype
+	WHERE 		
+        <cfif ListFind("5,6", CLIENT.usertype)>
+            <!--- Regional Manager / Regional Advisor - Only Area Representative --->
+            usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+        <cfelse>
+            <!--- Other users --->
+              usertypeid >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
+            AND
+              usertypeid <= <cfqueryparam cfsqltype="cf_sql_integer" value="9">
+         </cfif>
+    ORDER BY 
+    	usertypeid
 </cfquery>
 
 <!--- this table is so the form is not 100% width. --->
