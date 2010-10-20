@@ -19,9 +19,9 @@
 <!--- Process Form Submission --->
 <cfif isDefined("form.submitted")>
 	<!----Send email if address has changed---->
-	<cfif client.userid eq 1>
-		<cfif form.address neq form.prev_address or form.address2 neq form.prev_address2 or 
-                form.city neq form.prev_city or form.state neq form.prev_state or form.zip neq form.prev_zip>
+	
+		<cfif (form.address neq form.prev_address or form.address2 neq form.prev_address2 or 
+                form.city neq form.prev_city or form.state neq form.prev_state or form.zip neq form.prev_zip) and not isDefined('new')>
              <cfoutput>
               <cfquery name="regional_Advisor_emails" datasource="#application.dsn#">
               	select uar.regionid
@@ -63,7 +63,10 @@
 			
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="josh@pokytrails.com,thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
+            <!----
+                <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
+				---->
+                <cfinvokeargument name="email_to" value="josh@pokytrails.com">
                 <cfinvokeargument name="email_subject" value="Notice of Address Change">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 <cfinvokeargument name="email_from" value="#client.support_email#">
@@ -71,7 +74,7 @@
             
        
         </cfif>
-	</cfif>
+
 
 	<!--- checkboxes, radio buttons aren't defined if not checked. --->
     <cfparam name="form.sex" default="">
@@ -154,7 +157,7 @@
             <cfset form.ssn = encrypt("#trim(form.ssn)#", "#ssn_key#", "desede", "hex")>
         </cfif>
 		<cfif new>
-        
+        	
 			<!--- these fields aren't always displayed. --->
             <cfparam name="form.comments" default="">
             <!--- default to USA for non-international users. --->
@@ -242,7 +245,24 @@
                     FROM smg_users 
                 </cfquery>
             </cflock>
-            
+            <cfif form.usertype eq 8>
+            <cfoutput>
+            <cfsavecontent variable="email_message">
+            This email is to notify you that a new agent profile has been created by #client.name#. This email is a reminder for the following:<br /><br />
+            <strong>Ellen</strong> - Please send out a contract to that Agent<br />
+            <strong>Marcel</strong> - Please make sure you have a price, insurance, and SEVIS option.<br />
+            <strong>Brian</strong> - Make sure this agent has been issued an allocation<br /><br />
+            Agent Info: <a href="#exits_url#/nsmg/index.cfm?curdoc=user_info&userid=">#form.businessname#</a>
+            </cfsavecontent>
+			</cfoutput>
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+                <cfinvokeargument name="email_subject" value="New Agent Profile">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#client.emailfrom#">
+            </cfinvoke>
+            </cfif>
             <!--- add company & regional access record only for usertype 8. --->
             <cfif form.usertype EQ 8>
                 <cfquery datasource="#application.dsn#">
