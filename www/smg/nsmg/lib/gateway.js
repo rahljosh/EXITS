@@ -103,7 +103,7 @@ function Gateway(u, _d){
 	this.status = "idle";
 	this.multithreaded = true;
 	this.delay = 1;        // in milliseconds
-	this.timeout = 5;      // in seconds
+	this.timeout = 10;      // in seconds
 	this.statusReset = 3;  // in seconds
 	this.statusdelay = 100;
 	this.statusID = null;
