@@ -178,7 +178,7 @@ order by s.stuid, s.chargeid
             	<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
             <cfelse>
                 <cfswitch expression="#invoice_info.testCompId#">
-                    <cfcase value="8">
+                    <cfcase value="7, 8">
                         <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.jpg"/>
                     </cfcase>
                     
@@ -310,7 +310,7 @@ select *,
                 
       <cfelse>
           <cfswitch expression="#invoice_info.testCompId#">
-              <cfcase value="8">
+              <cfcase value="7, 8">
                   <span class="style3">CSB International</span><br>
                   JPMorgan Chase<br>
                   595 Sunrise Highway<br>
@@ -562,7 +562,7 @@ select *,
 			<tr>
 				<td  rowspan=3 width=470>
 				<cfoutput>
-					<cfif invoice_info.type IS 'trainee program'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
+					<cfif invoice_info.type IS 'trainee program' OR invoice_info.companyid EQ 7  OR invoice_info.companyid EQ 8><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
        					<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
                         
                         <cfelse>
