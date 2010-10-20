@@ -253,7 +253,7 @@
                     and user_id = #client.userid#
                     </cfquery>
                    
-                    <cfif webexTraining.recordcount eq 0>
+                    <cfif webexTraining.recordcount eq 0 and client.regionid neq 16>
                         <cfset CLIENT.trainingNeeded = 1>
                         <cflocation url="/nsmg/trainingNeeded.cfm">
                     </cfif>
