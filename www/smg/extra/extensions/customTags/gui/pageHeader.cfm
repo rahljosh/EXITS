@@ -157,8 +157,8 @@
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <cfoutput>
                         #csbMetaData#
-                        <link rel="stylesheet" href="../../../internal/linked/css/appLogin.css" type="text/css" />
-                        <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/appLogin.css" />
+                        <link rel="stylesheet" media="all" type="text/css"href="../../../internal/linked/css/baseStyle.css" />
                         <script src="#APPLICATION.Path.jQuery#" type="text/javascript"></script> <!-- jQuery -->
                         <script src="../../../internal/linked/js/jquery.pstrength-min.1.2.js" type="text/javascript"></script>
                         <script src="../../../internal/linked/js/appLogin.js" type="text/javascript"></script>
@@ -176,15 +176,15 @@
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <cfoutput>
                         #csbMetaData#
-                        <link rel="stylesheet" href="../../../internal/linked/css/appSection.css" type="text/css" />
-                        <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
-                        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/appSection.css" />
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/baseStyle.css" />
+                        <link rel="stylesheet" media="all" type="text/css" href="#APPLICATION.PATH.jQueryTheme#" /> <!-- JQuery UI 1.8 Tab --> 
 						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
-                        <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script src="../../../internal/linked/js/appSection.js " type="text/javascript"></script> <!-- UDF -->
-                        <script src="../../../internal/linked/js/ajaxUpload.js " type="text/javascript"></script> <!-- Ajax - Upload File -->
+                        <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+                        <script type="text/javascript" src="../../../internal/linked/js/appSection.js"></script> <!-- UDF -->
+                        <script type="text/javascript" src="../../../internal/linked/js/ajaxUpload.js"></script> <!-- Ajax - Upload File -->
 						<script src="../../../internal/linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
-						<script src="../../../internal/linked/js/jquery.validate.js " type="text/javascript"></script> <!-- JQuery Validation -->
+						<script type="text/javascript" src="../../../internal/linked/js/jquery.validate.js"></script> <!-- JQuery Validation -->
                     </cfoutput>
                 </head>
                 <body>
@@ -199,15 +199,16 @@
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <cfoutput>
                         #csbMetaData#
-                        <link rel="stylesheet" href="../../../internal/linked/css/appSection.css" type="text/css" />
-                        <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/appSection.css" />
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/baseStyle.css" />
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
-						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
-                        <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script src="../../../internal/linked/js/appSection.js " type="text/javascript"></script> <!-- UDF -->
-                        <script src="../../../internal/linked/js/ajaxUpload.js " type="text/javascript"></script> <!-- Ajax - Upload File -->
-						<script src="../../../internal/linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
-						<script src="../../../internal/linked/js/jquery.validate.js " type="text/javascript"></script> <!-- JQuery Validation -->
+						<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
+                        <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+                        <script type="text/javascript" src="../../../internal/linked/js/jquery-ui-timepicker-addon.min.js"></script> <!-- Date/Time Picker -->
+                        <script type="text/javascript" src="../../../internal/linked/js/ajaxUpload.js"></script> <!-- Ajax - Upload File -->
+						<script type="text/javascript" src="../../../internal/linked/js/jquery.metadata.js"></script> <!-- JQuery Validation -->
+						<script type="text/javascript" src="../../../internal/linked/js/jquery.validate.js"></script> <!-- JQuery Validation -->
+                        <script type="text/javascript" src="../../../internal/linked/js/appSection.js"></script> <!-- UDF -->
                     </cfoutput>
                 </head>
                 <body>
@@ -276,9 +277,9 @@
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <cfoutput>
                         #csbMetaData#
-                        <link rel="stylesheet" href="../../../internal/linked/css/appSection.css" type="text/css" />
-                        <link rel="stylesheet" href="../../../internal/linked/css/baseStyle.css" type="text/css" />
-                        <script src="../../../internal/linked/js/appSection.js " type="text/javascript"></script>
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/appSection.css" />
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/baseStyle.css" />
+                        <script type="text/javascript" src="../../../internal/linked/js/appSection.js"></script>
                     </cfoutput>
                 </head>
                 <body>

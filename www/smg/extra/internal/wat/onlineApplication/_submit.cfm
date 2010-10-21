@@ -370,30 +370,26 @@
                    
                     <legend>Application Submission History</legend>
 
-                    <span class="submissionDateTitle">
-                        Date 
-                    </span>
-                    <span class="submissionStatusTitle">
-                        Status
-                    </span>
-                    <span class="submissionCommentsTitle">
-                        Comments                
-                    </span> <br />             
-                    
-                    <cfloop query="qGetApplicationHistory">                        
-                        <span class="submissionDateField">
-                            #DateFormat(qGetApplicationHistory.dateCreated, 'mm/dd/yyyy')# 
-                            #TimeFormat(qGetApplicationHistory.dateCreated, 'hh-mm-ss tt')# EST 
-                        </span>
+                    <div class="table">
+                        <div class="th">
+                            <div class="tdXLarge">Date</div>
+                            <div class="tdXLarge">Status</div>
+                            <div class="tdXXLarge">Comments</div>
+                            <div class="clearBoth"></div>
+						</div>                            
+                        <cfloop query="qGetApplicationHistory">      
+                            <div <cfif qGetApplicationHistory.currentRow MOD 2> class="tr" <cfelse> class="trOdd" </cfif> >
+                                <div class="tdXLarge">
+                                	#DateFormat(qGetApplicationHistory.dateCreated, 'mm/dd/yyyy')#
+                                    #TimeFormat(qGetApplicationHistory.dateCreated, 'hh-mm-ss tt')# EST
+                                </div>
+                                <div class="tdXLarge">#qGetApplicationHistory.description#</div>
+                                <div class="tdXLarge">#qGetApplicationHistory.comments# </div>
+                                <div class="clearBoth"></div>
+                            </div>                            
+                        </cfloop>
+                	</div>
 
-                        <span class="submissionStatusField">
-                        	#qGetApplicationHistory.description#
-                        </span>
-						
-                        <span class="submissionCommentsField">
-                            #qGetApplicationHistory.comments#                    
-                        </span> <br />
-                    </cfloop>
                 </fieldset>
 				
 				<cfif NOT printApplication AND displaySubmit>                                                    

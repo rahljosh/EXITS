@@ -33,7 +33,10 @@
 	
 	// Store the initialized email Library object in the Application scope
 	AppCFC.email = CreateCFC("email").Init();
-	
+
+	// Store the initialized flight information Library object in the Application scope
+	AppCFC.flightInformation = CreateCFC("flightInformation").Init();
+
 	// Store the initialized lookUpTables Library object in the Application scope
 	AppCFC.lookUpTables = CreateCFC("lookUpTables").Init();
 	

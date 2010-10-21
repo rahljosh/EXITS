@@ -13,5 +13,4 @@
 	output="no"
 	hint="Handles form errors">
 	
-	
 </cfcomponent>

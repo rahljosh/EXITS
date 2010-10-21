@@ -229,7 +229,7 @@
  		<cfif NOT APPLICATION.IsServerLocal>
 			
             <!--- Production Environment - Email Error --->
-            <cfmail to="#APPLICATION.EMAIL.errors#" from="#APPLICATION.EMAIL.support#" subject="GranbyPrep.com : Error" type="HTML">
+            <cfmail to="#APPLICATION.EMAIL.errors#" from="#APPLICATION.EMAIL.support#" subject="EXTRA : Error" type="HTML">
                 <p>
                 An error occurred on
                 #DateFormat( Now(), "mmm d, yyyy" )# at
