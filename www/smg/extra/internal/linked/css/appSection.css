@@ -479,58 +479,99 @@ Page Footer
 }
 
 
-
 /*
 **********************************************************************************
 
-Submission History
+Flight Information
 
 ************************************************************************************/
-span.submissionDateTitle {
-	width:160px; 
-	padding-top:5px;
-	margin-bottom:3px;
-	font-weight:bold;
-	display:inline-block;
-	border-bottom:1px solid #CCC;
+
+.clearBoth {
+	clear:both;	
 }
 
-span.submissionStatusTitle {
-	width:180px; 
-	padding-top:5px;
-	margin-bottom:3px;
-	font-weight:bold;
-	display:inline-block;
-	border-bottom:1px solid #CCC;
+div.table {
+	width: 100%;
+	border:1px solid #0069aa;
+	margin-bottom:15px;
 }
 
-span.submissionCommentsTitle {
+div.table a {
+	font-weight:bold;
+	padding-right:3px;
+}
+
+div.table .th {
+	color: #fff;
+	font-weight: bold;
+	background-color: #0069aa;
+}
+
+/*
+div.table .tr:nth-child(odd) {
+	background-color: #EEEEEE;
+}
+*/
+
+div.table .trOdd {
+	background-color: #EEEEEE;
+}
+
+div.table .thCenter {
+	color: #fff;
+	font-weight: bold;
+	text-align:center;
+	background-color: #0069aa;
+}
+
+div.table .trCenter {
+	text-align:center;
+}
+
+/*
+div.table .trCenter:nth-child(odd) {
+	text-align:center;
+	background-color: #EEEEEE;
+}
+*/
+
+div.table .trCenterOdd {
+	text-align:center;
+	background-color: #EEEEEE;
+}
+
+div.table .tdSmall {	
+	float: left;
+	width: 9%;
+	padding:4px 0px 4px 0px;
+} 
+
+div.table .tdLarge {	
+	float: left;
+	width: 14%;
+	padding:4px 0px 4px 0px;
+} 
+
+div.table .tdXLarge {	
+	float: left;
+	width: 18%;
+	padding:4px 0px 4px 4px;
+} 
+
+div.table .tdXXLarge {	
+	float: left;
+	width: 58%;
+	padding:4px 0px 4px 4px;
+} 
+
+div.table .td100 {	
+	float: left;
+	width: 100%;
+	padding:4px 0px 4px 0px;
+} 
+
+div.table .clearBoth {
 	clear:both;
-	min-width:300px;
-	padding-top:5px;
-	margin-bottom:3px;
-	font-weight:bold;
-	display:inline-block;
-	border-bottom:1px solid #CCC;
-}
-
-span.submissionDateField {
-	width:160px; 
-	margin-bottom:3px;	
-	display:inline-block;
-}
-
-span.submissionStatusField {
-	width:180px; 
-	margin-bottom:3px;	
-	display:inline-block;
-}
-
-span.submissionCommentsField {
-	clear:both;
-	min-width:300px;
-	margin-bottom:3px;	
-	display:inline-block;
 }
 
 /*
@@ -708,6 +749,7 @@ div.form-container p {
 
 div.form-container p.note,
 div.form-container-noBorder p.note { 
+	margin:0px;
 	margin-left: 210px; 
 	font-size: 90%; 
 	color: #333; 
@@ -725,7 +767,7 @@ div.form-container-noBorder .phoneNote {
 
 div.form-container fieldset,
 div.form-container-noBorder fieldset { 
-	margin: 10px 0; 
+	margin: 10px 0px 10px 0px; 
 	padding: 10px; 
 	border: #DDD 1px solid; 
 }
@@ -744,8 +786,9 @@ div.form-container-noBorder fieldset a:hover {
 
 div.form-container legend,
 div.form-container-noBorder legend { 
-	font-weight: bold; 
 	color: #666; 
+	font-weight: bold; 
+	padding-bottom:5px;
 	text-transform:uppercase;
 }
 
