@@ -91,7 +91,10 @@
 				<cfif VAL(ARGUMENTS.intRep)>
                     AND
                         s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
-                </cfif>
+                <cfelse>
+                	AND
+                    	1 != 1
+				</cfif>
 				<cfif CLIENT.companyID EQ 5>
                     AND
                         s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )

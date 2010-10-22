@@ -38,6 +38,11 @@
                     smg_users
                 WHERE
                 	1 = 1
+
+				<cfif VAL(ARGUMENTS.userID)>
+                	AND	
+                    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                </cfif>
                     
 				<cfif VAL(ARGUMENTS.usertype)>
                 	AND	
