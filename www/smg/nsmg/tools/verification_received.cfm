@@ -184,6 +184,9 @@
 		if ($("#studentDetailDiv").css("display") == "none") {
 			$("#studentDetailDiv").slideDown("fast");			
 		}
+		
+		// Set focus to first name field
+		$("#firstName").focus();			
 
 	}
 
@@ -369,7 +372,7 @@
 	}
 
 	.studentDetail {
-		display:none;
+		display:none; 
 		padding-top:10px;
 		padding-bottom:20px;
 	}
@@ -390,7 +393,7 @@
             tableRightTitle=""
         />
         
-        <form name="studentDetail" onsubmit="return updateStudentDetail();">
+        <form name="studentDetail" id="studentDetail" onsubmit="return updateStudentDetail();">
             <input type="hidden" name="studentID" id="studentID" value="" />
             <table border="0" cellpadding="0" cellspacing="0" class="section" width="100%">
                 <tr>
