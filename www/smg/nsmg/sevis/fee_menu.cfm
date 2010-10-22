@@ -21,7 +21,7 @@
 	INNER JOIN smg_companies c ON c.companyid = s.companyid
 	INNER JOIN smg_users u ON u.userid = s.createdby
 	WHERE 1 = 1
-	<cfif url.all is 'no'>AND s.companyid = #client.companyid#<cfelse></cfif>
+	<cfif url.all is 'no'>AND s.companyid = #client.companyid#</cfif>
 	ORDER BY s.companyid, datecreated DESC
 </cfquery>
 
