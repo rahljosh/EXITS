@@ -114,7 +114,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 
 </div>
 <!----End of Area that Mouse Overs will effect---->
-<div id="bottomInfoRight"><a href="hostStudent.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
+<div id="bottomInfoRight"><a href="host-a-foreign-exchange-student.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
 <table width="200" border="0">
   <tr>
     <th scope="row"><a href="http://www.esecutive.com/index.php"><img src="images/globalSec.gif" width="108" height="28" border="1" /></a></th>
