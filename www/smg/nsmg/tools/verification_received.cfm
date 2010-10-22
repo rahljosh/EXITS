@@ -54,6 +54,19 @@
 	$(document).ready(function() {
 		getVerificationList();
 	});
+	
+	// Call animated scroll to anchor/id function - This will scroll up the page to the student detail div
+	function goToByScroll(){
+	  $('html,body').animate({scrollTop: $("#studentDetailDiv").offset().top},'slow');
+	}
+
+	$('.editStudent').bind('click', function(event) {
+	  event.preventDefault();
+	  $.get(this.href, {}, function(reply) {
+			  $("#studentDetailDiv").html(reply);
+			  alert('test');
+		  }, "html");
+	});
 
 	// --- START OF VERIFICATION LIST --- //
 
@@ -185,8 +198,8 @@
 			$("#studentDetailDiv").slideDown("fast");			
 		}
 		
-		// Set focus to first name field
-		$("#firstName").focus();			
+		// Call animated scroll to anchor/id function
+		goToByScroll();
 
 	}
 
