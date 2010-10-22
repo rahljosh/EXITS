@@ -90,70 +90,82 @@ a:active {
 <div id="container">
 <div class="spacer2"></div>
 <div class="title"><cfinclude template="title.cfm"><!-- end title --></div>
-<div class="tabsBar"><cfinclude template="tabsBarJR.cfm"><!-- end tabsBar --></div>
-
+<div class="tabsBar"><cfinclude template="tabsBar.cfm"><!-- end tabsBar --></div>
 <div id="mainContent">
-<!---area that mouse overs will affect---->
-<div id="lead">
-    <div id="initDiv" class="mybox">
-      <span class="SStext" style="background-color: #F1D0D1;">
-        <strong>Secretary of State Encourages the Hosting of Exchange Students </strong><br /><br />
-        On the heels of this message <strong>Assistant Secretary of State for Educational and Cultural Affairs, Ann Stock,</strong> followed up with<a href="/AnnStock.cfm" title="Ann Stock's Message" rel="gb_page_center[675,600]"> her own message</a> encouraging more Americans to &quot;[open] their homes and hearts and personally [engage] with people from all over the world&quot;<br /><p class="smText"><a href="/AnnStock.cfm" title="Ann Stock's Message" rel="gb_page_center[675,600]">Read Ann Stock's Entire Message</a><br /><a href="http://exchanges.state.gov/" target ="blank">More on Secretary Clinton's Message</a><br /></p></span>
-   <div class="videoClip"><object width="320" height="265"><param name="movie" value="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="320" height="265"></embed></object></div></div>
-         <!---Meet our Students---->
-     
+	<!---area that mouse overs will affect---->
+    <div id="lead">
+
+        <div id="initDiv" class="mybox">
+            <span class="MOtext" style="background-color: #E6F2D5;">
+            <strong>Meet our Students</strong><br /><br />
+            ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meetStudents.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
+            <span class="bigImage"><img src="images/subPages/subMeetStudents.gif" /></span>
+        </div>
+		
+		<!--- Hillary Clinton --->
+        <!---
+		<div id="initDiv" class="mybox">		
+			<span class="SStext" style="background-color: #F1D0D1;">
+			<strong>Secretary of State Encourages the Hosting of Exchange Students </strong><br /><br />
+			On the heels of this message <strong>Assistant Secretary of State for Educational and Cultural Affairs, Ann Stock,</strong> followed up with<a href="/AnnStock.cfm" title="Ann Stock's Message" rel="gb_page_center[675,600]"> her own message</a> encouraging more Americans to &quot;[open] their homes and hearts and personally [engage] with people from all over the world&quot;<br /><p class="smText"><a href="/AnnStock.cfm" title="Ann Stock's Message" rel="gb_page_center[675,600]">Read Ann Stock's Entire Message</a><br /><a href="http://exchanges.state.gov/" target ="blank">More on Secretary Clinton's Message</a><br /></p></span>
+			<div class="videoClip"><object width="320" height="265"><param name="movie" value="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="320" height="265"></embed></object></div></div>
+		</div>		
+		--->
+		
+		<!---Meet our Students---->
         <div id="meetStudents" class="mybox" style="display:none;":>
-        
-        <span class="MOtext" style="background-color: #E6F2D5;">
-        <strong>Meet our Students</strong><br /><br />
-         ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meet-our-students.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
-        <span class="bigImage"><img src="images/subPages/subMeetStudents_03.gif" /></span>
+            <span class="MOtext" style="background-color: #E6F2D5;">
+            <strong>Meet our Students</strong><br /><br />
+             ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meet-our-students.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
+            <span class="bigImage"><img src="images/subPages/subMeetStudents_03.gif" /></span>
       	</div>
            
-	
         <!---Host Fam---->
         <div id="hostFam" class="mybox" style="display:none; text-align:center;":>
+            <span class="MOtext" style="background-color: #ffefd6;"> 
+            <strong>Be a Host Family</strong><br /><br />
+            Hosting a foreign exchange student is a life changing experience that brings the world closer together.  See the world through the eyes of a foreign exchange student and exchange the world!
+            <br /><br /><p align="center"><a href="become-a-host-family.cfm"><img src="images/buttons/OreadMore.png" border="0"></a></p></span>
+            <span class="bigImage"><img src="images/subPages/subBahost.gif" /></span>
+      	</div>
         
-        <span class="MOtext" style="background-color: #ffefd6;"> 
-        <strong>Be a Host Family</strong><br /><br />
-        Hosting a foreign exchange student is a life changing experience that brings the world closer together.  See the world through the eyes of a foreign exchange student and exchange the world!
-        <br /><br /><p align="center"><a href="become-a-host-family.cfm"><img src="images/buttons/OreadMore.png" border="0"></a></p></span>
-        <span class="bigImage"><img src="images/subPages/subBahost.gif" /></span>
-      </div>
         <!---Travel Abroad---->
         <div id="travelAbroad" class="mybox" style="display:none; text-align:center;":>
-        <span class="MOtext" style="background-color: #F1D0D1;">
-        <strong>Travel Abroad</strong><br />American students are invited to go outbound to learn and study in different countries.  ISE offers many different types of individualized programs to fit your personal needs. <br /><Br />Become a world leader of tomorrow by expanding your horizons, learning new languages, and being an ambassador for your country!<p align="center"><a href="http://outbound.iseusa.com/"><img src="images/buttons/RExplore.png" border="0"></a></p></span>
-        <span class="bigImage"><img src="images/subPages/subTravel.gif" /></span>
-      </div>
+            <span class="MOtext" style="background-color: #F1D0D1;">
+            <strong>Travel Abroad</strong><br />American students are invited to go outbound to learn and study in different countries.  ISE offers many different types of individualized programs to fit your personal needs. <br /><Br />Become a world leader of tomorrow by expanding your horizons, learning new languages, and being an ambassador for your country!<p align="center"><a href="http://outbound.iseusa.com/"><img src="images/buttons/RExplore.png" border="0"></a></p></span>
+            <span class="bigImage"><img src="images/subPages/subTravel.gif" /></span>
+      	</div>
+        
         <!---Student Trips---->
         <div id="studentTrips" class="mybox" style="display:none; text-align:center;":>
-        <span class="MOtext" style="background-color: #D0EDF9;"> 
-        <strong>Student Trips</strong><br /><br />
-        We offer many trips for our students throughout the school year.
-        <br /><br /><p align="center"><a href="trips/exchange-student-trips.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
-        <span class="bigImage"><img src="images/subPages/subStudentTrips.gif" /></span>
+            <span class="MOtext" style="background-color: #D0EDF9;"> 
+            <strong>Student Trips</strong><br /><br />
+            We offer many trips for our students throughout the school year.
+            <br /><br /><p align="center"><a href="trips/exchange-student-trips.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
+            <span class="bigImage"><img src="images/subPages/subStudentTrips.gif" /></span>
         </div>
+        
         <!---webstore---->
         <div id="webstore" class="mybox" style="display:none; text-align:center;":>
-        <span class="MOtext" style="background-color: #E6F2D5;"> 
-        <strong>Webstore</strong><br /><br />
-        The ISE Webstore has many great items for you to share with friends and family!
-        <br /><br /><p align="center"><a href="webstore.cfm"><img src="images/buttons/Gshop.png" border="0"></a></p></span>
-        <span class="bigImage"><img src="images/subPages/subWebstore.gif" /></span>
+            <span class="MOtext" style="background-color: #E6F2D5;"> 
+            <strong>Webstore</strong><br /><br />
+            The ISE Webstore has many great items for you to share with friends and family!
+            <br /><br /><p align="center"><a href="webstore.cfm"><img src="images/buttons/Gshop.png" border="0"></a></p></span>
+            <span class="bigImage"><img src="images/subPages/subWebstore.gif" /></span>
         </div>
+        
         <!----blog---->
         <div id="blog" class="mybox" style="display:none; text-align:center;":>
-        <span class="MOtext" style="background-color: #ffefd6;"> 
-        <strong>BLOG</strong><br /><br />
-        Student Exchange is changing the world and we're keeping up with these changes!
-        <br /><br /><p align="center"><a href="http://blog.iseusa.com/" target="_blank"><img src="images/buttons/OreadMore.png" border="0"></a></p></span>
-        <span class="bigImage"><img src="images/subPages/subBlog.gif" /></span>
-      </div>
+            <span class="MOtext" style="background-color: #ffefd6;"> 
+            <strong>BLOG</strong><br /><br />
+            Student Exchange is changing the world and we're keeping up with these changes!
+            <br /><br /><p align="center"><a href="http://blog.iseusa.com/" target="_blank"><img src="images/buttons/OreadMore.png" border="0"></a></p></span>
+            <span class="bigImage"><img src="images/subPages/subBlog.gif" /></span>
+      	</div>
 
-<!-- end lead -->
+    <!-- end lead -->
+    </div>
 
-</div>
 <!----End of Area that Mouse Overs will effect---->
 <div id="bottomInfoRight"><a href="host-a-foreign-exchange-student.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
 <table width="210" border="0" style="margin-left:0px;">
