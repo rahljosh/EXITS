@@ -83,7 +83,7 @@
 					</cfif>
                     
 					<!--- INTO Germany / Into Austria / XML Upload Feature --->
-					<cfif client.userid eq 20 or client.userid eq 21>
+					<cfif client.userid eq 20 or client.userid eq 21 or client.userid eq 15130>
                         <br />
                         <a href="index.cfm?curdoc=xml/upload_form&novelaro">Try the XML upload feature.</a>
                     </cfif>

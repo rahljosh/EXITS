@@ -2,9 +2,7 @@
 <cfoutput>
 
 <cfset documents_exist = Len(#StudentXMLFile.applications.application[i].miscData.miscDocuments#)>
-<cfoutput>
-#documents_exist#
-</cfoutput>
+
 
 <!----
 <cfset documents_exist = ArrayIsDefined(#StudentXMLFile.applications.application[i].miscData.miscDocuments.document#)>
@@ -36,31 +34,73 @@ No misc docs to transfer.
 
 </cfif>
 </cfoutput>
+
+
 Starting Student Picture Transfer...
 <!----Student Picture---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page1.student.image.url.xmltext#'  method="get" path="#AppPath.onlineApp.picture#" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page1.student.image.url.xmltext,3)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
+<cfif #Right(StudentXMLFile.applications.application[i].page1.student.image.url.xmltext,3)# eq 'peg'>
+	<cfset client.rightCount = 4>
+<cfelse>
+	<cfset client.rightCount = 3>
+</cfif>
+<cfhttp url='#StudentXMLFile.applications.application[i].page1.student.image.url.xmltext#'  method="get" path="#AppPath.onlineApp.picture#" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page1.student.image.url.xmltext,client.rightCount)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
 <cfflush>Complete. Starting Student Letter Transfer...
 <!----students letter---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page3.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.studentLetter#" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page3.pdf.url.xmltext,3)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
+<cfif #Right(StudentXMLFile.applications.application[i].page3.pdf.url.xmltext,3)# eq 'peg'>
+	<cfset client.rightCount = 4>
+<cfelse>
+	<cfset client.rightCount = 3>
+</cfif>
+<cfhttp url='#StudentXMLFile.applications.application[i].page3.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.studentLetter#" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page3.pdf.url.xmltext,client.rightCount)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
 <cfflush>Complete.  Starting Parent Letter Transfer...
 <!----parents letter---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page6.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.parentLetter#" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page6.pdf.url.xmltext,3)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
+<cfif #Right(StudentXMLFile.applications.application[i].page6.pdf.url.xmltext,3)# eq 'peg'>
+	<cfset client.rightCount = 4>
+<cfelse>
+	<cfset client.rightCount = 3>
+</cfif>
+<cfhttp url='#StudentXMLFile.applications.application[i].page6.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.parentLetter#" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page6.pdf.url.xmltext,client.rightCount)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
 <cfflush>Complete. Starting Lang. Eval Transfer...
 <!----language eval letter page 19---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page7.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page09" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page7.pdf.url.xmltext,3)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
+<cfif #Right(StudentXMLFile.applications.application[i].page7.pdf.url.xmltext,3)# eq 'peg'>
+	<cfset client.rightCount = 4>
+<cfelse>
+	<cfset client.rightCount = 3>
+</cfif>
+<cfhttp url='#StudentXMLFile.applications.application[i].page7.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page09" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page7.pdf.url.xmltext,client.rightCount)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
 <cfflush>Complete. Starting Report Transfer...
 <!----Report Card---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page8.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page08/" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page8.pdf.url.xmltext,3)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
+<cfif #Right(StudentXMLFile.applications.application[i].page8.pdf.url.xmltext,3)# eq 'peg'>
+	<cfset client.rightCount = 4>
+<cfelse>
+	<cfset client.rightCount = 3>
+</cfif>
+<cfhttp url='#StudentXMLFile.applications.application[i].page8.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page08/" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page8.pdf.url.xmltext,client.rightCount)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
 <cfflush>Complete. Starting Medical Eval Transfer...
 <!----Medical Eval---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page9.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page12" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page9.pdf.url.xmltext,3)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
+<cfif #Right(StudentXMLFile.applications.application[i].page9.pdf.url.xmltext,3)# eq 'peg'>
+	<cfset client.rightCount = 4>
+<cfelse>
+	<cfset client.rightCount = 3>
+</cfif>
+<cfhttp url='#StudentXMLFile.applications.application[i].page9.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page12" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page9.pdf.url.xmltext,client.rightCount)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
 <cfflush>Complete. Starting Immunization Transfer...
 <!----Immunization---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page10.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page13" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page10.pdf.url.xmltext,3)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
+<cfif #Right(StudentXMLFile.applications.application[i].page10.pdf.url.xmltext,3)# eq 'peg'>
+	<cfset client.rightCount = 4>
+<cfelse>
+	<cfset client.rightCount = 3>
+</cfif>
+<cfhttp url='#StudentXMLFile.applications.application[i].page10.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page13" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page10.pdf.url.xmltext,client.rightCount)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
 <cfflush>Complete. Starting Authorization to Treat Minor Transfer...
 
 <!----Authorizaton to Treat a Minor---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page11.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page14" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page11.pdf.url.xmltext,3)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
+<cfif #Right(StudentXMLFile.applications.application[i].page11.pdf.url.xmltext,3)# eq 'peg'>
+	<cfset client.rightCount = 4>
+<cfelse>
+	<cfset client.rightCount = 3>
+</cfif>
+<cfhttp url='#StudentXMLFile.applications.application[i].page11.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.inserts#page14" file="#client.studentid#.#Right(StudentXMLFile.applications.application[i].page11.pdf.url.xmltext,client.rightCount)#" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
 <cfflush>Complete. Starting Progam Agreement Transfer...
 <!----Program Agreement---->
 <cffile action = "copy" source = "#AppPath.onlineApp.inserts#page14/#client.studentid#.#Right(StudentXMLFile.applications.application[i].page11.pdf.url.xmltext,3)#" destination="#AppPath.onlineApp.inserts#page15/#client.studentid#.#Right(StudentXMLFile.applications.application[i].page11.pdf.url.xmltext,3)#">

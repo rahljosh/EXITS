@@ -833,28 +833,11 @@ Registration information has been submitted:<Br />
                 </Tr>
                 
             <tr bgcolor="##deeaf3">
-            	<td><h3>Expiration</h3></td><td> <select name="cc_month">
-                								<option value=1>01 - January</option>
-                                                <option value=2>02 - February</option>
-                                                <option value=3>03 - March</option>
-                                                <option value=4>04 - April</option>
-                                                <option value=5>05 - May</option>
-                                                <option value=6>06 - June</option>
-                                                <option value=7>07 - July</option>
-                                                <option value=8>08 - August</option>
-                                                <option value=9>09 - September</option>
-                                                <option value=10>10 - October</option>
-                                                <option value=11>11 - November</option>
-                                                <option value=12>12 - December</option>
-                                                </select> 
-                                                <Cfset thisyear = #dateformat(now(),'yyyy')#>
-                                                <cfset maxyear = #thisyear# + 10>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <select name="cc_year">
-                                                <cfloop from="#thisyear#" to="#maxyear#" step="1" index="y">
-                                                <option value=#y#>#y#</option>
-                                                 </cfloop>                                  
-                                                </select>
+            	<td><h3>Expiration</h3></td><td> <cfinput type="text" name="cc_month" size=2 message="Please indicate the month your credit card expires.  Make sure you use a number to indicate them month. Jan =1, Feb=2, etc." validate="integer" required="yes" id = "ccmonth"> <strong>/</strong>
+                								
+                                         
+                                                <cfinput type="text" name="cc_year" message="Please select the year your credit card expires" validate="integer" required="yes" id = "ccyear" size=4>
+                                               
                                                 
                                                 
                                                 </td>
@@ -897,7 +880,12 @@ Registration information has been submitted:<Br />
            </cfif>
            
          </cfform>
-		
+		<script type="text/javascript">
+			document.getElementById('cc_month').selectedIndex = -1;
+		</script>
+        		<script type="text/javascript">
+			document.getElementById('cc_year').selectedIndex = -1;
+		</script>
         
           </cfoutput>
           </cfif>
