@@ -1,7 +1,7 @@
 <cfsetting requesttimeout="300">
 
 <!-- get company info -->
-<cfquery name="qGetCompany" datasource="caseusa">
+<cfquery name="qGetCompany" datasource="MySQL">
     SELECT 
         companyID,
         companyName,
@@ -16,7 +16,7 @@
         companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
 
-<cfquery name="qGetStudents" datasource="caseusa"> 
+<cfquery name="qGetStudents" datasource="MySQL"> 
 	SELECT 	
     	s.studentid, 
         s.dateapplication, 
@@ -93,13 +93,13 @@
 	<cfabort>
 </cfif>
 
-<cfquery datasource="caseusa">
+<cfquery datasource="MySQL">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
 	VALUES ('#qGetCompany.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#qGetStudents.recordcount#', 'school_update')
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
-<cfquery name="qBatchID" datasource="caseusa">
+<cfquery name="qBatchID" datasource="MySQL">
 	SELECT MAX(batchid) as batchid
 	FROM smg_sevis
 </cfquery> 
@@ -137,20 +137,6 @@
 	</BatchHeader>
 	<UpdateEV>
 	<cfloop query="qGetStudents">
-		<ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentid#" userID="#qGetCompany.sevis_userid#">
-			<SiteOfActivity>
-				<Edit printForm="false">
-					<Address1>#schooladdress#</Address1> 
-					<cfif schooladdress2 is not ''><Address2>#schooladdress2#</Address2></cfif>
-					<City>#schoolcity#</City> 
-					<State>#schoolstate#</State> 
-					<PostalCode>#schoolzip#</PostalCode> 
-					<SiteName>#qGetHistory.school_name#</SiteName>
-					<NewSiteName>#schoolname#</NewSiteName>
-					<PrimarySite>true</PrimarySite>
-				</Edit>
-			</SiteOfActivity>
-		</ExchangeVisitor>
 		<cfsilent>
             <!--- CREATE NEW HISTORY --->
             <cfquery name="qGetHistory" datasource="MySql">
@@ -167,6 +153,22 @@
                 ORDER BY 
                 	historyid DESC
             </cfquery>
+        </cfsilent>
+        <ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentid#" userID="#qGetCompany.sevis_userid#">
+			<SiteOfActivity>
+				<Edit printForm="false">
+					<Address1>#schooladdress#</Address1> 
+					<cfif schooladdress2 is not ''><Address2>#schooladdress2#</Address2></cfif>
+					<City>#schoolcity#</City> 
+					<State>#schoolstate#</State> 
+					<PostalCode>#schoolzip#</PostalCode> 
+					<SiteName>#qGetHistory.school_name#</SiteName>
+					<NewSiteName>#schoolname#</NewSiteName>
+					<PrimarySite>true</PrimarySite>
+				</Edit>
+			</SiteOfActivity>
+		</ExchangeVisitor>
+		<cfsilent>
             <!--- Update school name in history --->
             <cfquery datasource="MySql">
                 INSERT INTO 
@@ -184,7 +186,7 @@
                     	<cfqueryparam cfsqltype="cf_sql_integer" value="#qBatchID.batchid#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHistory.studentid#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHistory.hostid#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetStudents.school_name#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetStudents.schoolName#">, 
 						<cfif LEN(qGetHistory.start_date)>
                         	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(qGetHistory.start_date)#">,
 						<cfelse>
