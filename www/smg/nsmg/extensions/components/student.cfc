@@ -86,15 +86,12 @@
                 	smg_countrylist resident ON resident.countryID = s.countryResident
                 WHERE
                 	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-				AND   
+				AND
+                	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">              
+                AND   
                     s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-				<cfif VAL(ARGUMENTS.intRep)>
-                    AND
-                        s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
-                <cfelse>
-                	AND
-                    	1 != 1
-				</cfif>
+                AND
+                    s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.intRep)#">
 				<cfif CLIENT.companyID EQ 5>
                     AND
                         s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )

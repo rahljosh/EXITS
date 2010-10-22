@@ -47,6 +47,9 @@
 		} 
 	} 
 
+	// Create an instance of the proxy. 
+	var s = new student();
+
 	// Load the list when page is ready
 	$(document).ready(function() {
 		getVerificationList();
@@ -57,9 +60,6 @@
 	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
 	var getVerificationList = function() { 
 
-		// Create an instance of the proxy. 
-		var s = new student();
-		
 		// Get Search Form Values
 		var intRep = $("#intRep").val();
 
@@ -97,7 +97,7 @@
 		
 		if( verList.DATA.length == 0) {
 			// No data returned, display message
-			$("#verificationList").append("<tr><th colspan='11'>Your search did not return any results.</th></tr>");
+			$("#verificationList").append("<tr bgcolor='#FFFFE6'><th colspan='11'>Your search did not return any results.</th></tr>");
 		}
 		
 		// Loop over results and build the grid
@@ -131,7 +131,7 @@
 				tableBody += "<td>" + countryBirth + "</td>"
 				tableBody += "<td>" + countryCitizen + "</td>"
 				tableBody += "<td>" + countryResident + "</td>"
-				tableBody += "<td align='center'><a href='javascript:getStudentDetails(" + studentID + ");'>[Edit]</a> &nbsp; | &nbsp; <a href='javascript:setVerificationReceived(" + studentID + ");'>[Received]</a></td>"
+				tableBody += "<td align='center'><a href='javascript:getStudentDetails(" + studentID + ");'>[Edit]</a> &nbsp; | &nbsp; <a href='javascript:confirmReceived(" + studentID + ");'>[Received]</a></td>"
 			tableBody += "</tr>";
 			// Append table rows
 			$("#verificationList").append(tableBody);
@@ -146,13 +146,9 @@
 	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
 	var getStudentDetails = function(studentID) { 
 
-		// Create an instance of the proxy. 
-		var s = new student();
-		
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		s.setCallbackHandler(populateStudentDetails); 
 		s.setErrorHandler(myErrorHandler); 
-		
 		// This time, pass the student ID to the getRemoteStudentByID CFC function. 
 		s.getRemoteStudentByID(studentID);
 	} 
@@ -242,9 +238,6 @@
 	
 	var submitStudentDetail = function() { 
 	
-		// Create an instance of the proxy. 
-		var s = new student();
-	
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		s.setCallbackHandler(resetFormFields);
 		s.setErrorHandler(myErrorHandler);
@@ -295,15 +288,18 @@
 	
 	
 	// --- START OF VERICATION RECEIVED --- //
+	var confirmReceived = function(studentID,studentName) {
+		var answer = confirm("Are you sure you would like to check DS-2019 verification for student #" + studentID + " as received? \n You will no longer be able to update this record.")
+		if (answer){
+			setVerificationReceived(studentID);
+		} 
+	}	
+	
 	var setVerificationReceived = function(studentID) {
-		
-		// Create an instance of the proxy. 
-		var s = new student();
 
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		s.setCallbackHandler(verificationReceived(studentID)); 
 		s.setErrorHandler(myErrorHandler); 
-		
 		// This time, pass the intRep ID to the getVerificationList CFC function. 
 		s.confirmVerificationReceived(studentID);
 		
