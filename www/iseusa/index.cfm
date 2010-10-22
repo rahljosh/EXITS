@@ -155,7 +155,7 @@ a:active {
 
 </div>
 <!----End of Area that Mouse Overs will effect---->
-<div id="bottomInfoRight"><a href="hostStudent.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
+<div id="bottomInfoRight"><a href="host-a-foreign-exchange-student.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
 <table width="210" border="0" style="margin-left:0px;">
   <tr>
     <th scope="row" align="left">
