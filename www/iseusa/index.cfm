@@ -94,7 +94,7 @@ a:active {
 <div id="mainContent">
 	<!---area that mouse overs will affect---->
     <div id="lead">
-
+		
         <div id="initDiv" class="mybox">
             <span class="MOtext" style="background-color: #E6F2D5;">
             <strong>Meet our Students</strong><br /><br />
