@@ -26,7 +26,7 @@
 		qGetIntlRep = APPCFC.USER.getUsers(userType=8);
     </cfscript>
 
-    <cfquery name="get_sevis_history" datasource="MySql">
+    <cfquery name="qGetSevisHistory" datasource="MySql">
         SELECT s.batchid, s.companyid, s.createdby, s.datecreated, s.totalstudents, s.totalprint, s.received, 
                 c.companyshort,
                 u.firstname, u.lastname
@@ -35,7 +35,7 @@
         INNER JOIN smg_users u ON u.userid = s.createdby
         WHERE type = 'new'
         <cfif url.all is 'no'>AND s.companyid = #client.companyid#</cfif>
-        ORDER BY c.companyshort, datecreated DESC
+        ORDER BY s.batchID DESC
     </cfquery>
     
 </cfsilent>    
@@ -105,10 +105,10 @@
 		<td width="5%" align="center"><b>Errors</b></td>
 		<td width="20%" align="center"><b>Created By</b></td>				
 	</tr>
-	<cfoutput query="get_sevis_history">
+	<cfoutput query="qGetSevisHistory">
 	<cfif totalprint is 0 and received is 'no'><cfset toterrors = 'n/a'><cfelse><cfset toterrors = (#totalstudents# - #totalprint#)></cfif>
 	<cfif received is 'yes'><cfset fontcolor = '3333CC'><cfelse><cfset fontcolor = 'FF0000'></cfif>
-	<tr bgcolor="#iif(get_sevis_history.currentrow MOD 2 ,DE("white") ,DE("ededed"))#">
+	<tr bgcolor="#iif(qGetSevisHistory.currentrow MOD 2 ,DE("white") ,DE("ededed"))#">
 		<td align="center"><font color="#fontcolor#"><a href="sevis/new_forms_list.cfm?batchid=#batchid#" target="_blank">0#batchid#</font></a></td>
 		<td align="center"><font color="#fontcolor#"><a href="sevis/new_forms_list.cfm?batchid=#batchid#" target="_blank">#companyshort#</a></font></td>
 		<td align="center"><font color="#fontcolor#"><a href="sevis/new_forms_list.cfm?batchid=#batchid#" target="_blank">#DateFormat(datecreated, 'mm-dd-yyyy')#</font></a></td>

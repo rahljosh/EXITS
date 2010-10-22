@@ -16,10 +16,9 @@
         companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
 
-
-<cfquery name="get_students" datasource="MySql"> 
+<cfquery name="qGetStudents" datasource="MySql"> 
 	SELECT 	
-    	s.studentid, 
+    	s.studentID, 
     	s.dateapplication, 
         s.active, 
         s.ds2019_no, 
@@ -60,8 +59,9 @@
     	s.sevis_batchid != '0'
     AND 
     	s.sevis_activated != '0'
+    <!--- Get only the last record. Student could relocate to a previous host family --->
     AND 
-    	h.hostid NOT IN (SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentid)
+    	h.hostid NOT IN (SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentID AND historyID = (SELECT max(historyID) FROM smg_sevis_history WHERE studentid = s.studentID) )
     AND 
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 
@@ -91,29 +91,29 @@
     	250
 </cfquery>
 
-<cfif get_students.recordcount is '0'>
+<cfif NOT VAL(qGetStudents.recordcount)>
 Sorry, there were no students to populate the XML file at this time.
 <cfabort>
 </cfif>
 
-<cfquery name="insert_batchid" datasource="MySqL">
+<cfquery datasource="MySqL">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
-	VALUES ('#qGetCompany.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#get_students.recordcount#', 'host_update')
+	VALUES ('#qGetCompany.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#qGetStudents.recordcount#', 'host_update')
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
-<cfquery name="get_batchid" datasource="MySql">
+<cfquery name="qBatchID" datasource="MySql">
 	SELECT MAX(batchid) as batchid
 	FROM smg_sevis
 </cfquery>
 
-<cfset add_zeros = 13 - len(#get_batchid.batchid#) - len(#qGetCompany.companyshort_nocolor#)>
+<cfset add_zeros = 13 - len(#qBatchID.batchid#) - len(#qGetCompany.companyshort_nocolor#)>
 <!--- Batch id has to be numeric in nature A through Z a through z 0 through 9  --->
 
 <table align="center" width="100%" frame="box">
-<th colspan="2"><cfoutput>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</cfoutput></th>
-<cfoutput query="get_students">
-<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
+<th colspan="2"><cfoutput>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #qBatchID.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</cfoutput></th>
+<cfoutput query="qGetStudents">
+<tr bgcolor="#iif(qGetStudents.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 	<td width="35%">#businessname#</td><td width="65%">#firstname# #familylastname# (#studentid#)</td>
 </tr>
 </cfoutput>
@@ -130,12 +130,12 @@ Sorry, there were no students to populate the XML file at this time.
 	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/alpha/Create-UpdateExchangeVisitor.xsd"
 	userID='#qGetCompany.sevis_userid#'>
 	<BatchHeader>
-		<BatchID>#qGetCompany.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#get_batchid.batchid#</BatchID>
+		<BatchID>#qGetCompany.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#qBatchID.batchid#</BatchID>
 		<OrgID>#qGetCompany.iap_auth#</OrgID> 
 	</BatchHeader>
 	<UpdateEV>
-	<cfloop query="get_students">
-		<ExchangeVisitor sevisID="#get_students.ds2019_no#" requestID="#get_students.studentid#" userID="#qGetCompany.sevis_userid#">
+	<cfloop query="qGetStudents">
+		<ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentID#" userID="#qGetCompany.sevis_userid#">
 			<Biographical printForm="false">
 				<USAddress>
 				<cfif hostid is not '0' and  host_fam_approved LT '5'>
@@ -151,13 +151,53 @@ Sorry, there were no students to populate the XML file at this time.
 				</USAddress>
 			</Biographical>
 		</ExchangeVisitor>
-		<cfquery name="get_previous_info" datasource="MySql">
-			SELECT historyid, school_name, hostid, start_date, end_date FROM smg_sevis_history  WHERE studentid = '#get_students.studentid#' ORDER BY historyid DESC
-		</cfquery>
-		<cfquery name="create_new_history" datasource="MySql">
-			INSERT INTO smg_sevis_history (batchid, studentid, hostid, school_name, start_date, end_date)	
-			VALUES ('#get_batchid.batchid#', '#get_students.studentid#', '#get_students.hostid#', '#get_previous_info.school_name#', <cfif get_previous_info.start_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.start_date)#</cfif>, <cfif get_previous_info.end_date EQ ''>NULL<cfelse>#CreateODBCDate(get_previous_info.end_date)#</cfif>)
-		</cfquery>
+		<cfsilent>
+            <!--- CREATE NEW HISTORY --->
+            <cfquery name="qGetHistory" datasource="MySql">
+                SELECT 
+                	studentID,
+                    hostID,
+                    school_name, 
+                    start_date, 
+                    end_date 
+                FROM 
+                	smg_sevis_history  
+                WHERE 
+                	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
+                ORDER BY 
+                	historyid DESC
+            </cfquery>
+            <!--- Update hostID in history --->
+            <cfquery datasource="MySql">
+                INSERT INTO 
+                    smg_sevis_history 
+                    (
+                    	batchid, 
+                        studentid, 
+                        hostid, 
+                        school_name, 
+                        start_date,
+                        end_date
+                    )	
+                VALUES 
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#qBatchID.batchid#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHistory.studentid#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.hostid#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHistory.school_name#">, 
+						<cfif LEN(qGetHistory.start_date)>
+                        	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(qGetHistory.start_date)#">,
+						<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+						</cfif>
+						<cfif LEN(qGetHistory.end_date)>
+                        	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(qGetHistory.end_date)#">
+						<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_date" null="yes">
+						</cfif>
+                    )
+            </cfquery>	
+		</cfsilent>
 	</cfloop>
 	</UpdateEV>
 </SEVISBatchCreateUpdateEV>
@@ -174,10 +214,10 @@ Sorry, there were no students to populate the XML file at this time.
 	AppCFC.UDF.createFolder(currentDirectory);
 </cfscript>
 
-<cffile action="write" file="#currentDirectory##qGetCompany.companyshort_nocolor#_host_0#get_batchid.batchid#.xml" output="#toString(sevis_batch)#">
+<cffile action="write" file="#currentDirectory##qGetCompany.companyshort_nocolor#_host_0#qBatchID.batchid#.xml" output="#toString(sevis_batch)#">
 
 <table align="center" width="100%" frame="box">
-	<th>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #get_batchid.batchid# &nbsp; - &nbsp; Total of students in this batch: #get_students.recordcount#</th>
+	<th>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #qBatchID.batchid# &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</th>
 	<th>BATCH CREATED.</th>
 </table>
 

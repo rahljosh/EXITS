@@ -22,7 +22,7 @@
 	FROM smg_sevis s
 	WHERE s.companyid = '#client.companyid#'
 		<cfif IsDefined('batch_type')>AND type = '#batch_type#'</cfif>
-	ORDER BY datecreated DESC
+	ORDER BY s.batchID DESC
 </cfquery>
 
 <!--- https://egov.ice.gov/sbtsevis BETA WEBSITE--->
