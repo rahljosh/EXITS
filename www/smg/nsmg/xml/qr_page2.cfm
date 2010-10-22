@@ -1,8 +1,12 @@
-		             
-   <cfif isDefined('#StudentXMLFile.applications.application[i].page1.family.siblings.brothersister#')>
+<cfoutput>
+#Len(StudentXMLFile.applications.application[i].page1.family.siblings)#
+</cfoutput>
+<!----		             
+   <cfif isDefined(#StudentXMLFile.applications.application[i].page1.family.siblings.brothersister.firstname.XmlText#)>
    no siblings
         <cfelse>
-        	<cfif #Len(StudentXMLFile.applications.application[i].page1.family.siblings)#  gt 10>
+		---->
+        	<cfif #Len(StudentXMLFile.applications.application[i].page1.family.siblings)#  gt 130>
 			<cfloop From = "1" To = "#ArrayLen(StudentXMLFile.applications.application[i].page1.family.siblings.brothersister)#" Index = "x">
           
 				<cfset birthyear = #DatePart('yyyy','#now()#')#  - #StudentXMLFile.applications.application[i].page1.family.siblings.brothersister[x].age.XmlText# >
@@ -16,5 +20,6 @@
 				
 			</cfloop>
 			</cfif>
+           <!----
      </cfif>
-			
+			---->
