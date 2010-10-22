@@ -29,7 +29,7 @@
 	<tr><td colspan="8"><h2> Interests </h2></td></tr>
 	<tr>
 	<cfloop query="get_interests">	
-			<td><input type="checkbox" name="interest" value='#interestid#' <cfif ListFind(get_student_interests.interests, interestid , ",")>checked<cfelse></cfif>> </td>
+			<td><input type="checkbox" name="interest" value='#interestid#' <cfif ListFind(get_student_interests.interests, interestid , ",")>checked</cfif>> </td>
 			<td>#interest#</td>
 			<cfif (get_interests.currentrow MOD 4 ) is 0></tr><tr></cfif>
 	</cfloop>

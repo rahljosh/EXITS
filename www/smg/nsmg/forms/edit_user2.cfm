@@ -222,7 +222,7 @@ where userid=#form.userid#
 		from smg_companies
 		</cfquery>
 				<cfoutput query="company_names">
-		<input type="checkbox" name="companyaccess" value='#companyid#' <cfif ListFind(rep_info.companyid, companyid , ",")>checked<cfelse></cfif>>#Companyshort#
+		<input type="checkbox" name="companyaccess" value='#companyid#' <cfif ListFind(rep_info.companyid, companyid , ",")>checked</cfif>>#Companyshort#
 		</cfoutput>
 		</td>
 	</Tr>

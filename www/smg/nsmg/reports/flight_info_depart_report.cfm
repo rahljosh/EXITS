@@ -59,7 +59,7 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 			</cfloop> )
 		<cfif IsDefined('form.dates')>
 		AND (f.dep_date between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(form.date2)#) 
-		<cfelse></cfif>
+		</cfif>
 		and f.flight_type = 'departure'
    	<cfif client.usertype GT 4>
 		AND (s.placerepid = '#client.userid#' or s.arearepid = '#client.userid#' )

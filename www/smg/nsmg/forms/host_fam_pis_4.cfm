@@ -27,7 +27,7 @@ order by interest
 	<tr><td width="80%">
 		<table border=0 cellpadding=2 cellspacing=0 align="left">
 			<tr><cfloop query="get_interests">	
-					<td><input type="checkbox" name="interest" value='#interestid#' <cfif ListFind(get_host_interests.interests, interestid , ",")>checked<cfelse></cfif>> </td><td>#interest#</td>
+					<td><input type="checkbox" name="interest" value='#interestid#' <cfif ListFind(get_host_interests.interests, interestid , ",")>checked</cfif>> </td><td>#interest#</td>
 					<cfif (get_interests.currentrow MOD 4 ) is 0></tr><tr></cfif>
 				</cfloop>
 			<tr><td>&nbsp;</td></tr>

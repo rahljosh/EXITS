@@ -98,7 +98,7 @@ function areYouSure() {
 					<cfif motherfirstname is not ''>#motherfirstname#
 							<cfif motherlastname is not familylastname>#motherlastname#</cfif> 
 					</cfif>
-					<cfif motherlastname is familylastname or fatherlastname is familylastname>#familylastname#<cfelse></cfif>
+					<cfif motherlastname is familylastname or fatherlastname is familylastname>#familylastname#</cfif>
 					&nbsp; (###hostid#)
 					</option>
 					</cfloop>

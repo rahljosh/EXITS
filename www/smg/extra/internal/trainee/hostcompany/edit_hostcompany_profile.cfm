@@ -306,7 +306,7 @@ function OpenHistory(url) {
 								<cfloop query="housing">
 								<td height="32"> 
 								 	<input type="checkbox" name="housing" value="#id#" 
-									     <cfif ListFind(get_extrahostcompany.housing_options, id , ",")>checked<cfelse></cfif> />								 </td>
+									     <cfif ListFind(get_extrahostcompany.housing_options, id , ",")>checked</cfif> />								 </td>
 								 <td class="style1">#type#</td>
 								  
 									<cfif (housing.currentrow MOD 2) is 0></tr><tr></cfif>

@@ -58,7 +58,7 @@
 				<td>#DateFormat(end_date, 'mm/dd/yyyy')#</td>				
 				<td>#org_code#</td>		
 				<td>#policy_code#</td>		
-				<td><cfif sent_to_caremed EQ ''>File has not been sent<cfelse></cfif>#DateFormat(sent_to_caremed, 'mm/dd/yyyy')#</td>
+				<td><cfif sent_to_caremed EQ ''>File has not been sent</cfif>#DateFormat(sent_to_caremed, 'mm/dd/yyyy')#</td>
 			</tr>
 		</cfloop>
 	</cfif>
