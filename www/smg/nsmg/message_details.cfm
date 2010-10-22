@@ -20,7 +20,7 @@
 <cfoutput query="message_Details">
 <table align="Center" border=0>
 	<tr>
-		<td colspan=3 align="center" <cfif #messagetype# is 'alert'>bgcolor="CC0000"<cfelseif #messagetype# is 'update'>bgcolor="005B01"<cfelse></cfif>><font color="white">#Ucase(messagetype)#</font></td>
+		<td colspan=3 align="center" <cfif #messagetype# is 'alert'>bgcolor="CC0000"<cfelseif #messagetype# is 'update'>bgcolor="005B01"</cfif>><font color="white">#Ucase(messagetype)#</font></td>
 	</tr>
 	<tr>
 		<td>Start Date: </td><td colspan=2>#DateFormat(startdate, 'mm/dd/yyyy')# at #TimeFormat(startdate, 'hh:mm:ss tt')#</td><td></td>

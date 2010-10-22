@@ -196,7 +196,7 @@
 				AND s.placerepid = '#list_repid.placerepid#' AND host_fam_approved <= '4'
 				<cfif IsDefined('form.dates')>
 				AND (s.dateplaced between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(form.date2)#) 
-				<cfelse></cfif>
+				</cfif>
 				AND (<cfloop list=#form.programid# index='prog'>
 				   s.programid = #prog# 
 				   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>

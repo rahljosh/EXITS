@@ -294,7 +294,7 @@ function OpenHistory(url) {
                             	<cfloop query="housing">
 								<td height="32"> 
 								  <input type="checkbox" name="housing" value="#id#" 
-									     <cfif ListFind(get_extrahostcompany.housing_options, id , ",")>checked<cfelse></cfif> />
+									     <cfif ListFind(get_extrahostcompany.housing_options, id , ",")>checked</cfif> />
                               
 								 </td><td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">#type#</font></td>
 								  

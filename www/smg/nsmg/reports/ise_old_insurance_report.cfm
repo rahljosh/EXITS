@@ -54,7 +54,7 @@ order by smg_users.businessname, simpsonsmg_insurance.policy_code, stu.familylas
 				<td>#org_code#</td>		
 				<td>#policy_code#</td>		
 				<td>#programname#</td>
-				<td><cfif sent_to_caremed EQ ''>File has not been sent<cfelse></cfif>#DateFormat(sent_to_caremed, 'mm/dd/yyyy')#</td>
+				<td><cfif sent_to_caremed EQ ''>File has not been sent</cfif>#DateFormat(sent_to_caremed, 'mm/dd/yyyy')#</td>
 			</tr>
 	
 		

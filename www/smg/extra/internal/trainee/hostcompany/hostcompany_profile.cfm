@@ -234,7 +234,7 @@ function OpenFax(url) {
                     <tr>
                       <td height="32" class="style1"><cfoutput>
 					   <input type="checkbox" name="comp_received" value="1" disabled="disabled"
-						<cfif get_extrahostcompany.comp_received EQ 1>checked="checked"<cfelse></cfif> /> <span class="style1"> Received</span><br />
+						<cfif get_extrahostcompany.comp_received EQ 1>checked="checked"</cfif> /> <span class="style1"> Received</span><br />
                       </cfoutput> </td>
                     </tr>
                 </table></td>
@@ -257,7 +257,7 @@ function OpenFax(url) {
                             	<cfloop query="housing">
 								<td height="32" class="style1"> 
 								  <input type="checkbox" name="housing" value="#id#" disabled="disabled"
-									     <cfif ListFind(get_extrahostcompany.housing_options, id , ",")>checked<cfelse></cfif> />								 </td>
+									     <cfif ListFind(get_extrahostcompany.housing_options, id , ",")>checked</cfif> />								 </td>
 								 <td class="style1">#type#</td>
 								  
 								 	<cfif (housing.currentrow MOD 2) is 0></tr><tr></cfif>

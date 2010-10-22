@@ -40,7 +40,7 @@
 					<cfif motherfirstname NEQ ''>#motherfirstname#
 							<cfif motherlastname NEQ familylastname>#motherlastname#</cfif> 
 					</cfif>
-					<cfif motherlastname is familylastname or fatherlastname is familylastname>#familylastname#<cfelse></cfif>
+					<cfif motherlastname is familylastname or fatherlastname is familylastname>#familylastname#</cfif>
 					&nbsp; (###hostid#)
 					</option>	
 				</cfloop>

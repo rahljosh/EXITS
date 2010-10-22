@@ -70,7 +70,7 @@
 
 <table  width=650 align="center" border=0 bgcolor="FFFFFF" >	
 	<tr><td class="style1">
-		TO : &nbsp; <cfif get_student_info.schoolid is double_placement.schoolid>#get_school.schoolname#<cfelse></cfif><br><br></td></tr>
+		TO : &nbsp; <cfif get_student_info.schoolid is double_placement.schoolid>#get_school.schoolname#</cfif><br><br></td></tr>
 	<tr><td class="style1">
 		FROM :  &nbsp; #companyshort.companyname#<br><br></td></tr>
 	<tr><td class="style1">

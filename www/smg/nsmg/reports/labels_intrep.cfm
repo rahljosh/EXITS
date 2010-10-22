@@ -70,7 +70,7 @@
 				FROM smg_users
 				WHERE usertype = '8'
 				<cfif form.intrep is not '0'>AND userid = '#form.intrep#'</cfif>
-				<cfif not IsDefined('form.inactive')>AND active = '1'<cfelse></cfif>
+				<cfif not IsDefined('form.inactive')>AND active = '1'</cfif>
 				ORDER BY businessname
 			</cfquery>
 						
