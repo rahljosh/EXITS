@@ -15,20 +15,22 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
-	
+	<cfparam name="FORM.userID" default="0">
+    
     <cfscript>
-		if ( CLIENT.userType LTE 4 ) {
+		if ( VAL(CLIENT.userType) AND CLIENT.userType LTE 4 ) {
 			// Get All International Representatives List
 			qIntRep = APPCFC.USER.getUsers(userType=8);	
 		} else {
 			// Get Current International Representatives List
-			qIntRep = APPCFC.USER.getUsers(userID=CLIENT.userID, userType=8);	
+			qIntRep = APPCFC.USER.getUsers(userID=CLIENT.userID, userType=8);
+			FORM.userID=CLIENT.userID;
 		}
 		
 		// Get Country List
 		qCountryList = APPCFC.LOOKUPTABLES.getCountry();
 	</cfscript>
-    
+
 </cfsilent>    
 
 <!--- Ajax Call to the Component --->
@@ -45,6 +47,11 @@
 		} 
 	} 
 
+	// Load the list when page is ready
+	$(document).ready(function() {
+		getVerificationList();
+	});
+
 	// --- START OF VERIFICATION LIST --- //
 
 	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
@@ -59,7 +66,6 @@
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		s.setCallbackHandler(populateVerificationList); 
 		s.setErrorHandler(myErrorHandler); 
-		
 		// This time, pass the intRep ID to the getVerificationList CFC function. 
 		s.getVerificationList(intRep);
 	} 
@@ -110,7 +116,11 @@
 			
 			// Create Table Rows
 			var tableBody = '';	
-			tableBody += "<tr id='" + studentID + "'>";
+			if (i % 2 == 0) {
+				tableBody += "<tr bgcolor='#FFFFE6' id='" + studentID + "'>";
+			} else {
+				tableBody += "<tr bgcolor='#FFFFFF' id='" + studentID + "'>";
+			}
 				tableBody += "<td><a href='javascript:getStudentDetails(" + studentID + ");'>#" + studentID + "</a></td>"
 				tableBody += "<td><a href='javascript:getStudentDetails(" + studentID + ");'>" + firstName + "</a></td>"
 				tableBody += "<td><a href='javascript:getStudentDetails(" + studentID + ");'>" + middleName + "</a></td>"
@@ -443,7 +453,7 @@
                             </cfloop>
                         </select>
                     </td>
-                    <td class="formField"><input type="submit" name="submit" value="Submit" /></td>
+                    <td class="formField"><input type="submit" name="Save" value="Save" /></td>
 				</tr>                    
             </table>
         </form>
@@ -467,9 +477,11 @@
             <td class="listTitle">
                 International Representative: &nbsp;
                 <select name="intRep" id="intRep" onchange="getVerificationList();">
-                    <option value=""></option>
+                    <cfif VAL(CLIENT.userType) AND CLIENT.userType LTE 4>
+	                    <option value="0"></option>
+                    </cfif>
                     <cfloop query="qIntRep">
-                        <option value="#qIntRep.userID#">#qIntRep.businessName#</option>
+                        <option value="#qIntRep.userID#" <cfif FORM.userID EQ qIntRep.userID> selected="selected" </cfif> >#qIntRep.businessName#</option>
                     </cfloop>
                 </select>
             </td>                

@@ -54,6 +54,7 @@
                 <li>
                     <a href="##">Tools</a>
                     <ul>
+						<li><a href="index.cfm?curdoc=tools/verification_received">DS-2019 Verification List</a></li>                        
                         <li><a href="index.cfm?curdoc=intrep/students_missing_flight_info">Flight Information</a></li>
                         <li><a href="index.cfm?curdoc=intrep/email_welcome">Email Messages</a></li>
                         <li><a href="index.cfm?curdoc=intrep/update_alerts">News Messages</a></li>
@@ -76,16 +77,15 @@
             </ul>
         </cfcase>
     
+    
         <!--- Menu for MPD Tours--->
         <cfcase value="25">
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
                 <li>
                     <a href="index.cfm?curdoc=tours/mpdtours">Students</a>
-
                 </li>
-            
-            
+                
                 <li>
                     <a href="##">Tools</a>
                     <ul>
@@ -94,8 +94,6 @@
                 </li>
             
                 <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
-                
-              
                 
                 <!--- Case Store --->
                 <cfif CLIENT.companyID EQ 10>
@@ -265,6 +263,8 @@
                         </cfif>
     
                         <li><a href="index.cfm?curdoc=tools/countries">Countries</a></li>
+
+    					<li><a href="index.cfm?curdoc=tools/verification_received">DS-2019 Verification List</a></li>
                     
                     	<cfif ListFind(APPLICATION.AllowedIDs.hostLeads, CLIENT.userID) OR CLIENT.userType EQ 1>
                             <li><a href="index.cfm?curdoc=tools/hostLeads">Host Family Leads</a></li>
@@ -297,8 +297,6 @@
                         <li><a href="index.cfm?curdoc=forms/update_alerts">System Messages</a></li>
     
                         <li><a href="index.cfm?curdoc=tools/student-tours/index">Student Tours</a></li>
-    
-    					<li><a href="index.cfm?curdoc=tools/verification_received">Verification Received List</a></li>
     
                         <li><a href="index.cfm?curdoc=tools/smg_welcome_pictures">Welcome Pictures</a></li>
                     </ul>
