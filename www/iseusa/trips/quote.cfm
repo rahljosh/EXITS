@@ -157,13 +157,22 @@ h3{text-indent:10px;}
 <cfparam name="stuInfo.firstname" default="">
 <cfparam name="stuInfo.studentID" default="">
 <cfparam name="stuInfo.Email" default="">
+<cfparam name="hostInfo.address" default="">
+<cfparam name="hostInfo.address2" default="">
+<cfparam name="hostInfo.city" default="">
+<cfparam name="hostInfo.state" default="">
+<cfparam name="hostInfo.zip" default="">
+<cfparam name="hostInfo.phone" default="">
 <cfparam name="form.local_air_code" default="">
 <cfparam name="form.major_air_code" default="">
 
 <cfparam name="hostInfo.local_air_code" default="">
 <cfparam name="hostInfo.major_air_code" default="">
 
-
+<cfquery name="qstates" datasource="#APPLICATION.DSN.Source#">
+select state, statename
+from smg_states
+</cfquery>
 <cfoutput>
 <cfif isDefined('form.process')>
 
@@ -233,7 +242,76 @@ A flight quote has been requested by this student:<Br />
                     </cfif>
                 </td>
             </tr>
-			
+            </Table>
+             
+            <h2>Location Information</h2>
+           <Table width=100% cellspacing=0 cellpadding=2 class="border">
+ <Tr bgcolor="##deeaf3">
+            	<td><h3>Address</h3></td>
+                <td>#form.address# </td>
+                <td>#form.ret_address#</td>
+                <td><cfif form.address eq form.ret_address>
+                		<img src="http://www.iseusa.com/images/green_checksm.png" height=25 width=25 alt="Match"/>
+                    <cfelse>
+                    	<img src="http://www.iseusa.com/images/redcircleSM.png" height=25 width=25 alt="No Match"/>
+                    </cfif>
+                </td>
+           	</Tr>
+            <Tr bgcolor="##deeaf3">
+            	<td><h3></h3></td>
+                <td>#form.address2# </td>
+                <td>#form.ret_address2#</td>
+                <td><cfif form.address2 eq form.ret_address2>
+                		<img src="http://www.iseusa.com/images/green_checksm.png" height=25 width=25 alt="Match"/>
+                    <cfelse>
+                    	<img src="http://www.iseusa.com/images/redcircleSM.png" height=25 width=25 alt="No Match"/>
+                    </cfif>
+                </td>
+           	</Tr >
+   			 <Tr>
+            	<td><h3>City</h3></td>
+                <td>#form.city# </td>
+                <td>#form.ret_city#</td>
+                <td><cfif form.city eq form.ret_city>
+                		<img src="http://www.iseusa.com/images/green_checksm.png" height=25 width=25 alt="Match"/>
+                    <cfelse>
+                    	<img src="http://www.iseusa.com/images/redcircleSM.png" height=25 width=25 alt="No Match"/>
+                    </cfif>
+                </td>
+           	</Tr>
+            <Tr  bgcolor="##deeaf3">
+            	<td><h3>State</h3></td>
+                <td>#form.state# </td>
+                <td>#form.ret_state#</td>
+                <td><cfif form.state eq form.ret_state>
+                		<img src="http://www.iseusa.com/images/green_checksm.png" height=25 width=25 alt="Match"/>
+                    <cfelse>
+                    	<img src="http://www.iseusa.com/images/redcircleSM.png" height=25 width=25 alt="No Match"/>
+                    </cfif>
+                </td>
+           	</Tr>
+             <Tr>
+            	<td><h3>Zip</h3></td>
+                <td>#form.zip#</td>
+                <td>#form.ret_zip#</td>
+                <td><cfif form.zip eq form.ret_zip>
+                		<img src="http://www.iseusa.com/images/green_checksm.png" height=25 width=25 alt="Match"/>
+                    <cfelse>
+                    	<img src="http://www.iseusa.com/images/redcircleSM.png" height=25 width=25 alt="No Match"/>
+                    </cfif>
+                </td>
+           	</Tr>
+            <Tr  bgcolor="##deeaf3">
+            	<td><h3>Phone</h3></td>
+                <td>#form.phone# </td>
+                <td>#form.ret_phone#</td>
+                <td><cfif form.phone eq form.ret_phone>
+                		<img src="http://www.iseusa.com/images/green_checksm.png" height=25 width=25 alt="Match"/>
+                    <cfelse>
+                    	<img src="http://www.iseusa.com/images/redcircleSM.png" height=25 width=25 alt="No Match"/>
+                    </cfif>
+                </td> 
+           	</Tr>
 
              <Tr>
             	<td><h3>Major Airport (Airport Code)</h3></td>
@@ -307,8 +385,11 @@ A flight quote has been requested by this student:<Br />
 			
 			<!--- send email --->
             <cfinvoke component="cfc.email" method="send_mail">
+            	<!----Live Emails
                 <cfinvokeargument name="email_to" value="trips@iseusa.com">
-                <cfinvokeargument name="email_cc" value="brendan@iseusa.com">
+                <cfinvokeargument name="email_cc" value="brendan@iseusa.com">---->
+                <!----Test Email----->
+                <cfinvokeargument name="email_to" value="josh@iseusa.com">
                 <cfinvokeargument name="email_subject" value="Trip Quote">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 
@@ -409,7 +490,50 @@ A flight quote has been requested by this student:<Br />
                  <input type=hidden name="ret_studentFName" value="#stuInfo.firstname#" />
                  </td>
             </tr>
+          </Table>
+          
+          
+          
+          
 			<Cfif  isDefined('form.lookup')>
+          
+           <h2>Location Information</h2>
+             <Table width=100% cellspacing=0 cellpadding=2 class="border">
+      <Tr bgcolor="##deeaf3">
+            	<td><h3>Address</h3></td>
+                <td><cfinput type="text"  name="address" value="#hostInfo.address#"> <input type="hidden" name="ret_address" value="#hostInfo.address#" /></td>
+           	</Tr>
+            <Tr bgcolor="##deeaf3">
+            	<td><h3></h3></td>
+                <td><cfinput type="text"  name="address2" value="#hostInfo.address2#"> <input type="hidden" name="ret_address2" value="#hostInfo.address2#" /></td>
+           	</Tr >
+   			 <Tr>
+            	<td><h3>City</h3></td>
+                <td><cfinput type="text"  name="city" value="#hostInfo.city#"> <input type="hidden" name="ret_city" value="#hostInfo.city#" /></td>
+           	</Tr>
+           
+            <Tr  bgcolor="##deeaf3">
+            	<td><h3>State</h3></td>
+                <td>
+                <select name="state">
+                <option value=""></option>
+                <cfloop query="qstates">
+                <option value="#state#" <cfif hostInfo.state eq state>selected</cfif>>#state# - #statename#</option>
+                </cfloop>
+                </select>
+                <input type="hidden" name="ret_state" value="#hostInfo.state#"/>
+                </td>
+           	</Tr>
+             <Tr>
+            	<td><h3>Zip</h3></td>
+                <td><cfinput type="text"  name="zip" value="#hostInfo.zip#"> <input type="hidden" name="ret_zip" value="#hostInfo.zip#" /></td>
+           	</Tr>
+            <Tr  bgcolor="##deeaf3">
+            	<td><h3>Phone</h3></td>
+                <td><cfinput type="text"  name="phone" message="Please enter a valid phone number. You will only be contacted by the travel agent if there are quetsions about your requested trip." required="yes" value="#hostInfo.phone#"> <input type="hidden" name="ret_phone" value="#hostInfo.phone#" /></td>
+           	</Tr>
+			
+          
              <Tr>
             	<td><h3>Major Airport (Airport Code)</h3></td>
                 <td><cfinput type="text"  name="major_Air_Code" value="#hostInfo.major_Air_Code#"> <input type="hidden" name="ret_major_Air_Code" value="#hostInfo.major_Air_Code#" /></td>
