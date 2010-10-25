@@ -55,6 +55,7 @@
 
 	<cffunction name="getVerificationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
+        <cfargument name="branchID" default="0" hint="Branch is not required">
         <cfargument name="receivedDate" default="" hint="Filter by verification received date">
 
         <cfquery 
@@ -92,9 +93,15 @@
                     s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 AND
                     s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.intRep)#">
+                    
+            	<cfif VAL(ARGUMENTS.branchID)>
+                    AND
+                        s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.branchID)#">
+                </cfif>        
+			                    
 				<cfif CLIENT.companyID EQ 5>
                     AND
-                        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes"> )
                 <cfelse>
                     AND
                         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
@@ -110,7 +117,7 @@
             	s.familyLastName,
                 s.firstName                                                        
 		</cfquery>
-		   
+		
 		<cfreturn qGetVerificationList>
 	</cffunction>
 

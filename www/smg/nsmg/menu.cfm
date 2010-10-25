@@ -76,7 +76,44 @@
                 
             </ul>
         </cfcase>
-    
+
+
+        <!--- Menu for Int. Branches --->
+        <cfcase value="11">
+            <ul id="MenuBar1" class="MenuBarHorizontal">
+            
+                <li>
+                    <a href="index.cfm?curdoc=intrep/int_students">Students</a>
+                    <ul>
+                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=no">Unplaced</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=yes">Placed</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=all">All</a></li>
+                    </ul>
+                </li>
+                
+                <li>
+                    <a href="index.cfm?curdoc=helpdesk/help_desk_list">Tools</a>
+                    <ul>
+   						<li><a href="index.cfm?curdoc=tools/verification_received">DS-2019 Verification List</a></li>                        
+                        <li><a href="index.cfm?curdoc=intrep/students_missing_flight_info">Flight Information</a></li>
+                    </ul>
+                </li>
+                
+                <li><a href="index.cfm?curdoc=branch/branch_info&branchid=#CLIENT.userid#">My Info</a></li>
+                
+                <li><a href="index.cfm?curdoc=helpdesk/help_desk_list">Support</a></li>
+                
+                <!--- Case Store --->
+                <cfif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+                <!--- ISE Store --->
+                <cfelse>
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                </cfif>
+            
+            </ul>
+        </cfcase>
+
     
         <!--- Menu for MPD Tours--->
         <cfcase value="25">
@@ -107,47 +144,9 @@
         </cfcase>
     
     
-        <!--- Menu for Int. Branches --->
-        <cfcase value="11">
-    
-            <ul id="MenuBar1" class="MenuBarHorizontal">
-            
-                <li>
-                    <a href="index.cfm?curdoc=intrep/int_students">Students</a>
-                    <ul>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=no">Unplaced</a></li>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=yes">Placed</a></li>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=all">All</a></li>
-                    </ul>
-                </li>
-                
-                <li>
-                    <a href="index.cfm?curdoc=helpdesk/help_desk_list">Tools</a>
-                    <ul>
-                        <li><a href="index.cfm?curdoc=intrep/students_missing_flight_info">Flight Information</a></li>
-                    </ul>
-                </li>
-                
-                <li><a href="index.cfm?curdoc=branch/branch_info&branchid=#CLIENT.userid#">My Info</a></li>
-                
-                <li><a href="index.cfm?curdoc=helpdesk/help_desk_list">Support</a></li>
-                
-                <!--- Case Store --->
-                <cfif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
-                <!--- ISE Store --->
-                <cfelse>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
-                </cfif>
-            
-            </ul>
-        
-        </cfcase>
-    
     
         <!--- Menu for the Field | Managers / Advisors / Area Reps / Student View --->
         <cfcase value="5,6,7,9">
-    
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
                 <li>
@@ -202,13 +201,11 @@
                 </cfif>
             
             </ul>
-        
         </cfcase>
     
     
         <!--- Menu for Office Users --->	
         <cfdefaultcase>
-        
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
                 <li>
@@ -338,7 +335,6 @@
                 </cfif>
             
             </ul>
-            
         </cfdefaultcase>
         
     </cfswitch>

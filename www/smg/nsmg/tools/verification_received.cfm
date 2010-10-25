@@ -15,16 +15,21 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
-	<cfparam name="FORM.userID" default="0">
+	<cfparam name="FORM.intRep" default="0">
+    <cfparam name="FORM.branchID" default="0">
     
     <cfscript>
 		if ( VAL(CLIENT.userType) AND CLIENT.userType LTE 4 ) {
 			// Get All International Representatives List
 			qIntRep = APPCFC.USER.getUsers(userType=8);	
-		} else {
-			// Get Current International Representatives List
-			qIntRep = APPCFC.USER.getUsers(userID=CLIENT.userID, userType=8);
-			FORM.userID=CLIENT.userID;
+		} else if ( CLIENT.userType EQ 8 )  {
+			// Get Intl. Rep. Information
+			qIntRep = APPCFC.USER.getUsers(userID=CLIENT.userID, userType=CLIENT.userType);
+			FORM.intRep=CLIENT.userID;
+		} else if ( CLIENT.userType EQ 11 ) {
+			// Get Branch Information
+			qIntRep = APPCFC.USER.getUsers(userID=CLIENT.userID, userType=CLIENT.userType);
+			FORM.intRep=qIntRep.intRepID;
 		}
 		
 		// Get Country List
@@ -75,12 +80,13 @@
 
 		// Get Search Form Values
 		var intRep = $("#intRep").val();
-
+		var branchID = $("#branchID").val();
+		
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		s.setCallbackHandler(populateVerificationList); 
 		s.setErrorHandler(myErrorHandler); 
 		// This time, pass the intRep ID to the getVerificationList CFC function. 
-		s.getVerificationList(intRep);
+		s.getVerificationList(intRep,branchID);
 	} 
 
 	// Callback function to handle the results returned by the getVerificationList function and populate the table. 
@@ -487,15 +493,27 @@
     <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding:15px;">
         <tr>
             <td class="listTitle">
-                International Representative: &nbsp;
-                <select name="intRep" id="intRep" onchange="getVerificationList();">
-                    <cfif VAL(CLIENT.userType) AND CLIENT.userType LTE 4>
-	                    <option value="0"></option>
-                    </cfif>
-                    <cfloop query="qIntRep">
-                        <option value="#qIntRep.userID#" <cfif FORM.userID EQ qIntRep.userID> selected="selected" </cfif> >#qIntRep.businessName#</option>
-                    </cfloop>
-                </select>
+                <cfif CLIENT.userType EQ 11>
+					<!--- Branch --->
+                    International Representative: &nbsp;                
+                    <select name="branchID" id="branchID" onchange="getVerificationList();">
+                        <cfloop query="qIntRep">
+                            <option value="#qIntRep.userID#" <cfif FORM.branchID EQ qIntRep.userID> selected="selected" </cfif> >#qIntRep.businessName#</option>
+                        </cfloop>
+                    </select>
+                    <input type="hidden" name="intRep" id="intRep" value="#FORM.intRep#" />
+                <cfelse>
+                	<!--- Intl. Rep. --->
+                    International Representative: &nbsp;                
+                    <select name="intRep" id="intRep" onchange="getVerificationList();">
+                        <cfif VAL(CLIENT.userType) AND CLIENT.userType LTE 4>
+                            <option value="0"></option>
+                        </cfif>
+                        <cfloop query="qIntRep">
+                            <option value="#qIntRep.userID#" <cfif FORM.intRep EQ qIntRep.userID> selected="selected" </cfif> >#qIntRep.businessName#</option>
+                        </cfloop>
+                    </select>
+                </cfif>
             </td>                
 			<td><input name="send" type="submit" value="Submit" onclick="getVerificationList();" /></td>
         </tr>            
