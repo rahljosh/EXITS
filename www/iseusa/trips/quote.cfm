@@ -385,11 +385,12 @@ A flight quote has been requested by this student:<Br />
 			
 			<!--- send email --->
             <cfinvoke component="cfc.email" method="send_mail">
-            	<!----Live Emails
+            	<!----Live Emails---->
                 <cfinvokeargument name="email_to" value="trips@iseusa.com">
-                <cfinvokeargument name="email_cc" value="brendan@iseusa.com">---->
-                <!----Test Email----->
+                <cfinvokeargument name="email_cc" value="brendan@iseusa.com">
+                <!----Test Email
                 <cfinvokeargument name="email_to" value="josh@iseusa.com">
+				----->
                 <cfinvokeargument name="email_subject" value="Trip Quote">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 
