@@ -870,7 +870,7 @@ div.form-container-noBorder div.controlset div {
 }
 
 div.form-container div.buttonrow,
-div.form-container-noBorder div.buttonrow{ 
+div.form-container-noBorder div.buttonrow { 
 	text-align:center;
 	/* margin-left: 350px; */
 }
@@ -890,5 +890,24 @@ div.form-container-noBorder div.buttonrow .button {
 
 div.form-container div.buttonrow .button:hover,
 div.form-container-noBorder div.buttonrow .button:hover {
+   	background: #e69700 url(../../pics/onlineApp/buttonOrange.png) 50% 50% repeat;	
+}
+
+div.form-container div.buttonrow .buttonClose,
+div.form-container-noBorder div.buttonrow .buttonClose {
+	cursor: pointer;
+	margin-left:50px;
+	padding:5px;
+	border: 0px;
+   	width:80px;
+	font-family: segoe ui, Arial, sans-serif; 
+	font-size:1.1em;
+	font-weight:bold;
+	color: #ffffff; 
+	background: #1484e6 url(../../pics/onlineApp/buttonBlue.png) 50% 50% repeat; 	
+}
+
+div.form-container div.buttonrow .buttonClose:hover,
+div.form-container-noBorder div.buttonrow .buttonClose:hover {
    	background: #e69700 url(../../pics/onlineApp/buttonOrange.png) 50% 50% repeat;	
 }
