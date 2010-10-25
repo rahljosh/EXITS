@@ -27,8 +27,8 @@
     <!--- regional director --->
     <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ ''>
     	<cfset approve_field = 'pr_rd_approved_date'>
-    <!--- facilitator --->
-    <cfelseif CLIENT.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
+    <!--- facilitator OR any office user --->
+    <cfelseif get_report.pr_ny_approved_date EQ '' AND (CLIENT.userid EQ get_report.fk_ny_user OR CLIENT.userType LTE 4)>
     	<cfset approve_field = 'pr_ny_approved_date'>
     </cfif>
     <cfif approve_field NEQ ''>
