@@ -532,8 +532,12 @@
 
                 <div class="buttonrow">
                     <input type="submit" value="Add Flight" onclick="javascript:displayForm();" class="button ui-corner-top" />
+
+					<cfif NOT URL.completeApplication>
+                        <input type="submit" onClick="javascript:window.close();" value="Close" class="buttonClose ui-corner-top" />
+                    </cfif>
                 </div>
-                    
+				
             </div>
             
         </div>

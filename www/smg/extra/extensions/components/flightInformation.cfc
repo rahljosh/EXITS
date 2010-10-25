@@ -48,7 +48,7 @@
                     dateCreated,
                     dateUpdated
                 FROM 
-                    extraFlightInformation	
+                    extra_flight_information	
                 WHERE
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.candidateID)#">
                 AND
@@ -89,7 +89,7 @@
                     dateCreated,
                     dateUpdated
                 FROM 
-                    extraFlightInformation	
+                    extra_flight_information	
                 WHERE
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.candidateID)#">
                 AND
@@ -135,7 +135,7 @@
                     dateCreated,
                     dateUpdated
                 FROM 
-                    extraFlightInformation	
+                    extra_flight_information	
                 WHERE
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.ID)#">
 		</cfquery>
@@ -151,7 +151,7 @@
         <cfquery 
 			datasource="#APPLICATION.DSN.Source#">
                 DELETE  FROM 
-                    extraFlightInformation	
+                    extra_flight_information	
                 WHERE
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.ID)#">
 				AND
@@ -182,7 +182,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN.Source#">
                     UPDATE
-                        extraFlightInformation
+                        extra_flight_information
                     SET                    
                         programID=<cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.programID)#">,
                         flightType=<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">,
@@ -219,7 +219,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO 
-                        extraFlightInformation
+                        extra_flight_information
                     (                    
                         candidateID,
                         programID,
