@@ -516,7 +516,12 @@
                 </cfif>
             </td>                
 			<td><input name="send" type="submit" value="Submit" onclick="getVerificationList();" /></td>
-        </tr>            
+        </tr>  
+        <tr>
+        	<td>
+            	PS: After setting the student record as received, you are no longer able to update the record. If you make a mistake, please contact <a href="#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a> immediately.
+            </td>
+		</tr>                      
     </table>
 
     <!--- Verification List --->

@@ -128,7 +128,7 @@
 	<tr>
 		<table>
 			<tr><td valign="top"><div align="justify">
-			Please review the report and make any necessary corrections. After you have made the corrections, sign the form, scan and email it back to me at <a href="bhause@iseusa.com">bhause@iseusa.com</a>.
+			Please review the report and make any necessary corrections. After you have made the corrections, sign the form, scan and email it back to me at <a href="#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a>.
 			Once I receive the signed from, I will print the DS-2019 form for your student(s) and send them to you.
 			</div></td>
 			<td align="right">
