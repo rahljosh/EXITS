@@ -187,7 +187,7 @@
                 <cfif CLIENT.usertype EQ 8 AND ListFind(APPLICATION.submitAppNotAllowed, CLIENT.userID)> 
                     We are currently not accepting applications for the upcoming season. <br>
                     You can send this application back to your <cfif get_student_info.branchID> branch <cfelse> student </cfif> by clicking the deny button below.
-                    Please contact Brian Hause at <a href="mailto:bhause@iseusa.com">bhause@iseusa.com</a> if you have any questions.                    
+                    Please contact Brian Hause at <a href="mailto:#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a> if you have any questions.                    
 					<br><br>
                     <div align="center">						
                     	<a href="?curdoc=deny_application"><img border=0 src="pics/deny.gif" alt="Deny Application" align="center" border="0"></a>                    
@@ -317,7 +317,7 @@
                 <cfif CLIENT.usertype EQ 8 AND ListFind(APPLICATION.submitAppNotAllowed, CLIENT.userID)> 
                     We are currently not accepting applications for the upcoming season. <br>
                     You can send this application back to <cfif get_student_info.branchID> #qGetBranch.businessname# <cfelse> the student </cfif> by clicking the deny button below.
-                    Please contact Brian Hause at <a href="mailto:bhause@iseusa.com">bhause@iseusa.com</a> if you have any questions.                    
+                    Please contact Brian Hause at <a href="mailto:#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a> if you have any questions.                    
 					<br><br>
                     <div align="center">						
                     	<a href="?curdoc=deny_application"><img border=0 src="pics/deny.gif" alt="Deny Application" align="center" border="0"></a>                    
