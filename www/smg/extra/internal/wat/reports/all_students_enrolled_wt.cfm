@@ -1,6 +1,8 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 	
+    <cfsetting requesttimeout="9999">
+    
     <!--- Param FORM variables --->
 	<cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.userID" default="0">
