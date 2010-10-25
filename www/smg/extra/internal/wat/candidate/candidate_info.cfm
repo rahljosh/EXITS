@@ -16,12 +16,27 @@
     <cfparam name="URL.uniqueID" default="">
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.candidateID" default="0">
-    
+
     <cfinclude template="../querys/get_candidate_unqid.cfm">
+	
+    <cfscript>
+		// Get Arrival Information
+		qGetArrival = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(
+			candidateID=get_candidate_unqID.candidateID,
+			flightType='arrival'
+		);
+	
+		// Get Departure Information
+		qGetDeparture = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(
+			candidateID=get_candidate_unqID.candidateID,
+			flightType='departure'
+		);
+	</cfscript>
+    	    
     <cfinclude template="../querys/countrylist.cfm">
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
-
+	
 	<!--- Query of Queries --->
     <cfquery name="qGetProgramInfo" dbtype="query">
         SELECT 
@@ -92,7 +107,8 @@
         SELECT 
             u.userid, 
             u.businessname, 
-            u.extra_insurance_typeid, 
+            u.extra_insurance_typeid,
+            u.extra_accepts_sevis_fee,
             type.type
         FROM 
             smg_users u
@@ -302,8 +318,11 @@
                             </tr>
                             <tr>
                                 <td align="center" colspan="2">
-                                    <span class="style4">[ <a href='candidate/candidate_profile.cfm?uniqueid=#get_candidate_unqid.uniqueid#' target="_blank"><span class="style4">profile</span></a> ]</span> 
-                                    <span class="style4">[ <a href='candidate/immigrationLetter.cfm?uniqueid=#get_candidate_unqid.uniqueid#' target="_blank"><span class="style4">Immigration Letter</span></a> ]</span>
+                                    <cfif VAL(get_candidate_unqid.applicationStatusID)>
+                                    	<a href="onlineApplication/index.cfm?action=initial&uniqueID=#get_candidate_unqid.uniqueID#" class="style4 popUpOnlineApplication">[ Online Application ]</a> &nbsp;
+                                    </cfif>
+                                    <a href="candidate/candidate_profile.cfm?uniqueid=#get_candidate_unqid.uniqueid#" class="style4" target="_blank">[ profile ]</span></a> &nbsp;
+                                    <a href="candidate/immigrationLetter.cfm?uniqueid=#get_candidate_unqid.uniqueid#" class="style4" target="_blank">[ Immigration Letter ]</span></a>
                                 </td>
                             </tr>
                             <tr>
@@ -663,11 +682,11 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="2%">
+                                            <td width="2%" align="right">
                                                 <input type="checkbox" name="insurance_check" disabled <cfif qGetIntlRepInfo.extra_insurance_typeid GT 1> checked </cfif> >
                                             </td>
-                                            <td width="30%" class="style1" align="right"><b>Policy Type:</b></td>
-                                            <td width="68%" class="style1">
+                                            <td width="25%" class="style1" align="right"><b>Policy Type:</b></td>
+                                            <td width="73%" class="style1">
                                                 <cfif qGetIntlRepInfo.extra_insurance_typeid EQ 0>
                                                     <font color="FF0000">Missing Policy Type</font>
                                                 <cfelse>
@@ -932,10 +951,11 @@
                         
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                     	<tr bgcolor="##C2D1EF">
-                                    		<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Form DS-2019</td>
+                                    		<td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Form DS-2019</td>
                                     	</tr>	
                                         <tr>
-                                            <td class="style1" align="left" colspan="2"><strong>Sponsor</strong>&nbsp; 
+                                            <td class="style1" width="50%" align="right"><strong>Sponsor:</strong></td>
+                                            <td class="style1">
                                                 <cfif LEN(qGetProgramInfo.extra_sponsor)>
                                                     #qGetProgramInfo.extra_sponsor#
                                                 <cfelse>
@@ -944,12 +964,13 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="left" colspan="2"><strong><label for="ds2019Check">DS-2019 Verification Report Received</label></strong>&nbsp; 
-                                            	<input type="checkbox" name="ds2019Check" id="ds2019Check" class="formField" disabled onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#');" <cfif LEN(get_candidate_unqid.verification_received)> checked </cfif> > Yes 
+                                            <td class="style1" align="right"><strong><label for="ds2019Check">DS-2019 Verification Report</label></strong></td>
+                                            <td class="style1">
+                                            	<input type="checkbox" name="ds2019Check" id="ds2019Check" class="formField" disabled onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#');" <cfif LEN(get_candidate_unqid.verification_received)> checked </cfif> > Received 
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" width="35%" align="right"><strong>Date:</strong></td>
+                                            <td class="style1" align="right"><strong>Date:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#dateFormat(get_candidate_unqid.verification_received, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="verification_received" id="verification_received" class="date-pick style1 editPage" value="#dateFormat(get_candidate_unqid.verification_received, 'mm/dd/yyyy')#" maxlength="10">
@@ -963,10 +984,8 @@
                                             </td>
                                         </tr>
                                         <tr>	
-                                            <td class="style1" colspan="2" align="left">
-                                            	<b>Intl. Rep. Accepts Sevis Fee</b>&nbsp; &nbsp;
-                                            	<input type="checkbox" name="agent_accepts_sevis" class="formField" disabled value="1" <cfif VAL(get_candidate_unqid.agent_accepts_sevis)> checked="checked" </cfif>> Yes
-                                            </td>
+                                        	<td class="style1" align="right"><strong>Accepts SEVIS Fee:</strong></td>
+                                            <td class="style1">#YesNoFormat(VAL(qGetIntlRepInfo.extra_accepts_sevis_fee))#</td>
                                         </tr>
                                     </table>
                         
@@ -986,7 +1005,7 @@
                                         	<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Verification</td>
                                         </tr>	
                                         <tr>
-                                        	<td class="style1" width="52%" align="right"><label for="verification_address"><strong>House Address Verified:</strong></label></td>
+                                        	<td class="style1" width="50%" align="right"><label for="verification_address"><strong>House Address Verified:</strong></label></td>
                                             <td class="style1">
                                             	<input type="checkbox" name="verification_address" id="verification_address" value="1" class="formField" disabled <cfif VAL(get_candidate_unqid.verification_address)>checked="checked"</cfif> >
                                             </td>
@@ -1002,6 +1021,50 @@
                                             <td class="style1">
                                                 <input type="checkbox" name="verification_arrival" id="verification_arrival" value="1" class="formField" disabled <cfif VAL(get_candidate_unqid.verification_arrival)>checked="checked"</cfif> >
                                             </td>
+                                        </tr>
+                        			</table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+
+						<br />
+ 
+ 						<!---- Flight Information --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Flight Information  &nbsp;
+                                                <a href="onlineApplication/index.cfm?action=flightInfo&uniqueID=#get_candidate_unqid.uniqueID#&completeApplication=0" class="style2 popUpFlightInformation">[ Edit ]</a>
+                                            </td>
+                                        </tr>	
+                                        <tr>
+                                        	<td class="style1" width="20%" align="right" valign="top"><label for="verification_address"><strong>Arrival:</strong></label></td>
+                                            <td class="style1">
+												<cfif qGetArrival.recordCount>
+	                                                <cfloop query="qGetArrival">
+                                                    	From #qGetArrival.departAirportCode# to #qGetArrival.arriveAirportCode# on #qGetArrival.departDate# at #qGetArrival.arriveTime# <br />
+													</cfloop>                                                        
+                                                <cfelse>
+                                                	n/a
+                                                </cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right" valign="top"><label for="verification_sevis"><strong>Departure:</strong></label></td>
+                                        	<td class="style1">
+												<cfif qGetDeparture.recordCount>
+                                                    <cfloop query="qGetDeparture">
+                                                   		From #qGetDeparture.departAirportCode# to #qGetDeparture.arriveAirportCode# on #qGetDeparture.departDate# at #qGetDeparture.arriveTime# <br />
+                                                    </cfloop>    
+                                                <cfelse>
+                                                	n/a
+                                                </cfif>
+                                        	</td>
                                         </tr>
                         			</table>
                                     
@@ -1052,6 +1115,28 @@
 </cfform>
 
 </cfoutput>
+
+<script type="text/javascript">
+// Pop Up Application 
+$('.popUpOnlineApplication').popupWindow({ 
+	height:600, 
+	width:1100,
+	centerBrowser:1,
+	scrollbars:1,
+	resizable:1,
+	windowName:'onlineApplication'
+}); 
+
+// Pop Up Flight Information 
+$('.popUpFlightInformation').popupWindow({ 
+	height:600, 
+	width:1100,
+	centerBrowser:1,
+	scrollbars:1,
+	resizable:1,
+	windowName:'flightInformation'
+}); 
+</script>
 
 </body>
 </html>

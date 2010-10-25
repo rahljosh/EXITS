@@ -4,10 +4,11 @@
 // PS: USE CSS SPRITE TO COMBINE IMAGES
 
 // Date-Pick Function
+/*
 $(function() {
 	$('.date-pick').datePicker({startDate:'01/01/2010'});
 });	
-
+*/
 
 // Show/hide email address fields
 var startApplicationType = function(selectedType) { 

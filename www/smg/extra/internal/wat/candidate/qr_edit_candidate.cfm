@@ -192,12 +192,6 @@
             verification_received = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
         
-        <cfif IsDefined('FORM.agent_accepts_sevis')>
-            agent_accepts_sevis = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-        <cfelse>
-            agent_accepts_sevis = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-        </cfif>
-        
         <!--- DS2019 stuff ---> 
         ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019#">, 
         requested_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.requested_placement#">,

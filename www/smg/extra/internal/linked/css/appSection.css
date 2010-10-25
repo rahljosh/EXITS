@@ -143,7 +143,7 @@ Left Side / Right Side Content
 	padding:1px 10px 20px 5px;
 }
 
-.smallSideContent {
+.fullSideContent {
 	width:100%;
 	min-height:220px;
 	background-color: #eeeeee;
@@ -151,7 +151,7 @@ Left Side / Right Side Content
 	margin:3px 15px 0px 0px;		
 }
 
-.smallSideContent .insideBar {
+.fullSideContent .insideBar {
 	min-height:200px;
 	background-color: #FFFFFF;
 	margin:20px;

@@ -12,11 +12,22 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
+
+    <cfparam name="URL.completeApplication" default="1">
 	
     <cfscript>
 		// Get Current Candidate Information
 		qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(candidateID=APPLICATION.CFC.CANDIDATE.getCandidateID());
-	</cfscript>
+	
+		// Set type of header
+    	if ( URL.completeApplication ) {
+			headerType = 'application';
+			contentType = 'rightSideContent';
+		} else {
+			headerType = 'applicationNoHeader';
+			contentType = 'fullSideContent';
+		}
+    </cfscript>
     
     <!--- Candidate Details --->
     <cfparam name="FORM.candidateID" default="#qGetCandidateInfo.candidateID#">
@@ -31,7 +42,7 @@
 
 <!--- Page Header --->
 <gui:pageHeader
-	headerType="application"
+	headerType="#headerType#"
 />
 
 	<script language="javascript">
@@ -49,7 +60,7 @@
 		var fi = new flightInformation();
 		
 		// This is used to refresh both lists
-        var refreshLists = function() { 
+        var loadFlightInformation = function() { 
 			getFlightInformation('arrival');
 			getFlightInformation('departure');
 		}
@@ -64,10 +75,9 @@
 
         // Load the list when page is ready
         $(document).ready(function() {
-			refreshLists();
-			$('##arriveTime').timepicker();
-			$('##departTime').timepicker();
-			$('##departDate').datepicker();
+			loadFlightInformation();
+			$('.datePicker').datepicker();
+			$('.timePicker').timepicker();
         });
 		
 		
@@ -341,7 +351,7 @@
 			});
 			
 			// Refresh Lists
-			refreshLists();
+			loadFlightInformation();
 		}
 		// --- END OF ADD/UPDATE FLIGHT DETAIL --- //
 	
@@ -375,7 +385,7 @@
     </script>
 
     <!--- Side Bar --->
-    <div class="rightSideContent ui-corner-all">
+    <div class="#contentType# ui-corner-all">
 
         <div class="insideBar">
 			
@@ -409,7 +419,7 @@
                 
                     <div class="field">
                         <label for="departDate">Date <em>*</em></label> 
-                        <input type="text" name="departDate" id="departDate" value="" class="mediumField date-pick" maxlength="10" />
+                        <input type="text" name="departDate" id="departDate" value="" class="smallField datePicker" maxlength="10" readonly="readonly" />
                         <p class="note">(mm/dd/yyyy)</p>
                     </div>
 					
@@ -442,13 +452,13 @@
 
                     <div class="field">
                         <label for="departTime">Depart Time <em>*</em></label> 
-                        <input type="text" name="departTime" id="departTime" value="" class="smallField" maxlength="8" />
+                        <input type="text" name="departTime" id="departTime" value="" class="smallField timePicker" maxlength="8" readonly="readonly" />
                         <p class="note">(hh:mm 24hs)</p>
                     </div>
                     
                     <div class="field">
                         <label for="arriveTime">Arrive Time <em>*</em></label> 
-                        <input type="text" name="arriveTime" id="arriveTime" value="" class="smallField" maxlength="8" />
+                        <input type="text" name="arriveTime" id="arriveTime" value="" class="smallField timePicker" maxlength="8" readonly="readonly" />
                         <p class="note">(hh:mm 24hs)</p>
                     </div>
 
@@ -472,7 +482,7 @@
             	<!--- Arrival Information --->
                 <fieldset>
 					
-                    <legend>Arrival to USA Information</legend>
+                    <legend>Arrival to USA Information - #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#</legend>
 
                     <div class="table">
                         <div class="thCenter">
@@ -497,7 +507,7 @@
                 <!--- Departure Information --->
                 <fieldset>
                    
-                    <legend>Departure from USA Information</legend>
+                    <legend>Departure from USA Information - #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#</legend>
 
                     <div class="table">
                         
@@ -530,9 +540,13 @@
         
     </div>
 
-<!--- Page Footer --->
-<gui:pageFooter
-	footerType="application"
-/>
+<cfif URL.completeApplication>
+
+	<!--- Page Footer --->
+    <gui:pageFooter
+        footerType="application"
+    />
+    
+</cfif>
 
 </cfoutput>
