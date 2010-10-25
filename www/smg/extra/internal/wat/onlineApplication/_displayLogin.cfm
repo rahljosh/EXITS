@@ -41,11 +41,11 @@
 
 <!--- Page Header --->
 <gui:pageHeader
-	headerType="displayLogin"
+	headerType="applicationNoHeader"
 />
 
     <!--- Side Bar --->
-    <div class="smallSideContent ui-corner-all">
+    <div class="fullSideContent ui-corner-all">
         
         <div class="insideBar">
 			

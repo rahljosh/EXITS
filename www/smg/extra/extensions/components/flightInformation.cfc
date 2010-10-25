@@ -24,6 +24,47 @@
 	</cffunction>
 
 
+	<cffunction name="getFlightInformationByCandidateID" access="public" returntype="query" output="false" hint="Returns flight information for a candidate">
+    	<cfargument name="candidateID" required="yes" hint="candidateID is required">
+        <cfargument name="flightType" required="yes" hint="arrival/departure">
+
+        <cfquery 
+			name="qGetFlightInformationByCandidateID" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					ID,
+                    candidateID,
+                    programID,
+                    flightType,
+                    DATE_FORMAT(departDate, '%c/%e/%Y') AS departDate,
+                    departCity,
+                    departAirportCode,
+                    TIME_FORMAT(departTime, '%h:%i %p') AS departTime,       
+                    flightNumber,
+                    arriveCity,
+                    arriveAirportCode,                    
+                    TIME_FORMAT(arriveTime, '%h:%i %p') AS arriveTime,                    
+                    IF(isOvernightFlight,' Yes ',' No ') AS isOvernightFlight,
+                    dateCreated,
+                    dateUpdated
+                FROM 
+                    extraFlightInformation	
+                WHERE
+                    candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.candidateID)#">
+                AND
+                    flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
+				ORDER BY	
+                	departDate,
+                    departTime                    
+		</cfquery>
+
+        <cfscript>
+			return qGetFlightInformationByCandidateID;
+		</cfscript>
+	</cffunction>
+		
+     
+    <!--- Remote Functions --->    
 	<cffunction name="getFlightInformation" access="remote" returnFormat="json" output="false" hint="Returns flight information for a candidate in Json format">
     	<cfargument name="candidateID" required="yes" hint="candidateID is required">
         <cfargument name="flightType" required="yes" hint="arrival/departure">
@@ -157,7 +198,7 @@
                         <cfelse>
                             departTime=<cfqueryparam cfsqltype="cf_sql_time" null="yes">,   
                         </cfif>
-                        flightNumber=<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightNumber)#">,
+                        flightNumber=<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(UCASE(ARGUMENTS.flightNumber))#">,
                         arriveCity=<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.arriveCity)#">,
                         arriveAirportCode=<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(UCASE(ARGUMENTS.arriveAirportCode))#">,
                         <cfif IsDate(ARGUMENTS.arriveTime)>

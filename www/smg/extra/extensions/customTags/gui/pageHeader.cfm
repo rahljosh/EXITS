@@ -168,8 +168,8 @@
             </cfcase>
     
     	
-            <!--- Display Login --->
-            <cfcase value="displayLogin">
+            <!--- Application with no top and left columns --->
+            <cfcase value="applicationNoHeader">
                	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 				<html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
@@ -178,13 +178,14 @@
                         #csbMetaData#
                         <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/appSection.css" />
                         <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/baseStyle.css" />
-                        <link rel="stylesheet" media="all" type="text/css" href="#APPLICATION.PATH.jQueryTheme#" /> <!-- JQuery UI 1.8 Tab --> 
-						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+                        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+						<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script type="text/javascript" src="../../../internal/linked/js/appSection.js"></script> <!-- UDF -->
+                        <script type="text/javascript" src="../../../internal/linked/js/jquery-ui-timepicker-addon.min.js"></script> <!-- Time Picker -->
                         <script type="text/javascript" src="../../../internal/linked/js/ajaxUpload.js"></script> <!-- Ajax - Upload File -->
-						<script src="../../../internal/linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
+						<script type="text/javascript" src="../../../internal/linked/js/jquery.metadata.js"></script> <!-- JQuery Validation -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.validate.js"></script> <!-- JQuery Validation -->
+                        <script type="text/javascript" src="../../../internal/linked/js/appSection.js"></script> <!-- UDF -->
                     </cfoutput>
                 </head>
                 <body>
@@ -204,7 +205,7 @@
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
 						<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script type="text/javascript" src="../../../internal/linked/js/jquery-ui-timepicker-addon.min.js"></script> <!-- Date/Time Picker -->
+                        <script type="text/javascript" src="../../../internal/linked/js/jquery-ui-timepicker-addon.min.js"></script> <!-- Time Picker -->
                         <script type="text/javascript" src="../../../internal/linked/js/ajaxUpload.js"></script> <!-- Ajax - Upload File -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.metadata.js"></script> <!-- JQuery Validation -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.validate.js"></script> <!-- JQuery Validation -->
