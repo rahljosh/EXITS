@@ -29,6 +29,11 @@
     where id = #form.delete#
     limit 1
     </cfquery>
+    <cfquery datasource="#application.dsn#">
+    delete from student_tours_siblings
+    where  mastertripid = #form.delete#
+  
+    </cfquery>
 </Cfif>
 
 <cfif isDefined('url.permission')>
@@ -250,8 +255,21 @@ where 1=1
           <td><cfif companyid eq 1>ISE<cfelseif companyid eq 10>CASE</cfif></td>
           <td><form method="post" action="index.cfm?curdoc=tours/mpdtours"><input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></td>
         </tr>  
-        </cfloop>
-    </cfif>
+        <cfquery name="check_siblings" datasource="#application.dsn#">
+        select sts.siblingid, smg_host_children.name, smg_host_children.lastname, smg_host_children.sex
+        from student_tours_siblings sts
+        left join smg_host_children on smg_host_children.childid = sts.siblingid
+        where fk_studentID = #studentid# and mastertripid = #id#
+        </cfquery>
+        <cfif check_siblings.recordcount gt 0>
+        	<cfloop query="check_siblings">
+        <tr bgcolor="##ffe2ba">	
+        	<td></td><td>#name#</td><td>#lastname#</td><td colspan=10>#sex#</td>
+        </tr>
+ 			</cfloop>
+         </cfif>       
+    </cfloop>
+</cfif>
 
  </table>
 
