@@ -539,6 +539,7 @@ Registration information has been submitted:<Br />
     FROM smg_students s
     WHERE email = '#form.email#'
     </Cfquery>
+
     <cfset acctVerified = 1>
 	<cfif stuInfo.recordcount eq 1 and stuInfo.hostid gt 0>
         <cfquery name="hostInfo" datasource="#APPLICATION.DSN.Source#">
@@ -729,16 +730,16 @@ Registration information has been submitted:<Br />
 			
 			<cfif stuInfo.recordcount eq 1 and stuInfo.hostid gt 0>            
 				<cfif kids.recordcount gt 0>
-                <h2>Siblings</h2>
+                <h2>Host Siblings</h2>
                 <em>Do any of your host siblings want to join you?</em>
                 <Table width=100% cellspacing=0 cellpadding=2 class="border">
                     <Cfloop query="kids">
                     <tr <CFif kids.currentrow mod 2>bgcolor="##deeaf3"</cfif>>
-                    <cfset oktogo = 1>
+                    <cfset oktogo = 0>
                     <Cfset kidsage = #DateDiff('yyyy', kids.birthdate, now())#>
-                        <Cfif ListFind('15,16,17,18', '#kidsage#')> <cfset oktogo = 0></Cfif>
+                        <Cfif ListFind('15,16,17,18', '#kidsage#')> <cfset oktogo = 1></Cfif>
                         
-                        <td><cfif oktogo neq 0><input type="checkbox" value="#childid#" name="host_siblings" ></cfif></td><td>#name#</td><Td>#DateDiff('yyyy', kids.birthdate, now())# <Cfif oktogo eq 0>- Must be between 15 and 18 to participate.</Cfif> </Td><Td>#kids.sex#</Td>
+                        <td><cfif oktogo neq 0><input type="checkbox" value="#childid#" name="host_siblings" ><cfelse>N/A</cfif></td><td><h3>#name#</h3></td><Td><h3>#DateDiff('yyyy', kids.birthdate, now())# years old</h3>  </Td><Td><h3>#kids.sex#</h3></Td><td><Cfif oktogo eq 0><h3> Must be between 15 and 18 to participate.</h3></Cfif></td>
                     </tr>
                     </Cfloop>
                 </table>     
@@ -770,7 +771,7 @@ Registration information has been submitted:<Br />
           
           </Table>
               <h2>Trip Information</h2>
-				<em>You are registering for the following tour(s).</em>
+				<em>You are registering for the following tour.</em>
                 <Table width=100% cellspacing=0 cellpadding=2 class="border">
      
             <Tr>
@@ -804,21 +805,10 @@ Registration information has been submitted:<Br />
                 </td>
             </Tr>
          </Table>
-         <!----
-           <cfif kids.recordcount gt 0>
-             <h2>Siblings</h2>
-				<em>Do any of your host siblings want to join you?</em>
-               
-           <Table width=100% cellspacing=0 cellpadding=2 class="border">
-           		<Cfloop query="kids">
-                <tr <CFif kids.currentrow mod 2>bgcolor="##deeaf3"</cfif>>
-                	<td><input type="checkbox" value="#childid#" name="host_siblings" /></td><td>#name#</td><Td>#DateDiff('yyyy', kids.birthdate, now())#</Td><Td>#kids.sex#</Td>
-                </tr>
-                </Cfloop>
-           </table>     
-           </cfif>
-         ---->
-            <h2>Payment Information</h2>
+        
+
+       
+            <h2>#form.studentFName# #form.studentLName# Payment Information</h2>
 			<em>*Bank or ATM cards will not work. Must be a valid credit card, or debit card with Visa or Mastercard logo, that can be processed as a credit card.</em>
           <Table width=100% cellspacing=0 cellpadding=2 class="border">
      
@@ -874,7 +864,65 @@ Registration information has been submitted:<Br />
 										</cfselect>
 									</Td>
                     </Tr>                                
-                          </Table>               
+                          </Table>         
+                          
+                            <h2>Host Sibling Payment Information</h2>
+			<em>*Bank or ATM cards will not work. Must be a valid credit card, or debit card with Visa or Mastercard logo, that can be processed as a credit card.</em>
+          <Table width=100% cellspacing=0 cellpadding=2 class="border">
+     
+          	<Tr>
+            	<td><h3>Total Amount Due</h3></td><Td><strong>#LSCurrencyFormat(amount_due, 'local')# - <strong>PER SIBLING SELECTED</strong><input type="hidden" name="amount" value="#amount_due#"/></Td>
+            </Tr>
+            <Tr bgcolor="##deeaf3">
+                            	<Td><h3>Name on Card</h3></Td><td><cfinput type="text" name="nameoncard" validateat="onSubmit" message="Please enter the name shown on credit card." validate="noblanks" required="yes" size=20></td></Tr>
+            <Tr >
+            	<td><h3>Credit Card*</h3></td><td><cfinput type="text" name="cc" validateat="onSubmit" message="Please enter a valid credit card number."  validate="creditcard" required="yes"><br />
+                <em><font size=-1>This will be a 15 or 16 digit number on the front of the card.</font></em></td>
+                </Tr>
+                
+            <tr bgcolor="##deeaf3">
+            	<td><h3>Expiration</h3></td><td> <cfinput type="text" name="cc_month" size=2 message="Please indicate the month your credit card expires.  Make sure you use a number to indicate them month. Jan =1, Feb=2, etc." validate="integer" required="yes" id = "ccmonth"> <strong>/</strong>
+                								
+                                         
+                                                <cfinput type="text" name="cc_year" message="Please select the year your credit card expires" validate="integer" required="yes" id = "ccyear" size=4>
+                                               
+                                                
+                                                
+                                                </td>
+                            </tr>
+                         <tr>
+            	<td><h3>Billing Address</h3></td><td><cfinput type="text" name="billingAddress" validateat="onSubmit" message="Please enter the Credit Card billing address" required="yes"/>                                          
+                                                
+                                                </td>
+                            </tr>
+                    <Tr bgcolor="##deeaf3">
+                            	<Td><h3>Billing City</h3></Td>
+                                <td><cfinput type="text" name="billingcity" validateat="onSubmit" message="Please enter the billing city." validate="noblanks" required="yes" size=20></td></Tr>
+					<Tr>
+                            	<Td><h3>Billing State</h3></Td>
+                                <td>
+                                <cfselect name="billingstate" validateat="onSubmit" message="Please enter the billing state." validate="noblanks" required="yes">
+                                <option value=""></option>
+                                <cfloop query="qstates">
+                                <option value="#state#">#state# - #statename#</option>
+                                </cfloop>
+                                </cfselect>
+                                
+                                </td></Tr>
+					<Tr bgcolor="##deeaf3">
+                            	<Td><h3>Billing Zip</h3></Td>
+                                <td><cfinput type="text" name="billingzip" validateat="onSubmit" message="Please enter the billing state." validate="noblanks" required="yes" size=20></td></Tr>
+      <Tr>
+                                	<td><h3>Billing Country</h3></td>
+                                    <Td><cfselect name="billingcountry" validateat="onSubmit" message="Please enter the billing country." validate="noblanks" required="yes">
+                                        <option value=""></option>
+                                        <cfloop query="qCountryList">
+                                        <option value="#countrycode# - #countryname#">#countrycode# - #countryname#</option>
+                                        </cfloop>
+										</cfselect>
+									</Td>
+                    </Tr>                                
+                          </Table>                     
          <div align="center"><input type="image" src="../images/buttons/Next.png" /></div>
          <input type="hidden" name="process" />
            </cfif>
