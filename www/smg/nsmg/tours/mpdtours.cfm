@@ -261,6 +261,7 @@ where 1=1
         left join smg_host_children on smg_host_children.childid = sts.siblingid
         where fk_studentID = #studentid# and mastertripid = #id#
         </cfquery>
+       
         <cfif check_siblings.recordcount gt 0>
         	<cfloop query="check_siblings">
         <tr bgcolor="##ffe2ba">	
