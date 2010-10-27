@@ -310,13 +310,14 @@
 	
 	
 	// --- START OF VERICATION RECEIVED --- //
-	var confirmReceived = function(studentID,studentName) {
-		var answer = confirm("Are you sure you would like to check DS-2019 verification for student #" + studentID + " as received? \n You will no longer be able to update this record.")
+	var confirmReceived = function(studentID) {
+		// Are you sure you would like to check DS-2019 verification for student #" + studentID + " as received?
+		var answer = confirm(" By clicking OK you are verifying that: \n 1. Student information has been verified \n 2. Student has been personally interviewed (CSIET) \n 3. Student has not participated in F-1 or J-1 programs in the past \n 4. Student was screened for background, needs, experience and English \n PS: You will no longer be able to update this record.")
 		if (answer){
 			setVerificationReceived(studentID);
 		} 
 	}	
-	
+
 	var setVerificationReceived = function(studentID) {
 
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
