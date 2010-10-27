@@ -101,7 +101,6 @@
 	<cfabort>
 </cfif>
 
-
 <cfif NOT VAL(qGetStudents.recordcount)>
 	<p>There are no students to populate the DS 2019 Verification Report for the programs selected.</p>
     <div align="center"><input type="image" src="../pics/close.gif" value="Close" onClick="javascript:window.close()"></div>
@@ -123,34 +122,44 @@
     <cfset studentCount = 0>
     
 	<cfsavecontent variable="verificationReport">
-        <table width="95%" cellpadding=10 cellspacing="0" align="center" frame="below">
+        <table width="80%" cellpadding=10 cellspacing="0" align="center" frame="below">
             <tr>
-                <td width=1% align="center"><u>Verified<br> (initial)</u></td>
-                <td width=2%><u>ID</u></td>
-                <td width=14%><u>Last Name</u></td>
-                <td width=14%><u>First Name</u></td>
-                <td width=14%><u>Middle Name</u></td>
-                <td width=6%><u>Sex</u></td>
-                <td width=9%><u>Date of Birth (mm/dd/yyyy)</u></td>
-                <td width=10%><u>City of Birth</u></td>
-                <td width=10%><u>Country of Birth</u></td>
-                <td width=10%><u>Country of Citizenship</u></td>
-                <td width=10%><u>Country of Residence</u></td> 
+            	<td colspan="4">
+                    <strong>Starting this January 2011 season we will be launching a new application for completing verification reports. 
+                    As an agent, you are now required to complete all verifications electronically. <br />
+                    Please find the directions below:</strong>
+                    
+                    <ol>
+                    	<li>Login to your EXITS account</li>
+                        <li>Click on TOOLS which can be found in the menu bar along the top of the page</li>
+                        <li>Choose DS2019 verification list</li>
+                        <li>A list of all your students for the upcoming program will be shown on this page</li>
+                        <li>If all the information is correct for a student, click <strong>RECEIVED</strong> in the right side column</li>
+                        <li>
+                        	If any information is incorrect, please click <strong>EDIT</strong>. You will now have the option to edit all of the student information. <br /> 
+                        	When finished editing, click <strong>SAVE</strong>. Now, perform step 4 for this student
+                        </li>
+                        <li>After you click received for a student, they will disappear off the list</li>
+					</ol>                        
+					
+                    <p>If you have clicked received by mistake, you can contact Brian Hause by emailing him at <a href="mailto:#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a></p>
+					
+                    <p>Please find list of students below that we have NOT received an electronically verification report.</p>
+                </td>
+			</tr>            
+            <tr>
+                <td width="15%"><u>Student ID</u></td>
+                <td width="30%"><u>Last Name</u></td>
+                <td width="30%"><u>First Name</u></td>
+                <td width="30%"><u>Date of Birth</u></td>
             </tr>
             <!--- Loop Query --->
             <cfoutput>
             <tr bgcolor="#iif(qGetStudents.currentrow MOD 2 ,DE("ededed") ,DE("white") )#" >
-                <td>______</td>
-                <td>#qGetStudents.studentid#</td>
+                <td>###qGetStudents.studentid#</td>
                 <td>#qGetStudents.familylastname#</td>
                 <td>#qGetStudents.firstname#</td>
-                <td>#qGetStudents.middlename#</td>
-                <td>#qGetStudents.sex#</td>
                 <td>#DateFormat(qGetStudents.dob, 'mm/dd/yyyy')#</td>
-                <td>#qGetStudents.citybirth#</td>
-                <td>#qGetStudents.countrybirth#</td>
-                <td>#qGetStudents.countrycitizen#</td>
-                <td>#qGetStudents.countryresident#</td>
             </tr>
             <cfset studentCount = studentCount + 1>
             </cfoutput>
@@ -196,51 +205,12 @@
 			
             <hr width=80% color="000000">
             <div align="center"><h4>#qGetStudents.businessname#</h4></div>
-            <div align="center"><h3>DS 2019 Verification Report</h3></div>
+            <div align="center"><h3>DS 2019 Verification Reminder</h3></div>
             <div align="center"><h4>Total of #studentCount# student(s).</h4></b></div>
-            <div align="center"><font size="-2">PS: Better if printed in landscape format.</font></div>
             <hr width=80% color="000000">
             <!--- Insert Student Table list --->
             #verificationReport#
 			<br>			
-			<table width="95%" cellpadding=2 cellspacing="0" align="center">
-				<tr>
-					<td valign="top"><div align="justify">
-					Please verify that the information above is  correct by <strong>initialing next to each student ID</strong>. If there's anything wrong  or misspelled, please correct it ON THIS FORM. </div></td></tr>
-				<tr><td>
-					<table cellpadding=2 cellspacing="0" align="center">
-						<tr><td valign="top">
-							<div align="justify"><p>
-                            By signing this form you are verifying that:<br>
-							1. Student has been personally interviewed (CSIET4)<br>
-							2. Student has not participated in F-1 or J-1  programs in the past (##14)<br>
-							3. Student was screened for background,  needs, experience and English</p>
-							After you have made the corrections, sign the form, scan and email it back to me at <a href="#client.projectmanager_email#">#client.projectmanager_email#</a>. Once I receive the corrected report, I can issue the DS2019 forms for your students.<br>
-                            <strong>In order for the forms to be sent out in our next mailing, I will need the  corrected verification report back  </strong><b> 
-                            <cfif LEN(FORM.deadline)>
-	                            by  #DateFormat(FORM.deadline, 'dddd mmmm dd')# at 5:00pm EST.
-							<cfelse>
-								as soon as possible.
-                            </cfif></b><br>
-							<br><b><strong>PS: Please, be sure to make all corrections visible,  readable and clear.</strong></b><br>
-						  </div>
-						</td>
-						</tr>
-					</table>
-				</td>
-				</tr>
-			</table>
-			<br>
-			<table width="95%" align="center" cellpadding=2 cellspacing="0" frame="border">
-              <tr>
-                <td height="28" colspan="2"><u><strong>Verification:</strong></u></td>
-              </tr>
-              <tr>
-                <td>Signature: ___________________________________________</td>
-                <td>Date: _________________________________________</td>
-              </tr>
-            </table>
-			<br>
 			<table width="95%" align="center" cellpadding=2 cellspacing="0">
 				<tr><td>Our best regards,</td></tr>
 				<tr><td>#qGetCurrentUser.firstname# #qGetCurrentUser.lastname#</td></tr>

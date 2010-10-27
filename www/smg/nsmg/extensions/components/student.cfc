@@ -78,7 +78,7 @@
                 FROM 
                     smg_students s
 				INNER JOIN
-                	smg_programs p ON p.programID = s.programID
+                	smg_programs p ON p.programID = s.programID AND p.startDate < ADDDATE(now(), INTERVAL 120 DAY) <!--- Get only programs that are starting 120 days from now --->
                 LEFT OUTER JOIN
                 	smg_countrylist birth ON birth.countryID = s.countryBirth
 				LEFT OUTER JOIN
