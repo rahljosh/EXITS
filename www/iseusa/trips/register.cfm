@@ -537,10 +537,11 @@ Registration information has been submitted:<Br />
 			
 			<!--- send email --->
             <cfinvoke component="cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="josh@iseusa.com">
             <!----
+            <cfinvokeargument name="email_to" value="josh@iseusa.com">
+            ---->
                 <cfinvokeargument name="email_to" value="brendan@iseusa.com">
-				---->
+		
                 <cfinvokeargument name="email_subject" value="Trip Registration">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 
