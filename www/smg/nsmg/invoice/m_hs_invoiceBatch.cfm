@@ -672,10 +672,6 @@ colspan="2" align="center"><span class="style11">Problem</span></td>
 
 <cfoutput query="getMissingAmounts">
 
-<cfif getMissingAmounts.intrep eq 114>
-#getMissingAmounts.studentid#
-</cfif>
-
 <cfif getMissingAmounts.endMonth EQ 12>
     <cfset program = 12>
     <cfelseif getMissingAmounts.datediffer GT 6 AND getMissingAmounts.endMonth NEQ 12>
