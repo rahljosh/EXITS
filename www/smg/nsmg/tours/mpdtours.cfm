@@ -72,18 +72,32 @@
 			Major Airport: #student_info.major_air_code#<br />
             Additional Notes: #tourInfo.tour_flightDetails#
             </p>
+            
 			<p>
+            <strong>Student Info</strong><br />
             First Name: #student_info.firstname#<br />
             Middle Name: #student_info.middlename#<Br />
             Last Name: #student_info.familylastname#<br />
+            Sex: #student_info.sex#<br />
             Email: #student_info.email#<br />
             DOB: #student_info.dob#
+            </p>
+            <p>
+            <strong>Host Info</strong><br />
+            Father: #student_info.fatherfirstname# #student_info.fatherlastname#<br />
+            Mother: #student_info.motherfirstname# #student_info.motherlastname#<br />
+            Address: <br />
+            #student_info.address#<br />
+            <cfif student_info.address2 is ''>#student_info.address2#<br /></cfif>
+            #student_info.city# #student_info.state# #student_info.zip#
+            Phone: #student_info.hostphone#<br />
+            Email: #student_info.hostemail#
             </p>
         </cfoutput>
         </cfsavecontent>
         
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="dees626@verizon.net">
+            <cfinvokeargument name="email_to" value="trips@iseusa.com">
             <cfinvokeargument name="email_cc" value="brendan@iseusa.com">
             <cfinvokeargument name="email_replyto" value="#student_info.email#">
             <cfinvokeargument name="email_subject" value="Trip Request">
