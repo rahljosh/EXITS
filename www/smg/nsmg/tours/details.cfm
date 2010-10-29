@@ -184,7 +184,7 @@
 
 <cfquery name="details" datasource="#application.dsn#">
 select st.studentid, st.tripid, st.cc, st.cc_year, st.cc_month, st.date, st.ip, st.verified, st.paid, 
-st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, stu.familylastname, stu.firstname, smg_tours.tour_name, stu.email
+st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, stu.familylastname, stu.firstname, stu.hostid, smg_tours.tour_name, stu.email
 from student_tours st
 left join smg_students stu on stu.studentid = st.studentid
 left join smg_tours on smg_tours.tour_id = st.tripid
@@ -274,7 +274,37 @@ where tour_status <> 'inactive'
   <br />
       <img src="images/line_03.png" width="480" height="6" />
       <Br />
-      
+      <h3>Host Family Information</h3>
+    <cfquery name="hostInfo" datasource="#application.dsn#">
+    select familylastname, fatherfirstname, motherfirstname, address, address2, city, state, zip, phone, email
+    from smg_hosts
+    where hostid = #details.hostid#
+    </cfquery>
+      <table width=98% cellpadding = 4 cellspacing = 0>
+
+	<tr>
+    	<Td>Host Parents:</Td>
+        <td><cfif hostInfo.fatherfirstname is not ''>#hostInfo.Fatherfirstname#</cfif>
+         <cfif hostInfo.motherfirstname is not ''>#hostInfo.motherfirstname#</cfif> #hostInfo.familylastname#
+        </td>
+    </tr>
+	<tr>
+    	<Td valign="top">Address:</Td>
+        <td>#hostInfo.address#<Br />
+        <cfif hostInfo.address2 is not ''>#hostinfo.address2#<br /></cfif>
+        #hostInfo.city# #hostInfo.state#, #hostInfo.zip#</td>
+    </tr>
+    <Tr>
+    	<td>Email:</td><td><a href="mailto:#hostInfo.email#">#hostInfo.email#</a></td>
+    </Tr>
+    
+    <Tr>
+    	<td>Phone:</td><td>#hostInfo.phone#</td>
+    </Tr>
+    </table>
+    <br />
+    <img src="images/line_03.png" width="480" height="6" />
+    <Br />
     <h3>Student Payment Details</h3>
    
     <table width=98% cellpadding = 4 cellspacing = 0>
@@ -391,11 +421,12 @@ where mastertripid = #url.id#
          <Td>Reference Code: <strong>#sib_details.refCode#</strong></Td>
      </cfif>
       
-   </Table>     
-  </cfif>
-    <br /><br />
+   </Table>  
+       <br /><br />
       <img src="images/line_03.png" width="480" height="6" />
-      <Br />   
+      <Br />      
+  </cfif>
+
       
     <h3>Other Information</h3>
     <table width=98% cellpadding = 4 cellspacing = 0>
