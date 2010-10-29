@@ -32,6 +32,9 @@
 			<cfelseif client.userid eq 21>
 			app_teacher_address = 'Waehringer Strasse 145/15, 1180 Wien, Austria',
 			app_teacher_phone = '+43-1-478-75 15',
+            <cfelseif client.userid eq 15130>
+            app_teacher_address = 'Mannerheimintie 12 B, 5th Floor, FIN-00100 Helsinki',
+			app_teacher_phone = '+358-9-25166-294',
 			</cfif>
 			app_interview_date = #now()#,
 			app_evaluation_date = #now()#
