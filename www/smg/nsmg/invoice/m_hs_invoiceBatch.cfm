@@ -672,12 +672,16 @@ colspan="2" align="center"><span class="style11">Problem</span></td>
 
 <cfoutput query="getMissingAmounts">
 
+<cfif getMissingAmounts.intrep eq 114>
+#getMissingAmounts.studentid#
+</cfif>
+
 <cfif getMissingAmounts.endMonth EQ 12>
     <cfset program = 12>
     <cfelseif getMissingAmounts.datediffer GT 6 AND getMissingAmounts.endMonth NEQ 12>
         <cfset program = 10>
-        <cfelse>
-        <cfset program = 5>
+        <cfelseif getMissingAmounts.datediffer LTE 6>
+        	<cfset program = 5>
 </cfif>
 
 <cfif (getMissingAmounts.intrep + variables.program) NEQ variables.previous>
@@ -720,7 +724,7 @@ colspan="2" align="center"><span class="style11">Problem</span></td>
                 </td>           
             </tr>
         </cfif>
-        <cfelse>
+        <cfelseif getMissingAmounts.datediffer LTE 6>
             <cfif getMissingAmounts.5_month_price EQ 0 OR (getMissingAmounts.5_month_ins EQ 0 AND getMissingAmounts.insurance_typeid NEQ 1)>
                 <tr>
                     <td class="right">
