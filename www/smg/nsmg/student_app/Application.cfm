@@ -36,8 +36,8 @@
 		}
 		
 		// List of User IDs that are not allowed to submit Online Applications
-		// Dream I - 03/23/2010
-        APPLICATION.submitAppNotAllowed = "6559"; 
+		// Dream I - 03/23/2010 removed DreamI 10/29/2010
+        APPLICATION.submitAppNotAllowed = "0"; 
 		
 		// List of User IDs that are not allowed to view the Student and Host Family Profile
 		// Current Intl. Rep: STB
