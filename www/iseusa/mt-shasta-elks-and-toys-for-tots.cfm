@@ -59,27 +59,19 @@ a:active {
    <div class="whtTop"></div>
    <div class="whtMiddleService">
     <div class="SuccessInfo">
-     <h1 class="enter">Articles</h1>
+     <h1 class="enter">Mt. Shasta Elks and Toys for Tots</h1>
      <table width="633">
       <tr>
-       <td height="45" colspan="2" align="center" scope="row" ><img src="images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
+       <td height="45" align="center" scope="row" ><img src="images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
         <a href="community-service.cfm">Service</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Thanksgiving.cfm">Thanksgiving</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Harvest.cfm"> Parties</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Rollerskating.cfm">Rollerskating</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="NYTrip.cfm">NY Trip</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Bowling.cfm">Bowling</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="in-the-news.cfm">Articles</a><img src="images/webStore_lines_06.gif" width="600" height="14" /></th>
-        <tr>
-       <td height="44" colspan="2" scope="row" class="p2"><p>A few of the articles that we have been sent the past year.<br />
+       </tr>
+      <tr>
+       <td height="44" scope="row" class="p2"><p>A few of the articles that we have been sent the past year.<br />
          </p></td>
       </tr>
        <tr>
-         <td height="200" class="lightBlue" scope="row"><a href="/mt-shasta-elks-and-toys-for-tots.cfm"><img src="images/studentSuccess/articles/thumbarticle1.png" width="250" height="301" border="1"/></a></td>
-         <td class="lightBlue" scope="row"><a href="/ISE-sports-weekend.cfm"><img src="images/studentSuccess/articles/thumbarticle2.png" width="250" height="325" border="1" /></a></td>
-       </tr>
-       <tr>
-         <td height="200" class="lightBlue" scope="row"><a href="/say-halo-to-laura.cfm"><img src="images/studentSuccess/articles/thumbarticle5.png" width="250" height="193" /></a></td>
-         <td class="lightBlue" scope="row"><a href="/ISE-student-reaches-state-finals.cfm"><img src="images/studentSuccess/articles/thumbarticle4.png" width="250" height="110" border="1" /></a></td>
-       </tr>
-       <tr>
-       <td width="321" height="200" class="lightBlue" scope="row"><a href="/track-title-won-ISE-student.cfm"><img src="images/studentSuccess/articles/thumbarticle3.png" width="250" height="132" border="1" /></a></td>
-       <th width="422" class="lightBlue" scope="row"> <a href="images/studentSuccess/studentsIce.pdf" target="_blank">Foreign Students Take To Ice</a></th>
-      </tr>
+         <td height="200" class="lightBlue" scope="row"><img src="images/studentSuccess/articles/article1.png" width="543" height="654" /></td>
+         </tr>
      </table>
      <br />
     </div>

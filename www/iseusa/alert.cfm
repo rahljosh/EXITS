@@ -124,7 +124,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <!-- end bottomInfoRight --></div>
 <div id="bottomInfoLeft">
   <div class="top"><!-- end top --></div>
-  <div class="middle"><a href="aboutStudents.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://blog.iseusa.com/" target="_blank"><img src="images/Blog.gif" width="469" height="167" alt="blog" border="0"/></a></div>
+  <div class="middle"><a href="about-our-students.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://blog.iseusa.com/" target="_blank"><img src="images/Blog.gif" width="469" height="167" alt="blog" border="0"/></a></div>
   <div class="bottom"></div>
 <!-- end bottomInfoLeft --></div>
 <h1>&nbsp;</h1>
