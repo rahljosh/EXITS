@@ -177,7 +177,7 @@
                 	OR
                 </cfif>
              </cfloop>) 
-        AND s.companyid =#client.companyid#
+        <!--- AND s.companyid =#client.companyid# --->
         AND (sp.type !=7
             AND sp.type !=8
             AND sp.type !=9
@@ -201,7 +201,7 @@
                 	OR
                 </cfif>
              </cfloop>)
-        AND s.companyid =#client.companyid#
+        <!--- AND s.companyid =#client.companyid# --->
         AND (sp.type =7
             OR sp.type =8
             OR sp.type =9
@@ -262,7 +262,7 @@
             INNER JOIN smg_programs sp ON sp.programid = s.programid
             WHERE s.stuid =#student#
             AND s.agentid =#url.userid#
-            AND s.companyid =#client.companyid#
+            <!--- AND s.companyid =#client.companyid# --->
             AND (sp.type !=7
                 AND sp.type !=8
                 AND sp.type !=9
@@ -356,14 +356,15 @@
         <cfcase value="High School">
 
             <cfquery name="getChargesCancellations" datasource="MySQL">
-            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, su.accepts_sevis_fee, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType
+            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, su.accepts_sevis_fee, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, scomp.team_id
             FROM smg_charges s
             LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
             INNER JOIN smg_programs sp ON sp.programid = s.programid
+            INNER JOIN smg_companies scomp ON scomp.companyid = s.companyid
             INNER JOIN smg_users su ON su.userid = s.agentid
             WHERE s.stuid =#student#
             AND s.agentid =#url.userid#
-            AND s.companyid =#client.companyid#
+            <!--- AND s.companyid =#client.companyid# --->
             AND (sp.type !=7
                 AND sp.type !=8
                 AND sp.type !=9
@@ -373,14 +374,15 @@
             </cfquery>              
     
             <cfquery name="getCreditsDiscounts" datasource="MySQL">
-            SELECT sc.creditid, sc.stuid, sc.agentid, sc.companyid, sc.type, sc.amount, sc.description, sp.type AS programType
+            SELECT sc.creditid, sc.stuid, sc.agentid, sc.companyid, sc.type, sc.amount, sc.description, sp.type AS programType, scomp.team_id
             FROM smg_credit sc
             INNER JOIN smg_programs sp ON sc.credit_type = sp.programname
+            INNER JOIN smg_companies scomp ON scomp.companyid = sc.companyid
             WHERE sc.stuid =#student#
             AND sc.chargeid = 0        
             AND sc.agentid =#url.userid#
-            AND sc.companyid =#client.companyid#
-            AND sp.companyid =#client.companyid#        
+            <!--- AND sc.companyid =#client.companyid#
+            AND sp.companyid =#client.companyid# --->        
             AND (sp.type !=7
                 AND sp.type !=8
                 AND sp.type !=9
@@ -400,12 +402,13 @@
         </cfcase>
         <cfcase value="Work Program">
             <cfquery name="getChargesCancellations" datasource="MySQL">
-            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.active AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee
+            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.active AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee, scomp.team_id
             FROM  `smg_charges` s
             LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
             INNER JOIN smg_programs sp ON sp.programid = s.programid
             INNER JOIN extra_candidates e ON e.candidateid = s.stuid
             INNER JOIN smg_users su ON su.userid = s.agentid
+            INNER JOIN smg_companies scomp ON scomp.companyid = s.companyid
             WHERE s.stuid =#student#
             AND s.agentid =#url.userid#
 <!---             AND s.companyid =#client.companyid# --->
@@ -418,9 +421,10 @@
             </cfquery>
             
             <cfquery name="getCreditsDiscounts" datasource="MySQL">
-            SELECT sc.creditid, sc.stuid, sc.agentid, sc.companyid, sc.type, sc.amount, sc.description, sp.type AS programType
+            SELECT sc.creditid, sc.stuid, sc.agentid, sc.companyid, sc.type, sc.amount, sc.description, sp.type AS programType, scomp.team_id
             FROM smg_credit sc
             INNER JOIN smg_programs sp ON sc.credit_type = sp.programname
+            INNER JOIN smg_companies scomp ON scomp.companyid = sc.companyid
             WHERE sc.stuid =#student#
             AND sc.chargeid = 0
             AND sc.agentid =#url.userid#
@@ -546,7 +550,9 @@
             <td align="center" class="right">
             <span class="style4">Invoice</span></td>
             <td align="center" class="right">
-            <span class="style1 style5">Program</span></td>       
+            <span class="style1 style5">Program</span></td>
+			<td align="center" class="right">
+            <span class="style1 style5">Division</span></td>     
             <td align="center" class="right">
             <span class="style1 style5">Charge Desc.</span></td>       
             <td align="center" class="right">
@@ -593,7 +599,9 @@
             <td class="right">
             <a href="invoice_view.cfm?id=#getChargesCancellations.invoiceid#" target="_blank">#getChargesCancellations.invoiceid#</a></td>               
             <td class="right">
-            #getChargesCancellations.programname#</td>               
+            #getChargesCancellations.programname#</td>
+            <td class="right" align="center">
+            #getChargesCancellations.team_id#</td>             
             <td class="right">
             <cfif getChargesCancellations.charge_type IS 'miscellaneous'>
             	#getChargesCancellations.description#
@@ -625,6 +633,7 @@
             <td></td>
             <td class="right"></td>
             <td class="right"></td>
+            <td class="right" align="center">#getCreditsDiscounts.team_id#</td>
             <td class="right"></td>
             <td class="right"></td>
             <td class="right"></td> 
@@ -638,7 +647,8 @@
         <tr>
             <td></td>
             <td></td>
-            <td>
+            <td></td>
+            <td class="right">
             <cfinput type="checkbox" id="charge0#student#" name="charge0#student#" onClick="javaScript:enabDisabCharge();"></td>
             <td class="right"></td>
             <td class="right">
@@ -656,7 +666,8 @@
         <tr>
             <td></td>
             <td></td>
-            <td>
+            <td></td>
+            <td class="right">
             <cfinput type="checkbox" id="charge1#student#" name="charge1#student#" onClick="javaScript:enabDisabCharge();"></td>
             <td class="right"></td>
             <td class="right">
@@ -674,7 +685,8 @@
         <tr>
             <td></td>
             <td></td>
-            <td>
+            <td></td>
+            <td class="right">
             <cfinput type="checkbox" id="charge2#student#" name="charge2#student#" onClick="javaScript:enabDisabCharge();"></td>
             <td class="right"></td>
             <td class="right">
@@ -692,7 +704,8 @@
         <tr>
             <td></td>
             <td></td>
-            <td>
+            <td></td>
+            <td class="right">
             <cfinput type="checkbox" id="charge3#student#" name="charge3#student#" onClick="javaScript:enabDisabCharge();"></td>
             <td class="right"></td>
             <td class="right">
@@ -710,7 +723,8 @@
         <tr>
             <td></td>
             <td></td>
-            <td>
+            <td></td>
+            <td class="right">
             <cfinput type="checkbox" id="charge4#student#" name="charge4#student#" onClick="javaScript:enabDisabCharge();"></td>
             <td class="right"></td>
             <td class="right">
