@@ -45,7 +45,7 @@ a:active {
     <p class="p1"><span class="bold">NETWORKING:</span> Our area representatives are skillful networkers, able to meet with people and develop long lasting relationships which foster positive environments for student exchange to thrive. Area representatives are able to meet with school officials and host families on a regular basis to provide the extra support that these individuals need.</p>
     <p class="p1"><span class="bold">FLEXIBILITY:</span> Area Representatives work from home and develop their own schedule to work in the field with families, students, and schools. </p>
     <p class="p1"><span class="bold">COMMUNITY:</span> Through networking and outreach area representatives develop long lasting bonds with exchange students, schools, and families. Area representatives reinforce positive growth and development within their communities.</p>
-    <p class="p1"><form method ="post" action="jobForm.cfm"><input type="image" class="margin" src="images/buttons/RlearnMore.png" width="89" height="35" border="0" /><input type="hidden" name="job_type" value="Representative" /></form></p>
+    <p class="p1"><form method ="post" action="work-for-ISE.cfm"><input type="image" class="margin" src="images/buttons/RlearnMore.png" width="89" height="35" border="0" /><input type="hidden" name="job_type" value="Representative" /></form></p>
 <p class="p1">&nbsp;</p>
   <!-- end whtMiddle --></div>
   <div class="whtBottom"></div>

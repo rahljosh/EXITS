@@ -62,7 +62,7 @@
 		<priority>0.80</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/aboutStudents.cfm</loc>
+		<loc>http://www.iseusa.com/about-our-students.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.80</priority>
 	</url>
@@ -322,27 +322,27 @@
 		<priority>0.51</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/articles1.cfm</loc>
+		<loc>http://www.iseusa.com//mt-shasta-elks-and-toys-for-tots.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.51</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/articles2.cfm</loc>
+		<loc>http://www.iseusa.com//ISE-sports-weekend.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.51</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/articles5.cfm</loc>
+		<loc>http://www.iseusa.com//say-halo-to-laura.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.51</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/articles4.cfm</loc>
+		<loc>http://www.iseusa.com//ISE-student-reaches-state-finals.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.51</priority>
 	</url>
 	<url>
-		<loc>http://www.iseusa.com/articles3.cfm</loc>
+		<loc>http://www.iseusa.com//track-title-won-ISE-student.cfm</loc>
 		<changefreq>daily</changefreq>
 		<priority>0.51</priority>
 	</url>
