@@ -6,7 +6,7 @@
 	<cfif not isDefined("form.email_to")>
 		<cfset errorMsg = "Please select at least one Recipient.">
     <cfelse>
-    
+    	
     	<!--- delete old files. --->
         <cfdirectory directory="#AppPath.temp#" action="list" name="get_files">
         <cfloop query="get_files">
@@ -31,7 +31,7 @@
                 
         <cfsavecontent variable="email_message">
         <cfoutput>				
-            <p>This progress report was sent from the ISE website.</p>
+            <p>This progress report was sent from the #CLIENT.companyShort# website.</p>
             <p>Please reference the attached PDF file.</p>
         </cfoutput>
         </cfsavecontent>
@@ -39,7 +39,7 @@
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
             <cfinvokeargument name="email_to" value="#form.email_to#">
             <cfinvokeargument name="email_replyto" value="#client.email#">
-            <cfinvokeargument name="email_subject" value="SMG - Progress Report">
+            <cfinvokeargument name="email_subject" value="#CLIENT.companyShort# - Progress Report">
             <cfinvokeargument name="email_message" value="#email_message#">
             <cfinvokeargument name="email_file" value="#AppPath.temp#progress_report_#form.pr_id#.pdf">
         </cfinvoke>		
