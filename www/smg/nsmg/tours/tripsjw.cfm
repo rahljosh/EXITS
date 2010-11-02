@@ -171,13 +171,13 @@ order by tour_name
 
   <cfoutput>
 <h4>Registered Trips</h4>
-<table width=100% cellpadding=4 cellspacing=4>
+<table width=100% cellpadding=4 cellspacing=0>
 	<tr>
-    	<Td bgcolor="##999999" align="center"><span class="paragraph">Tour</span></Td>
-    	<Td bgcolor="##999999" align="center"><span class="paragraph">Registered</span></Td>
-    	<td bgcolor="##999999" align="center"><span class="paragraph">Verified</span></td>
-    	<td bgcolor="##999999" align="center"><span class="paragraph">Paid</span></td>
-    	<td bgcolor="##999999" align="center"><span class="paragraph">Flights</span></td>
+    	<Td bgcolor="##999999" align="center" cellspacing=10><span class="paragraph">Tour</span></Td>
+    	<Td bgcolor="##999999" align="center" cellspacing=10><span class="paragraph">Registered</span></Td>
+    	<td bgcolor="##999999" align="center" cellspacing=10><span class="paragraph">Verified</span></td>
+    	<td bgcolor="##999999" align="center" cellspacing=10><span class="paragraph">Paid</span></td>
+    	<td bgcolor="##999999" align="center" cellspacing=10><span class="paragraph">Flights</span></td>
     </tr>
 
   
