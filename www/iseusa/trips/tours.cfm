@@ -193,8 +193,8 @@ margin-left: 0px;
                     <td width="24%">
                      <cfif tours.tour_status EQ 'Full'><font color='FF0000' size='2'><b><center>No More Seats Available!!</center></b></font>
                      <cfelseif tours.tour_status EQ 'Cancelled'><font color='FF0000' size='2'><b><center>Cancelled!!</center></b></font><cfelse> <a href="selectTrips.cfm?tour_id=#tour_id#"><img src="images/reserve.png" alt="reserve spot" border="0" /></a> 
-                     
-                     <a href="selectTripQuote.cfm?tour_id=#tour_id#"> <img src="images/FlightQuote_07.png"  border=0 /></a></cfif>
+                     </cfif>
+                     <a href="selectTripQuote.cfm?tour_id=#tour_id#"> <img src="images/FlightQuote_07.png"  border=0 /></a>
                     </td>
                   </tr>
                 </table>

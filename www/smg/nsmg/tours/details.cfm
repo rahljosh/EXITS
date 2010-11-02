@@ -93,28 +93,6 @@
             where id = #url.id#
         </cfquery>
  </cfif>
- <Cfif isDefined('form.sib_updatecc')>
-	<cfquery datasource="#application.dsn#">
-    update student_tours_siblings
-    set cc = '#form.sib_cc#',
-    	cc_year = '#form.sib_cc_year#',
-        cc_month = '#form.sib_cc_month#',
-        billingAddress = '#form.sib_billingAddress#',
-        billingState = '#form.sib_billingstate#',
-        billingCity = '#form.sib_billingcity#',
-        billingzip = '#form.sib_billingzip#'
-   where mastertripid = #form.sib_updatecc#     
-    </cfquery>
-</Cfif>
-<cfif isDefined('form.sib_paid')>
-
-        <cfquery datasource="#application.dsn#">
-           update student_tours_siblings
-            set paid = #now()#,
-                refCode = "#form.refCode#"
-            where mastertripid = #url.id#
-        </cfquery>
- </cfif>
 <Cfif isDefined('form.paid') or isDefined('form.resendpacket')>        
         <Cfquery name="check_permission" datasource="#application.dsn#">
         select permissionForm
@@ -184,13 +162,12 @@
 
 <cfquery name="details" datasource="#application.dsn#">
 select st.studentid, st.tripid, st.cc, st.cc_year, st.cc_month, st.date, st.ip, st.verified, st.paid, 
-st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, stu.familylastname, stu.firstname, stu.hostid, smg_tours.tour_name, stu.email
+st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, stu.familylastname, stu.firstname, smg_tours.tour_name, stu.email
 from student_tours st
 left join smg_students stu on stu.studentid = st.studentid
 left join smg_tours on smg_tours.tour_id = st.tripid
 where id = #url.id#
 </cfquery>
-
 <Cfquery name="tours" datasource="#application.dsn#">
 select *
 from smg_tours
@@ -274,38 +251,8 @@ where tour_status <> 'inactive'
   <br />
       <img src="images/line_03.png" width="480" height="6" />
       <Br />
-      <h3>Host Family Information</h3>
-    <cfquery name="hostInfo" datasource="#application.dsn#">
-    select familylastname, fatherfirstname, motherfirstname, address, address2, city, state, zip, phone, email
-    from smg_hosts
-    where hostid = #details.hostid#
-    </cfquery>
-      <table width=98% cellpadding = 4 cellspacing = 0>
-
-	<tr>
-    	<Td>Host Parents:</Td>
-        <td><cfif hostInfo.fatherfirstname is not ''>#hostInfo.Fatherfirstname#</cfif>
-         <cfif hostInfo.motherfirstname is not ''>#hostInfo.motherfirstname#</cfif> #hostInfo.familylastname#
-        </td>
-    </tr>
-	<tr>
-    	<Td valign="top">Address:</Td>
-        <td>#hostInfo.address#<Br />
-        <cfif hostInfo.address2 is not ''>#hostinfo.address2#<br /></cfif>
-        #hostInfo.city# #hostInfo.state#, #hostInfo.zip#</td>
-    </tr>
-    <Tr>
-    	<td>Email:</td><td><a href="mailto:#hostInfo.email#">#hostInfo.email#</a></td>
-    </Tr>
-    
-    <Tr>
-    	<td>Phone:</td><td>#hostInfo.phone#</td>
-    </Tr>
-    </table>
-    <br />
-    <img src="images/line_03.png" width="480" height="6" />
-    <Br />
-    <h3>Student Payment Details</h3>
+      
+    <h3>Payment Details</h3>
    
     <table width=98% cellpadding = 4 cellspacing = 0>
     <cfif details.paid is ''>
@@ -358,76 +305,6 @@ where tour_status <> 'inactive'
  <br /><br />
       <img src="images/line_03.png" width="480" height="6" />
       <Br />
-  <cfquery name="sibling_info" datasource="#application.dsn#">
-  select *
-  from student_tours_siblings
-  where mastertripid = #url.id#
-  </cfquery>
-  <cfif sibling_info.recordcount gt 0>
-  <cfquery name="sib_details" datasource="#application.dsn#">
-select st.tripid, st.cc, st.cc_year, st.cc_month, st.paid, st.refCode,
-st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, shc.lastname, shc.name, smg_tours.tour_name
-from student_tours_siblings st
-left join smg_host_children shc on shc.childid = st.siblingid
-left join smg_tours on smg_tours.tour_id = st.tripid
-where mastertripid = #url.id#
-</cfquery>
-    <h3>Sibling Payment Details</h3>
-   
-    <table width=98% cellpadding = 4 cellspacing = 0>
-    <cfif sib_details.paid is ''>
-    <form method="post" action="details.cfm?id=#url.id#">
-    <input type="hidden" name="sib_updatecc" value=#url.id#>
-   	<tr>
-    	<Td>CC Number:</Td><td><input type="text" value="#sib_details.cc#" name="sib_cc" /></td>
-    </tr>
-    <tr>
-    	<Td>Expires:</Td><Td><input type="text" size=2 name="sib_cc_month" value="<cfif len(details.cc_month) eq 1>0#sib_details.cc_month#<cfelse>#sib_details.cc_month#</cfif>"/> / <input type="text" size=4 name="sib_cc_year" value="#DateFormat(sib_details.cc_year, 'yyyy')#"/></Td>
-    </tr>
-    <Tr>
-    	<Td valign="top">Address:</Td><td><input type ="text" name="sib_billingAddress" value="#sib_details.billingAddress#" /></td>
-    </Tr>
-    <tr>    
-        <td>	City:</td><Td> <input type ="text" name="sib_billingcity" value="#sib_details.billingcity#" /></Td>
-    </tr>
-    <Tr>        
-         <td> State:</td><Td> <input  type="text" value="#sib_details.billingstate#" name="sib_billingstate"/></Td>
-    </Tr>
-    <tr>
-    	<td>ZIP:</td><td><input size=5 type ="text" name="sib_billingzip" value="#sib_details.billingzip#" /></td>
-     </Tr>
-     <Tr>
-     	<td>Country</td><td><input type="text" name="sib_billingcountry" value="#sib_details.billingcountry#" /></td>
-     </Tr>
-     <tr>
-     	<td align="middle" colspan=2><input type="image" src="../pics/update.gif" /></td>
-     </tr>
-     </table>
-            </form>
-     <br />
-      <img src="images/line_03.png" width="480" height="6" />
-      <Br />
-        <h3>Record the Payment</h3>
-   
-    <table cellpadding = 4 cellspacing = 0>
-    <cfform method="post" action="details.cfm?id=#url.id#">
-    <input type="hidden" name="sib_paid" />
-   	<tr> 
-        	<td>Reference Code: <cfinput type="text" name="refCode" message="Please enter the reference code of the payment." required="yes" size=20/></td><td>  <input type="image" src="../pics/submit.gif" />   </td>
-        </tr>
-     </cfform>
-     <cfelse>
-     <tr>
-         <Td>Reference Code: <strong>#sib_details.refCode#</strong></Td>
-     </cfif>
-      
-   </Table>  
-       <br /><br />
-      <img src="images/line_03.png" width="480" height="6" />
-      <Br />      
-  </cfif>
-
-      
     <h3>Other Information</h3>
     <table width=98% cellpadding = 4 cellspacing = 0>
     	<tr>

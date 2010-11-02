@@ -1,7 +1,7 @@
 <head>
 <!----Script for greybox---->
 <script type="text/javascript" language="JavaScript">
-    var GB_ROOT_DIR = "https://ise.exitsapplication.com/nsmg/greybox/";
+    var GB_ROOT_DIR = "http://smg.local/nsmg/greybox/";
 </script>
 <script type="text/javascript" src="greybox/AJS.js"></script>
 <script type="text/javascript" src="greybox/AJS_fx.js"></script>
@@ -19,7 +19,7 @@
 <!----Set Default Search Parametes---->
 <cfparam name="keyword" default="">
 <cfparam name="orderby" default="tour_name">
-<cfparam name="form.tourStatus" default="0">
+<cfparam name="tourStatus" default="active">
 <cfparam name="paid" default="0">
 <cfparam name="recordsToShow" default="25">
 <cfparam name="tripSelected" default ="0">
@@ -28,11 +28,6 @@
     delete from student_tours
     where id = #form.delete#
     limit 1
-    </cfquery>
-    <cfquery datasource="#application.dsn#">
-    delete from student_tours_siblings
-    where  mastertripid = #form.delete#
-  
     </cfquery>
 </Cfif>
 
@@ -72,32 +67,18 @@
 			Major Airport: #student_info.major_air_code#<br />
             Additional Notes: #tourInfo.tour_flightDetails#
             </p>
-            
 			<p>
-            <strong>Student Info</strong><br />
             First Name: #student_info.firstname#<br />
             Middle Name: #student_info.middlename#<Br />
             Last Name: #student_info.familylastname#<br />
-            Sex: #student_info.sex#<br />
             Email: #student_info.email#<br />
             DOB: #student_info.dob#
-            </p>
-            <p>
-            <strong>Host Info</strong><br />
-            Father: #student_info.fatherfirstname# #student_info.fatherlastname#<br />
-            Mother: #student_info.motherfirstname# #student_info.motherlastname#<br />
-            Address: <br />
-            #student_info.address#<br />
-            <cfif student_info.address2 is ''>#student_info.address2#<br /></cfif>
-            #student_info.city# #student_info.state# #student_info.zip#
-            Phone: #student_info.hostphone#<br />
-            Email: #student_info.hostemail#
             </p>
         </cfoutput>
         </cfsavecontent>
         
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="trips@iseusa.com">
+            <cfinvokeargument name="email_to" value="dees626@verizon.net">
             <cfinvokeargument name="email_cc" value="brendan@iseusa.com">
             <cfinvokeargument name="email_replyto" value="#student_info.email#">
             <cfinvokeargument name="email_subject" value="Trip Request">
@@ -133,8 +114,8 @@ where 1=1
         AND smg_tours.tour_id = #tripSelected#
         </Cfif>
         <!----Tour Status---->
-       	<cfif form.tourStatus is not ''>
-        AND smg_tours.tour_status = '#form.tourStatus#'
+       	<cfif tourStatus NEQ 0>
+        AND smg_tours.tour_status = '#tourStatus#'
         </cfif>
         <Cfif paid neq 0>
         AND student_tours.paid <> ''
@@ -187,12 +168,12 @@ where 1=1
             select distinct tour_status
             from smg_tours
             </cfquery>
-            
+            <select name="placed">
           
-			  <cfselect name="tourStatus"  query="tripStatus" value="tour_status" display="tour_status" selected="#form.tourStatus#" queryPosition="below">
+			  <cfselect name="tourStatus"  query="tripStatus" value="tour_status" display="tour_status" selected="#tourStatus#" queryPosition="below">
             		<option value="">All</option>
               </cfselect>
-			       
+			</select>            
         </td>
 
        <td>
@@ -269,22 +250,8 @@ where 1=1
           <td><cfif companyid eq 1>ISE<cfelseif companyid eq 10>CASE</cfif></td>
           <td><form method="post" action="index.cfm?curdoc=tours/mpdtours"><input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></td>
         </tr>  
-        <cfquery name="check_siblings" datasource="#application.dsn#">
-        select sts.siblingid, smg_host_children.name, smg_host_children.lastname, smg_host_children.sex
-        from student_tours_siblings sts
-        left join smg_host_children on smg_host_children.childid = sts.siblingid
-        where fk_studentID = #studentid# and mastertripid = #id#
-        </cfquery>
-       
-        <cfif check_siblings.recordcount gt 0>
-        	<cfloop query="check_siblings">
-        <tr bgcolor="##ffe2ba">	
-        	<td></td><td>#name#</td><td>#lastname#</td><td colspan=10>#sex#</td>
-        </tr>
- 			</cfloop>
-         </cfif>       
-    </cfloop>
-</cfif>
+        </cfloop>
+    </cfif>
 
  </table>
 
