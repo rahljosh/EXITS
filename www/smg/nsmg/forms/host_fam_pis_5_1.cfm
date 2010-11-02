@@ -27,12 +27,9 @@
 	FROM smg_seasons
 	WHERE active = '1'
 	<!--- get remaining seasons --->
-	<cfif get_school_dates.recordcount GT '0'>
-		AND (
-		 <cfloop list="#season_list#" index='school_seasons'>
-			 seasonid != '#school_seasons#'
-			 <cfif school_seasons EQ #ListLast(season_list)#><Cfelse>AND</cfif>
-		  </cfloop> )
+	<cfif VAL(get_school_dates.recordcount)>
+    	AND
+        	seasonID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#season_list#" list="yes"> )
 	</cfif>
 	ORDER BY season
 </cfquery>
