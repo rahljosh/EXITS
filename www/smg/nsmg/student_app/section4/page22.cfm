@@ -40,7 +40,7 @@ function OpenApp(url)
 <cfquery name="check_allergies" datasource="#application.dsn#">
 select has_an_allergy
 from smg_student_app_health
-where studentid = #client.studentid#
+where studentid = #CLIENT.studentid#
 </cfquery>
 <cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##get_student_info.studentid#/page22">
 <!--- Check to see if the Directory exists. --->
@@ -79,7 +79,7 @@ where studentid = #client.studentid#
 <table width="670" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr>
 		<td align="center">
-			<a href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page22.cfm?referrer=#CGI.HTTP_HOST#&studentid=#client.studentid#', 'UploadFiles', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/upload-file.gif" border=0></a>
+			<a href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_page22.cfm?referrer=#CGI.HTTP_HOST#&studentid=#CLIENT.studentid#', 'UploadFiles', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/upload-file.gif" border=0></a>
 		</td>
 	</tr>
 </table><br>
@@ -94,36 +94,37 @@ where studentid = #client.studentid#
 	  <td><em>View</em></td>
 	  <td><em>Delete</em></td>
 	</tr>
-    <cfif check_allergies.has_an_allergy eq 1>
-    <tr>
-    	<td><a href="?curdoc=section3/allergy_info_request">Allergy Clarification Form</a></td>
-    </tr>
+    <cfif VAL(check_allergies.has_an_allergy)>
+        <tr>
+            <td><a href="?curdoc=section3/allergy_info_request">Allergy Clarification Form</a></td>
+        </tr>
     </cfif>
-	<cfif mydirectory.recordcount EQ '0'>
-	<tr><td colspan="5">No file has been uploaded.</td></tr>
+    
+	<cfif NOT VAL(mydirectory.recordcount)>
+		<tr><td colspan="5">No file has been uploaded.</td></tr>
 	</cfif>
 
 	<cfloop query="mydirectory">
-	<cfset newsize = mydirectory.size / '1024'>
-	<tr bgcolor="#iif(mydirectory.currentrow MOD 2 ,DE("white") ,DE("CCCCCC") )#">
-	  <td><a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#');">#mydirectory.name#</a></td>
-	  <td>#Round(newsize)# kb</td>
-	  <td>#mydirectory.dateLastModified#</td>
-	  <td>
-	  	<cfif ListFind("jpg,peg,gif,tif,png", Right(name, 3))>
-			<a href="javascript:OpenApp('section4/page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#URLEncodedFormat(name)#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
-		<cfelse>
-	  		<a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
-		</cfif>
-	  </td>	
-	  <td>
-		<cfform method="post" name="page22delete" action="#AppPath.onlineApp.uploadURL#qr_delete_page22.cfm?referrer=#CGI.HTTP_HOST#">
-			<cfinput type="hidden" name="deletefile" value="#mydirectory.name#">
-			<cfinput type="hidden" name="studentid" value="#get_student_info.studentid#">
-			<cfinput type="image" name="submit" src="pics/delete.gif" alt="Delete this file" onclick="return areYouSure(this);"> 
-		</cfform>
-	  </td>
-	</tr>
+		<cfset newsize = mydirectory.size / '1024'>
+        <tr bgcolor="#iif(mydirectory.currentrow MOD 2 ,DE("white") ,DE("CCCCCC") )#">
+          <td><a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#');">#mydirectory.name#</a></td>
+          <td>#Round(newsize)# kb</td>
+          <td>#mydirectory.dateLastModified#</td>
+          <td>
+            <cfif ListFind("jpg,peg,gif,tif,png", Right(name, 3))>
+                <a href="javascript:OpenApp('section4/page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#URLEncodedFormat(name)#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
+            <cfelse>
+                <a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#');"><img src="pics/view-file.gif" border="0" alt="View File"></img></a>
+            </cfif>
+          </td>	
+          <td>
+            <cfform method="post" name="page22delete" action="#AppPath.onlineApp.uploadURL#qr_delete_page22.cfm?referrer=#CGI.HTTP_HOST#">
+                <cfinput type="hidden" name="deletefile" value="#mydirectory.name#">
+                <cfinput type="hidden" name="studentid" value="#get_student_info.studentid#">
+                <cfinput type="image" name="submit" src="pics/delete.gif" alt="Delete this file" onclick="return areYouSure(this);"> 
+            </cfform>
+          </td>
+        </tr>
 	</cfloop>
 </table><br><br>
 </div>
@@ -143,7 +144,7 @@ where studentid = #client.studentid#
 
 <!---
 <!--- CREATE NEW FOLDER AND MOVE FILES --->
-<cfif client.userid EQ 510>
+<cfif CLIENT.userid EQ 510>
 <cfoutput>
 Create Folders and Move Files <br>
 <cfset oldfolder = "#AppPath.onlineApp.inserts#page22">
