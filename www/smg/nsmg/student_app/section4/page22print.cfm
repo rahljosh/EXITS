@@ -1,26 +1,31 @@
-<cftry>
+<!--- Kill Extra Output --->
+<cfsilent>
 
-<!--- OPENING FROM PHP - AXIS --->
-<cfif IsDefined('url.user')>
-	<cfset client.usertype = url.user>
-</cfif>
+	<cfsetting requesttimeout="9999">
 
-<cfif isDefined('url.unqid')>
-	<!----Get student id  for office folks linking into the student app---->
-	<cfquery name="get_student_id" datasource="MySQL">
-		select studentid from smg_students
-		where uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
-	</cfquery>
-	<cfset client.studentid = #get_student_id.studentid#>
-</cfif>
+	<!--- OPENING FROM PHP - AXIS --->
+    <cfif IsDefined('URL.user')>
+        <cfset CLIENT.usertype = URL.user>
+    </cfif>
+    
+    <cfif isDefined('URL.unqid')>
+        <!----Get student id  for office folks linking into the student app---->
+        <cfquery name="get_student_id" datasource="MySQL">
+            select studentid from smg_students
+            where uniqueid = <cfqueryparam value="#URL.unqid#" cfsqltype="cf_sql_char">
+        </cfquery>
+        <cfset CLIENT.studentid = #get_student_id.studentid#>
+    </cfif>
+    
+    <cfif IsDefined('URL.curdoc') OR IsDefined('URL.path')>
+        <cfset path = "">
+    <cfelseif IsDefined('URL.exits_app')>
+        <cfset path = "nsmg/student_app/">
+    <cfelse>
+        <cfset path = "../">
+    </cfif>
 
-<cfif IsDefined('url.curdoc') OR IsDefined('url.path')>
-	<cfset path = "">
-<cfelseif IsDefined('url.exits_app')>
-	<cfset path = "nsmg/student_app/">
-<cfelse>
-	<cfset path = "../">
-</cfif>
+</cfsilent>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -42,8 +47,8 @@ function PrintFile(url)
 //-->
 </SCRIPT>
 
-<cfif IsDefined('url.studentid')>
-	<cfset client.studentid = #url.studentid#>
+<cfif IsDefined('URL.studentid')>
+	<cfset CLIENT.studentid = URL.studentid>
 </cfif>
 
 <cfinclude template="../querys/get_student_info.cfm">
@@ -56,7 +61,7 @@ function PrintFile(url)
 		<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
 		<td class="tablecenter"><h2>Page [22] - Supplements</h2></td>
-		<cfif IsDefined('url.curdoc')>
+		<cfif IsDefined('URL.curdoc')>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page22print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
 		<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
@@ -81,7 +86,7 @@ function PrintFile(url)
 	  <td><em>Size</em></td>
 	  <td><em>Modified</em></td>
 	</tr>
-	<cfif mydirectory.recordcount EQ '0'>
+	<cfif NOT VAL(mydirectory.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfloop query="mydirectory">
@@ -102,7 +107,7 @@ function PrintFile(url)
 
 	<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="studentletter" filter="#get_student_info.studentid#.*">
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 05 - Student's Letter</b></td></tr>
-	<cfif studentletter.recordcount EQ '0'>
+	<cfif NOT VAL(studentletter.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = studentletter.size / '1024'>
@@ -114,7 +119,7 @@ function PrintFile(url)
 
 	<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="parentletter" filter="#get_student_info.studentid#.*">
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 06 - Parent's Letter</b></td></tr>
-	<cfif parentletter.recordcount EQ '0'>
+	<cfif NOT VAL(parentletter.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = parentletter.size / '1024'>
@@ -129,7 +134,7 @@ function PrintFile(url)
 	</cfloop>
     
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 07 - School Information</b></td></tr>
-	<cfif page07.recordcount EQ '0'>
+	<cfif NOT VAL(page07.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page07.size / '1024'>
@@ -144,7 +149,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 08 - Transcript of Grades</b></td></tr>
-	<cfif page08.recordcount EQ '0'>
+	<cfif NOT VAL(page08.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page08.size / '1024'>
@@ -159,7 +164,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 09 - Language Evaluation</b></td></tr>
-	<cfif page09.recordcount EQ '0'>
+	<cfif NOT VAL(page09.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page09.size / '1024'>
@@ -174,7 +179,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 10 - Social Skills</b></td></tr>
-	<cfif page10.recordcount EQ '0'>
+	<cfif NOT VAL(page10.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page10.size / '1024'>
@@ -189,7 +194,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>		
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 12 - Clinical Evaluation</b></td></tr>
-	<cfif page12.recordcount EQ '0'>
+	<cfif NOT VAL(page12.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page12.size / '1024'>
@@ -204,7 +209,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 13 - Immunization Record</b></td></tr>
-	<cfif page13.recordcount EQ '0'>
+	<cfif NOT VAL(page13.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page13.size / '1024'>
@@ -219,7 +224,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 14 - Authorization to Treat a Minor</b></td></tr>
-	<cfif page14.recordcount EQ '0'>
+	<cfif NOT VAL(page14.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page14.size / '1024'>
@@ -234,7 +239,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 15 - Program Agreement</b></td></tr>
-	<cfif page15.recordcount EQ '0'>
+	<cfif NOT VAL(page15.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page15.size / '1024'>
@@ -249,7 +254,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 16 - Liability Release</b></td></tr>
-	<cfif page16.recordcount EQ '0'>
+	<cfif NOT VAL(page16.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page16.size / '1024'>
@@ -264,7 +269,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 17 - Travel Authorization</b></td></tr>
-	<cfif page17.recordcount EQ '0'>
+	<cfif NOT VAL(page17.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page17.size / '1024'>
@@ -279,7 +284,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 18 - Private School</b></td></tr>
-	<cfif page18.recordcount EQ '0'>
+	<cfif NOT VAL(page18.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page18.size / '1024'>
@@ -294,7 +299,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 19 - Intl. Rep. Questionnaire</b></td></tr>
-	<cfif page19.recordcount EQ '0'>
+	<cfif NOT VAL(page19.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page19.size / '1024'>
@@ -309,7 +314,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 20 - Region Guarantee</b></td></tr>
-	<cfif page20.recordcount EQ '0'>
+	<cfif NOT VAL(page20.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page20.size / '1024'>
@@ -324,7 +329,7 @@ function PrintFile(url)
 		</tr>
 	</cfif>
 	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 21 - State Guarantee</b></td></tr>
-	<cfif page21.recordcount EQ '0'>
+	<cfif NOT VAL(page21.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
 		<cfset newsize = page21.size / '1024'>
@@ -340,29 +345,6 @@ function PrintFile(url)
 	</cfif>
 </table><br>		
 
-<!----
-<cfloop list="08,09,10,12,13,14,15,16,17,18,19,20,21" index="i">
-
-</cfloop>
-<table width="300" border=0 cellpadding=3 cellspacing=0 align="center">
-	<tr><td colspan="4"><h2>Other Attached Files</h2></td></tr>
-	<tr><td width="15%">Pages</td><td width="30%">File Type</td><td width="10%">&nbsp;</td><td width="15%">Page</td><td width="30%">File Type</td></tr>
-	<tr><td><cfif page08.recordcount><a href="../../uploadedfiles/online_app/page08/#get_student_info.studentid#.#page08.filetype#" target="_blank">08</a></td><td>#page08.filetype#<cfelse>08</td><td>no file attached</td></cfif><td>&nbsp;</td>
-		<td><cfif page16.recordcount><a href="../../uploadedfiles/online_app/page16/#get_student_info.studentid#.#page16.filetype#" target="_blank">16</a></td><td>#page08.filetype#<cfelse>16</td><td>no file attached</td></cfif></tr>
-	<tr><td><cfif page09.recordcount><a href="../../uploadedfiles/online_app/page09/#get_student_info.studentid#.#page09.filetype#" target="_blank">09</a></td><td>#page08.filetype#<cfelse>09</td><td>no file attached</td></cfif><td>&nbsp;</td>
-		<td><cfif page17.recordcount><a href="../../uploadedfiles/online_app/page17/#get_student_info.studentid#.#page17.filetype#" target="_blank">17</a></td><td>#page17.filetype#<cfelse>17</td><td>no file attached</td></cfif></tr>
-	<tr><td><cfif page10.recordcount><a href="../../uploadedfiles/online_app/page10/#get_student_info.studentid#.#page10.filetype#" target="_blank">10</a></td><td>#page10.filetype#<cfelse>10</td><td>no file attached</td></cfif><td>&nbsp;</td>
-		<td><cfif page18.recordcount><a href="../../uploadedfiles/online_app/page18/#get_student_info.studentid#.#page18.filetype#" target="_blank">18</a></td><td>#page18.filetype#<cfelse>18</td><td>no file attached</td></cfif></tr>	
-	<tr><td><cfif page12.recordcount><a href="../../uploadedfiles/online_app/page12/#get_student_info.studentid#.#page12.filetype#" target="_blank">12</a></td><td>#page12.filetype#<cfelse>12</td><td>no file attached</td></cfif><td>&nbsp;</td>
-		<td><cfif page19.recordcount><a href="../../uploadedfiles/online_app/page19/#get_student_info.studentid#.#page19.filetype#" target="_blank">19</a></td><td>#page19.filetype#<cfelse>19</td><td>no file attached</td></cfif></tr>			
-	<tr><td><cfif page13.recordcount><a href="../../uploadedfiles/online_app/page13/#get_student_info.studentid#.#page13.filetype#" target="_blank">13</a></td><td>#page13.filetype#<cfelse>13</td><td>no file attached</td></cfif><td>&nbsp;</td>
-		<td><cfif page20.recordcount><a href="../../uploadedfiles/online_app/page20/#get_student_info.studentid#.#page20.filetype#" target="_blank">20</a></td><td>#page20.filetype#<cfelse>20</td><td>no file attached</td></cfif></tr>
-	<tr><td><cfif page14.recordcount><a href="../../uploadedfiles/online_app/page14/#get_student_info.studentid#.#page14.filetype#" target="_blank">14</a></td><td>#page14.filetype#<cfelse>14</td><td>no file attached</td></cfif><td>&nbsp;</td>
-		<td><cfif page21.recordcount><a href="../../uploadedfiles/online_app/page21/#get_student_info.studentid#.#page21.filetype#" target="_blank">21</a></td><td>#page21.filetype#<cfelse>21</td><td>no file attached</td></cfif></tr>
-	<tr><td><cfif page15.recordcount><a href="../../uploadedfiles/online_app/page15/#get_student_info.studentid#.#page15.filetype#" target="_blank">15</a></td><td>#page15.filetype#<cfelse>15</td><td>no file attached</td></cfif><td>&nbsp;</td>
-		<td>&nbsp;</td></tr>
-</table><br>
---->
 </div>
 
 <!--- FOOTER OF TABLE --->
@@ -377,8 +359,3 @@ function PrintFile(url)
 
 </body>
 </html>
-
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-</cftry>
