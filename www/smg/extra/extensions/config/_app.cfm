@@ -167,7 +167,7 @@
 	// Document Root
 	APPLICATION.PATH.UploadDocumentRoot = APPLICATION.PATH.base & 'uploadedFiles/';
 
-	// DELETE THESE 
+	// DELETE THESE FROM TRAINEE AND H2B
 	/*
 	APPLICATION.PATH.uploadedFiles = = APPLICATION.PATH.base & "uploadedFiles/";
 	APPLICATION.PATH.pdfDocs = APPLICATION.PATH.UploadDocumentRoot & 'pdf_docs/wat/';

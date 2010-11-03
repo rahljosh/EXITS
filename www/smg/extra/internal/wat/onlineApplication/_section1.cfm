@@ -610,7 +610,7 @@
             </cfif>            
         </div>
 		
-        <!--- School Name | Original Key [8] --->
+        <!--- University Name | Original Key [8] --->
         <div class="field">
             <label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label>  
             <cfif printApplication>

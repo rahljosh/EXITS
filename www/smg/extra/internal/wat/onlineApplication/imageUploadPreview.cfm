@@ -18,7 +18,7 @@
 
 	<cfscript>
 		// Set Image Folder
-		imagePath = AppPath.candidatePicture;
+		imagePath = APPLICATION.PATH.uploadCandidatePicture;
 	</cfscript>
 
 </cfsilent>
