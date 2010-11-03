@@ -4,8 +4,10 @@
 	<cfsetting requesttimeout="9999">
 
     <!--- Param FORM Variables --->
-	<cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.hostCompanyID" default="0">
+	<cfparam name="FORM.programID" default="">
+	<cfparam name="FORM.flightType" default="Arrival">
+    <cfparam name="FORM.isDisplayAll" default="1">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
 
@@ -55,6 +57,17 @@
                     	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
                     AND 
                         ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+			<cfif FORM.isDisplayAll>
+                LEFT OUTER JOIN
+                    extra_flight_information efi ON efi.candidateID = ec.candidateID 
+                    AND 
+                        ec.candidateID IN ( SELECT candidateID FROM extra_flight_information WHERE flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.flightType#"> )
+            <cfelse>
+                INNER JOIN
+                    extra_flight_information efi ON efi.candidateID = ec.candidateID 
+                AND
+                    efi.flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.flightType#">
+            </cfif>    
             WHERE 
                 1 = 1
                 <!--- 
@@ -72,21 +85,13 @@
 		
         <!--- Get All Candidates --->
         <cfquery name="qGetAllCandidates" datasource="MySQL">
-            SELECT 
+            SELECT DISTINCT
                 c.candidateID,
                 c.uniqueID,
-                c.hostCompanyID,
                 c.firstname,             
                 c.lastname, 
-                c.sex, 
-                c.dob,                
-                c.email, 
-                c.ssn, 
-                c.ds2019,
-                c.startdate, 
-                c.enddate, 
-                c.wat_placement, 
-                c.status,
+                c.hostCompanyID,
+                c.wat_placement,
                 u.businessname,
                 country.countryname
             FROM   
@@ -97,6 +102,17 @@
             	extra_hostCompany ehc ON ehc.hostCompanyID = c.hostCompanyID
             LEFT JOIN 
                 smg_countrylist country ON country.countryid = c.home_country
+			<cfif FORM.isDisplayAll>
+                LEFT OUTER JOIN
+                    extra_flight_information efi ON efi.candidateID = c.candidateID 
+                    AND 
+                        c.candidateID IN ( SELECT candidateID FROM extra_flight_information WHERE flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.flightType#"> )
+            <cfelse>
+                INNER JOIN
+                    extra_flight_information efi ON efi.candidateID = c.candidateID 
+                AND
+                    efi.flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.flightType#">
+            </cfif>    
             WHERE 
                 c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">    
             AND 
@@ -111,7 +127,7 @@
                 ehc.name,
                 c.candidateID
 		</cfquery>
-
+		
         <cffunction name="filterGetAllCandidates" hint="Gets total by Host Company">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
             <cfargument name="hostCompanyID" default="0" hint="hostCompanyID is not required">
@@ -174,8 +190,8 @@
     <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
         <tr valign="middle" height="24">
             <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
-            	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> All active students</font>
-			</td>                
+                <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> Candidate Flight Information</font>
+            </td>
         </tr>
         <tr valign="middle" height="24">
             <td valign="middle" colspan=2>&nbsp;</td>
@@ -198,6 +214,22 @@
                     <cfloop query="qGetProgramList">
                     	<option value="#programID#" <cfif qGetProgramList.programID EQ FORM.programID> selected </cfif> >#programname#</option>
                     </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="right" class="style1"><b>Flight Type: </b></td><td>
+                <select name="flightType" class="style1">
+                    <option value="Arrival" <cfif FORM.flightType EQ 'Arrival'> selected </cfif> >Arrival</option>
+                    <option value="Departure" <cfif FORM.flightType EQ 'Departure'> selected </cfif> >Departure</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="right" class="style1"><b>Display Option: </b></td><td>
+                <select name="isDisplayAll" class="style1">
+                    <option value="1" <cfif FORM.isDisplayAll EQ 1> selected </cfif> >All Candidates</option>
+                    <option value="0" <cfif FORM.isDisplayAll EQ 0> selected </cfif> >Candidates with flight only</option>
                 </select>
             </td>
         </tr>
@@ -261,37 +293,35 @@
                     </td>
                 </tr>
                 <tr>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">ID</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Sex</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">DOB</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Email</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">SSN</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Start Date</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">End Date</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Intl. Rep.</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Option</td>
+                    <td width="5%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">ID</Td>
+                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
+                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
+                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
+                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Intl. Rep.</td>
+                    <td width="35%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Flight Information</td>
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
+                	<cfscript>
+						// Get Flight Information
+						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType);
+					</cfscript>
                     <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
-                        <td><span class="style1">#qTotalPerHostCompany.sex#</span></td>
-                        <td><span class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.countryname#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.email#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.ssn#</span></td>
-                        <cfif LEN(qTotalPerHostCompany.ds2019)>
-                            <td><span class="style1">#dateformat(qTotalPerHostCompany.startdate, 'mm/dd/yyyy')#</span></td>
-                            <td><span class="style1">#dateformat(qTotalPerHostCompany.enddate, 'mm/dd/yyyy')# </span></td>
-                        <cfelse>
-                            <td colspan=2 align="center"><span class="style1">Awaiting DS-2019</span></td>
-                        </cfif>
-                        <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.businessName#</span></td>                        
+                        <td>
+                        	<span class="style1">
+                            	<cfif qGetFlightInfo.recordCount>
+                                    <cfloop query="qGetFlightInfo">
+                                        From #qGetFlightInfo.departAirportCode# to #qGetFlightInfo.arriveAirportCode# on #qGetFlightInfo.departDate# at #qGetFlightInfo.arriveTime# <br />
+                                    </cfloop>                                                        
+                                <cfelse>
+                                	n/a
+                                </cfif>                            
+                            </span>
+                        </td>
                     </tr>
                 </cfloop>
 
