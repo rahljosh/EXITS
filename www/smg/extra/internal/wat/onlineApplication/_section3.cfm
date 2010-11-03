@@ -166,8 +166,13 @@
             <cfif printApplication>
             	<div class="printField">#FORM[qGetQuestions.fieldKey[1]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" value="#FORM[qGetQuestions.fieldKey[1]]#" class="#qGetQuestions.classType[1]#" maxlength="100" />
-            </cfif>
+                <select name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]#">
+                    <option value=""></option>
+                    <cfloop from="1" to="10" index="i">
+                        <option value="#i#" <cfif FORM[qGetQuestions.fieldKey[1]] EQ i> selected="selected" </cfif> >#i#</option>
+                    </cfloop>
+                </select>
+			</cfif>
 		</div>
 
 		<!--- Test Score --->

@@ -255,7 +255,8 @@
                                     <li class="#YesNoFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection2Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=1">Agreement</a></li>
                                     <li class="#YesNoFormat(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete)#"><a href="#CGI.SCRIPT_NAME#?action=initial&currentTabID=2">English Assessment</a></li>
                                 </ul>    
-
+							
+                            <a href="#CGI.SCRIPT_NAME#?action=download" class="itemLinks <cfif Find("download", CGI.QUERY_STRING)> selected </cfif>">Download Forms</a>
                             <a href="#CGI.SCRIPT_NAME#?action=documents" class="itemLinks <cfif Find("documents", CGI.QUERY_STRING)> selected </cfif>">Upload Documents</a>
                             <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
                             <a href="#CGI.SCRIPT_NAME#?action=flightInfo" class="itemLinks <cfif Find("flightInfo", CGI.QUERY_STRING)> selected </cfif>">Flight Information</a>                            

@@ -759,11 +759,11 @@
 				}
 
 				case 'section2': {
-					// It also requires a document to be uploaded - Agreement ID=1
+					// It also requires a document to be uploaded - Agreement ID=2
 					qAgreement = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(
 						foreignTable=APPLICATION.foreignTable,
 						foreignID=ARGUMENTS.candidateID,
-						documentTypeID=1
+						documentTypeID=2
 					);
 					
 					// Check if Agreement has been uploaded

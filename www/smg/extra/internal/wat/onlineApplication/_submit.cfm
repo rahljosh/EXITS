@@ -384,7 +384,13 @@
                                     #TimeFormat(qGetApplicationHistory.dateCreated, 'hh-mm-ss tt')# EST
                                 </div>
                                 <div class="tdXLarge">#qGetApplicationHistory.description#</div>
-                                <div class="tdXLarge">#qGetApplicationHistory.comments# </div>
+                                <div class="tdXLarge">
+                                	<cfif LEN(qGetApplicationHistory.comments)>
+                                    	#qGetApplicationHistory.comments# 
+                                    <cfelse>
+                                    	n/a
+                                    </cfif>
+                                </div>
                                 <div class="clearBoth"></div>
                             </div>                            
                         </cfloop>
