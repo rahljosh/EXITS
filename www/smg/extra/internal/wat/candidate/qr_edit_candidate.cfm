@@ -29,7 +29,51 @@
     WHERE 
     	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
 </cfquery>
+
 	
+<cfscript>
+	/*** Online Application ***/
+	
+	// Get Questions for section 1
+	qGetQuestionsSection1 = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section1');
+	
+	// Param Online Application Form Variables 
+	for ( i=1; i LTE qGetQuestionsSection1.recordCount; i=i+1 ) {
+		param name="FORM[qGetQuestionsSection1.fieldKey[i]]" default="";
+	}
+
+	// Insert/Update Application Fields 
+	for ( i=1; i LTE qGetQuestionsSection1.recordCount; i=i+1 ) {
+		APPLICATION.CFC.ONLINEAPP.insertAnswer(	
+			applicationQuestionID=qGetQuestionsSection1.ID[i],
+			foreignTable=APPLICATION.foreignTable,
+			foreignID=FORM.candidateID,
+			fieldKey=qGetQuestionsSection1.fieldKey[i],
+			answer=FORM[qGetQuestionsSection1.fieldKey[i]]						
+		);	
+	}
+
+	// Get Questions for section 3
+	qGetQuestionsSection3 = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section3');
+	
+	// Param Online Application Form Variables 
+	for ( i=1; i LTE qGetQuestionsSection3.recordCount; i=i+1 ) {
+		param name="FORM[qGetQuestionsSection3.fieldKey[i]]" default="";
+	}
+
+	// Insert/Update Application Fields 
+	for ( i=1; i LTE qGetQuestionsSection3.recordCount; i=i+1 ) {
+		APPLICATION.CFC.ONLINEAPP.insertAnswer(	
+			applicationQuestionID=qGetQuestionsSection3.ID[i],
+			foreignTable=APPLICATION.foreignTable,
+			foreignID=FORM.candidateID,
+			fieldKey=qGetQuestionsSection3.fieldKey[i],
+			answer=FORM[qGetQuestionsSection3.fieldKey[i]]						
+		);	
+	}
+</cfscript>
+
+    
 <!---- PROGRAM HISTORY ---->
 <cfif qGetCandidateInfo.programid NEQ FORM.programid>
 	

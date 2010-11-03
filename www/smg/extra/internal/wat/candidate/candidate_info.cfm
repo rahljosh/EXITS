@@ -16,6 +16,7 @@
     <cfparam name="URL.uniqueID" default="">
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.candidateID" default="0">
+	<cfparam name="FORM.submitted" default="0">
 
     <cfinclude template="../querys/get_candidate_unqid.cfm">
 	
@@ -31,8 +32,42 @@
 			candidateID=get_candidate_unqID.candidateID,
 			flightType='departure'
 		);
+		
+		/*** Online Application ***/
+
+		// Get Questions for section 1
+		qGetQuestionsSection1 = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section1');
+		
+		// Get Answers for section 1
+		qGetAnswersSection1 = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=get_candidate_unqID.candidateID);
+
+		// Param Online Application Form Variables 
+		for ( i=1; i LTE qGetQuestionsSection1.recordCount; i=i+1 ) {
+			param name="FORM[qGetQuestionsSection1.fieldKey[i]]" default="";
+		}
+		
+		// Online Application Fields 
+		for ( i=1; i LTE qGetAnswersSection1.recordCount; i=i+1 ) {
+			FORM[qGetAnswersSection1.fieldKey[i]] = qGetAnswersSection1.answer[i];
+		}
+
+		// Get Questions for section 3
+		qGetQuestionsSection3 = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section3');
+		
+		// Get Answers for section 3
+		qGetAnswersSection3 = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section3', foreignTable=APPLICATION.foreignTable, foreignID=get_candidate_unqID.candidateID);
+
+		// Param Online Application Form Variables 
+		for ( i=1; i LTE qGetQuestionsSection3.recordCount; i=i+1 ) {
+			param name="FORM[qGetQuestionsSection3.fieldKey[i]]" default="";
+		}
+		
+		// Online Application Fields 
+		for ( i=1; i LTE qGetAnswersSection3.recordCount; i=i+1 ) {
+			FORM[qGetAnswersSection3.fieldKey[i]] = qGetAnswersSection3.answer[i];
+		}
 	</cfscript>
-    	    
+		
     <cfinclude template="../querys/countrylist.cfm">
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
@@ -477,6 +512,14 @@
                                             	<input name="passport_number" class="style1 editPage" value="#get_candidate_unqid.passport_number#" type="text" size=32 maxlength="100">
                                             </td>
                                         </tr>
+                                        <!--- Online App Field - University Name --->
+                                        <tr>
+                                            <td class="style1" align="right"><b>#qGetQuestionsSection1.displayField[1]#:</b></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#FORM[qGetQuestionsSection1.fieldKey[1]]# &nbsp;</span>
+                                            	<input name="#qGetQuestionsSection1.fieldKey[1]#" class="style1 editPage" value="#FORM[qGetQuestionsSection1.fieldKey[1]]#" type="text" size=32 maxlength="50">
+                                            </td>
+                                        </tr>
                                         <tr>				
                                             <td class="style1" colspan="2">
             
@@ -542,12 +585,25 @@
                                             	<span class="readOnly">#get_candidate_unqid.ssn#</span>
                                                 <input name="ssn" value="#get_candidate_unqid.ssn#" type="text" class="style1 editPage" size="32" maxlength="100">
                                             </td>
-                                        </tr>					
+                                        </tr>	
+                                        <!--- Online App Field - Participant's English Level --->
                                         <tr>
-                                            <td class="style1" align="right"><b>English Assessment:</b></td>
+                                            <td class="style1" align="right"><b><label for="#qGetQuestionsSection3.fieldKey[1]#">#qGetQuestionsSection3.displayField[1]# :</label></b></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#FORM[qGetQuestionsSection3.fieldKey[1]]# &nbsp;</span>
+                                                <select name="#qGetQuestionsSection3.fieldKey[1]#" id="#qGetQuestionsSection3.fieldKey[1]#" class="style1 editPage">
+                                                    <option value=""></option>
+                                                    <cfloop from="1" to="10" index="i">
+                                                        <option value="#i#" <cfif FORM[qGetQuestionsSection3.fieldKey[1]] EQ i> selected="selected" </cfif> >#i#</option>
+                                                    </cfloop>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>English Assessment CSB:</b></td>
                                             <td class="style1">
                                             	<span class="readOnly">#get_candidate_unqid.personal_info#</span>
-                                                <textarea name="personal_info" class="style1 editPage" cols="30" rows="5">#get_candidate_unqid.personal_info#</textarea>
+                                                <textarea name="personal_info" class="style1 editPage" cols="30" rows="2">#get_candidate_unqid.personal_info#</textarea>
                                             </td>
                                         </tr>
                                     </table>
