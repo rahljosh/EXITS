@@ -163,12 +163,12 @@
                 SESSION.formErrors.Add('Business name is required');
             }
 			
-            if ( NOT VAL(FORM.business_typeID) AND FORM.business_typeID NEQ 00 ) {
+            if ( NOT VAL(FORM.business_typeID) AND FORM.business_typeID NEQ 'Other' ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add('Business type is required');
             }
 
-            if ( FORM.business_typeID EQ 00 AND NOT LEN(FORM.businessTypeOther) ) {
+            if ( FORM.business_typeID EQ 'Other' AND NOT LEN(FORM.businessTypeOther) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add('You selected other as business type, please specify');
             }
@@ -180,7 +180,7 @@
 		</cfscript>
 
 		<!--- Check if we need to insert business type --->
-        <cfif LEN(FORM.businessTypeOther) AND FORM.business_typeID EQ 00>
+        <cfif LEN(FORM.businessTypeOther) AND FORM.business_typeID EQ 'Other'>
             
             <cfquery name="qCheckBusinessType" datasource="MySql">
                 SELECT
@@ -394,7 +394,7 @@
 	var showHideBusinessTypeOther = function() { 
 		
 		getSelectedOption = $("#business_typeID").val();
-		if ( getSelectedOption == 00 ) {
+		if ( getSelectedOption == 'Other' ) {
 			// Show Business Type Other
 			$("#rowBusinessTypeID").slideDown("fast");
 		} else {
@@ -506,14 +506,14 @@
                         <table width="600px" align="center" cellpadding="2" class="editPage">
                             <tr>
                                 <td width="35%" align="right" class="style1"><strong>Business Name:</strong> </td>
-                                <td><input type="text" name="name" value="#FORM.name#" class="style1" size="32" maxlength="100"></td>
+                                <td><input type="text" name="name" value="#FORM.name#" class="style1" size="35" maxlength="100"></td>
                             </tr>
                             <tr>
                                 <td align="right" class="style1"><strong>Business Type:</strong></td>
                                 <td>
                                     <select name="business_typeID" id="business_typeID" class="style1" onchange="showHideBusinessTypeOther();">
                                         <option value="0"></option>
-                                        <option value="00" <cfif FORM.business_typeID EQ 00>selected="selected"</cfif> >-- Other --</option>
+                                        <option value="Other" <cfif FORM.business_typeID EQ 'Other'>selected="selected"</cfif> >-- Other --</option>
                                         <cfloop query="qGetBusinessType">
                                             <option value="#qGetBusinessType.business_typeID#" <cfif qGetBusinessType.business_typeID EQ FORM.business_typeID>selected="selected"</cfif> >#qGetBusinessType.business_type#</option>
                                         </cfloop>
@@ -522,7 +522,7 @@
                             </tr>
                             <tr id="rowBusinessTypeID" class="hiddenField">
                                 <td align="right" class="style1"><strong>Specity if Other:</strong> </td>
-                                <td><input type="text" name="businessTypeOther" id="businessTypeOther" value="#FORM.businessTypeOther#" class="style1" size="32" maxlength="100"></td>
+                                <td><input type="text" name="businessTypeOther" id="businessTypeOther" value="#FORM.businessTypeOther#" class="style1" size="35" maxlength="100"></td>
                             </tr>
                         </table>
 
@@ -552,21 +552,21 @@
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.address#</span>
-                                                <input type="text" name="address" value="#FORM.address#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="address" value="#FORM.address#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td width="25%" class="style1" align="right"><strong>Address 2:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.address2#</span>
-                                                <input type="text" name="address2" value="#FORM.address2#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="address2" value="#FORM.address2#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>City</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.city#</span>
-                                                <input type="text" name="city" value="#FORM.city#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="city" value="#FORM.city#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>		
                                         <tr>
@@ -585,7 +585,7 @@
                                             <td class="style1" align="right"><strong>Zip:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.zip#</span>
-                                                <input type="text" name="zip" value="#FORM.zip#" class="style1 editPage" size="32" maxlength="10">
+                                                <input type="text" name="zip" value="#FORM.zip#" class="style1 editPage" size="35" maxlength="10">
                                             </td>
                                         </tr>
                                     </table>
@@ -622,7 +622,7 @@
                                                 <span class="readOnly">
                                                     #DollarFormat(VAL(qGetHostCompanyInfo.housing_cost))#
                                                 </span>
-                                                <input type="text" name="housing_cost" value="#FORM.housing_cost#" class="style1 editPage" size="32" maxlength="10">
+                                                <input type="text" name="housing_cost" value="#FORM.housing_cost#" class="style1 editPage" size="35" maxlength="10">
                                             </td>
 										</tr>                                        
                                     </table>
@@ -646,14 +646,14 @@
                                             <td width="35%" class="style1" align="right"><strong>Aiport:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.closest_airport#</span>
-                                                <input type="text" name="closest_airport" value="#FORM.closest_airport#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="closest_airport" value="#FORM.closest_airport#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.arrivalInstructions#</span>
-                                                <textarea name="arrivalInstructions" class="style1 editPage" cols="30" rows="2">#FORM.arrivalInstructions#</textarea>
+                                                <textarea name="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
                                             </td>
                                         </tr>		
                                     </table>
@@ -686,14 +686,14 @@
                                             <td width="35%" class="style1" align="right"><strong>Contact:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor#</span>
-                                                <input type="text" name="supervisor" value="#FORM.supervisor#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="supervisor" value="#FORM.supervisor#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.phone#</span>
-                                                <input type="text" name="phone" value="#FORM.phone#" class="style1 editPage" size="32" maxlength="50">
+                                                <input type="text" name="phone" value="#FORM.phone#" class="style1 editPage" size="35" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
@@ -705,49 +705,49 @@
                                                         <img src="../pics/fax-cover.gif" alt="Fax Cover Page" border="0" />
                                                     </a>
                                                 </span>
-                                                <input type="text" name="fax" value="#FORM.fax#" class="style1 editPage" size="32" maxlength="50">
+                                                <input type="text" name="fax" value="#FORM.fax#" class="style1 editPage" size="35" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Email:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.email#</span>
-                                                <input type="text" name="email" value="#FORM.email#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="email" value="#FORM.email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Supervisor:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_name#</span>
-                                                <input type="text" name="supervisor_name" value="#FORM.supervisor_name#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="supervisor_name" value="#FORM.supervisor_name#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Supervisor Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_phone#</span>
-                                                <input type="text" name="supervisor_phone" value="#FORM.supervisor_phone#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="supervisor_phone" value="#FORM.supervisor_phone#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Supervisor Email:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_email#</span>
-                                                <input type="text" name="supervisor_email" value="#FORM.supervisor_email#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="supervisor_email" value="#FORM.supervisor_email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Homepage:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.homepage#</span>
-                                                <input type="text" name="homepage" value="#FORM.homepage#" class="style1 editPage" size="32" maxlength="100">
+                                                <input type="text" name="homepage" value="#FORM.homepage#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Observations:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.observations#</span>
-                                                <textarea name="observations" class="style1 editPage" cols="30" rows="2">#FORM.observations#</textarea>
+                                                <textarea name="observations" class="style1 editPage" cols="35" rows="4">#FORM.observations#</textarea>
                                             </td>                                            
                                         </tr> 
                                     </table>
