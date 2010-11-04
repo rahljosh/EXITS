@@ -148,7 +148,7 @@
                         <td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
                             <cfif qNewHostCompanies.recordCount>
                                 <cfloop query="qNewHostCompanies">
-                                    <a href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#hostcompanyid#" class="style4">
+                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyid=#hostcompanyid#" class="style4">
                                         #qNewHostCompanies.name# in  #qNewHostCompanies.city#, #qNewHostCompanies.statename#
                                     </a> 
                                     <cfif LEN(qNewHostCompanies.homepage)>

@@ -133,13 +133,13 @@
             	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">, 
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID_combo#">, 
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                <cfif LEN(FORM.host_startdate)>
-                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.host_startdate)#">,
+                <cfif LEN(FORM.program_startdate)>
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-                <cfif LEN(FORM.host_enddate)>
-                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.host_enddate)#">,
+                <cfif LEN(FORM.program_enddate)>
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
@@ -155,13 +155,13 @@
             UPDATE 
             	extra_candidate_place_company
             SET 
-				<cfif LEN(FORM.host_startdate)>
-                    startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.host_startdate)#">,
+				<cfif LEN(FORM.program_startdate)>
+                    startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
                 <cfelse>
                     startdate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-				<cfif LEN(FORM.host_enddate)>
-                    enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.host_enddate)#">,
+				<cfif LEN(FORM.program_enddate)>
+                    enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
                 <cfelse>
                     enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>

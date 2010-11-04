@@ -90,7 +90,7 @@
         <cfif VAL(CLIENT.userType) LTE 4>
             <br />
             <div align="center">
-                <a href="index.cfm?curdoc=hostcompany/new_hostcompany"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a></div>
+                <a href="index.cfm?curdoc=hostcompany/hostCompanyInfo"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a></div>
             </div>
 		</cfif>
 		<br />
@@ -107,9 +107,9 @@
 			</tr>
             <cfloop query="qGetHostCompanies">
                 <tr bgcolor="###iif(qGetHostCompanies.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
-                    <td><a href="?curdoc=hostcompany/hostcompany_profile&hostCompanyID=#hostCompanyID#" class="style4">#hostCompanyID#</a></td>
-                    <td><a href="?curdoc=hostcompany/hostcompany_profile&hostCompanyID=#hostCompanyID#" class="style4">#name#</a></td>
-                    <td><a href="?curdoc=hostcompany/hostcompany_profile&hostCompanyID=#hostCompanyID#" class="style4">#phone#</a></td>
+                    <td><a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#" class="style4">#hostCompanyID#</a></td>
+                    <td><a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#" class="style4">#name#</a></td>
+                    <td><a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#" class="style4">#phone#</a></td>
                     <td class="style5">#supervisor#</td>
                     <td class="style5">#city#</td>
                     <td class="style5">#stateName#</td>
@@ -134,7 +134,7 @@
 
         <cfif VAL(CLIENT.userType) LTE 4>
             <div align="center">
-                <a href="index.cfm?curdoc=hostcompany/new_hostcompany"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a></div>
+                <a href="index.cfm?curdoc=hostcompany/hostCompanyInfo"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a></div>
             </div> <br>
 		</cfif>
         
