@@ -139,6 +139,31 @@
                 </cfsavecontent>
             
             </cfcase>
+
+        	<!--- Grant Access --->
+        	<cfcase value="userGrantAccess">
+
+                <cfscript>
+					stEmailStructure.subject = csbEmailSubject & ' - Account Created';
+				</cfscript>
+
+                <cfsavecontent variable="stEmailStructure.message">
+                	<p>Dear #qGetUser.firstName# #qGetUser.lastName# at #qGetUser.businessName#-</p>
+					
+                    #accountCreatedMessage#                        
+
+                    Please see below your login information: <br /><br />
+                    Username: #qGetUser.username# <br />
+                    Password: #qGetUser.password# <br /><br />
+
+                    Please visit  
+                    <a href="#APPLICATION.SITE.URL.main#?" style="text-decoration:none; color:##0069aa;">
+                    	#APPLICATION.SITE.URL.main#
+                    </a> to log in into your account. <br /><br />
+                </cfsavecontent>
+            
+            </cfcase>
+
             
 			<!--- 
 				/*********** CANDIDATE TEMPLATES ***********/ 

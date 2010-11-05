@@ -95,6 +95,24 @@
 	</cffunction>
 
 
+	<cffunction name="getUserByUniqueID" access="public" returntype="query" output="false" hint="Gets a user by uniqueID">
+    	<cfargument name="uniqueID" type="string" hint="uniqueID is required">
+              
+        <cfquery 
+			name="qGetUserByUniqueID" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					*
+                FROM 
+                    smg_users
+                WHERE	
+                    uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+		</cfquery>
+		   
+		<cfreturn qGetUserByUniqueID>
+	</cffunction>
+
+
 	<cffunction name="getUserAccessRights" access="public" returntype="query" output="false" hint="Gets user access rights for a user or region">
     	<cfargument name="userID" type="numeric" default="0" hint="userID is required">
         <cfargument name="companyID" type="numeric" default="0" hint="companyID is required">
@@ -127,6 +145,98 @@
 		</cfquery>
 		   
 		<cfreturn qGetUserAccessRights>
+	</cffunction>
+
+
+	<cffunction name="insertUserAccessRights" access="public" returntype="void" output="false" hint="Inserts User Access Rights">
+    	<cfargument name="userID" type="numeric" default="0" hint="userID is required">
+        <cfargument name="userType" type="numeric" default="8" hint="userType is required">
+        
+        <cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+                INSERT INTO
+                    user_access_rights
+				(
+                	userID,
+                    companyID,
+                    userType,
+                    changeDate
+                )
+                VALUES 
+                (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                )                    
+		</cfquery>
+		   
+	</cffunction>
+
+	
+    <!--- Grant Access --->
+	<cffunction name="grantAccess" access="public" returntype="void" output="false" hint="Check user credentials">
+		<cfargument name="userID" required="yes" hint="Username is requireds" />
+        <cfargument name="userType" required="yes" hint="userType is requireds" />
+		        
+        <cfscript>
+			// Get User Information
+			qUserInfo = getUserByID(userID=ARGUMENTS.userID);
+			
+			setUsername = qUserInfo.username;
+			setPassword = qUserInfo.password;
+			
+			// Check if user has access to extra			
+			qCheckAccess = getUserAccessRights(
+				userID=ARGUMENTS.userID,
+				companyID=CLIENT.companyID
+			);
+			
+			if ( NOT qCheckAccess.recordCount ) {
+				
+				// Check if there is a username, if not, copy from email address
+				if ( NOT LEN(qUserInfo.username) ) {
+					
+					setUsername = qUserInfo.email;
+					
+					// Update User Information
+					updateUsername(
+						userID=ARGUMENTS.userID, 
+						username=setUsername
+					);
+					
+				}
+				
+				// Check if there is a password, if not, generate a password
+				if ( NOT LEN(qUserInfo.password) ) {
+					
+					setPassword = APPLICATION.CFC.ONLINEAPP.generatePassword();					
+					
+					// Update User Information
+					updatePassword(
+						userID=ARGUMENTS.userID, 
+						password=setPassword
+					);
+					
+				}
+				
+				// Grant Access
+				insertUserAccessRights(
+					userID=ARGUMENTS.userID,
+					companyID=CLIENT.companyID,
+					userType=ARGUMENTS.userType
+									   
+				);
+			}
+			
+			// Send out Email Confirmation
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailTo=qUserInfo.email,
+				emailTemplate='userGrantAccess',
+				userID=ARGUMENTS.userID
+			);
+		</cfscript>
+                
 	</cffunction>
 
 
@@ -241,6 +351,42 @@
                 userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
         </cfquery>
         
+	</cffunction>
+
+
+	<!--- Update User Username --->
+	<cffunction name="updateUsername" access="private" returntype="void" output="false" hint="Update User Username">
+		<cfargument name="userID" required="yes" hint="userID ID" />
+		<cfargument name="username" required="yes" hint="Email Address / Username">
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	smg_users
+                SET
+                    username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.username))#">
+				WHERE
+	                userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+		</cfquery>
+		
+	</cffunction>
+    
+    
+    <!--- Update User Password --->
+	<cffunction name="updatePassword" access="private" returntype="void" output="false" hint="Update User Password">
+		<cfargument name="userID" required="yes" hint="userID ID" />
+        <cfargument name="password" required="yes" hint="Password">
+
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	smg_users
+                SET
+                    password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.password))#">
+				WHERE
+	                userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+		</cfquery>
+
 	</cffunction>
 
 </cfcomponent>

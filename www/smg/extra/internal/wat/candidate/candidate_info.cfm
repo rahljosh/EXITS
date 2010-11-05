@@ -241,6 +241,9 @@
 	function displayCancelation(selectedValue) {
 		if (selectedValue == 'canceled') {
 			$("#divCancelation").slideDown(1000);
+			if ( $("#cancel_date").val() == '' ) {
+				$("#cancel_date").val(getCurrentDate());
+			}
 		} else {
 			$("#divCancelation").fadeOut("fast");
 		}
@@ -793,7 +796,7 @@
                                                 <td width="12%" class="style1"><strong>Date: </strong></td>
                                                 <td colspan="2" class="style1">
                                                     <span class="readOnly">#dateFormat(get_candidate_unqid.cancel_date, 'mm/dd/yyyy')#</span>
-                                                    <input type="text" class="style1 editPage datePicker" name="cancel_date" value="#dateFormat(get_candidate_unqid.cancel_date, 'mm/dd/yyyy')#">
+                                                    <input type="text" name="cancel_date" id="cancel_date" class="style1 editPage datePicker"value="#dateFormat(get_candidate_unqid.cancel_date, 'mm/dd/yyyy')#">
                                                 </td>
                                             </tr>
                                             <tr>

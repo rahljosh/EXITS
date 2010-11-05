@@ -25,14 +25,11 @@ var startApplicationType = function(selectedType) {
 
 }
 
-function getCurrentDate() {
-	var d = new Date();
-	var curr_day = d.getDate();
-	var curr_month = d.getMonth();
-	var curr_year = d.getFullYear();
-	var curr_date = curr_month + "/" + curr_day + "/" + curr_year;
 
-	return curr_date;
+function getCurrentDate() {
+	var myDate = new Date();
+	var prettyDate =(myDate.getMonth()+1) + '/' + myDate.getDate() + '/' + myDate.getFullYear();
+	return prettyDate;
 }
 
 
