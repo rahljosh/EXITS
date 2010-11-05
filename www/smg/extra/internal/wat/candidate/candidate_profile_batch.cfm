@@ -178,7 +178,7 @@
                                     </tr>
                                     <tr>
                                         <td class="style1" valign="top" align="right"><b>Entered Date:</b></td>
-                                        <td class="style1" align="left"><input type="text" name="enteredDate" value="#FORM.enteredDate#" class="date-pick"></td>
+                                        <td class="style1" align="left"><input type="text" name="enteredDate" value="#FORM.enteredDate#" class="datePicker"></td>
                                     </tr>
                                     <tr><td align="center" colspan="2"><input type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>
                                     </form>	

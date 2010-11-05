@@ -1,14 +1,16 @@
 // JavaScript Document
 // Stores base javascript functions that can be used in any page of the application
 
-// PS: USE CSS SPRITE TO COMBINE IMAGES
-
-// Date-Pick Function
-/*
+// jQuery Date Picker Function
 $(function() {
-	$('.date-pick').datePicker({startDate:'01/01/2010'});
-});	
-*/
+	$(".datePicker").datepicker({
+		//numberOfMonths: 3,								
+		showButtonPanel: true,
+		changeMonth: true,
+		changeYear: true
+	});
+});
+
 
 // Show/hide email address fields
 var startApplicationType = function(selectedType) { 
@@ -48,7 +50,7 @@ function openPopUp(url, width, height) {
 	return false;
 }
 
-function OpenWindow(url) {
+function openWindow(url) {
 	newwindow=window.open(url, 'NewWindow', 'height=350, width=720, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
 	if (window.focus) {
 		newwindow.focus()
@@ -90,6 +92,3 @@ function displayClass(className) {
 		
 	});
 }	
-
-
-

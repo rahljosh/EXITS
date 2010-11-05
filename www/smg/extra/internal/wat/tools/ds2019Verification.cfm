@@ -497,8 +497,8 @@
                     <td class="formTitle">&nbsp;</td>     
 				</tr>
                 <tr>
-                    <td><input type="text" name="startDate" id="startDate" value="" class="date-pick smallField" maxlength="10" /></td>
-                    <td><input type="text" name="endDate" id="endDate" value="" class="date-pick smallField" maxlength="10" /></td>
+                    <td><input type="text" name="startDate" id="startDate" value="" class="datePicker smallField" maxlength="10" /></td>
+                    <td><input type="text" name="endDate" id="endDate" value="" class="datePicker smallField" maxlength="10" /></td>
                     <td><input type="submit" name="submit" value="Submit" /></td>
                 </tr>
             </table>

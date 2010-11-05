@@ -30,6 +30,7 @@
         <cfargument name="branchID" type="numeric" default="0" hint="Used with the emailTemplate to get the Branch Information">
         <cfargument name="intlRepID" type="numeric" default="0" hint="Used with the emailTemplate to get the Intl. Rep. Information">
         <cfargument name="companyID" type="numeric" default="0" hint="7=Trainee / 8=WAT">
+        <cfargument name="userID" type="numeric" default="0" hint="User ID is not required">
                
         <cfscript>
 			var csbEmailSubject = '';
@@ -48,7 +49,10 @@
 			
 			// Get Application History
 			qGetApplicationHistory = APPLICATION.CFC.ONLINEAPP.getApplicationHistory(foreignTable=APPLICATION.foreignTable, foreignID=ARGUMENTS.candidateID);
-	
+			
+			// Get User Information
+			qGetUser =  APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID); 
+			
 			/*** Email Templates
 				loginUpdated - ok
 				forgotPassword - ok
@@ -61,8 +65,8 @@
 				deniedByIntlRep - ok
 				receivedByOffice
 				onHoldByOffice
-				approvedByOffice
-				deniedByOffice
+				approvedByOffice - ok
+				deniedByOffice - ok
 			***/
 		</cfscript>
 		
@@ -110,6 +114,36 @@
         <!--- Email Templates --->
 		<cfswitch expression="#ARGUMENTS.emailTemplate#">
 
+			<!--- 
+				/*********** USER TEMPLATES ***********/ 
+			--->
+            			
+        	<!--- Forgot Password User --->
+        	<cfcase value="userForgotPassword">
+
+                <cfscript>
+					stEmailStructure.subject = csbEmailSubject & ' - Password Reminder';
+				</cfscript>
+
+                <cfsavecontent variable="stEmailStructure.message">
+                	<p>Dear #qGetUser.firstName# #qGetUser.lastName#-</p>
+
+                    Please see below your login information: <br /><br />
+                    Username: #qGetUser.username# <br />
+                    Password: #qGetUser.password# <br /><br />
+
+                    Please visit  
+                    <a href="#APPLICATION.SITE.URL.main#?" style="text-decoration:none; color:##0069aa;">
+                    	#APPLICATION.SITE.URL.main#
+                    </a> to log in into your account. <br /><br />
+                </cfsavecontent>
+            
+            </cfcase>
+            
+			<!--- 
+				/*********** CANDIDATE TEMPLATES ***********/ 
+			--->
+            
         	<!--- Login Updated --->
         	<cfcase value="loginUpdated">
 
@@ -124,11 +158,16 @@
 
                     Username: #qGetCandidateInfo.email# <br />
                     Password: #qGetCandidateInfo.password# <br /><br />
+                    
+                    Please visit  
+                    <a href="#APPLICATION.SITE.URL.main#?" style="text-decoration:none; color:##0069aa;">
+                    	#APPLICATION.SITE.URL.main#
+                    </a> to log in into your account. <br /><br />
                 </cfsavecontent>
             
             </cfcase>
 
-        	<!--- Forgot Password --->
+        	<!--- Forgot Password Candidate --->
         	<cfcase value="forgotPassword">
 
                 <cfscript>
@@ -141,6 +180,11 @@
                     Please see below your login information: <br /><br />
                     Username: #qGetCandidateInfo.email# <br />
                     Password: #qGetCandidateInfo.password# <br /><br />
+
+                    Please visit  
+                    <a href="#APPLICATION.SITE.URL.main#?" style="text-decoration:none; color:##0069aa;">
+                    	#APPLICATION.SITE.URL.main#
+                    </a> to log in into your account. <br /><br />
                 </cfsavecontent>
             
             </cfcase>
@@ -362,19 +406,21 @@
         <cfargument name="emailFilePath" type="string" default="" hint="Optional attachment file">
         <cfargument name="emailTemplate" type="string" default="" hint="newAccount/forgotPassword/ - If passed gets the email text accordingly">
         <cfargument name="candidateID" type="numeric" default="0" hint="Used with the emailTemplate to get the student information">  
-        <cfargument name="companyID" type="numeric" default="0" hint="Company ID to get the correct subject/footer information">      
+        <cfargument name="companyID" type="numeric" default="0" hint="Company ID to get the correct subject/footer information">   
+        <cfargument name="userID" type="numeric" default="0" hint="user ID in case we are emailing a user">    
 
 		<!--- Import CustomTag --->
 		<cfimport taglib="../../extensions/customtags/gui/" prefix="gui" />	
 
 		<cfscript>
-			// If we have a valid candidateID and emailTemplate we'll get the email subject and message from  the function above
-			if ( LEN(ARGUMENTS.emailTemplate) AND VAL(ARGUMENTS.candidateID) ) {
+			// If we have a valid emailTemplate we'll get the email subject and message from the function above
+			if ( LEN(ARGUMENTS.emailTemplate) ) {
 				
 				stGetEmailTemplate = getEmailTemplate(
 					emailTemplate=ARGUMENTS.emailTemplate, 
 					candidateID=ARGUMENTS.candidateID,
-					companyID=ARGUMENTS.companyID
+					companyID=ARGUMENTS.companyID,
+					userID=ARGUMENTS.userID
 				);
 				
 				ARGUMENTS.emailSubject = stGetEmailTemplate.subject;

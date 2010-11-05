@@ -768,7 +768,7 @@
                                                 	<span class="readOnly">
                                                     	#DateFormat(get_candidate_unqID.cancel_date, 'mm/dd/yyyy')#
                                                     </span>
-                                                    <input type="text" class="style1 date-pick" name="cancel_date" size=20 value="#DateFormat(get_candidate_unqID.cancel_date, 'mm/dd/yyyy')#" maxlength="10">
+                                                    <input type="text" class="style1 datePicker" name="cancel_date" size=20 value="#DateFormat(get_candidate_unqID.cancel_date, 'mm/dd/yyyy')#" maxlength="10">
                                                 </td>
                                             </tr>
                                             <tr>

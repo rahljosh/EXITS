@@ -259,11 +259,11 @@
                     </tr>
                     <tr>
                         <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">Start Date</font></td>
-                        <td><input type="text" name="startDate" value="#DateFormat(FORM.startDate, 'mm/dd/yyyy')#" class="date-pick" maxlength="10"> <font size="2" face="Verdana, Arial, Helvetica, sans-serif"> (mm/dd/yyyy</font>)</td>
+                        <td><input type="text" name="startDate" value="#DateFormat(FORM.startDate, 'mm/dd/yyyy')#" class="datePicker" maxlength="10"> <font size="2" face="Verdana, Arial, Helvetica, sans-serif"> (mm/dd/yyyy</font>)</td>
                     </tr>
                     <tr>
                         <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">End Date</font></td>
-                        <td><input type="text" name="endDate" value="#DateFormat(FORM.endDate, 'mm/dd/yyyy')#" class="date-pick" maxlength="10"> <font size="2" face="Verdana, Arial, Helvetica, sans-serif">(mm/dd/yyyy</font>)</td>
+                        <td><input type="text" name="endDate" value="#DateFormat(FORM.endDate, 'mm/dd/yyyy')#" class="datePicker" maxlength="10"> <font size="2" face="Verdana, Arial, Helvetica, sans-serif">(mm/dd/yyyy</font>)</td>
                     </tr>
                     <tr>
                         <td colspan="2" align="center"><input type="image" src="../pics/save.gif" name="button" value="Submit" alt="save" /></td>

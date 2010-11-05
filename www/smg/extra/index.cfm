@@ -14,9 +14,12 @@
     <cfimport taglib="extensions/customtags/gui/" prefix="gui" />	
 	
 	<!--- Param Form Variables --->
-    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.type" default="">
+    <!--- Login --->
     <cfparam name="FORM.userName" default="">
     <cfparam name="FORM.password" default="">
+    <!--- Forgot Password --->
+    <cfparam name="FORM.forgotEmail" default="">
 
 	<!--- Param URL Variables --->
     <cfparam name="URL.link" default="">
@@ -41,131 +44,134 @@
 		}
 	</cfscript>
 
-	<!--- FORM SUBMITTED --->
-    <cfif FORM.submitted>
-                
-		<cfscript>
-			// FORM Validation
-			if ( NOT LEN(FORM.username) ) {
-				SESSION.formErrors.Add("Please enter an username");
-			}
-			
-			if ( NOT LEN(FORM.password) ) {
-				SESSION.formErrors.Add("Please enter a password");
-			}
-        </cfscript>
-		
-        <!--- Check if there are no errors --->
-        <cfif NOT SESSION.formErrors.length()>
-                        
-            <!--- User - Authenticate and Get Default Company --->
-            <cfquery name="qAuthenticateUser" datasource="mysql">
-                SELECT 
-                    u.userID,
-                    u.firstName,
-                    u.lastName,
-                    u.lastLogin,
-                    u.userType,
-                    u.email,
-                    uar.companyID
-                FROM 
-                    smg_users u 
-                INNER JOIN
-                    user_access_rights uar ON uar.userID = u.userID
-                INNER JOIN
-                    smg_companies c ON c.companyID = uar.companyID
-                WHERE 
-                    u.username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.username#"> 
-                AND 
-                    u.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">
-                AND 
-                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                AND   
-                    c.system_id = <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-                ORDER BY 
-                    uar.default_region DESC
-            </cfquery>
-    		
-            <!--- Candidate - Authenticate and Get Company --->
-            <cfscript>
-				//Check Candidate Login
-                qAuthenticateCandidate = APPLICATION.CFC.CANDIDATE.checkLogin(
+	<cfscript>
+        // DO LOGIN
+        if ( FORM.type EQ 'login' ) {
+        
+            // FORM Validation
+            if ( NOT LEN(FORM.username) ) {
+                SESSION.formErrors.Add("Please enter an username");
+            }
+            
+            if ( NOT LEN(FORM.password) ) {
+                SESSION.formErrors.Add("Please enter a password");
+            }
+
+            // Check if there are no errors
+            if ( NOT SESSION.formErrors.length() ) {
+        
+                // Check User Login
+                qAuthenticateUser = APPLICATION.CFC.USER.authenticateUser(
+                    username=FORM.username,
+                    password=FORM.password
+                );
+            
+                // Check Candidate Login
+                qAuthenticateCandidate = APPLICATION.CFC.CANDIDATE.authenticateCandidate(
                     email=FORM.username,
                     password=FORM.password
                 );
-			</cfscript>
-                                                  
-			<!--- Valid User Login --->
-            <cfif qAuthenticateUser.recordcount>
+
+                // Valid User Login
+                if ( qAuthenticateUser.recordcount )  {
                 
-                <cfquery name="lastLogin" datasource="mysql">
-                    UPDATE 
-                        smg_users 
-                    SET 
-                        lastLogin = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                    WHERE 
-                        userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
-                </cfquery>
+                    // SET LINKS        
+                    getLink = APPLICATION.CFC.onlineApp.setLoginLinks(
+                        companyID=qAuthenticateUser.companyID,
+                        loginType='user'
+                    );
+                    
+                    // Do Login / Set CLIENT Variables / Update Last Logged in Date
+                    APPLICATION.CFC.USER.doLogin(qUser=qAuthenticateUser);
 
-                <cfscript>				
-					// Set up Session Variables
-					SESSION.auth = structNew();
-					
-					// Set Up Client Variables
-					CLIENT.isLoggedIn = 1;
-					CLIENT.loginType = 'user';
-					CLIENT.userID = qAuthenticateUser.userID;
-					CLIENT.firstName = qAuthenticateUser.firstName;
-					CLIENT.lastname =  qAuthenticateUser.lastname;
-					CLIENT.lastLogin = qAuthenticateUser.lastLogin;
-					CLIENT.userType =  qAuthenticateUser.userType;
-					CLIENT.email = qAuthenticateUser.email;
-					CLIENT.companyID = qAuthenticateUser.companyID;
-						
-					// SET LINKS        
-					getLink = APPLICATION.CFC.onlineApp.setLoginLinks(
-						companyID=qAuthenticateUser.companyID,
-						loginType='user'
-					);
-					
-					// Redirect User to appropriate page
-					location(getLink, "no");
-                </cfscript>		
-            
-            <!--- Valid Candidate Login --->
-            <cfelseif VAL(qAuthenticateCandidate.recordCount)>
+                    // Redirect Candidate to appropriate page
+                    location(getLink, "no");
 
-				<cfscript>
-					// SET LINKS        
-					getLink = APPLICATION.CFC.onlineApp.setLoginLinks(
-						companyID=qAuthenticateCandidate.companyID,
-						loginType='candidate'
-					);
+                // Valid Candidate Login 
+                } else if ( qAuthenticateCandidate.recordCount ) {
 
-					// Do Login / Set SESSION variables / Update Last Logged in Date
+                    // SET LINKS        
+                    getLink = APPLICATION.CFC.onlineApp.setLoginLinks(
+                        companyID=qAuthenticateCandidate.companyID,
+                        loginType='candidate'
+                    );
+
+                    // Do Login / Set SESSION variables / Update Last Logged in Date
                     APPLICATION.CFC.ONLINEAPP.doLogin(candidateID=qAuthenticateCandidate.candidateID);
-                    				
-					// Redirect Candidate to appropriate page
-					location(getLink, "no");
-				</cfscript>
-                            
-                            
-            <!--- User does not have access to extra --->    
-            <cfelse>
-                
-                <cfscript>
-                    // User does not have access to extra
-					CLIENT.isLoggedIn = "No";
-					
-					SESSION.formErrors.Add("Please check your account credentials");
-               </cfscript> 
-            
-            </cfif>
-    
-		</cfif> <!--- NOT SESSION.formErrors.length() --->
-   
-    </cfif> <!--- FORM SUBMITTED --->
 
+                    // Redirect Candidate to appropriate page
+                    location(getLink, "no");
+
+                } else {
+                    
+                    // User/Candidate does not have access to extra
+                    CLIENT.isLoggedIn = "No";
+                    
+                    SESSION.formErrors.Add("Please check your account credentials");
+                    
+                }
+            
+            } // NOT SESSION.formErrors.length()
+        
+        // RETRIEVE PASSWORD
+        } else if ( FORM.type EQ 'forgotPassword' ) {
+            
+            // FORM Validation
+            if ( NOT LEN(FORM.forgotEmail) OR NOT IsValid("email", FORM.forgotEmail) ) {
+                SESSION.formErrors.Add("Enter a valid email address");
+            }
+            
+            // Check if there are no errors
+            if ( NOT SESSION.formErrors.length() ) {
+                
+                // Check User Account
+                qCheckUserAccount = APPLICATION.CFC.USER.checkEmail(email=FORM.forgotEmail);
+            
+                // Check Candidate Account
+                qCheckCandidateAccount = APPLICATION.CFC.CANDIDATE.checkEmail(email=FORM.forgotEmail);
+                
+				// EMAIL User Account Information
+                if ( qCheckUserAccount.recordCount ) {
+
+					// Send out Email Confirmation
+					APPLICATION.CFC.EMAIL.sendEmail(
+						emailTo=qCheckUserAccount.email,
+						emailTemplate='userForgotPassword',
+						userID=qCheckUserAccount.userID
+					);
+
+					SESSION.pageMessages.Add("Your login information has been sent");
+
+				// EMAIL Candidate Account Information
+                } else if ( qCheckCandidateAccount.recordCount ) {
+
+					// Send out Email Confirmation
+					APPLICATION.CFC.EMAIL.sendEmail(
+						emailTo=qCheckCandidateAccount.email,
+						emailTemplate='forgotPassword',
+						candidateID=qCheckCandidateAccount.candidateID
+					);
+                	
+					SESSION.pageMessages.Add("Your login information has been sent");
+				
+                // Account Not Found
+                } else {
+                    SESSION.formErrors.Add("Email address is not registered or your account is inactive. Please contact #APPLICATION.EMAIL.support# if you have any questions");
+                }
+                
+            }	
+        }
+
+		// Set which form needs to be displayed
+		if (FORM.type EQ "forgotPassword" ) {
+			loginFormClass = 'hiddenDiv';
+			forgotPassClass = '';
+		} else {
+			loginFormClass = '';
+			forgotPassClass = 'hiddenDiv';
+		}
+	</cfscript>	
+    
 </cfsilent>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -182,69 +188,109 @@
 
 <cfoutput>
 
-<cfform name="login" action="#CGI.SCRIPT_NAME#" method="post">
-<input type="hidden" name="submitted" value="1" />
-            
 <table width="720" border="0" align="center" cellpadding="0" cellspacing="0" style="margin-top:150px;">
     <tr>
         <td height="389" background="login.gif">
             
-            <table width="91%" border="0" cellspacing="0" cellpadding="0" style="margin-top:50px;">
+            <table width="91%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
                 <tr>
                     <td width="55%">&nbsp;</td>
                     <td width="45%">
                         
-                        <table width="250"  border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="##999999">
+                        <table width="285"  border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="##999999">
                             <tr>
                                 <td bgcolor="##FFFFFF" class="style1">
 
-									<!--- Form Errors --->
+									<!--- Page Messages --->
+                                    <gui:displayPageMessages 
+                                        pageMessages="#SESSION.pageMessages.GetCollection()#"
+                                        messageType="login"
+                                        />
+					
+                    				<!--- Form Errors --->
                                     <gui:displayFormErrors 
                                         formErrors="#SESSION.formErrors.GetCollection()#"
                                         messageType="login"
                                         />
-									                                   
-                                    <table width="100%"  border="0" align="center" cellpadding="5" cellspacing="1" bordercolor="##DDE0E5">
-                                        <cfif VAL(URL.user)>
+									
+                                    <!--- Login --->
+                                    <cfform name="loginForm" id="loginForm" action="#CGI.SCRIPT_NAME#" method="post" class="#loginFormClass#">
+                                        <input type="hidden" name="type" value="login" />
+                                                                                       
+                                        <table width="100%" border="0" align="center" cellpadding="5" cellspacing="1" bordercolor="##DDE0E5">
+                                            <cfif VAL(URL.user)>
+                                                <tr>
+                                                    <td bgcolor="##FF3300">
+                                                        <font color="white">Accounts are automatically logged out after 2 hrs of inactivity.<br>  Please re-login to continue.</font>
+                                                    </td>
+                                                </tr>
+                                            </cfif>
                                             <tr>
-                                                <td bgcolor="##FF3300">
-                                                    <font color="white">Accounts are automatically logged out after 2 hrs of inactivity.<br>  Please re-login to continue.</font>
+                                                <td bordercolor="##E9ECF1" bgcolor="##FF7E0D" class="style4">
+                                                    <span class="style2" style="margin-left:5px; font-weight:bold">Username:</span> 
                                                 </td>
                                             </tr>
-                                        </cfif>
-                                        <tr>
-                                            <td bordercolor="##E9ECF1" bgcolor="##FF7E0D" class="style4">
-                                                <span class="style2" style="margin-left:5px; font-weight:bold">Username:</span> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td height="19" valign="top" bordercolor="##E9ECF1">
-                                                <cfinput type="text" name="username" id="username" value="#FORM.userName#" message="Username is required to login." required="yes" class="style1" size="40" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td bordercolor="##E9ECF1" bgcolor="##FF7E0D">
-                                                <span class="style2" style="margin-left:5px; font-weight:bold">Password:</span> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td height="19" valign="top" bordercolor="##E9ECF1">
-                                                <cfinput type="password" name="password" id="password" value="#FORM.password#" message="Password is required to login." required="yes" class="style1" size="40" maxlength="20"> 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td bordercolor="##E9ECF1">
-                                                
-                                                <table width="100%"  border="0" cellspacing="0" cellpadding="0">
-                                                    <tr>
-                                                        <td><a href="reauthenticate.cfm" target="_top" class="style1">Forgot Login?</a></td>
-                                                        <td><input name="Submit" type="submit" class="style1" value="Login" /></td>
-                                                    </tr>
-                                                </table>
-                                                
-                                            </td>
-                                        </tr>
-                                    </table>
+                                            <tr>
+                                                <td height="19" valign="top" bordercolor="##E9ECF1">
+                                                    <cfinput type="text" name="username" id="username" value="#FORM.userName#" message="Username is required to login." required="yes" class="style1" size="45" maxlength="100">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td bordercolor="##E9ECF1" bgcolor="##FF7E0D">
+                                                    <span class="style2" style="margin-left:5px; font-weight:bold">Password:</span> 
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="19" valign="top" bordercolor="##E9ECF1">
+                                                    <cfinput type="password" name="password" id="password" value="#FORM.password#" message="Password is required to login." required="yes" class="style1" size="45" maxlength="20"> 
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td bordercolor="##E9ECF1">
+                                                    
+                                                    <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td><a href="javascript:displayForgotPass();" class="style1" title="Forgot Login?">Forgot Login?</a></td>
+                                                            <td><input name="Submit" type="submit" class="style1" value="Login" /></td>
+                                                        </tr>
+                                                    </table>
+                                                    
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </cfform>
+                                    
+                                    
+									<!--- Forgot Password --->
+                                    <cfform name="forgotPassForm" id="forgotPassForm" action="#cgi.SCRIPT_NAME#" method="post" class="#forgotPassClass#">
+                                        <input type="hidden" name="type" value="forgotPassword">
+                                        
+                                        <table width="100%"  border="0" align="center" cellpadding="5" cellspacing="1" bordercolor="##DDE0E5">
+                                            <tr><td class="style1" colspan="2">Your login information will be sent to the email address entered:</td></tr>
+                                            <tr>
+                                                <td bordercolor="##E9ECF1" bgcolor="##FF7E0D" class="style4">
+                                                    <span class="style2" style="margin-left:5px; font-weight:bold">Email Address:</span> 
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="19" valign="top" bordercolor="##E9ECF1">
+                                                    <cfinput type="text" name="forgotEmail" id="forgotEmail" value="#FORM.forgotEmail#" message="Email address is required" required="yes" class="style1" size="45" maxlength="100">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td bordercolor="##E9ECF1">
+                                                    
+                                                    <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td><a href="javascript:displayForgotPass();" class="style1" title="Back to Login">Back to Login</a></td>
+                                                            <td><input name="Submit" type="submit" class="style1" value="Submit" /></td>
+                                                        </tr>
+                                                    </table>
+                                                    
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </cfform>	
                                     
                             	</td>
                             </tr>
@@ -258,20 +304,36 @@
     </tr>
 </table>
 
-</cfform>
-
 </cfoutput>
 
 <script type="text/JavaScript">
 <!--
-	// Set cursor to username field
+	// Slide down form field div
+	var displayForgotPass = function() { 
+		
+		if ($("#forgotPassForm").css("display") == "none") {
+			$("#loginForm").slideToggle(500);
+			$("#forgotPassForm").slideToggle(500);	
+			$("#forgotEmail").focus();
+		} else {
+			$("#forgotPassForm").slideToggle(500);	
+			$("#loginForm").slideToggle(500);
+			$("#loginEmail").focus();
+		}
+		
+	}
+
+	// Auto Focus - Set cursor to username field
 	$(document).ready(function() {
+		
 		if ( $("#username").val() == '' ) {
 			$("#username").focus();
 		} else {
-			$("#password").focus();
+			$("#loginPassword").focus();
 		}
-	});
+		
+	});	
+	
 //-->
 </script>
 

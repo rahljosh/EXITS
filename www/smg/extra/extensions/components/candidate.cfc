@@ -297,12 +297,12 @@
 
 
 	<!--- Check Login --->
-	<cffunction name="checkLogin" access="public" returntype="query" output="false" hint="Check candidate credentials">
+	<cffunction name="authenticateCandidate" access="public" returntype="query" output="false" hint="Check candidate credentials">
 		<cfargument name="email" required="yes" hint="Email Address" />
 		<cfargument name="password" required="yes" hint="Password" />		
 
 		<cfquery 
-			name="qCheckLogin" 
+			name="qAuthenticateCandidate" 
 			datasource="#APPLICATION.DSN.Source#">
 				SELECT
 					candidateID,
@@ -327,7 +327,7 @@
 				--->
 		</cfquery>
 		
-		<cfreturn qCheckLogin /> 
+		<cfreturn qAuthenticateCandidate /> 
 	</cffunction>
 
 
@@ -359,6 +359,38 @@
 			} else {
 				return 0;
 			}
+		</cfscript>
+	</cffunction>
+
+
+	<cffunction name="checkEmail" access="public" returntype="query" output="false" hint="Check if email exists - Forgot password">
+    	<cfargument name="email" hint="email is required">
+        <cfargument name="candidateID" default="0" hint="candidateID is not required">
+              
+        <cfquery 
+			name="qCheckEmail" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					candidateID
+					ID, 
+                    firstName,
+                    lastName,                    
+                    email,
+                    password                    
+                FROM 
+                    extra_candidates
+                WHERE
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.email#">
+				AND	
+                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                <cfif VAL(ARGUMENTS.candidateID)>
+                    AND
+                        candidateID != <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+                </cfif>
+		</cfquery>
+		
+        <cfscript>
+			return qCheckEmail;
 		</cfscript>
 	</cffunction>
 
