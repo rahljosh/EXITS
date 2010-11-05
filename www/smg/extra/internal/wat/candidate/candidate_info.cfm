@@ -396,7 +396,7 @@
                             <tr>
                                 <td align="center" class="style1"><strong>Date of Birth:</strong></td>
                                 <td class="style1">
-                                    <cfinput type="text" name="dob" class="date-pick style1" size="12" value="#dateFormat(get_candidate_unqID.dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">
+                                    <cfinput type="text" name="dob" class="datePicker style1" size="12" value="#dateFormat(get_candidate_unqID.dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">
                                     &nbsp; 
                                     <strong>Sex:</strong> 
                                     <input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif get_candidate_unqID.sex Eq 'M'>checked="checked"</cfif>>Male &nbsp; &nbsp;
@@ -617,7 +617,7 @@
                                             <td width="23%" class="style1" align="right"><strong>Start Date:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#dateFormat(get_candidate_unqid.wat_vacation_start, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="wat_vacation_start" class="date-pick style1 editPage" value="#dateFormat(get_candidate_unqid.wat_vacation_start, 'mm/dd/yyyy')#" maxlength="10">
+                                                <input type="text" name="wat_vacation_start" class="datePicker style1 editPage" value="#dateFormat(get_candidate_unqid.wat_vacation_start, 'mm/dd/yyyy')#" maxlength="10">
                                                 <font size="1">(mm/dd/yyyy)</font>
                                             </td>
                                         </tr>
@@ -625,7 +625,7 @@
                                         	<td class="style1" align="right"><strong>End Date:</strong></td>
                                         	<td class="style1">	
                                             	<span class="readOnly">#dateFormat(get_candidate_unqid.wat_vacation_end, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="wat_vacation_end" class="date-pick style1 editPage" value="#dateFormat(get_candidate_unqid.wat_vacation_end, 'mm/dd/yyyy')#" maxlength="10"> 
+                                                <input type="text" name="wat_vacation_end" class="datePicker style1 editPage" value="#dateFormat(get_candidate_unqid.wat_vacation_end, 'mm/dd/yyyy')#" maxlength="10"> 
                                                 <font size="1">(mm/dd/yyyy)</font>
                                         	</td>
                                         </tr>
@@ -793,7 +793,7 @@
                                                 <td width="12%" class="style1"><strong>Date: </strong></td>
                                                 <td colspan="2" class="style1">
                                                     <span class="readOnly">#dateFormat(get_candidate_unqid.cancel_date, 'mm/dd/yyyy')#</span>
-                                                    <input type="text" class="style1 editPage date-pick" name="cancel_date" value="#dateFormat(get_candidate_unqid.cancel_date, 'mm/dd/yyyy')#">
+                                                    <input type="text" class="style1 editPage datePicker" name="cancel_date" value="#dateFormat(get_candidate_unqid.cancel_date, 'mm/dd/yyyy')#">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -956,14 +956,14 @@
                                         	<td class="style1" align="right"><strong>Start Date:</strong></td>
                                         	<td class="style1" colspan="3">
                                             	<span class="readOnly">#dateFormat(get_candidate_unqid.startdate, 'mm/dd/yyyy')#</span>
-                                            	<input type="text" class="date-pick editPage" name="program_startdate" value="#dateFormat(get_candidate_unqid.startdate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
+                                            	<input type="text" class="style1 datePicker editPage" name="program_startdate" value="#dateFormat(get_candidate_unqid.startdate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>End Date:</strong></td>
                                             <td class="style1" colspan="3">
                                                 <span class="readOnly">#dateFormat(get_candidate_unqid.enddate, 'mm/dd/yyyy')#</span>
-                                                <input type="text" class="date-pick editPage" name="program_enddate" value="#dateFormat(get_candidate_unqid.enddate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
+                                                <input type="text" class="style1 datePicker editPage" name="program_enddate" value="#dateFormat(get_candidate_unqid.enddate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
                                             </td>
                                         </tr>
                                     </table>
@@ -1003,14 +1003,14 @@
                                             <td class="style1" align="right"><strong>Date:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#dateFormat(get_candidate_unqid.verification_received, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="verification_received" id="verification_received" class="date-pick style1 editPage" value="#dateFormat(get_candidate_unqid.verification_received, 'mm/dd/yyyy')#" maxlength="10">
+                                                <input type="text" name="verification_received" id="verification_received" class="datePicker style1 editPage" value="#dateFormat(get_candidate_unqid.verification_received, 'mm/dd/yyyy')#" maxlength="10">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>DS-2019 Number:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#get_candidate_unqid.ds2019#</span>
-                                                <input type="text" name="ds2019" class="style1 editPage" value="#get_candidate_unqid.ds2019#" size="12" maxlength="20">
+                                                <input type="text" name="ds2019" class="style1 editPage" value="#get_candidate_unqid.ds2019#" size="20" maxlength="20">
                                             </td>
                                         </tr>
                                         <tr>	

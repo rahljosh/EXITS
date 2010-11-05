@@ -39,6 +39,10 @@
         type="string" 
         default="section" />
 
+	<cfparam name="ATTRIBUTES.width" 
+    	type="string" 
+        default="100%" />
+
 	<cfparam name="ATTRIBUTES.Clear" 
     	type="boolean" 
         default="1" />
@@ -62,7 +66,7 @@
 				<!--- Error displayed on login --->
                 <cfcase value="login">
                 
-                    <table border="0" cellspacing="0" cellpadding="0" class="form-errors">
+                    <table border="0" cellspacing="0" cellpadding="0" class="formErrors">
                     <tr>
                         <td class="errors">
                         

@@ -123,7 +123,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 											</tr>
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" width="35%" align="right"><b>Date of Birth:</b></td>
-												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" class="date-pick" name="dob" size=15 maxlength="100" validate="date" message="Date of Birth MM/DD/YYYY"> <br/>mm/dd/yyyy</td>
+												<td class="style1" bordercolor="FFFFFF" width="65%"><cfinput type="text" class="datePicker" name="dob" size=15 maxlength="100" validate="date" message="Date of Birth MM/DD/YYYY"> <br/>mm/dd/yyyy</td>
 											</tr>
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" width="35%" align="right"><b>Place of Birth:</b></td>
@@ -355,13 +355,13 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 											</tr>		
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" align="right"><b>Start:</b></td>
-												<td class="style1" bordercolor="FFFFFF"><cfinput type="text" class="date-pick" name="startdate" size=10 maxlength="10"  validate="date" message="Start MM/DD/YYYY"><font size="1">mm/dd/yyyy</font></td>
+												<td class="style1" bordercolor="FFFFFF"><cfinput type="text" class="datePicker" name="startdate" size=10 maxlength="10"  validate="date" message="Start MM/DD/YYYY"><font size="1">mm/dd/yyyy</font></td>
 												<td class="style1" bordercolor="FFFFFF" align="right"></td>
 												<td class="style1" bordercolor="FFFFFF"></td>
 											</tr>	
 											<tr>
 												<td class="style1" bordercolor="FFFFFF" align="right"><b>End:</b></td>
-												<td class="style1" bordercolor="FFFFFF"><cfinput type="text" class="date-pick" name="enddate" size=10 maxlength="10" validate="date" message="End Date MM/DD/YYYY"><font size="1">mm/dd/yyyy</font></td>
+												<td class="style1" bordercolor="FFFFFF"><cfinput type="text" class="datePicker" name="enddate" size=10 maxlength="10" validate="date" message="End Date MM/DD/YYYY"><font size="1">mm/dd/yyyy</font></td>
 												<td class="style1" bordercolor="FFFFFF" align="right"></td>
 												<td class="style1" bordercolor="FFFFFF"></td>
 											</tr>

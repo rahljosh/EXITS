@@ -33,6 +33,10 @@
         type="string" 
         default="section" />
 
+	<cfparam name="ATTRIBUTES.width" 
+    	type="string" 
+        default="100%" />
+
 	<cfparam name="ATTRIBUTES.Clear" 
     	type="boolean" 
         default="1" />
@@ -56,9 +60,9 @@
 				<!--- Error displayed on login --->
                 <cfcase value="login">
                 
-                    <table border="0" cellspacing="0" cellpadding="0" class="form-errors">
+                    <table border="0" cellspacing="0" cellpadding="0" class="pageMessages">
                     <tr>
-                        <td class="errors">
+                        <td>
                         
                             <!--- Loop over the messages --->
                             <ul class="list">
@@ -73,6 +77,11 @@
                         </td>
                     </tr>
                     </table>
+
+                    <script type="text/javascript">
+						// FadeIn and FadeOut Message
+                    	$(".pageMessages").fadeIn().fadeOut(5000);
+                    </script>
 
 					<cfscript>
                         // Check to see if we are supposed to clear the queue 

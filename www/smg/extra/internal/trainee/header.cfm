@@ -8,13 +8,11 @@
     <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css">
     <link rel="stylesheet" href="../linked/css/basescript.css" type="text/css">
-	<cfoutput>
+    <cfoutput>
+    <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
     <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+    <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
     </cfoutput>
-    <!-- required plugins -->
-    <script src="../linked/js/date.js" type="text/javascript"></script>
-    <!-- jquery.datePicker.js -->
-    <script src="../linked/js/jquery.datePicker.js" type="text/javascript"></script>
     <!-- Basescript -->
 	<script src="../linked/js/basescript.js" type="text/javascript"></script>
 </head>

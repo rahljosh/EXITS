@@ -92,29 +92,25 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta name="Author" content="Josh Rahl">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>EXTRA - Exchange Training Abroad</title>
-<link rel="stylesheet" href="../style.css" type="text/css">
-<link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="../linked/css/onlineApplication.css" type="text/css">
-<link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css">
-<link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css">
-<!-- Combine these into one single file -->
-<cfoutput>
-<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
-</cfoutput>
-<script src="../linked/js/jquery.popupWindow.js" type="text/javascript"></script> <!-- Jquery PopUp Window -->
-<script src="../linked/js/date.js " type="text/javascript"></script> <!-- required plugins -->
-<script src="../linked/js/jquery.datePicker.js " type="text/javascript"></script> <!-- jquery.datePicker.js -->
-<script src="../linked/js/jquery.validate.js " type="text/javascript"></script> <!-- jquery validation -->
-<script src="../linked/js/jquery.metadata.js " type="text/javascript"></script> <!-- jquery validation -->
-<script src="../linked/js/basescript.js" type="text/javascript"></script> <!-- baseScript -->
-<script type="text/javascript" language="javascript">
-	$(function() {
-		$('.date-pick').datePicker({startDate:'01/01/2009'});
-	});	
-</script>
+    <meta name="Author" content="CSB International">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>EXTRA - Exchange Training Abroad</title>
+    <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../style.css" type="text/css">
+    <link rel="stylesheet" href="../linked/css/onlineApplication.css" type="text/css">
+    <link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css">
+    <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css">
+    <!-- Combine these into one single file -->
+    <cfoutput>
+    <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+    <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+    <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+    </cfoutput>
+    <script type="text/javascript" src="../linked/js/jquery.popupWindow.js"></script> <!-- Jquery PopUp Window -->
+    <script type="text/javascript" src="../linked/js/jquery.validate.js"></script> <!-- jquery form validation -->
+    <script type="text/javascript" src="../linked/js/jquery.metadata.js"></script> <!-- jquery form validation -->
+    <script type="text/javascript" src="../linked/js/jquery.maskedinput-1.2.2.min.js"></script> <!-- input plugin (phone,ssn,date) -->
+    <script type="text/javascript" src="../linked/js/basescript.js"></script> <!-- baseScript -->
 </head>
 <body>
 

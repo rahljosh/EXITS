@@ -94,6 +94,7 @@
         SELECT 
         	ej.id, 
             ej.title, 
+            ej.hours,
             ej.description,
             ej.wage, 
             ej.wage_type
@@ -264,6 +265,7 @@
                     INSERT INTO 
                         extra_hostcompany 
                     (
+                        companyID,
                         name,
                         business_typeID,
                         address,
@@ -289,6 +291,7 @@
                     )                
                     VALUES 
                     (
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
                          <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
                          <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.business_typeID#">,
                          <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
@@ -405,22 +408,15 @@
 		}
 		
 	}
-
-	function openWindow(url, setHeight, setWidth) {
-		newwindow = window.open(url, 'Application', 'height=' + setHeight + ', width=' + setWidth + ', location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
-		if(window.focus) {
-			newwindow.focus()
-		}
-	}
+	
+	// Fomat Phone Number
+	jQuery(function($){
+	   $("#phone").mask("(999)999-9999");
+	   $("#fax").mask("(999)999-9999");
+	   $("#supervisor_phone").mask("(999)999-9999");
+	});	
 	// --> 
 </script>
-
-<style type="text/css">
-<!-- 
-	.editPage { display:none;}
-	.hiddenField { display:none;}
--->
-</style>
 
 <cfoutput>
 
@@ -650,7 +646,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>Instructions:</strong></td>
+                                            <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.arrivalInstructions#</span>
                                                 <textarea name="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
@@ -693,19 +689,19 @@
                                             <td class="style1" align="right"><strong>Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.phone#</span>
-                                                <input type="text" name="phone" value="#FORM.phone#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="phone" id="phone" value="#FORM.phone#" class="style1 editPage" size="35" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Fax:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">
-                                                	#FORM.fax#
+                                                	#FORM.fax# &nbsp;
                                                     <a href="javascript:openWindow('hostcompany/fax_cover.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 600, 800);">
                                                         <img src="../pics/fax-cover.gif" alt="Fax Cover Page" border="0" />
                                                     </a>
                                                 </span>
-                                                <input type="text" name="fax" value="#FORM.fax#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="fax" id="fax" value="#FORM.fax#" class="style1 editPage" size="35" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
@@ -726,7 +722,7 @@
                                             <td class="style1" align="right"><strong>Supervisor Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_phone#</span>
-                                                <input type="text" name="supervisor_phone" value="#FORM.supervisor_phone#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="supervisor_phone" id="supervisor_phone" value="#FORM.supervisor_phone#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
                                         <tr>
@@ -744,7 +740,7 @@
                                             </td>                                            
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>Observations:&nbsp;</strong></td>
+                                            <td class="style1" align="right" valign="top"><strong>Observations:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.observations#</span>
                                                 <textarea name="observations" class="style1 editPage" cols="35" rows="4">#FORM.observations#</textarea>
@@ -765,25 +761,27 @@
 
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Jobs</td>
+                                            <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Jobs</td>
                                         </tr>
                                         <tr>
                                             <td class="style1"><strong><u>Job Title</u></strong></td>
                                             <td class="style1"><strong><u>Wage</u></strong></td>
+                                            <td class="style1"><strong><u>Hours/Week</u></strong></td>
                                         </tr>
                                         <cfloop query="qGetJobs">
-                                            <tr>
+                                            <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                                                 <td class="style1">
                                                 	<a href="javascript:openWindow('hostcompany/edit_newjob.cfm?jobid=#id#', 300, 600);">
 	                                                    #qGetJobs.title#
                                                     </a>
                                                 </td>
-                                                <td class="style1">#qGetJobs.wage# / hour</td>
+                                                <td class="style1">#qGetJobs.wage# / #qGetJobs.wage_type#</td>
+                                                <td class="style1">#qGetJobs.hours#</td>
                                             </tr>
                                         </cfloop>
                                         <cfif VAL(qGetHostCompanyInfo.hostCompanyID) AND ListFind("1,2,3,4", CLIENT.userType)>
                                             <tr>
-                                                <td colspan="2" align="center">
+                                                <td colspan="3" align="center">
                                                     <a href="javascript:openWindow('hostcompany/add_newjob.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);" > 
                                                         <img src="../pics/add-job.gif" width="64" height="20" border="0" />
                                                     </a>

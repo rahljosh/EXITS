@@ -128,7 +128,7 @@
 				</cfsavecontent>   
             
             	<cfsavecontent variable="csbHeader">
-                    <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.CSB.name# #APPLICATION.CSB.programName#">
+                    <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.CSB.name#">
                         <div class="mainLogo"></div>
                         <div class="title">#APPLICATION.CSB.name#</div>
                         <div class="subTitle">&nbsp;</div>
