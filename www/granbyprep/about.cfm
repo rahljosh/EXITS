@@ -23,6 +23,7 @@ body {
 <body class="oneColElsCtrHdr">
 
 <div id="container">
+<div href="javascript:void(0)" onclick="window.location.href='http://www.granbyprep.com'">
   <div id="headerBar">
     <div id="clickright">
   <a href="index.cfm"><img src="images/click.png" width="190" height="170" border="0" /></a>
@@ -30,14 +31,21 @@ body {
 <div id="ciQmQ6" style="z-index:100;position:absolute"></div><div id="scQmQ6" style="display:inline"></div><div id="sdQmQ6" style="display:none"></div><script type="text/javascript">var seQmQ6=document.createElement("script");seQmQ6.type="text/javascript";var seQmQ6s=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/granbyprep/safe-standard.js?ps_h=QmQ6&ps_t="+new Date().getTime();setTimeout("seQmQ6.src=seQmQ6s;document.getElementById('sdQmQ6').appendChild(seQmQ6)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=granbyprep">Live Support Chat</a></div></noscript>
 <!-- END ProvideSupport.com Graphics Chat Button Code -->
   <!-- end clickright --></div>
-  <!-- end header --></div>
+  <!-- end header --></div></div>
   <div id="menu">
 <cfinclude template ="menu.cfm">
   </div>
 <div id="mainContent">
-  <div class="photo"><img src="images/schoolgrounds.png" width="300" height="200" /></div>
+
     <h2>About Granby Prep</h2>
-    <p class="paragraphText">Granby Preparatory Academy is a co-ed, independent boarding school located 70 miles west of Boston. It is located on acres of beautiful grounds in the residential community of Granby, Massachusetts. This location in the heart of New England provides close proximity to all major airports, cities and the world's best colleges. </p><p class="paragraphText">The beauty of our campus is very evident as soon as you enter the grounds.</p><p class="paragraphText"> Granby Prep has a rigorous academic program combined with diversified athletic and social programs. This school will create an environment to help our students achieve academic excellence and learn how to appreciate cultural diversity in an ever-shrinking world. Learning and playing side by side with Americans and international students, our diversified student population will learn how to work together to create a positive impact in today's society. An excellent student to teacher ratio will allow us to cater to each of our student's needs.</p><p class="paragraphText"> Granby Prep will specialize in overseas opportunities for our American students who want to experience the world of business in foreign countries on a short-term basis. Our international students will be presented with various opportunities to travel and see some of America's greatest cities and sites.</p>
+      <div class="photoAbout"><img src="images/facts.jpg"/></div>
+    <p class="paragraphText">Granby Preparatory Academy is located on beautiful grounds in the residential community of Granby, Massachusetts. The location, in the heart of New England, provides close proximity to several large universities, including Harvard and Yale, both of which are approximately an hour and a half from the campus. Several other prestigious universities and colleges, such as Boston College, Boston University, Brown University, UMass-Amherst, and Williams College are also in this region. Boston, Massachusetts and New York, New York are accessible to GPA students and serve as school trip destinations. Logan International Airport is 90 minutes from campus and Bradley International Airport is 40 minutes from campus and the Amtrak train station is 20 minutes from campus.<br />
+      <br />
+
+The traditional college preparatory curriculum employs several methods of learning including class discussions, group projects, individual work, and tutorial sessions for additional assistance. Advanced Placement courses as well as Honors Programs are available for all subjects. Faculty are equipped with the latest teaching tools and encourage students to be active learners.<br />
+<br />
+
+The International Students at GPA have every level of English as a Second Language courses and standardized test preparation available. GPA is committed to teaching all students, domestic and international, the importance of thinking, learning, and acting globally. Students have the opportunity to travel to various countries on exchange trips with other schools, as well as take part in hosting several international and domestic business and political leaders on campus. The learning opportunities at GPA are not just occurring in the classroom, but extend to the dormitory, the athletic fields, the community, and the rest of the world.</p>
     <p></p>
   <!-- end mainContent --></div>
   <div id="footer">

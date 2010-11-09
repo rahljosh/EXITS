@@ -20,7 +20,7 @@ body {
 li {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 16px;
-	line-height: 19px;
+	line-height: 23px;
 }
 -->
 </style></head>
@@ -28,6 +28,7 @@ li {
 <body class="oneColElsCtrHdr">
 
 <div id="container">
+<div href="javascript:void(0)" onclick="window.location.href='http://www.granbyprep.com'">
   <div id="headerBar">
     <div id="clickright">
   <a href="index.cfm"><img src="images/click.png" width="190" height="170" border="0" /></a>
@@ -35,7 +36,7 @@ li {
 <div id="ciQmQ6" style="z-index:100;position:absolute"></div><div id="scQmQ6" style="display:inline"></div><div id="sdQmQ6" style="display:none"></div><script type="text/javascript">var seQmQ6=document.createElement("script");seQmQ6.type="text/javascript";var seQmQ6s=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/granbyprep/safe-standard.js?ps_h=QmQ6&ps_t="+new Date().getTime();setTimeout("seQmQ6.src=seQmQ6s;document.getElementById('sdQmQ6').appendChild(seQmQ6)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=granbyprep">Live Support Chat</a></div></noscript>
 <!-- END ProvideSupport.com Graphics Chat Button Code -->
   <!-- end clickright --></div>
-  <!-- end header --></div>
+  <!-- end header --></div></div>
   <div id="menu">
 <cfinclude template ="menu.cfm">
   </div>
@@ -49,8 +50,8 @@ li {
 <li>All buildings are connected so you don't have to go outside in the winter!
 <li>30 classrooms
 <li>Dormitories have a capacity of 165 boarders in single, double and triple rooms
-<li>Every square foot of the campus will be renovated in 2010-2011, including all new furniture and technology throughout<br /><br />
-
+<li>Every square foot of the campus will be renovated in 2010-2011, including all new furniture and technology throughout
+<li>Board students in grades 6 - 12.
 <li>Traditional college prep curriculum with an international emphasis
 <li>Class sizes of 15 or less
 <li>Latest teaching technology in each classroom
