@@ -54,7 +54,7 @@
         </cfif>
         
         <!--- Intl Rep Account --->
-        <cfif VAL(CLIENT.userType) GT 4>
+        <cfif NOT ListFind("1,2,3,4", CLIENT.userType)>
             AND
                 ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">            
         </cfif>
