@@ -177,7 +177,7 @@ h3{text-indent:10px;}
         <cfquery name="trips" datasource="#APPLICATION.DSN.Source#">
         select *
         from smg_tours
-        where tour_status = 'active'
+        where tour_status <> 'inactive'
         </cfquery>
        	<cfquery name="tripInfo" dbtype="query">
         select *
@@ -186,6 +186,7 @@ h3{text-indent:10px;}
         </cfquery>
         <cfoutput>
         <h2 align="Center">Flight Quote</h2>
+        This should be used to check flight prices before you book a trip.  Once you have booked a trip, you will be contacted by the travel agent once your permission form is received.  You do NOT need to submit a flight quote request to initiate the flight purchase process.
         <cfform method="post" action="quote.cfm">
 
 
