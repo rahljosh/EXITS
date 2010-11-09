@@ -23,6 +23,7 @@ body {
 <body class="oneColElsCtrHdr">
 
 <div id="container">
+<div href="javascript:void(0)" onclick="window.location.href='http://www.granbyprep.com'">
   <div id="headerBar">
     <div id="clickright">
   <a href="index.cfm"><img src="images/click.png" width="190" height="170" border="0" /></a>
@@ -30,7 +31,7 @@ body {
 <div id="ciQmQ6" style="z-index:100;position:absolute"></div><div id="scQmQ6" style="display:inline"></div><div id="sdQmQ6" style="display:none"></div><script type="text/javascript">var seQmQ6=document.createElement("script");seQmQ6.type="text/javascript";var seQmQ6s=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/granbyprep/safe-standard.js?ps_h=QmQ6&ps_t="+new Date().getTime();setTimeout("seQmQ6.src=seQmQ6s;document.getElementById('sdQmQ6').appendChild(seQmQ6)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=granbyprep">Live Support Chat</a></div></noscript>
 <!-- END ProvideSupport.com Graphics Chat Button Code -->
   <!-- end clickright --></div>
-  <!-- end header --></div>
+  <!-- end header --></div></div>
   <div id="menu">
 <cfinclude template ="menu.cfm">
   </div>
@@ -39,19 +40,31 @@ body {
     <h2>Tuition and Financial Aid</h2>
  
     <ul><ol>Boarding: $47,250</ol>
+    <ol>Junior Boarding: $52,500</ol>
 <ol>Day: $24,500 </ol>
 <ol>International Fee: $3,000</ol><br /><br />
-<ol><strong>Tuition Refund Plan </strong>(manadatory): </ol>
+<ol>
+  <strong>Tuition Refund Plan* </strong>(Mandatory): 
+</ol>
 <ol>Boarding: $650</ol>
 <ol>Day: $450</ol>
-<ol>Mandatory U.S. health insurance for <br /> international boarding students: $750</ol><br /><br />
+<ol>Mandatory U.S. health insurance for <br /> international boarding students: $750</ol><br />
+<ol>
+  <span class="italic">*The Tuition Refund Plan provides an allowance of tuition charges in the event of withdrawal of a student for medical causes as well as other reasons, including dismissal by GPA</span>.
+</ol><br /><br />
 <ol><strong>Application Fees:</strong></ol>
 <ol>International: $150</ol>
 <ol>Domestic: $75</ol><br /><br />
-<ol><strong>Deposits:</strong></ol>
+<ol>
+  <strong>Deposits**:</strong>
+</ol>
 <ol>Boarding: $5,000</ol>
-<ol>Day: $1,500</ol><br /><br />
+<ol>Day: $1,500</ol>
+<ol>
+  <span class="italic">**included in the prices listed above</span>.
+</ol><br /><br />
 <ol><strong>Laundry Service </strong>(mandatory for boarding students) $450 per semester.</ol></ul>
+<br /><br />
   <!-- end mainContent --></div>
   <div id="footer">
     <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />

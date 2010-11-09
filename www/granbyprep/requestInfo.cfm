@@ -27,39 +27,40 @@ td, th {
 
 <body class="oneColElsCtrHdr">
 <Cfif isDefined('form.sendEmail')>
-<cfmail  to="jeimi@exitgroup.org" replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
+<cfmail  to="jeimi@exitgroup.org, bchatterley@granbyprep.com" replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
 <p> The info submitted was:
   <br /><br />
   <strong>Student Information</strong><br />
   Name:#form.firstname# #form.lastname#<br />
-  Sex: #form.sex# 
+  Email:#form.email#<br />
+  Sex:#form.sex# 
   <br />
-  Date of Birth: #form.birth#<br />
-  Current School: #form.current#<br />
+  Date of Birth:#form.birth#<br />
+  Current School:#form.current#<br />
   Current Grade: #form.grade# <br />
   Admission for what grade: #form.admission#<br />
   Admission for what grade: #form.admYear#<br />
-  Day / Boarding school: #form.school#<br />
-  Academic Interests: #form.academicInt#<br />
-  Other Interests: #form.interests#<br />
+  Day / Boarding school:#form.school#<br />
+  Academic Interests:#form.academicInt#<br />
+  Other Interests:#form.interests#<br />
   Sports Interests:#form.sportsInt#
-  Comments: #form.comments#<br /><br /><br />
+  Comments:#form.comments#<br /><br /><br />
   
   <strong>Parent / Guardian Information</strong><br />
-   Name: #form.ptfirstname# #form.ptlastname#<Br />
-  Address: #form.address#<br />
-  City: #form.city#<Br />
-  State: #form.state#<br />
-  Zip: #form.zip#<br />
+   Name:#form.ptfirstname# #form.ptlastname#<Br />
+  Address:#form.address#<br />
+  City:#form.city#<Br />
+  State:#form.state#<br />
+  Zip:#form.zip#<br />
   Country: #form.country#<br />
-  Phone: #form.phone#<br />
-  Email: #form.email#<br /><br />
+  Phone: #form.phone#<br /><br />
   
-  Have a rockin day.</p>
+  </p>
 
 </cfmail>
 </Cfif>
 <div id="container">
+<div href="javascript:void(0)" onclick="window.location.href='http://www.granbyprep.com'">
   <div id="headerBar">
     <div id="clickright">
   <a href="index.cfm"><img src="images/click.png" width="190" height="170" border="0" /></a>
@@ -67,7 +68,7 @@ td, th {
 <div id="ciQmQ6" style="z-index:100;position:absolute"></div><div id="scQmQ6" style="display:inline"></div><div id="sdQmQ6" style="display:none"></div><script type="text/javascript">var seQmQ6=document.createElement("script");seQmQ6.type="text/javascript";var seQmQ6s=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/granbyprep/safe-standard.js?ps_h=QmQ6&ps_t="+new Date().getTime();setTimeout("seQmQ6.src=seQmQ6s;document.getElementById('sdQmQ6').appendChild(seQmQ6)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=granbyprep">Live Support Chat</a></div></noscript>
 <!-- END ProvideSupport.com Graphics Chat Button Code -->
   <!-- end clickright --></div>
-  <!-- end header --></div>
+  <!-- end header --></div></div>
   <div id="menu">
 <cfinclude template ="menu.cfm">
   </div>
@@ -92,6 +93,10 @@ td, th {
     <th bgcolor="##FFFFFF" scope="row"><span class="formText">Students Last Name</span></th>
     <td bgcolor="##FFFFFF"><cfinput name="lastname" type="text" /></td>
     </tr>
+     <tr>
+ <th bgcolor="##FFFFFF" scope="row"><span class="formText">Email Address</span></th>
+ <td bgcolor="##FFFFFF"><cfinput name="email" type="text" /></td>
+ </tr>
   <tr>
     <th bgcolor="##FFFFFF" scope="row">&nbsp; </th>
     <td bgcolor="##FFFFFF"><span class="formText">male</span>
@@ -209,10 +214,6 @@ td, th {
  <tr>
  <th bgcolor="##FFFFFF" scope="row"><span class="formText">Home Phone</span></th>
  <td bgcolor="##FFFFFF"><cfinput name="phone" type="text" /></td>
- </tr>
- <tr>
- <th bgcolor="##FFFFFF" scope="row"><span class="formText">Email Address</span></th>
- <td bgcolor="##FFFFFF"><cfinput name="email" type="text" /></td>
  </tr>
  </table>
  <table width="425" border="0">

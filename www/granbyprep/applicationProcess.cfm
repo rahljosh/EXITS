@@ -23,6 +23,7 @@ body {
 <body class="oneColElsCtrHdr">
 
 <div id="container">
+<div href="javascript:void(0)" onclick="window.location.href='http://www.granbyprep.com'">
   <div id="headerBar">
     <div id="clickright">
   <a href="index.cfm"><img src="images/click.png" width="190" height="170" border="0" /></a>
@@ -30,28 +31,29 @@ body {
 <div id="ciQmQ6" style="z-index:100;position:absolute"></div><div id="scQmQ6" style="display:inline"></div><div id="sdQmQ6" style="display:none"></div><script type="text/javascript">var seQmQ6=document.createElement("script");seQmQ6.type="text/javascript";var seQmQ6s=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/granbyprep/safe-standard.js?ps_h=QmQ6&ps_t="+new Date().getTime();setTimeout("seQmQ6.src=seQmQ6s;document.getElementById('sdQmQ6').appendChild(seQmQ6)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=granbyprep">Live Support Chat</a></div></noscript>
 <!-- END ProvideSupport.com Graphics Chat Button Code -->
   <!-- end clickright --></div>
-  <!-- end header --></div>
+  <!-- end header --></div></div>
   <div id="menu">
 <cfinclude template ="menu.cfm">
   </div>
 <div id="mainContent">
    
     <h2>Application Process</h2>
-<h4>Campus Visit</h4>
+    <p class="paragraphText"> Below is a checklist of required items for application to GPA.  The application deadline for consideration in the first round is February 1st, 2011.  However, we do have a rolling admission policy which means that if you complete your application before January 1st, you will receive an admission decision early.  We will begin making admission decisions for the 2011-2012 school year on October 1st, 2010.</p>
+<h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Campus Visit</h4>
  <p class="paragraphText"> We hope you'll be able to visit our campus and take a tour of our facilities.  At that time you can also have your interview with a member of the admission staff.  If you aren't able to visit, you can arrange to have a Skype interview by emailing the admission office at admission@granbyprep.com. </p>
  
- <h4>Application</h4>
- <p class="paragraphText"> Please create a login and complete your online application at the following link: click here. </p>
+ <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Application</h4>
+ <p class="paragraphText"> Please create a login and complete your online application at the following link: <a href="https://www.granbyprep.com/admissions/index.cfm?"><strong>click here.</strong></a> </p>
  
- <h4>Teacher Recommendations</h4>
+ <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Teacher Recommendations</h4>
  <p class="paragraphText"> Teacher recommendations must be printed from the online application site and must be mailed, faxed or emailed by the teacher directly to GPA.</p>
  
- <h4>School Transcript</h4>
+ <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;School Transcript</h4>
  <p class="paragraphText"> School Transcripts from the last two years should be sent directly from the school to GPA.</p>
  
-  <h4>Standardized Testing</h4>
+  <h4><img src="images/box_33.png" width="14" height="11" />&nbsp;Standardized Testing</h4>
  <p class="paragraphText"> Acceptable tests include National, State or Regional Tests.  TOEFL and SLEP tests are also acceptable.  Test results should be sent directly to GPA.</p>
- <p>&nbsp;</p>
+ <p><a href="https://www.granbyprep.com/admissions/index.cfm?"><img src="images/applyHere_25.png" width="85" height="22" border="0"/></a></p>
 
   <!-- end mainContent --></div>
   <div id="footer">

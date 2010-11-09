@@ -17,12 +17,17 @@ body {
 	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
 	color: #000000;
 }
+p {
+	text-align: justify;
+	line-height: 17px;
+}
 -->
 </style></head>
 
 <body class="oneColElsCtrHdr">
 
 <div id="container">
+<div href="javascript:void(0)" onclick="window.location.href='http://www.granbyprep.com'">
   <div id="headerBar">
     <div id="clickright">
   <a href="index.cfm"><img src="images/click.png" width="190" height="170" border="0" /></a>
@@ -30,57 +35,38 @@ body {
 <div id="ciQmQ6" style="z-index:100;position:absolute"></div><div id="scQmQ6" style="display:inline"></div><div id="sdQmQ6" style="display:none"></div><script type="text/javascript">var seQmQ6=document.createElement("script");seQmQ6.type="text/javascript";var seQmQ6s=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/granbyprep/safe-standard.js?ps_h=QmQ6&ps_t="+new Date().getTime();setTimeout("seQmQ6.src=seQmQ6s;document.getElementById('sdQmQ6').appendChild(seQmQ6)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=granbyprep">Live Support Chat</a></div></noscript>
 <!-- END ProvideSupport.com Graphics Chat Button Code -->
   <!-- end clickright --></div>
-  <!-- end header --></div>
+  <!-- end header --></div></div>
   <div id="menu">
 <cfinclude template ="menu.cfm">
   </div>
 <div id="mainContentCenter">
-    <h2>The Hampshire Hospitality Group</h2>
-<p class="paragraphText"><strong>The Hampshire Hospitality Group has 7 hotels, ranging from a quaint New England lodge to a full-service chain hotel. All are within 16 miles of the Granby Preparatory Academy and offer discounts to our visitors.</strong></p>
 
-<h4>University Lodge</h4>
-<p class="paragraphItalic"> For reservations call 413-256-8111 and ask for the Granby Prep discount. </p>
-<img src="images/hotels/univLodge.jpg" width="576" height="139" alt="university lodge" />
-<p class="paragraphText"><strong> Located 11 miles from the academy</strong><br />
-    &#8226;&nbsp;&nbsp;walking distance to downtown Amherst&nbsp;&nbsp;&#8226;&nbsp;&nbsp;exterior access&nbsp;&nbsp;&#8226;&nbsp;&nbsp;computer for guest use in lobby&nbsp;&nbsp;&#8226;&nbsp;&nbsp;20 guestrooms&nbsp;&nbsp;&#8226;&nbsp;&nbsp;2 double beds&nbsp;&nbsp;&#8226;&nbsp;&nbsp;coffeemaker&nbsp;&nbsp;&#8226;&nbsp;&nbsp;mini fridge&nbsp;&nbsp;&#8226;&nbsp;&nbsp;microwave&nbsp;&nbsp;&#8226;&nbsp;&nbsp;pets allowed for a small fee&nbsp;&nbsp;&#8226;&nbsp;&nbsp;smoking &amp; non-smoking rooms<br /></p><br />
+    <h2>GRANBY, MA</h2>
+    <div class="photo"><img src="images/church.png"/><br />
+    <span class="picture">photo by: Mark J. Romani</span></div>
+<p class="paragraphText">The Town of Granby is a rural suburban town on the outskirts of the Holyoke
+metropolitan area, approximately 20 minutes from Springfield, MA and 30 minutes from Bradley International Airport in Hartford, MA.  Granby is centrally located near several prestigious colleges, including Mt. Holyoke College, Amherst College, Hampshire College and Smith College.  Settled around 1727, the town is dominated in the north by the Holyoke range of hills and has a rugged terrain which hampered agricultural development as the limited water resources hampered industrial development.  However, despite these obstacles, settlers developed farms and some limited industries which made up the town's economic foundation. They grew grains, turnips, pumpkins and hops, and small distilleries were open by 1812 using the surplus grain produced.  Dairy farming, making buttons and palm leaf hats followed these in economic importance in the 19th century.<br /><br />                                                              
+However, by 1875, local industry was gone and agriculture, primarily dairy farming, was the staple in Granby.  The town still retains the huge, well-known milk bottle which houses a dairy bar. Granby retains its original meeting house green and the period character that this section of town gives it as well as a fine neoclassical library and a good stock of Greek revival houses.</p><br /><br />
+<img src="images/line_03.jpg" width="600" height="10" />
+<h4>LOCATION</h4>
+<p class="paragraphText">West central Massachusetts, bordered by Amherst on the north, Belchertown on the east, Ludlow and Chicopee on the south, and South Hadley on the west. Granby is about 15 miles north of Springfield, 46 miles west of Worcester, 85 miles west of Boston, and 152 miles from New York City. </p>
+<p class="paragraphText"><strong> TOTAL AREA:</strong> 28.07 sq. miles<br />
+						<strong> LAND AREA:</strong> 27.87 sq. miles<br />
+                        <strong> POPULATION:</strong> 5,565<br />
+    <strong> DENSITY:</strong> 200 per sq. miles<br />
+    <strong> CLIMATE:</strong><br />
+    &nbsp; &nbsp; &nbsp;Normal temperature in January.....23.6&#176;F<br />  
+  &nbsp; &nbsp; &nbsp;Normal temperature in July...........71.9&#176;F<br />  
+   &nbsp; &nbsp; &nbsp;Normal annual precipitation.........42.5"</p>
    
 <img src="images/line_03.jpg" width="600" height="10" />
-<h4>Courtyard Hadley Amherst</h4>
- <p class="paragraphItalic"> For reservations call 413-256-5454 and ask for the Granby Prep discount. </p>
-<img src="images/hotels/courtyardHadley.jpg" width="576" height="113" alt="university lodge" />
-<p class="paragraphText"><strong> Located less than 12 miles from the academy</strong><br />
-  &#8226;&nbsp;&nbsp;Platinum Award winner&nbsp;&nbsp;&#8226;&nbsp;&nbsp;96 rooms including Standard, large Corner &amp; Suites&nbsp;&nbsp;&#8226;&nbsp;&nbsp;Lounge/bar&nbsp;&nbsp;&#8226;&nbsp;&nbsp;indoor heated pool&nbsp;&nbsp;&#8226;&nbsp;&nbsp; hot tub&nbsp;&nbsp;&#8226;&nbsp;&nbsp;business center&nbsp;&nbsp;&#8226;&nbsp;&nbsp;free Wifi&nbsp;&nbsp;&#8226;&nbsp;&nbsp;banquet &amp; meeting rooms&nbsp;&nbsp;&#8226;&nbsp;&nbsp;fitness room&nbsp;&nbsp;&#8226;&nbsp;&nbsp;guest laundry room&nbsp;&nbsp;&#8226;&nbsp;&nbsp;100% nonsmoking<br /></p><br />
- <img src="images/line_03.jpg" width="600" height="10" />
-  
-  <h4>Howard Johnson</h4>
-  <p class="paragraphItalic"> For reservations call 413-586-0114 and ask for the Granby Prep discount. </p>
-<img src="images/hotels/howardJohnson.jpg" width="576" height="131" alt="university lodge" />
-<p class="paragraphText"><strong> Located less than 12 miles from the academy</strong><br />
-&#8226;&nbsp;&nbsp;free continental breakfast&nbsp;&nbsp;&#8226;&nbsp;&nbsp;seasonal outdoor pool&nbsp;&nbsp;&#8226;&nbsp;&nbsp;computer for guest use in lobby&nbsp;&nbsp;&#8226;&nbsp;&nbsp;free Wifi&nbsp;&nbsp;&#8226;&nbsp;&nbsp;small meeting room&nbsp;&nbsp;&#8226;&nbsp;&nbsp;fitness room&nbsp;&nbsp;&#8226;&nbsp;&nbsp;guest laundry room&nbsp;&nbsp;&#8226;&nbsp;&nbsp;100 guestrooms&nbsp;&nbsp;&#8226;&nbsp;&nbsp;pets allowed for a small fee&nbsp;&nbsp;&#8226;&nbsp;&nbsp;smoking &amp; non-smoking rooms<br /></p><br />
-  <img src="images/line_03.jpg" width="600" height="10" />
-   
-   <h4>Holiday Inn Express Hotel &amp; Suites</h4>
-    <p class="paragraphItalic"> For reservations call 413-582-0002 and ask for the Granby Prep discount.</p>
-<img src="images/hotels/holidayInn.jpg" width="575" height="138" alt="university lodge" />
-<p class="paragraphText"><strong> Located less than 12 miles from the academy</strong><br />
-    &#8226;&nbsp;&nbsp;Intercontinental Quality Excellence Award winner&nbsp;&nbsp;&#8226;&nbsp;&nbsp;100 rooms including Standard, Executive &amp; Suites&nbsp;&nbsp;&#8226;&nbsp;&nbsp;free continental hot breakfast buffet&nbsp;&nbsp;&#8226;&nbsp;&nbsp;indoor heated pool&nbsp;&nbsp;&#8226;&nbsp;&nbsp;hot tub&nbsp;&nbsp;&#8226;&nbsp;&nbsp;computer for guest use in lobby&nbsp;&nbsp;&#8226;&nbsp;&nbsp;free Wifi&nbsp;&nbsp;&#8226;&nbsp;&nbsp;meeting rooms&nbsp;&nbsp;&#8226;&nbsp;&nbsp;fitness room&nbsp;&nbsp;&#8226;&nbsp;&nbsp;guest laundry room&nbsp;&nbsp;&#8226;&nbsp;&nbsp;soon to be 100% nonsmoking<br /></p><br />
- <img src="images/line_03.jpg" width="600" height="10" />
-  
-  <h4>Econo Lodge</h4>
-   <p class="paragraphItalic"> For reservations call 413-582-7077 and ask for the Granby Prep discount.</p>
-<img src="images/hotels/econo.jpg" width="576" height="139" alt="university lodge" />
-<p class="paragraphText"><strong> Located less than 12 miles from the academy</strong><br />
-    &#8226;&nbsp;&nbsp;Platinum Award winner&nbsp;&nbsp;&#8226;&nbsp;&nbsp;63 rooms&nbsp;&nbsp;&#8226;&nbsp;&nbsp;free continental breakfast&nbsp;&nbsp;&#8226;&nbsp;&nbsp;indoor heated pool&nbsp;&nbsp;&#8226;&nbsp;&nbsp;computer for guest use in lobby&nbsp;&nbsp;&#8226;&nbsp;&nbsp;free High Speed Internet&nbsp;&nbsp;&#8226;&nbsp;&nbsp;guest laundry room&nbsp;&nbsp;&#8226;&nbsp;&nbsp;smoking &amp; non-smoking rooms<br /></p><br />
- <img src="images/line_03.jpg" width="600" height="10" />
-
-  <h4>Clarion Hotel &amp; Conference Center</h4>
-  <p class="paragraphItalic"> For reservations call 413-586-1211 and ask for the Granby Prep discount.</p>
-<img src="images/hotels/Clarion.jpg" width="576" height="139" alt="university lodge" />
-<p class="paragraphText"><strong> Located less than 16 miles from the academy</strong><br />
-    &#8226;&nbsp;&nbsp;full-service hotel&nbsp;&nbsp;&#8226;&nbsp;&nbsp;easy access to/from Interstate 91&nbsp;&nbsp;&#8226;&nbsp;&nbsp;ATM&nbsp;&nbsp;&#8226;&nbsp;&nbsp;122 guestrooms including Standard, Business &amp; Suites&nbsp;&nbsp;&#8226;&nbsp;&nbsp;Montana's Tavern open for breakfast &amp; dinner&nbsp;&nbsp;&#8226;&nbsp;&nbsp;Room Service&nbsp;&nbsp;&#8226;&nbsp;&nbsp;indoor heated pool&nbsp;&nbsp;&#8226;&nbsp;&nbsp;seasonal outdoor pool&nbsp;&nbsp;&#8226;&nbsp;&nbsp;children’s pool&nbsp;&nbsp;&#8226;&nbsp;&nbsp;banquet &amp; meeting rooms&nbsp;&nbsp;&#8226;&nbsp;&nbsp;computer for guest use in lobby&nbsp;&nbsp;&#8226;&nbsp;&nbsp;Wifi&nbsp;&nbsp;&#8226;&nbsp;&nbsp;tennis court&nbsp;&nbsp;&#8226;&nbsp;&nbsp;sand volleyball court&nbsp;&nbsp;&#8226;&nbsp;&nbsp;horseshoe pit&nbsp;&nbsp;&#8226;&nbsp;&nbsp;seasonal outdoor café/bar&nbsp;&nbsp;&#8226;&nbsp;&nbsp;pets allowed for a small fee&nbsp;&nbsp;&#8226;&nbsp;&nbsp; smoking &amp; non-smoking rooms<br /></p>
-  
-  
-  <!-- end mainContent --></div>
+<h2>TRANSPORTATION AND ACCESS</h2>
+ <p class="paragraphText"> Granby is located in the Pioneer Valley Region, known as the crossroads of New England because of its strategic position along the Connecticut River and its excellent transportation facilities. The Massachusetts Turnpike    
+   connects the region to Boston and to Albany, New York. Interstate 91 provides direct access to Hartford, Connecticut, and to Brattleboro and points north in Vermont.  Bradley International Airport in Connecticut serves as the primary airport for Granby Preparatory Academy. </p>
+ <p class="paragraphText"><strong> RAIL</strong><br />
+  Amtrak's passenger rail service between Montreal and Washington, D.C. is accessible in neighboring Amherst<br /></p><br /><br />
+  <!-- end mainContent -->
+</div>
   <div id="footer">
     <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
     For more information contact us at info@granbyprep.com</p>

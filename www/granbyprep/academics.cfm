@@ -23,6 +23,7 @@ body {
 <body class="oneColElsCtrHdr">
 
 <div id="container">
+<div href="javascript:void(0)" onclick="window.location.href='http://www.granbyprep.com'">
   <div id="headerBar">
     <div id="clickright">
   <a href="index.cfm"><img src="images/click.png" width="190" height="170" border="0" /></a>
@@ -30,12 +31,12 @@ body {
 <div id="ciQmQ6" style="z-index:100;position:absolute"></div><div id="scQmQ6" style="display:inline"></div><div id="sdQmQ6" style="display:none"></div><script type="text/javascript">var seQmQ6=document.createElement("script");seQmQ6.type="text/javascript";var seQmQ6s=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/granbyprep/safe-standard.js?ps_h=QmQ6&ps_t="+new Date().getTime();setTimeout("seQmQ6.src=seQmQ6s;document.getElementById('sdQmQ6').appendChild(seQmQ6)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=granbyprep">Live Support Chat</a></div></noscript>
 <!-- END ProvideSupport.com Graphics Chat Button Code -->
   <!-- end clickright --></div>
-  <!-- end header --></div>
+  <!-- end header --></div></div>
   <div id="menu">
 <cfinclude template ="menu.cfm">
   </div>
 <div id="mainContent">
-   <div class="photo"><img src="images/courses.png" width="303" height="161" /></div>
+   <div class="photo"><img src="images/academics.jpg" width="300" height="225" alt="academics" /></div>
     <h2>Courses Offered </h2>
 <ul><li>AP classes offered<br />
  <li> SAT and TOEFL Prep Courses<br />
@@ -43,11 +44,12 @@ body {
   <li>ESL available<br />
   <li>Pre-September English Courses
     <br />
-    available in summer of 2010</li></ul>
+    available in summer of 2011</li></ul>
     <p></p>
     <p></p>
     <p></p>
-  <!-- end mainContent --></div>
+    <div class="clearfix"></div>
+<!-- end mainContent --></div>
   <div id="footer">
     <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
     For more information contact us at info@granbyprep.com</p>
