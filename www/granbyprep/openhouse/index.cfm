@@ -37,7 +37,7 @@ td, th {
 
 <body class="oneColElsCtrHdr">
 <Cfif isDefined('form.sendEmail')>
-<cfmail  to="marcus@iseusa.com, marcusise@hotmail.com" replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
+<cfmail  to="jeimi@exitgroup.org,#APPLICATION.EMAIL.headMaster#,#APPLICATION.EMAIL.admissionsOfficer#," replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
 <p> The info submitted was:
   <br /><br />
   <strong>Student Information</strong><br />
@@ -82,8 +82,8 @@ td, th {
   <div class="InsPhoto"><img src="images/GPA_Arial.jpg" width="330" height="220" alt="GAP arial shot" /><br /><br />
   Aerial shot of Granby Prep Academy</div>
 <cfoutput>
-  <cfform id="RequestInfo" name="RequestInfo" method="post" action="../index.cfm">
-  <cfinput type="hidden" name="sendEmail" value=1/>
+  <cfform id="RequestInfo" name="RequestInfo" method="post" action="#CGI.SCRIPT_NAME#">
+  <cfinput type="hidden" name="sendEmail" value="1"/>
   <table width="425" border="0">
   <tr>
     <th colspan="2" bgcolor="##CCCCCC" scope="row">Student Information</th>
