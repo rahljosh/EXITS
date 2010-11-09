@@ -37,7 +37,7 @@ td, th {
 
 <body class="oneColElsCtrHdr">
 <Cfif isDefined('form.sendEmail')>
-<cfmail  to="jeimi@exitgroup.org,#APPLICATION.EMAIL.headMaster#,#APPLICATION.EMAIL.admissionsOfficer#," replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
+<cfmail  to="#APPLICATION.EMAIL.headMaster#;#APPLICATION.EMAIL.admissionsOfficer#;jeimi@exitgroup.org" replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
 <p> The info submitted was:
   <br /><br />
   <strong>Student Information</strong><br />
