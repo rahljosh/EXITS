@@ -3,7 +3,7 @@
 	File:		_section2.cfm
 	Author:		Marcus Melo
 	Date:		June 14, 2010
-	Desc:		Section 1 of the Online Application
+	Desc:		Section 2 of the Online Application - Family Information
 
 ----- ------------------------------------------------------------------------- --->
 

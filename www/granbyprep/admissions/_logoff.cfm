@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		index.cfc
+	File:		logOff.cfc
 	Author:		Marcus Melo
 	Date:		June 14, 2010
-	Desc:		Online Application Index Page
+	Desc:		Online Application LogOff Page
 
 ----- ------------------------------------------------------------------------- --->
 
