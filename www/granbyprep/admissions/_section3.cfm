@@ -3,7 +3,7 @@
 	File:		_section3.cfm
 	Author:		Marcus Melo
 	Date:		June 14, 2010
-	Desc:		Section 1 of the Online Application
+	Desc:		Section 3 of the Online Application - Additional Family Information
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -292,7 +292,7 @@
             </div>
 		<cfelse>
 			<!--- Parent US State --->
-            <div class="field hiddenField" id="sec2HomeUsStDiv">
+            <div class="field hiddenField" id="sec3HomeUsStDiv">
                 <label for="#qGetQuestions.fieldKey[8]#">State/Province <em>*</em></label> 
                 <select name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" class="mediumField sec2HomeUsStField">
                     <option value=""></option> <!--- [select a state] ---->
@@ -303,7 +303,7 @@
             </div>
             
             <!--- Parent Non US State --->
-            <div class="field hiddenField" id="sec2HomeNonUsStDiv">
+            <div class="field hiddenField" id="sec3HomeNonUsStDiv">
                 <label for="#qGetQuestions.fieldKey[8]#">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
                 <input type="text" name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" value="#FORM[qGetQuestions.fieldKey[8]]#" class="#qGetQuestions.classType[8]# sec2HomeNonUsStField" maxlength="100" />
             </div>

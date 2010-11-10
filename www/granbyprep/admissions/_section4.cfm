@@ -3,7 +3,7 @@
 	File:		_section4.cfm
 	Author:		Marcus Melo
 	Date:		June 14, 2010
-	Desc:		Section 1 of the Online Application
+	Desc:		Section 4 of the Online Application - Other Information
 
 ----- ------------------------------------------------------------------------- --->
 
