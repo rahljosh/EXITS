@@ -139,7 +139,7 @@
             }
             
             // Validate Password
-			stValPassword = APPLICATION.CFC.ONLINEAPP.isValidPassword(password=FORM.password);
+			stValPassword = APPLICATION.CFC.UDF.isValidPassword(password=FORM.password);
 			if ( LEN(FORM.password) AND NOT stValPassword.isValidPassword ) {
                 ArrayAppend(pageMsg.Errors, stValPassword.Errors);	
             }

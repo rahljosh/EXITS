@@ -14,30 +14,9 @@
 	<cfparam name="id" default="0" />
 	<cfparam name="action" default="login">
 
-    <!--- Param URL variables --->
-	<cfparam name="URL.hashID" default="">
-
     <cfscript>
-		// Check if Office is opening an application
-		if ( LEN(URL.hashID) ) {
-			
-			// Get Candidate Information
-			qAuthenticateCandidate = APPLICATION.CFC.STUDENT.getStudentByHashID(hashID=URL.hashID);
-						
-			// Check if we have a valid student
-			if ( qAuthenticateCandidate.recordCount ) {
-					
-				// Login Candidat / Set SESSION variables / Update Last Logged in Date
-				APPLICATION.CFC.ONLINEAPP.doLogin(
-					studentID=qAuthenticateCandidate.ID,
-					updateDateLastLoggedIn=0
-				);
-							
-			}
-		}
-	
 		// If user is not logged in, set action to the login page.
-		if ( NOT APPLICATION.CFC.ONLINEAPP.isCurrentUserLoggedIn() ) {
+		if ( NOT APPLICATION.CFC.ADMINTOOL.isCurrentUserLoggedIn() ) {
 			action = 'login';
 		}
 	</cfscript>
@@ -54,7 +33,7 @@
 --->
 <cfswitch expression="#action#">
 
-	<cfcase value="login,logOff,home,initial,section1,section2,section3,section4,section5,documents,help,faq,myAccount,printApplication,download,checkList,privacy,applicationFee,submit" delimiters=",">
+	<cfcase value="login,home,studentList,userList,myAccount,logOff" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />

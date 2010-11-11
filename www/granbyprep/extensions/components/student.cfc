@@ -202,7 +202,7 @@
 				)
                 VALUES
                 (
-					<cfqueryparam cfsqltype="cf_sql_integer" value="1">,	
+					<cfqueryparam cfsqltype="cf_sql_integer" value="2">, <!--- active status --->	
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.firstName))#">,	
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.lastName))#">,		
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email))#">,		
@@ -210,6 +210,17 @@
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                 )                    
 		</cfquery>
+
+		<!--- Insert hashID based on the student ID --->
+        <cfquery 
+            datasource="#APPLICATION.DSN.Source#">
+            UPDATE
+                student
+            SET
+                hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.generateHashID(newRecord.GENERATED_KEY)#">
+            WHERE
+                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">
+        </cfquery>
 		
         <cfscript>
 			// Insert Application History
@@ -234,6 +245,7 @@
 			datasource="#APPLICATION.DSN.Source#">
 				SELECT
 					ID, 
+                    hashID,
                     applicationStatusID,
                     applicationPaymentID,
                     firstName,
@@ -260,6 +272,45 @@
 		</cfquery>
 		
 		<cfreturn qGetStudentByID /> 
+	</cffunction>
+
+
+	<!--- Get Student By HashID --->
+	<cffunction name="getStudentByHashID" access="public" returntype="query" output="false" hint="Gets student information by Hash ID">
+		<cfargument name="hashID" required="yes" hint="Hash ID" />
+
+		<cfquery 
+			name="qGetStudentByHashID" 
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+					ID, 
+                    hashID,
+                    applicationStatusID,
+                    applicationPaymentID,
+                    firstName,
+                    middleName,                    
+                    lastName,  
+                    preferredName,
+                    email,
+                    password,
+                    gender,
+                    dob,
+                    countryBirthID,
+                    countryCitizenID,
+                    hasAddFamInfo,
+                    isActive,
+                    isDeleted,
+                    dateCanceled,
+                    dateLastLoggedIn,
+                    dateCreated,
+                    dateupdated                  
+				FROM
+					student
+				WHERE
+	                hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.hashID#">
+		</cfquery>
+		
+		<cfreturn qGetStudentByHashID /> 
 	</cffunction>
 
 
@@ -470,5 +521,167 @@
         
 	</cffunction>
    
+   
+	<!--- 
+		AdminTool 
+	--->   
+
+	<!--- Get Student List --->
+	<cffunction name="getStudentList" access="remote" returnFormat="json" output="false" hint="Returns a list of students">
+		<cfargument name="keyword" default="" hint="keyword" />
+        <cfargument name="applicationStatusID" default="0" hint="applicationStatusID ID" />
+        <cfargument name="countryHomeID" default="0" hint="countryHome ID" />
+        <cfargument name="countryCitizenID" default="0" hint="countryCitizen ID" />
+		<cfargument name="page" required="yes">
+		<cfargument name="pageSize" required="yes">
+		<cfargument name="gridSortColumn" default="dateCreated" hint="By Default dataCreated">
+		<cfargument name="gridSortDirection" default="DESC" hint="By Default DESC">
+
+		<cfquery 
+			name="qGetStudentList" 
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+					s.ID,
+                    s.hashID,
+                    s.applicationStatusID,
+                    s.applicationPaymentID,
+                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">', s.firstName, '</a>') USING latin1) AS firstName,
+                    s.middleName,                    
+                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">', s.lastName, '</a>') USING latin1) AS lastName,
+                    s.preferredName,
+                    s.email,
+                    s.password,
+                    s.gender,
+                    s.dob,
+                    s.countryBirthID,
+                    s.countryCitizenID,
+                    s.hasAddFamInfo,
+                    s.isActive,
+                    s.isDeleted,
+                    s.dateCanceled,
+                    DATE_FORMAT(s.dateLastLoggedIn, '%m/%d/%y') AS dateLastLoggedIn,
+                    DATE_FORMAT(s.dateCreated, '%m/%d/%y') AS displayDateCreated,
+                    s.dateupdated,
+					CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">[Open]</a>') USING latin1) AS action,
+                    c.name as homeCountry,        
+       				cCitizen.name AS citizenCountry,
+                    aps.name AS statusName
+				FROM
+					student s
+                LEFT OUTER JOIN
+                     applicationAnswer aa ON aa.foreignID = s.ID 
+                     	AND 
+                        	aa.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student"> 
+                        AND 
+                        	aa.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="homeCountryID">
+                LEFT OUTER JOIN
+                     country c ON c.ID = aa.answer     
+                LEFT OUTER JOIN
+                     country cCitizen ON cCitizen.ID = s.countryCitizenID                    
+				LEFT OUTER JOIN
+                	applicationStatus aps ON aps.ID = s.applicationStatusID
+                WHERE
+	                1 = 1
+                    
+				<cfif LEN(ARGUMENTS.keyword)>                    
+                    AND
+                    	(
+                        	s.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.keyword#%">
+						OR
+                        	s.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.keyword#%">
+						OR
+                        	s.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.keyword#%">
+                        )    
+				</cfif>  
+                    
+				<cfif VAL(ARGUMENTS.applicationStatusID)>                    
+                    AND
+                    	s.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">
+				</cfif>  
+
+				<cfif VAL(ARGUMENTS.countryHomeID)>                    
+                    AND
+                    	aa.answer = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.countryHomeID#">
+				</cfif>  
+
+				<cfif VAL(ARGUMENTS.countryCitizenID)>                    
+                    AND
+                    	s.countryCitizenID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.countryCitizenID#">
+				</cfif>  
+
+				<cfif LEN(ARGUMENTS.gridsortcolumn)>
+                    ORDER BY 
+                        #ARGUMENTS.gridSortColumn# #ARGUMENTS.gridSortDirection#
+                <cfelse>
+                    ORDER BY
+                        s.dateCreated DESC     
+                </cfif>
+		</cfquery>
+		
+		<cfreturn QueryconvertForGrid(qGetStudentList,page,pagesize)/>
+	</cffunction>
+
+	
+	<cffunction name="getStudentByDate" access="public" returntype="query" output="false" hint="Returns a list of students">
+		<cfargument name="dateLastLoggedIn" default="" hint="dateLastLoggedIn" />
+ 
+		<cfquery 
+			name="qGetStudentByDate" 
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+					s.ID,
+                    s.hashID,
+                    s.applicationStatusID,
+                    s.applicationPaymentID,
+                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">', s.firstName, '</a>') USING latin1) AS firstName,
+                    s.middleName,                    
+                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">', s.lastName, '</a>') USING latin1) AS lastName,
+                    s.preferredName,
+                    s.email,
+                    s.password,
+                    s.gender,
+                    s.dob,
+                    s.countryBirthID,
+                    s.countryCitizenID,
+                    s.hasAddFamInfo,
+                    s.isActive,
+                    s.isDeleted,
+                    s.dateCanceled,
+                    DATE_FORMAT(s.dateLastLoggedIn, '%m/%d/%y') AS dateLastLoggedIn,
+                    s.dateCreated,
+                    DATE_FORMAT(s.dateCreated, '%m/%d/%y') AS displayDateCreated,
+                    s.dateupdated,
+					CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">[Open]</a>') USING latin1) AS action,
+                    c.name as homeCountry,        
+       				cCitizen.name AS citizenCountry,
+                    aps.name AS statusName
+				FROM
+					student s
+                LEFT OUTER JOIN
+                     applicationAnswer aa ON aa.foreignID = s.ID 
+                     	AND 
+                        	aa.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student"> 
+                        AND 
+                        	aa.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="homeCountryID">
+                LEFT OUTER JOIN
+                     country c ON c.ID = aa.answer     
+                LEFT OUTER JOIN
+                     country cCitizen ON cCitizen.ID = s.countryCitizenID                    
+				LEFT OUTER JOIN
+                	applicationStatus aps ON aps.ID = s.applicationStatusID
+                WHERE
+	                1 = 1
+                    
+				<cfif LEN(ARGUMENTS.dateLastLoggedIn)>                    
+                    AND
+                        s.dateCreated >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateLastLoggedIn#">
+				</cfif>  
+                    
+                ORDER BY
+                    s.dateCreated DESC     
+		</cfquery>
+		
+		<cfreturn qGetStudentByDate />
+	</cffunction>
 
 </cfcomponent>

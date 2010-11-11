@@ -85,19 +85,6 @@
 	</cffunction>
 
 
-	<!--- This hashes the given ID for security reasons --->
-	<cffunction name="HashID" access="public" returntype="string" output="no" hint="Hashes the given ID for security reasons">
-		<cfargument name="ID" type="numeric" required="yes" />
-		
-		<!--- Return hash --->
-		<cfreturn (
-			((ARGUMENTS.ID * 64) MOD 29) & 
-			Chr(Right(ARGUMENTS.ID, 1) + 65) & 
-			(ARGUMENTS.ID MOD 4)
-			) />
-	</cffunction>
-
-
 	<!--- Check to see if the given document exists --->
 	<cffunction name="DocumentExists" access="public" returntype="boolean" output="no" hint="Check to see if the given document exists">
 		<cfargument name="ID" type="numeric" required="yes" />
@@ -334,7 +321,7 @@
 				UPDATE
                 	document
 				SET
-                	hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#hashID(newRecord.GENERATED_KEY)#">
+                	hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.generateHashID(newRecord.GENERATED_KEY)#">
                 WHERE
                 	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">
 			</cfquery>

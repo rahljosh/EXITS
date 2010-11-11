@@ -48,8 +48,27 @@
 	<cfoutput>
     
         <cfswitch expression="#ATTRIBUTES.headerType#">
-    
-            <!--- Login Header --->
+
+            <!--- AdminTool Login Header --->
+            <cfcase value="adminToolLogin">
+                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <cfoutput>
+                        <title>#APPLICATION.Metadata.pageTitle#</title>
+                        <meta name="description" content="#APPLICATION.Metadata.pageDescription#" />
+                        <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
+                        <link rel="stylesheet" href="../linked/css/adminToolLogin.css" type="text/css" />
+                        <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
+                        <script src="#APPLICATION.Path.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+                    </cfoutput>
+                </head>
+                <body>
+            </cfcase>
+
+
+            <!--- Application Login Header --->
             <cfcase value="login">
                 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
                 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -69,6 +88,63 @@
                 <body>
             </cfcase>
     
+    
+            <!--- AdminTool Header --->
+            <cfcase value="adminTool">
+                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <cfoutput>
+                        <title>#APPLICATION.Metadata.pageTitle#</title>
+                        <meta name="description" content="#APPLICATION.Metadata.pageDescription#" />
+                        <meta name="keywords" content="#APPLICATION.Metadata.pageKeywords#" />
+                        <link rel="stylesheet" href="../linked/css/appSection.css" type="text/css" />
+                        <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
+                        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+						<script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+                        <script src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+                        <script src="../linked/js/appSection.js " type="text/javascript"></script> <!-- UDF -->
+						<script src="../linked/js/jquery.metadata.js" type="text/javascript"></script> <!-- JQuery Validation -->
+						<script src="../linked/js/jquery.validate.js " type="text/javascript"></script> <!-- JQuery Validation -->
+                    </cfoutput>
+                </head>
+                <body>
+                
+                <!--- Start of Div Wrapper --->
+                <div class="wrapper">
+                    
+                    <div class="topBar">
+                        
+                        <div class="topLeft">
+                            <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.SCHOOL.name# Application For Admission">
+                                <div class="mainLogo"></div>
+                                <div class="title">#APPLICATION.SCHOOL.name#</div>
+                                <div class="subTitle">#APPLICATION.SETTINGS.adminToolVersion#</div>
+                            </a>
+						</div>
+                                                
+                        <div class="topRight">
+                            <a href="#CGI.SCRIPT_NAME#?action=home" class="ui-corner-top <cfif Find("home", CGI.QUERY_STRING)> selected </cfif>">Home</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=studentList" class="ui-corner-top <cfif Find("studentList", CGI.QUERY_STRING)> selected </cfif>">Students</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=userList" class="ui-corner-top <cfif Find("userList", CGI.QUERY_STRING)> selected </cfif>">Users</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=myAccount" class="ui-corner-top <cfif Find("myAccount", CGI.QUERY_STRING)> selected </cfif>">Update Login</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=logoff" class="ui-corner-top">Logoff</a>
+
+                            <div class="welcomeMessage">
+                                <cfif IsDate(APPLICATION.CFC.USER.getUserSession().dateLastLoggedIn)>
+                                    Welcome Back #APPLICATION.CFC.USER.getUserSession().firstName# #APPLICATION.CFC.USER.getUserSession().lastName#! &nbsp;
+                                    Your last login was on #DateFormat(APPLICATION.CFC.USER.getUserSession().dateLastLoggedIn, 'mm/dd/yyyy')# at #TimeFormat(APPLICATION.CFC.USER.getUserSession().dateLastLoggedIn, 'hh:mm tt')# EST
+                                <cfelse>
+									Welcome #APPLICATION.CFC.USER.getUserSession().firstName# #APPLICATION.CFC.USER.getUserSession().lastName#!    
+								</cfif>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+            </cfcase>
+
     
             <!--- Application Header --->
             <cfcase value="application">
@@ -157,7 +233,7 @@
             </cfcase>
 
 
-            <!--- Print Header --->
+            <!--- Application Print Header --->
             <cfcase value="Print">
                 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
                 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -192,7 +268,39 @@
 			</cfcase>
             
             
-            <!--- Email Header --->
+            <!--- AdminTool Email Header --->
+            <cfcase value="AdminToolEmail">
+                <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <title>#APPLICATION.Metadata.pageTitle#</title>
+                </head>
+                <body>
+
+                <!--- Start of Div Wrapper --->
+                <table cellpadding="2" cellspacing="2" style="width:100%; background-color:##c2d9e9; border-bottom:10px solid ##0069aa; height:70px;">
+                    <tr>
+                        <td width="70px" align="center">
+                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# #APPLICATION.SETTINGS.adminToolVersion#">
+                                <img src="#APPLICATION.SITE.URL.main#/images/onlineApp/logoSmall.gif" border="0" />
+                            </a>
+                        </td>
+                        <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
+                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# Application For Admission" style="text-decoration:none; color:##0069aa;">
+                                <span style="font-size: 1.4em;">#APPLICATION.SCHOOL.name#</span> <br />
+                                <span style="font-size: 0.9em;">#APPLICATION.SETTINGS.adminToolVersion#</span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>                                                                    
+            	
+				<!--- Application Body --->
+                <div style="width:100%; margin:5px 0px 5px 0px; padding:20px; background-color: ##FFF; border: ##EEE 1px solid; min-height:150px;">
+            </cfcase>
+
+
+            <!--- Application Email Header --->
             <cfcase value="email">
                 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
                 <html xmlns="http://www.w3.org/1999/xhtml">

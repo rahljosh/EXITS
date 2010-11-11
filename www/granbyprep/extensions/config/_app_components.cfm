@@ -16,22 +16,25 @@
 	// Set a short name for the CFCs
 	AppCFC = APPLICATION.CFC;
 
-	// Store the initialized UDF Library object in the Application scope
+	// Store the initialized udf Library object in the Application scope
 	AppCFC.UDF = CreateCFC("udf").Init();
 	
 	// Store Application.IsServerLocal - This needs be declare before the other CFC components
 	APPLICATION.IsServerLocal = AppCFC.UDF.IsServerLocal();
 
-	// Store the initialized Content Library object in the Application scope
+	// Store the initialized adminTool Library object in the Application scope
+	AppCFC.adminTool = CreateCFC("adminTool").Init();
+
+	// Store the initialized content Library object in the Application scope
 	AppCFC.Content = CreateCFC("content").Init();
 
-	// Store the initialized Document Library object in the Application scope
+	// Store the initialized document Library object in the Application scope
 	AppCFC.Document = CreateCFC("document").Init();
 
-	// Store the initialized Email Library object in the Application scope
+	// Store the initialized email Library object in the Application scope
 	AppCFC.Email = CreateCFC("email").Init();
 
-	// Store the initialized OnlineApp Library object in the Application scope
+	// Store the initialized lookUpTables Library object in the Application scope
 	AppCFC.lookUpTables = CreateCFC("lookUpTables").Init();
 
 	// Store the initialized OnlineApp Library object in the Application scope
@@ -43,6 +46,9 @@
 	// Store the initialized session Library object in the Application scope
 	AppCFC.SESSION = CreateCFC("session").Init();
 
-	// Store the initialized Student Library object in the Application scope
+	// Store the initialized student Library object in the Application scope
 	AppCFC.student = CreateCFC("student").Init();
+	
+	// Store the initialized user Library object in the Application scope
+	AppCFC.user = CreateCFC("user").Init();
 </cfscript>
