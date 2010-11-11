@@ -50,12 +50,12 @@ winslide.focus()
 <div id="container">
   <div id="header">
   <div class="events">
-  <a href="javascript:gotoshow()"><img src="images/slideshow/pic1.jpg" name="slide" border=0 width=150 height=275></a>
+  <a href="javascript:gotoshow()"><img src="images/slideshow/pic2.jpg" name="slide" border=0 width=150 height=275></a>
 <script>
 <!--
 
 //configure the paths of the images, plus corresponding target links
-slideshowimages("images/slideshow/pic1.jpg","images/slideshow/pic2.jpg","images/slideshow/pic3.jpg")
+slideshowimages("images/slideshow/pic2.jpg","images/slideshow/pic3.jpg")
 slideshowlinks("http://www.granbyprep.com/openhouse/","https://www.granbyprep.com/admissions/index.cfm?","http://www.sss.nais.org/parents/")
 
 //configure the speed of the slideshow, in miliseconds

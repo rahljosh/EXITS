@@ -12,7 +12,7 @@
        <li><a href="http://www.granbyprep.com/academics.cfm">Academics</a></li>
        <li><a class="MenuBarItemSubmenu" href="http://www.granbyprep.com/applicationProcess.cfm">Admissions</a>
          <ul>
-         <li><a href="http://www.granbyprep.com/openhouse/index.cfm">Events</a></li>
+        <!-- <li><a href="http://www.granbyprep.com/openhouse/index.cfm">Events</a></li> -->
          <li><a href="http://www.granbyprep.com/requestInfo.cfm">Request Information</a></li>
            <li><a class="MenuBarItemSubmenu" href="http://www.granbyprep.com/applicationProcess.cfm">Application Process</a>
              <ul>
