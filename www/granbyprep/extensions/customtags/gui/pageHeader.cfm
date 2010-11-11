@@ -117,7 +117,7 @@
                     <div class="topBar">
                         
                         <div class="topLeft">
-                            <a href="#cgi.SCRIPT_NAME#?action=initial" title="#APPLICATION.SCHOOL.name# Application For Admission">
+                            <a href="#cgi.SCRIPT_NAME#?action=home" title="#APPLICATION.SCHOOL.name# Application For Admission">
                                 <div class="mainLogo"></div>
                                 <div class="title">#APPLICATION.SCHOOL.name#</div>
                                 <div class="subTitle">#APPLICATION.SETTINGS.adminToolVersion#</div>

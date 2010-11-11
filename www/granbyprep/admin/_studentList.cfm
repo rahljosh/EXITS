@@ -26,25 +26,7 @@
 		// Get Current Student Information
 		qGetCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry();
 	</cfscript>
-	
-        <cfquery name="qGetStudents" 
-            datasource="#APPLICATION.DSN.Source#">
-            SELECT
-            	ID
-            FROM
-            	student
-        </cfquery>
-        <cfloop query="qGetStudents">
-            <cfquery 
-                datasource="#APPLICATION.DSN.Source#">
-                UPDATE
-                    student
-                SET
-                    hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.generateHashID(qGetStudents.ID)#">
-                WHERE
-                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.ID#">
-            </cfquery>
-		</cfloop>
+
 </cfsilent>
 
 <cfoutput>
@@ -119,8 +101,8 @@
                                 format="html"
                                 bind="cfc:extensions.components.student.getStudentList({keyword},{applicationStatusID},{countryHomeID},{countryCitizenID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection})"                    
                                 width="1000"
-                                pagesize="50"
-                                bgcolor="##FFFFFF" 
+                                pagesize="50" 
+                                striperows="yes"
                                 highlighthref="yes"
                                 align="left">
                                                     
