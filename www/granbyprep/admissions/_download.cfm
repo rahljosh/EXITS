@@ -48,7 +48,7 @@
                     <!--- Loop Through Documents --->
                     <cfloop query="qDocumentList">
                     
-                    	<a href="publicDocument.cfm?ID=#qDocumentList.id#&Key=#APPLICATION.CFC.DOCUMENT.HashID(qDocumentList.id)#" class="itemLinks" title="Download #qDocumentList.description#">#qDocumentList.description#</a> 
+                    	<a href="publicDocument.cfm?ID=#qDocumentList.id#&Key=#APPLICATION.CFC.UDF.generateHashID(qDocumentList.id)#" class="itemLinks" title="Download #qDocumentList.description#">#qDocumentList.description#</a> 
                     
                     </cfloop> 
     
