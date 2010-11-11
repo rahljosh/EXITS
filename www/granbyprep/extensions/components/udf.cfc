@@ -42,6 +42,113 @@
 		</cfscript>
 	</cffunction>
 
+
+	<!--- This hashes the given ID for security reasons --->
+	<cffunction name="generateHashID" access="public" returntype="string" output="no" hint="Hashes the given ID for security reasons">
+		<cfargument name="ID" type="numeric" required="yes" />
+		
+		<!--- Return hash --->
+		<cfreturn (
+			((ARGUMENTS.ID * 64) MOD 29) & 
+			Chr(Right(ARGUMENTS.ID, 1) + 65) & 
+			(ARGUMENTS.ID MOD 4)
+			) />
+	</cffunction>
+
+
+	<!--- Check if Password is valid --->
+	<cffunction name="IsValidPassword" access="public" returntype="struct" hint="Determines if the password is of valid format">
+		<cfargument name="Password" type="string" required="Yes" />
+
+        <cfscript>
+			/* Password Policy
+			   Must have at least 8 characters in length
+			   Must have at least 1 number
+			   Must have at least 1 uppercase letter
+			   Must have at least 1 lower case letter */
+
+			var stResults = StructNew();			
+			stResults.isValidPassword = true;
+			stResults.Errors = '';
+			
+			// Check Minimum Characters
+			if ( LEN(ARGUMENTS.password) LT 8 ) {
+				stResults.isValidPassword = false;
+				stResults.Errors = stResults.Errors & 'The minimum password lenght is 8 characters. <br />';		
+			}
+
+			// Check Maximum Characters
+			if ( LEN(ARGUMENTS.password) GT 20 ) {
+				stResults.isValidPassword = false;
+				stResults.Errors = stResults.Errors & 'The maximum password lenght is 20 characters. <br />';					
+			}
+			
+			// Check for valid characters
+			if (REFindNoCase("[^0-9a-zA-Z\~\!\@\$\$\%\^\&\*]{1,}", ARGUMENTS.Password)){
+				stResults.isValidPassword = false;
+				stResults.Errors = stResults.Errors & 'Password contains an invalid character. <br />';					
+			}
+			
+			return stResults;
+		</cfscript>
+               
+	</cffunction>
+	
+
+    <!--- Generates a Password --->
+	<cffunction name="generatePassword" access="public" returntype="string" hint="Generates a password">
+		
+        <cfscript>
+			/***  ***/
+			/* Password Policy
+			   Must have at least 8 characters in length
+			   Must have at least 1 number
+			   Must have at least 1 uppercase letter
+			   Must have at least 1 lower case letter */
+		
+			// Set up available lower case values.
+			strLowerCaseAlpha = "abcdefghijklmnopqrstuvwxyz";
+			
+			// Set up available upper case values
+			strUpperCaseAlpha = UCase( strLowerCaseAlpha );
+			
+			// Set up available numbers
+			strNumbers = "0123456789";
+	
+			// Set up additional valid password chars
+			strOtherChars = "~!@##$%^&*";
+			
+			// Concatenate all the previous valid character sets
+			strAllValidChars = ( strLowerCaseAlpha & strUpperCaseAlpha & strNumbers & strOtherChars );
+			
+			// Create an array to contain the password ( think of a string as an array of character).
+			arrPassword = ArrayNew( 1 );
+			
+			// Select the random number from our number set.
+			arrPassword[ 1 ] = Mid(strNumbers, RandRange( 1, Len( strNumbers ) ), 1);	
+
+			// Select the random letter from our lower case set.
+			arrPassword[ 2 ] = Mid( strLowerCaseAlpha, RandRange( 1, Len( strLowerCaseAlpha ) ), 1 );
+			
+			// Select the random letter from our upper case set.
+			arrPassword[ 3 ] = Mid( strUpperCaseAlpha, RandRange( 1, Len( strUpperCaseAlpha ) ), 1 );	
+			
+			//Create rest of the password
+			For (i=(ArrayLen( arrPassword ) + 1);i LTE 8; i=i+1) {
+				arrPassword[ i ] = Mid( strAllValidChars, RandRange( 1, Len( strAllValidChars ) ), 1 );
+			}
+			
+			// Java Collections utility class to shuffle this array into a "random" order
+			CreateObject( "java", "java.util.Collections" ).Shuffle(arrPassword);
+			
+			// converting the array to a list and then just providing no delimiters (empty string delimiter).
+			strPassword = ArrayToList(arrPassword, "" );
+			
+			return strPassword;
+    	</cfscript>
+    
+    </cffunction>
+
 	
     <!--- Return School Address --->
 	<cffunction name="getSchoolAddress" access="public" returntype="string" output="false" hint="Returns the school address">

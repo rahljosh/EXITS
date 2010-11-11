@@ -71,7 +71,7 @@
 				THIS.OnApplicationStart();
 				THIS.OnSessionStart();
 			}
-			
+
 			if ( URL.initApp EQ 1 ) {
 				THIS.OnApplicationStart();
 			}
@@ -80,9 +80,8 @@
 				THIS.OnSessionStart();
 			}
 			
-			// Set up Short Names
-			APPCFC = APPLICATION.CFC;
-			APPEMAIL = APPLICATION.EMAIL;
+			// REMOVE THIS
+			// THIS.OnApplicationStart();
 		</cfscript>
         
 		<!--- 

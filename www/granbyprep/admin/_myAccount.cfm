@@ -2,7 +2,7 @@
 	
 	File:		_myAccount.cfm
 	Author:		Marcus Melo
-	Date:		June 25, 2010
+	Date:		November 11, 2010
 	Desc:		Frequently Asked Questions
 
 ----- ------------------------------------------------------------------------- --->
@@ -15,8 +15,8 @@
 
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
-    <!--- Student Details --->
-    <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
+    <!--- User Details --->
+    <cfparam name="FORM.userID" default="#APPLICATION.CFC.USER.getUserID()#">
 	<cfparam name="FORM.email" default="">
     <cfparam name="FORM.newEmail" default="">
     <cfparam name="FORM.password" default="">
@@ -24,12 +24,17 @@
     <cfparam name="FORM.confirmNewPassword" default="">
     
     <cfscript>	
-		// Get Current Student Information
-		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(ID=FORM.studentID);
+		// Get Current User Information
+		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(ID=FORM.userID);
 
 		// FORM Submitted
 		if (FORM.submitted) {
 			// Data Validation
+
+			// Current Password
+			if ( FORM.password NEQ qGetUserInfo.password ) {
+				SESSION.formErrors.Add("Current password does not match.");	
+			}
 
 			// Email
 			if ( NOT LEN(FORM.email) OR NOT IsValid("email", FORM.email) ) {
@@ -37,18 +42,13 @@
 			}
 
 			// Check if Email has been registered
-			if ( IsValid("email", FORM.email) AND APPLICATION.CFC.STUDENT.checkEmail(email=FORM.email,ID=FORM.studentID).recordCount ) {
+			if ( IsValid("email", FORM.email) AND APPLICATION.CFC.USER.checkEmail(email=FORM.email,ID=FORM.userID).recordCount ) {
 				SESSION.formErrors.Add("Email address already registered.");		
 			}
-
+			
 			// Check if we are updating password
 			if ( LEN(FORM.newPassword) ) {
 			
-				// Current Password
-				if ( FORM.password NEQ qGetStudentInfo.password ) {
-					SESSION.formErrors.Add("Current password does not match.");	
-				}
-				
 				// Password
 				if ( NOT LEN(FORM.newPassword) ) {
 					SESSION.formErrors.Add("Enter a new password.");			
@@ -72,11 +72,11 @@
 				
 				infoUpdated = 0;
 				
-				if ( FORM.email NEQ qGetStudentInfo.email ) {
+				if ( FORM.email NEQ qGetUserInfo.email ) {
 					infoUpdated = 1;
 					// update Email Address
-					APPLICATION.CFC.STUDENT.updateEmail(
-						ID=FORM.studentID, 
+					APPLICATION.CFC.USER.updateEmail(
+						ID=FORM.userID, 
 						email=FORM.email
 					);					
 				}
@@ -84,8 +84,8 @@
 				if ( LEN(FORM.newPassword) ) {
 					infoUpdated = 1;
 					// update Password
-					APPLICATION.CFC.STUDENT.updatePassword(
-						ID=FORM.studentID, 
+					APPLICATION.CFC.USER.updatePassword(
+						ID=FORM.userID, 
 						password=FORM.newPassword
 					);
 				}
@@ -96,7 +96,7 @@
 					APPLICATION.CFC.EMAIL.sendEmail(
 						emailTo=FORM.email,
 						emailType='loginUpdated',
-						studentID=FORM.studentID
+						userID=FORM.userID
 					);
 				}
 
@@ -110,8 +110,8 @@
 		} else {
 			
 		  // Set the default values of the FORM 
-		  FORM.email = qGetStudentInfo.email;
-		  FORM.password = qGetStudentInfo.password;
+		  FORM.email = qGetUserInfo.email;
+		  // FORM.password = qGetUserInfo.password;
 		  
 		}	
 	</cfscript>
@@ -122,11 +122,11 @@
 
 <!--- Page Header --->
 <gui:pageHeader
-	headerType="application"
+	headerType="adminTool"
 />
 
     <!--- Side Bar --->
-    <div class="rightSideContent ui-corner-all">
+    <div class="fullContent ui-corner-all">
         
         <div class="insideBar">
 			
@@ -162,7 +162,7 @@
                     <div class="field">
                         <label for="middleName">Current Password <em>*</em></label> 
                         <input type="password" name="password" id="password" value="#FORM.password#" class="largeField" maxlength="100" />
-                        <p class="note">If you wish to change your password, please fill out all the password fields.</p>
+                        <p class="note">If you wish to change your email/password, you must type in your current password.</p>
                     </div>
 
                     <div class="field">

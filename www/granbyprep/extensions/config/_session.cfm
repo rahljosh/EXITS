@@ -21,33 +21,33 @@
 <cfparam name="SESSION.STUDENT.firstName" type="string" default="">
 <cfparam name="SESSION.STUDENT.lastName" type="string" default="">
 <cfparam name="SESSION.STUDENT.dateLastLoggedIn" type="string" default="">
-
 <!--- Folder to upload application files multiple files --->
 <cfparam name="SESSION.STUDENT.myUploadFolder" type="string" default="">
-
 <cfparam name="SESSION.STUDENT.isApplicationSubmitted" type="numeric" default="0">
-
 <!--- These are used on the checklist --->
 <cfparam name="SESSION.STUDENT.isSection1Complete" type="numeric" default="0">
 <cfparam name="SESSION.STUDENT.section1FieldList" type="string" default="">
-
 <cfparam name="SESSION.STUDENT.isSection2Complete" type="numeric" default="0">
 <cfparam name="SESSION.STUDENT.section2FieldList" type="string" default="">
-
 <cfparam name="SESSION.STUDENT.isSection3Complete" type="numeric" default="0">
 <cfparam name="SESSION.STUDENT.section3FieldList" type="string" default="">
-
 <cfparam name="SESSION.STUDENT.isSection4Complete" type="numeric" default="0">
 <cfparam name="SESSION.STUDENT.section4FieldList" type="string" default="">
-
 <cfparam name="SESSION.STUDENT.isSection5Complete" type="numeric" default="0">
 <cfparam name="SESSION.STUDENT.section5FieldList" type="string" default="">
+
+<!--- User Information --->
+<cfparam name="SESSION.USER.firstName" type="string" default="">
+<cfparam name="SESSION.USER.lastName" type="string" default="">
+<cfparam name="SESSION.USER.dateLastLoggedIn" type="string" default="">
 
 <cftry>
 
 	<cfparam name="SESSION.STUDENT.ID" type="numeric" default="0">
     <cfparam name="SESSION.STUDENT.hasAddFamInfo" type="numeric" default="0">
 	<cfparam name="SESSION.informationID" type="numeric" default="0">
+
+	<cfparam name="SESSION.USER.ID" type="numeric" default="0">
 
     <cfcatch type="any">
     
@@ -56,6 +56,9 @@
             SESSION.STUDENT.ID = 0;
 			SESSION.STUDENT.hasAddFamInfo = 0;
 			SESSION.informationID = 0;
+			
+			// User
+			SESSION.USER.ID = 0;
         </cfscript>
         
     </cfcatch>

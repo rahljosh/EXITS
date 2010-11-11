@@ -135,8 +135,18 @@ Left Side / Right Side Content
 	margin:10px 15px 10px 0px;		
 }
 
+.fullContent {
+	float:right;
+	width:98%;
+	min-height:600px;
+	background-color: #eeeeee;
+	border:1px solid #aaaaaa;
+	margin:10px 15px 10px 15px;
+}
+
 .leftSideBar .insideBar,
-.rightSideContent .insideBar {
+.rightSideContent .insideBar,
+.fullContent .insideBar {
 	min-height:535px;
 	background-color: #FFFFFF;
 	margin:20px;
@@ -144,7 +154,8 @@ Left Side / Right Side Content
 }
 
 .leftSideBar .insideBar a.itemLinks,
-.rightSideContent .insideBar a.itemLinks {
+.rightSideContent .insideBar a.itemLinks,
+.fullContent .insideBar a.itemLinks {
 	display:block;
 	color: #0069aa;
 	font-size:1.2em;
@@ -157,13 +168,15 @@ Left Side / Right Side Content
 }
 
 .leftSideBar .insideBar a:hover,
-.rightSideContent .insideBar a:hover{
+.rightSideContent .insideBar a:hover,
+.fullContent .insideBar a:hover {
 	color: #e69700;	
 	outline: none;
 }
 
 .leftSideBar .insideBar a.selected,
-.rightSideContent .insideBar a.selected{
+.rightSideContent .insideBar a.selected,
+.fullContent .insideBar a.selected {
 	color: #e69700;	
 	outline: none;
 }
@@ -537,7 +550,108 @@ div.form-container-noBorder .checkMark {
 	background-image: url(../../images/onlineApp/checkMark.gif);
 }
 
-/* Error messages */
+
+/*
+**********************************************************************************
+
+TableLess
+
+************************************************************************************/
+
+.clearBoth {
+	clear:both;	
+}
+
+div.table {
+	width: 100%;
+	border:1px solid #0069aa;
+	margin-bottom:15px;
+}
+
+div.table a {
+	font-weight:bold;
+	padding-right:3px;
+}
+
+div.table .th {
+	color: #fff;
+	font-weight: bold;
+	background-color: #0069aa;
+}
+
+/*
+div.table .tr:nth-child(odd) {
+	background-color: #EEEEEE;
+}
+*/
+
+div.table .trOdd {
+	background-color: #EEEEEE;
+}
+
+div.table .thCenter {
+	color: #fff;
+	font-weight: bold;
+	text-align:center;
+	background-color: #0069aa;
+}
+
+div.table .trCenter {
+	text-align:center;
+}
+
+/*
+div.table .trCenter:nth-child(odd) {
+	text-align:center;
+	background-color: #EEEEEE;
+}
+*/
+
+div.table .trCenterOdd {
+	text-align:center;
+	background-color: #EEEEEE;
+}
+
+div.table .tdSmall {	
+	float: left;
+	width: 9%;
+	padding:4px 0px 4px 0px;
+} 
+
+div.table .tdLarge {	
+	float: left;
+	width: 14%;
+	padding:4px 0px 4px 0px;
+} 
+
+div.table .tdXLarge {	
+	float: left;
+	width: 18%;
+	padding:4px 0px 4px 4px;
+} 
+
+div.table .tdXXLarge {	
+	float: left;
+	width: 58%;
+	padding:4px 0px 4px 4px;
+} 
+
+div.table .td100 {	
+	float: left;
+	width: 100%;
+	padding:4px 0px 4px 0px;
+} 
+
+div.table .clearBoth {
+	clear:both;
+}
+
+/***********************************************************************************
+
+Form Errors
+These are the styles used to display the form errors.
+
+************************************************************************************/
 div.errorContainer { 
 	display: none; 
 	margin: 10px 0 10px 0; 
@@ -571,7 +685,12 @@ div.errorContainer p em {
 }
 
 
-/* Page Messages */
+/************************************************************************************
+
+Page Messages
+These are the styles used to display the page messages.
+
+************************************************************************************/
 div.pageMessages { 
 	display:none;
 	margin: 10px 0 10px 0; 
@@ -589,6 +708,8 @@ div.pageMessages p em {
 	color: #0069aa; 
 	font-weight: bold;
 }
+
+
 
 p.legend { 
 	margin-bottom: 1em; 

@@ -42,9 +42,21 @@
     
         <cfswitch expression="#ATTRIBUTES.footerType#">
 
-            <!--- Login Footer --->
+            <!--- Application Login Footer --->
             <cfcase value="login">
             
+            </cfcase>
+
+
+            <!--- AdminTool Footer --->
+            <cfcase value="adminTool">
+    			
+                </div> <!--- End of <div class="wrapper"> placed on the header --->
+                
+                <div class="pageFooter">
+                    <div class="footerText">Copyright &copy; #Year(now())# #APPLICATION.SCHOOL.name#. ALL RIGHTS RESERVED.</div>
+                </div>
+                
             </cfcase>
 
         
@@ -60,7 +72,7 @@
             </cfcase>
 
 
-            <!--- Print Footer --->
+            <!--- Application Print Footer --->
             <cfcase value="print">
             
                 <div class="pageFooter">
@@ -70,7 +82,7 @@
             </cfcase>
 
     		
-            <!--- Email Footer --->
+            <!--- AdminTool/Application Email Footer --->
             <cfcase value="email">
 					
                 </div>  <!--- End of class="form-container" --->
