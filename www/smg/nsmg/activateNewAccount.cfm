@@ -20,7 +20,7 @@ where userid = #url.userid#
                 </cfinvoke>
  <Cfquery name="created" datasource="#application.dsn#">
  select email 
- from users where userid = #userEmail.whocreated#
+ from smg_users where userid = #userEmail.whocreated#
   </Cfquery>               
 
 
