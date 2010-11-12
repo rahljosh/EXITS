@@ -33,13 +33,26 @@
 --->
 <cfswitch expression="#action#">
 
-	<cfcase value="login,home,studentList,userList,myAccount,logOff" delimiters=",">
+	<cfcase value="login,home,logOff" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />
 
 	</cfcase>
 
+	<cfcase value="studentList" delimiters=",">
+
+		<!--- Include template --->
+		<cfinclude template="student/_#action#.cfm" />
+
+	</cfcase>
+
+	<cfcase value="userList,userDetail,myAccount" delimiters=",">
+
+		<!--- Include template --->
+		<cfinclude template="user/_#action#.cfm" />
+
+	</cfcase>
 
 	<!--- The default case is the login page --->
 	<cfdefaultcase>

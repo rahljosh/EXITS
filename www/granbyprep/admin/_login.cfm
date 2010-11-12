@@ -16,7 +16,7 @@
     <!--- Param FORM Variables --->
     <cfparam name="FORM.type" default="">
     <!--- Login --->
-    <cfparam name="FORM.loginUsername" default="">
+    <cfparam name="FORM.loginEmail" default="">
     <cfparam name="FORM.loginPassword" default="">
     <!--- Forgot Password --->
     <cfparam name="FORM.forgotEmail" default="">
@@ -25,10 +25,10 @@
        // FORM Submitted - Login
        if ( FORM.type EQ 'login' ) {
            // Data Validation
-            
+
             // Email
-            if ( NOT LEN(FORM.loginUsername) ) {
-				SESSION.formErrors.Add("Enter an username");
+            if ( NOT LEN(FORM.loginEmail) OR NOT IsValid("email", FORM.loginEmail) ) {
+				SESSION.formErrors.Add("Enter a valid email address");
             }
 
             // Password
@@ -41,7 +41,7 @@
                 
 				//Check Login
                 qCheckLogin = APPLICATION.CFC.USER.checkLogin(
-                    username=FORM.loginUsername,
+                    email=FORM.loginEmail,
                     password=FORM.loginPassword
                 );
             	
@@ -162,8 +162,8 @@
                 
                 <table border="0" align="center" cellpadding="4" cellspacing="0" width="90%">
                     <tr>
-                        <td class="formTitle"><label for="loginUsername">Username:</label></td>
-                        <td><input type="text" name="loginUsername" id="loginUsername" value="#FORM.loginUsername#" class="largeField" maxlength="100"></td>
+                        <td class="formTitle"><label for="loginEmail">Email Address:</label></td>
+                        <td><input type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" class="largeField" maxlength="100"></td>
                     </tr>
                     <tr>
                         <td class="formTitle"><label for="loginPassword">Password:</label></td>
@@ -239,11 +239,11 @@
 
 <script type="text/JavaScript">
 <!--
-	// Auto Focus - Set cursor to loginUsername field
+	// Auto Focus - Set cursor to loginEmail field
 	$(document).ready(function() {
 		
-		if ( $("#loginUsername").val() == '' ) {
-			$("#loginUsername").focus();
+		if ( $("#loginEmail").val() == '' ) {
+			$("#loginEmail").focus();
 		} else {
 			$("#loginPassword").focus();
 		}

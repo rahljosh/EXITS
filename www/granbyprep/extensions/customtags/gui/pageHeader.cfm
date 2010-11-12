@@ -126,9 +126,12 @@
                                                 
                         <div class="topRight">
                             <a href="#CGI.SCRIPT_NAME#?action=home" class="ui-corner-top <cfif Find("home", CGI.QUERY_STRING)> selected </cfif>">Home</a>
+                            <!---
+                            <a href="#CGI.SCRIPT_NAME#?action=home" class="ui-corner-top <cfif Find("contentList", CGI.QUERY_STRING)> selected </cfif>">Content</a>
+							--->
                             <a href="#CGI.SCRIPT_NAME#?action=studentList" class="ui-corner-top <cfif Find("studentList", CGI.QUERY_STRING)> selected </cfif>">Students</a>
                             <a href="#CGI.SCRIPT_NAME#?action=userList" class="ui-corner-top <cfif Find("userList", CGI.QUERY_STRING)> selected </cfif>">Users</a>
-                            <a href="#CGI.SCRIPT_NAME#?action=myAccount" class="ui-corner-top <cfif Find("myAccount", CGI.QUERY_STRING)> selected </cfif>">Update Login</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=userDetail&ID=#APPLICATION.CFC.USER.getUserID()#" class="ui-corner-top <cfif Find("myAccount", CGI.QUERY_STRING)> selected </cfif>">My Info</a>
                             <a href="#CGI.SCRIPT_NAME#?action=logoff" class="ui-corner-top">Logoff</a>
 
                             <div class="welcomeMessage">

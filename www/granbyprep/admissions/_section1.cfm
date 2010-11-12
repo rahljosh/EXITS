@@ -300,9 +300,9 @@
             <label for="gender">Gender <em>*</em></label> 
             <cfif printApplication>
 				<cfif FORM.gender EQ 'M'>
-                	<div class="printField">Male
+                	<div class="printField">Male</div>
                 <cfelseif FORM.gender EQ 'F'>
-                	<div class="printField">Female
+                	<div class="printField">Female</div>
                 </cfif>
         	<cfelse>
                 <select name="gender" id="gender" class="smallField {validate:{required:true}}">

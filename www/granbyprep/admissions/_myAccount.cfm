@@ -155,23 +155,23 @@
                     <legend>My Account</legend>
                         
                     <div class="field">
-                        <label for="firstName">Email Address <em>*</em></label> 
+                        <label for="email">Email Address <em>*</em></label> 
                         <input type="email" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" />
                     </div>
 
                     <div class="field">
-                        <label for="middleName">Current Password <em>*</em></label> 
+                        <label for="password">Current Password <em>*</em></label> 
                         <input type="password" name="password" id="password" value="#FORM.password#" class="largeField" maxlength="100" />
                         <p class="note">If you wish to change your password, please fill out all the password fields.</p>
                     </div>
 
                     <div class="field">
-                        <label for="middleName">New Password <em>*</em></label> 
+                        <label for="newPassword">New Password <em>*</em></label> 
                         <input type="password" name="newPassword" id="newPassword" value="#FORM.newPassword#" class="largeField" maxlength="100" />
                     </div>
 
                     <div class="field">
-                        <label for="middleName">Confirm New Password <em>*</em></label> 
+                        <label for="password">Confirm New Password <em>*</em></label> 
                         <input type="password" name="confirmNewPassword" id="confirmNewPassword" value="#FORM.confirmNewPassword#" class="largeField" maxlength="100" />
                     </div>
     
