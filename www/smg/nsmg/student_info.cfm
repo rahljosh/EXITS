@@ -371,11 +371,11 @@
 										<cfif CLIENT.usertype LTE 4>
                                         	<a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; 
                                         </cfif> 
-                                    	<a href='student_profile.cfm?uniqueid=#uniqueid#'>profile</a> &middot;
+                                    	<a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=web'>profile</a> &middot;
 										<cfif CLIENT.userType LTE 5>  <!--- Only Office & Managers --->
 	                                        <a href="javascript:SendEmail('student_profile_email.cfm?uniqueid=#uniqueid#', 300, 400);" title="Email Student Profile and Letters"><img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"> email profile </a> &middot;
                                         </cfif>
-                                        <a href='student_profile_pdf.cfm?studentID=#uniqueid#'> <img src="pics/pdficon_small.gif" border=0></a>
+                                        <a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=pdf'> <img src="pics/pdficon_small.gif" border=0></a>
                                     ]
                                     </span></font>
                                 </td>
