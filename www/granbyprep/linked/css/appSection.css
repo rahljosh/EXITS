@@ -381,6 +381,17 @@ Online Application
 	*/
 }
 
+.adminPrintField {
+	width:300px;
+	margin:0px 0px 5px 210px;
+	text-align:justify;
+	vertical-align:bottom;
+	border-bottom:1px solid #999999;
+	/* display:block;
+	background: url(../../images/onlineApp/line.gif) repeat-x;  
+	*/
+}
+
 .printWrapper {
 	width:800px;	
 }
@@ -592,12 +603,12 @@ div.table .trOdd {
 div.table .thCenter {
 	color: #fff;
 	font-weight: bold;
-	text-align:center;
 	background-color: #0069aa;
+	padding-left:15px;
 }
 
 div.table .trCenter {
-	text-align:center;
+	padding-left:15px;
 }
 
 /*
@@ -608,7 +619,7 @@ div.table .trCenter:nth-child(odd) {
 */
 
 div.table .trCenterOdd {
-	text-align:center;
+	padding-left:15px;
 	background-color: #EEEEEE;
 }
 
@@ -730,9 +741,9 @@ div.form-container p {
 
 div.form-container p.note,
 div.form-container-noBorder p.note { 
-	margin-left: 210px; 
 	font-size: 90%; 
 	color: #333; 
+	margin:0px 0px 0px 210px;
 }
 
 div.form-container .phoneNote,

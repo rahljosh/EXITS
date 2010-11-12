@@ -3,7 +3,7 @@
 	File:		_myAccount.cfm
 	Author:		Marcus Melo
 	Date:		November 11, 2010
-	Desc:		Frequently Asked Questions
+	Desc:		My Account Information
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -11,14 +11,13 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="../../extensions/customtags/gui/" prefix="gui" />	
 
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <!--- User Details --->
     <cfparam name="FORM.userID" default="#APPLICATION.CFC.USER.getUserID()#">
 	<cfparam name="FORM.email" default="">
-    <cfparam name="FORM.newEmail" default="">
     <cfparam name="FORM.password" default="">
     <cfparam name="FORM.newPassword" default="">
     <cfparam name="FORM.confirmNewPassword" default="">
@@ -30,20 +29,25 @@
 		// FORM Submitted
 		if (FORM.submitted) {
 			// Data Validation
-
+			
 			// Current Password
-			if ( FORM.password NEQ qGetUserInfo.password ) {
-				SESSION.formErrors.Add("Current password does not match.");	
+			if ( NOT LEN(FORM.password) ) {
+				SESSION.formErrors.Add("Please enter your current password");	
+			}
+			
+			// Current Password
+			if ( LEN(FORM.password) AND FORM.password NEQ qGetUserInfo.password ) {
+				SESSION.formErrors.Add("Current password does not match");	
 			}
 
 			// Email
 			if ( NOT LEN(FORM.email) OR NOT IsValid("email", FORM.email) ) {
-				SESSION.formErrors.Add("Enter a valid email address.");			
+				SESSION.formErrors.Add("Enter a valid email address");			
 			}
 
 			// Check if Email has been registered
-			if ( IsValid("email", FORM.email) AND APPLICATION.CFC.USER.checkEmail(email=FORM.email,ID=FORM.userID).recordCount ) {
-				SESSION.formErrors.Add("Email address already registered.");		
+			if ( LEN(FORM.email) AND APPLICATION.CFC.USER.checkEmail(email=FORM.email,ID=FORM.userID).recordCount ) {
+				SESSION.formErrors.Add("Email already registered");		
 			}
 			
 			// Check if we are updating password
@@ -51,12 +55,12 @@
 			
 				// Password
 				if ( NOT LEN(FORM.newPassword) ) {
-					SESSION.formErrors.Add("Enter a new password.");			
+					SESSION.formErrors.Add("Enter a new password");			
 				}
 	
 				// Password
 				if ( LEN(FORM.newPassword) AND LEN(FORM.newPassword) NEQ LEN(FORM.confirmNewPassword) ) {
-					SESSION.formErrors.Add("Confirm new password does not match.");			
+					SESSION.formErrors.Add("Confirm new password does not match");			
 				}
 				
 				// Validate Password
@@ -101,7 +105,7 @@
 				}
 
 				// Set Page Message
-				SESSION.pageMessages.Add("Form successfully submitted.");
+				SESSION.pageMessages.Add("Form successfully submitted");
 				// Reload page with updated information
 				location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");
 
@@ -155,23 +159,23 @@
                     <legend>My Account</legend>
                         
                     <div class="field">
-                        <label for="firstName">Email Address <em>*</em></label> 
-                        <input type="email" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" />
+                        <label for="Email">Email <em>*</em></label> 
+                        <input type="text" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" />
                     </div>
 
                     <div class="field">
-                        <label for="middleName">Current Password <em>*</em></label> 
+                        <label for="password">Current Password <em>*</em></label> 
                         <input type="password" name="password" id="password" value="#FORM.password#" class="largeField" maxlength="100" />
                         <p class="note">If you wish to change your email/password, you must type in your current password.</p>
                     </div>
 
                     <div class="field">
-                        <label for="middleName">New Password <em>*</em></label> 
+                        <label for="newPassword">New Password <em>*</em></label> 
                         <input type="password" name="newPassword" id="newPassword" value="#FORM.newPassword#" class="largeField" maxlength="100" />
                     </div>
 
                     <div class="field">
-                        <label for="middleName">Confirm New Password <em>*</em></label> 
+                        <label for="confirmNewPassword">Confirm New Password <em>*</em></label> 
                         <input type="password" name="confirmNewPassword" id="confirmNewPassword" value="#FORM.confirmNewPassword#" class="largeField" maxlength="100" />
                     </div>
     

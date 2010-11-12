@@ -87,7 +87,7 @@
 
 	<!--- Check Login --->
 	<cffunction name="checkLogin" access="public" returntype="query" output="false" hint="Check user credentials">
-		<cfargument name="username" required="yes" hint="Username" />
+		<cfargument name="email" required="yes" hint="email" />
 		<cfargument name="password" required="yes" hint="Password" />		
 
 		<cfquery 
@@ -98,12 +98,11 @@
                     firstName,
                     lastName,                    
                     email,
-                    username,
                     password
 				FROM
 					user
 				WHERE
-                    username  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.username)#">
+                    email  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">
                 AND 
     	            password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.password)#">
 				AND
@@ -116,7 +115,7 @@
 	</cffunction>
 
 
-	<!--- Check Username --->
+	<!--- Check Email --->
 	<cffunction name="checkEmail" access="public" returntype="query" output="false" hint="Check user credentials">
 		<cfargument name="email" required="yes" hint="Email Address" />
 		<cfargument name="ID" default="0" hint="Pass userID if you are updating account">
@@ -129,7 +128,6 @@
                     firstName,
                     lastName,                    
                     email,
-                    username,
                     password
 				FROM
 					user
@@ -161,7 +159,6 @@
                     middleName,                    
                     lastName,  
                     email,
-                    username,
                     password,
                     gender,
                     dob,
@@ -169,7 +166,7 @@
                     DATE_FORMAT(dateLastLoggedIn, '%m/%d/%y') AS dateLastLoggedIn,
                     isActive,
                     isDeleted,
-                    CONVERT(CONCAT('<a href="index.cfm?action=userDetail=ID=(''', ID, ''');">[Details]</a>') USING latin1) AS action,
+                    CONVERT(CONCAT('<a href="index.cfm?action=userDetail&ID=', ID, '">[Details]</a>') USING latin1) AS action,
                     DATE_FORMAT(dateCreated, '%m/%d/%y') AS dateCreated,
                     dateupdated                  
 				FROM
@@ -197,7 +194,6 @@
                     middleName,                    
                     lastName,  
                     email,
-                    username,
                     password,
                     gender,
                     dob,
@@ -217,97 +213,102 @@
 	</cffunction>
 
 
-	<!--- Insert User --->
-	<cffunction name="insertUser" access="public" returntype="numeric" output="false" hint="Inserts a new user. Returns user ID.">
+	<!--- Insert/Edit User --->
+	<cffunction name="insertEditUser" access="public" returntype="numeric" output="false" hint="Inserts a new user. Returns user ID.">
+    	<cfargument name="ID" required="yes" hint="User ID" />
 		<cfargument name="firstName" required="yes" hint="First Name" />
         <cfargument name="middleName" required="yes" hint="Middle Name" />		
         <cfargument name="lastName" required="yes" hint="Last Name" />
         <cfargument name="email" required="yes" hint="Email" />
-        <cfargument name="username" required="yes" hint="Username" />
         <cfargument name="password" required="yes" hint="Password" />
 		<cfargument name="gender" required="yes" hint="Gender" />
 		<cfargument name="dob" required="yes" hint="dob" />
-
-		<cfquery 
-            result="newRecord"
-			datasource="#APPLICATION.DSN.Source#">
-				INSERT INTO
-					user
-				(                    
-                    firstName,
-                    middleName,
-                    lastName,                    
-                    email,
-                    username,
-                    password,
-                    gender,
-                    dob,                    
-                    dateCreated
-				)
-                VALUES
-                (
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.middleName)#">,	
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,		
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">,	
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.username)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.password)#">,	
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.gender)#">,	
-                    <cfif IsDate(ARGUMENTS.dob)>
-	                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">,
-                    <cfelse>
-                    	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    </cfif>
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                )                    
-		</cfquery>
 		
-		<cfreturn newRecord.GENERATED_KEY /> 
+        <!--- Insert User --->
+        <cfif NOT VAL(ARGUMENTS.ID)>
+        
+            <cfquery 
+                result="newRecord"
+                datasource="#APPLICATION.DSN.Source#">
+                    INSERT INTO
+                        user
+                    (                    
+                        firstName,
+                        middleName,
+                        lastName,                    
+                        email,
+                        password,
+                        gender,
+                        dob,                    
+                        dateCreated
+                    )
+                    VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.middleName)#">,	
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,		
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">,	
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.password)#">,	
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.gender)#">,	
+                        <cfif IsDate(ARGUMENTS.dob)>
+                            dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">,
+                        <cfelse>
+                            dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        </cfif>
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    )                    
+            </cfquery>
+			
+            <!--- Email New User --->
+			<cfscript>
+				// Email Student
+				APPLICATION.CFC.EMAIL.sendEmail(
+					emailTo=ARGUMENTS.email,
+					emailType='newAccount',
+					userID=newRecord.GENERATED_KEY
+				);
+
+				return newRecord.GENERATED_KEY;
+            </cfscript>
+            
+        <!--- Update User --->
+        <cfelse>
+
+            <cfquery 
+                datasource="#APPLICATION.DSN.Source#">
+                    UPDATE
+                        user
+                    SET
+                        firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,
+                        middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.middleName)#">,                    
+                        lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,  
+                        gender = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.gender)#">,
+                        <cfif IsDate(ARGUMENTS.dob)>
+                            dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">
+                        <cfelse>
+                            dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        </cfif>
+                    WHERE
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+            </cfquery>
+
+			<cfreturn ARGUMENTS.ID /> 
+	
+    	</cfif>        
 	</cffunction>
 
 
-	<!--- Update User --->
-	<cffunction name="updateUser" access="public" returntype="void" output="false" hint="Update User Information">
+    <!--- Update Email --->
+	<cffunction name="updateEmail" access="public" returntype="void" output="false" hint="Update User Email">
 		<cfargument name="ID" required="yes" hint="User ID" />
-		<cfargument name="firstName" default="" hint="User First Name">
-        <cfargument name="middleName" default="" hint="User Middle Name">
-        <cfargument name="lastName" default="" hint="User Last Name">
-        <cfargument name="email" default="" hint="User Gender">
-        <cfargument name="gender" default="" hint="User Gender">
-        <cfargument name="dob" default="" hint="User Date of Birth">
+		<cfargument name="email" required="yes" hint="Email Address">
 
 		<cfquery 
 			datasource="#APPLICATION.DSN.Source#">
 				UPDATE
                 	user
                 SET
-                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#">,
-                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.middleName)#">,                    
-                    lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,  
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">,  
-                    gender = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.gender)#">,
-                    <cfif IsDate(ARGUMENTS.dob)>
-	                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">
-                    <cfelse>
-                    	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                    </cfif>
-				WHERE
-	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
-		</cfquery>
-		
-	</cffunction>
-
-
-	<cffunction name="udpateUsername" access="public" returntype="void" output="false" hint="Update User Email">
-		<cfargument name="ID" required="yes" hint="User ID" />
-		<cfargument name="username" required="yes" hint="Username">
-
-		<cfquery 
-			datasource="#APPLICATION.DSN.Source#">
-				UPDATE
-                	user
-                SET
-                    username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.username)#">
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.email)#">
 				WHERE
 	                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 		</cfquery>

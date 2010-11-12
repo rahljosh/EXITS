@@ -261,15 +261,15 @@
 				</cfscript>
                 
                 <cfsavecontent variable="stEmailStructure.message">
-                	<p>#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#-</p>
+                	<p>#qGetUserInfo.firstName# #qGetUserInfo.lastName#-</p>
 
                     An account has been created at #APPLICATION.SCHOOL.name# AdminTool. <br /><br />
 
                     Please visit <a href="#APPLICATION.SITE.URL.adminTool#" style="text-decoration:none; color:##0069aa;">#APPLICATION.SITE.URL.adminTool#</a> to login into the AdminTool. <br /><br />
 
                     Please see below your login information: <br /><br />
-                    Username: #qGetUserInfo.username#<br />
-                    Password: #qGetStudentInfo.password# <br /><br />
+                    Email Address: #qGetUserInfo.email#<br />
+                    Password: #qGetUserInfo.password# <br /><br />
 
                     If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
@@ -296,7 +296,7 @@
                 	<p>#qGetUserInfo.firstName# #qGetUserInfo.lastName#-</p>
 
                     Please see below your login information: <br /><br />
-                    Username: #qGetUserInfo.username# <br />
+                    Email Address: #qGetUserInfo.email# <br />
                     Password: #qGetUserInfo.password# <br /><br />
 
                     Please visit <a href="#APPLICATION.SITE.URL.adminTool#" style="text-decoration:none; color:##0069aa;">#APPLICATION.SITE.URL.adminTool#</a> to login into the AdminTool. <br /><br />
@@ -329,7 +329,7 @@
 
                     Please visit <a href="#APPLICATION.SITE.URL.adminTool#" style="text-decoration:none; color:##0069aa;">#APPLICATION.SITE.URL.adminTool#</a> to login into the AdminTool. <br /><br />
 
-                    Username: #qGetUserInfo.username# <br />
+                    Email Address: #qGetUserInfo.email# <br />
                     Password: #qGetUserInfo.password# <br /><br />
 
                     If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />

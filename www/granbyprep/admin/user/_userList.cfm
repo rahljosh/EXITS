@@ -11,8 +11,8 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
-	
+    <cfimport taglib="../../extensions/customtags/gui/" prefix="gui" />	
+    	
 	<cfscript>
 		// Application Status
 		qGetUsers = APPLICATION.CFC.USER.getUsers();
@@ -34,9 +34,19 @@
 
             <!--- Application Body --->
 			<div class="form-container-noBorder">
-            	
-                <cfform>
+
+                <!--- Page Messages --->
+                <gui:displayPageMessages 
+                    pageMessages="#SESSION.pageMessages.GetCollection()#"
+                    messageType="section"
+                    />
                 
+                <!--- Form Errors --->
+                <gui:displayFormErrors 
+                    formErrors="#SESSION.formErrors.GetCollection()#"
+                    messageType="section"
+                    />
+            	
                 <fieldset>
                    
                     <legend>User List</legend>
@@ -47,7 +57,7 @@
                             <div class="tdSmall">First Name</div>
                             <div class="tdSmall">Last Name</div>
                             <div class="tdSmall">Gender</div>
-                            <div class="tdSmall">Email</div>
+                            <div class="tdLarge">Email</div>
                             <div class="tdSmall">Date Created</div>
                             <div class="tdSmall">Last Login</div>
                             <div class="tdSmall">Actions</div>
@@ -59,7 +69,7 @@
                                 <div class="tdSmall">#qGetUsers.firstName#</div>
                                 <div class="tdSmall">#qGetUsers.LastName#</div>
                                 <div class="tdSmall">#qGetUsers.gender#</div>
-                                <div class="tdSmall">#qGetUsers.email#</div>
+                                <div class="tdLarge">#qGetUsers.email#</div>
                                 <div class="tdSmall">#qGetUsers.dateCreated#</div>
                                 <div class="tdSmall">#qGetUsers.dateLastLoggedIn#</div>
                                 <div class="tdSmall">#qGetUsers.action#</div>
@@ -77,12 +87,12 @@
                 </fieldset>
 
                 <div class="buttonrow">
-                    <input type="Button" value="New" class="button ui-corner-top" />
+                    <form action="#CGI.SCRIPT_NAME#?action=userDetail&ID=0" method="post">
+	                    <input type="submit" value="New User" class="button ui-corner-top" />
+                    </form>
                 </div>
                             
             </div>
-            
-            </cfform>  
             
         </div>
 

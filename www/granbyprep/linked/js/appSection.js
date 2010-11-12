@@ -15,6 +15,16 @@ var popUpApplication = function(hashID) {
 	Online Application
 **********************************************************/
 
+// jQuery Date Picker Function
+$(function() {
+	$(".datePicker").datepicker({
+		//numberOfMonths: 3,								
+		showButtonPanel: true,
+		changeMonth: true,
+		changeYear: true
+	});
+});
+
 // Word Count - Used on _section5.cfm
 var countWord = function(field, displayCount) {	
 	var number = 0;
