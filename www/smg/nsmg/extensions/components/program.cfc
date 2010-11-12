@@ -26,7 +26,7 @@
 	
 	<cffunction name="getPrograms" access="public" returntype="query" output="false" hint="Gets a list of users, if programID is passed gets a program by ID">
     	<cfargument name="programID" default="0" hint="programID is not required">
-        <cfargument name="isActive" default="1" hint="IsActive is not required">
+        <cfargument name="isActive" default="" hint="IsActive is not required">
         <cfargument name="dateActive" default="" hint="DateActive is not required">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
               
