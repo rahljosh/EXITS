@@ -368,14 +368,15 @@
                             	<td align="center" colspan="2">
                             		<font size=-1><span class="edit_link">
                                     [ 
-										<cfif CLIENT.usertype LTE 4>
+										<cfif ListFind("1,2,3,4", CLIENT.usertype)>
                                         	<a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; 
+                                            <a href='studentProfileFull.cfm?uniqueid=#uniqueid#'>full profile</a> &middot;
                                         </cfif> 
                                     	<a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=web'>profile</a> &middot;
-										<cfif CLIENT.userType LTE 5>  <!--- Only Office & Managers --->
-	                                        <a href="javascript:SendEmail('student_profile.cfm?uniqueid=#uniqueid#&profileType=email', 300, 400);" title="Email Student Profile and Letters"><img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"> email profile </a> &middot;
+                                        <a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=pdf'> <img src="pics/pdficon_small.gif" border=0></a> &middot;
+										<cfif ListFind("1,2,3,4,5", CLIENT.usertype)>  <!--- Only Office & Managers --->
+	                                        <a href="javascript:SendEmail('student_profile.cfm?uniqueid=#uniqueid#&profileType=email', 300, 400);" title="Email Student Profile and Letters"> email profile <img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"> </a>
                                         </cfif>
-                                        <a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=pdf'> <img src="pics/pdficon_small.gif" border=0></a>
                                     ]
                                     </span></font>
                                 </td>
