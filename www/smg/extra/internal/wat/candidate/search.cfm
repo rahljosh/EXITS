@@ -6,6 +6,7 @@
 	<!--- Param FORM Variable --->
 	<cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.search" default="">
+    <cfparam name="FORM.status" default="">
 
 	<cfif FORM.submitted>
 
@@ -34,8 +35,15 @@
                 ec.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
 	        AND
                 applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )     
-            AND
-            	ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            
+            <!--- Status --->
+            <cfif ListFind("1,2", FORM.status)>
+                AND
+                    ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+          	<cfelseif FORM.status EQ 'canceled'>  
+            	AND 
+                	ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+            </cfif>
                 
 			<!--- Intl Rep Account --->
             <cfif NOT ListFind("1,2,3,4", CLIENT.userType)>
@@ -99,6 +107,14 @@
 			<tr>
 				<td align="center" class="style1">
 					Search Criteria: <input name="search" value="#FORM.search#" type="text" style="width:250px;" />
+                    
+                    <select name="status">
+                    	<option value="" <cfif NOT LEN(FORM.status)> selected="selected"</cfif>> All </option>
+                        <option value="1" <cfif FORM.status EQ 1> selected="selected"</cfif> >Active</option>
+                        <option value="0" <cfif FORM.status EQ 0> selected="selected"</cfif> >Inactive</option>
+                        <option value="canceled" <cfif FORM.status EQ 'canceled'> selected="selected"</cfif> >Canceled</option>
+                    </select>
+                    
                     &nbsp; &nbsp; 
                     <input type="submit" name="Submit" value="Search" /> <br /><br />
                     PS: Search will be performed on candidate ID, first name, last name, DOB, email and degree fields.
