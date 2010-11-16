@@ -75,12 +75,13 @@
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
             s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+        <!--- US or Canada --->
         AND 
-            s.countrybirth != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+            s.countrybirth NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
         AND 
-            s.countryresident != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+            s.countryresident NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
         AND 
-            s.countrycitizen != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+            s.countrycitizen NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
         AND 
             s.verification_received IS NOT NULL
         AND 
