@@ -17,8 +17,7 @@
 	<cfloop From = "1" To = "#form.count#" Index = "x">
 		<cfquery name="update_paperwork" datasource="MySQL">
 			UPDATE smg_users_paperwork 
-			SET fk_companyid = #client.companyid#,
-            	ar_info_sheet = <cfif form["ar_info_sheet_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_info_sheet_" & x])#</cfif>,
+			SET ar_info_sheet = <cfif form["ar_info_sheet_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_info_sheet_" & x])#</cfif>,
 				ar_ref_quest1 = <cfif form["ar_ref_quest1_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest1_" & x])#</cfif>,
 				ar_ref_quest2 = <cfif form["ar_ref_quest2_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest2_" & x])#</cfif>,
 				ar_cbc_auth_form = <cfif form["ar_cbc_auth_form_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_cbc_auth_form_" & x])#</cfif>,
