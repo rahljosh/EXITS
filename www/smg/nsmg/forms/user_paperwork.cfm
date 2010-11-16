@@ -54,7 +54,11 @@ function CheckDates(ckname, frname) {
 	LEFT JOIN smg_seasons s ON s.seasonid = p.seasonid
 	WHERE userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer" maxlength="6">
     <cfif client.companyid eq 10>
-    and fk_companyid = 10
+    	AND
+        	fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
+	<cfelse>
+    	AND
+        	fk_companyid != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 
     </cfif>
 	ORDER BY p.seasonid DESC
 </cfquery>
@@ -140,6 +144,46 @@ function CheckDates(ckname, frname) {
 			</table>
 		</td>
 		<td  valign="top">
+
+			<!--- NEW SEASON PAPERWORK --->
+			<cfif client.usertype LTE 4>
+				<table cellpadding="2" border="0" align="left">
+					<tr><td bgcolor="e2efc7">
+							<cfselect name="seasonid" required="yes" message="You must select a season">
+								<option value="0">Contract AYP</option>
+								<cfloop query="get_seasons">
+								<option value="#seasonid#">#season#</option>
+								</cfloop>
+							</cfselect>				
+						</td>
+					</tr>
+					<tr <Cfif get_rep.active eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_info_sheet_check" OnClick="CheckDates('ar_info_sheet_check', 'ar_info_sheet');">
+							Date: <cfinput type="text" name="ar_info_sheet" value="" size="8" maxlength="10" validate="date">					
+						</td>
+					</tr>
+					<tr <Cfif get_rep.active eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_ref_quest1_check" OnClick="CheckDates('ar_ref_quest1_check', 'ar_ref_quest1');"> 
+							Date: <cfinput type="text" name="ar_ref_quest1" value="" size="8" maxlength="10" validate="date">						
+						</td>
+					</tr>
+					<tr  <Cfif get_rep.active eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_ref_quest2_check" OnClick="CheckDates('ar_ref_quest2_check', 'ar_ref_quest2')"> 
+							Date: <cfinput type="text" name="ar_ref_quest2" value="" size="8" maxlength="10" validate="date">						
+						</td>
+					</tr>
+					<tr  <Cfif get_rep.active eq 0 and get_paperwork.recordcount eq 0 > bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_cbc_auth_form_check" OnClick="CheckDates('ar_cbc_auth_form_check', 'ar_cbc_auth_form');"> 
+							Date: <cfinput type="text" name="ar_cbc_auth_form" value="" size="8" maxlength="10" validate="date">						
+						</td>
+					</tr>
+					<tr><td><cfinput type="checkbox" name="ar_agreement_check" OnClick="CheckDates('ar_agreement_check', 'ar_agreement');"> 
+							Date: <cfinput type="text" name="ar_agreement" value="" size="8" maxlength="10" validate="date">
+						</td>
+					</tr>
+					<tr><td><cfinput type="checkbox" name="ar_training_check" OnClick="CheckDates('ar_training_check', 'ar_training');"> 
+							Date: <cfinput type="text" name="ar_training" value="" size="8" maxlength="10" validate="date">
+						</td>
+					</tr>				
+				</table>
+			</cfif>
+
 			<!--- EXISTING SEASON PAPERWORK --->
 			<cfloop query="get_paperwork">
 				<!--- OFFICE --->
@@ -232,45 +276,6 @@ function CheckDates(ckname, frname) {
 				</cfif>	
 			</cfloop>
             
-            
-			<!--- NEW SEASON PAPERWORK --->
-			<cfif client.usertype LTE 4>
-				<table cellpadding="2" border="0" align="left">
-					<tr><td bgcolor="e2efc7">
-							<cfselect name="seasonid" required="yes" message="You must select a season">
-								<option value="0">Contract AYP</option>
-								<cfloop query="get_seasons">
-								<option value="#seasonid#">#season#</option>
-								</cfloop>
-							</cfselect>				
-						</td>
-					</tr>
-					<tr <Cfif get_rep.active eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_info_sheet_check" OnClick="CheckDates('ar_info_sheet_check', 'ar_info_sheet');">
-							Date: <cfinput type="text" name="ar_info_sheet" value="" size="8" maxlength="10" validate="date">					
-						</td>
-					</tr>
-					<tr <Cfif get_rep.active eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_ref_quest1_check" OnClick="CheckDates('ar_ref_quest1_check', 'ar_ref_quest1');"> 
-							Date: <cfinput type="text" name="ar_ref_quest1" value="" size="8" maxlength="10" validate="date">						
-						</td>
-					</tr>
-					<tr  <Cfif get_rep.active eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_ref_quest2_check" OnClick="CheckDates('ar_ref_quest2_check', 'ar_ref_quest2')"> 
-							Date: <cfinput type="text" name="ar_ref_quest2" value="" size="8" maxlength="10" validate="date">						
-						</td>
-					</tr>
-					<tr  <Cfif get_rep.active eq 0 and get_paperwork.recordcount eq 0 > bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_cbc_auth_form_check" OnClick="CheckDates('ar_cbc_auth_form_check', 'ar_cbc_auth_form');"> 
-							Date: <cfinput type="text" name="ar_cbc_auth_form" value="" size="8" maxlength="10" validate="date">						
-						</td>
-					</tr>
-					<tr><td><cfinput type="checkbox" name="ar_agreement_check" OnClick="CheckDates('ar_agreement_check', 'ar_agreement');"> 
-							Date: <cfinput type="text" name="ar_agreement" value="" size="8" maxlength="10" validate="date">
-						</td>
-					</tr>
-					<tr><td><cfinput type="checkbox" name="ar_training_check" OnClick="CheckDates('ar_training_check', 'ar_training');"> 
-							Date: <cfinput type="text" name="ar_training" value="" size="8" maxlength="10" validate="date">
-						</td>
-					</tr>				
-				</table>
-			</cfif>
 		</td>
        <!----For new accounts, display instructions---->
         <Cfif get_rep.active eq 0>
@@ -332,9 +337,9 @@ function CheckDates(ckname, frname) {
 	<Cfif get_rep.active eq 1>
     <tr>
     	<Td colspan=30>
-    <font color="red">*</font>Required for new accounts before account can be activated.</Cfif>
-    	</Td>
-    </Tr>
+    <font color="red">*</font>Required for new accounts before account can be activated.</Td></Tr></Cfif>
+    	
+    
 
         
 </table>
