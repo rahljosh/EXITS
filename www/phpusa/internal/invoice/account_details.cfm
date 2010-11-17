@@ -270,7 +270,7 @@ where intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
 			<table border="0" cellpadding="3" cellspacing="0" width="100%">				
 				<tr>
 					<td width="50%"><b>Invoice</b></td>
-					<td width="12%"></td>
+					<td width="12%" align="right"><b>Date</b></td>
 					<td width="12%" align="right"><b>Total Invoiced</b></td>
 					<td width="12%" align="right"><b>Received</b></td>
 					<td width="12%" align="right"><b>Outstanding</b></td>
@@ -279,7 +279,8 @@ where intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
 				<cfloop query="qGeneralInvoices">
                 
 					<cfquery name="total_gen_invoiced" datasource="MySql">
-						SELECT 
+						SELECT
+                        	date,
                         	SUM(amount) as amount
 						FROM 
                         	egom_charges
@@ -304,7 +305,7 @@ where intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
                    
 					<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
 						<td><a href="?curdoc=invoice/create_general_invoice_view&i=#uniqueid#">###invoiceID#</a></td>				
-						<td></td>
+						<td align="right">#DateFormat(total_gen_invoiced.date,'mm/dd/yy')#</td>
 						<td align="right">#LSCurrencyFormat(VAL(total_gen_invoiced.amount))#</td>
 						<td align="right">#LSCurrencyFormat(VAL(total_gen_received.amount_paid))#</td>
 						<td align="right">#LSCurrencyFOrmat(VAL(balance_gen_due))#</td>
