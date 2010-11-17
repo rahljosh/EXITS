@@ -177,7 +177,7 @@ function findselected() {
 						</td>
 					</tr>
                     <Tr>
-                    	<td colspan=4><a href="" onClick="javascript: win=window.open('invoice/addCredit.cfm?intrep=#intrep#', 'Settings', 'height=300, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="images/addCredit.png" /></a></td>
+                    	<td colspan=4><a href="" onClick="javascript: win=window.open('invoice/addCredit.cfm?intrep=#intrep#', 'Settings', 'height=300, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="images/addCredit.png" border="0" /></a></td>
                     </Tr>
 					<CFIF isDefined('URL.INVOICE')>
 						<cfquery name="charges" datasource="mysql">
