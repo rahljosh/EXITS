@@ -226,14 +226,14 @@
             WHERE su.userid = #indexAgentId#
             </cfquery>
             
-            <cfif getAgentInfo.email IS "" AND getAgentInfo.billing_email IS "">
+            <cfif getAgentInfo.email IS "" AND getAgentInfo.php_contact_email IS "">
                 <cfset missingEmail = 1>
             </cfif>
             
-            <cfif getAgentInfo.email IS NOT "" AND getAgentInfo.billing_email IS "">
+            <cfif getAgentInfo.email IS NOT "" AND getAgentInfo.php_contact_email IS "">
                 <cfquery name="getAgentInfoSecRun" datasource="MySQL">
                 UPDATE smg_users su
-                SET su.billing_email = su.email
+                SET su.php_contact_email = su.email
                 WHERE userid = #indexAgentId#
                 </cfquery>
                 
@@ -244,9 +244,9 @@
                 </cfquery>
             </cfif>
             
-            <cfif getAgentInfo.billing_email IS NOT "" AND getTotalBalancePerAgent.recordCount NEQ 0>
+            <cfif variables.missingEmail NEQ 1 AND getTotalBalancePerAgent.recordCount NEQ 0>
             													
-                <cfmail from="marcel@student-management.com" to="#getAgentInfo.php_conctact_email#" bcc="marcel@student-management.com" subject="#getAgentInfo.businessname# (#getAgentInfo.userid#) - PHP PROGRAM - Balance Due" type="html">
+                <cfmail from="marcel@student-management.com" to="#getAgentInfo.php_contact_email#" bcc="marcel@student-management.com" subject="#getAgentInfo.businessname# (#getAgentInfo.userid#) - PHP PROGRAM - Balance Due" type="html">
                 
                     <style type="text/css">
         
