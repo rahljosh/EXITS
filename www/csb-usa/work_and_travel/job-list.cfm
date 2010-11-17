@@ -73,7 +73,7 @@
               </table>
               </form>
               <cfelse>
-	              	<cfif client.user EQ 'csbagent' AND client.pass EQ 'jobs10'>
+	              	<cfif client.user EQ 'csbagent' AND client.pass EQ 'csbjobs-11'>
 						<cfinclude template="view_job_listing.cfm">
                    	<cfelseif client.user EQ 'anca' AND client.pass eq 'qaz123'>
  	                   <cfinclude template="admin_job_listing.cfm">
