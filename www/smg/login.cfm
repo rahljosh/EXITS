@@ -7,16 +7,13 @@
     <cfparam name="FORM.email" default="">
     <cfparam name="url.forgot" default="0">
     <cfset errorMsg = ''>
-    
-	<cfif CGI.http_host is 'jan.case-usa.org'>
-        <cflocation url="http://case.exitsapplication.com">
-    </cfif>
-    
+        
     <cfquery name="qGetCompany" datasource="mysql">
         SELECT 
         	companyid, 
             companyname,
-            support_email
+            support_email,
+            url_ref
         FROM 
         	smg_companies 
         WHERE
@@ -27,10 +24,12 @@
         <cfset CLIENT.companyid = qGetCompany.companyid>
         <cfset CLIENT.companyname = qGetCompany.companyname>
         <cfset CLIENT.emailFrom = qGetCompany.support_email>
+        <cfset APPLICATION.site_url = qGetCompany.url_ref>
     <cfelse>
         <cfset CLIENT.companyid = 0>
         <cfset CLIENT.companyname = 'EXIT Group'>
         <cfset CLIENT.emailFrom = 'support@iseusa.com'>
+        <cfset APPLICATION.site_url = 'ise.exitsapplication.com'>
     </cfif>
     
     <!--- Process Form Submission - login --->
