@@ -323,6 +323,99 @@ where intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
 			</table>			
 		</td>
 	</tr>
+    
+	<tr><td bgcolor="##C2D1EF"><b>Payments Received &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Total of #qGeneralInvoices.recordcount# invoice(s)</b></td></tr>	
+	<tr>
+		<td width="100%">
+			<table border="0" cellpadding="3" cellspacing="0" width="100%">				
+				<tr>
+					<td width="12%"><b>Wire Reference</b></td>
+					<td width="12%" align="right"><b>Date Received</b></td>
+					<td width="12%" align="right"><b>Date Applied</b></td>
+					<td width="12%" align="right"><b>Amount Received</b></td>
+					<td width="12%" align="right"><b>Amount Applied</b></td>
+					<td width="12%" align="right"><b>Amount Unapplied</b></td>
+                    <td width="12%" align="right"><b>Student ID</b></td>
+				</tr>
+                
+                <cfquery name="qPaymentsReceived" datasource="MySql">
+                SELECT
+                	paymentid,
+                	transaction, 
+                    date_received, 
+                    date_applied, 
+                    SUM(total_amount) AS total_amount
+                FROM
+                	egom_payments
+                WHERE
+                	intrepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
+                GROUP BY
+                	transaction
+                ORDER BY
+                	date_received DESC, transaction
+                </cfquery>
+                
+                <cfparam name="totalReceived" default="0">
+                <cfparam name="totalApplied" default="0">
+                <cfparam name="paymLeft" default="0">
+                <cfparam name="totalUnapplied" default="0">
+                
+				<cfloop query="qPaymentsReceived">
+
+                	<cfquery name="qPaymentApplied" datasource="MySql">
+                    SELECT
+                    	IFNULL(ec.studentid, 0) AS studentid,
+                    	ep.intrepid,
+                    	IFNULL(ep.transaction, 0),
+                    	IFNULL(SUM(epc.amount_paid), 0) AS amountApplied
+                    FROM
+                    	egom_payment_charges epc
+                    LEFT JOIN
+                    	egom_payments ep
+                    ON
+                    	ep.paymentid = epc.paymentid
+                    LEFT JOIN
+                    	egom_charges ec
+                    ON
+                    	ec.chargeid = epc.chargeid
+                    WHERE
+                    	ep.transaction = '#qPaymentsReceived.transaction#'
+                    AND
+                    	ep.intrepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.intRep#">
+                    </cfquery>
+                    
+					<cfset totalReceived = totalReceived + qPaymentsReceived.total_amount>
+                    <cfset totalApplied = totalApplied + qPaymentApplied.amountApplied>
+                    <cfset paymLeft = qPaymentsReceived.total_amount - qPaymentApplied.amountApplied>
+                    <cfset totalUnapplied = totalUnapplied + paymLeft>
+                    
+                    
+					<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+						<td>###transaction#</a></td>				
+						<td align="right">#DateFormat(qPaymentsReceived.date_received,'mm/dd/yy')#</td>
+						<td align="right">#DateFormat(qPaymentsReceived.date_applied,'mm/dd/yy')#</td>
+						<td align="right">#LSCurrencyFormat(VAL(qPaymentsReceived.total_amount))#</td>
+						<td align="right">#LSCurrencyFormat(VAL(qPaymentApplied.amountApplied))#</td>
+						<td align="right">#LSCurrencyFormat(VAL(variables.paymLeft))#</td>
+                        <td align="right">#qPaymentApplied.studentid#</td>
+					</tr>
+                
+                </cfloop>
+                
+				<tr>
+					<td colspan="2" align="right"><b>Total</b></td>
+					<td align="right"><b></b></td>
+					<td align="right"><b>#LSCurrencyFormat(VAL(variables.totalReceived))#</b></td>
+					<td align="right"><b>#LSCurrencyFormat(VAL(variables.totalApplied))#</b></td>
+                    <td align="right"><b>#LSCurrencyFormat(VAL(variables.totalUnapplied))#</b></td>
+                    <td align="right"><b></b></td>
+				</tr>
+				<tr><td colspan="5">&nbsp;</td></tr>				
+			</table>			
+		</td>
+	</tr>
+</table><br /><br />    
+    
 </table><br /><br />
 
 </cfoutput>
