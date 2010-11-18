@@ -21,7 +21,7 @@
     <cfparam name="FORM.isListSubscriber" default="0">
     <cfparam name="FORM.remoteCountry" default="">
     <cfparam name="FORM.captcha" default="">
-    <cfparam name="FORM.strCaptcha" default="">
+    <cfparam name="FORM.strCaptcha" default="#makeRandomString()#">
     <cfparam name="FORM.captchaHash" default="">    
 	<!--- Login --->
 	<cfparam name="FORM.loginEmail" default="">
