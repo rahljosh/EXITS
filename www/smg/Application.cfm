@@ -24,6 +24,17 @@
     <cfparam name="CLIENT.studentID" default="0"> 
     <cfparam name="CLIENT.userType" default="0">  
 
+    <cfquery name="qCompanyInfo" datasource="mysql">
+        SELECT
+            companyID,
+            support_email,
+            url_ref
+        FROM
+            smg_companies
+        WHERE
+            companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfquery>
+	    
 	<cfscript>
         // Check if we need to initialize Application scope
 		if ( VAL(URL.init) ) {
@@ -55,12 +66,16 @@
 		} else {
 			// Live Server Settings
 			
-			// Set Site URL
-			APPLICATION.site_url = 'http://ise.exitsapplication.com';
+			if ( VAL(qCompanyInfo.recordCount) ) {
+				// Set Site URL - // Phase Out this variable
+				APPLICATION.site_url = 'http://' & qCompanyInfo.url_ref;
+			} else {
+				// Set Site URL - // Phase Out this variable
+				APPLICATION.site_url = 'http://ise.exitsapplication.com';
+			}
 			
-		}		
+		}	
 	</cfscript>
-
 
 	<!--- Include Application Config Files --->
 	<cfinclude template="nsmg/extensions/config/_app_index.cfm" />    

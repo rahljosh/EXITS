@@ -60,16 +60,6 @@ cgi.SERVER_PORT=#cgi.SERVER_PORT#
 </cfoutput>--->
 
 
-<!----Set site variables for email and site---->
-<cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
-	<cfparam name="application.support_email" default="support@case-usa.org">
-	<cfparam name="application.site_url" default="http://www.case-usa.org">
-<cfelse>
-    <cfparam name="application.support_email" default="support@student-management.com">
-    <cfparam name="application.site_url" default="http://www.student-management.com">
-</cfif>
-
-
 <!--- this enables the address lookup. 0=off, 1=simple (lookup required but user can enter any value), 2=auto (lookup required and auto fill in readonly value).
 used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
 <cfparam name="application.address_lookup" default="0"> 

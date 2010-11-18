@@ -10,6 +10,17 @@
 
 ----- ------------------------------------------------------------------------- --->
 
+<cfquery name="qCompanyInfo" datasource="mysql">
+	SELECT
+    	companyID,
+        support_email,
+        url_ref
+	FROM
+    	smg_companies
+	WHERE
+    	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+</cfquery>
+
 <cfscript>
 	APPLICATION.DSN = 'MySQL';
 
@@ -29,23 +40,23 @@
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
 
-	AppEmail.support = 'support@student-management.com';
+	
 	AppEmail.errors = 'errors@student-management.com';
 	AppEmail.admissions = 'bhause@iseusa.com';
 	AppEmail.finance = 'marcel@iseusa.com';	
 	AppEmail.cbcNotifications = 'support@student-management.com;bill@iseusa.com;margarita@iseusa.com;diana@iseusa.com;gary@iseusa.com';
-
-	// Phase Out these variables
-	if ( cgi.http_host EQ 'jan.case-usa.org' OR cgi.http_host EQ 'www.case-usa.org' ) {
+	
+	if ( VAL(qCompanyInfo.recordCount) ) {
 		
-		APPLICATION.support_email = 'support@case-usa.org';
-		APPLICATION.site_url = 'http://www.case-usa.org';
+		AppEmail.support = qCompanyInfo.support_email;
+		// Phase Out this variable
+		APPLICATION.support_email = qCompanyInfo.support_email;
 		
 	} else {
 
-		APPLICATION.support_email = 'support@student-management.com';
-		APPLICATION.site_url = 'http://www.student-management.com';
-
+		AppEmail.support = 'support@student-management.com';
+		// Phase Out this variable
+		APPLICATION.support_email =  'support@student-management.com';
 	}
 
 
@@ -67,8 +78,8 @@
 		// Base Path eg. C:\websites\smg\nsmg\
 		AppPath.base = 'C:/websites/www/smg/nsmg/';
 
-		// Set Site URL
-		APPLICATION.site_url = 'http://dev.student-management.com';
+		// Set Site URL // Phase Out this variable
+		APPLICATION.site_url = 'http://smg.local';
 		
 	} else {
 		// PRODUCTION Server Settings
@@ -78,9 +89,14 @@
 		// Base Path eg. C:\websites\smg\nsmg\
 		AppPath.base = 'C:/websites/student-management/nsmg/';
 
-		// Set Site URL
-		APPLICATION.site_url = 'http://www.student-management.com';
-		
+		if ( VAL(qCompanyInfo.recordCount) ) {
+			// Set Site URL - // Phase Out this variable
+			APPLICATION.site_url = 'http://' & qCompanyInfo.url_ref;
+		} else {
+			// Set Site URL - // Phase Out this variable
+			APPLICATION.site_url = 'http://ise.exitsapplication.com';
+		}
+
 	}
 
 	/* jQuery Latest Version 
