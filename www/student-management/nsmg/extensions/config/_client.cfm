@@ -1,0 +1,28 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		_client.cfm
+	Author:		Marcus Melo
+	Date:		April, 02 2010
+	Desc:		Params CLIENT variables used in the application.
+
+	Updated:  	
+
+----- ------------------------------------------------------------------------- --->
+
+<!--- Param Client Variables --->
+<cfparam name="CLIENT.companyID" default="0">
+<cfparam name="CLIENT.userID" default="0">
+<cfparam name="CLIENT.studentID" default="0">  
+<cfparam name="CLIENT.regionID" default="0">  
+<cfparam name="CLIENT.name" default=""> 
+<cfparam name="CLIENT.userType" default="0">   
+<cfparam name="CLIENT.companyName" default=""> 
+<cfparam name="CLIENT.companyShort" default=""> 
+<cfparam name="CLIENT.parentCompany" default="">   
+<cfparam name="CLIENT.company_submitting" default="">  
+<cfparam name="CLIENT.lastLogin" default="">  
+<cfparam name="CLIENT.programManager" default="">
+<cfparam name="CLIENT.levels" default="0">
+<cfparam name="CLIENT.accesslevelname" default="">
+<cfparam name="CLIENT.invoice_access" default="0">
+<cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">
