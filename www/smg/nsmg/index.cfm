@@ -25,8 +25,8 @@
 <cfinclude template="footer.cfm">
 
 <!--- MARCUS - remove this ---->
-<cfparam name="url.test" default="0">
-<cfif VAL(URL.test)>
+<cfparam name="URL.showInfo" default="0">
+<cfif VAL(URL.showInfo) AND ListFind("1,510", CLIENT.userID)>
 	<CFDUMP var="#CLIENT#">
     <CFDUMP var="#APPLICATION#">
 </cfif>
