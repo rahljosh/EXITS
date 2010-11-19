@@ -1,4 +1,3 @@
-
 <cfquery datasource="mysql" name="active_seasons">
 select seasonid, season
 from smg_seasons
@@ -37,7 +36,7 @@ where active=1 and seasonid = 7
     from smg_companies
     where companyid = #i#
     </cfquery>
-    <Cfset CLIENT.exits_url = #company_info.url_ref#>
+    <Cfset CLIENT.exits_url = "https://" & company_info.url_ref>    
     <cfset client.companyname = #company_info.companyname#>
 	
 	<cfoutput>    
@@ -73,7 +72,7 @@ This information is also available on initial welcome page when you login under 
 			
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value=" #company_info.pm_email#">
+                <cfinvokeargument name="email_to" value="#company_info.pm_email#">
                 <cfinvokeargument name="email_subject" value="#season# Schools Missing Dates">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 <cfinvokeargument name="email_from" value="Daily Reports <#company_info.support_email#>">
@@ -111,7 +110,7 @@ This information is also available on initial welcome page when you login under 
         from smg_companies
         where companyid = #rm_email_list.companyid#
         </cfquery>
-        <Cfset CLIENT.exits_url = #company_info.url_ref#>
+        <Cfset CLIENT.exits_url = "https://" & company_info.url_ref>
         <cfset client.companyname = #company_info.companyname#>
 	<cfoutput>    
   
@@ -186,7 +185,7 @@ This information is also available on initial welcome page when you login under 
         from smg_companies
         where companyid = #ar_email.companyid#
         </cfquery>
-        <Cfset CLIENT.exits_url = #company_info.url_ref#>
+        <Cfset CLIENT.exits_url = "https://" & company_info.url_ref>
         <cfset client.companyname = #company_info.companyname#>
 	<cfoutput>  
    
