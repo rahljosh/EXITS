@@ -1,7 +1,9 @@
-<cfapplication 
-	name="ise-external" 
-    clientmanagement="yes">
-    
+<cfapplication
+	name="ISEUSA" 
+    clientmanagement="yes" 
+    sessionmanagement="yes" 
+    sessiontimeout="#CreateTimeSpan(0,4,0,0)#">
+
 	<!----
 	<cferror type="EXCEPTION" template="AlertForm.cfm">
     
@@ -25,6 +27,11 @@
 			return(CreateObject("component", ("extensions.components." & ARGUMENTS.strCFCName)));
 		}
 
+		// Page Messages
+		SESSION.PageMessages = CreateCFC("pageMessages").Init();
+		
+		// Form Errors
+		SESSION.formErrors = CreateCFC("formErrors").Init();
 
 		// Set up DSN information
 		APPLICATION.DSN = StructNew();

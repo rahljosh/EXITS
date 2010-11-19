@@ -55,7 +55,7 @@
 		<cfscript>
 			try {
 				 // Check if we have a query in the application scope, if not store the query.
-				var getQuery = APPLICATION.QUERY.qMetadata;
+				getQuery = APPLICATION.QUERY.qMetadata;
 			} catch (Any e) {
 				// Set Query
 				APPLICATION.QUERY.qMetadata = getMetadataBySite();
