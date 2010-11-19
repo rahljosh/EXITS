@@ -1,0 +1,290 @@
+/*
+**********************************************************************************
+
+Application Stats Table
+
+************************************************************************************/
+.applicationStatsTable {
+	border:1px solid #999999;
+}
+
+.applicationStatsTable a {
+	color:#000033;
+	text-decoration:none;
+}
+
+.applicationStatsTable a:hover {
+	color:#5e748c;
+	text-decoration:none;
+}
+
+.applicationStatsStudent {
+	text-align:center; 
+	padding:5px;
+	background-color:#fef3b9;
+	border-bottom:1px solid #999999;
+}
+
+.applicationStatsBranch {
+	text-align:center; 
+	padding:5px;
+	background-color:#fcd3a3;
+	border-bottom:1px solid #999999;
+	border-left:1px solid #999999;	
+}
+
+.applicationStatsIntlRep {
+	text-align:center; 
+	padding:5px;
+	background-color:#bed0fc;
+	border-bottom:1px solid #999999;
+	border-left:1px solid #999999;
+}
+
+.applicationStatsCSB {
+	text-align:center; 
+	padding:5px;
+	background-color:#bde2ac;
+	border-bottom:1px solid #999999;
+	border-left:1px solid #999999;
+}
+
+.applicationStatsTitle {
+	padding:3px;
+}
+
+.applicationStatsEnterHere {
+	background-repeat:no-repeat;
+	background-position:center;
+	background-image:url(../../pics/onlineApp/arrow_rt.gif);
+}
+
+.divInformation {
+	float:right;
+	display:inline;
+	width:300px; 
+ 	style="float:right;
+	border:1px solid ##cccccc;	
+}
+
+.divInformation .title {
+	color:#006699;
+	display:block;
+	margin-bottom:5px;
+	font-weight:bold;	
+	border-bottom:1px solid #CCCCCC;
+}
+
+.divInformation .text {
+	display:block;
+	padding-bottom:10px;
+}
+
+.divEmailAddress {
+	display:none;	
+}
+
+/*
+**********************************************************************************
+
+FORM Style
+
+************************************************************************************/
+
+/* General styles */
+/* body { margin: 0; padding: 0; font: 80%/1.5 Arial,Helvetica,sans-serif; color: #111; background-color: #FFF; } */
+
+/* Form styles */
+div.form-container { 
+	font-size:0.8em;
+	margin: 10px 25px 10px 22px; /* margin: 10px; */
+	padding: 5px; 
+	background-color: #FFF; 
+	border: #EEE 1px solid; 
+}
+
+/* Error messages */
+div.errorContainer {
+	font-size:0.8em;
+	display: none; 
+	margin: 10px 25px 10px 22px; /* margin: 10px; */
+	padding: 5px 10px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+}
+
+div.errors { 
+	margin: 0 0 10px 0; 
+	padding: 5px 10px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+}
+
+div.errorContainer label,
+div.errors label { 
+	color:#000;
+}
+
+div.errors p,
+div.errorContainer p { 
+	margin: 0; 
+}
+
+div.errors p em,
+div.errorContainer p em { 
+	color: #C00; 
+	font-style: normal; 
+	font-weight: bold; 
+}
+
+
+/* Page Messages */
+div.pageMessages { 
+	font-size:0.8em;
+	display:none;
+	margin: 10px 0 10px 0; 
+	padding: 5px 10px; 
+	background-color: #c2d9e9;
+	border: #0069aa 1px solid; 
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+div.pageMessages p { 
+	margin: 0; 
+}
+
+div.pageMessages p em { 
+	color: #0069aa; 
+	font-weight: bold;
+}
+
+p.legend { 
+	margin-bottom: 1em; 
+}
+
+p.legend strong {
+	font-weight:bold;	
+}
+
+p.legend em { 
+	color: #C00; 
+	font-style: normal; 
+}
+
+div.form-container p { 
+	margin: 0; 
+}
+
+div.form-container p.note { 
+	margin-left: 210px; 
+	font-size: 90%; 
+	color: #333; 
+}
+
+div.form-container .phoneNote {
+	width:48px;
+	text-align:center;
+	display:inline-block;
+	margin-right:10px;
+	font-size: 90%; 
+	color: #333; 
+}
+
+div.form-container fieldset { 
+	margin: 10px 0; 
+	padding: 10px; 
+	border: #DDD 1px solid; 
+}
+
+div.form-container fieldset a { 
+	color: #0069aa;
+	text-decoration:none;
+}
+
+div.form-container fieldset a:hover { 
+	color: #e69700;	
+	outline: none;
+}
+
+div.form-container legend { 
+	font-weight: bold; 
+	color: #666; 
+}
+
+div.form-container fieldset div.field { 
+	padding: 0.25em 0;
+}
+
+div.form-container fieldset div.submit { 
+	padding: 1em 0;
+	clear:both;
+}
+
+/*
+div.form-container fieldset div { 
+	padding: 0.25em 0;
+}
+*/
+
+div.form-container label, 
+div.form-container span.label { 
+	margin-right: 10px; 
+	padding-right: 10px; 
+	width: 190px; 
+	display: block; 
+	float: left; 
+	text-align: right; 
+	position: relative; 
+}
+
+div.form-container label.error, 
+div.form-container span.error,
+div.form-container li.error { 
+	color: #C00; 
+}
+
+div.form-container label em, 
+div.form-container span.label em { 
+	position: absolute; 
+	right: 0; 
+	font-size: 120%; 
+	font-style: normal; 
+	color: #C00; 
+}
+
+div.form-container input.error,
+div.form-container select.error { 
+	border-color: #C00; 
+	background-color: #FEF; 
+}
+
+div.form-container input:focus,
+div.form-container input.error:focus, 
+div.form-container select:focus, 
+div.form-container textarea:focus {	
+	background-color: #FFC; 
+	border-color: #FC6; 
+}
+
+div.form-container div.controlset label, 
+div.form-container div.controlset input { 
+	display: inline; 
+	float: none; 
+}
+
+div.form-container div.controlset div { 
+	margin-left: 210px; 
+}
+
+/* Field Size */
+.largeField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width : 300px;
+}
+
+.smallField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:100px;
+}

@@ -1,0 +1,49 @@
+textarea, select, input { font: 11px Verdana, arial, helvetica, sans-serif; }
+
+body { background-color: #DCDCDC; font-family: Arial, Helvetica, sans-serif; font-size:10px}
+
+table,tr,td {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+questions {
+	color: #666666;
+	font: 11px tahoma;
+	font-style: italic;
+	font-weight: bold;
+}
+
+h2{
+ font: bold 114% Arial,sans-serif;
+ color: #006600;
+ margin: 0px;
+ padding: 0px;
+}
+
+em {
+	color: #666666;
+	font-style: italic;
+}
+
+small {
+	color: #666666;
+	font-style: normal;
+	font-size:9px
+}
+
+.bar { width:570px; 
+	 align:center; 
+	 color:#FF6600;
+	 height: 1px; 
+}
+
+.section {border-top: 0px; border-right: 2px solid #8f8f8f; border-left: 2px solid #8f8f8f; border-bottom: 0px; background:#ffffff;}
+
+.tableside {border-top: 0px; border-right: 0px; border-left: 0px; border-bottom: 0px; background: #DCDCDC;}
+
+.tablecenter {border-top: 2px solid #8f8f8f; border-right: 0px; border-left: 0px; border-bottom: 1px solid #CFCFCF; background: #FFFFFF;}
+
+.tablebotton {border-top: 0px; border-right: 0px; border-left: 0px; border-bottom: 2px solid #8f8f8f; background: #FFFFFF;}
+
+.buttontop {border-top: 1px solid #CFCFCF; border-right: 0px; border-left: 0px; border-bottom: 0px; background: #FFFFFF;}
