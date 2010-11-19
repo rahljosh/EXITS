@@ -1180,7 +1180,7 @@ Babylon, NY 11702<br/>
 631-893-4550-Fax<br/>
 marcel@student-management.com<br/><br/>
 
-visit our web site at www.student-management.com</small>
+visit our web site at #CLIENT.exits_url#</small>
 
 	<cfloop list="#form.docNumber#" index="iDocNumb">
 	

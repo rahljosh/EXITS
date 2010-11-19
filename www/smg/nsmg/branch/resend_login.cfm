@@ -45,7 +45,7 @@
 	</style>
 	<table width=550 class="thin-border" cellspacing="5" cellpadding=0>
 		<tr>
-			<td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/#client.app_menu_comp#_top-email.gif" width=550 heignt=75></td>
+			<td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/#client.app_menu_comp#_top-email.gif" width=550 heignt=75></td>
 		</tr>
 		<tr>
 			<td>

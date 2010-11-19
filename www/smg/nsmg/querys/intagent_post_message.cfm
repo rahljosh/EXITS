@@ -28,7 +28,7 @@ group by smg_users.userid
 <cfoutput query="get_email">
 <cfmail to="#email#" replyto="support@student-management.com" from="SMG Technical Support <support@student-management.com>" subject="#form.messagetype# message">
 The following message was posted on student-management.com  It may contain information that will affect you on your next login. 
-This message can also be viewed by logging into www.student-management.com until #dateformat(expires, 'mm/d/yyyy')# at #TimeFormat(expires, 'h:mm:ss t')#
+This message can also be viewed by logging into #CLIENT.exits_url# until #dateformat(expires, 'mm/d/yyyy')# at #TimeFormat(expires, 'h:mm:ss t')#
 
 Message Type: #form.messagetype#
 Message Subject: #form.message#

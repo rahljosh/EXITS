@@ -24,7 +24,7 @@ body {font:Arial, Helvetica, sans-serif;}
 		<h2>Congratulations!</h2>
 		You application has passesd this intial check for information. <br><br> Your application has been approved and submitted to 
 		your local representative.  You will receive an email shortly confirming that your applicaiton has been submitted. 
-		<br><br>You can check on your application by logging into <a href="http://www.student-management.com">www.stuent-management.com</a>.   
+		<br><br>You can check on your application by logging into <a href="#CLIENT.exits_url#">www.stuent-management.com</a>.   
 		<br>
 		<div align="center"><a href="../../index.cfm">Return to Application Status<</a></div>
 		<cfelse>

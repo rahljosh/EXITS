@@ -117,7 +117,7 @@ where companyid = #client.org_code#
 							SMG 
 						</cfif>.<br>
 					You will receive an email shortly confirming that your application has been submitted. 
-					<br><br>You can check on your application by logging into <a href="http://www.student-management.com">www.student-management.com</a>.<br>
+					<br><br>You can check on your application by logging into <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a>.<br>
 					<div align="center"><a href="../index.cfm">Return to Application Status</a></div>
 				</td>
 			</tr>

@@ -39,7 +39,7 @@
 
 <cfquery name="insert_link" datasource="MySQL">
 	insert into smg_links (link)
-		values ('https://www.student-management.com/nsmg/index.cfm?curdoc=helpdesk/help_desk_view&amp;helpdeskid=#retrive_helpdeskid.helpdeskid#')
+		values ('#CLIENT.exits_url#/nsmg/index.cfm?curdoc=helpdesk/help_desk_view&amp;helpdeskid=#retrive_helpdeskid.helpdeskid#')
 </cfquery>
 
 <cfquery name="get_link_id" datasource="MySQL">
@@ -55,7 +55,7 @@
 #assigned_to.firstname# #assigned_to.lastname#,
 <br /><br />
 A new request of service has been submitted to you.
-Full Details: http://#client.exits_url#/?link=#get_link_id.linkid#
+Full Details: #client.exits_url#/?link=#get_link_id.linkid#
 <br /><br />
 Title: #form.title#
 Category: #form.category#

@@ -2,8 +2,8 @@
 <cfoutput>
 <cfif not IsDefined('url.schoolid')>
 	<table border="0" align="left" width="85%" bordercolor="C0C0C0" valign="top" cellpadding="3" cellspacing="0">
-	<tr bgcolor="D5DCE5"><td align="center"><a href="http://www.student-management.com"><img src="pics/logos/5.gif" border="0"></a></td>	
-		<td><b>STUDENT MANAGEMENT GROUP</b><br>http://www.student-management.com</td></tr>
+	<tr bgcolor="D5DCE5"><td align="center"><a href="#CLIENT.exits_url#"><img src="pics/logos/5.gif" border="0"></a></td>	
+		<td><b>STUDENT MANAGEMENT GROUP</b><br>#CLIENT.exits_url#</td></tr>
 	<tr bgcolor="D5DCE5"><td colspan="2">An error has occured and it was not possible to complete the process requested.<br>
 		Please go back and try again.</td></tr>
 	<tr bgcolor="D5DCE5"><td align="center" colspan="2"><font size=-1><Br>&nbsp;&nbsp;
@@ -27,8 +27,8 @@
 	<!--- THERE ARE STUDENTS ASSIGNED TO THIS SCHOOL --->
 	<cfif check_students.recordcount> 
 		<table border="0" align="left" width="85%" bordercolor="C0C0C0" valign="top" cellpadding="3" cellspacing="0">
-		<tr bgcolor="D5DCE5"><td align="center"><a href="http://www.student-management.com"><img src="pics/logos/5.gif" border="0"></a></td>	
-			<td align="left"><b>STUDENT MANAGEMENT GROUP</b><br>http://www.student-management.com</td></tr>
+		<tr bgcolor="D5DCE5"><td align="center"><a href="#CLIENT.exits_url#"><img src="pics/logos/5.gif" border="0"></a></td>	
+			<td align="left"><b>STUDENT MANAGEMENT GROUP</b><br>#CLIENT.exits_url#</td></tr>
 		<tr bgcolor="D5DCE5"><td colspan="2">In order to delete a school its must not be assigned to a student.</td></tr>
 		<tr bgcolor="D5DCE5"><td colspan="2">The school you are trying to delete has been assigned to #check_students.recordcount# student(s).</td></tr>
 		<tr bgcolor="D5DCE5"><td colspan="2">

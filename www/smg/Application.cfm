@@ -22,7 +22,8 @@
 	<cfparam name="CLIENT.companyID" default="0">
 	<cfparam name="CLIENT.userID" default="0">
     <cfparam name="CLIENT.studentID" default="0"> 
-    <cfparam name="CLIENT.userType" default="0">  
+    <cfparam name="CLIENT.userType" default="0">
+    <cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">  
 
     <cfquery name="qCompanyInfo" datasource="mysql">
         SELECT
@@ -55,26 +56,6 @@
 		
 		// Store Application.IsServerLocal - This needs be declare before the other CFC components
 		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
-		
-		// Check if this is Dev or Live 
-		if ( APPLICATION.isServerLocal ) {
-			// Development Server Settings	
-			
-			// Set Site URL
-			APPLICATION.site_url = 'http://smg.local';
-			
-		} else {
-			// Live Server Settings
-			
-			if ( VAL(qCompanyInfo.recordCount) ) {
-				// Set Site URL - // Phase Out this variable
-				APPLICATION.site_url = 'http://' & qCompanyInfo.url_ref;
-			} else {
-				// Set Site URL - // Phase Out this variable
-				APPLICATION.site_url = 'http://ise.exitsapplication.com';
-			}
-			
-		}	
 	</cfscript>
 
 	<!--- Include Application Config Files --->

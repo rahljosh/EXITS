@@ -35,9 +35,9 @@
 
 <cfoutput>
 <div class="thin-border">
-<table background="#application.site_url#/nsmg/pics/email_textured_background.png" width=600>
+<table background="#CLIENT.exits_url#/nsmg/pics/email_textured_background.png" width=600>
 	<tr>
-     	<td width="94"><img src="#application.site_url#/nsmg/pics/logos/#client.companyid#_header_logo.png"></td>
+     	<td width="94"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#client.companyid#_header_logo.png"></td>
 		<cfif ListFind("1,2,3,4,5,12,13", CLIENT.companyID)>
             <td><strong><font size=+2>INTERNATIONAL <font color="#companycolor#">STUDENT EXCHANGE</font></font></strong></td>
         <cfelse>
@@ -45,7 +45,7 @@
         </cfif>
     </tr>	
 	<tr>
-     	<td colspan="2"><img src="#application.site_url#/nsmg/pics/logos/#CLIENT.companyID#_px.png" height="12" width="100%"></td>
+     	<td colspan="2"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#CLIENT.companyID#_px.png" height="12" width="100%"></td>
 	</tr>
 </table>
 

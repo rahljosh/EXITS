@@ -61,7 +61,7 @@ function enableFieldsMember(totalm)
 <!--- SECURE CONNECTION --->
 <cfif cgi.SERVER_PORT NEQ 443>
 	<table align="center" width="50%" border="0" bgcolor="white">
-		<tr><th><img src="http://www.student-management.com/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
+		<tr><th><img src="#CLIENT.exits_url#/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr><td colspan="2">Dear Family,<br /><br /></td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
@@ -75,7 +75,7 @@ function enableFieldsMember(totalm)
 	
 	<cfform name="form" method="post" action="submit_cbc_menu.cfm" enctype="multipart/form-data"> 
 		<table align="center" width="50%" border="0" bgcolor="white">
-			<tr><th><img src="https://www.student-management.com/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
+			<tr><th><img src="#CLIENT.exits_url#/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
 			<tr><td colspan="2">&nbsp;</td></tr>
 			<tr><td colspan="2">Please enter below the information provided by your representative:<br /><br /></td></tr>
 			<tr><td width="20%" align="right">Host Family ID:</td><td width="80%"><cfinput type="text" name="hostid" size="10" maxlength="5" required="yes" message="You must enter the Host Family ID in order to continue."></td></tr>
@@ -115,7 +115,7 @@ function enableFieldsMember(totalm)
 			<cfinput type="hidden" name="hostid" value="#form.hostid#">
 			<cfinput type="hidden" name="uniqueid" value="#form.uniqueid#">
 			<table align="center" width="70%" border="0" bgcolor="white">
-				<tr><th><img src="https://www.student-management.com/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
+				<tr><th><img src="#CLIENT.exits_url#/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
 				<tr><td colspan="2">&nbsp;</td></tr>
 				<tr><td colspan="2">Dear #get_host.familylastname# Family,<br /><br /></td></tr>
 				<tr><Td colspan="2">Please click the box for each family member you are goin to enter information for:</td></tr>
@@ -204,7 +204,7 @@ function enableFieldsMember(totalm)
 		
 		<cfform name="form" method="post" action="submit_cbc_menu.cfm" enctype="multipart/form-data"> 
 			<table align="center" width="50%" border="0" bgcolor="white">
-				<tr><th><img src="https://www.student-management.com/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
+				<tr><th><img src="#CLIENT.exits_url#/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
 				<tr><td colspan="2">&nbsp;</td></tr>
 				<tr><td colspan="2"><font color="FF0000">SMG could not find any records for the information provided. Please check the login information and try again.</font><br /><br /></td></tr>
 				<tr><td width="20%" align="right">Host Family ID:</td><td width="80%"><cfinput type="text" name="hostid" size="10" maxlength="5" required="yes" message="You must enter the Host Family ID in order to continue."></td></tr>

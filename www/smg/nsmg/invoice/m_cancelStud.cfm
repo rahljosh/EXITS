@@ -537,7 +537,7 @@
             <td></td>
             <td></td>
             <td>
-            <h1 align="center" style="padding-top:0.2cm"><a href="http://www.student-management.com/nsmg/index.cfm?curdoc=student_info&studentid=#getStudents.stuid#" target="_blank">#getCurrStudInfo.firstname# #getCurrStudInfo.lastname# (#getCurrStudInfo.stuid#)</a></h1></td>
+            <h1 align="center" style="padding-top:0.2cm"><a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentid=#getStudents.stuid#" target="_blank">#getCurrStudInfo.firstname# #getCurrStudInfo.lastname# (#getCurrStudInfo.stuid#)</a></h1></td>
             <td></td>
             <td></td>
             <td></td>

@@ -15,8 +15,8 @@
 
 	<cfif get_student_info.recordcount is '0'> <!--- NONE STUDENTS WERE FOUND --->
 		<table width=400 border=0>
-		<td><a href="http://www.student-management.com"><img src="../pics/logos/5.gif"  alt="" border="0" align="left"></a></td>	
-		<td><b>STUDENT MANAGEMENT GROUP</b><br>http://www.student-management.com<br><br></td></tr>
+		<td><a href="#CLIENT.exits_url#"><img src="../pics/logos/5.gif"  alt="" border="0" align="left"></a></td>	
+		<td><b>STUDENT MANAGEMENT GROUP</b><br>#CLIENT.exits_url#<br><br></td></tr>
 		<tr><td colspan="2"><p>Sorry, we could not process your request at this time.<br>The id provided does not match with any of our students.</p>
 				<p>Please try again.</p><p>If you are still having problems, please contact your facilitator.</p></td></tr>		
 		</table>
@@ -24,8 +24,8 @@
 	</cfif>
 <cfelse>
 		<table width=400 border=0>
-		<td><a href="http://www.student-management.com"><img src="../pics/logos/5.gif"  alt="" border="0" align="left"></a></td>	
-		<td><b>STUDENT MANAGEMENT GROUP</b><br>http://www.student-management.com<br><br></td></tr>
+		<td><a href="#CLIENT.exits_url#"><img src="../pics/logos/5.gif"  alt="" border="0" align="left"></a></td>	
+		<td><b>STUDENT MANAGEMENT GROUP</b><br>#CLIENT.exits_url#<br><br></td></tr>
 		<tr><td colspan="2"><p>Sorry, an error has occur and we could not process your request at this time.</p>
 				<p>Please try again.</p><p>If you are still having problems, please contact your facilitator.</p></td></tr>		
 		</table>

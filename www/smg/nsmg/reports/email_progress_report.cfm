@@ -143,7 +143,7 @@
 	
 	<table cellspacing="2" cellpadding="2" border="0" width="650" align="center" class="box">
 		<tr>
-			<td><img src="#APPLICATION.site_url#/nsmg/pics/logos/#client.companyid#.gif" alt="" border="0" align="left"></td>
+			<td><img src="#CLIENT.exits_url#/nsmg/pics/logos/#client.companyid#.gif" alt="" border="0" align="left"></td>
 			 <td  align="left">
 				<font size="+3">Student Progress Report for #prmonth# <br></font><br>
 				<font size="+1">Student Name: #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#) Program: #get_student_info.programname#</font>
@@ -183,7 +183,7 @@
 						</tr>
 						<tr>
 							<td>
-								<table class=nav_bar width=100% align="Center" background="#APPLICATION.site_url#/nsmg/pics/inperson_background.jpg">
+								<table class=nav_bar width=100% align="Center" background="#CLIENT.exits_url#/nsmg/pics/inperson_background.jpg">
 									<TR>
 										<td align="center">Host Family<br>(mm/dd/yy)</td><td align="center">Student<br>(mm/dd/yy)</td>
 									</tr>
@@ -208,7 +208,7 @@
 						</tr>
 						<tr>
 							<td>
-								<table class=nav_bar width=100% align="Center"  background="#APPLICATION.site_url#/nsmg/pics/phone_background.jpg">
+								<table class=nav_bar width=100% align="Center"  background="#CLIENT.exits_url#/nsmg/pics/phone_background.jpg">
 									<TR>
 										<td align="center">Host Family<br>(mm/dd/yy)</td><td align="center">Student<br>(mm/dd/yy)</td>
 									</tr>

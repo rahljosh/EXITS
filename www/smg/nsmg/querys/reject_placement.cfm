@@ -29,7 +29,7 @@ where studentid = #cookie.review_student#
 
 The Placement Information for #student_info.firstname# #student_info.familylastname# was rejected. 
 
-Please visit www.student-management.com to:
+Please visit #CLIENT.exits_url# to:
 -view why it was rejected
 -make the necessary changes
 

@@ -106,7 +106,7 @@
 	<!--- Page Header --->
 	<table width="650" border="0" bgcolor="FFFFFF"> 
 		<tr>
-			<td align="left"><img src="http://www.student-management.com/nsmg/pics/logos/#companyshort.companyid#.gif"  alt="" border="0" align="left"></td>
+			<td align="left"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#companyshort.companyid#.gif"  alt="" border="0" align="left"></td>
 			<td align="left" valign="top">
 				<b>#companyshort.companyname#</b><br>
 				#companyshort.address#<br>

@@ -37,9 +37,9 @@ where active=1 and seasonid = 7
     from smg_companies
     where companyid = #i#
     </cfquery>
-    <Cfset application.site_url = #company_info.url_ref#>
+    <Cfset CLIENT.exits_url = #company_info.url_ref#>
     <cfset client.companyname = #company_info.companyname#>
-	<cfset client.site_url = #company_info.url#>
+	
 	<cfoutput>    
 
 
@@ -111,9 +111,8 @@ This information is also available on initial welcome page when you login under 
         from smg_companies
         where companyid = #rm_email_list.companyid#
         </cfquery>
-        <Cfset application.site_url = #company_info.url_ref#>
+        <Cfset CLIENT.exits_url = #company_info.url_ref#>
         <cfset client.companyname = #company_info.companyname#>
-        <cfset client.site_url = #company_info.url#>
 	<cfoutput>    
   
 
@@ -187,9 +186,8 @@ This information is also available on initial welcome page when you login under 
         from smg_companies
         where companyid = #ar_email.companyid#
         </cfquery>
-        <Cfset application.site_url = #company_info.url_ref#>
+        <Cfset CLIENT.exits_url = #company_info.url_ref#>
         <cfset client.companyname = #company_info.companyname#>
-        <cfset client.site_url = #company_info.url#>
 	<cfoutput>  
    
 

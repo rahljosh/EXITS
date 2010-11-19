@@ -18,7 +18,7 @@
     <cfparam name="URL.email" default="">
 	<cfparam name="URL.unqid" default="">
        
-    <cfparam name="CLIENT.exits_url" default="http://www.student-management.com">
+    <cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">
     <cfparam name="CLIENT.companyID" default="5">
     <cfparam name="CLIENT.companyName" default="International Student Exchange">
     <cfparam name="CLIENT.companyShort" default="ise">
@@ -36,7 +36,7 @@
 			CLIENT.userID = userID;
 			CLIENT.companyName = "Private High School Program";
 			CLIENT.companyShort = "php";
-			CLIENT.exits_url = "php.exitsapplication.com";
+			CLIENT.exits_url = "http://php.exitsapplication.com";
 			CLIENT.companyID = 6;
 		}
 		
@@ -104,12 +104,7 @@
                 
                 Additional Comments:<br>
                 <cfif FORM.comments EQ ''>n/a<cfelse>#FORM.comments#</cfif><br><br>
-                Please click
-                <cfif Left(CLIENT.exits_url, 7) NEQ "http://">
-                	<a href="http://#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
-                <cfelse>
-                	<a href="#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
-                </cfif>
+                Please click <a href="#client.exits_url#/exits_app.cfm?unqid=#get_student_info.uniqueid#">here</a>
                 to see the student's online application.<br><br>
                 
                 Please keep in mind that this application might take a few minutes to load completely. The loading time will depend on your internet connection.<br><br>             

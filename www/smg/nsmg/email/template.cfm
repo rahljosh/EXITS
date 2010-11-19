@@ -29,12 +29,12 @@ table,tr,td					{font-family:Arial, Helvetica, sans-serif;}
 <cfoutput>
 <cfdump var="#cgi#">
 <cfdump var="#application#">
- <cfoutput>1: #application.site_url# </cfoutput>
+ <cfoutput>1: #CLIENT.exits_url# </cfoutput>
 <div class="thin-border">
-<table background="#application.site_url#/nsmg/pics/email_textured_background.png" width=575>
+<table background="#CLIENT.exits_url#/nsmg/pics/email_textured_background.png" width=575>
 	<Tr >
     
-     	<td rowspan=2 width=94><img src="#application.site_url#/nsmg/pics/logos/#client.companyid#_header_logo.png"></td>
+     	<td rowspan=2 width=94><img src="#CLIENT.exits_url#/nsmg/pics/logos/#client.companyid#_header_logo.png"></td>
     <cfif client.companyid lte 5>
         <td><strong><font size=+2>INTERNATIONAL <font color="#companycolor#">STUDENT EXCHANGE</font></font></strong></td>
      <cfelse>
@@ -45,7 +45,7 @@ table,tr,td					{font-family:Arial, Helvetica, sans-serif;}
      	<td><font color="##666666">This email is for {recipient name/email}</td>
      
      <tr>
-     	<td colspan=2><img src="#application.site_url#/nsmg/pics/logos/#client.companyid#_px.png" height=12 width=100%></td>
+     	<td colspan=2><img src="#CLIENT.exits_url#/nsmg/pics/logos/#client.companyid#_px.png" height=12 width=100%></td>
 	</tr>
 <table width="575">
     <tr>

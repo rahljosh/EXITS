@@ -74,5 +74,5 @@ limit 50
 <cfoutput>
 <cffile action="write" file="#AppPath.xmlFiles#flight_verification/#batchid#.xml" output="#toString(submitted_fight_info)#">
 <br>
-<a href="http://www.student-management.com/nsmg/uploadedfiles/xml_files/flight_verification/#batchid#.xml">Results in an XML File</a>
+<a href="#CLIENT.exits_url#/nsmg/uploadedfiles/xml_files/flight_verification/#batchid#.xml">Results in an XML File</a>
 </cfoutput>

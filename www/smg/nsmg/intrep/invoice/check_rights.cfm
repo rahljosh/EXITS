@@ -1,5 +1,5 @@
 <cfif NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.userType)>
-	<cflocation url="http://www.student-management.com/nsmg/loginform.cfm" addtoken="no">
+	<cflocation url="#CLIENT.exits_url#/nsmg/loginform.cfm" addtoken="no">
 </cfif>
 
 <cfif client.usertype NEQ 8>

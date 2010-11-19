@@ -6,11 +6,12 @@
     
     <cfparam name="APPLICATION.DSN" default="MySQL">
     <cfparam name="APPLICATION.support_email" default="support@student-management.com">
-    <cfparam name="APPLICATION.site_url" default="http://www.student-management.com">
+    
 
 	<!--- Param Client Variables --->
     <cfparam name="CLIENT.companyShort" default="SMG"> 
     <cfparam name="CLIENT.support_email" default="support@student-management.com"> 
+    <cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">
 		       
 
 	<!--- Added by Marcus Melo - 11/20/2009 --->

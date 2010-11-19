@@ -2,4 +2,4 @@
 delete from cdata
 where cfid ='#client.cfid#:#client.cftoken#'
 </cfquery>
-<cflocation url="http://www.student-management.com/">
+<cflocation url="#CLIENT.exits_url#">
