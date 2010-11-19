@@ -316,7 +316,11 @@
         <div class="field">
             <label for="dobMonth">Date of Birth <em>*</em></label> 
             <cfif printApplication>
-				<div class="printField">#MonthAsString(FORM.dobMonth)#/#FORM.dobDay#/#FORM.dobYear# &nbsp;</div>
+				<div class="printField">
+                	<cfif VAL(FORM.dobMonth)>
+	                    #MonthAsString(FORM.dobMonth)#/#FORM.dobDay#/#FORM.dobYear#
+                    </cfif> &nbsp;
+                </div>
         	<cfelse>
                 <select name="dobMonth" id="dobMonth" class="smallField {validate:{required:true}}">
                     <option value=""></option>
