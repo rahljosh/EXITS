@@ -1,2 +1,0 @@
-<!----students letter---->
-<cfhttp url='#StudentXMLFile.applications.application[i].page3.pdf.url.xmltext#'  method="get" path="#AppPath.onlineApp.xmlApp#" file="stu_letter#client.studentid#.jpg" multipart="yes" getasbinary="yes" username="exits" password="34uFka">
