@@ -291,7 +291,7 @@ END OF DISPLAY
 	<FinancialInfo>
 		<ReceivedUSGovtFunds>false</ReceivedUSGovtFunds> 
 		<OtherFunds>
-			<Personal>3000</Personal> 
+			<Personal><cfif ListFind("3,4,25,26", qGetStudents.programType)>1500<cfelse>3000</cfif></Personal> <!--- First / Second Semester Programs --->
 		</OtherFunds>
 	</FinancialInfo>
 	<AddSiteOfActivity>
