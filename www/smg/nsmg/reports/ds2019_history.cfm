@@ -44,7 +44,7 @@
 	LEFT JOIN smg_regions r ON r.regionid = history.regionid
 	WHERE     
 	<cfif CLIENT.companyID EQ 5>
-        history.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+        history.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
     <cfelse>
         history.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     </cfif>

@@ -66,7 +66,7 @@
 		
 		<cfif client.companyid LTE 5>
         	AND
-            	s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> ) 
+            	s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISESMG#" list="yes"> ) 
         <cfelse>
         	AND
             	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">

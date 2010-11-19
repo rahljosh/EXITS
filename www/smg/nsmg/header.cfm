@@ -110,7 +110,6 @@
    		<!----<td align="left">
 		<cfinclude template="tools/region_access.cfm">
 		</td>---->
-
 		<cfif not isDefined('url.novelaro')>
             <cfif client.usertype eq 8 >
                 <td>		

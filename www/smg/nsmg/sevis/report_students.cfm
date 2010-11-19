@@ -60,7 +60,7 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
     	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 	<cfif CLIENT.companyID EQ 5>
         AND 
-            s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
     <cfelse>
         AND 
             s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">

@@ -12,7 +12,7 @@
     AND
     	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     AND
-    	uar.companyid in ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    	uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
     GROUP BY
     	u.userid
 </cfquery>
@@ -31,7 +31,7 @@
     AND
     	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     AND
-    	uar.companyid in ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+    	uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
     GROUP BY
     	u.userid
 </cfquery>

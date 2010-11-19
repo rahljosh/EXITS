@@ -39,7 +39,7 @@
         <cfif CLIENT.companyID EQ 10>
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
         <cfelse>
-        	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
+        	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISESMG#" list="yes"> )
         </cfif>        
         AND 
         	s.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="new">

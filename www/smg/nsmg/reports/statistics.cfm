@@ -21,7 +21,7 @@
         	smg_companies c ON c.companyID = r.company          
         WHERE 
 		<cfif CLIENT.companyID EQ 5>
-            r.company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+            r.company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
         <cfelse>
             r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
@@ -75,7 +75,7 @@
           	programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
 		<cfif CLIENT.companyID EQ 5>
             AND	
-                companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
         <cfelse>
 	        AND	
     	        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
