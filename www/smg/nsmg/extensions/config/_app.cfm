@@ -18,7 +18,7 @@
 	FROM
     	smg_companies
 	WHERE
-    	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_host#">
 </cfquery>
 
 <cfscript>
