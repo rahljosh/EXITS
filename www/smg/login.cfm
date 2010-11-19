@@ -24,12 +24,12 @@
         <cfset CLIENT.companyid = qGetCompany.companyid>
         <cfset CLIENT.companyname = qGetCompany.companyname>
         <cfset CLIENT.emailFrom = qGetCompany.support_email>
-        <cfset APPLICATION.site_url = qGetCompany.url_ref>
+        <cfset CLIENT.exits_url = 'https://' & CGI.http_host>
     <cfelse>
         <cfset CLIENT.companyid = 0>
         <cfset CLIENT.companyname = 'EXIT Group'>
         <cfset CLIENT.emailFrom = 'support@iseusa.com'>
-        <cfset APPLICATION.site_url = 'ise.exitsapplication.com'>
+        <cfset CLIENT.exits_url = 'https://ise.exitsapplication.com'>
     </cfif>
     
     <!--- Process Form Submission - login --->
@@ -87,7 +87,7 @@
                         </p>
                     </cfoutput>
                     <!----
-                    <p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
+                    <p>To login please visit: <cfoutput><a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a></cfoutput></p>
                     ---->
                 </cfsavecontent>
                 
