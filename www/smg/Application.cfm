@@ -59,4 +59,7 @@
 	</cfscript>
 
 	<!--- Include Application Config Files --->
+	<cfinclude template="nsmg/extensions/config/_index.cfm" />    
+
+	<!--- Include Application Config Files --->
 	<cfinclude template="nsmg/extensions/config/_app_index.cfm" />    

@@ -39,69 +39,55 @@
 			StructClear(APPLICATION);	
 		}
 	</cfscript>
+
+	<!--- Include Config Files --->
+	<cfinclude template="extensions/config/_index.cfm" />    
     
 	<!--- Include Application Config Files --->
 	<cfinclude template="extensions/config/_app_index.cfm" />    
     
-	<!--- Include Config Files --->
-	<cfinclude template="extensions/config/_index.cfm" />    
-
-
-<!--- Redirect if not using www.student-management.com or not using SSL. 
-<cfif CGI.SERVER_NAME NEQ 'dev.exitgroup.org'>
-	<cfif cgi.QUERY_STRING NEQ ''>
-		<cflocation url="http://dev.exitgroup.org#cgi.script_name#?#cgi.QUERY_STRING#" addtoken="no">
-	<cfelse>
-		<cflocation url="http://dev.exitgroup.org#cgi.script_name#" addtoken="no">
-	</cfif>
-</cfif>
-<cfoutput>
-cgi.SERVER_PORT=#cgi.SERVER_PORT#
-</cfoutput>--->
-
-
-<!--- this enables the address lookup. 0=off, 1=simple (lookup required but user can enter any value), 2=auto (lookup required and auto fill in readonly value).
-used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
-<cfparam name="application.address_lookup" default="0"> 
-
-
-<!--- session has expired // Go to login page. --->
-<cfif NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.userType)>
-    <cflocation url="http://#cgi.http_host#/" addtoken="no">
-</cfif>
-
-
-<!----Take Down site except for certain users
-<cfif not listFind("1,13282,7178", client.userid)>
-	THE SITE IS TEMPORARILY DOWN FOR MAINTENANCE
-    <cfabort>
-</cfif>
----->
-
-
-<!--- always allow logout. --->
-<cfif not findNoCase("/logout.cfm", getBaseTemplatePath())>
-	<!--- force verify user information. --->
-    <cfif isDefined("client.verify_info")>
-		<!--- allow user only on user info and user form. --->
-    	<cfif NOT (isDefined("url.curdoc") AND listFindNoCase("user_info,forms/user_form", url.curdoc))>
-        	<cflocation url="/nsmg/index.cfm?curdoc=user_info&userid=#client.userid#" addtoken="no">
-        </cfif>
-    <!--- force change password. --->
-    <cfelseif isDefined("client.change_password")>
-	    <!--- allow user only on change password page. --->
-    	<cfif NOT (isDefined("url.curdoc") AND url.curdoc EQ 'forms/change_password')>
-        	<cflocation url="/nsmg/index.cfm?curdoc=forms/change_password" addtoken="no"><br />
-		</cfif>
+	<!--- this enables the address lookup. 0=off, 1=simple (lookup required but user can enter any value), 2=auto (lookup required and auto fill in readonly value).
+    used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
+    <cfparam name="application.address_lookup" default="0"> 
+    
+    
+    <!--- session has expired // Go to login page. --->
+    <cfif NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.userType)>
+        <cflocation url="http://#cgi.http_host#/" addtoken="no">
     </cfif>
-</cfif>
 
 
-<!--- if "resume login" is used login is not run.  Automatically logout if not the same day, so change password and verify info can be checked when they login again.
-use isDefined because students don't have thislogin.  this is on application.cfm and nsmg/application.cfm --->
-<cfif isDefined("client.thislogin") and client.thislogin NEQ dateFormat(now(), 'mm/dd/yyyy')>
-	<!--- don't do a cflocation because we'll get an infinite loop. --->
-	<cfinclude template="/nsmg/logout.cfm">
-</cfif>
+	<!----Take Down site except for certain users
+    <cfif not listFind("1,13282,7178", client.userid)>
+        THE SITE IS TEMPORARILY DOWN FOR MAINTENANCE
+        <cfabort>
+    </cfif>
+    ---->
 
-<cfinclude template="includes/trackman.cfm">
+
+	<!--- always allow logout. --->
+    <cfif not findNoCase("/logout.cfm", getBaseTemplatePath())>
+        <!--- force verify user information. --->
+        <cfif isDefined("client.verify_info")>
+            <!--- allow user only on user info and user form. --->
+            <cfif NOT (isDefined("url.curdoc") AND listFindNoCase("user_info,forms/user_form", url.curdoc))>
+                <cflocation url="/nsmg/index.cfm?curdoc=user_info&userid=#client.userid#" addtoken="no">
+            </cfif>
+        <!--- force change password. --->
+        <cfelseif isDefined("client.change_password")>
+            <!--- allow user only on change password page. --->
+            <cfif NOT (isDefined("url.curdoc") AND url.curdoc EQ 'forms/change_password')>
+                <cflocation url="/nsmg/index.cfm?curdoc=forms/change_password" addtoken="no"><br />
+            </cfif>
+        </cfif>
+    </cfif>
+    
+    
+    <!--- if "resume login" is used login is not run.  Automatically logout if not the same day, so change password and verify info can be checked when they login again.
+    use isDefined because students don't have thislogin.  this is on application.cfm and nsmg/application.cfm --->
+    <cfif isDefined("client.thislogin") and client.thislogin NEQ dateFormat(now(), 'mm/dd/yyyy')>
+        <!--- don't do a cflocation because we'll get an infinite loop. --->
+        <cfinclude template="/nsmg/logout.cfm">
+    </cfif>
+    
+    <cfinclude template="includes/trackman.cfm">
