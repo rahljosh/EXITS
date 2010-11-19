@@ -24,7 +24,7 @@ Plase note that this message will go out for all branch offices as well.<br>
 <cfif isDefined('url.us')><br><h2><font color="green">Message Successfully updated.</font></h2><br></cfif></div>
 	<table width=550 class="thin-border" cellspacing="0" cellpadding=0 bgcolor="white" align="center">
 		<tr>
-			<td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
+			<td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
 		</tr>
 		<tr>
 			<td>
@@ -49,7 +49,7 @@ Plase note that this message will go out for all branch offices as well.<br>
 			<br><br>
 			Click the link below to start your application process.  
 			<br><br>
-			http://www.student-management.com/exits/student_app/?s=E180CA2F-1320-17E0-361BAD89F91C6FDBD</a>
+			<a href="#CLIENT.exits_url#/exits/student_app/?s=E180CA2F-1320-17E0-361BAD89F91C6FAAA">#CLIENT.exits_url#/exits/student_app/?s=E180CA2F-1320-17E0-361BAD89F91C6FAAA</a>
 			<br><br>
 			You will need the following information to verify your account:<br>
 			*email address<br>
@@ -116,7 +116,7 @@ Plase note that this message will go out for all branch offices as well.<br>
 		
 			<table width=550 class="thin-border" cellspacing="0" cellpadding=0 bgcolor="white" align="center">
 		<tr>
-			<td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
+			<td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
 		</tr>
 		<tr>
 			<td>

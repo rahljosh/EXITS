@@ -102,7 +102,7 @@ font-size: small;
 <BODY>
 
 <p>Please DO NOT reply to this message.</p>
-<p>If you are not able to read this e-mail please contact your Facilitator or <a href="http://www.student-management.com/flight_view.cfm?s=#get_student_info.uniqueid#">click here</a><br></p>
+<p>If you are not able to read this e-mail please contact your Facilitator or <a href="#CLIENT.exits_url#/flight_view.cfm?s=#get_student_info.uniqueid#">click here</a><br></p>
 
 <table width="85%" align="center" border=0 bgcolor="FFFFFF">
 	<tr>
@@ -121,7 +121,7 @@ font-size: small;
 		#DateFormat(now(), 'dddd, mmmm dd, yyyy')#<br>
 	</td>
 	
-	<td><img src="#APPLICATION.site_url#/nsmg/pics/logos/#client.companyid#.gif"  alt="" border="0" align="right"></td>	
+	<td><img src="#CLIENT.exits_url#/nsmg/pics/logos/#client.companyid#.gif"  alt="" border="0" align="right"></td>	
 	<td valign="top" align="right"> 
 		<div align="right">
 		#companyshort.companyshort#<br>

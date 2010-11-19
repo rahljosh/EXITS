@@ -1,9 +1,9 @@
 <!----Create Temp Login---->
 
  <cfset CLIENT.company_submitting = "www.student-management.com">
-        <cfset APPLICATION.company_short = "SMG">
+        <cfset CLIENT.company_short = "SMG">
         <cfset CLIENT.app_menu_comp = 5>
-        <cfset CLIENT.exits_url = "www.student-management.com">
+        <cfset CLIENT.exits_url = "https://ise.exitsapplication.com">
         
 
 

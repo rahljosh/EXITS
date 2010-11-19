@@ -53,7 +53,7 @@
 		The follwing students placement information has been updated. 
 		#client.studentid# #get_info.firstname# #get_info.lastname#
 		
-		Full family information is available at http://www.student-management.com/
+		Full family information is available at #CLIENT.exits_url#/
 		</cfmail>
 	</cfif>
 	<!--- </cftransaction> --->

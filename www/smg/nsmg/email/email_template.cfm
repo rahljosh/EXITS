@@ -9,7 +9,7 @@
 <cfoutput>
 
 <!--- sample image
-<img src="#application.site_url#/images/email/email-header.jpg" width="750" height="100" border="0" usemap="#Map" />--->
+<img src="#CLIENT.exits_url#/images/email/email-header.jpg" width="750" height="100" border="0" usemap="#Map" />--->
 
 <cfif trim(email_message) NEQ ''>
 	#email_message#<br /><br />

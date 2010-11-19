@@ -6,7 +6,7 @@
 		#GetIntlReps.email#</a><br><br><br><br>
 		#DateFormat(now(), 'dddd, mmmm dd, yyyy')#
 	</td>
-	<td><img src="#APPLICATION.site_url#/nsmg/pics/logos/#client.companyid#.gif"  alt="" border="0" align="right"></td>	
+	<td><img src="#CLIENT.exits_url#/nsmg/pics/logos/#client.companyid#.gif"  alt="" border="0" align="right"></td>	
 	<td valign="top" align="right"> 
 		<div align="right">
 		#companyshort.companyshort_nocolor#<br>#companyshort.address#<br>

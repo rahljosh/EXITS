@@ -235,7 +235,7 @@
                     <tr>
                         <td  valign="top" width="100%"><br>
                             <img src="pics/tower_100.jpg" width=71 height=100 align="left">
-                            <!---<img src="http://www.student-management.com/nsmg/pics/clover.gif" width="75" align="left" >--->
+                            <!---<img src="#CLIENT.exits_url#/nsmg/pics/clover.gif" width="75" align="left" >--->
                             <cfif news_messages.recordcount is 0>
                                 <br>There are currently no announcements or news items.
                             <cfelse>
@@ -325,7 +325,7 @@
         <tr>
            <td  valign="top" width="100%"><br>
                 <img src="pics/tower_100.jpg" width=71 height=100 align="left">
-                <!---<img src="http://www.student-management.com/nsmg/pics/clover.gif" width="75" align="left" >--->
+                <!---<img src="#CLIENT.exits_url#/nsmg/pics/clover.gif" width="75" align="left" >--->
                 <cfif news_messages.recordcount is 0>
                     <br>There are currently no announcements or news items.
                 <cfelse>

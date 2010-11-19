@@ -25,7 +25,7 @@
 	</HEAD>
 	<BODY>	
 <table width=550 class="thin-border" cellspacing="3" cellpadding=0>
-	<tr><td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email2.gif" width=550 height=75></td></tr>
+	<tr><td bgcolor=b5d66e><img src="http://#CLIENT.exits_url#/nsmg/student_app/pics/top-email2.gif" width=550 height=75></td></tr>
 	<tr><td><br>#DateFormat(now(), 'mmmm d, yyyy')#<br><br></td></tr>
 	<tr><td>The application for #get_Student_info.firstname# #get_student_info.familylastname# has been received.<br><br></td></tr>	
 	<tr><td>
@@ -54,7 +54,7 @@ Please note, If you use EXITS to manage your online applications, this applicati
 	<BODY>	
 	
 <table width=550 class="thin-border" cellspacing="3" cellpadding=0>
-	<tr><td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email2.gif" width=550 height=75></td></tr>
+	<tr><td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/top-email2.gif" width=550 height=75></td></tr>
 	<tr><td><br>#DateFormat(now(), 'mmmm d, yyyy')#<br><br></td></tr>
 	<tr><td>The application for #get_Student_info.firstname# #get_student_info.familylastname# has been received.<br><br></td></tr>	
 	<tr><td>

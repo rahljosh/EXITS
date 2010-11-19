@@ -26,7 +26,7 @@ Two things to keep in mind when changing your password:
 *your password MUST be at least 6 characters long
 *you password can not start with the word 'temp'
 
-You can login immediately by visiting:  http://www.student-management.com/  and log in with the information above. 
+You can login immediately by visiting:  #CLIENT.exits_url#  and log in with the information above. 
 
 If you have any questions or problems with logging in please contact support@student-management.com  or by replying to this email.
 

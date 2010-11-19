@@ -705,7 +705,7 @@ window.location.href = URL;
 
  <cfif startRowNext lte totalRows>
  <a href="index.cfm?curdoc=forms/approve_list&regionid=#url.regionid#&rmonth=#url.rmonth#&startrow=#next5start#&previous=#previous5start#">
- <img src="http://www.student-management.com/nsmg/pics/next5.jpg" 
+ <img src="#CLIENT.exits_url#/nsmg/pics/next5.jpg" 
  alt="Next #rowsPerPage# Reps" border="0" align="right"></a>
  </cfif>
 </cfif>

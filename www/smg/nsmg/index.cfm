@@ -23,3 +23,10 @@
 </table>
 
 <cfinclude template="footer.cfm">
+
+<!--- MARCUS - remove this ---->
+<cfparam name="url.test" default="0">
+<cfif VAL(URL.test)>
+	<CFDUMP var="#CLIENT#">
+    <CFDUMP var="#APPLICATION#">
+</cfif>

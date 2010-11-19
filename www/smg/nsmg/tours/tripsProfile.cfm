@@ -182,7 +182,7 @@ where id = #url.id#
 			<img src="../pics/no_stupicture.jpg" width="135">
 		</cfif>
 	<br>
-	<!--- <td bgcolor="F3F3F3" valign="top" width=133><div align="left"><img <cfif #get_student_info.old_stuid# is 0>src="http://www.student-management.com/pics/#client.studentid#.jpg"<cfelse> src="http://www.student-management.com/pics/web-students/#client.studentid#.jpg"</cfif> width=133><br> --->
+	<!--- <td bgcolor="F3F3F3" valign="top" width=133><div align="left"><img <cfif #get_student_info.old_stuid# is 0>src="#CLIENT.exits_url#/pics/#client.studentid#.jpg"<cfelse> src="#CLIENT.exits_url#/pics/web-students/#client.studentid#.jpg"</cfif> width=133><br> --->
 	</div></td>
 	<td valign="top" width=504>
 	<span class="application_section_header">STUDENT PROFILE</span><br>

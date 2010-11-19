@@ -93,7 +93,7 @@ WHERE userid = #client.userid#
 	
 	Please click on the link below to see the flight information:
 	
-	http://www.student-management.com/flight_view.cfm?s=#get_student_info.uniqueid#
+	#CLIENT.exits_url#/flight_view.cfm?s=#get_student_info.uniqueid#
 	
 	PS: If the link above is shown on two lines, please make sure to copy and paste the url into your browser.
 

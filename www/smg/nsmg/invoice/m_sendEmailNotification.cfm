@@ -226,9 +226,9 @@ END) AS testCompId
                             <td class="two <cfif getInvoicesCreditNotes.invBalance LT 0>style2</cfif>"><small>#getInvoicesCreditNotes.invoice#</small></td>
                             <td class="two">
                             	<cfif getInvoicesCreditNotes.invoice IS "invoice">
-                                    <small><a href="http://www.student-management.com/nsmg/intrep/invoice/invoice_view.cfm?id=#getInvoicesCreditNotes.invoiceid#" target="_top">#getInvoicesCreditNotes.invoiceid#</a></small>
+                                    <small><a href="#CLIENT.exits_url#/nsmg/intrep/invoice/invoice_view.cfm?id=#getInvoicesCreditNotes.invoiceid#" target="_top">#getInvoicesCreditNotes.invoiceid#</a></small>
 									<cfelse>
-                                        <small><a href="http://www.student-management.com/nsmg/intrep/invoice/credit_note.cfm?creditid=#getInvoicesCreditNotes.invoiceid#" target="_top">#getInvoicesCreditNotes.invoiceid#</a></small>
+                                        <small><a href="#CLIENT.exits_url#/nsmg/intrep/invoice/credit_note.cfm?creditid=#getInvoicesCreditNotes.invoiceid#" target="_top">#getInvoicesCreditNotes.invoiceid#</a></small>
                                 </cfif>
                             </td>
                             <td class="two"><small>#DateFormat(getInvoicesCreditNotes.date,'mm/dd/yyyy')#</small></td>
@@ -251,7 +251,7 @@ END) AS testCompId
                 
                 <small><strong>Notes:</strong><br/><br/>
                 
-                <!--- - <span style="font-size:medium; color:##0000A0">"You can "<span style="font-size:medium; color:##FF0000">view</span>" and "<span style="font-size:medium; color:##FF0000">print</span>" your invoices and credit notes by clicking on the "<strong><span style="font-size:medium; color:##000000">Docum Numb</span></strong>" on the table above. In order to do this, you need to log in into your EXITS account (<a href="http://www.student-management.com/flash/" target="_top"><strong>click here to log in</strong></a>, when the page pops up click on "EXITS login portal", then enter your username and password).</span><br/><br/> --->
+                <!--- - <span style="font-size:medium; color:##0000A0">"You can "<span style="font-size:medium; color:##FF0000">view</span>" and "<span style="font-size:medium; color:##FF0000">print</span>" your invoices and credit notes by clicking on the "<strong><span style="font-size:medium; color:##000000">Docum Numb</span></strong>" on the table above. In order to do this, you need to log in into your EXITS account (<a href="#CLIENT.exits_url#/flash/" target="_top"><strong>click here to log in</strong></a>, when the page pops up click on "EXITS login portal", then enter your username and password).</span><br/><br/> --->
                 
                 - The amounts in <span style="font-size:small; font-weight:bolder; color:##FF0000">red</span> between parentheses are negative values that decrease your balance. They represent the credit notes that were issued to cancel/offset charges that are no longer due. If you wish to apply a credit note against an unpaid invoice, you can just send me an e-mail requesting it (credit notes must be applied against invoices under the same company).<br/><br/>
                 
@@ -268,7 +268,7 @@ END) AS testCompId
             
             <cfelse>
             	Missing Email:	<cfoutput>
-                					<a href="http://www.student-management.com/nsmg/index.cfm?curdoc=forms/edit_user&userid=#indexAgentId#" target="_blank">#getAgentInfo.businessname#</a>
+                					<a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=forms/edit_user&userid=#indexAgentId#" target="_blank">#getAgentInfo.businessname#</a>
 								</cfoutput><br/>
             
     	</cfif>

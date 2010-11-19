@@ -71,7 +71,7 @@
 
 <cfquery name="insert_link" datasource="MySQL">
 	insert into smg_links (link)
-		values ('https://www.student-management.com/exits/index.cfm?curdoc=helpdesk/help_desk_view&amp;helpdeskid=#retrive_helpdeskid.helpdeskid#')
+		values ('#CLIENT.exits_url#/exits/index.cfm?curdoc=helpdesk/help_desk_view&amp;helpdeskid=#retrive_helpdeskid.helpdeskid#')
 </cfquery>
 
 <cfquery name="get_link_id" datasource="MySQL">

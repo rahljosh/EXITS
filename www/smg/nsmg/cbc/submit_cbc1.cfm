@@ -26,7 +26,7 @@ return true;
 <!--- SECURE CONNECTION --->
 <cfif cgi.SERVER_PORT NEQ 443>
 	<table align="center" width="80%" border="0" bgcolor="white">
-		<tr><th><img src="https://www.student-management.com/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
+		<tr><th><img src="#CLIENT.exits_url#/5.gif" /></th><th valign="middle">HOST FAMILY CBC FORM SIGN IN</th></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr><td colspan="2">Dear Family,<br /><br /></td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
@@ -89,7 +89,7 @@ return true;
 	<cfform name="authorization" action="" method="post">
 	<cfset FatherDecryptedSSN = decrypt(get_host.fatherssn, 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', "desede", "hex")>
 	<table width="660" align="center" cellpadding="5" cellspacing="5" bgcolor="FFFFFF">
-		<tr><td><img src="https://www.student-management.com/#get_host.companyid#.gif" /></td>
+		<tr><td><img src="#CLIENT.exits_url#/#get_host.companyid#.gif" /></td>
 			<td><div align="justify">As mandated by the Department of State, a Criminam Background Check on all Office Staff, Regional Directors/Managers, Regional Advisors,
 				Area Representatives all members of the host family aged 18 and above is required for involvement with the J-1 Secondary School Exchange
 				Visitor Program.</div>
@@ -101,31 +101,31 @@ return true;
 		<tr><td colspan="2">
 				<table width="100%" cellpadding="1" cellspacing="1">
 					<tr>
-						<td width="230">1. #get_host.fatherfirstname#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="220" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">First Name</font></div></td>
-						<td width="210">#get_host.fathermiddlename#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="200" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Middle Name</font></div></td>
-						<td width="210">#get_host.fatherlastname#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="200" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Last Name</font></div></td>
+						<td width="230">1. #get_host.fatherfirstname#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="220" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">First Name</font></div></td>
+						<td width="210">#get_host.fathermiddlename#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="200" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Middle Name</font></div></td>
+						<td width="210">#get_host.fatherlastname#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="200" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Last Name</font></div></td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>
 					<tr>
-						<td align="center">#DateFormat(get_host.fatherdob, 'mm/dd/yyyy')#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="220" height="1" border="0" align="absmiddle"><br /><font size="-2">Date of Birth</font></td>
-						<td align="center">***-**-#Right(FatherDecryptedSSN, 4)#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="200" height="1" border="0" align="absmiddle"><br /><font size="-2">Social Security Number</font></td>
-						<td align="center"><br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="200" height="1" border="0" align="absmiddle"><br /><font size="-2">Driver's License ##</font></td>
+						<td align="center">#DateFormat(get_host.fatherdob, 'mm/dd/yyyy')#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="220" height="1" border="0" align="absmiddle"><br /><font size="-2">Date of Birth</font></td>
+						<td align="center">***-**-#Right(FatherDecryptedSSN, 4)#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="200" height="1" border="0" align="absmiddle"><br /><font size="-2">Social Security Number</font></td>
+						<td align="center"><br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="200" height="1" border="0" align="absmiddle"><br /><font size="-2">Driver's License ##</font></td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>
 					<tr><td colspan="3">
 						<table width="100%" cellpadding="1" cellspacing="1">
 							<tr>
-								<td width="250">#get_host.address#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="240" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Address</font></div></td>
-								<td width="150">#get_host.city#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="140" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">City</font></div></td> 
-								<td width="100">#get_host.zip#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="90" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Zip</font></div></td>
-								<td width="150"><br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="140" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Dates of Residence</font></div></td>
+								<td width="250">#get_host.address#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="240" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Address</font></div></td>
+								<td width="150">#get_host.city#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="140" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">City</font></div></td> 
+								<td width="100">#get_host.zip#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="90" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Zip</font></div></td>
+								<td width="150"><br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="140" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Dates of Residence</font></div></td>
 							</tr>
 							<tr><td>&nbsp;</td></tr>
 							<tr>
-								<td>#get_host.address#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="240" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Previous Address</font></div></td>
-								<td>#get_host.city#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="140" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Previous City</font></div></td> 
-								<td>#get_host.zip#<br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="90" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Previous Zip</font></div></td>
-								<td><br><img src="https://www.student-management.com/nsmg/pics/line.gif" width="140" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Dates of Residence</font></div></td>
+								<td>#get_host.address#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="240" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Previous Address</font></div></td>
+								<td>#get_host.city#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="140" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Previous City</font></div></td> 
+								<td>#get_host.zip#<br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="90" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Previous Zip</font></div></td>
+								<td><br><img src="#CLIENT.exits_url#/nsmg/pics/line.gif" width="140" height="1" border="0" align="absmiddle"><br /><div align="center"><font size="-2">Dates of Residence</font></div></td>
 							</tr>
 						</table>	
 					</td></tr>				

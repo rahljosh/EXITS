@@ -78,9 +78,6 @@
 		// Base Path eg. C:\websites\smg\nsmg\
 		AppPath.base = 'C:/websites/www/smg/nsmg/';
 
-		// Set Site URL // Phase Out this variable
-		APPLICATION.site_url = 'http://smg.local';
-		
 	} else {
 		// PRODUCTION Server Settings
 
@@ -88,14 +85,6 @@
 		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		// Base Path eg. C:\websites\smg\nsmg\
 		AppPath.base = 'C:/websites/student-management/nsmg/';
-
-		if ( VAL(qCompanyInfo.recordCount) ) {
-			// Set Site URL - // Phase Out this variable
-			APPLICATION.site_url = 'http://' & qCompanyInfo.url_ref;
-		} else {
-			// Set Site URL - // Phase Out this variable
-			APPLICATION.site_url = 'http://ise.exitsapplication.com';
-		}
 
 	}
 
@@ -121,8 +110,8 @@
 	AppPath.onlineApp = StructNew();
 	
 	// URL Used on Upload/Delete Files
-	AppPath.onlineApp.URL = 'https://www.student-management.com/nsmg/student_app/';		
-	AppPath.onlineApp.reloadURL = 'https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm';
+	AppPath.onlineApp.URL = '#CGI.http_host#/nsmg/student_app/';		
+	AppPath.onlineApp.reloadURL = '#CGI.http_host#/nsmg/student_app/querys/reload_window.cfm';
 	AppPath.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
 	
 	AppPath.onlineApp.picture = AppPath.uploadedFiles & "web-students/";

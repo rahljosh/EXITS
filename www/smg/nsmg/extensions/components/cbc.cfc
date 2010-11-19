@@ -1107,7 +1107,7 @@
 						
                         <cfmailparam file="#APPLICATION.PATH.temp#xmlReceived.xml" type="text">
                         
-                    	<p>#APPLICATION.site_url#</p>
+                    	<p>#CLIENT.exits_url#</p>
                     
                         <p>
                         	<strong>

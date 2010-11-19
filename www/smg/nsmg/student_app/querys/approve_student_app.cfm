@@ -138,7 +138,7 @@
 					.thin-border{ border: 1px solid ##000000;}
 					</style>
 					<table width=550 class="thin-border" cellspacing="0" cellpadding=0>
-						<tr><td bgcolor="b5d66e"><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td></tr>
+						<tr><td bgcolor="b5d66e"><img src="#CLIENT.exits_url#/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td></tr>
 						<tr>
 							<td>
 								<h2>Congratulations!</h2>
@@ -148,7 +148,7 @@
 								<em>What does this mean to you and what are the next steps?</em><br>
 								Your are now listed as available for placement in the United States and the region or state you chose if applicable.  Students are placed on a 
 								daily basis all over the county.  All you have to do is wait to hear from us.  You will receive an email and acceptance letter once you have been placed with a host family. 
-								You will also be able to see your host family profile when you log into www.student-management.com after you have been placed.
+								You will also be able to see your host family profile when you log into #CLIENT.exits_url# after you have been placed.
 								<br><br>
 							</td>
 						</tr>

@@ -26,7 +26,7 @@
 	<cfloop query="tours">
 	<table border=0 cellpadding=4 cellspacing=2 width=100% class="section">
 	<tr  <cfif packetfile is ''>bgcolor="##FFCCCC"</cfif>>
-	  <td width="120"><img src="http://www.student-management.com/nsmg/uploadedfiles/student-tours/#tour_img2#.jpg" width="100px" height="100px" />	</td>
+	  <td width="120"><img src="#CLIENT.exits_url#/nsmg/uploadedfiles/student-tours/#tour_img2#.jpg" width="100px" height="100px" />	</td>
 	  <td><b><u>#tour_name#</u></b> <br />
         <b>Status:</b> #tour_status#<br />
         <b>Date:</b> #tour_date#<br />

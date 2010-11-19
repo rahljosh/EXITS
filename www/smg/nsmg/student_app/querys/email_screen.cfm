@@ -9,7 +9,7 @@
 	<cfoutput>
 	<table width=550 class="thin-border" cellspacing="0" cellpadding=0>
 		<tr>
-			<td bgcolor=b5d66e><img src="http://www.student-management.com/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
+			<td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
 		</tr>
 		<tr>
 			<td>
@@ -36,7 +36,7 @@
 			<br><br>
 			Click the link below to start your application process.  
 			<br><br>
-			<a href="http://www.student-management.com/exits/student_app/?s=#uniqueid#">http://www.student-management.com/exits/student_app/?s=#uniqueid#</a>
+			<a href="#CLIENT.exits_url#/exits/student_app/?s=#uniqueid#">#CLIENT.exits_url#/exits/student_app/?s=#uniqueid#</a>
 			<br><br>
 			You will need the following information to verify your account:<br>
 			*email address<br>

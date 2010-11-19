@@ -293,7 +293,7 @@ What: Flight Information<BR />
 Student: #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#)<Br />
 Submitted By: #qGetEmailInfo.businessname#.<br><br>
 
-            Please click <a href="http://#CLIENT.exits_url#/nsmg/forms/flight_info.cfm?unqid=#qGetEmailInfo.uniqueid#">here</a>
+            Please click <a href="#CLIENT.exits_url#/nsmg/forms/flight_info.cfm?unqid=#qGetEmailInfo.uniqueid#">here</a>
             to see the student's flight information.<br><br>
         
             Sincerely,<br>

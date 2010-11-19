@@ -7,4 +7,4 @@
 
 <cfflush>
 
-<meta http-equiv="Refresh" content="0;url=http://www.student-management.com/">
+<meta http-equiv="Refresh" content="0;url=#CLIENT.exits_url#/">

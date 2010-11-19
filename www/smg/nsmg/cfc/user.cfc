@@ -70,7 +70,7 @@
         <cfset CLIENT.company_submitting = "#submitting_info.website#">
         <cfset APPLICATION.company_short = "#submitting_info.website#">
         <cfset CLIENT.app_menu_comp = CLIENT.companyid>
-        <cfset CLIENT.exits_url = "#submitting_info.url_ref#">
+        <cfset CLIENT.exits_url = "https://" & submitting_info.url_ref>
         <cfset CLIENT.color = "#submitting_info.company_color#">
 
 
@@ -97,7 +97,7 @@
             <!--- Production / Force SSL --->    
             <cfelse>
             	
-                <cflocation url="https://#CLIENT.exits_url#/nsmg/student_app/login.cfm" addtoken="no">
+                <cflocation url="#CLIENT.exits_url#/nsmg/student_app/login.cfm" addtoken="no">
             
             </cfif>
 
@@ -272,11 +272,7 @@
         <!--- Production / Force SSL if not Case --->
         <cfelse>
         
-			<cfif client.companyid eq 10>
-                <cflocation url="http://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
-            <cfelse>
-                <cflocation url="https://#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
-            </cfif>
+            <cflocation url="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
 
         </cfif>
         

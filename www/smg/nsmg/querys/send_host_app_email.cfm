@@ -21,7 +21,7 @@ where email = "#form.email#"
 <cfoutput>
 <cfmail to="#form.email#" from="support@student-management.com" subject="Requested Host Application">
 To begin the host family application, please click on the following link. 
-http://www.student-management.com/newsmg/host.cfm?id=#get_uuid.uniquecookieid#
+#CLIENT.exits_url#/newsmg/host.cfm?id=#get_uuid.uniquecookieid#
 
 If the above is not a link, you can copy the link into your browser window.
 

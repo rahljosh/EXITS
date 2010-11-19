@@ -2,7 +2,7 @@
 SELECT
 	firstName AS "First Name",
 	familyLastName AS "Last Name", 
-	CONCAT('http://www.student-management.com/nsmg/student_app/verify.cfm?s=', uniqueID) AS "ACTIVATION URL",     
+	CONCAT('#CLIENT.exits_url#/nsmg/student_app/verify.cfm?s=', uniqueID) AS "ACTIVATION URL",     
 	email as "Email Address", randid AS ID
 FROM 
 	smg_students
