@@ -44,7 +44,7 @@
     * your password MUST be at least 6 characters long<br />
     * your password can not start with the word 'temp'</p>
     
-    <p>You can login immediately by visiting:  <a href="#client.site_url#">#client.site_url#</a>  and log in with the information above.</p> 
+    <p>You can login immediately by visiting:  <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a>  and log in with the information above.</p> 
     
     <p>If you have any questions or problems with logging in please contact <a href="mailto:#client.support_email#">#client.support_email#</a> or by replying to this email.</p>
     

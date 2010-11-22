@@ -369,7 +369,7 @@
                         <br><br>
                         Click the link below to start your application process.  
                         <br><br>
-                        <a href="#client.site_url#nsmg/student_app/index.cfm?s=#uniqueid#">#client.site_url#nsmg/student_app/index.cfm?s=#uniqueid#</a>
+                        <a href="#CLIENT.exits_url#nsmg/student_app/index.cfm?s=#uniqueid#">#CLIENT.exits_url#nsmg/student_app/index.cfm?s=#uniqueid#</a>
                         <br><br>
                         You will need the following information to verify your account:<br>
                         *email address<br>
