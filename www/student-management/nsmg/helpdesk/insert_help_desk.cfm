@@ -87,7 +87,7 @@ Dear #get_user_info.firstname# #get_user_info.lastname#,
 On #dateformat (now(), "dd/mm/yyyy")# at #timeformat(now(), 'h:mm:ss tt')# you submitted a request for service in the help desk 
 and the #client.companyshort# Technical Support Team will be reviewing it soon.
 
-Please login at <a href="#client.site_url#">#client.site_url#</a> to check the status, review the item, or add additional information. 
+Please login at <a href="#client.site_url#">#CLIENT.exits_url#</a> to check the status, review the item, or add additional information. 
 *Authentication maybe required if you are not currently logged on to the Student Management website.*
 
 You will receive an e-mail when we update/answer your ticket.

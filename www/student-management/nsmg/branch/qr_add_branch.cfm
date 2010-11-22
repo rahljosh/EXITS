@@ -102,7 +102,7 @@
 				An account has been created for you on the #client.companyname# EXITS system by #agent_info.businessname#.  
 				Using EXITS you will be able to create online student application accounts and view the status of your applicants as they are processed.<br><br>
 				
-				To activate your account, simply click on the EXITS Login Portal at #client.site_url# and login with the username and 
+				To activate your account, simply click on the EXITS Login Portal at #CLIENT.exits_url# and login with the username and 
 				password provided below. <br><br>		
 				
 				*username: #form.username# <br>

@@ -61,8 +61,7 @@
 			<br><br>
 			Click the link below to start your application process.  
 			<br><br>
-			<a href="#CLIENT.exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">#CLIENT.exits_url#/exits/student_app/verify.cfm?s=#get_student.uniqueid#</a>
-            <!---<a href="http://#exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">http://#exits_url#/exits/student_app/verify.cfm?s=#get_student.uniqueid#</a>--->
+			<a href="#CLIENT.exits_url#/nsmg/student_app/index.cfm?s=#get_student.uniqueid#">#CLIENT.exits_url#/exits/student_app/index.cfm?s=#get_student.uniqueid#</a>
 			<br><br>
 			You will need the following information to verify your account:<br>
 			*email address<br>
