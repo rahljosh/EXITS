@@ -54,7 +54,8 @@
         <cfif not isValid("email", TRIM(FORM.email))>
             <cfset errorMsg = "Please enter a valid Email.">
         <cfelse>
-    
+    		
+            <!--- Username --->
             <cfquery name="qCheckUsername" datasource="#application.dsn#">
                 SELECT 
                 	userID,
@@ -85,10 +86,9 @@
                             Username: #qCheckUsername.username#<br />
                             Password: #qCheckUsername.password#
                         </p>
+                        
+                        <p>To login please visit: <a href="#application.site_url#">#application.site_url#</a></p>
                     </cfoutput>
-                    <!----
-                    <p>To login please visit: <cfoutput><a href="#application.site_url#">#application.site_url#</a></cfoutput></p>
-                    ---->
                 </cfsavecontent>
                 
                 <!--- send email --->
@@ -107,7 +107,62 @@
                 </script>
             
             </cfif>
+            
+            <!--- Check Student Account --->
+            <cfquery name="qCheckStudentAccount" datasource="#application.dsn#">
+                SELECT 
+                	studentID,
+                    firstName,
+                    familyLastName,
+                    email,
+                    password
+                FROM 
+                	smg_students
+                WHERE 
+                	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.email)#">
+                AND
+                   	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            </cfquery>
                 
+            <cfif NOT VAL(qCheckStudentAccount.recordCount)>
+                <cfset errorMsg = "The email address entered was not found in our database.">
+            <cfelse>
+    
+                <cfsavecontent variable="email_message">
+                    <cfif qCheckStudentAccount.recordCount GT 1>
+                        <p>(There were multiple accounts found with the email address entered.)</p>
+                    </cfif>
+                    <cfoutput query="qCheckStudentAccount">				
+                        <p>
+                        	#qCheckStudentAccount.firstname# #qCheckStudentAccount.familyLastName#, a login information retrieval request was made from 
+                        	the <a href="http://#CGI.http_host#">http://#CGI.http_host#</a> website. <br>
+           		            Your login information is:<br />
+                            Username: #qCheckStudentAccount.email#<br />
+                            Password: #qCheckStudentAccount.password#
+                        </p>
+                        
+                        <p>To login please visit: <a href="#application.site_url#">#application.site_url#</a></p>
+                    </cfoutput>
+                   
+                </cfsavecontent>
+                
+                <!--- send email --->
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="#FORM.email#">
+                    <cfinvokeargument name="email_subject" value="EXITS - Login Information">
+                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_from" value="#CLIENT.emailFrom#">
+                </cfinvoke>
+                
+                <!--- return to the login form, not forgot password FORM. --->
+                <cfset url.forgot = 0>
+                    
+                <script language="JavaScript">
+                	<cfset errorMsg = "Your login information has been sent to the email address entered.">
+                </script>
+            
+            </cfif>
+
         </cfif>
      
     </cfif>

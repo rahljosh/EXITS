@@ -19,7 +19,7 @@
 
 
 	<cfquery name="get_student" datasource="mysql">
-		SELECT firstname, familylastname, email, randid, uniqueid, intrep, branchid
+		SELECT firstname, familylastname, email, password, randid, uniqueid, intrep, branchid
 		FROM smg_students
 		WHERE uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
 	</cfquery>
@@ -42,32 +42,14 @@
 <br><br>
 **This email has been resent to you. This may indicate that your login info has changed, please note any changes to your login info below.**
 <br /><br />
-An account has been created for you on the #client.companyname# EXITS system.  
-Using EXITS you will be able to apply for your exchange program and view the status of your application as it is processed. 
-<br><br>
-You can start your application at any time and do not need to complete it all at once.
-You can save your work at any time and return to the application when convenient.  
-The first time you access EXITS you will create a username and password that will allow you to work 
-on your application at any time. 
-<br><br>
-Your application will initially expire in 15 days.  Your representative can extend the deadline of your application 
-if needed.
-<br><br>
-Please provide the information requested by the application and press the submit button when it is complete.
-Once submitted, the application can no longer be edited.  
-The completed application will be reviewed by your international representative and sent to a partner company.
-The status of your application can be viewed by logging into the Exits Login Portal. 
-After your placement has been made, you will also be able to access your host family profile, the the partner company uses EXITS.
-<br><br>
-You are taking the first step in what will become one of the greatest experiences in your life!
-<br><br>
-Click the link below to start your application process.  
-<br><br>
-<a href="#client.exits_url#/nsmg/student_app/verify.cfm?s=#get_student.uniqueid#">#client.exits_url#/exits/student_app/verify.cfm?s=#get_student.uniqueid#</a>
-<br><br>
-You will need the following information to verify your account:<br>
-*email address<br>
-*this ID: #get_student.randid#
+
+See your login information below: 
+<br /><br />
+username: #get_student.email# <br>
+password: #get_student.password# 
+<br /><br />
+
+Please visit <a href="#client.exits_url#">#client.exits_url#</a> to log in into your online application.
 <br><br>
 If you have any questions about the application or the information you need to submit, please contact your international representative:
 <br><br>
