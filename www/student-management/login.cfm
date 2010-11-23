@@ -24,12 +24,12 @@
         <cfset CLIENT.companyid = qGetCompany.companyid>
         <cfset CLIENT.companyname = qGetCompany.companyname>
         <cfset CLIENT.emailFrom = qGetCompany.support_email>
-        <cfset APPLICATION.site_url = qGetCompany.url_ref>
+        <cfset CLIENT.site_url = qGetCompany.url_ref>
     <cfelse>
         <cfset CLIENT.companyid = 0>
         <cfset CLIENT.companyname = 'EXIT Group'>
         <cfset CLIENT.emailFrom = 'support@iseusa.com'>
-        <cfset APPLICATION.site_url = 'ise.exitsapplication.com'>
+        <cfset CLIENT.site_url = 'ise.exitsapplication.com'>
     </cfif>
     
     <!--- Process Form Submission - login --->
@@ -87,7 +87,7 @@
                             Password: #qCheckUsername.password#
                         </p>
                         
-                        <p>To login please visit: <a href="#application.site_url#">#application.site_url#</a></p>
+                        <p>To login please visit: <a href="#CLIENT.site_url#">#CLIENT.site_url#</a></p>
                     </cfoutput>
                 </cfsavecontent>
                 
@@ -141,7 +141,7 @@
                             Password: #qCheckStudentAccount.password#
                         </p>
                         
-                        <p>To login please visit: <a href="#application.site_url#">#application.site_url#</a></p>
+                        <p>To login please visit: <a href="#CLIENT.site_url#">#CLIENT.site_url#</a></p>
                     </cfoutput>
                    
                 </cfsavecontent>
