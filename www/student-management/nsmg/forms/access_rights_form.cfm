@@ -77,7 +77,7 @@
             WHERE 
                 uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
             AND
-            	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
+            	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userType#"> 
 			<cfif VAL(URL.companyID)>
                 AND 
                     uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.companyID#">
@@ -85,11 +85,6 @@
                 AND 
                     uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             </cfif>      
-               <Cfif client.usertype eq 5>
-               AND uar.userid = #client.userid#
-               AND uar.usertype = 5
-               </Cfif>    
-                          
             ORDER BY 
                 r.regionname,
                 r.regionid
@@ -292,11 +287,13 @@
 </script>
 
 <!--- CHECK RIGHTS - put here since URL.userID is required and it's set above on edit. --->
-<cfinclude template="../check_rights.cfm">
+<!---  11/23/10 - Allowing advisors to add an user
+	<cfinclude template="../check_rights.cfm">
+--->
 
 <cfoutput>
 
-<cfif CLIENT.usertype GT 5>
+<cfif CLIENT.usertype GT 6>
 	<p>You do not have access to this page.</p>
     <cfabort>
 </cfif>
@@ -495,6 +492,10 @@
                                                     uar.usertype = 6
                                                 AND 
                                                     uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">
+                                                <cfif CLIENT.userType EQ 6>
+                                                	AND
+                                                    	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                                                </cfif>
                                                 ORDER BY 
                                                     firstname
                                             </cfquery>

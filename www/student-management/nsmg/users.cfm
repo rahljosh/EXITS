@@ -13,8 +13,8 @@
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 		<td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
 		<td background="pics/header_background.gif"><h2>Users</h2></td>
-	<!--- ONLY OFFICE AND MANAGERS CAN ADD NEW USERS --->
-    <cfif client.usertype LTE 5>
+	<!--- ONLY OFFICE, MANAGERS AND ADVISORS CAN ADD NEW USERS --->
+    <cfif client.usertype LTE 6>
         <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/add_user">Add User</a></td>
 	</cfif>
 		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
