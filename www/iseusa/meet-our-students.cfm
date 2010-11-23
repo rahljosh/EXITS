@@ -111,7 +111,7 @@
 
     <!--- Get User Location - If not US, do not allow access --->
     <cftry>
-        <cfhttp url="http://www.ipinfodb.com/ip_query_country.php?ip=#CGI.remote_addr#&timezone=false" method="get" throwonerror="yes"></cfhttp>
+        <cfhttp url="http://api.ipinfodb.com/v2/ip_query.php?key=#APPLICATION.SETTINGS.IPInfoDBKey#&ip=#CGI.remote_addr#&timezone=false" method="get" throwonerror="yes"></cfhttp>
         
         <cfscript>
             // Parse XML we received back to a variable
