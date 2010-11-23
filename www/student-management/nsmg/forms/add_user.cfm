@@ -1,5 +1,5 @@
-<!--- ONLY OFFICE CAN ADD NEW USERS --->
-<cfif not client.usertype LTE 5>
+<!--- ONLY OFFICE, MANAGERS AND ADVISORS CAN ADD NEW USERS --->
+<cfif not client.usertype LTE 6>
 	you don't have access to add a user.
 	<cfabort>
 </cfif>
