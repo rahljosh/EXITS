@@ -7,4 +7,6 @@
 
 <cfflush>
 
+<cfoutput>
 <meta http-equiv="Refresh" content="0;url=#CLIENT.exits_url#/">
+</cfoutput>

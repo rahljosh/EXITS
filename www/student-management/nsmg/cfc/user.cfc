@@ -83,12 +83,12 @@
             and active = 1
         </cfquery>
         
-        <cfif student_login.recordcount gt 0>
+        <cfif VAL(student_login.recordcount)>
             <cfset CLIENT.studentID = student_login.studentID>
             <cfset CLIENT.usertype = 10>
             <cfset CLIENT.userID = 0>
             <cfset CLIENT.name = '#student_login.firstname# #student_login.familylastname#'>
-
+			
 			<!--- Check if server is local, if it is do not redirect to SSL --->
             <cfif APPLICATION.IsServerLocal>
 				
@@ -98,9 +98,11 @@
             <cfelse>
             	
                 <cflocation url="#CLIENT.exits_url#/nsmg/student_app/login.cfm" addtoken="no">
-            
+            	
             </cfif>
-
+		
+        	<cfabort>
+        
         </cfif>
 
         <cfquery name="authenticate" datasource="#APPLICATION.dsn#">
