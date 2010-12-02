@@ -47,7 +47,7 @@ table {
 	padding-right: 0px;
 	padding-bottom: 0px;
 	padding-left: 0px;
-	min-height: 1300px;
+	min-height: 1400px;
 }
 
 
@@ -80,6 +80,7 @@ table {
       <div class="whtMiddleTrips">
         <div class="trips">
           <h1 class="enter">ISE Student Tours</h1>
+          <em><font color="#be1e2d" size=+1><strong><div align="center">For ISE students ONLY!</div></strong></font></em>
           <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.<br /><br />
           <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE.  Once you are registered for a tour, you will be contacted regarding airfare.</strong></p>
           

@@ -40,7 +40,7 @@ a:active {
    	<cfoutput>
     <tr>
     	<td>
-   			You must be logged into to view students. <br />
+   			You must be logged in to view students. <br />
 			If you have your login or need to register, visit <a href="http://#cgi.SERVER_NAME#/meet-our-students.cfm">http://#cgi.SERVER_NAME#/meet-our-students.cfm</a>.
         </td>
      </tr>
