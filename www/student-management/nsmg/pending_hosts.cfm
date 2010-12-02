@@ -29,6 +29,7 @@ window.location.href = URL;
             s.firstname, 
             s.familylastname as student_lastname, 
             s.regionassigned, 
+            s.dateplaced,
 			h.familylastname, 
             h.fatherfirstname, 
             h.fatherlastname, 
@@ -124,6 +125,7 @@ window.location.href = URL;
             s.firstname, 
             s.familylastname as student_lastname, 
             s.regionassigned, 
+            s.dateplaced,
 			h.familylastname, 
             h.fatherfirstname, 
             h.fatherlastname, 
@@ -201,7 +203,7 @@ div.scroll {
 
 <table border=0 cellpadding=4 cellspacing=0 width=100%>
 	<tr>
-		<td colspan=4 align="center" bgcolor="#EAEAF2">Student</td><td colspan=4 align="center" bgcolor="#FFDFE1">Host</td>
+		<td colspan=4 align="center" bgcolor="#EAEAF2">Student</td><td colspan=5 align="center" bgcolor="#FFDFE1">Host</td>
 	</tr>
 	<tr>
 		<td width="30">ID</td>
@@ -212,6 +214,7 @@ div.scroll {
 		<td width="30">ID</td>
 		<td width="100">Last Name(s)</td>
 		<td width="100">First Name(s)</td>
+        <td width="70">Date Placed</td>
 	</tr>
 
 <cfoutput query="pending_hosts">
@@ -229,6 +232,7 @@ div.scroll {
             <td><a class=nav_bar href="" onClick="javascript: win=window.open('forms/place_menu.cfm?studentid=#studentid#', 'Settings', 'height=550, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#hostid#</a></td>
             <td><a class=nav_bar href="" onClick="javascript: win=window.open('forms/place_menu.cfm?studentid=#studentid#', 'Settings', 'height=550, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif fatherlastname is motherlastname> #fatherlastname#<Cfelseif fatherlastname is''> #motherlastname# <Cfelseif motherlastname is ''>#fatherlastname#<Cfelse>#fatherlastname# #motherlastname#</cfif></td>
             <td><a class=nav_bar href="" onClick="javascript: win=window.open('forms/place_menu.cfm?studentid=#studentid#', 'Settings', 'height=550, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"> #fatherfirstname# <Cfif fatherfirstname is '' or motherfirstname is ''><cfelse>&</Cfif> #motherfirstname#</td>
+            <td>#DateFormat(dateplaced,'mm/dd/yyyy')#</td>
     </tr>
     <tr>
         <td></td>

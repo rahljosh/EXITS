@@ -157,6 +157,7 @@ margin-left: 0px;
   <div class="whtMiddletours2">
         <div class="tripsTours">
           <h1 class="enter">ISE Student Tours</h1>
+          <em><font color="#be1e2d" size=+1><strong><div align="center">For ISE students ONLY!</div></strong></font></em>
           <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.</p>
          <cfoutput>
 <cfset company = 'ISE'>
@@ -189,7 +190,7 @@ margin-left: 0px;
 <cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
 					  		<span class="SubTitle"><br />
-					  		#tours.tour_length#</span></td>
+			  		  #tours.tour_length#</span></td>
                     <td width="24%">
                      <cfif tours.tour_status EQ 'Full'><font color='FF0000' size='2'><b><center>No More Seats Available!!</center></b></font>
                      <cfelseif tours.tour_status EQ 'Cancelled'><font color='FF0000' size='2'><b><center>Cancelled!!</center></b></font><cfelse> <a href="selectTrips.cfm?tour_id=#tour_id#"><img src="images/reserve.png" alt="reserve spot" border="0" /></a> 
