@@ -67,7 +67,8 @@
 	<cfquery datasource="#application.dsn#">
     update student_tours
     set studentid = '#form.studentid#',
-    	tripid = '#form.trip#'
+    	tripid = '#form.trip#',
+        email = '#form.stuEmail#'
    where id = #form.updatestudent#     
     </cfquery>
 </cfif>
@@ -250,7 +251,7 @@ where tour_status <> 'inactive'
     	<Td>Student Name (First, Last):</Td><td>#details.firstname# #details.familylastname#</td>
     </tr>
     <Tr>
-    	<td>Email:</td><td><a href="mailto:#details.email#">#details.email#</a></td>
+    	<td>Email:</td><td><input type="text" name="stuEmail" size=20 value="#details.email#"/> <a href="mailto:#details.email#">Click to Email</a></td>
     </Tr>
     
     <Tr>

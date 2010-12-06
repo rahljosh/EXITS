@@ -150,7 +150,7 @@ h3{text-indent:10px;}
 <!----Student Info---->
 <cfparam name="form.studentLName" default="">
 <cfparam name="form.studentFName" default="">
-<cfparam name="form.studentID" default="">
+<cfparam name="form.studentID" default="0">
 <cfparam name="form.Email" default="">
 <cfparam name="stuInfo.familylastname" default="">
 <cfparam name="stuInfo.firstname" default="">
@@ -556,7 +556,8 @@ Registration information has been submitted:<Br />
     <Cfquery name="stuInfo" datasource="#APPLICATION.DSN.Source#">
     SELECT s.studentid, s.dob, s.sex, s.arearepid, s.hostid, s.studentid, s.email, s.familylastname, s.firstname, s.med_allergies, s.other_allergies
     FROM smg_students s
-    WHERE email = '#form.email#'
+    WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
+    or studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">
     </Cfquery>
 
     <cfset acctVerified = 1>
@@ -621,7 +622,7 @@ Registration information has been submitted:<Br />
             	<td><h3>Student ID</h3> </td>
                 <td>
                 
-                <cfinput type="text" name="studentid" size=10 value="#form.studentid#"> <br /><em>Don't know your ID? No problem, just leave it blank.</em>
+                <cfinput type="text" name="studentid" size=10 value="#form.studentid#"> <br /><em>Don't know your ID? No problem, just leave it 0.</em>
                 <input type=hidden name="ret_studentid" value="#stuInfo.studentid#" />
                 </td>
             </Tr>
