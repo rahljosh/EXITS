@@ -66,6 +66,7 @@
 			list-style-type: none; 
 			line-height:25px; 
 			}
+		.count {width:20px;}
 		.idnumber {width:40px;}
 		.fname {width:100px; }
 		.lname {width:100px; }
@@ -280,7 +281,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
         <tr>
             <td colspan="7">
             <div id="table_title">
-         
+         	  <li class="count"></li>
               <li class="idnumber">ID</li>
               <li class="fname">First Name</li>
               <li class="lname">Last Name</li>
@@ -307,7 +308,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
                         <cfloop query="tours">
               
               <div id="table_row">   
-              
+              <li class="count">#tours.currentrow#</li>
               <li class="idnumber"><a href='http://ise.exitsapplication.com/nsmg/tours/details.cfm?id=#id#&student=#studentid#' title='Payment Details' rel='gb_page_center[675,600]'>#studentid#</a></li>
               <li class="fname"><a href='tours/details.cfm?id=#id#&student=#studentid#' title="Payment Details" rel="gb_page_center[675,600]">#firstname#</a></li>
               <li class="lname"><a href="tours/details.cfm?id=#id#&student=#studentid#" title="Payment Details" rel="gb_page_center[675,600]">#familylastname#</a></li>
@@ -335,7 +336,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
 				<cfif check_siblings.recordcount gt 0>
                     <cfloop query="check_siblings">
                            <div id="table_sibling">   
-              
+              			  <li class="count"></li>
                           <li class="idnumber"></li>
                           <li class="fname">#name#</li>
                           <li class="lname">#lastname#</li>
