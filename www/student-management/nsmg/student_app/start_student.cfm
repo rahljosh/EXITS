@@ -388,7 +388,7 @@
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#FORM.email1#">
-                    <cfinvokeargument name="email_subject" value="Student App. Login Information">
+                    <cfinvokeargument name="email_subject" value="EXITS - Online Student Application - Account Activation Required">
                     <cfinvokeargument name="email_message" value="#email_message#">
                     <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
                 </cfinvoke>
