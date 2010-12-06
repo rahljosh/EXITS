@@ -5,7 +5,7 @@
     <cfparam name="FORM.username" default="">
     <cfparam name="FORM.password" default="">
     <cfparam name="FORM.email" default="">
-    <cfparam name="url.forgot" default="0">
+    <cfparam name="URL.forgot" default="0">
     <cfset errorMsg = ''>
         
     <cfquery name="qGetCompany" datasource="mysql">
@@ -55,7 +55,7 @@
             <cfset errorMsg = "Please enter a valid Email.">
         <cfelse>
     		
-            <!--- Username --->
+            <!--- Username - Check email address --->
             <cfquery name="qCheckUsername" datasource="#application.dsn#">
                 SELECT 
                 	userID,
@@ -65,14 +65,14 @@
                     password
                 FROM 
                 	smg_users
-                WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.email)#">
-                	AND
-                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                WHERE 
+                	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.email)#">
+               	AND
+                   	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             </cfquery>
-                
-            <cfif NOT VAL(qCheckUsername.recordCount)>
-                <cfset errorMsg = "The email address entered was not found in our database.">
-            <cfelse>
+            
+            <!--- Username - Email Login Information --->    
+            <cfif VAL(qCheckUsername.recordCount)>
     
                 <cfsavecontent variable="email_message">
                     <cfif qCheckUsername.recordCount GT 1>
@@ -108,7 +108,7 @@
             
             </cfif>
             
-            <!--- Check Student Account --->
+            <!--- Student - Check email address --->
             <cfquery name="qCheckStudentAccount" datasource="#application.dsn#">
                 SELECT 
                 	studentID,
@@ -123,10 +123,9 @@
                 AND
                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             </cfquery>
-                
-            <cfif NOT VAL(qCheckStudentAccount.recordCount)>
-                <cfset errorMsg = "The email address entered was not found in our database.">
-            <cfelse>
+                         
+            <!--- Student - Email Login Information --->      
+            <cfif VAL(qCheckStudentAccount.recordCount)>
     
                 <cfsavecontent variable="email_message">
                     <cfif qCheckStudentAccount.recordCount GT 1>
@@ -162,6 +161,11 @@
                 </script>
             
             </cfif>
+
+			<!--- Error Message --->
+            <cfif NOT VAL(qCheckUsername.recordCount) AND NOT VAL(qCheckStudentAccount.recordCount)>
+                <cfset errorMsg = "The email address entered was not found in our database.">
+			</cfif>
 
         </cfif>
      
@@ -255,10 +259,7 @@ a:active {
             <tr><td class="style3" colspan=2>Your login information will be sent to the address entered:</td></tr>
             <tr>
                 <td class="style1">Email:</td>
-                <td><cfinput type="text" name="email" id="email" value="#FORM.email#" class="style1" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email."></td>
-            </tr>
-            <tr>
-	            <td>&nbsp;</td>
+                <td><cfinput type="text" name="email" id="email" value="#FORM.email#" class="style1" size="25" maxlength="150" required="yes" validate="email" message="Please enter a valid Email."></td>
             </tr>
         </table>
         <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
