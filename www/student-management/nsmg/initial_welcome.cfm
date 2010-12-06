@@ -410,7 +410,7 @@
                         	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
                         </cfif>
                        <cfif client.companyid lte 5>
-                        <a href="uploadedfiles/pdf_docs/ISE/payment/Aug%2010%20bonus%20flyer%202.pdf" target="_blank">Click Here For Exciting Bonuses For The Placing Season!</a>
+                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Pre%20AYP%20Bonus%202011.pdf" target="_blank">Click Here For Exciting Bonuses For The Placing Season!</a>
                    		</cfif>
                     </td>
          			<!--- Office Users --->
