@@ -30,6 +30,16 @@
 		 margin-right:0px; 		
 		 background-color:#ddeaf3;
 		}
+		#table_sibling     
+		{width: 100%;
+		 margin-left:1px; 
+		 margin-bottom:1px; 
+		 margin-right:1px; 
+		 margin-top:1px;  
+		 margin-left:0px; 
+		 margin-right:0px; 		
+		 background-color:#ddeae0;
+		}
 		#table_title {
 			width: 100%; 
 			margin-left:0px; 
@@ -56,9 +66,9 @@
 			list-style-type: none; 
 			line-height:25px; 
 			}
-		.idnumber {width:50px;}
-		.fname {width:150px; }
-		.lname {width:150px; }
+		.idnumber {width:40px;}
+		.fname {width:100px; }
+		.lname {width:100px; }
 		.sex {width:60px; }
 		.registered {width:90px;}
 		.verified {width:90px;}
@@ -314,7 +324,35 @@ Students are ordered by Registration Date.  You can always search a list by simp
               <li class="delete"> <input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></li>
               
               </div>
+              <!----check for any siblings---->
+                <cfquery name="check_siblings" datasource="#application.dsn#">
+                select sts.siblingid, smg_host_children.name, smg_host_children.lastname, smg_host_children.sex
+                from student_tours_siblings sts
+                left join smg_host_children on smg_host_children.childid = sts.siblingid
+                where fk_studentID = #studentid# and mastertripid = #id#
+                </cfquery>
+       
+				<cfif check_siblings.recordcount gt 0>
+                    <cfloop query="check_siblings">
+                           <div id="table_sibling">   
               
+                          <li class="idnumber"></li>
+                          <li class="fname">#name#</li>
+                          <li class="lname">#lastname#</li>
+                          <li class="sex">#sex#</li>
+                          <li class="Registered"> </li>
+                          <li class="Verified"></li>
+                          <li class="Paid"></li>
+                          <li class="Permission" align="left"></li>
+                          <li class="Flights"></li>
+                          <li class="Profile"></li>
+                          <li class="Forms"></li>
+                          <li class="Company"></li>
+                          <li class="delete"></li>
+                          
+                          </div>
+                    </cfloop>
+                 </cfif>       
 
                         </cfloop>
                          
