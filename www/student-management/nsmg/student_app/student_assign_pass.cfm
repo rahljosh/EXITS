@@ -79,7 +79,7 @@ Sincerely-<br>
 				<ul>
 				<li>Your application will expire on #DateFormat(application_expires, 'mmm dd, yyyy')# at #TimeFormat(application_expires, 'h:mm tt')# MST
 				<li>You can check on the current status of your application at any time by logging into EXITS through the EXITS Login Portal at 
-                <a href="#client.site_url#">#client.site_url#</a> and click on Log In.
+                <a href="#client.exits_url#">#client.exits_url#</a> and click on Log In.
 				<li>If you forget your password, you can click on the "Forgot your login?" link on the EXITS Login Portal to retrieve your account information.
 				<li>If you are having problems with the EXITS system, please contact support via the Support link on the student application.
 				
@@ -88,7 +88,7 @@ Sincerely-<br>
 				</ul>
 				Click the Start Application Process button if you are ready to start your application.<br><br>
                 <div align="center">
-                	 <a href="#client.site_url#"><img src="pics/start-application.gif" border="0" /></a>
+                	 <a href="#client.exits_url#"><img src="pics/start-application.gif" border="0" /></a>
                 </div>  <br />
 				</td>
 			</tr>
