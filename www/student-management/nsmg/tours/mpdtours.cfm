@@ -7,6 +7,89 @@
 <script type="text/javascript" src="greybox/AJS_fx.js"></script>
 <script type="text/javascript" src="greybox/gb_scripts.js"></script>
 <link href="greybox/gb_styles.css" rel="stylesheet" type="text/css" />
+ <style type="text/css">
+        body { font-family:Arial, Helvetica, Sans-Serif; font-size:0.8em;}
+        #report { border-collapse:collapse;}
+        #report h4 { margin:0px; padding:0px;}
+        #report img { float:right;}
+        #report ul { margin:10px 0 10px 40px; padding:0px;}
+        #report th { background:#7CB8E2 url(images/header_bkg.png) repeat-x scroll center left; color:#fff; padding:7px 15px; text-align:left;}
+        #report td { background:#C7DDEE none repeat-x scroll center left; color:#000; padding:7px 15px; }
+        #report tr.odd td { background:#fff url(tours/images/row_bkg.png) repeat-x scroll center left; cursor:pointer; }
+        #report div.arrow { background:transparent url(tours/images/arrows.png) no-repeat scroll 0px -16px; width:16px; height:16px; display:block;}
+        #report div.up { background-position:0px 0px;}
+		li { display: inline-block; }
+		li { _display: inline; }
+		#table_row     
+		{width: 100%;
+		 margin-left:1px; 
+		 margin-bottom:1px; 
+		 margin-right:1px; 
+		 margin-top:1px;  
+		 margin-left:0px; 
+		 margin-right:0px; 		
+		 background-color:#ddeaf3;
+		}
+		#table_title {
+			width: 100%; 
+			margin-left:0px; 
+			margin-bottom:0px; 
+			margin-right:0px;
+			margin-top:0px; 
+			background-color:#1573bd;
+			font-weight:bold;
+			color:#FFF;}
+		#table_row li {
+			padding: 5px;
+			margin-left:0px;
+			margin-bottom:0px;
+			margin-right:0px;
+			margin-top:0px;
+			list-style-type:none;
+			line-height:25px;}
+		#table_title li {
+			padding: 5px;	
+			margin-left:0px; 
+			margin-bottom:0px; 
+			margin-right:0px; 
+			margin-top:0px; 
+			list-style-type: none; 
+			line-height:25px; 
+			}
+		.idnumber {width:50px;}
+		.fname {width:150px; }
+		.lname {width:150px; }
+		.sex {width:60px; }
+		.registered {width:90px;}
+		.verified {width:90px;}
+		.paid {width:90px; }
+		.permission {width:80px; text-align:center;  vertical-align:bottom;}
+		.flights {width:80px; text-align:center;vertical-align:bottom;}
+		.profile {width:80px; text-align:center; vertical-align:bottom;}
+		.forms {width:80px; text-align:center;vertical-align:bottom;}
+		.company {width:80px;}
+		.delete {width:80px;vertical-align:bottom;}
+    </style>
+
+<style type="text/css">
+.table_row li{display:inline}
+.table_title li{display:inline}
+</style>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">  
+        $(document).ready(function(){
+            $("#report tr:odd").addClass("odd");
+            $("#report tr:not(.odd)").hide();
+            $("#report tr:first-child").show();
+            
+            $("#report tr.odd").click(function(){
+                $(this).next("tr").toggle();
+                $(this).find(".arrow").toggleClass("up");
+            });
+            //$("#report").jExpand();
+        });
+    </script>        
 </head>
 <script type="text/javascript">
   function DoNav(theUrl)
@@ -18,10 +101,10 @@
 
 <!----Set Default Search Parametes---->
 <cfparam name="keyword" default="">
-<cfparam name="orderby" default="tour_name">
-<cfparam name="tourStatus" default="active">
+
+
 <cfparam name="paid" default="0">
-<cfparam name="recordsToShow" default="25">
+
 <cfparam name="tripSelected" default ="0">
 <Cfif isDefined('form.delete')>
 	<cfquery datasource="#application.dsn#">
@@ -39,7 +122,7 @@
     </cfquery>	
     
     <Cfquery name="tourInfo" datasource="#application.dsn#">
-    select *, smg_tours.tour_name, smg_tours.tour_date, smg_tours.tour_price, smg_tours.tour_flightDetails
+    select *, smg_tours.tour_name, smg_tours.tour_date, smg_tours.tour_start, smg_tours.tour_end, smg_tours.tour_price, smg_tours.tour_flightDetails
     from student_tours
     left join smg_tours on smg_tours.tour_id = student_tours.tripid
     where id = #url.permission#
@@ -92,7 +175,8 @@
 <Cfquery name="allTrips" datasource="#application.dsn#">
 select * 
 from smg_tours
-order by tour_name
+where tour_status <> 'Inactive'
+order by tour_start
 </Cfquery>
 
 <cfquery name="tours" datasource="#application.dsn#">
@@ -101,31 +185,13 @@ from student_tours
 left join smg_students stu on stu.studentid = student_tours.studentid
 left join smg_tours on smg_tours.tour_id = student_tours.tripid
 where 1=1 
-		<!----Keyword---->
-  		<cfif trim(keyword) NEQ ''>
-            AND (
-                stu.studentid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(keyword)#">
-                OR stu.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                OR stu.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-            )
-        </cfif>
-        <!----Tour Name---->
-        <Cfif tripSelected NEQ 0>
-        AND smg_tours.tour_id = #tripSelected#
-        </Cfif>
-        <!----Tour Status---->
-       	<cfif tourStatus NEQ 0>
-        AND smg_tours.tour_status = '#tourStatus#'
-        </cfif>
-        <Cfif paid neq 0>
-        AND student_tours.paid <> ''
-        </Cfif>
-        order by #orderby#
+
+        order by tour_start
         
         
 </cfquery>
 
-
+<!----
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24 bgcolor="#ffffff">
     <tr height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -137,125 +203,132 @@ where 1=1
     	<td width=17 background="../pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
+---->
 <cfoutput>
-<table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
-    <tr>
-        <td>
-        <Cfform>
-<table border=0 cellpadding=4 cellspacing=0 width=100% >
-    <tr>
-        <td><input name="send" type="submit" value="Submit" /></td>
-	
-        <td>
-		
-            Tour Names<br />
-           
-                <cfselect name="tripSelected" query="allTrips" value="tour_id" display="tour_name" selected="#tripSelected#" queryPosition="below">
-                    <option value="0" >All</option>
-                </cfselect>
-        	
-        </td>
+Below are all trips in the system. Click on a row to view students that have registerd for the tour.  To view the Flight Report, click on View under Flight Report.  You will then have the option to generate the Arrival or Departure Report.<br /><Br />
+Students are ordered by Registration Date.  You can always search a list by simply pressing CTRL-F and typing in your searh term. (Name, ID, Search anything displayed the screen)<br /><br />
 
-
-        <td>
-            Student Name / ID<br />
-			<cfinput type="text" name="keyword" value="#keyword#" size="20" maxlength="50">         
-        </td>
-
-        <td>
-            Tour Status<br />
-			<cfquery name="tripStatus" datasource="#application.dsn#">
-            select distinct tour_status
-            from smg_tours
-            </cfquery>
-            <select name="placed">
-          
-			  <cfselect name="tourStatus"  query="tripStatus" value="tour_status" display="tour_status" selected="#tourStatus#" queryPosition="below">
-            		<option value="">All</option>
-              </cfselect>
-			</select>            
-        </td>
-
-       <td>
-            Paid in Full<br />
-			<select name="paid">
-				<option value="0" <cfif #paid# is 0> selected </cfif>>No</option>
-                <option value="1" <cfif #paid# is 1>selected</cfif>>Yes</option>
-			
-			</select>            
-        </td>
-<!----
-        <td>
-            Order By<br />
-            <select name="orderby">
-                <option value="studentid" <cfif orderby EQ 'studentid'>selected</cfif>>ID</option>
-                <option value="familylastname" <cfif orderby EQ 'familylastname'>selected</cfif>>Last Name</option>
-                <option value="firstname" <cfif orderby EQ 'firstname'>selected</cfif>>First Name</option>
-                <option value="sex" <cfif orderby EQ 'sex'>selected</cfif>>Sex</option>
-                <option value="country" <cfif orderby EQ 'country'>selected</cfif>>Country</option>
-                <option value="regionname" <cfif orderby EQ 'regionname'>selected</cfif>>Region</option>
-                <option value="s.programID" <cfif orderby EQ 's.programID'>selected</cfif>>Program</option>
-                <option value="hostid" <cfif orderby EQ 'hostid'>selected</cfif>>Family</option>
-                <cfif client.companyid EQ 5>
-	                <option value="companyshort" <cfif orderby EQ 'companyshort'>selected</cfif>>Company</option>
-                </cfif>
-            </select>            
-        </td>
-		---->
-        <td>
-            Records Per Page<br />
-            <select name="recordsToShow">
-                <option <cfif recordsToShow EQ 25>selected</cfif>>25</option>
-                <option <cfif recordsToShow EQ 50>selected</cfif>>50</option>
-                <option <cfif recordsToShow EQ 100>selected</cfif>>100</option>
-                <option <cfif recordsToShow EQ 250>selected</cfif>>250</option>
-                <option <cfif recordsToShow EQ 500>selected</cfif>>500</option>
-            </select>            
-        </td>
-    </tr>
-</table>
-</Cfform>
-<Br />
-</td>
-</tr>
-</table>
-
-<table width=100% cellpadding=4 cellspacing=0 class="Section">
-	<tr>
-    	<Td>ID</Td><td>First Name</td><Td>Last Name</Td><Td>Tour</Td><Td>Registered</Td><td>Verified</td><td>Paid</td><td>Permission</td>
-    	<td>Flights</td><td>Profile</td><td>Release Forms</td><td>Company</td><td></td>
-    </tr>
-
-
-    <cfif tours.recordcount eq 0>
+ <table id="report" width=100%>
         <tr>
-            <Td colspan=5 align="Center">Please use the filters above to view students.</Td>
+            <th>Trip</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Total Reg</th>
+            <th>M/F</th>
+            <th>Flight Report</th>
+            <th></th>
         </tr>
-    <cfelse>
-        <cfloop query="tours">
-        <tr  <cfif tours.currentrow mod 2>bgcolor= '##CCCCCC' </cfif> onMouseOver="this.bgColor='##cfe5f9';" onMouseOut="this.bgColor='<cfif tours.currentrow mod 2>##CCCCCC<cfelse>##F7F7F7</cfif>';">
-        	
-   			<td><a href='http://ise.exitsapplication.com/nsmg/tours/details.cfm?id=#id#&student=#studentid#' title='Payment Details' rel='gb_page_center[675,600]'>#studentid#</a></td>
-        	<td><a href='tours/details.cfm?id=#id#&student=#studentid#' title="Payment Details" rel="gb_page_center[675,600]">#firstname#</a></td>
-            <td><a href="tours/details.cfm?id=#id#&student=#studentid#" title="Payment Details" rel="gb_page_center[675,600]">#familylastname#</a></td>
-            <Td><a href="tours/details.cfm?id=#id#&student=#studentid#" title="Payment Details" rel="gb_page_center[675,600]">#tour_name#</a></Td>
-            <Td>#DateFormat(date,'mm/dd/yyyy')#</Td>
-            <td align="center"><cfif verified is ''>----</a><cfelse>#DateFormat(verified,'mm/dd/yyyy')#</cfif></td>
-            <td align="center"><cfif paid is ''>-----</a><cfelse>#DateFormat(paid,'mm/dd/yyyy')#</cfif></td>
-            <td align="Center"><Cfif permissionForm is ''><a href="?curdoc=tours/mpdtours&permission=#id#&studentid=#tours.studentid#"><img src="pics/confirm_03.png" /><cfelse>#DateFormat(permissionForm, 'mm/dd/yyyy')#</Cfif></td>
-          <td align="Center"><a href='tours/flights.cfm?id=#id#' title="Flight Details" rel="gb_page_center[675,600]"><cfif flightinfo is ''><img src="pics/submitBlue.png" /><cfelse><img src="pics/view.png" /></cfif></a></td>
-            <td><a href="tours/tripsProfile.cfm?uniqueid=#uniqueid#&id=#id#"><img src="pics/view.png" /></a></td>
-            <td><a href="" onClick="javascript: win=window.open('student_app/section4/page22print.cfm?unqid=#uniqueid#', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
-          <img src="pics/view.png" /></a></td>
-          <td><cfif companyid eq 1>ISE<cfelseif companyid eq 10>CASE</cfif></td>
-          <td><form method="post" action="index.cfm?curdoc=tours/mpdtours"><input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></td>
-        </tr>  
+        <cfloop query="allTrips">
+        <cfquery name="tours" datasource="#application.dsn#">
+        select *, stu.familylastname, stu.firstname, stu.studentid, stu.UNIQUEID, stu.sex
+        from student_tours 
+        left join smg_students stu on stu.studentid = student_tours.studentid
+        left join smg_tours on smg_tours.tour_id = student_tours.tripid
+        where 1=1 
+		
+        and tripid = #tour_id#
+        order by date desc 
+        </cfquery>
+        <!----m/f stats---->
+
+        <Cfset male = 0>
+        <cfset female =0>
+        <cfif tours.recordcount gt 0>
+            <cfquery name=mstats dbtype="query">
+            select count(sex) as nom
+            from tours
+            where sex = 'male'
+             and tripid = #tour_id#
+            </cfquery>
+				<cfif mstats.nom is ''>
+                    	<Cfset male = 0>
+                 <cfelse>
+                 		<cfset male = #mstats.nom#>
+                </cfif>
+            <cfquery name=fstats dbtype="query">
+            select count(sex) as nof
+            from tours
+            where sex = 'female'
+            and tripid = #tour_id#
+            </cfquery>
+            	
+            	<cfif fstats.nof is ''>
+                    	<Cfset female = 0>
+                 <cfelse>
+                 		<cfset female = #fstats.nof#>
+				</cfif>
+        </cfif>
+        <tr>
+            <td>#tour_name#</td>
+            <td>#DateFormat(tour_start, 'mmmm d')# - #DateFormat(tour_end, 'mmmm d, yyyy')#</td>
+            <td>#tour_status#</td>
+            <td><cfset totreg = #male# + #female#>#totreg#</td>
+            <td>#male# / #female#</td>
+            <td><a href="tours/arrival_report.cfm?tripid=#tour_id#">Arr.</a> :: Dep.</td>
+            <td><div class="arrow"></div></td>
+        </tr>
+        <tr>
+            <td colspan="7">
+            <div id="table_title">
+         
+              <li class="idnumber">ID</li>
+              <li class="fname">First Name</li>
+              <li class="lname">Last Name</li>
+              <li class="sex">Sex </li>
+              <li class="Registered">Registered </li>
+              <li class="Verified">Verified</li>
+              <li class="Paid">Paid</li>
+              <li class="Permission">Permission</li>
+              <li class="Flights">Flights</li>
+              <li class="Profile">Profile</li>
+              <li class="Forms">Forms</li>
+              <li class="Company">Company</li>
+              <li class="delete">Delete</li>
+             
+         
+              </div>
+              
+                
+                
+                    <cfif tours.recordcount eq 0>
+                        <strong>No students are registered for this trip yet</strong>
+                    <cfelse>
+                    
+                        <cfloop query="tours">
+              
+              <div id="table_row">   
+              
+              <li class="idnumber"><a href='http://ise.exitsapplication.com/nsmg/tours/details.cfm?id=#id#&student=#studentid#' title='Payment Details' rel='gb_page_center[675,600]'>#studentid#</a></li>
+              <li class="fname"><a href='tours/details.cfm?id=#id#&student=#studentid#' title="Payment Details" rel="gb_page_center[675,600]">#firstname#</a></li>
+              <li class="lname"><a href="tours/details.cfm?id=#id#&student=#studentid#" title="Payment Details" rel="gb_page_center[675,600]">#familylastname#</a></li>
+              <li class="sex"> <a href="tours/details.cfm?id=#id#&student=#studentid#" title="Payment Details" rel="gb_page_center[675,600]">#sex#</a> </li>
+              <li class="Registered">#DateFormat(date,'mm/dd/yyyy')# </li>
+              <li class="Verified"><cfif verified is ''>----</a><cfelse>#DateFormat(verified,'mm/dd/yyyy')#</cfif></li>
+              <li class="Paid"><cfif paid is ''>-----</a><cfelse>#DateFormat(paid,'mm/dd/yyyy')#</cfif></li>
+              <li class="Permission" align="left"><Cfif permissionForm is ''><a href="?curdoc=tours/mpdtours&permission=#id#&studentid=#tours.studentid#"><img src="pics/confirm_03.png" border=0  /><cfelse>#DateFormat(permissionForm, 'mm/dd/yyyy')#</Cfif></li>
+              <li class="Flights"><a href='tours/flights.cfm?id=#id#' title="Flight Details" rel="gb_page_center[675,600]"><cfif flightinfo is ''><img src="pics/submitBlue.png" border=0 />
+              <cfelse><img src="pics/view.png" border=0/></cfif></a></li>
+              <li class="Profile"><a href="tours/tripsProfile.cfm?uniqueid=#uniqueid#&id=#id#"><img src="pics/view.png" border=0  /></a></li>
+              <li class="Forms"> <a href="" onClick="javascript: win=window.open('student_app/section4/page22print.cfm?unqid=#uniqueid#', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/view.png" border=0  /></a></li>
+              <li class="Company"><cfif companyid eq 1>ISE<cfelseif companyid eq 10>CASE</cfif></li>
+              <li class="delete"> <input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></li>
+              
+              </div>
+              
+
+                        </cfloop>
+                         
+                    </cfif>
+                
+ 			</td>
         </cfloop>
-    </cfif>
 
- </table>
+    </table>
 
+
+<!----
  <cfinclude template="../table_footer.cfm">
+ ---->
  </cfoutput>
 <br />
 </body>
