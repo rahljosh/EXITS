@@ -139,7 +139,7 @@
 		APPLICATION.EMAIL.errors = 'marcus@iseusa.com';
 
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		APPLICATION.PATH.base = 'C:/Websites/www/smg/extra/internal/';
+		APPLICATION.PATH.base = 'C:/Websites/www/student-management/extra/internal/';
 	
 	} else {
 		// ***** PRODUCTION Server Settings *****

@@ -4,17 +4,22 @@
     <meta name="Author" content="CSB">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <title>EXTRA - Exchange Training Abroad</title>
-    <link rel="stylesheet" href="../style.css" type="text/css">
     <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../style.css" type="text/css">
+    <link rel="stylesheet" href="../linked/css/onlineApplication.css" type="text/css">
     <link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css">
-    <link rel="stylesheet" href="../linked/css/basescript.css" type="text/css">
+    <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css">
+    <!-- Combine these into one single file -->
     <cfoutput>
     <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
     <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
     <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
     </cfoutput>
-    <!-- Basescript -->
-	<script src="../linked/js/basescript.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../linked/js/jquery.popupWindow.js"></script> <!-- Jquery PopUp Window -->
+    <script type="text/javascript" src="../linked/js/jquery.validate.js"></script> <!-- jquery form validation -->
+    <script type="text/javascript" src="../linked/js/jquery.metadata.js"></script> <!-- jquery form validation -->
+    <script type="text/javascript" src="../linked/js/jquery.maskedinput-1.2.2.min.js"></script> <!-- input plugin (phone,ssn,date) -->
+    <script type="text/javascript" src="../linked/js/basescript.js"></script> <!-- baseScript -->
 </head>
 
 <body>
