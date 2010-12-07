@@ -75,16 +75,16 @@
 		</tr>
 <cfloop query="hostcompanies">
 	<tr bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#"><a href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#hostcompanyid#" class="style4">
+		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#"><a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyid=#hostcompanyid#" class="style4">
 		  <div align="left">#hostcompanyid#</div></a></td>
-		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#"><a href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#hostcompanyid#" class="style4">
+		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#"><a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyid=#hostcompanyid#" class="style4">
 		  <div align="left">#name#</div></a></td>
 		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style1"><div align="left">#phone#</td>
 		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style1"><div align="left">#supervisor#</td>
 		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style1">
 		  <div align="left">#city#</div></a></td>
-		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style1"><a href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#hostcompanyid#" class="style4"><div align="left">#s#</div></a></td>
-		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style1"><a href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#hostcompanyid#" class="style4"><div align="left">
+		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style1"><a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyid=#hostcompanyid#" class="style4"><div align="left">#s#</div></a></td>
+		<td bgcolor="#iif(hostcompanies.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style1"><a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyid=#hostcompanyid#" class="style4"><div align="left">
 		<cfif #business_typeid# EQ 0> n/a <cfelse> #typebusiness# </cfif></div>
 		</a></td>
 		</tr>
@@ -93,7 +93,7 @@
 <br><br>
 </cfoutput>
 <div align="center">
-<a href="index.cfm?curdoc=hostcompany/new_hostcompany"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a></div>
+<a href="index.cfm?curdoc=hostcompany/hostCompanyInfo"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a></div>
 <br>
 
 <!--- <cfcatch type="any">

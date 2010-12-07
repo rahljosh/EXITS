@@ -232,7 +232,7 @@
 																								No new host companies have been added.
 																							<cfelse>
 																								<Cfloop query="new_hostcompanies">
-																									<A href="?curdoc=hostcompany/hostcompany_profile&hostcompanyid=#hostcompanyid#">#name# in  #city#, #statename#</A> <cfif homepage is not ''>:: <a href="#homepage#">homepage</a></cfif><br>
+																									<A href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyid=#hostcompanyid#">#name# in  #city#, #statename#</A> <cfif homepage is not ''>:: <a href="#homepage#">homepage</a></cfif><br>
 																								</Cfloop>
 																							</cfif>
 																							
