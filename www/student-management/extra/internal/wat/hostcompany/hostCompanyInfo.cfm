@@ -24,10 +24,13 @@
     <cfparam name="FORM.business_typeID" default="">
     <cfparam name="FORM.businessTypeOther" default="">
     <cfparam name="FORM.address" default="">
-    <cfparam name="FORM.address2" default="">
     <cfparam name="FORM.city" default="">
     <cfparam name="FORM.state" default="">
     <cfparam name="FORM.zip" default="">
+    <cfparam name="FORM.workSiteAddress" default="">
+    <cfparam name="FORM.workSiteCity" default="">
+    <cfparam name="FORM.workSiteState" default="">
+    <cfparam name="FORM.workSiteZip" default="">
     <cfparam name="FORM.housing_options" default="">
     <cfparam name="FORM.housing_cost" default="">
     <cfparam name="FORM.closest_airport" default="">
@@ -48,10 +51,13 @@
             eh.business_typeID, 
             eh.name,
             eh.address,
-            eh.address2,
             eh.city, 
             eh.state,
             eh.zip,
+            eh.workSiteAddress,
+            eh.workSiteCity,
+            eh.workSiteState,
+            eh.workSiteZip,
             eh.phone, 
             eh.fax,
             eh.email,
@@ -69,11 +75,14 @@
             eh.closest_airport,
             eh.arrivalInstructions,
             et.business_type as typeBusiness, 
-            s.state as stateName            
+            s.stateName as stateName,  
+            workSiteS.stateName as workSiteStateName            
         FROM 
         	extra_hostcompany eh
         LEFT OUTER JOIN 
         	smg_states s ON eh.state = s.ID
+        LEFT OUTER JOIN 
+        	smg_states workSiteS ON eh.workSiteState = workSiteS.ID
         LEFT OUTER JOIN 
         	extra_typebusiness et ON et.business_typeID = eh.business_typeID
         WHERE 
@@ -237,10 +246,13 @@
                         name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
                         business_typeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.business_typeID#">,
                         address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
-                        address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
                         city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
                         state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
                         zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+                        workSiteAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteAddress#">,
+                        workSiteCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteCity#">,
+                        workSiteState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workSiteState#">,
+                        workSiteZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteZip#">,
                         housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
                         closest_airport = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.closest_airport#">,
@@ -269,10 +281,13 @@
                         name,
                         business_typeID,
                         address,
-                        address2,
                         city,
                         state,
                         zip,
+                        workSiteAddress,
+                        workSiteCity,
+                        workSiteState,
+                        workSiteZip,
                         housing_options,
                         housing_cost,
                         closest_airport,
@@ -292,28 +307,31 @@
                     VALUES 
                     (
                     	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
-                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.business_typeID#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
-                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.closest_airport#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalInstructions#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
-                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
-                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.business_typeID#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteAddress#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteCity#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workSiteState#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteZip#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.closest_airport#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalInstructions#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                     )
                 </cfquery>
                 
@@ -341,10 +359,13 @@
 			FORM.name = qGetHostCompanyInfo.name;
 			FORM.business_typeID = qGetHostCompanyInfo.business_typeID;
 			FORM.address = qGetHostCompanyInfo.address;
-			FORM.address2 = qGetHostCompanyInfo.address2;
 			FORM.city = qGetHostCompanyInfo.city;
 			FORM.state = qGetHostCompanyInfo.state;
 			FORM.zip = qGetHostCompanyInfo.zip;
+			FORM.workSiteAddress = qGetHostCompanyInfo.workSiteAddress;
+			FORM.workSiteCity = qGetHostCompanyInfo.workSiteCity;
+			FORM.workSiteState = qGetHostCompanyInfo.workSiteState;
+			FORM.workSiteZip = qGetHostCompanyInfo.workSiteZip;
 			FORM.housing_options = qGetHostCompanyInfo.housing_options;
 			FORM.housing_cost = qGetHostCompanyInfo.housing_cost;
 			FORM.closest_airport = qGetHostCompanyInfo.closest_airport;
@@ -463,29 +484,13 @@
                 <tr>
                     <td valign="top">
 
-                    	<!--- HOST COMPANY LOGO --->
-                        <table width="135px" align="left" cellpadding="2">
-                            <tr>
-                                <td valign="top">
-									<cfif FileExists("#APPLICATION.PATH.hostLogo##qGetHostCompanyInfo.hostCompanyID#.#qGetHostCompanyInfo.picture_type#")>
-                                        <img src="../uploadedfiles/web-hostlogo/#qGetHostCompanyInfo.hostCompanyID#.#qGetHostCompanyInfo.picture_type#" width="135" /><br />
-                                        <a class="nav_bar" href="" onClick="javascript: win=window.open('hostcompany/upload_picture.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Change Picture</a>
-                                    <cfelseif NOT VAL(qGetHostCompanyInfo.hostCompanyID)>
-                                        <img src="../pics/no_logo.jpg" width="135" border="0">
-                                    <cfelse>
-                                        <a class="nav_bar" href="" onClick="javascript: win=window.open('hostcompany/upload_picture.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/no_logo.jpg" width="135" border="0"></a>
-                                    </cfif>
-                                </td>
-                            </tr>
-						</table>
-
                         <!--- HOST COMPANY INFO - READ ONLY --->
-                        <table width="600px" align="center" cellpadding="2" class="readOnly">
+                        <table width="100%" align="center" cellpadding="2" class="readOnly">
                             <tr>
-                                <td align="center" colspan="2" class="title1"><p>#qGetHostCompanyInfo.name# <br /> #qGetHostCompanyInfo.phone#</p></td>
+                                <td align="center" colspan="2" class="title1"><p>#qGetHostCompanyInfo.name# (###qGetHostCompanyInfo.hostCompanyID#)</td>
                             </tr>
                             <tr>
-                                <td width="35%" align="right" class="style1"><strong>Business Type:</strong></td>
+                                <td width="40%" align="right" class="style1"><strong>Business Type:</strong></td>
                                 <td class="style1">#qGetHostCompanyInfo.typebusiness#</td>
                             </tr>
                             <tr>
@@ -499,9 +504,9 @@
                         </table>
 
                         <!--- HOST COMPANY INFO - EDIT PAGE --->
-                        <table width="600px" align="center" cellpadding="2" class="editPage">
+                        <table width="100%" align="center" cellpadding="2" class="editPage">
                             <tr>
-                                <td width="35%" align="right" class="style1"><strong>Business Name:</strong> </td>
+                                <td width="40%" align="right" class="style1"><strong>Business Name:</strong> </td>
                                 <td><input type="text" name="name" value="#FORM.name#" class="style1" size="35" maxlength="100"></td>
                             </tr>
                             <tr>
@@ -552,13 +557,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="25%" class="style1" align="right"><strong>Address 2:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.address2#</span>
-                                                <input type="text" name="address2" value="#FORM.address2#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td class="style1" align="right"><strong>City</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.city#</span>
@@ -591,7 +589,57 @@
                         </table> 
                         
                         <br />
+
+                        <!--- WORK SITE ADDRESS --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+								<td bordercolor="##FFFFFF">
+
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Work Site Address</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.workSiteAddress#</span>
+                                                <input type="text" name="workSiteAddress" value="#FORM.workSiteAddress#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>City</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.workSiteCity#</span>
+                                                <input type="text" name="workSiteCity" value="#FORM.workSiteCity#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>		
+                                        <tr>
+                                            <td class="style1" align="right"><strong>State:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#qGetHostCompanyInfo.workSitestateName#</span>
+                                                <select name="workSiteState" class="style1 editPage">
+                                              		<option value="0"></option>
+                                              		<cfloop query="qGetStateList">
+		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.workSiteState>selected</cfif>>#qGetStateList.stateName#</option>
+        	                                      	</cfloop>
+	                                            </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Zip:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.workSiteZip#</span>
+                                                <input type="text" name="workSiteZip" value="#FORM.workSiteZip#" class="style1 editPage" size="35" maxlength="10">
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table> 
                         
+                        <br />
+
                         <!--- HOUSING --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
@@ -627,37 +675,6 @@
                             </tr>
                         </table> 
 
-						<br />
-
-                        <!--- ARRIVAL INFORMATION --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-								<td bordercolor="##FFFFFF">
-
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Information</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Aiport:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.closest_airport#</span>
-                                                <input type="text" name="closest_airport" value="#FORM.closest_airport#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.arrivalInstructions#</span>
-                                                <textarea name="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
-                                            </td>
-                                        </tr>		
-                                    </table>
-
-                                </td>
-                            </tr>
-                        </table> 
-                        
                         <br />
 
                 	</td>        
@@ -795,6 +812,37 @@
                         </table> 
 
 						<br />                        
+
+                        <!--- ARRIVAL INFORMATION --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+								<td bordercolor="##FFFFFF">
+
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Information</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Aiport:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.closest_airport#</span>
+                                                <input type="text" name="closest_airport" value="#FORM.closest_airport#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.arrivalInstructions#</span>
+                                                <textarea name="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
+                                            </td>
+                                        </tr>		
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table> 
+                        
+						<br />
                         
     				</td>
 				</tr>
