@@ -71,6 +71,11 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add('Low Wage must be a numeric value');
             }			
+			
+            if ( NOT LEN(FORM.wage_type) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add('Wage Type is required');
+            }
 		</cfscript>
 
         <!--- // Check if there are no errors --->
@@ -181,13 +186,20 @@
     -->
     </style>
 </head>
+<body>
 
+<!--- Reload Opener / Close PopUp --->
 <cfif FORM.submitted AND NOT SESSION.formErrors.length()>
-	<!--- Reload Opener Window --->
-    <body onLoad="opener.location.reload(); setTimeout(window.close, 3000)" >   
-<cfelse>
-    <body>
-</cfif>
+	<script type="text/JavaScript">
+        $(document).ready(function() {
+            // Reload Opener
+            opener.location.reload();
+            // Close Pop UP
+            setTimeout(window.close, 2000);
+        });	
+    //-->
+    </script>
+</cfif>    
 
 <cfoutput>
 
@@ -213,7 +225,7 @@
                     </tr>
 				</table>    
     
-                <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td valign="top">
 
@@ -247,11 +259,10 @@
                             <input type="radio" name="sex" id="genderMale" value="1" <cfif FORM.sex EQ 1> checked="checked" </cfif> /><label for="genderMale">Male</label>
                             <input type="radio" name="sex" id="genderFemale" value="2" <cfif FORM.sex EQ 2> checked="checked" </cfif> /><label for="genderFemale">Female</label>
                         </td>
-                    	<td class="style1" align="right"><strong>Positions Available:&nbsp;</strong></td>
+                    	<td class="style1" align="right"><strong>Available Positions:&nbsp;</strong></td>
                         <td class="style1">
                         	<select name="avail_position" id="avail_position" class="style1" tabindex="7">
-                                <option value="" <cfif NOT VAL(FORM.avail_position)> selected="selected" </cfif> ></option>
-                                <cfloop from="1" to="20" index="i">
+                                <cfloop from="0" to="20" index="i">
                                 	<option value="#i#" <cfif FORM.avail_position EQ i> selected="selected" </cfif> >#i#</option>
                                 </cfloop>
                             </select>
