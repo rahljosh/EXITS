@@ -155,14 +155,12 @@
         	extra_candidates ec
         LEFT JOIN 
         	smg_programs p ON p.programid = ec.programid
-            	AND	
-                	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-				AND
-                    p.enddate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         WHERE 
         	ec.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#"> 
         AND 
         	ec.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND
+            ec.enddate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         ORDER BY 
         	p.programid
     </cfquery>
@@ -178,14 +176,12 @@
         	extra_candidates ec
         INNER JOIN 
         	smg_programs p ON p.programid = ec.programid
-            	AND	
-                	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-				AND
-                    p.startdate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         WHERE 
         	ec.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#"> 
         AND 
         	ec.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND
+            ec.startdate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">            
         ORDER BY 
         	p.programid
     </cfquery>
@@ -826,7 +822,7 @@
                                         <cfloop query="qGetJobs">
                                             <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                                                 <td class="style1">
-                                                	<a href="javascript:openWindow('hostcompany/edit_newjob.cfm?jobid=#id#', 300, 600);">
+                                                	<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#qGetJobs.ID#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
 	                                                    #qGetJobs.title#
                                                     </a>
                                                 </td>
@@ -837,7 +833,7 @@
                                         <cfif VAL(qGetHostCompanyInfo.hostCompanyID) AND ListFind("1,2,3,4", CLIENT.userType)>
                                             <tr>
                                                 <td colspan="3" align="center">
-                                                    <a href="javascript:openWindow('hostcompany/add_newjob.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);" > 
+                                                    <a href="javascript:openWindow('hostcompany/jobInfo.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);" > 
                                                         <img src="../pics/add-job.gif" width="64" height="20" border="0" />
                                                     </a>
                                                 </td>
