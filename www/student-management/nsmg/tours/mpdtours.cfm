@@ -1,7 +1,7 @@
 <head>
 <!----Script for greybox---->
 <script type="text/javascript" language="JavaScript">
-    var GB_ROOT_DIR = "http://smg.local/nsmg/greybox/";
+    var GB_ROOT_DIR = "https://ise.exitsapplication.com/nsmg/greybox/";
 </script>
 <script type="text/javascript" src="greybox/AJS.js"></script>
 <script type="text/javascript" src="greybox/AJS_fx.js"></script>
@@ -216,6 +216,7 @@ where 1=1
 </table>
 ---->
 <cfoutput>
+
 Below are all trips in the system. Click on a row to view students that have registerd for the tour.  To view the Flight Report, click on View under Flight Report.  You will then have the option to generate the Arrival or Departure Report.<br /><Br />
 Students are ordered by Registration Date.  You can always search a list by simply pressing CTRL-F and typing in your searh term. (Name, ID, Search anything displayed the screen)<br /><br />
 
@@ -336,7 +337,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
 				<cfif check_siblings.recordcount gt 0>
                     <cfloop query="check_siblings">
                            <div id="table_sibling">   
-              			  <li class="count"></li>
+              			  <li class="count"></li> 
                           <li class="idnumber"></li>
                           <li class="fname">#name#</li>
                           <li class="lname">#lastname#</li>

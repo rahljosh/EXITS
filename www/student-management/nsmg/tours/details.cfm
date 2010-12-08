@@ -57,7 +57,7 @@
 </style>
 </head>
 
-<body>
+<body> 
 
 <div class="box">
   <div class="topleft">
@@ -67,15 +67,20 @@
 	<cfquery datasource="#application.dsn#">
     update student_tours
     set studentid = '#form.studentid#',
-    	tripid = '#form.trip#',
-        email = '#form.stuEmail#'
+    	tripid = '#form.trip#'
    where id = #form.updatestudent#     
+    </cfquery>
+    <cfquery datasource="#application.dsn#">
+    update smg_students
+    set email = '#form.stuEmail#'
+    where studentid = #form.studentid#
     </cfquery>
 </cfif>
 <Cfif isDefined('form.updatecc')>
+<cfset EncrpytedCC = encrypt(form.cc, 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', "desede", "hex")>
 	<cfquery datasource="#application.dsn#">
     update student_tours
-    set cc = '#form.cc#',
+    set cc = '#EncrpytedCC#',
     	cc_year = '#form.cc_year#',
         cc_month = '#form.cc_month#',
         billingAddress = '#form.billingAddress#',
@@ -172,9 +177,9 @@
             <cfinvokeargument name="email_replyto" value="#details.email#">
             <cfinvokeargument name="email_subject" value="Payment Processed">
             <cfinvokeargument name="email_message" value="#email_message#">
-          
+          <!----
             <cfinvokeargument name="email_file" value="#AppPath.tours##tourinfo.packetfile#">
-      
+      	---->
         </cfinvoke>	
     
     
@@ -314,8 +319,9 @@ where tour_status <> 'inactive'
     <cfif details.paid is ''>
     <form method="post" action="details.cfm?id=#url.id#">
     <input type="hidden" name="updatecc" value=#url.id#>
+     <cfset decrpytedCC =decrypt(details.cc, 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', "desede", "hex")>
    	<tr>
-    	<Td>CC Number:</Td><td><input type="text" value="#details.cc#" name="cc" /></td>
+    	<Td>CC Number:</Td><td><input type="text" value="#decrpytedCC#" name="cc" /></td>
     </tr>
     <tr>
     	<Td>Expires:</Td><Td><input type="text" size=2 name="cc_month" value="<cfif len(details.cc_month) eq 1>0#details.cc_month#<cfelse>#details.cc_month#</cfif>"/> / <input type="text" size=4 name="cc_year" value="#DateFormat(details.cc_year, 'yyyy')#"/></Td>
