@@ -8,7 +8,7 @@
 		THIS.Name = "extra"; // "extra" & Hash(GetCurrentTemplatePath());
 		THIS.ApplicationTimeout = CreateTimeSpan( 1, 0, 0, 0 ); // Application Expires in 1 day
 		THIS.SessionManagement = true;
-		THIS.sessionTimeout = CreateTimeSpan( 0, 4, 0, 0 ); // Session Expires in 4 hours
+		THIS.sessionTimeout = CreateTimeSpan( 0, 8, 0, 0 ); // Session Expires in 4 hours
 		THIS.ClientManagement = true;
 		
 		// Create a function that let us create CFCs from any location

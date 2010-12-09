@@ -47,16 +47,19 @@
 			<!--- Application Body --->
             <div class="form-container">
             
-                <p class="legend">Please upload supporting documents on this page. After upload, click on edit to select a category for the file.</p>
+                <p class="legend">
+                	Please upload supporting documents on this page. <strong>After upload, click on edit to select a category for the file.</strong> <br /> 
+                    Besides the agreement and English Assessment (uploaded by your International Representative). You also need to upload:
+				</p>
                 
                 <p class="legend">
-                    Besides the agreement and English Assessment (uploaded by your International Representative). You also need to upload: <br /><br />
-                    
-                    1. Enrollment confirmation from the school (proof of student status) <br />
+                    1. Enrollment confirmation from the school (proof of student status) <br /> 
                     2. Translation after the enrollment confirmation from the school <br />
                     3. Passport copy <br />
-                    4. Job offer agreement  (only for the Self-placement participants) <br />
-                    5. Walk-in agreement (only for the Walk-in participants) <br />
+                    4. CSB Resume  (only for the CSB-placement participants) <br />
+                    5. Signed job offer agreement (only for the Self-placement participants) <br />
+                    6. Walk-in agreement (only for the Walk-in participants- – i.e. Argentina and Brazil) <br />
+                    7. Orientation sign-off (after the orientation has taken place) <br />
                 </p>
                 
                 <!--- Upload Documents --->    

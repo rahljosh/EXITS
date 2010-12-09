@@ -35,12 +35,13 @@
 		}    
 		
 		// Replace Variables 
-		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{firstName}",qGetCandidateInfo.firstName,"all");
-		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{lastName}",qGetCandidateInfo.lastName,"all");
+		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{firstName}","<u>" & qGetCandidateInfo.firstName & "</u>","all");
+		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{lastName}","<u>" & qGetCandidateInfo.lastName & "</u>","all");
 		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{csbName}",APPLICATION.CSB.name,"all");
-		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{csbMainSite}",APPLICATION.SITE.URL.main,"all");
+		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{csbMainSite}","<u>" & APPLICATION.SITE.URL.main & "</u>","all");
 		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{csbTollFree}",APPLICATION.CSB.toolFreePhone,"all");
-		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{date}",DateFormat(now(), 'mmmm dd, yyyy'),"all");
+		watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{intlRepName}", "<u>" & APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName & "</u>","all");
+		//watApplicationAgreement = ReplaceNoCase(watApplicationAgreement,"{date}",DateFormat(now(), 'mmmm dd, yyyy'),"all");	
 
 		// Get Questions for this section
 		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section2');
