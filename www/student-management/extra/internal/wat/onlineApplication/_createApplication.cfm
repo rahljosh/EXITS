@@ -164,18 +164,22 @@
             
                 <span class="title">Candidate Application</span> 
                 <span class="text">
-                    Candidates will fill out their own application.
-                    Candidates must have an email account and internet access to fill out the application. <br />
-                    PS: An account is created for the candidate.
+					If you choose Candidate under the Application type, an account will be created for the particular candidate, who must have a valid email account and Internet access. 
+                    He/she will receive the login information and will further be able to login, fill-out the application and upload all required documents. 
+                    Once the application is ready, you will be able to check it and Approve/Deny it. By approving it, the application will be submitted to CSB for the review.                     
 				</span>
                 
                 <span class="title">Office Application</span>
                 <span class="text">
-                    If you have a hard copy of an application that you would like to submit to CSB.
-                    You will fill out the application for a candidate.  <br />
-                    PS: An account is NOT created for the candidate.
+                    If you choose Office under the Application type, you (the International Representative) and your staff will directly fill-out the application for a candidate and 
+                    submit it to CSB for the review. <br />
                 </span>
-                
+
+				<span class="title"></span>
+                <span class="text">
+					PS: You will have access to all candidates submitted to CSB. You will be able to check their status and information (no edit).
+                </span>
+
             </div>
             
             <div class="field">
