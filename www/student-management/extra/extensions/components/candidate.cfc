@@ -296,6 +296,23 @@
 	</cffunction>
 
 
+	<!--- Delete Candidate --->
+	<cffunction name="deleteCandidate" access="public" returntype="void" output="false" hint="Sets a candidate as deleted">
+		<cfargument name="candidateID" required="yes" hint="candidate ID" />
+			
+		<cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+				UPDATE
+                	extra_candidates
+                SET
+                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+				WHERE
+	                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+		</cfquery>
+		
+	</cffunction>
+
+
 	<!--- Check Login --->
 	<cffunction name="authenticateCandidate" access="public" returntype="query" output="false" hint="Check candidate credentials">
 		<cfargument name="email" required="yes" hint="Email Address" />
@@ -592,13 +609,15 @@
                     extra_candidates ec ON aps.StatusID = ec.applicationStatusID 
                     	AND 
                         	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    	AND 
+                        	ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                         <cfif VAL(ARGUMENTS.intRep)>
                         AND
                         	ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
                 		</cfif>
                 WHERE            
                     aps.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">        
-                
+
 				<cfif VAL(ARGUMENTS.applicationStatusID)>
                 	AND
                     	aps.statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">
@@ -646,6 +665,8 @@
         			smg_users branch ON branch.userid = c.branchid                
                 WHERE            
                     c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+				AND
+					c.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 AND 
                     c.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#"> 
                 <cfif VAL(ARGUMENTS.intRep)>
