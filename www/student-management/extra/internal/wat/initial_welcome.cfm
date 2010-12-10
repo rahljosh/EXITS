@@ -216,7 +216,7 @@
 						<table width="100%" class="applicationStatsTable" cellspacing="0" cellpadding="5" valign="top">
                             <tr style="min-height:12px;">
                                 <th colspan="2" class="applicationStatsStudent">Student</th>
-								<th colspan="2" class="applicationStatsBranch">Intl. Branch</th>
+								<!--- <th colspan="2" class="applicationStatsBranch">Intl. Branch</th> --->
                                 <th colspan="2" class="applicationStatsIntlRep">Intl. Rep.</th>
                                 <th colspan="3" class="applicationStatsCSB">CSB</th>
                             </tr>
@@ -237,7 +237,7 @@
                             <!--- Intl. Reps --->
                             <cfif CLIENT.userType EQ 8>
                                 <tr>
-                                    <td colspan="4" align="right">Applications you are entering can be found here </td>
+                                    <td colspan="2" align="right">Applications you are <br /> entering can be found here </td>
                                     <td class="applicationStatsEnterHere"></td>
                                 </tr>
                                 <tr>

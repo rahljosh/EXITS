@@ -15,10 +15,31 @@
 	
     <!--- Param URL Variables --->
     <cfparam name="URL.statusID" default="0">
+	<cfparam name="URL.uniqueID" default="0">
 
     <cfscript>	
 		// Get Current Status
 		qGetStatus = APPLICATION.CFC.onlineApp.getApplicationStatusByID(statusID=URL.statusID);
+
+		// Set Candidate Record as Deleted
+		if ( LEN(URL.uniqueID) ) {
+			// Get Candidate Info
+			qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
+			
+			if ( qGetCandidateInfo.recordCount) {
+				// Set Candidate as Deleted
+				isDeleted = APPLICATION.CFC.candidate.deleteCandidate(candidateID=qGetCandidateInfo.candidateID);
+		
+				// Set Page Message
+				SESSION.pageMessages.Add("Candidate " & qGetCandidateInfo.firstName & " " & qGetCandidateInfo.lastName & " successfully deleted");
+			} else {
+				SESSION.formErrors.Add("Candidate could not be deleted");
+			}
+
+			// Reload page with updated information
+			location("index.cfm?curdoc=onlineApplication/index&action=#URL.action#&statusID=#URL.statusID#", "no");
+			
+		}
 		
 		if ( VAL(CLIENT.usertype) LTE 4 ) {
 			// Get List
@@ -47,6 +68,18 @@
     </div>
         
 	<br />
+
+	<!--- Page Messages --->
+    <gui:displayPageMessages 
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
+        messageType="section"
+        />
+    
+    <!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
     
     <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
         <tr bgcolor="##4F8EA4">
@@ -92,7 +125,7 @@
                 <td class="style5">
                     <a href="onlineApplication/index.cfm?action=displayLogin&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpDisplayLogin">[View Login]</a>
                     &nbsp;
-                    <a href="onlineApplication/index.cfm?action=delete&uniqueID=#qGetCandidates.uniqueID#" class="style4">[Delete]</a>
+                    <a href="index.cfm?curdoc=onlineApplication/index&action=#URL.action#&statusID=#URL.statusID#&uniqueID=#qGetCandidates.uniqueID#" onclick="return confirmReceived();" class="style4">[Delete]</a>
                 </td>
             </tr>
         </cfloop>
@@ -105,23 +138,33 @@
 </cfoutput>
 
 <script type="text/javascript">
-// Pop Up Application 
-$('.popUpOnlineApplication').popupWindow({ 
-	height:600, 
-	width:1100,
-	centerBrowser:1,
-	scrollbars:1,
-	resizable:1,
-	windowName:'onlineApplication'
-}); 
+	// --- START OF VERICATION RECEIVED --- //
+	var confirmReceived = function() {
+		// Are you sure you would like to check DS-2019 verification for student #" + studentID + " as received?
+		if (confirm(" Are you sure you would like to delete this application? \n If you change your mind in the future, please contact suppport to reactivate this account.")){
+			return true; 
+		} else {
+			return false; 
+		}
+	}	
 
-// Pop Up Application 
-$('.popUpDisplayLogin').popupWindow({ 
-	height:250, 
-	width:600,
-	centerBrowser:1,
-	scrollbars:0,
-	resizable:1,
-	windowName:'loginInformation'
-}); 
+	// Pop Up Application 
+	$('.popUpOnlineApplication').popupWindow({ 
+		height:600, 
+		width:1100,
+		centerBrowser:1,
+		scrollbars:1,
+		resizable:1,
+		windowName:'onlineApplication'
+	}); 
+	
+	// Pop Up Application 
+	$('.popUpDisplayLogin').popupWindow({ 
+		height:250, 
+		width:600,
+		centerBrowser:1,
+		scrollbars:0,
+		resizable:1,
+		windowName:'loginInformation'
+	}); 
 </script>
