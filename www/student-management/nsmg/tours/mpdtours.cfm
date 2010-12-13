@@ -323,7 +323,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
               <li class="Profile"><a href="tours/tripsProfile.cfm?uniqueid=#uniqueid#&id=#id#"><img src="pics/view.png" border=0  /></a></li>
               <li class="Forms"> <a href="" onClick="javascript: win=window.open('student_app/section4/page22print.cfm?unqid=#uniqueid#', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/view.png" border=0  /></a></li>
               <li class="Company"><cfif companyid eq 1>ISE<cfelseif companyid eq 10>CASE</cfif></li>
-              <li class="delete"> <input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></li>
+              <li class="delete"><form method="post" action="index.cfm?curdoc=tours/mpdtours"><input type="hidden" name="delete" value="#id#" /> <input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></li>
               
               </div>
               <!----check for any siblings---->
