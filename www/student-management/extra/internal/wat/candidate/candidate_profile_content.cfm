@@ -27,7 +27,7 @@
         <td bgcolor="F3F3F3" valign="top" width="170px">
             <div align="center" style="padding-left:15px; padding-right:15px;">
                 <cfif FileExists('#expandPath("../../uploadedfiles/web-candidates/#get_candidate_unqid.candidateid#.jpg")#')>
-                    <img src="../../uploadedfiles/web-candidates/#candidateid#.jpg" width="135">
+                    <img src="../../uploadedfiles/web-candidates/#get_candidate_unqid.candidateid#.jpg" width="135">
                 <cfelse>
                     <img src="../../pics/no_stupicture.jpg" width="137" height="137">
                 </cfif>
