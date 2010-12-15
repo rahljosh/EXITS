@@ -160,9 +160,9 @@
             ecpc.placement_date,
             ecpc.startDate,
             ecpc.endDate,
-            ecpc.contactName,
-            ecpc.contactMethod,
-            ecpc.contactDate            
+            ecpc.selfConfirmationName,
+            ecpc.selfConfirmationMethod,
+            ecpc.selfConfirmationDate            
         FROM
         	extra_candidate_place_company ecpc
         INNER JOIN
@@ -282,9 +282,9 @@
 			$(".selfPlacementInfo").fadeIn("fast");
 		} else {
 			//erase data
-			$("#contactName").val("");
-			$("#contactMethod").val("");
-			$("#contactDate").val("");
+			$("#selfConfirmationName").val("");
+			$("#selfConfirmationMethod").val("");
+			$("#selfConfirmationDate").val("");
 			$(".selfPlacementInfo").fadeOut("fast");
 		}
 	}
@@ -891,31 +891,31 @@
                                         
                                         <!--- Only for Self Placement with Active Placement Information --->
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="hiddenField selfPlacementInfo">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Self Placement Information</td>
-                                        </tr>
-                                        <tr class="hiddenField selfPlacementInfo">
-                                            <td class="style1" align="right"><strong>Name:</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly">#qCandidatePlaceCompany.contactName#</span>
-                                                <input type="text" name="contactName" id="contactName" value="#qCandidatePlaceCompany.contactName#" size="45" class="style1 editPage">
-                                            </td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Self Placement Confirmation</td>
                                         </tr>
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Date:</strong></td>
                                             <td class="style1" colspan="3">
-                                                <span class="readOnly">#DateFormat(qCandidatePlaceCompany.contactDate, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="contactDate" id="contactDate" class="style1 datePicker editPage" value="#DateFormat(qCandidatePlaceCompany.contactDate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
+                                                <span class="readOnly">#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="selfConfirmationDate" id="selfConfirmationDate" class="style1 datePicker editPage" value="#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                            <td class="style1" align="right"><strong>Name:</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#qCandidatePlaceCompany.selfConfirmationName#</span>
+                                                <input type="text" name="selfConfirmationName" id="selfConfirmationName" value="#qCandidatePlaceCompany.selfConfirmationName#" size="45" class="style1 editPage">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Method:</strong></td>
                                             <td class="style1">
-                                                <span class="readOnly">#qCandidatePlaceCompany.contactMethod#</span>
-                                                <select name="contactMethod" id="contactMethod" class="style1 editPage"> 
+                                                <span class="readOnly">#qCandidatePlaceCompany.selfConfirmationMethod#</span>
+                                                <select name="selfConfirmationMethod" id="selfConfirmationMethod" class="style1 editPage"> 
                                                     <option value=""></option>
-                                                    <option value="Email" <cfif qCandidatePlaceCompany.contactMethod EQ 'Email'>selected</cfif> >Email</option>
-                                                    <option value="Phone" <cfif qCandidatePlaceCompany.contactMethod EQ 'Phone'>selected</cfif> >Phone</option>
-                                                    <option value="Fax" <cfif qCandidatePlaceCompany.contactMethod EQ 'Fax'>selected</cfif> >Fax</option>
+                                                    <option value="Email" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Email'>selected</cfif> >Email</option>
+                                                    <option value="Phone" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Phone'>selected</cfif> >Phone</option>
+                                                    <option value="Fax" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Fax'>selected</cfif> >Fax</option>
                                                 </select>
                                             </td>
                                         </tr>
