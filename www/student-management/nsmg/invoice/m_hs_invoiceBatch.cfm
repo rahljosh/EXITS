@@ -360,15 +360,15 @@ smg_charges
 							   
 							</cfif> --->
 						   
-							<!--- discount for scholarship students from CLS --->
-							<cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 1>
+							<!--- discount for scholarship students from CLS (DISCOUNT DISCONTINUED FOR FALL 2011 ON, as per Wayne's email Dec 15th 2010)--->
+							<!--- <cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 1>
 								<cfquery name="insertScholDisc" datasource="MySQL">
 								INSERT INTO smg_charges
 								(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
 								VALUES
 								(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Scholarship Student', 'scholarship discount', #Now()#, -200, -200, #client.userid#, #Now()#, #getHSstud.companyid#)   
 								</cfquery>                               
-							</cfif>
+							</cfif> --->
 						   
 						</cfif>
 					   
