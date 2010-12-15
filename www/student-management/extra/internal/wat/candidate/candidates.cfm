@@ -43,8 +43,11 @@
         	smg_users u ON u.userid = ec.intrep 	
         WHERE 
         	ec.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        AND    
+            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">            
 		AND
         	applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )     
+		
 		<cfif URL.status EQ 'canceled'>
             AND ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
         <cfelseif URL.status EQ 0>

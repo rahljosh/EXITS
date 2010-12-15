@@ -159,7 +159,10 @@
             ecpc.status,
             ecpc.placement_date,
             ecpc.startDate,
-            ecpc.endDate
+            ecpc.endDate,
+            ecpc.contactName,
+            ecpc.contactMethod,
+            ecpc.contactDate            
         FROM
         	extra_candidate_place_company ecpc
         INNER JOIN
@@ -206,6 +209,7 @@
 	$(document).ready(function() {
 		$(".formField").attr("disabled","disabled");
 		$(".dp-choose-date").fadeOut("fast");
+		displaySelfPlacementInfo();
 	});
 
 	function populateDate(dateValue) {
@@ -266,6 +270,22 @@
 			$("#reason_host").focus();
 		} else if (currentHostPlaceID == selectedHostID) {
 			$("#host_history").fadeOut("fast");
+		}
+	}
+	
+	var displaySelfPlacementInfo = function() { 
+		// Get Placement Info
+		getHostID = $("#hostcompanyID").val();
+		// Get Program Option
+		getProgramOption = $("#wat_placement").val();
+		if ( getHostID > 0 && getProgramOption == 'Self-Placement' ) {
+			$(".selfPlacementInfo").fadeIn("fast");
+		} else {
+			//erase data
+			$("#contactName").val("");
+			$("#contactMethod").val("");
+			$("#contactDate").val("");
+			$(".selfPlacementInfo").fadeOut("fast");
 		}
 	}
 	
@@ -834,7 +854,7 @@
                                                     <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.name#</strong></a>
                                                 </span>
                                                 
-                                                <select name="hostcompanyID_combo" class="style1 editPage" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value);"> 
+                                                <select name="hostcompanyID" id="hostcompanyID" class="style1 editPage" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo();"> 
 	                                                <option value="0"></option>
                                                     <cfloop query="qHostCompanyList">
                                                     	<option value="#qHostCompanyList.hostcompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostcompanyID>selected</cfif> > 
@@ -866,6 +886,37 @@
                                         	<td class="style1" align="right"><strong>Placement Date:</strong></td>
                                             <td class="style1" align="left">
 	                                        	#dateFormat(qCandidatePlaceCompany.placement_date, 'mm/dd/yyyy')#
+                                            </td>
+                                        </tr>
+                                        
+                                        <!--- Only for Self Placement with Active Placement Information --->
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="hiddenField selfPlacementInfo">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Self Placement Information</td>
+                                        </tr>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                            <td class="style1" align="right"><strong>Name:</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#qCandidatePlaceCompany.contactName#</span>
+                                                <input type="text" name="contactName" id="contactName" value="#qCandidatePlaceCompany.contactName#" size="45" class="style1 editPage">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                            <td class="style1" align="right"><strong>Date:</strong></td>
+                                            <td class="style1" colspan="3">
+                                                <span class="readOnly">#DateFormat(qCandidatePlaceCompany.contactDate, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="contactDate" id="contactDate" class="style1 datePicker editPage" value="#DateFormat(qCandidatePlaceCompany.contactDate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                            <td class="style1" align="right"><strong>Method:</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#qCandidatePlaceCompany.contactMethod#</span>
+                                                <select name="contactMethod" id="contactMethod" class="style1 editPage"> 
+                                                    <option value=""></option>
+                                                    <option value="Email" <cfif qCandidatePlaceCompany.contactMethod EQ 'Email'>selected</cfif> >Email</option>
+                                                    <option value="Phone" <cfif qCandidatePlaceCompany.contactMethod EQ 'Phone'>selected</cfif> >Phone</option>
+                                                    <option value="Fax" <cfif qCandidatePlaceCompany.contactMethod EQ 'Fax'>selected</cfif> >Fax</option>
+                                                </select>
                                             </td>
                                         </tr>
                                     </table>	
@@ -906,7 +957,7 @@
                                         	<td class="style1" align="right"><strong>Option:</strong></td>
                                         	<td class="style1" colspan="3">
 												<span class="readOnly">#get_candidate_unqid.wat_placement#</span>
-                                                <select name="wat_placement" class="style1 editPage">
+                                                <select name="wat_placement" id="wat_placement" onChange="displaySelfPlacementInfo();" class="style1 editPage">
                                                     <option value="">Select....</option>
                                                     <option value="Self-Placement" <cfif get_candidate_unqid.wat_placement EQ 'Self-Placement'>selected="selected"</cfif>>Self-Placement</option>
                                                     <option value="CSB-Placement" <cfif get_candidate_unqid.wat_placement EQ 'CSB-Placement'>selected="selected"</cfif>>CSB-Placement</option>

@@ -9,6 +9,10 @@
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.verification_arrival" default="0">
+<!--- Placement Information --->
+<cfparam name="FORM.contactName" default="">
+<cfparam name="FORM.contactMethod" default="">
+<cfparam name="FORM.contactDate" default="">
 
 <cfquery name="qGetCandidateInfo" datasource="mysql">
     SELECT 
@@ -101,9 +105,9 @@
 
 	
 <!---- HOST COMPANY HISTORY ---->
-<cfif VAL(FORM.hostCompanyID_combo)>
+<cfif VAL(FORM.hostcompanyID)>
 	
-	<cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostCompanyID_combo>
+	<cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostcompanyID>
 		
         <!--- Set old records to inactive --->
         <cfquery datasource="mysql">
@@ -114,7 +118,7 @@
         	WHERE
             	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
         </cfquery>
-        
+
         <!--- New Host Company Information --->
         <cfquery datasource="mysql">
             INSERT INTO 
@@ -126,25 +130,35 @@
                 startdate, 
                 enddate, 
                 status, 
-                reason_host
+                reason_host,
+                contactName,
+                contactMethod,
+                contactDate
             )
             VALUES 
             (	
             	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">, 
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID_combo#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">, 
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                <cfif LEN(FORM.program_startdate)>
+                <cfif IsDate(FORM.program_startdate)>
                 	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-                <cfif LEN(FORM.program_enddate)>
+                <cfif IsDate(FORM.program_enddate)>
                 	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactName#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactMethod#">,
+                <cfif IsDate(FORM.contactDate)>
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.contactDate)#">
+                <cfelse>
+                	<cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                </cfif>
 			)
 		</cfquery>
 	
@@ -155,17 +169,24 @@
             UPDATE 
             	extra_candidate_place_company
             SET 
-				<cfif LEN(FORM.program_startdate)>
+				<cfif IsDate(FORM.program_startdate)>
                     startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
                 <cfelse>
                     startdate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-				<cfif LEN(FORM.program_enddate)>
+				<cfif IsDate(FORM.program_enddate)>
                     enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
                 <cfelse>
                     enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-                status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">
+                status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">,
+                contactName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactName#">,
+                contactMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactMethod#">,
+                <cfif IsDate(FORM.contactDate)>
+                	contactDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.contactDate)#">
+                <cfelse>
+                	contactDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                </cfif>
             WHERE 
             	candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candcompid#">
 		</cfquery>
@@ -178,7 +199,7 @@
     UPDATE 
     	extra_candidates
     SET 
-        hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID_combo#">,
+        hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">,
         firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">, 
         lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">, 
         middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#">,
@@ -243,7 +264,7 @@
         <!--- change_requested_comment --->
         change_requested_comment = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.change_requested_comment#">,
         
-        <cfif LEN(FORM.cancel_date)>
+        <cfif isDate(FORM.cancel_date)>
         	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.cancel_date)#">, 
             active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
         <cfelse>
@@ -251,13 +272,13 @@
         </cfif>
         cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancel_reason#">,
         
-		<cfif LEN(FORM.program_startdate)>
+		<cfif isDate(FORM.program_startdate)>
         	startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
         <cfelse>
         	startdate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
        
-		<cfif LEN(FORM.program_enddate)>
+		<cfif isDate(FORM.program_enddate)>
         	enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
         <cfelse>
        		enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
