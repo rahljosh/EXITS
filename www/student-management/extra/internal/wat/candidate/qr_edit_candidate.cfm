@@ -10,9 +10,9 @@
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.verification_arrival" default="0">
 <!--- Placement Information --->
-<cfparam name="FORM.contactName" default="">
-<cfparam name="FORM.contactMethod" default="">
-<cfparam name="FORM.contactDate" default="">
+<cfparam name="FORM.selfConfirmationName" default="">
+<cfparam name="FORM.selfConfirmationMethod" default="">
+<cfparam name="FORM.selfConfirmationDate" default="">
 
 <cfquery name="qGetCandidateInfo" datasource="mysql">
     SELECT 
@@ -131,9 +131,9 @@
                 enddate, 
                 status, 
                 reason_host,
-                contactName,
-                contactMethod,
-                contactDate
+                selfConfirmationName,
+                selfConfirmationMethod,
+                selfConfirmationDate
             )
             VALUES 
             (	
@@ -152,10 +152,10 @@
                 </cfif>
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">, 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactName#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactMethod#">,
-                <cfif IsDate(FORM.contactDate)>
-                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.contactDate)#">
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
+                <cfif IsDate(FORM.selfConfirmationDate)>
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 </cfif>
@@ -180,12 +180,12 @@
                     enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
                 status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">,
-                contactName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactName#">,
-                contactMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactMethod#">,
-                <cfif IsDate(FORM.contactDate)>
-                	contactDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.contactDate)#">
+                selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
+                selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
+                <cfif IsDate(FORM.selfConfirmationDate)>
+                	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">
                 <cfelse>
-                	contactDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 </cfif>
             WHERE 
             	candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candcompid#">
