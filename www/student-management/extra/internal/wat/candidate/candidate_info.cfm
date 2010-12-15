@@ -538,18 +538,20 @@
             
                                                 <table width="100%" cellpadding="3" cellspacing="3" bordercolor="##C7CFDC" bgcolor="##F7F7F7">
                                                     <tr>
-                                                        <td colspan="4" class="style1">
-                                                        	<strong>Mailing Address:</strong> 
+                                                    	<td class="style1" align="right"><strong>Mailing Address:</strong></td>
+                                                        <td class="style1">
 															<span class="readOnly">#get_candidate_unqID.home_address#</span>
-                                                            <input type="text" class="style1 editPage" name="home_address" size=49 value="#get_candidate_unqID.home_address#" maxlength="100">
+                                                            <input type="text" class="style1 editPage" name="home_address" size="38" value="#get_candidate_unqID.home_address#" maxlength="100">
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="style1" align="right"><strong>City:</strong></td>
                                                         <td class="style1">
 															<span class="readOnly">#get_candidate_unqID.home_city#</span>
-                                                            <input type="text" class="style1 editPage" name="home_city" size=11 value="#get_candidate_unqID.home_city#" maxlength="100">
+                                                            <input type="text" class="style1 editPage" name="home_city" size="38" value="#get_candidate_unqID.home_city#" maxlength="100">
                                                         </td>
+                                                    </tr>
+                                                    <tr>
                                                         <td class="style1" align="right"><strong>Zip:</strong></td>
                                                         <td class="style1">
                                                         	<span class="readOnly">#get_candidate_unqID.home_zip#</span>
@@ -578,14 +580,14 @@
                                                         <td class="style1" align="right"><strong>Phone:</strong></td>
                                                         <td class="style1" colspan="3">
                                                         	<span class="readOnly">#get_candidate_unqID.home_phone#</span>
-                                                            <input type="text" class="style1 editPage" name="home_phone" size=38 value="#get_candidate_unqID.home_phone#" maxlength="50">
+                                                            <input type="text" class="style1 editPage" name="home_phone" size="38" value="#get_candidate_unqID.home_phone#" maxlength="50">
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="style1" align="right"><strong>Email:</strong></td>
                                                         <td class="style1" colspan="3">
                                                         	<span class="readOnly">#get_candidate_unqID.email#</span>
-                                                            <input type="text" class="style1 editPage" name="email" size=38 value="#get_candidate_unqID.email#" maxlength="100">
+                                                            <input type="text" class="style1 editPage" name="email" size="38" value="#get_candidate_unqID.email#" maxlength="100">
                                                         </td>
                                                     </tr>
                                                 </table>
