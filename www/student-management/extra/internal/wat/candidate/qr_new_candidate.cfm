@@ -81,7 +81,7 @@
 				'#form.passport_number#',<!----	'#form.passport_country#',	
 				<cfif form.passport_date NEQ ''>#CreateODBCDate(form.passport_date)#<cfelse>NULL</cfif>,
 				<cfif form.passport_expires NEQ ''>#CreateODBCDate(form.passport_expires)#<cfelse>NULL</cfif>,----> 
-				'#form.ssn#', '#form.wat_placement#', 
+				'#APPLICATION.CFC.UDF.encryptVariable(FORM.SSN)#', '#form.wat_placement#', 
 				<cfif form.wat_vacation_start NEQ ''>#CreateODBCDate(form.wat_vacation_start)#<cfelse>NULL</cfif>,
 				<cfif form.wat_vacation_end NEQ ''>#CreateODBCDate(form.wat_vacation_end)#<cfelse>NULL</cfif>, <!----'#form.wat_length#',---->
 				<!--- document control --->

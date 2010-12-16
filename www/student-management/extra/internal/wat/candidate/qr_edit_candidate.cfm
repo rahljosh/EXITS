@@ -226,7 +226,7 @@
         emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">, 
         passport_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.passport_number#">,
         programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">, 
-        ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ssn#">, 
+        ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(FORM.SSN)#">, 
         wat_participation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.wat_participation#">, 
         wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_placement#">,
 		

@@ -368,8 +368,10 @@
                                     <cfif VAL(get_candidate_unqid.applicationStatusID)>
                                     	<a href="onlineApplication/index.cfm?action=initial&uniqueID=#get_candidate_unqid.uniqueID#" class="style4 popUpOnlineApplication">[ Online Application ]</a> &nbsp;
                                     </cfif>
-                                    <a href="candidate/candidate_profile.cfm?uniqueid=#get_candidate_unqid.uniqueid#" class="style4" target="_blank">[ profile ]</span></a> &nbsp;
-                                    <a href="candidate/immigrationLetter.cfm?uniqueid=#get_candidate_unqid.uniqueid#" class="style4" target="_blank">[ Immigration Letter ]</span></a>
+                                    <cfif ListFind(CLIENT.userType, "1,2,3,4")>
+                                        <a href="candidate/candidate_profile.cfm?uniqueid=#get_candidate_unqid.uniqueid#" class="style4" target="_blank">[ profile ]</span></a> &nbsp;
+                                        <a href="candidate/immigrationLetter.cfm?uniqueid=#get_candidate_unqid.uniqueid#" class="style4" target="_blank">[ Immigration Letter ]</span></a>
+									</cfif>
                                 </td>
                             </tr>
                             <tr>
@@ -388,16 +390,17 @@
                                 <td class="style1">#dateFormat(get_candidate_unqID.entrydate, 'mm/dd/yyyy')#</td>
                             </tr>
                             <tr>
-                                <td align="right">&nbsp;</td>
+                                <td align="right">Candidate is</td>
                                 <td class="style1">
-                                	Candidate is <strong>
+                                	<strong>
 									<cfif get_candidate_unqID.status EQ 1>
                                         ACTIVE 
                                     <cfelseif get_candidate_unqID.status EQ 0>
                                         INACTIVE 
                                     <cfelseif get_candidate_unqID.status EQ 'canceled'>
                                         CANCELED
-                                    </cfif> </strong>
+                                    </cfif> 
+                                    </strong>
                                 </td>
                             </tr>													
                         </table>
@@ -597,8 +600,14 @@
                                         <tr>
                                             <td class="style1" align="right"><strong>Social Security ##:</strong></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#get_candidate_unqid.ssn#</span>
-                                                <input name="ssn" value="#get_candidate_unqid.ssn#" type="text" class="style1 editPage" size="32" maxlength="100">
+                                            	<span class="readOnly">
+                                                	<cfif ListFind(CLIENT.userType, "1,2,3,4")>
+                                                    	#APPLICATION.CFC.UDF.decryptVariable(get_candidate_unqid.SSN)#
+                                                    <cfelse>
+                                                    	#get_candidate_unqid.SSN#
+                                                    </cfif>                                                    
+                                                </span>
+                                                <input name="ssn" value="#APPLICATION.CFC.UDF.decryptVariable(get_candidate_unqid.SSN)#" type="text" class="style1 editPage" size="32" maxlength="100">
                                             </td>
                                         </tr>	
                                         <!--- Online App Field - Participant's English Level --->
@@ -749,7 +758,9 @@
                                         <tr bgcolor="##C2D1EF">
                                             <td colspan="3" class="style2" bgcolor="##8FB6C9">
                                                 &nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; 
-                                                [ <a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);"><font class="style2" color="##FFFFFF">Insurance Management</font></a> ]
+                                                <cfif ListFind(CLIENT.userType, "1,2,3,4")>
+	                                                [ <a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);"><font class="style2" color="##FFFFFF">Insurance Management</font></a> ]
+                                                </cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -845,7 +856,12 @@
                         
                                     <table width="100%" cellpadding=5 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-            	                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Placement Information [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#get_candidate_unqid.uniqueid#', 400, 750);" class="style2"> History </a> ]</span></td>
+            	                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Placement Information 
+                                            	<cfif ListFind(CLIENT.userType, "1,2,3,4")>
+		                                            [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#get_candidate_unqid.uniqueid#', 400, 750);" class="style2"> History </a> ]</span>
+        										</cfif>
+											</td>			                                                
                                         </tr>
                                         <tr>
                                         	<td class="style1" align="Left" colspan=2><strong>Company Name:</strong></td>
@@ -853,7 +869,11 @@
                                         <tr>
                                             <td class="style1" colspan=2 align="left">
                                             	<span class="readOnly">
-                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.name#</strong></a>
+                                                    <cfif ListFind(CLIENT.userType, "1,2,3,4")>
+	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.name#</strong></a>
+                                                	<cfelse>
+                                                    	#qCandidatePlaceCompany.name#
+                                                    </cfif>
                                                 </span>
                                                 
                                                 <select name="hostcompanyID" id="hostcompanyID" class="style1 editPage" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo();"> 
@@ -936,7 +956,12 @@
                         
                                     <table width="100%" cellpadding=5 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                        	<td class="style2" bgcolor="##8FB6C9" colspan="4">&nbsp;:: Program Information &nbsp;  [ <a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);"> <font class="style2" color="##FFFFFF"> History </font> </a> ]</span></td>
+                                        	<td class="style2" bgcolor="##8FB6C9" colspan="4">
+                                            	&nbsp;:: Program Information &nbsp;  
+                                            	<cfif ListFind(CLIENT.userType, "1,2,3,4")>    
+                                                	[ <a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);"> <font class="style2" color="##FFFFFF"> History </font> </a> ]</span>
+                                            	</cfif>
+                                            </td>
                                         </tr>						
                                         <tr>
                                         	<td class="style1" align="right" width="27%"><strong>Program:</strong></td>
@@ -984,7 +1009,11 @@
                                         <tr>
                                         	<td class="style1" colspan="4"> 
                                             	<span class="readOnly">
-                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qRequestedPlacement.hostcompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
+                                                    <cfif ListFind(CLIENT.userType, "1,2,3,4")>
+	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qRequestedPlacement.hostcompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
+                                                    <cfelse>
+                                                    	#qRequestedPlacement.name#
+                                                    </cfif>
                                                 </span>
                                                 
                                                 <select name="requested_placement" class="style1 editPage">
@@ -1125,7 +1154,7 @@
                                         <tr bgcolor="##C2D1EF">
                                         	<td colspan="4" class="style2" bgcolor="##8FB6C9">
                                             	&nbsp;:: Flight Information  &nbsp;
-                                                <a href="onlineApplication/index.cfm?action=flightInfo&uniqueID=#get_candidate_unqid.uniqueID#&completeApplication=0" class="style2 popUpFlightInformation">[ Edit ]</a>
+                                                <a href="onlineApplication/index.cfm?action=flightInfo&uniqueID=#get_candidate_unqid.uniqueID#&completeApplication=0" class="style2 popUpFlightInformation">[ Add/Edit ]</a>
                                             </td>
                                         </tr>	
                                         <tr>
