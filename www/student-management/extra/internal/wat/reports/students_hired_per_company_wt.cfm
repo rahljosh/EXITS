@@ -283,7 +283,11 @@
                         <td><span class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.countryname#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.email#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.ssn#</span></td>
+                        <td>
+                        	<cfif LEN(qTotalPerHostCompany.SSN)>
+                            	<span class="style1">#APPLICATION.CFC.UDF.decryptVariable(qTotalPerHostCompany.SSN)#</span>
+                            </cfif>                        
+                        </td>
                         <cfif LEN(qTotalPerHostCompany.ds2019)>
                             <td><span class="style1">#dateformat(qTotalPerHostCompany.startdate, 'mm/dd/yyyy')#</span></td>
                             <td><span class="style1">#dateformat(qTotalPerHostCompany.enddate, 'mm/dd/yyyy')# </span></td>

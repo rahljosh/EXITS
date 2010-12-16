@@ -368,7 +368,7 @@
                                     <cfif VAL(get_candidate_unqid.applicationStatusID)>
                                     	<a href="onlineApplication/index.cfm?action=initial&uniqueID=#get_candidate_unqid.uniqueID#" class="style4 popUpOnlineApplication">[ Online Application ]</a> &nbsp;
                                     </cfif>
-                                    <cfif ListFind(CLIENT.userType, "1,2,3,4")>
+                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         <a href="candidate/candidate_profile.cfm?uniqueid=#get_candidate_unqid.uniqueid#" class="style4" target="_blank">[ profile ]</span></a> &nbsp;
                                         <a href="candidate/immigrationLetter.cfm?uniqueid=#get_candidate_unqid.uniqueid#" class="style4" target="_blank">[ Immigration Letter ]</span></a>
 									</cfif>
@@ -601,10 +601,10 @@
                                             <td class="style1" align="right"><strong>Social Security ##:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">
-                                                	<cfif ListFind(CLIENT.userType, "1,2,3,4")>
+                                                	<cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                     	#APPLICATION.CFC.UDF.decryptVariable(get_candidate_unqid.SSN)#
                                                     <cfelse>
-                                                    	#get_candidate_unqid.SSN#
+                                                    	XXX-XX-XX#Right(APPLICATION.CFC.UDF.decryptVariable(get_candidate_unqid.SSN), 2)#
                                                     </cfif>                                                    
                                                 </span>
                                                 <input name="ssn" value="#APPLICATION.CFC.UDF.decryptVariable(get_candidate_unqid.SSN)#" type="text" class="style1 editPage" size="32" maxlength="100">
@@ -758,7 +758,7 @@
                                         <tr bgcolor="##C2D1EF">
                                             <td colspan="3" class="style2" bgcolor="##8FB6C9">
                                                 &nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; 
-                                                <cfif ListFind(CLIENT.userType, "1,2,3,4")>
+                                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                [ <a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);"><font class="style2" color="##FFFFFF">Insurance Management</font></a> ]
                                                 </cfif>
                                             </td>
@@ -858,7 +858,7 @@
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
             	                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
                                             	&nbsp;:: Placement Information 
-                                            	<cfif ListFind(CLIENT.userType, "1,2,3,4")>
+                                            	<cfif ListFind("1,2,3,4", CLIENT.userType)>
 		                                            [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#get_candidate_unqid.uniqueid#', 400, 750);" class="style2"> History </a> ]</span>
         										</cfif>
 											</td>			                                                
@@ -869,7 +869,7 @@
                                         <tr>
                                             <td class="style1" colspan=2 align="left">
                                             	<span class="readOnly">
-                                                    <cfif ListFind(CLIENT.userType, "1,2,3,4")>
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.name#</strong></a>
                                                 	<cfelse>
                                                     	#qCandidatePlaceCompany.name#
@@ -958,7 +958,7 @@
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
                                         	<td class="style2" bgcolor="##8FB6C9" colspan="4">
                                             	&nbsp;:: Program Information &nbsp;  
-                                            	<cfif ListFind(CLIENT.userType, "1,2,3,4")>    
+                                            	<cfif ListFind("1,2,3,4", CLIENT.userType)>    
                                                 	[ <a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);"> <font class="style2" color="##FFFFFF"> History </font> </a> ]</span>
                                             	</cfif>
                                             </td>
@@ -1009,7 +1009,7 @@
                                         <tr>
                                         	<td class="style1" colspan="4"> 
                                             	<span class="readOnly">
-                                                    <cfif ListFind(CLIENT.userType, "1,2,3,4")>
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qRequestedPlacement.hostcompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
                                                     <cfelse>
                                                     	#qRequestedPlacement.name#
