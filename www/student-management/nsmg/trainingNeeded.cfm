@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>WebEx Training</title>
-<link href="http://trips.exitsapplication.com/STB.css" rel="stylesheet" type="text/css" />
+<link href="http://iseusa.com/css/ISEStyle.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 <!--
 .wrapper {
@@ -33,7 +33,7 @@
 	height: 10px;
 }
 .boxTile2 {
-	background-image: url(http://trips.exitsapplication.com/images/loginTile.png);
+	background-image: url(http://iseusa.com/login/images/loginTile.png);
 	background-repeat: repeat-y;
 	width: 700px;
 }
@@ -113,7 +113,7 @@ This hour long WebEx session will go over the requirments and procedures that ar
 <cfloop query="qNextWebExMeeting">
 	<tr bgcolor="<cfif qNextWebExMeeting.currentrow mod 2>##F7F7F7<cfelse>##dbe9f2</cfif>" onMouseOver="this.bgColor='##cccccc';" onMouseOut="this.bgColor='<cfif qNextWebExMeeting.currentrow mod 2>##F7F7F7<cfelse>##dbe9f2</cfif>';">
     	<td>#DateFormat(date_started, 'mmmm d, yyyy')#</td><td>#TimeFormat(time_started, 'h:mm tt')# EST</td><td>#TimeFormat(time_ended, 'h:mm tt')# EST</td><Td><Cfif description is ''><span class="infoItalic">None Avail.</span><cfelse>#description#</Cfif></Td>
-        <td><a href="#webex_url#"><img src="http://www.iseusa.com/trips/images/reserve.png" border=0/></a></td>
+        <td><a href="#webex_url#"><img src="http://www.iseusa.com/trips/images/reserve_class.png" border=0/></a></td>
     </tr>
 </cfloop>
 	<tr>

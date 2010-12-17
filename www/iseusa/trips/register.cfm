@@ -143,6 +143,20 @@ h3{text-indent:10px;}
 </style>
 </head>
 
+
+ <!----Generate Randome ID string---->
+			<cfset ststring=structNew()>
+            <cfloop index="i" from="1" to="6" step="1">
+                <cfset a = randrange(48,122)>
+                <cfif (#a# gt 57 and #a# lt 65) or (#a# gt 90 and #a# lt 97)>
+                    <cfset ststring["#i#"]="E">
+                <cfelse> 
+                    <cfset ststring["#i#"]=#chr(a)#>
+                </cfif>
+            </cfloop>
+            <cfset unqid ="#ststring[1]##ststring[2]##ststring[3]##ststring[4]##ststring[5]##ststring[6]#">
+
+
 <cfparam name="url.tour_id" default="1">
 <cfparam name="form.select_trip" default="#url.tour_id#">
 <cfparam name="form.select_trip" default="#url.tour_id#">
@@ -202,9 +216,10 @@ This account was found in EXITS.  Trip information has been recorded but not ver
 <Cfloop list="#form.select_trip#" index=x>
 <cfif form.studentid is ''><cfset form.studentid = 0></cfif>
 <Cfif form.ret_studentid is ''><cfset form.ret_studentid = 0></Cfif>
+
 <cfquery datasource="#APPLICATION.DSN.Source#">
-insert into student_tours (studentid, tripid, cc, cc_year, nationality, stunationality, person1, person2, person3, med, billingAddress, billingCity, billingState, billingZip, billingcountry, cc_month, date, ip)
-			values (#form.ret_studentid#, #x#, '#form.cc#', #form.cc_year#, '#form.nationality#', '#form.stunationality#', '#form.person1#', '#form.person2#', '#form.person3#', '#form.med#',  '#form.billingAddress#', '#form.billingCity#', '#form.billingState#', '#form.billingZip#', '#form.billingcountry#', #form.cc_month#, now(), '#cgi.REMOTE_ADDR#')
+insert into student_tours (studentid, tripid, nationality, stunationality, person1, person2, person3, med, date, ip, unqid)
+			values (#form.ret_studentid#, #x#, '#form.nationality#', '#form.stunationality#', '#form.person1#', '#form.person2#', '#form.person3#', '#form.med#',   now(), '#cgi.REMOTE_ADDR#', '#form.unqid#')
 </cfquery>
 <cfif isDefined('form.host_siblings')>
 <cfquery name="tripid" datasource="#application.dsn.Source#">
@@ -212,9 +227,10 @@ select max(id) mastertripid
 from student_tours
 </cfquery>
     <cfloop list=#form.host_siblings# index=i>
+    <cfset sibEncrpytedCC = encrypt(cc, 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', "desede", "hex")> 
             <cfquery datasource="#APPLICATION.DSN.Source#">
-        insert into student_tours_siblings (fk_studentid, mastertripid,siblingid, tripid, nameOnCard, cc, cc_year, billingAddress, billingCity, billingState, billingZip, billingcountry, cc_month)
-                    values (#form.ret_studentid#, #tripid.mastertripid#, #i#, #x#, '#form.sibling_nameoncard#','#form.sibling_cc#', #form.sibling_cc_year#,  '#form.sibling_billingAddress#', '#form.sibling_billingCity#', '#form.sibling_billingState#', '#form.sibling_billingZip#', '#form.sibling_billingcountry#', #form.sibling_cc_month#)
+        insert into student_tours_siblings (fk_studentid, mastertripid,siblingid, tripid)
+                    values (#form.ret_studentid#, #tripid.mastertripid#, #i#, #x#)
         </cfquery>
     </cfloop>
 </cfif>
@@ -514,23 +530,7 @@ Registration information has been submitted:<Br />
                 </td>
             </Tr>
          </Table>
-<br />
-          <hr width=60% align="center" />
-          <br />
-          <h2>Payment Info</h2>
-<Table width=100% cellspacing=0 cellpadding=2 class="border">
-     
-          	<Tr>
-            	<td><h3>Amount to Charge Now </h3></td><Td>#form.amount#</Td>
-            </Tr>
-            <Tr bgcolor="##deeaf3">
-                            	<Td><h3>Name on Card</h3></Td><td>#form.nameoncard#</td></Tr>
-            <Tr>
-            	<td><h3>Credit Card*</h3></td><td>************#Right(form.cc, 4)#</td>
-            </Tr>
-               
-                       
-                          </Table>   
+
 
 
 </cfsavecontent>
@@ -556,8 +556,9 @@ Registration information has been submitted:<Br />
     <Cfquery name="stuInfo" datasource="#APPLICATION.DSN.Source#">
     SELECT s.studentid, s.dob, s.sex, s.arearepid, s.hostid, s.studentid, s.email, s.familylastname, s.firstname, s.med_allergies, s.other_allergies
     FROM smg_students s
-    WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
-    or studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">
+    WHERE (email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
+    or studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">)
+    and onhold_approved = 0
     </Cfquery>
 
     <cfset acctVerified = 1>
@@ -596,8 +597,55 @@ Registration information has been submitted:<Br />
         <cfif isDefined('form.process')>
         	
             <cfoutput>
-            <h2>You are set!</h2> 
-            <h2>Please be sure to keep an eye on your email.  Once your information has been verified, you will recieve an email at <strong>#form.email#</strong> with additional information and  forms that MUST be signed and returned to MPD Tours.</cfoutput>  </h2>
+            <h2>Almost done, just need to pay.</h2> 
+            <h2>Make sure that were registering you for the correct trip.<br />
+            Click on the "Add to Cart" button. <font size=-1>(added a sibling on previous page?  Update the qty to 2)</font><Br />
+            Then click on the Google Checkout button to pay for your trip. <br /><Br />
+            </h2>
+        
+        <h2>Trip Information</h2>
+				<em>You are registering for the following tour.</em>
+                <Table width=100% cellspacing=0 cellpadding=2 class="border">
+     
+            <Tr>
+                <td>
+                  <table  width=100% cellspacing=0 cellpadding=2>
+                    <tr>
+                        <td width="22" class="boxB"></td><Td width="181" class="boxB"><h3><u>Tour</Td>
+                        <td width="169" class="boxB"><h3><u>Dates</td>
+                        <td width="84" class="boxB"><h3><u>Price</td>
+                        <td width="73" class="boxB"><h3><u>Status</td>
+                        <td width="73" class="boxB"><h3><u>Confirm</td>
+                    </Tr>
+                    <cfset amount_due = 0>
+                    <cfloop list="#SELECT_TRIP#" index=t>
+                    <Cfquery name="strips" datasource="#APPLICATION.DSN.Source#">
+                    select *
+                    from smg_tours 
+                    where tour_id = #t#
+                    </Cfquery>
+                    <tr id=#tour_id# bgcolor="##deeaf3">
+                    
+                        <td></td>
+                        <Td align="left" valign="middle" class="infoBold"><h3>#strips.tour_name#</Td>
+                        <Td align="left" valign="middle"><h3>#strips.tour_date#</Td>
+                        <td align="center" valign="middle" class="infoBold"><h3>#LSCurrencyFormat(strips.tour_price,'local')#</td>
+                        <td align="center" valign="middle"><h3>#strips.tour_status#</td>
+                        <td>
+                        <div class="product"><input value="#strips.tour_name# - #form.unqid#" class="product-title" type="hidden">
+                        <input value="http://www.iseusa.com/trips/images/trips_#t#.png" class="product-image" type="hidden">
+                        <input value="#strips.tour_price#" class="product-price" type="hidden">
+                        <div title="Add to cart" role="button" tabindex="0" class="googlecart-add-button"></div></div>
+                        </td>
+                     </Tr>
+                  	<cfset amount_due = #amount_due# + #strips.tour_price#>
+                    </cfloop>
+                                           
+                </table>
+                </td>
+            </Tr>
+         </Table>
+        </cfoutput>
         <cfelse>   
         
         <cfquery name="trips" datasource="#APPLICATION.DSN.Source#">
@@ -616,6 +664,7 @@ Registration information has been submitted:<Br />
          <h2>Student Information</h2>
           <cfform method="post" action="register.cfm?tour_id=#url.tour_id#">
           <input type="hidden" name="select_trip" value="#form.select_trip#">
+           
           <Table width=100% cellspacing=0 cellpadding=2 class="border">
      
           	<Tr>
@@ -794,162 +843,15 @@ Registration information has been submitted:<Br />
           
           
           </Table>
-              <h2>Trip Information</h2>
-				<em>You are registering for the following tour.</em>
-                <Table width=100% cellspacing=0 cellpadding=2 class="border">
-     
-            <Tr>
-                <td>
-                  <table  width=100% cellspacing=0 cellpadding=2>
-                    <tr>
-                        <td width="22" class="boxB"></td><Td width="181" class="boxB"><h3><u>Tour</Td>
-                        <td width="169" class="boxB"><h3><u>Dates</td>
-                        <td width="84" class="boxB"><h3><u>Price</td>
-                        <td width="73" class="boxB"><h3><u>Status</td>
-                    </Tr>
-                    <cfset amount_due = 0>
-                    <cfloop list="#SELECT_TRIP#" index=t>
-                    <Cfquery name="strips" datasource="#APPLICATION.DSN.Source#">
-                    select *
-                    from smg_tours 
-                    where tour_id = #t#
-                    </Cfquery>
-                    <tr id=#tour_id# <CFif t mod 2>bgcolor="##deeaf3"</cfif>>
-                    
-                        <td></td>
-                        <Td align="left" valign="middle" class="infoBold"><h3>#strips.tour_name#</Td>
-                        <Td align="left" valign="middle"><h3>#strips.tour_date#</Td>
-                        <td align="center" valign="middle" class="infoBold"><h3>#LSCurrencyFormat(strips.tour_price,'local')#</td>
-                        <td align="center" valign="middle"><h3>#strips.tour_status#</td>
-                     </Tr>
-                  	<cfset amount_due = #amount_due# + #strips.tour_price#>
-                    </cfloop>
-                                           
-                </table>
-                </td>
-            </Tr>
-         </Table>
-        
+         
 
        
-            <h2>#form.studentFName# #form.studentLName# Payment Information</h2>
-			<em>*Bank or ATM cards will not work. Must be a valid credit card, or debit card with Visa or Mastercard logo, that can be processed as a credit card.</em>
-          <Table width=100% cellspacing=0 cellpadding=2 class="border">
-     
-          	<Tr>
-            	<td><h3>Total Amount Due</h3></td><Td><strong>#LSCurrencyFormat(amount_due, 'local')#</strong><input type="hidden" name="amount" value="#amount_due#"/></Td>
-            </Tr>
-            <Tr bgcolor="##deeaf3">
-                            	<Td><h3>Name on Card</h3></Td><td><cfinput type="text" name="nameoncard" validateat="onSubmit" message="Please enter the name shown on credit card." validate="noblanks" required="yes" size=20></td></Tr>
-            <Tr >
-            	<td><h3>Credit Card*</h3></td><td><cfinput type="text" name="cc" validateat="onSubmit" message="Please enter a valid credit card number."  validate="creditcard" required="yes"><br />
-                <em><font size=-1>This will be a 15 or 16 digit number on the front of the card.</font></em></td>
-                </Tr>
-                
-            <tr bgcolor="##deeaf3">
-            	<td><h3>Expiration</h3></td><td> <cfinput type="text" name="cc_month" size=2 message="Please indicate the month your credit card expires.  Make sure you use a number to indicate them month. Jan =1, Feb=2, etc." validate="integer" required="yes" id = "ccmonth"> <strong>/</strong>
-                								
-                                         
-                                                <cfinput type="text" name="cc_year" message="Please select the year your credit card expires" validate="integer" required="yes" id = "ccyear" size=4>
-                                               
-                                                
-                                                
-                                                </td>
-                            </tr>
-                         <tr>
-            	<td><h3>Billing Address</h3></td><td><cfinput type="text" name="billingAddress" validateat="onSubmit" message="Please enter the Credit Card billing address" required="yes"/>                                          
-                                                
-                                                </td>
-                            </tr>
-                    <Tr bgcolor="##deeaf3">
-                            	<Td><h3>Billing City</h3></Td>
-                                <td><cfinput type="text" name="billingcity" validateat="onSubmit" message="Please enter the billing city." validate="noblanks" required="yes" size=20></td></Tr>
-					<Tr>
-                            	<Td><h3>Billing State</h3></Td>
-                                <td>
-                                <cfselect name="billingstate" validateat="onSubmit" message="Please enter the billing state." validate="noblanks" required="yes">
-                                <option value=""></option>
-                                <cfloop query="qstates">
-                                <option value="#state#">#state# - #statename#</option>
-                                </cfloop>
-                                </cfselect>
-                                
-                                </td></Tr>
-					<Tr bgcolor="##deeaf3">
-                            	<Td><h3>Billing Zip</h3></Td>
-                                <td><cfinput type="text" name="billingzip" validateat="onSubmit" message="Please enter the billing state." validate="noblanks" required="yes" size=20></td></Tr>
-      <Tr>
-                                	<td><h3>Billing Country</h3></td>
-                                    <Td><cfselect name="billingcountry" validateat="onSubmit" message="Please enter the billing country." validate="noblanks" required="yes">
-                                        <option value=""></option>
-                                        <cfloop query="qCountryList">
-                                        <option value="#countrycode# - #countryname#">#countrycode# - #countryname#</option>
-                                        </cfloop>
-										</cfselect>
-									</Td>
-                    </Tr>                                
-                          </Table>         
-                          <cfif showsibcc gt 0>
-                            <h2>Host Sibling Payment Information</h2>
-			<em>*Bank or ATM cards will not work. Must be a valid credit card, or debit card with Visa or Mastercard logo, that can be processed as a credit card.</em>
-          <Table width=100% cellspacing=0 cellpadding=2 class="border">
-     
-          	<Tr>
-            	<td><h3>Total Amount Due</h3></td><Td><strong>#LSCurrencyFormat(amount_due, 'local')# - <strong>PER SIBLING SELECTED</strong><input type="hidden" name="amount" value="#amount_due#"/></Td>
-            </Tr>
-            <Tr bgcolor="##deeaf3">
-                            	<Td><h3>Name on Card</h3></Td><td><cfinput type="text" name="sibling_nameoncard"  size=20></td></Tr>
-            <Tr >
-            	<td><h3>Credit Card*</h3></td><td><cfinput type="text" name="sibling_cc"><br />
-                <em><font size=-1>This will be a 15 or 16 digit number on the front of the card.</font></em></td>
-                </Tr>
-                
-            <tr bgcolor="##deeaf3">
-                <td><h3>Expiration</h3></td><td> <cfinput type="text" name="sibling_cc_month" size=2  id = "ccmonth"> <strong>/</strong>
-                
-                
-                <cfinput type="text" name="sibling_cc_year"  id = "ccyear" size=4>
-                
-                
-                
-                </td>
-                </tr>
-                         <tr>
-            	<td><h3>Billing Address</h3></td><td><cfinput type="text" name="sibling_billingAddress" />                                          
-                                                
-                                                </td>
-                            </tr>
-                    <Tr bgcolor="##deeaf3">
-                            	<Td><h3>Billing City</h3></Td>
-                                <td><cfinput type="text" name="sibling_billingcity" validateat="onSubmit"  size=20></td></Tr>
-					<Tr>
-                            	<Td><h3>Billing State</h3></Td>
-                                <td>
-                                <cfselect name="sibling_billingstate" validateat="onSubmit" >
-                                <option value=""></option>
-                                <cfloop query="qstates">
-                                <option value="#state#">#state# - #statename#</option>
-                                </cfloop>
-                                </cfselect>
-                                
-                                </td></Tr>
-					<Tr bgcolor="##deeaf3">
-                            	<Td><h3>Billing Zip</h3></Td>
-                    <td><cfinput type="text" name="sibling_billingzip"  size=20></td></Tr>
-    <Tr>
-                        <td><h3>Billing Country</h3></td>
-                        <Td><cfselect name="sibling_billingcountry">
-                            <option value=""></option>
-                            <cfloop query="qCountryList">
-                            <option value="#countrycode# - #countryname#">#countrycode# - #countryname#</option>
-                            </cfloop>
-							</cfselect>
-					</Td>
-               </Tr>                                
-            </Table>     
- </cfif>             
+                  
+                         
          <div align="center"><input type="image" src="../images/buttons/Next.png" /></div>
          <input type="hidden" name="process" />
+        
+         <input type="hidden" name="unqid" value="#unqid#" />
            </cfif>
            
          </cfform>
@@ -962,6 +864,8 @@ Registration information has been submitted:<Br />
         
           </cfoutput>
           </cfif>
+          <div align="right"><div id="googleCheckoutLogo"></div><script src='https://checkout.google.com/buttons/logos?merchant_id=926853133876547&loc=en_US&f=png' ></script>
+      </div>
         <div id="main" class="clearfix"></div>
       <!-- endtripTours --></div>
       <div id="main" class="clearfix"></div>
@@ -975,5 +879,6 @@ Registration information has been submitted:<Br />
   <div class="clear"></div>
 <cfinclude template="../bottomLinks.cfm">
 <!-- end footer --></div>
+<script  id='googlecart-script' type='text/javascript' src='https://checkout.google.com/seller/gsc/v2_2/cart.js?mid=926853133876547' integration='jscart-wizard' post-cart-to-sandbox='false' currency='USD' productWeightUnits='LB'></script>
 </body>
 </html>
