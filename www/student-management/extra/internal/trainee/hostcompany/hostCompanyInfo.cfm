@@ -31,7 +31,7 @@
     <cfparam name="FORM.comp_received" default="0">
     <cfparam name="FORM.housing_options" default="">
     <cfparam name="FORM.housing_cost" default="">
-    <cfparam name="FORM.closest_airport" default="">
+    <cfparam name="FORM.arrivalAirport" default="">
     <cfparam name="FORM.arrivalInstructions" default="">
     <cfparam name="FORM.supervisor" default="">
     <cfparam name="FORM.phone" default="">
@@ -72,7 +72,7 @@
             eh.picture_type,
             eh.enteredBy,
             eh.entryDate,
-            eh.closest_airport,
+            eh.arrivalAirport,
             eh.arrivalInstructions,
             et.business_type as typeBusiness, 
             s.stateName as stateName,  
@@ -297,7 +297,7 @@
                         comp_received = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.comp_received#">,
                         housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
-                        closest_airport = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.closest_airport#">,
+                        arrivalAirport = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirport#">,
                         arrivalInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalInstructions#">,
                         supervisor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
@@ -330,7 +330,7 @@
                         comp_received,
                         housing_options,
                         housing_cost,
-                        closest_airport,
+                        arrivalAirport,
                         arrivalInstructions,
                         supervisor,
                         phone,
@@ -357,7 +357,7 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.comp_received#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.closest_airport#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirport#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalInstructions#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
@@ -404,7 +404,7 @@
 			FORM.comp_received = qGetHostCompanyInfo.comp_received;
 			FORM.housing_options = qGetHostCompanyInfo.housing_options;
 			FORM.housing_cost = qGetHostCompanyInfo.housing_cost;
-			FORM.closest_airport = qGetHostCompanyInfo.closest_airport;
+			FORM.arrivalAirport = qGetHostCompanyInfo.arrivalAirport;
 			FORM.arrivalInstructions = qGetHostCompanyInfo.arrivalInstructions;
 			FORM.supervisor = qGetHostCompanyInfo.supervisor;
 			FORM.phone = qGetHostCompanyInfo.phone;
@@ -859,8 +859,8 @@
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Aiport:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.closest_airport#</span>
-                                                <input type="text" name="closest_airport" value="#FORM.closest_airport#" class="style1 editPage" size="35" maxlength="100">
+                                            	<span class="readOnly">#FORM.arrivalAirport#</span>
+                                                <input type="text" name="arrivalAirport" value="#FORM.arrivalAirport#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>

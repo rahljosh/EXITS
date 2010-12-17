@@ -359,7 +359,7 @@ from smg_states
 
 						<th>Closest Airport </th>
 				 
-				  <th><cfinput name="closest_airport" size="25"  maxlength="50"></th>
+				  <th><cfinput name="arrivalAirport" size="25"  maxlength="50"></th>
 												</tr>			
 				
 		

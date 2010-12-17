@@ -275,7 +275,7 @@
                             	<cfelse>
                                 
                                     <p><strong>Note:</strong> 
-                                    	Application has NOT been submitted for your approval. <br />
+                                    	Application has NOT been submitted for your approval. #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# must submit this application first. <br />
                                 	</p>
 
                                 </cfif>
@@ -303,7 +303,7 @@
                             	<cfelse>
                                 
                                     <p><strong>Note:</strong> 
-                                    	Application has NOT been submitted for your approval. <br />
+                                    	Application has NOT been submitted for your approval. #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# must submit this application first. <br />
                                 	</p>
 
                                 </cfif>
