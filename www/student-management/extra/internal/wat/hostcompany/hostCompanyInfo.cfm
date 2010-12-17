@@ -33,8 +33,20 @@
     <cfparam name="FORM.workSiteZip" default="">
     <cfparam name="FORM.housing_options" default="">
     <cfparam name="FORM.housing_cost" default="">
-    <cfparam name="FORM.closest_airport" default="">
+	<!--- Arrival Information --->    
+    <cfparam name="FORM.isHousingProvided" default="0">
+    <cfparam name="FORM.housingProvidedInstructions" default="">
+    <cfparam name="FORM.isPickUpProvided" default="0">
+    <cfparam name="FORM.arrivalAirport" default="">
+	<cfparam name="FORM.arrivalAirportCity" default="">    
+    <cfparam name="FORM.arrivalAirportState" default="">       
+    <cfparam name="FORM.arrivalPickUpHours" default="">
     <cfparam name="FORM.arrivalInstructions" default="">
+    <cfparam name="FORM.pickUpContactName" default="">    
+    <cfparam name="FORM.pickUpContactPhone" default="">    
+    <cfparam name="FORM.pickUpContactEmail" default="">
+    <cfparam name="FORM.pickUpContactHours" default="">
+	<!--- Supervisor --->    
     <cfparam name="FORM.supervisor" default="">
     <cfparam name="FORM.phone" default="">
     <cfparam name="FORM.fax" default="">
@@ -72,17 +84,31 @@
             eh.picture_type,
             eh.enteredBy,
             eh.entryDate,
-            eh.closest_airport,
+			eh.isHousingProvided,
+            eh.housingProvidedInstructions,
+            eh.isPickUpProvided,
+            eh.arrivalAirport,
+            eh.arrivalAirportCity,
+            eh.arrivalAirportState,
+            eh.arrivalPickUpHours,
             eh.arrivalInstructions,
+            eh.pickUpContactName,
+            eh.pickUpContactPhone,
+            eh.pickUpContactEmail,
+            eh.pickUpContactHours,
             et.business_type as typeBusiness, 
             s.stateName as stateName,  
-            workSiteS.stateName as workSiteStateName            
+            workSiteS.stateName as workSiteStateName,
+            airportS.stateName as arrivalAirportStateName            
         FROM 
         	extra_hostcompany eh
         LEFT OUTER JOIN 
         	smg_states s ON eh.state = s.ID
         LEFT OUTER JOIN 
         	smg_states workSiteS ON eh.workSiteState = workSiteS.ID
+        LEFT OUTER JOIN 
+        	smg_states airportS ON eh.arrivalAirportState = airportS.ID
+            
         LEFT OUTER JOIN 
         	extra_typebusiness et ON et.business_typeID = eh.business_typeID
         WHERE 
@@ -255,8 +281,18 @@
                         workSiteZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteZip#">,
                         housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
-                        closest_airport = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.closest_airport#">,
+                        isHousingProvided = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isHousingProvided)#">,
+                        housingProvidedInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
+                        isPickUpProvided = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isPickUpProvided)#">,
+                        arrivalAirport = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirport#">,
+                        arrivalAirportCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirportCity#">,
+                        arrivalAirportState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.arrivalAirportState#">,
+                        arrivalPickUpHours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalPickUpHours#">,
                         arrivalInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalInstructions#">,
+                        pickUpContactName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactName#">,
+                        pickUpContactPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactPhone#">,
+                        pickUpContactEmail = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactEmail#">,
+                        pickUpContactHours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
                         supervisor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
@@ -290,8 +326,18 @@
                         workSiteZip,
                         housing_options,
                         housing_cost,
-                        closest_airport,
+                        isHousingProvided,
+                        housingProvidedInstructions,
+                        isPickUpProvided,
+                        arrivalAirport,
+                        arrivalAirportCity,
+                        arrivalAirportState,
+                        arrivalPickUpHours,
                         arrivalInstructions,
+                        pickUpContactName,
+                        pickUpContactPhone,
+                        pickUpContactEmail,
+                        pickUpContactHours,
                         supervisor,
                         phone,
                         fax,
@@ -319,8 +365,18 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteZip#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.closest_airport#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isHousingProvided)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isPickUpProvided)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirport#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirportCity#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.arrivalAirportState#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalPickUpHours#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalInstructions#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactPhone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactEmail#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
@@ -368,8 +424,18 @@
 			FORM.workSiteZip = qGetHostCompanyInfo.workSiteZip;
 			FORM.housing_options = qGetHostCompanyInfo.housing_options;
 			FORM.housing_cost = qGetHostCompanyInfo.housing_cost;
-			FORM.closest_airport = qGetHostCompanyInfo.closest_airport;
+			FORM.isHousingProvided = qGetHostCompanyInfo.isHousingProvided;
+			FORM.housingProvidedInstructions = qGetHostCompanyInfo.housingProvidedInstructions;
+			FORM.isPickUpProvided = qGetHostCompanyInfo.isPickUpProvided;
+			FORM.arrivalAirport = qGetHostCompanyInfo.arrivalAirport;
+			FORM.arrivalAirportCity  = qGetHostCompanyInfo.arrivalAirportCity;  
+			FORM.arrivalAirportState = qGetHostCompanyInfo.arrivalAirportState;      
+			FORM.arrivalPickUpHours = qGetHostCompanyInfo.arrivalPickUpHours;
 			FORM.arrivalInstructions = qGetHostCompanyInfo.arrivalInstructions;
+			FORM.pickUpContactName = qGetHostCompanyInfo.pickUpContactName;  
+			FORM.pickUpContactPhone = qGetHostCompanyInfo.pickUpContactPhone;    
+			FORM.pickUpContactEmail = qGetHostCompanyInfo.pickUpContactEmail;
+			FORM.pickUpContactHours = qGetHostCompanyInfo.pickUpContactHours;
 			FORM.supervisor = qGetHostCompanyInfo.supervisor;
 			FORM.phone = qGetHostCompanyInfo.phone;
 			FORM.fax = qGetHostCompanyInfo.fax;
@@ -390,6 +456,8 @@
 		$(".formField").attr("disabled","disabled");
 		
 		showHideBusinessTypeOther();
+		displayHousingInfo();
+		displayPickUpInfo();
 		
 		// Get Host Company Value
 		hostCompanyID = $("#hostCompanyID").val();
@@ -398,7 +466,7 @@
 			readOnlyEditPage();
 		}
 	});
-
+	
 	function readOnlyEditPage() {
 		if( $(".readOnly").css("display") == "none" ) {			
 			// Hide editPage and display readOnly
@@ -411,6 +479,38 @@
 			$(".editPage").fadeIn("fast");	
 			$(".formField").removeAttr("disabled");
 			$(".dp-choose-date").fadeIn("fast");
+		}
+	}
+
+	var displayHousingInfo = function() { 
+		// Get Housing Info
+		getHousingInfo = $("#isHousingProvided").val();
+		if ( getHousingInfo > 0 ) {
+			$(".housingInfo").fadeIn("fast");
+		} else {
+			//erase data
+			$("#housingProvidedInstructions").val("");
+			$(".housingInfo").fadeOut("fast");
+		}
+	}
+
+	var displayPickUpInfo = function() { 
+		// Get PickUp Info
+		getPickUpInfo = $("#isPickUpProvided").val();
+		if ( getPickUpInfo > 0 ) {
+			$(".pickUpInfo").fadeIn("fast");
+		} else {
+			//erase data
+			$("#arrivalAirport").val("");
+			$("#arrivalAirportCity").val("");
+			$("#arrivalAirportState").val("");
+			$("#arrivalPickUpHours").val("");
+			$("#arrivalInstructions").val("");
+			$("#pickUpContactName").val("");
+			$("#pickUpContactPhone").val("");
+			$("#pickUpContactEmail").val("");
+			$("#pickUpContactHours").val("");
+			$(".pickUpInfo").fadeOut("fast");
 		}
 	}
 
@@ -813,7 +913,43 @@
 
 						<br />                        
 
-                        <!--- ARRIVAL INFORMATION --->
+                        <!--- HOUSING INFORMATION --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+								<td bordercolor="##FFFFFF">
+
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Housing Information</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Is Housing Provided?</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">
+                                                	#YesNoFormat(VAL(FORM.isHousingProvided))#
+                                                </span>
+                                                <select name="isHousingProvided" id="isHousingProvided" class="style1 editPage" onchange="displayHousingInfo();">
+                                              		<option value="0" <cfif FORM.isHousingProvided EQ 0> selected="selected" </cfif> >No</option>
+                                                    <option value="1" <cfif FORM.isHousingProvided EQ 1> selected="selected" </cfif> >Yes</option>
+	                                            </select>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField housingInfo">
+                                            <td class="style1" align="right" valign="top"><strong>Housing Instructions:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.housingProvidedInstructions#</span>
+                                                <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">#FORM.housingProvidedInstructions#</textarea>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table> 
+                        
+						<br />
+
+                        <!--- PICK UP/ARRIVAL INFORMATION --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
 								<td bordercolor="##FFFFFF">
@@ -823,26 +959,92 @@
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Information</td>
                                         </tr>
                                         <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Aiport:</strong></td>
+                                            <td width="35%" class="style1" align="right"><strong>Is pick-up available?</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.closest_airport#</span>
-                                                <input type="text" name="closest_airport" value="#FORM.closest_airport#" class="style1 editPage" size="35" maxlength="100">
+                                            	<span class="readOnly">
+                                                	#YesNoFormat(VAL(FORM.isPickUpProvided))#
+                                                </span>
+                                                <select name="isPickUpProvided" id="isPickUpProvided" class="style1 editPage" onchange="displayPickUpInfo();">
+                                              		<option value="0" <cfif FORM.isPickUpProvided EQ 0> selected="selected" </cfif> >No</option>
+                                                    <option value="1" <cfif FORM.isPickUpProvided EQ 1> selected="selected" </cfif> >Yes</option>
+	                                            </select>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station Code:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.arrivalAirport#</span>
+                                                <input type="text" name="arrivalAirport" id="arrivalAirport" value="#FORM.arrivalAirport#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station City:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.arrivalAirportCity#</span>
+                                                <input type="text" name="arrivalAirportCity" id="arrivalAirportCity" value="#FORM.arrivalAirportCity#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station State:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#qGetHostCompanyInfo.arrivalAirportStateName#</span>
+                                                <select name="arrivalAirportState" id="arrivalAirportState" class="style1 editPage">
+                                              		<option value="0"></option>
+                                              		<cfloop query="qGetStateList">
+		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.arrivalAirportState>selected</cfif>>#qGetStateList.stateName#</option>
+        	                                      	</cfloop>
+	                                            </select>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Hours:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.arrivalPickUpHours#</span>
+                                                <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpHours#</textarea>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
                                             <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.arrivalInstructions#</span>
-                                                <textarea name="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
+                                                <textarea name="arrivalInstructions" id="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
                                             </td>
-                                        </tr>		
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Contact Name:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpContactName#</span>
+                                                <input type="text" name="pickUpContactName" id="pickUpContactName" value="#FORM.pickUpContactName#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Contact Phone:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpContactPhone#</span>
+                                                <input type="text" name="pickUpContactPhone" id="pickUpContactPhone" value="#FORM.pickUpContactPhone#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Contact Email:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpContactEmail#</span>
+                                                <input type="text" name="pickUpContactEmail" id="pickUpContactEmail" value="#FORM.pickUpContactEmail#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Hours of Contact:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpContactHours#</span>
+                                                <textarea name="pickUpContactHours" id="pickUpContactHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
+                                            </td>
+                                        </tr>
                                     </table>
 
                                 </td>
                             </tr>
                         </table> 
-                        
-						<br />
+						
+                        <br />
                         
     				</td>
 				</tr>

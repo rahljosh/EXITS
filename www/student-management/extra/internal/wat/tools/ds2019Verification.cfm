@@ -79,9 +79,9 @@
 		var tableHeader = '';		
 		tableHeader += "<tr>";
         	tableHeader += "<td class='listTitle style2'>ID</td>";
-        	tableHeader += "<td class='listTitle style2'>First Name</td>";
-        	tableHeader += "<td class='listTitle style2'>Middle Name</td>";
         	tableHeader += "<td class='listTitle style2'>Last Name</td>";
+			tableHeader += "<td class='listTitle style2'>First Name</td>";
+        	tableHeader += "<td class='listTitle style2'>Middle Name</td>";        	
         	tableHeader += "<td class='listTitle style2'>Gender</td>";
         	tableHeader += "<td class='listTitle style2'>DOB <br /> (mm/dd/yyyy)</td>";                                                            
             tableHeader += "<td class='listTitle style2'>City of <br /> Birth</td>";                                                          
@@ -126,9 +126,9 @@
 					tableBody += "<tr id='" + candidateID + "' class='rowOn'>";
 				}
 				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>#" + candidateID + "</a></td>"
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + firstName + "</a></td>"
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + middleName + "</a></td>"
 				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + lastName + "</a></td>"
+				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + firstName + "</a></td>"
+				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + middleName + "</a></td>"				
 				tableBody += "<td class='style5'>" + sex + "</td>"
 				tableBody += "<td class='style5'>" + dob + "</td>"
 				tableBody += "<td class='style5'>" + birthCity + "</td>"
@@ -388,11 +388,11 @@
 	}
 
 	.largeField {
-		width:200px;
+		width:250px;
 	}
 
 	.smallField {
-		width:100px;
+		width:120px;
 	}
 
 	.pageMessage {
@@ -408,7 +408,7 @@
 	}
 
 	.candidateDetail {
-		font-size:0.8em;
+		font-size:1.1em;
 		font-family:Georgia, "Times New Roman", Times, serif;
 		display:none;
 		padding-top:10px;
@@ -435,14 +435,14 @@
                 	<td class="formTitle" colspan="6">Please make your corrections below and click on submit.</td>
 				</tr>                    
                 <tr>
+                    <td class="formTitle"><label for="lastName">Last Name</label></td>
                     <td class="formTitle"><label for="firstName">First Name</label></td>
                     <td class="formTitle"><label for="middleName">Middle Name</label></td>
-                    <td class="formTitle"><label for="lastName">Last Name</label></td>
                  </tr>   
                 <tr>
-                    <td><input type="text" name="firstName" id="firstName" value="" class="largeField" maxlength="100" /></td>
-                    <td><input type="text" name="middleName" id="middleName" value="" class="largeField" maxlength="100" /></td>
                     <td><input type="text" name="lastName" id="lastName" value="" class="largeField" maxlength="100" /></td>
+                    <td><input type="text" name="firstName" id="firstName" value="" class="largeField" maxlength="100" /></td>
+                    <td><input type="text" name="middleName" id="middleName" value="" class="largeField" maxlength="100" /></td>                    
             	</tr> 
                 <tr>   
                     <td class="formTitle"><label for="sex">Gender</label></td>
@@ -451,13 +451,13 @@
 				</tr>
                 <tr>
                     <td>
-                    	<select name="sex" id="sex">
+                    	<select name="sex" id="sex" class="smallField">
                         	<option value=""></option>
                             <option value="M">Male</option>
                             <option value="F">Female</option>
 						</select>                            
                     </td>
-                    <td><input type="text" name="dob" id="dob" value="" class="smallField" maxlength="10" /></td>
+                    <td><input type="text" name="dob" id="dob" value="" class="datePicker smallField" maxlength="10" /></td>
                     <td><input type="text" name="birthCity" id="birthCity" value="" class="largeField" maxlength="100" /></td>
             	</tr> 
                 <tr>                    
@@ -467,7 +467,7 @@
                 </tr>            
 				<tr>	
                     <td>
-                    	<select name="countryBirth" id="countryBirth">
+                    	<select name="countryBirth" id="countryBirth" class="largeField">
                         	<option value=""></option>
                         	<cfloop query="qCountryList">
                             	<option value="#qCountryList.countryID#">#qCountryList.countryName#</option>
@@ -475,7 +475,7 @@
                         </select>
                     </td>
                     <td>
-                    	<select name="countryCitizen" id="countryCitizen">
+                    	<select name="countryCitizen" id="countryCitizen" class="largeField">
                         	<option value=""></option>
                         	<cfloop query="qCountryList">
                             	<option value="#qCountryList.countryID#">#qCountryList.countryName#</option>
@@ -483,7 +483,7 @@
                         </select>
                     </td>
                     <td>
-                    	<select name="countryResident" id="countryResident">
+                    	<select name="countryResident" id="countryResident" class="largeField">
                         	<option value=""></option>
                         	<cfloop query="qCountryList">
                             	<option value="#qCountryList.countryID#">#qCountryList.countryName#</option>

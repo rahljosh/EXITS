@@ -16,8 +16,8 @@
 </cfif>
 
 <cfquery name="hostcompany" datasource="MySql">
-	INSERT INTO extra_hostcompany(entrydate, name, address, city, state, zip, phone, fax, email, active, supervisor, supervisor_phone, supervisor_email, <!---description, closest_airport, ----> observations, <!----recruteddirectly,----> enteredby, companyid, business_typeid, housing_options, supervisor_name, housing_cost) 
-	VALUES (#now()#, '#form.name#', '#form.address#', '#form.city#', '#form.state#', '#form.zip#', '#form.phone#', '#form.fax#', '#form.email#', <CFif isdefined('form.active')>1 <cfelse>0 </cfif>, '#form.supervisor#', '#form.supervisor_phone#', '#form.supervisor_email#', <!----'#form.description#', '#form.closest_airport#',---> '#form.observations#', <!----<cfif NOT IsDefined('form.recruteddirectly')> 1 <cfelse> #form.recruteddirectly#</cfif>,----> #client.userid#, #client.companyid#, #form.business_type#, <cfif IsDefined('form.housing')>'#form.housing#'<cfelse>0</cfif>, '#form.supervisor_name#', '#form.housing_cost#')
+	INSERT INTO extra_hostcompany(entrydate, name, address, city, state, zip, phone, fax, email, active, supervisor, supervisor_phone, supervisor_email, <!---description, arrivalAirport, ----> observations, <!----recruteddirectly,----> enteredby, companyid, business_typeid, housing_options, supervisor_name, housing_cost) 
+	VALUES (#now()#, '#form.name#', '#form.address#', '#form.city#', '#form.state#', '#form.zip#', '#form.phone#', '#form.fax#', '#form.email#', <CFif isdefined('form.active')>1 <cfelse>0 </cfif>, '#form.supervisor#', '#form.supervisor_phone#', '#form.supervisor_email#', <!----'#form.description#', '#form.arrivalAirport#',---> '#form.observations#', <!----<cfif NOT IsDefined('form.recruteddirectly')> 1 <cfelse> #form.recruteddirectly#</cfif>,----> #client.userid#, #client.companyid#, #form.business_type#, <cfif IsDefined('form.housing')>'#form.housing#'<cfelse>0</cfif>, '#form.supervisor_name#', '#form.housing_cost#')
 	
 </cfquery>
 
