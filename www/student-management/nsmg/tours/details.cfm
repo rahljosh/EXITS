@@ -270,7 +270,7 @@ where tour_status <> 'inactive'
         </td>
     </Tr>
     <tr>
-    	<Td>Payment Status:</Td><td><cfif details.paid is ''>Unpaid <cfelse>Payment Applied - #DateFormat(details.paid,'mmm. d, yyyy')#</cfif> </td>
+    	<Td>Payment Status:</Td><td><cfif details.paid is ''>Unpaid <cfelse>Pay Date - #DateFormat(details.paid,'mmm. d, yyyy')#</cfif> </td>
     </tr>
      <tr>
      	<td align="middle" colspan=2><input type="image" src="../pics/update.gif" /></td>
@@ -313,42 +313,7 @@ where tour_status <> 'inactive'
     <br />
     <img src="images/line_03.png" width="480" height="6" />
     <Br />
-    <h3>Student Payment Details</h3>
    
-    <table width=98% cellpadding = 4 cellspacing = 0>
-    <cfif details.paid is ''>
-    <form method="post" action="details.cfm?id=#url.id#">
-    <input type="hidden" name="updatecc" value=#url.id#>
-     <cfset decrpytedCC =decrypt(details.cc, 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', "desede", "hex")>
-   	<tr>
-    	<Td>CC Number:</Td><td><input type="text" value="#decrpytedCC#" name="cc" /></td>
-    </tr>
-    <tr>
-    	<Td>Expires:</Td><Td><input type="text" size=2 name="cc_month" value="<cfif len(details.cc_month) eq 1>0#details.cc_month#<cfelse>#details.cc_month#</cfif>"/> / <input type="text" size=4 name="cc_year" value="#DateFormat(details.cc_year, 'yyyy')#"/></Td>
-    </tr>
-    <Tr>
-    	<Td valign="top">Address:</Td><td><input type ="text" name="billingAddress" value="#details.billingAddress#" /></td>
-    </Tr>
-    <tr>    
-        <td>	City:</td><Td> <input type ="text" name="billingcity" value="#details.billingcity#" /></Td>
-    </tr>
-    <Tr>        
-         <td> State:</td><Td> <input  type="text" value="#details.billingstate#" name="billingstate"/></Td>
-    </Tr>
-    <tr>
-    	<td>ZIP:</td><td><input size=5 type ="text" name="billingzip" value="#details.billingzip#" /></td>
-     </Tr>
-     <Tr>
-     	<td>Country</td><td><input type="text" name="billingcountry" value="#details.billingcountry#" /></td>
-     </Tr>
-     <tr>
-     	<td align="middle" colspan=2><input type="image" src="../pics/update.gif" /></td>
-     </tr>
-     </table>
-            </form>
-     <br />
-      <img src="images/line_03.png" width="480" height="6" />
-      <Br />
         <h3>Record the Payment</h3>
    
     <table cellpadding = 4 cellspacing = 0>
@@ -381,42 +346,11 @@ left join smg_host_children shc on shc.childid = st.siblingid
 left join smg_tours on smg_tours.tour_id = st.tripid
 where mastertripid = #url.id#
 </cfquery>
-    <h3>Sibling Payment Details</h3>
-   
-    <table width=98% cellpadding = 4 cellspacing = 0>
-    <cfif sib_details.paid is ''>
-    <form method="post" action="details.cfm?id=#url.id#">
-    <input type="hidden" name="sib_updatecc" value=#url.id#>
-   	<tr>
-    	<Td>CC Number:</Td><td><input type="text" value="#sib_details.cc#" name="sib_cc" /></td>
-    </tr>
-    <tr>
-    	<Td>Expires:</Td><Td><input type="text" size=2 name="sib_cc_month" value="<cfif len(details.cc_month) eq 1>0#sib_details.cc_month#<cfelse>#sib_details.cc_month#</cfif>"/> / <input type="text" size=4 name="sib_cc_year" value="#DateFormat(sib_details.cc_year, 'yyyy')#"/></Td>
-    </tr>
-    <Tr>
-    	<Td valign="top">Address:</Td><td><input type ="text" name="sib_billingAddress" value="#sib_details.billingAddress#" /></td>
-    </Tr>
-    <tr>    
-        <td>	City:</td><Td> <input type ="text" name="sib_billingcity" value="#sib_details.billingcity#" /></Td>
-    </tr>
-    <Tr>        
-         <td> State:</td><Td> <input  type="text" value="#sib_details.billingstate#" name="sib_billingstate"/></Td>
-    </Tr>
-    <tr>
-    	<td>ZIP:</td><td><input size=5 type ="text" name="sib_billingzip" value="#sib_details.billingzip#" /></td>
-     </Tr>
-     <Tr>
-     	<td>Country</td><td><input type="text" name="sib_billingcountry" value="#sib_details.billingcountry#" /></td>
-     </Tr>
-     <tr>
-     	<td align="middle" colspan=2><input type="image" src="../pics/update.gif" /></td>
-     </tr>
-     </table>
-            </form>
+ 
      <br />
       <img src="images/line_03.png" width="480" height="6" />
       <Br />
-        <h3>Record the Payment</h3>
+        <h3>Record Sibling Payment</h3>
    
     <table cellpadding = 4 cellspacing = 0>
     <cfform method="post" action="details.cfm?id=#url.id#">

@@ -67,6 +67,7 @@
 			line-height:25px; 
 			}
 		.count {width:20px;}
+		.unqid {width:40px;}
 		.idnumber {width:40px;}
 		.fname {width:100px; }
 		.lname {width:100px; }
@@ -116,12 +117,12 @@
 
 <cfparam name="paid" default="0">
 
+
 <cfparam name="tripSelected" default ="0">
 <Cfif isDefined('form.delete')>
 	<cfquery datasource="#application.dsn#">
     delete from student_tours
     where id = #form.delete#
-    limit 1
     </cfquery>
 </Cfif>
 
@@ -241,6 +242,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
         and tripid = #tour_id#
         order by date desc 
         </cfquery>
+        
         <!----m/f stats---->
 
         <Cfset male = 0>
@@ -283,6 +285,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
             <td colspan="7">
             <div id="table_title">
          	  <li class="count"></li>
+              <li class="unqid">TID</li>              
               <li class="idnumber">ID</li>
               <li class="fname">First Name</li>
               <li class="lname">Last Name</li>
@@ -310,6 +313,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
               
               <div id="table_row">   
               <li class="count">#tours.currentrow#</li>
+              <li class="unqid">#tours.unqid#</li>
               <li class="idnumber"><a href='http://ise.exitsapplication.com/nsmg/tours/details.cfm?id=#id#&student=#studentid#' title='Payment Details' rel='gb_page_center[675,600]'>#studentid#</a></li>
               <li class="fname"><a href='tours/details.cfm?id=#id#&student=#studentid#' title="Payment Details" rel="gb_page_center[675,600]">#firstname#</a></li>
               <li class="lname"><a href="tours/details.cfm?id=#id#&student=#studentid#" title="Payment Details" rel="gb_page_center[675,600]">#familylastname#</a></li>
@@ -323,7 +327,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
               <li class="Profile"><a href="tours/tripsProfile.cfm?uniqueid=#uniqueid#&id=#id#"><img src="pics/view.png" border=0  /></a></li>
               <li class="Forms"> <a href="" onClick="javascript: win=window.open('student_app/section4/page22print.cfm?unqid=#uniqueid#', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/view.png" border=0  /></a></li>
               <li class="Company"><cfif companyid eq 1>ISE<cfelseif companyid eq 10>CASE</cfif></li>
-              <li class="delete"><form method="post" action="index.cfm?curdoc=tours/mpdtours"><input type="hidden" name="delete" value="#id#" /> <input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></li>
+              <li class="delete"><form method="post" action="index.cfm?curdoc=tours/mpdtours"> <input type="hidden" name="delete" value="#id#" /><input type="image" src="pics/deletex.gif" /></form></li>
               
               </div>
               <!----check for any siblings---->
