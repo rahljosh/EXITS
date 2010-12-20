@@ -153,8 +153,8 @@
 				</cfform>
 			</td>
             <td width="2%">&nbsp;</td>
-			<td width="49%" valign="top">
-				&nbsp;
+			<td width="49%" valign="top">&nbsp;
+				
 			</td>
 		</tr>
 	</table><br>
@@ -198,6 +198,46 @@
 			</td>
             <td width="2%">&nbsp;</td>
 			<td width="49%" valign="top">
+				<form action="reports/bulk_student_letter.cfm" method="POST" target="blank">
+				<Table cellpadding=2 cellspacing="0" width="100%" style="border:1px solid ##C4CDE7;">
+					<tr><th colspan="3" bgcolor="##C4CDE7" height="25px;">Bulk Student Letter</th></tr>
+					<tr>
+						<td align="right">Program :</td>
+						<td><select name="programid" multiple size="5">
+								<cfloop query="get_programs"><option value="#programid#">#programname# &nbsp;</option></cfloop>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">Intl. Rep :</td>
+						<td><select name="intrep">
+								<option value="0">All</option>
+								<cfloop query="get_php_intl_reps"><option value="#userid#">#businessname#</option></cfloop>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">Insurance Policy :</td>
+						<td><select name="insurance_typeid">
+								<option value="0">All</option>
+								<cfloop query="get_insurance_policies"><option value="#insutypeid#">#type#</option></cfloop>
+							</select>
+						</td>
+					</tr>							
+					<tr><td align="right">Date Placed</td><td>* not required</td></tr>
+					<tr><td align="right">From :</td><td><input type="text" name="date1" size="6" validate="date" maxlength="10"> mm/dd/yyyy</td></tr>
+					<tr><td align="right">To :</td><td><input type="text" name="date2" size="6" validate="date" maxlength="10"> mm/dd/yyyy</td></tr>																												
+					<tr><td colspan="3" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+				</table>
+				</form>
+			</td>
+		</tr>
+	</table><br>
+
+	<!--- ROW 4 - 2 boxes --->
+	<table cellpadding=2 cellspacing="0" align="center" width="100%">
+		<tr>
+			<td width="49%" valign="top">
 				<cfform action="reports/labels_schools.cfm" method="POST">
 				<Table cellpadding=2 cellspacing="0" width="100%" style="border:1px solid ##C4CDE7;">
 					<tr><th colspan="3" bgcolor="##C4CDE7" height="25px;">School Labels</th></tr>
@@ -220,10 +260,14 @@
 				</table>
 				</cfform>
 			</td>
+            <td width="2%">&nbsp;</td>
+			<td width="49%" valign="top">
+			</td>
 		</tr>
 	</table><br>
 
-	<!--- ROW 4 - 2 boxes --->
+
+	<!--- ROW 5 - 2 boxes --->
 	<table cellpadding=2 cellspacing="0" align="center" width="100%">
 		<tr>
 			<td width="49%" valign="top">

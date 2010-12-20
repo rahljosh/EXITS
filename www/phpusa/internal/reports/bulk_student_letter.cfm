@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		bulk_host_family_letter.cfm
+	File:		bulk_student_letter.cfm
 	Author:		Marcus Melo
 	Date:		December 20, 2010
-	Desc:		Bulk Host Family Letter
+	Desc:		Bulk Student Letter
 
 	Updated: 	
 
@@ -44,6 +44,7 @@
             p.enddate, 
             p.type,
             country.countryname,
+            sc.schoolName,
             sd.year_begins, 
             sd.semester_ends, 
             sd.semester_begins, 
@@ -58,6 +59,8 @@
             smg_hosts h ON php.hostid = h.hostid 
         INNER JOIN 
             smg_companies c ON php.companyid = c.companyid
+		LEFT JOIN 
+        	php_schools sc ON php.schoolid = sc.schoolid         
         INNER JOIN 
             smg_users u ON s.intrep = u.userid
         LEFT OUTER JOIN 
@@ -123,6 +126,18 @@
 	<cfabort>
 </cfif>
 
+<cfif NOT VAL(qGetStudents.recordcount)>
+    No records were found that match your criteria.<br />
+    Please use your browser's back button to select different criteria and resubmit.
+	<cfabort>    
+</cfif>
+
+<cfif NOT VAL(qGetStudents.recordcount)>
+    No records were found that match your criteria.<br />
+    Please use your browser's back button to select different criteria and resubmit.
+	<cfabort>    
+</cfif>
+
 <cfoutput query="qGetStudents">
 
 <!--- Page Header --->
@@ -142,14 +157,10 @@
 </table>
 
 <table width="660" align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
-	<tr>
-		<td align="left">The #qGetStudents.hostlastname# Family<br>
-			#qGetStudents.address#<br>
-			<Cfif qGetStudents.address2 NEQ ''>#qGetStudents.address2#<br></Cfif>
-			#qGetStudents.city#, #qGetStudents.state# #qGetStudents.zip#
-		</td>
-		<td align="right">
-			Program: #qGetStudents.programname#<br>
+    <tr><td align="right">#DateFormat(now(), 'dddd, mmmm d, yyyy')#</td></tr>
+    <tr><td align="right">School: #qGetStudents.schoolname#</td></tr>
+    <tr>
+        <td align="right">
             From: 
             <cfif qGetStudents.type EQ 4>
                 #DateFormat(qGetStudents.semester_begins, 'mmm. d, yyyy')#
@@ -162,54 +173,40 @@
             <cfelse>
                 #DateFormat(qGetStudents.year_ends, 'mmm. d, yyyy')#
             </cfif>						
-			<br><br>
-		</td>
-	</tr>
+        </td>
+    </tr>	
 </table><br><br>
 	
 <table width="660" align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
 	<tr>	
 		<td>
-			<div align="justify">
-			Dear #qGetStudents.hostlastname# Family,
-		
-			<p>Welcome to the DMD Private High School Program!</p>
-
-			<p>I would like to begin by thanking you for opening you heart and home to 
-			#qGetStudents.firstname# #qGetStudents.familylastname# from #qGetStudents.countryname#. 
-			I hope that your hosting experience will be enjoyable and memorable.</p>
-			
-			<p>Enclosed, you will find your DMD arrival folder. This folder has been created to help you prepare the arrival of 
-			your international student and to familiarize you with DMD's Private High School Program. Inside, you will find a 
-			DMD Host Family Handbook that explains DMD's expectations and program rules. This Handbook also offers advice for 
-			different situations that may arise during your hosting experience. Please read your Handbook carefully and use it as
-			a guide whenever possible.</p>
-			
-			<p>We suggest that you contact the student before 
-			<cfif qGetStudents.sex EQ 'male'>he<cfelseif qGetStudents.sex EQ 'female'>she<cfelse>he or she</cfif> arrives. 
-			Not only will such communication relieve your anxieties, but it will also do wonders to relieve your student and his or her
-			parents' anxieties. Your initial contact will also give you the opportunity to re-confirm your student's arrival information.</p>
-
-			<p>The DMD office is in constant communication with your local representatives regarding your student's flight information. 
-			As soon as DMD receives your student's flight details we will forward this information to you via fax, phone or post. 
-			In most cases the DMD local contact person will be giving this information directly to your local representative.</p>
-
-			<p>Also included in your family's arrival folder, are numerous flyers that will help you prepare, organize and learn about your
-			international student before <cfif qGetStudents.sex EQ 'male'>he<cfelseif qGetStudents.sex EQ 'female'>she<cfelse>he or she</cfif> 
-			arrives! Please take a few minutes to review all materials.</p>
-
-			<p>If you should have any questions regarding your arrival folder, please feel free to contact DMD. 
-			I will be happy to answer any questions or address any concerns you may have.</p>
-
-			<p>Thank you again.</p>
-			</div>
+            <div align="justify">
+    
+            <p>Dear #qGetStudents.firstname# #qGetStudents.familylastname# (###qGetStudents.studentid#).
+    
+            <p>On behalf of everyone at DMD, I would like to take this opportunity to welcome you to this exciting, 
+            challenging and rewarding program.</p>
+            
+            <p>Everyone involved with our Private High School Program wants to assure you that we have worked hard to make sure that this
+            experience will be memorable and beneficial. We are here to assist you in any way possible throughout your stay. 
+            Your school is #qGetStudents.schoolname# and they are very eager to greet you and ensure that your stay goes well.</p>
+            
+            <p>We take our mission statement, "Educating Tomorrow's Leaders" very seriously. Our staff is always available to you. 
+            We are fully aware that your experience requires careful planning as well as care, love and attention.</p>
+            
+            <p>We know that we can all make a difference in this world when we all work together for our common goal. 
+            We know our mission is only possible when we all join together to make this upcoming year a great success for everyone!!</p>
+            
+            <p>We look forward to seeing you in the States.</p>	
+                    
+            </div>
 		</td>
 	</tr>
 </table>
 
 <!--- PAGE BOTTON --->	
 <table width="660" align="center" border=0 cellpadding="1" cellspacing="1" style="font-size:13px">
-	<tr><td>Best Regards,</td></tr>	
+	<tr><td>Sincerely,</td></tr>	
 	<tr><td>&nbsp;</td></tr>
 	<tr><td><img src="../pics/lukesign.jpg" border="0"></td></tr>
 	<tr><td>Luke Davis</td></tr>
