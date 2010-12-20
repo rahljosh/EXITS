@@ -83,7 +83,7 @@
 
       <li><a href="index.cfm?curdoc=reports/reports_menu">Reports</a>
         <ul>
-          <li><a href="index.cfm?curdoc=reports/menu_id_cards">ID Cards & Labels</a></li>
+          <li><a href="index.cfm?curdoc=reports/menu_id_cards">ID Cards & Labels and Bulk Letters</a></li>
         </ul>
       </li>
 
@@ -106,7 +106,6 @@
           </cfif>
           <li><a href="index.cfm?curdoc=tools/returning_j1_students">Returning Students J1 to F1</a></li>
           <li><a href="index.cfm?curdoc=forms/update_alerts">System Messages</a></li>
-          <li><a href="index.cfm?curdoc=reports/select_batch">Welcome Letter Batch</a></li>
         </ul>
       </li>
 

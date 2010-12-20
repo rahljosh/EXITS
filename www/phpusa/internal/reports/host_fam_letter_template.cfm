@@ -12,11 +12,10 @@
 	INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
 	LEFT JOIN smg_programs p ON stu_prog.programid = p.programid
 	LEFT JOIN smg_hosts h ON stu_prog.hostid = h.hostid
-	<!--- LEFT JOIN smg_states sta ON h.state = sta.id ---> 
 	LEFT JOIN smg_countrylist c ON c.countryid = s.countryresident
-	WHERE 1 = 1 <!----stu_prog.welcome_letter_printed = NULL---->
-	<cfif isDefined('form.intrep')><!----<cfif url.intrep is 'all'><cfelse>---->AND s.intrep = #form.intrep#<!----</cfif>----></cfif>
-	<cfif isDefined('form.program')>AND p.programid = #form.program#</cfif>
+	WHERE 1 = 1 
+	<cfif isDefined('form.intrep')>AND s.intrep = #form.intrep#</cfif>
+	<cfif isDefined('form.program')>AND stu_prog.programid = #form.program#</cfif>
 	<cfif isDefined('form.school')>AND stu_prog.schoolid = #form.school#</cfif>
 	<cfif isDefined('form.date')>AND stu_prog.i20received = #form.date#</cfif>
 	ORDER BY assignedid DESC	
