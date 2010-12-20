@@ -4,8 +4,8 @@
 <script src="SpryAssets/SpryMenuBar.js" type="text/javascript"></script>
 <link href="SpryAssets/SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
 <link href="css/granby.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript1.1">
-<!--
+<!--<script language="JavaScript1.1">
+
 
 /*
 JavaScript Image slideshow:
@@ -35,8 +35,8 @@ winslide.location=slidelinks[whichlink]
 winslide.focus()
 }
 
-//-->
-</script>
+
+</script>//-->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Granby Prep Academy</title>
@@ -50,13 +50,13 @@ winslide.focus()
 <div id="container">
   <div id="header">
   <div class="events">
-  <a href="javascript:gotoshow()"><img src="images/slideshow/pic2.jpg" name="slide" border=0 width=150 height=275></a>
-<script>
-<!--
+  <a href="http://www.granbyprep.com/announcement.cfm"><img src="images/slideshow/pic5.jpg" name="slide" border=0 width=150 height=275></a>
+<!--<script>
+<a href="javascript:gotoshow()">
 
 //configure the paths of the images, plus corresponding target links
-slideshowimages("images/slideshow/pic2.jpg","images/slideshow/pic3.jpg")
-slideshowlinks("http://www.granbyprep.com/openhouse/","https://www.granbyprep.com/admissions/index.cfm?","http://www.sss.nais.org/parents/")
+slideshowimages("images/slideshow/pic5.jpg", "images/slideshow/pic2.jpg","images/slideshow/pic3.jpg","images/slideshow/pic4.jpg", "images/slideshow/pic5.jpg")
+slideshowlinks("http://www.granbyprep.com/announcement.cfm", "https://www.granbyprep.com/admissions/index.cfm?","http://www.sss.nais.org/parents/","http://www.granbyprep.com/openhouse/openhouse.cfm", "http://www.granbyprep.com/announcement.cfm")
 
 //configure the speed of the slideshow, in miliseconds
 var slideshowspeed=3000
@@ -76,8 +76,8 @@ setTimeout("slideit()",slideshowspeed)
 }
 slideit()
 
-//-->
 </script>
+//-->
 
 
     </div>

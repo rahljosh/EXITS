@@ -38,16 +38,14 @@ body {
 <div id="mainContent">
    
     <h2>Employment Opportunities</h2>
+    <h4 class="red">We will begin posting job opportunities after December 15th</h4>
 <p class="paragraphText">Thank you for your interest in employment at Granby Preparatory Academy. If you have any questions please email us at: <strong>info@granbyprep.com.</strong> <br /><br />
   We do not officially open until September, 2011. However, we will begin interviewing to fill faculty and administrative positions in November and December and will post the positions on this page as they become available. Please check back periodically.<br /><br />
   If you are interested in working in food services at GPA, please contact our dining services vendor, Sage Food Services, by clicking on the link below<a href="http://www.sagedining.com/applicationNEW.php">.</a></p>
 <p><a href="http://www.sagedining.com/applicationNEW.php"><img src="images/sageOnline_24.png" border="0" /></a></p><br />
 
   <!-- end mainContent --></div>
-  <div id="footer">
-    <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
-    For more information contact us at info@granbyprep.com</p>
-  <!-- end footer --></div>
+<cfinclude template ="footer.cfm">
 <!-- end container --></div>
 <script type="text/javascript">
 <!--

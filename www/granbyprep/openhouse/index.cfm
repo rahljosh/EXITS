@@ -24,7 +24,7 @@ td, th {
 }
 .InsPhoto {
 	float: right;
-	height: 250px;
+	height: 500px;
 	width: 330px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 10px;
@@ -32,12 +32,26 @@ td, th {
 	color: #000;
 	text-align: center;
 }
+.call-out {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	height: 200px;
+	width: 250px;
+	background-color: #FDD22B;
+	margin-top: 20px;
+	margin-left: 10px;
+	padding-top: 10px;
+	padding-right: 30px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	line-height: 16px;
+}
 -->
 </style></head>
 
 <body class="oneColElsCtrHdr">
 <Cfif isDefined('form.sendEmail')>
-<cfmail  to="#APPLICATION.EMAIL.headMaster#;#APPLICATION.EMAIL.admissionsOfficer#;jeimi@exitgroup.org" replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Info Request"> 
+<cfmail  to="#APPLICATION.EMAIL.headMaster#;#APPLICATION.EMAIL.admissionsOfficer#;jeimi@exitgroup.org" replyto="#form.email#" from="support@granbyprep.com" type="html" SUBJECT="Granby Open House Registration"> 
 <p> The info submitted was:
   <br /><br />
   <strong>Student Information</strong><br />
@@ -76,11 +90,18 @@ td, th {
    
     <h2>Granby Preparatory Academy Open House</h2>
      <cfif not isDefined('form.sendEmail')>
- <p class="paragraphText">Come visit us at GPA on<strong> Sunday, November 7th 2010 from 2:00 &#8211; 5:00 PM</strong> for our Open House!  Please fill out the registration form below. </p>
+ <p class="paragraphText">Come visit us at GPA on<strong> January 23rd 2011 from 2:00 &#8211; 5:00 PM</strong> for our Open House!  Please fill out the registration form below. </p>
 <p class="paragraphText">Guests will be shown around campus on a tour of the grounds and given an opportunity to see the exciting opportunities available at Granby Preparatory Academy! Come and see New England's newest world-class high school!</p><br />
 
   <div class="InsPhoto"><img src="images/GPA_Arial.jpg" width="330" height="220" alt="GAP arial shot" /><br /><br />
-  Aerial shot of Granby Prep Academy</div>
+  Aerial shot of Granby Prep Academy
+    <div class="call-out">
+      <h2>Open House</h2>
+      <p>Granby Preparatory Academy opened its doors for the first time to the area residents to come and see all of the changes that the GPA campus has undergone.</p>
+      <p><a href="openhouse.cfm">Click to see video </a><br />
+        from the first Open House</p>
+    </div>
+  </div>
 <cfoutput>
   <cfform id="RequestInfo" name="RequestInfo" method="post" action="#CGI.SCRIPT_NAME#">
   <cfinput type="hidden" name="sendEmail" value="1"/>
@@ -165,10 +186,7 @@ td, th {
  <p>&nbsp;</p>
 
   <!-- end mainContent --></div>
-  <div id="footer">
-    <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
-    For more information contact us at info@granbyprep.com</p>
-  <!-- end footer --></div>
+<cfinclude template ="../footer.cfm">
 <!-- end container --></div>
 <script type="text/javascript">
 <!--

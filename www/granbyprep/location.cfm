@@ -19,7 +19,6 @@ body {
 }
 p {
 	text-align: justify;
-	line-height: 17px;
 }
 -->
 </style></head>
@@ -67,10 +66,7 @@ However, by 1875, local industry was gone and agriculture, primarily dairy farmi
   Amtrak's passenger rail service between Montreal and Washington, D.C. is accessible in neighboring Amherst<br /></p><br /><br />
   <!-- end mainContent -->
 </div>
-  <div id="footer">
-    <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
-    For more information contact us at info@granbyprep.com</p>
-  <!-- end footer --></div>
+<cfinclude template ="footer.cfm">
 <!-- end container --></div>
 <script type="text/javascript">
 <!--
