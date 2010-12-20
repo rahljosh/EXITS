@@ -39,7 +39,7 @@ body {
 
     <h2>About Granby Prep</h2>
       <div class="photoAbout"><img src="images/facts.jpg"/></div>
-    <p class="paragraphText">Granby Preparatory Academy is located on beautiful grounds in the residential community of Granby, Massachusetts. The location, in the heart of New England, provides close proximity to several large universities, including Harvard and Yale, both of which are approximately an hour and a half from the campus. Several other prestigious universities and colleges, such as Boston College, Boston University, Brown University, UMass-Amherst, and Williams College are also in this region. Boston, Massachusetts and New York, New York are accessible to GPA students and serve as school trip destinations. Logan International Airport is 90 minutes from campus and Bradley International Airport is 40 minutes from campus and the Amtrak train station is 20 minutes from campus.<br />
+    <p class="paragraphText">Granby Preparatory Academy is located on beautiful grounds in the residential community of Granby, Massachusetts. The location, in the heart of New England, provides close proximity to several large universities, including Harvard and Yale, both of which are approximately an hour and a half from the campus. Several other prestigious universities and colleges, such as the Five College Consortium comprised of Amherst College, Hampshire College, Mt. Holyoke College, Smith College, and UMass-Amherst are in the immediate area, while Boston College, Boston University, Brown University, and Williams College are a short drive away. Boston, Massachusetts and New York, New York are accessible to GPA students and serve as school trip destinations. Logan International Airport is 90 minutes from campus and Bradley International Airport is 40 minutes from campus and the Amtrak train station is 20 minutes from campus.<br />
       <br />
 
 The traditional college preparatory curriculum employs several methods of learning including class discussions, group projects, individual work, and tutorial sessions for additional assistance. Advanced Placement courses as well as Honors Programs are available for all subjects. Faculty are equipped with the latest teaching tools and encourage students to be active learners.<br />
@@ -48,10 +48,7 @@ The traditional college preparatory curriculum employs several methods of learni
 The International Students at GPA have every level of English as a Second Language courses and standardized test preparation available. GPA is committed to teaching all students, domestic and international, the importance of thinking, learning, and acting globally. Students have the opportunity to travel to various countries on exchange trips with other schools, as well as take part in hosting several international and domestic business and political leaders on campus. The learning opportunities at GPA are not just occurring in the classroom, but extend to the dormitory, the athletic fields, the community, and the rest of the world.</p>
     <p></p>
   <!-- end mainContent --></div>
-  <div id="footer">
-    <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
-    For more information contact us at info@granbyprep.com</p>
-  <!-- end footer --></div>
+<cfinclude template ="footer.cfm">
 <!-- end container --></div>
 <script type="text/javascript">
 <!--

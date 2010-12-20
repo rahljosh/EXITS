@@ -66,10 +66,7 @@ body {
 <ol><strong>Laundry Service </strong>(mandatory for boarding students) $450 per semester.</ol></ul>
 <br /><br />
   <!-- end mainContent --></div>
-  <div id="footer">
-    <p>Granby Preparatory Academy &nbsp; |&nbsp;  (800) 766-4656 or (631) 893-4540 &nbsp; |  &nbsp;66 School Street, Granby , MA 01033<br />
-    For more information contact us at info@granbyprep.com </p>
-  <!-- end footer --></div>
+<cfinclude template ="footer.cfm">
 <!-- end container --></div>
 <script type="text/javascript">
 <!--
