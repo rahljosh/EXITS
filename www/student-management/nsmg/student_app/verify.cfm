@@ -7,7 +7,7 @@ body {font:Arial, Helvetica, sans-serif;}
 
 <cfif isDefined('form.randid')>
 	<cfquery name="check_info" datasource="MySQL">
-		SELECT email, uniqueid, randid, phone, studentid, firstname, familylastname
+		SELECT email, uniqueid, randid, phone, studentid, firstname, familylastname, companyid
 		FROM smg_students
 		WHERE randid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.randid#">
 		AND email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
@@ -17,7 +17,13 @@ body {font:Arial, Helvetica, sans-serif;}
 	<cfif check_info.recordcount eq 0>
 				<table align="center" width=550 class=thin-border border=0>
 						<tr>
-							<td colspan=2><img src="pics/top-email.gif"></td>
+							<td colspan=2>
+                            <cfif client.companyid eq 11>
+                            	<img src="pics/WEPbanner.jpg">
+                            <cfelse>
+                            	<img src="pics/EXITSbanner.jpg">
+                            </cfif>
+                            </td>
 						</tr>
 						<tr>
 							<td align="center" colspan=2><h1>Account Verification</h1></td>
@@ -38,7 +44,7 @@ body {font:Arial, Helvetica, sans-serif;}
 							<td align="right">Your ID Number sent via email:</td><td> <cfinput type=text name=randid size = 8 message="Please enter the validation code included in your email." required="yes"></td>
 						</tr>
 					<tr>
-						<td colspan=2 align="center"><br><cfinput name="Submit" type="image" src="pics/submit.gif" border=0 alt="Start Application"></td>
+						<td colspan=2 align="center"><br><cfinput name="Submit" type="image" src="pics/submit_45.png" border=0 alt="Start Application"></td>
 					</tr>
 					</cfform>
 							
@@ -62,7 +68,11 @@ function checkPassword() {
 </script> 
 				<table align="center" width=550 class=thin-border>
 			<tr>
-				<td colspan=2><img src="pics/top-email.gif"></td>
+				<td colspan=2><cfif companyid eq 11>
+                            	<img src="pics/WEPbanner.jpg">
+                            <cfelse>
+                            	<img src="pics/EXITSbanner.jpg">
+                            </cfif></td>
 			</tr>
 			<tr>
 				<td align="center" colspan=2><h1>Account Verification</h1></td>
@@ -84,7 +94,7 @@ function checkPassword() {
 						</tr>
 						<tr>
 							<td colspan=2 align="center"><br>
-								<input name="Submit" type="image" src="pics/submit.gif" border=0 alt="Start Application" onClick="return checkPassword();">
+								<input name="Submit" type="image" src="pics/submit_45.png" border=0 alt="Start Application" onClick="return checkPassword();">
 								</form><cfset client.studentid = check_info.studentid></td>
 							</tr>					
 			
@@ -97,7 +107,13 @@ function checkPassword() {
 	
 	<table align="center" width=550 class=thin-border>
 			<tr>
-				<td colspan=2><img src="pics/top-email.gif"></td>
+				<td colspan=2>
+                 <cfif companyid eq 11>
+                            	<img src="pics/WEPbanner.jpg">
+                            <cfelse>
+                            	<img src="pics/EXITSbanner.jpg">
+                            </cfif>
+                </td>
 			</tr>
 			<tr>
 				<td align="center" colspan=2><h1>Account Verification</h1></td>
@@ -133,7 +149,7 @@ function checkPassword() {
 				<td align="right">Your ID Number sent via email:</td><td> <cfinput type=text name=randid size = 8 message="Please enter the validation code included in your email." required="yes"></td>
 			</tr>
 		<tr>
-			<td colspan=2 align="center"><br><cfinput name="Submit" type="image" src="pics/submit.gif" border=0 alt="Start Application"></td>
+			<td colspan=2 align="center"><br><cfinput name="Submit" type="image" src="pics/submit_45.png" border=0 alt="Start Application"></td>
 		</tr>
 		
 		</cfform>
