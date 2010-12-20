@@ -108,7 +108,7 @@ function checkPassword() {
 	<table align="center" width=550 class=thin-border>
 			<tr>
 				<td colspan=2>
-                 <cfif companyid eq 11>
+                 <cfif client.companyid eq 11>
                             	<img src="pics/WEPbanner.jpg">
                             <cfelse>
                             	<img src="pics/EXITSbanner.jpg">
