@@ -221,14 +221,14 @@ This account was found in EXITS.  Trip information has been recorded but not ver
 insert into student_tours (studentid, tripid, nationality, stunationality, person1, person2, person3, med, date, ip, unqid)
 			values (#form.ret_studentid#, #x#, '#form.nationality#', '#form.stunationality#', '#form.person1#', '#form.person2#', '#form.person3#', '#form.med#',   now(), '#cgi.REMOTE_ADDR#', '#form.unqid#')
 </cfquery>
+
 <cfif isDefined('form.host_siblings')>
 <cfquery name="tripid" datasource="#application.dsn.Source#">
 select max(id) mastertripid
 from student_tours
 </cfquery>
     <cfloop list=#form.host_siblings# index=i>
-    <cfset sibEncrpytedCC = encrypt(cc, 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', "desede", "hex")> 
-            <cfquery datasource="#APPLICATION.DSN.Source#">
+      <cfquery datasource="#APPLICATION.DSN.Source#">
         insert into student_tours_siblings (fk_studentid, mastertripid,siblingid, tripid)
                     values (#form.ret_studentid#, #tripid.mastertripid#, #i#, #x#)
         </cfquery>
