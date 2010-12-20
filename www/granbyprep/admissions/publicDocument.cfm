@@ -36,7 +36,7 @@
 	tampering with the URLs.
 --->
 <cfif ( APPLICATION.CFC.DOCUMENT.DocumentExists(ID=URL.ID) AND 
-	(NOT Compare(APPLICATION.CFC.DOCUMENT.HashID(URL.id), URL.key))	
+	(NOT Compare(APPLICATION.CFC.UDF.generateHashID(URL.id), URL.key))	
 	)>
 	<!--- The file exists, to return it --->
 
