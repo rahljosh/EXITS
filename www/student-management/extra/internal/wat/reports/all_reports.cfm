@@ -45,6 +45,8 @@
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- All cancelled students</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInformationByHC" class="style4">- Candidate Flight Information</a></p>
+                        
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInfo" class="style4">- Arrival Information</a></p>
  	               </td>
                 </tr>
             </table>

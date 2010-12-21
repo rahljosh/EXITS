@@ -97,7 +97,7 @@
             eh.pickUpContactEmail,
             eh.pickUpContactHours,
             et.business_type as typeBusiness, 
-            s.stateName as stateName,  
+            s.stateName,  
             workSiteS.stateName as workSiteStateName,
             airportS.stateName as arrivalAirportStateName            
         FROM 
@@ -108,7 +108,6 @@
         	smg_states workSiteS ON eh.workSiteState = workSiteS.ID
         LEFT OUTER JOIN 
         	smg_states airportS ON eh.arrivalAirportState = airportS.ID
-            
         LEFT OUTER JOIN 
         	extra_typebusiness et ON et.business_typeID = eh.business_typeID
         WHERE 
@@ -484,8 +483,8 @@
 
 	var displayHousingInfo = function() { 
 		// Get Housing Info
-		getHousingInfo = $("#isHousingProvided").val();
-		if ( getHousingInfo > 0 ) {
+		getHousingInfo = $('input:radio[name=isHousingProvided]:checked').val();
+		if ( getHousingInfo == 1 ) {
 			$(".housingInfo").fadeIn("fast");
 		} else {
 			//erase data
@@ -496,14 +495,11 @@
 
 	var displayPickUpInfo = function() { 
 		// Get PickUp Info
-		getPickUpInfo = $("#isPickUpProvided").val();
-		if ( getPickUpInfo > 0 ) {
+		getPickUpInfo = $('input:radio[name=isPickUpProvided]:checked').val();
+		if ( getPickUpInfo == 1 ) {
 			$(".pickUpInfo").fadeIn("fast");
 		} else {
 			//erase data
-			$("#arrivalAirport").val("");
-			$("#arrivalAirportCity").val("");
-			$("#arrivalAirportState").val("");
 			$("#arrivalPickUpHours").val("");
 			$("#arrivalInstructions").val("");
 			$("#pickUpContactName").val("");
@@ -925,13 +921,11 @@
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Is Housing Provided?</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">
-                                                	#YesNoFormat(VAL(FORM.isHousingProvided))#
-                                                </span>
-                                                <select name="isHousingProvided" id="isHousingProvided" class="style1 editPage" onchange="displayHousingInfo();">
-                                              		<option value="0" <cfif FORM.isHousingProvided EQ 0> selected="selected" </cfif> >No</option>
-                                                    <option value="1" <cfif FORM.isHousingProvided EQ 1> selected="selected" </cfif> >Yes</option>
-	                                            </select>
+                                            	<span class="readOnly">#YesNoFormat(VAL(FORM.isHousingProvided))#</span>
+                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedNo" value="0" class="style1 editPage" onclick="displayHousingInfo();" <cfif FORM.isHousingProvided EQ 0> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isHousingProvidedNo">No</label>
+                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedYes" value="1" class="style1 editPage" onclick="displayHousingInfo();" <cfif VAL(FORM.isHousingProvided)> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isHousingProvidedYes">Yes</label>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField housingInfo">
@@ -959,18 +953,6 @@
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Information</td>
                                         </tr>
                                         <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Is pick-up available?</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">
-                                                	#YesNoFormat(VAL(FORM.isPickUpProvided))#
-                                                </span>
-                                                <select name="isPickUpProvided" id="isPickUpProvided" class="style1 editPage" onchange="displayPickUpInfo();">
-                                              		<option value="0" <cfif FORM.isPickUpProvided EQ 0> selected="selected" </cfif> >No</option>
-                                                    <option value="1" <cfif FORM.isPickUpProvided EQ 1> selected="selected" </cfif> >Yes</option>
-	                                            </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td width="35%" class="style1" align="right"><strong>Aiport/Station Code:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.arrivalAirport#</span>
@@ -994,6 +976,16 @@
 		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.arrivalAirportState>selected</cfif>>#qGetStateList.stateName#</option>
         	                                      	</cfloop>
 	                                            </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Is pick-up available?</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#YesNoFormat(VAL(FORM.isPickUpProvided))#</span>
+                                                <input type="radio" name="isPickUpProvided" id="isPickUpProvidedNo" value="0" class="style1 editPage" onclick="displayPickUpInfo();" <cfif FORM.isPickUpProvided EQ 0> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isPickUpProvidedNo">No</label>
+                                                <input type="radio" name="isPickUpProvided" id="isPickUpProvidedYes" value="1" class="style1 editPage" onclick="displayPickUpInfo();" <cfif VAL(FORM.isPickUpProvided)> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isPickUpProvidedYes">Yes</label>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
