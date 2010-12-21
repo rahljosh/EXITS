@@ -74,9 +74,17 @@
 		<tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>
 		</cfif>
 		</cfform>
-		<tr>
-			<td colspan=2 align="center"><a href="resend_student_login.cfm?unqid=#get_student_info.uniqueid#">Resend Login Info</a> <br> (if you changed the info, click save before clicking on resend)</td>
-		</tr>
+        
+         <cfif url.status neq 1>
+	<tr>
+		<td colspan=2 align="center"><a href="resend_student_login.cfm?unqid=#get_student_info.uniqueid#">Resend Login Info</a> - (if you changed the info, click save before clicking resend)</td>
+	</tr>
+    	<cfelse>
+        <tr><td colspan="2"><font size=-2>Student is not active - <a href="index.cfm?curdoc=student_app/querys/resend_welcome_student&unqid=#get_student_info.uniqueid#">Resend Welcome email</A></font></td>
+        </tr>
+    	</cfif>
+        
+
 	</table>		
 <cfelseif form.email EQ '' OR form.password EQ ''>
 	<table width="450" border=0 cellpadding=3 cellspacing=0 align="center">
@@ -104,9 +112,14 @@
 		<tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>				
 		</cfif>
 		</cfform>
+       <cfif url.status neq 1>
 	<tr>
 		<td colspan=2 align="center"><a href="resend_student_login.cfm?unqid=#get_student_info.uniqueid#">Resend Login Info</a> - (if you changed the info, click save before clicking resend)</td>
 	</tr>
+    	<cfelse>
+        <tr><td colspan="2"><font size=-2>Student is not active - <a href="index.cfm?curdoc=student_app/querys/resend_welcome_student&unqid=#get_student_info.uniqueid#">Resend Welcome email</A></font></td>
+        </tr>
+    	</cfif>
 	</table>
 <cfelse>
 

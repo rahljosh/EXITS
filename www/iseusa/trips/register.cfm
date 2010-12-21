@@ -596,56 +596,10 @@ Registration information has been submitted:<Br />
         <div class="tripsTours">
         <cfif isDefined('form.process')>
         	
-            <cfoutput>
-            <h2>Almost done, just need to pay.</h2> 
-            <h2>Make sure that were registering you for the correct trip.<br />
-            Click on the "Add to Cart" button. <font size=-1>(added a sibling on previous page?  Update the qty to 2)</font><Br />
-            Then click on the Google Checkout button to pay for your trip. <br /><Br />
-            </h2>
+            
+            <h2>Your are registered.  <br /><br />
+            Our online payment system is currently down.  An agent will contact you shortly to collect payment information. We appologize for any inconvenience this may cause.<br /><Br /></h2> 
         
-        <h2>Trip Information</h2>
-				<em>You are registering for the following tour.</em>
-                <Table width=100% cellspacing=0 cellpadding=2 class="border">
-     
-            <Tr>
-                <td>
-                  <table  width=100% cellspacing=0 cellpadding=2>
-                    <tr>
-                        <td width="22" class="boxB"></td><Td width="181" class="boxB"><h3><u>Tour</Td>
-                        <td width="169" class="boxB"><h3><u>Dates</td>
-                        <td width="84" class="boxB"><h3><u>Price</td>
-                        <td width="73" class="boxB"><h3><u>Status</td>
-                        <td width="73" class="boxB"><h3><u>Confirm</td>
-                    </Tr>
-                    <cfset amount_due = 0>
-                    <cfloop list="#SELECT_TRIP#" index=t>
-                    <Cfquery name="strips" datasource="#APPLICATION.DSN.Source#">
-                    select *
-                    from smg_tours 
-                    where tour_id = #t#
-                    </Cfquery>
-                    <tr id=#tour_id# bgcolor="##deeaf3">
-                    
-                        <td></td>
-                        <Td align="left" valign="middle" class="infoBold"><h3>#strips.tour_name#</Td>
-                        <Td align="left" valign="middle"><h3>#strips.tour_date#</Td>
-                        <td align="center" valign="middle" class="infoBold"><h3>#LSCurrencyFormat(strips.tour_price,'local')#</td>
-                        <td align="center" valign="middle"><h3>#strips.tour_status#</td>
-                        <td>
-                        <div class="product"><input value="#strips.tour_name# - #form.unqid#" class="product-title" type="hidden">
-                        <input value="http://www.iseusa.com/trips/images/trips_#t#.png" class="product-image" type="hidden">
-                        <input value="#strips.tour_price#" class="product-price" type="hidden">
-                        <div title="Add to cart" role="button" tabindex="0" class="googlecart-add-button"></div></div>
-                        </td>
-                     </Tr>
-                  	<cfset amount_due = #amount_due# + #strips.tour_price#>
-                    </cfloop>
-                                           
-                </table>
-                </td>
-            </Tr>
-         </Table>
-        </cfoutput>
         <cfelse>   
         
         <cfquery name="trips" datasource="#APPLICATION.DSN.Source#">
@@ -855,21 +809,15 @@ Registration information has been submitted:<Br />
            </cfif>
            
          </cfform>
-		<script type="text/javascript">
-			document.getElementById('cc_month').selectedIndex = -1;
-		</script>
-        		<script type="text/javascript">
-			document.getElementById('cc_year').selectedIndex = -1;
-		</script>
-        
+	        
           </cfoutput>
           </cfif>
-          <div align="right"><div id="googleCheckoutLogo"></div><script src='https://checkout.google.com/buttons/logos?merchant_id=926853133876547&loc=en_US&f=png' ></script>
+       
       </div>
         <div id="main" class="clearfix"></div>
       <!-- endtripTours --></div>
-      <div id="main" class="clearfix"></div>
-      <!-- end whtMiddle --></div>
+ 
+
       <div class="whtBottom"></div>
       <!-- end subpages --></div>
     <!-- end mainContent --></div>
@@ -879,6 +827,5 @@ Registration information has been submitted:<Br />
   <div class="clear"></div>
 <cfinclude template="../bottomLinks.cfm">
 <!-- end footer --></div>
-<script  id='googlecart-script' type='text/javascript' src='https://checkout.google.com/seller/gsc/v2_2/cart.js?mid=926853133876547' integration='jscart-wizard' post-cart-to-sandbox='false' currency='USD' productWeightUnits='LB'></script>
 </body>
 </html>
