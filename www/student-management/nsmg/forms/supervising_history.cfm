@@ -31,7 +31,9 @@ function areYouSure() {
 	LEFT JOIN smg_students s ON s.studentid = rep.studentid
 	LEFT JOIN smg_payment_types type ON type.id = rep.paymenttype
 	WHERE rep.agentid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer"> AND rep.companyid = '#client.companyid#'
-	ORDER BY studentid, rep.date
+    ORDER BY         
+        studentID,
+        rep.date DESC        
 </cfquery>
 
 <cfoutput>
@@ -40,13 +42,13 @@ function areYouSure() {
 		<td height=24 width=13 background="../pics/header_leftcap.gif">&nbsp;</td>
 		<td width=26 background="../pics/header_background.gif"><img src="../pics/user.gif"></td>
 		<td background="../pics/header_background.gif"><h2>#companyshort.companyshort#</h2></td>
-		<td align="right" background="../pics/header_background.gif"><h2>All Payments for #rep_info.firstname# #rep_info.lastname#</h2></td>
+		<td align="right" background="../pics/header_background.gif"><h2>All Payments for #rep_info.firstname# #rep_info.lastname# ###rep_info.userID#</h2></td>
 		<td width=17 background="../pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
 
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-	<tr><td><b>Date</b></td><Td><b>ID</b></Td><td><b>Student</b></td><td><b>Type</b></td><td><b>Amount</b></td><td><b>Comment</b></td><td><b>Trans. Type</b></td><td>Delete</td></tr>
+	<tr><td><b>Date</b></td><Td><b>ID</b></Td><td><b>Student</b></td><td><b>Type</b></td><td><b>Amount</b></td><td><b>Comments</b></td><td><b>Trans. Type</b></td><td><b>Delete</b></td></tr>
 		<Cfif all_charges.recordcount is '0'>
 		<tr><td colspan=5 align="center">No payments submitted.</td></tr>
 		<cfelse>
