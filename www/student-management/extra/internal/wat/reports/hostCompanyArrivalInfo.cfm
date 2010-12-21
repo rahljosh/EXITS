@@ -1,0 +1,339 @@
+<!--- Kill extra output --->
+<cfsilent>
+
+	<cfsetting requesttimeout="9999">
+
+    <!--- Param FORM Variables --->
+	<cfparam name="FORM.programID" default="">
+	<cfparam name="FORM.hostCompanyID" default="0">
+	<cfparam name="FORM.printOption" default="1">
+    <cfparam name="FORM.submitted" default="0">
+
+    <cfquery name="qGetProgramList" datasource="MySql">
+        SELECT 
+        	programID,
+            programname             
+        FROM 
+        	smg_programs 
+        WHERE 
+        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfquery>
+
+    <cfquery name="qGetHostCompanyList" datasource="MySql">
+        SELECT 
+        	hostcompanyID, 
+            name 
+        FROM 
+        	extra_hostcompany 
+        WHERE         	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND 
+        	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+        <!---
+        AND
+        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        --->
+		ORDER BY 
+        	name
+    </cfquery>
+
+    <!--- FORM submitted --->
+    <cfif FORM.submitted>
+
+        <!--- Get Host Companies Assigned to Candidates --->
+        <cfquery name="qGetHostCompany" datasource="MySQL">
+            SELECT DISTINCT
+                eh.hostCompanyID,
+                eh.name,
+                eh.city, 
+                eh.state,
+                eh.isHousingProvided,
+                eh.housingProvidedInstructions,
+                eh.isPickUpProvided,
+                eh.arrivalAirport,
+                eh.arrivalAirportCity,
+                eh.arrivalAirportState,
+                eh.arrivalPickUpHours,
+                eh.arrivalInstructions,
+                eh.pickUpContactName,
+                eh.pickUpContactPhone,
+                eh.pickUpContactEmail,
+                eh.pickUpContactHours,
+                s.stateName, 
+                airportS.state as arrivalAirportStateCode 
+            FROM 
+            	extra_hostcompany eh 
+			<cfif VAL(FORM.programID)>
+            INNER JOIN
+            	extra_candidates ec ON ec.hostCompanyID = eh.hostCompanyID
+                	AND
+                    	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+					AND
+                    	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                    AND 
+                        ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+			</cfif>                        
+            LEFT OUTER JOIN 
+                smg_states s ON eh.state = s.ID
+            LEFT OUTER JOIN 
+                smg_states airportS ON eh.arrivalAirportState = airportS.ID
+            WHERE 
+                1 = 1
+                <!--- 
+				eh.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+				--->
+			<cfif VAL(FORM.hostcompanyID)> 
+                AND
+                    eh.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+			</cfif>
+       		GROUP BY
+            	eh.hostCompanyID
+            ORDER BY
+            	eh.name
+		</cfquery>
+		
+	</cfif>
+
+</cfsilent>
+
+<style type="text/css">
+<!--
+.tableTitleView {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	padding:2px;
+	color:#FFFFFF;
+	background:#4F8EA4;
+}
+-->
+</style>
+
+<cfoutput>
+
+<form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+<input type="hidden" name="submitted" value="1" />
+
+    <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
+        <tr valign="middle" height="24">
+            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
+            	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> Arrival Information</font>
+			</td>                
+        </tr>
+        <tr valign="middle" height="24">
+            <td valign="middle" colspan=2>&nbsp;</td>
+        </tr>
+        <tr valign="middle">
+            <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
+            <td valign="middle">  
+                <select name="hostCompanyID" class="style1">
+                    <option value="ALL">---  All Host Companies  ---</option>
+                    <cfloop query="qGetHostCompanyList">
+                    	<option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
+                    </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="right" class="style1"><b>Program: </b></td>
+            <td>
+                <select name="programID" class="style1">
+                    <option value="0"></option>
+                    <cfloop query="qGetProgramList">
+                    	<option value="#programID#" <cfif qGetProgramList.programID EQ FORM.programID> selected </cfif> >#programname#</option>
+                    </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" class="style1"><b>Format: </b></td>
+            <td class="style1"> 
+                <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked="checked" </cfif> > <label for="printOption1">Onscreen (View Only)</label>
+                <input type="radio" name="printOption" id="printOption2" value="2" <cfif FORM.printOption EQ 2> checked="checked" </cfif> > <label for="printOption2">Print (PDF)</label> 
+                <input type="radio" name="printOption" id="printOption3" value="3" <cfif FORM.printOption EQ 3> checked="checked" </cfif> > <label for="printOption3">Excel (XLS)</label>
+            </td>            
+        </tr>
+        <tr>
+            <td colspan=2 align="center"><br />
+                <input type="submit" value="Generate Report" class="style1" /><br />
+            </td>
+        </tr>
+    </table>
+
+</form>
+
+<br /><br />
+
+<!--- Print --->
+<cfif FORM.submitted>
+	
+    <cfscript>
+		// On Screen
+		if (FORM.printOption EQ 1) {
+			tableTitleClass = 'tableTitleView';
+		} else {
+			tableTitleClass = 'style2';
+		}
+	</cfscript>
+
+	<cfsavecontent variable="reportContent">
+		
+        <cfloop query="qGetHostCompany">
+			            
+            <table width=99% cellpadding="4" cellspacing=0 align="center"> 
+                <tr>
+                    <td colspan="12">
+                        <small>
+                            <strong>
+                            	<a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetHostCompany.hostCompanyID#" target="_blank" class="style4">#qGetHostCompany.name#</a>
+                            	in #qGetHostCompany.city#, #qGetHostCompany.stateName#
+                            </strong> 
+                        </small>
+                    </td>
+                </tr>
+                <tr>
+                	<td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Housing</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#" width="20%">Housing Instructions</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Pick-Up</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Arrival Airport</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Arrival City</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Hours</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#" width="20%">Pick-Up Instructions</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Contact Name</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Contact Phone</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Contact Email</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Hours of contact</td>
+                </tr>
+                <tr bgcolor="##E4E4E4">
+                    <td valign="top">#YesNoFormat(VAL(qGetHostCompany.isHousingProvided))#</td>
+                    <td valign="top">
+                        <cfif LEN(qGetHostCompany.housingProvidedInstructions)>
+                            #qGetHostCompany.housingProvidedInstructions#
+                        <cfelse>
+                            n/a
+                        </cfif>
+                    </td>
+                    <td valign="top">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
+                    <td valign="top">#qGetHostCompany.arrivalAirport#</td>
+                    <td valign="top">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
+                    <td valign="top">#qGetHostCompany.arrivalPickUpHours#</td>
+                    <td valign="top">
+                        <cfif LEN(qGetHostCompany.arrivalInstructions)>
+                            #qGetHostCompany.arrivalInstructions#
+                        <cfelse>
+                            n/a
+                        </cfif>
+                    </td>
+                    <td valign="top">#qGetHostCompany.pickUpContactName#</td>
+                    <td valign="top">#qGetHostCompany.pickUpContactPhone#</td>
+                    <td valign="top">#qGetHostCompany.pickUpContactEmail#</td>
+                    <td valign="top">#qGetHostCompany.pickUpContactHours#</td>
+                </tr>
+            </table>
+            <br />
+         
+		</cfloop>
+            
+    </cfsavecontent>
+
+	<!-----Display Reports---->
+    <cfswitch expression="#FORM.printOption#">
+    
+        <!--- Screen --->
+        <cfcase value="1">
+            <!--- Include Report --->
+            #reportContent#
+        </cfcase>
+    
+        <!--- PDF --->
+        <cfcase value="2">   
+            <cfdocument format="pdf" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">          	
+                <style type="text/css">
+                <!--
+                .style1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2;
+                }
+                .style2 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 8px;
+                    padding:2;
+                }
+                .title1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 15px;
+                    font-weight: bold;
+                    padding:5;
+                }					
+                -->
+                </style>
+    
+                <img src="../../pics/black_pixel.gif" width="100%" height="2">
+                <div class="title1">Students hired per company</div>
+                <img src="../../pics/black_pixel.gif" width="100%" height="2">
+                
+                <!--- Include Report --->
+                #reportContent#
+            </cfdocument>
+        </cfcase>
+    
+        <!--- Excel --->
+        <cfcase value="3">
+    
+            <!--- set content type --->
+            <cfcontent type="application/msexcel">
+            
+            <!--- suggest default name for XLS file --->
+            <cfheader name="Content-Disposition" value="attachment; filename=studentsHiredPerCompany.xls"> 
+    
+            <style type="text/css">
+            <!--
+            .style1 {
+                font-family: Verdana, Arial, Helvetica, sans-serif;
+                font-size: 10px;
+                padding:2;
+            }
+            .style2 {
+                font-family: Verdana, Arial, Helvetica, sans-serif;
+                font-size: 10px;
+                padding:2;
+            }
+            .title1 {
+                font-family: Verdana, Arial, Helvetica, sans-serif;
+                font-size: 15px;
+                font-weight: bold;
+                padding:5;
+            }					
+            -->
+            </style>
+           
+            <img src="../../pics/black_pixel.gif" width="100%" height="2">
+            <div class="title1">Students hired per company</div>
+            <img src="../../pics/black_pixel.gif" width="100%" height="2">
+            
+            <!--- Include Report --->
+            #reportContent#
+            
+            <cfabort>
+    
+        </cfcase>
+        
+        <cfdefaultcase>    
+            <div align="center" class="style1">
+                Print results will replace the menu options and take a bit longer to generate. <br />
+                Onscreen will allow you to change criteria with out clicking your back button.
+            </div>  <br />
+        </cfdefaultcase>
+        
+    </cfswitch>
+
+<cfelse>
+
+    <div align="center" class="style1">
+        Print results will replace the menu options and take a bit longer to generate. <br />
+        Onscreen will allow you to change criteria with out clicking your back button.
+    </div>  <br />
+
+</cfif>    
+
+</cfoutput>
