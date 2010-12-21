@@ -24,6 +24,15 @@
 <cfscript>
 	APPLICATION.DSN = 'MySQL';
 
+	/***** Create APPLICATION.SETTINGS structure *****/
+	APPLICATION.SETTINGS = StructNew();		
+	// Stores a list with public program companies (Except PHP, CSB and Wep)
+	// PS: CFCASE does not accept a variable so they are still hard coded.
+	APPLICATION.SETTINGS.listNonISE = "10,12";
+	APPLICATION.SETTINGS.listISE = "1,2,3,4,12";
+	APPLICATION.SETTINGS.listISESMG = "1,2,3,4,5,12";
+	APPLICATION.SETTINGS.listAll = "1,2,3,4,5,10,12,13,14";
+
 	/* 
 		this enables the address lookup. 
 		0=off, 
@@ -39,7 +48,6 @@
 
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
-
 	
 	AppEmail.errors = 'errors@student-management.com';
 	AppEmail.admissions = 'bhause@iseusa.com';
@@ -76,7 +84,7 @@
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
 		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		// Base Path eg. C:\websites\smg\nsmg\
-		AppPath.base = 'C:/websites/www/smg/nsmg/';
+		AppPath.base = 'C:/websites/www/student-management/nsmg/';
 
 	} else {
 		// PRODUCTION Server Settings
