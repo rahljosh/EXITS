@@ -899,7 +899,7 @@
                                         <cfif VAL(qGetHostCompanyInfo.hostCompanyID) AND ListFind("1,2,3,4", CLIENT.userType)>
                                             <tr>
                                                 <td colspan="3" align="center">
-                                                    <a href="javascript:openWindow('hostcompany/add_newjob.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);" > 
+                                                    <a href="javascript:openWindow('hostcompany/jobInfo.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);" > 
                                                         <img src="../pics/add-job.gif" width="64" height="20" border="0" />
                                                     </a>
                                                 </td>
@@ -970,21 +970,21 @@
 	                                            </select>
                                             </td>
                                         </tr>
-                                        <tr class="hiddenField pickUpInfo">
+                                        <tr>
                                             <td width="35%" class="style1" align="right"><strong>Aiport/Station Code:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.arrivalAirport#</span>
                                                 <input type="text" name="arrivalAirport" id="arrivalAirport" value="#FORM.arrivalAirport#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
-                                        <tr class="hiddenField pickUpInfo">
+                                        <tr>
                                             <td width="35%" class="style1" align="right"><strong>Aiport/Station City:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.arrivalAirportCity#</span>
                                                 <input type="text" name="arrivalAirportCity" id="arrivalAirportCity" value="#FORM.arrivalAirportCity#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
-                                        <tr class="hiddenField pickUpInfo">
+                                        <tr>
                                             <td width="35%" class="style1" align="right"><strong>Aiport/Station State:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#qGetHostCompanyInfo.arrivalAirportStateName#</span>
@@ -997,7 +997,7 @@
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Hours:</strong></td>
+                                            <td width="35%" class="style1" align="right"><strong>Pick Up Hours:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.arrivalPickUpHours#</span>
                                                 <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpHours#</textarea>
