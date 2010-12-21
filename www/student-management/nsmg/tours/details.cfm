@@ -317,6 +317,7 @@ where tour_status <> 'inactive'
         <h3>Record the Payment</h3>
    
     <table cellpadding = 4 cellspacing = 0>
+    <cfif details.refCode is ''>
     <cfform method="post" action="details.cfm?id=#url.id#">
     <input type="hidden" name="paid" />
    	<tr> 
@@ -353,6 +354,7 @@ where mastertripid = #url.id#
         <h3>Record Sibling Payment</h3>
    
     <table cellpadding = 4 cellspacing = 0>
+    <cfif sib_details.refCode is ''>
     <cfform method="post" action="details.cfm?id=#url.id#">
     <input type="hidden" name="sib_paid" />
    	<tr> 
