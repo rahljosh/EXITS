@@ -20,7 +20,11 @@
 	RIGHT JOIN smg_regions on smg_students.regionassigned = smg_regions.regionid
 	WHERE studentid = #client.studentid#
 </cfquery>
-
+<cfquery name="season" datasource="#application.dsn#">
+select seasonid
+from smg_programs
+where programid = #get_student_info.programid#
+</cfquery>
 <!--- SET GRAY IMAGES --->
 <cfset host_image = 'host_1'>
 <cfset school_image = 'school_1'>
@@ -86,10 +90,10 @@
 		</cfif>
 	</cfloop>
 
-<Cfif client.totalfam neq 1>
+<Cfif client.totalfam neq 1 and season.seasonid lte 7>
 		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
             AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
-            AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
+            AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ '' 
             AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND member_missing EQ 0>	
     
         
@@ -106,9 +110,9 @@
 		<!----Add in the extra paper work for a single person placement---->
 		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
             AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
-            AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
+            AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ '' 
             AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND 
-			doc_single_ref_form_1 NEQ '' AND doc_single_ref_form_2 NEQ '' and  member_missing EQ 0>	
+			doc_single_ref_form_1 NEQ '' AND doc_single_ref_form_2 NEQ ''  and  member_missing EQ 0>	
     
                     
             <cfif stu_arrival_orientation NEQ '' AND host_arrival_orientation NEQ ''>

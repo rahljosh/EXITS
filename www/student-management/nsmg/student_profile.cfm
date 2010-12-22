@@ -90,6 +90,11 @@
 	<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="parentLetter" filter="#qGetStudentInfo.studentid#.*">    
 
 </cfsilent>
+<Cfquery name="studentReligion" datasource="#application.dsn#">
+select religionname
+from smg_religions
+where religionid = #qGetStudentInfo.religiousaffiliation#
+</cfquery>
 
 <cfif NOT LEN(uniqueID)>
 	You have not specified a valid studentID.
@@ -102,17 +107,17 @@
 <cfsavecontent variable="studentProfile">
     
     <link rel="stylesheet" href="linked/css/student_profile.css" type="text/css">
+
+     <table class="profileTable" align="center">
+     	<Tr>
+        	<Td>
      
     <!--- Header --->
-    <table align="center" class="profileTable">
+    <table align="center" background="pics/short_profile_header.jpg">
         <tr>
-            <td class="titleLeft" valign="bottom">
-                <!--- <span class="title">International Representative:</span> <br /> #qIntlRep.businessname# <br /><br /><br /> --->
-                 <br /><br /><br />
-                <span class="title">Today's Date:</span> #DateFormat(now(), 'mmm d, yyyy')#<br />
-            </td> 
-            <td class="titleCenter">
-                <h1>#qGetCompany.companyName#</h1>                
+            
+            <td class="bottom_center" width=800 height=160>
+           <!---     <h1>#qGetCompany.companyName#</h1>                
                 <span class="title">Program:</span> #qGetProgram.programname#<br />
                 <!---
                 <span class="title">Region:</span> #qGetRegion.regionname# 
@@ -120,38 +125,27 @@
                 <cfif VAL(qGetStudentInfo.state_guarantee)><strong> - #getStateGuranteed# Guaranteed</strong> <br /></cfif>
                 --->
                 <cfif VAL(qGetStudentInfo.scholarship)>Participant of Scholarship Program</cfif>
+				---->
+                <span class="title"><font size=+1>Name:</font></span><font size=+2>#qGetStudentInfo.firstname#</font><font size=+2> (###qGetStudentInfo.studentID#)</font>
             </td>
+            <!----
             <td class="titleRight">
                 <img src="pics/logos/#client.companyid#.gif" align="right" width="100px" height="100px"> <!--- Image is 144x144 --->
             </td>
+			---->
         </tr>	
     </table>
     
     
-    <!--- Student Information --->
-    <table  align="center" class="profileTable">
-        <tr>
-            <td valign="top" width="140px">
-                <div align="left">
-                    <cfif studentPicture.recordcount>
-                        <img src="uploadedfiles/web-students/#studentPicture.name#" width="135">
-                    <cfelse>
-                        <img src="pics/no_stupicture.jpg" width="135">
-                    </cfif>
-                    <br />
-                </div>
-            </td>
+    <!--- Student Information #qGetStudentInfo.countryresident# --->
+    <table  align="center" border=0 cellpadding="4" cellspacing=0>
+        <tr>           
             <td valign="top" width="660px">
                 <span class="profileTitleSection">STUDENT PROFILE</span>
-                <table cellpadding="2" cellspacing="2" border="0">
+                <table cellpadding="0" cellspacing="0" border="0" class="profiletable2">
                     <tr>
                         <td valign="top" width="330px">
-                        
-                            <table cellpadding="2" cellspacing="2" border="0">
-                                <tr>
-                                    <td><span class="title">Name:</span></td>
-                                    <td>#qGetStudentInfo.firstname# (###qGetStudentInfo.studentID#)</td>
-                                </tr>	
+                            <table cellpadding="4" cellspacing="0" border="0" class="inner_profileTable">                              
                                 <tr>
                                     <td><span class="title">Sex:</span></td>
                                     <td>#qGetStudentInfo.sex#</td>
@@ -159,13 +153,28 @@
                                 <tr>
                                     <td><span class="title">Age:</span></td>
                                     <td>#DateDiff("yyyy", qGetStudentInfo.dob, now())#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">Religious Affiliation:</span></td>
+                                    
+                                    <td>#studentReligion.religionname#</td>
+                                </tr> 
+                                <tr>
+                                    <td><span class="title">Religious Participation:</span></td>
+                                    <td>#qGetStudentInfo.religious_participation#</td>
+                                </tr>        
+                                <tr>
+                                    <td><span class="title">Program:</span></td>
+                                    <td>#qGetProgram.programname#</td>
                                 </tr>                                    
                             </table>
                             
                         </td>
                         <td valign="top" width="330px">
                         
-                            <table cellpadding="2" cellspacing="2" border="0">
+                            <table cellpadding="4" cellspacing="0" class="inner_profileTable" border=0>
+                           
+                               
                                 <tr>
                                     <td><span class="title">Place of Birth:</span></td>
                                     <td>#qGetStudentInfo.citybirth#</td>
@@ -182,19 +191,72 @@
                                     <td><span class="title">Country of Residence:</span></td>
                                     <td>#getCountryResident#</td>
                                 </tr>
+                                <Tr>
+                                	<Td colspan=2>  <cfif VAL(qGetStudentInfo.scholarship)>Participant of Scholarship Program</cfif></Td>
+                                </Tr>
                             </table>
                             
                         </td>
+                        <td valign="center">
+                        	<Table border=0>
+                            	<Tr>
+                                	<Td>
+                            <cfif FileExists('c:/websites/student-management/nsmg/pics/flags/#qGetStudentInfo.countryresident#.jpg')>
+                            <cfimage source="pics/flags/#qGetStudentInfo.countryresident#.jpg" name="myImage">
+                            <cfelse>
+                            <cfimage source="pics/flags/0.jpg" name="myImage">
+                            </cfif>
+                            <cfset ImageScaleToFit(myimage, 150,100)>
+                            <cfif qGetStudentInfo.sex is 'female'>
+                            	<cfimage source="pics/girl.png" name="topImage">
+                            <cfelse>
+                            	<cfimage source="pics/boy.png" name="topImage">
+                            </cfif>
+                            <cfset ImagePaste(myImage,topImage,0,0)>
+                            <cfimage source="#myImage#" action="writeToBrowser" border=0>
+             						</Td>
+                                 </Tr>
+                               </Table>
+            			</td>
                     </tr>                        
                 </table>
             
             </td>
         </tr>                
     </table>
-    
+     <!--- Siblings --->
+     <Cfquery name="sibling" datasource="#application.dsn#">
+     select *
+     from smg_student_siblings
+     where studentid = #qGetStudentInfo.studentID#
+     </cfquery>
+    <table align="center" class="profileTable2">
+        <tr><td colspan="3"><span class="profileTitleSection">SIBLINGS</span></td></tr>     
+        <tr>
+            <td width="250px"><span class="title">Name</span></td>
+            <td width="200px"><span class="title">Age</span></td>
+            <td width="200px"><span class="title">Relation </span></td>
+        </tr>
+       <cfloop query="sibling">
+        <tr>
+            <td>
+            <cfset str = "#name#">
+			<cfset maxwords = 1>
+             <cfoutput>
+             #REReplace(str,"^(#RepeatString('[^ ]* ',maxwords)#).*","\1")#
+            </cfoutput>   
+            <td>
+             	#DateDiff('yyyy', birthdate, now())#
+            </td>
+            <td>
+       			<cfif sex is 'male'>Brother<cfelse>Sister</cfif>
+            </td>
+        </tr>
+       </cfloop>
+    </table>
     
     <!--- Academic and Language Evaluation --->
-    <table align="center" class="profileTable">
+    <table align="center" class="profileTable2">
         <tr><td colspan="3"><span class="profileTitleSection">ACADEMIC AND LANGUAGE EVALUATION</span></td></tr>     
         <tr>
             <td width="250px"><span class="title">Band:</span> <cfif qGetStudentInfo.band is ''><cfelse>#qGetStudentInfo.band#</cfif></td>
@@ -233,7 +295,7 @@
         </tr>
     </table>
     
-    <table align="center" class="profileTable">
+    <table align="center" class="profileTable2">
         <tr><td colspan="4"><span class="profileTitleSection">PERSONAL INFORMATION</span></td></tr>            
         <tr>
             <td width="110px"><span class="title">Allergies</span></td>
@@ -278,7 +340,9 @@
             </td>
         </tr>
     </table>
-
+		</td>
+      </tr>
+    </table>
 </cfsavecontent>
 
 
@@ -356,8 +420,9 @@
                     <td>
                         <input type="checkbox" name="isIncludeLetters" id="isIncludeLetters" value="1" <cfif FORM.isIncludeLetters> checked="checked" </cfif> /> 
                         &nbsp; 
-                        <label for="isIncludeLetters">Include Student and Parent Letters</label>
-                    </td>
+                        <label for="isIncludeLetters">Include Student and Parent Letters <br />
+                        </label>
+                    (only to approved host families)</td>
                 </tr>
                 <tr>	
                     <td align="center">
