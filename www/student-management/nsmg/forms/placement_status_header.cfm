@@ -60,7 +60,8 @@
 		</cfif>
 	</cfloop>
 
-	<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
+<Cfif client.totalfam neq 1>
+			<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
 		AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
 		AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
 		AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND member_missing EQ 0>	
@@ -72,6 +73,25 @@
 	<cfelse>
 		<cfset paperwork_image = 'paperwork_2'>  <!--- paperwork incomplete image --->
 	</cfif>
+<Cfelse>
+		<!----Add in the extra paper work for a single person placement---->
+		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
+		AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
+		AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
+		AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ ''
+		AND	doc_single_ref_form_1 NEQ '' AND doc_single_ref_form_2  NEQ '' and member_missing EQ 0>	
+    
+                    
+            <cfif stu_arrival_orientation NEQ '' AND host_arrival_orientation NEQ ''>
+                <cfset paperwork_image = 'paperwork_4'>  <!--- paperwork complete image --->
+            <cfelse>
+                <cfset paperwork_image = 'paperwork_3'>  <!--- paperwork docs complete missing orientations --->
+            </cfif>
+        <cfelse>
+            <cfset paperwork_image = 'paperwork_2'>  <!--- paperwork incomplete image --->
+        </cfif>
+</Cfif>
+
 </cfif>
 
 <!--- PLACEMENT NOTES --->

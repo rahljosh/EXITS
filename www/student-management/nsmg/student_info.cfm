@@ -882,6 +882,14 @@
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_student_orientation.cfm');">Student Orient. Sign Off</a></td>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_host_orientation.cfm');">Family Orientation Sign Off</a></td>
+				</tr>
+                <tr>
+					<td width="50%">: : <a href="javascript:OpenLetter('reports/labels_student_idcards.cfm?studentid=#studentid#');">Student ID Card</a>
+						<cfif CLIENT.usertype LTE '4'> &nbsp; <a href="javascript:OpenLetter('reports/emailStudentIDCard.cfm?studentID=#studentID#');">
+                   		<img src="pics/email.gif" border="0" alt="Email Student ID Card"></a></cfif></td>
+					<td width="50%">: : <a href="javascript:OpenLetter('forms/singlePersonPlacementAuth.cfm?studentid=#studentid#');">Single Person Auth.</a>
+						<cfif CLIENT.usertype LTE '4'> &nbsp; <a href="javascript:OpenLetter('reports/emailSinglePlaceAuth.cfm?studentID=#studentID#');">
+                        <img src="pics/email.gif" border="0" alt="Email Single Place Auth"></a></cfif></td>
 				</tr>				
 			</table>
 			<table cellpadding="2" width="100%">

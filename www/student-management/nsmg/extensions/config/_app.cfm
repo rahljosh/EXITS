@@ -18,10 +18,20 @@
 	FROM
     	smg_companies
 	WHERE
-    	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_host#">
 </cfquery>
 
 <cfscript>
+	/***** Create APPLICATION.SETTINGS structure *****/
+	APPLICATION.SETTINGS = StructNew();		
+	// Stores a list with public program companies (Except PHP, CSB and Wep)
+	// PS: CFCASE does not accept a variable so they are still hard coded.
+	APPLICATION.SETTINGS.listNonISE = "10,12";
+	APPLICATION.SETTINGS.listISE = "1,2,3,4,12";
+	APPLICATION.SETTINGS.listISESMG = "1,2,3,4,5,12";
+	APPLICATION.SETTINGS.listAll = "1,2,3,4,5,10,12,13,14";
+
+	
 	APPLICATION.DSN = 'MySQL';
 
 	/***** Create APPLICATION.SETTINGS structure *****/
@@ -48,7 +58,6 @@
 
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
-	
 	AppEmail.errors = 'errors@student-management.com';
 	AppEmail.admissions = 'bhause@iseusa.com';
 	AppEmail.finance = 'marcel@iseusa.com';	

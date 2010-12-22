@@ -35,7 +35,7 @@
 			s.active, s.ds2019_no, s.hostid AS s_hostid, s.regionassigned, s.arearepid,
 			p.programname, p.programid,
 			u.businessname, 
-			c.companyname, c.address AS c_address, c.city AS c_city, c.state AS c_state, c.zip AS c_zip, c.toll_free, c.iap_auth,
+			c.companyname, c.address AS c_address, c.city AS c_city, c.state AS c_state, c.zip AS c_zip, c.toll_free, c.iap_auth, c.emergecyNumber,
 			r.regionid, r.regionname,
 			h.familylastname AS h_lastname, h.address AS h_address, h.address2 AS h_address2, h.city AS h_city,
 			h.state AS h_state, h.zip AS h_zip, h.phone AS h_phone				
@@ -66,18 +66,9 @@
 			</cfif>	
 	ORDER BY u.businessname, s.familylastname
 </cfquery>
-	<!----				
-<!---		The table consists has two columns, two labels.
-			To identify where to place each, we need to	maintain a column counter.	--->
-<!--- set content type --->
 
-<cfcontent type="application/msword">
+ <cfdirectory directory="#AppPath.onlineApp.picture#" name="studentPicture" filter="#qGetStudentInfo.studentID#.*">   
 
-<!--- suggest default name for XLS file --->
-<<!--- "Content-Disposition" in cfheader also ensures 
-relatively correct Internet Explorer behavior. --->
-<cfheader name="Content-Disposition" value="attachment; filename=id_cards.doc"> 
----->
 <div class="Section1">
 						
 	<cfset col=0> <!--- set variables --->
@@ -85,6 +76,223 @@ relatively correct Internet Explorer behavior. --->
 	
 	<cfloop query="get_students">
 	<cfoutput>
+    
+      <link rel="stylesheet" href="linked/css/student_profile.css" type="text/css">
+     
+    <!--- Header --->
+    <table align="center" class="profileTable">
+        <tr>
+           
+            <td class="titleCenter">
+                <h1>#companyname#</h1>                
+                <span class="title">Emergency Contact:</span> #qGetProgram.programname#<br />
+                <!---
+                <span class="title">Region:</span> #qGetRegion.regionname# 
+                <cfif qGetStudentInfo.regionguar EQ 'yes'><strong> - #qGetRegionGuaranteed.regionname# Guaranteed</strong> <br /></cfif>
+                <cfif VAL(qGetStudentInfo.state_guarantee)><strong> - #getStateGuranteed# Guaranteed</strong> <br /></cfif>
+                --->
+                <cfif VAL(qGetStudentInfo.scholarship)>Participant of Scholarship Program</cfif>
+            </td>
+            <td class="titleRight">
+                <img src="pics/logos/#client.companyid#.gif" align="right" width="100px" height="100px"> <!--- Image is 144x144 --->
+            </td>
+        </tr>	
+    </table>
+    
+    
+    <!--- Student Information --->
+    <table  align="center" class="profileTable">
+        <tr>
+            <td valign="top" width="140px">
+                <div align="left">
+                    <cfif studentPicture.recordcount>
+                        <img src="uploadedfiles/web-students/#studentPicture.name#" width="135">
+                    <cfelse>
+                        <img src="pics/no_stupicture.jpg" width="135">
+                    </cfif>
+                    <br />
+                </div>
+            </td>
+            <td valign="top" width="660px">
+                <span class="profileTitleSection">STUDENT PROFILE</span>
+                <table cellpadding="2" cellspacing="2" border="0">
+                    <tr>
+                        <td valign="top" width="330px">
+                        
+                            <table cellpadding="2" cellspacing="2" border="0">
+                                <tr>
+                                    <td><span class="title">Name:</span></td>
+                                    <td>#qGetStudentInfo.firstname# (###qGetStudentInfo.studentID#)</td>
+                                </tr>	
+                                <tr>
+                                    <td><span class="title">Sex:</span></td>
+                                    <td>#qGetStudentInfo.sex#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">Age:</span></td>
+                                    <td>#DateDiff("yyyy", qGetStudentInfo.dob, now())#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">Religion:</span></td>
+                                    
+                                    <td>#studentReligion.religionname#</td>
+                                </tr>                                          
+                            </table>
+                            
+                        </td>
+                        <td valign="top" width="330px">
+                        
+                            <table cellpadding="2" cellspacing="2" border="0">
+                                <tr>
+                                    <td><span class="title">Place of Birth:</span></td>
+                                    <td>#qGetStudentInfo.citybirth#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">Country of Birth:</span></td>
+                                    <td>#getCountryBirth#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">Country of Citizenship:</span></td>
+                                    <td>#getCountryCitizen#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">Country of Residence:</span></td>
+                                    <td>#getCountryResident#</td>
+                                </tr>
+                            </table>
+                            
+                        </td>
+                    </tr>                        
+                </table>
+            
+            </td>
+        </tr>                
+    </table>
+     <!--- Siblings --->
+     <Cfquery name="sibling" datasource="#application.dsn#">
+     select *
+     from smg_student_siblings
+     where studentid = #qGetStudentInfo.studentID#
+     </cfquery>
+    <table align="center" class="profileTable">
+        <tr><td colspan="3"><span class="profileTitleSection">SIBLINGS</span></td></tr>     
+        <tr>
+            <td width="250px"><span class="title">Name</span></td>
+            <td width="200px"><span class="title">Age</span></td>
+            <td width="200px"><span class="title">Relation </span></td>
+        </tr>
+       <cfloop query="sibling">
+        <tr>
+            <td>
+               #name#
+            <td>
+             	#DateDiff('yyyy', birthdate, now())#
+            </td>
+            <td>
+       			<cfif sex is 'male'>Brother<cfelse>Sister</cfif>
+            </td>
+        </tr>
+       </cfloop>
+    </table>
+    
+    <!--- Academic and Language Evaluation --->
+    <table align="center" class="profileTable">
+        <tr><td colspan="3"><span class="profileTitleSection">ACADEMIC AND LANGUAGE EVALUATION</span></td></tr>     
+        <tr>
+            <td width="250px"><span class="title">Band:</span> <cfif qGetStudentInfo.band is ''><cfelse>#qGetStudentInfo.band#</cfif></td>
+            <td width="200px"><span class="title">Orchestra:</span> <cfif qGetStudentInfo.orchestra is ''><cfelse>#qGetStudentInfo.orchestra#</cfif></td>
+            <td width="200px"><span class="title">Est. GPA: </span> <cfif qGetStudentInfo.orchestra is ''><cfelse>#qGetStudentInfo.estgpa#</cfif></td>
+        </tr>
+        <tr>
+            <td>
+                <cfif qGetStudentInfo.grades EQ 12>
+                     <span class="title">Must be placed in:</span> #qGetStudentInfo.grades#th grade
+                <cfelse>				
+                     <span class="title">Last Grade Completed:</span>
+                    <cfif NOT VAL(qGetStudentInfo.grades)>
+                        n/a
+                    <cfelse>
+                        #qGetStudentInfo.grades#th grade
+                    </cfif>
+                </cfif>
+            </td>
+            <td>
+                <span class="title">Years of English:</span>
+                <cfif NOT VAL(qGetStudentInfo.yearsenglish)>
+                    n/a
+                <cfelse>
+                    #qGetStudentInfo.yearsenglish#
+                </cfif>
+            </td>
+            <td>
+                <span class="title">Convalidation needed:</span>
+                <cfif NOT LEN(qGetStudentInfo.convalidation_needed)>
+                    no
+                <cfelse>
+                    #qGetStudentInfo.convalidation_needed#
+                </cfif>
+            </td>
+        </tr>
+    </table>
+    
+    <table align="center" class="profileTable">
+        <tr><td colspan="4"><span class="profileTitleSection">PERSONAL INFORMATION</span></td></tr>            
+        <tr>
+            <td width="110px"><span class="title">Allergies</span></td>
+            <td width="140px"><span class="title">Animal:</span> <cfif qGetStudentInfo.animal_allergies is ''>no<cfelse>#qGetStudentInfo.animal_allergies#</cfif></td>
+            <td width="200px"><span class="title">Medical Allergies:</span> <cfif qGetStudentInfo.med_allergies is ''>no<cfelse>#qGetStudentInfo.med_allergies#</cfif></td>
+            <td width="200px"><span class="title">Other:</span> <cfif qGetStudentInfo.other_allergies is ''>no<cfelse>#qGetStudentInfo.other_allergies#</cfif></td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <span class="title">Interests:</span> #interestList#
+            </td>
+        </tr>	
+    
+        <cfif qGetStudentInfo.aypenglish EQ 'yes'>
+            <tr>
+                <td colspan="4"><span class="title">Pre-AYP:</span> The Student Participant of the Pre-AYP English Camp.</td>
+            </tr>
+        </cfif>	
+            
+        <cfif qGetStudentInfo.ayporientation EQ 'yes'>
+            <tr>
+                <td colspan="4"><span class="title">Pre-AYP:</span> The Student Participant of the Pre-AYP Orientation Camp.</td>
+            </tr>
+        </cfif>	
+        
+        <cfif qGetStudentInfo.iffschool EQ 'yes'>    
+            <tr>
+                <td colspan="4"><span class="title">IFF:</span>The Student Accepts IFF School.</td>
+            </tr>
+        </cfif>
+                  
+        <cfif qGetStudentInfo.privateschool>
+            <tr>
+                <td colspan="4"><span class="title">Private HS:</span>The Student Accepts Private HS #qPrivateSchool.privateschoolprice#.</td>
+            </tr>
+        </cfif>		
+                
+        <tr>
+            <td colspan="4">
+                <span class="title">Comments:</span> 
+                <div class="comments">#qGetStudentInfo.interests_other#</div>
+            </td>
+        </tr>
+    </table>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 		<cfif pagebreak EQ "0">				
 		<!---	Start a table for our labels	--->
 		<table align="center" width="670" border="0" cellspacing="2" cellpadding="0">	
@@ -103,7 +311,7 @@ relatively correct Internet Explorer behavior. --->
 						</td>
 						<td width="75%" align="center"> 
 						<p class="style5">&nbsp;</p>
-						<p class="style4"><b>#companyname#</b>
+						<p class="style4"><b></b>
 						<p class="style1">#c_address#</p>
 						<p class="style1">#c_city#, #c_state# &nbsp; #c_zip#</p>
 						<p class="style1">#toll_free#</p>

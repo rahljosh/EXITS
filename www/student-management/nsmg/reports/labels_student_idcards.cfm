@@ -19,13 +19,13 @@
 	<!--- Get names, addresses from our database --->
     <cfquery name="qGetStudents" datasource="MySql"> 
         SELECT 	
-        	s.studentid, s.familylastname, s.firstname, s.dateapplication, 
+        	s.studentid, s.familylastname, s.firstname, s.dateapplication, s.programid, s.regionassigned, s.regionalguarantee,
             s.active, s.ds2019_no, s.hostid AS s_hostid, s.regionassigned, s.arearepid,
             p.programname, p.programid,
             u.businessname, 
-            c.companyname, c.address AS c_address, c.city AS c_city, c.state AS c_state, c.zip AS c_zip, c.toll_free, c.iap_auth,
+            c.companyname, c.address AS c_address, c.city AS c_city, c.state AS c_state, c.zip AS c_zip, c.toll_free as c_tollfree, c.phone as c_phone, c.iap_auth, c.emergencyPhone, c.companyid, c.url_ref,
             r.regionid, r.regionname,
-            h.familylastname AS h_lastname, h.address AS h_address, h.address2 AS h_address2, h.city AS h_city,
+            h.familylastname AS h_lastname, h.address AS h_address, h.address2 AS h_address2, h.city AS h_city,h.mother_cell, h.father_cell,
             h.state AS h_state, h.zip AS h_zip, h.phone AS h_phone				
         FROM
         	smg_students s 
@@ -43,45 +43,52 @@
         	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
         AND 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-        	( 
-            	<cfloop list="#FORM.programid#" index="prog"> 
-                	s.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#">
-            		<cfif ListLast(FORM.programid) NEQ prog> OR </cfif>
-              	</cfloop> 
-            )
-        
-        <cfif IsDate(FORM.date1) AND IsDate(FORM.date2)>
+       <Cfif isDefined('url.studentid')>
+       AND studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
+       <cfelse>
             AND 
-                (
-                    s.dateapplication 
-                    BETWEEN 
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(FORM.date1)#">
-                    AND 
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(DateAdd('d', 1, FORM.date2))#">
-                ) 
-		</cfif>
-        
-        <cfif VAL(FORM.intrep)>
-        	AND 
-            	s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-        </cfif>
-        
-        <cfif FORM.insurance_typeid NEQ 0>
-            AND 
-            	u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.insurance_typeid#">
-        </cfif>	
-        		
+                ( 
+                    <cfloop list="#FORM.programid#" index="prog"> 
+                        s.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#">
+                        <cfif ListLast(FORM.programid) NEQ prog> OR </cfif>
+                    </cfloop> 
+                )
+            
+            <cfif IsDate(FORM.date1) AND IsDate(FORM.date2)>
+                AND 
+                    (
+                        s.dateapplication 
+                        BETWEEN 
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(FORM.date1)#">
+                        AND 
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(DateAdd('d', 1, FORM.date2))#">
+                    ) 
+            </cfif>
+            
+            <cfif VAL(FORM.intrep)>
+                AND 
+                    s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+            </cfif>
+            
+            <cfif FORM.insurance_typeid NEQ 0>
+                AND 
+                    u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.insurance_typeid#">
+            </cfif>	
+       </Cfif>
         ORDER BY
             u.businessname, 
             s.firstname,
             s.familyLastName,
-            s.studentID      
+            s.studentID   
+           
     </cfquery>
     
 </cfsilent>
-            
-
+ <cfscript>	
+  qGetProgram = APPCFC.PROGRAM.getPrograms(programID=qGetStudents.programid);      
+  qGetRegion = APPCFC.REGION.getRegions(regionID=qGetStudents.regionassigned);
+  qGetRegionGuaranteed = APPCFC.REGION.getRegions(regionID=qGetStudents.regionalguarantee);
+ </cfscript>
 <style>
 	@page Section1 {
 		size:8.5in 11.0in;
@@ -92,6 +99,7 @@
 	
 	div.Section1 {		
 		page:Section1;
+		font-family:"Arial";
 	}
 
 	div.fullCol {
@@ -124,7 +132,7 @@
 		font-size:10.0pt;
 		font-family:"Arial";
 	}
-	
+	h1 {padding:0;}
 	.style1 {font-size: 6pt;}  /* company address */
 	.style2 {font-size: 7pt;}  /* host + rep info */
 	.style3 {font-size: 8pt;}  /* student's name */
@@ -144,14 +152,17 @@
 <div class="Section1">
 	
     <cfloop query="qGetStudents">
-
+    	<!----Student Picture---->
+		 <cfdirectory directory="#AppPath.onlineApp.picture#" name="studentPicture" filter="#studentID#.*">
+        
 		<!--- get regional manager --->
         <cfquery name="qRegionalManager" datasource="MySQL">
             SELECT 	
                 firstname, 
                 lastname, 
                 businessphone, 
-                phone
+                phone,
+                cell_phone
             FROM 	
                 smg_users
             INNER JOIN 
@@ -168,7 +179,8 @@
                 firstname, 
                 lastname, 
                 businessphone,
-                phone
+                phone,
+                cell_phone
             FROM 	
                 smg_users
             WHERE	
@@ -181,147 +193,248 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="7"> 		
         </cfquery>			
                     
-		<cfif pagebreak EQ 0>				
-			<!--- Start a table for our labels --->
-            <table align="center" width="670px" cellspacing="2" cellpadding="0"> <!--- border="0" ---->
-		</cfif>
-        
-		  <!--- If this is the first column, then start a new row --->
-		<cfif col EQ "0">
-            <tr>
-		</cfif>	
-        			
-			<!--- Output label --->			
-			<td class="label" valign="top">
-					
-				<!--- HEADER --->
-                <table border="0" width="100%">
-                    <tr>
-                        <td align="center"> <!--- width="25%" --->
-                            <img src="../pics/logos/#client.companyid#_small.gif" border="0">
-                        </td>
-                        <td align="center"> <!--- width="75%" --->
-                            <p class="style4">#companyname#</p>
-                            <p class="style1">#c_address#</p>
-                            <p class="style1">#c_city#, #c_state# &nbsp; #c_zip#</p>
-                            <p class="style1">Toll Free: #toll_free#</p>
-                            <p class="style5">&nbsp;</p>
-                            <p class="style3">STUDENT: <b>#Firstname# #familylastname#</b></p>
-                            <p class="style2">DS-2019: #ds2019_no# &nbsp; &nbsp; ID: ###studentid#</p>
-                        </td>
-                    </tr>
-                </table>
-                
-                <div class="fullCol">
-                
-					<!--- Left Column --->
-                    <div class="leftCol">
-                        <cfif VAL(qGetStudents.s_hostid)>
-                            <p class="style2">Hosts: The #h_lastname# Family &nbsp;</p>
-                            <p class="style2"><cfif h_address is ''>#h_address2#<cfelse>#h_address#</cfif> &nbsp;</p>
-                            <p class="style2">#h_city#, #h_state# &nbsp; #h_zip# &nbsp;</p>
-                            <p class="style2">#h_phone# &nbsp;</p>
-                        <cfelse>						
-                            <p class="style2">&nbsp;</p>
-                            <p class="style2">&nbsp;</p>	
-                            <p class="style2">&nbsp;</p>						
-                            <p class="style2">&nbsp;</p>																
-                        </cfif>
-                    </div>
                     
-                    <!--- Right Column --->
-                    <div class="rightCol">
-                        <!--- check if there's an region assigned --->
-                        <cfif VAL(qGetStudents.regionassigned)>
-                            <p class="style2">
-                                Regional Contact: #qRegionalManager.firstname# #qRegionalManager.lastname# &nbsp;
-                            </p>
-                            <p class="style2">
-                                <cfif LEN(qRegionalManager.businessphone)>
-                                    Toll Free: #qRegionalManager.businessphone#
-                                <cfelse>
-                                    Toll Free: #qRegionalManager.phone#
-                                </cfif> &nbsp; 
-                            </p>
-                        <cfelse>
-                            <p class="style2">&nbsp;</p>
-                            <p class="style2">&nbsp;</p>
-                        </cfif>
-                        
-                        <p class="style5">&nbsp;</p>
-                        
-                        <!--- check if there's an area rep --->
-                        <cfif VAL(qGetStudents.arearepid)> 
-                            <p class="style2">
-                                Local Contact: #qLocalContact.firstname# #qLocalContact.lastname# &nbsp;
-                            </p>			
-                            <p class="style2">
-                                Phone: 
-                                <cfif LEN(qLocalContact.businessphone)>
-                                    #qLocalContact.businessphone#
-                                <cfelse>
-                                    #qLocalContact.phone#
-                                </cfif> 
-                                &nbsp;
-                            </p>
-                        <cfelse>
-                            <p class="style2">&nbsp;</p>
-                            <p class="style2">&nbsp;</p>
-                        </cfif>
-                    </div>
-            	
-                </div>    
-                
-                
-                <!--- DoS Information --->
-                <div class="fullCol">
-                
-					<!--- Left Column --->
-                    <div class="leftCol">
-                        <p class="style2">U.S. Department of State</p>
-                        <p class="style2">2200 C St. NW</p>
-                        <p class="style2">Washington, D.C. 20037</p>
-                    </div>
-                    
-                    <!--- Right Column --->
-                    <div class="rightCol">
-                        <p class="style2">&nbsp;</p>
-                        <p class="style2">Phone: 1-866-283-9090</p>
-                        <p class="style2">Email: jvisas@state.gov</p>
-                    </div>
-            	
-                </div>    
-
-		  	</td>
             
-			<cfset col=col+1>						
-			
-			<!---If it's column 2, then end the row and reset the column number.--->
-			<cfif col EQ 2>
-                </tr>
-				<cfset col=0>			
-			</cfif>
-					
-			<cfset pagebreak=pagebreak+1>
-			
-			<cfif pagebreak EQ 10> <!--- close table and add a page break --->
-				</table>
-				<cfset pagebreak=0>
-				<div style="page-break-before:always;"></div>					
-			</cfif>	
-            
-	</cfloop>
-		
-	<!---If we didn't end on column 2, then we have to output blank labels --->
-    <cfif col EQ 1>
-            <td class="label">
-                <p>&nbsp;</p>
+            <link rel="stylesheet" href="../linked/css/student_profile.css" type="text/css">
+     
+    <!--- Header --->
+    <table align="center" class="profileTable" width=750 border=0>
+        <tr>
+             <td class="titleRight">
+                <img src="../pics/logos/#companyid#.gif" align="right" width="110px" height="110px"> <!--- Image is 144x144 --->
             </td>
-        </tr>		
-    </cfif>
+            
+            <td class="titleCenter" valign="center">
+             <h1>#companyname#</h1>      
+                 <table width=100% border=0>
+                	<Tr>
+                    <td width=100></td>
+                    	<td valign="top">
+                              #c_address#<br />
+                              #c_city# #c_state#<br />
+                              #c_zip#<Br />
+                              
+              			</td>
+                        <Td valign="top">
+                          Local Number: #c_phone#<br />
+                              Toll Free: #c_tollfree#<br />          
+            			  Emergency Phone:  #emergencyPhone#</h3>
+              			</Td>
+                        
+                   </Tr>
+            	</table>
+              
+            </td>
+          
+        </tr>	
+    </table>
     
+    
+    <!--- Student Information --->
+    <table  align="center" class="profileTable" border=0 width=750>
+        <tr>
+            <td valign="top" width="140px" align="Center">
+                <div align="center">
+                    <cfif studentPicture.recordcount>
+                      <img src="../uploadedfiles/web-students/#studentPicture.name#" height="155" align="Center"/>
+                      <cfelse>
+                        <img src="../pics/no_stupicture.jpg" width="135">
+                 	 </cfif>
+                    <br />
+              </div>
+            </td>
+            <td valign="top">
+                <span class="profileTitleSection">STUDENT IDENTIFICATION</span>
+                <table cellpadding="2" cellspacing="2" border="0" width=100%>
+                    <tr>
+                      <td valign="top" width="330">
+                        
+                            <table cellpadding="2" cellspacing="2" border="0" width=100%>
+                                <tr>
+                                    <td><span class="title">Name</span></td>
+                                    <td><b>#Firstname# #familylastname#</b></td>
+                                </tr>	
+                                <tr>
+                                    <td><span class="title">ID</span></td>
+                                    <td>###studentid#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">DS-2019</span></td>
+                                    <td>#ds2019_no#</td>
+                                </tr>
+                                 <tr>
+                                    <td><span class="title">Program</span></td>
+                                    <td>#qGetProgram.programname#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">Region</span></td>
+                                    <td>#qGetRegion.regionname# #qGetRegionGuaranteed.regionname# </td>
+                                </tr>
+                                                                                  
+                          </table>
+                            
+                        </td>
+                        <td valign="top" width="330">
+                        
+                            <table cellpadding="2" cellspacing="2" border="0" width=100%>
+                                <tr>
+                                    <td><span class="title">Hosts</span></td>
+                                    <td>The #h_lastname# Family</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">Address</span></td>
+                                    <td>#h_address# #h_address2#</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="title">City State, Zip</span></td>
+                                    <td>#h_city# #h_state#, &nbsp; #h_zip# </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><span class="title">Phone</span></td>
+                                    <td>#h_phone#</td>
+                                </tr>
+                                <tr>
+                                    <td><em><span class="title"><font size=-1>Alt. Phones</font></span></em></td>
+                                    <td><em><font size=-1>
+										<cfif mother_cell is '' and father_cell is ''>No alt. phone numbers on file.
+                                        <cfelse>#mother_cell#
+											<cfif mother_cell is not ''>;</cfif>
+                                          		#father_cell#
+                                         </cfif></font></em>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                        </td>
+                    </tr>                        
+                </table>
+            
+            </td>
+        </tr>                
     </table>
 
+ <table  align="center" class="profileTable" width=750>
+        <tr>
+      <td valign="top" colspan=10 >
+              
+                <table cellpadding="2" cellspacing="2" border="0" width=100%>
+                    <tr>
+                        <td valign="top" width="50%">
+                          <span class="profileTitleSection">Regional Contact</span>
+                            <table cellpadding="2" cellspacing="2" border="0">
+                                <tr>
+                                    <td><span class="title">Regional Contact</span></td>
+                                    <td>#qRegionalManager.firstname# #qRegionalManager.lastname#&nbsp;
+                                    </td>
+                                        </tr>	
+                                        <tr>
+                                            <td><span class="title">Primary Phone</span></td>
+                                            <td><cfif LEN(qRegionalManager.businessphone)>
+                                                 #qLocalContact.firstname##qRegionalManager.businessphone#
+                                                <cfelse>
+                                                  #qRegionalManager.phone#
+                                                </cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="title">Alt Phone</span></td>
+                                            <td> #qRegionalManager.cell_phone#</td>
+                                        </tr>
+                                                                      
+                                    </table>
+                           
+                      </td>
+                       <td valign="top" width="50%">
+                        	  <span class="profileTitleSection">LOCAL CONTACT</span>
+                            
+                              
+                            <table cellpadding="2" cellspacing="2" border="0">
+                             	   <tr>
+                                    <td><span class="title">Local Contact</span></td>
+                                    <td><cfif qLocalContact.lastname is ''><span class="title"><em>Information not available</em></span><cfelse>#qLocalContact.lastname#</cfif></td>
+                                </tr>
+                                 <tr>
+                                    <td><span class="title">Primary Phone</span></td>
+                                    <td>
+										<cfif LEN(qLocalContact.businessphone)>
+                                   			 #qLocalContact.businessphone#
+                                		<cfelse>
+                                   			 #qLocalContact.phone#
+                                      </cfif>
+                                  	</td>
+                                </tr>     
+                                 <tr>
+                                    <td><span class="title">Alt Phone</span></td>
+                                    <td>
+										#qLocalContact.cell_phone#
+                                     
+                                  	</td>
+                                </tr>       
+                            </table>
+                            
+                      </td>
+                       
+                        
+                    </tr> 
+               <Tr>
+                 <cfquery name="insurance" datasource="#application.dsn#">
+                              select u.insurance_typeid, i.type, ic.policycode
+                              from smg_users u
+                              left join smg_insurance_codes ic on ic.insu_codeid = u.insurance_typeid
+                              left join smg_students on smg_students.intrep = u.userid 
+                              left join smg_insurance_type i on i.insutypeid = u.insurance_typeid
+                              
+                              where smg_students.studentid = #studentid#
+                              </cfquery>
+                              <cfquery name="insuranceDetails" datasource="#application.dsn#">
+                              select policy_code
+                              from smg_insurance
+                              where studentid = #studentID# 
+                              </cfquery>
+                    	 <td valign="top" width="100%" colspan=2>
+                        	  <span class="profileTitleSection">INSURANCE</span>
+                            <table cellpadding="2" cellspacing="2" border="0">
+                                <tr>
+                                    <td>Global Secutive</td>
+                               		<td>&middot;</td>
+                                    <td>#insurance.type#</td>
+                              		 <td>&middot;</td>
+                                    <td>Policy: #insurance.policycode#</td>
+                            		 <td>&middot;</td>
+                                    <td> (727) 894 7282 </td>
+                       				<td>&middot;</td>
+                                    <td>www.esecutive.com</td>
+                                </tr>
+                            </table>
+                            
+                        </td>
+                    </Tr>     
+                    <Tr>
+                    	 <td valign="top" width="100%" colspan=2>
+                        	  <span class="profileTitleSection">DEPARTMENT OF STATE</span>
+                            <table cellpadding="2" cellspacing="2" border="0">
+                                <tr>
+                                    <td>U.S. Department of State</td>
+                               		<td>&middot;</td>
+                                    <td>2200 C St. NW</td>
+                              		 <td>&middot;</td>
+                                    <td>Washington, D.C. 20037</td>
+                            		 <td>&middot;</td>
+                                    <td>1-866-283-9090</td>
+                       				<td>&middot;</td>
+                                    <td>jvisas@state.gov</td>
+                                </tr>
+                            </table>
+                            
+                        </td>
+                    </Tr>                       
+    </table> 
+            
+ 
+    <br />
+     <!---     --->     
+                    
+    </cfloop>
 </div>
 
 </cfoutput>

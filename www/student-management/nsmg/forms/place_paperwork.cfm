@@ -19,7 +19,22 @@
 	//  End -->
 	</script>
 </cfoutput>
+<style type="text/css">
+.alert{
+	width:550;
+	height:55px;
+	border:#666;
+	background-color:#FF9797;
+	text-align:center;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
+	margin-left:auto;
+	margin-right:auto;
+	
 
+}
+</style>
 <Title>Placement Check-Off List</title>
 
 <body bgcolor="white" background="white.jpg">
@@ -86,11 +101,57 @@
 </cfif>
 
 <input type="hidden" name="hostid" value="#get_student_info.hostid#">
-
+<cfif client.totalfam neq 1>
+<div class="alert">
+<h1>Single Person Placement - additional screening will be required.</h1>
+<em>2 additional references and  Single Person Placement Authorization Form required</em> </div>
+<br />
+</cfif>
 <Table width="560" align="center" cellpadding=4 cellspacing="0">
 	<tr>
 		<td colspan=3><u>Paperwork Received</u></td>
 	</tr>
+    <Cfif client.totalfam neq 1>
+    <tr> <!-- 0 - SINGLE PLACEMENT VEROFOCASTOPM --->
+        <td width="5%"><Cfif #get_student_info.doc_single_place_auth# EQ ''>
+                <input type="checkbox" name="single_auth" OnClick="CheckDates('single_auth', 'doc_single_place_auth');" <cfif edit is 'no'>disabled</cfif>>
+            <cfelse>
+                <input type="checkbox" name="single_auth" OnClick="CheckDates('single_auth', 'doc_single_place_auth');" checked <cfif edit is 'no'>disabled</cfif>>		
+            </cfif>
+        </td>
+        <td width="55%">Single Person Placement Verification</td>
+        <td align="left" width="40%">Date: &nbsp;<input type="text" name="doc_single_place_auth" size=9 value="#DateFormat(doc_single_place_auth, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+	</tr><tr> <!-- 8 - REFERENCE FORM 1 --->
+		<td><Cfif #get_student_info.doc_ref_form_1# EQ ''>
+				<input type="checkbox" name="single_check_form1" OnClick="CheckDates('single_check_form1', 'doc_single_ref_form_1');" <cfif edit is 'no'>disabled</cfif>>
+			<cfelse>
+				<input type="checkbox" name="single_check_form1" OnClick="CheckDates('single_check_form1', 'doc_single_ref_form_1');" checked <cfif edit is 'no'>disabled</cfif>>		
+			</cfif>
+		</td>
+		<td>Single Person Placement Reference 1</td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_form_1" size=9 value="#DateFormat(doc_single_ref_form_1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+	</tr>	
+	<tr> <!-- REFERENCE CHECK FORM 1 --->
+		<td>&nbsp;</td>
+		<td>Date of S.P. Reference Check 1</td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_check1" size=9 value="#DateFormat(doc_single_ref_check1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+	</tr>	
+	<tr> <!-- 9 - REFERENCE FORM 2 --->
+		<td><Cfif #get_student_info.doc_single_ref_form_2# EQ ''>
+				<input type="checkbox" name="single_check_form2" OnClick="CheckDates('single_check_form2', 'doc_single_ref_form_2');" <cfif edit is 'no'>disabled</cfif>>
+			<cfelse>
+				<input type="checkbox" name="single_check_form2" OnClick="CheckDates('single_check_form2', 'doc_single_ref_form_2');" checked <cfif edit is 'no'>disabled</cfif>>		
+			</cfif>
+		</td>
+		<td>Single Person Placement Reference 2</td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_form_2" size=9 value="#DateFormat(doc_single_ref_form_2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+	</tr>
+	<tr> <!--Single  REFERENCE CHECK FORM 2 --->
+		<td>&nbsp;</td>
+		<td>Date of S.P. Reference Check 2</td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_check2" size=9 value="#DateFormat(doc_single_ref_check2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+	</tr>		
+    </Cfif>    
 	<tr> <!-- 0 - PLACEMENT INFORMATION SHEET --->
 		<td width="5%"><Cfif #get_student_info.date_pis_received# EQ ''>
 				<input type="checkbox" name="check_pis" OnClick="CheckDates('check_pis', 'date_pis_received');" <cfif edit is 'no'>disabled</cfif>>
@@ -170,7 +231,27 @@
 			</cfif> &nbsp; --->
 			Date of Visit</td>
 		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit" size=9 value="#DateFormat(doc_date_of_visit, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+	</tr>
+    	<tr> <!-- 6 - CONFIDENTIAL HOST FAMILY 2 VISIT FORM --->
+		<td><Cfif #get_student_info.doc_conf_host_rec2# EQ ''>
+				<input type="checkbox" name="check_confi2" OnClick="CheckDates('check_confi2', 'doc_conf_host_rec2');" <cfif edit is 'no'>disabled</cfif>>
+			<cfelse>
+				<input type="checkbox" name="check_confi2" OnClick="CheckDates('check_confi2', 'doc_conf_host_rec2');" checked <cfif edit is 'no'>disabled</cfif>>		
+			</cfif>
+		</td>
+		<td>2nd Confidential Host Family Visit Form</td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_rec2" size=9 value="#DateFormat(doc_conf_host_rec2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
+	<tr> <!-- 7 - VISIT DATE --->
+		<td>&nbsp;</td>
+		<td><!--- <Cfif #get_student_info.doc_date_of_visit# EQ ''>
+				<input type="checkbox" name="check_visit" OnClick="CheckDates('check_visit', 'doc_date_of_visit');" <cfif edit is 'no'>disabled</cfif>>
+			<cfelse>
+				<input type="checkbox" name="check_visit" OnClick="CheckDates('check_visit', 'doc_date_of_visit');" checked <cfif edit is 'no'>disabled</cfif>>		
+			</cfif> &nbsp; --->
+			Date of 2nd Visit</td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit2" size=9 value="#DateFormat(doc_date_of_visit2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+	</tr>
 	<tr> <!-- 8 - REFERENCE FORM 1 --->
 		<td><Cfif #get_student_info.doc_ref_form_1# EQ ''>
 				<input type="checkbox" name="check_form1" OnClick="CheckDates('check_form1', 'doc_ref_form_1');" <cfif edit is 'no'>disabled</cfif>>
