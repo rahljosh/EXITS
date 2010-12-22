@@ -31,22 +31,23 @@
 <cfset notes_image = 'notes_1'>
     <!---number kids at home---->
     <cfquery name="kidsAtHome" datasource="#application.dsn#">
-    select count(childid)
+    select count(childid) as kidcount
     from smg_host_children
     where liveathome = 'yes' and hostid =#get_student_info.hostid#
     </cfquery>
-    
+ 
 <cfoutput query="get_student_info">
 	<Cfset father=0>
     <cfset mother=0>
+  
     <Cfif get_host_info.fatherfirstname is not ''>
         <cfset father = 1>
     </Cfif>
     <Cfif get_host_info.motherfirstname is not ''>
         <cfset mother = 1>
     </Cfif>
-    <cfset client.totalfam = #mother# + #father# + #kidsAtHome.recordcount#>
-    
+    <cfset client.totalfam = #mother# + #father# + #kidsAtHome.kidcount#>
+ 
 <!--- It's not complete --->
 <cfif hostid is '0' and (schoolid NEQ '0' or arearepid NEQ '0' or placerepid NEQ '0')><cfset host_image = 'host_2'></cfif>
 <cfif schoolid is '0' and (hostid NEQ '0' or arearepid NEQ '0' or placerepid NEQ '0')><cfset school_image = 'school_2'></cfif>
@@ -86,25 +87,28 @@
 	</cfloop>
 
 <Cfif client.totalfam neq 1>
-			<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
-		AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
-		AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
-		AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND member_missing EQ 0>	
-		<cfif stu_arrival_orientation NEQ '' AND host_arrival_orientation NEQ ''>
-			<cfset paperwork_image = 'paperwork_4'>  <!--- paperwork complete image --->
-		<cfelse>
-			<cfset paperwork_image = 'paperwork_3'>  <!--- paperwork docs complete missing orientations --->
-		</cfif>
-	<cfelse>
-		<cfset paperwork_image = 'paperwork_2'>  <!--- paperwork incomplete image --->
-	</cfif>
+		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
+            AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
+            AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
+            AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND member_missing EQ 0>	
+    
+        
+            
+            <cfif stu_arrival_orientation NEQ '' AND host_arrival_orientation NEQ ''>
+                <cfset paperwork_image = 'paperwork_4'>  <!--- paperwork complete image --->
+            <cfelse>
+                <cfset paperwork_image = 'paperwork_3'>  <!--- paperwork docs complete missing orientations --->
+            </cfif>
+        <cfelse>
+            <cfset paperwork_image = 'paperwork_2'>  <!--- paperwork incomplete image --->
+        </cfif>
 <Cfelse>
 		<!----Add in the extra paper work for a single person placement---->
 		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
-		AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
-		AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
-		AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ ''
-		AND	doc_single_ref_form_1 NEQ '' AND doc_single_ref_form_2  NEQ '' and member_missing EQ 0>	
+            AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
+            AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
+            AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND 
+			doc_single_ref_form_1 NEQ '' AND doc_single_ref_form_2 NEQ '' and  member_missing EQ 0>	
     
                     
             <cfif stu_arrival_orientation NEQ '' AND host_arrival_orientation NEQ ''>
@@ -116,6 +120,7 @@
             <cfset paperwork_image = 'paperwork_2'>  <!--- paperwork incomplete image --->
         </cfif>
 </Cfif>
+
 
 </cfif>
 
