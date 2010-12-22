@@ -162,7 +162,8 @@
             ecpc.endDate,
             ecpc.selfConfirmationName,
             ecpc.selfConfirmationMethod,
-            ecpc.selfConfirmationDate            
+            ecpc.selfConfirmationDate,
+            ecpc.selfConfirmationNotes           
         FROM
         	extra_candidate_place_company ecpc
         INNER JOIN
@@ -285,6 +286,7 @@
 			$("#selfConfirmationName").val("");
 			$("#selfConfirmationMethod").val("");
 			$("#selfConfirmationDate").val("");
+			$("#selfConfirmationNotes").val("");
 			$(".selfPlacementInfo").fadeOut("fast");
 		}
 	}
@@ -941,6 +943,13 @@
                                                 </select>
                                             </td>
                                         </tr>
+                                        <tr class="hiddenField selfPlacementInfo">
+	                                        <td class="style1" align="right"><strong>Notes:</strong></td>
+    	                                    <td class="style1" colspan="3">
+                                                <span class="readOnly">#qCandidatePlaceCompany.selfConfirmationNotes#</span>
+            		                            <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage" cols="40" rows="3">#qCandidatePlaceCompany.selfConfirmationNotes#</textarea>
+                    	                    </td>
+                                        </tr>
                                     </table>	
                         
                                 </td>
@@ -1015,7 +1024,6 @@
                                                     	#qRequestedPlacement.name#
                                                     </cfif>
                                                 </span>
-                                                
                                                 <select name="requested_placement" class="style1 editPage">
                                                     <option value="0"></option>
                                                     <cfloop query="qHostCompanyList">
@@ -1034,7 +1042,7 @@
 	                                        <td class="style1" align="right"><strong>Comment:</strong></td>
     	                                    <td class="style1" colspan="3">
         	                                	<span class="readOnly">#get_candidate_unqid.change_requested_comment#</span>
-            		                            <textarea name="change_requested_comment" class="style1 editPage" value="change_requested_comment" cols="40" rows="3">#get_candidate_unqid.change_requested_comment#</textarea>
+            		                            <textarea name="change_requested_comment" class="style1 editPage" cols="40" rows="3">#get_candidate_unqid.change_requested_comment#</textarea>
                     	                    </td>
                                         </tr>
                                         <tr>
