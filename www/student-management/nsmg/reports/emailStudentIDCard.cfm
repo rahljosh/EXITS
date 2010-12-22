@@ -106,7 +106,7 @@
      <cfsavecontent variable="email_message">
         <cfoutput>				
             <p>An ID card for #get_student_info.firstname# #get_student_info.familylastname# (#get_student_info.studentid#) is attached.  #get_student_info.firstname#  will need this ID card when he comes to the United States. Please make sure he has a hard copy of this ID with him along with his passport and visa when he departs.   </p>
-            <p>See the attached file for the ID card/</p>
+            <p>See the attached file for the ID card.</p>
             <p>
             Regards-<br />
             #get_facilitator.firstname# #get_facilitator.lastname#
