@@ -3,6 +3,16 @@
 
 <!--- Student Info --->
 <cfinclude template="../querys/get_student_info.cfm">
+	<!----Host Info---->
+<cfquery name="get_host_info" datasource="MySQL">
+	SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.hostid, stu.arearepid, stu.placerepid, stu.schoolid, 
+		stu.uniqueid, stu.dateplaced, stu.host_fam_approved, stu.date_host_fam_approved, stu.address, stu.address2, stu.city, stu.country, stu.programid,
+		stu.zip,  stu.fax, stu.email, stu.phone, stu.welcome_family,
+		h.motherfirstname, h.fatherfirstname, h.familylastname as hostlastname, h.hostid as hostfamid
+	FROM smg_students stu
+	LEFT JOIN smg_hosts h ON stu.hostid = h.hostid
+	WHERE stu.studentid = #client.studentid#
+</cfquery>
 
 <cfquery name="get_region_assigned" datasource="MySQL">
 	SELECT smg_students.regionassigned, smg_regions.regionname
@@ -19,9 +29,24 @@
 <cfset double_image = 'double_1'>
 <cfset paperwork_image = 'paperwork_1'>
 <cfset notes_image = 'notes_1'>
-
+    <!---number kids at home---->
+    <cfquery name="kidsAtHome" datasource="#application.dsn#">
+    select count(childid)
+    from smg_host_children
+    where liveathome = 'yes' and hostid =#get_student_info.hostid#
+    </cfquery>
+    
 <cfoutput query="get_student_info">
-
+	<Cfset father=0>
+    <cfset mother=0>
+    <Cfif get_host_info.fatherfirstname is not ''>
+        <cfset father = 1>
+    </Cfif>
+    <Cfif get_host_info.motherfirstname is not ''>
+        <cfset mother = 1>
+    </Cfif>
+    <cfset client.totalfam = #mother# + #father# + #kidsAtHome.recordcount#>
+    
 <!--- It's not complete --->
 <cfif hostid is '0' and (schoolid NEQ '0' or arearepid NEQ '0' or placerepid NEQ '0')><cfset host_image = 'host_2'></cfif>
 <cfif schoolid is '0' and (hostid NEQ '0' or arearepid NEQ '0' or placerepid NEQ '0')><cfset school_image = 'school_2'></cfif>
