@@ -13,6 +13,7 @@
 <cfparam name="FORM.selfConfirmationName" default="">
 <cfparam name="FORM.selfConfirmationMethod" default="">
 <cfparam name="FORM.selfConfirmationDate" default="">
+<cfparam name="FORM.selfConfirmationNotes" default="">
 
 <cfquery name="qGetCandidateInfo" datasource="mysql">
     SELECT 
@@ -133,7 +134,8 @@
                 reason_host,
                 selfConfirmationName,
                 selfConfirmationMethod,
-                selfConfirmationDate
+                selfConfirmationDate,
+                selfConfirmationNotes
             )
             VALUES 
             (	
@@ -155,10 +157,11 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 <cfif IsDate(FORM.selfConfirmationDate)>
-                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">,
                 <cfelse>
-                	<cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">
 			)
 		</cfquery>
 	
@@ -183,10 +186,11 @@
                 selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 <cfif IsDate(FORM.selfConfirmationDate)>
-                	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">
+                	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">,
                 <cfelse>
-                	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
+                selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">
             WHERE 
             	candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candcompid#">
 		</cfquery>

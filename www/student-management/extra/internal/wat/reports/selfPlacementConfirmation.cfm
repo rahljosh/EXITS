@@ -84,10 +84,12 @@
                 ec.enddate,
                 ec.intrep, 
                 ec.wat_placement,
+                ehc.hostCompanyID,
                 ehc.name,     
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationDate,
-                ecpc.selfConfirmationMethod,            
+                ecpc.selfConfirmationMethod,  
+                ecpc.selfConfirmationNotes,          
                 u.businessName
             FROM
                 extra_candidates ec
@@ -110,6 +112,9 @@
                 AND 
                     ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
            	</cfif>
+			ORDER BY
+            	ehc.name,
+                ec.candidateID            
         </cfquery>
 
 
@@ -143,10 +148,7 @@
                     AND
                         ds2019 = ''
 				</cfif>
-                
-                ORDER BY 
-                	wat_placement,
-                    candidateID
+
             </cfquery>
 			
             <cfreturn qFilterGetAllCandidates>
@@ -284,11 +286,7 @@
             	
                 <table width="99%" cellpadding="4" cellspacing=0 align="center">
                         <tr>
-                            <td colspan="8">
-                                <small>
-                                    <strong>#qGetIntlReps.businessname# - Total candidates: #qTotalPerAgent.recordCount#</strong> 
-                                </small>
-                            </td>
+                            <td colspan="10"><strong>#qGetIntlReps.businessname# - Total candidates: #qTotalPerAgent.recordCount#</strong></td>
                         </tr>
                     <cfif ListFind("2,3", FORM.printOption)>
                         <tr>
@@ -296,18 +294,20 @@
                         </tr>
                     </cfif>
                     <tr>
-                        <Th align="left" class="#tableTitleClass#">Student</Th>
-                        <th align="left" class="#tableTitleClass#">Sex</th>
-                        <th align="left" class="#tableTitleClass#">Start Date</th>
-                        <th align="left" class="#tableTitleClass#">End Date</th>
-                        <th align="left" class="#tableTitleClass#">Placement Information</th>
-                        <th align="left" class="#tableTitleClass#">Contact Date</th>
-                        <th align="left" class="#tableTitleClass#">Contact Name</th>
-                        <th align="left" class="#tableTitleClass#">Contact Method</th>
+                        <Th align="left" class="#tableTitleClass#" width="16%">Student</Th>
+                        <th align="left" class="#tableTitleClass#" width="5%">Gender</th>
+                        <th align="left" class="#tableTitleClass#" width="7%">Start Date</th>
+                        <th align="left" class="#tableTitleClass#" width="7%">End Date</th>
+                        <th align="left" class="#tableTitleClass#" width="19%">Placement Information</th>
+                        <th align="left" class="#tableTitleClass#" width="7%">Contact Date</th>
+                        <th align="left" class="#tableTitleClass#" width="10">Contact Name</th>
+                        <th align="left" class="#tableTitleClass#" width="7%">Contact Method</th>
+                        <th align="left" class="#tableTitleClass#" width="16%">Notes</th>
+                        <th align="left" class="#tableTitleClass#" width="6%">Status</th>
                     </tr>
                     <cfif ListFind("2,3", FORM.printOption)>
                         <tr>
-                            <td colspan=8><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
+                            <td colspan="10"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
                         </tr>
                     </cfif>
                     <cfloop query="qTotalPerAgent">
@@ -320,10 +320,20 @@
                             <td class="style1">#qTotalPerAgent.sex#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
-                            <td class="style1">#qTotalPerAgent.name#</td>
+                            <td class="style1">
+                            	<a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#" target="_blank" class="style4">#qTotalPerAgent.name#</a>
+                            </td>
                             <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
+                            <td class="style1">#qTotalPerAgent.selfConfirmationNotes#</td>
+                            <td class="style1">
+                            	<cfif isDate(qTotalPerAgent.selfConfirmationDate)>
+                                	Confirmed
+                                <cfelse>
+                                	Unconfirmed
+                                </cfif>                            
+                            </td>
                         </tr>
                     </cfloop>        
                 </table>
