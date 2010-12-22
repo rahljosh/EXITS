@@ -13,7 +13,7 @@
 		h.hostid, h.familylastname AS h_lastname, h.address AS h_address, h.address2 AS h_address2, h.city AS h_city, h.state AS h_state, h.zip AS h_zip, h.phone as h_phone,
 		sc.schoolid, sc.schoolname, sc.principal, sc.address AS sc_address, sc.address2 AS sc_address2, sc.city AS sc_city, sc.state AS sc_state, sc.zip AS sc_zip, sc.phone AS sc_phone,
 		ar.userid, ar.lastname AS ar_lastname, ar.firstname AS ar_firstname, ar.address AS ar_address, ar.address2 AS ar_address2, ar.city AS ar_city, 
-		ar.state AS ar_state, ar.zip AS ar_zip, ar.phone AS ar_phone,
+		ar.state AS ar_state, ar.zip AS ar_zip, ar.phone AS ar_phone, ar.email AS ar_email, 
 		c.countryname
 	FROM smg_students stu
 	INNER JOIN smg_hosts h ON stu.hostid = h.hostid
@@ -35,7 +35,8 @@
 		#companyshort.city#, #companyshort.state# #companyshort.zip#<br><br>
 		<cfif companyshort.phone is ''><cfelse> Phone: #companyshort.phone#<br></cfif>
 		<cfif companyshort.toll_free is ''><cfelse> Toll Free: #companyshort.toll_free#<br></cfif>
-		<cfif companyshort.fax is ''><cfelse> Fax: #companyshort.fax#<br></cfif></div>
+		<cfif companyshort.fax is ''><cfelse> Fax: #companyshort.fax#<br></cfif>
+        <cfif companyshort.generalContactEmail is ''><cfelse> Email: #companyshort.generalContactEmail#<br></cfif></div>
 	</td></tr>		
 </table>
 <br>
@@ -85,6 +86,7 @@
 			<Cfif get_letter_info.ar_address2 is ''><cfelse>#get_letter_info.ar_address2#<br></Cfif>
 			#get_letter_info.ar_city#, #get_letter_info.ar_state# #get_letter_info.ar_zip#<br>
 			<Cfif get_letter_info.ar_phone is ''><cfelse>Phone: &nbsp; #get_letter_info.ar_phone#<br></Cfif>
+            <Cfif get_letter_info.ar_email is ''><cfelse>Email: &nbsp; #get_letter_info.ar_email#<br></Cfif>
 		</div></td>
 	</tr>
 </table>

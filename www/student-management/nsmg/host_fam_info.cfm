@@ -47,6 +47,18 @@
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.hostID#">
     </cfquery>
     
+     <cfquery name="host_children" datasource="#application.dsn#">
+        SELECT *
+        FROM smg_host_children
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
+        ORDER BY birthdate
+    </cfquery>
+    <!---number kids at home---->
+    <cfquery name="kidsAtHome" dbtype="query">
+    select count(childid)
+    from host_children
+    where liveathome = 'yes'
+    </cfquery>
     <!----- Students being Hosted----->
     <cfquery name="hosting_students" datasource="#application.dsn#">
         SELECT studentid, familylastname, firstname, p.programname, c.countryname
@@ -157,6 +169,17 @@ div.scroll2 {
 	background: #Ffffe6;
 	left:auto;
 }
+.alert{
+	width:auto;
+	height:55px;
+	border:#666;
+	background-color:#FF9797;
+	text-align:center;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
+
+}
 </style>
 
 <cfif family_info.recordcount EQ 0>
@@ -172,6 +195,24 @@ div.scroll2 {
 
 
 <cfoutput>
+
+<!----check if single placement family assign a value of 1 to each family memmber, if sum of total family members over 1, no worries.  Other wise, display warning---->
+<Cfset father=0>
+<cfset mother=0>
+<Cfif family_info.fatherfirstname is not ''>
+	<cfset father = 1>
+</Cfif>
+<Cfif family_info.motherfirstname is not ''>
+	<cfset mother = 1>
+</Cfif>
+<cfset totalfam = #mother# + #father# + #kidsAtHome.recordcount#>
+
+<cfif totalfam eq 1>
+<div class="alert"><h1>Single Person Placement - additional screening will be required.</h1>
+<em>Single Person Placement Authorization Form and 2 additional references</em> </div>
+<br />
+</cfif>
+
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr><td width="60%" align="left" valign="top">
 
@@ -212,12 +253,7 @@ div.scroll2 {
 <td width="2%"></td> <!--- SEPARATE TABLES --->
 <td width="38%" align="right" valign="top">
 
-    <cfquery name="host_children" datasource="#application.dsn#">
-        SELECT *
-        FROM smg_host_children
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
-        ORDER BY birthdate
-    </cfquery>
+   
 
 	<!--- HEADER OF TABLE --- Other Family Members --->
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -414,7 +450,7 @@ div.scroll2 {
                         		<a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostID#_rec.xml" target="_blank">#requestid#</a>
                             <cfelse>
                             	#requestid#
-                            </cfif>
+                          </cfif>
                         </cfif>
                 	</td>
 					<cfif client.usertype lte 4 and client.companyid eq 10>
@@ -434,7 +470,7 @@ div.scroll2 {
                         	processing
                         <cfelse>
 							#requestid#
-						</cfif>
+					  </cfif>
                    </td>
                    <cfif client.usertype lte 4 and client.companyid eq 10>
 						<td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></a></td>
@@ -459,7 +495,7 @@ div.scroll2 {
                         		<a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_father_#qGetCBCFather.hostID#_rec.xml" target="_blank">#requestid#</a>
                         	<cfelse>
                             	#requestid#
-                            </cfif>
+                          </cfif>
 						</cfif>
 					</td>
                     <cfif client.usertype lte 4 and client.companyid eq 10>
@@ -480,7 +516,7 @@ div.scroll2 {
                         	processing
                         <cfelse>
                             #requestid#
-                        </cfif>
+                      </cfif>
                     </td>
                     <cfif client.usertype lte 4 and client.companyid eq 10>
                     	<td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td>

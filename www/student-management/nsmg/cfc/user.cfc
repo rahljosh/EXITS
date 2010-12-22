@@ -263,7 +263,7 @@
            </cfif>
         <cfelse>
         	<cfif isDefined('client.trainingNeeded')>
-        		<cfset temp = StructDelete(client.trainingNeeded,1)>
+        		<cfset client.trainingNeeded = 0>
     		</cfif>
         </Cfif>
         <!--- Check if server is local, if it is do not redirect to SSL --->

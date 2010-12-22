@@ -21,7 +21,7 @@
 	SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.hostid, stu.arearepid, stu.placerepid, stu.schoolid, 
 		stu.uniqueid, stu.dateplaced, stu.host_fam_approved, stu.date_host_fam_approved, stu.address, stu.address2, stu.city, stu.country, stu.programid,
 		stu.zip,  stu.fax, stu.email, stu.phone, stu.welcome_family,
-		h.familylastname as hostlastname, h.hostid as hostfamid,
+		h.motherfirstname, h.fatherfirstname, h.familylastname as hostlastname, h.hostid as hostfamid,
 		area.firstname as areafirstname, area.lastname as arealastname, area.userid as areaid,
 		place.firstname as placefirstname, place.lastname as placelastname, place.userid as placeid,
 		countryname 
@@ -32,6 +32,7 @@
 	LEFT JOIN smg_countrylist country ON stu.countryresident = country.countryid
 	WHERE stu.studentid = #client.studentid#
 </cfquery>
+
 <cfquery name="season" datasource="#application.dsn#">
 select seasonid
 from smg_programs
@@ -44,9 +45,7 @@ left join smg_school_dates sd on sd.schoolid = sc.schoolid
 where sc.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.schoolid)#">
 and sd.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(season.seasonid)#">
 </cfquery>
-<cfif client.userid eq 1>
-<cfdump var="#get_student_info#">
-</cfif>
+
 <!--- PLACEMENT HISTORY --->
 <cfquery name="placement_history" datasource="MySQL">
 	SELECT hist.hostid, hist.reason, hist.studentid, hist.dateofchange, hist.arearepid, hist.placerepid, hist.schoolid, hist.changedby, hist.original_place,
@@ -218,7 +217,10 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 						<cfelseif hostfamid EQ ''>
 							<font color="CC3300">Host Family (#hostid#) was not found in the system.</font>						
 						<cfelse>
-							<cfif get_student_info.welcome_family EQ 1>*** This is a Welcome Family ***<br></cfif>
+							<cfif get_student_info.welcome_family EQ 1>*** This is a Welcome Family ***<br></cfif>	                       
+                            <cfif client.totalfam neq 1>
+                            	<font color="##CC0000">*** Single Person Placement***<br></font>
+                            </cfif>
 							#hostlastname# (#hostid#)
 						</cfif>	
 					</td> 
