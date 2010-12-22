@@ -65,6 +65,11 @@
 		AND liveathome = 'yes'
 </cfquery>
 
+<cfquery name="season" datasource="#application.dsn#">
+select seasonid
+from smg_programs
+where programid = #get_student_info.programid#
+</cfquery>
 <!--- include template page header --->
 <cfinclude template="placement_status_header.cfm">
 
@@ -94,7 +99,7 @@
 	<cfparam name="edit" default="no">
 <cfelse>
 	<cfparam name="edit" default="yes">
-	<form action="../querys/update_check_list.cfm?studentid=#url.studentid#" name="form" method="post">
+	<form action="../querys/update_check_list.cfm?studentid=#url.studentid#&season=#season.seasonid#" name="form" method="post">
 </cfif>
 <cfif url.update is 'yes'>
 <div align="center"><span class="get_Attention">Placement Paperwork Updated</span></div>
@@ -111,7 +116,7 @@
 	<tr>
 		<td colspan=3><u>Paperwork Received</u></td>
 	</tr>
-    <Cfif client.totalfam eq 1>
+    <Cfif client.totalfam eq 1 and season.seasonid gte 8>
     <tr> <!-- 0 - SINGLE PLACEMENT VEROFOCASTOPM --->
         <td width="5%"><Cfif #get_student_info.doc_single_place_auth# EQ ''>
                 <input type="checkbox" name="single_auth" OnClick="CheckDates('single_auth', 'doc_single_place_auth');" <cfif edit is 'no'>disabled</cfif>>
@@ -232,6 +237,8 @@
 			Date of Visit</td>
 		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit" size=9 value="#DateFormat(doc_date_of_visit, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
+    <br>
+	<cfif season.seasonid gt 7>
     	<tr> <!-- 6 - CONFIDENTIAL HOST FAMILY 2 VISIT FORM --->
 		<td><Cfif #get_student_info.doc_conf_host_rec2# EQ ''>
 				<input type="checkbox" name="check_confi2" OnClick="CheckDates('check_confi2', 'doc_conf_host_rec2');" <cfif edit is 'no'>disabled</cfif>>
@@ -242,6 +249,7 @@
 		<td>2nd Confidential Host Family Visit Form</td>
 		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_rec2" size=9 value="#DateFormat(doc_conf_host_rec2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
+   
 	<tr> <!-- 7 - VISIT DATE --->
 		<td>&nbsp;</td>
 		<td><!--- <Cfif #get_student_info.doc_date_of_visit# EQ ''>
@@ -252,6 +260,7 @@
 			Date of 2nd Visit</td>
 		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit2" size=9 value="#DateFormat(doc_date_of_visit2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
+     </cfif>
 	<tr> <!-- 8 - REFERENCE FORM 1 --->
 		<td><Cfif #get_student_info.doc_ref_form_1# EQ ''>
 				<input type="checkbox" name="check_form1" OnClick="CheckDates('check_form1', 'doc_ref_form_1');" <cfif edit is 'no'>disabled</cfif>>

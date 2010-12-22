@@ -9,19 +9,22 @@
 		doc_photos_rec_date = <cfif form.doc_photos_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_photos_rec_date)#</cfif>,
 		doc_school_profile_rec = <cfif form.doc_school_profile_rec EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_school_profile_rec)#</cfif>,
 		doc_conf_host_rec = <cfif form.doc_conf_host_rec EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_conf_host_rec)#</cfif>,
+        doc_date_of_visit = <cfif form.doc_date_of_visit EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_date_of_visit)#</cfif>,
+        <cfif url.season gte 8>
         doc_conf_host_rec2 = <cfif form.doc_conf_host_rec2 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_conf_host_rec2)#</cfif>,
-		doc_date_of_visit = <cfif form.doc_date_of_visit EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_date_of_visit)#</cfif>,
 		doc_date_of_visit2 = <cfif form.doc_date_of_visit2 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_date_of_visit2)#</cfif>,
-		doc_ref_form_1 = <cfif form.doc_ref_form_1 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_ref_form_1)#</cfif>,
+		</cfif>
+        doc_ref_form_1 = <cfif form.doc_ref_form_1 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_ref_form_1)#</cfif>,
 		doc_ref_check1 = <cfif form.doc_ref_check1 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_ref_check1)#</cfif>,	
 		doc_ref_form_2 = <cfif form.doc_ref_form_2 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_ref_form_2)#</cfif>,
 		doc_ref_check2 = <cfif form.doc_ref_check2 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_ref_check2)#</cfif>,
-		doc_single_place_auth = <cfif form.doc_single_place_auth EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_place_auth)#</cfif>,
+		<cfif client.totalfam eq 1 and url.season gte 8>
+        doc_single_place_auth = <cfif form.doc_single_place_auth EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_place_auth)#</cfif>,
         doc_single_ref_form_1 = <cfif form.doc_single_ref_form_1 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_ref_form_1)#</cfif>,
 		doc_single_ref_check1 = <cfif form.doc_single_ref_check1 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_ref_check1)#</cfif>,	
 		doc_single_ref_form_2 = <cfif form.doc_single_ref_form_2 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_ref_form_2)#</cfif>,
 		doc_single_ref_check2 = <cfif form.doc_single_ref_check2 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_ref_check2)#</cfif>,
-        
+        </cfif>
 		doc_school_accept_date = <cfif form.doc_school_accept_date EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_school_accept_date)#</cfif>,
 		doc_school_sign_date = <cfif form.doc_school_sign_date EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_school_sign_date)#</cfif>,
 		doc_class_schedule = <cfif form.doc_class_schedule EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_class_schedule)#</cfif>,

@@ -218,7 +218,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 							<font color="CC3300">Host Family (#hostid#) was not found in the system.</font>						
 						<cfelse>
 							<cfif get_student_info.welcome_family EQ 1>*** This is a Welcome Family ***<br></cfif>	                       
-                            <cfif client.totalfam neq 1>
+                            <cfif client.totalfam eq 1>
                             	<font color="##CC0000">*** Single Person Placement***<br></font>
                             </cfif>
 							#hostlastname# (#hostid#)
