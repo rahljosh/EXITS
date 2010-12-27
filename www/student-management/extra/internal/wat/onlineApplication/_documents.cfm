@@ -76,7 +76,7 @@
                             extensionfilter="jpg,jpeg,gif,png,bmp,tiff,pdf" 
                             oncomplete="handleComplete"             
                             maxfileselect="5" 
-                            maxuploadsize="3" 
+                            maxuploadsize="10" 
                             bgcolor="##FFFFFF" 
                             align="center"
                             height="220"
