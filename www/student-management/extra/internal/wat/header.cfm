@@ -95,7 +95,7 @@
     <meta name="Author" content="CSB International">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <title>EXTRA - Exchange Training Abroad</title>
-    <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="../style.css" type="text/css">
     <link rel="stylesheet" href="../linked/css/onlineApplication.css" type="text/css">
     <link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css">
