@@ -27,7 +27,7 @@
 			<cfform action="qr_upload_file.cfm?referrer=#URL.referrer#&folder=#url.folder#" method="post" enctype="multipart/form-data" preloader="no">
 			Please upload your file here. <br>
 			EXITS Online Application accepts the following formats: JPG, JPEG, GIF, TIF, PNG, PDF AND DOC. <br>
-			<strong>Please preferably upload image files such as JPG, JPEG, GIF, TIF OR PNG FILES.</strong><br>
+			<strong>When possible, please upload JPG or JPEG.</strong><br>
 			If you upload the wrong file, just upload the correct file and the wrong file will be removed. <br>
 			<br>
 			<cfoutput>
