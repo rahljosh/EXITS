@@ -862,7 +862,7 @@
 		</div>			
 
         <!--- Requested Placement | Original Key [16] --->
-        <cfif printApplication>
+        <cfif printApplication AND ListFind(FORM.wat_placement, 'CSB-Placement')>
             <div class="field">
                 <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label> 
                 <div class="printField">#FORM[qGetQuestions.fieldKey[2]]# &nbsp;</div>            
