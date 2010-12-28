@@ -52,6 +52,8 @@
 				SESSION.CANDIDATE.applicationStatusID = qGetCandidateInfo.applicationStatusID;
 				SESSION.CANDIDATE.email = qGetCandidateInfo.email;
 				
+				SESSION.CANDIDATE.isOfficeApplication = APPLICATION.CFC.ONLINEAPP.isOfficeApplication(foreignTable=APPLICATION.foreignTable, foreignID=ARGUMENTS.candidateID);
+									
 				// set up upload files path
 				SESSION.CANDIDATE.myUploadFolder = APPLICATION.PATH.uploadDocumentCandidate & ARGUMENTS.candidateID & '/';
 				// Make sure folder exists
@@ -69,6 +71,12 @@
 				stCheckSession3 = checkCandidateRequiredFields(candidateID=ARGUMENTS.candidateID, sectionName='section3');
 				SESSION.CANDIDATE.isSection3Complete = stCheckSession3.isComplete;
 				SESSION.CANDIDATE.section3FieldList = stCheckSession3.fieldList;
+
+				if ( SESSION.CANDIDATE.isSection1Complete AND SESSION.CANDIDATE.isSection2Complete AND SESSION.CANDIDATE.isSection3Complete ) {
+					SESSION.CANDIDATE.isApplicationComplete = 1;
+				} else {
+					SESSION.CANDIDATE.isApplicationComplete = 0;
+				}				
 				
 				// Set Intl Rep ID / Branch ID / Intl Rep/Branch Name
 				SESSION.CANDIDATE.intlRepID = qGetCandidateInfo.intRep;
@@ -209,6 +217,7 @@
         <cfargument name="home_country" default="" hint="Candidate Home Country">
         <cfargument name="home_zip" default="" hint="Candidate Home Zip">
         <cfargument name="home_phone" default="" hint="Candidate Home Phone">
+        <cfargument name="email" default="" hint="Email Address">
         <cfargument name="passport_number" default="" hint="Candidate Passport Number">
         <cfargument name="emergency_name" default="" hint="Candidate Emergency Name">
         <cfargument name="emergency_phone" default="" hint="Candidate Emergency Phone">
@@ -243,6 +252,7 @@
                     home_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.home_country)#">,
                     home_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.home_zip))#">,
                     home_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.home_phone))#">,
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email))#">,
                     passport_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.passport_number))#">,
                     emergency_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_name))#">,
                     emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_phone))#">,
@@ -513,8 +523,8 @@
 				foreignTable=APPLICATION.foreignTable,
 				foreignID=newRecord.GENERATED_KEY,
 				submittedByForeignTable=submittedBy.foreignTable,
-				submittedByforeignID=submittedBy.foreignID,
-				comments=APPLICATION.CFC.ONLINEAPP.getApplicationStatusByID(applicationStatusID).description
+				submittedByforeignID=submittedBy.foreignID
+				//comments=APPLICATION.CFC.ONLINEAPP.getApplicationStatusByID(applicationStatusID).description
 			);
 		</cfscript>
 

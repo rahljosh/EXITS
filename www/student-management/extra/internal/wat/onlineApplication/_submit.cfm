@@ -40,18 +40,14 @@
 		qGetApplicationHistory = APPLICATION.CFC.ONLINEAPP.getApplicationHistory(foreignTable=APPLICATION.foreignTable, foreignID=FORM.candidateID);
 			
 		// Check if Application is complete, if not redirect to check list page.		
-		if ( 
-			CLIENT.loginType NEQ 'user' 
-		AND (
-				NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection1Complete)
-			OR
-				NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection2Complete)
-			OR
-				NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete) 
-			) ) {
-				// Application is not complete - go to checkList page
-				location("#CGI.SCRIPT_NAME#?action=checkList", "no");
-		}
+		if ( CLIENT.loginType NEQ 'user' AND NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isApplicationComplete) ) {
+			// Application is not complete - go to checkList page
+			location("#CGI.SCRIPT_NAME#?action=checkList", "no");
+		// Intl. Reps should be able to deny/approve application.
+		} else if ( CLIENT.loginType EQ 'user' AND VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isOfficeApplication) AND NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isApplicationComplete) ) {
+			// Application is not complete - go to checkList page
+			location("#CGI.SCRIPT_NAME#?action=checkList", "no");		
+		}		
 		
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
@@ -268,7 +264,7 @@
                                         <!--- Only display approve if section 3 is complete --->
                                         <cfif APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete>
                                             <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
-                                        </cfif>
+                                        </cfif>                                        
                                         <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
                                     </select>
                             
@@ -293,11 +289,13 @@
 									<!--- Branch / Intl. Rep - Deny / Approve Button --->
                                     <select name="submissionType" id="submissionType" class="mediumField">
                                         <option value=""></option> <!--- [select an action] --->
-                                        <!--- Only display approve if section 3 is complete --->
-                                        <cfif APPLICATION.CFC.CANDIDATE.getCandidateSession().isSection3Complete>
+                                        <!--- Only display approve if application is fully complete --->
+                                        <cfif VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isApplicationComplete)>
                                             <option value="approved" <cfif FORM.submissionType EQ 'approved'> selected="selected" </cfif> >Approve Application</option>
                                         </cfif>
-                                        <option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
+                                        <cfif NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isOfficeApplication)>
+                                        	<option value="denied" <cfif FORM.submissionType EQ 'denied'> selected="selected" </cfif> >Deny Application</option>
+                                        </cfif>
                                     </select>
                             
                             	<cfelse>
@@ -310,7 +308,6 @@
                             
                             <!--- NY Office --->                           
                             <cfelseif CLIENT.userType LTE 4>
-                                
                                 
                                 <cfif ListFind("7,8,9,10", APPLICATION.CFC.CANDIDATE.getCandidateSession().applicationStatusID)>
 
@@ -373,18 +370,18 @@
                     <div class="table">
                         <div class="th">
                             <div class="tdXLarge">Date</div>
-                            <div class="tdXLarge">Status</div>
+                            <div class="tdXXLarge">Status</div>
                             <div class="tdXXLarge">Comments</div>
                             <div class="clearBoth"></div>
 						</div>                            
                         <cfloop query="qGetApplicationHistory">      
                             <div <cfif qGetApplicationHistory.currentRow MOD 2> class="tr" <cfelse> class="trOdd" </cfif> >
                                 <div class="tdXLarge">
-                                	#DateFormat(qGetApplicationHistory.dateCreated, 'mm/dd/yyyy')#
+                                	#DateFormat(qGetApplicationHistory.dateCreated, 'mm/dd/yy')#
                                     #TimeFormat(qGetApplicationHistory.dateCreated, 'hh-mm-ss tt')# EST
                                 </div>
-                                <div class="tdXLarge">#qGetApplicationHistory.description#</div>
-                                <div class="tdXLarge">
+                                <div class="tdXXLarge">#qGetApplicationHistory.description#</div>
+                                <div class="tdXXLarge">
                                 	<cfif LEN(qGetApplicationHistory.comments)>
                                     	#qGetApplicationHistory.comments# 
                                     <cfelse>
