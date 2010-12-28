@@ -5,6 +5,8 @@ body {font:Arial, Helvetica, sans-serif;}
 .dashed-border {border: 1px dashed #FF9933;}
     </style>
 
+<cfparam name="CLIENT.companyID" default="0">
+
 <cfif isDefined('form.randid')>
 	<cfquery name="check_info" datasource="MySQL">
 		SELECT email, uniqueid, randid, phone, studentid, firstname, familylastname, companyid
