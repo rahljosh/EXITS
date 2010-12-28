@@ -154,6 +154,7 @@
 					home_country = FORM.home_country,
 					home_zip = FORM.home_zip,
 					home_phone = FORM.home_phone,
+					email = FORM.email,
 					passport_number = FORM.passport_number,
 					emergency_name = FORM.emergency_name,
 					emergency_phone = FORM.emergency_phone,
@@ -591,12 +592,17 @@
 
         <!--- Email Address --->
         <div class="field">
-            <label for="email">Email Address <em>*</em></label> 
+            <label for="email">Email Address <cfif NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isOfficeApplication)><em>*</em></cfif></label> 
             <cfif printApplication>
 				<div class="printField">#FORM.email# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" disabled="disabled" />
-                <p class="note">Click on Update Login to update your email address.</p>
+                <cfif VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isOfficeApplication)>
+                    <input type="text" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" />
+                <cfelse>
+                    <input type="text" name="displayEmail" id="displayEmail" value="#FORM.email#" class="largeField" maxlength="100" disabled="disabled" />
+                    <input type="hidden" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" />
+	                <p class="note">Click on Update Login to update your email address.</p>
+                </cfif>
             </cfif>            
         </div>
 
@@ -831,7 +837,7 @@
                     <span class="printFieldCheck#YesNoFormat(ListFind(FORM.wat_placement, 'Self-Placement'))#"> Self-Placement </span>
                     <span class="printFieldCheck#YesNoFormat(ListFind(FORM.wat_placement, 'Walk-In'))#"> Walk-In </span>
                 </div>
-        	<cfelse>
+			<cfelse>
         		<div class="field">
                     <input type="radio" name="wat_placement" id="CSB-Placement" value="CSB-Placement" onclick="showHideRequestPlacement(this.value);" class="{validate:{required:true}}" <cfif ListFind(FORM.wat_placement, 'CSB-Placement')> checked="checked" </cfif> /> 
                     <label for="CSB-Placement">CSB International, Inc. - Placement</label>
@@ -840,13 +846,9 @@
 				<!--- Requested Placement | Original Key [16] --->
                 <div id="divRequestPlacement" class="field hiddenField">
                     <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label>  
-                    <cfif printApplication>
-                        <div class="printField">#FORM[qGetQuestions.fieldKey[2]]# &nbsp;</div>
-                    <cfelse>
-                        <input type="text" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="#FORM[qGetQuestions.fieldKey[2]]#" class="#qGetQuestions.classType[2]#" maxlength="50" />
-                    </cfif>            
+                    <input type="text" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="#FORM[qGetQuestions.fieldKey[2]]#" class="#qGetQuestions.classType[2]#" maxlength="50" />
                 </div>
-
+				
         		<div class="field">
                     <input type="radio" name="wat_placement" id="Self-Placement" value="Self-Placement" onclick="showHideRequestPlacement(this.value);" class="{validate:{required:true}}" <cfif ListFind(FORM.wat_placement, 'Self-Placement')> checked="checked" </cfif> /> 
                     <label for="Self-Placement">Self-Placement - Please attach the signed job offer form for verification of your employment</label>
@@ -858,6 +860,14 @@
                 </div>
             </cfif>
 		</div>			
+
+        <!--- Requested Placement | Original Key [16] --->
+        <cfif printApplication>
+            <div class="field">
+                <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label> 
+                <div class="printField">#FORM[qGetQuestions.fieldKey[2]]# &nbsp;</div>            
+            </div>
+        </cfif>
 
         <!--- Number of previous participations in the program --->
         <div class="field">

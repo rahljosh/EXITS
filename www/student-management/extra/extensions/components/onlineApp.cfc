@@ -675,7 +675,7 @@
 
 
     <!--- Get Application History --->
-	<cffunction name="getApplicationHistory" access="public" returntype="query" output="false" hint="Inserts a record into candidateApplicationStatusJN">
+	<cffunction name="getApplicationHistory" access="public" returntype="query" output="false" hint="Gets application status history">
 		<cfargument name="applicationStatusID" type="numeric" default="0" hint="applicationStatusID is NOT required" />		
         <cfargument name="foreignTable" type="string" required="yes" hint="User/Candidate is updating status - is required." />	
         <cfargument name="foreignID" type="numeric" required="yes" hint="ID of user/candidate updating status - is required" />		
@@ -713,6 +713,50 @@
         </cfquery>        
         
         <cfreturn qGetApplicationHistory>
+	</cffunction>
+
+
+	<cffunction name="isOfficeApplication" access="public" returntype="numeric" output="false" hint="Returns yes/no if application is being filled out by Intl. Rep.">
+        <cfargument name="foreignTable" type="string" required="yes" hint="User/Candidate is updating status - is required." />	
+        <cfargument name="foreignID" type="numeric" required="yes" hint="ID of user/candidate updating status - is required" />		
+		
+		<cfquery 
+        	name="qGetIsOfficeApplication"
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+                	apsJN.ID,
+                	apsJN.applicationStatusID,
+                    apsJN.sessionInformationID,
+                    apsJN.foreignTable,
+                    apsJN.foreignID,
+                    apsJN.submittedByForeignTable,
+                    apsJN.submittedByForeignID,
+                    apsJN.comments,
+                	apsJN.dateCreated,
+                    apsJN.dateUpdated,
+                    aps.name,
+                    aps.description
+				FROM	
+                	applicationStatusJN apsJN
+                LEFT OUTER JOIN
+                	applicationStatus aps ON aps.statusID = apsJN.applicationStatusID
+				WHERE
+                	apsJN.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+                AND
+					apsJN.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">
+				AND
+                	apsJN.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2" list="yes"> )
+                ORDER BY
+                	apsJN.dateCreated DESC                    
+        </cfquery>        
+		
+        <cfscript>
+			if ( qGetIsOfficeApplication.recordCount ) {
+				return 0;
+			} else {
+				return 1;
+			}
+		</cfscript>        
 	</cffunction>
 
 

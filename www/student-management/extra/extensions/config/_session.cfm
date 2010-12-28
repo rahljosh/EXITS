@@ -26,13 +26,15 @@
 <cfparam name="SESSION.CANDIDATE.lastName" default="">
 <cfparam name="SESSION.CANDIDATE.email" default="">
 <cfparam name="SESSION.CANDIDATE.dateLastLoggedIn" default="">
-<cfparam name="APPLICATION.CFC.CANDIDATE.getCandidateSession().isReadOnly" default="0">
+<cfparam name="SESSION.CANDIDATE.isReadOnly" default="1">
+<cfparam name="SESSION.CANDIDATE.isOfficeApplication" default="0">
 <cfparam name="SESSION.CANDIDATE.isSection1Complete" default="0">
 <cfparam name="SESSION.CANDIDATE.section1FieldList" default="">
 <cfparam name="SESSION.CANDIDATE.isSection2Complete" default="0">
 <cfparam name="SESSION.CANDIDATE.section2FieldList" default="">
 <cfparam name="SESSION.CANDIDATE.isSection3Complete" default="0">
 <cfparam name="SESSION.CANDIDATE.section3FieldList" default="">
+<cfparam name="SESSION.CANDIDATE.isApplicationComplete" default="0">
 <cfparam name="SESSION.CANDIDATE.intlRepID" default="0">
 <cfparam name="SESSION.CANDIDATE.branchID" default="0">
 <cfparam name="SESSION.CANDIDATE.intlRepName" default="">

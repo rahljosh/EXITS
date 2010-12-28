@@ -554,13 +554,13 @@ div.table .tdLarge {
 
 div.table .tdXLarge {	
 	float: left;
-	width: 18%;
+	width: 20%;
 	padding:4px 0px 4px 4px;
 } 
 
 div.table .tdXXLarge {	
 	float: left;
-	width: 58%;
+	width: 30%;
 	padding:4px 0px 4px 4px;
 } 
 
