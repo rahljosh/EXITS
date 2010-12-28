@@ -87,6 +87,7 @@
                 c.enddate, 
                 c.wat_placement, 
                 c.status,
+                c.personal_info,
                 u.businessname,
                 country.countryname
             FROM   
@@ -273,6 +274,7 @@
                     <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">End Date</td>
                     <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Intl. Rep.</td>
                     <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Option</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">English Assessment CSB</td>
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
                     <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
@@ -296,6 +298,7 @@
                         </cfif>
                         <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.personal_info#</span></td>
                     </tr>
                 </cfloop>
 
