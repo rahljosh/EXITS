@@ -18,7 +18,7 @@ body {font:Arial, Helvetica, sans-serif;}
 				<table align="center" width=550 class=thin-border border=0>
 						<tr>
 							<td colspan=2>
-                            <cfif client.companyid eq 11>
+                            <cfif cgi.server_name is 'wep.exitsapplication.com'>
                             	<img src="pics/WEPbanner.jpg">
                             <cfelse>
                             	<img src="pics/EXITSbanner.jpg">
@@ -68,7 +68,7 @@ function checkPassword() {
 </script> 
 				<table align="center" width=550 class=thin-border>
 			<tr>
-				<td colspan=2><cfif companyid eq 11>
+				<td colspan=2><cfif cgi.server_name is 'wep.exitsapplication.com'>
                             	<img src="pics/WEPbanner.jpg">
                             <cfelse>
                             	<img src="pics/EXITSbanner.jpg">
@@ -108,7 +108,7 @@ function checkPassword() {
 	<table align="center" width=550 class=thin-border>
 			<tr>
 				<td colspan=2>
-                 <cfif client.companyid eq 11>
+                 <cfif cgi.server_name is 'wep.exitsapplication.com'>
                             	<img src="pics/WEPbanner.jpg">
                             <cfelse>
                             	<img src="pics/EXITSbanner.jpg">
