@@ -23,6 +23,7 @@
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.isIncludeLetters" default="0">
+    <cfparam name="FORM.isIncludePicture" default="0">
     <cfparam name="FORM.emailTo" default="">
 
     <cfscript>	
@@ -113,7 +114,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
         	<Td>
      
     <!--- Header --->
-    <table align="center" background="pics/short_profile_header.jpg">
+    <table align="center" background="pics/#client.companyid#_short_profile_header.jpg">
         <tr>
             
             <td class="bottom_center" width=800 height=160>
@@ -201,20 +202,51 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                         	<Table border=0>
                             	<Tr>
                                 	<Td>
-                            <cfif FileExists('c:/websites/student-management/nsmg/pics/flags/#qGetStudentInfo.countryresident#.jpg')>
-                            <cfimage source="pics/flags/#qGetStudentInfo.countryresident#.jpg" name="myImage">
-                            <cfelse>
-                            <cfimage source="pics/flags/0.jpg" name="myImage">
-                            </cfif>
-                            <cfset ImageScaleToFit(myimage, 150,100)>
-                            <cfif qGetStudentInfo.sex is 'female'>
-                            	<cfimage source="pics/girl.png" name="topImage">
-                            <cfelse>
-                            	<cfimage source="pics/boy.png" name="topImage">
-                            </cfif>
-                            <cfset ImagePaste(myImage,topImage,0,0)>
-                            <cfimage source="#myImage#" action="writeToBrowser" border=0>
-             						</Td>
+                                    
+                                    <Cfif form.isIncludePicture eq 1>
+                                    		 <cftry>
+                                    
+										<cfscript>
+											// CF throws errors if can't read head of the file "ColdFusion was unable to create an image from the specified source file". 
+											// Possible cause is a gif file renamed as jpg. Student #17567 per instance.
+										
+                                            // this file is really a gif, not a jpeg
+                                            pathToImage = AppPath.onlineApp.picture & studentPicture.name;
+                                            imageFile = createObject("java", "java.io.File").init(pathToImage);
+											
+                                            // read the image into a BufferedImage
+                                            ImageIO = createObject("java", "javax.imageio.ImageIO");
+                                            bi = ImageIO.read(imageFile);
+                                            img = ImageNew(bi);
+                                        </cfscript>              
+                                        
+                                        <cfimage source="#img#" name="myImage">
+                                        <!---- <cfset ImageScaleToFit(myimage, 250, 135)> ---->
+                                        <cfimage source="#myImage#" action="writeToBrowser" border="0" width="135px"><br>
+                                       
+                                        <cfif CLIENT.usertype lte 4><A href="qr_delete_picture.cfm?student=#studentPicture.name#&studentID=#studentID#">Remove Picture</a></cfif>
+                                        
+                                        <cfcatch type="any">
+                                            <img src="pics/no_stupicture.jpg" width="135">
+                                        </cfcatch>
+                                        
+                                    </cftry>
+                                    <cfelse>
+											<cfif FileExists('c:/websites/student-management/nsmg/pics/flags/#qGetStudentInfo.countryresident#.jpg')>
+                                            <cfimage source="pics/flags/#qGetStudentInfo.countryresident#.jpg" name="myImage">
+                                            <cfelse>
+                                            <cfimage source="pics/flags/0.jpg" name="myImage">
+                                            </cfif>
+                                            <cfset ImageScaleToFit(myimage, 150,100)>
+                                            <cfif qGetStudentInfo.sex is 'female'>
+                                                <cfimage source="pics/girl.png" name="topImage">
+                                            <cfelse>
+                                                <cfimage source="pics/boy.png" name="topImage">
+                                            </cfif>
+                                            <cfset ImagePaste(myImage,topImage,0,0)>
+                                            <cfimage source="#myImage#" action="writeToBrowser" border=0>
+             						</Cfif>
+                                    </Td>
                                  </Tr>
                                </Table>
             			</td>
@@ -246,7 +278,9 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
              #REReplace(str,"^(#RepeatString('[^ ]* ',maxwords)#).*","\1")#
             </cfoutput>   
             <td>
+            	<Cfif birthdate is not ''>
              	#DateDiff('yyyy', birthdate, now())#
+                </Cfif>
             </td>
             <td>
        			<cfif sex is 'male'>Brother<cfelse>Sister</cfif>
@@ -421,6 +455,14 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                         <input type="checkbox" name="isIncludeLetters" id="isIncludeLetters" value="1" <cfif FORM.isIncludeLetters> checked="checked" </cfif> /> 
                         &nbsp; 
                         <label for="isIncludeLetters">Include Student and Parent Letters <br />
+                        </label>
+                    (only to approved host families)</td>
+                </tr>
+                <tr>	
+                    <td>
+                        <input type="checkbox" name="isIncludePicture" id="isIncludePicture" value="1" <cfif FORM.isIncludePicture> checked="checked" </cfif> /> 
+                        &nbsp; 
+                        <label for="isIncludeLetters">Include Student Picture - instead of flag. <br />
                         </label>
                     (only to approved host families)</td>
                 </tr>
