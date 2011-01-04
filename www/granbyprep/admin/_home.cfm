@@ -57,7 +57,7 @@
                             <div class="tdSmall">Gender</div>
                             <div class="tdLarge">Home Country</div>
                             <div class="tdLarge">Citizen Country</div>
-                            <div class="tdSmall">Email</div>
+                            <div class="tdLarge">Email</div>
                             <div class="tdSmall">Status</div>
                             <div class="tdSmall">Date Created</div>
                             <div class="tdSmall">Last Login</div>
@@ -69,9 +69,9 @@
                                 <div class="tdSmall">#qGetStudents.firstName#</div>
                                 <div class="tdSmall">#qGetStudents.LastName#</div>
                                 <div class="tdSmall">#qGetStudents.gender#</div>
-                                <div class="tdLarge">#qGetStudents.homeCountry#</div>
-                                <div class="tdLarge">#qGetStudents.CitizenCountry#</div>
-                                <div class="tdSmall">#qGetStudents.email#</div>
+                                <div class="tdSmall">#qGetStudents.homeCountry#</div>
+                                <div class="tdSmall">#qGetStudents.CitizenCountry#</div>
+                                <div class="tdLarge">#qGetStudents.email#</div>
                                 <div class="tdSmall">#qGetStudents.statusName#</div>
                                 <div class="tdSmall">#qGetStudents.displayDateCreated#</div>
                                 <div class="tdSmall">#qGetStudents.dateLastLoggedIn#</div>
