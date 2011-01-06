@@ -280,15 +280,16 @@ ORDER BY candidateid
 		<cfparam name="insuranceCost" default="1">
 		<cfif #getWorkCand.extra_insurance_typeid# EQ 14 AND ISDATE(getWorkCand.startdate) AND ISDATE(getWorkCand.enddate)>
 			<cfset progLengTest1 = #DateDiff("d",getWorkCand.startdate,getWorkCand.enddate)#>
-            <cfset progLengTest2 = #progLengTest1# / 7><!--- length in weeks --->
+        <!--- INSURANCE COST PER WEEK DEACTIVATED, CHARGING NOW PER DAY from 01/06/2011    <cfset progLengTest2 = #progLengTest1# / 7><!--- length in weeks --->
             <cfset progLengTest = #progLengTest2# - #Int(progLengTest2)#>
             <cfif progLengTest EQ 0><!--- it means the length is an integer --->
 				<cfset programLength = #progLengTest2#>
                 <cfelse>
                 	<cfset programLength = #Int(progLengTest2)# + 1>
-            </cfif>
-            <cfset insuranceCostPerWeek = 25 / 4>
-            <cfset insuranceCost = Round(#insuranceCostPerWeek# * #programLength#)>
+            </cfif> --->
+            <cfset insuranceCostPerDay = 25 / 30>
+         <!--- INSURANCE COST PER WEEK DEACTIVATED, CHARGING NOW PER DAY from 01/06/2011   <cfset insuranceCost = Round(#insuranceCostPerDay# * #programLength#)> --->
+         	<cfset insuranceCost = Round(#insuranceCostPerDay# * #progLengTest1#)>
         </cfif>
         
         <!--- queries to select charges to show in the form --->
