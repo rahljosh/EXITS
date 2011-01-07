@@ -4,7 +4,8 @@
 	Author:		Marcus Melo
 	Date:		September 09, 2010
 	Desc:		Gets a list of students that extended their program from 1st semester
-				to a 10 month program. Extend insurance accordingly.
+				to a 10 month program or students that need their end dates adjusted
+				accordingly to their flight departure date. 
 
 	Updated: 	
 
@@ -17,6 +18,7 @@
     
     <!--- Param variables --->
     <cfparam name="FORM.programID" default="0">
+    <cfparam name="FORM.type" default="">
 	
     <cfscript>
 		// Create Structure to store errors
@@ -39,9 +41,14 @@
 			
 			abort;
 		}
-
-		// Get Students that needs to be insured
-		qGetStudents = APPCFC.INSURANCE.getStudentsToExtend(programID=FORM.programID);
+		
+		if ( FORM.TYPE EQ 'flightDeparture' ) {
+			// Get Students that needs to be insured
+			qGetStudents = APPCFC.INSURANCE.getStudentsToExtendFlight(programID=FORM.programID);
+		} else {
+			// Get Students that needs to be insured
+			qGetStudents = APPCFC.INSURANCE.getStudentsToExtend(programID=FORM.programID);
+		}
 
 		// Get Company Short
 		companyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
@@ -55,7 +62,7 @@
 			abort;
 		}
 	</cfscript>
- 
+    
 </cfsilent>	
 
 <!--- use cfsetting to block output of HTML outside of cfoutput tags --->
@@ -106,13 +113,22 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 <td>#qGetStudents.familyLastName#</td>
                 <td>#qGetStudents.firstName#</td>
                 <td>#DateFormat(qGetStudents.dob, 'dd/mmm/yyyy')#</td>
-                <td>#DateFormat(qGetStudents.extensionEndDate, 'dd/mmm/yyyy')#</td>
+                <td>
+                	<cfif IsDate(qGetStudents.extensionEndDate)>
+                        #DateFormat(qGetStudents.extensionEndDate, 'dd/mmm/yyyy')#
+                        <cfif FORM.TYPE EQ 'flightDeparture' AND qGetStudents.extensionDays GT 45>
+                            <strong>PLEASE CHECK THIS DEPARTURE</strong>
+                        </cfif>                
+					<cfelse>
+                        Missing
+                    </cfif>
+                </td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
             </tr>
             
-            <cfif IsDate(qGetStudents.extensionEndDate)>
+            <cfif IsDate(qGetStudents.extensionEndDate) AND ( FORM.TYPE EQ 'flightDeparture' AND qGetStudents.extensionDays LTE 45 )>
 				
 				<cfscript>
 					// Update Insurace Record and Insert History
@@ -122,7 +138,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 						startDate=qGetStudents.extensionStartDate,
 						endDate=extensionEndDate,
 						fileName=XLSFileName
-					);	
+					);
 				</cfscript>
 	
             </cfif>

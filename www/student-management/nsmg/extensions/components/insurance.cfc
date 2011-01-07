@@ -125,7 +125,7 @@
                 GROUP BY            
                     file                  
                 ORDER BY            
-                    date
+                    ID
         </cfquery>
 		   
 		<cfreturn qGetInsuranceHistoryByStudent>
@@ -166,7 +166,7 @@
 	</cffunction>
 
 
-	<!--- Insure Students --->
+	<!--- Enroll Students --->
 	<cffunction name="getStudentsToInsure" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
         <cfargument name="programID" hint="List of program IDs. Required.">
         <cfargument name="PolicyID" hint="Policy ID required">
@@ -185,10 +185,6 @@
                     ic.policycode, 
                     p.startDate,
                     p.endDate
-                    <!---
-					p.insurance_startDate,
-					p.insurance_endDate
-					--->
                 FROM
                     smg_flight_info fi
                 INNER JOIN
@@ -199,10 +195,10 @@
                             s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
                         <cfif CLIENT.companyID EQ 5>
                             AND          
-                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
                         <cfelse>
                             AND          
-                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
                         </cfif>
                 INNER JOIN 
                     smg_users u ON u.userid = s.intrep 
@@ -214,17 +210,14 @@
                     smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
                 INNER JOIN  
                     smg_programs p ON p.programID = s.programID
-    
                 LEFT OUTER JOIN 
                     smg_insurance_batch ib ON ib.studentID = fi.studentID 
                         AND 
                             ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
-                    
                 WHERE 
                     fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
                 AND
                     ib.studentID IS NULL
-                    
                 GROUP BY 
                     fi.studentID
                 ORDER BY 
@@ -265,10 +258,6 @@
                     ic.policycode, 
                     p.startDate,
                     p.endDate
-                    <!---
-					p.insurance_startDate,
-					p.insurance_endDate
-					--->
                 FROM
                     smg_students s  
                 INNER JOIN 
@@ -304,7 +293,6 @@
     <!--- End Date Correction --->
 	<cffunction name="getStudentsReturnRecords" access="public" returntype="query" output="false" hint="Returns students list with depature flight information">
         <cfargument name="programID" hint="List of program IDs. Required.">
-        <cfargument name="PolicyID" hint="Policy ID required">
               
         <cfquery 
         	name="qGetStudentsReturnRecords" 
@@ -313,56 +301,41 @@
                     s.studentID, 
                     s.firstname, 
                     s.familyLastName, 
-                    s.dob, 
-                    DATE_ADD( MIN(fi.dep_date), INTERVAL 1 DAY) AS dep_date,
-                    it.type,  
-                    ic.policycode, 
-                    p.startDate,
-                    p.endDate
-                    <!---
-					p.insurance_startDate,
-					p.insurance_endDate
-					--->
+                    s.dob,                     
+                    ibEndDate.endDate AS insuranceEndDate,                    
+                    DATE_ADD( fi.dep_date, INTERVAL 1 DAY) AS returnDate,
+                    DATEDIFF( ibEndDate.endDate, DATE_ADD( fi.dep_date, INTERVAL 1 DAY) ) AS returnDays
                 FROM
-                    smg_flight_info fi
+                    smg_students s 
                 INNER JOIN
-                    smg_students s ON fi.studentID = s.studentID 
-                        AND
-                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                        AND 
-                            s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
-						<cfif CLIENT.companyID EQ 5>
-                            AND          
-                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
-                        <cfelse>
-                            AND          
-                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
-                        </cfif>
+                    smg_flight_info fi ON fi.studentID = s.studentID 
+					AND 
+                         fi.dep_date = ( SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> ) 
                 INNER JOIN 
                     smg_users u ON u.userid = s.intrep 
-                        AND 
-                            u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.policyID#">
-                INNER JOIN
-                    smg_insurance_type it ON it.insutypeid = u.insurance_typeid
                 INNER JOIN 
-                    smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
-                INNER JOIN  
-                    smg_programs p ON p.programID = s.programID
-                LEFT OUTER JOIN 
-                    smg_insurance_batch ib ON ib.studentID = fi.studentID 
+                    smg_insurance_batch ibEndDate ON ibEndDate.studentID = s.studentID 
                         AND 
-                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="R">
+                            ibEndDate.ID = ( SELECT MAX(ID) FROM smg_insurance_batch WHERE studentID = s.studentID )                            
                 WHERE 
-                    fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
-                AND
-                    ib.studentID IS NULL
-                    
+                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+				<cfif CLIENT.companyID EQ 5>
+                    AND          
+                        s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
+                <cfelse>
+                    AND          
+                        s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                </cfif>
+                AND 
+                	DATE_ADD( fi.dep_date, INTERVAL 1 DAY) < ibEndDate.endDate
                 GROUP BY 
-                    fi.studentID
+                    s.studentID
                 ORDER BY 
                     u.businessname, 
                     s.familyLastName,
-                    s.firstName        
+                    s.firstName   
 		</cfquery>
         
         <cfreturn qGetStudentsReturnRecords> 
@@ -398,10 +371,10 @@
                             s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
                         <cfif CLIENT.companyID EQ 5>
                             AND          
-                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
                         <cfelse>
                             AND          
-                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
                         </cfif>
                 INNER JOIN 
                     smg_users u ON u.userid = s.intrep 
@@ -410,7 +383,7 @@
                 LEFT OUTER JOIN 
                     smg_insurance_batch ibc ON ibc.studentID = s.studentID 
                         AND 
-                            ibc.type != <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                            ibc.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="X">
                 WHERE 
                     ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
                 AND
@@ -438,51 +411,94 @@
                     s.firstname, 
                     s.familyLastName, 
                     s.dob, 
-                    ib.type,
-                    DATE_ADD(ib.endDate, INTERVAL 1 DAY) AS extensionStartDate,
+                    u.businessName,
+                    DATE_ADD(ibEndDate.endDate, INTERVAL 1 DAY) AS extensionStartDate,
                     p.endDate AS extensionEndDate
-                    <!---
-					p.insurance_startDate,
-					p.insurance_endDate
-					--->
                 FROM
-                    smg_insurance_batch ib
-                INNER JOIN
-                    smg_students s ON ib.studentID = s.studentID 
-                        AND
-                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    smg_students s 
+                INNER JOIN 
+                    smg_insurance_batch ibEndDate ON ibEndDate.studentID = s.studentID 
                         AND 
-                            s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
-						<cfif CLIENT.companyID EQ 5>
-                            AND          
-                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
-                        <cfelse>
-                            AND          
-                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
-                        </cfif>
+                            ibEndDate.ID = ( SELECT MAX(ID) FROM smg_insurance_batch WHERE studentID = s.studentID AND type != <cfqueryparam cfsqltype="cf_sql_varchar" value="R"> )
                 INNER JOIN 
                     smg_users u ON u.userid = s.intrep 
                 INNER JOIN  
                     smg_programs p ON p.programID = s.programID
-                LEFT OUTER JOIN 
-                    smg_insurance_batch ibc ON ibc.studentID = ib.studentID 
-                        AND 
-                            ibc.type = "EX"                    
                 WHERE 
-                    ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+                <cfif CLIENT.companyID EQ 5>
+                    AND          
+                        s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
+                <cfelse>
+                    AND          
+                        s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                </cfif>
                 AND
-                	ib.endDate < p.endDate 
-                AND
-                    ibc.studentID IS NULL                                                
+                	 DATE_ADD(ibEndDate.endDate, INTERVAL 1 DAY) < p.endDate 
                 GROUP BY 
-                    ib.studentID
+                    s.studentID
                 ORDER BY 
                     u.businessname, 
                     s.familyLastName,
-                    s.firstName        
+                    s.firstName
         </cfquery>
     
 		<cfreturn qGetStudentsToExtend>
+	</cffunction>
+
+
+	<!--- Extensions Based on Flight Departure --->
+	<cffunction name="getStudentsToExtendFlight" access="public" returntype="query" output="false" hint="Extend insurance based on flight departure">
+        <cfargument name="programID" hint="List of program IDs. Required.">
+
+        <cfquery 
+        	name="qGetStudentsToExtendFlight" 
+            datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                    s.studentID, 
+                    s.firstname, 
+                    s.familyLastName, 
+                    s.dob,          
+					u.businessName,
+                    ibEndDate.endDate AS extensionStartDate,                    
+                    DATE_ADD( fi.dep_date, INTERVAL 1 DAY) AS extensionEndDate,
+                    DATEDIFF( DATE_ADD( fi.dep_date, INTERVAL 1 DAY), ibEndDate.endDate ) AS extensionDays
+                FROM
+                    smg_students s 
+                INNER JOIN
+                    smg_flight_info fi ON fi.studentID = s.studentID 
+					AND 
+                         fi.dep_date = ( SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> ) 
+                INNER JOIN 
+                    smg_users u ON u.userid = s.intrep 
+                INNER JOIN 
+                    smg_insurance_batch ibEndDate ON ibEndDate.studentID = s.studentID 
+                        AND 
+                            ibEndDate.ID = ( SELECT MAX(ID) FROM smg_insurance_batch WHERE studentID = s.studentID )                            
+                WHERE 
+                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+				<cfif CLIENT.companyID EQ 5>
+                    AND          
+                        s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.listISE#" list="yes"> )
+                <cfelse>
+                    AND          
+                        s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                </cfif>
+                AND 
+                	DATE_ADD( fi.dep_date, INTERVAL 1 DAY) > ibEndDate.endDate
+                GROUP BY 
+                    s.studentID
+                ORDER BY 
+                    u.businessname, 
+                    s.familyLastName,
+                    s.firstName
+        </cfquery>
+    
+		<cfreturn qGetStudentsToExtendFlight>
 	</cffunction>
 
 
