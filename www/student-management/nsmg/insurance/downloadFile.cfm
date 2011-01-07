@@ -49,7 +49,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 <cfoutput>
 
 	<!--- New and Return --->
-	<cfif ListFind("N,R", qGetStudentsHistory.type)>
+	<cfif ListFind("N", qGetStudentsHistory.type)>
     
         <table border="1" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">
             <tr>
@@ -96,7 +96,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 			</cfloop>
 		</table>
 	
-    <!--- Cancelation --->
+    <!--- Cancelation / Extension --->
 	<cfelse>
     
         <table border="1" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">

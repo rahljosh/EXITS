@@ -29,6 +29,7 @@
         <cfargument name="isActive" default="" hint="IsActive is not required">
         <cfargument name="dateActive" default="" hint="DateActive is not required">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
+        <cfargument name="isEndingSoon" default="0" hint="Get only programs that are ending soon for the insurance extension/early return">
               
         <cfquery 
 			name="qGetPrograms" 
@@ -92,6 +93,11 @@
 					--->
                     AND
                     	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.isEndingSoon)>
+                    AND
+                    	( p.endDate BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -3, now())#"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', 3, now())#"> ) 
                 </cfif>
 
                 ORDER BY 
