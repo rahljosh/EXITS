@@ -127,7 +127,7 @@
                                                     id="verification_received"
                                                     value="verificationReceived"
                                                     display="verificationReceived"
-                                                    bind="cfc:extra.extensions.components.user.getVerificationDate({intRep})" /> 
+                                                    bind="cfc:extra.extensions.components.user.getVerificationDate({intRep},{programID})" /> 
 											</td>
 										</tr>
 										<tr>
@@ -186,7 +186,7 @@
                                                     id="verification_received2"
                                                     value="verificationReceived"
                                                     display="verificationReceived"
-                                                    bind="cfc:extra.extensions.components.user.getVerificationDate({intRepID2})"> 
+                                                    bind="cfc:extra.extensions.components.user.getVerificationDate({intRepID2},{programID2})"> 
                                                 </cfselect> 
 											</td>
 										</tr>

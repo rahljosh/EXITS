@@ -128,6 +128,7 @@
 
 	<cffunction name="getVerificationDate" access="remote" returnType="query" output="false" hint="Gets a list of Intl. Reps. assigned to a candidate">
         <cfargument name="intRep" default="0">
+        <cfargument name="programID" default="0" hint="Get Intl. Reps. Based on a list of program ids">
 		       
         <cfquery 
 			name="qGetVerificationDate" 
@@ -145,6 +146,10 @@
                 <cfif VAL(ARGUMENTS.intRep)>
                     AND
                         intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+                <cfif ARGUMENTS.programID NEQ 0>
+                	AND	
+                    	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> )
                 </cfif>
                 GROUP BY 
                     verification_received
