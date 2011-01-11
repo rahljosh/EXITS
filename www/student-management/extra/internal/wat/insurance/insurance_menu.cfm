@@ -98,25 +98,26 @@
                                                     name="programID" 
                                                     id="programID"
                                                     class="style1"
-                                                    value="programID"
-                                                    display="programName"
                                                     multiple="yes"
                                                     size="7"
+                                                    value="programID"
+                                                    display="programName"
                                                     selected="#FORM.programID#"
                                                     bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
-                                                    bindonload="true" /> 
+                                                    bindonload="true" />                                                     
 											</td>
 										</tr>
 										<tr>
 											<td class="style1">Intl. Rep. :</td>
 											<td class="style1" align="left">
-		                                        <cfselect
-                                                	name="intRep" 
+                                                <cfselect
+                                                    name="intRep" 
                                                     id="intRep"
+                                                    class="style1"
                                                     value="userID"
                                                     display="businessName"
-                                                	bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID})" 
-                                                    bindonload="true" /> 
+                                                    selected="#FORM.intRep#"
+                                                    bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID})" /> 
 											</td>
 										</tr>
                                         <tr>
@@ -125,14 +126,16 @@
                                                 <cfselect 
                                                     name="verification_received" 
                                                     id="verification_received"
+                                                    class="style1"
                                                     value="verificationReceived"
                                                     display="verificationReceived"
+                                                    selected="#FORM.verification_received#"
                                                     bind="cfc:extra.extensions.components.user.getVerificationDate({intRep},{programID})" /> 
 											</td>
 										</tr>
 										<tr>
 											<td class="style1">Insurance Type</td>
-											<td><cfselect name="extra_insurance_typeid" query="qGetInsuranceTypes" value="insutypeid" display="type"></cfselect></td>
+											<td><cfselect name="extra_insurance_typeid" query="qGetInsuranceTypes" value="insutypeid" display="type" class="style1" /></td>
 										</tr>																														
 										<tr><td align="center" colspan="2"><input type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>										
 									</table>
@@ -156,26 +159,26 @@
                                                     name="programID" 
                                                     id="programID2"
                                                     class="style1"
-                                                    value="programID"
-                                                    display="programName"
                                                     multiple="yes"
                                                     size="7"
+                                                    value="programID"
+                                                    display="programName"
                                                     selected="#FORM.programID#"
                                                     bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
-                                                    bindonload="true" /> 
+                                                    bindonload="true" />                                                     
 											</td>
 										</tr>
 										<tr>
 											<td class="style1">Intl. Rep. :</td>
 											<td class="style1" align="left">
-		                                        <cfselect
-                                                	name="intRepID" 
-                                                    id="intRepID2"
+                                                <cfselect
+                                                    name="intRep" 
+                                                    id="intRep2"
+                                                    class="style1"
                                                     value="userID"
                                                     display="businessName"
-                                                	bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID2})" 
-                                                    bindonload="true"> 
-                                                </cfselect> 
+                                                    selected="#FORM.intRep#"
+                                                    bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID2})" /> 
 											</td>
 										</tr>
                                         <tr>
@@ -184,10 +187,11 @@
                                                 <cfselect 
                                                     name="verification_received" 
                                                     id="verification_received2"
+                                                    class="style1"
                                                     value="verificationReceived"
                                                     display="verificationReceived"
-                                                    bind="cfc:extra.extensions.components.user.getVerificationDate({intRepID2},{programID2})"> 
-                                                </cfselect> 
+                                                    selected="#FORM.verification_received#"
+                                                    bind="cfc:extra.extensions.components.user.getVerificationDate({intRep2},{programID2})" /> 
 											</td>
 										</tr>
                                         <tr>
