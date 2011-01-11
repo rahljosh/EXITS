@@ -2,9 +2,10 @@
 <cfsilent>
 	
     <!--- Param FORM variables --->
-	<cfparam name="FORM.selected_rep" default="All">
-    <cfparam name="FORM.selected_program" default="0">
-    <cfparam name="FORM.date" default="">
+	<cfparam name="FORM.intRep" default="All">
+    <cfparam name="FORM.programID" default="0">
+    <cfparam name="FORM.verification_received" default="">
+    <cfparam name="FORM.submitted" default="0">
 
     <cfquery name="qGetCandidate" datasource="MySql">
         SELECT 
@@ -17,14 +18,12 @@
         FROM 
         	extra_candidates
         WHERE 
-        	verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date#">
-        
+        	verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#">
         AND 
-        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_program#">
-        
-		<cfif VAL(FORM.selected_rep)>
+        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+		<cfif VAL(FORM.intRep)>
         AND 
-        	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_rep#">
+        	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#">
         </cfif>
     </cfquery>
 
@@ -36,7 +35,7 @@
         FROM 
             smg_programs
         WHERE 
-            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selected_program#">
+            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
     </cfquery>
 
 	<cfscript>
