@@ -113,7 +113,7 @@
         <cfscript>
 			// Add default value
 			result[1][1]=0;
-			result[1][2]="---- Total of " & qGetIntlRepRemote.recordCount & " International Representatives ----" ;
+			result[1][2]="---- All - Total of " & qGetIntlRepRemote.recordCount & " International Representatives ----" ;
 
 			// Convert results to array
 			For (i=1;i LTE qGetIntlRepRemote.Recordcount; i=i+1) {
@@ -126,20 +126,18 @@
 	</cffunction>
 
 
-	<cffunction name="getVerificationDate" access="remote" returnType="query" output="false" hint="Gets a list of Intl. Reps. assigned to a candidate">
+	<cffunction name="getVerificationDate" access="remote" returntype="query" output="false" hint="Gets a list of Intl. Reps. assigned to a candidate">
         <cfargument name="intRep" default="0">
         <cfargument name="programID" default="0" hint="Get Intl. Reps. Based on a list of program ids">
-		       
+
         <cfquery 
 			name="qGetVerificationDate" 
 			datasource="#APPLICATION.DSN.Source#">
-                SELECT 
+                SELECT
                     DATE_FORMAT(verification_received, '%m/%e/%Y') as verificationReceived
                 FROM 
                     extra_candidates
                 WHERE 
-                    active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                AND 
                     companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
                 AND 
                     verification_received IS NOT NULL
@@ -157,7 +155,15 @@
                     verification_received DESC
 		</cfquery>
 
-		<cfreturn qGetVerificationDate>
+        <cfscript>
+			// Return message to user
+			if ( NOT VAL(qGetVerificationDate.recordCount) ) {
+				QueryAddRow(qGetVerificationDate, 1);
+				QuerySetCell(qGetVerificationDate, "verificationReceived", "---- No Verification Dates Found ----", 1);
+			} 
+			
+			return qGetVerificationDate;
+		</cfscript>
 	</cffunction>
     <!--- End Of Remote --->
 
