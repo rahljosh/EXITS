@@ -76,6 +76,86 @@
 		<cfreturn qGetUsers>
 	</cffunction>
 
+	
+    <!--- Remote --->
+	<cffunction name="getIntlRepRemote" access="remote" returntype="array" output="false" hint="Gets a list of Intl. Reps. assigned to a candidate">
+		<cfargument name="programID" default="0" hint="Get Intl. Reps. Based on a list of program ids">
+        
+        <cfscript>
+			// Define variables
+        	var qGetIntlRepRemote='';
+			var result=ArrayNew(2);
+			var i=0;
+        </cfscript>
+               
+        <cfquery 
+			name="qGetIntlRepRemote" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					u.userID,
+                    u.businessName
+                FROM 
+                    smg_users u
+                INNER JOIN
+                	extra_candidates c ON c.intRep = u.userID
+                WHERE
+                    c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                <cfif ARGUMENTS.programID NEQ 0>
+                	AND	
+                    	c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> )
+                </cfif>
+                GROUP BY
+                	u.userID
+                ORDER BY
+                	u.businessName
+		</cfquery>
+
+        <cfscript>
+			// Add default value
+			result[1][1]=0;
+			result[1][2]="---- Total of " & qGetIntlRepRemote.recordCount & " International Representatives ----" ;
+
+			// Convert results to array
+			For (i=1;i LTE qGetIntlRepRemote.Recordcount; i=i+1) {
+				result[i+1][1]=qGetIntlRepRemote.userID[i];
+				result[i+1][2]=qGetIntlRepRemote.businessName[i];
+			}
+			
+			return result;
+		</cfscript>
+	</cffunction>
+
+
+	<cffunction name="getVerificationDate" access="remote" returnType="query" output="false" hint="Gets a list of Intl. Reps. assigned to a candidate">
+        <cfargument name="intRep" default="0">
+		       
+        <cfquery 
+			name="qGetVerificationDate" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                    DATE_FORMAT(verification_received, '%m/%e/%Y') as verificationReceived
+                FROM 
+                    extra_candidates
+                WHERE 
+                    active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                AND 
+                    verification_received IS NOT NULL
+                <cfif VAL(ARGUMENTS.intRep)>
+                    AND
+                        intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+                GROUP BY 
+                    verification_received
+                ORDER BY 
+                    verification_received DESC
+		</cfquery>
+
+		<cfreturn qGetVerificationDate>
+	</cffunction>
+    <!--- End Of Remote --->
+
 
 	<cffunction name="getUserByID" access="public" returntype="query" output="false" hint="Gets a user by ID">
     	<cfargument name="userID" type="numeric" hint="userID is required">

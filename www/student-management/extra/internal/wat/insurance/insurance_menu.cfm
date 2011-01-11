@@ -1,150 +1,239 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Insurance Menu</title>
-</head>
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		insurance_menu.cfm
+	Author:		Marcus Melo
+	Date:		January 10, 2011
+	Desc:		Insurance Information
 
-<body>
+	Updated: 	
 
-<cftry>
+----- ------------------------------------------------------------------------- --->
 
-<cfinclude template="../querys/get_active_programs.cfm">
+<!--- Kill Extra Output --->
+<cfsilent>
 
-<cfinclude template="../querys/get_intl_reps.cfm">
+    <!--- Param variables --->
+    <cfparam name="FORM.programID" default="0">
+    <cfparam name="FORM.intRep" default="0">
+    <cfparam name="FORM.verification_received" default="">
+    <cfparam name="FORM.submitted" default="0">
 
-<cfquery name="get_insutypes" datasource="MySql">
-	SELECT insutypeid, type
-	FROM smg_insurance_type
-	WHERE insutypeid = '14'
-</cfquery>
-
-<cfquery name="verification_dates" datasource="MySql">
-	SELECT ec.verification_received
-	FROM extra_candidates ec
-	INNER JOIN smg_users u ON ec.intrep = u.userid
-	WHERE ec.active = '1'
-		AND ec.companyid = '#client.companyid#'
-		AND ec.verification_received IS NOT NULL
-		AND u.extra_insurance_typeid = '14'
-	GROUP BY ec.verification_received
-	ORDER BY ec.verification_received DESC
-</cfquery>
-
-<cfquery name="get_pending" datasource="MySql">
-	SELECT h.transtype, count(h.candidateid) as total  
-	FROM extra_insurance_history h
-	INNER JOIN extra_candidates c ON c.candidateid = h.candidateid
-	WHERE c.companyid = '#client..companyid#'
-		AND h.filed_date IS NULL
-	GROUP BY transtype
-	ORDER BY transtype
-</cfquery>
-
-<cfquery name="get_history" datasource="MySql">
-	SELECT h.transtype, h.filed_date, count(h.candidateid) as total  
-	FROM extra_insurance_history h
-	INNER JOIN extra_candidates c ON c.candidateid = h.candidateid
-	WHERE c.companyid = '#client..companyid#'
-		AND h.filed_date IS NOT NULL
-	GROUP BY filed_date, transtype
-	ORDER BY filed_date DESC, transtype
-</cfquery>
+    <cfquery name="qGetInsuranceTypes" datasource="MySql">
+        SELECT 
+        	insutypeid, type
+        FROM 
+        	smg_insurance_type
+        WHERE 
+        	insutypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="14">
+    </cfquery>
+    
+    <cfquery name="qGetPendingTransactions" datasource="MySql">
+        SELECT 
+        	h.transtype, 
+            count(h.candidateid) AS total  
+        FROM 
+        	extra_insurance_history h
+        INNER JOIN 
+        	extra_candidates c ON c.candidateid = h.candidateid
+        WHERE 
+        	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        AND 
+        	h.filed_date IS NULL
+        GROUP BY 
+        	transtype
+        ORDER BY 
+        	transtype
+    </cfquery>
+    
+    <cfquery name="qGetHistory" datasource="MySql">
+        SELECT 
+        	h.transtype, 
+            h.filed_date, 
+            count(h.candidateid) AS total  
+        FROM 
+        	extra_insurance_history h
+        INNER JOIN 
+        	extra_candidates c ON c.candidateid = h.candidateid
+        WHERE 
+        	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        AND 
+        	h.filed_date IS NOT NULL
+        GROUP BY 
+        	filed_date, 
+            transtype
+        ORDER BY 
+        	filed_date DESC, 
+            transtype
+        LIMIT 50
+    </cfquery>
+    
+</cfsilent>
 
 <cfoutput>
 
-<table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="CCCCCC" bgcolor="FFFFFF">
+<table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="##CCCCCC" bgcolor="##FFFFFF">
 	<tr>
-		<td bordercolor="FFFFFF">
+		<td bordercolor="##FFFFFF">
 			<!----Header Table---->
-			<table width=95% cellpadding=0 cellspacing=0 border=0 align="center" height="25" bgcolor="E4E4E4">
-				<tr bgcolor="E4E4E4">
+			<table width=95% cellpadding=0 cellspacing=0 border=0 align="center" height="25" bgcolor="##CCCCCC">
+				<tr bgcolor="##CCCCCC">
 					<td class="title1">&nbsp; &nbsp; Insurance</td>
 				</tr>
 			</table><br>
 		
 			<!--- INSURANCE FILES --->
-			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
 				<tr>
 					<td width="49%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
 							<tr>
-								<td bordercolor="FFFFFF" valign="top">
+								<td bordercolor="##FFFFFF" valign="top">
+                                    <cfform name="new_transaction" action="insurance/new_transaction_programid.cfm" method="post">
 									<table width="100%" cellpadding=3 cellspacing=0 border=0>
-										<cfform name="new_transaction" action="insurance/new_transaction_programid.cfm" method="post">
-										<tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: Insurance New Transaction - Excel Spreadsheet</td></tr>
+										<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Enroll Candidates - Excel Spreadsheet</td></tr>
 										<tr>
-											<td class="style1">Program :</td>
+											<td class="style1" valign="top">Program :</td>
 											<td class="style1" align="left">
-											<cfselect name="programid" size="5"  class="style1" multiple="yes">
-												<cfloop query="get_active_programs">
-													<option value="#programid#">#programname#</option>
-												</cfloop>
-											</cfselect>	
+                                                <cfselect
+                                                    name="programID" 
+                                                    id="programID"
+                                                    class="style1"
+                                                    value="programID"
+                                                    display="programName"
+                                                    multiple="yes"
+                                                    size="7"
+                                                    selected="#FORM.programID#"
+                                                    bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
+                                                    bindonload="true" /> 
 											</td>
 										</tr>
 										<tr>
 											<td class="style1">Intl. Rep. :</td>
 											<td class="style1" align="left">
-											<cfselect name="intrep"  class="style1">
-												<option value="0">All</option>
-												<cfloop query="get_intl_reps">
-													<option value="#userid#"><cfif len(businessname) GT 40>#Right(businessname, 38)#..<cfelse>#businessname#</cfif></option>
-												</cfloop>
-											</cfselect>												
+		                                        <cfselect
+                                                	name="intRep" 
+                                                    id="intRep"
+                                                    value="userID"
+                                                    display="businessName"
+                                                	bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID})" 
+                                                    bindonload="true" /> 
+											</td>
+										</tr>
+                                        <tr>
+											<td class="style1">Verification Received :</td>
+											<td class="style1" align="left">
+                                                <cfselect 
+                                                    name="verification_received" 
+                                                    id="verification_received"
+                                                    value="verificationReceived"
+                                                    display="verificationReceived"
+                                                    bind="cfc:extra.extensions.components.user.getVerificationDate({intRep})" /> 
 											</td>
 										</tr>
 										<tr>
 											<td class="style1">Insurance Type</td>
-											<td><cfselect name="extra_insurance_typeid"  class="style1" query="get_insutypes" value="insutypeid" display="type"></cfselect></td>
+											<td><cfselect name="extra_insurance_typeid" query="qGetInsuranceTypes" value="insutypeid" display="type"></cfselect></td>
 										</tr>																														
-										<tr>
-											<td class="style1">Verification Received :</td>
-											<td class="style1" align="left">
-												<cfselect name="verification_received"  class="style1" query="verification_dates" value="verification_received" display="verification_received" queryPosition="below">
-												<option value="0"></option>
-												</cfselect>
-											</td>
-										</tr>
-										<tr><td align="center" colspan="2"><cfinput type="image" name="submit" value=" Submit " src="../pics/save.gif"></td></tr>
-										</cfform>	
+										<tr><td align="center" colspan="2"><input type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>										
 									</table>
+                                    </cfform>	
 								</td>
 							</tr>
 						</table>
 					</td>
 					<td width="2%" valign="top">&nbsp;</td>
 					<td width="49%" valign="top">
-					</td>
-				</tr>
-			</table><br>
-	
-			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
-				<tr>
-					<td width="100%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-							<tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9">&nbsp;:: Insurance Management Screen</td></tr>
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
+							<tr>
+								<td bordercolor="##FFFFFF" valign="top">
+                                    <cfform name="toBeInsured" action="index.cfm?curdoc=insurance/toBeInsured" method="post">
+									<table width="100%" cellpadding=3 cellspacing=0 border=0>
+										<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Candidates to be Insured</td></tr>
+										<tr>
+											<td class="style1" valign="top">Program :</td>
+											<td class="style1" align="left">
+                                                <cfselect
+                                                    name="programID" 
+                                                    id="programID2"
+                                                    class="style1"
+                                                    value="programID"
+                                                    display="programName"
+                                                    multiple="yes"
+                                                    size="7"
+                                                    selected="#FORM.programID#"
+                                                    bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
+                                                    bindonload="true" /> 
+											</td>
+										</tr>
+										<tr>
+											<td class="style1">Intl. Rep. :</td>
+											<td class="style1" align="left">
+		                                        <cfselect
+                                                	name="intRepID" 
+                                                    id="intRepID2"
+                                                    value="userID"
+                                                    display="businessName"
+                                                	bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID2})" 
+                                                    bindonload="true"> 
+                                                </cfselect> 
+											</td>
+										</tr>
+                                        <tr>
+											<td class="style1">Verification Received :</td>
+											<td class="style1" align="left">
+                                                <cfselect 
+                                                    name="verification_received" 
+                                                    id="verification_received2"
+                                                    value="verificationReceived"
+                                                    display="verificationReceived"
+                                                    bind="cfc:extra.extensions.components.user.getVerificationDate({intRepID2})"> 
+                                                </cfselect> 
+											</td>
+										</tr>
+                                        <tr>
+                                            <td align="right" class="style1"><b>Format: </b></td>
+                                            <td  class="style1"> 
+                                                <input type="radio" name="printOption" id="printOption1" value="1" checked> <label for="printOption1">Onscreen (View Only)</label>
+                                                <input type="radio" name="printOption" id="printOption2" value="2"> <label for="printOption2">Print (FlashPaper)</label> 
+                                                <input type="radio" name="printOption" id="printOption3" value="3"> <label for="printOption3">Print (PDF)</label>
+                                            </td>           
+                                        </tr>
+										<tr><td align="center" colspan="2"><input type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>										
+									</table>
+                                    </cfform>	
+								</td>
+							</tr>
 						</table>
 					</td>
 				</tr>
 			</table><br>
 	
-			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
+				<tr>
+					<td width="100%" valign="top">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
+							<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9">&nbsp;:: Insurance Management Screen</td></tr>
+						</table>
+					</td>
+				</tr>
+			</table><br>
+	
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
 				<tr>
 					<td width="49%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
 							<tr>
-								<td bordercolor="FFFFFF" valign="top">
+								<td bordercolor="##FFFFFF" valign="top">
 									<table width="100%" cellpadding=3 cellspacing=0 border=0>
-										<tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: Pending Manual Transactions</td></tr>
+										<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Pending Manual Transactions</td></tr>
 										<tr><td class="style1"><b>Transaction</b></td><th class="style1">Total</th></tr>
-										<cfloop query="get_pending">
+										<cfloop query="qGetPendingTransactions">
 											<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
 												<td class="style1">#transtype#</td>
 												<td align="center" class="style1">#total#</td>
 											</tr>
 										</cfloop>
-										<cfif get_pending.recordcount EQ 0>
+										<cfif qGetPendingTransactions.recordcount EQ 0>
 											<tr bgcolor="e9ecf1"><td colspan="2" class="style1">There are no pending transactions.</td></tr>
 										</cfif>
 									</table>
@@ -154,12 +243,12 @@
 					</td>
 					<td width="2%" valign="top">&nbsp;</td>
 					<td width="49%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
 							<tr>
-								<td bordercolor="FFFFFF" valign="top">
+								<td bordercolor="##FFFFFF" valign="top">
 									<table width="100%" cellpadding=3 cellspacing=0 border=0>
 										<cfform name="manual_transaction" action="insurance/manual_transaction.cfm" method="post">
-										<tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: Manual Transaction - Excel Spreadsheet</td></tr>														
+										<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Manual Transaction - Excel Spreadsheet</td></tr>														
 										<tr>
 											<td class="style1">Transaction Type :</td>
 											<td class="style1" align="left">
@@ -183,27 +272,18 @@
 				</tr>
 			</table><br>	
 
-			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
 				<tr>
 					<td width="100%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-							<tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="3">&nbsp;:: Insurance History - Excel Files</td></tr>
-						</table>
-					</td>
-				</tr>
-			</table><br>
-
-			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
-				<tr>
-					<td width="100%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
+							<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="4">&nbsp;:: Insurance History - Excel Files</td></tr>
 							<tr>
 								<th width="25%" class="style1">Transaction Type</th>
 								<th width="25%" class="style1">Filed Date</th>
 								<th width="25%" class="style1">Total of Candidates</th>
 								<th width="25%" class="style1">List of Candidates</th>
 							</tr>
-							<cfloop query="get_history">
+							<cfloop query="qGetHistory">
 							<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
 								<td align="center" class="style1"><a href="insurance/open_history.cfm?type=#transtype#&date=#DateFormat(filed_date, 'yyyy/mm/dd')#" class="style4">#transtype#</a></td>
 								<td align="center" class="style1"><a href="insurance/open_history.cfm?type=#transtype#&date=#DateFormat(filed_date, 'yyyy/mm/dd')#" class="style4">#DateFormat(filed_date, 'mm/dd/yyyy')#</a></td>
@@ -220,12 +300,3 @@
 </table>
 
 </cfoutput>
-
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-
-</cftry>
-
-</body>
-</html>
