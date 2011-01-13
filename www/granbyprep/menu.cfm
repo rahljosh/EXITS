@@ -5,7 +5,7 @@
            <li><a href="http://www.granbyprep.com/facts.cfm">Quick Facts</a></li>
            <li><a href="http://www.granbyprep.com/slideshow/gallery.cfm">Campus Images</a></li>
            <li><a href="http://www.granbyprep.com/location.cfm">Location</a></li>
-           <li><a href="http://www.granbyprep.com/lodging.cfm">Area Accomodations</a></li>
+           <li><a href="http://www.granbyprep.com/lodging.cfm">Area Accommodations</a></li>
            <li><a href="http://www.granbyprep.com/employment.cfm" target="blank">Employment</a></li>
          </ul>
        </li>
@@ -17,7 +17,7 @@
            <li><a class="MenuBarItemSubmenu" href="http://www.granbyprep.com/applicationProcess.cfm">Application Process</a>
              <ul>
                <li><a href="#">Dates</a></li>
-               <li><a href="#">Checklist</a></li>
+               <li><a href="http://www.granbyprep.com/applicationProcess.cfm">Checklist</a></li>
                <li><a href="https://www.granbyprep.com/admissions/index.cfm?">Apply Online</a></li>
                <li><a href="http://www.granbyprep.com/tuition.cfm">Tuition & Financial Aid</a></li>
              </ul>

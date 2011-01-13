@@ -38,12 +38,12 @@ body {
 <div id="mainContent">
    
     <h2>Employment Opportunities</h2>
-    <h4 class="red">We will begin posting job opportunities after December 15th</h4>
+    <!---<h4 class="red">Due to the pending acquisition of The MacDuffie School (subject to the approval of the Massachusetts Attorney General), we have suspended all employment opportunities until further notice.</h4>--->
 <p class="paragraphText">Thank you for your interest in employment at Granby Preparatory Academy. If you have any questions please email us at: <strong>info@granbyprep.com.</strong> <br /><br />
   We do not officially open until September, 2011. However, we will begin interviewing to fill faculty and administrative positions in November and December and will post the positions on this page as they become available. Please check back periodically.<br /><br />
   If you are interested in working in food services at GPA, please contact our dining services vendor, Sage Food Services, by clicking on the link below<a href="http://www.sagedining.com/applicationNEW.php">.</a></p>
 <p><a href="http://www.sagedining.com/applicationNEW.php"><img src="images/sageOnline_24.png" border="0" /></a></p><br />
-
+<br />
   <!-- end mainContent --></div>
 <cfinclude template ="footer.cfm">
 <!-- end container --></div>

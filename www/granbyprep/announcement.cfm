@@ -37,73 +37,33 @@ body {
   </div>
 <div id="mainContent">
 
-    <h2 class="ribbon">ANNOUNCEMENT</h2>
+    <h2 class="ribbon">December 27th &#8212; PRESS RELEASE</h2>
      <div class="textInfo">
-
-<table width="700" border="0">
-  <tr>
-    <td width="152"><strong>For Immediate Release</strong><br />
-Thursday, Dec. 9, 2010<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br /></td>
-    <td width="379">&nbsp;</td>
-    <td width="147"><strong>Contact</strong>: Tom Addicks<br />
-Interim Head of School 
-  <br />
-  The MacDuffie School<br />
-(413) 734-4971<br />
-taddicks@macduffie.org<br />
-Or, Paul Robbins, 
-<br />
-Paul Robbins Associates<br />
-(413) 682-0002 </td>
-  </tr>
-</table>
-
- <h1 class="newsA"> MacDuffie School to Be Acquired;
-    <br />
-    Move to New Granby Campus</h1>
+     <p><strong>Press Release: For Immediate Release</strong></p><br /><br />
+       <h1 class="newsA"><strong>Massachusetts Attorney General Approves <br />
+   MacDuffie School Transfer to Independent School</strong></h1>
+   <h4><em>Sale of 120-year-old MacDuffie School to International EC LLC establishes new ownership of historical day, boarding school in western Massachusetts.</em></h4><br />
   
-<p><strong>Springfield, MA&#8212;</strong> Representatives of The MacDuffie School in Springfield today announced the planned sale of all school operations, not including the school's Springfield real estate, to International EC LLC, the group that acquired the former St. Hyacinth seminary campus in Granby in June. </p>
+<p><strong>Springfield, MA&#8212;</strong> December 27, 2010 &#8212; The MacDuffie School, a 120-year-old boarding and day school nestled in the heart of western Massachusetts, has formally been acquired by International EC LLC. The Massachusetts Attorney General approved the purchase transaction on December 23, 2010.</p>
 
-<p>International EC is establishing an independent school in Granby and will absorb MacDuffie's curriculum, corporate identity, intellectual property, furnishings, computers and business equipment and faculty as it establishes a school serving grades 6 through 12 beginning in the fall of 2011. The school will continue as a day and boarding school.</p>
+<p>The newly acquired entity will retain its name and move to a renovated, expansive campus in Granby, Massachusetts, beginning in September 2011. Led by newly appointed Headmaster Brian Chatterley, the school will have a renewed focus on its international student base while showcasing renovated dormitories, advanced teaching technology, upgraded facilities and seasoned leadership.</p>  
 
-<p>Massachusetts Attorney General approval is needed since the sale involves a non-profit entity, The MacDuffie School, being acquired by a privately held company, International EC. Michael A. Serafino, Chairman of The MacDuffie School Board of Trustees made the following statement regarding the sale:</p>
+<p>"This is a new beginning for an institution with a long-standing academic and cultural history. By introducing a transformed and expanded MacDuffie School next fall, we are providing a modernized environment for focused learning, exploration and development. This, coupled with our dynamic campus and offerings will provide a solid base for MacDuffie programs for years to come," said Brian Chatterley, Headmaster of The MacDuffie School. 
+For more information about MacDuffie School and the recent acquisition by International EC LLC visit www.macduffie.org or call 413-467-1601.</p>
 
-<p>"The acquisition of MacDuffie by International EC LLC represents an exciting new chapter in MacDuffie's history, offering our student body a larger campus with enhanced classroom space, outstanding boarding facilities, state-of-the-art technology and athletic fields in a college preparatory environment with high academic standards.</p>
+<h3>About The MacDuffie School</h3>
+<p>An independent, 6-12 boarding and day school with a history dating back to the 1800s and a new campus in 2011, the MacDuffie School combines tradition with technology, facilities and leadership optimized for twenty-first century success.</p>
+<p>Known as "the International School," MacDuffie's commitment to international students translates into a global experience for visiting and American students alike, with deep and relevant learning opportunities from the classroom to the athletic fields, the dormitory to the community. The school brings together 21st century leadership development methods, such as outdoor leadership courses, with technology-enhanced classroom experience that ensures rigorous academic standards.</p>
+<p>MacDuffie's scenic, expansive grounds in the heart of New England provide easy access to world-renowned colleges and universities including Harvard and Yale, as well as the cities of Boston and New York. The campus' newly renovated dormitories, underground winter-weather tunnel system and state of the art key-less security system set the gold standard for comfort, convenience and safety.</p>
 
-<p>"In the highly competitive academic marketplace for private middle and secondary schools, this move represents a chance to expand and promote the MacDuffie brand and mission in a way that our current location, with space and infrastructure limitations, would not allow. </p>
+<h4>For more information on The MacDuffie School, please visit<a href="http://www.macduffie.org"> www.macduffie.org.</a></h4> 
 
-
-<p>"We feel this move will make the MacDuffie name more attractive to prospective domestic and international students, effectively merging our 120 year reputation for educational excellence with an organization with experience in working with international secondary students. The strengths of these two organizations will be merged on an attractive 26-acre rural campus that is also currently undergoing extensive renovations.</p>
-
-<p>"This transaction requires the review and approval of the Massachusetts Attorney General, and that process is now underway. The MacDuffie Board of Directors has concluded that sale of the school is in MacDuffie's best interest. We are hopeful that the Attorney General will find that it is also in the public interest and that MacDuffie's educational mission will continue well into the future. </p>
-
-<p>"As competition in private secondary education has increased, it became clear to MacDuffie's leadership that steps needed to be undertaken to remain viable. This move to a spacious new campus, we believe, will enhance the attractiveness of MacDuffie's curriculum and reputation to prospective new students, and to our existing student body as well. The affiliation with International EC will allow us jointly to build upon our school's 120-year reputation for producing well-educated and productive citizens prepared to succeed in a highly competitive world.</p>
-
-<p>"The sale of assets does not include our campus located off of Maple Street and MacDuffie's leadership is very cognizant of our responsibility to develop a plan for the reuse of the property. With this in mind, MacDuffie's Board of Trustees has created a workgroup to ensure that the campus is maintained and secured after the school's operations are moved to Granby. Efforts to prepare the campus for sale will start immediately. The Board's workgroup includes individuals familiar with the local and regional real estate market. </p>
-
-<p>"We will also initiate a vigorous communications plan to inform our current student body, their parents, prospective new students, staff, alumni, vendors and representatives of the City of Springfield about the acquisition and the planned move to Granby. Springfield has represented a wonderful host community for MacDuffie for over a century and we look forward to working with the City in identifying an appropriate re-use of the property."</p>
-
-<p>   International EC, LLC has three managing partners:  Craig Brewer, who currently oversees a large private high school program for international students in the United States; Wayne Brewer, who is currently the CEO of International Student Exchange; and, Dal Swain, the owner and President of FLS, which has a network of ESL schools for foreign students. Wayne Brewer represented International EC at the press conference.</p>
-<br />
-
-<h3>Related Facts about The MacDuffie School</h3>
-<ul>
-  <li> Before the sale and transfer of assets can be finalized the Massachusetts Attorney General must approve the acquisition since a for-profit organization is acquiring a not-for-profit institution. The review by the Attorney General is now underway.
-  </li><br /><br />
- 
-<li> The MacDuffie School is a 120-year-old co-educational school for grades 6 &#8211; 12 offering a challenging college preparatory curriculum as well as comprehensive fine and performing arts and athletic programs. MacDuffie's enrollment in 2010-2011 is 175 students with 118-day students and 57 boarding students. Twenty-eight percent are international students.</li><br /><br />
-
-<li>MacDuffie's enrollment in 2010-2011 is 175 students with 118-day students and 57 boarding students. Twenty-eight percent are international students. </li><br /><br />
-
-<li> Founders John and Abigail MacDuffie established The MacDuffie School in Springfield in 1890 as a private high school to prepare high school aged women for college. In the early years it was predominantly a boarding school. In 1990 the school became coeducational in response to the need to sustain a diverse and appropriately sized student population. </li><br /><br />
-
-<li> The MacDuffie School Corporation will continue to own the Springfield campus property after the closing of the sale. After school operations are moved to Granby during the summer of 2011, the MacDuffie campus will be available. The school will begin a vigorous process to determine a reuse of the property and will secure and maintain the property until it can be sold.</li></ul></div>
+<p>
+<strong>Press Contacts:</strong><br />
+&nbsp;&nbsp;Brandie Gerrish or Ashley Bell<br />
+&nbsp;&nbsp;MacDuffie@hartboillot.com<br />
+&nbsp;&nbsp;781-893-0053</p><br />
+</div>
     <div class="ribbonbm"></div>
     <div class="clearfix"></div>
   <!-- end mainContent --></div>

@@ -37,6 +37,14 @@ body {
 	height: 526px;
 	width: 831px;
 } 
+.oneColElsCtrHdr #headerBN {
+	padding: 0;  /* this padding matches the left alignment of the elements in the divs that appear beneath it. If an image is used in the #header instead of text, you may want to remove the padding. */
+	background-color: #FFF;
+	background-image: url(../images/headerBN.jpg);
+	background-repeat: no-repeat;
+	height: 526px;
+	width: 831px;
+}
 .oneColElsCtrHdr #headerBar {
 	background-color: #FFF;
 	background-image: url(../images/headerbar.png);
@@ -74,6 +82,12 @@ body {
 	background-repeat: no-repeat;
 	height: 131px;
 	width: 831px;
+}
+.oneColElsCtrHdr #mainIndex2 {
+	background-color: #FFFFFF;
+	background-repeat: no-repeat;
+	width: 831px;
+	padding: 0;
 }
 .oneColElsCtrHdr #footer {
 	background-color: #DDDDDD;
@@ -215,6 +229,8 @@ a:active {
 	background-image: url(../images/eventbox.png);
 	background-repeat: no-repeat;
 	font-weight: bold;
+	color: #000;
+	font-size: 16px;
 }
 .paragraphText {
 	font-family: Arial, Helvetica, sans-serif;
@@ -232,7 +248,7 @@ a:active {
 .red {
 	font-family: Arial, Helvetica, sans-serif;
 	color: #900;
-	text-decoration: underline;
+	text-decoration: none;
 }
 .formText {
 	font-family: Arial, Helvetica, sans-serif;
@@ -244,6 +260,12 @@ a:active {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 17px;
 	color: #000;
+	text-align: center;
+}
+.newsA {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	color: #900;
 	text-align: center;
 }
 .twitter {
@@ -265,4 +287,26 @@ a:active {
 	font-size: 11px;
 	font-weight: bold;
 	color: #000;
+}
+.textInfo {
+	width: 700px;
+	margin-right: auto;
+	margin-left: auto;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: justify;
+	text-indent: 5px;
+}
+.ribbon {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 18px;
+	color: #FFF;
+	background-color: #900;
+	padding: 5px;
+	text-align: center;
+}
+.ribbonbm {
+	background-color: #900;
+	display: block;
+	height: 15px;
 }
