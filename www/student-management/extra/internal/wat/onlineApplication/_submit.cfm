@@ -44,10 +44,18 @@
 			// Application is not complete - go to checkList page
 			location("#CGI.SCRIPT_NAME#?action=checkList", "no");
 		// Intl. Reps should be able to deny/approve application.
-		} else if ( CLIENT.loginType EQ 'user' AND VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isOfficeApplication) AND NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isApplicationComplete) ) {
+		} else if ( 
+				CLIENT.loginType EQ 'user' 
+			AND 
+				CLIENT.userType GT 4 
+			AND 
+				VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isOfficeApplication)
+			AND 
+				NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isApplicationComplete) 
+		) {
 			// Application is not complete - go to checkList page
 			location("#CGI.SCRIPT_NAME#?action=checkList", "no");		
-		}		
+		}
 		
 		// Param Online Application Form Variables 
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {

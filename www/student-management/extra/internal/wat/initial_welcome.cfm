@@ -223,13 +223,14 @@
                             <tr>
                                 <cfloop query="qStatus">
                                     <th class="ApplicationStatsTitle"> 
-                                    	<a href="index.cfm?curdoc=onlineApplication/index&action=list&statusID=#qStatus.statusID#">#qStatus.name#</a></th>
+										<a href="index.cfm?curdoc=onlineApplication/index&action=list&statusID=#qStatus.statusID#" title="#qStatus.description#">#qStatus.name#</a>
+                                	</th>
                                 </cfloop>
      						</tr>
                             <tr>
                                 <cfloop query="qGetTotalByStaus">
                                     <td align="center">
-                                    	<a href="index.cfm?curdoc=onlineApplication/index&action=list&statusID=#qGetTotalByStaus.statusID#">#qGetTotalByStaus.total#</a>
+                                    	<a href="index.cfm?curdoc=onlineApplication/index&action=list&statusID=#qGetTotalByStaus.statusID#" title="#qStatus.description[qGetTotalByStaus.currentRow]#">#qGetTotalByStaus.total#</a>
                                     </td>
                                 </cfloop>
      						</tr>
