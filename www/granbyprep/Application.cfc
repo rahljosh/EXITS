@@ -83,14 +83,12 @@
 			// REMOVE THIS
 			// THIS.OnApplicationStart();
 			
-			// Production Environemnt
-			if ( NOT APPLICATION.IsServerLocal ) {
+			// Relocate to MacDuffie website - Online App and Admin are exceptions - Production Environemnt Only			
+			allowedAreasList = "admissions,admin,extensions,documents,linked,images,archived,privacy.cfm,CFIDE";
+			getCurrentPage = ListGetAt(CGI.SCRIPT_NAME, 1, "/");
 			
-				// Relocate to MacDuffie website - Online App and Admin are exceptions
-				if ( NOT ListContainsNoCase(CGI.SCRIPT_NAME, "admissions", "/") AND NOT ListContainsNoCase(CGI.SCRIPT_NAME, "admin", "/") ) {			
-					Location("http://www.MacDuffie.org", "no");
-				}
-			
+			if ( NOT APPLICATION.IsServerLocal AND NOT ListContainsNoCase(allowedAreasList, getCurrentPage) ) {			
+				Location("http://www.MacDuffie.org", "no");
 			}
 		</cfscript>
         
