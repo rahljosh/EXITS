@@ -88,10 +88,10 @@ td, th {
   </div>
 <div id="mainContent">
    
-    <h2>Granby Preparatory Academy Open House</h2>
+    <h2>The MacDuffie /GPA School Open House</h2>
      <cfif not isDefined('form.sendEmail')>
- <p class="paragraphText">Come visit us at GPA on<strong> January 23rd 2011 from 2:00 &#8211; 5:00 PM</strong> for our Open House!  Please fill out the registration form below. </p>
-<p class="paragraphText">Guests will be shown around campus on a tour of the grounds and given an opportunity to see the exciting opportunities available at Granby Preparatory Academy! Come and see New England's newest world-class high school!</p><br />
+ <p class="paragraphText">Come visit us at the MacDuffie / GPA school on<strong> January 23rd 2011 from 1:00 &#8211; 4:00 PM</strong> for our Open House!  Please fill out the registration form below. </p>
+<p class="paragraphText">Guests will be shown around campus on a tour of the grounds and given an opportunity to see the exciting opportunities available at the MacDuffie / GPA school! Come and see New England's newest world-class high school!</p><br />
 
   <div class="InsPhoto"><img src="images/GPA_Arial.jpg" width="330" height="220" alt="GAP arial shot" /><br /><br />
   Aerial shot of Granby Prep Academy
@@ -181,7 +181,7 @@ td, th {
  </cfform>
 </cfoutput>
 <cfelse>
- <p class="paragraphText"> Thank you for your interest in Granby Preparatory Academy. We look forward to seeing you at our Open House<strong></strong> </p>
+ <p class="paragraphText"> Thank you for your interest in the MacDuffie / GPA school Open House. We look forward to seeing you at our Open House.</p>
 </cfif>
  <p>&nbsp;</p>
 
