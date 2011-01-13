@@ -40,9 +40,13 @@ body {
     <h2>Tuition and Financial Aid</h2>
  
     <ul><ol>Boarding: $47,250</ol>
-    <ol>Junior Boarding: $52,500</ol>
-<ol>Day: $24,500 </ol>
-<ol>International Fee: $3,000</ol><br /><br />
+    <ol>
+      Junior Boarding: $52,500<br />
+      Day: $24,500<br />
+    Middle School Day: $19,500
+      <br />
+      International Fee: $3,000</ol>
+<br /><br />
 <ol>
   <strong>Tuition Refund Plan* </strong>(Mandatory): 
 </ol>
@@ -50,8 +54,9 @@ body {
 <ol>Day: $450</ol>
 <ol>Mandatory U.S. health insurance for <br /> international boarding students: $750</ol><br />
 <ol>
-  <span class="italic">*The Tuition Refund Plan provides an allowance of tuition charges in the event of withdrawal of a student for medical causes as well as other reasons, including dismissal by GPA</span>.
-</ol><br /><br />
+  <span class="italic">*The Tuition Refund Plan provides an allowance of tuition charges in the event of withdrawal of a student for medical causes.</span>
+</ol>
+<br /><br />
 <ol><strong>Application Fees:</strong></ol>
 <ol>International: $150</ol>
 <ol>Domestic: $75</ol><br /><br />
