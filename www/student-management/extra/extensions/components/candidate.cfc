@@ -686,7 +686,8 @@
                 GROUP BY
                 	c.candidateID
                 ORDER BY            
-                	c.candidateID
+                	u.businessName,
+                    c.candidateID
 		</cfquery>
            
 		<cfreturn qGetApplicationListbyStatusID>
@@ -777,6 +778,10 @@
 		
 					if ( NOT VAL(qGetStudentInfo.home_country) ) {
 						ArrayAppend(stRequiredFields.fieldList, 'Please select your mailing country');
+					}
+					
+					if ( NOT LEN(qGetStudentInfo.email) ) {
+						ArrayAppend(stRequiredFields.fieldList, 'Please enter an email address');
 					}
 		
 					if ( NOT LEN(qGetStudentInfo.passport_number) ) {
