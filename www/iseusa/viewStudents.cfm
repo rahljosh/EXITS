@@ -49,38 +49,50 @@ a:active {
    <cfelse>
    
    	<cfquery name="get_students" datasource="#APPLICATION.DSN.Source#">
-	SELECT     	studentid,  dob, firstname, interests, interests_other, smg_countrylist.countryname, smg_religions.religionname
-	FROM       	smg_students
-	INNER JOIN 	smg_countrylist ON smg_countrylist.countryid = smg_students.countryresident
-	LEFT JOIN 	smg_religions ON smg_religions.religionid = smg_students.religiousaffiliation
-	WHERE 	   	active = '1' 
-    			and ( programid = 316 or programid =314) 
-			 	AND hostid = '0' 
-				AND direct_placement = '0'
-                <!--- Only ISE Students --->
-                AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">)
-	ORDER BY rand()
-	LIMIT 5
-</cfquery>
-     <cfoutput query="get_students">  
-     
-
-  <CFSET image_path1="C:\websites\student-management\nsmg\uploadedfiles\web-students\#get_students.studentid#.*">
-   <CFSET image_path2="C:\websites\student-management\nsmg\uploadedfiles\web-students\#get_students.studentid#.jpg">
+        SELECT     	
+            studentid,  
+            dob, 
+            firstname, 
+            interests, 
+            interests_other, 
+            countryresident,
+            smg_countrylist.countryname, 
+            smg_religions.religionname
+        FROM
+            smg_students
+        INNER JOIN 	
+            smg_countrylist ON smg_countrylist.countryid = smg_students.countryresident
+        LEFT JOIN 	
+            smg_religions ON smg_religions.religionid = smg_students.religiousaffiliation
+        WHERE 	   	
+            active = '1' 
+        <!--- August 2011 Programs - Set this up in the DB later so users can change in the program information --->
+        AND 
+            programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="318,319,320,321" list="yes"> ) 
+        AND 
+            hostid = '0' 
+        AND 
+            direct_placement = '0'
+        <!--- Only ISE Students --->
+        AND 
+            companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes">)
+        ORDER BY rand()
+        LIMIT 5
+	</cfquery>
+	
+	<cfoutput query="get_students">  
       <tr>
-        <td><CFIF FileExists(image_path1)>
-      						<span class="style1"><img src="http://www.student-management.com/nsmg/uploadedfiles/web-students/#get_students.studentid#.*" width="133"> 			<cfelseif FileExists(image_path2)>
-                            <span class="style1"><img src="http://www.student-management.com/nsmg/uploadedfiles/web-students/#get_students.studentid#.jpg" width="133">
-	   					    <CFELSE>
-	        				Sorry, no picture available at this time.</span>	
-	    				</CFIF></td>
-        <td bgcolor="##FFFFFF">&nbsp;</td>
         <td class="lightGreen">
-          <p class="StudentName">Name: #get_students.firstname#<cfif dob EQ ''><cfelse>(#datediff('yyyy',dob,now())#)</cfif><br />
+			<cfif FileExists('c:\websites\student-management\nsmg\pics\flags\#get_students.countryresident#.jpg')>
+            	<span class="style1" style="float:left; padding:5px;"><img src="http://ise.exitsapplication.com/nsmg/pics/flags/#get_students.countryresident#.jpg" width="133"></span>
+            <cfelse>
+                <span class="style1" style="float:left; padding:5px;"><img src="http://ise.exitsapplication.com/nsmg/pics/flags/0.jpg" width="133"></span>
+            </cfif>
+          <p class="StudentName">Name: #get_students.firstname# <cfif IsDate(dob)>(#datediff('yyyy',dob,now())#)</cfif><br />
             Home Country: #get_students.countryname#<br />
             Religion: #get_students.religionname#<br />
             Interests:
-                 <cfloop list=#get_students.interests# index=i>
+                <cfloop list=#get_students.interests# index=i>
 				<cfquery name="get_interests" datasource="#APPLICATION.DSN.Source#">
 				Select interest 
 				from smg_interests 
