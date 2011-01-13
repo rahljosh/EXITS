@@ -388,10 +388,10 @@
                 Reason: <strong>#FORM.cancelreason#</strong><br />
                 
                 Placement Approved: 
-                <cfif qStudentInfo.date_host_fam_approved is ''>
-                    <strong>Unplaced</strong>
-                <cfelse>
+                <cfif IsDate(qStudentInfo.date_host_fam_approved)>
                     <strong>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</strong>
+                <cfelse>
+                    <strong>Unplaced</strong>
                 </cfif> <br />
     
                 SEVIS No.: 
