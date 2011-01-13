@@ -109,7 +109,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
   </div>
 <div id="mainContent">
    
-    <h2>Granby Preparatory Academy Open House</h2>
+    <h2>The MacDuffie School/Granby Preparatory Academy Open House</h2>
  <p class="paragraphText">Granby Preparatory Academy opened its doors for the first time to the area residents to come and see all of the changes that the GPA campus has undergone. On Sunday, November 7th, over seventy visitors walked through the classrooms, the gymnasium, and even sat in on a SmartBoard demonstration. While on campus families were able to view several of the clubs, programs, and a sample schedule that will be available to students next fall.<br /><br />
 There were several information tables that also provided information on tuition and fees, financial aid, the Admission process, as well as our esteemed food service providers, SAGE Dining Services, sent a representative, Mr. Fabian Dominguez, to discuss the meal services that will be provided to students.<br /><br /> 
 The success of the Open House is marked by the enthusiastic response we received from the guests! Several left the building exclaiming: "I can not wait to come back! What an impressive sight!".</p>
