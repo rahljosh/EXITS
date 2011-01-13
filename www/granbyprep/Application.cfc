@@ -83,9 +83,14 @@
 			// REMOVE THIS
 			// THIS.OnApplicationStart();
 			
-			// Relocate to MacDuffie website - Online App and Admin are exceptions
-			if ( NOT ListFind(CGI.SCRIPT_NAME, "admissions", "/") AND NOT ListFind(CGI.SCRIPT_NAME, "admin", "/") ) {			
-				Location("http://www.MacDuffie.org", "no");
+			// Production Environemnt
+			if ( NOT APPLICATION.IsServerLocal ) {
+			
+				// Relocate to MacDuffie website - Online App and Admin are exceptions
+				if ( NOT ListContainsNoCase(CGI.SCRIPT_NAME, "admissions", "/") AND NOT ListContainsNoCase(CGI.SCRIPT_NAME, "admin", "/") ) {			
+					Location("http://www.MacDuffie.org", "no");
+				}
+			
 			}
 		</cfscript>
         
