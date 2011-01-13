@@ -12,6 +12,14 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
+
+	<!--- Candidate ID --->
+    <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getCandidateID()#">
+    
+    <cfscript>
+		// Get Application History
+		qGetApplicationHistory = APPLICATION.CFC.ONLINEAPP.getApplicationHistory(foreignTable=APPLICATION.foreignTable, foreignID=FORM.candidateID);
+	</cfscript>
     
 </cfsilent>
 
@@ -69,6 +77,39 @@
                         </cfif>
                         
                     </ul>    
+
+                </fieldset>
+
+				<!--- Submission History --->
+                <fieldset>
+                   
+                    <legend>Application Submission History</legend>
+
+                    <div class="table">
+                        <div class="th">
+                            <div class="tdXLarge">Date</div>
+                            <div class="tdXXLarge">Status</div>
+                            <div class="tdXXLarge">Comments</div>
+                            <div class="clearBoth"></div>
+						</div>                            
+                        <cfloop query="qGetApplicationHistory">      
+                            <div <cfif qGetApplicationHistory.currentRow MOD 2> class="tr" <cfelse> class="trOdd" </cfif> >
+                                <div class="tdXLarge">
+                                	#DateFormat(qGetApplicationHistory.dateCreated, 'mm/dd/yy')#
+                                    #TimeFormat(qGetApplicationHistory.dateCreated, 'hh-mm-ss tt')# EST
+                                </div>
+                                <div class="tdXXLarge">#qGetApplicationHistory.description#</div>
+                                <div class="tdXXLarge">
+                                	<cfif LEN(qGetApplicationHistory.comments)>
+                                    	#qGetApplicationHistory.comments# 
+                                    <cfelse>
+                                    	n/a
+                                    </cfif>
+                                </div>
+                                <div class="clearBoth"></div>
+                            </div>                            
+                        </cfloop>
+                	</div>
 
                 </fieldset>
             

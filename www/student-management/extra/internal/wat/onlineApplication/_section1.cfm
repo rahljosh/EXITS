@@ -592,7 +592,7 @@
 
         <!--- Email Address --->
         <div class="field">
-            <label for="email">Email Address <cfif NOT VAL(APPLICATION.CFC.CANDIDATE.getCandidateSession().isOfficeApplication)><em>*</em></cfif></label> 
+            <label for="email">Email Address <em>*</em></label> 
             <cfif printApplication>
 				<div class="printField">#FORM.email# &nbsp;</div>
         	<cfelse>
