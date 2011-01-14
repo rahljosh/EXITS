@@ -41,20 +41,24 @@
 			
 			abort;
 		}
-		
-		if ( FORM.TYPE EQ 'flightDeparture' ) {
-			// Get Students that needs to be insured
-			qGetStudents = APPCFC.INSURANCE.getStudentsToExtendFlight(programID=FORM.programID);
-		} else {
-			// Get Students that needs to be insured
-			qGetStudents = APPCFC.INSURANCE.getStudentsToExtend(programID=FORM.programID);
-		}
 
 		// Get Company Short
 		companyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
-			
-		// Set XLS File Name
-		XLSFileName = '#companyShort#_Extension_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
+
+		if ( FORM.TYPE EQ 'flightDeparture' ) {
+			// Get Students that needs to be insured
+			qGetStudents = APPCFC.INSURANCE.getStudentsToExtendFlight(programID=FORM.programID);
+
+			// Set XLS File Name
+			XLSFileName = '#companyShort#_FlightExtension_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
+
+		} else {
+			// Get Students that needs to be insured
+			qGetStudents = APPCFC.INSURANCE.getStudentsToExtend(programID=FORM.programID);
+
+			// Set XLS File Name
+			XLSFileName = '#companyShort#_ProgramExtension_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
+		}
 
 		// No Records
 		if ( NOT VAL(qGetStudents.recordCount) ) {
@@ -128,7 +132,9 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 <td>&nbsp;</td>
             </tr>
             
-            <cfif IsDate(qGetStudents.extensionEndDate) AND ( FORM.TYPE EQ 'flightDeparture' AND qGetStudents.extensionDays LTE 45 )>
+            <cfif ( IsDate(qGetStudents.extensionEndDate) AND FORM.TYPE EQ 'flightDeparture' AND qGetStudents.extensionDays LTE 45 )
+				OR
+				  ( IsDate(qGetStudents.extensionEndDate) AND FORM.TYPE NEQ 'flightDeparture' )>
 				
 				<cfscript>
 					// Update Insurace Record and Insert History
