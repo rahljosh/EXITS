@@ -468,7 +468,7 @@
 		}
 	});
 	
-	function readOnlyEditPage() {
+	var readOnlyEditPage = function() { 
 		if( $(".readOnly").css("display") == "none" ) {			
 			// Hide editPage and display readOnly
 			$(".editPage").fadeOut("fast");
@@ -480,6 +480,34 @@
 			$(".editPage").fadeIn("fast");	
 			$(".formField").removeAttr("disabled");
 			$(".dp-choose-date").fadeIn("fast");
+		}
+	}
+
+	var jsCopyAddress = function () {
+		isChecked = $("#copyAddress").attr('checked');
+		if ( isChecked ) {
+			$("#workSiteAddress").val($("#address").val());
+			$("#workSiteCity").val($("#city").val());
+			$("#workSiteState").val($("#state").val());
+			$("#workSiteZip").val($("#zip").val());
+		} else {
+			$("#workSiteAddress").val("");
+			$("#workSiteCity").val("");
+			$("#workSiteState").val("");
+			$("#workSiteZip").val("");
+		}
+	}
+
+	var jsCopyContact = function () {
+		isChecked = $("#copyContact").attr('checked');
+		if ( isChecked ) {
+			$("#supervisor_name").val($("#supervisor").val());
+			$("#supervisor_phone").val($("#phone").val());
+			$("#supervisor_email").val($("#email").val());
+		} else {
+			$("#supervisor_name").val("");
+			$("#supervisor_phone").val("");
+			$("#supervisor_email").val("");
 		}
 	}
 
@@ -533,6 +561,7 @@
 	   $("#phone").mask("(999)999-9999");
 	   $("#fax").mask("(999)999-9999");
 	   $("#supervisor_phone").mask("(999)999-9999");
+	   $("#pickUpContactPhone").mask("(999)999-9999");
 	});	
 	// --> 
 </script>
@@ -651,21 +680,21 @@
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.address#</span>
-                                                <input type="text" name="address" value="#FORM.address#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="address" id="address" value="#FORM.address#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>City</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.city#</span>
-                                                <input type="text" name="city" value="#FORM.city#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="city" id="city" value="#FORM.city#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>		
                                         <tr>
                                             <td class="style1" align="right"><strong>State:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#qGetHostCompanyInfo.stateName#</span>
-                                                <select name="state" class="style1 editPage">
+                                                <select name="state" id="state" class="style1 editPage">
                                               		<option value="0"></option>
                                               		<cfloop query="qGetStateList">
 		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.state>selected</cfif>>#qGetStateList.stateName#</option>
@@ -677,7 +706,7 @@
                                             <td class="style1" align="right"><strong>Zip:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.zip#</span>
-                                                <input type="text" name="zip" value="#FORM.zip#" class="style1 editPage" size="35" maxlength="10">
+                                                <input type="text" name="zip" id="zip" value="#FORM.zip#" class="style1 editPage" size="35" maxlength="10">
                                             </td>
                                         </tr>
                                     </table>
@@ -697,25 +726,29 @@
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Work Site Address</td>
                                         </tr>
+                                        <tr class="editPage">
+                                        	<td class="style1" align="right"><input type="checkbox" name="copyAddress" id="copyAddress" class="style1 editPage" onclick="jsCopyAddress();" /></td>
+                                            <td class="style1"><strong><label for="copyAddress">Same as Above</label></strong></td>
+                                        </tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.workSiteAddress#</span>
-                                                <input type="text" name="workSiteAddress" value="#FORM.workSiteAddress#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="workSiteAddress" id="workSiteAddress" value="#FORM.workSiteAddress#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>City</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.workSiteCity#</span>
-                                                <input type="text" name="workSiteCity" value="#FORM.workSiteCity#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="workSiteCity" id="workSiteCity" value="#FORM.workSiteCity#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>		
                                         <tr>
                                             <td class="style1" align="right"><strong>State:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#qGetHostCompanyInfo.workSitestateName#</span>
-                                                <select name="workSiteState" class="style1 editPage">
+                                                <select name="workSiteState" id="workSiteState" class="style1 editPage">
                                               		<option value="0"></option>
                                               		<cfloop query="qGetStateList">
 		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.workSiteState>selected</cfif>>#qGetStateList.stateName#</option>
@@ -727,7 +760,7 @@
                                             <td class="style1" align="right"><strong>Zip:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.workSiteZip#</span>
-                                                <input type="text" name="workSiteZip" value="#FORM.workSiteZip#" class="style1 editPage" size="35" maxlength="10">
+                                                <input type="text" name="workSiteZip" id="workSiteZip" value="#FORM.workSiteZip#" class="style1 editPage" size="35" maxlength="10">
                                             </td>
                                         </tr>
                                     </table>
@@ -797,7 +830,7 @@
                                             <td width="35%" class="style1" align="right"><strong>Contact:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor#</span>
-                                                <input type="text" name="supervisor" value="#FORM.supervisor#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="supervisor" id="supervisor" value="#FORM.supervisor#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
@@ -823,14 +856,18 @@
                                             <td class="style1" align="right"><strong>Email:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.email#</span>
-                                                <input type="text" name="email" value="#FORM.email#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="email" id="email" value="#FORM.email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
+                                        </tr>
+                                        <tr class="editPage">
+                                        	<td class="style1" align="right"><input type="checkbox" name="copyContact" id="copyContact" class="style1 editPage" onclick="jsCopyContact();" /></td>
+                                            <td class="style1"><strong><label for="copyContact">Same as Above</label></strong></td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Supervisor:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_name#</span>
-                                                <input type="text" name="supervisor_name" value="#FORM.supervisor_name#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="supervisor_name" id="supervisor_name" value="#FORM.supervisor_name#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
                                         <tr>
@@ -844,7 +881,7 @@
                                             <td class="style1" align="right"><strong>Supervisor Email:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_email#</span>
-                                                <input type="text" name="supervisor_email" value="#FORM.supervisor_email#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="supervisor_email" id="supervisor_email" value="#FORM.supervisor_email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
                                         <tr>
