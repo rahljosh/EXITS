@@ -21,7 +21,10 @@
 		
 		// Get Programs Ending Soon
 		qGetProgramsEndingSoon = APPCFC.PROGRAM.getPrograms(isEndingSoon=1);
-		
+
+		// Get Programs Ending Soon
+		qGetYearPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1,isFullYear=1);
+
 		//Get Insurance Policies
 		qGetInsurancePolicies = APPCFC.INSURANCE.getInsurancePolicies(provider="global");
 		
@@ -248,8 +251,8 @@
                                     <td>Program :</td>
                                     <td>
                                     	<select name="programID" size="6" multiple>
-                                            <cfloop query="qGetPrograms">
-                                            	<option value="#qGetPrograms.ProgramID#">#qGetPrograms.programName#</option>
+                                            <cfloop query="qGetYearPrograms">
+                                            	<option value="#qGetYearPrograms.ProgramID#">#qGetYearPrograms.programName#</option>
                                             </cfloop>
                                         </select>
                                     </td>
