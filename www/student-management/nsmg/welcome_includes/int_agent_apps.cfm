@@ -54,7 +54,10 @@
 							<cfif NOT ListFind("4,6,9", i)>
                                 AND 
                                     active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                            </cfif>
+							<cfelse>
+                                AND
+                                    canceldate IS NULL
+							</cfif>
     
                             <!--- Display Branch Applications (3/4) in the Active list --->
                             <cfif CLIENT.usertype NEQ 11 AND i EQ 2>

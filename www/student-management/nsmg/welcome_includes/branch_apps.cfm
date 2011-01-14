@@ -62,6 +62,9 @@
                         <cfif NOT ListFind("4,6,9", i)>
                             AND 
                                 active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+						<cfelse>
+                            AND
+                                canceldate IS NULL
                         </cfif>
                     </cfquery>
                     
