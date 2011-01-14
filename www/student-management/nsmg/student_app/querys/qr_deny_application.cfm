@@ -39,14 +39,11 @@
 	<cfif newstatus EQ '9'> <!--- DENIED BY SMG --->
 		<cfquery name="deny_application" datasource="MySQL">
 			UPDATE smg_students 
-			SET app_current_status = '#newstatus#',
-				companyid = '#FORM.companyid#'				
+			SET 
                 <!--- Keep status active so the student can login and re-submit the application --->
-				<!---
-                cancelreason = '#FORM.reason#',
-				active = '0',
-				canceldate = #CreateODBCDate(now())#
-				--->
+				active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                app_current_status = '#newstatus#',
+				companyid = '#FORM.companyid#'				
 			WHERE studentID = '#FORM.studentID#'
 			LIMIT 1
 		</cfquery>

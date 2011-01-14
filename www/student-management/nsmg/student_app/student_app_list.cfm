@@ -99,6 +99,9 @@
 			<cfif NOT ListFind("4,6,9", URL.status)>
                 AND 
                     s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+			<cfelse>
+                AND
+                	s.canceldate IS NULL
             </cfif>
             
 			<cfif VAL(URL.intRep)>
