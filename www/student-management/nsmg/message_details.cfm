@@ -13,7 +13,7 @@
         where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#message_details.companyid#">
     </cfquery>
 <cfelse>
-	<cfset company_affected.companyshort = 'All SMG Companies'>
+	<cfset company_affected.companyshort = 'Everyone'>
 </cfif>
 <div id="information_window">
 <span class="application_section_header">Message Details</span> <br>
@@ -40,7 +40,7 @@
 <!--- only display companies for these users.  others don't see companies. --->
 <cfif client.usertype LTE 4>	
 	<tr>
-		<td colspan=3>Companies Affected: <b>#company_Affected.companyshort#</b></td>
+		<td colspan=3>Those Affected: <b>#company_Affected.companyshort#</b></td>
 	</tr>
 </cfif>
 </table>
