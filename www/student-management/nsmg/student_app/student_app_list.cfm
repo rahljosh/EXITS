@@ -100,7 +100,7 @@
                 AND 
                     s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 			<cfelse>
-                AND
+            	AND
                 	s.canceldate IS NULL
             </cfif>
             
@@ -567,6 +567,7 @@
             <td><strong>Login Info</strong></td>
             <td><strong>Future</strong></td>
 			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Received</strong></a></td>
+            <td><strong>Prev. Denied</strong></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
             <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
 			<td><strong>Cover Page</strong></td>
@@ -574,6 +575,11 @@
 		</tr>
         
 		<cfloop query="qStudents">
+        <cfquery name="qcheckPrevDenied" datasource="#application.dsn#">
+        select date, reason 
+        from smg_student_app_status
+        where studentid = #studentid# and status = 9
+        </cfquery>
 			<tr bgcolor="#iif(qStudents.currentrow MOD 2 ,DE("FFFFFF") ,DE("e2efc7") )#">
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#studentid#</a></td>
 				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#familylastname#</a></td>
@@ -583,11 +589,18 @@
 				<td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
                 <td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#URL.status#" >Change</a></td>
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
+                <td><cfif qCheckPrevDenied.recordcount eq 0>N/A<cfelse>#DateFormat(qcheckPrevDenied.date, 'mm/dd/yyyy')#</cfif></td>
 				<td>#businessname#</td>
                 <td>#programApplied#</td>
 				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueid#');">Page</a></td>
 				<td><a href="javascript:AppReceived('student_app/querys/qr_app_received.cfm?unqid=#uniqueid#&status=#URL.status#');" onClick="return areYouSure(this);">Check</a></td>
 			</tr>
+            <cfif qCheckPrevDenied.recordcount neq 0>
+            <tr bgcolor="#iif(qStudents.currentrow MOD 2 ,DE("FFFFFF") ,DE("e2efc7") )#">
+				<td colspan=13>Previous Denied: #qcheckPrevDenied.reason#</td>
+				
+			</tr>
+            </cfif>
 		</cfloop>
         
 		<tr><td colspan="11">&nbsp;</td></tr>
