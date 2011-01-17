@@ -132,12 +132,12 @@
         
 	</cfif>
 	<cfif allergies_details eq 1>
-    	<cflocation url="index.cfm?curdoc=section3/allergy_info_request">
+    	<cflocation url="index.cfm?curdoc=section3/allergy_info_request" addtoken="no">
     </cfif>
 
   
 		<cfif client.need_add_info is not ''>
-        	<cflocation url="index.cfm?curdoc=section3/additional_health_answers">
+        	<cflocation url="index.cfm?curdoc=section3/additional_health_answers" addtoken="no">
         </cfif>
       
 
