@@ -53,3 +53,13 @@ a:active {
 	color: #000000;
 	font-weight: bold;
 }
+
+
+.grouptopleft { background-position: 50% bottom; background-image: url(pics/table-borders/topleft.gif); background-repeat: no-repeat; }
+.groupTop { background-position: 50% bottom; background-image: url(pics/table-borders/top.gif); background-repeat: repeat-x ;}
+.groupTopRight { background-position: left bottom; background-image: url(pics/table-borders/topright.gif); background-repeat: no-repeat; }
+.groupLeft { background-image: url(pics/table-borders/left-vert-line.gif); background-repeat: repeat-y; }
+.groupRight { background-image: url(pics/table-borders/right.gif); background-repeat: repeat-y; }
+.groupBottomLeft { background-position: right top; background-image: url(pics/table-borders/bottomleft.gif); background-repeat: no-repeat; }
+.groupBottom { background-position: 50% top; background-image: url(pics/table-borders/bottom.gif); background-repeat: repeat-x; }
+.groupBottomRight { background-position: left top; background-image: url(pics/table-borders/bottomright.gif); background-repeat: no-repeat; }

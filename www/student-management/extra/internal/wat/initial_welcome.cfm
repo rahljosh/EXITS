@@ -117,9 +117,9 @@
                     </td>
                 </tr>
 
-                <!--- New Students --->
+                <!--- New Candidates --->
                 <tr>
-                    <td colspan="2" style="font-weight:bold; text-decoration:underline;">New Students</td>
+                    <td colspan="2" style="font-weight:bold; text-decoration:underline;">New Candidates</td>
                 </tr>
                 <tr>
                     <td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
@@ -215,7 +215,7 @@
                     
 						<table width="100%" class="applicationStatsTable" cellspacing="0" cellpadding="5" valign="top">
                             <tr style="min-height:12px;">
-                                <th colspan="2" class="applicationStatsStudent">Student</th>
+                                <th colspan="2" class="applicationStatsCandidate">Candidate</th>
 								<!--- <th colspan="2" class="applicationStatsBranch">Intl. Branch</th> --->
                                 <th colspan="2" class="applicationStatsIntlRep">Intl. Rep.</th>
                                 <th colspan="3" class="applicationStatsCSB">CSB</th>
