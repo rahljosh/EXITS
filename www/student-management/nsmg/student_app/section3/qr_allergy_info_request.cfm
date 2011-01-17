@@ -29,23 +29,17 @@ allergic_cigs = <cfif IsDefined('form.allergic_cigs')>1<cfelse>0</cfif>
 where studentid = #client.studentid#
 </cfquery>
 
-   
-		<cfif client.need_add_info is not ''>
-        	<cflocation url="../index.cfm?curdoc=section3/additional_health_answers">
-        </cfif>
-      
+<cfif client.need_add_info is not ''>
+	<cflocation url="?curdoc=section3/additional_health_answers">
+</cfif>
 
-	<html>
-	<head>
-	<script language="JavaScript">
-	<!-- 
-	alert("You have successfully updated this page. Thank You.");
-	<cfif NOT IsDefined('url.next')>
-		location.replace("../index.cfm?curdoc=section3/allergy_info_request&id=3&p=allergy_info_request");
-	<cfelse>
-		location.replace("../index.cfm?curdoc=section3/page12&id=3&p=12");
-	</cfif>
-	//-->
-	</script>
-	</head>
-	</html>
+<script language="JavaScript">
+<!-- 
+alert("You have successfully updated this page. Thank You.");
+<cfif NOT IsDefined('url.next')>
+	location.replace("?curdoc=section3/allergy_info_request&id=3&p=allergy_info_request");
+<cfelse>
+	location.replace("?curdoc=section3/page12&id=3&p=12");
+</cfif>
+//-->
+</script>
