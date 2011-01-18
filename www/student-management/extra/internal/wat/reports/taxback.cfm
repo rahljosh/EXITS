@@ -8,7 +8,7 @@
     </td>
   </tr>
   <tr valign="middle" height="24">
-    <td valign="middle" colspan=2>&nbsp;</td>
+    <td valign="middle" colspan="2">&nbsp;</td>
   </tr>
     <tr>
     <cfquery name="get_program" datasource="MySql">

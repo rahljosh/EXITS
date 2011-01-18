@@ -4,7 +4,7 @@
 	<cfsetting requesttimeout="9999">
 
     <!--- Param FORM Variables --->
-	<cfparam name="FORM.hostCompanyID" default="0">
+	<cfparam name="FORM.userID" default="0">
 	<cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.flightType" default="Arrival">
     <cfparam name="FORM.isDisplayAll" default="1">
@@ -21,36 +21,36 @@
         	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     </cfquery>
 
-    <cfquery name="qGetHostCompanyList" datasource="MySql">
+    <cfquery name="qGetIntlRepList" datasource="MySql">
         SELECT 
-        	hostcompanyID, 
-            name 
+        	u.userid, 
+            u.businessname
         FROM 
-        	extra_hostcompany 
-        WHERE         	
-            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        	smg_users u
+		INNER JOIN 
+        	extra_candidates ec ON ec.intRep = u.userID AND ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        WHERE         
+        	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
         AND 
-        	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        <!---
-        AND
-        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        --->
-		ORDER BY 
-        	name
+        	u.businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+		GROUP BY
+        	u.userID            
+        ORDER BY 
+        	u.businessname
     </cfquery>
 
     <!--- FORM submitted --->
     <cfif FORM.submitted>
 
-        <!--- Get Host Companies Assigned to Candidates --->
-        <cfquery name="qGetHostCompany" datasource="MySQL">
+        <!--- Get Intl. Reps Assigned to Candidates --->
+        <cfquery name="qGetIntlRep" datasource="MySQL">
             SELECT 
-                ehc.hostCompanyID,
-                ehc.name
+                u.userID,
+                u.businessName
             FROM 
-            	extra_hostcompany ehc    
+            	smg_users u
 			INNER JOIN
-            	extra_candidates ec ON ec.hostCompanyID = ehc.hostCompanyID
+            	extra_candidates ec ON ec.intRep = u.userID
                 	AND
                     	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 					AND
@@ -70,17 +70,14 @@
             </cfif>    
             WHERE 
                 1 = 1
-                <!--- 
-				ehc.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-				--->
-			<cfif VAL(FORM.hostcompanyID)> 
+			<cfif VAL(FORM.userID)> 
                 AND
-                    ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+                    u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">                               
             </cfif>
        		GROUP BY
-            	ehc.hostCompanyID
+            	u.userID
             ORDER BY
-            	ehc.name
+            	u.businessName
 		</cfquery>
 		
         <!--- Get All Candidates --->
@@ -90,9 +87,9 @@
                 c.uniqueID,
                 c.firstname,             
                 c.lastname, 
-                c.hostCompanyID,
+                c.intRep,                
                 c.wat_placement,
-                u.businessname,
+                ehc.name AS hostCompanyName,
                 country.countryname
             FROM   
                 extra_candidates c
@@ -119,18 +116,18 @@
                 c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
                 c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-           <cfif VAL(FORM.hostcompanyID)> 
+           <cfif VAL(FORM.userID)> 
                 AND
-                    c.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+                    c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">                               
 			</cfif>                
        		ORDER BY
-                ehc.name,
+                u.businessName,
                 c.candidateID
 		</cfquery>
 		
         <cffunction name="filterGetAllCandidates" hint="Gets total by Host Company">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
-            <cfargument name="hostCompanyID" default="0" hint="hostCompanyID is not required">
+            <cfargument name="intRep" default="0" hint="intRep is not required">
             
             <cfquery name="qFilterGetAllCandidates" dbtype="query">
                 SELECT
@@ -140,9 +137,9 @@
                 WHERE
                 	1 = 1
                     
-				<cfif VAL(ARGUMENTS.hostcompanyID)> 
+				<cfif VAL(ARGUMENTS.intRep)> 
                     AND
-                        hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostcompanyID#">                               
+                        intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">                               
                 </cfif>                
                 
                 <cfif ARGUMENTS.placementType NEQ 'All'>
@@ -190,19 +187,19 @@
     <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
         <tr valign="middle" height="24">
             <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
-                <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> Candidate Flight Information</font>
+                <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; International Representative Reports -> Candidate Flight Information</font>
             </td>
         </tr>
         <tr valign="middle" height="24">
-            <td valign="middle" colspan=2>&nbsp;</td>
+            <td valign="middle" colspan="2">&nbsp;</td>
         </tr>
         <tr valign="middle">
-            <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
+            <td align="right" valign="middle" class="style1"><b>Intl. Rep.:</b> </td>
             <td valign="middle">  
-                <select name="hostCompanyID" class="style1">
-                    <option value="ALL">---  All Host Companies  ---</option>
-                    <cfloop query="qGetHostCompanyList">
-                    	<option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
+                <select name="userID" class="style1">
+                    <option value="All">---  All International Representatives  ---</option>
+                    <cfloop query="qGetIntlRepList">
+                        <option value="#qGetIntlRepList.userID#" <cfif qGetIntlRepList.userID EQ FORM.userID> selected</cfif> >#qGetIntlRepList.businessname#</option>
                     </cfloop>
                 </select>
             </td>
@@ -266,28 +263,28 @@
 
 	<cfsavecontent variable="reportContent">
 		
-        <cfloop query="qGetHostCompany">
+        <cfloop query="qGetIntlRep">
 			            
 			<cfscript>
                 // Total By Agent
-                qTotalPerHostCompany = filterGetAllCandidates(placementType='ALL', hostCompanyID=qGetHostCompany.hostCompanyID);
+                qTotalPerIntlRep = filterGetAllCandidates(placementType='ALL', intRep=qGetIntlRep.userID);
 				
-				totalPerHostCompanyCSBPlacements = filterGetAllCandidates(placementType='CSB-Placement', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
+				totalPerIntlRepCSBPlacements = filterGetAllCandidates(placementType='CSB-Placement', intRep=qGetIntlRep.userID).recordCount;
                 
-                totalPerHostCompanySelfPlacements = filterGetAllCandidates(placementType='Self-Placement', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
+                totalPerIntlRepSelfPlacements = filterGetAllCandidates(placementType='Self-Placement', intRep=qGetIntlRep.userID).recordCount;
                 
-                totalPerHostCompanyWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
+                totalPerIntlRepWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', intRep=qGetIntlRep.userID).recordCount;
             </cfscript>
 
             <table width=99% cellpadding="4" cellspacing=0 align="center"> 
                 <tr>
                     <td colspan="12">
                         <small>
-                            <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
+                            <strong>#qGetIntlRep.businessName# - Total candidates: #qTotalPerIntlRep.recordCount#</strong> 
                             (
-                                #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
-                                #totalPerHostCompanySelfPlacements# Self; &nbsp; 
-                                #totalPerHostCompanyWalkInPlacements# Walk-In 
+                                #totalPerIntlRepCSBPlacements# CSB; &nbsp; 
+                                #totalPerIntlRepSelfPlacements# Self; &nbsp; 
+                                #totalPerIntlRepWalkInPlacements# Walk-In 
                             )
                         </small>
                     </td>
@@ -297,20 +294,20 @@
                     <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
                     <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
                     <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
-                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Intl. Rep.</td>
+                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Host Company</td>
                     <td width="35%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Flight Information</td>
                 </tr>
-                <cfloop query="qTotalPerHostCompany">
+                <cfloop query="qTotalPerIntlRep">
                 	<cfscript>
 						// Get Flight Information
-						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType);
+						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerIntlRep.candidateID, flightType=FORM.flightType);
 					</cfscript>
-                    <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
-                        <td><span class="style1">#qTotalPerHostCompany.countryname#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.businessName#</span></td>                        
+                    <tr <cfif qTotalPerIntlRep.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
+                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.candidateID#</a></td>
+                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.lastname#</a></td>
+                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.firstname#</a></td>
+                        <td><span class="style1">#qTotalPerIntlRep.countryname#</span></td>
+                        <td><span class="style1">#qTotalPerIntlRep.hostCompanyName#</span></td>                        
                         <td>
                         	<span class="style1">
                             	<cfif qGetFlightInfo.recordCount>

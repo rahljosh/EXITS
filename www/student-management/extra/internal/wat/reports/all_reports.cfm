@@ -22,6 +22,8 @@
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/ds2019_verification_wt" class="style4">- DS-2019 Verification Report</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Confirmation</a></p>
+                        
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flightInfoByIntlRep" class="style4">- Candidate Flight Information</a></p>
                     </td>
 				</tr>
 			</table>
@@ -44,7 +46,7 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- All cancelled students</a></p>
                         
-                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInformationByHC" class="style4">- Candidate Flight Information</a></p>
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Candidate Flight Information</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInfo" class="style4">- Arrival Information</a></p>
  	               </td>
