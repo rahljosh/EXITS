@@ -66,7 +66,7 @@
             </td>
         </tr>
         <tr valign="middle" height="24">
-			<td valign="middle" colspan=2>&nbsp;</td>
+			<td valign="middle" colspan="2">&nbsp;</td>
         </tr>
         <tr valign="middle">
             <td align="right" valign="middle" class="style1"><b>International Rep:</b> </td>
