@@ -355,7 +355,15 @@
     <fieldset>
        
         <legend>Personal Data</legend>
-		
+
+        <!--- Intl. Rep. --->
+        <cfif printApplication>
+            <div class="field">
+                <label>CSB International Representative <em>*</em></label> 
+                <div class="printField">#APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName# &nbsp;</div>
+            </div>
+        </cfif>
+
         <!--- Picture --->	
         <div class="field">
         	<label for="lastName">Picture <em>*</em></label> 
@@ -369,7 +377,7 @@
                     <img id="thumb" width="150" height="150" src="../../pics/onlineApp/noPicture.jpg">
                 </cfif>            
             </div>
-
+            
             <p class="note">(smiling - max size 2mb)</p>
             
             <div class="divUploadPicture" <cfif printApplication> style="display:none;" </cfif> >

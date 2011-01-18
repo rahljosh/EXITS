@@ -6,6 +6,8 @@
 	<!--- Param URL Variable --->
 	<cfparam name="URL.status" default="1">
 	<cfparam name="URL.order" default="lastName">
+	<cfparam name="URL.isProgramUnassigned" default="0">
+	<cfparam name="URL.isCompanyUnassigned" default="0">
 
 	<!--- Inactivate Students --->
     <cfquery name="qSetExpiredCandidates" datasource="mysql">
@@ -60,6 +62,27 @@
         <cfif NOT ListFind("1,2,3,4", CLIENT.userType)>
             AND
                 ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">            
+        </cfif>
+ 
+        <!--- Unassigned Program --->
+        <cfif VAL(URL.isProgramUnassigned)>
+            AND
+                ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">            
+        </cfif>
+
+        <!--- Unassigned Company --->
+        <cfif VAL(URL.isCompanyUnassigned)>
+            AND
+                ec.candidateID NOT IN ( 
+                						SELECT 	
+                                        	candidateID 
+                                        FROM 
+                                        	extra_candidate_place_company 
+                                        WHERE 
+                                        	candidateID = ec.candidateID AND status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
+                                        GROUP BY
+                                        	candidateID
+									)
         </cfif>
             
         ORDER BY 
@@ -118,8 +141,8 @@
 
 		<table width=95% cellpadding=0 cellspacing=0 border=0 align="center">
 			<tr valign=middle height=24>
-				<td width="57%" valign="middle" bgcolor="##E4E4E4" class="title1">&nbsp;Candidates</td>
-				<td width="42%" align="right" valign="top" bgcolor="##E4E4E4" class="style1">
+				<td width="40%" valign="middle" bgcolor="##E4E4E4" class="title1">&nbsp;Candidates</td>
+				<td width="59%" align="right" valign="top" bgcolor="##E4E4E4" class="style1">
 					#qCandidates.recordcount#
 					<cfif URL.status EQ 1>
                     	<b>Active</b>
@@ -130,10 +153,25 @@
 					</cfif>
 					candidate<cfif qCandidates.recordcount GT 1>s</cfif> found &nbsp; <br>
                     
-					Filter: &nbsp; <cfif URL.status NEQ 'All'><a href="?curdoc=candidate/candidates&placed=all&status=all" class="style4"></cfif>All</a> 
-					&nbsp; | &nbsp; <cfif URL.status NEQ 1><a href="?curdoc=candidate/candidates&status=1" class="style4" ></cfif>Active</a> 
-					&nbsp; | &nbsp; <cfif URL.status NEQ 0><a href="?curdoc=candidate/candidates&status=0" class="style4" ></cfif>Inactive</a> 					
-					&nbsp; | &nbsp; <cfif URL.status NEQ 'canceled'><a href="?curdoc=candidate/candidates&status=canceled" class="style4" ></cfif>Cancelled</a>&nbsp;</td>
+					Filter: &nbsp; 
+					<a href="?curdoc=candidate/candidates&placed=all&status=all&isProgramUnassigned=#URL.isProgramUnassigned#&isCompanyUnassigned=#URL.isCompanyUnassigned#" <cfif URL.status EQ 'All'>class="filterOn"<cfelse>class="filterOff"</cfif> class="filterOff">All</a>
+					&nbsp; | &nbsp; 
+					
+                    <a href="?curdoc=candidate/candidates&status=1&isProgramUnassigned=#URL.isProgramUnassigned#&isCompanyUnassigned=#URL.isCompanyUnassigned#" <cfif URL.status EQ 1>class="filterOn"<cfelse>class="filterOff"</cfif> >Active</a>
+					&nbsp; | &nbsp; 
+					
+                    <a href="?curdoc=candidate/candidates&status=0&isProgramUnassigned=#URL.isProgramUnassigned#&isCompanyUnassigned=#URL.isCompanyUnassigned#" <cfif URL.status EQ 0>class="filterOn"<cfelse>class="filterOff"</cfif> >Inactive</a>
+					&nbsp; | &nbsp; 
+					
+                    <a href="?curdoc=candidate/candidates&status=canceled&isProgramUnassigned=#URL.isProgramUnassigned#&isCompanyUnassigned=#URL.isCompanyUnassigned#" <cfif URL.status EQ 'canceled'>class="filterOn"<cfelse>class="filterOff"</cfif> >Cancelled</a>
+                    &nbsp; | &nbsp; 
+					
+                    <a href="?curdoc=candidate/candidates&status=#URL.status#&isProgramUnassigned=#Int(NOT VAL(URL.isProgramUnassigned))#&isCompanyUnassigned=#URL.isCompanyUnassigned#" <cfif VAL(URL.isProgramUnassigned)>class="filterOn"<cfelse>class="filterOff"</cfif> >Unassigned Program</a>
+                    &nbsp; | &nbsp; 
+					
+                    <a href="?curdoc=candidate/candidates&status=#URL.status#&isProgramUnassigned=#URL.isProgramUnassigned#&isCompanyUnassigned=#Int(NOT VAL(URL.isCompanyUnassigned))#" <cfif VAL(URL.isCompanyUnassigned)>class="filterOn"<cfelse>class="filterOff"</cfif> >Unassigned Host Company</a>
+                    &nbsp;
+                </td>
 				<td width="1%"></td>
 			</tr>
 		</table>

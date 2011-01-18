@@ -38,6 +38,18 @@ a:active {
 	color: #006666;
 	font-weight: bold;
 }
+.filterOff {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #006666;
+	font-weight: bold;
+}
+.filterOn {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #fa7d15;
+	font-weight: bold;
+}
 .style4Big {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
