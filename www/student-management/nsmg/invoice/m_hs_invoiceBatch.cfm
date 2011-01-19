@@ -527,7 +527,7 @@ smg_charges
 					WHERE stuid = #getHSstud.studentid#
 					AND programid = #getHSstud.programid#
 					AND agentid = #getHSstud.intrep#
-					AND companyid = #getHSstud.companyid#
+					<!--- AND companyid = #getHSstud.companyid# --->
 					AND type = 'program fee'
 					AND active = 1
 					</cfquery>
