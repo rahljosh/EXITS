@@ -62,6 +62,56 @@
 			return qGetFlightInformationByCandidateID;
 		</cfscript>
 	</cffunction>
+
+
+	<cffunction name="getDailyFlightReport" access="public" returntype="query" output="false" hint="Emails flight information report updated/entered in the last 25 hours">
+        <cfargument name="flightType" required="yes" hint="arrival/departure">
+
+        <cfquery 
+			name="qGetDailyFlightReport" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+                    ec.candidateID,
+                    ec.firstName,
+                    ec.lastName,
+                    u.businessName,
+					efi.ID,
+                    efi.programID,
+                    efi.flightType,
+                    DATE_FORMAT(efi.departDate, '%c/%e/%Y') AS departDate,
+                    efi.departCity,
+                    efi.departAirportCode,
+                    TIME_FORMAT(efi.departTime, '%h:%i %p') AS departTime,       
+                    efi.flightNumber,
+                    efi.arriveCity,
+                    efi.arriveAirportCode,                    
+                    TIME_FORMAT(efi.arriveTime, '%h:%i %p') AS arriveTime,                    
+                    IF(efi.isOvernightFlight,' Yes ',' No ') AS isOvernightFlight,
+                    efi.dateCreated,
+                    efi.dateUpdated
+                FROM 
+                    extra_candidates ec
+                INNER JOIN
+                	extra_flight_information efi ON ec.candidateID = efi.candidateID
+                    	AND
+                        	efi.dateUpdated >= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -25 HOUR)    
+				INNER JOIN
+                	smg_users u ON u.userID = ec.intRep
+                WHERE
+                    flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
+                ORDER BY
+                	u.businessName,
+                    ec.candidateID,	
+                	efi.departDate,
+                    efi.departTime                    
+		</cfquery>
+
+        <cfscript>
+			return qGetDailyFlightReport;
+		</cfscript>
+        
+	</cffunction>
+
 		
      
     <!--- Remote Functions --->    
