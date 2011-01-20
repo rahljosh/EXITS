@@ -173,30 +173,31 @@ ORDER BY candidateid
          
             <!--- rules trainee charges --->
             <!--- set insurance & program fee for trainee --->
+            <!--- new program fees entered on 01/20/2011 (Sergei's e-mail from 01/20/2011) --->
             <cfswitch expression="#getTraineeCand.programid#">
             	<cfcase value="194">
                 	<cfset insuranceCost = 210>
-                    <cfset programFee = 1600>
+                    <cfset programFee = 1650>
                 </cfcase>
             	<cfcase value="195">
                 	<cfset insuranceCost = 210>
-                    <cfset programFee = 735>
+                    <cfset programFee = 885>
                 </cfcase>
             	<cfcase value="196">
                 	<cfset insuranceCost = 420>
-                    <cfset programFee = 1840>
+                    <cfset programFee = 1890>
                 </cfcase>
             	<cfcase value="197">
                 	<cfset insuranceCost = 420>
-                    <cfset programFee = 915>
+                    <cfset programFee = 1065>
                 </cfcase>
             	<cfcase value="198">
                 	<cfset insuranceCost = 630>
-                    <cfset programFee = 2055>
+                    <cfset programFee = 2105>
                 </cfcase>
             	<cfcase value="199">
                 	<cfset insuranceCost = 630>
-                    <cfset programFee = 1165>
+                    <cfset programFee = 1315>
                 </cfcase>
             </cfswitch>
             
