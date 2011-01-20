@@ -16,7 +16,7 @@
         FROM 
             smg_programs
         WHERE 
-            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.programid#">
+            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqid.programid)#">
         ORDER BY 
             programname
     </cfquery>
@@ -27,7 +27,7 @@
         FROM 
         	extra_candidate_place_company
         WHERE 
-        	candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.candidateid#">
+        	candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqid.candidateid)#">
         ORDER BY 
         	candcompid DESC
     </Cfquery>
@@ -47,7 +47,7 @@
         AND 
         	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
-        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.intrep#">
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqid.intrep)#">
     </Cfquery>
     
     <cfquery name="qRequestedPlacement" datasource="mysql">
@@ -69,7 +69,7 @@
         FROM 
         	countrylist
 		WHERE
-        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.home_country#">
+        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqid.home_country)#">
     </cfquery>
 	
     <cfquery name="qBirthCountry" dbtype="query">
@@ -79,7 +79,7 @@
         FROM 
         	countrylist
 		WHERE
-        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.birth_country#">
+        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqid.birth_country)#">
     </cfquery>
 
     <cfquery name="qCitizenCountry" dbtype="query">
@@ -89,7 +89,7 @@
         FROM 
         	countrylist
 		WHERE
-        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.citizen_country#">
+        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqid.citizen_country)#">
     </cfquery>
 
     <cfquery name="qResidenceCountry" dbtype="query">
@@ -99,7 +99,7 @@
         FROM 
         	countrylist
 		WHERE
-        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.residence_country#">
+        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqid.residence_country)#">
     </cfquery>
 
 </cfsilent>
