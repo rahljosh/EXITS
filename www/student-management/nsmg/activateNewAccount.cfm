@@ -23,13 +23,13 @@ where userid = #url.userid#
  from smg_users where userid = #userEmail.whocreated#
   </Cfquery>               
 
-
+<Cfoutput>
 <cfsavecontent variable="email_message">
  Just a quick note to let you know that the account for #userEmail.firstname# #userEmail.lastname# has been approved and is active. 
  
 
 </cfsavecontent>
-			
+</Cfoutput>			
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#created.email#">
