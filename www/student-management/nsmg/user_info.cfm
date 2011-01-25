@@ -1210,6 +1210,8 @@
                                                     <option value="Positive Supervisions">Positive Supervisions</option>
                                                     <option value="Student Issues and Resolutions">Student Issues and Resolutions</option>
                                                     <option value="Student Orientations">Student Orientations</option>
+                                                    <option value="Program Manager">Program Manager</option>
+                                                    <option value="New DOS">New DOS</option>
                                                 </select>
                                              </td>
                                         </tr>
