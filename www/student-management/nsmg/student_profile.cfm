@@ -451,6 +451,11 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                     </td>
                 </tr>
                 <tr>	
+                    <td valign="top">
+                      Additional Info: &nbsp; <textarea name="addInfo" cols="28" rows="5"></textarea>
+                    </td>
+                </tr>
+                <tr>	
                     <td>
                         <input type="checkbox" name="isIncludeLetters" id="isIncludeLetters" value="1" <cfif FORM.isIncludeLetters> checked="checked" </cfif> /> 
                         &nbsp; 
@@ -544,9 +549,12 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                 <cfelse>
                     <p>Please see attached student profile.</p>
                 </cfif>
-                
+              
                 <p>Student Name: #qGetStudentInfo.firstName# (###qGetStudentInfo.studentid#) student profile attached.</p>
                 
+                <Cfif form.addInfo is not''>
+                <p>Additional Info: #form.addInfo#</p>
+                </Cfif>
                 <p>
                     Thank you, <br />
                     #qGetCompany.companyName#   
