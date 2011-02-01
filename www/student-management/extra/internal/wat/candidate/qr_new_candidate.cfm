@@ -1,7 +1,7 @@
 <cfparam name="FORM.wat_doc_walk_in_agreement" default="0">
 
 <cfquery name="check_new_candidate" datasource="mysql">
-	SELECT candidateid, firstname, lastname, dob
+	SELECT candidateid, firstname, lastname, dob, uniqueid
 	FROM extra_candidates
 	WHERE firstname = '#form.firstname#' 
 		AND	lastname = '#form.lastname#'
@@ -16,7 +16,7 @@
 		<tr>
 			<td align="center">
 				<cfoutput query="check_new_candidate">
-				<a href="?curdoc=forms/candidate_info&candidateid=#check_new_candidate.candidateid#">#firstname# #lastname# (#candidateid#)</a>
+				<a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#check_new_candidate.uniqueid#">#firstname# #lastname# (#candidateid#)</a>
 				</cfoutput>
 			</td>
 		</tr>
