@@ -33,11 +33,7 @@
 	WHERE stu.studentid = #client.studentid#
 </cfquery>
 
-<cfquery name="season" datasource="#application.dsn#">
-select seasonid
-from smg_programs
-where programid = #get_student_info.programid#
-</cfquery>
+
 <cfquery name="school_info" datasource="#application.dsn#">
 select sc.schoolname, sc.schoolid, sd.year_begins, sd.semester_begins, sd.semester_ends, sd.year_ends
 from smg_schools sc
@@ -218,7 +214,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 							<font color="CC3300">Host Family (#hostid#) was not found in the system.</font>						
 						<cfelse>
 							<cfif get_student_info.welcome_family EQ 1>*** This is a Welcome Family ***<br></cfif>	                       
-                            <cfif client.totalfam eq 1>
+                            <cfif client.totalfam eq 1 and season.seasonid gt 8>
                             	<font color="##CC0000">*** Single Person Placement***<br></font>
                             </cfif>
 							#hostlastname# (#hostid#)

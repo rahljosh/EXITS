@@ -106,7 +106,7 @@ where programid = #get_student_info.programid#
 </cfif>
 
 <input type="hidden" name="hostid" value="#get_student_info.hostid#">
-<cfif client.totalfam eq 1>
+<cfif client.totalfam eq 1 and season.seasonid gt 8>
 <div class="alert">
 <h1>Single Person Placement - additional screening will be required.</h1>
 <em>2 additional references and  Single Person Placement Authorization Form required</em> </div>
@@ -290,6 +290,16 @@ where programid = #get_student_info.programid#
 		<td>&nbsp;</td>
 		<td>Date of Reference Check 2</td>
 		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_check2" size=9 value="#DateFormat(doc_ref_check2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+	</tr>	
+    <tr> <!---- 3 - Income Verificaiont --->
+		<td><Cfif #get_student_info.doc_income_ver_date# EQ ''>
+				<input type="checkbox" name="income_ver" OnClick="CheckDates('income_ver', 'doc_income_ver_date');" <cfif edit is 'no'>disabled</cfif>>
+			<cfelse>
+				<input type="checkbox" name="income_ver" OnClick="CheckDates('income_ver', 'doc_income_ver_date');" checked <cfif edit is 'no'>disabled</cfif>>		
+			</cfif>
+		</td>
+		<td>Income Verification Form</td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_income_ver_date" size=9 value="#DateFormat(doc_income_ver_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>		
 </table><br>
 
