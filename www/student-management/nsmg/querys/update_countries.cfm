@@ -6,7 +6,8 @@
 	UPDATE  smg_countrylist 
 		SET  countrycode = '#UCASE(Evaluate("form." & x & "_code"))#',
 		     seviscode = '#UCASE(Evaluate("form." & x & "_sevis"))#',
-			 continent = '#Evaluate("form." & x & "_continent")#'
+			 continent = '#Evaluate("form." & x & "_continent")#',
+             funFact = '#Evaluate("form." & x & "_funFact")#'
 	WHERE countryid = '#Evaluate("form." & x & "_countryid")#'
 	</Cfquery>
 	
