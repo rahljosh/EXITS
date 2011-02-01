@@ -175,6 +175,10 @@
 		<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 			AND (s.dateplaced between #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#) 
 		</cfif>
+     <cfif LEN(FORM.regionID)>
+        AND 
+            s.regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+    </cfif>
 	AND 
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
 	ORDER BY s.familylastname, s.firstname	

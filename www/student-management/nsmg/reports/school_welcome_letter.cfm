@@ -9,13 +9,14 @@
 
 <cfquery name="get_letter_info" datasource="mysql">
 	SELECT stu.studentid, stu.familylastname, stu.firstname, stu.arearepid, stu.regionassigned, stu.hostid, 
-		stu.schoolid, stu.grades, stu.countryresident, stu.sex, stu.dateplaced,
+		stu.schoolid, stu.grades, stu.countryresident, stu.sex, stu.dateplaced, stu.regionassigned,
 		h.hostid, h.familylastname AS h_lastname, h.address AS h_address, h.address2 AS h_address2, h.city AS h_city, h.state AS h_state, h.zip AS h_zip, h.phone as h_phone,
 		sc.schoolid, sc.schoolname, sc.principal, sc.address AS sc_address, sc.address2 AS sc_address2, sc.city AS sc_city, sc.state AS sc_state, sc.zip AS sc_zip, sc.phone AS sc_phone,
 		ar.userid, ar.lastname AS ar_lastname, ar.firstname AS ar_firstname, ar.address AS ar_address, ar.address2 AS ar_address2, ar.city AS ar_city, 
-		ar.state AS ar_state, ar.zip AS ar_zip, ar.phone AS ar_phone, ar.email AS ar_email, 
+		ar.state AS ar_state, ar.zip AS ar_zip, ar.phone AS ar_phone, ar.email AS ar_email, r.regionname,
 		c.countryname
 	FROM smg_students stu
+    INNER JOIN smg_regions r on stu.regionassigned = r.regionid
 	INNER JOIN smg_hosts h ON stu.hostid = h.hostid
 	INNER JOIN smg_schools sc ON stu.schoolid = sc.schoolid
 	INNER JOIN smg_users ar ON stu.arearepid = ar.userid
@@ -71,7 +72,7 @@
 <!--- host family + Area Rep --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 	<tr>
-		<td align="left">
+		<td align="left" valign="top">
 			<b>Host Family:</b><br>
 			#get_letter_info.h_lastname# Family<br>
 			#get_letter_info.h_address#<br>
@@ -85,7 +86,7 @@
 			#get_letter_info.ar_address#<br>
 			<Cfif get_letter_info.ar_address2 is ''><cfelse>#get_letter_info.ar_address2#<br></Cfif>
 			#get_letter_info.ar_city#, #get_letter_info.ar_state# #get_letter_info.ar_zip#<br>
-			<Cfif get_letter_info.ar_phone is ''><cfelse>Phone: &nbsp; #get_letter_info.ar_phone#<br></Cfif>
+            <Cfif get_letter_info.ar_phone is ''><cfelse>Phone: &nbsp; #get_letter_info.ar_phone#<br></Cfif>
             <Cfif get_letter_info.ar_email is ''><cfelse>Email: &nbsp; #get_letter_info.ar_email#<br></Cfif>
 		</div></td>
 	</tr>

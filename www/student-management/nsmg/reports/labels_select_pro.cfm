@@ -615,6 +615,10 @@
                                     <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
+                               <tr>
+                            	<td>Region:</td>
+                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" multiple="yes" size="5" queryPosition="below"></cfselect></td>
+                            </tr>
                             <tr><td colspan="2"><font size="-2" color="000066">* Date Placed (Leave blank for all)</font></td></tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
                         </table>
@@ -640,6 +644,10 @@
                                     <span style="float:left;">To: &nbsp;</span>
                                     <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
                                 </td>
+                            </tr>
+                                 <tr>
+                            	<td>Region:</td>
+                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" multiple="yes" size="5" queryPosition="below"></cfselect></td>
                             </tr>
                             <tr><td colspan="2"><font size="-2" color="000066">* Date Placed (Leave blank for all)</font></td></tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>

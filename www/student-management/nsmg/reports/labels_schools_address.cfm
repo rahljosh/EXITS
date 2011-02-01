@@ -75,6 +75,10 @@
                     #CreateODBCDateTime(FORM.date2)#
             ) 
         </cfif>
+             <cfif LEN(FORM.regionID)>
+        AND 
+            s.regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+    </cfif>
         ORDER BY 
             s.familylastname, 
             s.firstname	
