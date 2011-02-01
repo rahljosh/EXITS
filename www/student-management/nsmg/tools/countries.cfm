@@ -1,4 +1,4 @@
-<cfif #client.usertype# LT 3>
+<cfif #client.usertype# LTe 4>
 	
 	<cfquery name="countries" datasource="MySql">
 	SELECT *
@@ -17,11 +17,12 @@
 	<input type="hidden" name="count" value=#countries.recordcount#>
 	<table div align="center" cellpadding= 4 cellspacing=0 width="95%">
 		<tr bgcolor="00003C">
-			<td width="36%"><font color="white">Country</font></td>
-			<td width="17%" align="center"><font color="white">Caremed Code</font></td>
-			<td width="17%" align="center"><font color="white">SEVIS Code</font></td>
-			<td width="23%" align="center"><font color="white">Continent</font></td>
-			<td width="7%" align="center"><font color="white">Delete</font></td>
+			<td ><font color="white">Country</font></td>
+			<td  align="center"><font color="white">Caremed Code</font></td>
+			<td  align="center"><font color="white">SEVIS Code</font></td>
+			<td  align="center"><font color="white">Continent</font></td>
+            <td  align="center"><font color="white">Fun Fact</font></td>
+			<td  align="center"><font color="white">Delete</font></td>
 		</tr>
 		<cfloop query="countries">
 		<tr bgcolor="#iif(countries.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
@@ -40,13 +41,14 @@
 			</select>
 			<!--- <input type=text name="#countries.currentrow#_continent" size="12"  maxlength="30" value="#countries.continent#"> --->
 			</td>
+            <td align="Center"><input type=text name="#countries.currentrow#_funFact" value="#funFact#" size=40 /> </td>
 			<td align="center"><cfinput type="checkbox" name="delete#countries.currentrow#"></td>
 		</tr>
 		</cfloop>
 		<Tr>
 	</cfoutput>		
 		<td><input name="Submit" type="image" src="pics/update.gif" border=0></td></cfform>
-		<td colspan="3"><form action="index.cfm?curdoc=forms/" method="post"><input type="submit" value="   Add Country   " disabled></form></td>
+		<td colspan="3"><form action="index.cfm?curdoc=forms/" method="post"><!----<input type="submit" value="   Add Country   " >----></form></td>
 		</Tr>
 	</table>	
 <cfelse>
