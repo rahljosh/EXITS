@@ -73,7 +73,7 @@ school.schoolname
 from smg_students s 
 left join smg_hosts h on h.hostid = s.hostid
 left join smg_users u on u.userid = s.arearepid
-left join smg_schools school on school.schoolid = h.schoolid
+left join smg_schools school on school.schoolid = s.schoolid
 where s.studentid = #url.student# 
 </cfquery>
 

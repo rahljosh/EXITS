@@ -9,7 +9,7 @@
 	<cfif not isDefined("form.usertype")>
 		<cfset errorMsg = 'Please select an Access Level.'>
 	<cfelse>
-		<cflocation url="index.cfm?curdoc=forms/user_form&usertype=#form.usertype#" addtoken="No">
+		<cflocation url="index.cfm?curdoc=forms/user_form&usertype=#form.usertype#&new" addtoken="No">
 	</cfif>
 </cfif>
 

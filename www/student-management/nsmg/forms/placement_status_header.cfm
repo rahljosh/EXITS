@@ -3,6 +3,11 @@
 
 <!--- Student Info --->
 <cfinclude template="../querys/get_student_info.cfm">
+<cfquery name="season" datasource="#application.dsn#">
+select smgseasonid
+from smg_programs
+where programid = #get_student_info.programid#
+</cfquery>
 	<!----Host Info---->
 <cfquery name="get_host_info" datasource="MySQL">
 	SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.hostid, stu.arearepid, stu.placerepid, stu.schoolid, 

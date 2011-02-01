@@ -19,9 +19,10 @@
 <!--- Process Form Submission --->
 <cfif isDefined("form.submitted")>
 	<!----Send email if address has changed---->
-	
+  
 		<cfif (form.address neq form.prev_address or form.address2 neq form.prev_address2 or 
-                form.city neq form.prev_city or form.state neq form.prev_state or form.zip neq form.prev_zip) and not isDefined('new')>
+                form.city neq form.prev_city or form.state neq form.prev_state or form.zip neq form.prev_zip) and isDefined('url.new')>
+            
              <cfoutput>
               <cfquery name="regional_Advisor_emails" datasource="#application.dsn#">
               	select uar.regionid
@@ -63,10 +64,14 @@
 			
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <!----
+          <Cfif client.companyid eq 10>
+          		<cfinvokeargument name="email_to" value="stacy@case-usa.org">
+          <Cfelse>
                 <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
-				---->
+		  </Cfif>				
+					<!----
                 <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+				---->
                 <cfinvokeargument name="email_subject" value="Notice of Address Change">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 <cfinvokeargument name="email_from" value="#client.support_email#">
@@ -83,6 +88,7 @@
     <cfparam name="form.invoice_access" default="0">
     <cfparam name="form.active" default="0">
     <cfparam name="form.usebilling" default="0">
+    
 
 	<cfif isDefined("form.username")>
         <cfquery name="check_username" datasource="#application.dsn#">
@@ -375,7 +381,6 @@
     
     <!--- we're coming from add_user.cfm --->
     <cfset form.usertype = url.usertype>
-    
     <cfset temp_password = "temp#RandRange(100000, 999999)#">
     
     <cfset form.password = temp_password>

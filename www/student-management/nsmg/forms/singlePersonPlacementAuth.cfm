@@ -24,7 +24,7 @@
     <Tr>
         <Td>
        
-          <table align="center" background="../pics/short_profile_header.jpg">
+          <table align="center" background="../pics/#client.companyid#_short_profile_header.jpg">
                 <tr>
                     
                     <td class="bottom_right" width=800 height=160>
@@ -39,9 +39,9 @@
                 	<Td colspan=3><p>The U.S Department of State requires Student exchange visitors and natural parents agree in writing to a single person placement. A single person is defined as someone living alone without children or family members.<sup>*</sup></p><br />
                     <p>I, <strong><u>#studentfaminfo.firstname# #studentfaminfo.familylastname#</u></strong>, agree to live with a
 single person during my exchange year. I understand this type of placement has
-been additionally screened by ISE .</p><br />
+been additionally screened by #client.companyshort#.</p><br />
 <p><cfif studentFamInfo.fathersname is not '' AND studentFamInfo.mothersname is not ''>We<cfelse>I</cfif>, <u><strong>#studentFamInfo.fathersname# <cfif studentFamInfo.fathersname is not ''>&amp;</cfif> #studentFamInfo.mothersname#</strong></u>, agree to a single person placement for our son or daughter
-during his/her exchange year. I/we understand this type of placement has been additionally screened by ISE.</p>
+during his/her exchange year. I/we understand this type of placement has been additionally screened by #client.companyshort#.</p>
         </Td>
 	</Tr>
  	<tr>
