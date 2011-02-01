@@ -24,9 +24,9 @@ body {font:Arial, Helvetica, sans-serif;}
 		<h2>Congratulations!</h2>
 		You application has passesd this intial check for information. <br><br> Your application has been approved and submitted to 
 		your local representative.  You will receive an email shortly confirming that your applicaiton has been submitted. 
-		<br><br>You can check on your application by logging into <a href="#CLIENT.exits_url#">www.stuent-management.com</a>.   
+		<br><br>You can check on your application by logging into <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a>.   
 		<br>
-		<div align="center"><a href="../../index.cfm">Return to Application Status<</a></div>
+		<div align="center"><a href="../../index.cfm">Return to Application Status</a></div>
 		<cfelse>
 		<br>
 		Unfortunatly there are #client.missingitems# missing items on your application that need to be filled out before you can 

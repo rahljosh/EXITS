@@ -125,7 +125,7 @@
             
 			<!--- Filter for Case and WEP --->
             <!---Reomoved WEP filter, as a student isn't assigned to WEP as a oompany, only as an int rep---->
-            <cfif ListFind("10", CLIENT.companyID)>
+            <cfif ListFind("10,11", CLIENT.companyID)>
                 AND 
                     s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             <!--- show All but WEP (companyID 11) applications --->
