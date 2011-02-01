@@ -137,13 +137,15 @@
    
       <cfquery name="details" datasource="#application.dsn#">
         select st.studentid, st.tripid, st.cc, st.cc_year, st.cc_month, st.date, st.ip, st.verified, st.paid, 
-        st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, stu.familylastname, stu.firstname, smg_tours.tour_name, stu.email
+        st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, stu.familylastname, stu.firstname, smg_tours.tour_name, stu.email, smg_hosts.email host_email
         from student_tours st
         left join smg_students stu on stu.studentid = st.studentid
         left join smg_tours on smg_tours.tour_id = st.tripid
+        left join smg_hosts on smg_hosts.hostid = stu.hostid
         where id = #url.id#
         </cfquery>
-
+	
+    	
         <cfsavecontent variable="email_message">
         <cfoutput>				
         <h3>Thank you!</h3>
@@ -172,7 +174,7 @@
         </cfsavecontent>
         
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-        	<cfinvokeargument name="email_to" value="#details.email#">
+        	<cfinvokeargument name="email_to" value="#details.email#, #details.host_email#">
             <cfinvokeargument name="email_cc" value="brendan@iseusa.com">
             <cfinvokeargument name="email_replyto" value="#details.email#">
             <cfinvokeargument name="email_subject" value="Payment Processed">
@@ -190,10 +192,11 @@
 
 <cfquery name="details" datasource="#application.dsn#">
 select st.studentid, st.tripid, st.cc, st.cc_year, st.cc_month, st.date, st.ip, st.verified, st.paid, 
-st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, stu.familylastname, stu.firstname, stu.hostid, smg_tours.tour_name, stu.email
+st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, stu.familylastname, stu.firstname, stu.hostid, smg_tours.tour_name, stu.email, smg_hosts.email as host_email
 from student_tours st
 left join smg_students stu on stu.studentid = st.studentid
 left join smg_tours on smg_tours.tour_id = st.tripid
+left join smg_hosts on smg_hosts.hostid = stu.hostid
 where id = #url.id#
 </cfquery>
 
@@ -234,7 +237,7 @@ where tour_status <> 'inactive'
         </cfsavecontent>
         
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="#details.email#">
+            <cfinvokeargument name="email_to" value="#details.email#, #details.host_email#">
             <cfinvokeargument name="email_cc" value="brendan@iseusa.com">
             <cfinvokeargument name="email_replyto" value="#client.email#">
             <cfinvokeargument name="email_subject" value="Permission Forms">
