@@ -7,6 +7,7 @@
             s.familylastname as student_lastname, 
             s.regionassigned, 
             s.dateplaced,
+            s.arearepid,
 			h.familylastname, 
             h.fatherfirstname, 
             h.fatherlastname, 
@@ -30,7 +31,7 @@
         WHERE 
         	s.active = '1'		
         AND 
-        	s.host_fam_approved > 4			
+        	s.host_fam_approved between  5 and 98		
 		
             AND
                 s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
@@ -38,19 +39,26 @@
 		ORDER BY 
         	host_fam_approved
 	</cfquery>
+    <cfdump var="#pending_hosts#">
     <cfoutput>
     <Cfloop query="pending_hosts">
     <cfset DisplayEndDate = #DateAdd('d', 4, '#dateplaced#')#>
     #studentid# #student_lastname# #DateFormat(dateplaced, 'mm/dd/yy')# #TimeFormat(dateplaced, 'hh:mm:ss')# 
-	<cfif DateDiff('d', '#DisplayEndDate#', '#now()#') gt 4>
-    	<cfquery datasource="mysql">
+	<cfif #DisplayEndDate# lt #now()#>
+
+        <cfquery datasource="mysql">
         update smg_students
         set host_fam_approved = 99
         where studentid = #studentid#
         </cfquery>
-        Reset 
+		
+        Reset
+     
     <cfelse>
-    	Leave
+    	 Leave
     </cfif><Br />
+
+    <br />
     </Cfloop>  
+   
     </cfoutput>

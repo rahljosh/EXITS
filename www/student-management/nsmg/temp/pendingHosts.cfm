@@ -53,4 +53,7 @@
     	Leave
     </cfif><Br />
     </Cfloop>  
+    <cfmail to="josh@pokytrails.com" from="suppoer@iseusa.com" subject="Reject script ran">
+    Reject Script ran succesfully. 
+    </cfmail>
     </cfoutput>

@@ -374,6 +374,35 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
             </td>
         </tr>
     </table>
+     <!--- Siblings --->
+     <Cfquery name="funFact" datasource="#application.dsn#">
+     select funFact 
+     from smg_countrylist
+     where countryid = #qGetStudentInfo.countryResident#
+     </cfquery>
+     <Cfif funFact.funfact is not ''>
+    <table align="center" class="profileTable2">
+        <tr><td colspan="3"><span class="profileTitleSection">FACTS ABOUT #UCase(getCountryResident)#</span></td></tr>     
+        <tr>
+            <td>
+            <cfif FileExists('c:/websites/student-management/nsmg/uploadedfiles/profileFactPics/#qGetStudentInfo.countryResident#.png')>
+               <img src="uploadedfiles/profileFactPics/#qGetStudentInfo.countryResident#.png" align="right" height="150" width="200" />
+            <cfelse>
+            	<cfif FileExists('c:/websites/student-management/nsmg//pics/flags/#qGetStudentInfo.countryResident#.jpg')>
+                    <cfimage source="pics/flags/#qGetStudentInfo.countryResident#.jpg" name="myImage">
+                 <cfelse>                                                    
+                     <cfimage source="pics/flags/0.jpg" name="myImage">
+                </cfif>
+            	<img src="pics/flags/#qGetStudentInfo.countryResident#.jpg" align="right" height="100" width="150" />
+            </cfif>                             
+           #funFact.funFact#                   
+            </td>
+        </tr>
+       
+ 
+       
+    </table>
+    </Cfif>
 		</td>
       </tr>
     </table>

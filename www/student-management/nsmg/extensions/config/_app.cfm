@@ -122,6 +122,7 @@
 	AppPath.welcomePics = AppPath.uploadedFiles & "welcome_pics/";	
 	AppPath.xmlFiles = AppPath.uploadedFiles & "xml_files/";
 	AppPath.tours = AppPath.uploadedFiles & "tours/";
+	AppPath.profileFactPics = AppPath.uploadedFiles & "profileFactPics/";
 
 	// These are used in the student online application
 	AppPath.onlineApp = StructNew();
