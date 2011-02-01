@@ -69,7 +69,13 @@ where companyid = #client.org_code#
 <br>
 <table class=dashed-border align="center" width="550" bgcolor="white">
 	<tr>
-		<td><img src="../pics/#org_info.companyid#_top-email.gif" width="550" height="75"></td>
+		<td> 
+         <cfif cgi.server_name is 'wep.exitsapplication.com'>
+            <img src="../pics/WEPbanner.jpg">
+        <cfelse>
+            <img src="../pics/EXITSbanner.jpg">
+        </cfif>
+        </td>
 	</tr>
 		<cfif client.missingitems EQ 0>
 			<cfif NOT IsDefined('form.app_intl_comments')>
@@ -118,7 +124,7 @@ where companyid = #client.org_code#
 						</cfif>.<br>
 					You will receive an email shortly confirming that your application has been submitted. 
 					<br><br>You can check on your application by logging into <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a>.<br>
-					<div align="center"><a href="../index.cfm">Return to Application Status</a></div>
+					
 				</td>
 			</tr>
 			</cfif>
