@@ -762,7 +762,7 @@
                 <div class="meetStudentsForm">
 					
                     <!--- Check if user is allowed to register --->
-                    <cfif NOT allowAccess>
+                    <cfif allowAccess>
                     	
 						<!--- <h2> Register </h2> --->
                         
