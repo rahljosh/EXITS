@@ -23,6 +23,25 @@
 		// Gets Current Candidate Information
 		qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(candidateID=APPLICATION.CFC.CANDIDATE.getCandidateID());
 		
+		// Gets a list of uploaded PDF files to attach to the online application
+		qGetPDFDocumentList = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(
+			foreignTable=APPLICATION.foreignTable,
+			foreignID=qGetCandidateInfo.candidateID,
+			clientExt='pdf'
+		);
+
+		qGetOtherDocumentList = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(
+			foreignTable=APPLICATION.foreignTable,
+			foreignID=qGetCandidateInfo.candidateID,
+			NotClientExt='pdf'
+		);
+		
+		// Set File name
+		PDFFileName = 'CSB-WAT-##' & qGetCandidateInfo.candidateID & '-' & qGetCandidateInfo.firstName & qGetCandidateInfo.lastName & '-OnlineApplication.pdf';
+		
+		// Set File Path
+		PDFFilePath = APPLICATION.PATH.uploadDocumentTemp & PDFFileName;
+
 		// Make sure they are not going to process any updates
 		FORM.submittedType = '';
 		FORM.submitted = 0;		
@@ -123,15 +142,99 @@
     
     </cfdocument>
 	
-	<!--- Set up the header info --->
-    <cfheader 
-        name="content-disposition" 
-        value="attachment; filename=CBS-CandidateCopy.pdf"/>
+    <!--- Include Uploaded PDF Files --->
+    <cfif qGetPDFDocumentList.recordCount>
 
+		<!--- Try to Merge PDF and other files --->    	
+        <cftry>
+        
+			<!--- Create a PDF document in the temp folder --->
+            <cffile 
+                action="write"
+                file="#PDFFilePath#"
+                output="#printPDFApplication#"
+                nameconflict="overwrite">
+            
+            <!--- Merge PDF files --->
+            <cfpdf   
+                action="merge" 
+                package="no" 
+                destination="#PDFFilePath#" 
+                overwrite="yes"> 
+                    
+                    <!--- Insert Application File --->
+                    <cfpdfparam source="#PDFFilePath#"> 
+                    
+                    <!--- Loop Over Uploaded Files --->                
+                    <cfloop query="qGetPDFDocumentList">
+                        <!--- Check if file exists --->
+                        
+                        <!--- Merge Files --->
+                        <cfpdfparam source="#qGetPDFDocumentList.filePath#"> 
+                    </cfloop>
+            </cfpdf>
+    
+            <!--- Include other files such as Jpgs --->
+            <cfpdf   
+                action="merge" 
+                package="yes" 
+                destination="#PDFFilePath#" 
+                overwrite="yes"> 
+    
+                    <!--- Insert Application File / Merged PDFs --->
+                    <cfpdfparam source="#PDFFilePath#"> 
+                    
+                    <!--- Loop Over Uploaded Files --->                
+                    <cfloop query="qGetOtherDocumentList">
+                        <!--- Check if file exists --->
+                        
+                        <!--- Merge Files --->
+                        <cfpdfparam source="#qGetOtherDocumentList.filePath#"> 
+                    </cfloop>
+            </cfpdf>
 
-    <!--- Set up the content type --->        
-    <cfcontent 
-        type="application/pdf" 
-        variable="#toBinary(printPDFApplication)#">
+			<!--- Set up the header info --->
+            <cfheader 
+                name="content-disposition" 
+                value="attachment; filename=#PDFFileName#"/>
+        
+            <!--- Set up the content type --->        
+            <cfcontent  
+                type="application/pdf" 
+                file="#PDFFilePath#">
+
+			<!--- Deliver Basic PDF in case of errors --->
+            <cfcatch type="any">
+            
+                <!--- Set up the header info --->
+                <cfheader 
+                    name="content-disposition" 
+                    value="attachment; filename=#PDFFileName#"/>
+            
+            
+                <!--- Set up the content type --->        
+                <cfcontent 
+                    type="application/pdf" 
+                    variable="#toBinary(printPDFApplication)#">
+    
+            </cfcatch>
+    
+        </cftry>        
+
+    <!--- No Files need to be uploaded - send it directly to the browser --->
+    <cfelse>
+    
+		<!--- Set up the header info --->
+        <cfheader 
+            name="content-disposition" 
+            value="attachment; filename=#PDFFileName#"/>
+    
+    
+        <!--- Set up the content type --->        
+        <cfcontent 
+            type="application/pdf" 
+            variable="#toBinary(printPDFApplication)#">
+    
+    </cfif>
     
 </cfoutput>

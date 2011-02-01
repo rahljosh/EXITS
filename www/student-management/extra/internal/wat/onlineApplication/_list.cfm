@@ -41,7 +41,7 @@
 			
 		}
 		
-		if ( VAL(CLIENT.usertype) LTE 4 ) {
+		if ( ListFind("1,2,3,4", VAL(CLIENT.usertype)) ) {
 			// Get List
 			qGetCandidates = APPLICATION.CFC.candidate.getApplicationListbyStatusID(applicationStatusID=URL.statusID);
 		} else { 
@@ -89,7 +89,7 @@
             <th width="5%" class="style2" align="left">Gender</th>
             <th width="20%" class="style2" align="left">Email</th>
             <th width="10%" class="style2" align="left">Submitted</th>		
-            <cfif VAL(CLIENT.userType) LTE 4>
+            <cfif ListFind("1,2,3,4", VAL(CLIENT.userType))>
             	<th width="20%" class="style2" align="left">Intl. Rep.</th>
             <cfelse>
             	<th width="20%" class="style2" align="left">Created By</th>
@@ -111,7 +111,7 @@
                 <td class="style5"><cfif qGetCandidates.sex EQ 'm'>Male<cfelse>Female</cfif></td>
                 <td class="style5">#qGetCandidates.email#</td>
                 <td class="style5">#DateFormat(qGetCandidates.dateCreated, 'mm/dd/yyyy')#</td>		
-				<cfif VAL(CLIENT.userType) LTE 4>
+				<cfif ListFind("1,2,3,4", VAL(CLIENT.userType))>
                     <td class="style5">#qGetCandidates.businessName#</td>
                 <cfelse>
                     <td class="style5">

@@ -315,7 +315,7 @@
                                 </cfif>
                             
                             <!--- NY Office --->                           
-                            <cfelseif CLIENT.userType LTE 4>
+                            <cfelseif ListFind("1,2,3,4", VAL(CLIENT.userType))>
                                 
                                 <cfif ListFind("7,8,9,10", APPLICATION.CFC.CANDIDATE.getCandidateSession().applicationStatusID)>
 
