@@ -207,7 +207,9 @@
         <cfargument name="foreignTable" default="" hint="foreignTable is not required">
         <cfargument name="foreignID" default="" hint="foreignID is not required">
         <cfargument name="documentTypeID" default="" hint="documentTypeID is not required">
-
+        <cfargument name="clientExt" default="" hint="clientExt is not required">
+		<cfargument name="NotClientExt" default="" hint="Get extensions that are not this type">
+        
         <cfquery 
 			name="qGetDocumentsByFilter" 
 			datasource="#APPLICATION.DSN.Source#">
@@ -224,13 +226,14 @@
                     clientExt,
                     fileSize,
                     location,
+                    CONCAT(location, serverName, '.', serverExt) AS filePath,
                     isDeleted,
                     dateCreated,
                     dateUpdated
                 FROM 
                     document
                 WHERE
-                    1 = 1
+                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 <cfif LEN(ARGUMENTS.foreignTable)>
                 	AND
                     	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
@@ -242,6 +245,14 @@
                 <cfif LEN(ARGUMENTS.documentTypeID)>
                 	AND
                     	documentTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentTypeID#">
+                </cfif>
+                <cfif LEN(ARGUMENTS.clientExt)>
+                	AND
+                    	clientExt = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.clientExt#">
+                </cfif>
+                <cfif LEN(ARGUMENTS.NotClientExt)>
+                	AND
+                    	clientExt != <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.NotClientExt#">
                 </cfif>
               	ORDER BY
                 	serverName

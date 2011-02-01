@@ -108,9 +108,9 @@
 					// Intl. Rep. logged in and application submitted
 					SESSION.CANDIDATE.isReadOnly = 1;
 				
-				} else if ( VAL(CLIENT.userType) AND CLIENT.userType LTE 4 AND NOT ListFind("7,8,10", qGetCandidateInfo.applicationStatusID) ) {
-					// Office logged in
-					SESSION.CANDIDATE.isReadOnly = 1;
+				} else if ( VAL(CLIENT.userType) AND ListFind("1,2,3,4", CLIENT.userType) AND NOT ListFind("7,8,10,11", qGetCandidateInfo.applicationStatusID) ) {
+					// Office logged in and application not submitted
+					SESSION.CANDIDATE.isReadOnly = 1;				
 				
 				} else {
 					// Application can be edited

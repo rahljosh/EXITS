@@ -17,7 +17,7 @@
     <cfimport taglib="/extra/extensions/customtags/gui/" prefix="gui" /> 
     
     <cfscript>
-		if ( CLIENT.userType LTE 4 ) {
+		if ( ListFind("1,2,3,4", CLIENT.userType) ) {
 			// Get All International Representatives List
 			qIntlRep = APPLICATION.CFC.USER.getUsers(userType=8, getAll=0);	
 		} else {
