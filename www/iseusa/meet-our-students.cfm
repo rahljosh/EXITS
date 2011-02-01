@@ -361,9 +361,9 @@
             }
 			
 			// Heard About Us
-			if ( FORM.hearAboutUs EQ "ISE Representative" AND NOT LEN(FORM.hearAboutUsDetail) ) {
-                ArrayAppend(pageMsg.Errors, "Enter the ISE representative name");			
-			}
+			//if ( FORM.hearAboutUs EQ "ISE Representative" AND NOT LEN(FORM.hearAboutUsDetail) ) {
+            //    ArrayAppend(pageMsg.Errors, "Enter the ISE representative name");			
+			//}
 			
 			// Heard About Us
 			if ( FORM.hearAboutUs EQ "Other" AND NOT LEN(FORM.hearAboutUsDetail) ) {
@@ -826,7 +826,7 @@
                         <div style="clear:both;">&nbsp;</div>
                         
                         <!--- Captcha --->
-                        <cfimage action="captcha" width="215" height="75" text="#FORM.strCaptcha#" difficulty="medium" fonts="verdana,arial,times new roman,courier" fontsize="28">
+                        <cfimage action="captcha" width="215" height="75" text="#FORM.strCaptcha#" difficulty="medium"  fontsize="28">
 						
                         <div style="clear:both;">&nbsp;</div>
                         
