@@ -6,8 +6,6 @@
 </head>
 
 <body>
-<cfform>
-<cfinput type="text" name="name" message="Please enter a zipcode" validateat="onBlur" validate="zipcode" required="yes">
-</cfform>
+<Cfdump var="#cgi#">
 </body>
 </html>
