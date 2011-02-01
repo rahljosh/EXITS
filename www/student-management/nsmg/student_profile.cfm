@@ -455,6 +455,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                       Additional Info: &nbsp; <textarea name="addInfo" cols="28" rows="5"></textarea>
                     </td>
                 </tr>
+                <cfif ListFind("1,2,3,4,5,6", CLIENT.usertype)>
                 <tr>	
                     <td>
                         <input type="checkbox" name="isIncludeLetters" id="isIncludeLetters" value="1" <cfif FORM.isIncludeLetters> checked="checked" </cfif> /> 
@@ -471,6 +472,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                         </label>
                     (only to approved host families)</td>
                 </tr>
+                </cfif>
                 <tr>	
                     <td align="center">
                         <input name="Submit" type="image" src="pics/submit.gif" border=0 alt=" Send Email ">
