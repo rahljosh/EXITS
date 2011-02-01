@@ -36,8 +36,8 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 //--></script>
 
 
-	<script type="text/javascript" src="jquery-1.2.6.min.js"></script> 
-	<script type="text/javascript" src="jquery.badBrowser.js"></script> 
+	<script type="text/javascript" src="linked/js/jquery-1.2.6.min.js"></script> 
+	<script type="text/javascript" src="linked/js/jquery.badBrowser.js"></script> 
 
 <link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
 </head>

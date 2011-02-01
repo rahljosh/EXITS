@@ -361,9 +361,9 @@
             }
 			
 			// Heard About Us
-			//if ( FORM.hearAboutUs EQ "ISE Representative" AND NOT LEN(FORM.hearAboutUsDetail) ) {
-            //    ArrayAppend(pageMsg.Errors, "Enter the ISE representative name");			
-			//}
+			if ( FORM.hearAboutUs EQ "ISE Representative" AND NOT LEN(FORM.hearAboutUsDetail) ) {
+                ArrayAppend(pageMsg.Errors, "Enter the ISE representative name");			
+			}
 			
 			// Heard About Us
 			if ( FORM.hearAboutUs EQ "Other" AND NOT LEN(FORM.hearAboutUsDetail) ) {
@@ -641,6 +641,11 @@
 		}
 		
 	}
+	
+	// Fomat Phone Number
+	jQuery(function($){
+	   $("#phone").mask("(999)999-9999");
+	});		
 </script>
 </head>
 
@@ -757,7 +762,7 @@
                 <div class="meetStudentsForm">
 					
                     <!--- Check if user is allowed to register --->
-                    <cfif allowAccess>
+                    <cfif NOT allowAccess>
                     	
 						<!--- <h2> Register </h2> --->
                         
@@ -823,6 +828,12 @@
                             </cfloop>
                         </cfselect>
     					
+                        <div id="divExtraField" class="hiddenDiv">
+                            <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
+                            <span id="spanHearAboutUs" class="inputNote"></span>
+                            <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
+                        </div>
+                                            
                         <div style="clear:both;">&nbsp;</div>
                         
                         <!--- Captcha --->

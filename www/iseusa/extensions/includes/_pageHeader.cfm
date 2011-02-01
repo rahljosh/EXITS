@@ -7,4 +7,5 @@
 <link rel="shortcut icon" href="favicon.ico" />
 <link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script></cfoutput>
-<script type="text/javascript" src="jquery.badBrowser.js"></script>
+<script type="text/javascript" src="linked/js/jquery.badBrowser.js"></script>
+<script type="text/javascript" src="linked/js/jquery.maskedinput-1.2.2.min.js"></script> <!-- input plugin (phone,ssn,date) -->
