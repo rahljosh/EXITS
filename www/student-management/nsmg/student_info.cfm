@@ -374,7 +374,7 @@
                                         </cfif> 
                                     	<a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=web'>profile</a> &middot;
                                         <a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=pdf'> <img src="pics/pdficon_small.gif" border=0></a> &middot;
-										<cfif ListFind("1,2,3,4,5", CLIENT.usertype)>  <!--- Only Office & Managers --->
+										<cfif ListFind("1,2,3,4,5,6,7", CLIENT.usertype)>  <!--- Only Office & Managers --->
 	                                        <a href="javascript:SendEmail('student_profile.cfm?uniqueid=#uniqueid#&profileType=email', 300, 400);" title="Email Student Profile and Letters"> email profile <img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"> </a>
                                         </cfif>
                                     ]
@@ -445,7 +445,8 @@
 												<a href="javascript:OpenApp('student_app/print_application.cfm?unqid=#uniqueid#');"><img src="pics/exits.jpg" border="0"></a>
 											</cfif>
 											<br><a href="javascript:OpenMediumW('student_app/section4/page22print.cfm?unqid=#uniqueid#');"><img src="pics/attached-files.gif" border="0"></a>	
-											<br><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"></a>	
+											<cfif client.usertype lt 7>
+                                            <br><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"></a>	</cfif>
 											</td>
 										</tr>
 										<cfelse>

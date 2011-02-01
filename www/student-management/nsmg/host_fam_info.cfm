@@ -208,8 +208,9 @@ div.scroll2 {
 <cfset totalfam = #mother# + #father# + #kidsAtHome.recordcount#>
 
 <cfif totalfam eq 1>
-<div class="alert"><h1>Single Person Placement - additional screening will be required.</h1>
-<em>Single Person Placement Authorization Form and 2 additional references</em> </div>
+<div class="alert">
+<h1>Single Person Placement - additional screening will be required. </h1>
+<em>Starting with Aug 2011 Students - Single Person Placement Authorization Form and 2 additional references</em> </div>
 <br />
 </cfif>
 
