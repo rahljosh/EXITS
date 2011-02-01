@@ -1,3 +1,5 @@
+<cflocation url="exchange-student-trips.cfm">
+<!----
 <cfinclude template="extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
 <script type="text/javascript" language="JavaScript">
     var GB_ROOT_DIR = "http://www.iseusa.com/greybox/";
@@ -191,3 +193,4 @@ a:active {
 
 <!--- Include Page Footer --->
 <cfinclude template="extensions/includes/_pageFooter.cfm">
+---->

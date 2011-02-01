@@ -537,11 +537,11 @@ A flight quote has been requested by this student:<Br />
           
              <Tr>
             	<td><h3>Major Airport (Airport Code)</h3></td>
-                <td><cfinput type="text"  name="major_Air_Code" value="#hostInfo.major_Air_Code#"> <input type="hidden" name="ret_major_Air_Code" value="#hostInfo.major_Air_Code#" /></td>
+                <td><cfinput type="text"  name="major_Air_Code" message="Please enter the major airport nearest you." required="yes" value="#hostInfo.major_Air_Code#" typeahead="no" showautosuggestloadingicon="true"> <input type="hidden" name="ret_major_Air_Code" value="#hostInfo.major_Air_Code#" /></td>
            	</Tr>
             <Tr  bgcolor="##deeaf3">
             	<td><h3>Local Airport (Airport Code)</h3></td>
-                <td><cfinput type="text"  name="local_Air_Code" value="#hostInfo.local_Air_Code#"> <input type="hidden" name="ret_local_Air_Code" value="#hostInfo.local_Air_Code#" /></td>
+                <td><cfinput type="text"  name="local_Air_Code" message="Please enter your local airport. (This maybe the same as major)" required="yes" value="#hostInfo.local_Air_Code#" typeahead="no" showautosuggestloadingicon="true"> <input type="hidden" name="ret_local_Air_Code" value="#hostInfo.local_Air_Code#" /></td>
            	</Tr>
 			</table>
             <cfelse>
