@@ -193,7 +193,14 @@
                     	<a href="?curdoc=deny_application"><img border=0 src="pics/deny.gif" alt="Deny Application" align="center" border="0"></a>                    
 					</div>                        
                 <cfelseif CLIENT.usertype EQ 8>
-                    #approvalButton#
+                    
+                    <!--- Hide Approval Button for the following Agents --->
+                    <cfif ListFind(APPLICATION.NotAllowedIDs.submitApplication,CLIENT.userID)>
+						<div align="center"><strong>Unfortunately we are no longer accepting applications for the upcoming season.</strong></div>						                    
+                    <cfelse>
+                        #approvalButton#
+                    </cfif>
+					
                 <cfelse>
                 	<em>* This application must be submitted by #qGetIntlRep.businessname#.</em>   
                 </cfif>
