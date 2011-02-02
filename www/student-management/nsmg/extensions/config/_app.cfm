@@ -22,26 +22,21 @@
 </cfquery>
 
 <cfscript>
-	/***** Create APPLICATION.SETTINGS structure *****/
-	APPLICATION.SETTINGS = StructNew();		
-	// Stores a list with public program companies (Except PHP, CSB and Wep)
-	// PS: CFCASE does not accept a variable so they are still hard coded.
-	APPLICATION.SETTINGS.listNonISE = "10,12";
-	APPLICATION.SETTINGS.listISE = "1,2,3,4,12";
-	APPLICATION.SETTINGS.listISESMG = "1,2,3,4,5,12";
-	APPLICATION.SETTINGS.listAll = "1,2,3,4,5,10,12,13,14";
-
-	
 	APPLICATION.DSN = 'MySQL';
 
+
 	/***** Create APPLICATION.SETTINGS structure *****/
 	APPLICATION.SETTINGS = StructNew();		
+	
+	// This will store a company lists 
+	APPLICATION.SETTINGS.COMPANYLIST = StructNew();		
 	// Stores a list with public program companies (Except PHP, CSB and Wep)
 	// PS: CFCASE does not accept a variable so they are still hard coded.
-	APPLICATION.SETTINGS.listNonISE = "10,12";
-	APPLICATION.SETTINGS.listISE = "1,2,3,4,12";
-	APPLICATION.SETTINGS.listISESMG = "1,2,3,4,5,12";
-	APPLICATION.SETTINGS.listAll = "1,2,3,4,5,10,12,13,14";
+	APPLICATION.SETTINGS.COMPANYLIST.ISE = "1,2,3,4,12";
+	APPLICATION.SETTINGS.COMPANYLIST.ISESMG = "1,2,3,4,5,12";
+	APPLICATION.SETTINGS.COMPANYLIST.NonISE = "10,11,14";
+	APPLICATION.SETTINGS.COMPANYLIST.ESI = "14";
+	APPLICATION.SETTINGS.COMPANYLIST.All = "1,2,3,4,5,10,12,13,14";
 
 	/* 
 		this enables the address lookup. 
