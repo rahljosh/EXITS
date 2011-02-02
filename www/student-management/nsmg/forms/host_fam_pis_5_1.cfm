@@ -34,6 +34,15 @@
 	ORDER BY season
 </cfquery>
 
+<script language="javascript">
+	// Fomat Phone/Fax Numbers
+	jQuery(function($){
+	   $("#phone").mask("(999) 999-9999");
+	   $("#fax").mask("(999) 999-9999");
+	});		
+</script>
+
+
 <cfform action="?curdoc=querys/insert_school_info_pis" method="post" name=frmPhone>
 
 <cfoutput>
@@ -76,8 +85,8 @@
 				Zip:  &nbsp; <cfinput type="text" name="zip" size="5" value="#get_host_school.zip#" maxlength="5"></td>
 			</tr>
 			<tr><td class="label">Contact:</td><td class="form_text" colspan=3><cfinput type="text" name="principal" size="23" value="#get_host_school.principal#"></td></tr>
-			<tr><td class="label">Phone:</td><td class="form_text" colspan=3><cfinput type="text" name="phone" size="23" value="#get_host_school.phone#" onclick="javascript:getIt(this)"> nnn-nnn-nnnn</td></tr>
-			<tr><td class="label">Fax:</td><td class="form_text" colspan=3><cfinput type="text" name="fax" size="23" value="#get_host_school.fax#" onclick="javascript:getIt2(this)"> nnn-nnn-nnnn</td></tr>
+			<tr><td class="label">Phone:</td><td class="form_text" colspan=3><cfinput type="text" name="phone" id="phone" size="23" value="#get_host_school.phone#"> nnn-nnn-nnnn</td></tr>
+			<tr><td class="label">Fax:</td><td class="form_text" colspan=3><cfinput type="text" name="fax" id="fax" size="23" value="#get_host_school.fax#"> nnn-nnn-nnnn</td></tr>
 			<tr><td class="label">Contact Email:</td><td class="form_text" colspan=3> <cfinput name="email" size="23" type="text" value="#get_host_school.email#"></td></tr>
 			<tr><td class="label">Web Site:</td><td class="form_text" colspan=3> <cfinput name="url" size="23" type="text" value="#get_host_school.url#"> <Cfif #get_host_school.url# is ''><cfelse><a href="#get_host_school.url#" target=_blank>Visit Web Site </a></cfif></td></tr>	
 		</table>

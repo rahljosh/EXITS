@@ -76,6 +76,55 @@
 		<cfreturn qGetSchools>
 	</cffunction>
     
+ 
+ 	<cffunction name="getSchoolByID" access="public" returntype="query" output="false" hint="Gets school information">
+    	<cfargument name="schoolID" default="0" hint="schoolID is required">
+              
+        <cfquery 
+			name="qGetSchoolByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					schoolID,
+                    schoolName,
+                    regionID,
+                    schoolDistrict,
+                    principal,
+                    address,
+                    address2,
+                    city,
+                    state,
+                    zip,
+                    phone,
+                    phone_ext,
+                    fax,
+                    email,
+                    url,
+                    allowGraduation,
+                    tuition,
+                    bookFees,
+                    numberOfStudents,
+                    collegeBound,
+                    comments,
+                    begins,
+                    semesterEnds,
+                    semesterBegins,
+                    ends,
+                    enrollment,
+                    special_programs,
+                    grad_policy,
+                    sports,
+                    other_policies,
+                    private_school_info,
+                    other_trans
+                FROM 
+                    smg_schools
+                WHERE
+                    schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">
+		</cfquery>
+		   
+		<cfreturn qGetSchoolByID>
+	</cffunction>
+
     
 	<cffunction name="getPrivateSchools" access="public" returntype="query" output="false" hint="Gets a list of Private schools, if privateSchoolID is passed gets it by ID">
     	<cfargument name="privateSchoolID" default="0" hint="privateSchoolID is not required">

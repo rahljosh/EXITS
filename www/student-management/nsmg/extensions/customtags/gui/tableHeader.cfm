@@ -61,7 +61,7 @@
 <cfoutput>
 
 <!--- Header of Table --->
-<table width="#ATTRIBUTES.width#" cellpadding="0" cellspacing="0" border="0" height="24">
+<table width="#ATTRIBUTES.width#" align="center" cellpadding="0" cellspacing="0" border="0">
     <tr valign="middle" height="24">
         <td width="13" height="24" background="pics/header_leftcap.gif">&nbsp;</td>
         <td width="26" background="pics/header_background.gif"><img src="pics/#ATTRIBUTES.imageName#"></td>
