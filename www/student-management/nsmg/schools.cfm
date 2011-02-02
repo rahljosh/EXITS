@@ -22,7 +22,7 @@
     <tr height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
         <td width=26 background="pics/header_background.gif"><img src="pics/school.gif"></td>
-        <td background="pics/header_background.gif"><h2>Schools </td>
+        <td background="pics/header_background.gif"><h2>Schools</h2></td>
 	
         <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/school_form">Add School</a></td>
 	
@@ -84,25 +84,46 @@
 <cfif submitted>
 
     <cfquery name="getResults" datasource="#application.dsn#">
-        SELECT DISTINCT smg_schools.*
-        FROM smg_schools LEFT JOIN smg_school_dates ON smg_schools.schoolid = smg_school_dates.schoolid
-        WHERE 0=0
-		<cfif state NEQ ''>
-            AND smg_schools.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#state#">
+        SELECT DISTINCT 
+			s.*
+        FROM 
+        	smg_schools s
+        LEFT JOIN 
+        	smg_school_dates scd ON s.schoolid = scd.schoolid
+        WHERE 
+        	1=1		
+
+		<!--- Filter ESI Schools --->
+		<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
+        	AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
-        <cfif trim(keyword) NEQ ''>
-            AND (
-                smg_schools.schoolid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(keyword)#">
-                OR smg_schools.schoolname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                OR smg_schools.principal LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                OR smg_schools.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                OR smg_schools.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-            )
+		
+		<cfif LEN(FORM.state)>
+            AND 
+            	s.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">
         </cfif>
-		<cfif school_dates NEQ ''>
-            AND smg_school_dates.schoolid IS NULL
+
+        <cfif TRIM(keyword) NEQ ''>
+            AND 
+            	(
+                	s.schoolid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.keyword)#">
+                OR 
+                	s.schoolname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.keyword)#%">
+                OR 
+                	s.principal LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.keyword)#%">
+                OR 
+                	s.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.keyword)#%">
+                OR 
+                	s.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.keyword)#%">
+            	)
         </cfif>
-        order by #orderby#
+		<cfif LEN(FORM.school_dates)>
+            AND 
+            	scd.schoolid IS NULL
+        </cfif>
+        ORDER BY
+        	#orderby#
     </cfquery>
 
 	<cfif getResults.recordCount GT 0>
@@ -152,7 +173,7 @@
             <cfloop query="getResults" startrow="#startrow#" endrow="#endrow#">
             <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
                 <td><a href="?curdoc=school_info&schoolid=#schoolid#">#schoolid#</a></td>
-                <td>#schoolname#</td>
+                <td><a href="?curdoc=school_info&schoolid=#schoolid#">#schoolname#</a></td>
                 <td>#principal#</td>
                 <td>#city#</td>
                 <td>#state#</td>

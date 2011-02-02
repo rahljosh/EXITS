@@ -72,6 +72,7 @@
 <script src="linked/js/jquery.cfjs.js" type="text/javascript"></script> <!-- Coldfusion functions for jquery -->
 <script src="linked/js/date.js " type="text/javascript"></script> <!-- required plugins for date picker -->
 <script src="linked/js/jquery.datePicker.js " type="text/javascript"></script> <!-- jquery.datePicker.js -->
+<script src="linked/js/jquery.maskedinput-1.2.2.min.js " type="text/javascript"></script> <!-- jquery input plugin (phone,ssn,date) -->
 <script src="linked/js/basescript.js " type="text/javascript"></script> <!-- BaseScript -->
 </head>
 <body>

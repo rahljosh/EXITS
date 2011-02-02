@@ -28,10 +28,37 @@
 			
 		<cftransaction action="begin" isolation="SERIALIZABLE">
 			<cfquery name="insert_school" datasource="MySQL">
-				INSERT INTO smg_Schools
-					(schoolname,address,address2,city,state,zip,phone,fax,email,url,principal)								
-				VALUES ("#form.name#", "#form.address#", "#form.address2#", "#form.city#", "#form.state#", "#form.zip#", "#form.phone#",
-						"#form.fax#", "#form.email#", "#form.url#", "#form.principal#")
+                    INSERT INTO 
+                    	smg_schools 
+                    (	
+                    	companyID,
+                        schoolname, 
+                        address, 
+                        address2, 
+                        city, 
+                        state, 
+                        zip, 
+                        principal, 
+                        email, 
+                        phone, 
+                        fax, 
+                        url
+                    )
+                    VALUES 
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#" null="#yesNoFormat(TRIM(FORM.address2) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.principal#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#" null="#yesNoFormat(TRIM(FORM.email) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(TRIM(FORM.fax) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.url#" null="#yesNoFormat(TRIM(FORM.url) EQ '')#">
+                    )  
 			</cfquery>
 		
 			<cfquery name="schoolid" datasource="MySQL"> <!--- get the newest school --->
