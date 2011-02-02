@@ -28,6 +28,14 @@
 	/***** Create APPLICATION.SETTINGS structure *****/
 	APPLICATION.SETTINGS = StructNew();		
 	
+	/* PHASE THIS OUT */
+	APPLICATION.SETTINGS.listNonISE = "10,12,14";
+	APPLICATION.SETTINGS.listISE = "1,2,3,4,12";
+	APPLICATION.SETTINGS.listISESMG = "1,2,3,4,5,12";
+	APPLICATION.SETTINGS.listAll = "1,2,3,4,5,10,12,13,14";
+	/* PHASE THIS OUT */
+	
+	
 	// This will store a company lists 
 	APPLICATION.SETTINGS.COMPANYLIST = StructNew();		
 	// Stores a list with public program companies (Except PHP, CSB and Wep)
@@ -178,4 +186,10 @@
 	
 	// List of User IDs allowed to access ISE USA Leads
 	APPLICATION.AllowedIDs.hostLeads = "8743,314,12431"; // 8743 - Robert Keegan / 314 - Budge Lamonica / 12431 - Gary Lubrat
+	
+	// This stores list of Users IDs that DO NOT have access to certain areas of the system
+	APPLICATION.NotAllowedIDs = StructNew();	
+	
+	// Apex Fundation / WIZANTIANA as per Brian Hause 02/02/11
+	APPLICATION.NotAllowedIDs.submitApplication = "8217,12172";
 </cfscript>
