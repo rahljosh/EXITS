@@ -58,13 +58,14 @@
 		<cfabort>
 	</cfif>
 	
-<!--- none students are assigned to the HOST, - DELETE HOST --->
+<!--- none students are assigned to the HOST, - set host to inactive HOST --->
  		<cfquery name="delete_host" datasource="MySql">
-			DELETE 
-			FROM smg_hosts
+			update smg_hosts
+            set active = 0
 			WHERE hostid = <cfqueryparam value="#url.hostid#" cfsqltype="cf_sql_integer">
 			LIMIT 1
 		</cfquery>
+        <!----
 		<cfquery name="delete_host_children" datasource="MySql">
 			DELETE 
 			FROM smg_host_children
@@ -75,6 +76,7 @@
 			FROM smg_host_animals
 			WHERE hostid = <cfqueryparam value="#url.hostid#" cfsqltype="cf_sql_integer">
 		</cfquery>
+		---->
 		<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 			<tr valign=middle height=24>
 				<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>

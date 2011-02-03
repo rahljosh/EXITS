@@ -184,7 +184,15 @@ function change(href)
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>	
-	<tr>
+		<tr>
+		<td><em>Has the student received a diploma in his/her home country??</em></td>
+		<td>
+			<cfif gradAtHome is 'Yes'><cfinput type="radio" name="gradAtHome" value="yes" checked="yes" onchange="DataChanged();">Yes<cfelse><cfinput type="radio" name="gradAtHome" value="yes" onchange="DataChanged();">Yes</cfif>&nbsp; &nbsp;
+			<cfif gradAtHome is 'No'><cfinput type="radio" name="gradAtHome" value="no" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="gradAtHome" value="no" onchange="DataChanged();">No</cfif>	
+		</td>
+	</tr>
+    
+    <tr>
 		<td><em>Does the student need to have his/her transcript convalidated?</em></td>
 		<td>
 			<cfif convalidation_needed is 'Yes'><cfinput type="radio" name="convalidation_needed" value="Yes" checked="yes" onchange="DataChanged();">Yes<cfelse><cfinput type="radio" name="convalidation_needed" value="Yes" onchange="DataChanged();">Yes</cfif>&nbsp; &nbsp;

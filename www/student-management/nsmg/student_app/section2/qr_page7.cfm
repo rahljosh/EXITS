@@ -28,6 +28,7 @@
 			app_grade_7_com = <cfqueryparam value="#form.app_grade_7_com#" cfsqltype="cf_sql_varchar" maxlength="100">,
 			app_grade_8 = <cfqueryparam value="#form.app_grade_8#" cfsqltype="cf_sql_varchar" maxlength="30">,
 			app_grade_8_com = <cfqueryparam value="#form.app_grade_8_com#" cfsqltype="cf_sql_varchar" maxlength="100">,
+            gradAtHome = <cfqueryparam value="#form.gradAtHome#" cfsqltype="cf_sql_varchar" maxlength="100">,
 			<cfif IsDefined('form.grades')>grades = '#form.grades#',</cfif>
 			<cfif IsDefined('form.app_completed_school')>app_completed_school = '#form.app_completed_school#',</cfif>			
 			<cfif IsDefined('form.convalidation_needed')>convalidation_needed = '#form.convalidation_needed#',</cfif>

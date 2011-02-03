@@ -1,5 +1,6 @@
+<!----
 <cftry>
-
+---->
 <cfsetting requesttimeout="300">
 
 <!--- OPENING FROM PHP - AXIS --->
@@ -18,12 +19,13 @@
 	<cfset client.studentid = '#get_student_info2.studentid#'>
 <cfelse>
 	<cfquery name="get_student_info2" datasource="MySql">
-	 	SELECT s.firstname, s.familylastname, s.studentid, s.intrep,
+	 	SELECT s.firstname, s.familylastname, s.studentid, s.intrep, s.uniqueid,
 			u.businessname, u.master_accountid
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.intrep
 		WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
 	</cfquery>
+    <cfset url.unqid = '#get_student_info2.uniqueid#'>
 </cfif>
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfset client.org_code = 10>
@@ -85,8 +87,12 @@ where studentid = #client.studentid#
 <body onLoad="print();launchRemote();"> 
 
 <input type="Button" name="printit" value="print" onclick="javascript:window.print();">
-
+<cfoutput>
+<a href="" onClick="javascript: win=window.open('section4/page22print.cfm?unqid=#url.unqid#', 'Settings', 'height=380, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+<img src="../pics/attached-files.gif" border="0"></a>
+</cfoutput>
 <cfset url.path = "">
+<br>
 
 <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
 	<!--- SECTION 1 --->
@@ -244,6 +250,8 @@ where studentid = #client.studentid#
 			</cfif>
 		</td>
     </tr>
+    <!----We don't need to include 18 for ESI---->
+    <cfif client.companyid neq 14>
     <tr>
     	<td valign="top">				
 			<cfinclude template="section4/page18print.cfm">
@@ -252,6 +260,7 @@ where studentid = #client.studentid#
 			</cfif>
 		</td>
     </tr>
+    </cfif>
     <tr>
     	<td valign="top">				
 			<cfinclude template="section4/page19print.cfm">
@@ -261,6 +270,8 @@ where studentid = #client.studentid#
 			
 	<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS --->
 	<cfif IsDefined('client.usertype') AND client.usertype NEQ 10 AND get_student_info2.master_accountid NEQ 10115 AND get_student_info2.intrep NEQ 10115 AND get_student_info2.intrep NEQ 8318>
+    <!----We don't need to include 18 for ESI---->
+    <cfif client.companyid neq 14>
         <tr>
             <td valign="top">				
                     <cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#get_student_info2.studentid#.*">
@@ -272,6 +283,7 @@ where studentid = #client.studentid#
                     </cfif>
                 </td>
         </tr>
+        </cfif>
         <tr>
             <td valign="top">				
                     <cfdirectory directory="#AppPath.onlineApp.inserts#page21" name="page21" filter="#get_student_info2.studentid#.*">
@@ -300,8 +312,9 @@ where studentid = #client.studentid#
 
 </body>
 </html>
-
+<!----
 <cfcatch type="any">
 	<cfinclude template="error_message.cfm">
 </cfcatch>
 </cftry>
+---->

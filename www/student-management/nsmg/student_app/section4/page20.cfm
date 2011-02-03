@@ -119,6 +119,7 @@ function NextPage() {
 	<cfinclude template="../footer_table.cfm">
 	<cfabort>	
 </cfif>
+<!----Regional Choice doesn't apply to ESI---->
 
 <cfform action="?curdoc=section4/qr_page20" method="post" name="page20" onSubmit="return CheckRegion();">
 
@@ -127,9 +128,12 @@ function NextPage() {
 <cfinput type="hidden" name="studentid" value="#studentid#">
 <cfinput type="hidden" name="CheckChanged" value="0">
 		
+
 <!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES --->
 <cfif IsDefined('client.usertype') AND client.usertype EQ 10 AND (int_agent.master_accountid EQ 10115 OR int_agent.userid EQ 10115 OR int_agent.userid EQ 8318)>
 	<div class="section"><br><br>
+    
+
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
 			<td>Currently, you are unable to request a Regional Choice online. You are still able to request them, you just need to contact your
@@ -144,7 +148,11 @@ function NextPage() {
 </cfif>
 
 <div class="section"><br>
-
+<Cfif client.companyid eq 14>
+    <br><Br><br>
+    <h2 align=center>This page does not apply to your program.</h2>
+    <Br><br><BR>
+<cfelse>
 <!--- Check uploaded file - Upload File Button --->
 <cfinclude template="../check_uploaded_file.cfm">
 
@@ -199,9 +207,11 @@ function NextPage() {
 
 <!--- PAGE BUTTONS --->
 <cfinclude template="../page_buttons.cfm">
-
+</Cfif>
 </cfoutput>
+
 </cfform>
+
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">

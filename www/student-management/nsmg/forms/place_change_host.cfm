@@ -56,6 +56,8 @@
 				<option value="Incompatibility with school">Incompatibility with school</option>
 				<option value="Host family change of situation (e.g., move, illness, etc.)">Host family change of situation (e.g., move, illness, etc.)</option>
 				<option value="Move from welcome family to permanent family">Move from welcome family to permanent family</option>
+                <option value="Paperwork was not submitted in a timely fashion">Paperwork was not submitted in a timely fashion</option>
+                
 				<option value="Other">Other</option>				
 			</cfselect>
 		</td>

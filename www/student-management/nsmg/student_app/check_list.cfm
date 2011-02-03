@@ -538,22 +538,23 @@
 	</cfif>
 	
     <tr><td>&nbsp;</td></tr>	
-	
-	<!--- PAGE 18 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page18&id=4&p=18"><h3>Page [18] - Private School</h3></a></td></tr>
-	<cfloop query="page18">
-		<cfset get_field = page18.table_located &"."& page18.field_name>
-		<cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
-			<tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
-			<cfset countRed = countRed + 1>
-		<cfelseif Evaluate(get_field) GT 0 AND check_18_upload.recordcount EQ 0>
-			<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
-			<cfset countRed = countRed + 1> 
-		<cfelseif (Evaluate(get_field) EQ 0) OR (Evaluate(get_field) GT 0 AND check_18_upload.recordcount NEQ 0)>
-			<tr><td><font color="0000FF">Complete</font><br></td></tr>
-		</cfif>
-	</cfloop> 
-	
+	<!----Page 18 doesn't apply to ESI---->
+    <cfif client.companyid neq 14>
+		<!--- PAGE 18 --->
+        <tr><td><a href="index.cfm?curdoc=section4/page18&id=4&p=18"><h3>Page [18] - Private School</h3></a></td></tr>
+        <cfloop query="page18">
+            <cfset get_field = page18.table_located &"."& page18.field_name>
+            <cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
+                <tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
+                <cfset countRed = countRed + 1>
+            <cfelseif Evaluate(get_field) GT 0 AND check_18_upload.recordcount EQ 0>
+                <tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
+                <cfset countRed = countRed + 1> 
+            <cfelseif (Evaluate(get_field) EQ 0) OR (Evaluate(get_field) GT 0 AND check_18_upload.recordcount NEQ 0)>
+                <tr><td><font color="0000FF">Complete</font><br></td></tr>
+            </cfif>
+        </cfloop> 
+	</cfif>
     <tr><td>&nbsp;</td></tr>	
 
 	<!--- PAGE 19 --->
@@ -581,33 +582,34 @@
 	</cfif> 	
 		
     <tr><td>&nbsp;</td></tr>	
-	
-	<!--- PAGE 20 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page20&id=4&p=20"><h3>Page [20] - Regional Guarantee</h3></a></td></tr>
-	<!--- Not Available in April or May - PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
-	
-	<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
-		<tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
-	<cfelse>
-		<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 --->
-		<cfif IsDefined('client.usertype') AND client.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
-			<tr><td><font color="0000FF">This page is not required or will be completed by <b><i>#smg_students.businessname#.</i></b></font><br></td></tr> 
-		<cfelse>
-			<cfloop query="page20">
-				<cfset get_field = page20.table_located &"."& page20.field_name>
-				<cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
-					<tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
-					<cfset countRed = countRed + 1>
-				<cfelseif Evaluate(get_field) GT 0 AND check_20_upload.recordcount EQ 0>
-					<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
-					<cfset countRed = countRed + 1> 
-				<cfelseif (Evaluate(get_field) EQ 0) OR (Evaluate(get_field) GT 0 AND check_20_upload.recordcount NEQ 0)>
-					<tr><td><font color="0000FF">Complete</font><br></td></tr>
-				</cfif>
-			</cfloop> 
-		</cfif>
+	<!----Page 18 doesn't apply to ESI---->
+    <cfif client.companyid neq 14>
+		<!--- PAGE 20 --->
+        <tr><td><a href="index.cfm?curdoc=section4/page20&id=4&p=20"><h3>Page [20] - Regional Guarantee</h3></a></td></tr>
+        <!--- Not Available in April or May - PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
+        
+        <cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
+            <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
+        <cfelse>
+            <!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 --->
+            <cfif IsDefined('client.usertype') AND client.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
+                <tr><td><font color="0000FF">This page is not required or will be completed by <b><i>#smg_students.businessname#.</i></b></font><br></td></tr> 
+            <cfelse>
+                <cfloop query="page20">
+                    <cfset get_field = page20.table_located &"."& page20.field_name>
+                    <cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
+                        <tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
+                        <cfset countRed = countRed + 1>
+                    <cfelseif Evaluate(get_field) GT 0 AND check_20_upload.recordcount EQ 0>
+                        <tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
+                        <cfset countRed = countRed + 1> 
+                    <cfelseif (Evaluate(get_field) EQ 0) OR (Evaluate(get_field) GT 0 AND check_20_upload.recordcount NEQ 0)>
+                        <tr><td><font color="0000FF">Complete</font><br></td></tr>
+                    </cfif>
+                </cfloop> 
+            </cfif>
+        </cfif>
 	</cfif>
-	
     <tr><td>&nbsp;</td></tr>
 
 	<!--- PAGE 21 --->
