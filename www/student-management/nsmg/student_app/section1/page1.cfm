@@ -58,10 +58,10 @@
         country
     FROM 
         smg_student_app_programs
-    <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyid)>
-        WHERE
-            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-    </cfif>
+    WHERE
+        isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    AND
+        companyID LIKE ( <cfqueryparam cfsqltype="cf_sql_varchar" value="%#CLIENT.companyID#%"> )
 </cfquery>
 
 <cfquery name="qAppPrograms" dbtype="query">

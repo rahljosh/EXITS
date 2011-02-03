@@ -16,7 +16,7 @@
 				<tr>
 					<th colspan="3" align="center" bgcolor="#fef3b9">Waiting on Student</th>
 					<th colspan="2" align="center" bgcolor="#bed0fc">Waiting on Intl. Rep.</th> 
-					<th colspan="5" align="center" bgcolor="#bde2ac">Waiting on SMG</th>
+					<th colspan="5" align="center" bgcolor="#bde2ac">Waiting on <cfoutput>#CLIENT.companyShort#</cfoutput></th>
 				</tr>
 				<tr>
 					<th valign="top">Issued</th>
@@ -68,6 +68,13 @@
                                 AND 
                                     app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
                             </cfif>
+                            
+                            <!--- Keep Exchange Service Information Apps separate --->
+                            <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
+                            	AND
+                                	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                            </cfif>
+                            
                         </cfquery>
                      
                         <cfoutput><a href="index.cfm?curdoc=student_app/student_app_list&status=#i#">#apps.count#</a></cfoutput>
