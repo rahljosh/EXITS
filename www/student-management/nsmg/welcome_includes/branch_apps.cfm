@@ -20,17 +20,17 @@
 		<td style="line-height:20px;" valign="top" width="100%">
 		<table width=100% valign="top" border=0>
 			<tr class="style1">
-				<th colspan="2" align="center" bgcolor="#fef3b9">Student</th>
-				<th colspan="2" align="center" bgcolor="#fcd3a3">Branch</th>
-				<th colspan="2" align="center" bgcolor="#bed0fc">Main Office</th>
-				<th colspan="5" align="center" bgcolor="#bde2ac">SMG</th>
+				<th colspan="2" align="center" bgcolor="#fef3b9">Waiting on Student</th>
+				<th colspan="2" align="center" bgcolor="#fcd3a3">Waiting on Branch</th>
+				<th colspan="2" align="center" bgcolor="#bed0fc">Waiting on Main Office</th>
+				<th colspan="5" align="center" bgcolor="#bde2ac">Waiting on <cfoutput>#CLIENT.companyShort#</cfoutput></th>
 			</tr>			
 			<tr class="style1">
 				<th valign="top">Issued</th>
 				<th valign="top">Active</th>
 				<th valign="top">Apps to Approve</th>
 				<th valign="top">Apps you Denied</th>
-				<th valign="top">To be approved</th>
+				<th valign="top">To be Approved</th>
 				<th valign="top">Denied</th>
 				<th valign="top">Submitted</th>
 				<th valign="top">Received</th>
@@ -66,6 +66,13 @@
                             AND
                                 canceldate IS NULL
                         </cfif>
+                        
+						<!--- Keep Exchange Service Information Apps separate --->
+                        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
+                            AND
+                                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                        </cfif>
+                        
                     </cfquery>
                     
                     <cfoutput><a href="index.cfm?curdoc=student_app/student_app_list&status=#i#">#apps.count#</a></cfoutput>

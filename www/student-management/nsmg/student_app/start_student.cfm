@@ -60,10 +60,10 @@
             country
         FROM 
         	smg_student_app_programs
-        <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyid)>
-	        WHERE
-                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        </cfif>
+        WHERE
+        	isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND
+            companyID LIKE ( <cfqueryparam cfsqltype="cf_sql_varchar" value="%#CLIENT.companyID#%"> )
     </cfquery>
 
     <cfquery name="qAppPrograms" dbtype="query">
@@ -258,8 +258,9 @@
                     branchid,  
                     app_sent_student, 
                     app_current_status, 
-                    <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyid)>
-                        companyid,
+                    <!--- Record Company ID for WEP and ESI --->
+					<cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyID)>
+                        companyID,
                     </cfif>
                     application_expires
                 )
@@ -279,8 +280,9 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#setBranchID#">, 
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(currentStatus)#">, 
-                    <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyid)>
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">, 
+                    <!--- Record Company ID for WEP and ESI --->
+                    <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyID)>
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
                     </cfif>
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#expiration_date#">
                 )
@@ -648,7 +650,7 @@
     </table>
 
 </cfform>
-    
+
 </cfoutput>
 
 <!----footer of table---->

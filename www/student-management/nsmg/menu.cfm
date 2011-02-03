@@ -70,7 +70,7 @@
                 <cfif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
                 <!--- ISE Store --->
-                <cfelse>
+                <cfelseif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 </cfif>
                 
@@ -107,7 +107,7 @@
                 <cfif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
                 <!--- ISE Store --->
-                <cfelse>
+                <cfelseif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 </cfif>
             
