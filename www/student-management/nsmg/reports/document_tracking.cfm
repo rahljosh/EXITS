@@ -149,6 +149,7 @@
 		SELECT 
 			s.studentID, 
             s.countryresident, 
+            s.hostid,
             s.firstname, 
             s.familylastname, 
             s.sex, 
@@ -168,7 +169,12 @@
             s.stu_arrival_orientation, 
             s.host_arrival_orientation, 
             s.doc_class_schedule,
-        	u.userID,
+          <!----Added 2/2/2011---->
+            s.doc_income_ver_date,
+            s.doc_conf_host_rec2,
+            s.doc_single_ref_check1,
+            s.doc_single_ref_check2,
+            u.userID,
             CONCAT(u.firstName, ' ', u.lastName) AS repName
 		FROM 
         	smg_students s
@@ -213,6 +219,14 @@
             	s.host_arrival_orientation IS NULL 
             OR 
             	s.doc_class_schedule IS NULL
+			OR
+                s.doc_income_ver_date IS NULL
+            OR
+            	s.doc_conf_host_rec2 IS NULL
+            OR
+            	s.doc_single_ref_check1 IS NULL
+            or
+            	s.doc_single_ref_check2  IS NULL
 			)
 		ORDER BY
         	repName,
@@ -280,7 +294,31 @@
                         <td width="8%"><strong>Placement</strong></td>
                         <td width="70%"><strong>Missing Documents</strong></td>
                     </tr>	
-                    <cfloop query="qGetStudentsByRep">			 
+                    <cfloop query="qGetStudentsByRep">		
+                    
+                    <cfquery name="get_host_info" datasource="MySQL">
+                        SELECT  h.hostid, h.motherfirstname, h.fatherfirstname, h.familylastname as hostlastname, h.hostid as hostfamid
+                        FROM smg_hosts h
+                        WHERE hostid = #hostid#
+                    </cfquery>
+	 				  <!---number kids at home---->
+                        <cfquery name="kidsAtHome" datasource="#application.dsn#">
+                        select count(childid) as kidcount
+                        from smg_host_children
+                        where liveathome = 'yes' and hostid =#get_host_info.hostid#
+                        </cfquery>
+						
+						<Cfset father=0>
+                        <cfset mother=0>
+                      
+                        <Cfif get_host_info.fatherfirstname is not ''>
+                            <cfset father = 1>
+                        </Cfif>
+                        <Cfif get_host_info.motherfirstname is not ''>
+                            <cfset mother = 1>
+                        </Cfif>
+                        <cfset client.totalfam = #mother# + #father# + #kidsAtHome.kidcount#>
+                        
                         <tr bgcolor="###iif(qGetStudentsByRep.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
                             <td>#qGetStudentsByRep.studentID#</td>
                             <td>#qGetStudentsByRep.firstname# #qGetStudentsByRep.familylastname#</td>
@@ -301,6 +339,12 @@
                                         <cfif NOT LEN(qGetStudentsByRep.stu_arrival_orientation)>Student Orientation &nbsp; &nbsp;</cfif>
                                         <cfif NOT LEN(qGetStudentsByRep.host_arrival_orientation)>HF Orientation &nbsp; &nbsp;</cfif>
                                         <cfif NOT LEN(qGetStudentsByRep.doc_class_schedule)>Class Schedule &nbsp; &nbsp;</cfif>
+                                        <cfif NOT LEN(qGetStudentsByRep.doc_income_ver_date)>Income Verification &nbsp; &nbsp;</cfif>
+           								<cfif NOT LEN(qGetStudentsByRep.doc_conf_host_rec2)> 2nd Conf. Host Visit &nbsp; &nbsp;</cfif>
+                                        <cfif client.totalfam eq 1>
+											<cfif NOT LEN(qGetStudentsByRep.doc_single_ref_check1)>Ref Check (Single) &nbsp; &nbsp;</cfif>
+                                            <cfif NOT LEN(qGetStudentsByRep.doc_single_ref_check2)>2nd Ref Check (Single) &nbsp; &nbsp;</cfif>
+                                        </cfif>
                                     </font>
                                 </i>
                             </td>		

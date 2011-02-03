@@ -236,7 +236,14 @@ div.scroll {
             <td><a class=nav_bar href="" onClick="javascript: win=window.open('forms/place_menu.cfm?studentid=#studentid#', 'Settings', 'height=550, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif fatherlastname is motherlastname> #fatherlastname#<Cfelseif fatherlastname is''> #motherlastname# <Cfelseif motherlastname is ''>#fatherlastname#<Cfelse>#fatherlastname# #motherlastname#</cfif></td>
             <td><a class=nav_bar href="" onClick="javascript: win=window.open('forms/place_menu.cfm?studentid=#studentid#', 'Settings', 'height=550, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"> #fatherfirstname# <Cfif fatherfirstname is '' or motherfirstname is ''><cfelse>&</Cfif> #motherfirstname#</td>
             <td>#DateFormat(dateplaced,'mm/dd/yyyy')#</td>
-            <td><Cfif host_fam_approved eq 99>N/A<cfelse> <cf_timer dateEnd="#DisplayEndDate#"></cfif></td>
+            <td><Cfif host_fam_approved eq 99>
+           <!----If rejected, show how long its been rejected.---->
+            <cfset dtFrom = ParseDateTime( "#DisplayEndDate#" ) />
+			<cfset dtTo = Now() />
+			<cfset dtDiff = (dtTo - dtFrom) />
+            #DateFormat( dtDiff, "d" )# d
+            #TimeFormat( dtDiff, "h" )# h
+           <cfelse> <cf_timer dateEnd="#DisplayEndDate#"></cfif></td>
     </tr>
     <tr>
         <td></td>

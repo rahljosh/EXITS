@@ -114,10 +114,11 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
         	<Td>
      
     <!--- Header --->
-    <table align="center" background="pics/#client.companyid#_short_profile_header.jpg">
+    <table align="center">
         <tr>
             
-            <td class="bottom_center" width=800 height=160>
+            <td class="bottom_center" width=800  valign="top">
+            <img src="pics/#client.companyid#_short_profile_header.jpg" />
            <!---     <h1>#qGetCompany.companyName#</h1>                
                 <span class="title">Program:</span> #qGetProgram.programname#<br />
                 <!---
@@ -142,7 +143,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
     <table  align="center" border=0 cellpadding="4" cellspacing=0>
         <tr>           
             <td valign="top" width="660px">
-                <span class="profileTitleSection">STUDENT PROFILE</span>
+                <span class="profileTitleSection"  bgcolor="##0854a0">STUDENT PROFILE</span>
                 <table cellpadding="0" cellspacing="0" border="0" class="profiletable2">
                     <tr>
                         <td valign="top" width="330px">
@@ -263,7 +264,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
      where studentid = #qGetStudentInfo.studentID#
      </cfquery>
     <table align="center" class="profileTable2">
-        <tr><td colspan="3"><span class="profileTitleSection">SIBLINGS</span></td></tr>     
+        <tr bgcolor="##0854a0"><td colspan="3"><span class="profileTitleSection">SIBLINGS</span></td></tr>     
         <tr>
             <td width="250px"><span class="title">Name</span></td>
             <td width="200px"><span class="title">Age</span></td>
@@ -291,7 +292,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
     
     <!--- Academic and Language Evaluation --->
     <table align="center" class="profileTable2">
-        <tr><td colspan="3"><span class="profileTitleSection">ACADEMIC AND LANGUAGE EVALUATION</span></td></tr>     
+        <tr bgcolor="##0854a0"><td colspan="3"><span class="profileTitleSection">ACADEMIC AND LANGUAGE EVALUATION</span></td></tr>     
         <tr>
             <td width="250px"><span class="title">Band:</span> <cfif qGetStudentInfo.band is ''><cfelse>#qGetStudentInfo.band#</cfif></td>
             <td width="200px"><span class="title">Orchestra:</span> <cfif qGetStudentInfo.orchestra is ''><cfelse>#qGetStudentInfo.orchestra#</cfif></td>
@@ -330,7 +331,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
     </table>
     
     <table align="center" class="profileTable2">
-        <tr><td colspan="4"><span class="profileTitleSection">PERSONAL INFORMATION</span></td></tr>            
+        <tr bgcolor="##0854a0"><td colspan="4"><span class="profileTitleSection">PERSONAL INFORMATION</span></td></tr>            
         <tr>
             <td width="110px"><span class="title">Allergies</span></td>
             <td width="140px"><span class="title">Animal:</span> <cfif qGetStudentInfo.animal_allergies is ''>no<cfelse>#qGetStudentInfo.animal_allergies#</cfif></td>
@@ -374,7 +375,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
             </td>
         </tr>
     </table>
-     <!--- Siblings --->
+     <!--- Facts about country --->
      <Cfquery name="funFact" datasource="#application.dsn#">
      select funFact 
      from smg_countrylist
@@ -382,7 +383,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
      </cfquery>
      <Cfif funFact.funfact is not ''>
     <table align="center" class="profileTable2">
-        <tr><td colspan="3"><span class="profileTitleSection">FACTS ABOUT #UCase(getCountryResident)#</span></td></tr>     
+        <tr bgcolor="##0854a0"><td colspan="3"><span class="profileTitleSection">FACTS ABOUT #UCase(getCountryResident)#</span></td></tr>     
         <tr>
             <td>
             <cfif FileExists('c:/websites/student-management/nsmg/uploadedfiles/profileFactPics/#qGetStudentInfo.countryResident#.png')>

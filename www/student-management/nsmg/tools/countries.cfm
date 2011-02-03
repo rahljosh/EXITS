@@ -31,7 +31,7 @@
 		</tr>
 		<cfloop query="countries">
 		<tr bgcolor="#iif(countries.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
-			<td>#countries.countryname#  #countries.currentrow# - #countries.countryid#<input type="hidden" name="#countries.countryid#_countryid" value="#countries.countryid#"></td>
+			<td>#countries.countryname#  <input type="hidden" name="#countries.countryid#_countryid" value="#countries.countryid#"></td>
 			<td align="center"><input type=text name="#countries.countryid#_code" size="1"  maxlength="2" value="#countries.countrycode#"></td>
 			<td align="center"><input type=text name="#countries.countryid#_sevis" size="1"  maxlength="2" value="#countries.seviscode#"></td>
 			<!----<td align="center">

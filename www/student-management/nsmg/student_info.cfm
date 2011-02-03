@@ -87,20 +87,26 @@
             u.lastname, 
             u.userid, 
             u.accepts_sevis_fee, 
-            u.insurance_typeid, insu.type
+            u.insurance_typeid,
+            insu.type 
+           
         FROM 
         	smg_users u
         LEFT JOIN 
         	smg_insurance_type insu ON insu.insutypeid = u.insurance_typeid
+        LEFT JOIN 
+        	smg_insurance_codes codes ON codes.insutypeid = insu.insutypeid
         WHERE 
         	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.intrep)#">
+ 
     </cfquery>
-    
+   
     <cfquery name="qProgramInfo" datasource="#application.dsn#">
         SELECT 
         	programname, 
             programid, 
-            enddate
+            enddate,
+            seasonid
         FROM 
         	smg_programs
         WHERE 
@@ -112,7 +118,14 @@
         ORDER BY
         	programname
     </cfquery>
-    
+    <!----Ins. Policy Code---->
+    <Cfquery name="qInsPolicy" datasource="#application.dsn#">
+    select policycode
+    from smg_insurance_codes
+    where companyid = #client.companyid#
+   	and seasonid = #qProgramInfo.seasonid#
+    and insutypeid = #qIntAgent.insurance_typeid#
+    </cfquery>
     <!----Get Expired Student Programs---->
     <cfquery name="qCheckForExpiredProgram" datasource="#application.dsn#">
         SELECT 
@@ -727,6 +740,10 @@
 						<cfelse> #qIntAgent.type#	</cfif>		
 					</td>
 				</tr>
+                <tr>
+               	<td></td> 	<Td>Policy No.</Td>
+                              	<Td>#qInsPolicy.policycode#</Td>
+                </tr>
 				<!--- Insurance Information --->
                 <tr>
 					<td>
