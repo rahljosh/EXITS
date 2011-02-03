@@ -43,22 +43,58 @@
     <cfoutput>
     <Cfloop query="pending_hosts">
     <cfset DisplayEndDate = #DateAdd('d', 4, '#dateplaced#')#>
-    #studentid# #student_lastname# #DateFormat(dateplaced, 'mm/dd/yy')# #TimeFormat(dateplaced, 'hh:mm:ss')# 
+   			
 	<cfif #DisplayEndDate# lt #now()#>
-
+		Reject
         <cfquery datasource="mysql">
         update smg_students
         set host_fam_approved = 99
         where studentid = #studentid#
         </cfquery>
-		
-        Reset
+        <!----Email Area Rep so they know---->
+		 		<cfquery name="company_info" datasource="mysql">
+                select *
+                from smg_companies
+                where companyid = #i#
+                </cfquery>
+                <Cfset CLIENT.exits_url = #company_info.url_ref#>
+                <cfset client.companyname = #company_info.companyname#>
+            
+                <cfquery name="areaRepEmail" datasource="mysql">
+                select firstname, lastname, email
+                from smg_users
+                where userid = #pending_hosts.hostid#
+                </cfquery>
+               
+            
+            <cfsavecontent variable="email_message">
+            #areaRepEmail.firstname# #areaRepEmail.lastname#-<br /><br />
+            The pending placement for <strong>#pending_hosts.firstname# #pending_hosts.student_lastname#</strong> with the <Strong>pending_hosts.familylastname</Strong> has
+            been automatically rejected by EXITS due to the fact that it has been a pending placement for at least 96 hours.<br /><br />
+            <br /><br />
+            <font size=-1>
+            This information is accurate as of <strong>#DateFormat(now(),'mmm d, yyyy')# at #TimeFormat(now(),'h:m tt')#</strong>.<br />
+            Once the student is removed from the Rejected Placement list, they will be available for placement with another family. <br />
+            This information is also available on initial welcome page when you login under Pending Placements.
+            </font> 
+            
+            </cfsavecontent>
+                
+                <!--- send email --->
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="#areaRepEmail.email#">
+                    <cfinvokeargument name="email_cc" value="josh@iseusa.com">
+                    <cfinvokeargument name="email_subject" value="Placement for #pending_hosts.firstname# #pending_hosts.student_lastname# has been rejected.">
+                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_from" value="Automatic Reports <#company_info.support_email#>">
+                </cfinvoke>
+                
+            <!----End of Email---->
+                    
      
     <cfelse>
-    	 Leave
-    </cfif><Br />
-
-    <br />
+    	<!---- Leave as is---->
+    </cfif>
     </Cfloop>  
    
     </cfoutput>
