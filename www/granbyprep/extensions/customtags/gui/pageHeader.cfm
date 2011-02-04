@@ -282,7 +282,7 @@
                 <body>
 
                 <!--- Start of Div Wrapper --->
-                <table cellpadding="2" cellspacing="2" style="width:100%; background-color:##c2d9e9; border-bottom:10px solid ##0069aa; height:70px;">
+                <table cellpadding="2" cellspacing="2" style="width:100%; background-color:##FFFFFF; border-bottom:10px solid ##641c20; height:70px;">
                     <tr>
                         <td width="70px" align="center">
                             <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# #APPLICATION.SETTINGS.adminToolVersion#">
@@ -290,7 +290,7 @@
                             </a>
                         </td>
                         <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
-                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# Application For Admission" style="text-decoration:none; color:##0069aa;">
+                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# Application For Admission" style="text-decoration:none; color:##641c20;">
                                 <span style="font-size: 1.4em;">#APPLICATION.SCHOOL.name#</span> <br />
                                 <span style="font-size: 0.9em;">#APPLICATION.SETTINGS.adminToolVersion#</span>
                             </a>
@@ -314,7 +314,7 @@
                 <body>
 
                 <!--- Start of Div Wrapper --->
-                <table cellpadding="2" cellspacing="2" style="width:100%; background-color:##c2d9e9; border-bottom:10px solid ##0069aa; height:70px;">
+                <table cellpadding="2" cellspacing="2" style="width:100%; background-color:##FFFFFF; border-bottom:10px solid ##641c20; height:70px;">
                     <tr>
                         <td width="70px" align="center">
                             <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# Application For Admission">
@@ -322,7 +322,7 @@
                             </a>
                         </td>
                         <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
-                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# Application For Admission" style="text-decoration:none; color:##0069aa;">
+                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.SCHOOL.name# Application For Admission" style="text-decoration:none; color:##641c20;">
                                 <span style="font-size: 1.4em;">#APPLICATION.SCHOOL.name#</span> <br />
                                 <span style="font-size: 0.9em;">Application for Admission</span>
                             </a>

@@ -26,16 +26,7 @@
 	<cfparam name="FORM.email" default="">
     <cfparam name="FORM.password" default="">
     <cfparam name="FORM.confirmPassword" default="">
-    
-    <cfscript>
-		// Create Array to store errors
-		pageMsg = StructNew();
-		// Create Array to store error messages
-		pageMsg.Errors = ArrayNew(1);
-		// Create Array to store page messages
-		pageMsg.Messages = ArrayNew(1);		
-	</cfscript>
-    
+       
 	<cfscript>
        // FORM Submitted - Login
        if ( FORM.type EQ 'login' ) {
@@ -43,16 +34,16 @@
             
             // Email
             if ( NOT LEN(FORM.loginEmail) OR NOT IsValid("email", FORM.loginEmail) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a valid email address.");			
+				SESSION.formErrors.Add("Enter a valid email address");
             }
 
             // Password
             if ( NOT LEN(FORM.loginPassword) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a password.");			
+				SESSION.formErrors.Add("Enter a password");
             }
             
             // There are no errors
-            if ( NOT VAL(ArrayLen(pageMsg.Errors)) ) {
+            if ( NOT SESSION.formErrors.length() ) {
                 
 				//Check Login
                 qCheckLogin = APPLICATION.CFC.STUDENT.checkLogin(
@@ -69,7 +60,7 @@
 
                 } else {
                     // Set Login Error Message
-                    ArrayAppend(pageMsg.Errors, "Invalid login. If you would like to retrieve your password, please click on forgot password below.");
+					SESSION.formErrors.Add("Invalid login. If you would like to retrieve your password, please click on forgot password below");
                 }
             }
        
@@ -80,11 +71,11 @@
             
             // Email
             if ( NOT LEN(FORM.forgotEmail) OR NOT IsValid("email", FORM.forgotEmail) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a valid email address.");			
+				SESSION.formErrors.Add("Enter a valid email address");
             }
 			
             // There are no errors
-            if ( NOT VAL(ArrayLen(pageMsg.Errors)) ) {
+            if ( NOT SESSION.formErrors.length() ) {
 				
 				// Check if we have a record with the same email address
 				qCheckEmail = APPLICATION.CFC.STUDENT.checkEmail(email=FORM.forgotEmail);
@@ -99,9 +90,12 @@
 					);
 				} else {
 					// Set email is not registered error message
-					ArrayAppend(pageMsg.Errors, "Email is not registered. <br /> Please create an account.");	
+					SESSION.formErrors.Add("Email is not registered. <br /> Please create an account.");
 				}
 				
+				// Set Page Message
+				SESSION.pageMessages.Add("Your login information has been emailed successfully");
+
             }
        
 	   // FORM Submitted - newApplicant
@@ -110,42 +104,42 @@
 
             // First Name
             if ( NOT LEN(FORM.firstName) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a first name.");			
+				SESSION.formErrors.Add("Enter a first name");
             }
 
             // Last Name
             if ( NOT LEN(FORM.lastName) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a last name.");			
+				SESSION.formErrors.Add("Enter a last name");
             }
             
             // Email
             if ( NOT LEN(FORM.email) OR NOT IsValid("email", FORM.email) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a valid email address.");			
+				SESSION.formErrors.Add("Enter a valid email address");
             }
 
 			// Check if Email has been registered
 			if ( IsValid("email", FORM.email) AND APPLICATION.CFC.STUDENT.checkEmail(email=FORM.email).recordCount ) {
-				ArrayAppend(pageMsg.Errors, "Email address already registered. <br /> Please click on forgot password to retrieve your information.");		
+				SESSION.formErrors.Add("Email address already registered. <br /> Please click on forgot password to retrieve your information");
 			}
 
             // Password
             if ( NOT LEN(FORM.password) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a password.");			
+				SESSION.formErrors.Add("Enter a password");
             }
 
             // Password
             if ( LEN(FORM.password) AND LEN(FORM.password) NEQ LEN(FORM.confirmPassword) ) {
-                ArrayAppend(pageMsg.Errors, "Confirm password does not match.");			
+				SESSION.formErrors.Add("Confirm password does not match");
             }
             
             // Validate Password
 			stValPassword = APPLICATION.CFC.UDF.isValidPassword(password=FORM.password);
 			if ( LEN(FORM.password) AND NOT stValPassword.isValidPassword ) {
-                ArrayAppend(pageMsg.Errors, stValPassword.Errors);	
+				SESSION.formErrors.Add(stValPassword.Errors);
             }
 
 			// There are no errors
-            if ( NOT VAL(ArrayLen(pageMsg.Errors)) ) {
+            if ( NOT SESSION.formErrors.length() ) {
 				// Create Student Account
 				newID = APPLICATION.CFC.STUDENT.insertStudent(
 					firstName=FORM.firstName,
@@ -221,10 +215,16 @@
                 <input type="hidden" name="type" value="newApplicant">
 
 			  <cfif FORM.type EQ 'newApplicant'>
-                
+
+					<!--- Page Messages --->
+                    <gui:displayPageMessages 
+                        pageMessages="#SESSION.pageMessages.GetCollection()#"
+                        messageType="login"
+                        />
+
                     <!--- Display Form Errors --->
                     <gui:displayFormErrors 
-                        formErrors="#pageMsg.Errors#"
+                        formErrors="#SESSION.formErrors.GetCollection()#"
                         messageType="login"
                     />
                 
@@ -279,10 +279,16 @@
                 <input type="hidden" name="type" value="login">
 
 				<cfif FORM.type EQ 'login'>
+
+					<!--- Page Messages --->
+                    <gui:displayPageMessages 
+                        pageMessages="#SESSION.pageMessages.GetCollection()#"
+                        messageType="login"
+                        />
                 
                     <!--- Display Form Errors --->
                     <gui:displayFormErrors 
-                        formErrors="#pageMsg.Errors#"
+                        formErrors="#SESSION.formErrors.GetCollection()#"
                         messageType="login"
                     />
                 
@@ -313,10 +319,16 @@
 				<input type="hidden" name="type" value="forgotPassword">
 				
 				<cfif FORM.type EQ 'forgotPassword'>
+
+					<!--- Page Messages --->
+                    <gui:displayPageMessages 
+                        pageMessages="#SESSION.pageMessages.GetCollection()#"
+                        messageType="login"
+                        />
                 
                     <!--- Display Form Errors --->
                     <gui:displayFormErrors 
-                        formErrors="#pageMsg.Errors#"
+                        formErrors="#SESSION.formErrors.GetCollection()#"
                         messageType="login"
                     />
                 

@@ -87,7 +87,7 @@
 					
                 </div>  <!--- End of class="form-container" --->
 
-                <div style="width:100%; height:20px; background-color:##0069aa;">
+                <div style="width:100%; height:20px; background-color:##641c20;">
                     <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
                     	Copyright &copy; #Year(now())# #APPLICATION.SCHOOL.name#. ALL RIGHTS RESERVED.
                     </div>

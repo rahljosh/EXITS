@@ -2,6 +2,12 @@
 /* CSS Document */
 
 /************************************************************************************
+GranbyPrep Color #052f44
+MacDuffie Dark Color #641c20
+MacDuffie Light Color #d2a8ab
+************************************************************************************/
+
+/************************************************************************************
 
 Login Box
 
@@ -84,6 +90,7 @@ body {
 }
 
 #logoContent {
+	color: #FFF; /* MacDuffie */
 	height: 75px;
 	width: 560px;
 	position: absolute;
@@ -93,8 +100,10 @@ body {
 }
 
 .schoolName {
-	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	color: #FFF; /* MacDuffie */
 	font-size: 28px;
+	display:block;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
 .newUserBox {
@@ -106,7 +115,7 @@ body {
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 10px;
 	color: #999;
-	border:1px solid #052f44; /* #d5d6d6; */
+	border:1px solid #641c20; /* #d5d6d6; */
 }
 
 .returningUserBox {
@@ -118,7 +127,7 @@ body {
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 10px;
 	color: #999;
-	border:1px solid #052f44; /* #d5d6d6; */
+	border:1px solid #641c20; /* #d5d6d6; */
 }
 
 .button {
@@ -176,7 +185,7 @@ Login Text
 ************************************************************************************/
 
 .userTypeBox {
-	background-color: #052f44;
+	background-color: #641c20;
 	padding:2px;
 	margin-bottom:10px;
 }
