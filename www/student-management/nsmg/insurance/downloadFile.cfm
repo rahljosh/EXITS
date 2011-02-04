@@ -101,32 +101,40 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
     
         <table border="1" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">
             <tr>
-                <td style="font-size:8pt; height:100px; text-align:center; border:none;">
+                <td style="height:70px; text-align:center; border:none;">
                     The CORRECT Date format to enter in the Spreadsheet is: MM/DD/YYYY. 
                     You will then see the date converted to DD-MMM-YY. 
                     When this is takes place, your dates are correct.
                 </td>
                 <td colspan="3" style="font-size:18pt; font-weight:bold; text-align:center; border:none;">
-                    Batch Cancel / Extend Sheet        
+                    <cfif ListFind("X", qGetStudentsHistory.type)>
+                    	Batch Cancelation Sheet
+                    <cfelse>
+                    	Batch Extension Sheet  
+                    </cfif>
                 </td>
                 <td style="border:none;">&nbsp;</td>
                 <td style="border:none;">&nbsp;</td>
-                <td style="font-size:8pt; text-align:right;  border:none;">
-                    BatchCancelExtend
+                <td style="text-align:right; border:none;">
+                    <cfif ListFind("X", qGetStudentsHistory.type)>
+						BatchCancel
+                    <cfelse>
+                    	BatchExtend
+                    </cfif>
                 </td>
             </tr>
             <tr>
                 <td colspan="4" style="background-color:##CCCCCC; border:none;">&nbsp;</td>
-                <td colspan="3">&nbsp;</td>
+                <td colspan="3" style="border:none;">&nbsp;</td>
             </tr>
             <tr>
-                <td style="width:200px; text-align:left; font-weight:bold;">Last Name</td>
+                <td style="width:350px; text-align:left; font-weight:bold;">Last Name</td>
                 <td style="width:200px; text-align:left; font-weight:bold;">First Name</td>
                 <td style="width:100px; text-align:center; font-weight:bold;">Date of Birth</td>
                 <td style="width:200px; text-align:center; font-weight:bold;">New End Date</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                <td style="border:none;">&nbsp;</td>
+                <td style="border:none;">&nbsp;</td>
+                <td style="border:none;">&nbsp;</td>
             </tr>
             
             <cfloop query="qGetStudentsHistory">
@@ -135,11 +143,10 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     <td>#qGetStudentsHistory.firstName#</td>
                     <td>#DateFormat(qGetStudentsHistory.dob, 'dd/mmm/yyyy')#</td>
                     <td>#DateFormat(qGetStudentsHistory.endDate, 'dd/mmm/yyyy')#</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    <td style="border:none;">&nbsp;</td>
+                    <td style="border:none;">&nbsp;</td>
+                    <td style="border:none;">&nbsp;</td>
                 </tr>
-                            
             </cfloop>
             
         </table>
