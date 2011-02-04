@@ -22,12 +22,34 @@
 <cfset doc = 'page21'>
 
 <cfquery name="states_requested" datasource="MySQL">
-	SELECT state1, sta1.statename as statename1, state2, sta2.statename as statename2, state3, sta3.statename as statename3
-	FROM smg_student_app_state_requested 
-	LEFT JOIN smg_states sta1 ON sta1.id = state1
-	LEFT JOIN smg_states sta2 ON sta2.id = state2
-	LEFT JOIN smg_states sta3 ON sta3.id = state3
-	WHERE studentid = '#get_student_info.studentid#'
+	SELECT 
+    	state1, 
+        sta1.statename as statename1, 
+        state2, 
+        sta2.statename as statename2, 
+        state3, 
+        sta3.statename as statename3
+	FROM 
+    	smg_student_app_state_requested 
+	LEFT JOIN 
+    	smg_states sta1 ON sta1.id = state1
+	LEFT JOIN 
+    	smg_states sta2 ON sta2.id = state2
+	LEFT JOIN 
+    	smg_states sta3 ON sta3.id = state3
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+</cfquery>
+
+<cfquery name="qCityRequested" datasource="MySQL">
+	SELECT 
+    	city1, 
+        city2, 
+        city3
+	FROM 
+    	smg_student_app_city_requested 
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
 <!---- International Rep - EF ACCOUNTS ---->
@@ -59,7 +81,7 @@
 		<tr height="33">
 			<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
 			<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
-			<td class="tablecenter"><h2>Page [21] - State Choice </h2></td>
+			<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>City</cfif> Choice </h2></td>
 			<cfif IsDefined('url.curdoc')>
 			<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 			</cfif>
@@ -106,27 +128,68 @@
 		<tr>
 			<td>
 				<div align="justify"><cfinclude template="state_guarantee_text.cfm"></div>
-				<table>
-				<tr><td>State Choice Price:</td><td>Please contact your rep for current prices for state guarantees.</td></tr>
-				
-			</table><br>
-				<img src="#path#pics/usa-map.gif"><br><br>
-				<cfif states_requested.recordcount GT '0' AND states_requested.state1 NEQ '0'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Yes, submit my choices as indicated below. 
-				<cfif states_requested.recordcount EQ '0' OR states_requested.state1 EQ '0'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> 
-				No, I am not interested in a state choice.<br>
-				<br>
-				<table width="100%" border=0 cellpadding=2 cellspacing=0 align="center">
-					<tr>
-					<td width="90">1st Choice:</td>
-					<td width="130" align="left">#states_requested.statename1#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
-					<td width="90">&nbsp; 2nd Choice:</td>
-					<td width="130" align="left">#states_requested.statename2#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
-					<td width="90">&nbsp; 3rd Choice:</td>
-					<td width="130" align="left">#states_requested.statename3#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
-				</table>
+                	
+				<cfif CLIENT.companyID NEQ 14>
+					<!--- Regular State Guarantee Choice --->
+                    
+                    <table>
+                        <tr>
+                            <td>State Choice Price:</td>
+                            <td>Please contact your rep for current prices for state guarantees.</td>
+                        </tr>
+                    </table>
+                    
+                    <img src="#path#pics/usa-map.gif" width="642" height="331" align="middle"><br>
+
+					<cfif states_requested.recordcount AND VAL(states_requested.state1)>
+                    	<img src="#path#pics/RadioY.gif" width="13" height="13" border="0">
+					<cfelse>
+                    	<img src="#path#pics/RadioN.gif" width="13" height="13" border="0">
+					</cfif> 
+                    Yes, submit my choices as indicated below. 
+                    
+					<cfif states_requested.recordcount OR states_requested.state1 EQ 0>
+                    	<img src="#path#pics/RadioY.gif" width="13" height="13" border="0">
+					<cfelse>
+                    	<img src="#path#pics/RadioN.gif" width="13" height="13" border="0">
+					</cfif> 
+                    No, I am not interested in a state choice.<br><br>
+                    
+                    <table width="100%" border=0 cellpadding=2 cellspacing=0 align="center">
+                        <tr>
+                        <td width="90">1st Choice:</td>
+                        <td width="130" align="left">#states_requested.statename1#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        <td width="90">&nbsp; 2nd Choice:</td>
+                        <td width="130" align="left">#states_requested.statename2#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        <td width="90">&nbsp; 3rd Choice:</td>
+                        <td width="130" align="left">#states_requested.statename3#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                    </table>
+                
+                <cfelse>
+                	<!--- Exchange Service Information --->
+                    
+                    <img src="#path#pics/ESI-Map.jpg" width="650" height="372" align="middle"><br>
+
+                    <table cellpadding="2" cellspacing="2" style="margin:10px;">
+                        <tr>
+                            <td width="90">1st Choice:</td>
+                            <td width="130" align="left">#qCityRequested.city1#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        </tr>
+                        <tr>                        
+                            <td width="90">2nd Choice:</td>
+                            <td width="130" align="left">#qCityRequested.city2#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        </tr>
+                        <tr>                        
+                            <td width="90">3rd Choice:</td>
+                            <td width="130" align="left">#qCityRequested.city3#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        </tr>                        							
+                    </table>
+    
+                </cfif>
+                
 			</td>
 		</tr>
-	</table><br><br>
+	</table><br>
 	
 	<table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
 		<tr>

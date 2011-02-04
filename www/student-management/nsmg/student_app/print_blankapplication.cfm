@@ -102,23 +102,36 @@ where companyid = #client.org_code#
 	<tr><td valign="top">
 		<cfinclude template="section4/page17printblank.cfm"><br>
 		<div style="page-break-after:always;"></div>	
-	</td></tr>										
-	<tr><td valign="top">
-		<cfinclude template="section4/page18printblank.cfm"><br>
-		<div style="page-break-after:always;"></div>	
-	</td></tr>										
+	</td></tr>				
+    
+	<!----We don't need to include 18 for ESI---->
+    <cfif CLIENT.companyID NEQ 14>
+        <tr><td valign="top">
+            <cfinclude template="section4/page18printblank.cfm"><br>
+            <div style="page-break-after:always;"></div>	
+        </td></tr>										
+	</cfif>
+
 	<tr><td valign="top">
 		<cfinclude template="section4/page19printblank.cfm"><br>
 		<div style="page-break-after:always;"></div>	
 	</td></tr>	
+
+	<!--- Do not print guarantees for EF --->
 	<cfif get_student_info.intrep NEQ '10111' AND get_student_info.master_accountid NEQ '10111'>
-		<tr><td valign="top">
-			<cfinclude template="section4/page20printblank.cfm"><br>
-			<div style="page-break-after:always;"></div>	
-		</td></tr>										
-		<tr><td valign="top">
-			<cfinclude template="section4/page21printblank.cfm"><br>
-		</td></tr>	
+		
+		<!----We don't need to include 20 for ESI---->
+        <cfif CLIENT.companyID NEQ 14>
+            <tr><td valign="top">
+                <cfinclude template="section4/page20printblank.cfm"><br>
+                <div style="page-break-after:always;"></div>	
+            </td></tr>										
+        </cfif>
+
+        <tr><td valign="top">
+            <cfinclude template="section4/page21printblank.cfm"><br>
+        </td></tr>	
+		
 	</cfif>
 </table>
 

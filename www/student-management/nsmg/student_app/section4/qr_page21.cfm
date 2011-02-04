@@ -1,4 +1,4 @@
-<cfif not IsDefined('form.studentid')>
+<cfif not IsDefined('FORM.studentid')>
 	<cfinclude template="../error_message.cfm">
 	<cfabort>
 </cfif>
@@ -6,61 +6,85 @@
 <cfquery name="check_state" datasource="MySql">
 	SELECT statechoiceid, studentid, state1, state2, state3
 	FROM smg_student_app_state_requested
-	WHERE studentid = '#form.studentid#'
+	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
 </cfquery>
-<cfquery name="check_city" datasource="MySql">
-	SELECT citychoiceid, studentid, city1, city2, city3
-	FROM smg_student_app_city_requested
-	WHERE studentid = '#form.studentid#'
+
+<cfquery name="qCheckCityChoice" datasource="MySql">
+	SELECT 
+    	citychoiceid
+	FROM 
+    	smg_student_app_city_requested
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
 </cfquery>
 
 <cftransaction action="begin" isolation="serializable">
 <cftry>
-	<Cfif client.companyid eq 14>
-     <cfif check_state.recordcount EQ '0'>
-    		<cfquery name="insert_city" datasource="MySql">
-                    INSERT INTO smg_student_app_city_requested
-                        (studentid, city1, city2, city3)
-                    VALUES ('#form.studentid#', '#form.city1#', '#form.city2#', '#form.city3#')
-                </cfquery>
-     <Cfelse>
-     		<cfquery name="update_city" datasource="MySql">
-                    UPDATE smg_student_app_city_requested
-                    SET	    city1 = '#form.city1#',
-                            city2 = '#form.city2#',
-                            city3 = '#form.city3#'
-                   
-                    WHERE citychoiceid = '#check_city.citychoiceid#'
-                    LIMIT 1
-                </cfquery>
-     </cfif>
+	
+	<cfif CLIENT.companyID EQ 14>
+     	
+		<!--- Exchange Service International Application --->
+		<cfif qCheckCityChoice.recordcount>
+            <cfquery name="update_city" datasource="MySql">
+                UPDATE 
+                    smg_student_app_city_requested
+                SET	    
+                    city1 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city1#">,
+                    city2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city2#">,
+                    city3 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city3#">
+                WHERE 
+                    citychoiceid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckCityChoice.citychoiceid#">
+                LIMIT 1
+            </cfquery>
+		 <cfelse>
+            <cfquery name="insert_city" datasource="MySql">
+                INSERT INTO 
+                	smg_student_app_city_requested
+                    (
+                        studentid, 
+                        city1, 
+                        city2, 
+                        city3
+                    )
+                VALUES 
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city1#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city2#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city3#">
+                     )
+            </cfquery>
+    	</cfif>
+        
     <cfelse>
-		<cfif IsDefined('form.state_select')>
+    	<!--- REGULAR APPLICATION --->
+    
+		<cfif IsDefined('FORM.state_select')>
             <cfif check_state.recordcount EQ '0'>
                 <!--- INSERT CHOICES ---->
                 <cfquery name="insert_state" datasource="MySql">
                     INSERT INTO smg_student_app_state_requested
                         (studentid, state1, state2, state3)
-                    VALUES ('#form.studentid#', '#form.state1#', '#form.state2#', '#form.state3#')
+                    VALUES ('#FORM.studentid#', '#FORM.state1#', '#FORM.state2#', '#FORM.state3#')
                 </cfquery>
             <cfelse>
                 <!--- UPDATE CHOICES --->
                 <cfquery name="update_state" datasource="MySql">
                     UPDATE smg_student_app_state_requested
-                    SET	<cfif form.state_select EQ 'NO'>
+                    SET	<cfif FORM.state_select EQ 'NO'>
                             state1 = '0',
                             state2 = '0',
                             state3 = '0'
                         <cfelse>
-                            state1 = '#form.state1#',
-                            state2 = '#form.state2#',
-                            state3 = '#form.state3#'
+                            state1 = '#FORM.state1#',
+                            state2 = '#FORM.state2#',
+                            state3 = '#FORM.state3#'
                         </cfif>
                     WHERE statechoiceid = '#check_state.statechoiceid#'
                     LIMIT 1
                 </cfquery>
             </cfif>
-        <!--- <cfif IsDefined('form.region_choice')>app_region_guarantee = '#form.region_choice#'<cfelse>app_region_guarantee = 0</cfif> --->	
+        <!--- <cfif IsDefined('FORM.region_choice')>app_region_guarantee = '#FORM.region_choice#'<cfelse>app_region_guarantee = 0</cfif> --->	
         </cfif>
     </Cfif>
 	<html>
