@@ -89,7 +89,7 @@
 			
 			if ( CGI.HTTP_HOST EQ APPLICATION.SITE.URL.httpHost AND CGI.SCRIPT_NAME EQ "/index.cfm" ) { 
 				// Redirect to Online Application
-				Location("https://" & CGI.HTTP_HOST & "/admissions/index.cfm", "no");
+				Location("https://" & CGI.HTTP_HOST & "/admissions/", "no");
 			} else if ( NOT APPLICATION.IsServerLocal AND NOT ListContainsNoCase(allowedAreasList, getCurrentPage) AND CGI.HTTP_HOST NEQ APPLICATION.SITE.URL.httpHost ) {			
 				// Redirect to MacDuffie Site
 				Location("http://www.MacDuffie.org", "no");
