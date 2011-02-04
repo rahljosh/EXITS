@@ -106,7 +106,18 @@
         WHERE 
             studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
     </cfquery>
-    
+    <cfquery name="smg_student_app_city_requested" datasource="MySql">
+        SELECT 
+            citychoiceid, 
+            studentid, 
+            city1, 
+            city2, 
+            city3
+        FROM 
+            smg_student_app_city_requested
+        WHERE 
+            studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
+    </cfquery>
     <cfquery name="qGetPages" datasource="MySql">
         SELECT
             page
@@ -614,6 +625,14 @@
 
 	<!--- PAGE 21 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page21&id=4&p=21"><h3>Page [21] - State Guarantee</h3></a></td></tr>
+	<Cfif client.companyid eq 14>
+		<cfif smg_student_app_city_requested.city1 EQ 0 AND smg_student_app_city_requested.city2 EQ 0 AND smg_student_app_city_requested.city3 EQ 0>
+                    <tr><td><font color="0000FF">Complete</font><br></td></tr>
+        <cfelse>
+                <cfset countRed = countRed + 1>
+                <tr><td><font color="FF0000">Please choose 3 city choices</font><br></td></tr>
+        </cfif>	
+    <cfelse>
 	<!--- Not Available in April or May - PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
 	<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5)<!---- AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')---->> 
 		<tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
@@ -644,6 +663,7 @@
 			</cfif>
 		</cfif>
 	</cfif>
+    </Cfif>
 	
     <tr><td><br><hr class="bar"></hr><br></td></tr>
 	
