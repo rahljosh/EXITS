@@ -87,9 +87,13 @@
 			allowedAreasList = "admissions,admin,extensions,documents,linked,images,archived,privacy.cfm,CFIDE";
 			getCurrentPage = ListGetAt(CGI.SCRIPT_NAME, 1, "/");
 			
-			if ( NOT APPLICATION.IsServerLocal AND NOT ListContainsNoCase(allowedAreasList, getCurrentPage) ) {			
+			if ( CGI.HTTP_HOST EQ APPLICATION.SITE.URL.httpHost AND CGI.SCRIPT_NAME EQ "/index.cfm" ) { 
+				// Redirect to Online Application
+				Location("https://" & CGI.HTTP_HOST & "/admissions/index.cfm", "no");
+			} else if ( NOT APPLICATION.IsServerLocal AND NOT ListContainsNoCase(allowedAreasList, getCurrentPage) AND CGI.HTTP_HOST NEQ APPLICATION.SITE.URL.httpHost ) {			
+				// Redirect to MacDuffie Site
 				Location("http://www.MacDuffie.org", "no");
-			}
+			} 
 		</cfscript>
         
 		<!--- 

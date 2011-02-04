@@ -25,7 +25,7 @@
 
 	/***** Create APPLICATION.SCHOOL structure / Stores School Information *****/
 	APPLICATION.SCHOOL = StructNew();		
-	APPLICATION.SCHOOL.name = 'Granby Preparatory Academy';
+	APPLICATION.SCHOOL.name = 'The MacDuffie School';
 	APPLICATION.SCHOOL.address = '66 School Street';
 	APPLICATION.SCHOOL.city = 'Granby';
 	APPLICATION.SCHOOL.state = 'MA';
@@ -69,7 +69,10 @@
 	APPLICATION.SITE = StructNew();		
 	// Create new structure to store site information
 	APPLICATION.SITE = APPLICATION.SITE.URL = StructNew();	
-
+	
+	// Set Up Online Application URL
+	APPLICATION.SITE.URL.httpHost = 'macduffie.exitsapplication.com';
+	
 	// Set Site URL
 	APPLICATION.SITE.URL.main = 'http://' & CGI.SERVER_NAME;
 	APPLICATION.SITE.URL.adminTool = APPLICATION.SITE.URL.main & '/admin';
