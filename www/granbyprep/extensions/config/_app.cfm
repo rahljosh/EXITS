@@ -52,7 +52,7 @@
 	
 	// Set up a short name for APPLICATION.METADATA
 	APPLICATION.METADATA = APPLICATION.METADATA;
-	APPLICATION.METADATA.pageTitle = 'Granby Preparatory Academy';
+	APPLICATION.METADATA.pageTitle = 'The MacDuffie School';
 	APPLICATION.METADATA.pageDescription = '';
 	APPLICATION.METADATA.pageKeywords = '';
 	

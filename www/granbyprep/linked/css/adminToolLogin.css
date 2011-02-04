@@ -90,6 +90,7 @@ body {
 }
 
 #logoContent {
+	color: #FFF; /* MacDuffie */
 	height: 75px;
 	width: 560px;
 	position: absolute;
@@ -99,8 +100,10 @@ body {
 }
 
 .schoolName {
-	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	color: #FFF; /* MacDuffie */
 	font-size: 28px;
+	display:block;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
 .returningUserBox {
