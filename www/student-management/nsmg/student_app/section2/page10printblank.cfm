@@ -227,8 +227,9 @@
 		<td>&nbsp;</td>
 		<td><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 	</tr>
-</table><br><br>
-><br><br>
+</table>
+<br><br>
+<br><br>
 
 <table width="660" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr><td width="315"><em>Signature of Teacher</em></td><td width="40">&nbsp;</td><td width="315"><em>Date</em></td></tr>

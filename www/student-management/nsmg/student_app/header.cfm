@@ -15,21 +15,24 @@
 		if ( VAL(URL.userType) AND NOT IsDefined('CLIENT.usertype') )  {
 			CLIENT.userType = URL.userType;	
 		}
-	
-		// Case Color
+		
 		if ( CLIENT.companyid EQ 10 ) {
+			// Case 
 			CLIENT.org_code = CLIENT.companyid;
 			bgcolor ='FFFFFF';
-		}
-		
-		else {
+		} else if ( CLIENT.companyid EQ 11 ) {
+			// WEP
+			CLIENT.org_code = CLIENT.companyid;
+		} else if ( CLIENT.companyid EQ 14 ) {
+			// EIS
+			CLIENT.org_code = CLIENT.companyid;
+			bgcolor ='c4d5ef';
+		} else {
+			// EXITS APPLICATION
 			CLIENT.org_code = 5;
 			bgcolor ='B5D66E';			
 		} 
     </cfscript>
-    <cfif client.companyid eq 11>
-    <Cfset client.org_code=11>
-    </cfif>
 
 	<cfif isDefined('URL.unqID')>
         
@@ -54,7 +57,6 @@
         	companyID,
             companyName,
             companyShort_noColor
-            
         FROM
         	smg_companies
         WHERE 

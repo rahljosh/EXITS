@@ -1,6 +1,3 @@
-<!----
-<cftry>
----->
 <cfquery name="check_state" datasource="MySql">
 	SELECT statechoiceid, studentid, state1, state2, state3
 	FROM smg_student_app_state_requested
@@ -103,37 +100,53 @@ function NextPage() {
 <cfquery name="check_if_answered" datasource="MySQL">
 	SELECT smg_students.regionalguarantee, smg_students.regionguar, smg_regions.regionname
 	FROM smg_students, smg_regions
-	WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
+	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
 <cfquery name="states_requested" datasource="MySQL">
-	SELECT state1, sta1.statename as statename1, state2, sta2.statename as statename2, state3, sta3.statename as statename3
-	FROM smg_student_app_state_requested 
-	LEFT JOIN smg_states sta1 ON sta1.id = state1
-	LEFT JOIN smg_states sta2 ON sta2.id = state2
-	LEFT JOIN smg_states sta3 ON sta3.id = state3
-	WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
-</cfquery>
-<cfquery name="city_requested" datasource="MySQL">
-	SELECT city1, city2, city3
-	FROM smg_student_app_city_requested 
-	WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
+	SELECT 
+    	state1, 
+        sta1.statename as statename1, 
+        state2, 
+        sta2.statename as statename2, 
+        state3, 
+        sta3.statename as statename3
+	FROM 
+    	smg_student_app_state_requested 
+	LEFT JOIN 
+    	smg_states sta1 ON sta1.id = state1
+	LEFT JOIN 
+    	smg_states sta2 ON sta2.id = state2
+	LEFT JOIN 
+    	smg_states sta3 ON sta3.id = state3
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
-
+<cfquery name="qCityRequested" datasource="MySQL">
+	SELECT 
+    	city1, 
+        city2, 
+        city3
+	FROM 
+    	smg_student_app_city_requested 
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+</cfquery>
 
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
 		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
-		<td class="tablecenter"><h2>Page [21] - State Choice </h2></td>
+		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>City</cfif> Choice </h2></td>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		<td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
 
 <cfoutput>
+
 <cfform method="post" name="page21" action="?curdoc=section4/qr_page21" onSubmit="return CheckStates();">
 
 <!--- PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
@@ -178,96 +191,107 @@ function NextPage() {
 	<tr>
 		<td>
 			<div align="justify"><cfinclude template="state_guarantee_text.cfm"></div>
-            <cfif client.companyid neq 14>
-			<table>
-				<tr><td>State Choice Price:</td><td>=</td><td>Please contact your rep for current prices for state guarantees.</td></tr>
-				
-			</table>
             
-			<img src="pics/usa-map.gif" width="642" height="331"><br>
-            <cfelse>
-            <img src="pics/ESI-Map.jpg" width="642" height="331"><br>
+			<cfif CLIENT.companyID NEQ 14>
+            	<!--- Regular State Guarantee Choice --->
+                
+                <table>
+                    <tr>
+                    	<td>State Choice Price:</td>
+                        <td>Please contact your rep for current prices for state guarantees.</td>
+                    </tr>
+                </table>
+                <img src="pics/usa-map.gif" width="642" height="331" align="middle"><br>
+                
+                <input type="radio" name="state_select" id="stateSelectYes" value="yes" onClick="hideAll(); changeDiv('1','block'); DataChanged();" <cfif check_state.recordcount GT '0' AND check_state.state1 GT '0'>checked</cfif> >
+                <label for="stateSelectYes">Yes, submit my choices as indicated below.</label>
+                <input type="radio" name="state_select" id="stateSelectNo" value="no" onClick="hideAll(); changeDiv('2','block'); DataChanged();" <cfif check_state.recordcount NEQ '0' AND check_state.state1 EQ '0'>checked</cfif> >
+                <label for="stateSelectNo">No, I am not interested in a state choice.</label>
+                    
+                <div id ="1" style="display:none"><br>
+                    <table>
+                        <tr>
+                        <td>1st Choice:</td>
+                        <td><cfselect name="state1" onClick="DataChanged();">
+                                <option value="0"></option>
+                                <cfloop query="states"><option value="#id#" <cfif states_requested.state1 EQ id> selected </cfif> >#statename#</option></cfloop>
+                            </cfselect>
+                        </td>
+                        <td>&nbsp; 2nd Choice:</td>
+                        <td><cfselect name="state2" onClick="DataChanged();">
+                                <option value="0"></option>
+                                <cfloop query="states"><option value="#id#" <cfif states_requested.state2 EQ id> selected </cfif> >#statename#</option></cfloop>
+                            </cfselect>
+                        </td>
+                        <td>&nbsp; 3rd Choice:</td>
+                        <td><cfselect name="state3" onClick="DataChanged();">
+                                <option value="0"></option>
+                                <cfloop query="states"><option value="#id#" <cfif states_requested.state3 EQ id> selected </cfif> >#statename#</option></cfloop>
+                            </cfselect>
+                        </td>							
+                        </tr>
+                    </table>
+           		</div>
+
+                <div id=2 style="display:none"><br>
+	                Assign me to any state in the United States, do NOT put me down for a State Choice.
+                </div>
+                
+			<cfelse>
+            	<!--- Exchange Service International Application --->
+                
+                <img src="pics/ESI-Map.jpg" width="650" height="372" align="middle"><br>
+                
+                <table cellpadding="2" cellspacing="2" style="margin:10px;">
+                    <tr>
+                        <td>1st Choice:</td>
+                        <td><select name="city1" onClick="DataChanged();">
+                                <option value=""></option>
+                                <option value="Arlington" <cfif qCityRequested.city1 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
+                                <option value="Belmont" <cfif qCityRequested.city1 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
+                                <option value="Cambridge" <cfif qCityRequested.city1 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
+                                <option value="Antelope" <cfif qCityRequested.city1 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
+                                <option value="Los Angeles" <cfif qCityRequested.city1 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
+                                <option value="Santa Barbara" <cfif qCityRequested.city1 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
+                                <option value="Seattle" <cfif qCityRequested.city1 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
+                                <option value="Tacoma" <cfif qCityRequested.city1 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
+                            </select>
+                        </td>
+					</tr>
+                    <tr>                        
+                        <td>2nd Choice:</td>
+                        <td><select name="city2" onClick="DataChanged();">
+                                <option value=""></option>
+                                <option value="Arlington" <cfif qCityRequested.city2 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
+                                <option value="Belmont" <cfif qCityRequested.city2 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
+                                <option value="Cambridge" <cfif qCityRequested.city2 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
+                                <option value="Antelope" <cfif qCityRequested.city2 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
+                                <option value="Los Angeles" <cfif qCityRequested.city2 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
+                                <option value="Santa Barbara" <cfif qCityRequested.city2 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
+                                <option value="Seattle" <cfif qCityRequested.city2 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
+                                <option value="Tacoma" <cfif qCityRequested.city2 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
+                            </select>
+                        </td>
+					</tr>
+                    <tr>                        
+                        <td>3rd Choice:</td>
+                        <td><select name="city3" onClick="DataChanged();">
+                                <option value=""></option>
+                                <option value="Arlington" <cfif qCityRequested.city3 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
+                                <option value="Belmont" <cfif qCityRequested.city3 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
+                                <option value="Cambridge" <cfif qCityRequested.city3 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
+                                <option value="Antelope" <cfif qCityRequested.city3 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
+                                <option value="Los Angeles" <cfif qCityRequested.city3 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
+                                <option value="Santa Barbara" <cfif qCityRequested.city3 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
+                                <option value="Seattle" <cfif qCityRequested.city3 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
+                                <option value="Tacoma" <cfif qCityRequested.city3 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
+                            </select>
+                        </td>
+					</tr>                        							
+                </table>
+                
             </cfif>
-			<!--- Removed as per Brian House Request - 11/20/2009 --->
-            <!---
-			<a href="?curdoc=section4/page20&id=4&p=20">Regional Choices</a> are still available starting at $300<br><Br>
-			--->
-            <Cfif client.companyid neq  14>
-			<input type="radio" name="state_select" value="yes" onClick="hideAll(); changeDiv('1','block'); DataChanged();" <cfif check_state.recordcount GT '0' AND check_state.state1 GT '0'>checked</cfif> >Yes, submit my choices as indicated below. 
-			<input type="radio" name="state_select" value="no" onClick="hideAll(); changeDiv('2','block'); DataChanged();" <cfif check_state.recordcount NEQ '0' AND check_state.state1 EQ '0'>checked</cfif> >No, I am not interested in a state choice.
-			<div id ="1" style="display:none"><br>
-			
-        	<table>
-				<tr>
-				<td>1st Choice:</td>
-				<td><cfselect name="state1" onClick="DataChanged();">
-						<option value="0"></option>
-						<cfloop query="states"><option value="#id#" <cfif states_requested.state1 EQ id> selected </cfif> >#statename#</option></cfloop>
-					</cfselect>
-				</td>
-				<td>&nbsp; 2nd Choice:</td>
-				<td><cfselect name="state2" onClick="DataChanged();">
-						<option value="0"></option>
-						<cfloop query="states"><option value="#id#" <cfif states_requested.state2 EQ id> selected </cfif> >#statename#</option></cfloop>
-					</cfselect>
-				</td>
-				<td>&nbsp; 3rd Choice:</td>
-				<td><cfselect name="state3" onClick="DataChanged();">
-						<option value="0"></option>
-						<cfloop query="states"><option value="#id#" <cfif states_requested.state3 EQ id> selected </cfif> >#statename#</option></cfloop>
-					</cfselect>
-				</td>							
-			</table>
-           
-            <cfelse>
-        	<table>
-				<tr>
-				<td>1st Choice:</td>
-				<td><cfselect name="city1" onClick="DataChanged();">
-						<option value="0"></option>
-						<option value="Arlington" <cfif city_requested.city1 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
-                        <option value="Belmont" <cfif city_requested.city1 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
-                        <option value="Cambridge" <cfif city_requested.city1 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
-                        <option value="Antelope" <cfif city_requested.city1 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
-                        <option value="Los Angeles" <cfif city_requested.city1 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
-                        <option value="Santa Barbara" <cfif city_requested.city1 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
-                        <option value="Seattle" <cfif city_requested.city1 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
-                        <option value="Tacoma" <cfif city_requested.city1 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
-					</cfselect>
-			
-				</td>
-				<td>&nbsp; 2nd Choice:</td>
-				<td><cfselect name="city2" onClick="DataChanged();">
-						<option value="0"></option>
-						<option value="Arlington" <cfif city_requested.city2 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
-                        <option value="Belmont" <cfif city_requested.city2 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
-                        <option value="Cambridge" <cfif city_requested.city2 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
-                        <option value="Antelope" <cfif city_requested.city2 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
-                        <option value="Los Angeles" <cfif city_requested.city2 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
-                        <option value="Santa Barbara" <cfif city_requested.city2 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
-                        <option value="Seattle" <cfif city_requested.city2 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
-                        <option value="Tacoma" <cfif city_requested.city2 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
-					</cfselect>
-				</td>
-				<td>&nbsp; 3rd Choice:</td>
-				<td><cfselect name="city3" onClick="DataChanged();">
-						<option value="0"></option>
-						<option value="Arlington" <cfif city_requested.city3 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
-                        <option value="Belmont" <cfif city_requested.city3 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
-                        <option value="Cambridge" <cfif city_requested.city3 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
-                        <option value="Antelope" <cfif city_requested.city3 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
-                        <option value="Los Angeles" <cfif city_requested.city3 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
-                        <option value="Santa Barbara" <cfif city_requested.city3 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
-                        <option value="Seattle" <cfif city_requested.city3 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
-                        <option value="Tacoma" <cfif city_requested.city3 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
-					</cfselect>
-				</td>							
-			</table>
-            </cfif>
-			</div>
-			 <div id=2 style="display:none"><br>
-			Assign me to any state in the United States, do NOT put me down for a State Choice.
-			</div>
+            
 		</td>
 	</tr>
 </table><br><br>
@@ -275,18 +299,10 @@ function NextPage() {
 		 
 <!--- PAGE BUTTONS --->
 <cfinclude template="../page_buttons.cfm">
+
 </cfform>
+
 </cfoutput>
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
-<!----
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-
-</body>
-</html>
-
-</cftry>
----->

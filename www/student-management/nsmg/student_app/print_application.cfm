@@ -251,7 +251,7 @@ where studentid = #client.studentid#
 		</td>
     </tr>
     <!----We don't need to include 18 for ESI---->
-    <cfif client.companyid neq 14>
+    <cfif CLIENT.companyID NEQ 14>
     <tr>
     	<td valign="top">				
 			<cfinclude template="section4/page18print.cfm">
@@ -270,27 +270,29 @@ where studentid = #client.studentid#
 			
 	<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS --->
 	<cfif IsDefined('client.usertype') AND client.usertype NEQ 10 AND get_student_info2.master_accountid NEQ 10115 AND get_student_info2.intrep NEQ 10115 AND get_student_info2.intrep NEQ 8318>
-    <!----We don't need to include 18 for ESI---->
-    <cfif client.companyid neq 14>
-        <tr>
-            <td valign="top">				
-                    <cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#get_student_info2.studentid#.*">
-                    <cfif Right(page20.name, 3) NEQ 'pdf' AND Right(page20.name, 3) NEQ 'doc'>
-                        <cfinclude template="section4/page20print.cfm">
-                        <cfif printpage EQ 'yes'>
-                            <div style="page-break-after:always;"></div>
+    
+		<!----We don't need to include 20 for ESI---->
+        <cfif CLIENT.companyID NEQ 14>
+            <tr>
+                <td valign="top">				
+                        <cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#get_student_info2.studentid#.*">
+                        <cfif Right(page20.name, 3) NEQ 'pdf' AND Right(page20.name, 3) NEQ 'doc'>
+                            <cfinclude template="section4/page20print.cfm">
+                            <cfif printpage EQ 'yes'>
+                                <div style="page-break-after:always;"></div>
+                            </cfif>
                         </cfif>
-                    </cfif>
-                </td>
-        </tr>
-        </cfif>
+                    </td>
+            </tr>
+		</cfif>
+        
         <tr>
             <td valign="top">				
                     <cfdirectory directory="#AppPath.onlineApp.inserts#page21" name="page21" filter="#get_student_info2.studentid#.*">
                     <cfif Right(page21.name, 3) NEQ 'pdf' AND Right(page21.name, 3) NEQ 'doc'>
                         <cfinclude template="section4/page21print.cfm">
                     </cfif>
-                </td>
+            </td>
         </tr>
 	</cfif>
 </table>

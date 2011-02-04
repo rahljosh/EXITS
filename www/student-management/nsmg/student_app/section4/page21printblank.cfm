@@ -38,7 +38,7 @@
 	<tr height="33">
 		<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
-		<td class="tablecenter"><h2>Page [21] - State Choice </h2></td>
+		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>City</cfif> Choice </h2></td>
 		<cfif IsDefined('url.curdoc')>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21printblank.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
@@ -58,23 +58,50 @@
 	<tr>
 		<td>
 			<div align="justify"><cfinclude template="state_guarantee_text.cfm"></div>
-			<table>
-				<tr><td>State Choice Price:</td><td>Please contact your rep for current prices for state guarantees.</td></tr>
-				
-			</table><br>
-			<img src="#path#pics/usa-map.gif"><br><br>
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes, submit my choices as indicated below. 
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No, I am not interested in a state choice.<br>
-			<br>
-			<table width="100%" border=0 cellpadding=2 cellspacing=0 align="center">
-				<tr>
-				<td width="90">1st Choice:</td>
-				<td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
-				<td width="90">&nbsp; 2nd Choice:</td>
-				<td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
-				<td width="90">&nbsp; 3rd Choice:</td>
-				<td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
-			</table>
+            
+			<cfif CLIENT.companyID NEQ 14>
+                <!--- Regular State Guarantee Choice --->
+            
+                <table>
+                    <tr><td>State Choice Price:</td>
+                    <td>Please contact your rep for current prices for state guarantees.</td></tr>
+                </table><br>
+                <img src="#path#pics/usa-map.gif"><br><br>
+                <img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes, submit my choices as indicated below. 
+                <img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No, I am not interested in a state choice.
+                <br><br>
+                <table width="100%" border=0 cellpadding=2 cellspacing=0 align="center">
+                    <tr>
+                        <td width="90">1st Choice:</td>
+                        <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        <td width="90">&nbsp; 2nd Choice:</td>
+                        <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        <td width="90">&nbsp; 3rd Choice:</td>
+                        <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                	</tr>
+                </table>
+		  <cfelse>
+              <!--- Exchange Service Information --->
+          
+              <img src="#path#pics/ESI-Map.jpg" width="650" height="372" align="middle"><br>
+
+              <table cellpadding="2" cellspacing="2" style="margin:10px;">
+                  <tr>
+                      <td width="90">1st Choice:</td>
+                      <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                  </tr>
+                  <tr>                        
+                      <td width="90">2nd Choice:</td>
+                      <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                  </tr>
+                  <tr>                        
+                      <td width="90">3rd Choice:</td>
+                      <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                  </tr>                        							
+              </table>
+
+          </cfif>
+                
 		</td>
 	</tr>
 </table><br><br>
