@@ -652,6 +652,7 @@
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT DISTINCT
                     c.candidateID,
+                    c.applicationStatusID,
                     c.uniqueID,
                     c.firstName,
                     c.lastName,
