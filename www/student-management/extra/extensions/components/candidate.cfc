@@ -398,8 +398,8 @@
 			name="qCheckEmail" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
-					candidateID
-					ID, 
+					candidateID,
+                    applicationStatusID,
                     firstName,
                     lastName,                    
                     email,
@@ -506,7 +506,7 @@
 			// Email the candidate
 			if ( ARGUMENTS.type EQ 'Candidate' ) {
 
-				APPLICATION.CFC.email.sendEmail(
+				APPLICATION.CFC.EMAIL.sendEmail(
 					emailFrom=APPLICATION.EMAIL.contactUs,
 					emailTo=APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email)),
 					emailTemplate='newAccount',

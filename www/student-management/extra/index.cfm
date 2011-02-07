@@ -142,18 +142,34 @@
 
 					SESSION.pageMessages.Add("Your login information has been sent");
 
-				// EMAIL Candidate Account Information
-                } else if ( qCheckCandidateAccount.recordCount ) {
+				// EMAIL Candidate Account Information - If there is a proper account ( email / password )
+                } else if ( qCheckCandidateAccount.recordCount AND LEN(qCheckCandidateAccount.password) ) {
 
-					// Send out Email Confirmation
-					APPLICATION.CFC.EMAIL.sendEmail(
-						emailTo=qCheckCandidateAccount.email,
-						emailTemplate='forgotPassword',
-						candidateID=qCheckCandidateAccount.candidateID
-					);
-                	
-					SESSION.pageMessages.Add("Your login information has been sent");
-				
+					if ( qCheckCandidateAccount.applicationStatusID EQ 1 ) {
+						
+						// Pending Activation - Send out Activation Email
+						APPLICATION.CFC.EMAIL.sendEmail(
+							emailFrom=APPLICATION.EMAIL.contactUs,
+							emailTo=qCheckCandidateAccount.email,
+							emailTemplate='newAccount',
+							candidateID=qCheckCandidateAccount.candidateID
+						);
+
+						SESSION.pageMessages.Add("Account activation instructions has been emailed to you");	
+
+					} else {
+						
+						// Account Active - Send out Email Confirmation
+						APPLICATION.CFC.EMAIL.sendEmail(
+							emailTo=qCheckCandidateAccount.email,
+							emailTemplate='forgotPassword',
+							candidateID=qCheckCandidateAccount.candidateID
+						);
+						
+						SESSION.pageMessages.Add("Your login information has been emailed to you");
+
+					}
+			
                 // Account Not Found
                 } else {
                     SESSION.formErrors.Add("Email address is not registered or your account is inactive. Please contact #APPLICATION.EMAIL.support# if you have any questions");
