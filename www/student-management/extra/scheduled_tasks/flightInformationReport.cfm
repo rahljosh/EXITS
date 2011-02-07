@@ -2,8 +2,8 @@
 	
 	File:		flightInformationReport.cfm
 	Author:		Marcus Melo
-	Date:		January 19, 2010
-	Desc:		Scheduled Taks - Emails flight information entered/updated 
+	Date:		January 19, 2011
+	Desc:		Scheduled Task - Emails flight information entered/updated 
 				in the last 24 hours.
 				It should be scheduled to run daily.
 
