@@ -4,18 +4,29 @@
 </cfif>
 
 <cfparam name="submitted" default="0">
+<cfparam name="state" default="">
 <cfparam name="keyword" default="">
 <cfparam name="school_dates" default="">
 <cfparam name="orderby" default="schoolname">
 <cfparam name="recordsToShow" default="25">
+
+<cfquery name="list_states" datasource="#application.dsn#">
+    SELECT DISTINCT state
+    FROM smg_schools
+    ORDER BY state
+</cfquery>
+
 <!--- default state to user's state. --->
-<cfif not isDefined("state")>
-    <cfquery name="get_state" datasource="#application.dsn#">
-        SELECT state
-        FROM smg_users
-        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+<cfif NOT LEN(state)>
+    <cfquery name="qGetState" datasource="#application.dsn#">
+        SELECT 
+        	state
+        FROM 
+        	smg_users
+        WHERE 
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
     </cfquery>
-	<cfset state = get_state.state>
+	<cfset state = qGetState.state>
 </cfif>
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -23,9 +34,7 @@
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
         <td width=26 background="pics/header_background.gif"><img src="pics/school.gif"></td>
         <td background="pics/header_background.gif"><h2>Schools</h2></td>
-	
         <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/school_form">Add School</a></td>
-	
         <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
     </tr>
 </table>
@@ -36,13 +45,8 @@
     <tr>
         <td><input name="send" type="submit" value="Submit" /></td>
         <td>
-            <cfquery name="list_states" datasource="#application.dsn#">
-                SELECT DISTINCT state
-                FROM smg_schools
-                ORDER BY state
-            </cfquery>
             State<br />
-			<cfselect NAME="state" query="list_states" value="state" display="state" selected="#state#" queryPosition="below">
+			<cfselect name="state" query="list_states" value="state" display="state" selected="#state#" queryPosition="below">
 				<option value="">All</option>
 			</cfselect>
         </td>
@@ -99,26 +103,26 @@
             	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
 		
-		<cfif LEN(FORM.state)>
+		<cfif LEN(state)>
             AND 
-            	s.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">
+            	s.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#state#">
         </cfif>
 
         <cfif TRIM(keyword) NEQ ''>
             AND 
             	(
-                	s.schoolid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.keyword)#">
+                	s.schoolid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(keyword)#">
                 OR 
-                	s.schoolname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.keyword)#%">
+                	s.schoolname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
                 OR 
-                	s.principal LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.keyword)#%">
+                	s.principal LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
                 OR 
-                	s.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.keyword)#%">
+                	s.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
                 OR 
-                	s.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.keyword)#%">
+                	s.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
             	)
         </cfif>
-		<cfif LEN(FORM.school_dates)>
+		<cfif LEN(school_dates)>
             AND 
             	scd.schoolid IS NULL
         </cfif>
