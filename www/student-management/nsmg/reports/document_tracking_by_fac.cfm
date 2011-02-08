@@ -66,7 +66,7 @@ Order by Firstname
 </cfquery>
 
 <table width='100%' cellpadding=4 cellspacing="0" align="center">
-<span class="application_section_header"><cfoutput>#companyshort.companyshort# - Missing Placement Documents Report</cfoutput></span>
+<span class="application_section_header"><cfoutput>Missing Placement Documents Report</cfoutput></span>
 </table>
 <br>
 
@@ -118,7 +118,14 @@ Order by Firstname
 				or doc_photos_rec_date IS NULL or doc_school_accept_date IS NULL or doc_school_profile_rec IS NULL 
 				or doc_conf_host_rec IS NULL or doc_date_of_visit IS NULL or doc_ref_form_1 IS NULL 
 				or doc_ref_form_2 IS NULL or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL 
-				or doc_class_schedule IS NULL)
+				or doc_class_schedule IS NULL OR
+                doc_income_ver_date IS NULL
+            OR
+            	doc_conf_host_rec2 IS NULL
+            OR
+            	doc_single_ref_check1 IS NULL
+            or
+            	doc_single_ref_check2  IS NULL)
 	</cfquery> 
 	
 	<cfif get_total_in_region.recordcount is not 0>
@@ -137,22 +144,31 @@ Order by Firstname
 		</cfquery>
 
 		<Cfquery name="get_students_region" datasource="MySQL">
-			select studentid, countryresident, firstname, familylastname, sex, programid, placerepid,
+			select studentid, countryresident, firstname, familylastname, sex, smg_students.programid, placerepid, hostid,
 			date_pis_received, doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date, doc_photos_rec_date, doc_school_accept_date, doc_school_profile_rec,
-			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_form_2, stu_arrival_orientation, host_arrival_orientation, doc_class_schedule
+			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_form_2, stu_arrival_orientation, host_arrival_orientation, doc_class_schedule, doc_income_ver_date,
+            doc_conf_host_rec2, doc_single_ref_check1, doc_single_ref_check2, p.seasonid
 			from smg_students
-			where active = '1' AND regionassigned = '#current_region#' AND companyid = '#client.companyid#' 
+            left join smg_programs p on p.programid = smg_students.programid
+			where smg_students.active = '1' AND regionassigned = '#current_region#' AND smg_students.companyid = '#client.companyid#' 
 				AND onhold_approved <= '4'
 				 AND placerepid = '#list_repid.placerepid#' AND hostid <> '0' 
 				 AND (<cfloop list=#form.programid# index='prog'>
-					 programid = #prog# 
+					 smg_students.programid = #prog# 
 					 <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
 					 </cfloop> )						 
 				AND (doc_full_host_app_date IS NULL or doc_letter_rec_date IS NULL or doc_rules_rec_date IS NULL 
 					or doc_photos_rec_date IS NULL or doc_school_accept_date IS NULL or doc_school_profile_rec IS NULL 
 					or doc_conf_host_rec IS NULL or doc_date_of_visit IS NULL or doc_ref_form_1 IS NULL 
 					or doc_ref_form_2 IS NULL or stu_arrival_orientation IS NULL or host_arrival_orientation IS NULL 
-					or doc_class_schedule IS NULL)
+					or doc_class_schedule IS NULL OR
+                doc_income_ver_date IS NULL
+            OR
+            	doc_conf_host_rec2 IS NULL
+            OR
+            	doc_single_ref_check1 IS NULL
+            or
+            	doc_single_ref_check2  IS NULL)
 		</cfquery> 
 		
 		<cfif get_students_region.recordcount is not 0> 
@@ -172,7 +188,29 @@ Order by Firstname
 					<td width="8%">Placement</td>
 					<td width="70%">Missing Documents</td>
 				</tr>	
-				<cfoutput query="get_students_region">			 
+				<cfoutput query="get_students_region">		
+                 <cfquery name="get_host_info" datasource="MySQL">
+                        SELECT  h.hostid, h.motherfirstname, h.fatherfirstname, h.familylastname as hostlastname, h.hostid as hostfamid
+                        FROM smg_hosts h
+                        WHERE hostid = #hostid#
+                    </cfquery>
+	 				  <!---number kids at home---->
+                        <cfquery name="kidsAtHome" datasource="#application.dsn#">
+                        select count(childid) as kidcount
+                        from smg_host_children
+                        where liveathome = 'yes' and hostid =#get_host_info.hostid#
+                        </cfquery>
+						
+						<Cfset father=0>
+                        <cfset mother=0>
+                      
+                        <Cfif get_host_info.fatherfirstname is not ''>
+                            <cfset father = 1>
+                        </Cfif>
+                        <Cfif get_host_info.motherfirstname is not ''>
+                            <cfset mother = 1>
+                        </Cfif>
+                        <cfset client.totalfam = #mother# + #father# + #kidsAtHome.kidcount#>	 
 					<tr bgcolor="#iif(get_students_region.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 						<td>#studentid#</td>
 						<td>#firstname# #familylastname#</td>
@@ -190,7 +228,15 @@ Order by Firstname
 							<cfif doc_ref_form_2 is ''>Ref. 2 &nbsp; &nbsp;</cfif>
 							<cfif stu_arrival_orientation is ''>Student Orientation &nbsp; &nbsp;</cfif>
 							<cfif host_arrival_orientation is ''>HF Orientation &nbsp; &nbsp;</cfif>
-							<cfif doc_class_schedule is ''>Class Schedule &nbsp; &nbsp;</cfif>							
+							<cfif doc_class_schedule is ''>Class Schedule &nbsp; &nbsp;</cfif>		
+							 <cfif seasonid gt 8>
+                                <cfif NOT LEN(doc_income_ver_date)>Income Verification &nbsp; &nbsp;</cfif>
+                                <cfif NOT LEN(doc_conf_host_rec2)> 2nd Conf. Host Visit &nbsp; &nbsp;</cfif>
+                            </cfif>
+                            <cfif client.totalfam eq 1>
+                                <cfif NOT LEN(doc_single_ref_check1)>Ref Check (Single) &nbsp; &nbsp;</cfif>
+                                <cfif NOT LEN(doc_single_ref_check2)>2nd Ref Check (Single) &nbsp; &nbsp;</cfif>
+                            </cfif>					
 						</font></i></td>		
 					</tr>								
 				</cfoutput>	

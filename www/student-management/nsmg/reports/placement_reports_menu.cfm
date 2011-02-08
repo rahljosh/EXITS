@@ -276,6 +276,12 @@
                         </select>
                     </td>
 	            </tr>
+                            <tr align="left">
+                    <td>Send as email to manager :</td>
+                	<td>
+                    	<input type="radio" name="sendemail" value=0 checked>No  <input type="radio" name="sendemail" value=1>Yes 
+                    </td>
+	            </tr>
                 <tr>
                     <td>Report By :</td>
                     <td>
