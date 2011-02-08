@@ -113,7 +113,7 @@
 			allergic_to_foods = <cfif IsDefined('form.allergic_to_foods')>'#form.allergic_to_foods#',<cfelse>NULL,</cfif>
 			foods_list = <cfqueryparam value="#form.foods_list#" cfsqltype="cf_sql_char">,
 			allergic_to_pets = <cfif IsDefined('form.allergic_to_pets')>'#form.allergic_to_pets#',<cfelse>NULL,</cfif>
-			
+			pets_list = <cfif IsDefined('form.pets_list')>'#form.pets_list#',<cfelse>NULL,</cfif>
 			allergic_to_novocaine = <cfif IsDefined('form.allergic_to_novocaine')>'#form.allergic_to_novocaine#',<cfelse>NULL,</cfif>
 			allergic_to_sulfa = <cfif IsDefined('form.allergic_to_sulfa')>'#form.allergic_to_sulfa#',<cfelse>NULL,</cfif>
 			allergic_to_adhesive = <cfif IsDefined('form.allergic_to_adhesive')>'#form.allergic_to_adhesive#',<cfelse>NULL,</cfif>
