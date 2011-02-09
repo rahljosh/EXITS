@@ -16,7 +16,8 @@
 	LEFT JOIN smg_companies c ON codes.companyid = c.companyid
 	LEFT JOIN smg_insurance_type type ON codes.insutypeid = type.insutypeid
 	LEFT JOIN smg_seasons s ON codes.seasonid = s.seasonid
-	WHERE 1=1
+	WHERE 
+    	type.active = 1
 		<cfif client.companyid NEQ '5'>AND codes.companyid = '#client.companyid#'</cfif>
 	ORDER BY companyshort, season, insu_codeid
 </cfquery>
@@ -51,9 +52,7 @@
 </cfloop>
 <tr><td colspan=4>&nbsp;</td></tr>
 <Tr><td colspan=4 align="center">
-		<cfform method="post" action="?curdoc=insurance/new_policy">
-		<cfinput name="Submit" type="image" src="pics/new.gif" border=0>
-		</cfform>
+		<a href="?curdoc=insurance/new_policy"><img src="pics/new.gif" border="0"></a>
 	</td>
 </Tr>
 </table>

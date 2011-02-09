@@ -55,6 +55,7 @@ if (document.new_policy.seasonid.value == '0') {
 	SELECT insutypeid, type
 	FROM smg_insurance_type
 	WHERE insutypeid != '1'
+    	and active = 1
 </cfquery>
 
 <cfquery name="smg_seasons" datasource="MySql">
