@@ -36,16 +36,11 @@
 		VALUES ('#client.companyid#', '#form.insutypeid#', '#form.seasonid#', '#form.policycode#')
 	</cfquery>
 
-	<html>
-	<head>
 	<script language="JavaScript">
 	<!-- 
-	alert("You have successfully updated this page. Thank You.");
 		location.replace("?curdoc=insurance/insurance_codes");
 	//-->
 	</script>
-	</head>
-	</html>	
 
 	<cfcatch type="any">
 		<cfinclude template="../forms/error_message.cfm">
