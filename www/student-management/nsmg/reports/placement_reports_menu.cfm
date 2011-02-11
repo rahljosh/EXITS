@@ -279,7 +279,8 @@
                             <tr align="left">
                     <td>Send as email to manager :</td>
                 	<td>
-                    	<input type="radio" name="sendemail" value=0 checked>No  <input type="radio" name="sendemail" value=1>Yes 
+                    	<input type="radio" name="sendemail" id="sendEmailNo" value="0" checked="checked"> <label for="sendEmailNo">No</label>  
+                        <input type="radio" name="sendemail" id="sendEmailYes" value="1"> <label for="sendEmailYes">Yes</label>
                     </td>
 	            </tr>
                 <tr>
