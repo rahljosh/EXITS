@@ -10,12 +10,14 @@
 </head>
 <body>
 
-<cfif IsDefined('url.unqid')>
+<cfparam name="URL.status" default="0">
+
+<cfif IsDefined('URL.unqid')>
 	<cfquery name="get_student_info" datasource="MySql">
 		SELECT s.*, u.businessname
 		FROM smg_students s
 		LEFT JOIN smg_users u ON u.userid = s.intrep
-		WHERE s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
+		WHERE s.uniqueid = <cfqueryparam value="#URL.unqid#" cfsqltype="cf_sql_char">
 	</cfquery>
 	<cfset client.studentid = '#get_student_info.studentid#'>
 <cfelseif IsDefined('form.unqid')>
@@ -75,7 +77,7 @@
 		</cfif>
 		</cfform>
         
-         <cfif url.status neq 1>
+         <cfif URL.status neq 1>
 	<tr>
 		<td colspan=2 align="center"><a href="resend_student_login.cfm?unqid=#get_student_info.uniqueid#">Resend Login Info</a> - (if you changed the info, click save before clicking resend)</td>
 	</tr>
@@ -112,7 +114,7 @@
 		<tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>				
 		</cfif>
 		</cfform>
-       <cfif url.status neq 1>
+       <cfif URL.status neq 1>
 	<tr>
 		<td colspan=2 align="center"><a href="resend_student_login.cfm?unqid=#get_student_info.uniqueid#">Resend Login Info</a> - (if you changed the info, click save before clicking resend)</td>
 	</tr>

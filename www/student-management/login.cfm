@@ -291,7 +291,7 @@ a:active {
           <tr>
             <td class="style1">Password:</td>
             
-            <td><cfinput type="password" name="password" id="password" value="#FORM.password#" class="style1" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Password."></td>
+            <td><cfinput type="password" name="password" id="password" value="#FORM.password#" class="style1" size="20" maxlength="50" required="yes" validate="noblanks" message="Please enter the Password."></td>
           </tr>
           </table>
           <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
