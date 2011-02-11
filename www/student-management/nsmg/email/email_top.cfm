@@ -35,7 +35,7 @@
 
 <cfoutput>
 <div class="thin-border">
-<table background="#CLIENT.exits_url#/nsmg/pics/email_textured_background.png" width=600>
+<table background="#CLIENT.exits_url#/nsmg/pics/email_textured_background.png" width="80%">
 	<tr>
      	<td width="94"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#client.companyid#_header_logo.png"></td>
 		<cfif ListFind("1,2,3,4,5,12,13", CLIENT.companyID)>
@@ -49,7 +49,7 @@
 	</tr>
 </table>
 
-<Table width="600">
+<Table width="80%">
 	<Tr>
     	<td>
  </cfoutput>
