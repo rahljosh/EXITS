@@ -1,3 +1,19 @@
+<!--- Kill Extra Output --->
+<cfsilent>
+	
+    <!--- Param FORM variables --->
+	<cfparam name="URL.all" default="0">
+    
+</cfsilent>    
+
+
+<!--- All Programs --->
+<cfinclude template="../querys/get_programs.cfm">
+<!--- INTERNATIONAL REPS WITH KIDS ASSIGNED TO THE COMPANY--->
+<cfinclude template="../querys/get_intl_rep.cfm">
+<!--- ALL INTERNATIONAL REPS --->
+<cfinclude template="../querys/get_all_intl_rep.cfm">
+
 <SCRIPT LANGUAGE="JavaScript">
 <!-- Begin
 function checkEmail(obj) {
@@ -13,18 +29,20 @@ obj.checked = false; }
 	table.nav_bar { font-size: 10px; background-color: #ffffe6; border: 1px solid e2efc7; }
 </style>
 
-<!--- PROGRAM LIST --->
-<cfinclude template="../querys/get_active_programs.cfm">
-<!--- INTERNATIONAL REPS WITH KIDS ASSIGNED TO THE COMPANY--->
-<cfinclude template="../querys/get_intl_rep.cfm">
-<!--- ALL INTERNATIONAL REPS --->
-<cfinclude template="../querys/get_all_intl_rep.cfm">
-
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 		<td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
 		<td background="pics/header_background.gif"><h2>Intl. Representatives Reports</h2></td>
+		<cfif ListFind("1,2,3,4", CLIENT.userType)>
+            <td background="pics/header_background.gif" align="right">
+                <cfif NOT VAL(URL.All)>
+                    <a href="?curdoc=reports/placement_reports_menu&all=1">Show All Programs</a>
+                <cfelse>
+                    <a href="?curdoc=reports/placement_reports_menu">Show Active Programs Only</a>
+                </cfif>
+            </td>
+		</cfif>
 		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>

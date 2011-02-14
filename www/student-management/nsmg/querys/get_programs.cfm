@@ -1,3 +1,5 @@
+<cfparam name="URL.all" default="0">
+
 <cfquery name="get_program" datasource="MYSQL">
 	SELECT	
     	*
@@ -11,7 +13,7 @@
         p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
     AND	
     	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-	<cfif NOT IsDefined('URL.all')>
+	<cfif NOT VAL(URL.All)>
 		AND
 	        p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     </cfif>
