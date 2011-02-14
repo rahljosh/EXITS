@@ -3,7 +3,8 @@
 	
     <!--- Param FORM variables --->
 	<cfparam name="FORM.programID" default="0">
-    <cfparam name="FORM.regionID" default="0">
+    <cfparam name="FORM.regionID" default="">
+    <cfparam name="FORM.facilitatorID" default="0">
 	<cfparam name="FORM.reportBy" default="Placing"> <!--- Placing/Supervising representatives --->
     <cfparam name="FORM.sendEmail" default="0">
 
@@ -38,16 +39,29 @@
 	<!--- get company region --->
     <cfquery name="qGetRegions" datasource="MySQL">
         SELECT 
-        	regionID, 
-            regionname
+        	r.regionID, 
+            r.regionname,
+            u.firstName,
+            u.lastName
         FROM 
-        	smg_regions
+        	smg_regions r
+		LEFT OUTER JOIN 
+        	smg_users u ON r.regionFacilitator = u.userID            
         WHERE 
-        	company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-		AND
-            regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) 
+        	r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		
+        <cfif LEN(FORM.regionID)>
+            AND
+                r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) 
+        </cfif>
+            
+		<cfif VAL(FORM.facilitatorID)>
+			AND 
+            	r.regionFacilitator = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.facilitatorID#">
+		</cfif>            
+        
         ORDER BY 
-        	regionname
+        	r.regionname
     </cfquery> 
 
 	<!--- Advisors --->
@@ -85,8 +99,14 @@
 
 <body>
 
-<cfif NOT VAL(FORM.programID) OR NOT VAL(FORM.regionID)>
-	<cfinclude template="../forms/error_message.cfm">
+<cfif NOT VAL(FORM.programID)>
+	Please select at least one program.
+    <cfabort>
+</cfif>
+
+<cfif LEN(FORM.regionID) AND VAL(FORM.facilitatorID)>
+	Please select either a region or a facilitator.
+    <cfabort>
 </cfif>
 
 <cfoutput>
@@ -252,7 +272,7 @@
 
         <table width="100%" cellpadding="4" cellspacing="0" align="center" style="border:1px solid ##000;">	
             <tr bgcolor="##CCCCCC">	
-                <th width="85%">#qGetRegions.regionname#</th>
+                <th width="85%">Facitator:  #qGetRegions.firstName# #qGetRegions.lastName# &nbsp; - &nbsp; #qGetRegions.regionname#</th>
                 <td width="15%" align="center"><strong>#qGetAllStudentsInRegion.recordcount# student(s)</strong></td>
             </tr>
         </table>
