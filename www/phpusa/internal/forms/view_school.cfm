@@ -76,8 +76,8 @@ underline{border-bottom: 1px}
 	<tr>
 		<td wdith=15>
 		<cfif client.usertype lte 4>
-			<cfinput type="radio" name="usertype" onClick="hideAll(); changeDiv('1','block');" checked value="personal">School Info 
-			<cfinput type="radio" name="usertype" onClick="hideAll(); changeDiv('2','block');" value="billing">Website Info &nbsp;&nbsp;
+			<input type="radio" name="usertype" id="schoolInfo" onClick="hideAll(); changeDiv('1','block');" checked value="personal"> <label for="schoolInfo">School Info </label>
+			<input type="radio" name="usertype" id="schoolExternalInfo" onClick="hideAll(); changeDiv('2','block');" value="billing"> <label for="schoolExternalInfo">Website Info &nbsp;&nbsp; </label>
 		</cfif>
 		</td>
 		<td align="right"><strong><font size=+1>#get_school.schoolname#</font></strong></td>

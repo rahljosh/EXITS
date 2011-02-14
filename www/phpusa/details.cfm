@@ -26,8 +26,8 @@ from smg_states
 where id = #school.state#
 </cfquery>
 <!--- Build image paths --->
-<CFSET image_src="newschools/#school.schoolID#.jpg">
-<CFSET image_path=ExpandPath(image_src)>
+<CFSET imageFullPath=APPLICATION.PATH.PHP.schools & "#school.schoolID#.jpg">
+<CFSET imageRelativePath="newSchools/#school.schoolID#.jpg">
 <link rel="shortcut icon" href="favicon.ico" />
 <style type="text/css">
 <!--
@@ -102,8 +102,9 @@ td {
   <div class="spacerlg"></div>
   <div id="mainContentPad">
 <p class="headline">#City#, #State_name.state#</p>
-  <div id="detailsPhoto"><CFIF FileExists(image_path)>
-	                  <IMG SRC="#image_src#" width="220" height="140"><br>
+  <div id="detailsPhoto">
+					<CFIF FileExists(imageFullPath)>
+	                  <IMG SRC="#imageRelativePath#" width="220" height="140"><br>
 	                  <cfelse>
 	                  <span class="menu11"><img src="images/no_school.gif" width="220" height="138"></span>	
                           </CFIF>
