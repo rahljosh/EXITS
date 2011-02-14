@@ -78,21 +78,14 @@
 			</tr>
 			<tr>
 				<td align="center">
-				
-			<cfif '#FileExists('#expandPath("../newschools/#get_school.schoolid#.jpg")#')#'>
-				<img src="../newschools/#get_school.schoolid#.jpg" width=133><br>
-				<a class=nav_bar href="" onClick="javascript: win=window.open('forms/upload_picture.cfm?school=#url.sc#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Change Picture</a>
-			<cfelse>
-				<a class=nav_bar href="" onClick="javascript: win=window.open('forms/upload_picture.cfm?school=#url.sc#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../newschools/no_image_school.gif"></a>
-			</cfif>
-			<!----
-				<cfif '#FileExists('#expandPath("../newschools/#get_school.schoolid#.jpg")#')#' is 'YES'>
-				<img src="../newschools/#get_school.schoolid#.jpg"><br>Change Picture
-				<cfelse>
-				<a class=nav_bar href="" onClick="javascript: win=window.open('section1/upload_picture.cfm', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/no_image.gif" border=0></a>
-			<img src="../newschools/no_image_school.gif">
-				</cfif>
-				---->
+                    <cfif FileExists(APPLICATION.PATH.PHP.schools & '#get_school.schoolid#.jpg')>
+                        <img src="../newschools/#get_school.schoolid#.jpg" width="220" height="140" border="0"><br>
+                        <a class=nav_bar href="" onClick="javascript: win=window.open('forms/uploadPicture.cfm?schoolID=#url.sc#', 'Settings', 'height=300, width=500, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Change Picture</a>
+                    <cfelse>
+                        <a class=nav_bar href="" onClick="javascript: win=window.open('forms/uploadPicture.cfm?schoolID=#url.sc#', 'Settings', 'height=300, width=500, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+                        	<img src="../newschools/no_image_school.gif" border="0">
+                        </a>
+                    </cfif>
 				</td>
 			</tr>
 </table>
