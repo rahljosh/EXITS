@@ -73,11 +73,12 @@
           <Cfif client.companyid eq 10>
           		<cfinvokeargument name="email_to" value="stacy@case-usa.org">
           <Cfelse>
-          <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+          <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
+          
                 
 		  </Cfif>				
 					<!----
-                <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
+                <cfinvokeargument name="email_to" value="josh@pokytrails.com">
 				---->
                 <cfinvokeargument name="email_subject" value="Notice of Address Change">
                 <cfinvokeargument name="email_message" value="#email_message#">
