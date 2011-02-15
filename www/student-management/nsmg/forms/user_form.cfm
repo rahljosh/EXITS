@@ -21,7 +21,7 @@
 	<!----Send email if address has changed---->
   
 		<cfif (form.address neq form.prev_address or form.address2 neq form.prev_address2 or 
-                form.city neq form.prev_city or form.state neq form.prev_state or form.zip neq form.prev_zip) and isDefined('url.new')>
+                form.city neq form.prev_city or form.state neq form.prev_state or form.zip neq form.prev_zip)>
             
              <cfoutput>
               <cfquery name="regional_Advisor_emails" datasource="#application.dsn#">
@@ -35,7 +35,7 @@
                		select smg_users.email
                     from smg_users
                     left join user_access_rights on user_access_rights.userid = smg_users.userid
-                    where user_Access_rights.regionid = #regionid# and user_access_rights.usertype = 5
+                    where user_access_rights.regionid = #regionid# and user_access_rights.usertype = 5
                </cfquery>
                <cfset advisor_emails = #ListAppend(advisor_emails, '#get_email.email#')#>
                </cfloop>
@@ -47,7 +47,7 @@
            <cfsavecontent variable="email_message">
            <cfoutput>
            NOTICE OF ADDRESS CHANGE<Br />
-           <strong>#form.firstname# #form.lastname# (#url.userid#)</strong> has made a change to there address.<Br />
+           <strong>#form.firstname# #form.lastname# (#url.userid#)</strong> has made a change to their address.<Br />
            <br />
            NEW ADDRESSS<br />
            #form.address#<br />
@@ -58,8 +58,14 @@
            #form.prev_address#<br />
           <cfif form.prev_address2 is not ''> #form.prev_address2#<br /></cfif>
            #form.prev_city# #form.state# #form.prev_zip#<br /><br />
-           This is the only notification of this change that you will recieve.  Please update any records that do NOT pull information from EXITS.  
-                </cfoutput>
+           This is the only notification of this change that you will recieve.  Please update any records that do NOT pull information from EXITS.  <br /><br />
+           The following were notified:<br />
+           <cfif client.companyid eq 10>
+           stacy@case-usa.org
+           <cfelse>
+           thea@iseusa.com,#client.programmanager_email#, #advisor_emails#
+           </cfif>     
+				</cfoutput>
            </cfsavecontent>
 			
 			<!--- send email --->
@@ -67,10 +73,11 @@
           <Cfif client.companyid eq 10>
           		<cfinvokeargument name="email_to" value="stacy@case-usa.org">
           <Cfelse>
-                <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
+          <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+                
 		  </Cfif>				
 					<!----
-                <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+                <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
 				---->
                 <cfinvokeargument name="email_subject" value="Notice of Address Change">
                 <cfinvokeargument name="email_message" value="#email_message#">
