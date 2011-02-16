@@ -9,7 +9,7 @@
                     filefield="form.#x#_picture" nameconflict="makeunique">
            
             <Cfimage action="convert" 
-            		destination="C:\websites\student-management\nsmg\uploadedfiles\profileFactPics\#x#.png" 
+            		destination="C:\websites\student-management\nsmg\uploadedfiles\profileFactPics\#x#.jpg" 
                     isbase64="false" overwrite="true" source="C:\websites\student-management\nsmg\uploadedfiles\profileFactPics\#file.serverfile#">
                     
             <cffile action="delete" 

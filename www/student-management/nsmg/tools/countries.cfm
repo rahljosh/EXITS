@@ -51,8 +51,8 @@
            <cfdirectory directory="#AppPath.profileFactPics#" name="profileFactPics" filter="#countries.countryid#.*">
            
            
-           <cfif FileExists('c:/websites/student-management/nsmg/uploadedfiles/profileFactPics/#countries.countryid#.png')>
-                                            <cfimage source="../uploadedfiles/profileFactPics/#countries.countryid#.png" name="myImage">
+           <cfif FileExists('c:/websites/student-management/nsmg/uploadedfiles/profileFactPics/#countries.countryid#.jpg')>
+                                            <cfimage source="../uploadedfiles/profileFactPics/#countries.countryid#.jpg" name="myImage">
                                             <cfelse>
                                             	 <cfif FileExists('c:/websites/student-management/nsmg//pics/flags/#countries.countryid#.jpg')>
                                            			<cfimage source="../pics/flags/#countries.countryid#.jpg" name="myImage">
