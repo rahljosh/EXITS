@@ -32,18 +32,18 @@
         AND 
         	c.verification_received =  <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#">  
         AND  
-        	c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )  
-		<cfif VAL(FORM.intrep)>
-            AND 
-            	c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-        </cfif>
+            c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
+        <cfif VAL(FORM.intrep)>
+            AND
+                c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+        </cfif>        
 		--->
         GROUP BY 
         	c.candidateid        
         ORDER BY 
         	u.businessname, 
-            c.candidateid
-
+            c.lastname, 
+            c.firstname 
 		LIMIT 14            
     </cfquery>
 

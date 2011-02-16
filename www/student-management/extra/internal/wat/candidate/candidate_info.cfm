@@ -472,7 +472,7 @@
                             <tr>
 								<td bordercolor="##FFFFFF">
                                                                 	
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="C2D1EF" bordercolor="##FFFFFF">
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Personal Information</td>
                                         </tr>
@@ -641,7 +641,7 @@
                             <tr>
                                 <td bordercolor="##FFFFFF">
                         
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
                                         	<td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Dates of the Official Vacation</td>
                                         </tr>
@@ -674,7 +674,7 @@
                             <tr>
                                 <td bordercolor="##FFFFFF">
                         
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Emergency Contact</td>
                                         </tr>
@@ -705,7 +705,7 @@
                             <tr>
                                 <td bordercolor="##FFFFFF">
                         
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
                                             <td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Documents Control</td>
                                         </tr>
@@ -752,7 +752,7 @@
                             <tr>
                                 <td bordercolor="##FFFFFF">
                         
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
                                             <td colspan="3" class="style2" bgcolor="##8FB6C9">
                                                 &nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; 
@@ -819,7 +819,7 @@
                                 <tr>
                                     <td bordercolor="##FFFFFF">
                                 
-                                        <table width="100%" cellpadding=5 cellspacing="0" border="0">
+                                        <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                             <tr bgcolor="##C2D1EF">
                                                 <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Cancelation	</td>
                                             </tr>
@@ -852,7 +852,7 @@
                             <tr>
                                 <td bordercolor="##FFFFFF">
                         
-                                    <table width="100%" cellpadding=5 cellspacing="0" border="0">
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
             	                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
                                             	&nbsp;:: Placement Information 
@@ -1014,7 +1014,7 @@
                             <tr>
                                 <td bordercolor="##FFFFFF">
                         
-                                    <table width="100%" cellpadding=5 cellspacing="0" border="0">
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
                                         	<td class="style2" bgcolor="##8FB6C9" colspan="4">
                                             	&nbsp;:: Program Information &nbsp;  

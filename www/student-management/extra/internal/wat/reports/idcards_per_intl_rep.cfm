@@ -59,7 +59,8 @@
         	c.candidateid        
         ORDER BY 
         	u.businessname, 
-            c.candidateid
+            c.lastname, 
+            c.firstname 
     </cfquery>
 
 </cfsilent>

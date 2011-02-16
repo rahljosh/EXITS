@@ -64,7 +64,8 @@
 		AND
 			c.hostcompanyid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         ORDER BY 
-        	c.candidateID
+        	c.lastName, 
+            c.firstName
     </cfquery>
 
 	<!-----Intl. Rep.----->
