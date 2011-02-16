@@ -22,26 +22,26 @@
 
 <cfoutput>
 
-<table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="CCCCCC" bgcolor="FFFFFF">
+<table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="CCCCCC" bgcolor="##ffffff">
 	<tr>
-		<td bordercolor="FFFFFF">
+		<td bordercolor="##ffffff">
 			<!----Header Table---->
-			<table width=95% cellpadding=0 cellspacing=0 border=0 align="center" height="25" bgcolor="E4E4E4">
-				<tr bgcolor="E4E4E4">
+			<table width=95% cellpadding=0 cellspacing=0 border=0 align="center" height="25" bgcolor="##E4E4E4">
+				<tr bgcolor="##E4E4E4">
 					<td class="title1">&nbsp; &nbsp; ID Cards Menu</td>
 				</tr>
 			</table><br>
 			
 			<!--- ID CARDS --->
-			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
 				<tr>
 					<td width="49%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
 							<tr>
-								<td bordercolor="FFFFFF" valign="top">
+								<td bordercolor="##ffffff" valign="top">
                                     <cfform name="idCardsAvery5371" action="reports/idcards_per_intl_rep.cfm" method="post" target="_blank">
                                         <table width="100%" cellpadding=3 cellspacing=0 border=0>
-                                            <tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: ID Cards - Avery 5371</td></tr>
+                                            <tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: ID Cards - Avery 5371</td></tr>
                                             <tr>
                                                 <td class="style1" valign="top" align="right"><b>Program:</b></td>
                                                 <td class="style1" align="left">
@@ -93,12 +93,12 @@
 					</td>
 					<td width="2%" valign="top">&nbsp;</td>
 					<td width="49%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
 							<tr>
-								<td bordercolor="FFFFFF" valign="top">
+								<td bordercolor="##ffffff" valign="top">
                                 	<cfform name="idCardsList" action="reports/idcards_list.cfm" method="post" target="_blank">
                                         <table width="100%" cellpadding=3 cellspacing=0 border=0>
-                                            <tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: ID Cards List</td></tr>
+                                            <tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: ID Cards List</td></tr>
                                             <tr>
                                                 <td class="style1" valign="top" align="right"><b>Program:</b></td>
                                                 <td class="style1" align="left">
@@ -153,15 +153,15 @@
             
             
 			<!--- INSURANCE ID CARDS --->
-			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
 				<tr>
 					<td width="49%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
 							<tr>
-								<td bordercolor="FFFFFF" valign="top">
+								<td bordercolor="##ffffff" valign="top">
 	                                <cfform name="InsuranceCards" action="reports/insurance_cards.cfm" method="post" target="_blank">
                                         <table width="100%" cellpadding=3 cellspacing=0 border=0>
-                                            <tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: Insurance ID Cards</td></tr>
+                                            <tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Insurance ID Cards</td></tr>
                                             <tr>
                                                 <td class="style1" valign="top" align="right"><b>Program:</b></td>
                                                 <td class="style1" align="left">
@@ -221,12 +221,12 @@
 					</td>
 					<td width="2%" valign="top">&nbsp;</td>
 					<td width="49%" valign="top">
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
 							<tr>
-								<td bordercolor="FFFFFF" valign="top">
+								<td bordercolor="##ffffff" valign="top">
                                     <cfform name="InsuranceCardsPDF" action="reports/insurance_cards_pdf.cfm" method="post" target="_blank">
                                         <table width="100%" cellpadding=3 cellspacing=0 border=0>
-                                            <tr bgcolor="C2D1EF"><td class="style2" bgcolor="8FB6C9" colspan="2">&nbsp;:: Insurance ID Cards - PDF File</td></tr>
+                                            <tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Insurance ID Cards - PDF File</td></tr>
                                             <tr>
                                                 <td class="style1" valign="top" align="right"><b>Program:</b></td>
                                                 <td class="style1" align="left">

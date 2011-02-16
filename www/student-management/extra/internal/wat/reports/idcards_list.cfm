@@ -15,27 +15,47 @@
 <cfinclude template="../querys/get_company.cfm">
 
 <cfquery name="get_candidates" datasource="MySql"> 
-	SELECT DISTINCT	c.candidateid, c.lastname, c.firstname, c.verification_received, c.active, c.cancel_date, c.startdate, c.enddate,
+	SELECT DISTINCT	
+    	c.candidateid, 
+        c.lastname, 
+        c.firstname, 
+        c.verification_received, 
+        c.active, 
+        c.cancel_date, 
+        c.startdate, 
+        c.enddate,
 		u.businessname,
-		p.programname, p.programid
-	FROM extra_candidates c 
-	INNER JOIN smg_users u ON c.intrep = u.userid
-	INNER JOIN smg_programs p ON c.programid = p.programid
-	INNER JOIN smg_companies comp ON c.companyid = comp.companyid
-	LEFT JOIN extra_candidate_place_company place ON c.candidateid = place.candidateid
-	LEFT JOIN extra_hostcompany hcompany ON place.hostcompanyid = hcompany.hostcompanyid
-	LEFT JOIN smg_states states ON states.id = hcompany.state
-	WHERE c.status = '1'
-		AND c.verification_received = #CreateODBCDate(form.verification_received)#
-		<cfif form.intrep NEQ 0>
-			AND c.intrep = '#form.intrep#'
-		</cfif>
-		AND ( <cfloop list="#form.programid#" index="prog">
-			 c.programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )  		
+		p.programname, 
+        p.programid
+	FROM 
+    	extra_candidates c 
+	INNER JOIN 
+    	smg_users u ON c.intrep = u.userid
+	INNER JOIN 
+    	smg_programs p ON c.programid = p.programid
+	INNER JOIN 
+    	smg_companies comp ON c.companyid = comp.companyid
+	LEFT JOIN 
+    	extra_candidate_place_company place ON c.candidateid = place.candidateid
+	LEFT JOIN 
+    	extra_hostcompany hcompany ON place.hostcompanyid = hcompany.hostcompanyid
+	LEFT JOIN 
+    	smg_states states ON states.id = hcompany.state
+	WHERE 
+    	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    AND 
+    	c.verification_received = #CreateODBCDate(form.verification_received)#
+    AND  
+        c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
+	<cfif VAL(FORM.intrep)>
+        AND
+            c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+    </cfif>        
 	GROUP BY c.candidateid
-	ORDER BY u.businessname, c.candidateid
+        ORDER BY 
+        	u.businessname, 
+            c.lastname, 
+            c.firstname 
 </cfquery>
 					
 <!--- The table consists has two columns, two labels. To identify where to place each, we need to maintain a column counter. --->
