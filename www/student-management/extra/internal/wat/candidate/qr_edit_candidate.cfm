@@ -12,6 +12,10 @@
 <!--- Placement Information --->
 <cfparam name="FORM.selfConfirmationName" default="">
 <cfparam name="FORM.selfConfirmationMethod" default="">
+<cfparam name="FORM.selfWrittenConfirmation" default="">
+<cfparam name="FORM.selfAuthentication" default="">
+<cfparam name="FORM.EIN" default="">
+<cfparam name="FORM.selfWorkmanCompensation" default="">
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfConfirmationNotes" default="">
 
@@ -108,6 +112,16 @@
 <!---- HOST COMPANY HISTORY ---->
 <cfif VAL(FORM.hostcompanyID)>
 	
+    <!--- Update EIN on Host Company Table --->
+    <cfquery datasource="mysql" result="test">
+        UPDATE 
+            extra_hostCompany
+        SET 
+            EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">
+    	WHERE
+        	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+	</cfquery> 
+   
 	<cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostcompanyID>
 		
         <!--- Set old records to inactive --->
@@ -134,6 +148,9 @@
                 reason_host,
                 selfConfirmationName,
                 selfConfirmationMethod,
+                selfWrittenConfirmation,
+                selfAuthentication,
+                selfWorkmenCompensation,
                 selfConfirmationDate,
                 selfConfirmationNotes
             )
@@ -156,6 +173,17 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
+                <cfif IsBoolean(FORM.selfWrittenConfirmation)>
+               		<cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.selfWrittenConfirmation#">,
+                <cfelse>
+                	<cfqueryparam cfsqltype="cf_sql_bit" null="yes">,
+                </cfif>
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
+                <cfif IsBoolean(FORM.selfWorkmenCompensation)>
+               		<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#">,
+                <cfelse>
+                	<cfqueryparam cfsqltype="cf_sql_integer" null="yes">,
+                </cfif>
                 <cfif IsDate(FORM.selfConfirmationDate)>
                 	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">,
                 <cfelse>
@@ -185,7 +213,18 @@
                 status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">,
                 selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
-                <cfif IsDate(FORM.selfConfirmationDate)>
+                <cfif IsBoolean(FORM.selfWrittenConfirmation)>
+               		selfWrittenConfirmation = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.selfWrittenConfirmation#">,
+                <cfelse>
+                	selfWrittenConfirmation = <cfqueryparam cfsqltype="cf_sql_bit" null="yes">,
+                </cfif>
+                selfAuthentication = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
+                <cfif IsBoolean(FORM.selfWorkmenCompensation)>
+               		selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#">,
+                <cfelse>
+                	selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" null="yes">,
+                </cfif>
+				<cfif IsDate(FORM.selfConfirmationDate)>
                 	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">,
                 <cfelse>
                 	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,

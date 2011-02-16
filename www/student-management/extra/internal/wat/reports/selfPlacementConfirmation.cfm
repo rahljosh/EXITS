@@ -86,10 +86,14 @@
                 ec.intrep, 
                 ec.wat_placement,
                 ehc.hostCompanyID,
-                ehc.name,     
+                ehc.name,
+                ehc.EIN,     
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationDate,
                 ecpc.selfConfirmationMethod,  
+                ecpc.selfWrittenConfirmation,  
+                ecpc.selfAuthentication,  
+                ecpc.selfWorkmenCompensation,  
                 ecpc.selfConfirmationNotes,          
                 u.businessName
             FROM
@@ -316,6 +320,10 @@
                         <th align="left" class="#tableTitleClass#">Contact Date</th>
                         <th align="left" class="#tableTitleClass#">Contact Name</th>
                         <th align="left" class="#tableTitleClass#">Contact Method</th>
+                        <th align="left" class="#tableTitleClass#">Written Confirmation</th>
+                        <th align="left" class="#tableTitleClass#">Authentication</th>
+                        <th align="left" class="#tableTitleClass#">EIN</th>
+                        <th align="left" class="#tableTitleClass#">Workmen's Compensation</th>
                         <th align="left" class="#tableTitleClass#">Notes</th>
                     </tr>
                     <cfif ListFind("2,3", FORM.printOption)>
@@ -339,6 +347,20 @@
                             <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
+                            <td class="style1">
+                            	<cfif LEN(qTotalPerAgent.selfWrittenConfirmation)>
+                                	#YesNoFormat(qTotalPerAgent.selfWrittenConfirmation)#
+								</cfif>                                            
+                            </td>
+                            <td class="style1">#qTotalPerAgent.selfAuthentication#</td>
+                            <td class="style1">#qTotalPerAgent.EIN#</td>
+                            <td class="style1">
+                            	<cfif ListFind("0,1", qTotalPerAgent.selfWorkmenCompensation)>
+                                	#YesNoFormat(qTotalPerAgent.selfWorkmenCompensation)#
+								<cfelseif qTotalPerAgent.selfWorkmenCompensation EQ 2>
+                                	N/A
+								</cfif>                                            
+							</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationNotes#</td>
                         </tr>
                     </cfloop>        
