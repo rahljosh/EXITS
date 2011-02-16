@@ -19,26 +19,28 @@
 <!--- Process Form Submission --->
 <cfif isDefined("form.submitted")>
 	<!----Send email if address has changed---->
-  
+    <cfif url.userid is not ''>
 		<cfif (form.address neq form.prev_address or form.address2 neq form.prev_address2 or 
                 form.city neq form.prev_city or form.state neq form.prev_state or form.zip neq form.prev_zip)>
             
              <cfoutput>
-              <cfquery name="regional_Advisor_emails" datasource="#application.dsn#">
-              	select uar.regionid
-                from user_access_rights uar
-                where userid = #url.userid#
-              </cfquery>
-               <cfset advisor_emails = ''>
-               <cfloop query="regional_advisor_emails">
-               <cfquery name="get_email" datasource="#application.dsn#">
-               		select smg_users.email
-                    from smg_users
-                    left join user_access_rights on user_access_rights.userid = smg_users.userid
-                    where user_access_rights.regionid = #regionid# and user_access_rights.usertype = 5
-               </cfquery>
-               <cfset advisor_emails = #ListAppend(advisor_emails, '#get_email.email#')#>
-               </cfloop>
+             <cfset advisor_emails = ''>
+             
+                  <cfquery name="regional_Advisor_emails" datasource="#application.dsn#">
+                    select uar.regionid
+                    from user_access_rights uar
+                    where userid = #url.userid#
+                  </cfquery>
+                 
+                   <cfloop query="regional_advisor_emails">
+                   <cfquery name="get_email" datasource="#application.dsn#">
+                        select smg_users.email
+                        from smg_users
+                        left join user_access_rights on user_access_rights.userid = smg_users.userid
+                        where user_access_rights.regionid = #regionid# and user_access_rights.usertype = 5
+                   </cfquery>
+                   <cfset advisor_emails = #ListAppend(advisor_emails, '#get_email.email#')#>
+                   </cfloop>
                
                 
                 
@@ -73,12 +75,13 @@
           <Cfif client.companyid eq 10>
           		<cfinvokeargument name="email_to" value="stacy@case-usa.org">
           <Cfelse>
-          <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
+           <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+         
           
                 
 		  </Cfif>				
 					<!----
-                <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+                <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">
 				---->
                 <cfinvokeargument name="email_subject" value="Notice of Address Change">
                 <cfinvokeargument name="email_message" value="#email_message#">
@@ -87,7 +90,7 @@
             
        
         </cfif>
-
+</cfif>
 
 	<!--- checkboxes, radio buttons aren't defined if not checked. --->
     <cfparam name="form.sex" default="">
