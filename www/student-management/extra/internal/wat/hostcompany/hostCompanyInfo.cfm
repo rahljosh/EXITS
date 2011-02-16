@@ -54,6 +54,7 @@
     <cfparam name="FORM.supervisor_name" default="">
     <cfparam name="FORM.supervisor_phone" default="">
     <cfparam name="FORM.supervisor_email" default="">
+    <cfparam name="FORM.EIN" default="">
     <cfparam name="FORM.homepage" default="">
     <cfparam name="FORM.observations" default="">
     
@@ -78,6 +79,7 @@
             eh.supervisor_phone, 
             eh.supervisor_email, 
             eh.homepage,
+            eh.EIN,
             eh.observations,
             eh.housing_options,
             eh.housing_cost,
@@ -301,6 +303,7 @@
                         supervisor_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
                         supervisor_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
                         supervisor_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
+                        EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         homepage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">
                     WHERE
@@ -346,6 +349,7 @@
                         supervisor_name,
                         supervisor_phone,
                         supervisor_email,
+                        EIN,
                         homepage,
                         observations,
                         entryDate,
@@ -385,6 +389,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
@@ -419,6 +424,7 @@
 			FORM.city = qGetHostCompanyInfo.city;
 			FORM.state = qGetHostCompanyInfo.state;
 			FORM.zip = qGetHostCompanyInfo.zip;
+			FORM.EIN = qGetHostCompanyInfo.EIN;
 			FORM.workSiteAddress = qGetHostCompanyInfo.workSiteAddress;
 			FORM.workSiteCity = qGetHostCompanyInfo.workSiteCity;
 			FORM.workSiteState = qGetHostCompanyInfo.workSiteState;
@@ -710,7 +716,6 @@
                                             </td>
                                         </tr>
                                     </table>
-
                                 </td>
                             </tr>
                         </table> 
@@ -883,6 +888,13 @@
                                                 <span class="readOnly">#FORM.supervisor_email#</span>
                                                 <input type="text" name="supervisor_email" id="supervisor_email" value="#FORM.supervisor_email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>EIN:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.EIN#</span>
+                                                <input type="text" name="EIN" id="EIN" value="#FORM.EIN#" class="style1 editPage" size="35" maxlength="10">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Homepage:&nbsp;</strong></td>
