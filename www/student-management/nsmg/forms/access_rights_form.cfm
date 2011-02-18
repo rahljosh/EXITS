@@ -501,7 +501,9 @@
                                             </cfquery>
                                                                 
                                             <cfselect NAME="advisorid" query="qGetAdvisors" value="userid" display="advisorname" selected="#FORM.advisorid#" queryPosition="below">
-                                                <option value="0">Directly to Director</option>
+                                                <cfif CLIENT.userType NEQ 6>
+	                                                <option value="0">Directly to Director</option>
+                                                </cfif>
                                             </cfselect>        
                                         </td>
                                     </tr>

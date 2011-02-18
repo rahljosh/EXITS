@@ -319,7 +319,7 @@ function CheckDates(ckname, frname) {
                <cfif cbcCheck eq 1 or get_paperwork.ar_info_sheet is '' or get_paperwork.ar_ref_quest1 is '' OR get_paperwork.ar_ref_quest2 is '' or  get_paperwork.ar_cbc_auth_form is ''>
                <img src="pics/activateNot.png" width="130" height="25" />
                <Cfelse>
-               <A href="?curdoc=activateNewAccount&userid=#url.userid#"><img src="pics/activateActive.png" width="130" height="25" /></A>
+               <A href="?curdoc=activateNewAccount&userid=#url.userid#"><img src="pics/activateActive.png" width="130" height="25" border="0" /></A>
                </cfif><Br /><Br />
                <cfif cbcCheck eq 1>
                 Just a reminder that no CBC has been run <br /><br />
