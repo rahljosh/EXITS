@@ -386,8 +386,8 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
         <tr bgcolor="##0854a0"><td colspan="3"><span class="profileTitleSection">FACTS ABOUT #UCase(getCountryResident)#</span></td></tr>     
         <tr>
             <td>
-            <cfif FileExists('c:/websites/student-management/nsmg/uploadedfiles/profileFactPics/#qGetStudentInfo.countryResident#.png')>
-               <img src="uploadedfiles/profileFactPics/#qGetStudentInfo.countryResident#.png" align="right" height="150" width="200" />
+            <cfif FileExists('c:/websites/student-management/nsmg/uploadedfiles/profileFactPics/#qGetStudentInfo.countryResident#.jpg')>
+               <img src="uploadedfiles/profileFactPics/#qGetStudentInfo.countryResident#.jpg" align="right" height="150" width="200" />
             <cfelse>
             	<cfif FileExists('c:/websites/student-management/nsmg//pics/flags/#qGetStudentInfo.countryResident#.jpg')>
                     <cfimage source="pics/flags/#qGetStudentInfo.countryResident#.jpg" name="myImage">
