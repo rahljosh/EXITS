@@ -290,7 +290,7 @@
             </cfif>
             
 			<!--- send email --->
-            <cfif (form.usertype NEQ 8 AND client.usertype neq 5) >
+            <cfif form.usertype NEQ 8 AND NOT ListFind("5,6", CLIENT.userType)> <!--- Do Not Send Email / Account Needs to be activated --->
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#form.email#">
 					<cfinvokeargument name="email_replyto" value="#client.email#">
@@ -396,8 +396,8 @@
     <cfset form.confirm_password = temp_password>
     <cfset form.changepass = 1>
     <cfset form.datecreated = now()>
-    <!----If Regional Manager is creating account, set active to NO.  Once approved, account will be set to active.---->
-	<cfif client.usertype eq 5>
+    <!----If Regional Manager/Advisor is creating account, set active to NO.  Once approved, account will be set to active.---->
+	<cfif ListFind("5,6", CLIENT.userType)>
     	<cfset form.active = 0>
     <cfelse>
 		<cfset form.active = 1>
