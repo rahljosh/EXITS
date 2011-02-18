@@ -83,7 +83,7 @@
             <cfcase value="8">
         
                 <cfsavecontent variable="csbEmailFooter">
-                    If you have any questions about filling out the online application please contact us at 
+                    if you have any questions about filling out the online application please contact us at 
                     <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
                     For technical issues please email support at 
@@ -158,6 +158,20 @@
             <cfcase value="email">
 
                     #csbEmailFooter#
+
+                </div>  <!--- End of class="form-container" --->
+
+                <div style="width:100%; height:20px; background-color:##FF7E0D;">
+                    <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
+                        Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
+                    </div>
+                </div>
+
+            </cfcase>
+
+
+            <!--- Email Regular Footer / It does not include the technical support information --->
+            <cfcase value="emailRegular">
 
                 </div>  <!--- End of class="form-container" --->
 

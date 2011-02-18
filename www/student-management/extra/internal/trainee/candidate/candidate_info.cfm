@@ -15,8 +15,17 @@
     <!--- Param variables --->
 	<cfparam name="URL.uniqueID" default="">
 
-	<cfinclude template="../querys/get_candidate_unqID.cfm">
-    <cfinclude template="../querys/countrylist.cfm">
+	<cfscript>
+		// Get Candidate Information
+		qGetCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
+
+		// List of Countries
+		qGetCountryList = APPLICATION.CFC.LOOKUPTABLES.getCountry();
+
+		// List of Intl. Reps.
+		qGetIntlRepList = APPLICATION.CFC.USER.getUsers(userType=8);
+	</cfscript>
+
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
 
@@ -27,62 +36,45 @@
         FROM 
 			program
 		WHERE
-        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.programID)#">
+        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.programID)#">
     </cfquery>
     
     <cfquery name="qGetHomeCountry" dbtype="query">
         SELECT 
             countryName
         FROM 
-			countrylist
+			qGetCountryList
 		WHERE
-        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.home_country)#">
+        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.home_country)#">
     </cfquery>
 
     <cfquery name="qGetBirthCountry" dbtype="query">
         SELECT 
             countryName
         FROM 
-			countrylist
+			qGetCountryList
 		WHERE
-        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.birth_country)#">
+        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.birth_country)#">
     </cfquery>
 
     <cfquery name="qGetCitizenCountry" dbtype="query">
         SELECT 
             countryName
         FROM 
-			countrylist
+			qGetCountryList
 		WHERE
-        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.citizen_country)#">
+        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.citizen_country)#">
     </cfquery>
 
     <cfquery name="qGetResidenceCountry" dbtype="query">
         SELECT 
             countryName
         FROM 
-			countrylist
+			qGetCountryList
 		WHERE
-        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.citizen_country)#">
+        	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.citizen_country)#">
     </cfquery>
 
-    <Cfquery name="qIntRepList" datasource="MySQL">
-        SELECT 
-        	userid, 
-            firstname, 
-            lastname,
-            businessname,
-            country
-        FROM 
-        	smg_users
-        WHERE 
-        	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND 
-        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        ORDER BY 
-        	businessname
-    </Cfquery>
-    
     <Cfquery name="qGetIntlRepInfo" datasource="MySQL">
         SELECT 
         	u.userid, 
@@ -94,7 +86,7 @@
         LEFT JOIN 
         	smg_insurance_type type ON type.insutypeid = u.extra_insurance_typeid
         WHERE 
-        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.intrep#">
+        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.intrep#">
     </Cfquery>
     
     <Cfquery name="qCandidatePlacedCompany" datasource="MySQL">
@@ -103,7 +95,7 @@
         FROM 
         	extra_candidate_place_company
         WHERE 
-        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.candidateID#">
+        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">
         ORDER BY 
         	candCompID DESC
         LIMIT 1
@@ -127,7 +119,7 @@
         FROM 
         	qGetHostCompanyList
         WHERE 
-        	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.hostCompanyID#">
+        	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.hostCompanyID#">
     </Cfquery>
 
     <cfquery name="qCheckNewCandidate" datasource="mysql">
@@ -143,13 +135,13 @@
         LEFT JOIN 
         	smg_companies on smg_companies.companyid = extra_candidates.companyid 
         WHERE 
-        	firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#get_candidate_unqID.firstname#"> 
+        	firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidate.firstname#"> 
         AND	
-        	lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#get_candidate_unqID.lastname#">
+        	lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidate.lastname#">
         AND 
-        	DOB = <cfqueryparam cfsqltype="cf_sql_date" value="#get_candidate_unqID.dob#">
+        	DOB = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidate.dob#">
         AND 
-        	candidateID != <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.candidateID#">
+        	candidateID != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">
     </cfquery>
 
     <cfquery name="qGetExtraJobs" datasource="mysql">
@@ -171,7 +163,7 @@
         WHERE 
         	status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
-        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.candidateID#">
+        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">
     </cfquery>
 
     <cfquery name="getCategory" datasource="MySql">
@@ -180,7 +172,7 @@
         FROM 
         	extra_sevis_fieldstudy
         WHERE 
-        	fieldstudyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.fieldstudyid)#">
+        	fieldstudyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.fieldstudyid)#">
     </cfquery>
 
     <cfquery name="getSubCategory" datasource="MySql">
@@ -189,7 +181,7 @@
         FROM 
         	extra_sevis_sub_fieldstudy
         WHERE 
-        	subfieldid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.subfieldid)#">
+        	subfieldid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.subfieldid)#">
     </cfquery>
 
     <cfquery name="qDepartureInfo" datasource="mysql">
@@ -198,7 +190,7 @@
         FROM
         	extra_flight_info
         WHERE
-        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.candidateID#"> 
+        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#"> 
         AND
         	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
 		ORDER BY
@@ -211,7 +203,7 @@
         FROM 
         	extra_flight_info
         WHERE	
-        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.candidateID#">  
+        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">  
         AND
         	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
 		ORDER BY
@@ -328,10 +320,10 @@
 
 <cfoutput>
 
-<body onLoad="init(#VAL(get_candidate_unqID.subfieldid)#, #VAL(qCandidatePlacedCompany.jobid)#);">
+<body onLoad="init(#VAL(qGetCandidate.subfieldid)#, #VAL(qCandidatePlacedCompany.jobid)#);">
 
 <!--- candidate does not exist --->
-<cfif NOT VAL(get_candidate_unqID.recordcount)>
+<cfif NOT VAL(qGetCandidate.recordcount)>
 	The candidate ID you are looking for was not found. This could be for a number of reasons.<br><br>
 	<ul>
 		<li>the candidate record was deleted or renumbered
@@ -354,9 +346,9 @@
 			</table>
 			<br>
 
-			<cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate&uniqueid=#get_candidate_unqid.uniqueid#" onsubmit="return checkHistory(#VAL(get_candidate_unqID.programid)#, #VAL(qCandidatePlacedCompany.hostCompanyID)#);">
-			<input type="hidden" name="candidateID" value="#get_candidate_unqID.candidateID#">
-			<input type="hidden" name="uniqueID" value="#get_candidate_unqID.uniqueID#">
+			<cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate&uniqueid=#qGetCandidate.uniqueid#" onsubmit="return checkHistory(#VAL(qGetCandidate.programid)#, #VAL(qCandidatePlacedCompany.hostCompanyID)#);">
+			<input type="hidden" name="candidateID" value="#qGetCandidate.candidateID#">
+			<input type="hidden" name="uniqueID" value="#qGetCandidate.uniqueID#">
 			<input type="hidden" name="candCompID" value="#qCandidatePlacedCompany.candCompID#">
             
 			<table width="770" border="1" align="center" cellpadding=8 cellspacing=8 bordercolor="##C7CFDC" bgcolor="##ffffff">	
@@ -370,11 +362,11 @@
 									<table width="100%" cellpadding="2">
 										<tr>
 											<td width="135" valign="top">			
-												<cfif '#FileExists("#AppPath.candidatePicture##get_candidate_unqID.candidateID#.#get_candidate_unqID.picture_type#")#'>
-													<img src="../uploadedfiles/web-candidates/#get_candidate_unqID.candidateID#.#get_candidate_unqID.picture_type#" width="135" /><br>
+												<cfif '#FileExists("#AppPath.candidatePicture##qGetCandidate.candidateID#.#qGetCandidate.picture_type#")#'>
+													<img src="../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.#qGetCandidate.picture_type#" width="135" /><br>
 													<a  class="style4Big" href="" onClick="javascript: win=window.open('candidate/upload_picture.cfm?uniqueID=#uniqueID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><b><center>Change Picture</center></b></a>
 												<cfelse>
-													<a class=nav_bar href="" onClick="javascript: win=window.open('candidate/upload_picture.cfm?uniqueID=#get_candidate_unqID.uniqueID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/no_logo.jpg" width="135" border="0"></a>
+													<a class=nav_bar href="" onClick="javascript: win=window.open('candidate/upload_picture.cfm?uniqueID=#qGetCandidate.uniqueID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/no_logo.jpg" width="135" border="0"></a>
 												</cfif>						
 											</td>
 										</tr>
@@ -386,13 +378,13 @@
                                     <!--- Read Only --->
                                     <table width="100%" cellpadding="2" class="readOnly">
                                         <tr>
-                                            <td align="center" colspan="2" class="title1">#get_candidate_unqID.firstname# #get_candidate_unqID.middlename# #get_candidate_unqID.lastname# (###get_candidate_unqID.candidateID#)</td>
+                                            <td align="center" colspan="2" class="title1">#qGetCandidate.firstname# #qGetCandidate.middlename# #qGetCandidate.lastname# (###qGetCandidate.candidateID#)</td>
                                         </tr>
                                         <tr>
-                                            <td align="center" colspan="2"><span class="style4">[ <a href='candidate/candidate_profile.cfm?uniqueID=#get_candidate_unqID.uniqueID#' target="_blank"><span class="style4">profile</span></a> ]</span></td>
+                                            <td align="center" colspan="2"><span class="style4">[ <a href='candidate/candidate_profile.cfm?uniqueID=#qGetCandidate.uniqueID#' target="_blank"><span class="style4">profile</span></a> ]</span></td>
                                         </tr>
                                         <tr>
-                                            <td align="center" colspan="2" class="style1"><cfif get_candidate_unqID.dob EQ ''>n/a<cfelse>#dateformat (get_candidate_unqID.dob, 'mm/dd/yyyy')# - #datediff('yyyy',get_candidate_unqID.dob,now())# year old</cfif> - <cfif get_candidate_unqID.sex EQ 'm'>Male<cfelse>Female</cfif></td>
+                                            <td align="center" colspan="2" class="style1"><cfif qGetCandidate.dob EQ ''>n/a<cfelse>#dateformat (qGetCandidate.dob, 'mm/dd/yyyy')# - #datediff('yyyy',qGetCandidate.dob,now())# year old</cfif> - <cfif qGetCandidate.sex EQ 'm'>Male<cfelse>Female</cfif></td>
                                         </tr> 
                                         <tr>
                                             <td width="18%" align="right" class="style1"><b>Intl. Rep.:</b></td>
@@ -400,11 +392,11 @@
                                         </tr>
                                         <tr>
                                             <td align="right" class="style1"><b>Date of Entry: </b></td>
-                                            <td class="style1">#DateFormat(get_candidate_unqID.entrydate, 'mm/dd/yyyy')#</td>
+                                            <td class="style1">#DateFormat(qGetCandidate.entrydate, 'mm/dd/yyyy')#</td>
                                         </tr>
                                         <tr>
                                             <td align="right">&nbsp;</td>
-                                            <td class="style1">Candidate is <b><cfif get_candidate_unqID.status EQ 1>ACTIVE <cfelseif get_candidate_unqID.status EQ 0>INACTIVE <cfelseif get_candidate_unqID.status EQ 'canceled'>CANCELED</cfif> </b></td>
+                                            <td class="style1">Candidate is <b><cfif qGetCandidate.status EQ 1>ACTIVE <cfelseif qGetCandidate.status EQ 0>INACTIVE <cfelseif qGetCandidate.status EQ 'canceled'>CANCELED</cfif> </b></td>
                                         </tr>													
                                     </table>
                                 
@@ -412,23 +404,23 @@
                                     <table width="100%" cellpadding="2" class="editPage">
                                         <tr>
                                             <td align="right" class="style1"><b>First Name:</b></td>
-                                            <td><cfinput type="text" name="firstname" class="style1" size=32 value="#get_candidate_unqID.firstname#" maxlength="200" required="yes"></td>
+                                            <td><cfinput type="text" name="firstname" class="style1" size="32" value="#qGetCandidate.firstname#" maxlength="200" required="yes"></td>
                                         </tr>
                                         <tr>
                                             <td align="right" class="style1"><b>Middle Name:</b> </td>
-                                            <td><cfinput type="text" name="middlename" class="style1" size=32 value="#get_candidate_unqID.middlename#" maxlength="200"></td>
+                                            <td><cfinput type="text" name="middlename" class="style1" size="32" value="#qGetCandidate.middlename#" maxlength="200"></td>
                                         <tr>
                                             <td align="right" class="style1"><b>Last Name:</b> </td>
-                                            <td><cfinput type="text" name="lastname" class="style1" size=32 value="#get_candidate_unqID.lastname#" maxlength="200" required="yes"></td>
+                                            <td><cfinput type="text" name="lastname" class="style1" size="32" value="#qGetCandidate.lastname#" maxlength="200" required="yes"></td>
                                         </tr>
                                         <tr>
                                             <td align="center" class="style1"><b>Date of Birth:</b></td>
                                             <td class="style1">
-                                            	<cfinput type="text" name="dob" class="style1" size=12 value="#dateformat (get_candidate_unqID.dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">
+                                            	<cfinput type="text" name="dob" class="style1" size=12 value="#dateformat (qGetCandidate.dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">
                                             	&nbsp; 
                                                 <b>Sex:</b> 
-                                                <input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif get_candidate_unqID.sex Eq 'M'>checked="checked"</cfif>>Male &nbsp; &nbsp;
-                                                <input type="radio" name="sex" value="F" required="yes" message="You must specify the candidate's sex." <cfif get_candidate_unqID.sex Eq 'F'>checked="checked"</cfif>>Female 
+                                                <input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'M'>checked="checked"</cfif>>Male &nbsp; &nbsp;
+                                                <input type="radio" name="sex" value="F" required="yes" message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'F'>checked="checked"</cfif>>Female 
                                             </td>
                                         </tr> 
                                         <tr>
@@ -436,22 +428,22 @@
                                             <td width="82%" class="style1">
                                             	<select name="intrep" class="style1">
                                                     <option value="0"></option>		
-                                                    <cfloop query="qIntRepList">
-                                                        <option value="#userid#" <cfif userid EQ get_candidate_unqID.intrep> selected </cfif>><cfif #len(qIntRepList.businessname)# gt 45>#Left(qIntRepList.businessname, 42)#...<cfelse>#qIntRepList.businessname#</cfif></option>
+                                                    <cfloop query="qGetIntlRepList">
+                                                        <option value="#userid#" <cfif userid EQ qGetCandidate.intrep> selected </cfif>><cfif #len(qGetIntlRepList.businessname)# gt 45>#Left(qGetIntlRepList.businessname, 42)#...<cfelse>#qGetIntlRepList.businessname#</cfif></option>
                                                     </cfloop>
                                                 </select>
                                           </td>
                                         </tr>
                                         <tr>
                                             <td align="right" class="style1"><b>Date of Entry: </b></td>
-                                            <td class="style1">#DateFormat(get_candidate_unqID.entrydate, 'mm/dd/yyyy')#</td>
+                                            <td class="style1">#DateFormat(qGetCandidate.entrydate, 'mm/dd/yyyy')#</td>
                                         </tr>												
                                         <tr>
                                             <td align="right" class="style1"><b>Status: </b> <!---- <input type="checkbox" name="active" <cfif active EQ 1>checked="Yes"</cfif> > ----></td>
-                                            <td class="style1"><select id="status" name="status" <cfif get_candidate_unqID.status NEq 'canceled'> onchange="javascript:displayCancelation(this.value);" </cfif> >
-                                                <option value="1" <cfif get_candidate_unqID.status EQ 1>selected="selected"</cfif>>Active</option>
-                                                <option value="0" <cfif get_candidate_unqID.status EQ 0>selected="selected"</cfif>>Inactive</option>
-                                                <option value="canceled" <cfif get_candidate_unqID.status Eq 'canceled'>selected="selected"</cfif>>Canceled</option>
+                                            <td class="style1"><select id="status" name="status" <cfif qGetCandidate.status NEq 'canceled'> onchange="javascript:displayCancelation(this.value);" </cfif> >
+                                                <option value="1" <cfif qGetCandidate.status EQ 1>selected="selected"</cfif>>Active</option>
+                                                <option value="0" <cfif qGetCandidate.status EQ 0>selected="selected"</cfif>>Inactive</option>
+                                                <option value="canceled" <cfif qGetCandidate.status Eq 'canceled'>selected="selected"</cfif>>Canceled</option>
                                               </select>
                                             </td>
                                         </tr>													
@@ -504,8 +496,8 @@
                                         <tr>
                                             <td class="style1" bordercolor="##FFFFFF" width="100px" align="right"><b>Place of Birth:</b></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#get_candidate_unqID.birth_city#</span>
-                                                <input type="text" class="style1 editPage" name="birth_city" size=32 value="#get_candidate_unqID.birth_city#" maxlength="100">
+                                            	<span class="readOnly">#qGetCandidate.birth_city#</span>
+                                                <input type="text" class="style1 editPage" name="birth_city" size="32" value="#qGetCandidate.birth_city#" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
@@ -514,8 +506,8 @@
                                                 <span class="readOnly">#qGetBirthCountry.countryName#</span>
                                                 <select name="birth_country" class="style1 editPage">
                                                     <option value="0"></option>		
-                                                    <cfloop query="countrylist">
-                                                        <option value="#countryid#" <cfif countryid EQ get_candidate_unqID.birth_country> selected </cfif>><cfif #len(countryname)# gt 45>#Left(countryname, 42)#...<cfelse>#countryname#</cfif></option>
+                                                    <cfloop query="qGetCountryList">
+                                                        <option value="#countryid#" <cfif countryid EQ qGetCandidate.birth_country> selected </cfif>><cfif #len(countryname)# gt 45>#Left(countryname, 42)#...<cfelse>#countryname#</cfif></option>
                                                     </cfloop>
                                                 </select>
                                             </td>
@@ -526,8 +518,8 @@
                                                 <span class="readOnly">#qGetCitizenCountry.countryName#</span>
                                                 <select name="citizen_country" class="style1 editPage">
                                                     <option value="0"></option>		
-                                                    <cfloop query="countrylist">
-                                                        <option value="#countryid#" <cfif countryid EQ get_candidate_unqID.citizen_country> selected </cfif>><cfif #len(countryname)# gt 45>#Left(countryname, 42)#...<cfelse>#countryname#</cfif></option>
+                                                    <cfloop query="qGetCountryList">
+                                                        <option value="#countryid#" <cfif countryid EQ qGetCandidate.citizen_country> selected </cfif>><cfif #len(countryname)# gt 45>#Left(countryname, 42)#...<cfelse>#countryname#</cfif></option>
                                                     </cfloop>
                                                 </select>
                                             </td>
@@ -538,8 +530,8 @@
                                                 <span class="readOnly">#qGetResidenceCountry.countryName#</span>
                                                 <select name="residence_country" class="style1 editPage">
                                                     <option value="0"></option>		
-                                                    <cfloop query="countrylist">
-                                                        <option value="#countryid#" <cfif countryid EQ get_candidate_unqID.residence_country> selected </cfif>><cfif #len(countryname)# gt 45>#Left(countryname, 42)#...<cfelse>#countryname#</cfif></option>
+                                                    <cfloop query="qGetCountryList">
+                                                        <option value="#countryid#" <cfif countryid EQ qGetCandidate.residence_country> selected </cfif>><cfif #len(countryname)# gt 45>#Left(countryname, 42)#...<cfelse>#countryname#</cfif></option>
                                                     </cfloop>
                                                 </select>			
                                             </td>
@@ -551,20 +543,20 @@
                                                     <tr bordercolor="F7F7F7">
                                                         <td colspan="4" class="style1">
                                                         	<b>Mailing Address:</b> 
-															<span class="readOnly">#get_candidate_unqID.home_address#</span>
-                                                            <input type="text" class="style1 editPage" name="home_address" size=49 value="#get_candidate_unqID.home_address#" maxlength="200">
+															<span class="readOnly">#qGetCandidate.home_address#</span>
+                                                            <input type="text" class="style1 editPage" name="home_address" size=49 value="#qGetCandidate.home_address#" maxlength="200">
                                                         </td>
                                                     </tr>
                                                     <tr bordercolor="F7F7F7">
                                                         <td class="style1" align="right"><b>City:</b></td>
                                                         <td class="style1">
-															<span class="readOnly">#get_candidate_unqID.home_city#</span>
-                                                            <input type="text" class="style1 editPage" name="home_city" size=11 value="#get_candidate_unqID.home_city#" maxlength="100">
+															<span class="readOnly">#qGetCandidate.home_city#</span>
+                                                            <input type="text" class="style1 editPage" name="home_city" size=11 value="#qGetCandidate.home_city#" maxlength="100">
                                                         </td>
                                                         <td class="style1" align="right"><b>Zip:</b></td>
                                                         <td class="style1">
-                                                        	<span class="readOnly">#get_candidate_unqID.home_zip#</span>
-                                                            <input type="text" class="style1 editPage" name="home_zip" size=11 value="#get_candidate_unqID.home_zip#" maxlength="15">
+                                                        	<span class="readOnly">#qGetCandidate.home_zip#</span>
+                                                            <input type="text" class="style1 editPage" name="home_zip" size=11 value="#qGetCandidate.home_zip#" maxlength="15">
                                                         </td>
                                                     </tr>
                                                     <tr bordercolor="F7F7F7">
@@ -573,8 +565,8 @@
                                                             <span class="readOnly">#qGetHomeCountry.countryName#</span>
                                                             <select name="home_country" class="style1 editPage">
                                                                 <option value="0"></option>		
-                                                                <cfloop query="countrylist">
-                                                                    <option value="#countryid#" <cfif countryid EQ get_candidate_unqID.home_country> selected </cfif>><cfif #len(countryname)# gt 45>#Left(countryname, 42)#...<cfelse>#countryname#</cfif></option>
+                                                                <cfloop query="qGetCountryList">
+                                                                    <option value="#countryid#" <cfif countryid EQ qGetCandidate.home_country> selected </cfif>><cfif #len(countryname)# gt 45>#Left(countryname, 42)#...<cfelse>#countryname#</cfif></option>
                                                                 </cfloop>
                                                             </select>
                                                         </td>
@@ -582,15 +574,15 @@
                                                     <tr bordercolor="F7F7F7">
                                                         <td class="style1" align="right"><b>Phone:</b></td>
                                                         <td class="style1" colspan="3">
-                                                        	<span class="readOnly">#get_candidate_unqID.home_phone#</span>
-                                                            <input type="text" class="style1 editPage" name="home_phone" size=38 value="#get_candidate_unqID.home_phone#" maxlength="50">
+                                                        	<span class="readOnly">#qGetCandidate.home_phone#</span>
+                                                            <input type="text" class="style1 editPage" name="home_phone" size=38 value="#qGetCandidate.home_phone#" maxlength="50">
                                                         </td>
                                                     </tr>
                                                     <tr bordercolor="F7F7F7">
                                                         <td class="style1" align="right"><b>Email:</b></td>
                                                         <td class="style1" colspan="3">
-                                                        	<span class="readOnly">#get_candidate_unqID.email#</span>
-                                                            <input type="text" class="style1 editPage" name="email" size=38 value="#get_candidate_unqID.email#" maxlength="100">
+                                                        	<span class="readOnly">#qGetCandidate.email#</span>
+                                                            <input type="text" class="style1 editPage" name="email" size=38 value="#qGetCandidate.email#" maxlength="100">
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -603,21 +595,21 @@
                                         <tr>
                                             <td align="right" valign="top" class="style1"><b>Degree:</b></td>
                                             <td class="style1">
-												<span class="readOnly">#get_candidate_unqID.degree#</span>
-                                                <input type="text" class="style1 editPage" name="degree" size=34 value="#get_candidate_unqID.degree#" maxlength="200">                                                
+												<span class="readOnly">#qGetCandidate.degree#</span>
+                                                <input type="text" class="style1 editPage" name="degree" size=34 value="#qGetCandidate.degree#" maxlength="200">                                                
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right" valign="top"><b>Other Degree:</b></td>
                                             <td class="style1">
                                                  <span class="readOnly">
-                                                     <cfif NOT LEN(get_candidate_unqID.degree_other)> 
+                                                     <cfif NOT LEN(qGetCandidate.degree_other)> 
                                                           n/a 
                                                      <cfelse>
-                                                          #get_candidate_unqID.degree_other#
+                                                          #qGetCandidate.degree_other#
                                                      </cfif>
                                                  </span>
-                                                 <input type="text" class="style1 editPage" name="degree_other" size=34 value="#get_candidate_unqID.degree_other#" maxlength="200">
+                                                 <input type="text" class="style1 editPage" name="degree_other" size=34 value="#qGetCandidate.degree_other#" maxlength="200">
                                             </td>
                                         </tr>
                                     </table>
@@ -640,22 +632,22 @@
                                         <tr>
                                             <td width="15%" class="style1" align="right"><b>Name:</b></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#get_candidate_unqID.emergency_name#</span>
-                                                <input type="text" class="style1 editPage" name="emergency_name" size=32 value="#get_candidate_unqID.emergency_name#" maxlength="200">
+                                            	<span class="readOnly">#qGetCandidate.emergency_name#</span>
+                                                <input type="text" class="style1 editPage" name="emergency_name" size="32" value="#qGetCandidate.emergency_name#" maxlength="200">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><b>Phone:</b></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#get_candidate_unqID.emergency_phone#</span>
-                                                <input type="text" class="style1 editPage" name="emergency_phone" size=32 value="#get_candidate_unqID.emergency_phone#" maxlength="50">
+                                            	<span class="readOnly">#qGetCandidate.emergency_phone#</span>
+                                                <input type="text" class="style1 editPage" name="emergency_phone" size="32" value="#qGetCandidate.emergency_phone#" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><b>Relationship:</b></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#get_candidate_unqID.emergency_relationship#</span>
-                                                <input type="text" class="style1 editPage" name="emergency_relationship" size=32 value="#get_candidate_unqID.emergency_relationship#" maxlength="50">
+                                            	<span class="readOnly">#qGetCandidate.emergency_relationship#</span>
+                                                <input type="text" class="style1 editPage" name="emergency_relationship" size="32" value="#qGetCandidate.emergency_relationship#" maxlength="50">
                                             </td>
                                         </tr>
                                     </table>	
@@ -674,17 +666,52 @@
                                         <tr bgcolor="##C2D1EF">
                                             <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Letters</td>
                                         </tr>
-                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/enrollment_confirmation.cfm?uniqueID=#get_candidate_unqID.uniqueID#' class="style4Big", target="_blank"><b>Enrollment Confirmation</b></a></td></tr>
-                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/SevisFeeLetter.cfm?uniqueID=#get_candidate_unqID.uniqueID#' class="style4Big", target="_blank"><b>Sevis Fee Instruction Letter</b></a></td></tr>
-                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/SponsorLetter.cfm?uniqueID=#get_candidate_unqID.uniqueID#' class="style4Big", target="_blank"><b>Sponsorship Letter</b></a></td></tr>
-                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/VisaAppInst.cfm?uniqueID=#get_candidate_unqID.uniqueID#' class="style4Big", target="_blank"><b>Visa Application Instructions</b></a></td></tr>
+                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/enrollment_confirmation.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Enrollment Confirmation</b></a></td></tr>
+                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/SevisFeeLetter.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Sevis Fee Instruction Letter</b></a></td></tr>
+                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/SponsorLetter.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Sponsorship Letter</b></a></td></tr>
+                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/VisaAppInst.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Visa Application Instructions</b></a></td></tr>
                                     </table>	
                                 </td>
                             </tr>
                         </table>
                         
                         <br>
-                
+
+                        <!--- EVALUATIONS --->
+                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                                
+                                    <table width="100%" cellpadding="5" cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Evaluations</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="ckDoc_midterm_evaluation" id="ckDoc_midterm_evaluation" value="1" class="formField" onClick="checkInsertDate('ckDoc_midterm_evaluation','doc_midterm_evaluation');" disabled <cfif LEN(qGetCandidate.doc_midterm_evaluation)> checked </cfif> >												
+												<label for="ckDoc_midterm_evaluation">Midterm Evaluation</label>
+                                            </td>
+                                            <td class="style1" colspan="2">
+                                            	<span class="readOnly">#DateFormat(qGetCandidate.doc_midterm_evaluation, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="doc_midterm_evaluation" id="doc_midterm_evaluation" value="#DateFormat(qGetCandidate.doc_midterm_evaluation, 'mm/dd/yyyy')#" class="style1 editPage datePicker" size="12" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="ckDoc_summative_evaluation" id="ckDoc_summative_evaluation" value="1" class="formField" onClick="checkInsertDate('ckDoc_summative_evaluation','doc_summative_evaluation');" disabled <cfif LEN(qGetCandidate.doc_summative_evaluation)> checked </cfif> >												
+												<label for="ckDoc_summative_evaluation">Summative Evaluation</label>
+                                            </td>
+                                            <td class="style1" colspan="2">
+												<span class="readOnly">#DateFormat(qGetCandidate.doc_summative_evaluation, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="doc_summative_evaluation" id="doc_summative_evaluation" value="#DateFormat(qGetCandidate.doc_summative_evaluation, 'mm/dd/yyyy')#" class="style1 editPage datePicker" size="12" maxlength="10">
+                                            </td>
+                                        </tr>
+									</table>
+								</td>
+							</tr>                                                                    
+						</table>                            
+
+                        <br>
                         
                         <!---DOCUMENTS CONTROL --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -697,37 +724,37 @@
                                         </tr>
                                         <tr>
                                             <td width="46%" class="style1" colspan="2">
-                                                <input type="checkbox" name="doc_application" id="doc_application" value="1" class="formField" disabled <cfif VAL(get_candidate_unqID.doc_application)> checked </cfif> > 
+                                                <input type="checkbox" name="doc_application" id="doc_application" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_application)> checked </cfif> > 
                                                 <label for="doc_application">Application</label>
                                             </td>
                                             <td width="54%" class="style1" colspan="2">
-												<input type="checkbox" name="doc_passportphoto" id="doc_passportphoto" value="1" class="formField" disabled <cfif VAL(get_candidate_unqID.doc_passportphoto)> checked </cfif> >
+												<input type="checkbox" name="doc_passportphoto" id="doc_passportphoto" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_passportphoto)> checked </cfif> >
 												<label for="doc_passportphoto">Passport Photocopy</label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" colspan="2">
-												<input type="checkbox" name="doc_resume" id="doc_resume" value="1" class="formField" disabled <cfif VAL(get_candidate_unqID.doc_resume)> checked </cfif> >												
+												<input type="checkbox" name="doc_resume" id="doc_resume" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_resume)> checked </cfif> >												
 												<label for="doc_resume">Resume</label>
                                             </td>
                                             <td class="style1" colspan="2">
-												<input type="checkbox" name="doc_insu" id="doc_insu" value="1" class="formField" disabled <cfif VAL(get_candidate_unqID.doc_insu)> checked </cfif> >
+												<input type="checkbox" name="doc_insu" id="doc_insu" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_insu)> checked </cfif> >
 												<label for="doc_insu">Medical Insurance Appl.</label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" colspan="2">
-												<input type="checkbox" name="doc_proficiency" id="doc_proficiency" value="1" class="formField" disabled <cfif VAL(get_candidate_unqID.doc_proficiency)> checked </cfif> >												
+												<input type="checkbox" name="doc_proficiency" id="doc_proficiency" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_proficiency)> checked </cfif> >												
 												<label for="doc_proficiency">Proficiency Verification</label>
                                             </td>
                                             <td class="style1" colspan="2">
-												<input type="checkbox" name="doc_sponsor_letter" id="doc_sponsor_letter" value="1" class="formField" disabled <cfif VAL(get_candidate_unqID.doc_sponsor_letter)> checked </cfif> >
+												<input type="checkbox" name="doc_sponsor_letter" id="doc_sponsor_letter" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_sponsor_letter)> checked </cfif> >
 												<label for="doc_sponsor_letter">Home Sponsor Letter</label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" colspan="4">
-												<input type="checkbox" name="doc_recom_letter" id="doc_recom_letter" value="1" class="formField" disabled <cfif VAL(get_candidate_unqID.doc_recom_letter)> checked </cfif> >
+												<input type="checkbox" name="doc_recom_letter" id="doc_recom_letter" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_recom_letter)> checked </cfif> >
                                                 <label for="doc_recom_letter">Letters of Recommendation</label>
                                             </td>
                                         </tr>
@@ -735,9 +762,9 @@
                                             <td class="style1"> Missing Documents:</td>
                                             <td class="style1" colspan="3">
 												<span class="readOnly">
-                                                	#get_candidate_unqID.missing_documents#
+                                                	#qGetCandidate.missing_documents#
                                                 </span>
-                                                <textarea name="missing_documents" class="style1 editPage" cols="25" rows="3">#get_candidate_unqID.missing_documents#</textarea>
+                                                <textarea name="missing_documents" class="style1 editPage" cols="25" rows="3">#qGetCandidate.missing_documents#</textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -753,7 +780,7 @@
                     <td width="49%" valign="top">
                     
                     	<!--- CANCELATION --->
-                    	<div id="divCancelation" <cfif get_candidate_unqID.status NEQ 'canceled'> style="display:none;" </cfif> >
+                    	<div id="divCancelation" <cfif qGetCandidate.status NEQ 'canceled'> style="display:none;" </cfif> >
                             <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                                 <tr>
                                     <td bordercolor="##FFFFFF">
@@ -766,16 +793,16 @@
                                                 <td class="style1" bordercolor="##FFFFFF" align="right" valign="top"><b>Date:</b></td>
                                                 <td class="style1" width="85%">
                                                 	<span class="readOnly">
-                                                    	#DateFormat(get_candidate_unqID.cancel_date, 'mm/dd/yyyy')#
+                                                    	#DateFormat(qGetCandidate.cancel_date, 'mm/dd/yyyy')#
                                                     </span>
-                                                    <input type="text" class="style1 datePicker" name="cancel_date" size=20 value="#DateFormat(get_candidate_unqID.cancel_date, 'mm/dd/yyyy')#" maxlength="10">
+                                                    <input type="text" class="style1 datePicker" name="cancel_date" size=20 value="#DateFormat(qGetCandidate.cancel_date, 'mm/dd/yyyy')#" maxlength="10">
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="style1" bordercolor="##FFFFFF" align="right" valign="top"><b>Reason:</b></td>
                                                 <td class="style1">
-                                                	<span class="readOnly">#get_candidate_unqID.cancel_reason#</span>
-                                                    <input type="text" class="style1 editPage" name="cancel_reason" size=40 value="#get_candidate_unqID.cancel_reason#">
+                                                	<span class="readOnly">#qGetCandidate.cancel_reason#</span>
+                                                    <input type="text" class="style1 editPage" name="cancel_reason" size=40 value="#qGetCandidate.cancel_reason#">
                                                 </td>								
                                             </tr>
                                         </table>
@@ -871,10 +898,10 @@
                                             <td class="style1" bordercolor="##FFFFFF" align="right" width="27%"><b>Program:</b></td>
                                             <td class="style1" bordercolor="##FFFFFF" width="73%" colspan="3">
 												<span class="readOnly">#qGetProgramInfo.programName#</span>                                                                                                	
-                                                <select name="programid" class="style1 editPage" onChange="displayProgramReason(#VAL(get_candidate_unqID.programid)#, this.value);">
+                                                <select name="programid" class="style1 editPage" onChange="displayProgramReason(#VAL(qGetCandidate.programid)#, this.value);">
                                                     <option value="0">Unassigned</option>
                                                     <cfloop query="program">
-														<cfif get_candidate_unqID.programid EQ programid>
+														<cfif qGetCandidate.programid EQ programid>
                                                             <option value="#programid#" selected>#programname#</option>
                                                         <cfelse>
                                                             <option value="#programid#">#programname#</option>
@@ -890,15 +917,15 @@
                                         <tr>
                                             <td class="style1" bordercolor="##FFFFFF" align="right"><b>Arrival Date:</b></td>
                                             <td class="style1" bordercolor="##FFFFFF" colspan="3">
-												<span class="readOnly">#dateformat(get_candidate_unqID.arrivaldate, 'mm/dd/yyyy')#</span>
-                                                <cfinput type="text" class="style1 editPage" name="arrivaldate" size=35 value="#dateformat(get_candidate_unqID.arrivaldate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Arrival Date(MM/DD/YYYY)">
+												<span class="readOnly">#dateformat(qGetCandidate.arrivaldate, 'mm/dd/yyyy')#</span>
+                                                <cfinput type="text" class="style1 editPage" name="arrivaldate" size=35 value="#dateformat(qGetCandidate.arrivaldate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Arrival Date(MM/DD/YYYY)">
                                             </td>
                                         </tr>	
                                         <tr>
                                             <td class="style1" bordercolor="##FFFFFF" align="right"><b>Remarks:</b></td>
                                             <td class="style1" bordercolor="##FFFFFF" colspan="3">
-												<span class="readOnly">#get_candidate_unqID.remarks#</span>
-                                                <textarea name="remarks" class="style1 editPage" cols="25" rows="3">#get_candidate_unqID.remarks#</textarea>
+												<span class="readOnly">#qGetCandidate.remarks#</span>
+                                                <textarea name="remarks" class="style1 editPage" cols="25" rows="3">#qGetCandidate.remarks#</textarea>
                                             </td>
                                         </tr>	
                                     </table>
@@ -925,7 +952,7 @@
                                                 <strong> <label for="ds2019Check"> Verific. Rcvd. </label> </strong>
                                             </td>                                            
                                             <td class="style1" colspan="3">
-												<input type="checkbox" name="ds2019Check" id="ds2019Check" value="1" class="formField" onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#');" disabled <cfif LEN(get_candidate_unqID.verification_received)>checked="checked"</cfif> >                                                
+												<input type="checkbox" name="ds2019Check" id="ds2019Check" value="1" class="formField" onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#');" disabled <cfif LEN(qGetCandidate.verification_received)>checked="checked"</cfif> >                                                
                                                 
                                                 &nbsp; 
                                                 
@@ -933,8 +960,8 @@
                                                 
                                                 &nbsp; 
                                                 
-                                                <span class="readOnly">#DateFormat(get_candidate_unqID.verification_received, 'mm/dd/yyyy')#</span>                                                
-                                                <input type="text" class="style1 editPage" name="verification_received" id="verification_received" value="#DateFormat(get_candidate_unqID.verification_received, 'mm/dd/yyyy')#" maxlength="100">                                              
+                                                <span class="readOnly">#DateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#</span>                                                
+                                                <input type="text" class="style1 editPage" name="verification_received" id="verification_received" value="#DateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#" maxlength="100">                                              
                                             </td>
                                         </tr>
                                         <!--- End of Verification Received --->			
@@ -942,8 +969,8 @@
                                         <tr>	
                                             <td align="right" class="style1"><b>No.:</b></td>
                                             <td class="style1" colspan="3">
-                                            	<span class="readOnly">#get_candidate_unqID.ds2019#</span>
-                                                <input type="text" class="style1 editPage" name="ds2019" size="15" value="#get_candidate_unqID.ds2019#" maxlength="100">
+                                            	<span class="readOnly">#qGetCandidate.ds2019#</span>
+                                                <input type="text" class="style1 editPage" name="ds2019" size="15" value="#qGetCandidate.ds2019#" maxlength="100">
                                             </td>
                                         </tr>
                                         
@@ -960,7 +987,7 @@
                                                 <select name="fieldstudyid" class="style1 editPage" onChange="loadOptionsSubCat('listSubCat');">
                                                     <option value="0">Select...</option>
                                                     <cfloop query="fieldstudy">
-                                                        <option value="#fieldstudyid#" <cfif fieldstudyid EQ get_candidate_unqID.fieldstudyid>selected</cfif>><cfif len(fieldstudy) GT 35>#Left(fieldstudy,30)#...<cfelse>#fieldstudy#</cfif></option>
+                                                        <option value="#fieldstudyid#" <cfif fieldstudyid EQ qGetCandidate.fieldstudyid>selected</cfif>><cfif len(fieldstudy) GT 35>#Left(fieldstudy,30)#...<cfelse>#fieldstudy#</cfif></option>
                                                     </cfloop>
                                                 </select>
                                             </td>
@@ -987,27 +1014,27 @@
                                         <tr>
                                             <td class="style1" align="right"><b>Street:</b></td>
                                             <td colspan="3" class="style1">
-                                            	<span class="readOnly">#get_candidate_unqID.ds2019_street#</span>
-                                                <input type="text" class="style1 editPage" type="text" name="ds2019_street" size=50 value="#get_candidate_unqID.ds2019_street#" maxlength="150">
+                                            	<span class="readOnly">#qGetCandidate.ds2019_street#</span>
+                                                <input type="text" class="style1 editPage" type="text" name="ds2019_street" size=50 value="#qGetCandidate.ds2019_street#" maxlength="150">
                                             </td>
                                         </tr>
                                         <tr>
                                           	<td class="style1" align="right"><b>City:</b></td>
                                           	<td class="style1">
-										  		<span class="readOnly">#get_candidate_unqID.ds2019_city#</span>
-                                          		<input class="style1 editPage" type="text" name="ds2019_city" size=20 value="#get_candidate_unqID.ds2019_city#" maxlength="100">
+										  		<span class="readOnly">#qGetCandidate.ds2019_city#</span>
+                                          		<input class="style1 editPage" type="text" name="ds2019_city" size=20 value="#qGetCandidate.ds2019_city#" maxlength="100">
                                         	</td>
                                             <td align="right" class="style1"><b>Zip:</b></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#get_candidate_unqID.ds2019_zip#</span>
-                                                <input type="text" class="style1 editPage" name="ds2019_zip" size=12 value="#get_candidate_unqID.ds2019_zip#" maxlength="10">
+                                            	<span class="readOnly">#qGetCandidate.ds2019_zip#</span>
+                                                <input type="text" class="style1 editPage" name="ds2019_zip" size=12 value="#qGetCandidate.ds2019_zip#" maxlength="10">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td align="right" class="style1"><b>State:</b></td>
                                             <td class="style1">
-                                              <span class="readOnly">#get_candidate_unqID.ds2019_state#</span>                                            
-                                              <input type="text" class="style1 editPage" name="ds2019_state" size=12 value="#get_candidate_unqID.ds2019_state#" maxlength="12">
+                                              <span class="readOnly">#qGetCandidate.ds2019_state#</span>                                            
+                                              <input type="text" class="style1 editPage" name="ds2019_state" size=12 value="#qGetCandidate.ds2019_state#" maxlength="12">
                                             </td>
                                             <td align="right" class="style1">&nbsp;</td>
                                             <td class="style1">&nbsp;</td>
@@ -1015,25 +1042,25 @@
                                         <tr>
                                             <td align="right" class="style1"><b>Home Phone:</b></td>
                                             <td class="style1">
-                                              <span class="readOnly">#get_candidate_unqID.ds2019_phone#</span>
-                                              <input type="text" class="style1 editPage" name="ds2019_phone" size=20 value="#get_candidate_unqID.ds2019_phone#" maxlength="12">
+                                              <span class="readOnly">#qGetCandidate.ds2019_phone#</span>
+                                              <input type="text" class="style1 editPage" name="ds2019_phone" size=20 value="#qGetCandidate.ds2019_phone#" maxlength="12">
                                             </td>
                                             <td align="right" class="style1"><b>Cell.:</b></td>
                                             <td class="style1">
-                                              <span class="readOnly">#get_candidate_unqID.ds2019_cell#</span>
-                                              <input type="text" class="style1 editPage" name="ds2019_cell" size=20 value="#get_candidate_unqID.ds2019_cell#" maxlength="12">
+                                              <span class="readOnly">#qGetCandidate.ds2019_cell#</span>
+                                              <input type="text" class="style1 editPage" name="ds2019_cell" size=20 value="#qGetCandidate.ds2019_cell#" maxlength="12">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><b>Start:</b></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#DateFormat(get_candidate_unqID.ds2019_startdate, 'mm/dd/yyyy')#</span>
-                                                <cfinput type="text" class="style1 editPage" name="ds2019_startdate" size=20 value="#DateFormat(get_candidate_unqID.ds2019_startdate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 Start Date (MM/DD/YYYY)">
+                                            	<span class="readOnly">#DateFormat(qGetCandidate.ds2019_startdate, 'mm/dd/yyyy')#</span>
+                                                <cfinput type="text" class="style1 editPage" name="ds2019_startdate" size=20 value="#DateFormat(qGetCandidate.ds2019_startdate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 Start Date (MM/DD/YYYY)">
                                             </td>
                                             <td class="style1" align="right"><b>End:</b></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#DateFormat(get_candidate_unqID.ds2019_enddate, 'mm/dd/yyyy')#</span>
-                                            	<cfinput type="text" class="style1 editPage" name="ds2019_enddate" size=20 value="#DateFormat(get_candidate_unqID.ds2019_enddate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 End Date(MM/DD/YYYY)">
+                                            	<span class="readOnly">#DateFormat(qGetCandidate.ds2019_enddate, 'mm/dd/yyyy')#</span>
+                                            	<cfinput type="text" class="style1 editPage" name="ds2019_enddate" size=20 value="#DateFormat(qGetCandidate.ds2019_enddate, 'mm/dd/yyyy')#" maxlength="12" validate="date" message="DS-2019 End Date(MM/DD/YYYY)">
                                             </td>
                                         </tr>
                                     </table>
@@ -1068,14 +1095,14 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="checkbox" name="insurance_date" disabled <cfif LEN(get_candidate_unqID.insurance_date)> checked </cfif>>
+                                                <input type="checkbox" name="insurance_date" disabled <cfif LEN(qGetCandidate.insurance_date)> checked </cfif>>
                                             </td>
                                             <td class="style1" align="right"><b>Filed Date:</b></td>
                                             <td class="style1">
-                                                <cfif qGetIntlRepInfo.extra_insurance_typeid GT '1' AND get_candidate_unqID.insurance_date EQ ''>
+                                                <cfif qGetIntlRepInfo.extra_insurance_typeid GT '1' AND qGetCandidate.insurance_date EQ ''>
                                                     not insured yet
-                                                <cfelseif get_candidate_unqID.insurance_date NEQ ''>
-                                                    #DateFormat(get_candidate_unqID.insurance_date, 'mm/dd/yyyy')#
+                                                <cfelseif qGetCandidate.insurance_date NEQ ''>
+                                                    #DateFormat(qGetCandidate.insurance_date, 'mm/dd/yyyy')#
                                                 <cfelse>
                                                     n/a
                                                 </cfif>
@@ -1083,10 +1110,10 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="checkbox" name="insurance_Cancel" disabled="disabled" <cfif LEN(get_candidate_unqID.insurance_cancel_date)> checked </cfif> >
+                                                <input type="checkbox" name="insurance_Cancel" disabled="disabled" <cfif LEN(qGetCandidate.insurance_cancel_date)> checked </cfif> >
                                             </td>
                                             <td class="style1" align="right"><b>Cancel Date:</b></td>
-                                            <td class="style1">#DateFormat(get_candidate_unqID.insurance_cancel_date, 'mm/dd/yyyy')#</td>
+                                            <td class="style1">#DateFormat(qGetCandidate.insurance_cancel_date, 'mm/dd/yyyy')#</td>
                                         </tr>
                                     </table>
                                     
@@ -1112,7 +1139,7 @@
                                             <td class="style1">Depart US</td><td class="style1"><cfif LEN(qArrivalInfo.dep_date)>#DateFormat(qArrivalInfo.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif></td>
                                         </tr>
                                         <tr>
-                                            <Td align="Center" colspan=2 class="style1"><a href="" onClick="javascript: win=window.open('flight_info/flight_info.cfm?candidateID=#get_candidate_unqID.candidateID#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">View / Edit  Itinerary</A></Td>
+                                            <Td align="Center" colspan=2 class="style1"><a href="" onClick="javascript: win=window.open('flight_info/flight_info.cfm?candidateID=#qGetCandidate.candidateID#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">View / Edit  Itinerary</A></Td>
                                         </tr>
                                     </table>
                                 </td>	

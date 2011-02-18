@@ -429,11 +429,13 @@
         <cfargument name="emailSubject" type="string" default="" hint="Email Subject">
         <cfargument name="emailMessage" type="string" default="" hint="Email Message">
         <cfargument name="emailFilePath" type="string" default="" hint="Optional attachment file">
+        <cfargument name="emailPriority" type="numeric" default="3" hint="An integer in the range 1-5; 1 represents the highest priority.">
         <cfargument name="emailTemplate" type="string" default="" hint="newAccount/forgotPassword/ - If passed gets the email text accordingly">
         <cfargument name="candidateID" type="numeric" default="0" hint="Used with the emailTemplate to get the student information">  
         <cfargument name="companyID" type="numeric" default="0" hint="Company ID to get the correct subject/footer information">   
         <cfargument name="userID" type="numeric" default="0" hint="user ID in case we are emailing a user">    
-
+        <cfargument name="footerType" type="string" default="email" hint="email / emailRegular">
+		
 		<!--- Import CustomTag --->
 		<cfimport taglib="../../extensions/customtags/gui/" prefix="gui" />	
 
@@ -459,7 +461,8 @@
             replyto="#ARGUMENTS.emailReplyTo#" 
             cc="#ARGUMENTS.emailCC#" 
             subject="#ARGUMENTS.emailSubject#" 
-            type="html">
+            type="html"
+            priority="#ARGUMENTS.emailPriority#">
 
             <!--- Attach File --->
 			<cfif LEN(ARGUMENTS.emailFilePath) AND APPLICATION.CFC.DOCUMENT.checkFileExists(filePath=ARGUMENTS.emailFilePath)>
@@ -469,14 +472,15 @@
 			<!--- Page Header --->
             <gui:pageHeader
                 headerType="email"
+                companyID="#ARGUMENTS.companyID#"
             />
             
             <!--- Email Body --->
             #ARGUMENTS.emailMessage#
-        
-			<!--- Page Footer --->
+        	
             <gui:pageFooter
-                footerType="email"
+                footerType="#ARGUMENTS.footerType#"
+                companyID="#ARGUMENTS.companyID#"
             />
             
         </cfmail>

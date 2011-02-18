@@ -113,7 +113,9 @@
 	APPLICATION.EMAIL.flightReport = 'anca@csb-usa.com;elena@csb-usa.com;marcus@iseusa.com';
 	
 	/***** Create APPLICATION.PATH structure *****/
-	APPLICATION.PATH = StructNew();		
+	APPLICATION.PATH = StructNew();	
+	APPLICATION.PATH.TRAINEE = StructNew();		
+	APPLICATION.PATH.WAT = StructNew();		
 
 	/* jQuery Latest Version 
 	http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
@@ -156,9 +158,16 @@
 		
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		APPLICATION.PATH.base = 'C:/Websites/student-management/extra/internal/';
-		
 	}
+	
+	// Set Uploaded Files 
+	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & 'uploadedFiles/';
 
+	APPLICATION.PATH.pdfFiles = APPLICATION.PATH.uploadedFiles & 'pdf_docs/';
+	
+	APPLICATION.PATH.TRAINEE.pdfDocs = APPLICATION.PATH.pdfFiles & 'trainee/';
+
+	APPLICATION.PATH.WAT.pdfDocs = APPLICATION.PATH.pdfFiles & 'wat/';
 
 	/***************
 		Set up folders used to uplaod documents in the application.
