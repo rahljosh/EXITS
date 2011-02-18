@@ -12,6 +12,8 @@
 <!--- Param FORM variables --->
 <cfparam name="FORM.reason" default="">
 <cfparam name="FORM.reason_host" default="">
+<cfparam name="FORM.doc_midterm_evaluation" default="">
+<cfparam name="FORM.doc_summative_evaluation" default="">
 <cfparam name="FORM.doc_application" default="0">
 <cfparam name="FORM.doc_resume" default="0">
 <cfparam name="FORM.doc_proficiency" default="0">
@@ -101,12 +103,12 @@
 			<cfif LEN(FORM.host_startdate)>
 				<cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.host_startdate)#">
 			<cfelse>
-				NULL
+				<cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">
 			</cfif>,
 			<cfif LEN(FORM.host_enddate)>
 				<cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.host_enddate)#">
 			<cfelse>
-				NULL
+				<cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">
 			</cfif>,
 			<cfqueryparam cfsqltype="cf_sql_integer" value="1">, 
 			<cfqueryparam cfsqltype="cf_sql_bit" value="0">,
@@ -175,13 +177,23 @@
         <!---- degree_comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.degree_comments#">,---->	
         fieldstudyid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fieldstudyid#">,	 
      	subfieldid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,	
-        doc_application = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_application#">,	 
-        doc_resume = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_resume#">,
-        doc_proficiency = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_proficiency#">,	  
-        doc_passportphoto = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_passportphoto#">,	  
-        doc_recom_letter = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_recom_letter#">,	
-        doc_insu = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_insu#">,	  
-        doc_sponsor_letter = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.doc_sponsor_letter#">,	 
+		<cfif LEN(FORM.doc_midterm_evaluation)>
+            doc_midterm_evaluation = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.doc_midterm_evaluation#">,
+        <cfelse>
+            doc_midterm_evaluation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+        </cfif>
+		<cfif LEN(FORM.doc_summative_evaluation)>
+            doc_summative_evaluation = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.doc_summative_evaluation#">,
+        <cfelse>
+            doc_summative_evaluation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+        </cfif>
+        doc_application = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_application#">,	 
+        doc_resume = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_resume#">,
+        doc_proficiency = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_proficiency#">,	  
+        doc_passportphoto = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_passportphoto#">,	  
+        doc_recom_letter = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_recom_letter#">,	
+        doc_insu = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_insu#">,	  
+        doc_sponsor_letter = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_sponsor_letter#">,	 
         missing_documents = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.missing_documents#">,	  
         programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">,	
         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,		  		
