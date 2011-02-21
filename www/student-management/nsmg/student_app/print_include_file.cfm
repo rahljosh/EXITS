@@ -1,6 +1,6 @@
 <cfoutput>
 
-<cfdirectory directory="#AppPath.onlineApp.inserts#/#doc#" name="file" filter="#get_student_info.studentid#.*">	
+<cfdirectory directory="#AppPath.onlineApp.inserts#/#doc#" name="file" filter="#client.studentid#.*">	
 
 <cfif ListFind("jpg,peg,gif,tif,png", LCase(Right(file.name, 3)))>
 	<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">

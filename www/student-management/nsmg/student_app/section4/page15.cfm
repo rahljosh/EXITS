@@ -1,11 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link rel="stylesheet" type="text/css" href="app.css">
-	<title>Page [15] - Program Agreement</title>
-</head>
-<body>
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfset client.org_code = 10>
 	<cfset bgcolor ='ffffff'>    
@@ -13,11 +5,13 @@
     <cfset client.org_code = 5>
     <cfset bgcolor ='B5D66E'>  
 </cfif>
+
 <cfquery name="org_info" datasource="mysql">
-select *
-from smg_companies
-where companyid = #client.org_code#
+    select *
+    from smg_companies
+    where companyid = #client.org_code#
 </cfquery>
+
 <cftry>
 
 <!--- relocate users if they try to access the edit page without permission --->
@@ -43,75 +37,37 @@ function areYouSure() {
 } 
 </script>
 
-<cfset doc = 'page15'>
-
-<cfquery name="get_student_info" datasource="mysql">
-	SELECT s.studentid, s.city, s.country, s.firstname, s.familylastname, s.sex,
-		smg_countrylist.countryname
-	FROM smg_students s
-	LEFT JOIN smg_countrylist ON s.country = smg_countrylist.countryid
-	WHERE studentid = #client.studentid# 
-</cfquery>
-
-<cfswitch expression="#get_student_info.sex#">
-
-	<cfcase value="male">
-		<cfset sd='son'>
-        <cfset hs='he'>
-        <cfset hh='his'>
-    </cfcase>
+	<cfset doc = 'page15'>
     
-    <cfcase value="female">
-		<cfset sd='daughter'>
-        <cfset hs='she'>
-        <cfset hh='her'>
-    </cfcase>
+    <!--- HEADER OF TABLE --->
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr height="33">
+            <td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
+            <td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
+            <td class="tablecenter"><h2>Page [15] - Program Agreement</h2></td>
+            <td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page15print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
+            <td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
+        </tr>
+    </table>
     
-    <cfdefaultcase>
-		<cfset sd='son/daughter'>
-        <cfset hs='he/she'>
-        <cfset hh='his/her'>
-    </cfdefaultcase>
+    <div class="section"><br>
+    
+        <!--- Check uploaded file - Upload File Button --->
+        <cfinclude template="../check_uploaded_file.cfm">
+        
+        <cfinclude template="page15text.cfm">
 
-</cfswitch>
-
-<!--- HEADER OF TABLE --->
-<table width="100%" cellpadding="0" cellspacing="0">
-	<tr height="33">
-		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
-		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
-		<td class="tablecenter"><h2>Page [15] - Program Agreement</h2></td>
-		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page15print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
-		<td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
-	</tr>
-</table>
-
-<div class="section"><br>
-
-<cfoutput>
-
-<!--- Check uploaded file - Upload File Button --->
-<cfinclude template="../check_uploaded_file.cfm">
-<table width="670" cellpadding=3 cellspacing=0 align="center">
-	<tr>
-		<td>
-			<br><h3>Please read carefully, print, sign and date where indicated.</h3><br><br>
-			<div align="justify"><cfinclude template="page15text.cfm"></div>
-		</td>
-	</tr>
-</table><br>
-</cfoutput>
-</div>
-
-<table width=100% border=0 cellpadding=0 cellspacing=0 class="section" align="center">
-	<tr>
-		<td align="center" valign="bottom" class="buttontop">
-			<form action="?curdoc=section4/page16&id=4&p=16" method="post">
-			<input name="Submit" type="image" src="pics/next_page.gif" border=0 alt="Go to the next page">
-			</form>
-		</td>
-	</tr>
-</table>
+	</div>
+        
+    <table width=100% border=0 cellpadding=0 cellspacing=0 class="section" align="center">
+        <tr>
+            <td align="center" valign="bottom" class="buttontop">
+                <form action="?curdoc=section4/page16&id=4&p=16" method="post">
+                <input name="Submit" type="image" src="pics/next_page.gif" border=0 alt="Go to the next page">
+                </form>
+            </td>
+        </tr>
+    </table>
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
@@ -119,7 +75,5 @@ function areYouSure() {
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
-</cftry>
 
-</body>
-</html>
+</cftry>
