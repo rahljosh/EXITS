@@ -57,13 +57,12 @@ body {
             <a class="item1" href="?curdoc=support&id=su" onClick="return CheckLink();"><cfif url.id EQ 'su'><img border="0" src="pics/menu7selected.gif"><cfelse><img border="0" src="pics/menu7.gif"></cfif></a>
 		</td>
 		<td width="100%" background="pics/menuback.gif"></td>
-		<td height=31 width=13 background="pics/menuback.gif">
     </tr>
 </table>
 
 <table width=100% cellpadding=0 cellspacing=0 border="0" id="menu1" align="center">
 	<cfif url.id EQ '1'>
-	<tr>	
+	<tr>
 		<cfif url.p EQ '1'>
 			<td align="center" class="selected menuline"><a class="item2" href="?curdoc=section1/page1#print#&id=1&p=1" onClick="return CheckLink();"><div class="selectedlink">Page [01] &nbsp; Student's Information </div></a></td>
 		<cfelse>
@@ -77,9 +76,9 @@ body {
 		<cfif url.p EQ '3'>
 			<td align="center" class="selected menuline"><a class="item2" href="?curdoc=section1/page3#print#&id=1&p=3" onClick="return CheckLink();"><div class="selectedlink">Page [03] &nbsp; Personal Data </div></a></td>
 		<cfelse>
-			<td align="center" class="ddmx menulinex"><a class="item2" href="?curdoc=section1/page3#print#&id=1&p=3" onClick="return CheckLink();">Page [03] &nbsp; Personal Data </a></td>
+			<td align="center" class="ddmx menuline"><a class="item2" href="?curdoc=section1/page3#print#&id=1&p=3" onClick="return CheckLink();">Page [03] &nbsp; Personal Data </a></td>
 		</cfif>
-	</tr>	
+	</tr>
 	<tr>
 		<cfif url.p EQ '4'>
 			<td align="center" class="selected"><a class="item2" href="?curdoc=section1/page4#print#&id=1&p=4" onClick="return CheckLink();"><div class="selectedlink">Page [04] &nbsp; Family Album </div></a></td>
@@ -96,9 +95,9 @@ body {
 		<cfelse>
 			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section1/page6#print#&id=1&p=6" onClick="return CheckLink();">Page [06] &nbsp; Parent's Letter </a></td>
 		</cfif>
-	</tr>	
+	</tr>
 	</cfif>
-	
+    
 	<cfif url.id EQ '2'>
 	<tr>
 		<cfif url.p EQ '7'>

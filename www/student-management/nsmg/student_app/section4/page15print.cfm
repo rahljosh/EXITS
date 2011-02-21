@@ -1,12 +1,15 @@
 <cftry>
 
-<cfif IsDefined('url.curdoc') OR IsDefined('url.path')>
-	<cfset path = "">
-<cfelseif IsDefined('url.exits_app')>
-	<cfset path = "nsmg/student_app/">
-<cfelse>
-	<cfset path = "../">
-</cfif>
+<cfscript>
+	// Set up image path
+	if ( IsDefined('url.curdoc') OR IsDefined('url.path') ) {
+		path = "";
+	} else if ( IsDefined('url.exits_app') )  {
+		path = "nsmg/student_app/";
+	} else {
+		path = "../";
+	}
+</cfscript>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -17,38 +20,7 @@
 </head>
 <body <cfif not IsDefined('url.curdoc')>onLoad="print()"</cfif>>
 
-<cfset doc = 'program_agreement'>
-
-<cfquery name="get_student_info" datasource="mysql">
-	SELECT studentid, city, country, countryname, firstname, familylastname, sex
-	FROM smg_students 
-	LEFT JOIN smg_countrylist on smg_students.country = smg_countrylist.countryid
-	WHERE studentid = '#client.studentid#' 
-</cfquery>
-
 <cfset doc = 'page15'>
-
-<cfswitch expression="#get_student_info.sex#">
-
-	<cfcase value="male">
-		<cfset sd='son'>
-        <cfset hs='he'>
-        <cfset hh='his'>
-    </cfcase>
-    
-    <cfcase value="female">
-		<cfset sd='daughter'>
-        <cfset hs='she'>
-        <cfset hh='her'>
-    </cfcase>
-    
-    <cfdefaultcase>
-		<cfset sd='son/daughter'>
-        <cfset hs='he/she'>
-        <cfset hh='his/her'>
-    </cfdefaultcase>
-
-</cfswitch>
 
 <cfoutput>
 
@@ -80,38 +52,16 @@
 		</tr>
 	</table>
 	
-	<div class="section"><br>
-	<!--- CHECK IF FILE HAS BEEN UPLOADED --->
-	<cfif IsDefined('url.curdoc')>
-		<cfinclude template="../check_upl_print_file.cfm">
-	</cfif>
-	
-	<table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
-		<tr><td align="center">Please read carefully and sign and date where indicated.</td></tr>
-		<tr><td><div align="justify"><cfinclude template="page15text.cfm"></div></td></tr>
-	</table>
-	
-	<table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
-		<tr>
-			<td width="210"><br><img src="#path#pics/line.gif" width="210" height="1" border="0" align="absmiddle"></td>
-			<td width="5"></td>
-			<td width="100"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; / &nbsp; &nbsp; &nbsp; &nbsp; / <br><img src="#path#pics/line.gif" width="100" height="1" border="0" align="absmiddle"></td>		
-			<td width="40"></td>
-			<td width="210"><br><img src="#path#pics/line.gif" width="210" height="1" border="0" align="absmiddle"></td>
-			<td width="5"></td>
-			<td width="100"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; / &nbsp; &nbsp; &nbsp; &nbsp; / <br><img src="#path#pics/line.gif" width="100" height="1" border="0" align="absmiddle"></td>
-		</tr>
-		<tr>
-			<td>Signature of Parent</td>
-			<td></td>
-			<td>Date</td>
-			<td></td>
-			<td>Signature of Student</td>
-			<td></td>
-			<td>Date</td>	
-		</tr>
-	</table>
-	</div>
+    <div class="section"><br>
+    
+		<!--- CHECK IF FILE HAS BEEN UPLOADED --->
+        <cfif IsDefined('url.curdoc')>
+            <cfinclude template="../check_upl_print_file.cfm">
+        </cfif>
+        
+        <cfinclude template="page15text.cfm">
+
+	</div>    
 	
 	<!--- FOOTER OF TABLE --->
 	<table width="100%" cellpadding="0" cellspacing="0">
@@ -123,7 +73,8 @@
 	</table>
 	
 	<cfif not IsDefined('url.curdoc')>
-	</td></tr>
+			</td>
+	    </tr>
 	</table>
 	</cfif>
 
