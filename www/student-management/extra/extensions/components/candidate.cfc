@@ -666,13 +666,13 @@
                     extra_candidates c
                 INNER JOIN	
                 	smg_users u ON u.userID = c.intRep
-                INNER JOIN                
+                LEFT OUTER JOIN                
                       applicationStatusJn ast ON ast.foreignID = c.candidateID
                       AND
                          ast.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.foreignTable#"> 
 					  AND 
                     	ast.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">                                              
-                LEFT OUTER JOIN 
+				LEFT OUTER JOIN 
         			smg_users branch ON branch.userid = c.branchid                
                 WHERE            
                     c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
