@@ -137,7 +137,13 @@
 
 <table width="660" border="0" cellpadding="2" cellspacing="0" align="center">
 	<tr>
-		<td><em>What grade level will student have completed upon arrival in the USA?</em></td>
+        <cfif ListFind("14,15,16", get_student_info.app_indicated_program)>     
+        	<!--- Canada Application --->       	
+	        <td><em>What grade level will student have completed upon arrival in Canada?</em></td>
+		<cfelse>
+        	<!--- USA - Public High School --->
+	        <td><em>What grade level will student have completed upon arrival in the USA?</em></td>
+        </cfif>	
 		<td>
 			<cfif grades is '9'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse> <img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>  9<sup>th</sup> 
 			<cfif grades is '10'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif> 10<sup>th</sup>

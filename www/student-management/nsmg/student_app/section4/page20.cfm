@@ -101,7 +101,8 @@ function NextPage() {
 		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
 		<td class="tablecenter"><h2>Page [20] - Regional Choice </h2></td>
-		<cfif CLIENT.companyID NEQ 14>	
+		<!--- Do not display for Exchange Service or Canada Application --->
+		<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
 	        <td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page20print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
         <td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
@@ -149,67 +150,78 @@ function NextPage() {
 	<cfabort>
 </cfif>
 
-<div class="section"><br>
-<cfif CLIENT.companyID EQ 14>
-    <br><Br><br>
-    <h2 align=center>This page does not apply to your program.</h2>
-    <Br><br><BR>
-<cfelse>
-<!--- Check uploaded file - Upload File Button --->
-<cfinclude template="../check_uploaded_file.cfm">
 
-<table width="670" cellpadding=2 cellspacing=0 align="center">
-	<tr>
-		<td><h1>Student's Name: #get_student_info.firstname# #get_student_info.familylastname#</h1><br><br>
-			You can choose your regional if you so desire. Both the Semester and Academic Year students can choose a region.<br>
-			You must request a regional choice by printing and signing this page.
-		</td>
-	</tr>
-</table><br>
-
-<table width=670 border=0 cellpadding=2 cellspacing=0 align="center">
-	<tr><td><div align="justify">
-		If you would like to specify a region, select option A, 
-		confirm your request of region, print this page, sign it and upload it back into the system with original signatures.<br>
-		If you do not want a regional choice, select option B. 
-		If option B is selected you do not need to print this page, sign it and upload it back into the system.</div><br><br></td></tr>	
-	<tr>
-		<td>
-			A. <input type="radio" name="region_select" value='yes' onClick="hideAll(); changeDiv('1','block'); DataChanged();" <cfif check_guarantee.app_region_guarantee NEQ '0' AND check_guarantee.app_region_guarantee NEQ ''>checked</cfif>>
-			I would like to request a specific regional choice.<br></td>
-	</tr>
-	<tr>
-		<td>
-			B. <input type="radio" name="region_select" value='no'	onClick="hideAll(); changeDiv('2','block'); DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '0'>checked</cfif>>
-			I do not wish a regional choice.<br><br></td>
-	</tr>
-	<tr>
-		<td>
-			<b>Note: There will be additional charges if you make a regional choice, please contact your representative for details.</b><br><br>
+<!--- Do not display for ESI or Canada Application --->
+<cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", get_student_info.app_indicated_program)> 
 	
-			
-			<div id ="1" style="display:none">
-			<table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
-				<tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
-				<tr>
-					<td valign="top"><input type="radio" name="region_choice" value="1" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '1'>checked</cfif>>Region 1 - East<br><img src="pics/region1.gif"></td>
-					<td valign="top"><input type="radio" name="region_choice" value="2" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '2'>checked</cfif>>Region 2 - South<br><img src="pics/region2.gif"></td>
-				</tr>
-				<tr>
-					<td valign="top"><input type="radio" name="region_choice" value="3" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '3'>checked</cfif>>Region 3 - Central<br><img src="pics/region3.gif"></td>
-					<td valign="top"><input type="radio" name="region_choice" value="4" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '4'>checked</cfif>>Region 4 - Rocky Mountain<br><img src="pics/region4.gif"></td>
-					<td valign="top"><input type="radio" name="region_choice" value="5" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '5'>checked</cfif>>Region 5 - West<br><img src="pics/region5.gif"></td>
-				</tr>
-			</table>			
-			</div>
-		</td>
-	</tr>
-</table><br><br>
-</div>
+    <div class="section"><br>
+        <br><Br><br>
+        <h2 align=center>This page does not apply to your program.</h2>
+        <Br><br><BR>
+	</div>
+    
+<cfelse>
 
-<!--- PAGE BUTTONS --->
-<cfinclude template="../page_buttons.cfm">
+	<div class="section"><br>
+
+		<!--- Check uploaded file - Upload File Button --->
+        <cfinclude template="../check_uploaded_file.cfm">
+        
+        <table width="670" cellpadding=2 cellspacing=0 align="center">
+            <tr>
+                <td><h1>Student's Name: #get_student_info.firstname# #get_student_info.familylastname#</h1><br><br>
+                    You can choose your regional if you so desire. Both the Semester and Academic Year students can choose a region.<br>
+                    You must request a regional choice by printing and signing this page.
+                </td>
+            </tr>
+        </table><br>
+        
+        <table width=670 border=0 cellpadding=2 cellspacing=0 align="center">
+            <tr><td><div align="justify">
+                If you would like to specify a region, select option A, 
+                confirm your request of region, print this page, sign it and upload it back into the system with original signatures.<br>
+                If you do not want a regional choice, select option B. 
+                If option B is selected you do not need to print this page, sign it and upload it back into the system.</div><br><br></td></tr>	
+            <tr>
+                <td>
+                    A. <input type="radio" name="region_select" value='yes' onClick="hideAll(); changeDiv('1','block'); DataChanged();" <cfif check_guarantee.app_region_guarantee NEQ '0' AND check_guarantee.app_region_guarantee NEQ ''>checked</cfif>>
+                    I would like to request a specific regional choice.<br></td>
+            </tr>
+            <tr>
+                <td>
+                    B. <input type="radio" name="region_select" value='no'	onClick="hideAll(); changeDiv('2','block'); DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '0'>checked</cfif>>
+                    I do not wish a regional choice.<br><br></td>
+            </tr>
+            <tr>
+                <td>
+                    <b>Note: There will be additional charges if you make a regional choice, please contact your representative for details.</b><br><br>
+            
+                    
+                    <div id ="1" style="display:none">
+                    <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
+                        <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
+                        <tr>
+                            <td valign="top"><input type="radio" name="region_choice" value="1" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '1'>checked</cfif>>Region 1 - East<br><img src="pics/region1.gif"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="2" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '2'>checked</cfif>>Region 2 - South<br><img src="pics/region2.gif"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><input type="radio" name="region_choice" value="3" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '3'>checked</cfif>>Region 3 - Central<br><img src="pics/region3.gif"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="4" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '4'>checked</cfif>>Region 4 - Rocky Mountain<br><img src="pics/region4.gif"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="5" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '5'>checked</cfif>>Region 5 - West<br><img src="pics/region5.gif"></td>
+                        </tr>
+                    </table>			
+                    </div>
+                </td>
+            </tr>
+        </table><br><br>
+	
+    </div>
+
+	<!--- PAGE BUTTONS --->
+    <cfinclude template="../page_buttons.cfm">
+
 </Cfif>
+
 </cfoutput>
 
 </cfform>

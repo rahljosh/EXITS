@@ -261,18 +261,16 @@
 
 <table width="670px" cellpadding=3 cellspacing=0 align="center">
 	<tr>
-		<td>
+		<td style="text-align:justify;">
 			<p style="font-weight:bold;">Please read carefully, print, sign and date where indicated.</p>
             
-			<div align="justify">
+            <cfif ListFind("14,15,16", qGetStudentInfo.app_indicated_program)>            	
 				<!--- Canada Agreement --->
-                <cfif ListFind("14,15,16", qGetStudentInfo.app_indicated_program)>            	
-					#canadaAgreement#
-                <!--- Public High School Agreement --->
-                <cfelse>
-                	#publicAgreement#
-                </cfif>            
-            </div>
+                #canadaAgreement#
+            <cfelse>
+		        <!--- Public High School Agreement --->
+                #publicAgreement#
+            </cfif>            
 		</td>
 	</tr>
 </table>

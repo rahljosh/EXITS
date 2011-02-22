@@ -9,23 +9,23 @@
 </cfif>
 
 <cfif IsDefined('url.unqid')>
-	<cfquery name="get_student_info2" datasource="MySql">
-	 	SELECT s.firstname, s.familylastname, s.studentid, s.intrep,
+	<cfquery name="qGetStudentInfoPrint" datasource="MySql">
+	 	SELECT s.firstname, s.familylastname, s.studentid, s.intrep, s.app_indicated_program,
 			u.businessname, u.master_accountid
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.intrep
 		WHERE s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
 	</cfquery>	
-	<cfset client.studentid = '#get_student_info2.studentid#'>
+	<cfset client.studentid = '#qGetStudentInfoPrint.studentid#'>
 <cfelse>
-	<cfquery name="get_student_info2" datasource="MySql">
-	 	SELECT s.firstname, s.familylastname, s.studentid, s.intrep, s.uniqueid,
+	<cfquery name="qGetStudentInfoPrint" datasource="MySql">
+	 	SELECT s.firstname, s.familylastname, s.studentid, s.intrep, s.uniqueid, s.app_indicated_program,
 			u.businessname, u.master_accountid
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.intrep
 		WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
 	</cfquery>
-    <cfset url.unqid = '#get_student_info2.uniqueid#'>
+    <cfset url.unqid = '#qGetStudentInfoPrint.uniqueid#'>
 </cfif>
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfset client.org_code = 10>
@@ -44,7 +44,7 @@ where companyid = #client.org_code#
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="app.css">
-	<title>EXITS Online Application <cfoutput query="get_student_info2"> - #firstname# #familylastname# (###studentid#) - #businessname#</cfoutput></title>
+	<title>EXITS Online Application <cfoutput query="qGetStudentInfoPrint"> - #firstname# #familylastname# (###studentid#) - #businessname#</cfoutput></title>
 	<script language="JavaScript" type="text/JavaScript">
 	<!--
 	function launch(newURL, newName, newFeatures, orgName) {
@@ -123,7 +123,7 @@ where studentid = #client.studentid#
     <tr>
     	<td valign="top">				
 			<!--- DO NOT PRINT PAGES 5 IF PDF or DOC is attached --->
-			<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="page5" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="page5" filter="#qGetStudentInfoPrint.studentid#.*">	
 			<cfif Right(page5.name, 3) NEQ 'pdf' AND Right(page5.name, 3) NEQ 'doc'>	
 				<cfinclude template="section1/page5print.cfm">
 				<div style="page-break-after:always;"></div>	
@@ -133,7 +133,7 @@ where studentid = #client.studentid#
     <tr>
     	<td valign="top">				
 			<!--- DO NOT PRINT PAGES 5 IF PDF or DOC is attached --->
-			<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="page6" filter="#get_student_info2.studentid#.*">
+			<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="page6" filter="#qGetStudentInfoPrint.studentid#.*">
 			<cfif Right(page6.name, 3) NEQ 'pdf' AND Right(page6.name, 3) NEQ 'doc'>	
 				<cfinclude template="section1/page6print.cfm">
 				<div style="page-break-after:always;"></div>
@@ -205,7 +205,7 @@ where studentid = #client.studentid#
     <tr>
     	<td valign="top">				
 			<!--- DO NOT PRINT PAGE 14 if PDF or DOC is attached --->
-			<cfdirectory directory="#AppPath.onlineApp.inserts#page14" name="page14" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.inserts#page14" name="page14" filter="#qGetStudentInfoPrint.studentid#.*">	
 			<cfif Right(page14.name, 3) NEQ 'pdf' AND Right(page14.name, 3) NEQ 'doc'>	
 				<cfinclude template="section3/page14print.cfm">
 				<cfif printpage EQ 'yes'>
@@ -219,7 +219,7 @@ where studentid = #client.studentid#
 	<!--- DO NOT PRINT PAGES 15, 16 AND 17 if PDF or DOC are attached --->
 	<tr>
     	<td valign="top">
-			<cfdirectory directory="#AppPath.onlineApp.inserts#page15" name="page15" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.inserts#page15" name="page15" filter="#qGetStudentInfoPrint.studentid#.*">	
 			<cfif Right(page15.name, 3) NEQ 'pdf' AND Right(page15.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page15print.cfm">
 				<cfif printpage EQ 'yes'>
@@ -230,7 +230,7 @@ where studentid = #client.studentid#
     </tr>
     <tr>
     	<td valign="top">				
-			<cfdirectory directory="#AppPath.onlineApp.inserts#page16" name="page16" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.inserts#page16" name="page16" filter="#qGetStudentInfoPrint.studentid#.*">	
 			<cfif Right(page16.name, 3) NEQ 'pdf' AND Right(page16.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page16print.cfm">
 				<cfif printpage EQ 'yes'>
@@ -241,7 +241,7 @@ where studentid = #client.studentid#
     </tr>
     <tr>
     	<td valign="top">				
-			<cfdirectory directory="#AppPath.onlineApp.inserts#page17" name="page17" filter="#get_student_info2.studentid#.*">	
+			<cfdirectory directory="#AppPath.onlineApp.inserts#page17" name="page17" filter="#qGetStudentInfoPrint.studentid#.*">	
 			<cfif Right(page17.name, 3) NEQ 'pdf' AND Right(page17.name, 3) NEQ 'doc'>	
 				<cfinclude template="section4/page17print.cfm">
 				<cfif printpage EQ 'yes'>
@@ -250,16 +250,16 @@ where studentid = #client.studentid#
 			</cfif>
 		</td>
     </tr>
-    <!----We don't need to include 18 for ESI---->
-    <cfif CLIENT.companyID NEQ 14>
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section4/page18print.cfm">
-			<cfif printpage EQ 'yes'>
-				<div style="page-break-after:always;"></div>
-			</cfif>
-		</td>
-    </tr>
+	<!--- Do not display for ESI or Canada Application --->
+    <cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
+        <tr>
+            <td valign="top">				
+                <cfinclude template="section4/page18print.cfm">
+                <cfif printpage EQ 'yes'>
+                    <div style="page-break-after:always;"></div>
+                </cfif>
+            </td>
+        </tr>
     </cfif>
     <tr>
     	<td valign="top">				
@@ -269,13 +269,13 @@ where studentid = #client.studentid#
     </tr>
 			
 	<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS --->
-	<cfif IsDefined('client.usertype') AND client.usertype NEQ 10 AND get_student_info2.master_accountid NEQ 10115 AND get_student_info2.intrep NEQ 10115 AND get_student_info2.intrep NEQ 8318>
+	<cfif IsDefined('client.usertype') AND client.usertype NEQ 10 AND qGetStudentInfoPrint.master_accountid NEQ 10115 AND qGetStudentInfoPrint.intrep NEQ 10115 AND qGetStudentInfoPrint.intrep NEQ 8318>
     
 		<!----We don't need to include 20 for ESI---->
         <cfif CLIENT.companyID NEQ 14>
             <tr>
                 <td valign="top">				
-                        <cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#get_student_info2.studentid#.*">
+                        <cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#qGetStudentInfoPrint.studentid#.*">
                         <cfif Right(page20.name, 3) NEQ 'pdf' AND Right(page20.name, 3) NEQ 'doc'>
                             <cfinclude template="section4/page20print.cfm">
                             <cfif printpage EQ 'yes'>
@@ -288,7 +288,7 @@ where studentid = #client.studentid#
         
         <tr>
             <td valign="top">				
-                    <cfdirectory directory="#AppPath.onlineApp.inserts#page21" name="page21" filter="#get_student_info2.studentid#.*">
+                    <cfdirectory directory="#AppPath.onlineApp.inserts#page21" name="page21" filter="#qGetStudentInfoPrint.studentid#.*">
                     <cfif Right(page21.name, 3) NEQ 'pdf' AND Right(page21.name, 3) NEQ 'doc'>
                         <cfinclude template="section4/page21print.cfm">
                     </cfif>
@@ -298,7 +298,7 @@ where studentid = #client.studentid#
 </table>
 
 <!--- PRINT PAGE 22 SUPPLEMENTS --->
-<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder#/#get_student_info2.studentid#/page22">
+<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder#/#qGetStudentInfoPrint.studentid#/page22">
 
 <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
 
@@ -306,7 +306,7 @@ where studentid = #client.studentid#
     <cfif ListFind("jpg,peg,gif,tif,png", LCase(Right(name, 3)))>
 	<div style="page-break-after:always;"></div><br>
 	<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
-		<tr><td><img src="../uploadedfiles/virtualfolder/#get_student_info2.studentid#/page22/#name#" width="660" height="820">		</td>
+		<tr><td><img src="../uploadedfiles/virtualfolder/#qGetStudentInfoPrint.studentid#/page22/#name#" width="660" height="820">		</td>
     </tr>
 	</table>
 	</cfif>
