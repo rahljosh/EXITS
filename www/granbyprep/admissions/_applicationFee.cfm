@@ -328,13 +328,28 @@
 					<cfelse>
                         <p class="legend"><strong>Note:</strong> fields are marked with an asterisk (<em>*</em>)</p>
 					</cfif>
-                    
+
+                    <!--- Downloadable Application --->
+                    <cfif NOT printApplication>
+                        <fieldset>
+                        
+                            <legend>Downloadable Application</legend>
+                            
+                            <div class="field controlset">
+                                The submission of an online application does require that the application fee be paid at that time by credit card. If you would prefer to use a 
+                                different payment method please email the Admission Office at <a href="mailto:#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a> 
+                                for a downloadable application.  Thank you for your interest!
+                            </div>
+                        
+                        </fieldset>
+                    </cfif>
+            		        
                     <!--- Application Fee --->
                     <fieldset>
-                       
+							
+                        <!--- Application Fee --->                           
                         <legend>Application Fee</legend>
 						
-                        <!--- Application Fee --->
                         <div class="field controlset">
                             <span class="label">Application Fee <em>*</em></span>
 							<cfif printApplication>
@@ -343,7 +358,7 @@
                                 <strong>#dollarFormat(getApplicationFee)#</strong>
                             </cfif>
                         </div>
-						
+
                         <!--- Payment Information --->
                         <cfif printApplication>
                             <div class="field controlset">
@@ -363,8 +378,7 @@
                         </cfif>
                         
                     </fieldset>                
-
-                    
+					
                     <!--- Payment Information --->
                     <fieldset>
                        

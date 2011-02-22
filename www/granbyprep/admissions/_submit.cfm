@@ -20,9 +20,6 @@
     <cfparam name="FORM.submitted" default="0">
     <!--- Student ID --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
-	<!--- Semester Information --->
-    <cfparam name="FORM.semesterID" default="">
-    <cfparam name="FORM.academicYear" default="">
        
     <cfscript>
 		// Get Current Student Information
@@ -287,13 +284,31 @@
                             <select name="#qGetQuestions.fieldKey[3]#" id="#qGetQuestions.fieldKey[3]#" class="#qGetQuestions.classType[3]#">
                             	<option value=""></option>
                             	<cfloop from="#Year(now())#" to="#Year(now()) + 3#" index="i">
-                            		<!--- Remove this IF in 2011 --->
-									<cfif i NEQ 2010>
-	                                    <option value="#i#" <cfif FORM[qGetQuestions.fieldKey[3]] EQ i> selected="selected" </cfif> >#i#</option>
-                                    </cfif>    
+                                    <option value="#i#" <cfif FORM[qGetQuestions.fieldKey[3]] EQ i> selected="selected" </cfif> >#i#</option>
                                 </cfloop>
 							</select>                                
 						</cfif>
+                    </div>
+
+                    <!--- Referred By --->
+                    <div class="field">
+                        <label for="#qGetQuestions.fieldKey[4]#">#qGetQuestions.displayField[4]# <cfif qGetQuestions.isRequired[4]><em>*</em></cfif></label> 
+                        <cfif printApplication>
+                            <div class="printField">#FORM[qGetQuestions.fieldKey[4]]# &nbsp;</div>
+                        <cfelse>
+                            <input type="text" name="#qGetQuestions.fieldKey[4]#" id="#qGetQuestions.fieldKey[4]#" value="#FORM[qGetQuestions.fieldKey[4]]#" class="#qGetQuestions.classType[4]#" maxlength="100" />
+							<p class="note">If you were referred by an International Representative please enter their name above.</p>
+						</cfif>                        
+                    </div>
+
+					<!--- Comments --->
+                    <div class="field">
+                        <label for="#qGetQuestions.fieldKey[5]#">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label>  
+                        <cfif printApplication>
+                            <div class="printFieldText">#FORM[qGetQuestions.fieldKey[5]]# &nbsp;</div>
+                        <cfelse>
+                            <textarea name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" class="#qGetQuestions.classType[5]#">#FORM[qGetQuestions.fieldKey[5]]#</textarea>                                    	
+                        </cfif>            
                     </div>
 
                 </fieldset>                

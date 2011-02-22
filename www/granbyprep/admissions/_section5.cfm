@@ -24,27 +24,27 @@
     
     <cfscript>		
 		// Get Questions for this section
-		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section5');
+		qGetQuestionsSection5 = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section5');
 		
 		// Get Answers for this section
-		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section5', foreignTable='student', foreignID=FORM.studentID);
+		qGetAnswersSection5 = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section5', foreignTable='student', foreignID=FORM.studentID);
 
 		// Param Online Application Form Variables 
-		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
-			param name="FORM[qGetQuestions.fieldKey[i]]" default="";
+		for ( i=1; i LTE qGetQuestionsSection5.recordCount; i=i+1 ) {
+			param name="FORM[qGetQuestionsSection5.fieldKey[i]]" default="";
 		}
 	
 		// FORM Submitted
 		if ( FORM.submittedType EQ 'section5' ) {
 			
 			// FORM Validation
-			for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
-				if (qGetQuestions.isRequired[i] AND NOT LEN(FORM[qGetQuestions.fieldKey[i]]) ) {
-					SESSION.formErrors.Add(qGetQuestions.requiredMessage[i]);
+			for ( i=1; i LTE qGetQuestionsSection5.recordCount; i=i+1 ) {
+				if (qGetQuestionsSection5.isRequired[i] AND NOT LEN(FORM[qGetQuestionsSection5.fieldKey[i]]) ) {
+					SESSION.formErrors.Add(qGetQuestionsSection5.requiredMessage[i]);
 				}
 			}
 			
-			if (ListLen(FORM[qGetQuestions.fieldKey[1]], " #Chr(13)##Chr(10)#") LT 250) {
+			if (ListLen(FORM[qGetQuestionsSection5.fieldKey[1]], " #Chr(13)##Chr(10)#") LT 250) {
 				SESSION.formErrors.Add("Your essay must contain at least 250 words.");
 			}
 			
@@ -52,13 +52,13 @@
 			if ( NOT SESSION.formErrors.length() ) {				
 
 				// Insert/Update Application Fields 
-				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
+				for ( i=1; i LTE qGetQuestionsSection5.recordCount; i=i+1 ) {
 					APPLICATION.CFC.ONLINEAPP.insertAnswer(	
-						applicationQuestionID=qGetQuestions.ID[i],
+						applicationQuestionID=qGetQuestionsSection5.ID[i],
 						foreignTable='student',
 						foreignID=FORM.studentID,
-						fieldKey=qGetQuestions.fieldKey[i],
-						answer=FORM[qGetQuestions.fieldKey[i]]						
+						fieldKey=qGetQuestionsSection5.fieldKey[i],
+						answer=FORM[qGetQuestionsSection5.fieldKey[i]]						
 					);	
 				}
 
@@ -76,8 +76,8 @@
 		} else {
 			
 			// Online Application Fields 
-			for ( i=1; i LTE qGetAnswers.recordCount; i=i+1 ) {
-				FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
+			for ( i=1; i LTE qGetAnswersSection5.recordCount; i=i+1 ) {
+				FORM[qGetAnswersSection5.fieldKey[i]] = qGetAnswersSection5.answer[i];
 			}
 			
 		}
@@ -107,9 +107,9 @@
 	<p><em>Oops... the following errors were encountered:</em></p>
 					
 	<ol>
-		<cfloop query="qGetQuestions">
-        	<cfif qGetQuestions.isRequired>
-				<li><label for="#qGetQuestions.fieldKey#" class="error">#qGetQuestions.requiredMessage#</label></li>
+		<cfloop query="qGetQuestionsSection5">
+        	<cfif qGetQuestionsSection5.isRequired>
+				<li><label for="#qGetQuestionsSection5.fieldKey#" class="error">#qGetQuestionsSection5.requiredMessage#</label></li>
             </cfif>
 		</cfloop>
 	</ol>
@@ -151,25 +151,25 @@
         <!--- Student Essay --->
         <!--- custom bar created for this text area and stored in CFIDE/scripts/ajax/FCKEditor/fckconfig.js file // richtext="yes" toolbar="Basic" --->         
         <div class="field">
-            <label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label> 
+            <label for="#qGetQuestionsSection5.fieldKey[1]#">#qGetQuestionsSection5.displayField[1]# <cfif qGetQuestionsSection5.isRequired[1]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printFieldEssay">#FORM[qGetQuestions.fieldKey[1]]# &nbsp;</div>
+            	<div class="printFieldEssay">#FORM[qGetQuestionsSection5.fieldKey[1]]# &nbsp;</div>
         	<cfelse>
-                <textarea name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" class="#qGetQuestions.classType[1]# textAreaEssayCount">#FORM[qGetQuestions.fieldKey[1]]#</textarea>            
-                <p class="note">(In 250 words or more) <span id="#qGetQuestions.fieldKey[1]#Count" class="spanEssayCount"> </span> </p>  
+                <textarea name="#qGetQuestionsSection5.fieldKey[1]#" id="#qGetQuestionsSection5.fieldKey[1]#" class="#qGetQuestionsSection5.classType[1]# textAreaEssayCount">#FORM[qGetQuestionsSection5.fieldKey[1]]#</textarea>            
+                <p class="note">(In 250 words or more) <span id="#qGetQuestionsSection5.fieldKey[1]#Count" class="spanEssayCount"> </span> </p>  
             </cfif>
         </div>
         
 		<!--- Attest --->
         <div class="field controlset">
-			<span class="label"><cfif qGetQuestions.isRequired[2]><em>*</em></cfif> &nbsp;</span>
+			<span class="label"><cfif qGetQuestionsSection5.isRequired[2]><em>*</em></cfif> &nbsp;</span>
             <cfif printApplication>
             	<div class="printField">
-                    <span class="printFieldCheck#YesNoFormat(FORM[qGetQuestions.fieldKey[2]])#"> #qGetQuestions.displayField[2]# &nbsp; </span>
+                    <span class="printFieldCheck#YesNoFormat(FORM[qGetQuestionsSection5.fieldKey[2]])#"> #qGetQuestionsSection5.displayField[2]# &nbsp; </span>
                 </div>
         	<cfelse>
                 <div class="field">
-                    <input type="checkbox" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="1" class="#qGetQuestions.classType[2]#" <cfif FORM[qGetQuestions.fieldKey[2]] EQ 1> checked="checked" </cfif> /> &nbsp; <label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]#</label>
+                    <input type="checkbox" name="#qGetQuestionsSection5.fieldKey[2]#" id="#qGetQuestionsSection5.fieldKey[2]#" value="1" class="#qGetQuestionsSection5.classType[2]#" <cfif FORM[qGetQuestionsSection5.fieldKey[2]] EQ 1> checked="checked" </cfif> /> &nbsp; <label for="#qGetQuestionsSection5.fieldKey[2]#">#qGetQuestionsSection5.displayField[2]#</label>
                 </div>
             </cfif>
             

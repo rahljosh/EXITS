@@ -31,7 +31,7 @@
 	APPLICATION.SCHOOL.state = 'MA';
 	APPLICATION.SCHOOL.zipCode = '01033';
 	APPLICATION.SCHOOL.tollFree = '(800) 766-4656';
-	APPLICATION.SCHOOL.phone = '(631) 893-4540';
+	APPLICATION.SCHOOL.phone = '(413) 467-1601';
 	
 	// School Departments
 	APPLICATION.SCHOOL.headMaster = 'Brian Chatterley ';
@@ -108,9 +108,9 @@
 
 		// Email Settings
 		APPLICATION.EMAIL.headMaster = 'bchatterley@granbyprep.com';
-		APPLICATION.EMAIL.admissionsOfficer = 'askidmore@granbyprep.com';
-		APPLICATION.EMAIL.admissions = 'admissions@granbyprep.com';
-		APPLICATION.EMAIL.contactUs = 'info@granbyprep.com';
+		APPLICATION.EMAIL.admissionsOfficer = 'askidmore@macduffie.org'; // askidmore@granbyprep.com
+		APPLICATION.EMAIL.admissions = 'admissions@macduffie.org';
+		APPLICATION.EMAIL.contactUs = 'admissions@macduffie.org'; // info@granbyprep.com
 		APPLICATION.EMAIL.support = 'support@granbyprep.com';
 		APPLICATION.EMAIL.errors = 'errors@granbyprep.com';
 		APPLICATION.EMAIL.finance = 'bchatterley@granbyprep.com';	

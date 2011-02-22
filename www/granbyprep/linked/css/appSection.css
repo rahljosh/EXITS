@@ -299,6 +299,13 @@ Online Application
 	width:48px;
 }
 
+.smallTextField {
+	font-size:1.2em;
+	border : 1px solid #999;
+	width:300px;
+	height:60px;
+}
+
 .mediumTextField {
 	font-size:1.2em;
 	border : 1px solid #999;
