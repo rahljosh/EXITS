@@ -22,14 +22,14 @@
     <!--- Student Details --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
 	<!--- Parent Information ---> 
-    <cfparam name="FORM.homePhoneCountry" default="">
-    <cfparam name="FORM.homePhoneArea" default="">
-    <cfparam name="FORM.homePhonePrefix" default="">
-    <cfparam name="FORM.homePhoneNumber" default="">
-    <cfparam name="FORM.faxCountry" default="">
-    <cfparam name="FORM.faxArea" default="">
-    <cfparam name="FORM.faxPrefix" default="">
-    <cfparam name="FORM.faxNumber" default="">
+    <cfparam name="FORM.parentHomePhoneCountry" default="">
+    <cfparam name="FORM.parentHomePhoneArea" default="">
+    <cfparam name="FORM.parentHomePhonePrefix" default="">
+    <cfparam name="FORM.parentHomePhoneNumber" default="">
+    <cfparam name="FORM.parentFaxCountry" default="">
+    <cfparam name="FORM.parentFaxArea" default="">
+    <cfparam name="FORM.parentFaxPrefix" default="">
+    <cfparam name="FORM.parentFaxNumber" default="">
     <cfparam name="FORM.businessPhoneCountry" default="">
     <cfparam name="FORM.businessPhoneArea" default="">
     <cfparam name="FORM.businessPhonePrefix" default="">
@@ -47,30 +47,30 @@
 		qGetCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry();
 
 		// Get Questions for this section
-		qGetQuestions = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section2');
+		qGetQuestionsSection2 = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section2');
 		
 		// Get Answers for this section
-		qGetAnswers = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section2', foreignTable='student', foreignID=FORM.studentID);
+		qGetAnswersSection2 = APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section2', foreignTable='student', foreignID=FORM.studentID);
 
 		// Param Online Application Form Variables 
-		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
-			param name="FORM[qGetQuestions.fieldKey[i]]" default="";
+		for ( i=1; i LTE qGetQuestionsSection2.recordCount; i=i+1 ) {
+			param name="FORM[qGetQuestionsSection2.fieldKey[i]]" default="";
 		}
 	
 		// FORM Submitted
 		if ( FORM.submittedType EQ 'section2' ) {
 
 			// Parent Phone
-			FORM[qGetQuestions.fieldKey[11]] = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.homePhoneCountry, areaCode=FORM.homePhoneArea, prefix=FORM.homePhonePrefix, number=FORM.homePhoneNumber);
-			// Parent Fax
-			FORM[qGetQuestions.fieldKey[12]] = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.faxCountry, areaCode=FORM.faxArea, prefix=FORM.faxPrefix, number=FORM.faxNumber);					
+			FORM[qGetQuestionsSection2.fieldKey[11]] = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.parentHomePhoneCountry, areaCode=FORM.parentHomePhoneArea, prefix=FORM.parentHomePhonePrefix, number=FORM.parentHomePhoneNumber);
+			// Parent parentFax
+			FORM[qGetQuestionsSection2.fieldKey[12]] = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.parentFaxCountry, areaCode=FORM.parentFaxArea, prefix=FORM.parentFaxPrefix, number=FORM.parentFaxNumber);					
 			// Parent Business Phone
-			FORM[qGetQuestions.fieldKey[21]] = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.businessPhoneCountry, areaCode=FORM.businessPhoneArea, prefix=FORM.businessPhonePrefix, number=FORM.businessPhoneNumber);									
+			FORM[qGetQuestionsSection2.fieldKey[21]] = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.businessPhoneCountry, areaCode=FORM.businessPhoneArea, prefix=FORM.businessPhonePrefix, number=FORM.businessPhoneNumber);									
 
 			// FORM Validation
-			for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
-				if (qGetQuestions.isRequired[i] AND NOT LEN(FORM[qGetQuestions.fieldKey[i]]) ) {
-					SESSION.formErrors.Add(qGetQuestions.requiredMessage[i]);
+			for ( i=1; i LTE qGetQuestionsSection2.recordCount; i=i+1 ) {
+				if (qGetQuestionsSection2.isRequired[i] AND NOT LEN(FORM[qGetQuestionsSection2.fieldKey[i]]) ) {
+					SESSION.formErrors.Add(qGetQuestionsSection2.requiredMessage[i]);
 				}
 			}
 
@@ -82,13 +82,13 @@
 			if ( NOT SESSION.formErrors.length() ) {				
 				
 				// Insert/Update Application Fields 
-				for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
+				for ( i=1; i LTE qGetQuestionsSection2.recordCount; i=i+1 ) {
 					APPLICATION.CFC.ONLINEAPP.insertAnswer(	
-						applicationQuestionID=qGetQuestions.ID[i],
+						applicationQuestionID=qGetQuestionsSection2.ID[i],
 						foreignTable='student',
 						foreignID=FORM.studentID,
-						fieldKey=qGetQuestions.fieldKey[i],
-						answer=FORM[qGetQuestions.fieldKey[i]]						
+						fieldKey=qGetQuestionsSection2.fieldKey[i],
+						answer=FORM[qGetQuestionsSection2.fieldKey[i]]						
 					);	
 				}
 				
@@ -116,25 +116,25 @@
 		} else {
 
 			// Online Application Fields 
-			for ( i=1; i LTE qGetAnswers.recordCount; i=i+1 ) {
-				FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
+			for ( i=1; i LTE qGetAnswersSection2.recordCount; i=i+1 ) {
+				FORM[qGetAnswersSection2.fieldKey[i]] = qGetAnswersSection2.answer[i];
 			}
 
 			FORM.hasAddFamInfo = qGetStudentInfo.hasAddFamInfo;
 
 			// Break Down Phone Numbers
-			stHomePhone = APPLICATION.CFC.UDF.breakDownPhoneNumber(qGetAnswers.answer[11]);
-			stFax = APPLICATION.CFC.UDF.breakDownPhoneNumber(qGetAnswers.answer[12]);
-			stBusinessPhone = APPLICATION.CFC.UDF.breakDownPhoneNumber(qGetAnswers.answer[21]);
-
-			FORM.homePhoneCountry = stHomePhone.countryCode;
-			FORM.homePhoneArea = stHomePhone.areaCode;
-			FORM.homePhonePrefix = stHomePhone.prefix;
-			FORM.homePhoneNumber = stHomePhone.number;
-			FORM.faxCountry = stFax.countryCode;
-			FORM.faxArea = stFax.areaCode;
-			FORM.faxPrefix = stFax.prefix;
-			FORM.faxNumber = stFax.number;
+			stparentHomePhone = APPLICATION.CFC.UDF.breakDownPhoneNumber(qGetAnswersSection2.answer[11]);
+			stparentFax = APPLICATION.CFC.UDF.breakDownPhoneNumber(qGetAnswersSection2.answer[12]);
+			stBusinessPhone = APPLICATION.CFC.UDF.breakDownPhoneNumber(qGetAnswersSection2.answer[21]);
+			
+			FORM.parentHomePhoneCountry = stparentHomePhone.countryCode;
+			FORM.parentHomePhoneArea = stparentHomePhone.areaCode;
+			FORM.parentHomePhonePrefix = stparentHomePhone.prefix;
+			FORM.parentHomePhoneNumber = stparentHomePhone.number;
+			FORM.parentFaxCountry = stparentFax.countryCode;
+			FORM.parentFaxArea = stparentFax.areaCode;
+			FORM.parentFaxPrefix = stparentFax.prefix;
+			FORM.parentFaxNumber = stparentFax.number;
 			FORM.businessPhoneCountry = stBusinessPhone.countryCode;
 			FORM.businessPhoneArea = stBusinessPhone.areaCode;
 			FORM.businessPhonePrefix = stBusinessPhone.prefix;
@@ -167,9 +167,9 @@
 	<p><em>Oops... the following errors were encountered:</em></p>
 					
 	<ol>
-		<cfloop query="qGetQuestions">
-        	<cfif qGetQuestions.isRequired>
-				<li><label for="#qGetQuestions.fieldKey#" class="error">#qGetQuestions.requiredMessage#</label></li>
+		<cfloop query="qGetQuestionsSection2">
+        	<cfif qGetQuestionsSection2.isRequired>
+				<li><label for="#qGetQuestionsSection2.fieldKey#" class="error">#qGetQuestionsSection2.requiredMessage#</label></li>
             </cfif>
 		</cfloop>
 	</ol>
@@ -210,51 +210,51 @@
 		
 		<!--- Parent Relationship --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[1]#">#qGetQuestionsSection2.displayField[1]# <cfif qGetQuestionsSection2.isRequired[1]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[1]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[1]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[1]#" id="#qGetQuestions.fieldKey[1]#" value="#FORM[qGetQuestions.fieldKey[1]]#" class="#qGetQuestions.classType[1]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[1]#" id="#qGetQuestionsSection2.fieldKey[1]#" value="#FORM[qGetQuestionsSection2.fieldKey[1]]#" class="#qGetQuestionsSection2.classType[1]#" maxlength="100" />
             </cfif>
 		</div>
 		
 		<!--- Parent First Name --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[2]#">#qGetQuestionsSection2.displayField[2]# <cfif qGetQuestionsSection2.isRequired[2]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[2]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[2]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[2]#" id="#qGetQuestions.fieldKey[2]#" value="#FORM[qGetQuestions.fieldKey[2]]#" class="#qGetQuestions.classType[2]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[2]#" id="#qGetQuestionsSection2.fieldKey[2]#" value="#FORM[qGetQuestionsSection2.fieldKey[2]]#" class="#qGetQuestionsSection2.classType[2]#" maxlength="100" />
             </cfif>
 		</div>
 		
 		<!--- Parent Middle Name --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[3]#">#qGetQuestions.displayField[3]# <cfif qGetQuestions.isRequired[3]><em>*</em></cfif></label>  
+			<label for="#qGetQuestionsSection2.fieldKey[3]#">#qGetQuestionsSection2.displayField[3]# <cfif qGetQuestionsSection2.isRequired[3]><em>*</em></cfif></label>  
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[3]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[3]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[3]#" id="#qGetQuestions.fieldKey[3]#" value="#FORM[qGetQuestions.fieldKey[3]]#" class="#qGetQuestions.classType[3]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[3]#" id="#qGetQuestionsSection2.fieldKey[3]#" value="#FORM[qGetQuestionsSection2.fieldKey[3]]#" class="#qGetQuestionsSection2.classType[3]#" maxlength="100" />
             </cfif>
 		</div>
 		
 		<!--- Parent Last Name --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[4]#">#qGetQuestions.displayField[4]# <cfif qGetQuestions.isRequired[4]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[4]#">#qGetQuestionsSection2.displayField[4]# <cfif qGetQuestionsSection2.isRequired[4]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[4]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[4]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[4]#" id="#qGetQuestions.fieldKey[4]#" value="#FORM[qGetQuestions.fieldKey[4]]#" class="#qGetQuestions.classType[4]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[4]#" id="#qGetQuestionsSection2.fieldKey[4]#" value="#FORM[qGetQuestionsSection2.fieldKey[4]]#" class="#qGetQuestionsSection2.classType[4]#" maxlength="100" />
             </cfif>
 		</div>
 		
 		<!--- Parent Preferred Name ---> 
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[5]#">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[5]#">#qGetQuestionsSection2.displayField[5]# <cfif qGetQuestionsSection2.isRequired[5]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[5]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[5]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" value="#FORM[qGetQuestions.fieldKey[5]]#" class="#qGetQuestions.classType[5]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[5]#" id="#qGetQuestionsSection2.fieldKey[5]#" value="#FORM[qGetQuestionsSection2.fieldKey[5]]#" class="#qGetQuestionsSection2.classType[5]#" maxlength="100" />
             </cfif>
 		</div>
 		
@@ -268,14 +268,14 @@
 
 		<!--- Parent Country --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[10]#">#qGetQuestions.displayField[10]# <cfif qGetQuestions.isRequired[10]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[10]#">#qGetQuestionsSection2.displayField[10]# <cfif qGetQuestionsSection2.isRequired[10]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM[qGetQuestions.fieldKey[10]]).name# &nbsp;</div>
+            	<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM[qGetQuestionsSection2.fieldKey[10]]).name# &nbsp;</div>
         	<cfelse>
-                <select name="#qGetQuestions.fieldKey[10]#" id="#qGetQuestions.fieldKey[10]#" class="mediumField" onchange="displayStateField(this.value, 'sec2HomeUsStDiv', 'sec2HomeNonUsStDiv', 'sec2HomeUsStField', 'sec2HomeNonUsStField');">
+                <select name="#qGetQuestionsSection2.fieldKey[10]#" id="#qGetQuestionsSection2.fieldKey[10]#" class="mediumField" onchange="displayStateField(this.value, 'Section2HomeUsStDiv', 'Section2HomeNonUsStDiv', 'Section2HomeUsStField', 'Section2HomeNonUsStField');">
                     <option value=""></option>
                     <cfloop query="qGetCountry">
-                        <option value="#qGetCountry.ID#" <cfif FORM[qGetQuestions.fieldKey[10]] EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
+                        <option value="#qGetCountry.ID#" <cfif FORM[qGetQuestionsSection2.fieldKey[10]] EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
                     </cfloop>
                 </select>
             </cfif>
@@ -283,78 +283,78 @@
 
 		<!--- Parent Address --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[6]#">#qGetQuestions.displayField[6]# <cfif qGetQuestions.isRequired[6]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[6]#">#qGetQuestionsSection2.displayField[6]# <cfif qGetQuestionsSection2.isRequired[6]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[6]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[6]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[6]#" id="#qGetQuestions.fieldKey[6]#" value="#FORM[qGetQuestions.fieldKey[6]]#" class="#qGetQuestions.classType[6]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[6]#" id="#qGetQuestionsSection2.fieldKey[6]#" value="#FORM[qGetQuestionsSection2.fieldKey[6]]#" class="#qGetQuestionsSection2.classType[6]#" maxlength="100" />
             </cfif>
 		</div>
 		
 		<!--- Parent City --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[7]#">#qGetQuestions.displayField[7]# <cfif qGetQuestions.isRequired[7]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[7]#">#qGetQuestionsSection2.displayField[7]# <cfif qGetQuestionsSection2.isRequired[7]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[7]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[7]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[7]#" id="#qGetQuestions.fieldKey[7]#" value="#FORM[qGetQuestions.fieldKey[7]]#" class="#qGetQuestions.classType[7]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[7]#" id="#qGetQuestionsSection2.fieldKey[7]#" value="#FORM[qGetQuestionsSection2.fieldKey[7]]#" class="#qGetQuestionsSection2.classType[7]#" maxlength="100" />
             </cfif>
 		</div>
 
         <cfif printApplication>
 	        <!--- State Print Application --->	
             <div class="field">
-                <label for="#qGetQuestions.fieldKey[8]#">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
-                <div class="printField">#FORM[qGetQuestions.fieldKey[8]]# &nbsp;</div>
+                <label for="#qGetQuestionsSection2.fieldKey[8]#">#qGetQuestionsSection2.displayField[8]# <cfif qGetQuestionsSection2.isRequired[8]><em>*</em></cfif></label> 
+                <div class="printField">#FORM[qGetQuestionsSection2.fieldKey[8]]# &nbsp;</div>
             </div>
 		<cfelse>
 			<!--- Parent US State --->
-            <div class="field hiddenField" id="sec2HomeUsStDiv">
-                <label for="#qGetQuestions.fieldKey[8]#">State/Province <em>*</em></label> 
-                <select name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" class="mediumField sec2HomeUsStField">
+            <div class="field hiddenField" id="Section2HomeUsStDiv">
+                <label for="#qGetQuestionsSection2.fieldKey[8]#">State/Province <em>*</em></label> 
+                <select name="#qGetQuestionsSection2.fieldKey[8]#" id="#qGetQuestionsSection2.fieldKey[8]#" class="mediumField Section2HomeUsStField">
                     <option value=""></option> <!--- [select a state] ---->
                     <cfloop query="qGetStates">
-                        <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[8]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                        <option value="#qGetStates.code#" <cfif FORM[qGetQuestionsSection2.fieldKey[8]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
                     </cfloop>
                 </select>
             </div>
             
             <!--- Parent Non US State --->
-            <div class="field hiddenField" id="sec2HomeNonUsStDiv">
-                <label for="#qGetQuestions.fieldKey[8]#">#qGetQuestions.displayField[8]# <cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
-                <input type="text" name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" value="#FORM[qGetQuestions.fieldKey[8]]#" class="#qGetQuestions.classType[8]# sec2HomeNonUsStField" maxlength="100" />
+            <div class="field hiddenField" id="Section2HomeNonUsStDiv">
+                <label for="#qGetQuestionsSection2.fieldKey[8]#">#qGetQuestionsSection2.displayField[8]# <cfif qGetQuestionsSection2.isRequired[8]><em>*</em></cfif></label> 
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[8]#" id="#qGetQuestionsSection2.fieldKey[8]#" value="#FORM[qGetQuestionsSection2.fieldKey[8]]#" class="#qGetQuestionsSection2.classType[8]# Section2HomeNonUsStField" maxlength="100" />
             </div>
 		</cfif>
 
 		<!--- Parent Zip --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[9]#">#qGetQuestions.displayField[9]# <cfif qGetQuestions.isRequired[9]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[9]#">#qGetQuestionsSection2.displayField[9]# <cfif qGetQuestionsSection2.isRequired[9]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[9]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[9]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[9]#" id="#qGetQuestions.fieldKey[9]#" value="#FORM[qGetQuestions.fieldKey[9]]#" class="#qGetQuestions.classType[9]#" maxlength="50" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[9]#" id="#qGetQuestionsSection2.fieldKey[9]#" value="#FORM[qGetQuestionsSection2.fieldKey[9]]#" class="#qGetQuestionsSection2.classType[9]#" maxlength="50" />
             </cfif>
 		</div>
 		
 		<!--- Parent Home Telephone --->
 		<div class="field">
-			<label for="homePhoneCountry">#qGetQuestions.displayField[11]# <cfif qGetQuestions.isRequired[11]><em>*</em></cfif></label> 
+			<label for="parentHomePhoneCountry">#qGetQuestionsSection2.displayField[11]# <cfif qGetQuestionsSection2.isRequired[11]><em>*</em></cfif></label> 
             <cfif printApplication>
             	<div class="printField"> 
                 	#APPLICATION.CFC.UDF.formatPhoneNumber(
-                    	countryCode=FORM.homePhoneCountry, 
-                        areaCode=FORM.homePhoneArea, 
-                        prefix=FORM.homePhonePrefix, 
-                        number=FORM.homePhoneNumber)# &nbsp;
+                    	countryCode=FORM.parentHomePhoneCountry, 
+                        areaCode=FORM.parentHomePhoneArea, 
+                        prefix=FORM.parentHomePhonePrefix, 
+                        number=FORM.parentHomePhoneNumber)# &nbsp;
                 </div>
         	<cfelse>
-                <input type="text" name="homePhoneCountry" id="homePhoneCountry" value="#FORM.homePhoneCountry#" class="xxSmallField" maxlength="4" /> 
+                <input type="text" name="parentHomePhoneCountry" id="parentHomePhoneCountry" value="#FORM.parentHomePhoneCountry#" class="xxSmallField" maxlength="4" /> 
                 -
-                <input type="text" name="homePhoneArea" id="homePhoneArea" value="#FORM.homePhoneArea#" class="xxSmallField" maxlength="4" />                  
+                <input type="text" name="parentHomePhoneArea" id="parentHomePhoneArea" value="#FORM.parentHomePhoneArea#" class="xxSmallField" maxlength="4" />                  
                 - 
-                <input type="text" name="homePhonePrefix" id="homePhonePrefix" value="#FORM.homePhonePrefix#" class="xxSmallField" maxlength="4" /> 
+                <input type="text" name="parentHomePhonePrefix" id="parentHomePhonePrefix" value="#FORM.parentHomePhonePrefix#" class="xxSmallField" maxlength="4" /> 
                 - 
-                <input type="text" name="homePhoneNumber" id="homePhoneNumber" value="#FORM.homePhoneNumber#" class="xxSmallField" maxlength="6" />
+                <input type="text" name="parentHomePhoneNumber" id="parentHomePhoneNumber" value="#FORM.parentHomePhoneNumber#" class="xxSmallField" maxlength="6" />
                 <p class="note"> 
                     <span class="phoneNote">country</span> 
                     <span class="phoneNote">area</span>  
@@ -366,23 +366,23 @@
 
 		<!--- Parent Fax Telephone --->
 		<div class="field">
-			<label for="faxCountry">#qGetQuestions.displayField[12]# <cfif qGetQuestions.isRequired[12]><em>*</em></cfif></label> 
+			<label for="parentFaxCountry">#qGetQuestionsSection2.displayField[12]# <cfif qGetQuestionsSection2.isRequired[12]><em>*</em></cfif></label> 
             <cfif printApplication>
             	<div class="printField"> 
                 	#APPLICATION.CFC.UDF.formatPhoneNumber(
-                    	countryCode=FORM.faxCountry, 
-                        areaCode=FORM.faxArea, 
-                        prefix=FORM.faxPrefix, 
-                        number=FORM.faxNumber)# &nbsp;
+                    	countryCode=FORM.parentFaxCountry, 
+                        areaCode=FORM.parentFaxArea, 
+                        prefix=FORM.parentFaxPrefix, 
+                        number=FORM.parentFaxNumber)# &nbsp;
                 </div>
         	<cfelse>
-                <input type="text" name="faxCountry" id="faxCountry" value="#FORM.faxCountry#" class="xxSmallField" maxlength="4" /> 
+                <input type="text" name="parentFaxCountry" id="parentFaxCountry" value="#FORM.parentFaxCountry#" class="xxSmallField" maxlength="4" /> 
                 - 
-                <input type="text" name="faxArea" id="faxArea" value="#FORM.faxArea#" class="xxSmallField" maxlength="4" />                  
+                <input type="text" name="parentFaxArea" id="parentFaxArea" value="#FORM.parentFaxArea#" class="xxSmallField" maxlength="4" />                  
                 - 
-                <input type="text" name="faxPrefix" id="faxPrefix" value="#FORM.faxPrefix#" class="xxSmallField" maxlength="4" /> 
+                <input type="text" name="parentFaxPrefix" id="parentFaxPrefix" value="#FORM.parentFaxPrefix#" class="xxSmallField" maxlength="4" /> 
                 - 
-                <input type="text" name="faxNumber" id="faxNumber" value="#FORM.faxNumber#" class="xxSmallField" maxlength="6" />
+                <input type="text" name="parentFaxNumber" id="parentFaxNumber" value="#FORM.parentFaxNumber#" class="xxSmallField" maxlength="6" />
                 <p class="note"> 
                     <span class="phoneNote">country</span> 
                     <span class="phoneNote">area</span>  
@@ -394,11 +394,11 @@
 
 		<!--- Parent Email --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[13]#">#qGetQuestions.displayField[13]# <cfif qGetQuestions.isRequired[13]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[13]#">#qGetQuestionsSection2.displayField[13]# <cfif qGetQuestionsSection2.isRequired[13]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[13]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[13]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[13]#" id="#qGetQuestions.fieldKey[13]#" value="#FORM[qGetQuestions.fieldKey[13]]#" class="#qGetQuestions.classType[13]#" maxlength="50" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[13]#" id="#qGetQuestionsSection2.fieldKey[13]#" value="#FORM[qGetQuestionsSection2.fieldKey[13]]#" class="#qGetQuestionsSection2.classType[13]#" maxlength="50" />
             </cfif>
 		</div>
 
@@ -412,34 +412,34 @@
 		
 		<!--- Company Name --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[14]#">#qGetQuestions.displayField[14]# <cfif qGetQuestions.isRequired[14]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[14]#">#qGetQuestionsSection2.displayField[14]# <cfif qGetQuestionsSection2.isRequired[14]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[14]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[14]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[14]#" id="#qGetQuestions.fieldKey[14]#" value="#FORM[qGetQuestions.fieldKey[14]]#" class="#qGetQuestions.classType[14]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[14]#" id="#qGetQuestionsSection2.fieldKey[14]#" value="#FORM[qGetQuestionsSection2.fieldKey[14]]#" class="#qGetQuestionsSection2.classType[14]#" maxlength="100" />
             </cfif>
 		</div>
 		
 		<!--- Business Position --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[15]#">#qGetQuestions.displayField[15]# <cfif qGetQuestions.isRequired[15]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[15]#">#qGetQuestionsSection2.displayField[15]# <cfif qGetQuestionsSection2.isRequired[15]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[15]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[15]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[15]#" id="#qGetQuestions.fieldKey[15]#" value="#FORM[qGetQuestions.fieldKey[15]]#" class="#qGetQuestions.classType[15]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[15]#" id="#qGetQuestionsSection2.fieldKey[15]#" value="#FORM[qGetQuestionsSection2.fieldKey[15]]#" class="#qGetQuestionsSection2.classType[15]#" maxlength="100" />
             </cfif>
 		</div>
 
 		<!--- Business Country --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[20]#">#qGetQuestions.displayField[20]# <cfif qGetQuestions.isRequired[20]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[20]#">#qGetQuestionsSection2.displayField[20]# <cfif qGetQuestionsSection2.isRequired[20]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM[qGetQuestions.fieldKey[20]]).name# &nbsp;</div>
+            	<div class="printField">#APPLICATION.CFC.LOOKUPTABLES.getCountryByID(ID=FORM[qGetQuestionsSection2.fieldKey[20]]).name# &nbsp;</div>
         	<cfelse>
-                <select name="#qGetQuestions.fieldKey[20]#" id="#qGetQuestions.fieldKey[20]#" class="mediumField" onchange="displayStateField(this.value, 'sec2BusUsStDiv', 'sec2BusNonUsStDiv', 'sec2UsBusStField', 'sec2BusNonUsStField');">
+                <select name="#qGetQuestionsSection2.fieldKey[20]#" id="#qGetQuestionsSection2.fieldKey[20]#" class="mediumField" onchange="displayStateField(this.value, 'Section2BusUsStDiv', 'Section2BusNonUsStDiv', 'Section2UsBusStField', 'Section2BusNonUsStField');">
                     <option value=""></option>
                     <cfloop query="qGetCountry">
-                        <option value="#qGetCountry.ID#" <cfif FORM[qGetQuestions.fieldKey[20]] EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
+                        <option value="#qGetCountry.ID#" <cfif FORM[qGetQuestionsSection2.fieldKey[20]] EQ qGetCountry.ID> selected="selected" </cfif> >#qGetCountry.name#</option>
                     </cfloop>
                 </select>
             </cfif>
@@ -447,62 +447,62 @@
 
 		<!--- Business Address --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[16]#">#qGetQuestions.displayField[16]# <cfif qGetQuestions.isRequired[16]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[16]#">#qGetQuestionsSection2.displayField[16]# <cfif qGetQuestionsSection2.isRequired[16]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[16]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[16]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[16]#" id="#qGetQuestions.fieldKey[16]#" value="#FORM[qGetQuestions.fieldKey[16]]#" class="#qGetQuestions.classType[16]#" maxlength="100" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[16]#" id="#qGetQuestionsSection2.fieldKey[16]#" value="#FORM[qGetQuestionsSection2.fieldKey[16]]#" class="#qGetQuestionsSection2.classType[16]#" maxlength="100" />
             </cfif>
 		</div>
 		
 		<!--- Business City --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[17]#">#qGetQuestions.displayField[17]# <cfif qGetQuestions.isRequired[17]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[17]#">#qGetQuestionsSection2.displayField[17]# <cfif qGetQuestionsSection2.isRequired[17]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[17]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[17]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[17]#" id="#qGetQuestions.fieldKey[17]#" value="#FORM[qGetQuestions.fieldKey[17]]#" class="#qGetQuestions.classType[17]#" maxlength="50" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[17]#" id="#qGetQuestionsSection2.fieldKey[17]#" value="#FORM[qGetQuestionsSection2.fieldKey[17]]#" class="#qGetQuestionsSection2.classType[17]#" maxlength="50" />
             </cfif>
 		</div>
 
         <cfif printApplication>
 	        <!--- State Print Application --->	
             <div class="field">
-                <label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label> 
-                <div class="printField">#FORM[qGetQuestions.fieldKey[18]]# &nbsp;</div>
+                <label for="#qGetQuestionsSection2.fieldKey[18]#">#qGetQuestionsSection2.displayField[18]# <cfif qGetQuestionsSection2.isRequired[18]><em>*</em></cfif></label> 
+                <div class="printField">#FORM[qGetQuestionsSection2.fieldKey[18]]# &nbsp;</div>
             </div>
 		<cfelse>
 			<!--- Business US State --->
-            <div class="field hiddenField" id="sec2BusUsStDiv">
-                <label for="#qGetQuestions.fieldKey[18]#">State/Province <em>*</em></label> 
-                <select name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" class="mediumField sec2UsBusStField">
+            <div class="field hiddenField" id="Section2BusUsStDiv">
+                <label for="#qGetQuestionsSection2.fieldKey[18]#">State/Province <em>*</em></label> 
+                <select name="#qGetQuestionsSection2.fieldKey[18]#" id="#qGetQuestionsSection2.fieldKey[18]#" class="mediumField Section2UsBusStField">
                     <option value=""></option> <!--- [select a state] ---->
                     <cfloop query="qGetStates">
-                        <option value="#qGetStates.code#" <cfif FORM[qGetQuestions.fieldKey[18]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
+                        <option value="#qGetStates.code#" <cfif FORM[qGetQuestionsSection2.fieldKey[18]] EQ qGetStates.code> selected="selected" </cfif> >#qGetStates.name#</option>
                     </cfloop>
                 </select>
             </div>
     
             <!--- Business Non Us State --->
-            <div class="field hiddenField" id="sec2BusNonUsStDiv">
-                <label for="#qGetQuestions.fieldKey[18]#">#qGetQuestions.displayField[18]# <cfif qGetQuestions.isRequired[18]><em>*</em></cfif></label> 
-                <input type="text" name="#qGetQuestions.fieldKey[18]#" id="#qGetQuestions.fieldKey[18]#" value="#FORM[qGetQuestions.fieldKey[18]]#" class="#qGetQuestions.classType[18]# sec2BusNonUsStField" maxlength="50" />
+            <div class="field hiddenField" id="Section2BusNonUsStDiv">
+                <label for="#qGetQuestionsSection2.fieldKey[18]#">#qGetQuestionsSection2.displayField[18]# <cfif qGetQuestionsSection2.isRequired[18]><em>*</em></cfif></label> 
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[18]#" id="#qGetQuestionsSection2.fieldKey[18]#" value="#FORM[qGetQuestionsSection2.fieldKey[18]]#" class="#qGetQuestionsSection2.classType[18]# Section2BusNonUsStField" maxlength="50" />
             </div>
 		</cfif>
 
 		<!--- Business Zip --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[19]#">#qGetQuestions.displayField[19]# <cfif qGetQuestions.isRequired[19]><em>*</em></cfif></label> 
+			<label for="#qGetQuestionsSection2.fieldKey[19]#">#qGetQuestionsSection2.displayField[19]# <cfif qGetQuestionsSection2.isRequired[19]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[19]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestionsSection2.fieldKey[19]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[19]#" id="#qGetQuestions.fieldKey[19]#" value="#FORM[qGetQuestions.fieldKey[19]]#" class="#qGetQuestions.classType[19]#" maxlength="50" />
+                <input type="text" name="#qGetQuestionsSection2.fieldKey[19]#" id="#qGetQuestionsSection2.fieldKey[19]#" value="#FORM[qGetQuestionsSection2.fieldKey[19]]#" class="#qGetQuestionsSection2.classType[19]#" maxlength="50" />
             </cfif>
 		</div>
 		
 		<!--- Business Telephone --->
 		<div class="field">
-			<label for="businessPhoneCountry">#qGetQuestions.displayField[21]# <cfif qGetQuestions.isRequired[21]><em>*</em></cfif></label> 
+			<label for="businessPhoneCountry">#qGetQuestionsSection2.displayField[21]# <cfif qGetQuestionsSection2.isRequired[21]><em>*</em></cfif></label> 
             <cfif printApplication>
             	<div class="printField">
                 	#APPLICATION.CFC.UDF.formatPhoneNumber(
@@ -557,12 +557,12 @@
 	$(document).ready(function() {
 		
 		// Get Current Country Value
-		sec2GetHomeCountry = $("###qGetQuestions.fieldKey[10]#").val();
-		displayStateField(sec2GetHomeCountry, 'sec2HomeUsStDiv', 'sec2HomeNonUsStDiv', 'sec2HomeUsStField', 'sec2HomeNonUsStField');
+		Section2GetHomeCountry = $("###qGetQuestionsSection2.fieldKey[10]#").val();
+		displayStateField(Section2GetHomeCountry, 'Section2HomeUsStDiv', 'Section2HomeNonUsStDiv', 'Section2HomeUsStField', 'Section2HomeNonUsStField');
 
 		// Get Current Country Value
-		sec2GetBusCountry = $("###qGetQuestions.fieldKey[20]#").val();
-		displayStateField(sec2GetBusCountry, 'sec2BusUsStDiv', 'sec2BusNonUsStDiv', 'sec2UsBusStField', 'sec2BusNonUsStField');
+		Section2GetBusCountry = $("###qGetQuestionsSection2.fieldKey[20]#").val();
+		displayStateField(Section2GetBusCountry, 'Section2BusUsStDiv', 'Section2BusNonUsStDiv', 'Section2UsBusStField', 'Section2BusNonUsStField');
 
 	});
 </script>

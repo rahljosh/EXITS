@@ -18,6 +18,7 @@
 		applicationHomeContent = APPLICATION.CFC.CONTENT.getContentByKey(contentKey="applicationHome").content;
 		
 		// Replace Variables
+		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{admissionsEmail}",APPLICATION.EMAIL.admissions,"all");
 		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{schoolName}",APPLICATION.SCHOOL.name,"all");
 		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{address}",APPLICATION.SCHOOL.address,"all");
 		applicationHomeContent = ReplaceNoCase(applicationHomeContent,"{city}",APPLICATION.SCHOOL.city,"all");

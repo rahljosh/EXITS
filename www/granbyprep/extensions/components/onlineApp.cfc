@@ -215,10 +215,10 @@
 				applicationFee = 'Please select your country of citizenship in the student information section in order to submit your application fee payment.';
 			} else if ( countryCitizenID EQ 211 ) {
 				// US Citizens
-				applicationFee = 75;
+				applicationFee = 50;
 			} else {
 				// Non US Citizens
-				applicationFee = 150;
+				applicationFee = 100;
 			}
 			
 			return applicationFee;
