@@ -296,7 +296,7 @@
 				APPLICATION.CFC.EMAIL.sendEmail(
 					emailFrom=vEmailFrom,
 					emailTo=vEmailTo,
-					emailCC=vEmailCC,
+					//emailCC=vEmailCC,
 					emailReplyTo=vEmailFrom,
 					emailSubject=qGetMidterm.firstName[i] & ' ' & qGetMidterm.lastName[i] & " Trainee Midterm Evaluation",
 					emailMessage=vMidTermEvaluation,
@@ -334,7 +334,7 @@
 				APPLICATION.CFC.EMAIL.sendEmail(
 					emailFrom=vEmailFrom,
 					emailTo=vEmailTo,
-					emailCC=vEmailCC,
+					//emailCC=vEmailCC,
 					emailReplyTo=vEmailFrom,
 					emailSubject=qGetSummative.firstName[i] & ' ' & qGetSummative.lastName[i] & " Trainee Summative Evaluation",
 					emailMessage=vSummativeEvaluation,
