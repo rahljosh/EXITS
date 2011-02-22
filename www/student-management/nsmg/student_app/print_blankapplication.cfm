@@ -11,13 +11,21 @@
 
 <cfset url.path = "">
 
-<cfquery name="get_student_info" datasource="MySql">
-	SELECT s.firstname, s.familylastname, s.studentid, s.intrep,
-		u.businessname, u.master_accountid
-	FROM smg_students s
-	INNER JOIN smg_users u ON u.userid = s.intrep
-	WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
+<cfquery name="qGetIntlRepInfo" datasource="MySql">
+	SELECT 
+    	s.studentID,
+        s.app_indicated_program,
+    	u.userID,
+    	u.businessname, 
+        u.master_accountid
+	FROM
+		smg_students s
+    INNER JOIN 
+    	 smg_users u ON u.userid = s.intrep
+	WHERE 
+    	s.studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
 </cfquery>
+
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfset client.org_code = 10>
 	<cfset bgcolor ='ffffff'>    
@@ -104,8 +112,8 @@ where companyid = #client.org_code#
 		<div style="page-break-after:always;"></div>	
 	</td></tr>				
     
-	<!----We don't need to include 18 for ESI---->
-    <cfif CLIENT.companyID NEQ 14>
+	<!--- Do not display for ESI or Canada Application --->
+    <cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
         <tr><td valign="top">
             <cfinclude template="section4/page18printblank.cfm"><br>
             <div style="page-break-after:always;"></div>	
@@ -118,7 +126,7 @@ where companyid = #client.org_code#
 	</td></tr>	
 
 	<!--- Do not print guarantees for EF --->
-	<cfif get_student_info.intrep NEQ '10111' AND get_student_info.master_accountid NEQ '10111'>
+	<cfif qGetIntlRepInfo.userID NEQ '10111' AND qGetIntlRepInfo.master_accountid NEQ '10111'>
 		
 		<!----We don't need to include 20 for ESI---->
         <cfif CLIENT.companyID NEQ 14>

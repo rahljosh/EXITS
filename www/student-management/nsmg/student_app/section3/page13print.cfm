@@ -91,13 +91,25 @@
 
 <table width="660" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr><td><b>IMMUNIZATIONS REQUIRED FOR SCHOOL ADMITTANCE</b></td></tr>
-	<tr><td><div align="justify">
-			Pupils enrolled in kindergarten through grade 12 (in the United States) are required to have written proof on file at their
-			public or nonpublic school that they have been immunized against DPT (diphtheria, pertussis, tetanus), poliomyelitis, measles,
-			mumps, rubella, hepatitis B and varicella. Failure to do so is cause for exclusion from school. Required immunizations may
-			vary from state to state.
+	<tr>
+    	<td>
+    		<div align="justify">
+				<cfif ListFind("14,15,16", get_student_info.app_indicated_program)>     
+                    <!--- Canada Application --->       	
+                    Pupils enrolled in kindergarten through grade 12 are required to have written proof on file at their
+                    public or nonpublic school that they have been immunized against DPT (diphtheria, pertussis, tetanus), poliomyelitis, measles,
+                    mumps, rubella, hepatitis B and varicella. Failure to do so is cause for exclusion from school. Required immunizations may
+                    vary from school to school.
+                <cfelse>
+                    <!--- USA - Public High School --->
+                    Pupils enrolled in kindergarten through grade 12 (in the United States) are required to have written proof on file at their
+                    public or nonpublic school that they have been immunized against DPT (diphtheria, pertussis, tetanus), poliomyelitis, measles,
+                    mumps, rubella, hepatitis B and varicella. Failure to do so is cause for exclusion from school. Required immunizations may
+                    vary from state to state.
+                </cfif>	
 			</div>
-	</td></tr>
+		</td>
+    </tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td><b>MINIMUM IMMUNIZATION REQUIREMENTS:</b></td></tr>
 	<tr><td>Five or more doses of DPT, DT (Pediatric), TD (Adult) vaccine or a combination thereof.</td></tr>
@@ -191,13 +203,23 @@
 </table><br>
 
 <table width="660" border=0 cellpadding=3 cellspacing=0 align="center">
-<tr>
-	<td>
-		<div align="justify">Any immunizations not available in your country are available here, but they are expensive and are not
-		covered by insurance. The student must be prepared to pay for any immunizations they receive in the USA. Please make every
-		effort to obtain all immunizations before your departure from your home country.</div>
-	</td>
-</tr>
+    <tr>
+        <td>
+            <div align="justify">
+                <cfif ListFind("14,15,16", get_student_info.app_indicated_program)>     
+                    <!--- Canada Application --->       	
+                    Any immunizations not available in your country are available here, but they are expensive and are not
+                    covered by insurance. The student must be prepared to pay for any immunizations they receive in Canada. Please make every
+                    effort to obtain all immunizations before your departure from your home country.
+                <cfelse>
+                    <!--- USA - Public High School --->
+                    Any immunizations not available in your country are available here, but they are expensive and are not
+                    covered by insurance. The student must be prepared to pay for any immunizations they receive in the USA. Please make every
+                    effort to obtain all immunizations before your departure from your home country.
+                </cfif>	
+            </div>
+        </td>
+    </tr>
 </table><br><br>
 
 <table width="660" border=0 cellpadding=3 cellspacing=0 align="center">

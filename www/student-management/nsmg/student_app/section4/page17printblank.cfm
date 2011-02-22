@@ -48,48 +48,8 @@
 
 <div class="section"><br>
 
-<table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
-	<tr>
-		<td width="110"><em>Student's Name</em></td>
-		<td width="560"><br><img src="#path#pics/line.gif" width="520" height="1" border="0" align="absmiddle"></td>
-	</tr>
-</table><br><br>
-
-<table width="670" cellpadding=3 cellspacing=0 align="center">
-	<tr>
-		<td>
-			<br><div align="justify">
-			<p>We, as Parents of the Undersigned Student, do hereby authorize the exchange organization, the exchange organization's 
-			Area Representative, and the American Host parents as agents of the Undersigned Parents, 
-			to make the determination for student travel for the duration of students participation in the Academic Year Program.</p>
-			<p>It is understood that this Authorization is given in advance only when the Student is traveling and supervised by an 
-			exchange program Representative, Host Parent or by a Representative of a school program, or 
-			with tours sponsored by the exchange organization. We understand that the Student may not travel unsupervised.</p>
-			</div><br>
-		</td>
-	</tr>
-</table><br>
-
-<table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
-	<tr>
-		<td width="210"><br><img src="#path#pics/line.gif" width="210" height="1" border="0" align="absmiddle"></td>
-		<td width="5"></td>
-		<td width="100"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; / &nbsp; &nbsp; &nbsp; &nbsp; / <br><img src="#path#pics/line.gif" width="100" height="1" border="0" align="absmiddle"></td>		
-		<td width="40"></td>
-		<td width="210"><br><img src="#path#pics/line.gif" width="210" height="1" border="0" align="absmiddle"></td>
-		<td width="5"></td>
-		<td width="100"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; / &nbsp; &nbsp; &nbsp; &nbsp; / <br><img src="#path#pics/line.gif" width="100" height="1" border="0" align="absmiddle"></td>
-	</tr>
-	<tr>
-		<td>Signature of Parent</td>
-		<td></td>
-		<td>Date</td>
-		<td></td>
-		<td>Signature of Student</td>
-		<td></td>
-		<td>Date</td>	
-	</tr>
-</table><br><br>
+    <!--- Include Page 17 Text --->
+    <cfinclude template="page17text.cfm">
 
 </div>
 

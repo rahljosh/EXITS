@@ -175,11 +175,14 @@ function NextPage() {
 					<cfif smoke is 'no'><cfinput type="radio" name="smoke" value="No" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="smoke" value="No" onchange="DataChanged();">No</cfif>													
 				</td>
 			</tr>
-			<tr>
-				<td><font size="-2" color="FF0000">For your information: </font><i><font size="-2">The purchase and/or smoking of cigarettes for persons under age 18 is illegal in most parts of the USA.  
-					Individual host families may have additional rules which must be followed by the student.</font>
-				</td>
-			</tr>
+			<!--- Do not display for Canada Application --->
+            <cfif NOT ListFind("14,15,16", get_student_info.app_indicated_program)>            	
+                <tr>
+                    <td><font size="-2" color="##FF0000">For your information: </font><font size="-2"><i>The purchase and/or smoking of cigarettes for persons under age 18 is illegal in most parts of the USA.  
+                        Individual host families may have additional rules which must be followed by the student.</i></font>
+                    </td>
+                </tr>
+			</cfif>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td><em>Are you allergic to animals?</em></td></tr>					
 			<tr>

@@ -17,31 +17,7 @@
 </head>
 <body <cfif not IsDefined('url.curdoc')>onLoad="print()"</cfif>>
 
-<cfinclude template="../querys/get_student_info.cfm">
-
 <cfset doc = 'page17'>
-
-<cfswitch expression="#get_student_info.sex#">
-
-	<cfcase value="male">
-		<cfset sd='son'>
-        <cfset hs='he'>
-        <cfset hh='his'>
-    </cfcase>
-    
-    <cfcase value="female">
-		<cfset sd='daughter'>
-        <cfset hs='she'>
-        <cfset hh='her'>
-    </cfcase>
-    
-    <cfdefaultcase>
-		<cfset sd='son/daughter'>
-        <cfset hs='he/she'>
-        <cfset hh='his/her'>
-    </cfdefaultcase>
-
-</cfswitch>
 
 <cfoutput>
 
@@ -74,46 +50,15 @@
 </table>
 
 <div class="section"><br>
-<!--- CHECK IF FILE HAS BEEN UPLOADED --->
-<cfif IsDefined('url.curdoc')>
-	<cfinclude template="../check_upl_print_file.cfm">
-</cfif>
 
-<table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
-	<tr>
-		<td width="110"><em>Student's Name</em></td>
-		<td width="560">#get_student_info.firstname# #get_student_info.familylastname#<br><img src="#path#pics/line.gif" width="520" height="1" border="0" align="absmiddle"></td>
-	</tr>
-</table><br>
+	<!--- CHECK IF FILE HAS BEEN UPLOADED --->
+    <cfif IsDefined('url.curdoc')>
+        <cfinclude template="../check_upl_print_file.cfm">
+    </cfif>
+    
+    <!--- Include Page 17 Text --->
+    <cfinclude template="page17text.cfm">
 
-<table width="660" cellpadding=3 cellspacing=0 align="center">
-	<tr>
-		<td>
-			<br><div align="justify"><cfinclude template="page17text.cfm"></div><br>
-		</td>
-	</tr>
-</table><br>
-
-<table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
-	<tr>
-		<td width="210"><br><img src="#path#pics/line.gif" width="210" height="1" border="0" align="absmiddle"></td>
-		<td width="5"></td>
-		<td width="100"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; / &nbsp; &nbsp; &nbsp; &nbsp; / <br><img src="#path#pics/line.gif" width="100" height="1" border="0" align="absmiddle"></td>		
-		<td width="40"></td>
-		<td width="210"><br><img src="#path#pics/line.gif" width="210" height="1" border="0" align="absmiddle"></td>
-		<td width="5"></td>
-		<td width="100"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; / &nbsp; &nbsp; &nbsp; &nbsp; / <br><img src="#path#pics/line.gif" width="100" height="1" border="0" align="absmiddle"></td>
-	</tr>
-	<tr>
-		<td>Signature of Parent</td>
-		<td></td>
-		<td>Date</td>
-		<td></td>
-		<td>Signature of Student</td>
-		<td></td>
-		<td>Date</td>	
-	</tr>
-</table><br><br>
 </div>
 
 <!--- FOOTER OF TABLE --->
@@ -126,8 +71,8 @@
 </table>
 
 <cfif not IsDefined('url.curdoc')>
-</td></tr>
-</table>
+    </td></tr>
+    </table>
 </cfif>
 
 </cfif>

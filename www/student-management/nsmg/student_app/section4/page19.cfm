@@ -127,7 +127,13 @@ function NextPage() {
 	
 <table width="670" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr><td align="center">
-		<div align="justify"><em>Please note any other factors that could affect student's ability to communicate in English after his/her arrival in the United States: </em></div>
+		<cfif ListFind("14,15,16", get_student_info.app_indicated_program)>            	
+            <!--- Canada Agreement --->
+            <div align="justify"><em>Please note any other factors that could affect student's ability to communicate in English after his/her arrival in Canada: </em></div>	        
+        <cfelse>
+            <!--- Public High School Agreement --->
+            <div align="justify"><em>Please note any other factors that could affect student's ability to communicate in English after his/her arrival in the United States: </em></div>	        
+        </cfif>            
 	</td></tr>
 	<tr><td align="center"><textarea name="app_interview_other" cols="100" rows="14" onchange="DataChanged();" #readonly#>#app_interview_other#</textarea></td></tr>
 </table><br>

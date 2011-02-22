@@ -23,30 +23,6 @@
 
 <cfset doc='page17'>
 
-<cfinclude template="../querys/get_student_info.cfm">
-
-<cfswitch expression="#get_student_info.sex#">
-
-	<cfcase value="male">
-		<cfset sd='son'>
-        <cfset hs='he'>
-        <cfset hh='his'>
-    </cfcase>
-    
-    <cfcase value="female">
-		<cfset sd='daughter'>
-        <cfset hs='she'>
-        <cfset hh='her'>
-    </cfcase>
-    
-    <cfdefaultcase>
-		<cfset sd='son/daughter'>
-        <cfset hs='he/she'>
-        <cfset hh='his/her'>
-    </cfdefaultcase>
-
-</cfswitch>
-
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
@@ -58,24 +34,19 @@
 	</tr>
 </table>
 
-<div class="section"><br>
-
 <cfoutput>
 
-<!--- Check uploaded file - Upload File Button --->
-<cfinclude template="../check_uploaded_file.cfm">
-
-<table width="670" cellpadding=3 cellspacing=0 align="center">
-	<tr>
-		<td>
-			<h1>Student's Name: #get_student_info.firstname# #get_student_info.familylastname#</h1>
-			<div align="justify"><cfinclude template="page17text.cfm"></div>
-		</td>
-	</tr>
-</table><br>
-</cfoutput>
+<div class="section"><br>
+    
+    <!--- Check uploaded file - Upload File Button --->
+    <cfinclude template="../check_uploaded_file.cfm">
+    
+    <!--- Include Page 17 Text --->
+    <cfinclude template="page17text.cfm">
 
 </div>
+
+</cfoutput>
 
 <table width=100% border=0 cellpadding=0 cellspacing=0 class="section" align="center">
 	<tr>

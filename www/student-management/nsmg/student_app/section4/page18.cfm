@@ -87,88 +87,99 @@ function CheckPrivate() {
 		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
 		<td class="tablecenter"><h2>Page [18] - Private School</h2></td>
-		<cfif CLIENT.companyID NEQ 14>
+		<!--- Do not display for Exchange Service or Canada Application --->
+		<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
 	        <td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page18print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
         <td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
 
-<div class="section"><br>
-<cfif CLIENT.companyID EQ 14>
-    <br><Br><br>
-    <h2 align=center>This page does not apply to your program.</h2>
-    <Br><br><BR>
+<!--- Do not display for ESI or Canada Application --->
+<cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", get_student_info.app_indicated_program)> 
+
+	<div class="section"><br>
+        <br><Br><br>
+        <h2 align=center>This page does not apply to your program.</h2>
+        <Br><br><BR>
+	</div>
+    
 <cfelse>
-    <cfform name="page18" action="?curdoc=section4/qr_page18" method="post" onSubmit="return CheckPrivate();">
+
+	<div class="section"><br>
     
-    <cfoutput query="get_student_info">
-    
-    <cfinput type="hidden" name="studentid" value="#studentid#">
-    <cfinput type="hidden" name="CheckChanged" value="0">
-    
-    <!--- Check uploaded file - Upload File Button --->
-    <cfinclude template="../check_uploaded_file.cfm">
-    
-    <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
-        <tr>
-            <td>
-                <h1>Student's Name: #get_student_info.firstname# #get_student_info.familylastname#</h1>
-                <div align="justify"><cfinclude template="page18text.cfm"></div>
-            </td>
-        </tr>
-    </table><br>
-    
-    
-    <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
-        <tr>
-            <td>
-                <table>
-                    <tr><td><input type="radio" name="privateschool" value='0' onClick="DataChanged();" <cfif privateschool  EQ '0'>checked</cfif>></td>
-                        <td><em>Do not consider my child for J-1 Private Schools</em></td></tr>
-                </table>
-            </td>
-        </tr>
-        <tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
-        <tr>
-            <td>
-                <table>
-                    <tr><td><input type="radio" name="privateschool" value='1' onClick="DataChanged();" <cfif privateschool  GTE '1' AND privateschool LTE '3'>checked</cfif>></td>
-                        <td><em>Consider my child for any school in the following tuition range: (select one)</em></td></tr>
-                    <tr><td colspan="2">
-                        <select name="tuitionprivateschool" onClick="DataChanged();">
-                        <option value="0"></option>
-                        <cfloop query="private_schools">
-                        <option value="#privateschoolid#" <cfif get_student_info.privateschool EQ privateschoolid>selected</cfif>>#privateschoolprice#</option>
-                        </cfloop>
-                        </select>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    <!---	<tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
-        <tr>
-            <td>
-                <table>
-                    <tr><td><input type="radio" name="privateschool" value='5' onClick="DataChanged();" <cfif privateschool  GT 4>checked</cfif>></td>
-                        <td><em>Consider my child for the following 3 choices from the J-1 Private Schools List:</em></td></tr>
-                    <tr><td colspan="2">______________________________________________</td></tr>
-                    <tr><td colspan="2">______________________________________________</td></tr>
-                    <tr><td colspan="2">______________________________________________</td></tr>
-                </table>
-            </td>
-        </tr>---->
-    </table><br><br><br>
-    
+        <cfform name="page18" action="?curdoc=section4/qr_page18" method="post" onSubmit="return CheckPrivate();">
+        
+        <cfoutput query="get_student_info">
+        
+        <cfinput type="hidden" name="studentid" value="#studentid#">
+        <cfinput type="hidden" name="CheckChanged" value="0">
+        
+        <!--- Check uploaded file - Upload File Button --->
+        <cfinclude template="../check_uploaded_file.cfm">
+        
+        <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
+            <tr>
+                <td>
+                    <h1>Student's Name: #get_student_info.firstname# #get_student_info.familylastname#</h1>
+                    <div align="justify"><cfinclude template="page18text.cfm"></div>
+                </td>
+            </tr>
+        </table><br>
+        
+        
+        <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
+            <tr>
+                <td>
+                    <table>
+                        <tr><td><input type="radio" name="privateschool" value='0' onClick="DataChanged();" <cfif privateschool  EQ '0'>checked</cfif>></td>
+                            <td><em>Do not consider my child for J-1 Private Schools</em></td></tr>
+                    </table>
+                </td>
+            </tr>
+            <tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr><td><input type="radio" name="privateschool" value='1' onClick="DataChanged();" <cfif privateschool  GTE '1' AND privateschool LTE '3'>checked</cfif>></td>
+                            <td><em>Consider my child for any school in the following tuition range: (select one)</em></td></tr>
+                        <tr><td colspan="2">
+                            <select name="tuitionprivateschool" onClick="DataChanged();">
+                            <option value="0"></option>
+                            <cfloop query="private_schools">
+                            <option value="#privateschoolid#" <cfif get_student_info.privateschool EQ privateschoolid>selected</cfif>>#privateschoolprice#</option>
+                            </cfloop>
+                            </select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        <!---	<tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr><td><input type="radio" name="privateschool" value='5' onClick="DataChanged();" <cfif privateschool  GT 4>checked</cfif>></td>
+                            <td><em>Consider my child for the following 3 choices from the J-1 Private Schools List:</em></td></tr>
+                        <tr><td colspan="2">______________________________________________</td></tr>
+                        <tr><td colspan="2">______________________________________________</td></tr>
+                        <tr><td colspan="2">______________________________________________</td></tr>
+                    </table>
+                </td>
+            </tr>---->
+        </table><br><br><br>
+        
     </div>
     
     <!--- PAGE BUTTONS --->
     <cfinclude template="../page_buttons.cfm">
     
     </cfoutput>
+    
     </cfform>
+    
 </cfif>
+
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
 

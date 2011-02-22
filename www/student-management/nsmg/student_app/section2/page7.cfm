@@ -5,7 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="app.css">
 	<title>Page [07] - School Information</title>
 </head>
-<BODY >
+<BODY>
 
 <cftry>
 
@@ -40,20 +40,16 @@ function DataChanged()
 function NextPage() {
 	document.page7.action = '?curdoc=section2/qr_page7&next';
 	}
-//-->
-</SCRIPT>
-<SCRIPT>
 <!--
 function change(href)
-
 {
-
 	window.location.href = href;
-
 }
-<cfinclude template="../querys/get_student_info.cfm">
 //-->
 </SCRIPT>
+
+<cfinclude template="../querys/get_student_info.cfm">
+
 <cfset doc = 'page07'>
 
 <!--- HEADER OF TABLE --->
@@ -93,16 +89,15 @@ function change(href)
 		<td><cfinput type="text" name="app_school_phone" size="45" value="#app_school_phone#" onchange="DataChanged();"></td></tr>
 	<tr><td><em>Public or Private</em></td>
 		<td>
-			<cfif app_school_type is 'Public'><cfinput type="radio" name="app_school_type" value="Public" checked="yes" onchange="DataChanged();">Public<cfelse><cfinput type="radio" name="app_school_type" value="Public" onchange="DataChanged();">Public</cfif>&nbsp; &nbsp;
-			<cfif app_school_type is 'Private'><cfinput type="radio" name="app_school_type" value="Private" checked="yes" onchange="DataChanged();">Private<cfelse><cfinput type="radio" name="app_school_type" value="Private" onchange="DataChanged();">Private</cfif>	
-		</td>
+			<input type="radio" name="app_school_type" id="app_school_typePublic" value="Public" onchange="DataChanged();" <cfif app_school_type EQ 'Public'> checked="yes" </cfif>> <label for="app_school_typePublic">Public</label>
+			<input type="radio" name="app_school_type" id="app_school_typePrivate" value="Private" onchange="DataChanged();" <cfif app_school_type EQ 'Private'> checked="yes" </cfif>> <label for="app_school_typePrivate">Private</label>
+        </td>
 	</tr>
 	<tr><td><em>Administrator's Name</em></td>
 		<td><cfinput type="text" name="app_school_person" size="45" value="#app_school_person#" onchange="DataChanged();"></td></tr>
-	<tr><td>&nbsp;</td></tr>
 </table>
 
-<hr class="bar"></hr><br>
+<hr class="bar" style="margin-top:10px; margin-bottom:10px;"></hr>
 
 <table width="670" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td colspan="4" align="center"><b>GRADE CONVERSION CHART</b></td></tr>
@@ -167,36 +162,42 @@ function change(href)
 
 <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
 	<tr>
-		<td><em>What grade level will student have completed upon arrival in the USA?</em></td>
+        <cfif ListFind("14,15,16", get_student_info.app_indicated_program)>     
+        	<!--- Canada Application --->       	
+	        <td><em>What grade level will student have completed upon arrival in Canada?</em></td>
+		<cfelse>
+        	<!--- USA - Public High School --->
+	        <td><em>What grade level will student have completed upon arrival in the USA?</em></td>
+        </cfif>	
 		<td>
-			<cfif grades is '9'> <cfinput type="radio" name="grades" value="9" checked="yes" onchange="DataChanged();"> <cfelse> <cfinput type="radio" name="grades" value="9" onchange="DataChanged();"> </cfif>  9<sup>th</sup> 
-			<cfif grades is '10'><cfinput type="radio" name="grades" value="10" checked="yes" onchange="DataChanged();"> <cfelse> <cfinput type="radio" name="grades" value="10" onchange="DataChanged();"> </cfif> 10<sup>th</sup>
-			<cfif grades is '11'><cfinput type="radio" name="grades" value="11" checked="yes" onchange="DataChanged();"> <cfelse> <cfinput type="radio" name="grades" value="11" onchange="DataChanged();"> </cfif> 11<sup>th</sup>
-			<cfif grades is '12'><cfinput type="radio" name="grades" value="12" checked="yes" onchange="DataChanged();"> <cfelse> <cfinput type="radio" name="grades" value="12" onchange="DataChanged();"> </cfif> 12<sup>th</sup>
+        	<input type="radio" name="grades" id="grade9" value="9" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 9> checked="yes" </cfif>> <label for="grade9">9<sup>th</sup></label>
+            <input type="radio" name="grades" id="grade10" value="10" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 10> checked="yes" </cfif>> <label for="grade10">10<sup>th</sup></label>
+            <input type="radio" name="grades" id="grade11" value="11" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 11> checked="yes" </cfif>> <label for="grade11">11<sup>th</sup></label>
+            <input type="radio" name="grades" id="grade12" value="12" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 12> checked="yes" </cfif>> <label for="grade12">12<sup>th</sup></label>
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr>
 		<td><em>Upon arrival, will the student have completed secondary school in his/her home country?</em></td>
 		<td>
-			<cfif app_completed_school is 'Yes'><cfinput type="radio" name="app_completed_school" value="Yes" checked="yes" onchange="DataChanged();">Yes<cfelse><cfinput type="radio" name="app_completed_school" value="Yes" onchange="DataChanged();">Yes</cfif>&nbsp; &nbsp;
-			<cfif app_completed_school is 'No'><cfinput type="radio" name="app_completed_school" value="No" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="app_completed_school" value="No" onchange="DataChanged();">No</cfif>	
+			<input type="radio" name="app_completed_school" id="app_completed_schoolYes" value="Yes" onchange="DataChanged();" <cfif app_completed_school EQ 'Yes'> checked="yes" </cfif>> <label for="app_completed_schoolYes">Yes</label>
+			<input type="radio" name="app_completed_school" id="app_completed_schoolNo" value="No" onchange="DataChanged();" <cfif app_completed_school EQ 'No'> checked="yes" </cfif>> <label for="app_completed_schoolNo">No</label>
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>	
-		<tr>
-		<td><em>Has the student received a diploma in his/her home country??</em></td>
+	<tr>
+		<td><em>Has the student received a diploma in his/her home country?</em></td>
 		<td>
-			<cfif gradAtHome is 'Yes'><cfinput type="radio" name="gradAtHome" value="yes" checked="yes" onchange="DataChanged();">Yes<cfelse><cfinput type="radio" name="gradAtHome" value="yes" onchange="DataChanged();">Yes</cfif>&nbsp; &nbsp;
-			<cfif gradAtHome is 'No'><cfinput type="radio" name="gradAtHome" value="no" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="gradAtHome" value="no" onchange="DataChanged();">No</cfif>	
+			<input type="radio" name="gradAtHome" id="gradAtHomeYes" value="Yes" onchange="DataChanged();" <cfif gradAtHome EQ 'Yes'> checked="yes" </cfif>> <label for="gradAtHomeYes">Yes</label>
+			<input type="radio" name="gradAtHome" id="gradAtHomeNo" value="No" onchange="DataChanged();" <cfif gradAtHome EQ 'No'> checked="yes" </cfif>> <label for="gradAtHomeNo">No</label>
 		</td>
 	</tr>
-    
+	<tr><td>&nbsp;</td></tr>	
     <tr>
 		<td><em>Does the student need to have his/her transcript convalidated?</em></td>
 		<td>
-			<cfif convalidation_needed is 'Yes'><cfinput type="radio" name="convalidation_needed" value="Yes" checked="yes" onchange="DataChanged();">Yes<cfelse><cfinput type="radio" name="convalidation_needed" value="Yes" onchange="DataChanged();">Yes</cfif>&nbsp; &nbsp;
-			<cfif convalidation_needed is 'No'><cfinput type="radio" name="convalidation_needed" value="No" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="convalidation_needed" value="No" onchange="DataChanged();">No</cfif>	
+			<input type="radio" name="convalidation_needed" id="convalidation_neededYes" value="Yes" onchange="DataChanged();" <cfif convalidation_needed EQ 'Yes'> checked="yes" </cfif>> <label for="convalidation_neededYes">Yes</label>
+			<input type="radio" name="convalidation_needed" id="convalidation_neededNo" value="No" onchange="DataChanged();" <cfif convalidation_needed EQ 'No'> checked="yes" </cfif>> <label for="convalidation_neededNo">No</label>
 		</td>
 	</tr>
 	<tr><td>&nbsp;</td></tr>

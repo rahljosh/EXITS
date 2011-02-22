@@ -25,6 +25,8 @@
 </head>
 <body <cfif not IsDefined('url.curdoc')>onLoad="print()"</cfif>>
 
+<cfinclude template="../querys/get_student_info.cfm">
+
 <cfoutput>
 
 <cfif not IsDefined('url.curdoc')>
@@ -80,7 +82,13 @@
 
 <table width="670" border=0 cellpadding=3 cellspacing=0 align="center">
 	<tr><td align="center" height="100" valign="top">
-		<div align="justify"><em>Please note any other factors that could affect student's ability to communicate in English after his/her arrival in the United States: </em></div>
+		<cfif ListFind("14,15,16", get_student_info.app_indicated_program)>            	
+            <!--- Canada Agreement --->
+            <div align="justify"><em>Please note any other factors that could affect student's ability to communicate in English after his/her arrival in Canada: </em></div>	        
+        <cfelse>
+            <!--- Public High School Agreement --->
+            <div align="justify"><em>Please note any other factors that could affect student's ability to communicate in English after his/her arrival in the United States: </em></div>	        
+        </cfif>            
 	</td></tr>
 	<tr><td align="center" valign="top"><div align="justify"><br><img src="#path#pics/line.gif" width="665" height="1" border="0" align="absmiddle"></div></td></tr>
 </table><br><br>

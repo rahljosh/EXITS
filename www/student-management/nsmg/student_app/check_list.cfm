@@ -554,8 +554,8 @@
     
     <!--- PAGE 18 --->
     <tr><td><a href="index.cfm?curdoc=section4/page18&id=4&p=18"><h3>Page [18] - Private School</h3></a></td></tr>
-	<!---- It does not apply to ESI---->
-    <cfif CLIENT.companyID EQ 14>
+    <!--- Do not display for ESI or Canada Application --->
+    <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", smg_students.app_indicated_program)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
 	<cfelse>        
         <cfloop query="page18">
@@ -605,8 +605,8 @@
     <tr><td><a href="index.cfm?curdoc=section4/page20&id=4&p=20"><h3>Page [20] - Regional Choice</h3></a></td></tr>
     <!--- Not Available in April or May - PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
     
-	<!---- It does not apply to ESI---->
-    <cfif CLIENT.companyID EQ 14>
+    <!--- Do not display for ESI or Canada Application --->
+    <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", smg_students.app_indicated_program)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
 	<cfelse>    
 		<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
@@ -636,8 +636,12 @@
 
 	<!--- PAGE 21 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page21&id=4&p=21"><h3>Page [21] - <cfif CLIENT.companyID NEQ 14>State <cfelse>City </cfif> Choice </h3></a></td></tr>
+
+    <!--- Do not display for Canada Application --->
+    <cfif ListFind("14,15,16", smg_students.app_indicated_program)> 
+		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
 	
-	<Cfif CLIENT.companyID EQ 14>
+	<cfelseif CLIENT.companyID EQ 14>
 		
 		<!--- Exchange Service International Application --->
 		<cfif qCityRequested.recordCount AND LEN(qCityRequested.city1) AND LEN(qCityRequested.city2) AND LEN(qCityRequested.city3)>
