@@ -4,7 +4,7 @@
     	c.uniqueID, c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid,
         smg_programs.programname, smg_users.companyid, smg_users.businessname, 
         c.companyid, c.hostcompanyid, smg_countrylist.countryname, extra_hostcompany.name, 
-        c.wat_placement, c.candidateid, c.wat_placement, c.change_requested_comment
+        c.wat_placement, c.candidateid, c.wat_placement, c.change_requested_comment, c.personal_info
 	FROM extra_candidates c
 	INNER JOIN smg_users ON smg_users.userid = c.intrep
 	INNER JOIN smg_programs ON smg_programs.programid = c.programid
@@ -22,7 +22,8 @@
 	SELECT 
 	    c.uniqueID, c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, 
         smg_programs.programname, smg_users.companyid, smg_users.businessname, c.companyid, c.hostcompanyid, 
-        smg_countrylist.countryname, extra_hostcompany.name, c.wat_placement, c.candidateid, c.wat_placement, c.change_requested_comment
+        smg_countrylist.countryname, extra_hostcompany.name, c.wat_placement, c.candidateid, c.wat_placement, 		
+        c.change_requested_comment, c.personal_info
 	FROM extra_candidates c
 	INNER JOIN smg_users ON smg_users.userid = c.intrep
 	INNER JOIN smg_programs ON smg_programs.programid = c.programid
@@ -136,6 +137,7 @@
       <th align="left" bgcolor="4F8EA4" class="style2">Country</th>
       <th align="left" bgcolor="4F8EA4" class="style2">Req. Placement</th>
       <th align="left" bgcolor="4F8EA4" class="style2">Comments</th>
+      <th align="left" bgcolor="4F8EA4" class="style2">English Assessment CSB</th>
 	  <th align="left" bgcolor="4F8EA4" class="style2">Intl. Rep.</th>
 	  <th align="left" bgcolor="4F8EA4" class="style2">Option</th>
     </tr>	
@@ -162,6 +164,7 @@
 					<td class="style1">#countryname#</td>
 					<td class="style1">#name#</td>
 					<td class="style1">#change_requested_comment#</td>
+                    <td class="style1">#personal_info#</td>
                     <td class="style1">#businessname#</td>
 					<td class="style1">#wat_placement#</td>                    
 				  </tr>
@@ -179,7 +182,8 @@
 					<td class="style1">#countryname#</td>
 					<td class="style1">#name#</td>
                     <td class="style1">#change_requested_comment#</td>
-					<td class="style1">#businessname#</td>
+					<td class="style1">#personal_info#</td>
+                    <td class="style1">#businessname#</td>
 					<td class="style1">#wat_placement#</td>
 				  </tr>		
 				  <cfset into = into + 1 >	  
