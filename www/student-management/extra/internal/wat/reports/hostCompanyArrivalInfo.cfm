@@ -8,6 +8,7 @@
 	<cfparam name="FORM.hostCompanyID" default="0">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.csbPlacement" default="All">
 
     <cfquery name="qGetProgramList" datasource="MySql">
         SELECT 
@@ -86,6 +87,13 @@
                 AND
                     eh.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
 			</cfif>
+            <cfif FORM.csbPlacement EQ 1>
+            	AND
+                	ec.wat_placement = "CSB-Placement"
+            <cfelseif FORM.csbPlacement EQ 0>
+            	AND
+                	ec.wat_placement = "Self-Placement"            
+            </cfif>
        		GROUP BY
             	eh.hostCompanyID
             ORDER BY
@@ -141,6 +149,16 @@
                     <cfloop query="qGetProgramList">
                     	<option value="#programID#" <cfif qGetProgramList.programID EQ FORM.programID> selected </cfif> >#programname#</option>
                     </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="right" class="style1"><b>Placement Type: </b></td>
+            <td>
+                <select name="csbPlacement" class="style1">
+                	<option value="All" <cfif form.csbPlacement EQ "All"> selected="selected" </cfif>>--- All ---</option>
+                    <option value="0" <cfif form.csbPlacement EQ 0> selected="selected" </cfif>>Self-Placement</option>
+                    <option value="1" <cfif form.csbPlacement EQ 1> selected="selected" </cfif>>CSB-Placement</option>
                 </select>
             </td>
         </tr>
@@ -204,29 +222,29 @@
                     <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Hours of contact</td>
                 </tr>
                 <tr bgcolor="##E4E4E4">
-                    <td valign="top">#YesNoFormat(VAL(qGetHostCompany.isHousingProvided))#</td>
-                    <td valign="top">
+                    <td valign="top" style="font-size:small">#YesNoFormat(VAL(qGetHostCompany.isHousingProvided))#</td>
+                    <td valign="top" style="font-size:small">
                         <cfif LEN(qGetHostCompany.housingProvidedInstructions)>
                             #qGetHostCompany.housingProvidedInstructions#
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
-                    <td valign="top">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
-                    <td valign="top">#qGetHostCompany.arrivalAirport#</td>
-                    <td valign="top">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
-                    <td valign="top">#qGetHostCompany.arrivalPickUpHours#</td>
-                    <td valign="top">
+                    <td valign="top" style="font-size:small">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
+                    <td valign="top" style="font-size:small">#qGetHostCompany.arrivalAirport#</td>
+                    <td valign="top" style="font-size:small">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
+                    <td valign="top" style="font-size:small">#qGetHostCompany.arrivalPickUpHours#</td>
+                    <td valign="top" style="font-size:small">
                         <cfif LEN(qGetHostCompany.arrivalInstructions)>
                             #qGetHostCompany.arrivalInstructions#
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
-                    <td valign="top">#qGetHostCompany.pickUpContactName#</td>
-                    <td valign="top">#qGetHostCompany.pickUpContactPhone#</td>
-                    <td valign="top">#qGetHostCompany.pickUpContactEmail#</td>
-                    <td valign="top">#qGetHostCompany.pickUpContactHours#</td>
+                    <td valign="top" style="font-size:small">#qGetHostCompany.pickUpContactName#</td>
+                    <td valign="top" style="font-size:small">#qGetHostCompany.pickUpContactPhone#</td>
+                    <td valign="top" style="font-size:small">#qGetHostCompany.pickUpContactEmail#</td>
+                    <td valign="top" style="font-size:small">#qGetHostCompany.pickUpContactHours#</td>
                 </tr>
             </table>
             <br />
