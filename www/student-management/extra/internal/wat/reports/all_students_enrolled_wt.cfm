@@ -84,6 +84,7 @@
                 ec.enddate,
                 ec.intrep, 
                 ec.wat_placement,
+                ec.email,
                 ehc.name,                 
                 u.businessName
             FROM
@@ -328,8 +329,11 @@
                     </tr>
 				</cfif>
                 <tr>
-                    <Th align="left" class="#tableTitleClass#">Student</Th>
-                    <th align="left" class="#tableTitleClass#">Sex</th>
+                    <Th align="left" class="#tableTitleClass#">ID</Th>
+                    <Th align="left" class="#tableTitleClass#">Last Name</Th>
+                    <Th align="left" class="#tableTitleClass#">First Name</Th>
+                    <th align="left" class="#tableTitleClass#">Gender</th>
+                    <th align="left" class="#tableTitleClass#">E-mail</th>
                     <th align="left" class="#tableTitleClass#">Start Date</th>
                     <th align="left" class="#tableTitleClass#">End Date</th>
                     <th align="left" class="#tableTitleClass#">Placement Information</th>
@@ -346,10 +350,21 @@
                     <tr <cfif qTotalPerAgent.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>                    
                         <td class="style1">
                         	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
-                            	#qTotalPerAgent.firstname# #qTotalPerAgent.lastname# (###qTotalPerAgent.candidateID#)
+                            	#qTotalPerAgent.candidateID#
+                            </a>
+                        </td>
+                        <td class="style1">
+                        	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
+                            	#qTotalPerAgent.lastname#
+                            </a>
+                        </td>
+                        <td class="style1">
+                        	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
+                            	#qTotalPerAgent.firstname#
                             </a>
                         </td>
                         <td class="style1">#qTotalPerAgent.sex#</td>
+                        <td class="style1">#qTotalPerAgent.email#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
                         <td class="style1">#qTotalPerAgent.name#</td>
