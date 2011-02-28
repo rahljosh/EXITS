@@ -943,7 +943,8 @@
                     	ec.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 </cfif>
 			ORDER BY
-            	ec.candidateID
+            	ec.lastName,
+                ec.firstName
 		</cfquery>
 		   
 		<cfreturn qGetVerificationList>
