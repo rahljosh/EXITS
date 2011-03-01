@@ -144,7 +144,7 @@
 	
     <!--- Include Uploaded PDF Files --->
     <cfif qGetPDFDocumentList.recordCount>
-
+		
 		<!--- Try to Merge PDF and other files --->    	
         <cftry>
         
@@ -167,10 +167,15 @@
                     
                     <!--- Loop Over Uploaded Files --->                
                     <cfloop query="qGetPDFDocumentList">
+
                         <!--- Check if file exists --->
+                        <cfif APPLICATION.CFC.DOCUMENT.checkFileExists(filePath=qGetPDFDocumentList.filePath)>
                         
-                        <!--- Merge Files --->
-                        <cfpdfparam source="#qGetPDFDocumentList.filePath#"> 
+							<!--- Merge Files --->
+                            <cfpdfparam source="#qGetPDFDocumentList.filePath#"> 
+
+						</cfif>
+                        
                     </cfloop>
             </cfpdf>
     
