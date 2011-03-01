@@ -418,7 +418,8 @@
     
  		<cfscript>
 			// Set FORM Values
-			FORM.name = qGetHostCompanyInfo.name;
+			// Escape Double Quotes
+			FORM.name = APPLICATION.CFC.UDF.escapeQuotes(qGetHostCompanyInfo.name);
 			FORM.business_typeID = qGetHostCompanyInfo.business_typeID;
 			FORM.address = qGetHostCompanyInfo.address;
 			FORM.city = qGetHostCompanyInfo.city;
@@ -620,7 +621,7 @@
                         <!--- HOST COMPANY INFO - READ ONLY --->
                         <table width="100%" align="center" cellpadding="2" class="readOnly">
                             <tr>
-                                <td align="center" colspan="2" class="title1"><p>#qGetHostCompanyInfo.name# (###qGetHostCompanyInfo.hostCompanyID#)</td>
+                                <td align="center" colspan="2" class="title1"><p>#FORM.name# (###qGetHostCompanyInfo.hostCompanyID#)</td>
                             </tr>
                             <tr>
                                 <td width="40%" align="right" class="style1"><strong>Business Type:</strong></td>
@@ -640,7 +641,7 @@
                         <table width="100%" align="center" cellpadding="2" class="editPage">
                             <tr>
                                 <td width="40%" align="right" class="style1"><strong>Business Name:</strong> </td>
-                                <td><input type="text" name="name" value="#FORM.name#" class="style1" size="35" maxlength="100"></td>
+                                <td><input type="text" name="name" value="#FORM.name#" class="style1" size="50" maxlength="250"></td>
                             </tr>
                             <tr>
                                 <td align="right" class="style1"><strong>Business Type:</strong></td>
@@ -1078,7 +1079,7 @@
                                             <td width="35%" class="style1" align="right"><strong>Hours of Contact:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.pickUpContactHours#</span>
-                                                <textarea name="pickUpContactHours" id="pickUpContactHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
+                                                <textarea name="pickUpContactHours" id="pickUpContactHours" class="style1 editPage" cols="35" rows="4">#FORM.pickUpContactHours#</textarea>
                                             </td>
                                         </tr>
                                     </table>

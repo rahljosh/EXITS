@@ -86,7 +86,7 @@
 
 
 	<!--- This hashes the given ID for security reasons --->
-	<cffunction name="HashID" access="public" returntype="string" output="no" hint="Hashes the given ID for security reasons">
+	<cffunction name="HashID" access="public" returntype="string" output="no" hint="Hashes the given ID for security reasons. To be used for documents only.">
 		<cfargument name="ID" type="numeric" required="yes" />
 		
 		<!--- Return hash --->
