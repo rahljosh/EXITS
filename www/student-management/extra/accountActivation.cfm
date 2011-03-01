@@ -47,7 +47,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>EXTRA - Exchange Training Abroad - Account Activation</title>
     <link href="internal/style.css" rel="stylesheet" type="text/css" />
-    <link rel="SHORTCUT ICON" href="pics/favicon.ico">
+    <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 </head>
 <body>
 

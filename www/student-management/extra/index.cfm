@@ -197,7 +197,7 @@
     <title>EXTRA - Exchange Training Abroad</title>
     <link href="internal/style.css" rel="stylesheet" type="text/css" />
     <link href="internal/linked/css/login.css" rel="stylesheet" type="text/css" />
-    <link rel="SHORTCUT ICON" href="pics/favicon.ico">
+    <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
     <cfoutput><script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script></cfoutput> <!-- jQuery -->
 </head>
 <body>

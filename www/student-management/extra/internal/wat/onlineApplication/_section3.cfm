@@ -84,7 +84,7 @@
 				FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
 			}
 			
-			if ( qGetAnswers.recordCount ) {
+			if ( qGetAnswers.recordCount GTE 5 ) {
 				
 				FORM.dateInterview = FORM[qGetAnswers.fieldKey[5]];
 				// Break down interview date						

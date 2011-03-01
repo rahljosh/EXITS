@@ -193,7 +193,25 @@
 			return(ARGUMENTS.Text);
 		</cfscript>
 	</cffunction>
-    
+
+
+	<cffunction name="escapeQuotes" access="public" returntype="string" output="No" hint="Escapes double and single quotes">
+		<cfargument name="Text" type="string" required="Yes" />
+		
+		<cfscript>
+			// Remove Foreign Accents
+			ARGUMENTS.text = removeAccent(ARGUMENTS.text);
+
+			// Single quotes
+			ARGUMENTS.Text = Replace(ARGUMENTS.TEXT, Chr(39), "&apos;", "ALL");
+			
+			// Double quotes
+			ARGUMENTS.Text = Replace(ARGUMENTS.TEXT, Chr(34), "&quot;", "ALL");
+						
+			return(ARGUMENTS.Text);
+		</cfscript>
+	</cffunction>
+
     
 	<!--- Deletes the right N characters of a string --->
 	<cffunction name="RightDelete" access="public" returntype="string" output="No" hint="Deletes the right N characters of a string">
