@@ -128,7 +128,7 @@
 				
 				// Email Admissions Office
 				APPLICATION.CFC.EMAIL.sendEmail(
-					emailTo=APPLICATION.EMAIL.admissions,						
+					emailTo=APPLICATION.EMAIL.submittedApplication,						
 					emailType='applicationSubmittedAdmissions',
 					emailFilePath=applicationZipFile,
 					studentID=FORM.studentID

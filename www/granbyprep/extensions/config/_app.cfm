@@ -93,6 +93,7 @@
 		APPLICATION.EMAIL.headMaster = 'marcus@iseusa.com';
 		APPLICATION.EMAIL.admissions = 'marcus@iseusa.com';
 		APPLICATION.EMAIL.admissionsOfficer = 'marcus@iseusa.com';
+		APPLICATION.EMAIL.submittedApplication = 'marcus@iseusa.com';
 		APPLICATION.EMAIL.contactUs = 'marcus@iseusa.com';
 		APPLICATION.EMAIL.support = 'marcus@iseusa.com';
 		APPLICATION.EMAIL.errors = 'marcus@iseusa.com';
@@ -107,13 +108,14 @@
 		APPLICATION.PATH.base = 'C:/websites/granbyprep/';
 
 		// Email Settings
-		APPLICATION.EMAIL.headMaster = 'bchatterley@granbyprep.com';
-		APPLICATION.EMAIL.admissionsOfficer = 'askidmore@macduffie.org'; // askidmore@granbyprep.com
+		APPLICATION.EMAIL.headMaster = 'bchatterley@macduffie.org';
 		APPLICATION.EMAIL.admissions = 'admissions@macduffie.org';
+		APPLICATION.EMAIL.admissionsOfficer = 'askidmore@macduffie.org'; // askidmore@granbyprep.com
+		APPLICATION.EMAIL.submittedApplication = 'askidmore@granbyprep.com;bchatterley@macduffie.org';
 		APPLICATION.EMAIL.contactUs = 'admissions@macduffie.org'; // info@granbyprep.com
 		APPLICATION.EMAIL.support = 'support@granbyprep.com';
 		APPLICATION.EMAIL.errors = 'errors@granbyprep.com';
-		APPLICATION.EMAIL.finance = 'bchatterley@granbyprep.com';	
+		APPLICATION.EMAIL.finance = 'bchatterley@macduffie.org';	
 		
 	}
 
