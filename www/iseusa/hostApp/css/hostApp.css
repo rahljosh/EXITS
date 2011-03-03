@@ -1,0 +1,222 @@
+/* CSS Document */
+/*for the host app hello.cfm page*/
+
+@charset "UTF-8";
+#footer3 {
+	clear: both;
+	height: 40%;
+	margin: 0;
+	background-color: #000;
+	padding-top: 0;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+	bottom: -8px;
+	display: block;
+}
+.hostApp {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	width: 660px;
+	margin-left: 55px;
+	margin-top: 5px;
+	padding: 0px;
+}
+
+.Boxx {
+	border: 2px dashed #000066;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #000066;
+}
+.Titles {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #000066;
+	font-weight: bold;
+	font-size: 14px;
+}
+.TitlesLG {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #000066;
+	font-weight: bold;
+	font-size: 20px;
+}
+.SubTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #2E4F7A;
+	font-weight: bold;
+	font-size: 12px;
+}
+.SubTitleLG {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #2E4F7A;
+	font-weight: bold;
+	font-size: 16px;
+}
+.BottonText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: lighter;
+	font-variant: normal;
+	color: #6B8098;
+	background-image: url(../../trips/images/botton.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-align: center;
+	vertical-align: middle;
+}
+.RegularText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color:#000000;
+	font-style: normal;
+	font-weight: normal;
+}
+.style1 {color: #FFFFFF}
+.style2 {font-size: 12px}
+.style4 {font-size: 12}
+.style5 {color: #FFFFFF; font-weight: bold; }
+.style6 {
+	color: #FFFFFF;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	}
+.image-right {
+border:solid 1px;
+margin-right: 0px;
+margin-left: 15px;
+}
+.image-left {
+border:solid 1px;
+margin-right: 15px;
+margin-left: 0px;
+}
+.whtMiddletours2{
+	background-image: url(../../images/whtBoxMiddle.png);
+	background-repeat: repeat-y;
+	margin: 0px;
+	text-align: justify;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+.bBackground {
+	background-color: #C5DCEA;
+	border: thin solid #000;
+	text-align: center;
+}
+H1 { text-transform: capitalize }
+.p_uppercase { 
+text-transform: capitalize;
+padding-top: 2px;
+margin: 0px;
+}
+.oneColFixCtr #topBar #logoBox {
+}
+#logoBoxB {
+	background-image: url(/images/logobox.png);
+	background-repeat: no-repeat;
+	width: 200px;
+	z-index: 50;
+	display: block;
+	clear: both;
+	position: relative;
+	float: none;
+	margin-right: auto;
+	margin-left: auto;
+	top: 0px;
+	left: -435px;
+}
+#leftSide {
+	width: 154px;
+	padding-left: 0px;
+	font-weight: bold;
+	line-height: 20px;
+	margin-left: 28px;
+}
+#logoBox #leftSide ul, li {
+	list-style-type: none;
+	text-align: left;
+}
+.clearfix {
+	display: block;
+	height: 5px;
+}
+.clearfixLG {
+	display: block;
+	height: 10px;
+}
+.clearfix10pt {
+	display: block;
+	height: 10px;
+	background-image: url(../images/blueStrip_32.png);
+	background-repeat: no-repeat;
+	clear: both;
+}
+.blueBox {
+	width: 190px;
+	margin-left: 0px;
+	background-image: url(../images/blueStrip_32.png);
+	background-repeat: repeat-y;
+	margin-right: 10px;
+	display: block;
+}
+.blueBtm {
+	display: block;
+	height: 22px;
+	background-image: url(../images/bluebottom_32.png);
+	background-repeat: no-repeat;
+	clear: both;
+}
+.oneColFixCtr #topBar #logoBoxB .blueBox #leftSide td {
+	padding-left: 15px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-align: left;
+}
+.whtLinks{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFF;
+	text-decoration: none;
+}
+.whtLinks:links{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFF;
+ 	text-decoration: none;
+}
+.whtLinks:hover{
+	color: #000;
+	text-decoration: none;
+}
+.whtLinks:active{
+	color: #FFF;
+	text-decoration: none;
+}
+
+.border{border:solid 1px;}
+#slidingDiv {
+    display: none;
+
+}
+/****Spacing around the included page of the index file for host app****/
+
+H1 { text-transform: capitalize }
+.p_uppercase { 
+text-transform: capitalize;
+padding-top: 2px;
+margin: 0px;
+}
+.redtext {
+	color: #FF0000;
+}
+a.external {
+    background:url(../images/external.png) center right no-repeat;
+    padding-right: 13px;
+}
