@@ -43,7 +43,11 @@
 		// Set up SETTINGS
 		APPLICATION.SETTINGS = StructNew();
 		APPLICATION.SETTINGS.IPInfoDBKey = '0fc7fb53672eaf186d2c41db1c9b63224ef8f31e0270d8c351d2097794352bfb';
-
+		
+		// Key for Encrypt/Decrypt Strings
+		APPLICATION.SETTINGS.encryptKey = 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR';
+		
+		
 		/***** Create APPLICATION.CFC structure *****/
 		APPLICATION.CFC = StructNew();
 	
