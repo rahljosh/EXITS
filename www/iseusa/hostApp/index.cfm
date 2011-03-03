@@ -10,13 +10,14 @@
 </style>
 
 <link href="../css/ISEstyle.css" rel="stylesheet" type="text/css" />
+<link href="../css/baseStyle.css" rel="stylesheet" type="text/css" />
 <link href="css/hostApp.css" rel="stylesheet" type="text/css" />
 <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
 <script type="text/javascript">
 //<![CDATA[
-function ShowHide(){
-$("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
-}
+	function ShowHide(){
+	$("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
+	}
 //]]>
 </script>
 </head>

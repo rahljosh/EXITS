@@ -1,369 +1,396 @@
-<head>
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Start Host App</title>
-
-
-
-
-<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
-<script type="text/javascript">
-//<![CDATA[
-function ShowHide(){
-$("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
-}
-//]]>
-</script>
-<!----Copy Fields---->
-<script type="text/javascript" language="JavaScript">
-<!--
-function FillFields(box) 
-{
-if(box.checked == false) { return; }
-document.my_form.mailing_address.value  = document.my_form.address.value ;
-document.my_form.mailing_address2.value = document.my_form.address2.value;
-document.my_form.mailing_city.value = document.my_form.city.value;
-document.my_form.mailing_state.value = document.my_form.state.value;
-document.my_form.mailing_zip.value = document.my_form.zip.value;
-}
-//-->
-</script>
-</head>
-
-
-
-<!--- need to use url.hostid since there's a client.hostid but phase client.hostid out. --->
-
-
-
+<!--- ------------------------------------------------------------------------- ----
 	
-	<cfset new = false>
+	File:		startHostApp.cfm
+	Author:		Josh Rahl
+	Date:		March 3, 2011
+	Desc:		Host Family Application - Intial Page
 
-<cfparam name="form.fatherfullpart" default='null'>
-<cfparam name="form.motherfullpart" default='null'>
+	Updated:	
+					
+----- ------------------------------------------------------------------------- --->
 
-<cfset field_list = 'familylastname,address,address2,city,state,zip,phone,email,fatherlastname,fatherfirstname,fathermiddlename,fatherdob,fatherssn,fatherworktype,father_cell,motherlastname,motherfirstname,mothermiddlename,motherdob,motherssn,motherworktype,mother_cell,regionid,fatherfullpart,motherfullpart,mailing_address,mailing_address2,mailing_city,mailing_state,mailing_zip,homeIsFunctBusiness,homeBusinessDesc'>
+<!--- Kill Extra Output --->
+<cfsilent>
 
-<!--- the key for encrypting and decrypting the ssn. --->
-<cfset ssn_key = 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR'>
+	<!--- Import CustomTag Used for Page Messages and Form Errors --->
+    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+	
+    <!--- Param FORM Variables --->
+    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.regionID" default="0">
+    <cfparam name="FORM.familylastname" default="">
+	<!--- Father --->
+    <cfparam name="FORM.fatherlastname" default="">
+    <cfparam name="FORM.fatherfirstname" default="">
+    <cfparam name="FORM.fathermiddlename" default="">
+    <cfparam name="FORM.fatherdob" default="">
+    <cfparam name="FORM.fatherbirth" default="0">
+    <cfparam name="FORM.fatherssn" default="">
+    <cfparam name="FORM.fatherworktype" default="">
+    <cfparam name="FORM.father_cell" default="">
+    <cfparam name="FORM.fatherfullpart" default="3">
+	<!--- Mother --->    
+    <cfparam name="FORM.motherfirstname" default="">
+    <cfparam name="FORM.motherlastname" default="">
+    <cfparam name="FORM.mothermiddlename" default="">
+    <cfparam name="FORM.motherdob" default="">
+    <cfparam name="FORM.motherbirth" default="0">
+    <cfparam name="FORM.motherssn" default="">
+    <cfparam name="FORM.motherworktype" default="">
+    <cfparam name="FORM.mother_cell" default="">
+    <cfparam name="FORM.motherfullpart" default="3">
+    <!--- Address --->
+    <cfparam name="FORM.address" default="">
+    <cfparam name="FORM.address2" default="">
+    <cfparam name="FORM.city" default="">
+    <cfparam name="FORM.state" default="">
+    <cfparam name="FORM.zip" default="">
+    <cfparam name="FORM.phone" default="">
+    <cfparam name="FORM.email" default="">
+    <!--- Mailing Address --->
+    <cfparam name="FORM.mailing_address" default="">
+    <cfparam name="FORM.mailing_address2" default="">
+    <cfparam name="FORM.mailing_city" default="">
+    <cfparam name="FORM.mailing_state" default="">
+    <cfparam name="FORM.mailing_zip" default="">
+    <cfparam name="FORM.homeIsFunctBusiness" default="">
+    <cfparam name="FORM.homeBusinessDesc" default="">
 
-<!--- Process Form Submission --->
-<cfif isDefined("form.submitted")>
-    
-	<cfif form.lookup_success NEQ "1">
-		<cfset errorMsg = 'Please lookup the address.'>
-	<cfelseif trim(form.familylastname) EQ "">
-		<cfset errorMsg = "Please enter the Family Name.">
-	<cfelseif application.address_lookup NEQ 2 and trim(form.address) EQ ''>
-		<cfset errorMsg = "Please enter the Address.">
-   cfelseif not isDefined('form.fatherfullpart')>
-		<cfset form.fatherfullpart = 3>
-    <cfelseif not isDefined('form.motherfullpart')>
-		<cfset form.motherfullpart = 3> 
-	<cfelseif application.address_lookup NEQ 2 and trim(form.city) EQ ''>
-		<cfset errorMsg = "Please enter the City.">
-	<cfelseif application.address_lookup NEQ 2 and trim(form.state) EQ ''>
-		<cfset errorMsg = "Please select the State.">
-	<cfelseif application.address_lookup NEQ 2 and not isValid("zipcode", trim(form.zip))>
-		<cfset errorMsg = "Please enter a valid Zip.">        
-	<cfelseif trim(form.phone) EQ '' and trim(form.father_cell) EQ '' and trim(form.mother_cell) EQ ''>
-		<cfset errorMsg = "Please enter one of the Phone fields.">
-	<cfelseif trim(form.phone) NEQ '' and not isValid("telephone", trim(form.phone))>
-		<cfset errorMsg = "Please enter a valid Phone.">
-	<cfelseif trim(form.email) NEQ '' and not isValid("email", trim(form.email))>
-		<cfset errorMsg = "Please enter a valid Email.">
-	<cfelseif trim(form.fatherdob) NEQ '' and not isValid("date", trim(form.fatherdob))>
-		<cfset errorMsg = "Please enter a valid Father's Date of Birth.">
-	<!----<cfelseif isDefined("form.fatherssn") and trim(form.fatherssn) NEQ '' and not isValid("social_security_number", trim(form.fatherssn))>
-		<cfset errorMsg = "Please enter a valid Father's SSN.">---->
-	<cfelseif trim(form.father_cell) NEQ '' and not isValid("telephone", trim(form.father_cell))>
-		<cfset errorMsg = "Please enter a valid Father's Cell Phone.">
-	<cfelseif trim(form.motherdob) NEQ '' and not isValid("date", trim(form.motherdob))>
-		<cfset errorMsg = "Please enter a valid Mother's Date of Birth.">
-	<!----<cfelseif isDefined("form.motherssn") and trim(form.motherssn) NEQ '' and not isValid("social_security_number", trim(form.motherssn))>
-		<cfset errorMsg = "Please enter a valid Mother's SSN.">---->
-	<cfelseif trim(form.mother_cell) NEQ '' and not isValid("telephone", trim(form.mother_cell))>
-		<cfset errorMsg = "Please enter a valid Mother's Cell Phone.">
-	<!----<cfelseif new and form.regionid EQ ''>
-		<cfset errorMsg = "Please select the Region.">---->
-	<cfelse>
-    	<!--- encrypt the SSN. --->
-		<cfif isDefined("form.fatherssn") and trim(form.fatherssn) NEQ ''>
-            <cfset form.fatherssn = encrypt("#trim(form.fatherssn)#", "#ssn_key#", "desede", "hex")>
-        </cfif>
-		<cfif isDefined("form.motherssn") and trim(form.motherssn) NEQ ''>
-            <cfset form.motherssn = encrypt("#trim(form.motherssn)#", "#ssn_key#", "desede", "hex")>
-        </cfif>
-        <!--- set the birth year field from the birth date field. --->
-        <cfif trim(form.fatherdob) NEQ ''>
-        	<cfset fatherbirth = year(trim(form.fatherdob))>
-        <cfelse>
-        	<cfset fatherbirth = 0>
-        </cfif>
-        <cfif trim(form.motherdob) NEQ ''>
-        	<cfset motherbirth = year(trim(form.motherdob))>
-        <cfelse>
-        	<cfset motherbirth = 0>
-        </cfif>
-<!----
-		<cfif new>
-        	<cflock timeout="30">
-                <cfquery datasource="mysql">
-                    INSERT INTO smg_hosts (familylastname, fatherlastname, fatherfirstname, fathermiddlename, fatherbirth, fatherdob, <!----fatherssn,----> fatherworktype, father_cell,
-                        motherfirstname, motherlastname, mothermiddlename, motherbirth, motherdob, <!----motherssn,----> motherworktype, mother_cell,
-                        address, address2, city, state, zip, phone, email, homeIsFunctBusiness, homeBusinessDesc, companyid, <!----regionid, arearepid,----> date_record_entered, fatherfullpart, motherfullpart, mailing_address, mailing_address2, mailing_city, mailing_state, mailing_zip)
-                    VALUES (
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.familylastname#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherlastname#" null="#yesNoFormat(trim(form.fatherlastname) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherfirstname#" null="#yesNoFormat(trim(form.fatherfirstname) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fathermiddlename#" null="#yesNoFormat(trim(form.fathermiddlename) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#fatherbirth#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#form.fatherdob#" null="#yesNoFormat(trim(form.fatherdob) EQ '')#">,
-                    <!----<cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherssn#" null="#yesNoFormat(trim(form.fatherssn) EQ '')#">,---->
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherfullpart#" null="#yesNoFormat(trim(form.fatherfullpart) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.father_cell#" null="#yesNoFormat(trim(form.father_cell) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherfirstname#" null="#yesNoFormat(trim(form.motherfirstname) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherlastname#" null="#yesNoFormat(trim(form.motherlastname) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mothermiddlename#" null="#yesNoFormat(trim(form.mothermiddlename) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#motherbirth#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#form.motherdob#" null="#yesNoFormat(trim(form.motherdob) EQ '')#">,
-                    <!----<cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherssn#" null="#yesNoFormat(trim(form.motherssn) EQ '')#">,---->
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherfullpart#" null="#yesNoFormat(trim(form.motherfullpart) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mother_cell#" null="#yesNoFormat(trim(form.mother_cell) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address2#" null="#yesNoFormat(trim(form.address2) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.city#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.state#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.zip#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.phone#" null="#yesNoFormat(trim(form.phone) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#" null="#yesNoFormat(trim(form.email) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#form.homeIsFunctBusiness#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.homeBusinessDesc#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
-                    
-                   <!----<cfqueryparam cfsqltype="cf_sql_integer" value="#form.regionid#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">,---->
-                    #now()#,
-                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherfullpart#">,
-                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherfullpart#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_address#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_address2#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_city#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_state#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_zip#">
-                    )  
-                </cfquery>
-                <cfquery name="get_id" datasource="mysql">
-                    SELECT MAX(hostid) AS hostid
+    <cfquery name="qGetHostInfo" datasource="mysql">
+        SELECT  
+        	*
+        FROM 
+        	smg_hosts shl
+        LEFT JOIN 
+        	smg_states on smg_states.state = shl.state
+        WHERE 
+        	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostID#">
+    </cfquery>
 
-                    FROM smg_hosts
-                </cfquery>
-            </cflock>
-            <!--- the client variable should be phased out after host_fam_mem_form, etc. are modified to use url.hostid --->
-			<cfset client.hostid = get_id.hostid>
+    <cfquery name="qGetStates" datasource="mysql">
+        SELECT 
+        	state, 
+            statename
+        FROM 
+        	smg_states
+        ORDER BY 
+        	id
+    </cfquery>
+
+	<!--- Process Form Submission --->
+    <cfif VAL(FORM.submitted)>
+        
+        <cfscript>
+            // Data Validation
+			
+			// Family Last Name
+            if ( NOT LEN(TRIM(FORM.familylastname)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the Family Name");
+            }			
+        	
+			// Address Lookup
+            if ( FORM.lookup_success NEQ 1 ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please lookup the address");
+            }	
+			
+			// Address
+            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.address)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the address");
+            }	
+
+			// City
+            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.city)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the City");
+            }	
+
+			// State
+            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.state)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the State");
+            }	
+
+			// Zip
+            if ( APPLICATION.address_lookup NEQ 2 AND NOT isValid("zipcode", TRIM(FORM.zip)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Zip");
+            }	
+	
+			// Phones
+            if ( NOT LEN(TRIM(FORM.phone)) AND NOT LEN(TRIM(FORM.father_cell)) AND NOT LEN(TRIM(FORM.mother_cell)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter one of the Phone fields");
+            }	
+	
+			// Valid Phone
+            if ( LEN(TRIM(FORM.phone)) AND NOT isValid("telephone", TRIM(FORM.phone)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Phone");
+            }	
+	
+			// Valid Email Address
+            if ( LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Email Address");
+            }	
+			
+			// Valid Father's DOB
+            if ( LEN(TRIM(FORM.fatherdob)) AND NOT isValid("date", TRIM(FORM.fatherdob)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Father's Date of Birth");
+            }	
+
+			/*
+			// Valid Father's SSN
+            if ( LEN(TRIM(FORM.fatherssn)) AND NOT isValid("social_security_number", TRIM(FORM.fatherssn)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Father's SSN");
+            }	
+			*/
+
+			// Valid Father's Phone
+            if ( LEN(TRIM(FORM.father_cell)) AND NOT isValid("telephone", TRIM(FORM.father_cell)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Father's Cell Phone");
+            }	
+
+			// Valid Mother's DOB
+            if ( LEN(TRIM(FORM.motherdob)) AND NOT isValid("date", TRIM(FORM.motherdob)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Mother's Date of Birth");
+            }	
+			
+			/*
+			// Valid Mother's SSN
+            if ( LEN(TRIM(FORM.motherssn)) AND NOT isValid("social_security_number", TRIM(FORM.motherssn)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Mother's SSN");
+            }	
+			*/
+
+			// Valid Mother's Phone
+            if ( LEN(TRIM(FORM.mother_cell)) AND NOT isValid("telephone", TRIM(FORM.mother_cell)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter a valid Mother's Cell Phone");
+            }	
+		</cfscript>
+        
+        <!--- Check if there are no errors --->
+        <cfif NOT SESSION.formErrors.length()>
+            
+			<!--- No Erros --->				
+        		
+            <!--- Update Record --->
+            <cfquery datasource="mysql">
+                UPDATE 
+                    smg_hosts 
+                SET
+                    familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.familylastname#">,
+                    <!--- Father --->
+                    fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherlastname#" null="#yesNoFormat(TRIM(FORM.fatherlastname) EQ '')#">,
+                    fatherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherfirstname#" null="#yesNoFormat(TRIM(FORM.fatherfirstname) EQ '')#">,
+                    fathermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fathermiddlename#" null="#yesNoFormat(TRIM(FORM.fathermiddlename) EQ '')#">,
+                    fatherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherdob#" null="#yesNoFormat(TRIM(FORM.fatherdob) EQ '')#">,
+                    <cfif IsDate(FORM.fatherdob)>
+	                    fatherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#Year(TRIM(FORM.fatherdob))#">,
+                    </cfif>
+                    fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworktype#" null="#yesNoFormat(TRIM(FORM.fatherworktype) EQ '')#">,
+                    father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#" null="#yesNoFormat(TRIM(FORM.father_cell) EQ '')#">,
+                    fatherfullpart = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fatherfullpart#">,
+                    <!--- Mother --->
+                    motherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherfirstname#" null="#yesNoFormat(TRIM(FORM.motherfirstname) EQ '')#">,
+                    motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#" null="#yesNoFormat(TRIM(FORM.motherlastname) EQ '')#">,
+                    mothermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mothermiddlename#" null="#yesNoFormat(TRIM(FORM.mothermiddlename) EQ '')#">,
+                    motherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherdob#" null="#yesNoFormat(TRIM(FORM.motherdob) EQ '')#">,
+                    <cfif IsDate(FORM.motherdob)>
+                    	motherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#Year(TRIM(FORM.motherdob))#">,
+                    </cfif>
+                    motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworktype#" null="#yesNoFormat(TRIM(FORM.motherworktype) EQ '')#">,
+                    mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#" null="#yesNoFormat(TRIM(FORM.mother_cell) EQ '')#">,
+                    motherfullpart = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.motherfullpart#">,
+                    <!--- Address --->
+                    address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+                    address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#" null="#yesNoFormat(TRIM(FORM.address2) EQ '')#">,
+                    city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
+                    state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
+                    zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+                    phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(TRIM(FORM.phone) EQ '')#">,
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#" null="#yesNoFormat(TRIM(FORM.email) EQ '')#">,
+                    <!--- Mailing Address --->
+                    mailing_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_address#">,
+                    mailing_address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_address2#" null="#yesNoFormat(TRIM(FORM.mailing_address2) EQ '')#">,
+                    mailing_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_city#">,
+                    mailing_state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_state#">,
+                    mailing_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_zip#">,
+                    homeIsFunctBusiness = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.homeIsFunctBusiness#">,
+                    homeBusinessDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeBusinessDesc#">,
+                    lead = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                WHERE 
+                    hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+            </cfquery>
+            
+            <!--- Successfully Updated - Go to Next Page --->
             <cflocation url="index.cfm?page=familyMembers" addtoken="No">
-		<!--- edit --->
-	<!--- edit --->
-		<cfelse>
-        ---->
-			<cfquery datasource="mysql">
-				UPDATE smg_hosts SET
-                familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.familylastname#">,
-                fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherlastname#" null="#yesNoFormat(trim(form.fatherlastname) EQ '')#">,
-                fatherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherfirstname#" null="#yesNoFormat(trim(form.fatherfirstname) EQ '')#">,
-                fathermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fathermiddlename#" null="#yesNoFormat(trim(form.fathermiddlename) EQ '')#">,
-                fatherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#fatherbirth#">,
-                fatherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#form.fatherdob#" null="#yesNoFormat(trim(form.fatherdob) EQ '')#">,
-                <cfif isDefined("form.fatherssn")>
-                	fatherssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherssn#" null="#yesNoFormat(trim(form.fatherssn) EQ '')#">,
-                </cfif>
-                fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherworktype#" null="#yesNoFormat(trim(form.fatherworktype) EQ '')#">,
-                father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.father_cell#" null="#yesNoFormat(trim(form.father_cell) EQ '')#">,
-                
-                motherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherfirstname#" null="#yesNoFormat(trim(form.motherfirstname) EQ '')#">,
-                motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherlastname#" null="#yesNoFormat(trim(form.motherlastname) EQ '')#">,
-                mothermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mothermiddlename#" null="#yesNoFormat(trim(form.mothermiddlename) EQ '')#">,
-                motherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#motherbirth#">,
-                motherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#form.motherdob#" null="#yesNoFormat(trim(form.motherdob) EQ '')#">,
-                <cfif isDefined("form.motherssn")>
-                	motherssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherssn#" null="#yesNoFormat(trim(form.motherssn) EQ '')#">,
-                </cfif>
-                motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherworktype#" null="#yesNoFormat(trim(form.motherworktype) EQ '')#">,
-                
-                mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mother_cell#" null="#yesNoFormat(trim(form.mother_cell) EQ '')#">,
-                address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address#">,
-                address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address2#" null="#yesNoFormat(trim(form.address2) EQ '')#">,
-                city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.city#">,
-                state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.state#">,
-                zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.zip#">,
-               
-                phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.phone#" null="#yesNoFormat(trim(form.phone) EQ '')#">,
-                email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#" null="#yesNoFormat(trim(form.email) EQ '')#">,
-                mailing_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_address#">,
-                mailing_address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_address2#" null="#yesNoFormat(trim(form.mailing_address2) EQ '')#">,
-                mailing_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_city#">,
-                mailing_state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_state#">,
-                mailing_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mailing_zip#">,
-			    homeIsFunctBusiness = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.homeIsFunctBusiness#">,
-                homeBusinessDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.homeBusinessDesc#">,
-                
-				motherfullpart = #form.motherfullpart#,
-				fatherfullpart = #form.fatherfullpart#,
-                lead = 0
-				WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
-			</cfquery>
-            <cflocation url="index.cfm?page=familyMembers" addtoken="No">
-            <!----
-		</cfif>
-		---->
-		
-	</cfif>
-
-<!--- add --->
-<cfelseif new>
-
-	<cfloop list="#field_list#" index="counter">
-    	<cfset "form.#counter#" = "">
-	</cfloop>
-
-	<!--- lookup_success must be 0 to require lookup on add. --->
-	<cfset form.lookup_success = 0>
-    <cfset form.lookup_address = ''>
     
-    <!--- allow SSN --->
-	<cfset form.allow_fatherssn = 0>
-	<cfset form.allow_motherssn = 0>
+    	</cfif> <!--- NOT SESSION.formErrors.length() --->
     
-<!--- edit --->
-<cfelseif not new>
-
-	<cfquery name="get_record" datasource="mysql">
-		SELECT *
-		FROM smg_hosts
-		WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
-	</cfquery>
-	<cfloop list="#field_list#" index="counter">
-    	<cfset "form.#counter#" = evaluate("get_record.#counter#")>
-	</cfloop>
+    <!--- FORM NOT SUBMITTED --->
+    <cfelse>
     
-    <!--- the default values in the database for these used to be "na", so remove any. --->
-    <cfif form.father_cell EQ 'na'>
-    	<cfset form.father_cell = ''>
-    </cfif>
-    <cfif form.mother_cell EQ 'na'>
-    	<cfset form.mother_cell = ''>
-    </cfif>
+         <cfscript>
+			 // Set FORM Values   
+			FORM.familylastname = qGetHostInfo.familylastname;
+			// Father --->
+			FORM.fatherlastname = qGetHostInfo.fatherlastname;
+			FORM.fatherfirstname = qGetHostInfo.fatherfirstname;
+			FORM.fathermiddlename = qGetHostInfo.fathermiddlename;
+			FORM.fatherbirth = qGetHostInfo.fatherbirth;
+			FORM.fatherdob = qGetHostInfo.fatherdob;
+			FORM.fatherssn = qGetHostInfo.fatherssn;
+			FORM.fatherworktype = qGetHostInfo.fatherworktype;
+			FORM.father_cell = qGetHostInfo.father_cell;
+			FORM.fatherfullpart = qGetHostInfo.fatherfullpart;
+			// Mother --->    
+			FORM.motherfirstname = qGetHostInfo.motherfirstname;
+			FORM.motherlastname = qGetHostInfo.motherlastname;
+			FORM.mothermiddlename = qGetHostInfo.mothermiddlename;
+			FORM.motherbirth = qGetHostInfo.motherbirth;
+			FORM.motherdob = qGetHostInfo.motherdob;
+			FORM.motherssn = qGetHostInfo.motherssn;
+			FORM.motherworktype = qGetHostInfo.motherworktype;
+			FORM.mother_cell = qGetHostInfo.mother_cell;
+			FORM.motherfullpart = qGetHostInfo.motherfullpart;
+			// Address --->
+			FORM.address = qGetHostInfo.address;
+			FORM.address2 = qGetHostInfo.address2;
+			FORM.city = qGetHostInfo.city;
+			FORM.state = qGetHostInfo.state;
+			FORM.zip = qGetHostInfo.zip;
+			FORM.phone = qGetHostInfo.phone;
+			FORM.email = qGetHostInfo.email;
+			// Mailing Address --->
+			FORM.mailing_address = qGetHostInfo.mailing_address;
+			FORM.mailing_address2 = qGetHostInfo.mailing_address2;
+			FORM.mailing_city = qGetHostInfo.mailing_city;
+			FORM.mailing_state = qGetHostInfo.mailing_state;
+			FORM.mailing_zip = qGetHostInfo.mailing_zip;
+			FORM.homeIsFunctBusiness = qGetHostInfo.homeIsFunctBusiness;
+			FORM.homeBusinessDesc = qGetHostInfo.homeBusinessDesc;
+         	
+			// the default values in the database for these used to be "na", so remove any.
+         	if ( FORM.father_cell EQ 'na' ) {
+				FORM.father_cell = '';
+			}
+			
+			if ( FORM.mother_cell EQ 'na' )  {
+				FORM.mother_cell = '';
+			}
+         </cfscript>
+         
+    </cfif>    
 
 	<!--- lookup_success may be set to 1 to not require lookup on edit. --->
-	<cfset form.lookup_success = 0>
-    <cfset form.lookup_address = '#get_record.address##chr(13)##chr(10)##get_record.city# #get_record.state# #get_record.zip#'>
-<!----
-    <cfquery name="user_compliance" datasource="mysql">
-        SELECT compliance
-        FROM smg_users
-        WHERE userid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
-    </cfquery>
-	---->
-	<cfset form.allow_fatherssn = 0>
-	<cfset form.allow_motherssn = 0>
-    <!----
-	<!--- SSN: allow if null, or if not null and the user has access. --->
-	<cfif get_record.fatherssn EQ '' or user_compliance.compliance EQ 1>
-		<cfset form.allow_fatherssn = 1>
-        <cfif get_record.fatherssn NEQ ''>
-			<cfset form.fatherssn = decrypt(get_record.fatherssn, "#ssn_key#", "desede", "hex")>
-        </cfif>
-	</cfif>
-	<cfif get_record.motherssn EQ '' or user_compliance.compliance EQ 1>
-		<cfset form.allow_motherssn = 1>
-        <cfif get_record.motherssn NEQ ''>
-			<cfset form.motherssn = decrypt(get_record.motherssn, "#ssn_key#", "desede", "hex")>
-        </cfif>
-	</cfif>
-	---->
-</cfif>
+    <cfset FORM.lookup_success = 0>
+    <cfset FORM.lookup_address = '#qGetHostInfo.address##chr(13)##chr(10)##qGetHostInfo.city# #qGetHostInfo.state# #qGetHostInfo.zip#'>
+    <cfset FORM.allow_fatherssn = 0>
+    <cfset FORM.allow_motherssn = 0>
 
-<cfif isDefined("errorMsg")>
-	<script language="JavaScript">
-        alert('<cfoutput>#errorMsg#</cfoutput>');
-    </script>
-</cfif>
-<!----
-<!--- address lookup turned on. --->
-<cfif application.address_lookup>
-	<cfinclude template="includes/address_lookup_#application.address_lookup#.cfm">
-<!--- address lookup turned off. --->
-<cfelse>
-	<!--- set to true so lookup is not required. --->
-	<cfset form.lookup_success = 1>
+	<!----
+    <!--- address lookup turned on. --->
+    <cfif application.address_lookup>
+        <cfinclude template="includes/address_lookup_#application.address_lookup#.cfm">
+    <!--- address lookup turned off. --->
+    <cfelse>
+        <!--- set to true so lookup is not required. --->
+        <cfset FORM.lookup_success = 1>
+        <Cfset application.address_lookup = 0>
+    </cfif>
+    ---->
+	<cfset FORM.lookup_success = 1>
     <Cfset application.address_lookup = 0>
-</cfif>
----->
-	<cfset form.lookup_success = 1>
-    <Cfset application.address_lookup = 0>
-<script type="text/javascript">
-function checkForm() {
-	<cfif application.address_lookup NEQ 2>
-		if (document.my_form.state.value.length == 0) {alert("Please select the State."); return false; }
-	</cfif>
-	if (document.my_form.lookup_success.value != 1) {alert("Please lookup the address."); return false; }
-	if (document.my_form.phone.value.length == 0 && document.my_form.father_cell.value.length == 0 && document.my_form.mother_cell.value.length == 0) {alert("Please enter one of the Phone fields."); return false; }
-	<cfif new>
-		if (document.my_form.regionid.value.length == 0) {alert("Please select the Region."); return false; }
-	</cfif>
-	return true;
-}
-function lastname(form) {
-	form.fatherlastname.value = form.familylastname.value;
-	form.motherlastname.value = form.familylastname.value;
-}
+
+</cfsilent>
+
+<script language="javascript">
+	// JQuery Document Ready
+	$(document).ready(function() {
+		// Call animated scroll to anchor/id function - This will scroll up the page to the student detail div
+		$('html,body').animate({scrollTop: $("#hostFamilyHeader").offset().top},'fast');
+		// Set focus to the first field
+		$("#familylastname").focus();
+	});
+
+	function ShowHide(){
+		$("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
+	}
+
+	// Copy Fields
+	function FillFields(box) 
+	{
+		if (box.checked == false) { 
+			document.my_form.mailing_address.value  = '';
+			document.my_form.mailing_address2.value = '';
+			document.my_form.mailing_city.value = '';
+			document.my_form.mailing_state.value = '';
+			document.my_form.mailing_zip.value = '';
+		} else {
+			document.my_form.mailing_address.value  = document.my_form.address.value;
+			document.my_form.mailing_address2.value = document.my_form.address2.value;
+			document.my_form.mailing_city.value = document.my_form.city.value;
+			document.my_form.mailing_state.value = document.my_form.state.value;
+			document.my_form.mailing_zip.value = document.my_form.zip.value;
+		}
+	}
+
+	function checkForm() {
+		<cfif application.address_lookup NEQ 2>
+			if (document.my_form.state.value.length == 0) {alert("Please select the State."); return false; }
+		</cfif>
+		if (document.my_form.lookup_success.value != 1) {alert("Please lookup the address."); return false; }
+		if (document.my_form.phone.value.length == 0 && document.my_form.father_cell.value.length == 0 && document.my_form.mother_cell.value.length == 0) {alert("Please enter one of the Phone fields."); return false; }
+		return true;
+	}
+
+	function lastname(form) {
+		FORM.fatherlastname.value = FORM.familylastname.value;
+		FORM.motherlastname.value = FORM.familylastname.value;
+	}
 </script>
 
-
-
-<cfquery name="hostInfo" datasource="mysql">
-SELECT  *
-FROM smg_hosts shl
-LEFT JOIN smg_states on smg_states.state = shl.state
-where hostid = #client.hostid#
-</cfquery>
-
 <cfoutput>
-          <h1 class="enter">#lcase(hostInfo.familylastname)# Family Application</h1>
-          <p>Completing the host family application will take between 15 and 30 minutes.  You do not have to complete it all at once, feel free to come back and complete it.
-          </p>
-          <p>Use the menu on the left to navigate to any section of the application.</p>
 
+<h1 class="enter" id="hostFamilyHeader">#lcase(FORM.familylastname)# Family Application</h1>
+<p>
+	Completing the host family application will take between 15 and 30 minutes.  
+    You do not have to complete it all at once, feel free to come back and complete it.
+</p>
+<p>Use the menu on the left to navigate to any section of the application.</p>
 
-<!----
-onSubmit="return checkForm();"
----->
-<body onload="document.my_form.familylastname.focus()">
-<cfform method="post" action="index.cfm?page=startHostApp" name="my_form"  onsubmit="return validate(this)">
-<input type="hidden" name="submitted" value="1">
-<cfinput type="hidden" name="allow_fatherssn" value="#form.allow_fatherssn#">
-<cfinput type="hidden" name="allow_motherssn" value="#form.allow_motherssn#">
-<!--- this gets set to 1 by the javascript lookup function on success. --->
-<cfinput type="hidden" name="lookup_success" value="#form.lookup_success#">
+<cfform method="post" action="index.cfm?page=startHostApp" name="my_form"  onsubmit="return validate(this)"> <!--- onSubmit="return checkForm();" --->
+    <input type="hidden" name="submitted" value="1">
+    <input type="hidden" name="allow_fatherssn" value="#FORM.allow_fatherssn#">
+    <input type="hidden" name="allow_motherssn" value="#FORM.allow_motherssn#">
+    <!--- this gets set to 1 by the javascript lookup function on success. --->
+    <input type="hidden" name="lookup_success" value="#FORM.lookup_success#">
 
+	<!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
 
-<div align="center">
-  <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + One phone field is required</span>
-</div>
+    <div align="center">
+      <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + One phone field is required</span>
+    </div>
   
   <h2>Home Address, Phone & Email</h2>
   <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr>
         <td class="label"><h3>Family Name<span class="redtext">*</span></h3> </td>
-        <td colspan=3>
-            <!--- automatically fill in last names on new form only. --->
-            <cfif new>
-                <cfset blurValue = 'javascript:lastname(this.form);'>
-            <cfelse>
-                <cfset blurValue = ''>
-            </cfif>
-            <input type="text" name="familylastname" value="#hostInfo.familylastname#" size="20" maxlength="150" onBlur="#blurValue#">
-        </td>
+        <td colspan=3><input type="text" name="familylastname" id="familylastname" value="#FORM.familylastname#" size="20" maxlength="150"></td>
     </tr>
 
 <!--- address lookup - auto version. --->
@@ -374,27 +401,27 @@ onSubmit="return checkForm();"
             Enter at least the street address and zip code and click "Lookup".<br />
             Address, City, State, and Zip will be automatically filled in.<br />
             Address line 2 should be manually entered if needed.<br />
-            <cftextarea name="lookup_address" rows="2" cols="30" value="#form.lookup_address#" /><br />
+            <cftextarea name="lookup_address" rows="2" cols="30" value="#FORM.lookup_address#" /><br />
             <input type="button" value="Lookup" onClick="showLocation();" />
         </td>
     </tr>
     <tr>
         <td class="label"><h3>Address</h3></td>
-        <td colspan=3><cfinput type="text" name="address" value="#hostInfo.address#" size="40" maxlength="150" readonly="readonly"></td>
+        <td colspan=3><cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" readonly="readonly"></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td></td>
-        <td colspan=3><cfinput type="text" name="address2" value="#hostInfo.address2#" size="40" maxlength="150"></td>
+        <td colspan=3><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
     </tr>
     <tr>			 
         <td class="label"><h3>City</h3></td>
-        <td colspan=3><cfinput type="text" name="city" value="#hostInfo.city#" size="20" maxlength="150" readonly="readonly"></td>
+        <td colspan=3><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" readonly="readonly"></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td class="label"><h3>State</h3></td>
-        <td><cfinput type="text" name="state" value="#hostInfo.state#" size="2" maxlength="2" readonly="readonly"></td>
+        <td><cfinput type="text" name="state" value="#FORM.state#" size="2" maxlength="2" readonly="readonly"></td>
         <td class="zip"><h3>Zip</h3></td>
-        <td><cfinput type="text" name="zip" value="#hostInfo.zip#" size="5" maxlength="5" readonly="readonly"></td>
+        <td><cfinput type="text" name="zip" value="#FORM.zip#" size="5" maxlength="5" readonly="readonly"></td>
     </tr>
 <cfelse>
     <tr bgcolor="##deeaf3">
@@ -402,7 +429,7 @@ onSubmit="return checkForm();"
         
         <h3>Address <span class="redtext">*</span></h3></td>
         <td colspan=2>
-        	<cfinput type="text" name="address" value="#hostInfo.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address.">
+        	<cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address.">
             <font size="1">NO PO BOXES 
         </td>
         <td rowspan=2> <p><font size=-1><em>physical address where<Br /> 
@@ -411,26 +438,21 @@ onSubmit="return checkForm();"
     </tr>
     <tr bgcolor="##deeaf3">
         <td></td>
-        <td colspan=3><cfinput type="text" name="address2" value="#hostInfo.address2#" size="40" maxlength="150"></td>
+        <td colspan=3><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
     </tr>
     <tr>			 
         <td class="label"><h3>City <span class="redtext">*</span></h3></td>
-        <td colspan=3><cfinput type="text" name="city" value="#hostInfo.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
+        <td colspan=3><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td class="label"><h3>State <span class="redtext">*</span></h3></td>
         <td>
-            <cfquery name="get_states" datasource="mysql">
-                SELECT state, statename
-                FROM smg_states
-                ORDER BY id
-            </cfquery>
-			<cfselect NAME="state" query="get_states" value="state" display="statename" selected="#hostInfo.state#" queryPosition="below">
+			<cfselect NAME="state" query="qGetStates" value="state" display="statename" selected="#FORM.state#" queryPosition="below">
 				<option></option>
 			</cfselect>
         </td>
         <td class="zip"><h3>Zip<span class="redtext">*</span></h3> </td>
-        <td><cfinput type="text" name="zip" value="#hostInfo.zip#" size="5" maxlength="5" required="yes" validate="zipcode" message="Please enter a valid Zip."></td>
+        <td><cfinput type="text" name="zip" value="#FORM.zip#" size="5" maxlength="5" required="yes" validate="zipcode" message="Please enter a valid Zip."></td>
     </tr>
 	<!--- address lookup - simple version. --->
     <cfif application.address_lookup EQ 1>
@@ -450,11 +472,11 @@ onSubmit="return checkForm();"
 
     <tr >
         <td ><h3>Phone <span class="redtext">+</span></h3></td>
-        <td colspan=3><cfinput type="text" name="phone" value="#hostInfo.phone#" size="16" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Phone."></td>
+        <td colspan=3><cfinput type="text" name="phone" value="#FORM.phone#" size="16" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Phone."></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td ><h3>Email</h3></td>
-        <td colspan=3><cfinput type="text" name="email" value="#hostInfo.email#" size="30" maxlength="200" validate="email" message="Please enter a valid Email."></td>
+        <td colspan=3><cfinput type="text" name="email" value="#FORM.email#" size="30" maxlength="200" validate="email" message="Please enter a valid Email."></td>
     </tr>
   </table>
  <h2>Home Based Business</h2>
@@ -462,24 +484,22 @@ onSubmit="return checkForm();"
     <tr bgcolor="##deeaf3">
         <td class="label" colspan=3><h3>Is the residence the site of a functioning business?(e.g. daycare, farm)</h3> </td>
         <td>
-            <label>
-            <cfinput type="radio" name="homeIsFunctBusiness" value="1"
-            checked="#hostInfo.homeIsFunctBusiness eq 1#" onclick="document.getElementById('describeBusiness').style.display='table-row';" 
-            required="yes" message="Please answer: Is the residence the site of a functioning business?" />
-            Yes
-            </label>
+            <cfinput type="radio" name="homeIsFunctBusiness" id="homeIsFunctBusiness1" value="1"
+            	checked="#FORM.homeIsFunctBusiness eq 1#" onclick="document.getElementById('describeBusiness').style.display='table-row';" 
+            	required="yes" message="Please answer: Is the residence the site of a functioning business?" />
+            <label for="homeIsFunctBusiness1">Yes</label>
+            
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="homeIsFunctBusiness" value="0"
-           checked="#hostInfo.homeIsFunctBusiness eq 0#" onclick="document.getElementById('describeBusiness').style.display='none';" 
-           required="yes" message="Please answer: Is the residence the site of a functioning business?" />
-            No
-            </label>
+            
+            <cfinput type="radio" name="homeIsFunctBusiness" id="homeIsFunctBusiness0" value="0"
+            	checked="#FORM.homeIsFunctBusiness eq 0#" onclick="document.getElementById('describeBusiness').style.display='none';" 
+           		required="yes" message="Please answer: Is the residence the site of a functioning business?" />
+            <label for="homeIsFunctBusiness0">No</label>
 		 </td>
 	</tr>
   
      <Tr>
-	     <td align="left" colspan=4 id="describeBusiness" <cfif hostInfo.homeBusinessDesc is ''>  style="display: none;"</cfif>><Br /><strong>Please Describe</strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" wrap="VIRTUAL"><Cfoutput>#hostInfo.homeBusinessDesc#</cfoutput></textarea></td>
+	     <td align="left" colspan=4 id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>  style="display: none;"</cfif>><Br /><strong>Please Describe</strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" wrap="VIRTUAL"><Cfoutput>#FORM.homeBusinessDesc#</cfoutput></textarea></td>
 	</tr>   
 </table>
 <br />
@@ -487,35 +507,30 @@ onSubmit="return checkForm();"
 <a onclick="ShowHide(); return false;" href="##">+/- Need to add a mailing address that is different from the home address above?</a>
 <div id="slidingDiv" display:"none">
 ---->
-<h3>Mailing Address <font size=-1><input name="ShipSame" type="checkbox" class="formCheckbox" onclick="FillFields(this)" value="Same"<cfif IsDefined('FORM.ShipSame')> checked</cfif>>Same as Home</font></h3>
+<h3>Mailing Address <font size=-1><input name="ShipSame" id="ShipSame" type="checkbox" class="formCheckbox" onClick="FillFields(this)" value="Same"<cfif IsDefined('FORM.ShipSame')> checked</cfif>><label for="ShipSame">Same as Home</label></font></h3>
   <table width=100% cellspacing=0 cellpadding=2 class="border">
    <tr bgcolor="##deeaf3">
         <td class="label"><h3>Address <span class="redtext">*</span></h3></td>
         <td colspan=3>
-        	<cfinput type="text" name="mailing_address" value="#hostInfo.mailing_address#" size="40" maxlength="150" ></td>
+        	<cfinput type="text" name="mailing_address" value="#FORM.mailing_address#" size="40" maxlength="150" ></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td></td>
-        <td colspan=3><cfinput type="text" name="mailing_address2" value="#hostInfo.mailing_address2#" size="40" maxlength="150"></td>
+        <td colspan=3><cfinput type="text" name="mailing_address2" value="#FORM.mailing_address2#" size="40" maxlength="150"></td>
     </tr>
     <tr>			 
         <td class="label"><h3>City <span class="redtext">*</span></h3></td>
-        <td colspan=3><cfinput type="text" name="mailing_city" value="#hostInfo.mailing_city#" size="20" maxlength="150"  validate="noblanks" message="Please enter the City."></td>
+        <td colspan=3><cfinput type="text" name="mailing_city" value="#FORM.mailing_city#" size="20" maxlength="150"  validate="noblanks" message="Please enter the City."></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td class="label"><h3>State <span class="redtext">*</span></h3></td>
         <td>
-            <cfquery name="get_states" datasource="mysql">
-                SELECT state, statename
-                FROM smg_states
-                ORDER BY id
-            </cfquery>
-			<cfselect NAME="mailing_state" query="get_states" value="state" display="statename" selected="#hostInfo.mailing_state#" queryPosition="below">
+			<cfselect NAME="mailing_state" query="qGetStates" value="state" display="statename" selected="#FORM.mailing_state#" queryPosition="below">
 				<option></option>
 			</cfselect>
         </td>
         <td class="zip"><h3>Zip<span class="redtext">*</span></h3> </td>
-        <td><cfinput type="text" name="mailing_zip" value="#hostInfo.mailing_zip#" size="5" maxlength="5" validate="zipcode" message="Please enter a valid Zip."></td>
+        <td><cfinput type="text" name="mailing_zip" value="#FORM.mailing_zip#" size="5" maxlength="5" validate="zipcode" message="Please enter a valid Zip."></td>
     </tr>
   </table>
   <!----
@@ -526,35 +541,35 @@ onSubmit="return checkForm();"
   <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr>
     	<td class="label"><h3>Last Name</h3></td>
-        <td><cfinput type="text" name="fatherlastname" value="#hostInfo.fatherlastname#" size="20" maxlength="150"></td>
+        <td><cfinput type="text" name="fatherlastname" value="#FORM.fatherlastname#" size="20" maxlength="150"></td>
     </tr>
     <tr bgcolor="##deeaf3">
     	<td class="label"><h3>First Name</h3></td>
-        <td><cfinput type="text" name="fatherfirstname" value="#hostInfo.fatherfirstname#" size="20" maxlength="150"></td>
+        <td><cfinput type="text" name="fatherfirstname" value="#FORM.fatherfirstname#" size="20" maxlength="150"></td>
     </tr>
     <tr>
     	<td class="label"><h3>Middle Name</h3></td>
-        <td><cfinput type="text" name="fathermiddlename" value="#hostInfo.fathermiddlename#" size="20" maxlength="150"></td>
+        <td><cfinput type="text" name="fathermiddlename" value="#FORM.fathermiddlename#" size="20" maxlength="150"></td>
     </tr>
     <tr bgcolor="##deeaf3">
     	<td class="label"><h3>Date of Birth</h3></td>
-        <td><cfinput type="text" name="fatherdob" value="#dateFormat(hostInfo.fatherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Father's Date of Birth."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="fatherdob" value="#dateFormat(FORM.fatherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Father's Date of Birth."> mm/dd/yyyy</td>
     </tr>
 
     <tr >
     	<td class="label"><h3>Occupation</h3></td>
-        <td><cfinput type="text" name="fatherworktype" value="#hostInfo.fatherworktype#" size="50" maxlength="200"> 
-        <cfinput name="fatherfullpart" type="radio" value="1" checked="#hostInfo.fatherfullpart is 1#"> Full Time  
-        <cfinput name="fatherfullpart" type="radio" value="0" checked="#hostInfo.fatherfullpart is 0#"> Part Time </td>
+        <td><cfinput type="text" name="fatherworktype" value="#FORM.fatherworktype#" size="50" maxlength="200"> 
+        <cfinput name="fatherfullpart" type="radio" value="1" checked="#FORM.fatherfullpart is 1#"> Full Time  
+        <cfinput name="fatherfullpart" type="radio" value="0" checked="#FORM.fatherfullpart is 0#"> Part Time </td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td class="label"><h3>Cell Phone <span class="redtext">+</span></h3></td>
-        <td colspan=3><cfinput type="text" name="father_cell" value="#hostInfo.father_cell#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Father's Cell Phone."></td>
+        <td colspan=3><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Father's Cell Phone."></td>
     </tr>
-        <cfif form.allow_fatherssn eq 1>
+        <cfif FORM.allow_fatherssn eq 1>
         <tr>
         	<td class="label"><h3>SSN</h3></td>
-            <td><cfinput type="text" name="fatherssn" value="#form.fatherssn#" size="11" maxlength="11" mask="999-99-9999" validate="social_security_number" message="Please enter a valid Father's SSN."> <em>We use this durring the background check.</em></td>
+            <td><cfinput type="text" name="fatherssn" value="#FORM.fatherssn#" size="11" maxlength="11" mask="999-99-9999" validate="social_security_number" message="Please enter a valid Father's SSN."> <em>We use this durring the background check.</em></td>
         </tr>	
     </cfif>
 </table>
@@ -564,35 +579,35 @@ onSubmit="return checkForm();"
   <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr>
     	<td class="label"><h3>Last Name</h3></td>
-        <td><cfinput type="text" name="motherlastname" value="#hostInfo.motherlastname#" size="20" maxlength="150"></td>
+        <td><cfinput type="text" name="motherlastname" value="#FORM.motherlastname#" size="20" maxlength="150"></td>
     </tr>
     <tr  bgcolor="##deeaf3">
     	<td class="label"><h3>First Name</h3></td>
-        <td><cfinput type="text" name="motherfirstname" value="#hostInfo.motherfirstname#" size="20" maxlength="150"></td>
+        <td><cfinput type="text" name="motherfirstname" value="#FORM.motherfirstname#" size="20" maxlength="150"></td>
     </tr>
     <tr>
     	<td class="label"><h3>Middle Name</h3></td>
-        <td><cfinput type="text" name="mothermiddlename" value="#hostInfo.mothermiddlename#" size="20" maxlength="150"></td>
+        <td><cfinput type="text" name="mothermiddlename" value="#FORM.mothermiddlename#" size="20" maxlength="150"></td>
     </tr>			
     <tr  bgcolor="##deeaf3">
     	<td class="label"><h3>Date of Birth</h3></td>
-        <td><cfinput type="text" name="motherdob" value="#dateFormat(hostInfo.motherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Mother's Date of Birth."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="motherdob" value="#dateFormat(FORM.motherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Mother's Date of Birth."> mm/dd/yyyy</td>
     </tr>
 
     <tr>
     	<td class="label"><h3>Occupation</h3></td>
-        <td><cfinput type="text" name="motherworktype" value="#hostInfo.motherworktype#" size="50" maxlength="200">  
-        <cfinput name="motherfullpart" checked="#hostInfo.motherfullpart is 1#" type="radio" value="1"> Full Time  
-        <cfinput name="motherfullpart" checked="#hostInfo.motherfullpart is 0#" type="radio" value="0"> Part Time </td>
+        <td><cfinput type="text" name="motherworktype" value="#FORM.motherworktype#" size="50" maxlength="200">  
+        <cfinput name="motherfullpart" checked="#FORM.motherfullpart is 1#" type="radio" value="1"> Full Time  
+        <cfinput name="motherfullpart" checked="#FORM.motherfullpart is 0#" type="radio" value="0"> Part Time </td>
     </tr>
     <tr   bgcolor="##deeaf3">
         <td class="label"><h3>Cell Phone <span class="redtext">+</span></h3></td>
-        <td colspan=3><cfinput type="text" name="mother_cell" value="#hostInfo.mother_cell#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Mother's Cell Phone."></td>
+        <td colspan=3><cfinput type="text" name="mother_cell" value="#FORM.mother_cell#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Mother's Cell Phone."></td>
     </tr>
-        <cfif form.allow_motherssn eq 1>
+        <cfif FORM.allow_motherssn eq 1>
         <tr>
         	<td class="label"><h3>SSN</h3></td>
-            <td><cfinput type="text" name="motherssn" value="#form.motherssn#" size="11" maxlength="11" mask="999-99-9999" validate="social_security_number" message="Please enter a valid Mother's SSN."> <em>We use this durring the background check.</em></td>
+            <td><cfinput type="text" name="motherssn" value="#FORM.motherssn#" size="11" maxlength="11" mask="999-99-9999" validate="social_security_number" message="Please enter a valid Mother's SSN."> <em>We use this durring the background check.</em></td>
         </tr>		
     </cfif>
 </table> 		
