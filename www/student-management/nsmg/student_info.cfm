@@ -532,7 +532,7 @@
 	<tr>
 		<td width="49%" valign="top">
 			<table cellpadding=2 cellspacing=0 align="center" width="100%">
-				<tr bgcolor="EAE8E8">
+				<tr bgcolor="##EAE8E8">
                 	<td colspan="2">
                     	<span class="get_attention"><b>:: </b></span>Program <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('forms/stu_program_history.cfm?unqid=#uniqueid#');">History</a> ]</font></cfif>
                     </td>
@@ -584,7 +584,7 @@
 		<td width="2%" valign="top">&nbsp;</td>
 		<td width="49%" valign="top">
 			<table cellpadding=2 cellspacing=0 align="center" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Region  <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('forms/stu_region_history.cfm?unqid=#uniqueid#');"> History </a> ]</font></cfif></td></tr>
+				<tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Region  <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('forms/stu_region_history.cfm?unqid=#uniqueid#');"> History </a> ]</font></cfif></td></tr>
 				<tr>
                 	<td width="140px">Region :</td>
 					<td><select name="region" onChange="loadOptions('rguarantee'); Guaranteed();" <cfif FORM.edit EQ 'no'> disabled </cfif> >
@@ -664,7 +664,7 @@
 	<tr>
 		<td width="49%" valign="top">
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Pre-AYP / Private School</td></tr>
+				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Pre-AYP / Private School</td></tr>
 				<tr>
 					<td><cfif scholarship EQ 0><input type="checkbox" name="scholarship" value="0" <cfif FORM.edit EQ 'no'>disabled</cfif>><cfelse><input type="checkbox" name="scholarship" value="1" checked <cfif FORM.edit EQ 'no'>disabled</cfif>></cfif></td>
 					<td>Participant of Scholarship Program</td>
@@ -718,7 +718,7 @@
 		<td width="2%" valign="top">&nbsp;</td>
 		<td width="49%" valign="top">
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Insurance</td></tr>
+				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Insurance</td></tr>
 				<tr>
 					<td width="10"><cfif qIntAgent.insurance_typeid LTE '1'><input type="checkbox" name="insurance_check" value="0" disabled><cfelse><input type="checkbox" name="insurance_check" value="1" checked disabled></cfif></td>
 					<td align="left" colspan="2">
@@ -736,13 +736,17 @@
 					<td>Policy Type :</td>
 					<td><cfif qIntAgent.insurance_typeid EQ '0'>
 							<font color="FF0000">Missing Policy Type</font>
-						<cfelseif qIntAgent.insurance_typeid EQ 1> n/a
-						<cfelse> #qIntAgent.type#	</cfif>		
+						<cfelseif qIntAgent.insurance_typeid EQ 1> 
+                        	n/a
+						<cfelse> 
+                        	#qIntAgent.type#	
+						</cfif>		
 					</td>
 				</tr>
                 <tr>
-               	<td></td> 	<Td>Policy No.</Td>
-                              	<Td>#qInsPolicy.policycode#</Td>
+                    <td></td> 	
+                    <Td>Policy No.</Td>
+                    <Td>#qInsPolicy.policycode#</Td>
                 </tr>
 				<!--- Insurance Information --->
                 <tr>
@@ -754,7 +758,7 @@
 						<cfif qIntAgent.insurance_typeid EQ 1>
                             n/a
                         <cfelseif qInsuranceHistory.recordCount>
-                            #DateFormat(qInsuranceHistory.date, 'mm/dd/yyyy')# <br />
+                            #DateFormat(qInsuranceHistory.date, 'mm/dd/yyyy')# &nbsp; - &nbsp; <a href="http://www.esecutive.com/" target="_blank">[ Print Card ]</a><br />
                         <cfelse>
                             not insured yet.
                         </cfif>
@@ -789,7 +793,7 @@
 		<td width="49%" valign="top">
 			<!--- Direct Placement --->
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Direct Placement</td></tr>
+				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Direct Placement</td></tr>
 				<tr>
 					<td>&nbsp;</td>
 					<td>Direct Placement &nbsp; 
@@ -809,7 +813,7 @@
 		<td width="49%" valign="top">
 			<!--- Cancelation --->
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Cancelation</td></tr>
+				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Cancelation</td></tr>
 				<tr>
 					<td width="10"><Cfif canceldate is ''> <input type="checkbox" name="student_cancel" value="0" OnClick="PopulateCancelBox()" <cfif FORM.edit EQ 'no'>disabled</cfif>> <cfelse> <input type="checkbox" name="student_cancel" value="1" OnClick="PopulateCancelBox();" checked <cfif FORM.edit EQ 'no'>disabled</cfif> > </cfif></td>
 					<td colspan="2">Student Cancelled  &nbsp; &nbsp; &nbsp; &nbsp; Date: &nbsp; <input type="text" name="date_canceled" size=8 value="#DateFormat(canceldate, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
@@ -837,7 +841,7 @@
 	<tr>
 		<td width="49%" valign="top">
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>DS 2019 Form <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('sevis/student_history.cfm?unqid=#uniqueid#');">History</a> ]</font></cfif> </td></tr>				
+				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>DS 2019 Form <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('sevis/student_history.cfm?unqid=#uniqueid#');">History</a> ]</font></cfif> </td></tr>				
 				<tr>		
 					<td><Cfif verification_received EQ ''><input type="checkbox" name="verification_box" value="0" onClick="PopulateDS2019Box()" <cfif FORM.edit EQ 'no'>disabled</cfif>> <cfelse> <input type="checkbox" name="verification_box" value="1" onClick="PopulateDS2019Box()" checked <cfif FORM.edit EQ 'no'>disabled</cfif>> </cfif>
 					<td>DS 2019 Verification Received &nbsp; &nbsp; Date: &nbsp;<input type="text" name="verification_form" size=8 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
@@ -878,7 +882,7 @@
 		<td width="2%" valign="top">&nbsp;</td>
 		<td width="49%" valign="top">
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Letters &nbsp; &nbsp; [  <font size=-3> <a href="javascript:OpenLetter('reports/printing_tips.cfm');">Printing Tips</a></font> ]</td></tr>
+				<tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Letters &nbsp; &nbsp; [  <font size=-3> <a href="javascript:OpenLetter('reports/printing_tips.cfm');">Printing Tips</a></font> ]</td></tr>
 		<!--- OFFICE USERS --->
 				<cfif CLIENT.usertype LTE '4'>
 				<tr>
@@ -911,7 +915,7 @@
 				</tr>				
 			</table>
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Double Placement Letters</td></tr>
+				<tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Double Placement Letters</td></tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/double_placement_host_family.cfm');">Family & School</a></td>
 					<td width="50%">
@@ -939,7 +943,7 @@
 				</tr>				
 			</table>
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Double Placement Letters</td></tr>
+				<tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Double Placement Letters</td></tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/double_placement_host_family.cfm');">Family and School</a></td>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/double_placement_students.cfm');">Students</a></td>
