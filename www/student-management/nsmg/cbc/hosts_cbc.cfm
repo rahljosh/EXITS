@@ -18,7 +18,7 @@
     <cfsetting requesttimeout="9999">
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
     <cftry>
 	    <!--- param variables --->

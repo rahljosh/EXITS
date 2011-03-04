@@ -10,7 +10,7 @@
 	Call Custom Tag: 
 
 		<!--- Import CustomTag --->
-		<cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+		<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 		
 		<!--- Table Header --->
 		<gui:tableHeader
@@ -49,6 +49,12 @@
 		type="string"
         default=""
 		/>
+
+	<cfparam 
+		name="ATTRIBUTES.imagePath"
+		type="string"
+        default=""
+		/>
         
 </cfsilent>
 
@@ -63,13 +69,13 @@
 <!--- Header of Table --->
 <table width="#ATTRIBUTES.width#" align="center" cellpadding="0" cellspacing="0" border="0">
     <tr valign="middle" height="24">
-        <td width="13" height="24" background="pics/header_leftcap.gif">&nbsp;</td>
-        <td width="26" background="pics/header_background.gif"><img src="pics/#ATTRIBUTES.imageName#"></td>
-        <td background="pics/header_background.gif"><h2>#ATTRIBUTES.tableTitle#</h2></td>
+        <td width="13" height="24" background="#ATTRIBUTES.imagePath#pics/header_leftcap.gif">&nbsp;</td>
+        <td width="26" background="#ATTRIBUTES.imagePath#pics/header_background.gif"><img src="#ATTRIBUTES.imagePath#pics/#ATTRIBUTES.imageName#"></td>
+        <td background="#ATTRIBUTES.imagePath#pics/header_background.gif"><h2>#ATTRIBUTES.tableTitle#</h2></td>
         <cfif LEN(ATTRIBUTES.tableRightTitle)>
-	        <td align="right" background="pics/header_background.gif"><h2>#ATTRIBUTES.tableRightTitle#</h2></td>
+	        <td align="right" background="#ATTRIBUTES.imagePath#pics/header_background.gif"><h2>#ATTRIBUTES.tableRightTitle#</h2></td>
         </cfif>
-        <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
+        <td width="17" background="#ATTRIBUTES.imagePath#pics/header_rightcap.gif">&nbsp;</td>
     </tr>
 </table>
 
