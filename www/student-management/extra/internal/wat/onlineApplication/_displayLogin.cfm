@@ -11,7 +11,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../../../extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="../../../extensions/customTags/gui/" prefix="gui" />	
 
     <!--- Candidate Details --->
     <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getCandidateID()#">  

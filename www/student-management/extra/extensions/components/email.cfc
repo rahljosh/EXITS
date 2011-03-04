@@ -437,7 +437,7 @@
         <cfargument name="footerType" type="string" default="email" hint="email / emailRegular">
 		
 		<!--- Import CustomTag --->
-		<cfimport taglib="../../extensions/customtags/gui/" prefix="gui" />	
+		<cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
 
 		<cfscript>
 			// If we have a valid emailTemplate we'll get the email subject and message from the function above
