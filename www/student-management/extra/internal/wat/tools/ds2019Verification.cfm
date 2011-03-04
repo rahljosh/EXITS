@@ -14,7 +14,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="/extra/extensions/customtags/gui/" prefix="gui" /> 
+    <cfimport taglib="/extra/extensions/customTags/gui/" prefix="gui" /> 
     
     <cfscript>
 		if ( ListFind("1,2,3,4", CLIENT.userType) ) {

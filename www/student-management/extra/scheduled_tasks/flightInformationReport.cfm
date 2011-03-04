@@ -13,7 +13,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
     <cfscript>
 		// Get flights updated in the last 24 hours
