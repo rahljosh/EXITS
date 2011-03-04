@@ -11,7 +11,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
     <!--- Student Details --->
     <cfparam name="FORM.studentID" default="#APPLICATION.CFC.STUDENT.getStudentID()#">
