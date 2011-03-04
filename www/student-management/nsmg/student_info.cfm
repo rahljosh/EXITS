@@ -758,7 +758,7 @@
 						<cfif qIntAgent.insurance_typeid EQ 1>
                             n/a
                         <cfelseif qInsuranceHistory.recordCount>
-                            #DateFormat(qInsuranceHistory.date, 'mm/dd/yyyy')# &nbsp; - &nbsp; <a href="http://www.esecutive.com/" target="_blank">[ Print Card ]</a><br />
+                            #DateFormat(qInsuranceHistory.date, 'mm/dd/yyyy')# &nbsp; - &nbsp; <a href="http://www.esecutive.com/MyInsurance/" target="_blank">[ Print Card ]</a><br />
                         <cfelse>
                             not insured yet.
                         </cfif>
