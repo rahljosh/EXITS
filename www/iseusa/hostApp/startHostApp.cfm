@@ -13,7 +13,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
