@@ -368,7 +368,7 @@
         <cfargument name="userID" type="numeric" default="0" hint="Used with the emailType to get the user information">        
 
 		<!--- Import CustomTag --->
-		<cfimport taglib="/extensions/customtags/gui/" prefix="gui" />	
+		<cfimport taglib="/extensions/customTags/gui/" prefix="gui" />	
 
 		<cfscript>
 			// Set Template Type - Application / AdminTool
