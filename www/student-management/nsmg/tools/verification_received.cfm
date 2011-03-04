@@ -14,11 +14,13 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
-	<cfparam name="FORM.intRep" default="0">
-    <cfparam name="FORM.branchID" default="0">
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
     <cfscript>
+		// Param FORM Variables
+		param name="FORM.intRep" default=0;		
+		param name="FORM.branchID" default=0;		
+
 		if ( VAL(CLIENT.userType) AND CLIENT.userType LTE 4 ) {
 			// Get All International Representatives List
 			qIntRep = APPCFC.USER.getUsers(userType=8);	
@@ -36,10 +38,10 @@
 		qCountryList = APPCFC.LOOKUPTABLES.getCountry();
 	</cfscript>
 
-</cfsilent>    
+	<!--- Ajax Call to the Component --->
+    <cfajaxproxy cfc="nsmg.extensions.components.student" jsclassname="student">
 
-<!--- Ajax Call to the Component --->
-<cfajaxproxy cfc="nsmg.extensions.components.student" jsclassname="student">
+</cfsilent>    
 
 <script language="javascript">
 	// Function to find the index in an array of the first entry with a specific value. 
@@ -64,14 +66,6 @@
 	function goToByScroll(){
 	  $('html,body').animate({scrollTop: $("#studentDetailDiv").offset().top},'slow');
 	}
-
-	$('.editStudent').bind('click', function(event) {
-	  event.preventDefault();
-	  $.get(this.href, {}, function(reply) {
-			  $("#studentDetailDiv").html(reply);
-			  alert('test');
-		  }, "html");
-	});
 
 	// --- START OF VERIFICATION LIST --- //
 
@@ -309,7 +303,7 @@
 	// --- END OF STUDENT DETAILS --- //
 	
 	
-	// --- START OF VERICATION RECEIVED --- //
+	// --- START OF VERIFICATION RECEIVED --- //
 	var confirmReceived = function(studentID) {
 		// Are you sure you would like to check DS-2019 verification for student #" + studentID + " as received?
 		var answer = confirm(" By clicking OK you are verifying that: \n 1. Student information has been verified \n 2. Student has been personally interviewed (CSIET) \n 3. Student has not participated in F-1 or J-1 programs in the past \n 4. Student was screened for background, needs, experience and English \n PS: You will no longer be able to update this record.")
@@ -337,14 +331,13 @@
 		$("#" + studentID).fadeOut("slow");
 		
 	}
-	// --- END OF VERICATION RECEIVED --- //
+	// --- END OF VERIFICATION RECEIVED --- //
 
 	// Error handler for the asynchronous functions. 
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
 	} 
 </script>
-
 
 <style>
 	input { 

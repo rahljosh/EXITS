@@ -10,7 +10,7 @@
 	Call Custom Tag: 
 
 		<!--- Import CustomTag --->
-		<cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+		<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
 		<!--- Table Footer --->
 		<gui:tableFooter
@@ -28,6 +28,18 @@
 		type="string"
         default="100%"
 		/>
+
+	<cfparam 
+		name="ATTRIBUTES.imagePath"
+		type="string"
+        default=""
+		/>
+
+	<cfparam 
+		name="ATTRIBUTES.imagePath"
+		type="string"
+        default=""
+		/>
         
 </cfsilent>
 
@@ -42,9 +54,9 @@
 <!--- Footer of Table --->
 <table width="#ATTRIBUTES.width#" align="center" cellpadding="0" cellspacing="0" border="0">
 	<tr valign="bottom">
-		<td width="9" valign="top" height=12><img src="pics/footer_leftcap.gif"></td>
-		<td width="100%" background="pics/header_background_footer.gif"></td>
-		<td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
+		<td width="9" valign="top" height=12><img src="#ATTRIBUTES.imagePath#pics/footer_leftcap.gif"></td>
+		<td width="100%" background="#ATTRIBUTES.imagePath#pics/header_background_footer.gif"></td>
+		<td width="9" valign="top"><img src="#ATTRIBUTES.imagePath#pics/footer_rightcap.gif"></td>
 	</tr>
 </table>
 

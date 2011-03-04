@@ -11,7 +11,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="extensions/customtags/gui/" prefix="gui" />	
+    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
     
     <!--- CHECK SESSIONS --->
     <cfinclude template="check_sessions.cfm">
