@@ -23,6 +23,7 @@
 		} else if ( CLIENT.companyid EQ 11 ) {
 			// WEP
 			CLIENT.org_code = CLIENT.companyid;
+			bgcolor ='FFFFFF';
 		} else if ( CLIENT.companyid EQ 14 ) {
 			// EIS
 			CLIENT.org_code = CLIENT.companyid;
