@@ -6,10 +6,10 @@
 
 <link rel="stylesheet" href="../smg.css" type="text/css">
 
-<cfif #client.companyid# NEQ 2>
+<!--- <cfif #client.companyid# NEQ 2>
     <h1 align="center" style="padding-top:3cm">Work and Travel Program is not part of this company.</h1>
   <cfabort>
-</cfif>
+</cfif> --->
 
 <cfset todaysDate = DateFormat(Now(), 'yyyy/mm/dd')>
 

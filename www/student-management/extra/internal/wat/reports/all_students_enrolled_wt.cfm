@@ -85,7 +85,9 @@
                 ec.intrep, 
                 ec.wat_placement,
                 ec.email,
-                ehc.name,                 
+                ehc.name, 
+                ehc.city,
+                ss.state,                
                 u.businessName
             FROM
                 extra_candidates ec
@@ -95,6 +97,8 @@
                 smg_programs ON smg_programs.programID = ec.programID
             INNER JOIN 
                 smg_users u ON u.userid = ec.intrep
+            LEFT JOIN
+            	smg_states ss ON ss.id = ehc.state
             WHERE 
                 ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
@@ -337,6 +341,8 @@
                     <th align="left" class="#tableTitleClass#">Start Date</th>
                     <th align="left" class="#tableTitleClass#">End Date</th>
                     <th align="left" class="#tableTitleClass#">Placement Information</th>
+                    <th align="left" class="#tableTitleClass#">City</th>
+                    <th align="left" class="#tableTitleClass#">State</th>
                     <th align="left" class="#tableTitleClass#">DS-2019</th>
                     <th align="left" class="#tableTitleClass#">Option</th>
                     <th align="left" class="#tableTitleClass#">Intl. Rep.</th>
@@ -368,6 +374,8 @@
                         <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
                         <td class="style1">#qTotalPerAgent.name#</td>
+                        <td class="style1">#qTotalPerAgent.city#</td>
+                        <td class="style1">#qTotalPerAgent.state#</td>
                         <td class="style1">#qTotalPerAgent.ds2019#</td>
                         <td class="style1">#qTotalPerAgent.wat_placement#</td>
                         <td class="style1">#qTotalPerAgent.businessname#</td>

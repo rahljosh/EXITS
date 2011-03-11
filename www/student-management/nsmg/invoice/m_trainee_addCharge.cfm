@@ -6,10 +6,10 @@
 
 <link rel="stylesheet" href="../smg.css" type="text/css">
 
-<cfif #client.companyid# NEQ 1>
+<!--- <cfif #client.companyid# NEQ 1>
     <h1 align="center" style="padding-top:3cm">Trainee Program is not part of this company.</h1>
   <cfabort>
-</cfif>
+</cfif> --->
 
 <!--- get work and travel candidates that:
 1. Are active;
