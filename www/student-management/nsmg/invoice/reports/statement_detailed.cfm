@@ -372,7 +372,7 @@ function OpenRefund(url)
 			<td>
 				<cfif invoice EQ 'invoice'><a href="javascript:OpenInvoice('../invoice_view.cfm?id=#invoiceid#');">###invoiceid#</a></cfif>
 				<cfif invoice EQ 'payments'><a href="javascript:OpenPayment('../payment_details.cfm?ref=#paymentref#&userid=#form.userid#');">###paymentref#</a></cfif>
-				<cfif invoice EQ 'credits'><a href="javascript:OpenCredit('../credit_note.cfm?creditid=#creditid#');">###creditid#</a> &nbsp; #description#</cfif>
+				<cfif invoice EQ 'credits'><a href="javascript:OpenCredit('../credit_note.cfm?creditid=#creditid#');">###creditid#</a> &nbsp; <!--- #description# ---></cfif>
 				<cfif invoice EQ 'refund'><a href="javascript:OpenCredit('../view_refund_receipt.cfm?id=#invoiceid#&userid=#form.userid#');">###invoiceid#</a></cfif>
 			</td>
 			<td align="right">
