@@ -89,6 +89,7 @@
 				</cfloop> )
 			ORDER BY u.lastname, h.familylastname
 		</cfquery>
+       
 		<table align="center" width="90%" frame="below">
 		<tr><th bgcolor="DFE9EE">#get_regions.regionname#</th></tr>
 		<tr>
@@ -117,8 +118,11 @@
 							<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
 							</cfloop> )
 					</cfquery>
+                    
 					<cfloop query="get_kids">
+                    <!----
 						<cfif #DateDiff('yyyy', birthdate, startdate)# GTE 18>
+						---->
 							<cfset count = count + 1>
 							<tr bgcolor="#iif(count MOD 2 ,DE("ededed") ,DE("white") )#">
 								<td width="20%">#stufirstname# #stulastname# (###studentid#)</td>
@@ -127,7 +131,9 @@
 								<td width="20%">#familylastname# Family (###hostid#)</td>
 								<td width="25%">#placefirstname# #placelastname# (###userid#)</td>
 							</tr>
+                     <!----
 						</cfif>
+						---->
 					</cfloop>
 				</cfloop>
 				</table><br>
