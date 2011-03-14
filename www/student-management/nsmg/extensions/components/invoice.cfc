@@ -106,8 +106,10 @@
             GROUP BY 
             	sc.agentid
             ) t
-        <!--- End of Subquery: Table t --->   
-            
+        <!--- End of Subquery: Table t ---> 
+        
+       	WHERE
+        	t.agentid > 0            
         GROUP BY 
         	t.agentid 
         HAVING 
@@ -259,6 +261,9 @@
             	testCompId = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyId#" list="no">
             ) t
 			<!--- End of Subquery: Table t --->
+            
+        WHERE
+            t.agentid > 0 
             
         GROUP BY 
         	t.agentid  
