@@ -373,7 +373,11 @@
                         <td class="style1">#qTotalPerAgent.email#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
-                        <td class="style1">#qTotalPerAgent.name#</td>
+                        <td class="style1">
+							<a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#"  target="_blank" class="style4">
+	                        	#qTotalPerAgent.name#
+                        	</a>
+                        </td>
                         <td class="style1">#qTotalPerAgent.city#</td>
                         <td class="style1">#qTotalPerAgent.state#</td>
                         <td class="style1">#qTotalPerAgent.ds2019#</td>
