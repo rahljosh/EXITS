@@ -1,5 +1,4 @@
 <!--- Param FORM Variables --->
-<cfparam name="FORM.hostcompany_status" default="0">
 <cfparam name="FORM.wat_doc_agreement" default="0">
 <cfparam name="FORM.wat_doc_college_letter" default="0">
 <cfparam name="FORM.wat_doc_passport_copy" default="0">
@@ -169,7 +168,7 @@
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="1">, 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
@@ -210,7 +209,7 @@
                 <cfelse>
                     enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-                status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompany_status#">,
+                status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                 selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 <cfif IsBoolean(FORM.selfWrittenConfirmation)>

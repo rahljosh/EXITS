@@ -625,7 +625,7 @@
                                             <td class="style1" align="right"><strong>English Assessment CSB:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#qGetCandidate.personal_info#</span>
-                                                <textarea name="personal_info" class="style1 editPage" cols="30" rows="2">#qGetCandidate.personal_info#</textarea>
+                                                <textarea name="personal_info" class="style1 editPage" cols="30" rows="5">#qGetCandidate.personal_info#</textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -889,22 +889,12 @@
                                             </td>
                                         </tr>
                                         <tr id="host_history" bgcolor="FFBD9D" style="display:none;">
-                                            <td class="style1" align="right"><strong>Reason:</strong></td>
-                                            <td class="style1"><input type="text" name="reason_host" id="reason_host" size="50" class="style1"></td>
-                                        </tr>
-                                        <tr>
-                                            <td width="30%" class="style1" align="right"><strong>Status:</strong></td>
-                                            <td class="style1">
-                                                <input type="radio" name="hostcompany_status" id="hostStatus1" value="1" class="formField" disabled <cfif qCandidatePlaceCompany.status EQ 1>checked="yes" </cfif>>
-                                                <label for="hostStatus1">Active</label>
-                                                &nbsp;
-                                                <input type="radio" name="hostcompany_status" id="hostStatus0" value="0" class="formField" disabled <cfif qCandidatePlaceCompany.status EQ 0>checked="yes" </cfif>>
-                                                <label for="hostStatus0">Inactive</label>
-                                            </td>
+                                            <td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
+                                            <td class="style1"><textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="5"></textarea></td>
                                         </tr>
                                         <tr class="readOnly">
-                                        	<td class="style1" align="right"><strong>Placement Date:</strong></td>
-                                            <td class="style1" align="left">
+                                        	<td class="style1" align="right" width="35%"><strong>Placement Date:</strong></td>
+                                            <td class="style1" align="left" width="65%">
 	                                        	#dateFormat(qCandidatePlaceCompany.placement_date, 'mm/dd/yyyy')#
                                             </td>
                                         </tr>
@@ -998,7 +988,7 @@
 	                                        <td class="style1" align="right" valign="top"><strong>Notes:</strong></td>
     	                                    <td class="style1" colspan="3">
                                                 <span class="readOnly">#qCandidatePlaceCompany.selfConfirmationNotes#</span>
-            		                            <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage" cols="40" rows="3">#qCandidatePlaceCompany.selfConfirmationNotes#</textarea>
+            		                            <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage" cols="60" rows="5">#qCandidatePlaceCompany.selfConfirmationNotes#</textarea>
                     	                    </td>
                                         </tr>
                                     </table>	
@@ -1090,10 +1080,10 @@
  	                                       </td>
                                         </tr>			
                                         <tr>
-	                                        <td class="style1" align="right"><strong>Comment:</strong></td>
+	                                        <td class="style1" align="right" valign="top"><strong>Comments:</strong></td>
     	                                    <td class="style1" colspan="3">
         	                                	<span class="readOnly">#qGetCandidate.change_requested_comment#</span>
-            		                            <textarea name="change_requested_comment" class="style1 editPage" cols="40" rows="3">#qGetCandidate.change_requested_comment#</textarea>
+            		                            <textarea name="change_requested_comment" class="style1 editPage" cols="60" rows="10">#qGetCandidate.change_requested_comment#</textarea>
                     	                    </td>
                                         </tr>
                                         <tr>
