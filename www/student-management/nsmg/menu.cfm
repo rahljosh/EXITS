@@ -236,7 +236,7 @@
                             <li><a href="index.cfm?curdoc=invoice/reports/check_fees_menu" target="_blank">Check Fees Per Intl. Rep</a></li>
                             <!--- <li><a href="index.cfm?curdoc=invoice/int_rep_rates">Intl. Rep. Rates</a></li> --->
                             <li><a href="index.cfm?curdoc=invoice/m_hs_invoiceBatch" target="_blank">HS Invoice Batch</a></li>
-                            <li><a href="" onClick="javaScript:win=window.open('invoice/m_payment.cfm', '_blank', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, copyhistory=no, width=800, height=800'); win.opener=self; return false;">Payments Received</a></li>
+                            <li><a href="" onClick="javaScript:win=window.open('invoice/m_payment.cfm', '_blank', 'height=800, width=900,  toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=1, resizable=yes, copyhistory=no'); win.opener=self; return false;">Payments Received</a></li>
                         </ul>
                     </li>              
                 </cfif>
