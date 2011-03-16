@@ -6,7 +6,7 @@
     <!--- Param FORM variables --->
     <cfparam name="FORM.userID" default="0">
 	<cfparam name="FORM.programID" default="0">
-	<cfparam name="FORM.placementStatus" default="">
+	<cfparam name="FORM.jobOfferStatus" default="">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
     
@@ -88,10 +88,10 @@
                 ehc.hostCompanyID,
                 ehc.name,
                 ehc.EIN,     
+                ecpc.selfJobOfferStatus,
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationDate,
                 ecpc.selfConfirmationMethod,  
-                ecpc.selfWrittenConfirmation,  
                 ecpc.selfAuthentication,  
                 ecpc.selfWorkmenCompensation,  
                 ecpc.selfConfirmationNotes,          
@@ -117,13 +117,15 @@
                 AND 
                     ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
            	</cfif>
-			<cfif FORM.placementStatus EQ 0>
+			
+			<cfif ListFind("0,1", FORM.jobOfferStatus)>
             	AND
-                	ecpc.selfConfirmationDate IS NULL
-            <cfelseif VAL(FORM.placementStatus)>
+                    ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.jobOfferStatus#">                 
+            <cfelseif NOT LEN(FORM.jobOfferStatus)>
             	AND
-                	ecpc.selfConfirmationDate IS NOT NULL
-			</cfif>            
+                	ecpc.selfJobOfferStatus IS NULL
+			</cfif> 
+                       
             ORDER BY
             	ehc.name,
                 ec.candidateID            
@@ -244,12 +246,13 @@
         </td>
     </tr>
     <tr>
-        <td valign="middle" align="right" class="style1"><b>Placement Status:</b></td>
+        <td valign="middle" align="right" class="style1"><b>Job Offer Status:</b></td>
         <td> 
-            <select name="placementStatus" class="style1">
-                <option value="" <cfif NOT LEN(FORM.placementStatus)> selected="selected" </cfif> >All</option>
-                <option value="1" <cfif VAL(FORM.placementStatus)> selected="selected" </cfif> >Confirmed</option>
-                <option value="0" <cfif FORM.placementStatus EQ 0> selected="selected" </cfif> >Unconfirmed</option>
+            <select name="jobOfferStatus" class="style1">
+                <option value="2" <cfif FORM.jobOfferStatus EQ 2> selected="selected" </cfif> >All</option>
+                <option value="1" <cfif FORM.jobOfferStatus EQ 1> selected="selected" </cfif> >Approved</option>
+                <option value="0" <cfif FORM.jobOfferStatus EQ 0> selected="selected" </cfif> >Rejected</option>
+                <option value="" <cfif NOT LEN(FORM.jobOfferStatus)> selected="selected" </cfif> >Pending</option>
             </select>
         </td>
     </tr>    
@@ -317,10 +320,10 @@
                         <th align="left" class="#tableTitleClass#">Start Date</th>
                         <th align="left" class="#tableTitleClass#">End Date</th>
                         <th align="left" class="#tableTitleClass#">Placement Information</th>
+                        <th align="left" class="#tableTitleClass#">Job Offer Status</th>
                         <th align="left" class="#tableTitleClass#">Contact Date</th>
                         <th align="left" class="#tableTitleClass#">Contact Name</th>
                         <th align="left" class="#tableTitleClass#">Contact Method</th>
-                        <th align="left" class="#tableTitleClass#">Written Confirmation</th>
                         <th align="left" class="#tableTitleClass#">Authentication</th>
                         <th align="left" class="#tableTitleClass#">EIN</th>
                         <th align="left" class="#tableTitleClass#">Workmen's Compensation</th>
@@ -344,14 +347,18 @@
                             <td class="style1">
                                 <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#" target="_blank" class="style4">#qTotalPerAgent.name#</a>
                             </td>
+                            <td class="style1">
+                            	<cfif qTotalPerAgent.selfJobOfferStatus EQ 1>
+                                	Approved
+                                <cfelseif qTotalPerAgent.selfJobOfferStatus EQ 0>
+                                	Rejected
+                                <cfelse>
+                               		Pending                            	
+                                </cfif>
+                            </td>
                             <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
-                            <td class="style1">
-                            	<cfif LEN(qTotalPerAgent.selfWrittenConfirmation)>
-                                	#YesNoFormat(qTotalPerAgent.selfWrittenConfirmation)#
-								</cfif>                                            
-                            </td>
                             <td class="style1">#qTotalPerAgent.selfAuthentication#</td>
                             <td class="style1">#qTotalPerAgent.EIN#</td>
                             <td class="style1">
