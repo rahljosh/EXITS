@@ -61,7 +61,28 @@
 	{
 	background-color:#0052A4;
 	}
-
+	
+	div.container
+	{
+	display: table;
+	}
+	
+	div.containerRow
+	{
+	display: table-row;
+	}
+	
+	div.containerLeft
+	{
+	display: table-cell;
+	vertical-align:top;
+	}
+	
+	div.containerRight
+	{
+	display: table-cell;
+	}
+	
 .style1 {color: #FF0000}
 </style>
 </head>
@@ -78,209 +99,15 @@ WHERE usertype = 8
 ORDER BY businessname
 </cfquery>
 
-<cfparam name="form.chooseAgent" default="0">
+<cfparam name="form.choseNAgent" default="0">
 <cfparam name="form.selectInvoice" default="0">
 <cfparam name="form.amount_received" default="0">
 <cfparam name="variables.totalReceived" default="0">
 <cfparam name="form.creditId" default="0">
 <cfparam name="variables.confirm" default="0">
 
-<cfif form.amount_received EQ #variables.totalReceived#>
-	<cfform name="one" method="post">
-		</br></br></br>
-		<table>
-			<tr>
-				<h3><font color="#0000A0" face="Arial, Helvetica, sans-serif">Select International Agent</font></h3>
-			</tr>
-			<tr>
-			<select name="chooseAgent" size="1" onChange="javaScript:this.form.submit();">
-				<option></option>
-				<cfoutput query="qAgents">
-					<option value="#qAgents.userid#">#qAgents.businessname# (#qAgents.userid#)</option>
-				</cfoutput>
-			</select>
-			</tr>
-		</table>
-	</cfform>
-		</br></br></br>
-		
-		<cfif form.chooseAgent NEQ 0>
-		
-			<cfquery name="qAgent" datasource="MySQL">
-			SELECT userid, businessname
-			FROM smg_users
-			WHERE userid = #form.chooseAgent#
-			</cfquery>
-			
-			<cfquery name="get_credits" datasource="MySQL">
-			select creditid,SUM(amount) AS amount,companyid, SUM(amount_applied) AS amount_applied from smg_credit
-			where agentid = #form.chooseAgent# and active =1
-			GROUP BY creditid
-			</cfquery>
-			
-			<cfform method="post">	
-				
-				<cfinput name="agentId" type="hidden" value="#form.chooseAgent#">
-			
-				<table>
-					<tr>
-					<h3><cfoutput><a href="index.cfm?curdoc=invoice/user_account_details&userid=#qAgent.userid#" target="_blank">#qAgent.businessname# (#qAgent.userid#)</a></cfoutput></h3>
-					</tr>
-					<tr>
-						<td>
-						Payment Method:
-						</td>
-						<td>
-						<cfselect name="payment_method" message="Please Select a Payment Type" required="yes">
-							<option value='wire transfer'>Wire Transfer</option>
-							<option value='check'>Check</option>
-							<option value='travelers check'>Travelers Check</option>
-							<option value='cash'>Cash</option>
-							<option value='money order'>Money Order</option>
-							<option value='Direct Deposit'>Direct Deposit</option>
-						</cfselect>
-						</td>
-						<td></td>
-					</tr>
-					
-					<Cfif get_credits.recordcount gt 0>
-						<Tr>
-							<Td>
-							Credit Available to Apply:
-							</Td>
-							<td>
-							<cfoutput>
-								<script type="text/javascript">									
-									function getCreditValue(currentamount) {
-										document.getElementById("amount_received").value = currentamount;
-									}
-								</script>
-							</cfoutput>
-							<cfoutput query="get_credits">
-								<cfquery name="companyname" datasource="mysql">
-								select companyshort from smg_companies where companyid = #get_credits.companyid#
-								</cfquery>
-								<cfset amount_avail = #amount# - #amount_applied#> 
-								<cfinput type="radio" name="creditId" id="creditId#creditid#" value="#creditid#" onClick="javaScript:getCreditValue('#amount_avail#');">
-								<cfinput type="hidden" name="creditAvail#creditid#" id="creditAvail#creditid#" value="#amount_avail#">
-								#creditid# - #amount_avail# #companyname.companyshort#<br>
-							</cfoutput>
-							</td>
-						</Tr>
-					</Cfif>
-					<tr>
-						<td>
-						Date Received:
-						</td>
-						<td>
-						<input type="text" name="date_received" class="date-pick"></td><td> <font size=-2>(for apply credit, leave blank)</font>
-						</td>
-					</tr>
-					<tr>
-						<td>
-						Amount Received:
-						</td>
-						<td>
-						<input type="text" name="amount_received" id="amount_received"></td><td> <font size=-2>(for apply credit, leave blank)</font>
-						</td>
-					</tr>
-						<tr>
-						<td>Payment Reference:
-						</td>
-						<td>
-						<input type="text" name="pay_ref">
-						</td>
-						<td>Check Number, Wire Trans #, etc <font size=-2>(for apply credit, leave blank)</font>
-						</td>
-					</tr>
-				</table>
-				<br><br>
-					
-				<cfquery name="qInvBalance" datasource="MySQL"> 
-				SELECT t.invoiceid, t.companyid, SUM( t.total ) AS totalPerInvoice
-				FROM (
-				SELECT sch.invoiceid, sch.companyid, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
-				FROM smg_charges sch
-				WHERE sch.agentid = #form.chooseAgent#
-				GROUP BY sch.invoiceid
-				UNION ALL
-				SELECT sch.invoiceid, sch.companyid, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
-				FROM smg_payment_charges spc
-				LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
-				WHERE sch.agentid = #form.chooseAgent#
-				GROUP BY sch.invoiceid
-				) t
-				GROUP BY t.invoiceid HAVING totalPerInvoice > 0
-				ORDER BY t.invoiceid DESC    
-				</cfquery>
-				
-				<cfif qInvBalance.recordCount EQ 0>
-					<h3>There are no outstanding invoices</h3>
-					<cfabort>
-				</cfif>
-				
-				<cfset counter = #qInvBalance.recordCount#>
-				<cfset arrayInvoiceId = arrayNew(1)>
-				<cfloop query="qInvBalance">
-					<cfset #arrayAppend(arrayInvoiceId,"#qInvBalance.invoiceid#")#>
-				</cfloop>
-				
-				<cfoutput>
-				<script type="text/javascript" language="javascript">
-					var jsCounter = #counter#;
-					var #toScript(arrayInvoiceId, "jsArrayInvoiceId")#;			
-					
-					function calculator() {
-						var paymAmount = 0;
-						for (var i=0; i<=jsCounter-1; i++) {
-							if (document.getElementById("selectInvoice"+jsArrayInvoiceId[i]).checked == true) {
-								//multiply by 1 to force conversion to a number;
-								paymAmount = paymAmount +  document.getElementById("paying"+jsArrayInvoiceId[i]).value * 1; 
-							}
-							document.getElementById("amount_received").value = paymAmount;
-						}
-					}
-				</script>
-				</cfoutput>
-				
-				<table class="frame">
-					<tr class="darkBlue">
-						<td class="right">
-						</td>
-						<td class="right">Comp</td>
-						<td class="right">Invoice</td>
-						<td class="right">Balance</td>
-						<td class="right">Paying</td>
-					</tr>
-					<cfoutput query="qInvBalance">
-					<tr>
-						<td class="two">
-						<cfinput name="selectInvoice" id="selectInvoice#qInvBalance.invoiceid#" value="#qInvBalance.invoiceid#" type="checkbox" onClick="javaScript:calculator();">
-						</td>
-						<td class="two">
-						#qInvBalance.companyid#
-						</td>
-						<td class="two">
-						<a href="invoice_view.cfm?id=#qInvBalance.invoiceid#" target="_blank">#qInvBalance.invoiceid#</a>
-						</td>
-						<td class="two">
-						#LSCurrencyFormat(qInvBalance.totalPerInvoice,'local')#
-						</td>
-						<td class="two">
-						<cfinput name="payInv#qInvBalance.invoiceid#" id="paying#qInvBalance.invoiceid#" type="text" value="#qInvBalance.totalPerInvoice#" size="6">
-						</td>
-					</tr>
-					</cfoutput>
-				</table>
-				<br/><br/>
-				<cfinput type="image" src="../pics/submit.gif" name="submit">	
-			
-			</cfform>
-				
-		</cfif>
 
-</cfif>
-
+<!--- Process Payment --->
 <cfif form.selectInvoice NEQ 0>
 
 	<cfloop list="#form.selectInvoice#" index="iInvoiceNumber">
@@ -364,7 +191,7 @@ ORDER BY businessname
 	
 	<cfquery name="payment_Details" datasource="MySQL">
 	insert into smg_payment_received (date, date_applied, paymentref, paymenttype, totalreceived, agentid<!--- , companyid --->)
-					values(#CreateODBCDate(form.date_received)#, #CreateODBCDate(now())#, '#form.pay_ref#', '#form.payment_method#', #form.amount_received#, #form.agentId#<!--- , #variables.compId# --->)
+					values(#CreateODBCDate(form.date_received)#, #CreateODBCDate(now())#, '#form.pay_ref#', '#form.payment_method#', #form.amount_received#, #FORM.choseNAgent#<!--- , #variables.compId# --->)
 	</cfquery>
 	
 	<cfquery name="paymentid" datasource="mysql">
@@ -449,13 +276,240 @@ ORDER BY businessname
 	
 	<cfoutput>
 		<script type="text/javascript">
-		window.open('../invoice/payment_details.cfm?ref=#form.pay_ref#&userid=#form.agentId#', 'Payment_Details', 'height=600, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
-		
-		window.location="../invoice/m_payment.cfm"  
+		window.open('../invoice/payment_details.cfm?ref=#form.pay_ref#&userid=#FORM.choseNAgent#', 'Payment_Details', 'location=no', 'scrollbars=yes', 'menubars=no', 'toolbars=no', 'resizable=yes', 'width=150', 'height=150');  
 		</script>
 	</cfoutput>
 	
 </cfif>
+<!--- End of Process Payment --->
 
+
+<!--- Forms --->
+<cfform method="post" action="#CGI.SCRIPT_NAME#">
+
+    <table align="center">
+        <tr>
+        	<td>
+            <h3 align="center"><font color="#0000A0" face="Arial, Helvetica, sans-serif">Select International Agent</font></h3>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+        	<td>
+            <select name="choseNAgent" size="1" onChange="javaScript:this.form.submit();">
+                <option></option>
+                <cfoutput query="qAgents">
+                    <option value="#qAgents.userid#" <cfif qAgents.userid EQ choseNAgent>selected="selected"</cfif>>#qAgents.businessname# (#qAgents.userid#)</option>
+                </cfoutput>
+            </select>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    
+	<cfif choseNAgent NEQ 0>
+
+        <cfquery name="qAgent" datasource="MySQL">
+        SELECT userid, businessname
+        FROM smg_users
+        WHERE userid = #FORM.choseNAgent#
+        </cfquery>
+        
+        <cfquery name="get_credits" datasource="MySQL">
+        select creditid,SUM(amount) AS amount,companyid, SUM(amount_applied) AS amount_applied from smg_credit
+        where agentid = #FORM.choseNAgent# and active =1
+        GROUP BY creditid
+        </cfquery>	
+
+        <table align="center">
+            <tr>
+                <td>
+            	<h3><cfoutput><a href="index.cfm?curdoc=invoice/user_account_details&userid=#qAgent.userid#" target="_blank">#qAgent.businessname# (#qAgent.userid#)</a></cfoutput></h3>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+		</table>
+        
+ <table align="center" width="100%">
+ 	<tr>
+    	<td valign="top"> 
+            <table style="margin-left:80px; border-style:solid; border-color:#000066; border-width:thin; background-color:#FFFFE1;">
+                <tr>
+                    <td style="padding-top:10px;">
+                        <font size=-1 color="#0052A4"><strong>Payment Method:</strong></font>
+                    </td>
+                    <td style="padding-top:10px;">
+                        <cfselect name="payment_method" message="Please Select a Payment Type" required="yes">
+                            <option value='wire transfer'><font size=-1>Wire Transfer</font></option>
+                            <option value='check'><font size=-1>Check</font></option>
+                            <option value='travelers check'><font size=-1>Travelers Check</font></option>
+                            <option value='cash'><font size=-1>Cash</font></option>
+                            <option value='money order'><font size=-1>Money Order</font></option>
+                            <option value='Direct Deposit'><font size=-1>Direct Deposit</font></option>
+                        </cfselect>
+                    </td>
+                </tr>
+                
+                <Cfif get_credits.recordcount gt 0>
+                    <Tr height="40px;">
+                        <Td>
+                        <font size=-1 color="#0052A4"><strong>Credit Available to Apply:</strong></font>
+                        </Td>
+                        <td>
+                        <cfoutput>
+                            <script type="text/javascript">									
+                                function getCreditValue(currentamount) {
+                                    document.getElementById("amount_received").value = currentamount;
+                                }
+                            </script>
+                        </cfoutput>
+                        <cfoutput query="get_credits">
+                            <cfquery name="companyname" datasource="mysql">
+                            select companyshort from smg_companies where companyid = #get_credits.companyid#
+                            </cfquery>
+                            <cfset amount_avail = #amount# - #amount_applied#> 
+                            <cfinput type="radio" name="creditId" id="creditId#creditid#" value="#creditid#" onClick="javaScript:getCreditValue('#amount_avail#');">
+                            <cfinput type="hidden" name="creditAvail#creditid#" id="creditAvail#creditid#" value="#amount_avail#">
+                            <font size="-1">#creditid# - #amount_avail# #companyname.companyshort#</font><br>
+                        </cfoutput>
+                        </td>
+                    </Tr>
+                </Cfif>
+                <tr>
+                    <td valign="top">
+                    <font size=-1 color="#0052A4"><strong>Date Received:</strong></font>
+                    </td>
+                    <td>
+                    <input type="text" name="date_received" class="date-pick">
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top"></td>
+                    <td>
+                    <font size=-2>(for apply credit, leave blank)</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                    <font size=-1 color="#0052A4"><strong>Amount Received:</strong></font>
+                    </td>
+                    <td>
+                    <input type="text" name="amount_received" id="amount_received"> <br/>
+                    <font size=-2>(for apply credit, leave blank)</font> 
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                    <font size=-1 color="#0052A4"><strong>Payment Reference:</strong></font>
+                    </td>
+                    <td>
+                    <input type="text" name="pay_ref"> <br/> 
+                    <font size=-2>Check Number, Wire Trans #, etc</font> <br/>
+                    <font size=-2>(for apply credit, leave blank)</font> <br /><br />
+                    </td>
+                </tr>
+                <tr height="40px">
+                	<td align="center" colspan="2" style="border-top:solid 1px #CCCCCC;">
+                    	<input type="image" src="../pics/submit.gif" name="submit">
+                    </td>
+                </tr>
+            </table>     
+		</td>
+        
+        <td align="left">
+            <cfquery name="qInvBalance" datasource="MySQL"> 
+            SELECT t.invoiceid, t.date, t.companyid, SUM( t.total ) AS totalPerInvoice
+            FROM (
+            SELECT sch.invoiceid, sch.date, sch.companyid, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
+            FROM smg_charges sch
+            WHERE sch.agentid = #FORM.choseNAgent#
+            GROUP BY sch.invoiceid
+            UNION ALL
+            SELECT sch.invoiceid, sch.date, sch.companyid, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
+            FROM smg_payment_charges spc
+            LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
+            WHERE sch.agentid = #FORM.choseNAgent#
+            GROUP BY sch.invoiceid
+            ) t
+            GROUP BY t.invoiceid HAVING totalPerInvoice > 0
+            ORDER BY t.invoiceid DESC    
+            </cfquery>
+            
+            <cfif qInvBalance.recordCount EQ 0>
+                <h3 align="center">There are no outstanding invoices</h3>
+                <cfabort>
+            </cfif>
+            
+            <cfset counter = #qInvBalance.recordCount#>
+            <cfset arrayInvoiceId = arrayNew(1)>
+            <cfloop query="qInvBalance">
+                <cfset #arrayAppend(arrayInvoiceId,"#qInvBalance.invoiceid#")#>
+            </cfloop>
+            
+            <cfoutput>
+            <script type="text/javascript" language="javascript">
+                var jsCounter = #counter#;
+                var #toScript(arrayInvoiceId, "jsArrayInvoiceId")#;			
+                
+                function calculator() {
+                    var paymAmount = 0;
+                    for (var i=0; i<=jsCounter-1; i++) {
+                        if (document.getElementById("selectInvoice"+jsArrayInvoiceId[i]).checked == true) {
+                            //multiply by 1 to force conversion to a number;
+                            paymAmount = paymAmount +  document.getElementById("paying"+jsArrayInvoiceId[i]).value * 1; 
+                        }
+                        document.getElementById("amount_received").value = paymAmount;
+                    }
+                }
+            </script>
+            </cfoutput>
+            
+            <table class="frame" align="left">
+                <tr class="darkBlue">
+                    <td class="right">
+                    </td>
+                    <td class="right">Comp</td>
+                    <td class="right">Invoice</td>
+                    <td class="right">Date</td>
+                    <td class="right">Balance</td>
+                    <td class="right">Paying</td>
+                </tr>
+                <cfoutput query="qInvBalance">
+                <tr>
+                    <td class="two">
+                    <cfinput name="selectInvoice" id="selectInvoice#qInvBalance.invoiceid#" value="#qInvBalance.invoiceid#" type="checkbox" onClick="javaScript:calculator();">
+                    </td>
+                    <td class="two">
+                    #qInvBalance.companyid#
+                    </td>
+                    <td class="two">
+                    <a href="invoice_view.cfm?id=#qInvBalance.invoiceid#" target="_blank">#qInvBalance.invoiceid#</a>
+                    </td>
+                    <td class="two" width="60">
+                    #DateFormat(qInvBalance.date,'mm-dd-yyyy')#
+                    </td>
+                    <td class="two">
+                    #LSCurrencyFormat(qInvBalance.totalPerInvoice,'local')#
+                    </td>
+                    <td class="two">
+                    <cfinput name="payInv#qInvBalance.invoiceid#" id="paying#qInvBalance.invoiceid#" type="text" value="#qInvBalance.totalPerInvoice#" onChange="javaScript:calculator();" size="6">
+                    </td>
+                </tr>
+                </cfoutput>
+            </table>
+
+        </td>
+	</tr>
+</table>
+			    
+            
+
+	</cfif>           
+
+</cfform>
+          
 </body>
 </html>
