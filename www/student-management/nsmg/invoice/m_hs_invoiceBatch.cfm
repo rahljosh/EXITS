@@ -56,6 +56,8 @@
 
 <body>
 
+<cfparam name="form.placed" default="0">
+
 <cfform method="post">
 
 <cfinput type="hidden" name="check">
@@ -97,6 +99,16 @@
             </select>
         </td>
     </tr>
+    
+    <tr>
+        <td align="right" style="padding-top:1cm">
+        
+        </td>
+        <td style="padding-top:1cm">
+			<input type="checkbox" name="placed" value="1" checked="checked"/> Invoice only Placed students
+        </td>
+    </tr>
+    
     <tr>
         <td></td>
         <td align="left" style="padding-top:1cm"><cfinput type="image" src="pics/update.gif" name="submit"></td>
@@ -105,6 +117,7 @@
 </table>
 
 </cfform>
+
 <cfinclude template="../table_footer.cfm">
 
 <cfif NOT ISDEFINED('form.seasonId') OR NOT ISDEFINED('form.chooseCharge')>
@@ -157,6 +170,7 @@ smg_charges
 		ss.convalidation_completed,
 		ss.companyid,
 		ss.dateapplication,
+        ss.host_fam_approved,
 		sp.programname,
 		sp.startdate,
 		sp.enddate,
@@ -184,6 +198,10 @@ smg_charges
 		smg_users su ON ss.intrep = su.userid
     WHERE
 		ss.active = 1
+    <cfif form.placed EQ 1>
+    AND
+    	ss.host_fam_approved <= 4
+    </cfif>
     AND
 		sp.seasonid = #form.seasonId#
     AND
@@ -213,6 +231,7 @@ smg_charges
     ORDER BY
 		studentid
     </cfquery>
+    
    
     <cfloop query="getHSstud">
 		
