@@ -9,7 +9,7 @@
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.verification_arrival" default="0">
 <!--- Placement Information --->
-<cfparam name="FORM.selfJobOfferStatus" default="">
+<cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
 <cfparam name="FORM.selfConfirmationMethod" default="">
 <cfparam name="FORM.selfAuthentication" default="">
@@ -172,11 +172,7 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
-                <cfif IsBoolean(FORM.selfJobOfferStatus)>
-               		<cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.selfJobOfferStatus#">,
-                <cfelse>
-                	<cfqueryparam cfsqltype="cf_sql_bit" null="yes">,
-                </cfif>
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
                 <cfif IsBoolean(FORM.selfWorkmenCompensation)>
                		<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#">,
@@ -212,11 +208,7 @@
                 status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                 selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
-                <cfif IsBoolean(FORM.selfJobOfferStatus)>
-               		selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.selfJobOfferStatus#">,
-                <cfelse>
-                	selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_bit" null="yes">,
-                </cfif>
+                selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 selfAuthentication = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
                 <cfif IsBoolean(FORM.selfWorkmenCompensation)>
                		selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#">,

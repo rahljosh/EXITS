@@ -6,7 +6,7 @@
     <!--- Param FORM variables --->
     <cfparam name="FORM.userID" default="0">
 	<cfparam name="FORM.programID" default="0">
-	<cfparam name="FORM.jobOfferStatus" default="">
+	<cfparam name="FORM.selfJobOfferStatus" default="">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
     
@@ -118,12 +118,9 @@
                     ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
            	</cfif>
 			
-			<cfif ListFind("0,1", FORM.jobOfferStatus)>
+			<cfif LEN(FORM.selfJobOfferStatus)>
             	AND
-                    ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.jobOfferStatus#">                 
-            <cfelseif NOT LEN(FORM.jobOfferStatus)>
-            	AND
-                	ecpc.selfJobOfferStatus IS NULL
+                    ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">                 
 			</cfif> 
                        
             ORDER BY
@@ -248,11 +245,11 @@
     <tr>
         <td valign="middle" align="right" class="style1"><b>Job Offer Status:</b></td>
         <td> 
-            <select name="jobOfferStatus" class="style1">
-                <option value="2" <cfif FORM.jobOfferStatus EQ 2> selected="selected" </cfif> >All</option>
-                <option value="1" <cfif FORM.jobOfferStatus EQ 1> selected="selected" </cfif> >Approved</option>
-                <option value="0" <cfif FORM.jobOfferStatus EQ 0> selected="selected" </cfif> >Rejected</option>
-                <option value="" <cfif NOT LEN(FORM.jobOfferStatus)> selected="selected" </cfif> >Pending</option>
+            <select name="selfJobOfferStatus" class="style1">
+                <option value="" <cfif FORM.selfJobOfferStatus EQ 2> selected="selected" </cfif> >All</option>
+                <option value="Pending" <cfif FORM.selfJobOfferStatus EQ 'Pending'> selected="selected" </cfif> >Pending</option>
+                <option value="Approved" <cfif FORM.selfJobOfferStatus EQ 'Approved'> selected="selected" </cfif> >Approved</option>
+                <option value="Rejected" <cfif FORM.selfJobOfferStatus EQ 'Rejected'> selected="selected" </cfif> >Rejected</option>
             </select>
         </td>
     </tr>    
@@ -347,15 +344,7 @@
                             <td class="style1">
                                 <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#" target="_blank" class="style4">#qTotalPerAgent.name#</a>
                             </td>
-                            <td class="style1">
-                            	<cfif qTotalPerAgent.selfJobOfferStatus EQ 1>
-                                	Approved
-                                <cfelseif qTotalPerAgent.selfJobOfferStatus EQ 0>
-                                	Rejected
-                                <cfelse>
-                               		Pending                            	
-                                </cfif>
-                            </td>
+                            <td class="style1">#qTotalPerAgent.selfJobOfferStatus#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
