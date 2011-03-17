@@ -596,7 +596,23 @@
 		</cfif>
 	<!--- Intl. Representative Documents --->				
 	<cfelse>
-		<tr><td>This page will be completed and uploaded by <b><i>#smg_students.businessname#.</i></b></td></tr>
+		<tr><td>This page will be completed and uploaded by <b><i>#smg_students.businessname#.</i></b><Br>
+        <cfloop query="page19">
+			<cfset get_field = page19.table_located &"."& page19.field_name>
+			<cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
+				<tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
+				<cfset count19 = 1> <cfset countRed = countRed + 1>
+			<cfelseif NOT LEN(Evaluate(get_field)) AND NOT VAL(required)>
+				<tr><td><font color="0000FF">#field_label#</font><br></td></tr> 
+				<cfset count19 = 1>
+			</cfif>
+		</cfloop>
+		<cfif check_19_upload.recordcount NEQ 0>
+			<tr><td><font color="0000FF">Complete</font><br></td></tr>
+		<cfelse>
+			<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
+		</cfif>
+        </td></tr>
 	</cfif> 	
     	
     <tr><td>&nbsp;</td></tr>	

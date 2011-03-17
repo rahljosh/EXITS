@@ -85,6 +85,7 @@
 			OR h.hostid NOT IN (SELECT hostid FROM smg_hosts_cbc WHERE cbc_type = 'mother')) --->
 			ORDER BY u.lastname, h.familylastname
 	</cfquery>
+  
 	<table align="center" width="90%" frame="below">
 	<tr><th bgcolor="DFE9EE">#get_regions.regionname#</th></tr>
 	<tr>
@@ -126,7 +127,7 @@
 						AND (u.ssn = '#get_hosts.motherssn#' OR (u.firstname = '#get_hosts.motherfirstname#' AND u.lastname = '#get_hosts.familylastname#'))
 				</cfquery>
 							
-				<cfif (get_hosts.motherfirstname NEQ '' AND host_mother.recordcount EQ '0' AND check_mother.recordcount EQ '0') OR (get_hosts.fatherfirstname NEQ '' AND host_father.recordcount EQ '0' AND check_father.recordcount EQ '0')>
+				<!----<cfif (get_hosts.motherfirstname NEQ '' AND host_mother.recordcount EQ '0' AND check_mother.recordcount EQ '0') OR (get_hosts.fatherfirstname NEQ '' AND host_father.recordcount EQ '0' AND check_father.recordcount EQ '0')>--->
 				<tr bgcolor="#iif(get_hosts.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td width="20%">#stufirstname# #stulastname# (###studentid#)</td>
 					<td width="15%">#familylastname# (###hostid#)</td>
@@ -136,7 +137,9 @@
 					<td width="20%">#placefirstname# #placelastname# (###userid#)</td>
 				</tr>
 				<cfset countregion = countregion + 1>
+                <!----
 				</cfif>
+				---->
 			</cfloop>
 			<cfif countregion EQ 0>
 			<tr><td colspan="4">&nbsp;</td></tr>

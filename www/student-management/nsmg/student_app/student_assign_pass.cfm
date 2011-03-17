@@ -47,8 +47,9 @@ Your account has been Successfully created. Below is your login information for 
 Login ID (User ID) : #email#<br>
 Password: #password1#
 <br><br>
+
 You can log in and out of the EXITS Online Application System at any time using this login information.
-To login to the EXITS Online Application, go to the EXITS Login Portal at <a href="#client.exits_url#">#client.exits_url#</a> and click on Log In.
+To login to the EXITS Online Application, go to the EXITS Login Portal at <a href="http://#cgi.http_host#">http://#cgi.http_host#</a> and click on Log In.
 <br><br>
 Please remember that if your application will expire on #DateFormat(application_expires, 'mmm dd, yyyy')# at #TimeFormat(application_expires, 'h:mm tt')# MST.  
 <br><br>
@@ -79,7 +80,7 @@ Sincerely-<br>
 				<ul>
 				<li>Your application will expire on #DateFormat(application_expires, 'mmm dd, yyyy')# at #TimeFormat(application_expires, 'h:mm tt')# MST
 				<li>You can check on the current status of your application at any time by logging into EXITS through the EXITS Login Portal at 
-                <a href="#client.exits_url#">#client.exits_url#</a> and click on Log In.
+                <a href="http://#cgi.http_host#">http://#cgi.http_host#</a> and click on Log In.
 				<li>If you forget your password, you can click on the "Forgot your login?" link on the EXITS Login Portal to retrieve your account information.
 				<li>If you are having problems with the EXITS system, please contact support via the Support link on the student application.
 				
@@ -88,7 +89,7 @@ Sincerely-<br>
 				</ul>
 				Click the Start Application Process button if you are ready to start your application.<br><br>
                 <div align="center">
-                	 <a href="#client.exits_url#"><img src="pics/start-application.gif" border="0" /></a>
+                	 <a href="http://#cgi.http_host#/"><img src="pics/start-application.gif" border="0" /></a>
                 </div>  <br />
 				</td>
 			</tr>
