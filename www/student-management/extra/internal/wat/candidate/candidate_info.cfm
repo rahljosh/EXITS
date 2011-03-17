@@ -903,19 +903,11 @@
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Job Offer Status:</strong></td>
                                             <td class="style1">
-                                                <span class="readOnly">
-													<cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 1>
-                                                        Approved
-                                                    <cfelseif qCandidatePlaceCompany.selfJobOfferStatus EQ 0>
-                                                        Rejected
-                                                    <cfelse>
-                                                    	Pending 
-                                                    </cfif>
-                                                </span>
+                                                <span class="readOnly">#qCandidatePlaceCompany.selfJobOfferStatus#</span>
                                                 <select name="selfJobOfferStatus" id="selfJobOfferStatus" class="style1 editPage selfPlacementField"> 
-                                                    <option value="" <cfif NOT LEN(qCandidatePlaceCompany.selfJobOfferStatus)>selected</cfif> >Pending</option>
-                                                    <option value="1" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 1>selected</cfif> >Approved</option>
-                                                    <option value="0" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 0>selected</cfif> >Rejected</option>
+                                                    <option value="Pending" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Pending'>selected</cfif> >Pending</option>
+                                                    <option value="Approved" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Approved'>selected</cfif> >Approved</option>
+                                                    <option value="Rejected" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Rejected'>selected</cfif> >Rejected</option>
                                                 </select>
                                             </td>
                                         </tr>
