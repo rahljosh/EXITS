@@ -1,0 +1,17 @@
+SEVIS CERTIFICATE
+
+Valid From 01/11/2011 to 01/11/2012
+
+Issued By: VeriSign Class 1 Individual Subscription CA - G2
+
+Password: raul43
+
+
+-----------------------------------------
+
+Instructions for Use:
+
+Upload *.pem to SEVIS
+
+Import *.pfx to Browser (IE)
+
