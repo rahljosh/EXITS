@@ -117,6 +117,8 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #0
 .thin-border-left{ border-left: 1px solid #000000;}
 .thin-border-right-bottom{ border-right: 1px solid #000000; border-bottom: 1px solid #000000;}
 .thin-border-bottom{  border-bottom: 1px solid #000000;}
+.thin-border-top{ border-top: 1px solid #000000;}
+.thin-border-bottom-top{  border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
 .thin-border-left-bottom{ border-left: 1px solid #000000; border-bottom: 1px solid #000000;}
 .thin-border-right-bottom-top{ border-right: 1px solid #000000; border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
 .thin-border-left-bottom-top{ border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
@@ -132,6 +134,8 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #0
 </head>
 
 <body>
+
+<cfparam name="totalPaid" default="0">
 
 <Cfoutput>
 	<cfif client.usertype GT 4>
@@ -169,6 +173,27 @@ LEFT JOIN smg_programs sp ON sp.programid = s.programid
 where s.invoiceid = #url.id#
 group by s.stuid
 order by s.stuid, s.chargeid
+</cfquery>
+
+<cfquery name="invoice_payments" datasource="MySQL">
+SELECT 
+    SUM(spc.amountapplied) AS amountapplied,
+    spr.paymenttype,
+    spr.paymentref,
+    spr.date,
+    spr.totalreceived
+FROM
+	smg_payment_charges spc
+LEFT JOIN
+	smg_payment_received spr ON spr.paymentid = spc.paymentid
+LEFT JOIN
+	smg_charges sc ON sc.chargeid = spc.chargeid
+WHERE
+	sc.invoiceid = #url.id#
+GROUP BY
+	spr.paymentref
+ORDER BY
+	spr.date DESC
 </cfquery>
     
     <table align="center">
@@ -556,15 +581,14 @@ select *,
 			</cfquery>
 		<!----Retrieve Total Deposits Accounted for on this invoice---->
 		
-		
+		<cfoutput>
 		<table width=100% cellspacing=0 cellpadding=2 border=0 bgcolor="FFFFFF">	
 			<cfset charges.datepaid = ''>
 			<tr>
-				<td  rowspan=3 width=470>
-				<cfoutput>
-					<cfif invoice_info.type IS 'trainee program' OR invoice_info.companyid EQ 7  OR invoice_info.companyid EQ 8><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
+				<td valign="top" rowspan="#invoice_payments.recordCount+4#" width=470> 
+					<cfif invoice_info.type IS 'trainee program' OR invoice_info.companyid EQ 7  OR invoice_info.companyid EQ 8>
+						<!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
        					<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
-                        
                         <cfelse>
                             <cfswitch expression="#invoice_info.progType#">
                                 <cfcase value="7,8,9,11,22,23">
@@ -577,22 +601,57 @@ select *,
                             </cfswitch>                        
                         
                     </cfif>
-                    
-				</cfoutput></td>
-			  <td rowspan=3<cfif charges.datepaid is ''>><cfelse> background="../pics/paid.jpg" align="center" width=146><cfoutput><font color="b31633" size=+1>#DateFormat(charges.datepaid, 'mm/dd/yyyy')#</cfoutput></cfif></td><td align="left" width=120 class="thin-border-left" ><b>SUB - TOTAL</td><td align="right" class="thin-border-right"><b><cfoutput>#LSCurrencyFormat(total_due.total_due,'local')#</cfoutput></td>
+				</td>
+              <td width="300" colspan="7" height="50" align="right" class="thin-border-left-bottom" ><b>SUB - TOTAL:</td>
+              <td align="right" class="thin-border-right-bottom"><b><cfoutput>#LSCurrencyFormat(total_due.total_due,'local')#</cfoutput></td>
 			</tr>
 			
-
+			<cfif invoice_payments.recordCount NEQ 0>
+                <tr>
+                    <td colspan="3" align="left" class="thin-border-left"><b>Payments Applied to this invoice:</b></td>
+                    <td align="left"><b>Payment Type</b></td>
+                    <td align="left"><b>Payment Reference</b></td>
+                    <td align="left"><b>Original Amount</b></td>
+                    <td align="left"><b>Date Received</b></td>
+                    <td align="right"  class="thin-border-right"><b>Amount Applied to this invoice</b></td>
+                </tr>
+            
+				<cfloop query="invoice_payments">
+                    <tr>
+                        <td colspan="3" align="left" class="thin-border-left"></td>
+                        <td align="left">
+                        	<cfif invoice_payments.paymenttype EQ 'apply credit'>
+                            	credit note
+                            <cfelse>
+                            	#invoice_payments.paymenttype#
+                            </cfif>
+                        </td>
+                        <td align="left">#invoice_payments.paymentref#</td>
+                        <td align="left">#LSCurrencyFormat(invoice_payments.totalreceived, 'local')#</td>
+                        <td align="left">#dateFormat(invoice_payments.date, 'mm/dd/yyyy')#</td>
+                        <td align="right" class="thin-border-right"><font color="##FF0000">-#LSCurrencyFormat(invoice_payments.amountapplied, 'local')#</font></td>
+                    </tr>
+					<cfset totalPaid = totalPaid + invoice_payments.amountapplied>
+                </cfloop>
+                <tr>
+                    <td colspan="6" class="thin-border-top"></td>
+                    <td align="right" height="50" class="thin-border-left-bottom-right thin-border-top"><b>TOTAL PAID:</b></td>
+                    <td align="right" class="thin-border-right-bottom  thin-border-top">
+                        <b><font color="##FF0000">-#LSCurrencyFormat(totalPaid, 'local')#</font></b>
+                    </td>
+                </tr>
+            </cfif>
+            
 			<tr>
-			
-			
-				<td align="left" width=120 bgcolor="#CCCCCC" class="thin-border-left-bottom-top"><b>TOTAL DUE</b></td><td align="right" bgcolor="CCCCCC" class="thin-border-right-bottom-top"><b><cfoutput>#LSCurrencyFormat(total_due.total_due, 'local')#</cfoutput></td>
-			</tr>
-			<tr>
-				<td colspan=5 DIV ALIGN="CENTER"><b></b></td>
+				<td width="300" colspan="6"></td>
+                <td align="right" height="50" bgcolor="##CCCCCC"  class="thin-border-left-bottom-right"><b>TOTAL DUE:</b></td>
+                <td align="right" bgcolor="CCCCCC" class="thin-border-right-bottom">
+                	<cfset invBalance = total_due.total_due - variables.totalPaid>
+                	<b>#LSCurrencyFormat(variables.invBalance, 'local')#</b>
+                </td>
 			</tr>
 		</table>
-		
+		</cfoutput>
 <br>
 		<br>
 		
