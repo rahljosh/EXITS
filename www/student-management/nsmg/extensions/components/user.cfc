@@ -408,7 +408,7 @@
         <cfargument name="officeUserID" default="0" hint="officeUserID is not required">
         <cfargument name="trainingID" hint="trainingID is required">
         <cfargument name="dateTrained" hint="dateTrained is required">
-        <cfargument name="score" default="0" hint="score is not required">
+        <cfargument name="score" default="0.00" hint="score is not required">
         
         <cfscript>
 			// DOS Certification - Score >= 27 to pass
@@ -416,7 +416,12 @@
 			
 			if ( ARGUMENTS.SCORE >= 90 ) {
 				hasPassed = 1;
-			}		
+			}
+            
+            // Set a default value for ARGUMENTS.score
+            if ( NOT LEN(ARGUMENTS.score) ) {
+            	ARGUMENTS.score = '0.00';
+            }	
 		</cfscript>	
 		
         <!--- Check if has been entered --->
