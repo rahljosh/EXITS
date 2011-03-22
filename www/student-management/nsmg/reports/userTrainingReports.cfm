@@ -425,7 +425,7 @@
                                                 <td valign="top" align="right"><label for="regionID">Region:</label></td>
                                                 <td>
                                                     <select name="regionID" id="regionID" multiple="multiple" size="6">
-                                                        <cfif ListFind("1,2,3,4", CLIENT.companyID)>
+                                                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                             <option value="0">All</option>
                                                         </cfif>
                                                         <cfloop query="qGetRegions">
@@ -460,7 +460,7 @@
                                                 <td valign="top" align="right"><label for="regionID">Region:</label></td>
                                                 <td>
                                                     <select name="regionID" multiple="multiple" size="6">
-                                                        <cfif ListFind("1,2,3,4", CLIENT.companyID)>
+                                                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                             <option value="0">All</option>
                                                         </cfif>
                                                         <cfloop query="qGetRegions">
@@ -490,7 +490,7 @@
                         </table>
                         
                         <!--- Only Office Users --->
-                        <cfif ListFind("1,2,3,4", CLIENT.companyID)>
+                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
                         
                             <br />
                             
@@ -507,7 +507,7 @@
                                                     <td valign="top" align="right"><label for="regionID">Region:</label></td>
                                                     <td>
                                                         <select name="regionID" id="regionID" multiple="multiple" size="6">
-                                                            <cfif ListFind("1,2,3,4", CLIENT.companyID)>
+                                                            <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                                 <option value="0">All</option>
                                                             </cfif>
                                                             <cfloop query="qGetRegions">
