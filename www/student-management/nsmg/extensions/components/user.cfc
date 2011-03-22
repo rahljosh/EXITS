@@ -333,27 +333,70 @@
 	</cffunction>
 
 
-	<!--- Training --->
+
+	<!--- Start of User Training --->
 	<cffunction name="getTraining" access="public" returntype="query" output="false" hint="Gets a list of training records for a userID">
     	<cfargument name="userID" default="0" hint="userID is not required">
-              
+
+		<!--- Update Training Records / Remove this Later --->
+        <!---
+        <cfquery name="getTrainingRecords" datasource="#application.dsn#">
+            SELECT 
+                sut.id,
+                sut.training_id,
+                sut.notes,
+                alup.fieldID
+            FROM 
+                smg_users_training sut
+            INNER JOIN
+                applicationLookUp alup ON alup.name = sut.notes        
+            WHERE 
+                training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        </cfquery>
+        
+        <cfloop query="getTrainingRecords">
+        
+            <cfquery datasource="#application.dsn#">
+                UPDATE
+                    smg_users_training
+                SET
+                    training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#getTrainingRecords.fieldID#">           
+                WHERE 
+                    id = <cfqueryparam cfsqltype="cf_sql_integer" value="#getTrainingRecords.id#">        
+            </cfquery>
+        
+        </cfloop>
+		--->
+		<!--- Update Training Records / Remove this Later --->
+
         <cfquery 
 			name="qGetTraining" 
 			datasource="#APPLICATION.dsn#">
-                SELECT
-					id,
-                    user_id,
-                    office_user_id,
-                    notes,
-                    date_trained,
-                    date_created,
-                    date_updated
+                SELECT DISTINCT
+					sut.id,
+                    sut.user_id,
+                    sut.office_user_id,
+                    sut.training_id,
+                    sut.date_trained,
+                    sut.score,
+                    sut.has_passed,
+                    sut.date_created,
+                    sut.date_updated,
+                    alup.name as trainingName,
+                    <!--- Office User --->
+                    CAST(CONCAT(officeUser.firstName, ' ', officeUser.lastName,  ' ##', officeUser.userID) AS CHAR) AS officeUser                    
                 FROM 
-                    smg_users_training
+                    smg_users_training sut
+				INNER JOIN	
+                	applicationLookUP alup ON alup.fieldID = sut.training_id 
+                    	AND 
+                        	fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value="smgUsersTraining">
+				LEFT OUTER JOIN
+                	smg_users officeUser ON officeUser.userID = sut.office_user_id                                       	
                 WHERE
-                    user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    sut.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
                 ORDER BY 
-                    date_created
+                    sut.date_created
 		</cfquery>
 		   
 		<cfreturn qGetTraining>
@@ -361,40 +404,77 @@
 
 
 	<cffunction name="insertTraining" access="public" returntype="void" output="false" hint="Inserts a training. UserID must be passed.">
-    	<cfargument name="userID" hint="userID is required">
-        <cfargument name="officeUserID" hint="officeUserID is required">
-        <cfargument name="notes" default="" hint="notes is not required">
+        <cfargument name="userID" hint="userID is required">
+        <cfargument name="officeUserID" default="0" hint="officeUserID is not required">
+        <cfargument name="trainingID" hint="trainingID is required">
         <cfargument name="dateTrained" hint="dateTrained is required">
-              
+        <cfargument name="score" default="0" hint="score is not required">
+        
+        <cfscript>
+			// DOS Certification - Score >= 27 to pass
+			var hasPassed = 0;
+			
+			if ( ARGUMENTS.SCORE >= 90 ) {
+				hasPassed = 1;
+			}		
+		</cfscript>	
+		
+        <!--- Check if has been entered --->
         <cfquery 
-			name="qInsertTraining" 
+			name="qCheckData" 
 			datasource="#APPLICATION.dsn#">
-                INSERT INTO
+            	SELECT
+                	id
+                FROM	
                 	smg_users_training
-                (
-                    user_id,
-                    office_user_id,
-                    notes,
-                    date_trained,
-                    date_created,
-                    date_updated
-                )
-                VALUES
-                (
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.officeUserID#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">
-                )	
-		</cfquery>
-		   
+                WHERE
+                	user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                AND
+                	training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                AND
+                	date_trained = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">
+                AND
+                	score = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">
+		</cfquery>            
+        
+        <cfif NOT VAL(qCheckData.recordCount)>
+                             
+            <cfquery 
+                name="qInsertTraining" 
+                datasource="#APPLICATION.dsn#">
+                    INSERT INTO
+                        smg_users_training
+                    (
+                        user_id,
+                        office_user_id,
+                        training_id,
+                        date_trained,
+                        score,
+                        has_passed,
+                        date_created,
+                        date_updated
+                    )
+                    VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.officeUserID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">,
+                        <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPassed#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">
+                    )	
+            </cfquery>
+		
+        </cfif>
+        		   
 	</cffunction>
 
 
-	<cffunction name="reportTrainingByRegion" access="public" returntype="query" output="false" hint="Gets a list of training records for a userID">
-    	<cfargument name="regionID" default="0" hint="List of region IDs">
+	<cffunction name="reportTrainingByRegion" access="public" returntype="query" output="false" hint="Gets a list of training records by region">
+    	<cfargument name="regionID" default="" hint="List of region IDs">
+        <cfargument name="trainingID" default="0" hint="Training ID is not required">
               
         <cfquery 
 			name="qReportTrainingByRegion" 
@@ -405,29 +485,256 @@
                     u.lastName,
                     r.regionID,
                     r.regionName,
-                    sut.notes,
-                    sut.date_trained
+                    sut.date_trained,
+                    sut.score,
+                    sut.has_passed,
+                    alup.name as trainingName
                 FROM 
                     smg_users u
                 INNER JOIN 
-                	user_access_rights uar ON uar.userID = u.userID 
-                        AND 
-                            uar.regionID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes">)
+                    user_access_rights uar ON uar.userID = u.userID 
+                        <cfif LEN(ARGUMENTS.regionID) AND ARGUMENTS.regionID NEQ 0>
+                            AND 
+                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
+						</cfif>
                 INNER JOIN
                 	smg_regions r ON r.regionID = uar.regionID   
                 LEFT OUTER JOIN
                 	smg_users_training sut ON sut.user_ID = u.userID
+				LEFT OUTER JOIN
+                	applicationLookUP alup ON alup.fieldID = sut.training_id 
+                    	AND 
+                        	fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value="smgUsersTraining">
                 WHERE	
-                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                
+                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                				
+
+				<!--- Get Users that have this trainingID --->
+				<cfif VAL(ARGUMENTS.trainingID)>
+                    AND
+                        sut.training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">              
+                </cfif>   
+                
+                <!--- Get Users that are missing the training --->
+                <cfif VAL(ARGUMENTS.trainingID)>
+                    UNION
+    
+                    SELECT 
+                        u.userID,
+                        u.firstName,
+                        u.lastName,
+                        r.regionID,
+                        r.regionName,
+                        sut.date_trained,
+                        sut.score,
+                        sut.has_passed,
+                        alup.name as trainingName
+                    FROM 
+                        smg_users u
+                    INNER JOIN 
+                        user_access_rights uar ON uar.userID = u.userID 
+                            <cfif LEN(ARGUMENTS.regionID) AND ARGUMENTS.regionID NEQ 0>
+                                AND 
+                                    uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
+							</cfif>                                    
+                    INNER JOIN
+                        smg_regions r ON r.regionID = uar.regionID   
+                    LEFT OUTER JOIN
+                        smg_users_training sut ON sut.user_ID = u.userID
+                            AND	
+                            	training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                    LEFT OUTER JOIN
+                        applicationLookUP alup ON alup.fieldID = sut.training_id 
+                            AND 
+                                fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value="smgUsersTraining">
+                    WHERE	
+                        u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                				
+                </cfif>
+                
                 ORDER BY 
-                    r.regionName,
-                    u.lastName,
-                    sut.date_trained DESC
+                    regionName,
+                    lastName,
+                    userID,
+                    date_trained DESC
 		</cfquery>
 		   
 		<cfreturn qReportTrainingByRegion>
 	</cffunction>
+    
+    
+	<cffunction name="reportTrainingNonCompliance" access="public" returntype="query" output="false" hint="Gets a list of missing/expired training records by region">
+    	<cfargument name="regionID" default="" hint="List of region IDs">
+        <cfargument name="trainingID" default="0" hint="Training ID is not required">
+              
+        <cfquery 
+			name="qReportTrainingNonCompliance" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    u.userID,
+                    u.firstName,
+                    u.lastName,
+                    u.email,
+                    r.regionID,
+                    r.regionName,
+                    sut.date_trained,
+                    sut.score,
+                    sut.has_passed,
+                    alup.name as trainingName
+                FROM 
+                    smg_users u
+                INNER JOIN 
+                    user_access_rights uar ON uar.userID = u.userID 
+                        <cfif LEN(ARGUMENTS.regionID) AND ARGUMENTS.regionID NEQ 0>
+                            AND 
+                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
+						</cfif>                                
+                INNER JOIN
+                    smg_regions r ON r.regionID = uar.regionID   
+                LEFT OUTER JOIN
+                    smg_users_training sut ON sut.user_ID = u.userID
+                        AND	
+                            training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                LEFT OUTER JOIN
+                    applicationLookUP alup ON alup.fieldID = sut.training_id 
+                        AND 
+                            fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value="smgUsersTraining">
+                WHERE	
+                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                				
+            	AND
+                	u.userID NOT IN (
+                    	SELECT
+                        	user_ID
+                        FROM
+                        	smg_users_training
+                    	WHERE
+                        	training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                    )
+                <!--- Training ID 2 = DOS Certification Expires after a Year / Minimum Score --->
+                <cfif ARGUMENTS.trainingID EQ 2>
+                    OR
+                    	(
+							u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                				
+						AND
+                            u.userID IN (
+                                SELECT
+                                    sut1.user_id            
+                                FROM
+                                    smg_users_training sut1
+                                WHERE
+                                    date_trained = (
+										<!--- Get Latest Record --->
+                                        SELECT
+                                            MAX(date_trained)
+                                        FROM
+                                            smg_users_training sut2
+                                        WHERE
+                                            sut1.user_id = sut2.user_id                              
+                                        AND                         
+                                            training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                                    )                  
+                                AND
+                                	(
+                                        DATE_ADD(date_trained, INTERVAL 1 Year) <= NOW()
+                                    OR
+                                        has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                           
+									)
+							)                                       
+                        )
+				</cfif>
+                                
+                ORDER BY 
+                    regionName,
+                    lastName,
+                    userID,
+                    date_trained DESC
+		</cfquery>
+		   
+		<cfreturn qReportTrainingNonCompliance>
+	</cffunction>
+    
+
+	<cffunction name="exportDOSUserList" access="public" returntype="query" output="false" hint="Gets a list of users that needs to be registered for the DOS">
+    	<cfargument name="regionID" default="" hint="List of region IDs">
+        <cfargument name="companyID" default="0" hint="companyID">
+        <cfargument name="dateCreatedFrom" default="" hint="dateCreatedFrom is not required">
+        <cfargument name="dateCreatedTo" default="" hint="dateCreatedTo is not required">
+              
+        <cfquery 
+			name="qExportDOSUserList" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    u.userID,
+                    u.firstName,
+                    u.lastName,
+                    u.email,
+                    u.dateCreated,
+                    r.regionID,
+                    r.regionName
+                FROM 
+                    smg_users u
+                INNER JOIN 
+                    user_access_rights uar ON uar.userID = u.userID 
+                        AND
+                        	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+						<cfif LEN(ARGUMENTS.regionID) AND ARGUMENTS.regionID NEQ 0>
+                            AND 
+                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
+						</cfif>                                
+                INNER JOIN
+                    smg_regions r ON r.regionID = uar.regionID
+                    	AND
+                        	r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">               
+                WHERE	
+                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                				
+				<cfif IsDate(ARGUMENTS.dateCreatedFrom) AND IsDate(ARGUMENTS.dateCreatedTo)>
+                	AND
+                    	dateCreated 
+                   	BETWEEN 
+                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedFrom#">
+                    AND 
+                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedTo#">
+                </cfif>
+                ORDER BY 
+                    regionName,
+                    lastName,
+                    userID
+		</cfquery>
+		   
+		<cfreturn qExportDOSUserList>
+	</cffunction>    
+    
+
+	<cffunction name="importDOSExcelFile" access="public" returntype="void" output="true" hint="Reads Excel file received from the DOS and stores the data into the training table">
+    	<cfargument name="excelFile" hint="excelFile is required">
+        
+        <!--- Read Excel --->
+        <cfspreadsheet action="read" src="#ARGUMENTS.excelFile#" query="qUserListData" headerRow="1">          
+        	
+		<cfscript>
+            // COLUMNS: COURSE,LAST NAME,FIRST NAME,MIDDLE NAME,SCORE,COMPLETION DATE,PROGRAM SPONSOR,PERSON ID,COMMENTS
+			
+			// Loop thru query
+            for (i=1;i LTE qUserListData.recordCount; i=i+1) {
+            
+                // Check if we hava a valid ID
+                if ( VAL(qUserListData['PERSON ID'][i]) ) {
+                    
+                    // Insert Training
+                    insertTraining(
+                        userID=qUserListData['PERSON ID'][i],
+                        trainingID=2,
+                        dateTrained=qUserListData['COMPLETION DATE'][i],
+                        score=ReplaceNoCase(qUserListData['SCORE'][i], '%', '')
+                    );
+                    
+                }
+
+            }			
+        </cfscript>
+        
+	</cffunction>    
+	<!--- End of User Training --->
 	
+    
     <!----Studet Services Project----> 
 	<cffunction name="getStudentServices" access="public" returntype="query" output="false" hint="Gets a list of problem records for a studentID">
     	<cfargument name="studentID" default="0" hint="studentID is not required">
@@ -460,4 +767,79 @@
 		   
 		<cfreturn qGetInitialProblem>
 	</cffunction>
+    
+    
+    <!--- Remote Functions --->
+    <cffunction name="getUsersAssignedToRegion" access="remote" returntype="query" output="false" hint="Gets a list of users assigned to a region">
+    	<cfargument name="regionID" hint="regionID required">
+    	
+        <cfscript>
+			// This is the query that is returned
+			qResultQuery = QueryNew("userID, userInformation");
+			
+			if ( NOT VAL(ARGUMENTS.regionID) ) { 
+			
+				// Not a valid region ID
+				QueryAddRow(qResultQuery);
+				QuerySetCell(qResultQuery, "userID", 0);
+				QuerySetCell(qResultQuery, "userInformation", 'Please Select a Region');	
+				return qResultQuery;
+				
+			}		
+		</cfscript>
+        
+        <cfquery 
+			name="qGetUsersAssignedToRegion" 
+			datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                    u.userID,
+                    CONCAT(u.firstName, ' ', u.lastName, ' [', ut.shortUserType, ']' ) AS userInformation
+                FROM 
+                    smg_users u
+				INNER JOIN                    
+                    user_access_rights uar ON uar.userID = u.userID 
+                    	AND 
+                        	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#"> 
+						AND
+                        	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )                            
+                INNER JOIN 
+                    smg_userType ut ON ut.userTypeID = uar.userType
+                WHERE 
+                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                        
+                ORDER BY 
+                    uar.userType,
+                    u.lastName,
+                    u.firstName
+		</cfquery>
+		 
+        <cfscript>
+			// Check if query returned data
+			if ( qGetUsersAssignedToRegion.recordCount ) {
+				
+				// Insert blank first row
+				QueryAddRow(qResultQuery);
+				QuerySetCell(qResultQuery, "userID", 0);
+				QuerySetCell(qResultQuery, "userInformation", 'Select an Area Rep.');
+			
+				For ( i=1; i LTE qGetUsersAssignedToRegion.recordCount; i=i+1 ) {
+					QueryAddRow(qResultQuery);
+					QuerySetCell(qResultQuery, "userID", qGetUsersAssignedToRegion.userID[i]);
+					QuerySetCell(qResultQuery, "userInformation", qGetUsersAssignedToRegion.userInformation[i]);
+				}
+				
+			} else {
+			
+				// Query did not return data - Set up proper response
+				QueryAddRow(qResultQuery);
+				QuerySetCell(qResultQuery, "userID", 0);
+				QuerySetCell(qResultQuery, "userInformation", 'No Users Found');
+			
+			}
+			
+			// Return Query
+			return qResultQuery;	
+		</cfscript>
+	</cffunction>
+    
+    
 </cfcomponent>

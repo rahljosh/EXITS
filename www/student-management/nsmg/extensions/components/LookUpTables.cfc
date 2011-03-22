@@ -24,6 +24,144 @@
 	</cffunction>
 
 
+	<cffunction name="getApplicationLookUp" access="public" returntype="query" output="false" hint="Returns a list from ApplicationLookUp Table. This table was created to store values used throughout the system">
+    	<cfargument name="applicationID" hint="applicationID is required">
+    	<cfargument name="fieldKey" hint="fieldKey is required. This is what defines a group of data">
+        <cfargument name="fieldID" default="0" hint="fieldID is not required">
+    	<cfargument name="isActive" default="1" hint="isActive is not required">
+        <cfargument name="sortBy" type="string" default="fieldID" hint="sortBy is not required">
+
+        <cfquery 
+        	name="qGetApplicationLookUp"
+        	datasource="MySQL">
+                SELECT 
+                	ID,
+                    applicationID,
+                    fieldKey,
+                    fieldID,
+                    name,
+                    isActive,
+                    dateCreated,
+                    dateUpdated
+				FROM
+                	applicationLookUp
+				WHERE
+                	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isActive#">
+                AND 
+                    applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">
+                AND 
+                    fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
+
+				<cfif VAL(ARGUMENTS.fieldID)>
+	                AND 
+                        fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fieldID#">
+                </cfif>                        
+				
+                ORDER BY
+                
+                <cfswitch expression="#ARGUMENTS.sortBy#">
+                    
+                    <cfcase value="fieldID">                    
+                        fieldKey
+                    </cfcase>
+                
+                    <cfcase value="name">
+                        name
+                    </cfcase>
+    
+                    <cfdefaultcase>
+                        fieldKey
+                    </cfdefaultcase>
+    
+                </cfswitch>   
+        </cfquery> 
+
+		<cfreturn qGetApplicationLookUp>
+	</cffunction>
+
+
+	<cffunction name="getApplicationHistory" access="public" returntype="query" output="false" hint="Returns history">
+    	<cfargument name="applicationID" hint="applicationID is required">
+    	<cfargument name="foreignTable" hint="foreignTable is required. This is what defines a group of data">
+        <cfargument name="foreignID" hint="foreignID is required">
+
+        <cfquery 
+        	name="qGetApplicationHistory"
+        	datasource="MySQL">
+                SELECT 
+                	ah.ID,
+                    ah.applicationID,
+                    ah.foreignTable,
+                    ah.foreignID,
+                    ah.enteredByID,
+                    ah.actions,
+                    ah.comments,
+                    ah.dateCreated,
+                    ah.dateUpdated,
+                    <!--- Entered By --->
+                    CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS enteredBy
+				FROM
+                	applicationHistory ah 
+                LEFT OUTER JOIN
+                	smg_users u ON u.userID = ah.enteredByID    
+                WHERE
+                    ah.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">
+                AND 
+                    ah.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+                AND 
+                    ah.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">
+                ORDER BY
+					ah.dateCreated DESC
+        </cfquery> 
+
+		<cfreturn qGetApplicationHistory>
+	</cffunction>
+
+
+	<cffunction name="insertApplicationHistory" access="public" returntype="void" output="false" hint="Inserts a History">
+    	<cfargument name="applicationID" hint="applicationID is required">
+    	<cfargument name="foreignTable" hint="foreignTable is required. This is what defines a group of data">
+        <cfargument name="foreignID" hint="foreignID is required">
+        <cfargument name="enteredByID" default="0" hint="enteredByID is not required">
+        <cfargument name="actions" default="n/a" hint="actions is not required">
+        <cfargument name="comments" default="n/a" hint="comments is not required">
+        <cfargument name="dateCreated" default="#now()#" hint="dateCreated is not required">
+        <cfargument name="dateUpdated" default="#now()#" hint="dateCreated is not required">
+
+        <cfquery 
+        	datasource="MySQL">
+                INSERT
+                    applicationHistory
+                 (
+                    applicationID,
+                    foreignTable,
+                    foreignID,
+                    enteredByID,
+                    actions,
+                    comments,
+                    dateCreated,
+                    dateUpdated
+                 )           
+                VALUES
+                (
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.actions#">,
+                    <cfif LEN(ARGUMENTS.comments)>
+	                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.comments#">,
+					<cfelse>
+	                    <cfqueryparam cfsqltype="cf_sql_varchar" value="n/a">,
+					</cfif>				
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateCreated#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateUpdated#">
+                )        
+        </cfquery> 
+
+	</cffunction>
+
+
 	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
     	<cfargument name="countryID" default="0" hint="countryID is not required">
 
