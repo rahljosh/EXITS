@@ -45,3 +45,6 @@
 
 <!--- Set up Client variables --->
 <cfinclude template="_client.cfm" />
+
+<!--- Set up Session variables --->
+<cfinclude template="_session.cfm" />

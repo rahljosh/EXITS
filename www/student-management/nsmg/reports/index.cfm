@@ -94,7 +94,7 @@ window.location.href = URL;
     
 	<tr>
 		<td>&nbsp;</td>
-		<td><a href="?curdoc=reports/webex_reports">WebEx Reports</a></td>
+		<td><a href="?curdoc=reports/userTrainingReports">Training Reports</a></td>
 	</tr>
     
 </cfif>

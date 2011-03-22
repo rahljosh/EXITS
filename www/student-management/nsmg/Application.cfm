@@ -1,6 +1,8 @@
 <cfapplication 
 	name="smg" 
-    clientmanagement="yes">
+    clientmanagement="yes"
+    sessionmanagement="yes"
+    sessiontimeout="#CreateTimeSpan( 0, 12, 0, 0 )#">
 
 	<cfparam name="APPLICATION.DSN" default="MySQL">
 

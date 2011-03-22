@@ -21,12 +21,16 @@
     <!--- Param FORM variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.errors" default="">    
-    <cfparam name="FORM.webEx_dateTrained" default="#DateFormat(now(), 'mm/dd/yyyy')#">
-    <cfparam name="FORM.webEx_notes" default="">
-
+    <cfparam name="FORM.dateTrained" default="#DateFormat(now(), 'mm/dd/yyyy')#">
+    <cfparam name="FORM.trainingID" default="0">
+	<cfparam name="FORM.score" default="">
+    
     <cfscript>
+		// Get Training Options
+		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining');
+	
 		// Get Training records for this user
-		qGetTraining = APPCFC.USER.getTraining(userID=URL.userid);
+		qGetTraining = APPLICATION.CFC.USER.getTraining(userID=URL.userid);
 	</cfscript>
 
 	<!----Rep Info---->
@@ -180,40 +184,48 @@
         
     </cfswitch>
 
-
-	<!--- Form Submitted --->
-    <cfif VAL(FORM.submitted)>
+	<cfscript>
+        // Form Submitted 
+        if ( VAL(FORM.submitted) ) {
     
-    	<cfscript>
-			if (NOT IsDate(FORM.webEx_dateTrained)) {
-				FORM.errors = "Please enter a valid date trained (mm/dd/yyyy)";
-				FORM.webEx_dateTrained = '';
-			}		
+            if (NOT IsDate(FORM.dateTrained)) {
+                FORM.errors = "Please enter a valid date trained (mm/dd/yyyy)";
+                FORM.dateTrained = '';
+            }		
 
-			if (NOT LEN(FORM.webEx_notes)) {
-				FORM.errors = "Please select a training type";
-			}		
-
-			// There are no errors
-			if (NOT LEN(FORM.errors)) {
-				// Insert Training
-				APPCFC.USER.insertTraining (
-					userID=VAL(URL.userID),
-					officeUserID=VAL(CLIENT.userID), 
-					dateTrained=FORM.webEx_dateTrained,
-					notes=FORM.webEx_notes					
-				);
-			
-				// Re-set Form Variables
-				FORM.webEx_dateTrained = '';
-				FORM.webEx_notes = '';
-				// Get updated query
-				qGetTraining = APPCFC.USER.getTraining(userID=URL.userid);
-			}
-		</cfscript>
-
-    </cfif>
-
+            if (NOT VAL(FORM.trainingID)) {
+                FORM.errors = "Please select a training type";
+            }		
+            
+            // DOS Certification
+            if ( FORM.trainingID EQ 2 AND ( NOT LEN(FORM.score) OR NOT IsValid("float", FORM.score) ) ) {
+                FORM.errors = "Please enter a score in decimal format eg 93.70";
+            }
+            
+            // There are no errors
+            if (NOT LEN(FORM.errors)) {
+                
+                // Make sure we have a valid decimal
+                FORM.score = ReplaceNoCase(FORM.score, ",", ".");
+            
+                // Insert Training
+                APPLICATION.CFC.USER.insertTraining (
+                    userID=VAL(URL.userID),
+                    officeUserID=VAL(CLIENT.userID), 
+                    trainingID=FORM.trainingID,
+                    dateTrained=FORM.dateTrained,
+                    score=FORM.score					
+                );
+            
+                // Re-set Form Variables
+                FORM.dateTrained = '';
+                FORM.trainingID = 0;
+                FORM.score = '';
+                // Get updated query
+                qGetTraining = APPLICATION.CFC.USER.getTraining(userID=URL.userid);
+            }
+        }
+    </cfscript>
 
 </cfsilent>
 
@@ -229,12 +241,28 @@
 </style>
 
 <script type="text/javascript" language="javascript">
+	// JQuery Ready Function
+	$().ready(function() {
+		// Get Selected Training
+		displayTrainingScore();
+	});
+	
 	// Display WebExForm
-	function displayWebExForm() {
+	function displayTrainingForm() {
 		if($("#webExForm").css("display") == "none"){
-			$("#webExForm").fadeIn("slow");
+			$("#webExForm").slideDown("slow");
 		} else {
-			$("#webExForm").fadeOut("slow");	
+			$("#webExForm").slideUp("slow");	
+		}
+	}	
+	
+	// Display Score if DOS Certification is selected
+	function displayTrainingScore() {
+		selectedTraining = $("#trainingID").val();
+		if ( selectedTraining == 2 ) {
+			$("#trainingScore").slideDown("slow");
+		} else {
+			$("#trainingScore").slideUp("slow");	
 		}
 	}	
 </script>
@@ -1161,19 +1189,21 @@
         <tr>
             <td width="50%" valign="top">
                 
-                <!---- WebEx Training Information ---->
+                <!---- Training Information ---->
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
                     <tr valign="middle" height="24">
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width="26" background="pics/header_background.gif"><img src="pics/notes.gif"></td>
-                        <td background="pics/header_background.gif"><h2>WebEX Training</h2></td>
+                        <td background="pics/header_background.gif"><h2>Training</h2></td>
                         <cfif VAL(CLIENT.USERTYPE) LTE 4>
-                            <td background="pics/header_background.gif" width="80"><a href="javascript:displayWebExForm();">Add Record</a></td>
+                            <td background="pics/header_background.gif" width="80"><a href="javascript:displayTrainingForm();">Add Record</a></td>
                         </cfif>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
                 </table>
+                
                 <table width="100%" cellpadding="4" cellspacing="0" border="0" class="section">
+                    <!--- New Training --->
                     <tr>
                         <td colspan="3" style="line-height:20px;" valign="top">
                             <div id="webExForm" <cfif NOT LEN(FORM.errors)> style="display:none;" </cfif> >
@@ -1189,83 +1219,77 @@
                                                                         
                                     <table width="100%">
                                         <tr>
+                                            <td><label for="dateTrained">Date Trained:</label></td>
+                                            <td><input type="text" name="dateTrained" value="#DateFormat(FORM.dateTrained, 'mm/dd/yyyy')#" id="dateTrained" class="date-pick" maxlength="10" />  (mm/dd/yyyy)</td>
+                                        </tr>
+                                        <tr>
+                                            <td valign="top"><label for="trainingID">Training:</label></td>
                                             <td>
-                                                <label for="webEx_dateTrained">Date Trained:</label>
-                                             </td>
-                                             <td>
-                                                <input type="text" name="webEx_dateTrained" value="#DateFormat(FORM.webEx_dateTrained, 'mm/dd/yyyy')#" id="webEx_dateTrained" class="date-pick" maxlength="10" />  (mm/dd/yyyy)
-                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td valign="top">
-                                                <label for="webEx_notes">Training:</label>
-                                             </td>
-                                             <td>
-                                                <select name="webEx_notes">
+                                            	<select name="trainingID" id="trainingID" onchange="displayTrainingScore();">
                                                     <option value=""></option>
-                                                    <option value="Database Navigation">Database Navigation</option>
-                                                    <option value="Host Family Orientations">Host Family Orientations</option>
-                                                    <option value="Host Family Recruitment">Host Family Recruitment</option>
-                                                    <option value="New Area Reps">New Area Reps</option>
-                                                    <option value="Positive Supervisions">Positive Supervisions</option>
-                                                    <option value="Student Issues and Resolutions">Student Issues and Resolutions</option>
-                                                    <option value="Student Orientations">Student Orientations</option>
-                                                    <option value="Program Manager">Program Manager</option>
-                                                    <option value="New DOS">New DOS</option>
+                                                    <cfloop query="qGetTrainingOptions">
+                                                    	<option value="#qGetTrainingOptions.fieldID#" <cfif qGetTrainingOptions.fieldID EQ FORM.trainingID>selected="selected"</cfif> >#qGetTrainingOptions.name#</option>
+                                                    </cfloop>
                                                 </select>
-                                             </td>
+                                            </td>
+                                        </tr>
+                                        <tr id="trainingScore" class="displayNone">
+                                            <td valign="top"><label for="score">Score %:</label></td>
+                                            <td>
+                                            	<input type="text" name="score" id="score" value="#FORM.score#" maxlength="5" size="4" />
+                                                Eg: 93.70
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td>&nbsp;
-                                                                                                
-                                             </td>
-                                             <td>
-                                                <input name="Submit" type="image" src="pics/submit.gif" border=0 alt="submit">
-                                             </td>
+                                            <td>&nbsp;</td>
+                                            <td><input name="Submit" type="image" src="pics/submit.gif" border=0 alt="submit"></td>
                                         </tr>
                                     </table>
                                 </form>
                             </div>
                         </td>
                     </tr>
+                    <!--- Display Records --->
                     <tr>
-                        <td>
-                            <strong>Date Trained</strong>
-                        </td>
-                        <td>
-                            <strong>Training</strong>
-                        </td>
-                        <td>
-                            <strong>Added By</strong>
-                        </td>       
-                        <td>
-                            <strong>Date Recorded</strong>
-                        </td>                            
+                        <td><strong>Date Trained</strong></td>
+                        <td><strong>Training</strong></td>
+                        <td><strong>Score %</strong></td>
+                        <td><strong>Added By</strong></td>       
+                        <td><strong>Date Recorded</strong></td>                            
                     </tr>                        
                     <cfloop query="qGetTraining">
                         <tr>
+                            <td>#DateFormat(qGetTraining.date_trained, 'mm/dd/yyyy')#</td>
+                            <td>#qGetTraining.trainingName#</td>
                             <td>
-                                #DateFormat(qGetTraining.date_trained, 'mm/dd/yyyy')#
+                            	<cfif qGetTraining.score GT 0>
+                                    #qGetTraining.score#%
+                                    <cfif VAL(qGetTraining.has_passed)>
+                                    	<img src="pics/green_check.gif" border="0" />
+                                    <cfelse>
+                                    	<img src="pics/delete.png" border="0" />
+                                    </cfif>
+                                <cfelse>
+                                	n/a
+                                </cfif>
                             </td>
                             <td>
-                                #qGetTraining.notes#
-                            </td>
-                            <td>
-                                #APPCFC.USER.getUserByID(userID=qGetTraining.office_user_id).firstName# #APPCFC.USER.getUserByID(userID=qGetTraining.office_user_id).lastName#
+                            	<cfif LEN(officeUser)>
+                                	#officeUser#
+                                <cfelse>
+                                	n/a
+                                </cfif>                                
                             </td>  
-                            <td>
-                                #DateFormat(qGetTraining.date_created, 'mm/dd/yyyy')#
-                            </td>
+                            <td>#DateFormat(qGetTraining.date_created, 'mm/dd/yyyy')#</td>
                         </tr>                        
                     </cfloop> 
                     <cfif NOT VAL(qGetTraining.recordCount)>
                         <tr>
-                            <td colspan="3">
-                                No training records.
-                            </td>
+                            <td colspan="4">No training records.</td>
                         </tr>                               
                     </cfif>                      
                 </table>
+                
                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr valign="bottom">
                         <td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
