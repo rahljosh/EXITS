@@ -23,7 +23,7 @@
     <cfparam name="FORM.displayReport" default="0">
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
     
     <cfscript>
 		// Get Regions
