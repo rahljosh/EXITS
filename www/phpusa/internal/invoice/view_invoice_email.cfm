@@ -7,6 +7,8 @@
 
 <body>
 
+<cfparam name="totalPaid" default="0">
+
 <!---- INVOICE INFO --->
 <cfquery name="get_invoiceid" datasource="mysql">
 	SELECT invoiceid
@@ -31,6 +33,29 @@
 	LEFT JOIN smg_countrylist billcountry ON billcountry.countryid = u.billing_country  	
 	WHERE inv.invoiceid = '#invoice#'
 	ORDER BY e.canceled, e.chargeid
+</cfquery>
+
+<cfquery name="invoice_payments" datasource="MySQL">
+SELECT 
+    SUM(epg.amount_paid) AS amountPaid,
+    ptype.paymenttype,
+    ep.transaction,
+    ep.date_received,
+    ep.total_amount
+FROM
+	egom_payment_charges epg
+LEFT JOIN
+	egom_payments ep ON ep.paymentid = epg.paymentid
+LEFT JOIN
+	egom_payment_type ptype ON ptype.paymenttypeid = ep.paymenttypeid
+LEFT JOIN
+	egom_charges ec ON ec.chargeid = epg.chargeid
+WHERE
+	ec.invoiceid = '#invoice#'
+GROUP BY
+	ep.transaction
+ORDER BY
+	ep.date_received DESC
 </cfquery>
 
 <cfquery name="get_sender" datasource="MySql">
@@ -142,7 +167,7 @@ table.nav_bar {  background-color: ##ffffff; border: 1px solid ##000000; }
 
 <!----Invoice Info---->
 <table width=90% border=0 cellspacing=0 cellpadding=2 bgcolor="FFFFFF" align="Center" class="thin-border"> 
-	<tr><td colspan=5 class=thin-border-bottom>Below is a quick summary of the charges on your account as of the above date.  To view the full details of all charges and invocies, please click the link below.</td></tr>
+	<tr><td align="center" colspan=5 class=thin-border-bottom>Below is a quick summary of the charges on your account as of the above date.  To view the full details of all charges and invocies, please click the link below.</td></tr>
 	<tr><td bgcolor="CCCCCC"  class="thin-border-bottom" background="../pics/cccccc.gif" colspan=5>Charges</td></tr>
 	<tr>
 		<td>Date</td>
@@ -167,8 +192,70 @@ table.nav_bar {  background-color: ##ffffff; border: 1px solid ##000000; }
 </table>
 <br />
 
-<table width=90% border=0 cellspacing=0 cellpadding=2 bgcolor="##FFFF66" align="Center" class="thin-border"> 
-	<tr><td bgcolor="##FFFF66" align="center"><h2>Total Due: #LSCurrencyFormat(balance, 'local')#</h2></td></tr>
+<table width=90% cellspacing=0 cellpadding=2 align="Center" class="thin-border">
+
+	<cfif invoice_payments.recordCount GT 0>
+	<tr>
+        <td>
+        	<b>Payments Applied to this invoice:</b>
+        </td>
+        <td>
+        	<b>Payment Type</b>
+        </td>
+        <td>
+        	<b>Payment Reference</b>
+        </td>
+        <td>
+        	<b>Original Amount</b>
+        </td>
+        <td>
+        	<b>Date Received</b>
+        </td>
+        <td>
+        	<b>Amount Applied to this invoice</b>
+        </td>
+    </tr>
+
+    <cfloop query="invoice_payments">
+    
+        <cfquery name="paymRef" datasource="MySQL">
+        SELECT
+        	SUM(total_amount) AS total_amount
+        FROM
+        	egom_payments
+        WHERE
+        	transaction = #invoice_payments.transaction#
+        GROUP BY
+        	transaction
+        </cfquery>
+        
+        <tr>
+            <td></td>
+            <td>
+            	#invoice_payments.paymenttype#
+            </td>
+            <td>
+            	#invoice_payments.transaction#
+            </td>
+            <td>
+            	#LSCurrencyFormat(paymRef.total_amount, 'local')#
+            </td>
+            <td>
+            	#dateFormat(invoice_payments.date_received, 'mm/dd/yyyy')#
+            </td>
+            <td>
+            	#LSCurrencyFormat(invoice_payments.amountPaid, 'local')#
+            </td>
+        </tr>
+        <cfset totalPaid = totalPaid + invoice_payments.amountPaid>
+    </cfloop>
+    </cfif>
+    
+	<tr>
+        <td class="thin-border-top" colspan="6" bgcolor="##FFFF66" align="center">
+        	<h2>Total Due: #LSCurrencyFormat(balance - totalPaid, 'local')#</h2>
+        </td>
+    </tr>
 </table>
 <br />
 
