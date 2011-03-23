@@ -257,12 +257,12 @@
                     	FROM 
                         	smg_users_training
                     	WHERE 
-                        	training_id = <cfqueryparam cfsqltype="cf_sql_numeric" value="5">
+                        	training_id = <cfqueryparam cfsqltype="cf_sql_numeric" value="6">
                     	and 
                         	user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
                     </cfquery>
                    
-                    <cfif webexTraining.recordcount eq 0 and client.regionid neq 16>
+                    <cfif NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16>
                         <cfset CLIENT.trainingNeeded = 1>
                         <cflocation url="/nsmg/trainingNeeded.cfm">
                     </cfif>
