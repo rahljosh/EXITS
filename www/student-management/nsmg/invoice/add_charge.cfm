@@ -82,7 +82,9 @@ Type: 	<select name="type">
 <cfquery name="students_under_rep_not_charged" datasource="MySQL">
 	select s.studentid, s.intrep, s.firstname, s.familylastname, s.programid, s.hostid, s.direct_placement, s.dateplaced, s.jan_app, s.state_guarantee, s.onhold_approved, s.verification_received
 	from smg_students s
-	where s.intrep = #url.userid# <!--- and s.companyid = #client.companyid# ---> and s.active = 1
+	where s.intrep = #url.userid#
+    and s.companyid = #client.companyid#
+    and s.active = 1
 </cfquery>
 
 <Cfif students_under_rep_not_charged.recordcount is 0>
