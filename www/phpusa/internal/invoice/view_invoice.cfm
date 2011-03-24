@@ -235,7 +235,7 @@ where intrepid = 49
         FROM
         	egom_payments
         WHERE
-        	transaction = #invoice_payments.transaction#
+        	transaction = '#invoice_payments.transaction#'
         GROUP BY
         	transaction
         </cfquery>
