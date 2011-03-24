@@ -224,7 +224,7 @@ table.nav_bar {  background-color: ##ffffff; border: 1px solid ##000000; }
         FROM
         	egom_payments
         WHERE
-        	transaction = #invoice_payments.transaction#
+        	transaction = '#invoice_payments.transaction#'
         GROUP BY
         	transaction
         </cfquery>
