@@ -65,7 +65,7 @@
                 <!--- Upload Documents --->    
                 <fieldset>
             
-                   <legend>Upload Documents</legend>
+                   <legend>Upload PDF Documents</legend>
             
                     <div class="documentList" align="center">
                     
@@ -73,8 +73,9 @@
                             title="Select one or more files and click on Upload"
                             name="fileData" 
                             url="upload.cfm?#urlEncodedFormat(SESSION.URLToken)#"
-                            extensionfilter="jpg,jpeg,gif,png,bmp,tiff,pdf" 
-                            oncomplete="handleComplete"             
+                            extensionfilter="pdf" 
+                            oncomplete="handleComplete" 
+                            uploadbuttonlabel="Upload Now"            
                             maxfileselect="5" 
                             maxuploadsize="10" 
                             bgcolor="##FFFFFF" 
