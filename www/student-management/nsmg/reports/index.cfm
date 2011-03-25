@@ -173,7 +173,7 @@ window.location.href = URL;
 	</tr>
 	<tr>
 		<td><a href="?curdoc=cbc/managers_menu">CBC Form Authorization Not Received</a></td>
-        <td><a href="?curdoc=reports/webex_reports">WebEx Reports</a></td>
+		<td><a href="?curdoc=reports/userTrainingReports">Training Reports</a></td>
 	</tr>	
 </cfif>
 
