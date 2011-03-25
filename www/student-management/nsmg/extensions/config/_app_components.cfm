@@ -17,47 +17,50 @@
 	AppCFC = APPLICATION.CFC;
 
 	// Store the initialized UDF Library object in the Application scope
-	AppCFC.UDF = CreateCFC("udf").Init();
+	APPLICATION.CFC.UDF = CreateCFC("udf").Init();
 	
 	// Store Application.IsServerLocal - This needs be declare before the other CFC components
-	APPLICATION.IsServerLocal = AppCFC.UDF.IsServerLocal();
+	APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 
 	// Store the initialized CBC object in the Application scope
-	AppCFC.CBC = CreateCFC("cbc").Init();
+	APPLICATION.CFC.CBC = CreateCFC("cbc").Init();
 
 	// Store the initialized Company object in the Application scope
-	AppCFC.Company = CreateCFC("company").Init();
+	APPLICATION.CFC.Company = CreateCFC("company").Init();
 
 	// Store the initialized Host object in the Application scope
-	AppCFC.Host = CreateCFC("host").Init();
+	APPLICATION.CFC.Host = CreateCFC("host").Init();
 
-	// Store the initialized Host object in the Application scope
-	AppCFC.Insurance = CreateCFC("insurance").Init();
+	// Store the initialized Insurance object in the Application scope
+	APPLICATION.CFC.Insurance = CreateCFC("insurance").Init();
 	
 	// Store the initialized invoice object in the Application scope
-	AppCFC.Invoice = CreateCFC("invoice").Init();
+	APPLICATION.CFC.Invoice = CreateCFC("invoice").Init();
 
-	// Store the initialized Other object in the Application scope
-	AppCFC.LookUpTables = CreateCFC("lookUpTables").Init();
+	// Store the initialized LookUpTables object in the Application scope
+	APPLICATION.CFC.LookUpTables = CreateCFC("lookUpTables").Init();
+
+	// Store the initialized onlineApplication object in the Application scope
+	APPLICATION.CFC.onlineApplication = CreateCFC("onlineApplication").Init();
+
+	// Store the initialized pdfDoc object in the Application scope
+	APPLICATION.CFC.pdfDoc = CreateCFC("pdfDoc").Init();
 
 	// Store the initialized Program object in the Application scope
-	AppCFC.pdfDoc = CreateCFC("pdfDoc").Init();
-
-	// Store the initialized Program object in the Application scope
-	AppCFC.Program = CreateCFC("program").Init();
+	APPLICATION.CFC.Program = CreateCFC("program").Init();
 
 	// Store the initialized Progress Report object in the Application scope
-	AppCFC.ProgressReport = CreateCFC("progressReport").Init();
+	APPLICATION.CFC.ProgressReport = CreateCFC("progressReport").Init();
 	
 	// Store the initialized Region object in the Application scope
-	AppCFC.Region = CreateCFC("region").Init();
+	APPLICATION.CFC.Region = CreateCFC("region").Init();
 
 	// Store the initialized School object in the Application scope
-	AppCFC.School = CreateCFC("school").Init();
+	APPLICATION.CFC.School = CreateCFC("school").Init();
 
 	// Store the initialized Student object in the Application scope
-	AppCFC.Student = CreateCFC("student").Init();
+	APPLICATION.CFC.Student = CreateCFC("student").Init();
 
 	// Store the initialized User object in the Application scope
-	AppCFC.User = CreateCFC("user").Init();
+	APPLICATION.CFC.User = CreateCFC("user").Init();
 </cfscript>

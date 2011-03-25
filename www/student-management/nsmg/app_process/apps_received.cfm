@@ -161,18 +161,18 @@
                 <cfelseif status EQ 'denied'>
 	                <th>Denied By</th>
                 </cfif>
-                
-                <th>Company</th>
+                <th>Company</th>            
+                <th>Actions</th>
             </tr>
             <cfloop query="getResults" startrow="#startrow#" endrow="#endrow#">
 				<cfif dateapplication GT client.lastlogin>
-                    <cfset bgcolor="e2efc7">
+                    <cfset bgcolor="##e2efc7">
                 <cfelseif DateDiff('d',dateapplication, now()) GTE 25 AND DateDiff('d',dateapplication, now()) LTE 34>
-                    <cfset bgcolor="B3D9FF">
+                    <cfset bgcolor="##B3D9FF">
                 <cfelseif DateDiff('d',dateapplication, now()) GTE 35 AND DateDiff('d',dateapplication, now()) LTE 49>
-                    <cfset bgcolor="FFFF9D">
+                    <cfset bgcolor="##FFFF9D">
                 <cfelseif DateDiff('d',dateapplication, now()) GTE 50>
-                    <cfset bgcolor="FF9D9D">
+                    <cfset bgcolor="##FF9D9D">
                 <cfelse>
                     <cfset bgcolor="">
                 </cfif>
@@ -186,7 +186,15 @@
                         	<a href="index.cfm?curdoc=app_process/deny_app_info&studentid=#studentid#">#studentid#</a>
                         </cfif>
                     </td>
-                    <td>#familylastname#</td>
+                    <td>
+                        <cfif status EQ 'received'>
+                        	<a href="index.cfm?curdoc=app_process/app_received_info&studentid=#studentid#">#familylastname#</a>
+                        <cfelseif status EQ 'hold'>
+                        	<a href="index.cfm?curdoc=app_process/app_onhold_info&studentid=#studentid#">#familylastname#</a>
+                        <cfelseif status EQ 'denied'>
+                        	<a href="index.cfm?curdoc=app_process/deny_app_info&studentid=#studentid#">#familylastname#</a>
+                        </cfif>
+					</td>                    
                     <td>#firstname#</td>
                     <td>
                     	<cfif sex EQ 'male'>
@@ -218,16 +226,16 @@
                         </cfquery>	
 	                    <td>#denied_by.firstname# #denied_by.lastname#</td>
                     </cfif>
-
+                    <td>#companyshort#</td>
                     <td>
                         <cfif status EQ 'received'>
-                        	<a href="index.cfm?curdoc=app_process/apps_received_assignment&studentid=#studentid#">
-								<cfif companyid EQ 0>
-                                	Assign
-                                <cfelse>
-                                	#companyshort#
-                                </cfif>
-                            </a>
+                        	
+                            <cfif companyid EQ 0>
+	                            <a href="index.cfm?curdoc=app_process/apps_received_assignment&studentid=#studentid#">[ Assign ]</a>
+                                &nbsp; | &nbsp;   	
+							</cfif>
+                            
+                            <a href="javascript:openPopUp('student_app/index.cfm?curdoc=approve_student_app&unqid=#uniqueid#', 800, 700);">[ Approve ]</a>	
                         <cfelse>
                         	#companyshort#
                         </cfif>

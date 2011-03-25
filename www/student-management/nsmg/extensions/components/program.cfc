@@ -24,13 +24,14 @@
 	</cffunction>
 
 	
-	<cffunction name="getPrograms" access="public" returntype="query" output="false" hint="Gets a list of users, if programID is passed gets a program by ID">
+	<cffunction name="getPrograms" access="public" returntype="query" output="false" hint="Gets a list of programs, if programID is passed gets a program by ID">
     	<cfargument name="programID" default="0" hint="programID is not required">
         <cfargument name="isActive" default="" hint="IsActive is not required">
         <cfargument name="dateActive" default="" hint="DateActive is not required">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
         <cfargument name="isEndingSoon" default="0" hint="Get only programs that are ending soon for the insurance extension/early return">
         <cfargument name="isFullYear" default="0" hint="Get only 10 month programs">
+        <cfargument name="isUpcomingPrograms" default="0" hint="Get only upcoming programs, used to assign new student applications at the time of approval">         
               
         <cfquery 
 			name="qGetPrograms" 
@@ -106,12 +107,94 @@
                     	p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,5" list="yes"> )
                 </cfif>
 
+				<cfif VAL(ARGUMENTS.isUpcomingPrograms)>
+                    AND
+                    	p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -1, now())#">
+                </cfif>
+
                 ORDER BY 
                    p.startDate DESC,
                    p.programName
 		</cfquery>
 		   
 		<cfreturn qGetPrograms>
+	</cffunction>
+
+
+	<cffunction name="getOnlineAppPrograms" access="public" returntype="query" output="false" hint="Gets a list of program used on the online application, if app_programID is passed gets a program by ID">
+    	<cfargument name="app_programID" default="0" hint="app_programID is not required">
+        <cfargument name="companyID" default="" hint="List of companies">
+        <cfargument name="isActive" default="" hint="IsActive is not required">
+              
+        <cfquery 
+			name="qGetOnlineAppPrograms" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					app_programID,
+                    companyID,
+                    app_program,
+                    short_name,
+                    app_type,
+                    country,
+                    isActive
+                FROM 
+                    smg_student_app_programs
+                WHERE
+                	1 = 1
+
+				<cfif VAL(ARGUMENTS.app_programID)>
+                	AND
+                    	app_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.app_programID#">
+                </cfif>
+                
+				<cfif LEN(ARGUMENTS.companyID)>
+                    AND
+                        companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                <cfelse>
+                    AND
+                        companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13,14" list="yes">)
+                </cfif>	                
+                    
+				<cfif LEN(ARGUMENTS.isActive)>
+                	AND
+                    	isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
+                </cfif>
+
+                ORDER BY 
+                   app_program
+		</cfquery>
+		   
+		<cfreturn qGetOnlineAppPrograms>
+	</cffunction>
+
+
+	<cffunction name="insertProgramHistory" access="public" returntype="void" output="false" hint="Inserts a program history">
+    	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="programID" hint="programID is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+        <cfargument name="changedBy" hint="changedBy is required">
+              
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+			INSERT INTO 
+            	smg_programhistory
+			(
+            	studentID, 
+                programID, 
+                reason, 
+                changedby,  
+                date
+            )
+			VALUES
+			(
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reason#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.changedBy#">,
+                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+           )
+		</cfquery>
+
 	</cffunction>
 
 </cfcomponent>

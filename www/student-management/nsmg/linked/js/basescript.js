@@ -28,7 +28,7 @@ function checkInsertDate(CKname, FRname) {
 
 function openPopUp(url, width, height) {
 	window.open(url,"","scrollbars=yes,resizable=yes,width=" + width + ",height=" + height);
-	return false;
+	// return false;
 }
 
 function OpenWindow(url) {

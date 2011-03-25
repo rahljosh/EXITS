@@ -1,6 +1,8 @@
 <cfapplication 
 	name="smg" 
-    clientmanagement="yes">
+    clientmanagement="yes"
+    sessionmanagement="yes"
+    sessiontimeout="#CreateTimeSpan( 0, 12, 0, 0 )#">
 
 	<!--- Keep the same application name as ../Application.cfm so they can share the same APPLICATION variables --->
     

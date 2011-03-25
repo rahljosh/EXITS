@@ -23,18 +23,10 @@
 
 <cfscript>
 	APPLICATION.DSN = 'MySQL';
+	
 
-
-	/***** Create APPLICATION.SETTINGS structure *****/
+/***** Create APPLICATION.SETTINGS structure *****/
 	APPLICATION.SETTINGS = StructNew();		
-	
-	/* PHASE THIS OUT */
-	APPLICATION.SETTINGS.listNonISE = "10,12,14";
-	APPLICATION.SETTINGS.listISE = "1,2,3,4,12";
-	APPLICATION.SETTINGS.listISESMG = "1,2,3,4,5,12";
-	APPLICATION.SETTINGS.listAll = "1,2,3,4,5,10,12,13,14";
-	/* PHASE THIS OUT */
-	
 	
 	// This will store a company lists 
 	APPLICATION.SETTINGS.COMPANYLIST = StructNew();		
@@ -44,7 +36,7 @@
 	APPLICATION.SETTINGS.COMPANYLIST.ISESMG = "1,2,3,4,5,12";
 	APPLICATION.SETTINGS.COMPANYLIST.NonISE = "10,11,14";
 	APPLICATION.SETTINGS.COMPANYLIST.ESI = "14";
-	APPLICATION.SETTINGS.COMPANYLIST.All = "1,2,3,4,5,10,12,13,14";
+	APPLICATION.SETTINGS.COMPANYLIST.All = "1,2,3,4,5,6,10,12,13,14";
 
 	/* 
 		this enables the address lookup. 
@@ -94,91 +86,102 @@
 		// DEVELOPMENT Server Settings	
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		// Base Path eg. C:\websites\smg\nsmg\
-		AppPath.base = 'C:/websites/www/student-management/nsmg/';
+		APPLICATION.PATH.base = 'C:/websites/www/student-management/nsmg/';
 
 	} else {
 		// PRODUCTION Server Settings
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		// Base Path eg. C:\websites\smg\nsmg\
-		AppPath.base = 'C:/websites/student-management/nsmg/';
+		APPLICATION.PATH.base = 'C:/websites/student-management/nsmg/';
 
 	}
 
 	/* jQuery Latest Version 
 	http://code.jquery.com/jquery-latest.min.js
 	http://code.jquery.com/jquery.js */		
-	AppPath.jQuery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';	
+	APPLICATION.PATH.jQuery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js';	
 	
-	AppPath.companyLogo = AppPath.base & "pics/logos/"; 
-	AppPath.uploadedFiles = AppPath.base & "uploadedfiles/";	
+	APPLICATION.PATH.companyLogo = APPLICATION.PATH.base & "pics/logos/"; 
+	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & "uploadedfiles/";	
 	
 	// These are inside uploadedFiles folder
-	AppPath.cbcXML = AppPath.uploadedFiles & "xml_files/gis/";
-	AppPath.newsMessage = AppPath.uploadedFiles & "news/";
-	AppPath.pdfDocs = AppPath.uploadedFiles & 'pdf_docs/';	
-	AppPath.sevis = AppPath.uploadedFiles & "sevis/";
-	AppPath.temp = AppPath.uploadedFiles & "temp/";	
-	AppPath.welcomePics = AppPath.uploadedFiles & "welcome_pics/";	
-	AppPath.xmlFiles = AppPath.uploadedFiles & "xml_files/";
-	AppPath.tours = AppPath.uploadedFiles & "tours/";
-	AppPath.profileFactPics = AppPath.uploadedFiles & "profileFactPics/";
+	APPLICATION.PATH.cbcXML = APPLICATION.PATH.uploadedFiles & "xml_files/gis/";
+	APPLICATION.PATH.newsMessage = APPLICATION.PATH.uploadedFiles & "news/";
+	APPLICATION.PATH.pdfDocs = APPLICATION.PATH.uploadedFiles & 'pdf_docs/';	
+	APPLICATION.PATH.sevis = APPLICATION.PATH.uploadedFiles & "sevis/";
+	APPLICATION.PATH.temp = APPLICATION.PATH.uploadedFiles & "temp/";	
+	APPLICATION.PATH.welcomePics = APPLICATION.PATH.uploadedFiles & "welcome_pics/";	
+	APPLICATION.PATH.xmlFiles = APPLICATION.PATH.uploadedFiles & "xml_files/";
+	APPLICATION.PATH.tours = APPLICATION.PATH.uploadedFiles & "tours/";
+	APPLICATION.PATH.profileFactPics = APPLICATION.PATH.uploadedFiles & "profileFactPics/";
 
 	// These are used in the student online application
-	AppPath.onlineApp = StructNew();
+	APPLICATION.PATH.onlineApp = StructNew();
 	
 	// URL Used on Upload/Delete Files
-	AppPath.onlineApp.URL = '#CGI.http_host#/nsmg/student_app/';		
-	AppPath.onlineApp.reloadURL = '#CGI.http_host#/nsmg/student_app/querys/reload_window.cfm';
-	AppPath.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
+	APPLICATION.PATH.onlineApp.URL = '#CGI.http_host#/nsmg/student_app/';		
+	APPLICATION.PATH.onlineApp.reloadURL = '#CGI.http_host#/nsmg/student_app/querys/reload_window.cfm';
+	APPLICATION.PATH.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
 	
-	AppPath.onlineApp.picture = AppPath.uploadedFiles & "web-students/";
-	AppPath.onlineApp.letters = AppPath.uploadedFiles & "letters/";
-	AppPath.onlineApp.studentLetter = AppPath.uploadedFiles & "letters/students/";
-	AppPath.onlineApp.parentLetter = AppPath.uploadedFiles & "letters/parents/";		
-	AppPath.onlineApp.familyAlbum = AppPath.uploadedFiles & "online_app/picture_album/";
-	AppPath.onlineApp.inserts = AppPath.uploadedFiles & "online_app/";
-	AppPath.onlineApp.virtualFolder = AppPath.uploadedFiles & "virtualfolder/";
-	AppPath.onlineApp.xmlApp = AppPath.uploadedFiles & "xml_app/";
+	APPLICATION.PATH.onlineApp.picture = APPLICATION.PATH.uploadedFiles & "web-students/";
+	APPLICATION.PATH.onlineApp.letters = APPLICATION.PATH.uploadedFiles & "letters/";
+	APPLICATION.PATH.onlineApp.studentLetter = APPLICATION.PATH.uploadedFiles & "letters/students/";
+	APPLICATION.PATH.onlineApp.parentLetter = APPLICATION.PATH.uploadedFiles & "letters/parents/";		
+	APPLICATION.PATH.onlineApp.familyAlbum = APPLICATION.PATH.uploadedFiles & "online_app/picture_album/";
+	APPLICATION.PATH.onlineApp.inserts = APPLICATION.PATH.uploadedFiles & "online_app/";
+	APPLICATION.PATH.onlineApp.virtualFolder = APPLICATION.PATH.uploadedFiles & "virtualfolder/";
+	APPLICATION.PATH.onlineApp.xmlApp = APPLICATION.PATH.uploadedFiles & "xml_app/";
 
 
 	/* 
 		Create the constant object in the application scope - can be used to store states, countries and statuses 
 		that are often used in the system so we do not need to call the database to get them
 	*/
-	APPLICATION.Constants = StructNew();
+	APPLICATION.CONSTANTS = StructNew();
 	
 	// Set the reference to the struct
-	Constants = APPLICATION.Constants;
+	CONSTANTS = APPLICATION.CONSTANTS;
+	
+	
+	// These are the values stored on application table
+	APPLICATION.CONSTANTS.type = StructNew();	
+	APPLICATION.CONSTANTS.type.publicHighSchool = 1;
+	APPLICATION.CONSTANTS.type.privateHighSchool = 2;
+	APPLICATION.CONSTANTS.type.hostFamily = 3;
+	APPLICATION.CONSTANTS.type.wat = 4;
+	APPLICATION.CONSTANTS.type.trainee = 5;
+	APPLICATION.CONSTANTS.type.hostFamilyLead = 6;
+
 	
 	// Set up constant for project help statuses
-	Constants.projectHelpStatus = ArrayNew(1);		
-	Constants.projectHelpStatus[1] = "created";
-	Constants.projectHelpStatus[2] = "sr_approved";
-	Constants.projectHelpStatus[3] = "ra_approved";
-	Constants.projectHelpStatus[4] = "ra_rejected";
-	Constants.projectHelpStatus[5] = "rd_approved";
-	Constants.projectHelpStatus[6] = "rd_rejected";
-	Constants.projectHelpStatus[7] = "ny_approved";
-	Constants.projectHelpStatus[8] = "ny_rejected";
-	// ArrayAppend(Constants.projectHelpStatus, "sr_approved");
+	APPLICATION.CONSTANTS.projectHelpStatus = ArrayNew(1);		
+	APPLICATION.CONSTANTS.projectHelpStatus[1] = "created";
+	APPLICATION.CONSTANTS.projectHelpStatus[2] = "sr_approved";
+	APPLICATION.CONSTANTS.projectHelpStatus[3] = "ra_approved";
+	APPLICATION.CONSTANTS.projectHelpStatus[4] = "ra_rejected";
+	APPLICATION.CONSTANTS.projectHelpStatus[5] = "rd_approved";
+	APPLICATION.CONSTANTS.projectHelpStatus[6] = "rd_rejected";
+	APPLICATION.CONSTANTS.projectHelpStatus[7] = "ny_approved";
+	APPLICATION.CONSTANTS.projectHelpStatus[8] = "ny_rejected";
+	// ArrayAppend(APPLICATION.CONSTANTS.projectHelpStatus, "sr_approved");
 	
 	
 	// Used in the Online Application
-	Constants.canadaAreas = ArrayNew(1);	
-	Constants.canadaAreas[1] = "Calgary";
-	Constants.canadaAreas[2] = "Comox";
-	Constants.canadaAreas[3] = "Edmonton";
-	Constants.canadaAreas[4] = "Golden Hills";
-	Constants.canadaAreas[5] = "Nova Scotia";
-	Constants.canadaAreas[6] = "Ottawa, Ontario";
-	Constants.canadaAreas[7] = "Richmond";
-	Constants.canadaAreas[8] = "Saskatoon";
-	Constants.canadaAreas[9] = "Southeast Kootenay";
-	Constants.canadaAreas[10] = "Winnipeg";
+	APPLICATION.CONSTANTS.canadaAreas = ArrayNew(1);	
+	APPLICATION.CONSTANTS.canadaAreas[1] = "Calgary";
+	APPLICATION.CONSTANTS.canadaAreas[2] = "Comox";
+	APPLICATION.CONSTANTS.canadaAreas[3] = "Edmonton";
+	APPLICATION.CONSTANTS.canadaAreas[4] = "Golden Hills";
+	APPLICATION.CONSTANTS.canadaAreas[5] = "Nova Scotia";
+	APPLICATION.CONSTANTS.canadaAreas[6] = "Ottawa, Ontario";
+	APPLICATION.CONSTANTS.canadaAreas[7] = "Richmond";
+	APPLICATION.CONSTANTS.canadaAreas[8] = "Saskatoon";
+	APPLICATION.CONSTANTS.canadaAreas[9] = "Southeast Kootenay";
+	APPLICATION.CONSTANTS.canadaAreas[10] = "Winnipeg";
 	
 	
 	// This stores list of Users IDs that have access to certain areas of the system

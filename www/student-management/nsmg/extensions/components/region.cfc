@@ -121,7 +121,7 @@
         <cfargument name="usertype" type="numeric" hint="usertype is required">
         
         <!--- Office Users --->
-        <cfif VAL(ARGUMENTS.usertype) LTE 4>
+        <cfif ListFind("1,2,3,4", ARGUMENTS.userType )>
               
             <cfquery 
                 name="qGetUserRegions" 
@@ -183,5 +183,89 @@
                
 		<cfreturn qGetUserRegions>
 	</cffunction>
+    
+	
+    <!--- Start of Remote Functions --->
+	<cffunction name="getRegionRemote" access="remote" returntype="query" output="false" hint="Gets a list of Regions">
+		<cfargument name="companyID" default="0" hint="Get Regions based on companyID">
+               
+        <cfquery 
+			name="qGetRegionRemote" 
+                datasource="#APPLICATION.DSN#">
+                SELECT DISTINCT
+					r.regionID,
+                    r.regionName
+                FROM 
+                    smg_regions r
+                WHERE
+                    r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
+                AND
+                    r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">    
+                ORDER BY
+                	r.regionName                
+		</cfquery>
 
+        <cfscript>
+			// Return message to user if not was found
+			if ( NOT VAL(qGetRegionRemote.recordCount) ) {
+				QueryAddRow(qGetRegionRemote, 1);
+				QuerySetCell(qGetRegionRemote, "regionID", 0);	
+				QuerySetCell(qGetRegionRemote, "regionName", "---- No Regions assigned to this company ----", 1);
+			}
+			
+			// Return message if companyID is not valid
+			if ( NOT VAL(ARGUMENTS.companyID) ) {
+				qGetRegionRemote = QueryNew("regionID, regionName");
+				QueryAddRow(qGetRegionRemote);
+				QuerySetCell(qGetRegionRemote, "regionID", 0);	
+				QuerySetCell(qGetRegionRemote, "regionName", "---- First Select a Company ----", 1);
+			}
+
+			return qGetRegionRemote;
+		</cfscript>
+        
+	</cffunction>
+    
+
+	<cffunction name="getRegionGuaranteeRemote" access="remote" returntype="query" output="false" hint="Gets a list of Region Guarantees">
+		<cfargument name="regionID" default="0" hint="Get Guarantees based on regionID">
+               
+        <cfquery 
+			name="qGetRegionGuaranteeRemote" 
+                datasource="#APPLICATION.DSN#">
+                SELECT DISTINCT
+					r.regionID,
+                    r.regionName
+                FROM 
+                    smg_regions r
+                WHERE
+                    r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
+                AND
+                    r.subOfRegion = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">    
+                ORDER BY
+                	r.regionName                
+		</cfquery>
+
+        <cfscript>
+			// Return message to user if not was found
+			if ( NOT VAL(qGetRegionGuaranteeRemote.recordCount) ) {
+				QueryAddRow(qGetRegionGuaranteeRemote, 1);
+				QuerySetCell(qGetRegionGuaranteeRemote, "regionID", 0);	
+				QuerySetCell(qGetRegionGuaranteeRemote, "regionName", "---- No Guarantees available ----", 1);
+			}
+			
+			// Return message if regionID is not valid
+			if ( NOT VAL(ARGUMENTS.regionID) ) {
+				qGetRegionGuaranteeRemote = QueryNew("regionID, regionName");
+				QueryAddRow(qGetRegionGuaranteeRemote);
+				QuerySetCell(qGetRegionGuaranteeRemote, "regionID", 0);	
+				QuerySetCell(qGetRegionGuaranteeRemote, "regionName", "---- First Select a Region ----", 1);
+			}
+
+			return qGetRegionGuaranteeRemote;
+		</cfscript>
+        
+	</cffunction>
+    
+    
 </cfcomponent>

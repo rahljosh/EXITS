@@ -26,6 +26,7 @@
 	
 	<cffunction name="getCompanies" access="public" returntype="query" output="false" hint="Gets a list of companies, if companyID is passed gets a company by ID">
     	<cfargument name="companyID" default="0" hint="CompanyID is not required">
+    	<cfargument name="companyIDList" default="" hint="List of Company IDs / not required">
         <cfargument name="website" default="" hint="website is not required">
               
         <cfquery 
@@ -69,18 +70,27 @@
                     smg_companies
                 WHERE	
                 	1 = 1
+				
 				<cfif VAL(ARGUMENTS.companyID)>
                 	AND
                     	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 </cfif>    
+
+				<cfif LEN(ARGUMENTS.companyIDList)>
+                	AND
+                    	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyIDList#" list="yes"> )
+                </cfif>    
+                
 				<cfif LEN(ARGUMENTS.website)>
                 	AND
                     	website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.website#">
                 </cfif>    
+                
                 ORDER BY 
+                    companyShort_nocolor,                    
                     companyshort
 		</cfquery>
-		   
+           
 		<cfreturn qGetCompanies>
 	</cffunction>
 
