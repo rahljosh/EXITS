@@ -53,6 +53,12 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------------------------------------------- ----
+		
+		DS-2019 Verification List
+	
+	----- ------------------------------------------------------------------------- --->
+    
 	<cffunction name="getVerificationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         <cfargument name="branchID" default="0" hint="Branch is not required">
@@ -122,6 +128,7 @@
 	</cffunction>
 
 
+	<!--- Remote Functions --->
 	<cffunction name="getRemoteStudentByID" access="remote" returnFormat="json" output="false" hint="Returns a student in Json format">
         <cfargument name="studentID" required="yes" hint="studentID is required">
 
@@ -180,7 +187,7 @@
 		</cfquery>
 		   
 	</cffunction>
-
+	<!--- End of Remote Functions --->
 
 	<cffunction name="confirmVerificationReceived" access="remote" returntype="void" hint="Sets verification_received field as received.">
         <cfargument name="studentID" required="yes" hint="studentID is required">
@@ -196,6 +203,12 @@
 		</cfquery>
 		   
 	</cffunction>
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		END OF DS-2019 Verification List
+	
+	----- ------------------------------------------------------------------------- --->
 
 
 	<!--- ------------------------------------------------------------------------- ----

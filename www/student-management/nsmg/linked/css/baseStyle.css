@@ -84,7 +84,7 @@
 div.pageMessages { 
 	font-size:0.8em;
 	display:none;
-	margin: 0px; 
+	margin: 5px auto 5px auto; 
 	padding: 5px 10px; 
 	background-color: #c2d9e9;
 	border: #0069aa 1px solid; 
@@ -105,7 +105,7 @@ div.pageMessages p em {
 
 /***** ERROR MESSAGE *****/
 div.errors { 
-	margin: 0px; 
+    margin:0px auto 10px auto;
 	padding: 5px 10px; 
 	border: #FC6 1px solid; 
 	background-color: #FFC; 

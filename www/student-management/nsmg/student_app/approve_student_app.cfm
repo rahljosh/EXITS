@@ -1,172 +1,353 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link rel="stylesheet" type="text/css" href="app.css">
-	<title>EXITS Online Application</title>
-</head>
-<body>
-
-<style type="text/css">
-.thin-border{ border: 1px solid #000000;
-			  font:Arial, Helvetica, sans-serif;}
-</style>
-
-<cfif isDefined('url.unqid')>
-	<cfquery name="get_student_id" datasource="MySQL">
-		SELECT studentid
-		from smg_students
-		WHERE uniqueid = '#url.unqid#'
-	</cfquery>
-	<cfset client.studentid = get_student_id.studentid>
-</cfif>
+<!--- ------------------------------------------------------------------------- ----
 	
-<cfinclude template="../querys/get_student_info.cfm">
+	File:		approve_student_app.cfm
+	Author:		Marcus Melo
+	Date:		March 23, 2011
+	Desc:		Approves an application
 
-<cfquery name="get_intrep" datasource="MySql">
-	SELECT userid, businessname
-	FROM smg_users 
-	WHERE userid = '#get_student_info.intrep#'
-</cfquery>
+	Updated:	03/23/2011 - Ability to assign a program and region
+				
+----- ------------------------------------------------------------------------- --->
 
-<cfquery name="app_programs" datasource="MySQL">
-	SELECT app_programid, app_program 
-	FROM smg_student_app_programs
-	WHERE app_programid = '#get_student_info.app_indicated_program#'
-</cfquery>
- 
-<cfquery name="app_other_programs" datasource="MySQL">
-	SELECT app_programid, app_program 
-	FROM smg_student_app_programs
-	WHERE app_programid = '#get_student_info.app_additional_program#'
-</cfquery> 
+<!--- Kill Extra Output --->
+<cfsilent>
 
-<cfquery name="states_requested" datasource="MySQL">
-	SELECT state1, sta1.statename as statename1, state2, sta2.statename as statename2, state3, sta3.statename as statename3
-	FROM smg_student_app_state_requested 
-	LEFT JOIN smg_states sta1 ON sta1.id = state1
-	LEFT JOIN smg_states sta2 ON sta2.id = state2
-	LEFT JOIN smg_states sta3 ON sta3.id = state3
-	WHERE studentid = '#get_student_info.studentid#'
-</cfquery>
+	<!--- Import CustomTag --->
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+	
+    <!--- Param URL Variables --->
+    <cfparam name="studentID" default="0">
+    
+    <cfparam name="URL.unqID" default="">
 
-<!----Company and Region Assignment---->
-<cfquery name="get_company" datasource="MySQL">
-	SELECT companyid, companyname, companyshort,team_id
-	FROM smg_companies
+    <!--- Param FORM Variables --->
+	<cfparam name="FORM.submitted" default="0">    
+    <cfparam name="FORM.companyID" default="0">
+	<cfparam name="FORM.programID" default="0">	
+    <cfparam name="FORM.regionID" default="0">    
+	
+    <cfscript>
+		// Get Student By UniqueID
+		if ( LEN(URL.unqID) ) {
+			qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.unqID);
+			CLIENT.studentID = qGetStudentInfo.studentID;
+		} else {
+			qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=studentID);	
+		}
+		
+		// Get Program List
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingPrograms=1);
+		
+		// Get Company List
+		qGetCompanyList = APPLICATION.CFC.COMPANY.getCompanies(companyIDList=APPLICATION.SETTINGS.COMPANYLIST.All);
+
+		// Get Intl. Rep Information
+		qGetIntRepInfo = APPLICATION.CFC.USER.getUserByID(qGetStudentInfo.intrep);
+		
+		// Program Information
+		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getOnlineAppPrograms(app_programID=qGetStudentInfo.app_indicated_program);
+		
+		// Additional Program
+		qGetAdditionalProgramInfo = APPLICATION.CFC.PROGRAM.getOnlineAppPrograms(app_programID=qGetStudentInfo.app_additional_program);
+	</cfscript>
+
+    <cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="file" filter="#qGetStudentInfo.studentid#.*">
+
+    <cfquery name="qGetStatesRequested" datasource="MySQL">
+        SELECT 
+        	state1, 
+            sta1.statename as statename1, 
+            state2, 
+            sta2.statename as statename2, 
+            state3, 
+            sta3.statename as statename3
+        FROM 
+        	smg_student_app_state_requested 
+        LEFT JOIN 
+        	smg_states sta1 ON sta1.id = state1
+        LEFT JOIN 
+        	smg_states sta2 ON sta2.id = state2
+        LEFT JOIN 
+        	smg_states sta3 ON sta3.id = state3
+        WHERE 
+        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
+    </cfquery>
+    
+    <cfscript>
+		// Check if FORM has been submitted
+		if ( FORM.submitted ) {
+
+			// Data Validation
+			if ( NOT VAL(FORM.companyID) ) {
+				SESSION.formErrors.Add('You must select a company');
+			}
+			
+			if ( FORM.companyID NEQ 6 AND NOT VAL(FORM.regionID) ) {
+				SESSION.formErrors.Add('You must select a region');
+			}
+			
+			if ( FORM.companyID NEQ 6 AND NOT VAL(FORM.programID) ) {
+				SESSION.formErrors.Add('You must select a program');
+			}
+
+			// Check if there are no errors 
+			if ( NOT SESSION.formErrors.length() ) {
+				
+				// Get Current Application Status
+				vStudentStatus = APPLICATION.CFC.ONLINEAPPLICATION.getCurrentApplicationStatus(studentID=FORM.studentID).status;
+			
+				// Get Next Status
+				vSetNewStatus = APPLICATION.CFC.ONLINEAPPLICATION.setNextStatusID(statusID=vStudentStatus,type='approve');
+				
+				// If program is changing we need to add it to the history
+				if ( qGetStudentInfo.programID NEQ 0 AND qGetStudentInfo.programID NEQ FORM.programID ) {
+					
+					// Insert History
+					APPLICATION.CFC.PROGRAM.insertProgramHistory(
+						studentID=FORM.studentID,
+						programID=FORM.programID,
+						reason="ONLINE APP RE-APPROVED - #qGetStudentInfo.cancelreason#",
+						changedBy=CLIENT.userID
+					);
+					
+				}
+				
+				// Approve Application
+				APPLICATION.CFC.ONLINEAPPLICATION.approveStudentApplication(
+					studentID=FORM.studentID,
+					statusID=vSetNewStatus,
+					companyID=FORM.companyID,
+					programID=FORM.programID,
+					regionID=FORM.regionID,
+					approvedBy=CLIENT.userID
+				);
+				
+				// Set Up Page Message
+				SESSION.pageMessages.Add('Application successfully approved. This window should close automatically.');
+
+			}
+			
+		}
+    </cfscript>
+    
+</cfsilent>
+    
+
+<script language="javascript">
+	// Load the list when page is ready
+	$(document).ready(function() {
+		displayAddlInformation();
+	});
+
+	// Display Additional Information for Public High School
+	var displayAddlInformation = function(pageNumber,titleSortBy) { 
+		// Get CompanyID
+		vCompanyID = $("#companyID").val();
+		if ( vCompanyID != 0 && vCompanyID != 6 ) {
+			$(".additionalInformation").fadeIn();		
+		} else {
+			$(".additionalInformation").fadeOut();	
+		}
+	}
+</script>
+
+<!--- FORM Submitted - Refresh Opener and Close PopUp --->
+<cfif FORM.submitted AND NOT SESSION.formErrors.length()>
+
+	<script language="javascript">
+		// Refresh Opener
+		// window.opener.location.reload();
+		
+		// Close Window After 1.5 Seconds
+		setTimeout(function() { window.close(); }, 1500);
+	</script>
+	
+</cfif>
+
+<cfoutput>
+
+	<!--- HEADER OF TABLE --->
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr height="33">
+            <td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
+            <td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
+            <td class="tablecenter"><h2>Approve Application - #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# ###qGetStudentInfo.studentID#</h2></td>
+            <td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
+        </tr>
+    </table>
+    
+    <div class="section" style="padding-top:20px;">
+    
+		<!--- Page Messages --->
+        <gui:displayPageMessages 
+            pageMessages="#SESSION.pageMessages.GetCollection()#"
+            messageType="onlineApplication"
+            width="660"
+            />
+        
+        <!--- Form Errors --->
+        <gui:displayFormErrors 
+            formErrors="#SESSION.formErrors.GetCollection()#"
+            messageType="onlineApplication"
+            width="660"
+            />
+    
+        <table width="660px" border="0" cellpadding="4" cellspacing="2" align="center">	
+            <tr>
+                <td width="150" rowspan="10" align="left" valign="top">
+                    <cfif file.recordcount>
+                        <img src="../uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
+                    <cfelse>
+                        <img src="pics/no_image.gif" border="0">
+                    </cfif>
+                    <div align="center"><img src="pics/app_approved.gif" align="middle"></div>
+                </td>
+                <td colspan="3"><b>Student's Name</b></td>
+            </tr>
+            <tr>
+                <td width="200"><em>Family Name</em></td>
+                <td width="180"><em>First Name</em></td>
+                <td width="140"><em>Middle Name</em></td>		
+            </tr>
+            <tr>
+                <td valign="top">#qGetStudentInfo.familylastname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
+                <td valign="top">#qGetStudentInfo.firstname#<br><img src="pics/line.gif" width="175" height="1" border="0" align="absmiddle"></td>
+                <td valign="top">#qGetStudentInfo.middlename#<br><img src="pics/line.gif" width="135" height="1" border="0" align="absmiddle"></td>
+            </tr>
+            <tr><td colspan="3">&nbsp;</td></tr>
+            <tr><td colspan="3">
+                    <table width="100%" border="0" cellpadding=0 cellspacing=0 align="center">	
+                        <tr><td colspan="2"><b>Program Information</b></td></tr>
+                        <tr>
+                            <td><em>Program</em></td>
+                            <td><em>Additional Programs</em></td>
+                        </tr>
+                        <tr>
+                            <td>#qGetProgramInfo.app_program#<br><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+                            <td>
+                                <cfif NOT VAL(qGetAdditionalProgramInfo.recordcount)>
+                                    None
+                                <cfelse>
+                                    #qGetAdditionalProgramInfo.app_program#
+                                </cfif>
+                                <br><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+                        </tr>
+                        <tr><td colspan="2">&nbsp;</td></tr>
+                    </table>
+            </td></tr>
+            <tr>
+                <td><em>International Representative</em></td><td><em>Regional Guarantee</em></td><td><em>State Guarnatee</em></td>
+            </tr>
+            <tr>
+                <td valign="bottom">#qGetIntRepInfo.businessname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
+                <td valign="bottom">
+                    <cfswitch expression="#qGetStudentInfo.app_region_guarantee#">
+        
+                        <cfcase value="1">
+                            Region 1 - East
+                        </cfcase>
+                    
+                        <cfcase value="2">
+                            Region 2 - South
+                        </cfcase>
+                    
+                        <cfcase value="3">
+                            Region 3 - Central
+                        </cfcase>
+                    
+                        <cfcase value="4">
+                            Region 4 - Rocky Mountain
+                        </cfcase>
+                    
+                        <cfcase value="5">
+                            Region 5 - West
+                        </cfcase>
+                    
+                        <cfdefaultcase>
+                            n/a
+                        </cfdefaultcase>
+                    
+                    </cfswitch>
+                    <br><img src="pics/line.gif" width="175" height="1" border="0" align="absmiddle">
+                </td>
+                <td valign="bottom">
+                    <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
+                        n/a
+                    <cfelse>
+                        1st Choice: #qGetStatesRequested.statename1# <br>
+                        2nd Choice: #qGetStatesRequested.statename2#<br>
+                        3rd Choice: #qGetStatesRequested.statename3#
+                    </cfif>
+                    <br><img src="pics/line.gif" width="135" height="1" border="0" align="absmiddle">
+                </td>
+            </tr>
+        </table>
+        
+        <br>
+        
+        <!--- FORM --->
+        <cfform method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
+        	<input type="hidden" name="submitted" value="1">
+            <input type="hidden" name="studentID" value="#qGetStudentInfo.studentID#">
+            <table width="660px" border="0" cellpadding="4" cellspacing="2" align="center" style="border:1px solid ##CCC; padding:5px;">	
+                <tr><th colspan="2"><h3><u>The following information is required to finish the approval of the application.</u></h3></th></tr>
+                <tr>
+                    <td width="30%" align="right">Company: </td>
+                    <td>
+                    	<select name="companyID" id="companyID" onChange="displayAddlInformation();">
+                        	<option value="0">--- Select a Company ---</option>
+                            <cfloop query="qGetCompanyList">
+                            	<option value="#qGetCompanyList.companyID#" <cfif FORM.companyID EQ qGetCompanyList.companyID>selected</cfif>>#qGetCompanyList.companyShort_nocolor# - #qGetCompanyList.team_id#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="displayNone additionalInformation">
+                    <td align="right">Region: </td>
+                    <td>
+                      <cfselect
+                          name="regionID" 
+                          id="regionID"
+                          value="regionID"
+                          display="regionName"
+                          selected="#FORM.regionID#"
+                          bindonload="yes"
+                          bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" /> 
+                    </td>
+                </tr>
+                <tr class="displayNone additionalInformation">
+                    <td align="right">Program: </td>
+                    <td>
+                        <select name="programID" id="programID">
+                            <option value="0">--- Select a Program ---</option>
+                            <cfloop query="qGetProgramList">
+                            	<option value="#qGetProgramList.programID#" <cfif FORM.programID EQ qGetProgramList.programID>selected</cfif>>#programName#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="2">
+                        <input name="submit" type=image src="pics/approve.gif" alt='Approve Application'>		
+                    </td>
+                </tr>
+            </table>
             
-</cfquery>
-
-<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
-
-<!--- HEADER OF TABLE --->
-<table width="100%" cellpadding="0" cellspacing="0">
-	<tr height="33">
-		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
-		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
-		<td class="tablecenter"><h2>Approve Application</h2></td>
-		<td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
-	</tr>
-</table>
-
-<cfoutput query="get_student_info">
-
-<div class="section"><br>
-
-<table width="660" border=0 cellpadding=4 cellspacing=2 align="center">	
-	<tr>
-		<td width="150" rowspan="10" align="left" valign="top">
-			<cfif file.recordcount>
-				<img src="../uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
-			<cfelse>
-				<img src="pics/no_image.gif" border=0>
-			</cfif>
-			<div align="center"><img src="pics/app_approved.gif" align="middle"></div>
-		</td>
-		<td colspan="3"><b>Student's Name</b></td>
-	</tr>
-	<tr>
-		<td width="200"><em>Family Name</em></td>
-		<td width="180"><em>First Name</em></td>
-		<td width="140"><em>Middle Name</em></td>		
-	</tr>
-	<tr>
-		<td valign="top">#familylastname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
-		<td valign="top">#firstname#<br><img src="pics/line.gif" width="175" height="1" border="0" align="absmiddle"></td>
-		<td valign="top">#middlename#<br><img src="pics/line.gif" width="135" height="1" border="0" align="absmiddle"></td>
-	</tr>
-	<tr><td colspan="3">&nbsp;</td></tr>
-	<tr><td colspan="3">
-			<table width="100%" border=0 cellpadding=0 cellspacing=0 align="center">	
-				<tr><td colspan="2"><b>Program Information</b></td></tr>
-				<tr>
-					<td><em>Program</em></td>
-					<td><em>Additional Programs</em></td>
-				</tr>
-				<tr>
-					<td>#app_programs.app_program#<br><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
-					<td><cfif app_other_programs.recordcount EQ '0'>None<cfelse>#app_other_programs.app_program#</cfif><br><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
-				</tr>
-				<tr><td colspan="2">&nbsp;</td></tr>
-			</table>
-	</td></tr>
-	<tr>
-		<td><em>International Representative</em></td><td><em>Regional Guarantee</em></td><td><em>State Guarnatee</em></td>
-	</tr>
-	<tr>
-		<td valign="bottom">#get_intrep.businessname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
-		<td valign="bottom">
-			<cfif get_student_info.app_region_guarantee EQ '0'> n/a 
-			<cfelseif get_student_info.app_region_guarantee EQ '1'>Region 1 - East
-			<cfelseif get_student_info.app_region_guarantee EQ '2'>Region 2 - South
-			<cfelseif get_student_info.app_region_guarantee EQ '3'>Region 3 - Central
-			<cfelseif get_student_info.app_region_guarantee EQ '4'>Region 4 - Rocky Mountain
-			<cfelseif get_student_info.app_region_guarantee EQ '5'>Region 5 - West
-			</cfif>
-			<br><img src="pics/line.gif" width="175" height="1" border="0" align="absmiddle">
-		</td>
-		<td valign="bottom">
-			<cfif states_requested.state1 EQ '0' OR states_requested.recordcount EQ '0'>
-				n/a
-			<cfelse>
-				1st Choice: #states_requested.statename1# <br>
-				2nd Choice: #states_requested.statename2#<br>
-				3rd Choice: #states_requested.statename3#
-			</cfif>
-			<br><img src="pics/line.gif" width="135" height="1" border="0" align="absmiddle">
-		</td>
-	</tr>
-</table><br>
-
-<cfform method="post" action="querys/approve_student_app.cfm">
-<table width="500" border=0 cellpadding=4 cellspacing=2 align="center" class="thin-border">	
-	<tr><td colspan=2><h3><u>The following information is required to finish the approval of the application.</u></h3></td></tr>
-	<tr>
-		<td align="right">Assign the student to a company thats using EXITS: </td>
-		<td><cfselect name="companyid">
-				<option value="0">Select Company</option>
-				<cfloop query="get_company">
-				<option value="#companyid#" <cfif get_student_info.companyid EQ companyid>selected</cfif>>#team_id#</option>
-		 		</cfloop>
-			</cfselect>
-		</td>
-	</tr>
-	<tr>
-		<td align="center" colspan=2><br>
-		<cfinput name="submit" type=image src="pics/approve.gif" alt='Approve Application'>		
-		</td>
-	</tr>
-</table><br>
-
-<table width="660" border=0 cellpadding=4 cellspacing=2 align="center">	
-	<tr><td align="center">Upon Approval and Company Assignment, notification will be sent to the student (if an email is on file) to let him/her know his/her application has been approved and they are awaiting placement.<br>
-		Student will also immediately show up in the unplaced listing of students waiting for placement.</td></tr>
-</table><br>
-
-</cfform>
-
-</div>
-
-<cfinclude template="footer_table.cfm">
+            <br>
+            
+            <table width="660px" border="0" cellpadding="4" cellspacing="2" align="center">	
+                <tr>
+                    <td align="center">
+                        Upon Approval and Company Assignment, notification will be sent to the student (if an email is on file) to let him/her know his/her application has been approved and they are awaiting placement.<br>
+                        Student will also immediately show up in the unplaced listing of students waiting for placement.
+                    </td>
+               </tr>
+            </table>
+        
+        </cfform>
+    
+    </div>
+    
+    <cfinclude template="footer_table.cfm">
 
 </cfoutput>

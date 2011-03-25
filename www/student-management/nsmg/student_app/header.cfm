@@ -133,6 +133,7 @@
 <title>EXITS Student Application</title>
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" href="../smg.css" type="text/css">
+<link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
 <link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css"> <!-- Date Picker Style -->
 <script src="../linked/js/jquery.js" type="text/javascript"></script> <!-- jQuery -->
 <script src="../linked/js/jquery.cfjs.js" type="text/javascript"></script> <!-- Coldfusion functions for jquery -->

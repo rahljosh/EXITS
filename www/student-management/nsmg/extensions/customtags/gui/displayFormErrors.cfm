@@ -69,6 +69,7 @@
                 
                 </cfcase>
             
+            
 				<!--- Error displayed on tableSection --->
                 <cfcase value="tableSection">
 
@@ -93,6 +94,36 @@
                         </tr>                        
 					</table>
 
+					<cfscript>
+                        // Check to see if we are supposed to clear the queue 
+                        if ( ATTRIBUTES.Clear ) {
+							ATTRIBUTES.formErrors.Clear();
+							SESSION.formErrors.Clear();
+                        }
+                    </cfscript>
+                
+                </cfcase>
+
+
+				<!--- Online Application --->
+                <cfcase value="onlineApplication">
+					
+                    
+                    <div class="errors" style="width:#ATTRIBUTES.width#;">
+                        <p><em>Oops... the following errors were encountered:</em></p>
+                
+                        <ol>
+
+                            <!--- Loop over the message --->
+                            <cfloop from="1" to="#ArrayLen(ATTRIBUTES.formErrors)#" index="i">
+                               <li>#i#. &nbsp; #ATTRIBUTES.formErrors[i]#</li>        	
+                            </cfloop>
+    
+                        </ol>
+                        
+                        <p>Data has <strong>NOT</strong> been saved.</p>
+                    </div>
+                    
 					<cfscript>
                         // Check to see if we are supposed to clear the queue 
                         if ( ATTRIBUTES.Clear ) {
