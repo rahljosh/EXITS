@@ -58,7 +58,7 @@
 	<cfinvoke component="nsmg.cfc.email" method="send_mail">
         <cfinvokeargument name="email_to" value="#email_info.email#, josh@pokytrails.com">
         <cfinvokeargument name="reply_to" value="#client.email#">
-        <cfinvokeargument name="email_subject" value="EXITS Application Transfered">
+        <cfinvokeargument name="email_subject" value="EXITS Application Transferred">
         <cfinvokeargument name="email_message" value="#email_message#">
     </cfinvoke>
 
