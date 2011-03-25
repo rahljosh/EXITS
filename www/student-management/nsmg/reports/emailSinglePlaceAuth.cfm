@@ -106,7 +106,7 @@
      <cfsavecontent variable="email_message">
         <cfoutput>				
             <p>#get_student_info.firstname# #get_student_info.familylastname# (#get_student_info.studentid#) has been placed in a single person home. The Department of State requires that we have written authorization from the student and natural parents,  before the placement can be approved.  </p>
-            <p>Please sign and return the attached for as soon as possible.</p>
+            <p>Please sign and return the attached as soon as possible.</p>
             <p>
             Regards-<br />
             #get_facilitator.firstname# #get_facilitator.lastname#
