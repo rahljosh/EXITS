@@ -98,7 +98,7 @@ This agent does not have any students currently active OR all students have had 
 	<tr>
 		<td></td><td>Student</td><td>Program</td>
 	</tr>
-		<cfoutput query=students_under_rep_not_charged>
+		<cfoutput query="students_under_rep_not_charged">
         
         	<cfquery name="check_depositCharge" datasource="MySQL">
 				select type
