@@ -622,12 +622,26 @@ select *,
                         <td align="left">
                         	<cfif invoice_payments.paymenttype EQ 'apply credit'>
                             	credit note
+                                
+								<cfquery name="totalCreditNote" datasource="MySQL">
+                                SELECT
+                                	SUM(amount) AS amount
+                                FROM
+                                	smg_credit
+                                WHERE
+                                	creditid = #invoice_payments.paymentref#
+                                GROUP BY
+                                	creditid
+                                </cfquery>
+                                
+                                <cfset totalReceived = #totalCreditNote.amount#>
                             <cfelse>
                             	#invoice_payments.paymenttype#
+                                <cfset totalReceived = #invoice_payments.totalreceived#>
                             </cfif>
                         </td>
                         <td align="left">#invoice_payments.paymentref#</td>
-                        <td align="left">#LSCurrencyFormat(invoice_payments.totalreceived, 'local')#</td>
+                        <td align="left">#LSCurrencyFormat(variables.totalReceived, 'local')#</td>
                         <td align="left">#dateFormat(invoice_payments.date, 'mm/dd/yyyy')#</td>
                         <td align="right" class="thin-border-right"><font color="##FF0000">-#LSCurrencyFormat(invoice_payments.amountapplied, 'local')#</font></td>
                     </tr>
