@@ -11,6 +11,8 @@
 <cfinclude template="check_rights.cfm">
 
 <cfparam name="linkSSL" default="s">
+<cfparam name="totalapplied" default="0">
+<cfparam name="totalRefunded" default="0">
 
 <cfsetting requesttimeout="300">
 
@@ -127,6 +129,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #0
 .thin-border-left{ border-left: 1px solid #000000;}
 .thin-border-right-bottom{ border-right: 1px solid #000000; border-bottom: 1px solid #000000;}
 .thin-border-bottom{  border-bottom: 1px solid #000000;}
+.thin-border-top{  border-top: 1px solid #000000;}
 .thin-border-left-bottom{ border-left: 1px solid #000000; border-bottom: 1px solid #000000;}
 .thin-border-right-bottom-top{ border-right: 1px solid #000000; border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
 .thin-border-left-bottom-top{ border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
@@ -170,6 +173,42 @@ FROM smg_credit sc
 LEFT JOIN smg_students s ON s.studentid = sc.stuid
 LEFT JOIN smg_programs sp ON sc.credit_type = sp.programname
 WHERE sc.creditid = #url.creditid#
+</cfquery>
+
+<cfquery name="creditUsed" datasource="MySQL">
+SELECT
+	SUM(spc.amountapplied) AS amountapplied,
+    sc.invoiceid,
+    spr.date
+FROM
+	smg_payment_charges spc
+LEFT JOIN
+	smg_charges sc ON sc.chargeid = spc.chargeid
+LEFT JOIN
+	smg_payment_received spr ON spr.paymentid = spc.paymentid
+WHERE
+	spr.paymentref = #url.creditid#
+AND
+    spr.paymenttype = 'apply credit'
+GROUP BY
+	sc.invoiceid
+ORDER BY
+	spr.date DESC
+</cfquery>
+
+<cfquery name="creditRefunded" datasource="MySQL">
+SELECT
+	sir.date, sir.refund_receipt_id, SUM(sir.amount) AS amount, sc.creditid
+FROM
+	smg_invoice_refunds sir
+LEFT JOIN
+	smg_credit sc ON sc.id = sir.creditid
+WHERE
+	sc.creditid = #url.creditid#
+GROUP BY
+	refund_receipt_id
+ORDER BY
+	refund_receipt_id DESC
 </cfquery>
 
 <table align="center">
@@ -235,12 +274,12 @@ WHERE creditid = #url.creditid#
 
 <table width=100% border=0 cellspacing=0 cellpadding=2 bgcolor="FFFFFF"> 
 	<Tr>
-		<Td bgcolor="cccccc" class="thin-border" >Bill To:</Td>
+		<Td bgcolor="cccccc" class="thin-border" ><b>Bill To:</b></Td>
 		<td rowspan=2 valign="top">  
 			<table width="90%" border="0" cellspacing="0" cellpadding="2" align="right" class=thin-border>
 				  <tr><td bgcolor="CCCCCC" align="center" class="thin-border-bottom"><b><FONT size="+1">Credit</FONT></b></td></tr>
 				  <tr><td align="center" class="thin-border-bottom" ><B><font size=+1>###credit_info.creditid#</font></b></td></tr>
-				  <tr><td bgcolor="CCCCCC" align="center" class="thin-border-bottom">Date</td></tr>
+				  <tr><td bgcolor="CCCCCC" align="center" class="thin-border-bottom"><b>Date</b></td></tr>
 				  <tr><td  align="center" class="thin-border-bottom">#DateFormat(credit_info.date, 'mm/dd/yyyy')#</td></tr>
 			</table>
 		</td>
@@ -261,7 +300,7 @@ WHERE creditid = #url.creditid#
 	<cfif agent_info.billing_address neq agent_info.address or agent_info.billing_address2 neq agent_info.address2
 	or agent_info.billing_city neq agent_info.city or  agent_info.billing_zip neq agent_info.zip>
 		<tr><td>&nbsp;</td></tr>
-		<Tr><td bgcolor="cccccc" class="thin-border" background="../pics/cccccc.gif">Local Contact:</td></tr>
+		<Tr><td bgcolor="cccccc" class="thin-border" background="../pics/cccccc.gif"><b>Local Contact:</b></td></tr>
 		<tr>
 			<td valign=top class="thin-border-left-bottom-right">
 				#agent_info.businessname# (#agent_info.userid#)<br>
@@ -285,12 +324,12 @@ WHERE creditid = #url.creditid#
 
 	<table width=100% cellspacing=0 cellpadding=2 class=thin-border border=0> 	
         <tr bgcolor="CCCCCC" >
-			<td class="thin-border-right-bottom">Type</td>
-            <td class="thin-border-right-bottom">Invoice</td>
-            <td class="thin-border-right-bottom">Student ID</td>
-            <td class="thin-border-right-bottom">Description</td>
-            <td class="thin-border-right-bottom" align="right">Amount</td>
-            <td class="thin-border-bottom" align="right">Total</td>
+			<td class="thin-border-right-bottom"><b>Type</b></td>
+            <td class="thin-border-right-bottom"><b>Invoice</b></td>
+            <td class="thin-border-right-bottom"><b>Student ID</b></td>
+            <td class="thin-border-right-bottom"><b>Description</b></td>
+            <td class="thin-border-right-bottom" align="right"><b>Amount</b></td>
+            <td class="thin-border-bottom" align="right"><b>Total</b></td>
 		</tr>
 
     <cfquery name="studCred" datasource="MySQL">
@@ -336,7 +375,7 @@ WHERE creditid = #url.creditid#
 <cfoutput>
 	<table width=100% cellspacing=0 cellpadding=2 border=0 bgcolor="FFFFFF">	
 		<tr>
-			<td width="70%"><cfif credit_info.credit_type IS 'Trainee'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
+			<td width="70%" valign="top"><cfif credit_info.credit_type IS 'Trainee'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
        					<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="70"/>
                         
                         <cfelse>
@@ -352,10 +391,90 @@ WHERE creditid = #url.creditid#
                             </cfif> </td>
 			<td width="30%" valign="top" align="right">
 				<table width=100% cellspacing=0 cellpadding=2 border=0 bgcolor="FFFFFF">	
-					<tr>
-						<td bgcolor="CCCCCC" class="thin-border-left-bottom-top" align="right"><b>TOTAL CREDIT/CANCELED</b></td>
-						<td bgcolor="CCCCCC" class="thin-border-right-bottom-top" align="right"><b>#LSCurrencyFormat(creditSum.totalCredit, 'local')#</td>
+					<tr valign="middle" height="40" class="thin-border-left">
+						<td colspan="3" align="right"class="thin-border-left thin-border-top thin-border-bottom">
+                        	<b>TOTAL CREDIT/CANCELED:</b>
+                        </td>
+						<td align="right" class="thin-border-right thin-border-top thin-border-bottom">
+                        	<b>#LSCurrencyFormat(creditSum.totalCredit, 'local')#</b>
+                        </td>
 					</tr>
+                    
+                    <!--- <cfif creditUsed.recordCount NEQ 0> --->
+					<tr>
+                    	<td align="right" class="thin-border-left"><b>Total Credit Applied:</b></td>
+                        <td align="right"><b>Date Applied</b></td>
+						<td align="right"><b>Invoice</b></td>
+						<td align="right" class="thin-border-right"><b>Amount Applied</b></td>
+					</tr>
+
+                    <cfloop query="creditUsed">
+                        <tr>
+                            <td align="right" class="thin-border-left"></td>
+                            <td align="right">#dateFormat(creditUsed.date, 'mm-dd-yyyy')#</td>
+                            <td align="right">#creditUsed.invoiceid#</td>
+                            <td align="right" class="thin-border-right">
+                            	<font color="##FF0000">-#LSCurrencyFormat(creditUsed.amountapplied, 'local')#</font>
+                            </td>
+                        </tr>
+                    	<cfset totalapplied = totalapplied + #creditUsed.amountapplied#>
+                    </cfloop>
+                    
+					<tr valign="middle" height="40">
+                    	<td colspan="2" align="right" class="thin-border-left"></td>
+						<td align="right"><b>TOTAL APPLIED:</b></td>
+						<td align="right" class="thin-border-right">
+                        	<b><font color="##FF0000">-#LSCurrencyFormat(variables.totalapplied, 'local')#</font></b>
+                        </td>
+					</tr>
+                    <!--- </cfif> --->
+                    
+                    <cfif creditRefunded.recordCount NEQ 0>
+                        <tr>
+                            <td align="right" class="thin-border-left thin-border-top"><b>Total Credit Refunded:</b></td>
+                            <td align="center" class="thin-border-top"><b>Date </b></td>
+                            <td align="right" class="thin-border-top"><b>Refund ID</b></td>
+                            <td align="right" class="thin-border-right thin-border-top"><b>Amount Refunded</b></td>
+                        </tr>
+                    
+                        <cfloop query="creditRefunded">
+                            <tr>
+                                <td align="right" class="thin-border-left"></td>
+                                <td align="right">#dateFormat(creditRefunded.date, 'mm-dd-yyyy')#</td>
+                                <td align="right">#creditRefunded.refund_receipt_id#</td>
+                                <td align="right" class="thin-border-right">
+                                	<font color="##FF0000">-#LSCurrencyFormat(creditRefunded.amount, 'local')#</font>
+                                </td>
+                            </tr>
+                            <cfset totalRefunded = totalRefunded + #creditRefunded.amount#>
+                        </cfloop>
+                        <tr valign="middle" height="40">
+                            <td colspan="2" align="right" class="thin-border-left"></td>
+                            <td align="right"><b>TOTAL REFUNDED:</b></td>
+                            <td align="right" class="thin-border-right">
+                            	<b><font color="##FF0000">-#LSCurrencyFormat(variables.totalRefunded, 'local')#</font></b>
+                            </td>
+                        </tr>
+                    </cfif>
+                    
+                    <cfif creditUsed.recordCount NEQ 0 AND creditRefunded.recordCount NEQ 0>
+                        <tr valign="middle" height="40">
+                            <td colspan="3" align="right" class="thin-border-left thin-border-top">
+                                <b>TOTAL CREDIT APPLIED/REFUNDED:</b></td>
+                            <td align="right" class="thin-border-right thin-border-top">
+                                <b><font color="##FF0000">-#LSCurrencyFormat(variables.totalapplied + variables.totalRefunded, 'local')#</font></b>
+                            </td>
+                        </tr>
+                    </cfif>
+                        
+                    <tr valign="middle" height="40">
+                        <td colspan="3"align="right" class="thin-border-left thin-border-bottom thin-border-top">
+                            <b>CREDIT NOTE BALANCE:</b></td>
+                        <td align="right" class="thin-border-right thin-border-bottom thin-border-top">
+                            <b>#LSCurrencyFormat(creditSum.totalCredit - (variables.totalapplied + variables.totalRefunded), 'local')#</b>
+                        </td>
+                    </tr>
+                    
 				</table>
 			</td>
 		</tr>
