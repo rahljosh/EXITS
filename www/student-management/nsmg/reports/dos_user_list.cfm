@@ -26,7 +26,7 @@
    		FROM
         	smg_users u
         INNER JOIN
-        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="$APPLICATION.SETTINGS.COMPANYLIST.ISE$" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
+        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
         INNER JOIN
         	smg_programs p ON s.programID = p.programID AND p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
 		
@@ -41,7 +41,7 @@
   		FROM
         	smg_users u
         INNER JOIN
-        	smg_hosthistory h ON (h.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="$APPLICATION.SETTINGS.COMPANYLIST.ISE$" list="yes">) AND (h.placeRepID = u.userID OR h.areaRepID = u.userID) )
+        	smg_hosthistory h ON (h.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes">) AND (h.placeRepID = u.userID OR h.areaRepID = u.userID) )
         
         <!---
         UNION
@@ -56,7 +56,7 @@
   		FROM
         	smg_users u
         INNER JOIN
-        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="$APPLICATION.SETTINGS.COMPANYLIST.ISE$" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
+        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
         INNER JOIN
         	smg_programs p ON s.programID = p.programID AND p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
         WHERE
@@ -81,7 +81,7 @@
             AND 
             	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
 			AND
-            	uar.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="$APPLICATION.SETTINGS.COMPANYLIST.ISE$" list="yes">)             
+            	uar.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes">)             
 	</cfquery>
 
 

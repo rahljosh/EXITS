@@ -43,7 +43,7 @@
 	<tr>
     	<th colspan="2" bgcolor="e2efc7">
             R E P O R T S 
-             <cfif ListFind("$APPLICATION.SETTINGS.COMPANYLIST.ISE$", CLIENT.companyID)>
+             <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                 <font size="0.8em">
                 	<br> (PS: Change to SMG to include all ISE students - William, Margarita, Diana, Gary and Brian)
                 </font>
