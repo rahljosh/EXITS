@@ -29,9 +29,14 @@
 	LEFT JOIN smg_aypcamps english ON s.aypenglish = english.campid
 	LEFT JOIN smg_aypcamps orientation ON s.ayporientation = orientation.campid
 	WHERE 
-    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-    AND	
 	    s.active = '1' 
+        <cfif CLIENT.companyID EQ 5>
+	        AND
+	            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
+        <cfelse>
+	        AND
+	            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
+        </cfif>        
 		AND s.onhold_approved <= '4'
 		<cfif form.regionid NEQ 0>
 			AND s.regionassigned = '#form.regionid#'
