@@ -163,7 +163,7 @@
 				}
 			}
 			
-			if ( pageNumber > 1 ) {
+			if ( numberOfPages > 1 ) {
 			
 				//highlight current pageNumber  
 				$pager.find('#' + pageNumber).addClass('selectedLink');
