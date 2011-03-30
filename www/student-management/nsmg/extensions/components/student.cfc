@@ -84,7 +84,7 @@
                 FROM 
                     smg_students s
 				INNER JOIN
-                	smg_programs p ON p.programID = s.programID AND p.startDate < ADDDATE(now(), INTERVAL 120 DAY) <!--- Get only programs that are starting 120 days from now --->
+                	smg_programs p ON p.programID = s.programID AND p.startDate < ADDDATE(now(), INTERVAL 145 DAY) <!--- Get only programs that are starting 145 days from now --->
                 LEFT OUTER JOIN
                 	smg_countrylist birth ON birth.countryID = s.countryBirth
 				LEFT OUTER JOIN
@@ -112,6 +112,7 @@
                     AND
                         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 </cfif>
+                
 				<cfif IsDate(ARGUMENTS.receivedDate)>
                 	AND
                     	s.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.receivedDate#">
