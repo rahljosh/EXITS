@@ -136,6 +136,25 @@ div.errors ol {
 /***** END OF ERROR MESSAGE *****/
 
 
+
+/***** DEFAULT TABLE STYLE *****/
+
+.defaultTableStyle {
+	background-color:#e2efc7;  /* #c6c6c6 #EAE8E8 */
+	line-height:15px;
+	margin-bottom:50px;
+	padding-bottom:50px;
+	font-weight:bold;
+}
+
+.defaultTableStyle a {
+	color:#000;
+}
+
+/***** END OF DEFAULT TABLE STYLE *****/
+
+
+
 /***** PROJECT HELP *****/
 
 .projectHelpNote {

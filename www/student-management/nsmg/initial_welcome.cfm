@@ -174,7 +174,6 @@
         	u.datecreated DESC
     </cfquery>
     
-    
 </cfsilent>    
 
 <script type="text/javascript">
@@ -186,7 +185,7 @@
 	  {
 		if(!popUpWin.closed) popUpWin.close();
 	  }
-	  popUpWin = open(URLStr, 'popUpWin', 'toolbar=no,location=no,directories=no,status=no,menub ar=no,scrollbar=no,resizable=no,copyhistory=yes,width='+width+',height='+height+',left='+left+', top='+top+',screenX='+left+',screenY='+top+'');
+	  popUpWin = open(URLStr, 'popUpWin', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbar=no,resizable=no,copyhistory=yes,width='+width+',height='+height+',left='+left+', top='+top+',screenX='+left+',screenY='+top+'');
 	}
 	
 	function MM_jumpMenu(targ,selObj,restore){ //v3.0
@@ -195,6 +194,18 @@
 	}
 	// End -->
 </script>
+
+<!--- Display Host Lead Pop Up --->
+<cfif CLIENT.displayHostLeadPopUp>
+
+	<script language="javascript">
+		// JQuery ColorBox Modal
+		$(document).ready(function(){ 
+			$.fn.colorbox( {href:'hostLeads/index.cfm?action=needAttention', iframe:true,width:'60%',height:'50%', onLoad: function() { }} );
+		}); 
+	</script>
+
+</cfif>
 
 <style type="text/css">
 	<!--

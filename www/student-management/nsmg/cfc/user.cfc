@@ -7,12 +7,14 @@
 	<cffunction name="login" access="public" returntype="string">
 		<cfargument name="username" type="string" required="yes">
 		<cfargument name="password" type="string" required="yes">
-
-		<cfset var student_login = ''>
-		<cfset var authenticate = ''>
-		<cfset var get_access = ''>
-		<cfset var get_default_access = ''>
-		<cfset var get_companies = ''>
+		
+        <cfscript>
+			var student_login = '';
+			var authenticate = '';
+			var get_access = '';
+			var get_default_access = '';
+			var get_companies = '';
+		</cfscript>
 
 		<!--- Check if we are on Local Server --->
         <cfif APPLICATION.IsServerLocal>
@@ -53,17 +55,19 @@
         
         <!----If error code SI-102, company information is wrong---->
         <cfquery name="submitting_info" datasource="#APPLICATION.dsn#">
-            select website, url_ref, company_color
-            from
-            smg_companies
-            where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+            SELECT 
+            	website, 
+                url_ref, 
+                company_color
+            FROM
+            	smg_companies
+            WHERE 
+            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
         </cfquery>
 
         <cfif submitting_info.recordcount eq 0>
             Error during login.  Please try again shortly.
-            <cfoutput>
-            #cgi.server_name#
-            </cfoutput>
+            <cfoutput>#CGI.server_name#</cfoutput>
             <cfabort>
         </cfif>
         
@@ -75,7 +79,7 @@
 
 
 		<!--- student login --->
-        <cfquery name="student_login" datasource="#APPLICATION.dsn#">
+        <cfquery name="qAuhenticateStudent" datasource="#APPLICATION.dsn#">
             SELECT studentID, firstname, familylastname
             FROM smg_students
             WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
@@ -83,11 +87,11 @@
             and active = 1
         </cfquery>
         
-        <cfif VAL(student_login.recordcount)>
-            <cfset CLIENT.studentID = student_login.studentID>
+        <cfif VAL(qAuhenticateStudent.recordcount)>
+            <cfset CLIENT.studentID = qAuhenticateStudent.studentID>
             <cfset CLIENT.usertype = 10>
             <cfset CLIENT.userID = 0>
-            <cfset CLIENT.name = '#student_login.firstname# #student_login.familylastname#'>
+            <cfset CLIENT.name = '#qAuhenticateStudent.firstname# #qAuhenticateStudent.familylastname#'>
 			
 			<!--- Check if server is local, if it is do not redirect to SSL --->
             <cfif APPLICATION.IsServerLocal>
@@ -105,26 +109,37 @@
         
         </cfif>
 
-        <cfquery name="authenticate" datasource="#APPLICATION.dsn#">
-            SELECT *
-            FROM smg_users
-            where username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
-            and password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(password)#">
-            and active = 1
+        <cfquery name="qAuthenticateUser" datasource="#APPLICATION.dsn#">
+            SELECT 
+            	*
+            FROM 
+            	smg_users
+            WHERE 
+            	username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
+            AND 
+            	password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(password)#">
+            AND 
+            	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         </cfquery>
         
-        <cfif authenticate.recordcount EQ 0>
+        <cfif qAuthenticateUser.recordcount EQ 0>
         	<cfreturn 'Invalid Login'>            
         </cfif>
         
 		<!--- get all of the user's access records in the SMG companies. --->
         <cfquery name="get_access" datasource="#APPLICATION.dsn#">
-            SELECT user_access_rights.*
-            FROM user_access_rights
-            INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-            WHERE smg_companies.website = '#CLIENT.company_submitting#'
-            AND user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userID#">
-            ORDER BY user_access_rights.usertype
+            SELECT 
+            	user_access_rights.*
+            FROM 
+            	user_access_rights
+            INNER JOIN 
+            	smg_companies ON user_access_rights.companyid = smg_companies.companyid
+            WHERE 
+            	smg_companies.website =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
+            AND 
+            	user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
+            ORDER 
+            	BY user_access_rights.usertype
         </cfquery>
 
         <cfif get_access.recordcount EQ 0>
@@ -133,27 +148,32 @@
 
 		<!--- get the user's default access record. --->
         <cfquery name="get_default_access" dbtype="query">
-            SELECT *
-            FROM get_access
-            WHERE default_access = 1
+            SELECT 
+            	*
+            FROM 
+            	get_access
+            WHERE 
+            	default_access = 1
         </cfquery>
 
 		<!--- no default, so just use the first record. --->
         <cfif get_default_access.recordcount EQ 0>
             <cfquery name="get_default_access" dbtype="query" maxrows="1">
-                SELECT *
-                FROM get_access
+                SELECT 
+                	*
+                FROM 
+                	get_access
             </cfquery>
         </cfif>
 
-		<cfset CLIENT.userID = authenticate.userID>
-		<cfset CLIENT.name = '#authenticate.firstname# #authenticate.lastname#'>
-        <cfset CLIENT.email = authenticate.email>
+		<cfset CLIENT.userID = qAuthenticateUser.userID>
+		<cfset CLIENT.name = qAuthenticateUser.firstname & ' ' & qAuthenticateUser.lastname>
+        <cfset CLIENT.email = qAuthenticateUser.email>
         
         <!--- these are currently used only in the header & menu. --->
 		<cfset CLIENT.levels = get_access.recordcount>  <!--- the number of access records the user has. --->
-		<cfset CLIENT.compliance = authenticate.compliance>
-		<cfset CLIENT.invoice_access = authenticate.invoice_access>
+		<cfset CLIENT.compliance = qAuthenticateUser.compliance>
+		<cfset CLIENT.invoice_access = qAuthenticateUser.invoice_access>
         
         <!--- these are set from the default access record.  These are also set in forms/change_access_level.cfm. --->
         <cfset CLIENT.companyid = get_default_access.companyid>
@@ -176,52 +196,70 @@
         <cfset CLIENT.finance_email = qGetCompany.financeEmail>
 		<cfset CLIENT.support_email = qGetCompany.support_email> 
         <cfset CLIENT.site_url = qGetCompany.url>
-        <!----Get List of sub companies assigned to logged in company---->
+        
+		<!----Get List of sub companies assigned to logged in company---->
         <cfquery name="company_list" datasource="#APPLICATION.dsn#">
-        select companyid
-        from smg_companies
-        where website = '#qGetCompany.website#'
+            SELECT 
+            	companyid
+            FROM	 
+            	smg_companies
+            WHERE 
+            	website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCompany.website#">
         </cfquery>
+        
         <cfset compList = ''>
         <cfloop query="company_list">
-        <cfset compList = #ListAppend(compList, companyid)#>
+        	<cfset compList = #ListAppend(compList, companyid)#>
         </cfloop>
         <cfset CLIENT.globalCompanyList = '#compList#'>
         
         <cfquery name="get_usertype" datasource="#APPLICATION.dsn#">
-            SELECT usertype
-            FROM smg_usertype
-            WHERE usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
+            SELECT 
+            	usertype
+            FROM 
+            	smg_usertype
+            WHERE 
+            	usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
         </cfquery>
+        
         <cfset CLIENT.accesslevelname = get_usertype.usertype>
-        <cfif CLIENT.regionid NEQ ''>
+        
+		<cfif CLIENT.regionid NEQ ''>
             <cfquery name="get_region" datasource="#APPLICATION.dsn#">
-                SELECT regionname
-                FROM smg_regions
-                WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+                SELECT 
+                	regionname
+                FROM 
+                	smg_regions
+                WHERE 
+                	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
             </cfquery>
             <cfset CLIENT.accesslevelname = "#CLIENT.accesslevelname# in #get_region.regionname#">
         </cfif>
 
         <cfquery name="get_companies" dbtype="query">
-            SELECT DISTINCT companyid
-            FROM get_access
+            SELECT DISTINCT 
+            	companyid
+            FROM 
+            	get_access
         </cfquery>
 		<cfset CLIENT.companies = valueList(get_companies.companyid)>
 
 		<cfif CLIENT.usertype EQ 8>
-            <cfset CLIENT.parentcompany = authenticate.userID>
+            <cfset CLIENT.parentcompany = qAuthenticateUser.userID>
         <cfelseif CLIENT.usertype GTE 9>
-            <cfset CLIENT.parentcompany = authenticate.intrepid>
+            <cfset CLIENT.parentcompany = qAuthenticateUser.intrepid>
         </cfif>
         
-        <cfset CLIENT.lastlogin = authenticate.lastlogin>
+        <cfset CLIENT.lastlogin = qAuthenticateUser.lastlogin>
 
 		<!---- Update Last Login ---->
         <cfquery datasource="#APPLICATION.dsn#">
-        	UPDATE smg_users
-            SET lastlogin = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-        	WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userID#">
+        	UPDATE 
+            	smg_users
+            SET 
+            	lastlogin = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+        	WHERE 
+            	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
         </cfquery>
         
         <!--- this is used only in APPLICATION.cfm to logout after 24 hours. --->
@@ -230,23 +268,22 @@
 		<!--- this usertype doesn't need to verify information. --->
         <cfif CLIENT.usertype NEQ 11>
         	<!--- Verify user info. New user will have null, or it's been 90 days. --->
-			<cfif authenticate.last_verification EQ '' OR dateDiff("d", authenticate.last_verification, now()) GTE 90>
+			<cfif qAuthenticateUser.last_verification EQ '' OR dateDiff("d", qAuthenticateUser.last_verification, now()) GTE 90>
             	<!--- this is checked in APPLICATION.cfm and redirected if set. --->
       	  		<cfset CLIENT.verify_info = 1>
             </cfif>
 		</cfif>
 
         <!--- change password --->
-        <cfif authenticate.changepass EQ 1>
+        <cfif qAuthenticateUser.changepass EQ 1>
 			<!--- this is checked in APPLICATION.cfm and redirected if set. --->
             <cfset CLIENT.change_password = 1>      
 		</cfif>
 		
         <!----For Accounts Created after Sept 1, 2010---->
-        
-        <Cfif #authenticate.datecreated# gt '2010-09-01'>
+        <Cfif qAuthenticateUser.datecreated gt '2010-09-01'>
        		
-			<cfif #DateDiff('d',authenticate.datecreated, now())# gte 21>
+			<cfif #DateDiff('d',qAuthenticateUser.datecreated, now())# gte 21>
 				
 				<!----Check if WebEX Training has been completed ---->
                 <cfif listfind('5,6,7', client.usertype)>
@@ -270,12 +307,28 @@
                </Cfif>
                
            </cfif>
-           
         <cfelse>
         	<cfif isDefined('client.trainingNeeded')>
         		<cfset client.trainingNeeded = 0>
     		</cfif>
         </Cfif>
+        
+        
+        <cfscript>
+			// Host Family Leads Pop Up
+			if ( ListFind("5,6,7", CLIENT.userType) ) {
+				// Check if there are leads assigned to an Area Representative
+				qGetHostLeads = APPLICATION.CFC.HOST.getPendingHostLeads(
+					userType=CLIENT.userType,
+					areaRepID=CLIENT.userID, 
+					regionID=CLIENT.regionID,
+					lastLogin=CLIENT.lastlogin,
+					setClientVariable=1
+				);
+			}
+		</cfscript>
+                
+
         <!--- Check if server is local, if it is do not redirect to SSL --->
 		<cfif APPLICATION.IsServerLocal>
 

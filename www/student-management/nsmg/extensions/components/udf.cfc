@@ -24,6 +24,19 @@
 	</cffunction>
 
 
+	<!--- This hashes the given ID for security reasons --->
+	<cffunction name="HashID" access="public" returntype="string" output="no" hint="Hashes the given ID for security reasons. To be used for documents only.">
+		<cfargument name="ID" type="numeric" required="yes" />
+		
+		<!--- Return hash --->
+		<cfreturn (
+			((ARGUMENTS.ID * 64) MOD 29) & 
+			Chr(Right(ARGUMENTS.ID, 1) + 65) & 
+			(ARGUMENTS.ID MOD 4)
+			) />
+	</cffunction>
+
+
 	<!---
 		Determines if the site is local or if the site is live. This is
 		determined by checking the server name. 
