@@ -153,7 +153,17 @@
                     <a href="index.cfm?curdoc=students">Students</a>
                 </li>
                 
-                <li><a href="index.cfm?curdoc=host_fam">Host Families</a></li>
+                <li>
+                	<a href="index.cfm?curdoc=host_fam">Host Families</a>
+                    <!--- Not Live Yet For Field 03/30/2011 Marcus Melo --->
+                    <!---
+					<cfif ListFind("5,6,7", CLIENT.userType)>
+                        <ul>
+                            <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>                
+                        </ul>            
+                    </cfif>
+					--->
+                </li>
                 
                 <li><a href="index.cfm?curdoc=schools">Schools</a></li>
                 
@@ -215,7 +225,12 @@
                     </ul>
                 </li>
                 
-                <li><a href="index.cfm?curdoc=host_fam">Host Families</a></li>
+                <li>
+                	<a href="index.cfm?curdoc=host_fam">Host Families</a>
+					<ul>
+	                    <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>                
+    				</ul>            
+                </li>
                 
                 <li><a href="index.cfm?curdoc=schools">Schools</a></li>
                 
@@ -262,10 +277,6 @@
                         <li><a href="index.cfm?curdoc=tools/countries">Countries</a></li>
 
     					<li><a href="index.cfm?curdoc=tools/verification_received">DS-2019 Verification List</a></li>
-                    
-                    	<cfif ListFind(APPLICATION.AllowedIDs.hostLeads, CLIENT.userID) OR CLIENT.userType EQ 1>
-                            <li><a href="index.cfm?curdoc=tools/hostLeads">Host Family Leads</a></li>
-                        </cfif>
                     
                         <li>
                             <a href="index.cfm?curdoc=insurance/insurance_menu">Insurance Menu</a>
@@ -335,6 +346,7 @@
                 </cfif>
             
             </ul>
+            
         </cfdefaultcase>
         
     </cfswitch>
@@ -360,6 +372,12 @@
 </cfif>
 
 </cfoutput>
+
+<!--- 
+	Hack for Firefox - Grey bar was not displaying correctly unless we add a tag before the 
+	<!DOCTYPE> which need to be removed for the jQuery Modal 
+--->
+<!--- <div style="width:100%; background-color:#EEE; padding: 0.5em 0.75em;">&nbsp;</div> --->
 
 <script type="text/javascript">
 <!--

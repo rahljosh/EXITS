@@ -61,19 +61,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<meta name="Author" content="Josh Rahl">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>EXITS</title>
-<link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
-<link rel="stylesheet" href="smg.css" type="text/css">
-<link rel="stylesheet" href="linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
-<link rel="stylesheet" href="linked/css/datePicker.css" type="text/css"> <!-- Date Picker Style -->
-<script src="linked/js/jquery.js" type="text/javascript"></script> <!-- jQuery -->
-<script src="linked/js/jquery.cfjs.js" type="text/javascript"></script> <!-- Coldfusion functions for jquery -->
-<script src="linked/js/date.js " type="text/javascript"></script> <!-- required plugins for date picker -->
-<script src="linked/js/jquery.datePicker.js " type="text/javascript"></script> <!-- jquery.datePicker.js -->
-<script src="linked/js/jquery.maskedinput-1.2.2.min.js " type="text/javascript"></script> <!-- jquery input plugin (phone,ssn,date) -->
-<script src="linked/js/basescript.js " type="text/javascript"></script> <!-- BaseScript -->
+    <meta name="Author" content="Josh Rahl">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>EXITS</title>
+    <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="smg.css" type="text/css">
+    <link rel="stylesheet" href="linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
+    <link rel="stylesheet" href="linked/css/datePicker.css" type="text/css"> <!-- Date Picker Style -->
+    <link media="screen" rel="stylesheet" href="linked/css/colorbox.css" /> <!-- Modal ColorBox -->
+    <cfoutput><script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script></cfoutput> <!-- jQuery -->
+	<script type="text/javascript" src="linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput -->
+	<script type="text/javascript" src="linked/js/jquery.cfjs.js"></script> <!-- Coldfusion functions for jquery -->
+    <script type="text/javascript" src="linked/js/date.js "></script> <!-- JQuery date picker plugin -->
+    <script type="text/javascript" src="linked/js/jquery.datePicker.js "></script> <!-- JQuery.datePicker.js -->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
 </head>
 <body>
 

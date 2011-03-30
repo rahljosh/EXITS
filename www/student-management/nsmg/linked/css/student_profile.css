@@ -76,14 +76,11 @@
 	text-align:justify;
 	display:block;
 }
+
 div#test {
-
-    background-image:  url(http://smg.local/nsmg/pics/activateNot.png);
-
+    background-image:  url(../../pics/activateNot.png);
     background-repeat: no-repeat;
-
     height: 500px;
-
     width: 380px;
 
 }
