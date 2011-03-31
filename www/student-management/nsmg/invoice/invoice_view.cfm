@@ -651,7 +651,7 @@ select *,
                     <td colspan="6" class="thin-border-top"></td>
                     <td align="right" height="50" class="thin-border-left-bottom-right thin-border-top"><b>TOTAL PAID:</b></td>
                     <td align="right" class="thin-border-right-bottom  thin-border-top">
-                        <b><font color="##FF0000">-#LSCurrencyFormat(totalPaid, 'local')#</font></b>
+                        <b><font color="##FF0000">-#LSCurrencyFormat(variables.totalPaid, 'local')#</font></b>
                     </td>
                 </tr>
             </cfif>
@@ -665,6 +665,10 @@ select *,
                 </td>
 			</tr>
 		</table>
+       	<!--- have to zero the variable "totalPaid", otherwise when the file user_account_details.cfm generates the invoice pdf to be e-mailed
+		 to the intl agent, it will keep adding up in the loop and the pdf will display
+		 a cumulative amount, result in a invoice pdf document with the wrong balance --->
+		<cfset totalPaid = 0>
 		</cfoutput>
 <br>
 		<br>

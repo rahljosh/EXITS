@@ -481,6 +481,11 @@ WHERE creditid = #url.creditid#
 	</table>
 </div>
 <br><br>
+<!--- have to zero the variables "totalapplied and totalRefunded", otherwise when the file user_account_details.cfm generates
+ the credit note pdf to be e-mailed to the intl agent, it will keep adding up in the loop and the pdf will display
+ a cumulative amount, result in a credit note pdf document with the wrong balance --->
+<cfset totalapplied = 0>
+<cfset totalRefunded = 0>
 
 </cfoutput>
 
