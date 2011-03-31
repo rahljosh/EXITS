@@ -107,17 +107,17 @@
             studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
     </cfquery>
     
-    <cfquery name="qCityRequested" datasource="MySql">
+    <cfquery name="qESIAreaChoice" datasource="MySql">
         SELECT 
-            citychoiceid, 
-            studentid, 
-            city1, 
-            city2, 
-            city3
+            option1,
+            option2,
+            option3
         FROM 
-            smg_student_app_city_requested
+            smg_student_app_options
         WHERE 
-            studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+        AND
+            fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
     </cfquery>
     
     <cfquery name="qGetPages" datasource="MySql">
@@ -651,7 +651,7 @@
     <tr><td>&nbsp;</td></tr>
 
 	<!--- PAGE 21 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page21&id=4&p=21"><h3>Page [21] - <cfif CLIENT.companyID NEQ 14>State <cfelse>City </cfif> Choice </h3></a></td></tr>
+	<tr><td><a href="index.cfm?curdoc=section4/page21&id=4&p=21"><h3>Page [21] - <cfif CLIENT.companyID NEQ 14>State <cfelse>Area </cfif> Choice </h3></a></td></tr>
 
     <!--- Do not display for Canada Application --->
     <cfif ListFind("14,15,16", smg_students.app_indicated_program)> 
@@ -660,11 +660,11 @@
 	<cfelseif CLIENT.companyID EQ 14>
 		
 		<!--- Exchange Service International Application --->
-		<cfif qCityRequested.recordCount AND LEN(qCityRequested.city1) AND LEN(qCityRequested.city2) AND LEN(qCityRequested.city3)>
+		<cfif qESIAreaChoice.recordCount AND VAL(qESIAreaChoice.option1) AND VAL(qESIAreaChoice.option2) AND VAL(qESIAreaChoice.option3)>
         	<tr><td><font color="0000FF">Complete</font><br></td></tr>
         <cfelse>
 			<cfset countRed = countRed + 1>
-            <tr><td><font color="FF0000">Please choose 3 city choices</font><br></td></tr>
+            <tr><td><font color="FF0000">Please choose 3 areas</font><br></td></tr>
         </cfif>	
         
     <cfelse>

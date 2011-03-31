@@ -1,57 +1,63 @@
-<cfif not IsDefined('FORM.studentid')>
+<cfif not IsDefined('FORM.studentID')>
 	<cfinclude template="../error_message.cfm">
 	<cfabort>
 </cfif>
 
 <cfquery name="check_state" datasource="MySql">
-	SELECT statechoiceid, studentid, state1, state2, state3
+	SELECT statechoiceid, studentID, state1, state2, state3
 	FROM smg_student_app_state_requested
-	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
-</cfquery>
-
-<cfquery name="qCheckCityChoice" datasource="MySql">
-	SELECT 
-    	citychoiceid
-	FROM 
-    	smg_student_app_city_requested
-	WHERE 
-    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
+	WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 </cfquery>
 
 <cftransaction action="begin" isolation="serializable">
 <cftry>
 	
 	<cfif CLIENT.companyID EQ 14>
+
+        <cfquery name="qCheckCanadaChoice" datasource="MySql">
+            SELECT 
+                ID
+            FROM 
+                smg_student_app_options
+            WHERE 
+                studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+            AND
+                fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+        </cfquery>
      	
 		<!--- Exchange Service International Application --->
-		<cfif qCheckCityChoice.recordcount>
-            <cfquery name="update_city" datasource="MySql">
+		<cfif qCheckCanadaChoice.recordcount>
+            <cfquery datasource="MySql">
                 UPDATE 
-                    smg_student_app_city_requested
+                    smg_student_app_options
                 SET	    
-                    city1 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city1#">,
-                    city2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city2#">,
-                    city3 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city3#">
+                    option1 = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option1#">,
+                    option2 = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option2#">,
+                    option3 = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option3#">
                 WHERE 
-                    citychoiceid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckCityChoice.citychoiceid#">
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckCanadaChoice.ID#">
                 LIMIT 1
             </cfquery>
 		 <cfelse>
-            <cfquery name="insert_city" datasource="MySql">
+            <cfquery datasource="MySql">
                 INSERT INTO 
-                	smg_student_app_city_requested
+                	smg_student_app_options
                     (
-                        studentid, 
-                        city1, 
-                        city2, 
-                        city3
+                        studentID,
+                        fieldKey, 
+                        option1, 
+                        option2, 
+                        option3,
+                        dateCreated
                     )
                 VALUES 
                     (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city1#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city2#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city3#">
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option1#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option2#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option3#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                      )
             </cfquery>
     	</cfif>
@@ -64,8 +70,8 @@
                 <!--- INSERT CHOICES ---->
                 <cfquery name="insert_state" datasource="MySql">
                     INSERT INTO smg_student_app_state_requested
-                        (studentid, state1, state2, state3)
-                    VALUES ('#FORM.studentid#', '#FORM.state1#', '#FORM.state2#', '#FORM.state3#')
+                        (studentID, state1, state2, state3)
+                    VALUES ('#FORM.studentID#', '#FORM.state1#', '#FORM.state2#', '#FORM.state3#')
                 </cfquery>
             <cfelse>
                 <!--- UPDATE CHOICES --->

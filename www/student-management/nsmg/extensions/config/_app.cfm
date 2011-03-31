@@ -155,6 +155,7 @@
 	APPLICATION.CONSTANTS.type.wat = 4;
 	APPLICATION.CONSTANTS.type.trainee = 5;
 	APPLICATION.CONSTANTS.type.hostFamilyLead = 6;
+	APPLICATION.CONSTANTS.type.EXITS = 7;
 
 	
 	// Set up constant for project help statuses

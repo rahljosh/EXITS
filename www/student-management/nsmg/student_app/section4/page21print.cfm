@@ -41,15 +41,29 @@
     	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
-<cfquery name="qCityRequested" datasource="MySQL">
+<cfquery name="qESIAreaChoice" datasource="MySQL">
 	SELECT 
-    	city1, 
-        city2, 
-        city3
+    	opt1.name as option1,
+        opt2.name as option2,
+        opt3.name as option3
 	FROM 
-    	smg_student_app_city_requested 
+    	smg_student_app_options appo
+    LEFT OUTER JOIN
+    	applicationLookup opt1 ON opt1.fieldID = appo.option1 
+            AND 
+            	opt1.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+    LEFT OUTER JOIN
+    	applicationLookup opt2 ON opt2.fieldID = appo.option2 
+            AND 
+            	opt2.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+    LEFT OUTER JOIN
+    	applicationLookup opt3 ON opt3.fieldID = appo.option3 
+            AND 
+            	opt3.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
 	WHERE 
-    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+    	appo.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+	AND
+		appo.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
 </cfquery>
 
 <!---- International Rep - EF ACCOUNTS ---->
@@ -81,7 +95,7 @@
 		<tr height="33">
 			<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
 			<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
-			<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>City</cfif> Choice </h2></td>
+			<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>Area</cfif> Choice </h2></td>
 			<cfif IsDefined('url.curdoc')>
 			<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 			</cfif>
@@ -168,20 +182,20 @@
                 <cfelse>
                 	<!--- Exchange Service Information --->
                     
-                    <img src="#path#pics/ESI-Map.jpg" width="650" height="372" align="middle"><br>
+                    <img src="#path#pics/ESI-Map.gif" width="650" height="369" align="middle"><br>
 
                     <table cellpadding="2" cellspacing="2" style="margin:10px;">
                         <tr>
                             <td width="90">1st Choice:</td>
-                            <td width="130" align="left">#qCityRequested.city1#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                            <td width="130" align="left">#qESIAreaChoice.option1#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
                         </tr>
                         <tr>                        
                             <td width="90">2nd Choice:</td>
-                            <td width="130" align="left">#qCityRequested.city2#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                            <td width="130" align="left">#qESIAreaChoice.option2#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
                         </tr>
                         <tr>                        
                             <td width="90">3rd Choice:</td>
-                            <td width="130" align="left">#qCityRequested.city3#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                            <td width="130" align="left">#qESIAreaChoice.option3#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
                         </tr>                        							
                     </table>
     
