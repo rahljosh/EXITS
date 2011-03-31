@@ -1,3 +1,4 @@
+
 <!--- Param FORM Variables --->
 <cfparam name="FORM.wat_doc_agreement" default="0">
 <cfparam name="FORM.wat_doc_college_letter" default="0">
@@ -8,6 +9,7 @@
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.verification_arrival" default="0">
+<cfparam name="FORM.transfer" default="0">
 <!--- Placement Information --->
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
@@ -17,6 +19,8 @@
 <cfparam name="FORM.selfWorkmanCompensation" default="">
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfConfirmationNotes" default="">
+
+
 
 <cfquery name="qGetCandidateInfo" datasource="mysql">
     SELECT 
@@ -151,7 +155,12 @@
                 selfAuthentication,
                 selfWorkmenCompensation,
                 selfConfirmationDate,
-                selfConfirmationNotes
+                selfConfirmationNotes,
+                transNewHousingAddress,
+                transNewJobOffer,
+                transSevisUpdate,
+                transfer
+                
             )
             VALUES 
             (	
@@ -184,10 +193,32 @@
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
+                <cfif isDefined('form.transHousingAddress')>
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                <cfelse>
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                </cfif>
+                <cfif isDefined('form.transJobOffer')>
+                	 <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                <cfelse>
+                	 <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                </cfif>
+                
+                <cfif isDefined('form.transSevisUpdate')>
+                	 <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                <cfelse>
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                </cfif>
+               	<cfqueryparam cfsqltype="cf_sql_integer" value="#form.transfer#">
+              
+                
+              
+                
 			)
 		</cfquery>
 	
+        
     <cfelse>
 		
         <!--- Update Current Host Company Information --->
@@ -220,7 +251,23 @@
                 <cfelse>
                 	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
-                selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">
+                <cfif isDefined('form.transHousingAddress')>
+                	transNewHousingAddress = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                 <cfelse>
+                 	transNewHousingAddress = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                </cfif>
+                <cfif isDefined('form.transJobOffer')>
+                	transNewJobOffer = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                <cfelse>
+                	transNewJobOffer = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                </cfif>
+                <cfif isDefined('form.transSevisUpdate')>
+                	transSevisUpdate = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                <cfelse>
+                	transSevisUpdate = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                </cfif>
+                	
+               selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">
             WHERE 
             	candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candcompid#">
 		</cfquery>

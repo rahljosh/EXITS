@@ -157,7 +157,12 @@
             ecpc.selfAuthentication,
             ecpc.selfWorkmenCompensation,
             ecpc.selfConfirmationDate,
-            ecpc.selfConfirmationNotes           
+            ecpc.selfConfirmationNotes,
+            ecpc.transNewHousingAddress,
+            ecpc.transNewJobOffer,
+            ecpc.transSevisUpdate,
+            ecpc.transfer
+		   
         FROM
         	extra_candidate_place_company ecpc
         INNER JOIN
@@ -320,6 +325,7 @@
 <cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate&uniqueid=#qGetCandidate.uniqueid#" onsubmit="return checkHistory();">
 <input type="hidden" name="candidateID" value="#qGetCandidate.candidateID#">
 <input type="hidden" name="submitted" value="1">
+
 
 <!--- TABLE HOLDER --->
 <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="##CCCCCC" bgcolor="##F4F4F4">
@@ -886,6 +892,27 @@
                                             </td>
                                         </tr>
                                         <tr id="host_history" bgcolor="FFBD9D" style="display:none;">
+                                           <td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
+                                            <td class="style1"><textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="5"></textarea>
+                                            <br><Br>
+                                            Is this a transfer? 
+                                            <cfinput type="radio"  name="transfer" onclick="document.getElementById('showTransferInfo').style.display='table-row';" value="1" > Yes 
+                                            <cfinput type="radio"  name="transfer" onclick="document.getElementById('showTransferInfo').style.display='none';" value="0" > No
+                                            
+                                            </td>
+                                            </td>
+                                        </tr>
+                                     
+                                        <tr id="showTransferInfo" bgcolor="FFBD9D" style="display:none;">
+                                            <td class="style1"  colspan=2 align="center" valign="middle">
+                                            New Housing Address <input type="checkbox" class="editPage"  name="transHousingAddress">
+                                            New Job Offer <input type="checkbox" class="editPage"  name="transJobOffer">
+                                            SEVIS Updated <input type="checkbox" class="editPage"  name="transSEVISUpdate">
+                                            </td>
+                                           
+                                        </tr>
+                                       
+                                        <tr id="showTransferInfo" bgcolor="FFBD9D" style="display:none;">
                                             <td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
                                             <td class="style1"><textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="5"></textarea></td>
                                         </tr>
@@ -895,7 +922,19 @@
 	                                        	#dateFormat(qCandidatePlaceCompany.placement_date, 'mm/dd/yyyy')#
                                             </td>
                                         </tr>
-                                        
+                                        <!----transfer info    ---->
+                                        <cfif qCandidatePlaceCompany.transfer eq 1>
+                                        	<tr>
+                                            	<td class="style1" colspan=2>This was a transfer.</td>
+                                          <tr>
+                                        	 <td class="style1"  colspan=2 align="center" valign="middle">
+                                           <input type="checkbox" id="transHousingAddress" value="1" class="formField" name="transHousingAddress" <Cfif qCandidatePlaceCompany.transNewHousingAddress eq 1>checked</cfif>> New Housing Address 
+                                            <input type="checkbox"  id="transJobOffer" value="1" class="formField" name="transJobOffer" <Cfif qCandidatePlaceCompany.transNewJobOffer eq 1>checked</cfif>> New Job Offer
+                                             <input type="checkbox" id="transSEVISUpdate" value="1" class="formField" name="transSEVISUpdate" <Cfif qCandidatePlaceCompany.transSevisUpdate eq 1>checked</cfif>>SEVIS Updated
+                                            </td>
+                                        </tr>
+                                       </cfif>
+                                    
                                         <!--- Only for Self Placement with Active Placement Information --->
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="hiddenField selfPlacementInfo">
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Self Placement Confirmation</td>

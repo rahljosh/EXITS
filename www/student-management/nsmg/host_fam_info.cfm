@@ -8,10 +8,12 @@
 	Updated:  	
 
 ----- ------------------------------------------------------------------------- --->
-
+	<!--- Import CustomTag Used for Page Messages and Form Errors
+	<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	 ---> 
 <!--- Kill extra output --->
 <cfsilent>
-	
+
+
     <!--- Param URL Variables --->
     <cfparam name="url.hostID" default="">
     
@@ -34,7 +36,23 @@
             cbcType='member'
         );
     </cfscript>
-
+    
+        <!---Page Messages
+         <cfscript>
+            // Data Validation
+			// Family Last Name
+            if ( FORM.AppStatusUpdated ) {
+                // Get all the missing items in a list
+                SESSION.pageMessages.Add("Status has been updated.");
+            }			
+         </cfscript>---->
+	<cfif isDefined('form.AppStatusUpdated')>
+    	<Cfquery datasource="#application.dsn#">
+        update smg_hosts
+        set HostAppStatus = #form.newappStatus#
+        where hostid = #url.hostid#
+        </cfquery>
+    </cfif>
     <cfquery name="user_compliance" datasource="#application.dsn#">
         SELECT userid, compliance
         FROM smg_users
@@ -42,8 +60,9 @@
     </cfquery>
     
     <cfquery name="family_info" datasource="#application.dsn#">
-        SELECT *
+        SELECT *, stat.description as statDesc
         FROM smg_hosts
+        LEFT JOIN HostAppStatusDefinition stat on stat.StatusID = smg_hosts.HostAppStatus 
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.hostID#">
     </cfquery>
     
@@ -53,6 +72,13 @@
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
         ORDER BY birthdate
     </cfquery>
+    
+    <!----Status for Changing App - only for office people---->
+    <Cfquery name="availStatus" datasource="#application.dsn#">
+            select *
+            from HostAppStatusDefinition
+    </cfquery>
+            
     <!---number kids at home---->
     <cfquery name="kidsAtHome" dbtype="query">
     select count(childid)
@@ -254,7 +280,38 @@ div.scroll2 {
 <td width="2%"></td> <!--- SEPARATE TABLES --->
 <td width="38%" align="right" valign="top">
 
-   
+     	<!--- HEADER OF TABLE --- Application Status --->
+	  <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+			<tr valign=middle height=24>
+				<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+				<td background="pics/header_background.gif"><h2>Online Application Status</h2></td>
+				<td width=17 background="pics/header_rightcap.gif">&nbsp;</td></tr>
+		</table>
+		<!--- BODY OF TABLE --->
+        <!--- Form Errors 
+    <gui:displayPageMessages 
+        formErrors="#SESSION.PageMessages.GetCollection()#"
+        messageType="section"
+        />--->
+		<table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
+			<tr><td width=50%>Current Status: <strong>#family_info.statDesc#</strong></td><Td><Cfif client.usertype lte 4>Update Status:</Cfif></td><Td>
+			<Cfif client.usertype lte 4>
+         	<cfform action="?curdoc=host_fam_info&hostid=#url.hostid#">		
+            <input type="hidden" name="AppStatusUpdated">
+          			<cfselect NAME="newappStatus" query="availStatus" value="StatusID" display="Description" selected="#family_info.HostAppStatus#" queryPosition="below">
+					</cfselect>
+	        </td><td><input type="image" src="pics/update.gif" /></td>
+            </Cfform>
+            </Cfif>
+            </tr>
+			<tr bgcolor="e3efc7">
+            	<td align="center" colspan=5>Application | Check List </td></tr>
+		</table>				
+		<!--- BOTTOM OF A TABLE --->
+		<table width=100% cellpadding=0 cellspacing=0 border=0>
+			<tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td><td width=100% background="pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>
+	  </table>	
+    <Br /><Br />
 
 	<!--- HEADER OF TABLE --- Other Family Members --->
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -294,6 +351,9 @@ div.scroll2 {
 	<table width=100% cellpadding=0 cellspacing=0 border=0>
 		<tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td><td width=100% background="pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>
 	</table>
+    
+  
+    
     
 </td></tr>
 </table><br>

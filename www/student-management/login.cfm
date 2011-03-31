@@ -1,3 +1,6 @@
+
+
+
 <!--- Kill Extra Output --->
 <cfsilent>
 
@@ -176,6 +179,8 @@
 <title><cfoutput>#CLIENT.companyname#</cfoutput></title>
 <cfif CLIENT.companyid eq 11>
 	<link href="exitsapp_images/WEP.css" rel="stylesheet" type="text/css" media="screen"/>
+<cfelseif CLIENT.companyid eq 13>
+	<link href="exitsapp_images/CANADA.css" rel="stylesheet" type="text/css" media="screen"/>
 <cfelseif CLIENT.companyid eq 1>
 	<link href="exitsapp_images/ISE.css" rel="stylesheet" type="text/css" media="screen"/>
 <cfelse>

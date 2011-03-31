@@ -121,44 +121,47 @@
                     FROM smg_hosts
                 </cfquery>
             </cflock>
+            
+            
             <!--- the client variable should be phased out after host_fam_mem_form, etc. are modified to use url.hostid --->
 			<cfset client.hostid = get_id.hostid>
+             <cfoutput>
+                <cfsavecontent variable="email_message">
+                    #FORM.familylastname# Family-
+                    
+                    <p>
+                    	An account has been created for you on the International Student Exchange website at the request of #client.name#. 
+                          
+					</p>
+                    <p>With this account, you can start to fill out the application to become a host family.  The application process will take between 30 and 60 minutes depending on the size of you family, pictures you upload, etc. Upon completion of the app, you will be able to view student who are coming to the States this upcoming season. 
+                    </p>
+                    <p>
+                    Your account information is:<br /><Br />
+                    User: #qCheckAccount.email# <br />
+                    Password: #qCheckAccount.password# <br /> <br />
+					You can login to your accont by visiting www.iseusa.com and clicking on Log In in the upper right hand corner.
+                    <!---
+                    *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
+                    <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
+                    <br /> <br />
+                    --->
+                    Best Regards-<br />
+                    International Student Exchange
+                </cfsavecontent>
+                </cfoutput>
+                
+                <!--- send email --->
+                <cfinvoke component="cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="#FORM.email#">
+                    <cfinvokeargument name="email_subject" value="Host Family Account Information">
+                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
+                </cfinvoke>
+            
+            
             <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#get_id.hostid#" addtoken="No">
 		<!--- edit --->
-		<cfelse>
-			<cfquery datasource="#application.dsn#">
-				UPDATE smg_hosts SET
-                familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.familylastname#">,
-                fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherlastname#" null="#yesNoFormat(trim(form.fatherlastname) EQ '')#">,
-                fatherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherfirstname#" null="#yesNoFormat(trim(form.fatherfirstname) EQ '')#">,
-                fathermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fathermiddlename#" null="#yesNoFormat(trim(form.fathermiddlename) EQ '')#">,
-                fatherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#fatherbirth#">,
-                fatherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#form.fatherdob#" null="#yesNoFormat(trim(form.fatherdob) EQ '')#">,
-                <cfif isDefined("form.fatherssn")>
-                	fatherssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherssn#" null="#yesNoFormat(trim(form.fatherssn) EQ '')#">,
-                </cfif>
-                fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fatherworktype#" null="#yesNoFormat(trim(form.fatherworktype) EQ '')#">,
-                father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.father_cell#" null="#yesNoFormat(trim(form.father_cell) EQ '')#">,
-                motherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherfirstname#" null="#yesNoFormat(trim(form.motherfirstname) EQ '')#">,
-                motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherlastname#" null="#yesNoFormat(trim(form.motherlastname) EQ '')#">,
-                mothermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mothermiddlename#" null="#yesNoFormat(trim(form.mothermiddlename) EQ '')#">,
-                motherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#motherbirth#">,
-                motherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#form.motherdob#" null="#yesNoFormat(trim(form.motherdob) EQ '')#">,
-                <cfif isDefined("form.motherssn")>
-                	motherssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherssn#" null="#yesNoFormat(trim(form.motherssn) EQ '')#">,
-                </cfif>
-                motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.motherworktype#" null="#yesNoFormat(trim(form.motherworktype) EQ '')#">,
-                mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.mother_cell#" null="#yesNoFormat(trim(form.mother_cell) EQ '')#">,
-                address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address#">,
-                address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address2#" null="#yesNoFormat(trim(form.address2) EQ '')#">,
-                city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.city#">,
-                state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.state#">,
-                zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.zip#">,
-                phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.phone#" null="#yesNoFormat(trim(form.phone) EQ '')#">,
-                email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#" null="#yesNoFormat(trim(form.email) EQ '')#">
-				WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.hostid#">
-			</cfquery>
-            <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" addtoken="No">
+
 		</cfif>
 	</cfif>
 

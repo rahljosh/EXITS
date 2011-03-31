@@ -32,7 +32,7 @@
         	startdate < #now()#
         AND
         	lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
-        <cfif CLIENT.companyID EQ 10>
+        <cfif CLIENT.companyID EQ 10 or CLIENT.companyID EQ 11 or CLIENT.companyid EQ 13 or CLIENT.companyid EQ 14>
         	AND
             	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
         <cfelse>
@@ -414,10 +414,13 @@
                 </tr>
                 <tr valign="top">
                     <td style="line-height:20px;">
+                    	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
                         <a href="index.cfm?curdoc=progress_reports">Progress Reports</a><br>
-                        <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
+                        <cfif CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12>
+                        	<a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
+                        </cfif>
                         <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a><br />
-                        <cfif CLIENT.userType LTE 4>
+                        <cfif CLIENT.userType LTE 4 and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12)>
                         	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
                         </cfif>
                        <cfif client.companyid lte 5>

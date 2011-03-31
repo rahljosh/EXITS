@@ -29,7 +29,7 @@
 	<cfif NOT VAL(CLIENT.userid)>
         <cflocation url="../../index.cfm" addtoken="no">
     </cfif>
-    
+
     <cfinclude template="querys/get_company.cfm">
     
     <cfquery name="qAlertMessages" datasource="mysql">
