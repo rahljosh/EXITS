@@ -1127,8 +1127,7 @@ WHERE su.userid = #url.userid#
 	
 		<cfswitch expression="#docType#">
 			<cfcase value="invoice">
-	            
-				<cfinclude template="invoice_view.cfm">
+	            <cfinclude template="invoice_view.cfm">
 			</cfcase>
 			<cfcase value="credit_note">
 				<cfinclude template="credit_note.cfm">
@@ -1183,9 +1182,7 @@ marcel@student-management.com<br/><br/>
 visit our web site at #CLIENT.exits_url#</small>
 
 	<cfloop list="#form.docNumber#" index="iDocNumb">
-	
 		<cfmailparam disposition="attachment" type="html" file="#AppPath.uploadedFiles#invoices_pdf/#variables.compName#_#variables.docType#_#iDocNumb#.pdf">
-
 	</cfloop>
 	
 </cfmail>
