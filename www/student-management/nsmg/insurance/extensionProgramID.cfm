@@ -6,6 +6,7 @@
 	Desc:		Gets a list of students that extended their program from 1st semester
 				to a 10 month program or students that need their end dates adjusted
 				accordingly to their flight departure date. 
+				DO NOT INSURE STUDENTS PAST THEIR PROGRAM END DATE eg. 06/30
 
 	Updated: 	
 
@@ -25,7 +26,7 @@
 		Errors = StructNew();
 		// Create Array to store error messages
 		Errors.Messages = ArrayNew(1);
-	
+		
 		// FORM Validation
 		if ( FORM.programID EQ 0 ) {
 			ArrayAppend(Errors.Messages, "Please select at least one program");
@@ -43,18 +44,18 @@
 		}
 
 		// Get Company Short
-		companyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
+		companyShort = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
 
 		if ( FORM.TYPE EQ 'flightDeparture' ) {
 			// Get Students that needs to be insured
-			qGetStudents = APPCFC.INSURANCE.getStudentsToExtendFlight(programID=FORM.programID);
+			qGetStudents = APPLICATION.CFC.INSURANCE.getStudentsToExtendFlight(programID=FORM.programID);
 
 			// Set XLS File Name
 			XLSFileName = '#companyShort#_FlightExtension_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
 
 		} else {
 			// Get Students that needs to be insured
-			qGetStudents = APPCFC.INSURANCE.getStudentsToExtend(programID=FORM.programID);
+			qGetStudents = APPLICATION.CFC.INSURANCE.getStudentsToExtend(programID=FORM.programID);
 
 			// Set XLS File Name
 			XLSFileName = '#companyShort#_ProgramExtension_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
@@ -132,22 +133,21 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 <td style="border:none;">&nbsp;</td>
             </tr>
             
-            <cfif ( IsDate(qGetStudents.extensionEndDate) AND FORM.TYPE EQ 'flightDeparture' AND qGetStudents.extensionDays LTE 45 )
-				OR
-				  ( IsDate(qGetStudents.extensionEndDate) AND FORM.TYPE NEQ 'flightDeparture' )>
-				
-				<cfscript>
-					// Update Insurace Record and Insert History
-					APPCFC.INSURANCE.insertInsuranceHistory(
-						studentID=qGetStudents.studentID,
-						type="EX",
-						startDate=qGetStudents.extensionStartDate,
-						endDate=extensionEndDate,
-						fileName=XLSFileName
-					);
-				</cfscript>
-	
-            </cfif>
+			<cfscript>
+				if ( (IsDate(qGetStudents.extensionEndDate) AND FORM.TYPE EQ 'flightDeparture' AND qGetStudents.extensionDays LTE 45)
+                      OR
+                     (IsDate(qGetStudents.extensionEndDate) AND FORM.TYPE NEQ 'flightDeparture') ) {
+            
+                        // Update Insurace Record and Insert History
+                        APPLICATION.CFC.INSURANCE.insertInsuranceHistory(
+                            studentID=qGetStudents.studentID,
+                            type="EX",
+                            startDate=qGetStudents.extensionStartDate,
+                            endDate=extensionEndDate,
+                            fileName=XLSFileName
+                        );
+                }							
+            </cfscript>
             
 		</cfloop>
         
