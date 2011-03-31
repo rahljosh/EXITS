@@ -123,23 +123,33 @@ function NextPage() {
     	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
-<cfquery name="qCityRequested" datasource="MySQL">
+<cfquery name="qESIAreaChoice" datasource="MySQL">
 	SELECT 
-    	city1, 
-        city2, 
-        city3
+    	option1, 
+        option2, 
+        option3
 	FROM 
-    	smg_student_app_city_requested 
+    	smg_student_app_options 
 	WHERE 
-    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+    	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+    AND
+    	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
 </cfquery>
+
+<cfscript>
+	// Get List of Canada Areas
+	qGetESIAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
+		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
+		fieldKey='ESIAreaChoice'
+	);
+</cfscript>
 
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
 		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
-		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>City</cfif> Choice </h2></td>
+		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>Area</cfif> Choice </h2></td>
 		<!--- Do not display for Canada Application --->
         <cfif NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
 	        <td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
@@ -255,54 +265,40 @@ function NextPage() {
                     <cfelse>
                         <!--- Exchange Service International Application --->
                         
-                        <img src="pics/ESI-Map.jpg" width="650" height="372" align="middle"><br>
+                        <img src="pics/ESI-Map.gif" width="650" height="369" align="middle"><br>
                         
                         <table cellpadding="2" cellspacing="2" style="margin:10px;">
                             <tr>
                                 <td>1st Choice:</td>
-                                <td><select name="city1" onClick="DataChanged();">
-                                        <option value=""></option>
-                                        <option value="Arlington" <cfif qCityRequested.city1 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
-                                        <option value="Belmont" <cfif qCityRequested.city1 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
-                                        <option value="Cambridge" <cfif qCityRequested.city1 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
-                                        <option value="Antelope" <cfif qCityRequested.city1 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
-                                        <option value="Los Angeles" <cfif qCityRequested.city1 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
-                                        <option value="Santa Barbara" <cfif qCityRequested.city1 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
-                                        <option value="Seattle" <cfif qCityRequested.city1 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
-                                        <option value="Tacoma" <cfif qCityRequested.city1 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
+                                <td><select name="option1" onClick="DataChanged();">
+                                        <option value="0"></option>
+                                        <cfloop query="qGetESIAreaChoice">
+                                        	<option value="#qGetESIAreaChoice.fieldID#" <cfif qESIAreaChoice.option1 EQ qGetESIAreaChoice.fieldID>selected</cfif>>#qGetESIAreaChoice.name#</option>
+                                        </cfloop>
                                     </select>
                                 </td>
                             </tr>
                             <tr>                        
                                 <td>2nd Choice:</td>
-                                <td><select name="city2" onClick="DataChanged();">
-                                        <option value=""></option>
-                                        <option value="Arlington" <cfif qCityRequested.city2 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
-                                        <option value="Belmont" <cfif qCityRequested.city2 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
-                                        <option value="Cambridge" <cfif qCityRequested.city2 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
-                                        <option value="Antelope" <cfif qCityRequested.city2 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
-                                        <option value="Los Angeles" <cfif qCityRequested.city2 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
-                                        <option value="Santa Barbara" <cfif qCityRequested.city2 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
-                                        <option value="Seattle" <cfif qCityRequested.city2 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
-                                        <option value="Tacoma" <cfif qCityRequested.city2 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
+                                <td><select name="option2" onClick="DataChanged();">
+                                        <option value="0"></option>
+                                        <cfloop query="qGetESIAreaChoice">
+                                        	<option value="#qGetESIAreaChoice.fieldID#" <cfif qESIAreaChoice.option2 EQ qGetESIAreaChoice.fieldID>selected</cfif>>#qGetESIAreaChoice.name#</option>
+                                        </cfloop>
                                     </select>
                                 </td>
                             </tr>
                             <tr>                        
                                 <td>3rd Choice:</td>
-                                <td><select name="city3" onClick="DataChanged();">
-                                        <option value=""></option>
-                                        <option value="Arlington" <cfif qCityRequested.city3 eq 'Arlington'>selected</cfif>>Area 1 - Arlington, MA (Boston Area)</option>
-                                        <option value="Belmont" <cfif qCityRequested.city3 eq 'Belmont'>selected</cfif>>Area 2 - Belmon, MA (Boston Area)</option>
-                                        <option value="Cambridge" <cfif qCityRequested.city3 eq 'Cambridge'>selected</cfif>>Area 3 - Cambridge, MA (Boston Area)</option>
-                                        <option value="Antelope" <cfif qCityRequested.city3 eq 'Antelope'>selected</cfif>>Area 4 - Antelope Valley, CA</option>
-                                        <option value="Los Angeles" <cfif qCityRequested.city3 eq 'Los Angeles'>selected</cfif>>Area 5 - Los Angeles, CA</option>
-                                        <option value="Santa Barbara" <cfif qCityRequested.city3 eq 'Santa Barbara'>selected</cfif>>Area 6 - Santa Barbara, CA</option>
-                                        <option value="Seattle" <cfif qCityRequested.city3 eq 'Seattle'>selected</cfif>>Area 7 - Seattle, WA</option>
-                                        <option value="Tacoma" <cfif qCityRequested.city3 eq 'Tacoma'>selected</cfif>>Area 8 - Tacoma, WA</option>
+                                <td><select name="option3" onClick="DataChanged();">
+                                        <option value="0"></option>
+                                        <cfloop query="qGetESIAreaChoice">
+                                        	<option value="#qGetESIAreaChoice.fieldID#" <cfif qESIAreaChoice.option3 EQ qGetESIAreaChoice.fieldID>selected</cfif>>#qGetESIAreaChoice.name#</option>
+                                        </cfloop>
                                     </select>
                                 </td>
-                            </tr>                        							
+                            </tr> 
+                            <tr><td colspan="2">* Areas with an asterisk represent districts in the Boston area</td></tr>                       							
                         </table>
                         
                     </cfif>

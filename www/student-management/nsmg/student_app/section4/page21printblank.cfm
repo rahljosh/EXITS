@@ -38,7 +38,7 @@
 	<tr height="33">
 		<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
-		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>City</cfif> Choice </h2></td>
+		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>Area</cfif> Choice </h2></td>
 		<cfif IsDefined('url.curdoc')>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21printblank.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
@@ -83,7 +83,7 @@
 		  <cfelse>
               <!--- Exchange Service Information --->
           
-              <img src="#path#pics/ESI-Map.jpg" width="650" height="372" align="middle"><br>
+              <img src="#path#pics/ESI-Map.gif" width="650" height="369" align="middle"><br>
 
               <table cellpadding="2" cellspacing="2" style="margin:10px;">
                   <tr>
