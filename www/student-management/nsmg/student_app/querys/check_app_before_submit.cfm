@@ -41,8 +41,10 @@
 
 <!--- *******************************************************************
 	Copy of check_list.cfm 
-	- Update cfinclude path (remove querys/)
+	- Update cfinclude path (remove querys/ from path)
 ******************************************************************* --->
+
+<!--- Kill Extra Output --->
 <cfsilent>
 
     <cfsetting requesttimeout="9999">
@@ -640,7 +642,23 @@
 		</cfif>
 	<!--- Intl. Representative Documents --->				
 	<cfelse>
-		<tr><td>This page will be completed and uploaded by <b><i>#smg_students.businessname#.</i></b></td></tr>
+		<tr><td>This page will be completed and uploaded by <b><i>#smg_students.businessname#.</i></b><Br>
+        <cfloop query="page19">
+			<cfset get_field = page19.table_located &"."& page19.field_name>
+			<cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
+				<tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
+				<cfset count19 = 1> <cfset countRed = countRed + 1>
+			<cfelseif NOT LEN(Evaluate(get_field)) AND NOT VAL(required)>
+				<tr><td><font color="0000FF">#field_label#</font><br></td></tr> 
+				<cfset count19 = 1>
+			</cfif>
+		</cfloop>
+		<cfif check_19_upload.recordcount NEQ 0>
+			<tr><td><font color="0000FF">Complete</font><br></td></tr>
+		<cfelse>
+			<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
+		</cfif>
+        </td></tr>
 	</cfif> 	
     	
     <tr><td>&nbsp;</td></tr>	
@@ -649,8 +667,8 @@
     <tr><td><a href="index.cfm?curdoc=section4/page20&id=4&p=20"><h3>Page [20] - Regional Choice</h3></a></td></tr>
     <!--- Not Available in April or May - PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
     
-	<!---- It does not apply to ESI---->
-    <cfif CLIENT.companyID EQ 14>
+    <!--- Do not display for ESI or Canada Application --->
+    <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", smg_students.app_indicated_program)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
 	<cfelse>    
 		<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
@@ -680,8 +698,12 @@
 
 	<!--- PAGE 21 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page21&id=4&p=21"><h3>Page [21] - <cfif CLIENT.companyID NEQ 14>State <cfelse>City </cfif> Choice </h3></a></td></tr>
+
+    <!--- Do not display for Canada Application --->
+    <cfif ListFind("14,15,16", smg_students.app_indicated_program)> 
+		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
 	
-	<Cfif CLIENT.companyID EQ 14>
+	<cfelseif CLIENT.companyID EQ 14>
 		
 		<!--- Exchange Service International Application --->
 		<cfif qCityRequested.recordCount AND LEN(qCityRequested.city1) AND LEN(qCityRequested.city2) AND LEN(qCityRequested.city3)>
