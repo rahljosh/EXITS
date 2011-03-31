@@ -69,6 +69,8 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_documents_wt"  class="style4">- Missing Documents</a></p>
 						
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_transfer_docs"  class="style4">- Missing Transfer Documents</a></p>
+                        
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/unplaced_students_wt" class="style4">- List of Unplaced Students</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_students_work_study_wt" class="style4">- List of Students for DOS</a></p>

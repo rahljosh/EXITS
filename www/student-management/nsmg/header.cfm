@@ -28,11 +28,15 @@
         AND 
         	lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
         AND 
+          <cfif CLIENT.companyID EQ 10 or CLIENT.companyID EQ 11 or CLIENT.companyid EQ 13 or CLIENT.companyid EQ 14>
+          		companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+          <cfelse>
         	(
             	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
             OR 
             	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
             )
+            </cfif>
         ORDER BY 
         	startdate DESC
         

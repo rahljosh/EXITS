@@ -28,7 +28,13 @@
     LEFT JOIN smg_companies ON smg_news_messages.companyid = smg_companies.companyid
     INNER JOIN smg_usertype ON smg_news_messages.lowest_level = smg_usertype.usertypeid
     WHERE smg_news_messages.expires > #now()#
-    AND smg_news_messages.companyid <> 6
+    AND
+        <cfif CLIENT.companyID EQ 10 or CLIENT.companyID EQ 11 or CLIENT.companyid EQ 13 or CLIENT.companyid EQ 14>
+         smg_news_messages.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        <cfelse>
+         smg_news_messages.companyid < 6 OR smg_news_messages.companyid = 12
+        </cfif> 
+            
     ORDER BY smg_news_messages.startdate DESC
 </cfquery>
 
@@ -74,7 +80,7 @@
                 <td>#messagetype#</td>
                 <td>
                 	<cfif companyid EQ 0>
-                    	All SMG Companies
+                    	All ISE Companies
                     <cfelse>
                     	#companyshort#
                     </cfif>
@@ -153,7 +159,9 @@ function checkForm() {
                 ORDER BY companyid
             </cfquery>
             <select name="companyid">
+            <cfif client.companyid lte 5>
                 <option value="0">All SMG Companies</option>
+            </cfif>//
                 <cfoutput query="companies_available">
                     <option value="#companies_available.companyid#">#companies_available.companyshort#</option>
                 </cfoutput>
