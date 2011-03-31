@@ -217,7 +217,13 @@
             <!--- Program Extension Correction --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Extension</th></tr>
-                <tr><td align="center">Active students that extended their program from 5 to 10 month or students with a flight departure beyond the insurance end date</td></tr>
+                <tr>
+                	<td align="center">
+                		Active students that extended their program from 5 to 10 month or students with a flight departure beyond the insurance end date. 
+                        <br />
+                        PS: Students are insured until the last day of the program. They must purchase their own insurance beyond the program end date.
+                    </td>
+                </tr>
             </table>
             
             <table cellpadding="6" cellspacing="0" align="center" width="96%">

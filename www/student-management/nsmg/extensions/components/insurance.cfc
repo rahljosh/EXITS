@@ -450,23 +450,30 @@
 
 
 	<!--- Extensions Based on Flight Departure --->
-	<cffunction name="getStudentsToExtendFlight" access="public" returntype="query" output="false" hint="Extend insurance based on flight departure">
+	<cffunction name="getStudentsToExtendFlight" access="public" returntype="query" output="true" hint="Extend insurance based on flight departure">
         <cfargument name="programID" hint="List of program IDs. Required.">
+
+        <cfscript>
+			var qResultQuery = QueryNew("studentID, firstName, familyLastName, dob, businessName, extensionStartDate, extensionEndDate, extensionDays");
+		</cfscript>
 
         <cfquery 
         	name="qGetStudentsToExtendFlight" 
             datasource="#APPLICATION.dsn#">
                 SELECT DISTINCT
                     s.studentID, 
-                    s.firstname, 
+                    s.firstName, 
                     s.familyLastName, 
                     s.dob,          
 					u.businessName,
                     ibEndDate.endDate AS extensionStartDate,                    
                     DATE_ADD( fi.dep_date, INTERVAL 1 DAY) AS extensionEndDate,
-                    DATEDIFF( DATE_ADD( fi.dep_date, INTERVAL 1 DAY), ibEndDate.endDate ) AS extensionDays
+                    DATEDIFF( DATE_ADD( fi.dep_date, INTERVAL 1 DAY), ibEndDate.endDate ) AS extensionDays,
+                    p.endDate AS programEndDate
                 FROM
                     smg_students s 
+                INNER JOIN  
+                    smg_programs p ON p.programID = s.programID
                 INNER JOIN
                     smg_flight_info fi ON fi.studentID = s.studentID 
 					AND 
@@ -481,6 +488,7 @@
                     s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND 
                     s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+
 				<cfif CLIENT.companyID EQ 5>
                     AND          
                         s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
@@ -488,6 +496,7 @@
                     AND          
                         s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
                 </cfif>
+                
                 AND 
                 	DATE_ADD( fi.dep_date, INTERVAL 1 DAY) > ibEndDate.endDate
                 GROUP BY 
@@ -497,8 +506,38 @@
                     s.familyLastName,
                     s.firstName
         </cfquery>
-    
-		<cfreturn qGetStudentsToExtendFlight>
+    	
+        <cfscript>
+			// We only extend insurance until the last day of program (06/30 or 12/31 or 01/31)
+			// Student must purchase their own insurance after the program end date
+			For ( i=1; i LTE qGetStudentsToExtendFlight.recordCount; i=i+1 ) {
+				
+				// Check if student is leaving after the program end date, if it is, set end date to program end date which is the max date we insure students
+				if ( qGetStudentsToExtendFlight.extensionEndDate[i] GT qGetStudentsToExtendFlight.programEndDate[i] ) {
+                	vNewEndDate = qGetStudentsToExtendFlight.programEndDate[i];
+                } else {
+					vNewEndDate = qGetStudentsToExtendFlight.extensionEndDate[i];
+				}
+				
+				// Include Students if vNewEndDate GT than current end date
+				if ( vNewEndDate GT qGetStudentsToExtendFlight.extensionStartDate[i] ) {
+					QueryAddRow(qResultQuery);
+					QuerySetCell(qResultQuery, "studentID", qGetStudentsToExtendFlight.studentID[i]);
+					QuerySetCell(qResultQuery, "firstName", qGetStudentsToExtendFlight.firstName[i]);
+					QuerySetCell(qResultQuery, "familyLastName", qGetStudentsToExtendFlight.familyLastName[i]);
+					QuerySetCell(qResultQuery, "dob", qGetStudentsToExtendFlight.dob[i]);
+					QuerySetCell(qResultQuery, "businessName", qGetStudentsToExtendFlight.businessName[i]);
+					QuerySetCell(qResultQuery, "extensionStartDate", qGetStudentsToExtendFlight.extensionStartDate[i]);
+					QuerySetCell(qResultQuery, "extensionEndDate", vNewEndDate);
+					QuerySetCell(qResultQuery, "extensionDays", qGetStudentsToExtendFlight.extensionDays[i]);
+				}
+				
+			}	
+
+			// return query
+			return qResultQuery;
+		</cfscript>
+       
 	</cffunction>
 
 
