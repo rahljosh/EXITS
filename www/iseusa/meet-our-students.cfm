@@ -336,7 +336,7 @@
                         
                         Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
                         
-                        PS: DO NOT click on "Log In" at the top right of the page. Use the form at the bottom of the meet our students page to login to view our upcoming students. <br /> <br />
+                        PS: <strong>DO NOT</strong> click on "Log In" at the top right of the page. Use the form at the bottom of the meet our students page to login. <br /> <br />
                         
                         Best Regards-<br />
                         International Student Exchange
@@ -573,8 +573,9 @@
                         
                         Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
                         
-                        PS: Use the login box in the <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> page. 
-                        <strong>Do NOT click on "Log-In" top right corner.</strong> <br /><br />
+                        PS: Use the login box in the <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> page. <br /><br />
+                        
+                        PS: <strong>DO NOT</strong> click on "Log In" at the top right of the page. Use the form at the bottom of the meet our students page to login. <br /> <br />
     
                         Best Regards-<br />
                         International Student Exchange
@@ -645,7 +646,7 @@
 	
 	// Fomat Phone Number
 	jQuery(function($){
-	   $("#phone").mask("(999)999-9999");
+	   $("#phone").mask("(999) 999-9999");
 	});		
 </script>
 </head>
