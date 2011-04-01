@@ -184,10 +184,9 @@
                     CLIENT.hostID = qCheckLogin.ID;
                     CLIENT.name = qCheckLogin.lastName;
                     CLIENT.email = qCheckLogin.email;
+					// Redirect to View Students
+					location("viewStudents.cfm", "no");
 				</cfscript>
-        
-				<!--- Redirect to View Students --->
-                <cflocation url="viewStudents.cfm" addtoken="no">
     		
             <cfelse>
             	
@@ -234,37 +233,38 @@
             <!---  Email not registered - Send Login Information --->
             <cfif qCheckEmail.recordCount>
 
-                <cfoutput>
-                <cfsavecontent variable="email_message">
-                    Dear #qCheckEmail.firstName# #qCheckEmail.lastName#-
-                    
-                    <br /> <br />
-                    Please see your login information below.
-                    <br /> <br />
-                    
-                    User: #qCheckEmail.email#<br />
-                    Password: #qCheckEmail.password#<br /> <br />
-					
-                    Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
-                    
-                    PS: DO NOT click on "Log In" at the top right of the page. Use the form at the bottom of the meet our students page to login to view our upcoming students. <br /> <br />
-                    
-                    Best Regards-<br />
-                    International Student Exchange
+                <cfsavecontent variable="vEmailMessage">
+	                <cfoutput>
+	                    Dear #qCheckEmail.firstName# #qCheckEmail.lastName#-
+                        
+                        <br /> <br />
+                        Please see your login information below.
+                        <br /> <br />
+                        
+                        User: #qCheckEmail.email#<br />
+                        Password: #qCheckEmail.password#<br /> <br />
+                        
+                        Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
+                        
+                        PS: DO NOT click on "Log In" at the top right of the page. Use the form at the bottom of the meet our students page to login to view our upcoming students. <br /> <br />
+                        
+                        Best Regards-<br />
+                        International Student Exchange
+	                </cfoutput>
                 </cfsavecontent>
-                </cfoutput>
+                
                 
                 <!--- send email --->
                 <cfinvoke component="cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#qCheckEmail.email#">
                     <cfinvokeargument name="email_subject" value="ISE - Host Family Account Information">
-                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_message" value="#vEmailMessage#">
                     <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
                 
                 <cfscript>				
 					// Set Page Message
-					ArrayAppend(pageMsg.Messages, "Login information has been sent to your email address.");
+					ArrayAppend(pageMsg.Messages, "Login information has been sent to email addres provided.");
             	</cfscript>
             
             <!--- Email not registered --->
@@ -387,41 +387,35 @@
                 FROM
                     smg_host_lead
                 WHERE	
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">  
-				AND	
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">                                 
+                    email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">                                
             </cfquery>
                 
             <!--- Account Exists - Email Information --->             
             <cfif qCheckAccount.recordcount>
                 
-                <cfoutput>
-                <cfsavecontent variable="email_message">
-                    #FORM.firstname#-
-                    
-                    <p>
-                    	Based on your email address entered at <a href="http://www.iseusa.com">http://www.iseusa.com</a>, it appears you already have an account. 
-                        If you have ever hosted or applied to host with ISE*, or have already filled out the form, you have an account with us. <br /> <br />
-                        Your login information is below should you decide to log back in to view students or complete the host family application. 
-					</p>
-                    
-                    User: #qCheckAccount.email# <br />
-                    Password: #qCheckAccount.password# <br /> <br />
-                    <!---
-                    *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
-                    <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
-                    <br /> <br />
-                    --->
-                    Best Regards-<br />
-                    International Student Exchange
+                <cfsavecontent variable="vEmailMessage">
+	                <cfoutput>
+                        #FORM.firstname#-
+                        
+                        <p>
+                            Based on your email address entered at <a href="http://www.iseusa.com">http://www.iseusa.com</a>, it appears you already have an account. 
+                            If you have ever hosted or applied to host with ISE*, or have already filled out the form, you have an account with us. <br /> <br />
+                            Your login information is below should you decide to log back in to view students or complete the host family application. 
+                        </p>
+                        
+                        Email Address: #qCheckAccount.email# <br />
+                        Password: #qCheckAccount.password# <br /> <br />
+
+                        Best Regards-<br />
+                        International Student Exchange
+					</cfoutput>
                 </cfsavecontent>
-                </cfoutput>
                 
                 <!--- send email --->
                 <cfinvoke component="cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#FORM.email#">
                     <cfinvokeargument name="email_subject" value="Host Family Account Information">
-                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_message" value="#vEmailMessage#">
                     <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
                  
@@ -477,35 +471,32 @@
                     )		
                 </cfquery>
                 
-                <cfoutput>
-                <cfsavecontent variable="email_message">
-                    #FORM.firstname#-
-                    
-                    <p> Thank you for registering with ISE. Should you need to log back in to see profiles or to fill out the host family application you can use the information below. </p>
-                    
-                    User: #FORM.email# <br />
-                    Password: #setPassword# <br /> <br />
-                    
-					Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
-                    
-                    PS: Use the login box in the <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> page. 
-                    Do NOT click on "Log-In" top right corner. <br /><br />
-                    
-					<!---
-                    *If you have any questions regarding this email or why you already have an account, please visit this page for more information and contact information. 
-                    <a href="#APPLICATION.siteURL#account_info">#APPLICATION.siteURL#account_info</a>.				
-                    <br /> <br />
-                    --->
-                    Best Regards-<br />
-                    International Student Exchange
+                <cfsavecontent variable="vEmailMessage">
+	                <cfoutput>
+                        #FORM.firstname#-
+                        
+                        <p>Thank you for registering with ISE.</p>
+                        
+                        <p>Please use the information below to log in to see profiles or to fill out the host family application. </p>
+                        
+                        Email Address: #FORM.email# <br />
+                        Password: #setPassword# <br /> <br />
+                        
+                        Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
+                        
+                        PS: Use the login box in the <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> page. 
+                        <strong>Do NOT click on "Log-In" top right corner.</strong> <br /><br />
+    
+                        Best Regards-<br />
+                        International Student Exchange
+					</cfoutput>
                 </cfsavecontent>
-                </cfoutput>
                 
                 <!--- send email --->
                 <cfinvoke component="cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#FORM.email#">
                     <cfinvokeargument name="email_subject" value="Host Family Account Information">
-                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_message" value="#vEmailMessage#">
                     <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
             
@@ -521,75 +512,61 @@
                 LEFT OUTER JOIN
                 	smg_states st ON st.id = hl.stateID
                 WHERE
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
-				AND	
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">                    
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">                 
             </cfquery>
     
-            <cfscript>			
-                // Set CLIENT Variables 
-                CLIENT.hostID = qGetHostInfo.ID;
-                CLIENT.name = FORM.lastName;
-                CLIENT.email = FORM.email;
-            </cfscript>
-            
             <!--- send email to Bob --->
-            <cfoutput>
-            <cfsavecontent variable="email_message">
+            <cfsavecontent variable="vEmailMessage">
+    			<cfoutput>
+					<cfif qCheckAccount.recordcount>
+                        <strong>THIS IS A RETURNING HOST FAMILY</strong> <br /><br />
+                    </cfif>         
+                    
+                    <cfif CLIENT.isAdWords>
+                        <strong>Google AdWords Campaign</strong> <br /><br />
+                    </cfif>     
+                         
+                    <p>The #FORM.lastname# family from #FORM.city# has submitted their information to view students.</p>
+                    
+                    <p>Please see the details below:</p>
+                    
+                    Family Last Name: #FORM.lastName# <br />
+                    First Name: #FORM.firstName# <br />
+                    Address: #FORM.address# <br />
+                    Address2: #FORM.address2# <br />
+                    City: #FORM.city# <br />
+                    State: #qGetHostInfo.state# <br />
+                    Zip Code: #FORM.zipCode# <br />
+                    Phone Number: #FORM.phone# <br />
+                    Email: #FORM.email# <br />
+                    How did you hear about us: #FORM.hearAboutUs# <br /> 
+                    
+                    <cfif LEN(FORM.hearAboutUsDetail) AND FORM.hearAboutUs EQ 'ISE Representative'>
+                        ISE Representative Name: #FORM.hearAboutUsDetail# <br /> 
+                    <cfelseif LEN(FORM.hearAboutUsDetail) AND FORM.hearAboutUs EQ 'Other'>
+                        Other Specify: #FORM.hearAboutUsDetail# <br /> 
+                    </cfif>
+                    
+                    Would you like to join our mailing list? <cfif FORM.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
     
-                <cfif qCheckAccount.recordcount>
-                    <strong>THIS IS A RETURNING HOST FAMILY</strong> <br /><br />
-                </cfif>         
-                
-                <cfif CLIENT.isAdWords>
-                    <strong>Google AdWords Campaign</strong> <br /><br />
-                </cfif>     
-                     
-                <p>The #FORM.lastname# family from #FORM.city# has submitted their information to view students.</p>
-                
-                <p>Please see the details below:</p>
-                
-                Family Last Name: #FORM.lastName# <br />
-                First Name: #FORM.firstName# <br />
-                Address: #FORM.address# <br />
-                Address2: #FORM.address2# <br />
-                City: #FORM.city# <br />
-                State: #qGetHostInfo.state# <br />
-                Zip Code: #FORM.zipCode# <br />
-                Phone Number: #FORM.phone# <br />
-                Email: #FORM.email# <br />
-                How did you hear about us: #FORM.hearAboutUs# <br /> 
-                
-				<cfif LEN(FORM.hearAboutUsDetail) AND FORM.hearAboutUs EQ 'ISE Representative'>
-                	ISE Representative Name: #FORM.hearAboutUsDetail# <br /> 
-                <cfelseif LEN(FORM.hearAboutUsDetail) AND FORM.hearAboutUs EQ 'Other'>
-                    Other Specify: #FORM.hearAboutUsDetail# <br /> 
-                </cfif>
-                
-                Would you like to join our mailing list? <cfif FORM.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
-
-				<!--- View their information here: <a href="https://www.student-management.com/nsmg/index.cfm?curdoc=leads/hostInfo&ID=#qGetHostInfo.ID#">www.student-management.com/nsmg/index.cfm?curdoc=leads/hostInfo&ID=#qGetHostInfo.ID# </a> 
-                <br /> <br />
-                Once they choose to host, have them login at <a href="http://www.iseusa.com">www.iseusa.com</a> to fill out the host family application using their account login information.
-                <br /> <br />
-                 --->
-            
-                Regards, <Br />
-                International Student Exchange
+                    Regards, <Br />
+                    International Student Exchange
+	            </cfoutput>
             </cfsavecontent>
-            </cfoutput>
                             
             <!--- send email --->
             <cfinvoke component="cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#AppEmail.hostLead#">
                 <cfinvokeargument name="email_subject" value="Host Family Viewing Students Section">
-                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_message" value="#vEmailMessage#">
                 <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
             </cfinvoke>
             
-            <!--- Valid Login - Redirect to View Students --->
-            <cflocation url="viewStudents.cfm" addtoken="no">
-        
+			<cfscript>				
+                // Set Page Message
+                // ArrayAppend(pageMsg.Messages, "Your login information has been sent to the email address provided. Please follow the instructions on the email to meet our students.");
+            </cfscript>
+            
     	</cfif>
     
     </cfif>
@@ -671,11 +648,12 @@
             <div class="whtTop"></div>
             
             <div class="whtMiddle">
+            
 		        <p class="header1">Meet Our Students</p>
         	    
                 <div class="subPic">
-                	<img src="images/subMeetStudents.png" width="415" height="277" alt="Meet our Students" />
-		            <br />
+                	
+                    <img src="images/subMeetStudents.png" width="415" height="277" alt="Meet our Students" />
             
             		<div class="meetStudentsLogin">
 
@@ -683,7 +661,7 @@
                         <cfform name="loginForm" id="loginForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#loginFormClass#">
                         <input type="hidden" name="type" value="login" />
 
-							<!--- <h1> Login </h1> --->
+							<p class="sub-header">Login</p>
                             
                             <p> &nbsp; &nbsp; If you have already submited your contact information, please use the login information you received to login and view incoming students.</p>
 							
@@ -764,100 +742,124 @@
                     <!--- Check if user is allowed to register --->
                     <cfif allowAccess>
                     	
-						<!--- <h2> Register </h2> --->
-                        
-                        <p>&nbsp; &nbsp; Fill out this form to learn more about our students and hosting through ISE! Our students are great ambassadors of their home countries and are excited to bring their cultures to communities in the United States.</p>
-                        <p>&nbsp; &nbsp; In order to protect the privacy of our students, we do ask that you provide your name and address in order to ensure the utmost security of our students. </p>
-                        <p>&nbsp; &nbsp; Once you register, you will be permitted to view select student profiles. </p>
-                    
-                        <!--- Display Errors --->
-                        <cfif FORM.type EQ 'newAccount' AND VAL(ArrayLen(pageMsg.Errors))>
-                            <p class="errorMessage">
-                                
-                                <span>Please review the following item(s):</span>
-                            
-                                <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
-                                   &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
-                                </cfloop>
-                            
-                            </p>
-                        </cfif>	
-                    
-                        <cfform name="newAccount" id="newAccount" method="post" action="#cgi.SCRIPT_NAME#">
-                        <input type="hidden" name="type" value="newAccount" />
-                        <input type="hidden" name="strCaptcha" value="#FORM.strCaptcha#">
-                        <input type="hidden" name="captchaHash" value="#FORM.captchaHash#">
-                        
-                        <label for="lastName" class="inputLabel">Family Last Name <span class="requiredField">*</span></label>
-                        <cfinput type="text" name="lastName" id="lastName" value="#FORM.lastName#" maxlength="100" class="largeInput" required="yes" message="Please enter a family last name."/> 
-                        
-                        <label for="firstName" class="inputLabel">Your First Name <span class="requiredField">*</span></label>
-                        <cfinput type="text" name="firstName" id="firstName" value="#FORM.firstName#" maxlength="100"  class="largeInput" required="yes" message="Please enter a first name." /> 
-                       
-                        <label for="address" class="inputLabel">Address <span class="requiredField">*</span></label>
-                        <cfinput type="text" name="address" id="address" value="#FORM.address#" maxlength="100" class="largeInput" required="yes" message="Please enter an address." />
-                        
-                        <label for="address2" class="inputLabel">Additional Address Info</label>
-                        <cfinput type="text" name="address2" id="address2" value="#FORM.address2#" maxlength="100" class="largeInput" /> 
-                        
-                        <label for="city" class="inputLabel">City <span class="requiredField">*</span></label>
-                        <cfinput type="text" name="city" id="city" value="#FORM.city#" maxlength="100" class="largeInput" required="yes" message="Please enter a city." />
-                        
-                        <label for="stateID" class="inputLabel">State <span class="requiredField">*</span></label>
-                        <cfselect name="stateID" id="stateID" class="largeInput" required="yes" message="Please select a state.">
-                            <option value="0"></option>
-                            <cfloop query="qStateList">
-                                <option value="#qStateList.id#" <cfif FORM.stateID EQ qStateList.id> selected="selected" </cfif> >#qStateList.state# - #qStateList.statename#</option>
-                            </cfloop>
-                        </cfselect>
-                        
-                        <label for="zipCode" class="inputLabel">Zipcode - 5 digits only <span class="requiredField">*</span></label>
-                        <cfinput type="text" name="zipCode" id="zipCode" value="#FORM.zipCode#" maxlength="5" class="largeInput" required="yes" message="Please enter a valid zip code." validateat="onSubmit" validate="zipcode" />
-                        
-                        <label for="phone" class="inputLabel">Phone Number <span class="requiredField">*</span></label>
-                        <cfinput type="text" name="phone" id="phone" value="#FORM.phone#" maxlength="20" class="largeInput" required="yes"  message="Please enter a phone number xxx xxx-xxxx." pattern="(999) 999-9999" validateat="onSubmit" validate="telephone"/>
-                        
-                        <label for="email" class="inputLabel">Email <span class="requiredField">*</span></label>
-                        <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address." validateat="onSubmit" validate="email" />
+						<cfif FORM.type EQ 'newAccount' AND NOT VAL(ArrayLen(pageMsg.Errors))>
 
-                        <label for="hearAboutUs" class="inputLabel">How did you hear about us <span class="requiredField">*</span></label>
-                        <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayExtraField(this.value);"> 			
-                            <option value=""></option>
-                            <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
-                                <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>
-                            </cfloop>
-                        </cfselect>
-    					
-                        <div id="divExtraField" class="hiddenDiv">
-                            <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
-                            <span id="spanHearAboutUs" class="inputNote"></span>
-                            <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
-                        </div>
-                                            
-                        <div style="clear:both;">&nbsp;</div>
-                        
-                        <!--- Captcha --->
-                        <cfimage action="captcha" width="215" height="75" text="#FORM.strCaptcha#" difficulty="medium"  fontsize="28">
+                            <!--- Thank You For Registering --->
+                            <div style="height:510px;">
+                            
+                                <p class="pageMessage">
+                                	Thank you for registering with ISE. <br /><br />
+                                    
+                                    Your login information has been sent to the email address provided. <br /><br />
+                                                                        
+                                    Please follow the instructions on the email to meet our students. <br /><br />
+                                    
+                                    If you have any questions, please contact us at <a href="mailto:support@iseusa.com">support@iseusa.com</a> <br /><br />
+
+                               		International Student Exchange
+                                </p>
+
+                            </div>
 						
-                        <div style="clear:both;">&nbsp;</div>
+                        <cfelse>
+							<!--- Registration Form --->
+                            
+                            <p class="sub-header">Register</p>
+                            
+                            <p>&nbsp; &nbsp; Fill out this form to learn more about our students and hosting through ISE! Our students are great ambassadors of their home countries and are excited to bring their cultures to communities in the United States.</p>
+                            <p>&nbsp; &nbsp; In order to protect the privacy of our students, we do ask that you provide your name and address in order to ensure the utmost security of our students. </p>
+                            <p>&nbsp; &nbsp; Once you register, you will be permitted to view select student profiles. </p>
                         
-                        <label for="captcha" class="inputLabel">Please enter text in image above <span class="requiredField">*</span></label>
-                        <cfinput type="text" name="captcha" id="captcha" class="largeInput" required="yes" message="Please enter text as displayed in the image above">
+                            <!--- Display Errors --->
+                            <cfif FORM.type EQ 'newAccount' AND VAL(ArrayLen(pageMsg.Errors))>
+                                <p class="errorMessage">
+                                    
+                                    <span>Please review the following item(s):</span>
+                                
+                                    <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
+                                       &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
+                                    </cfloop>
+                                
+                                </p>
+                            </cfif>	
+                        	
+                            <cfform name="newAccount" id="newAccount" method="post" action="#cgi.SCRIPT_NAME#">
+                            <input type="hidden" name="type" value="newAccount" />
+                            <input type="hidden" name="strCaptcha" value="#FORM.strCaptcha#">
+                            <input type="hidden" name="captchaHash" value="#FORM.captchaHash#">
+                            
+                            <label for="lastName" class="inputLabel">Family Last Name <span class="requiredField">*</span></label>
+                            <cfinput type="text" name="lastName" id="lastName" value="#FORM.lastName#" maxlength="100" class="largeInput" required="yes" message="Please enter a family last name."/> 
+                            
+                            <label for="firstName" class="inputLabel">Your First Name <span class="requiredField">*</span></label>
+                            <cfinput type="text" name="firstName" id="firstName" value="#FORM.firstName#" maxlength="100"  class="largeInput" required="yes" message="Please enter a first name." /> 
+                           
+                            <label for="address" class="inputLabel">Address <span class="requiredField">*</span></label>
+                            <cfinput type="text" name="address" id="address" value="#FORM.address#" maxlength="100" class="largeInput" required="yes" message="Please enter an address." />
+                            
+                            <label for="address2" class="inputLabel">Additional Address Info</label>
+                            <cfinput type="text" name="address2" id="address2" value="#FORM.address2#" maxlength="100" class="largeInput" /> 
+                            
+                            <label for="city" class="inputLabel">City <span class="requiredField">*</span></label>
+                            <cfinput type="text" name="city" id="city" value="#FORM.city#" maxlength="100" class="largeInput" required="yes" message="Please enter a city." />
+                            
+                            <label for="stateID" class="inputLabel">State <span class="requiredField">*</span></label>
+                            <cfselect name="stateID" id="stateID" class="largeInput" required="yes" message="Please select a state.">
+                                <option value="0"></option>
+                                <cfloop query="qStateList">
+                                    <option value="#qStateList.id#" <cfif FORM.stateID EQ qStateList.id> selected="selected" </cfif> >#qStateList.state# - #qStateList.statename#</option>
+                                </cfloop>
+                            </cfselect>
+                            
+                            <label for="zipCode" class="inputLabel">Zipcode - 5 digits only <span class="requiredField">*</span></label>
+                            <cfinput type="text" name="zipCode" id="zipCode" value="#FORM.zipCode#" maxlength="5" class="largeInput" required="yes" message="Please enter a valid zip code." validateat="onSubmit" validate="zipcode" />
+                            
+                            <label for="phone" class="inputLabel">Phone Number <span class="requiredField">*</span></label>
+                            <cfinput type="text" name="phone" id="phone" value="#FORM.phone#" maxlength="20" class="largeInput" required="yes"  message="Please enter a phone number xxx xxx-xxxx." pattern="(999) 999-9999" validateat="onSubmit" validate="telephone"/>
+                            
+                            <label for="email" class="inputLabel">Email <span class="requiredField">*</span></label>
+                            <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address." validateat="onSubmit" validate="email" />
+    
+                            <label for="hearAboutUs" class="inputLabel">How did you hear about us <span class="requiredField">*</span></label>
+                            <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayExtraField(this.value);"> 			
+                                <option value=""></option>
+                                <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
+                                    <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>
+                                </cfloop>
+                            </cfselect>
+                            
+                            <div id="divExtraField" class="hiddenDiv">
+                                <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
+                                <span id="spanHearAboutUs" class="inputNote"></span>
+                                <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
+                            </div>
+                                                
+                            <div style="clear:both;">&nbsp;</div>
+                            
+                            <!--- Captcha --->
+                            <cfimage action="captcha" width="215" height="75" text="#FORM.strCaptcha#" difficulty="medium"  fontsize="28">
+                            
+                            <div style="clear:both;">&nbsp;</div>
+                            
+                            <label for="captcha" class="inputLabel">Please enter text in image above <span class="requiredField">*</span></label>
+                            <cfinput type="text" name="captcha" id="captcha" class="largeInput" required="yes" message="Please enter text as displayed in the image above">
+                            
+                            <div style="clear:both;">&nbsp;</div>
+    
+                            <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
+                            <label for="isListSubscriber" class="inputCheckbox">Would you like to join our mailing list?</label> 
+                            
+                            <span class="requiredFieldNote">* Required Fields</span>
+                            
+                            <input type="image" src="images/submitRed.png" />
+                            
+                            </cfform>
                         
-                        <div style="clear:both;">&nbsp;</div>
-
-                        <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
-                        <label for="isListSubscriber" class="inputCheckbox">Would you like to join our mailing list?</label> 
-                        
-						<span class="requiredFieldNote">* Required Fields</span>
-                        
-                        <input type="image" src="images/submitRed.png" />
-                        
-                        </cfform>
+                        </cfif> <!--- FORM.type EQ 'newAccount' AND  NOT VAL(ArrayLen(pageMsg.Errors)) --->
                     
                     <!--- Not US user --->
 					<cfelse>
-                    	<div style="height:500px;">
+                    	<div style="height:510px;">
 	                        <p>&nbsp; &nbsp; We are sorry but only United States based users are allowed to register to meet our upcoming students.</p>
     					</div>                
                     </cfif>                    
