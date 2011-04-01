@@ -25,16 +25,18 @@
 	APPLICATION.DSN = 'MySQL';
 	
 
-/***** Create APPLICATION.SETTINGS structure *****/
+	/***** Create APPLICATION.SETTINGS structure *****/
 	APPLICATION.SETTINGS = StructNew();		
 	
 	// This will store a company lists 
 	APPLICATION.SETTINGS.COMPANYLIST = StructNew();		
-	// Stores a list with public program companies (Except PHP, CSB and Wep)
+	// Stores a list with public program companies (Except PHP-6, CSB-7,8,9 and Wep-11)
 	// PS: CFCASE does not accept a variable so they are still hard coded.
 	APPLICATION.SETTINGS.COMPANYLIST.ISE = "1,2,3,4,12";
 	APPLICATION.SETTINGS.COMPANYLIST.ISESMG = "1,2,3,4,5,12";
-	APPLICATION.SETTINGS.COMPANYLIST.NonISE = "10,11,14";
+	// Case 10, WEP 11, Canada 13, ESI 14
+	APPLICATION.SETTINGS.COMPANYLIST.NonISE = "10,11,13,14";
+	APPLICATION.SETTINGS.COMPANYLIST.Canada = "13";
 	APPLICATION.SETTINGS.COMPANYLIST.ESI = "14";
 	APPLICATION.SETTINGS.COMPANYLIST.All = "1,2,3,4,5,6,10,12,13,14";
 
