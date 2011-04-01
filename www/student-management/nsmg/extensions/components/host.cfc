@@ -527,15 +527,42 @@
         <cfargument name="comments" type="string" default="" hint="comments is not required">
         
         <cfscript>
+			// Set actions
+			var vActions = '';
+			
 			// Get current host lead information
 			qGetHostLead = getHostLeadByID(ID=ARGUMENTS.ID);				
-			
+
+			// Get User Information
+			qGetUser = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.areaRepID);
+
 			// Get Entered By Information
 			qGetEnterBy = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.enteredByID);
-			
-			// Set actions
-			vActions = '';
-			
+		</cfscript>
+        
+        <cfsavecontent variable="emailMessage">
+            <cfoutput>
+                <p>Dear #qGetUser.firstName# #qGetUser.lastName#,</p>
+                
+                <p>A new host family lead has been assigned to you. Please see the details below:</p>
+                
+                Name: #qGetHostLead.firstName# #qGetHostLead.lastName# <br />
+                Location: #qGetHostLead.city#, #qGetHostLead.state# <br />
+                Phone Number: #qGetHostLead.phone# <br />
+                Email Address: #qGetHostLead.email# <br />
+                
+                <cfif LEN(ARGUMENTS.comments)>
+                    Comments: #ARGUMENTS.comments# <br />
+                </cfif>
+                
+                <p>Please visit <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a> to view the complete host lead information.</p>
+                
+                Regards, <Br />
+                #CLIENT.companyName#
+			</cfoutput>
+        </cfsavecontent>
+    
+        <cfscript>	
 			// Region
 			if ( ARGUMENTS.regionID NEQ qGetHostLead.regionID ) {
 				// Get Region Information
@@ -546,10 +573,24 @@
 			
 			// Area Representative
 			if ( ARGUMENTS.areaRepID NEQ qGetHostLead.areaRepID ) {
-				// Get User Information
-				qGetUser = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.areaRepID);
 				// Assign new area rep 
 				vActions = vActions & "Area Representative: #qGetUser.firstName# #qGetUser.lastName# ###qGetUser.userID# <br /> #CHR(13)#";
+				
+				// Email Area Representative / Production Only
+				if ( NOT APPLICATION.isServerLocal AND isvalid("email", qGetUser.Email) ) { 
+					
+					// Create Object
+					oEmail = createObject("component","nsmg.cfc.email");
+					
+					// Send Out Email
+					oEmail.send_mail(
+						email_to=qGetUser.email,
+						email_from='#companyshort#-support@exitsapplication.com',
+						email_subject='New Host Family Lead Assigned To You',
+						email_message=emailMessage
+					);
+				}
+				
 			}
 			
 			// Status
@@ -564,20 +605,23 @@
 				vActions = vActions & "Status: #qGetStatus.name# <br /> #CHR(13)#";
 			}
 			
+			// Check if information has been updated
 			if ( LEN(vActions) ) {
+				
 				// Add User and TimeStamp Information
 				vActions = vActions & "Assigned by: #qGetEnterBy.firstName# #qGetEnterBy.lastName# ###qGetEnterBy.userID# <br /> #CHR(13)#";
+
+				// Insert New History
+				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+					applicationID=APPLICATION.CONSTANTS.TYPE.hostFamilyLead,
+					foreignTable='smg_host_lead',
+					foreignID=ARGUMENTS.ID,
+					enteredByID=ARGUMENTS.enteredByID,
+					actions=vActions,
+					comments=ARGUMENTS.comments
+				);
+
 			}
-			
-			// Insert New History
-			APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
-				applicationID=APPLICATION.CONSTANTS.TYPE.hostFamilyLead,
-				foreignTable='smg_host_lead',
-				foreignID=ARGUMENTS.ID,
-				enteredByID=ARGUMENTS.enteredByID,
-				actions=vActions,
-				comments=ARGUMENTS.comments
-			);
 		</cfscript>
 			
 		<!--- Update Host Lead --->

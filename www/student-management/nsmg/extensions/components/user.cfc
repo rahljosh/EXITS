@@ -78,7 +78,7 @@
                 FROM 
                     smg_users
                 WHERE	
-                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
 		</cfquery>
 		   
 		<cfreturn qGetUserByID>

@@ -54,6 +54,14 @@
 	font-size:0.8em;
 }
 
+.formWarning {
+	color:#F00;
+	padding:2px 0 0 0;
+	margin:0 0 0 2px;
+	font-size:0.8em;
+	font-weight:bold;
+}
+
 .displayNone {
 	display:none;
 }
