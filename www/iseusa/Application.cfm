@@ -80,7 +80,6 @@
 		AppEmail.finance = 'marcel@iseusa.com';
 		AppEmail.errors = 'errors@student-management.com';
 		AppEmail.hostLead = 'bob@iseusa.com;lamonica@iseusa.com';
-
 		
 		// APPLICATION.QUERY should persist in the application scope. 
 		if ( NOT StructKeyExists(APPLICATION, 'QUERY') OR VAL(URL.init) ) {

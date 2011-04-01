@@ -1,3 +1,16 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		meet-our-students.cfm
+	Author:		Marcus Melo
+	Date:		April 30, 2010
+	Desc:		Meet our students page
+	
+	Updates:	04/01/2011 - Removing direct access, host family must check their 
+				email address to get the login information.
+				After first login we know account has been verified.
+
+----- ------------------------------------------------------------------------- --->
+
 <!--- Kill Extra Output --->
 <cfsilent>
 
@@ -176,7 +189,7 @@
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             </cfquery>
         	
-            <!--- Valid Login --->
+            <!--- Valid Login Host Family --->
         	<cfif qCheckLogin.recordcount>
             	
                 <cfscript>
@@ -226,11 +239,9 @@
                     smg_host_lead
                 WHERE 
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginEmail)#">
-				AND	
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">                    
             </cfquery>
   			
-            <!---  Email not registered - Send Login Information --->
+            <!---  Email Already registered - Send Login Information --->
             <cfif qCheckEmail.recordCount>
 
                 <cfsavecontent variable="vEmailMessage">
@@ -252,7 +263,6 @@
                         International Student Exchange
 	                </cfoutput>
                 </cfsavecontent>
-                
                 
                 <!--- send email --->
                 <cfinvoke component="cfc.email" method="send_mail">
@@ -387,7 +397,7 @@
                 FROM
                     smg_host_lead
                 WHERE	
-                    email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">                                
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">                                
             </cfquery>
                 
             <!--- Account Exists - Email Information --->             
@@ -505,7 +515,24 @@
             <!--- Look Up Host Family --->
             <cfquery name="qGetHostInfo" datasource="#APPLICATION.DSN.Source#">
                 SELECT
-					hl.id,
+                    hl.firstName,
+                    hl.lastName,
+                    hl.address,
+                    hl.address2, 
+                    hl.city,
+                    hl.stateID,
+                    hl.zipCode,
+                    hl.phone,
+                    hl.email,
+                    hl.password,
+                    hl.hearAboutUs,
+                    hl.hearAboutUsDetail,
+                    hl.isListSubscriber,
+                    hl.isAdWords,
+                    hl.httpReferer,
+                    hl.remoteAddress,
+                    hl.remoteCountry,
+                    hl.dateCreated,
                     st.state
                 FROM 
                     smg_host_lead hl
@@ -526,28 +553,28 @@
                         <strong>Google AdWords Campaign</strong> <br /><br />
                     </cfif>     
                          
-                    <p>The #FORM.lastname# family from #FORM.city# has submitted their information to view students.</p>
+                    <p>The #qGetHostInfo.lastname# family from #qGetHostInfo.city#, #qGetHostInfo.state# has submitted their information to view students.</p>
                     
                     <p>Please see the details below:</p>
                     
-                    Family Last Name: #FORM.lastName# <br />
-                    First Name: #FORM.firstName# <br />
-                    Address: #FORM.address# <br />
-                    Address2: #FORM.address2# <br />
-                    City: #FORM.city# <br />
+                    Family Last Name: #qGetHostInfo.lastName# <br />
+                    First Name: #qGetHostInfo.firstName# <br />
+                    Address: #qGetHostInfo.address# <br />
+                    Address2: #qGetHostInfo.address2# <br />
+                    City: #qGetHostInfo.city# <br />
                     State: #qGetHostInfo.state# <br />
-                    Zip Code: #FORM.zipCode# <br />
-                    Phone Number: #FORM.phone# <br />
-                    Email: #FORM.email# <br />
-                    How did you hear about us: #FORM.hearAboutUs# <br /> 
+                    Zip Code: #qGetHostInfo.zipCode# <br />
+                    Phone Number: #qGetHostInfo.phone# <br />
+                    Email: #qGetHostInfo.email# <br />
+                    How did you hear about us: #qGetHostInfo.hearAboutUs# <br /> 
                     
-                    <cfif LEN(FORM.hearAboutUsDetail) AND FORM.hearAboutUs EQ 'ISE Representative'>
-                        ISE Representative Name: #FORM.hearAboutUsDetail# <br /> 
-                    <cfelseif LEN(FORM.hearAboutUsDetail) AND FORM.hearAboutUs EQ 'Other'>
-                        Other Specify: #FORM.hearAboutUsDetail# <br /> 
+                    <cfif LEN(qGetHostInfo.hearAboutUsDetail) AND qGetHostInfo.hearAboutUs EQ 'ISE Representative'>
+                        ISE Representative Name: #qGetHostInfo.hearAboutUsDetail# <br /> 
+                    <cfelseif LEN(qGetHostInfo.hearAboutUsDetail) AND qGetHostInfo.hearAboutUs EQ 'Other'>
+                        Other Specify: #qGetHostInfo.hearAboutUsDetail# <br /> 
                     </cfif>
                     
-                    Would you like to join our mailing list? <cfif FORM.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
+                    Would you like to join our mailing list? <cfif qGetHostInfo.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
     
                     Regards, <Br />
                     International Student Exchange
@@ -739,6 +766,8 @@
                 
                 <div class="meetStudentsForm">
 					
+                    <p class="sub-header">Register</p>
+                    
                     <!--- Check if user is allowed to register --->
                     <cfif allowAccess>
                     	
@@ -763,8 +792,6 @@
 						
                         <cfelse>
 							<!--- Registration Form --->
-                            
-                            <p class="sub-header">Register</p>
                             
                             <p>&nbsp; &nbsp; Fill out this form to learn more about our students and hosting through ISE! Our students are great ambassadors of their home countries and are excited to bring their cultures to communities in the United States.</p>
                             <p>&nbsp; &nbsp; In order to protect the privacy of our students, we do ask that you provide your name and address in order to ensure the utmost security of our students. </p>
