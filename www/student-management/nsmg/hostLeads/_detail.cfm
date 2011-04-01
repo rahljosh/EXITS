@@ -78,6 +78,11 @@
 				SESSION.formErrors.Add('You must select a status');
 			}			
 			
+			if ( ListFind("3,8", FORM.statusID) AND NOT LEN(FORM.comments) ) {
+				// Get all the missing items in a list
+				SESSION.formErrors.Add('This is a final decision. Comments are required.');
+			}			
+			
 			// Managers Must Assign an Area Representative
 			if ( CLIENT.userType EQ 5 AND NOT VAL(FORM.areaRepID) ) {
 				// Get all the missing items in a list
@@ -133,6 +138,43 @@
     <gui:pageHeader
         headerType="applicationNoHeader"
     />	
+
+		<script language="javascript">
+            // Display warning when page is ready
+            $(document).ready(function() {
+                displayFinalDecision();
+            });
+           
+            // Display Final Decision Warning
+			var displayFinalDecision = function() { 
+                // Get Status Value
+				vGetSelectedStatus = $("##statusID").val();
+                // 3 - Not Interested
+				// 8 - Committed to Host
+				if ( vGetSelectedStatus == 3 || vGetSelectedStatus == 8 ) {
+					$("##pFinalDecision").fadeIn();	
+				} else {
+					$("##pFinalDecision").fadeOut();	
+				}				
+            }
+			
+			var confirmStatus = function() { 
+                // Get Status Value
+				vGetSelectedStatus = $("##statusID").val();
+			    
+				if ( vGetSelectedStatus == 3 || vGetSelectedStatus == 8 ) {
+					
+					if( confirm("This lead will be removed from your active list. Would you like to continue?") ) { 
+						return true; 
+					} else { 
+						return false; 
+					} 
+					
+				} else {
+					return true; 
+				}
+			}
+        </script>
 		
         <cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
         
@@ -167,7 +209,7 @@
             
 		<cfif familyFound>	
 
-            <cfform name="hostLeadDetail" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="defaultForm">
+            <cfform name="hostLeadDetail" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="defaultForm" onsubmit="return confirmStatus();">
                 <input type="hidden" name="submitted" value="1" />
                 <input type="hidden" name="ID" value="#ID#" />
                 <input type="hidden" name="KEY" value="#key#" />
@@ -318,12 +360,18 @@
                         <tr>
                             <th align="right" valign="top">Status:</th>
                             <td>
-                                <select name="statusID" id="statusID" class="largeField">
+                                <select name="statusID" id="statusID" class="largeField" onchange="displayFinalDecision();">
                                     <option value="0" <cfif FORM.statusID EQ 0>selected="selected"</cfif> >Please Select a Status</option>
                                     <cfloop query="qGetStatus">
                                         <option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
                                     </cfloop>
                                 </select>
+                                
+                                <p id="pFinalDecision" class="formWarning displayNone">
+                                	PS: This is a final decision, this lead will be removed from your active list. 
+                                    <br />
+                                    You can still find it under your host lead list by filtering by current status.
+                                </p>
                             </td>
                         </tr>
                         <tr>
