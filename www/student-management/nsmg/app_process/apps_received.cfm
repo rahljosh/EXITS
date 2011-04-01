@@ -226,24 +226,18 @@
                         </cfquery>	
 	                    <td>#denied_by.firstname# #denied_by.lastname#</td>
                     </cfif>
-                    <td>
-                    	<cfif NOT VAL(companyid)>
-                        	<a href="index.cfm?curdoc=app_process/apps_received_assignment&studentid=#studentid#">[ Assign ]</a>
-                        <cfelse>
-                        	#companyshort#
-                        </cfif>
-                    </td>
+                    <td>#companyshort#</td>
                     <td>
                         <cfif status EQ 'received'>
-                            <a href="javascript:openPopUp('student_app/index.cfm?curdoc=approve_student_app&unqid=#uniqueid#', 800, 700);">[ Approve ]</a>
-                            <cfif VAL(companyID)>
+                        	
+                            <cfif companyid EQ 0>
+	                            <a href="index.cfm?curdoc=app_process/apps_received_assignment&studentid=#studentid#">[ Assign ]</a>
                                 &nbsp; | &nbsp;   	
-                                <a href="index.cfm?curdoc=app_process/onhold_app&studentid=#studentid#">[ Hold ]</a>
-                                &nbsp; | &nbsp;   	
-                                <a href="javascript:openPopUp('student_app/index.cfm?curdoc=deny_application&unqid=#uniqueid#', 800, 700);">[ Deny ]</a>
-                                &nbsp; | &nbsp;   	
-                                <a href="index.cfm?curdoc=app_process/transfer_app&studentid=#studentid#">[ Transfer ]</a>	
-                            </cfif>
+							</cfif>
+                            
+                            <a href="javascript:openPopUp('student_app/index.cfm?curdoc=approve_student_app&unqid=#uniqueid#', 800, 700);">[ Approve ]</a>	
+                        <cfelse>
+                        	#companyshort#
                         </cfif>
                     </td>
                 </tr>
