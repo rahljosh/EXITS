@@ -105,7 +105,7 @@
 	/* jQuery Latest Version 
 	http://code.jquery.com/jquery-latest.min.js
 	http://code.jquery.com/jquery.js */		
-	APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js';	
+	APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js';	
 	
 	APPLICATION.PATH.companyLogo = APPLICATION.PATH.base & "pics/logos/"; 
 	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & "uploadedfiles/";	
