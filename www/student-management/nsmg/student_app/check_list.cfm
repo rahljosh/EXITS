@@ -27,13 +27,24 @@
         INNER JOIN 
             smg_users u ON u.userid = s.intrep
         WHERE 
-            studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentID#">
+    </cfquery>
+    
+    <cfquery name="qIsStudentAccount" datasource="MySql">
+        SELECT 
+            ID
+        FROM 
+            smg_student_app_status
+        WHERE 
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentID#">
+		AND	
+        	status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">         
     </cfquery>
     
     <cfquery name="smg_student_siblings" datasource="MySql">
         SELECT 
         	childid, 
-            studentid, 
+            studentID, 
             birthdate, 
             sex, 
             liveathome, 
@@ -41,7 +52,7 @@
         FROM 
         	smg_student_siblings
         WHERE 
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
         ORDER BY 
         	childid
     </cfquery>
@@ -49,26 +60,26 @@
     <cfquery name="smg_student_app_family_album" datasource="MySql">
         SELECT 	
         	id, 
-            studentid, 
+            studentID, 
             description, 
             filename
         FROM 
         	smg_student_app_family_album
         WHERE 
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
     </cfquery>
     
     <cfquery name="smg_student_app_school_year" datasource="MySql">
         SELECT 
         	yearid, 
-            studentid, 
+            studentID, 
             beg_year, 
             end_year, 
             class_year 
         FROM 
         	smg_student_app_school_year
         WHERE 
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
     </cfquery>
     
     <cfquery name="smg_student_app_grades" datasource="MySql">
@@ -82,7 +93,7 @@
         INNER JOIN 
         	smg_student_app_school_year ON smg_student_app_school_year.yearid = smg_student_app_grades.yearid
         WHERE 
-        	smg_student_app_school_year.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
+        	smg_student_app_school_year.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
     </cfquery>
     
     <cfquery name="smg_student_app_health" datasource="MySql">
@@ -91,20 +102,20 @@
         FROM 
         	smg_student_app_health
         WHERE 
-        	studentid = <cfqueryparam value="#smg_students.studentid#" cfsqltype="cf_sql_integer">
+        	studentID = <cfqueryparam value="#smg_students.studentID#" cfsqltype="cf_sql_integer">
     </cfquery>
     
     <cfquery name="smg_student_app_state_requested" datasource="MySql">
         SELECT 
             statechoiceid, 
-            studentid, 
+            studentID, 
             state1, 
             state2, 
             state3
         FROM 
             smg_student_app_state_requested
         WHERE 
-            studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentid#">
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
     </cfquery>
     
     <cfquery name="qESIAreaChoice" datasource="MySql">
@@ -156,20 +167,20 @@
     <!--- Check for Uploaded Files --->
     
     <!--- Passport Photo --->
-    <cfdirectory directory="#AppPath.onlineApp.picture#" name="check_01_upload" filter="#smg_students.studentid#.*">
+    <cfdirectory directory="#AppPath.onlineApp.picture#" name="check_01_upload" filter="#smg_students.studentID#.*">
     
     <!--- Family Album --->
-    <cfdirectory name="page04_family_album" directory="#AppPath.onlineApp.familyAlbum##smg_students.studentid#">
+    <cfdirectory name="page04_family_album" directory="#AppPath.onlineApp.familyAlbum##smg_students.studentID#">
     
     <!--- Students Letter --->
-    <cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="check_05_upload" filter="#smg_students.studentid#.*">
+    <cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="check_05_upload" filter="#smg_students.studentID#.*">
     
     <!--- Parents Letter --->
-    <cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="check_06_upload" filter="#smg_students.studentid#.*">
+    <cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="check_06_upload" filter="#smg_students.studentID#.*">
     
     <!--- Inserts --->
     <cfloop list="08,09,10,11,12,13,14,15,16,17,18,19,20,21" index="i">
-        <cfdirectory directory="#AppPath.onlineApp.inserts#page#i#" name="check_#i#_upload" filter="#smg_students.studentid#.*">	
+        <cfdirectory directory="#AppPath.onlineApp.inserts#page#i#" name="check_#i#_upload" filter="#smg_students.studentID#.*">	
     </cfloop>
     
 </cfsilent>
@@ -466,9 +477,9 @@
 	<cfloop query="page13">
 		<cfif lastvaccine NEQ page13.field_label>
 			<cfquery name="smg_student_app_shots" datasource="MySql">
-				SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster  
+				SELECT vaccineid, studentID, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster  
 				FROM smg_student_app_shots
-				WHERE vaccine = '#page13.field_label#' AND studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
+				WHERE vaccine = '#page13.field_label#' AND studentID = <cfqueryparam value="#CLIENT.studentID#" cfsqltype="cf_sql_integer">
 			</cfquery>
 		</cfif>
 		<cfset lastvaccine = page13.field_label>
@@ -578,7 +589,10 @@
 	<!--- PAGE 19 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page19&id=4&p=19"><h3>Page [19] - Personal Interview & English Fluency Assessment</h3></a></td></tr>
 	<!--- Intl. Representative Documents --->
-	<cfif (client.usertype LTE 8 AND get_latest_status.status GT 2) OR (client.usertype EQ 11 AND get_latest_status.status GT 2)>
+	<cfif qIsStudentAccount.recordCount AND get_latest_status.status LTE 2>
+		<!--- Students do not fill this page --->
+        <tr><td>This page will be completed and uploaded by <b><i>#smg_students.businessname#.</i></b></td></tr>
+	<cfelse>
 		<cfloop query="page19">
 			<cfset get_field = page19.table_located &"."& page19.field_name>
 			<cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
@@ -594,27 +608,8 @@
 		<cfelse>
 			<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
 		</cfif>
-	<!--- Intl. Representative Documents --->				
-	<cfelse>
-		<tr><td>This page will be completed and uploaded by <b><i>#smg_students.businessname#.</i></b><Br>
-        <cfloop query="page19">
-			<cfset get_field = page19.table_located &"."& page19.field_name>
-			<cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
-				<tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
-				<cfset count19 = 1> <cfset countRed = countRed + 1>
-			<cfelseif NOT LEN(Evaluate(get_field)) AND NOT VAL(required)>
-				<tr><td><font color="0000FF">#field_label#</font><br></td></tr> 
-				<cfset count19 = 1>
-			</cfif>
-		</cfloop>
-		<cfif check_19_upload.recordcount NEQ 0>
-			<tr><td><font color="0000FF">Complete</font><br></td></tr>
-		<cfelse>
-			<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
-		</cfif>
-        </td></tr>
 	</cfif> 	
-    	
+
     <tr><td>&nbsp;</td></tr>	
     
     <!--- PAGE 20 --->
@@ -629,7 +624,7 @@
             <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
         <cfelse>
             <!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 --->
-            <cfif IsDefined('client.usertype') AND client.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
+            <cfif IsDefined('CLIENT.usertype') AND CLIENT.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
                 <tr><td><font color="0000FF">This page is not required or will be completed by <b><i>#smg_students.businessname#.</i></b></font><br></td></tr> 
             <cfelse>
                 <cfloop query="page20">
@@ -673,7 +668,7 @@
             <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
         <cfelse>
             <!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 --->
-            <cfif IsDefined('client.usertype') AND client.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
+            <cfif IsDefined('CLIENT.usertype') AND CLIENT.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
                 <tr><td><font color="0000FF">This page is not required or will be completed by <b><i>#smg_students.businessname#.</i></b></font><br></td></tr> 
             <cfelse>
                 <!--- student has choosen state guarantee --->
@@ -703,7 +698,7 @@
     <tr><td><br><hr class="bar"></hr><br></td></tr>
 	
 	<!--- Application has been submitted --->
-	<cfif (client.usertype EQ 10 AND get_latest_status.status EQ 3) or (client.usertype EQ 10 AND get_latest_status.status GTE 5)>
+	<cfif (CLIENT.usertype EQ 10 AND get_latest_status.status EQ 3) or (CLIENT.usertype EQ 10 AND get_latest_status.status GTE 5)>
 		<tr><td align="center">You have submitted your application on #DateFormat(get_latest_status.date, 'mm-dd-yyyy')#.</td></tr>
 	</cfif>
 	
