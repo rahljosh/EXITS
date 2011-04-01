@@ -15,7 +15,7 @@
 
                         <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css" />
                         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
-						<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script> <!-- jQuery -->
+						<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js" type="text/javascript"></script> <!-- jQuery -->
                         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script> <!-- JQuery UI 1.8 Tab -->
                         <script src="../linked/js/appSection.js " type="text/javascript"></script>
                     
