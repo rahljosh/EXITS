@@ -2,7 +2,7 @@
 	
 	File:		displayPageMessages.cfm
 	Author:		Marcus Melo
-	Date:		June 28, 2010
+	Date:		february 23, 2011
 	Desc:		This tag is used to output page messages
 
 	Status:		In Development
@@ -10,7 +10,7 @@
 	Call Custom Tag: 
 
 		<!--- Import CustomTag --->
-		<cfimport taglib="../extensions/customtags/gui/" prefix="gui" />	
+		<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 		
 		<!--- Page Messages --->
 		<gui:displayPageMessages 
@@ -59,52 +59,27 @@
 			
 				<!--- Error displayed on login --->
                 <cfcase value="login">
-                
-                    <table border="0" cellspacing="0" cellpadding="0" class="pageMessages">
-                    <tr>
-                        <td>
-                        
-                            <!--- Loop over the messages --->
-                            <ul class="list">
                                 
-                                <!--- Loop over the message --->
-                                <cfloop from="1" to="#ArrayLen(ATTRIBUTES.pageMessages)#" index="i">
-                                   <li>#ATTRIBUTES.pageMessages[i]#</li>        	
-                                </cfloop>
-        
-                            </ul>
-                            
-                        </td>
-                    </tr>
-                    </table>
-
-                    <script type="text/javascript">
-						// FadeIn and FadeOut Message
-                    	$(".pageMessages").fadeIn().fadeOut(5000);
-                    </script>
-
-					<cfscript>
-                        // Check to see if we are supposed to clear the queue 
-                        if ( ATTRIBUTES.Clear ) {
-							ATTRIBUTES.pageMessages.Clear();
-							SESSION.pageMessages.clear();
-                        }
-                    </cfscript>
-                
                 </cfcase>
             
-				<!--- Error displayed on sections --->
-                <cfcase value="section">
-                    
-                    <div class="pageMessages">
-    
-						<!--- Loop over the message --->
-                        <cfloop from="1" to="#ArrayLen(ATTRIBUTES.pageMessages)#" index="i">
-                           <p><em>#ATTRIBUTES.pageMessages[i]#</em></p>    
-                        </cfloop>
+				<!--- Error displayed on tableSection --->
+                <cfcase value="tableSection">
 
-                    </div>
-					
+					<table width="#ATTRIBUTES.width#" border="0" cellpadding="4" cellspacing="0" class="section pageMessages" align="center">
+                        <tr>
+                            <td align="center">
+								<div class="pageMessages">
+								
+									<!--- Loop over the message --->
+                                    <cfloop from="1" to="#ArrayLen(ATTRIBUTES.pageMessages)#" index="i">
+                                       <p><em>#ATTRIBUTES.pageMessages[i]#</em></p>    
+                                    </cfloop>
+								
+                                </div>                                    
+                            </td>
+                        </tr>                        
+					</table>
+                    
                     <script type="text/javascript">
 						// FadeIn and FadeOut Message
                     	$(".pageMessages").fadeIn().fadeOut(5000);
