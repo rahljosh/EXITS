@@ -67,7 +67,7 @@
 		http://code.jquery.com/jquery.js
 		*/		
 		APPLICATION.PATH = StructNew();
-		APPLICATION.PATH.jQuery = 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js';
+		APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js';
 		
 
 		/***** Create APPLICATION.EMAIL structure *****/
