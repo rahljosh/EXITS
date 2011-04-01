@@ -258,8 +258,8 @@
                     branchid,  
                     app_sent_student, 
                     app_current_status, 
-                    <!--- Record Company ID for WEP and ESI --->
-					<cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyID)>
+                    <!--- Record Company ID for WEP, Canada and ESI --->
+					<cfif ListFind("11,13,14", CLIENT.companyID)>
                         companyID,
                     </cfif>
                     application_expires
@@ -280,8 +280,8 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#setBranchID#">, 
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(currentStatus)#">, 
-                    <!--- Record Company ID for WEP and ESI --->
-                    <cfif NOT ListFind("1,2,3,4,5,10,12,13", CLIENT.companyID)>
+                    <!--- Record Company ID for WEP, Canada and ESI --->
+                    <cfif ListFind("11,13,14", CLIENT.companyID)>
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
                     </cfif>
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#expiration_date#">
