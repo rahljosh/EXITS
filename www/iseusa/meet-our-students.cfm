@@ -7,7 +7,7 @@
 	
 	Updates:	04/01/2011 - Removing direct access, host family must check their 
 				email address to get the login information.
-				After first login we know account has been verified.
+				Emaling Bob/Budge after first login
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -131,7 +131,7 @@
             responseXML = XmlParse(cfhttp.filecontent);		
         
             if ( responseXML.response.CountryCode.XmlText NEQ 'US' ) {
-                allowAccess = 0;		
+				allowAccess = 0;		
             }
 			
 			// Set remoteCountry
@@ -175,25 +175,104 @@
        <cfif NOT VAL(ArrayLen(pageMsg.Errors))>
             
             <cfquery name="qCheckLogin" datasource="#APPLICATION.DSN.Source#">
-                SELECT 
-                    ID, 
-                    lastName, 
-                    email
+                SELECT
+                    hl.ID,
+                    hl.firstName,
+                    hl.lastName,
+                    hl.address,
+                    hl.address2, 
+                    hl.city,
+                    hl.stateID,
+                    hl.zipCode,
+                    hl.phone,
+                    hl.email,
+                    hl.password,
+                    hl.hearAboutUs,
+                    hl.hearAboutUsDetail,
+                    hl.isListSubscriber,
+                    hl.isAdWords,
+                    hl.httpReferer,
+                    hl.remoteAddress,
+                    hl.remoteCountry,
+                    hl.dateLastLoggedIn,
+                    hl.dateCreated,
+                    st.state
                 FROM 
-                    smg_host_lead
+                    smg_host_lead hl
+                LEFT OUTER JOIN
+                	smg_states st ON st.id = hl.stateID
                 WHERE 
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginEmail)#">
+                    hl.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginEmail)#">
                 AND
-                    password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginPassword)#">
+                    hl.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginPassword)#">
 				AND	
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             </cfquery>
         	
             <!--- Valid Login Host Family --->
         	<cfif qCheckLogin.recordcount>
             	
+                <!--- Update Last Logged In Date --->
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    UPDATE 
+                        smg_host_lead
+                    SET
+                    	dateLastLoggedIn = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    WHERE 
+                        ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qCheckLogin.ID#">
+                </cfquery>
+                
+                <!--- Email Bob/Budge if this is the first login --->
+                <cfif NOT LEN(qCheckLogin.dateLastLoggedIn)>
+
+                    <cfsavecontent variable="vEmailMessage">
+                        <cfoutput>
+                            <cfif CLIENT.isAdWords>
+                                <strong>Google AdWords Campaign</strong> <br /><br />
+                            </cfif>     
+                                 
+                            <p>The #qCheckLogin.lastname# family from #qCheckLogin.city#, #qCheckLogin.state# has submitted their information to view students.</p>
+                            
+                            <p>Please see the details below:</p>
+                            
+                            Family Last Name: #qCheckLogin.lastName# <br />
+                            First Name: #qCheckLogin.firstName# <br />
+                            Address: #qCheckLogin.address# <br />
+                            Address2: #qCheckLogin.address2# <br />
+                            City: #qCheckLogin.city# <br />
+                            State: #qCheckLogin.state# <br />
+                            Zip Code: #qCheckLogin.zipCode# <br />
+                            Phone Number: #qCheckLogin.phone# <br />
+                            Email: #qCheckLogin.email# <br />
+                            How did you hear about us: #qCheckLogin.hearAboutUs# <br /> 
+                            
+                            <cfif LEN(qCheckLogin.hearAboutUsDetail) AND qCheckLogin.hearAboutUs EQ 'ISE Representative'>
+                                ISE Representative Name: #qCheckLogin.hearAboutUsDetail# <br /> 
+                            <cfelseif LEN(qCheckLogin.hearAboutUsDetail) AND qCheckLogin.hearAboutUs EQ 'Other'>
+                                Other Specify: #qCheckLogin.hearAboutUsDetail# <br /> 
+                            </cfif>
+                            
+                            Would you like to join our mailing list? <cfif qCheckLogin.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
+            				
+                            Last Logged in #DateFormat(now(), 'mm/dd/yyyy')# #TimeFormat(now(), 'hh:mm tt')# EST <br /> <br />
+                            
+                            Regards, <br />
+                            International Student Exchange
+                        </cfoutput>
+                    </cfsavecontent>
+                                    
+                    <!--- send email --->
+                    <cfinvoke component="cfc.email" method="send_mail">
+                        <cfinvokeargument name="email_to" value="#AppEmail.hostLead#">
+                        <cfinvokeargument name="email_subject" value="Host Family Viewing Students Section">
+                        <cfinvokeargument name="email_message" value="#vEmailMessage#">
+                        <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
+                    </cfinvoke>
+                    
+                </cfif>
+                
                 <cfscript>
-					// Set CLIENT Variables 
+					// Login Host Lead / Set CLIENT Variables 
                     CLIENT.hostID = qCheckLogin.ID;
                     CLIENT.name = qCheckLogin.lastName;
                     CLIENT.email = qCheckLogin.email;
@@ -511,88 +590,6 @@
                 </cfinvoke>
             
             </cfif>
-            
-            <!--- Look Up Host Family --->
-            <cfquery name="qGetHostInfo" datasource="#APPLICATION.DSN.Source#">
-                SELECT
-                    hl.firstName,
-                    hl.lastName,
-                    hl.address,
-                    hl.address2, 
-                    hl.city,
-                    hl.stateID,
-                    hl.zipCode,
-                    hl.phone,
-                    hl.email,
-                    hl.password,
-                    hl.hearAboutUs,
-                    hl.hearAboutUsDetail,
-                    hl.isListSubscriber,
-                    hl.isAdWords,
-                    hl.httpReferer,
-                    hl.remoteAddress,
-                    hl.remoteCountry,
-                    hl.dateCreated,
-                    st.state
-                FROM 
-                    smg_host_lead hl
-                LEFT OUTER JOIN
-                	smg_states st ON st.id = hl.stateID
-                WHERE
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">                 
-            </cfquery>
-    
-            <!--- send email to Bob --->
-            <cfsavecontent variable="vEmailMessage">
-    			<cfoutput>
-					<cfif qCheckAccount.recordcount>
-                        <strong>THIS IS A RETURNING HOST FAMILY</strong> <br /><br />
-                    </cfif>         
-                    
-                    <cfif CLIENT.isAdWords>
-                        <strong>Google AdWords Campaign</strong> <br /><br />
-                    </cfif>     
-                         
-                    <p>The #qGetHostInfo.lastname# family from #qGetHostInfo.city#, #qGetHostInfo.state# has submitted their information to view students.</p>
-                    
-                    <p>Please see the details below:</p>
-                    
-                    Family Last Name: #qGetHostInfo.lastName# <br />
-                    First Name: #qGetHostInfo.firstName# <br />
-                    Address: #qGetHostInfo.address# <br />
-                    Address2: #qGetHostInfo.address2# <br />
-                    City: #qGetHostInfo.city# <br />
-                    State: #qGetHostInfo.state# <br />
-                    Zip Code: #qGetHostInfo.zipCode# <br />
-                    Phone Number: #qGetHostInfo.phone# <br />
-                    Email: #qGetHostInfo.email# <br />
-                    How did you hear about us: #qGetHostInfo.hearAboutUs# <br /> 
-                    
-                    <cfif LEN(qGetHostInfo.hearAboutUsDetail) AND qGetHostInfo.hearAboutUs EQ 'ISE Representative'>
-                        ISE Representative Name: #qGetHostInfo.hearAboutUsDetail# <br /> 
-                    <cfelseif LEN(qGetHostInfo.hearAboutUsDetail) AND qGetHostInfo.hearAboutUs EQ 'Other'>
-                        Other Specify: #qGetHostInfo.hearAboutUsDetail# <br /> 
-                    </cfif>
-                    
-                    Would you like to join our mailing list? <cfif qGetHostInfo.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
-    
-                    Regards, <Br />
-                    International Student Exchange
-	            </cfoutput>
-            </cfsavecontent>
-                            
-            <!--- send email --->
-            <cfinvoke component="cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#AppEmail.hostLead#">
-                <cfinvokeargument name="email_subject" value="Host Family Viewing Students Section">
-                <cfinvokeargument name="email_message" value="#vEmailMessage#">
-                <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
-            </cfinvoke>
-            
-			<cfscript>				
-                // Set Page Message
-                // ArrayAppend(pageMsg.Messages, "Your login information has been sent to the email address provided. Please follow the instructions on the email to meet our students.");
-            </cfscript>
             
     	</cfif>
     
