@@ -538,9 +538,16 @@
 
 			// Get Entered By Information
 			qGetEnterBy = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.enteredByID);
+			
+			// Get Status
+			qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
+				applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
+				fieldKey='hostLeadStatus',
+				fieldID=ARGUMENTS.statusID
+			);
 		</cfscript>
         
-        <cfsavecontent variable="emailMessage">
+        <cfsavecontent variable="emailNewHostLead">
             <cfoutput>
                 <p>Dear #qGetUser.firstName# #qGetUser.lastName#,</p>
                 
@@ -554,6 +561,27 @@
                 <cfif LEN(ARGUMENTS.comments)>
                     Comments: #ARGUMENTS.comments# <br />
                 </cfif>
+                
+                <p>Please visit <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a> to view the complete host lead information.</p>
+                
+                Regards, <Br />
+                #CLIENT.companyName#
+			</cfoutput>
+        </cfsavecontent>
+
+        <cfsavecontent variable="emailFinalDecision">
+            <cfoutput>
+                <p>NY Office-</p>
+                
+                <p>The host lead below has received a final decision.</p>
+                
+                Name: #qGetHostLead.firstName# #qGetHostLead.lastName# <br />
+                Location: #qGetHostLead.city#, #qGetHostLead.state# <br />
+                Phone Number: #qGetHostLead.phone# <br />
+                Email Address: #qGetHostLead.email# <br />                
+                Decision: #qGetStatus.name# <br />     
+                Comments: #ARGUMENTS.comments# <br />
+                Updated By: #qGetEnterBy.firstName# #qGetEnterBy.lastName# ###qGetEnterBy.userID# <br />
                 
                 <p>Please visit <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a> to view the complete host lead information.</p>
                 
@@ -587,8 +615,9 @@
 						email_to=qGetUser.email,
 						email_from='#companyshort#-support@exitsapplication.com',
 						email_subject='New Host Family Lead Assigned To You',
-						email_message=emailMessage
+						email_message=emailNewHostLead
 					);
+					
 				}
 				
 			}
@@ -620,6 +649,22 @@
 					actions=vActions,
 					comments=ARGUMENTS.comments
 				);
+				
+				// Final Decisions (Not Interested / Committed to Host) - Email Budge/Bob
+				if ( ListFind("3,8", ARGUMENTS.statusID) ) {
+					
+					// Create Object
+					oEmail = createObject("component","nsmg.cfc.email");
+					
+					// Send Out Email
+					oEmail.send_mail(
+						email_to=APPLICATION.EMAIL.hostLeadNotifications,
+						email_from='#companyshort#-support@exitsapplication.com',
+						email_subject='Host Lead - #qGetHostLead.lastName# from #qGetHostLead.city#, #qGetHostLead.state# - final decision',
+						email_message=emailFinalDecision
+					);
+					
+				}
 
 			}
 		</cfscript>
@@ -653,6 +698,7 @@
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="numberOfRecordsOnPage" type="numeric" default="30" hint="Page number is not required">
         <cfargument name="isDeleted" type="numeric" default="0" hint="isDeleted is not required">
+        <cfargument name="hasLoggedIn" type="numeric" default="0" hint="hasLoggedIn is not required">
 		
         <cfscript>
 			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
@@ -661,7 +707,7 @@
 		</cfscript>
               
         <cfquery 
-			name="qgetHostLeadsRemote" 
+			name="qGetHostLeadsRemote" 
 			datasource="#APPLICATION.dsn#">
                 SELECT
 					hl.ID,
@@ -681,6 +727,7 @@
                     hl.hearAboutUsDetail,
                     hl.isListSubscriber,
                     DATE_FORMAT(hl.dateCreated, '%m/%e/%Y') as dateCreated,
+                    DATE_FORMAT(hl.dateLastLoggedIn, '%m/%e/%Y') as dateLastLoggedIn,
                     <!--- State --->
                     st.state,
                     <!--- Region --->
@@ -705,6 +752,11 @@
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isDeleted#">
+				
+                <cfif VAL(ARGUMENTS.hasLoggedIn)>
+                    AND	
+                        dateLastLoggedIn IS NOT NULL
+				</cfif>                    
 
 				<cfif CLIENT.companyID NEQ 5>
                     AND
@@ -796,6 +848,11 @@
                         hl.dateCreated #ARGUMENTS.sortOrder#,
                         hl.lastName
                     </cfcase>
+
+                    <cfcase value="dateLastLoggedIn">
+                        hl.dateLastLoggedIn #ARGUMENTS.sortOrder#,
+                        hl.lastName
+                    </cfcase>
     
                     <cfcase value="statusAssigned">
 						statusAssigned,
@@ -828,8 +885,8 @@
 			// Populate structure with pagination information
 			stResult.pageNumber = ARGUMENTS.pageNumber;
 			stResult.numberOfRecordsOnPage = ARGUMENTS.numberOfRecordsOnPage;
-			stResult.numberOfPages = Ceiling( qgetHostLeadsRemote.recordCount / stResult.numberOfRecordsOnPage );
-			stResult.numberOfRecords = qgetHostLeadsRemote.recordCount;
+			stResult.numberOfPages = Ceiling( qGetHostLeadsRemote.recordCount / stResult.numberOfRecordsOnPage );
+			stResult.numberOfRecords = qGetHostLeadsRemote.recordCount;
 			stResult.sortBy = ARGUMENTS.sortBy;
 			stResult.sortOrder = ARGUMENTS.sortOrder;
 			
@@ -842,34 +899,35 @@
 				a false reading and gives the pagenumber * numberOfRecordsOnPage which is always a multiple of 10
 			*/
 			if ( stResult.recordTo EQ (stResult.numberOfPages * 10) ) {
-				stResult.recordTo = qgetHostLeadsRemote.recordCount;
+				stResult.recordTo = qGetHostLeadsRemote.recordCount;
 			}
 
 			// Populate structure with query
-			resultQuery = QueryNew("ID, hashID, firstName, lastName, city, state, zipCode, phone, email, dateCreated, statusAssigned, regionAssigned, areaRepAssigned");
+			resultQuery = QueryNew("ID, hashID, firstName, lastName, city, state, zipCode, phone, email, dateCreated, dateLastLoggedIn, statusAssigned, regionAssigned, areaRepAssigned");
 			
-			if ( qgetHostLeadsRemote.recordCount < stResult.recordTo ) {
-				stResult.recordTo = qgetHostLeadsRemote.recordCount;
+			if ( qGetHostLeadsRemote.recordCount < stResult.recordTo ) {
+				stResult.recordTo = qGetHostLeadsRemote.recordCount;
 			}
 			
 			// Populate query below
-			if ( qgetHostLeadsRemote.recordCount ) {
+			if ( qGetHostLeadsRemote.recordCount ) {
 				
 				For ( i=stResult.recordFrom; i LTE stResult.recordTo; i=i+1 ) {
 					QueryAddRow(resultQuery);
-					QuerySetCell(resultQuery, "ID", qgetHostLeadsRemote.ID[i]);
-					QuerySetCell(resultQuery, "HASHID", qgetHostLeadsRemote.hashID[i]);
-					QuerySetCell(resultQuery, "firstName", qgetHostLeadsRemote.firstName[i]);
-					QuerySetCell(resultQuery, "lastName", qgetHostLeadsRemote.lastName[i]);
-					QuerySetCell(resultQuery, "city", qgetHostLeadsRemote.city[i]);
-					QuerySetCell(resultQuery, "state", qgetHostLeadsRemote.state[i]);
-					QuerySetCell(resultQuery, "zipCode", qgetHostLeadsRemote.zipCode[i]);
-					QuerySetCell(resultQuery, "phone", qgetHostLeadsRemote.phone[i]);
-					QuerySetCell(resultQuery, "email", qgetHostLeadsRemote.email[i]);
-					QuerySetCell(resultQuery, "dateCreated", qgetHostLeadsRemote.dateCreated[i]);
-					QuerySetCell(resultQuery, "statusAssigned", qgetHostLeadsRemote.statusAssigned[i]);
-					QuerySetCell(resultQuery, "regionAssigned", qgetHostLeadsRemote.regionAssigned[i]);
-					QuerySetCell(resultQuery, "areaRepAssigned", qgetHostLeadsRemote.areaRepAssigned[i]);
+					QuerySetCell(resultQuery, "ID", qGetHostLeadsRemote.ID[i]);
+					QuerySetCell(resultQuery, "HASHID", qGetHostLeadsRemote.hashID[i]);
+					QuerySetCell(resultQuery, "firstName", qGetHostLeadsRemote.firstName[i]);
+					QuerySetCell(resultQuery, "lastName", qGetHostLeadsRemote.lastName[i]);
+					QuerySetCell(resultQuery, "city", qGetHostLeadsRemote.city[i]);
+					QuerySetCell(resultQuery, "state", qGetHostLeadsRemote.state[i]);
+					QuerySetCell(resultQuery, "zipCode", qGetHostLeadsRemote.zipCode[i]);
+					QuerySetCell(resultQuery, "phone", qGetHostLeadsRemote.phone[i]);
+					QuerySetCell(resultQuery, "email", qGetHostLeadsRemote.email[i]);
+					QuerySetCell(resultQuery, "dateCreated", qGetHostLeadsRemote.dateCreated[i]);
+					QuerySetCell(resultQuery, "dateLastLoggedIn", qGetHostLeadsRemote.dateLastLoggedIn[i]);
+					QuerySetCell(resultQuery, "statusAssigned", qGetHostLeadsRemote.statusAssigned[i]);
+					QuerySetCell(resultQuery, "regionAssigned", qGetHostLeadsRemote.regionAssigned[i]);
+					QuerySetCell(resultQuery, "areaRepAssigned", qGetHostLeadsRemote.areaRepAssigned[i]);
 				}
 			
 			}

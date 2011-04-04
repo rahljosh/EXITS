@@ -55,10 +55,12 @@
 
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
-	AppEmail.errors = 'errors@student-management.com';
-	AppEmail.admissions = 'bhause@iseusa.com';
-	AppEmail.finance = 'marcel@iseusa.com';	
-	AppEmail.cbcNotifications = 'support@student-management.com;bill@iseusa.com;margarita@iseusa.com;diana@iseusa.com;gary@iseusa.com';
+	APPLICATION.EMAIL.errors = 'errors@student-management.com';
+	APPLICATION.EMAIL.admissions = 'bhause@iseusa.com';
+	APPLICATION.EMAIL.finance = 'marcel@iseusa.com';	
+	APPLICATION.EMAIL.cbcNotifications = 'support@student-management.com;bill@iseusa.com;margarita@iseusa.com;diana@iseusa.com;gary@iseusa.com';
+	// APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com;bob@iseusa.com';
+	APPLICATION.EMAIL.hostLeadNotifications = 'marcus@iseusa.com';
 	
 	if ( VAL(qCompanyInfo.recordCount) ) {
 		

@@ -205,7 +205,8 @@
             tableHeader += '<td id="zipCode" class="listTitle"><a href="javascript:void(0);" title="Sort By Zip Code">Zip Code</a></td>';                                                          
             tableHeader += '<td id="phone" class="listTitle"><a href="javascript:void(0);" title="Sort By Phone">Phone</a></td>';                                                           
             tableHeader += '<td id="email" class="listTitle"><a href="javascript:void(0);" title="Sort By Email">Email</a></td>'; 
-            tableHeader += '<td id="dateCreated" class="listTitle"><a href="javascript:void(0);" title="Sort By Submitted On">Submitted On</a></td>';  
+            tableHeader += '<td id="dateCreated" class="listTitle"><a href="javascript:void(0);" title="Sort By Submitted On">Submitted On</a></td>'; 
+			tableHeader += '<td id="dateLastLoggedIn" class="listTitle"><a href="javascript:void(0);" title="Sort By Last Login">Last Login</a></td>'; 
             tableHeader += '<td id="regionAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Region">Region</a></td>';  
             tableHeader += '<td id="areaRepAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Area Rep.">Area Rep.</a></td>';  		
             tableHeader += '<td id="statusAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Status">Status</a></td>';  			
@@ -224,6 +225,7 @@
 		$('#phone').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#email').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#dateCreated').click(function (){getHostLeadList(pageNumber,this.id);});
+		$('#dateLastLoggedIn').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#regionAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#areaRepAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#statusAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
@@ -246,6 +248,7 @@
 			var phone = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('PHONE')];
 			var email = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('EMAIL')];
 			var dateCreated = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('DATECREATED')];
+			var dateLastLoggedIn = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('DATELASTLOGGEDIN')];
 			var regionAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('REGIONASSIGNED')];
 			var areaRepAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('AREAREPASSIGNED')];
 			var statusAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('STATUSASSIGNED')];
@@ -265,6 +268,7 @@
 				tableBody += '<td>' + phone + '</td>';
 				tableBody += '<td><a href="mailto:(' + email + ')">' + email + '</a></td>';
 				tableBody += '<td>' + dateCreated + '</td>';
+				tableBody += '<td>' + dateLastLoggedIn + '</td>';
 				tableBody += '<td>' + regionAssigned + '</td>';
 				tableBody += '<td>' + areaRepAssigned + '</td>';
 				tableBody += '<td>' + statusAssigned + '</td>';
@@ -436,7 +440,7 @@
                     	<option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
                     </cfloop>
                 </select>
-            </td>                
+            </td>   
             <td class="listTitle">
                 <label for="sortBy">Sort By</label> <br />    
                 <select name="sortBy" id="sortBy" class="mediumField selectSortBy">
