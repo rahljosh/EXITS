@@ -751,11 +751,15 @@
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isDeleted#">
+                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isDeleted#">
 				
+                <!--- Get Only Leads Entered as of 04/01/2011 --->
+                AND
+                	hl.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="2011/04/01">
+                
                 <cfif VAL(ARGUMENTS.hasLoggedIn)>
                     AND	
-                        dateLastLoggedIn IS NOT NULL
+                        hl.dateLastLoggedIn IS NOT NULL
 				</cfif>                    
 
 				<cfif CLIENT.companyID NEQ 5>
@@ -766,7 +770,7 @@
                 <!--- RA and AR can only see leads assigned to them --->
                 <cfif ListFind("6,7,9", CLIENT.userType)>
                 	AND
-                    	areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                    	hl.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                 </cfif>
 				
 				<cfif VAL(ARGUMENTS.regionID)>

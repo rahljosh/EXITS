@@ -59,8 +59,7 @@
 	APPLICATION.EMAIL.admissions = 'bhause@iseusa.com';
 	APPLICATION.EMAIL.finance = 'marcel@iseusa.com';	
 	APPLICATION.EMAIL.cbcNotifications = 'support@student-management.com;bill@iseusa.com;margarita@iseusa.com;diana@iseusa.com;gary@iseusa.com';
-	// APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com;bob@iseusa.com';
-	APPLICATION.EMAIL.hostLeadNotifications = 'marcus@iseusa.com';
+	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com;bob@iseusa.com';
 	
 	if ( VAL(qCompanyInfo.recordCount) ) {
 		
