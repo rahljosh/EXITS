@@ -110,7 +110,12 @@
                 VALUES 
                 (
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">,
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+					<!--- CASE, WEP, Canada and ESI --->
+                    <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
+                    <cfelse>
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+                    </cfif>    
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertypeid#">,
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 )
@@ -396,7 +401,12 @@
                                             FROM 
                                                 smg_companies
                                             WHERE 
+                                            <!--- CASE, WEP, Canada and ESI --->
+                                            <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
+                                                companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                                            <cfelse>
                                                 companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                                            </cfif>    
                                         </cfquery>
                                         #qGetCompany.team_id#  
                                     </td>
