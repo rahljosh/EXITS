@@ -147,22 +147,22 @@
         </table>
             
         <table width=100% class="section">
-            <tr align="left">
-                <th>ID</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Sex</th>
-                <th>Country</th>
-                <th>Type</th>
-                <th>Program</th>
-                <th>Intl. Agent</th>
+            <tr align="left" style="font-weight:bold;">
+                <td>ID</td>
+                <td>Last Name</td>
+                <td>First Name</td>
+                <td>Sex</td>
+                <td>Country</td>
+                <td>Type</td>
+                <td>Program</td>
+                <td>Intl. Agent</td>
                 <cfif status EQ 'hold'>
-	                <th>Hold Reason</th>
+	                <td>Hold Reason</td>
                 <cfelseif status EQ 'denied'>
-	                <th>Denied By</th>
+	                <td>Denied By</td>
                 </cfif>
-                <th>Company</th>            
-                <th>Actions</th>
+                <td>Company</td>            
+                <td>Actions</td>
             </tr>
             <cfloop query="getResults" startrow="#startrow#" endrow="#endrow#">
 				<cfif dateapplication GT client.lastlogin>
@@ -226,18 +226,26 @@
                         </cfquery>	
 	                    <td>#denied_by.firstname# #denied_by.lastname#</td>
                     </cfif>
-                    <td>#companyshort#</td>
                     <td>
-                        <cfif status EQ 'received'>
-                        	
-                            <cfif companyid EQ 0>
-	                            <a href="index.cfm?curdoc=app_process/apps_received_assignment&studentid=#studentid#">[ Assign ]</a>
-                                &nbsp; | &nbsp;   	
-							</cfif>
-                            
-                            <a href="javascript:openPopUp('student_app/index.cfm?curdoc=approve_student_app&unqid=#uniqueid#', 800, 700);">[ Approve ]</a>	
+                    	<cfif NOT VAL(companyid)>
+                        	<a href="index.cfm?curdoc=app_process/apps_received_assignment&studentid=#studentid#">[ Assign ]</a>
                         <cfelse>
                         	#companyshort#
+                        </cfif>
+                    </td>
+                    <td>
+                        <cfif status EQ 'received'>
+                            <a href="javascript:openPopUp('student_app/index.cfm?curdoc=approve_student_app&unqid=#uniqueid#', 800, 700);">[ Approve ]</a>
+                            <!--- 
+							<cfif VAL(companyID)>
+                                &nbsp; | &nbsp;   	
+                                <a href="index.cfm?curdoc=app_process/onhold_app&studentid=#studentid#">[ Hold ]</a>
+                                &nbsp; | &nbsp;   	
+                                <a href="javascript:openPopUp('student_app/index.cfm?curdoc=deny_application&unqid=#uniqueid#', 800, 700);">[ Deny ]</a>
+                                &nbsp; | &nbsp;   	
+                                <a href="index.cfm?curdoc=app_process/transfer_app&studentid=#studentid#">[ Transfer ]</a>	
+                            </cfif>
+							--->
                         </cfif>
                     </td>
                 </tr>
