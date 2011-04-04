@@ -89,9 +89,9 @@
         AND 
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
 		
-		<cfif VAL(FORM.intRep)>
-        AND
-            s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#">
+		<cfif LEN(FORM.intRep)>
+            AND
+                s.intRep IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#" list="yes"> )
        	</cfif>
 
         AND
