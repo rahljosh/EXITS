@@ -106,13 +106,31 @@
 
 <style type="text/css">
 <!--
-.tableTitleView {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
-	padding:2px;
-	color:#FFFFFF;
-	background:#4F8EA4;
-}
+	.companyTitle {
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size: 14px;
+		color: #006666;
+		font-weight: bold;
+		padding:0px;
+	}
+
+	.tableTitleView {
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		text-align:right;
+		font-weight:bold;
+		font-size: 11px;
+		padding:5px;
+	}
+
+	.tableDataView {
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-size: 11px;
+		padding:5px;
+	}
+
+	.greyRow {
+		background:#E4E4E4;
+	}
 -->
 </style>
 
@@ -123,7 +141,7 @@
 
     <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
         <tr valign="middle" height="24">
-            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
+            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan="2">
             	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> Arrival Information</font>
 			</td>                
         </tr>
@@ -184,70 +202,77 @@
 <!--- Print --->
 <cfif FORM.submitted>
 	
-    <cfscript>
-		// On Screen
-		if (FORM.printOption EQ 1) {
-			tableTitleClass = 'tableTitleView';
-		} else {
-			tableTitleClass = 'style2';
-		}
-	</cfscript>
-
 	<cfsavecontent variable="reportContent">
 		
         <cfloop query="qGetHostCompany">
 			            
-            <table width=99% cellpadding="4" cellspacing=0 align="center"> 
+            <table width="100%" cellpadding="6" cellspacing="0" align="center" style="border:1px solid ##CCC"> 
                 <tr>
-                    <td colspan="12">
-                        <small>
-                            <strong>
-                            	<a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetHostCompany.hostCompanyID#" target="_blank" class="style4">#qGetHostCompany.name#</a>
-                            	in #qGetHostCompany.city#, #qGetHostCompany.stateName#
-                            </strong> 
-                        </small>
+                    <td colspan="2">
+                        <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetHostCompany.hostCompanyID#" target="_blank" class="companyTitle">
+                            #qGetHostCompany.name# in #qGetHostCompany.city#, #qGetHostCompany.stateName#
+                        </a>
                     </td>
                 </tr>
                 <tr>
-                	<td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Housing</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#" width="20%">Housing Instructions</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Pick-Up</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Arrival Airport</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Arrival City</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Hours</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#" width="20%">Pick-Up Instructions</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Contact Name</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Contact Phone</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Contact Email</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Hours of contact</td>
+                	<td class="tableTitleView greyRow" width="15%">Housing:</td>
+                    <td class="greyRow tableDataView">#YesNoFormat(VAL(qGetHostCompany.isHousingProvided))#</td>
                 </tr>
-                <tr bgcolor="##E4E4E4">
-                    <td valign="top" style="font-size:small">#YesNoFormat(VAL(qGetHostCompany.isHousingProvided))#</td>
-                    <td valign="top" style="font-size:small">
+				<tr>               
+                    <td class="tableTitleView" valign="top">Housing Instructions:</td>
+                    <td class="tableDataView">
                         <cfif LEN(qGetHostCompany.housingProvidedInstructions)>
                             #qGetHostCompany.housingProvidedInstructions#
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
-                    <td valign="top" style="font-size:small">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
-                    <td valign="top" style="font-size:small">#qGetHostCompany.arrivalAirport#</td>
-                    <td valign="top" style="font-size:small">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
-                    <td valign="top" style="font-size:small">#qGetHostCompany.arrivalPickUpHours#</td>
-                    <td valign="top" style="font-size:small">
+                </tr>
+				<tr>               
+                    <td class="tableTitleView greyRow" valign="top">Pick-Up:</td>
+                    <td class="greyRow tableDataView">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView" valign="top">Arrival Airport:</td>
+                    <td class="tableDataView">#qGetHostCompany.arrivalAirport#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView greyRow" valign="top">Arrival City:</td>
+                    <td class="greyRow tableDataView">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView" valign="top">Hours:</td>
+                    <td class="tableDataView">#qGetHostCompany.arrivalPickUpHours#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView greyRow" valign="top">Pick-Up Instructions:</td>
+                    <td class="greyRow tableDataView">
                         <cfif LEN(qGetHostCompany.arrivalInstructions)>
                             #qGetHostCompany.arrivalInstructions#
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
-                    <td valign="top" style="font-size:small">#qGetHostCompany.pickUpContactName#</td>
-                    <td valign="top" style="font-size:small">#qGetHostCompany.pickUpContactPhone#</td>
-                    <td valign="top" style="font-size:small">#qGetHostCompany.pickUpContactEmail#</td>
-                    <td valign="top" style="font-size:small">#qGetHostCompany.pickUpContactHours#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView" valign="top">Contact Name:</td>
+                    <td class="tableDataView">#qGetHostCompany.pickUpContactName#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView greyRow" valign="top">Contact Phone:</td>
+                    <td class="greyRow tableDataView">#qGetHostCompany.pickUpContactPhone#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView" valign="top">Contact Email:</td>
+                    <td class="tableDataView">#qGetHostCompany.pickUpContactEmail#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView greyRow" valign="top">Hours of contact:</td>
+                    <td class="greyRow tableDataView">#qGetHostCompany.pickUpContactHours#</td>
                 </tr>
             </table>
-            <br />
+            
+            <br style="page-break-after:always" />
          
 		</cfloop>
             
@@ -302,7 +327,7 @@
             <cfcontent type="application/msexcel">
             
             <!--- suggest default name for XLS file --->
-            <cfheader name="Content-Disposition" value="attachment; filename=studentsHiredPerCompany.xls"> 
+            <cfheader name="Content-Disposition" value="attachment; filename=arrivalInformation.xls"> 
     
             <style type="text/css">
             <!--
@@ -326,7 +351,7 @@
             </style>
            
             <img src="../../pics/black_pixel.gif" width="100%" height="2">
-            <div class="title1">Students hired per company</div>
+            <div class="title1">Arrival Information</div>
             <img src="../../pics/black_pixel.gif" width="100%" height="2">
             
             <!--- Include Report --->
