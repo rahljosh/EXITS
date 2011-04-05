@@ -390,7 +390,7 @@
 	<!--- Table Header --->
     <gui:tableHeader
         imageName="family.gif"
-        tableTitle="Host Family Leads - www.iseusa.com"
+        tableTitle="Host Family Leads"
         tableRightTitle=""
     />
 
