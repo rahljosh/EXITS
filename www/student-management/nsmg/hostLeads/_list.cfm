@@ -143,7 +143,7 @@
 		if ( numberOfRecords > 0 ) {
 	
 			//Display query set info
-			var paginationInfo = '<td id="topPageNavigation" colspan="8" align="center"> Displaying <strong>' + recordFrom + '</strong> to: <strong>' + recordTo + '</strong> of <strong>' + numberOfRecords + '</strong> records <br>';
+			var paginationInfo = '<td id="topPageNavigation" colspan="9" align="center"> Displaying <strong>' + recordFrom + '</strong> to: <strong>' + recordTo + '</strong> of <strong>' + numberOfRecords + '</strong> records <br>';
 				paginationInfo += 'Total Number of Pages: <strong>' + numberOfPages + '</strong><br></td>';
 	
 			// Clear current information and append pagination info
