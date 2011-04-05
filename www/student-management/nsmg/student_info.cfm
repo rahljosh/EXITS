@@ -34,7 +34,7 @@
 		qEnteredBy = APPCFC.USER.getUserByID(userID=VAL(qStudentInfo.entered_by));
 		
 		// Get Student Company Assigned
-		qAssignedCompany = AppCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID);
+		qAssignedCompany = AppCFC.COMPANY.getCompanyByID(companyID=qStudentInfo.companyID);
 
 		// Get Student Region Assigned
 		qRegionAssigned = AppCFC.REGION.getRegions(regionID=qStudentInfo.regionAssigned);

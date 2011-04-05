@@ -93,5 +93,55 @@
            
 		<cfreturn qGetCompanies>
 	</cffunction>
+    
+
+	<cffunction name="getCompanyByID" access="public" returntype="query" output="false" hint="Gets a company by ID">
+    	<cfargument name="companyID" default="0" hint="CompanyID is not required">
+              
+        <cfquery 
+			name="qGetCompanyByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	companyID,
+                    companyName,
+                    team_ID,
+                    companyShort,
+                    companyShort_nocolor,
+                    URL,
+                    address,
+                    city,
+                    state,
+                    zip,
+                    phone,
+                    toll_free,
+                    fax,
+                    support_email,
+                    orgCode,
+                    sevis_userID,
+                    iap_auth,
+                    usbank_iap_aut,
+                    bcc_userID,
+                    bcc_password,
+                    gis_account,
+                    gis_username,
+                    gis_password,
+                    gis_email,
+                    admission_person,
+                    verification_letter,
+                    routingNumber,
+                    accountNumber,
+                    letterSig,
+                    dos_letter_sig,
+                    dos_letter_title,
+                    system_ID,
+                    website
+                FROM 
+                    smg_companies
+                WHERE	
+                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">
+		</cfquery>
+           
+		<cfreturn qGetCompanyByID>
+	</cffunction>
 
 </cfcomponent>
