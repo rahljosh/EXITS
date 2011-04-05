@@ -160,7 +160,8 @@
                 	<a href="index.cfm?curdoc=host_fam">Host Families</a>
                     <!--- Not Live Yet For Field 03/30/2011 Marcus Melo --->
                     <!---
-					<cfif ListFind("5,6,7", CLIENT.userType)>
+                    <!--- Host Leads - ISE Only --->
+					<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) AND ListFind("5,6,7", CLIENT.userType)>
                         <ul>
                             <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>                
                         </ul>            
@@ -231,9 +232,12 @@
                 
                 <li>
                 	<a href="index.cfm?curdoc=host_fam">Host Families</a>
-					<ul>
-	                    <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>                
-    				</ul>            
+                    <!--- Host Leads - ISE Only --->
+					<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                        <ul>
+                            <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>                
+                        </ul>            
+					</cfif>
                 </li>
                 
                 <li><a href="index.cfm?curdoc=schools">Schools</a></li>
@@ -296,6 +300,8 @@
                         <li><a href="index.cfm?curdoc=tools/regions">Regions</a></li>
     
                         <li><a href="index.cfm?curdoc=forms/supervising_placement_payments">Rep Payments</a></li>
+                        
+                        <li><a href="index.cfm?curdoc=userPayment/index">New Rep Payments</a></li>
         
                         <li><a href="index.cfm?curdoc=sevis/menu">SEVIS Batch</a>					
                             <!--- SEVIS Dev Access --->
@@ -326,12 +332,8 @@
                 <cfif CLIENT.userType LTE 5>
                     <cfswitch expression="#CLIENT.companyid#">
                         
-                        <cfcase value="1,2,3,4,12">
+                        <cfcase value="1,2,3,4,5,12">
                             <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
-                        </cfcase>
-                        
-                        <cfcase value="5">
-                            <li><a href="http://webmail.student-management.com/" target="_blank">Webmail</a></li>
                         </cfcase>
             
                         <cfcase value="10">
@@ -340,14 +342,13 @@
             
                     </cfswitch>
 				</cfif>
-                                
-                <!--- Case Store --->
-                <cfif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
-                <cfelseif CLIENT.companyid EQ 14>
+				
                 <!--- ISE Store --->
-                <cfelse>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                <!--- Case Store --->
+				<cfelseif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
             
             </ul>
