@@ -100,7 +100,7 @@
 				<th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=countryname&status=#url.status#" class="style2">Country</a></th>
 				<th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=programname&status=#url.status#" class="style2">Program</a></th>		
 				<th width="25%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=businessname&status=#url.status#" class="style2">Intl. Rep.</a></th>
-                <th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=businessname&status=#url.status#" class="style2">Program Dates</a></th>
+                <th width="12%" bgcolor="4F8EA4" align="left"><a href="?curdoc=candidate/candidates&order=ds2019_startDate&status=#url.status#" class="style2">Program Dates</a></th>
 			</tr>
 		<cfloop query="qCandidatesList">
 			<tr bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
