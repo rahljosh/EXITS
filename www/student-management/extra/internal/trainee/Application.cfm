@@ -28,6 +28,17 @@
 
 		AppPath.candidatePicture = AppPath.baseRoot & "uploadedfiles/web-candidates/";
 		AppPath.hostLogo = AppPath.baseRoot & "uploadedfiles/web-hostlogo/";
+
+		// Create a function that let us create CFCs from any location
+		function CreateCFC(strCFCName){
+			return(CreateObject("component", ("extra.extensions.components." & ARGUMENTS.strCFCName)));
+		}
+
+		// Page Messages
+		SESSION.PageMessages = CreateCFC("pageMessages").Init();
+		
+		// Form Errors
+		SESSION.formErrors = CreateCFC("formErrors").Init();
     </cfscript>
         
     <cfif NOT VAL(CLIENT.userType)>
