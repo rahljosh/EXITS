@@ -96,9 +96,10 @@ function highlight(checkbox) {
 <br />
 <br />
 <cfquery name="qNextWebExMeeting" datasource="#application.dsn#">
-select date_started, time_started, time_ended, description, webEx_url
+select date_started, time_started, time_ended, description, webEx_url, name
 from calendar_event
 where date_started > #now()#
+and name LIKE '%New Area Reps%'
 limit  30
 </cfquery>
 
@@ -108,16 +109,14 @@ This hour long WebEx session will go over the requirments and procedures that ar
 <br /><Br />
 <table cellpadding=4 cellspacing=0 width=100%>
 	<Tr>
-    	<th>Date</th><th>Start Time</th><th>End Time</th><Th>Additional Info</Th><th></th>
+    	<th>Date</th><Th>Session</Th><th>Start Time</th><th>End Time</th><Th>Additional Info</Th><th></th>
     </tr>
 <cfloop query="qNextWebExMeeting">
 	<tr bgcolor="<cfif qNextWebExMeeting.currentrow mod 2>##F7F7F7<cfelse>##dbe9f2</cfif>" onMouseOver="this.bgColor='##cccccc';" onMouseOut="this.bgColor='<cfif qNextWebExMeeting.currentrow mod 2>##F7F7F7<cfelse>##dbe9f2</cfif>';">
-    	<td>#DateFormat(date_started, 'mmmm d, yyyy')#</td><td>#TimeFormat(time_started, 'h:mm tt')# EST</td><td>#TimeFormat(time_ended, 'h:mm tt')# EST</td><Td><Cfif description is ''><span class="infoItalic">None Avail.</span><cfelse>#description#</Cfif></Td>
+    	<td>#DateFormat(date_started, 'mmmm d, yyyy')#</td><td>#name#</td><td>#TimeFormat(time_started, 'h:mm tt')# EST</td><td>#TimeFormat(time_ended, 'h:mm tt')# EST</td><Td><Cfif description is ''><span class="infoItalic">None Avail.</span><cfelse>#description#</Cfif></Td>
         <td><a href="#webex_url#"><img src="http://www.iseusa.com/trips/images/reserve_class.png" border=0/></a></td>
     </tr>
 </cfloop>
-	<tr>
-    	<Td colspan="5"><Br /><strong>Feeling spunky?</strong> There are a number of WebEx Training session available on different topics.  Check out the <A href="trainingCalendar.cfm">full schedule</A>, sign up, and on training day, grab a cup of coffee, relax and learn about the handy tools at your disposale to help you succeed.
 </table>
 </span>
 <!-- end info --></div>

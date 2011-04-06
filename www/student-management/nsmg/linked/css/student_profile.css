@@ -84,3 +84,52 @@ div#test {
     width: 380px;
 
 }
+
+a.googlemaps{color: #0854a0;
+	text-decoration:none;
+	background:url('https://ise.exitsapplication.com/nsmg/pics/Google-Maps-icon.png') center right no-repeat;
+	padding-right: 16px;
+}
+a.wiki{color: #0854a0;
+	text-decoration:none;
+	background:url('https://ise.exitsapplication.com/nsmg/pics/Wikipedia-globe-icon.png') center right no-repeat;
+    padding-right: 16px;
+}
+a.airport{color: #0854a0;
+	text-decoration:none;
+	background:url('https://ise.exitsapplication.com/nsmg/pics/Airport-icon.png') center right no-repeat;
+    padding-right: 16px;
+}
+a{color: #0454a0;
+	text-decoration:none;
+}
+
+.alert{
+	width:800;
+	height:25px;
+	border:#666;
+	background-color:#FF9797;
+	text-align:center;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

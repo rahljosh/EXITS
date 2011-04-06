@@ -22,13 +22,16 @@
 <cfinclude template="../../querys/get_countries.cfm">
 
 <cfquery name="get_program" datasource="mysql">
-select distinct s.programid, smg_programs.programname, smg_companies.team_id
+select distinct s.programid, smg_programs.programname
 from smg_students s
 LEFT join smg_programs on s.programid = smg_programs.programid
-LEFT join smg_companies on s.companyid = smg_companies.companyid
 where intrep = #client.userid# 
 and s.active = 1 and s.programid > 0
-order by team_id
+<Cfif client.companyid neq 10>
+and (s.companyid = 1 or s.companyid =2 or s.companyid =2 or s.companyid = 4 or s.companyid = 12)
+<cfelse>
+and s.companyid = 10
+</Cfif>
 </cfquery>
 
 
@@ -51,12 +54,12 @@ order by team_id
 
 	<tr>
 		<td width="50%" valign="top">
-			<cfform action="intrep/reports/labels_student_idcards.cfm" method="POST" target="_blank">
+			<cfform action="intrep/reports/BatchIDCards.cfm" method="POST" target="_blank">
 			<Table class="nav_bar" align="left" cellpadding=6 cellspacing="0" width="100%">
 				<tr><th colspan="3" bgcolor="##e2efc7">By Program</th></tr>
 				<tr><td>Program :</td>
 					<td><select name="programid" multiple size="5">
-						<cfloop query="get_program"><option value="#programid#">#team_id# - #programname#</option></cfloop>	
+						<cfloop query="get_program"><option value="#programid#">#programname#</option></cfloop>	
 						</select></td></tr>
 							
 		
@@ -67,7 +70,7 @@ order by team_id
 		</td>
 		
 		<td width="50%" valign="top">
-			<cfform action="intrep/reports/labels_student_idcards.cfm" method="POST" target="_blank">
+			<cfform action="intrep/reports/BatchIDCards.cfm" method="POST" target="_blank">
 			<Table class="nav_bar" align="left" cellpadding=6 cellspacing="0" width="100%">
 				<tr><th colspan="3" bgcolor="##e2efc7">By ID</th></tr>
 				<tr><td>Enter a single ID or list of ID's seperated by coma's :</td>
@@ -113,7 +116,7 @@ order by team_id
 	</tr>
 	<tr> 
 		<td colspan="2"><div align="justify">
-		<font color="FF0000">Note: </font>For 8.5 x 11 paper, please redefine all margins (top, botton, left and right) to 0.1. <br>Make sure to remove any information that would print in the header and footer so they are blank. </font></div>
+		<font color="FF0000">Note: </font>Each ID card will print on its own sheet of paper.<br>Make sure to remove any information that would print in the header and footer so they are blank. </font></div>
 		</td>
 	</tr>
 	</table><br><br>

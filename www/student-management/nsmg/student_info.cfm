@@ -887,7 +887,10 @@
 				<cfif CLIENT.usertype LTE '4'>
 				<tr>
 					<td>: : <a href="javascript:OpenLetter('reports/acceptance_letter.cfm');">Acceptance</a></td>
-					<td>: : <a href="javascript:OpenLetter('reports/placement_letter.cfm');">Placement</a></td>
+                  
+					<td>: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?studentID=#uniqueid#');">Placement</a>
+                  </td>
+                   
 				</tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/host_welcome_letter.cfm');">Family Welcome</a></td>

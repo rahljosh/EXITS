@@ -1,10 +1,22 @@
 <link rel="stylesheet" href="../smg.css" type="text/css">
-<body onLoad="opener.location.reload()"> 
+
 <Title>Placement Management Menu</title>
+<head>
 
-<body>
+</head>
 <html>
+<body onLoad="opener.location.reload()"> 
 
+
+<script>
+// opens small pop up in a defined format
+var newwindow;
+// opens letters in a defined format
+function OpenLetter(url) {
+	newwindow=window.open(url, 'Application', 'height=580, width=820, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
+	if (window.focus) {newwindow.focus()}
+}
+</script>
 <!----If link is from approval list, sets studentid to client.studentid---->
 <cfif isdefined('url.studentid')>
 	<cfset client.studentid = #url.studentid#>
@@ -16,7 +28,7 @@
 
 <!--- include template page header --->
 <cfinclude template="placement_status_header.cfm">
-
+<script language="JavaScript1.2" src="student_info.js"></script>
 <cfquery name="get_student_info" datasource="MySQL">
 	SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.hostid, stu.arearepid, stu.placerepid, stu.schoolid, 
 		stu.uniqueid, stu.dateplaced, stu.host_fam_approved, stu.date_host_fam_approved, stu.address, stu.address2, stu.city, stu.country, stu.programid,
@@ -122,13 +134,13 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 					<!----Placement Approval Information---->
 					<cfif host_fam_Approved LT '8' and host_fam_approved GTE '5'> <!--- 5 TO 7 --->
 						<cfif client.usertype LT host_fam_Approved>
-						<tr><td align="center" colspan="3"><a href="javascript:openLetter();"><img src="../pics/previewpis.gif" border="0"></a><br></td></tr>
+						<tr><td align="center" colspan="3">  <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br></td></tr>
 						<tr><td align="center" colspan="3"><font color="FF3300">To approve this placement, please review the placement letter clicking on the link above.</font><br><br></td></tr>
 						<cfelse>
-						<tr><td align="center" colspan="3"><a href="../reports/placement_letter.cfm?studentid=#get_student_info.studentid#" target="_blank"><img src="../pics/previewpis.gif" border="0"></a><br><br></td></tr>
+						<tr><td align="center" colspan="3"   <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br><br></td></tr>
 						</cfif>
 						<tr><td align="center" colspan="3">Placement is being approved.  Last Approval: #DateFormat(get_student_info.date_host_fam_approved, 'mm/dd/yyyy')# by the 
-							<Cfif host_fam_approved is '5'>Regional Manager
+						  <Cfif host_fam_approved is '5'>Regional Manager
 							<cfelseif host_fam_approved is '6'>Regional Advisor
 							<cfelseif host_fam_approved is '7'>Area Representative
 							<cfelseif host_fam_approved LT '5'>HQ
@@ -181,7 +193,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 						hideIt('hidedis');
 						</script>
 					<cfelseif host_fam_approved LTE '4'>
-						<tr><td align="center" colspan="3"><a href="../reports/placement_letter.cfm?studentid=#get_student_info.studentid#" target="_blank"><img src="../pics/previewpis.gif" border="0"></a><br><br></td></tr>
+						<tr><td align="center" colspan="3">   <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br><br></td></tr>
 						<tr><td align="center" colspan="3">Placement approved on #DateFormat(get_student_info.date_host_fam_approved, 'mm/dd/yyyy')# by the HQ.</td></tr>	
 					</cfif>				
 				<cfelse> <!--- if placement status --->
@@ -203,7 +215,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 					<td valign="top">
 						#get_Student_info.firstname# #get_Student_info.middlename# #get_Student_info.familylastname#<br>
 						#get_student_info.city# &nbsp; #get_student_info.countryname#, &nbsp; #get_student_info.zip#<br>
-						Phone: #get_student_info.phone#<br>
+			      Phone: #get_student_info.phone#<br>
 						<cfif get_student_info.fax is ''><cfelse>Fax: #get_student_info.fax#<br></cfif>
 						<cfif get_student_info.email is ''><cfelse>Email: #get_student_info.email#<br></cfif>
 					</td>		
@@ -218,7 +230,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
                             	<font color="##CC0000">*** Single Person Placement***<br></font>
                             </cfif>
 							#hostlastname# (#hostid#)
-						</cfif>	
+					  </cfif>	
 					</td> 
 				</tr>
 				</table>
