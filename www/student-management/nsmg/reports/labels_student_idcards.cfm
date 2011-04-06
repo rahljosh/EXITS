@@ -1,4 +1,13 @@
 <!--- Generate Avery Standard 5371 id cars for our students. --->
+<Cfif len(url.studentid) gt 10>
+	<cfquery name="stuid" datasource="mysql">
+    	select studentid
+        from smg_students
+        where uniqueid = '#url.studentid#'
+    </Cfquery>
+    <Cfset url.studentid = #stuid.studentid#>
+    
+</Cfif>
 
 <!--- Kill Extra Output --->
 <cfsilent>
@@ -70,8 +79,8 @@
         LEFT OUTER JOIN
         	smg_hosts h ON s.hostid = h.hostid			
         WHERE 
-        	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-        AND 
+        	<!----s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+        AND ---->
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
        <Cfif isDefined('url.studentid')>
 			AND 
@@ -372,7 +381,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><span class="title">Alt Phone</span></td>
+                                        <td><span class="title">Cell Phone</span></td>
                                         <td> #qRegionalManager.cell_phone#</td>
                                     </tr>
                                 </table>
@@ -403,7 +412,7 @@
                                         </td>
                                     </tr>     
                                     <tr>
-                                        <td><span class="title">Alt Phone</span></td>
+                                        <td><span class="title">Cell Phone</span></td>
                                         <td>#qLocalContact.cell_phone#</td>
                                     </tr>       
                                 </table>
@@ -438,13 +447,14 @@
                             
                                 <table cellpadding="2" cellspacing="2" border="0">
                                     <tr>
-                                        <td>U.S. Department of State</td>
+                                        <td >U.S. Department of State</td>
                                         <td>&middot;</td>
                                         <td>2200 C St. NW</td>
                                         <td>&middot;</td>
                                         <td>Washington, D.C. 20037</td>
                                         <td>&middot;</td>
-                                        <td>1-866-283-9090</td>
+                                        <td>1-866-283-9090<br />
+                                        1-202-203-5096</td>
                                         <td>&middot;</td>
                                         <td>jvisas@state.gov</td>
                                     </tr>

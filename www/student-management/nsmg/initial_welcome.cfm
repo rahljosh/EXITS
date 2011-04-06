@@ -416,11 +416,11 @@
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
                         <a href="index.cfm?curdoc=progress_reports">Progress Reports</a><br>
-                        <cfif CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12>
+                        <cfif CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10>
                         	<a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
                         </cfif>
                         <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a><br />
-                        <cfif CLIENT.userType LTE 4 and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12)>
+                        <cfif CLIENT.userType LTE 4 and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
                         	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
                         </cfif>
                        <cfif client.companyid lte 5>

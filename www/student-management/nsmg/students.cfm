@@ -361,7 +361,7 @@
                     
     <cfquery name="getResults" datasource="#application.dsn#">
         SELECT  s.studentid, s.uniqueid, s.firstname, s.familylastname, s.sex, s.active, s.dateassigned, s.regionguar,
-            s.state_guarantee, s.aypenglish, s.ayporientation, s.hostid,
+            s.state_guarantee, s.aypenglish, s.ayporientation, s.hostid, s.scholarship,
             smg_regions.regionname, smg_g.regionname as r_guarantee, smg_states.state, smg_programs.programname,
             c.countryname, co.companyshort, smg_hosts.familylastname AS hostname
         FROM smg_students s
@@ -604,6 +604,9 @@
                         <cfelseif ayporientation NEQ 0>
                             * Pre-Ayp Orient.
                         </cfif>
+                         <cfif scholarship NEQ 0>
+                            * Scholarship
+                         </cfif>
                         </font>
                     </td>
                     <td>#hostname#</td>

@@ -142,7 +142,7 @@
                         <li>After you click received for a student, they will disappear off the list</li>
 					</ol>                        
 					
-                    <p>If you have clicked received by mistake, you can contact Brian Hause by emailing him at <a href="mailto:#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a></p>
+                    <p>If you have clicked received by mistake, please contact <a href="mailto:#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a></p>
 					
                     <p>Please find list of students below that we have NOT received an electronically verification report.</p>
                 </td>

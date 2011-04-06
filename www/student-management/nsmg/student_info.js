@@ -23,7 +23,7 @@ function OpenMediumW(url) {
 
 // opens letters in a defined format
 function OpenLetter(url) {
-	newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
+	newwindow=window.open(url, 'Application', 'height=580, width=820, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
 	if (window.focus) {newwindow.focus()}
 }
 
