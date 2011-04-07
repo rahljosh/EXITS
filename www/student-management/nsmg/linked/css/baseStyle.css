@@ -42,6 +42,10 @@
 	width : 200px;
 }
 
+.xLargeField {
+	width : 260px;
+}
+
 .xLargeTextArea {
 	height: 80px;
 	width : 350px;

@@ -322,7 +322,7 @@
                                    <cfselect
                                         name="regionID" 
                                         id="regionID"
-                                        class="largeField"
+                                        class="xLargeField"
                                         value="regionID"
                                         display="regionName"
                                         selected="#FORM.regionID#" 
