@@ -902,6 +902,25 @@ body {
 	font-weight: bold;
 	text-decoration: underline;
 }
+.termsAndConditions {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	text-align: left;
+	margin: 0px;
+	padding-top: 20px;
+	padding-right: 30px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+}
+.termsAndConditions h2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+}
+.termsAndConditions h3 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
 .header1 {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 18px;
@@ -934,6 +953,19 @@ body {
 	background-color: #b5ea6c; 
 	border: 1px solid #000;
 	text-align:justify;
+}
+.meetStudentsForm a {
+	padding-top:10px;
+	text-decoration:none;
+	color: #124162;
+	font-weight:bold;
+}
+.meetStudentsForm a:link {
+	text-decoration: none;
+}
+.meetStudentsForm a:hover {
+	text-decoration: underline;
+	color:#000;
 }
 .meetStudentsLogin {
 	font-size: 12px;
