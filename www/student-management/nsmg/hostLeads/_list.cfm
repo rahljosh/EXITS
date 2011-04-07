@@ -27,17 +27,7 @@
 		
 		// Make sure records have a valid hashID and the initial record in the history table
 		APPLICATION.CFC.HOST.setHostLeadDataIntegrity();
-		
-		if ( ListFind("1,2,3,4", CLIENT.userType) ) {
-			// NY Office
-			
-		} else if (CLIENT.userType EQ 5) {
-			// Managers	
-			
-		} else if ( ListFind("6,7", CLIENT.userType) ) {
-			// Advisors / Area Representatives
-		}
-		
+	
 		// Get User Regions
 		qGetRegions = APPLICATION.CFC.REGION.getUserRegions(
 			companyID=CLIENT.companyID,
@@ -202,7 +192,7 @@
         	tableHeader += '<td id="lastName" class="listTitle"><a href="javascript:void(0);" title="Sort By Last Name">Last Name</a></td>';
         	tableHeader += '<td id="city" class="listTitle"><a href="javascript:void(0);" title="Sort By City">City</a></td>';
         	tableHeader += '<td id="state" class="listTitle"><a href="javascript:void(0);" title="Sort By State">State</a></td>';                                                            
-            tableHeader += '<td id="zipCode" class="listTitle"><a href="javascript:void(0);" title="Sort By Zip Code">Zip Code</a></td>';                                                          
+            // tableHeader += '<td id="zipCode" class="listTitle"><a href="javascript:void(0);" title="Sort By Zip Code">Zip Code</a></td>';                                                          
             tableHeader += '<td id="phone" class="listTitle"><a href="javascript:void(0);" title="Sort By Phone">Phone</a></td>';                                                           
             tableHeader += '<td id="email" class="listTitle"><a href="javascript:void(0);" title="Sort By Email">Email</a></td>'; 
             tableHeader += '<td id="dateCreated" class="listTitle"><a href="javascript:void(0);" title="Sort By Submitted On">Submitted On</a></td>'; 
@@ -221,7 +211,7 @@
 		$('#lastName').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#city').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#state').click(function (){getHostLeadList(pageNumber,this.id);});
-		$('#zipCode').click(function (){getHostLeadList(pageNumber,this.id);});
+		// $('#zipCode').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#phone').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#email').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#dateCreated').click(function (){getHostLeadList(pageNumber,this.id);});
@@ -244,7 +234,7 @@
 			var lastName = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('LASTNAME')];
 			var city = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('CITY')];
 			var state = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('STATE')];
-			var zipCode = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('ZIPCODE')];
+			// var zipCode = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('ZIPCODE')];
 			var phone = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('PHONE')];
 			var email = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('EMAIL')];
 			var dateCreated = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('DATECREATED')];
@@ -264,7 +254,7 @@
 				tableBody += '<td><a class="jQueryModal" href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '">' + lastName + '</a></td>';
 				tableBody += '<td>' + city + '</a></td>';
 				tableBody += '<td>' + state + '</td>';
-				tableBody += '<td>' + zipCode + '</td>';
+				// tableBody += '<td>' + zipCode + '</td>';
 				tableBody += '<td>' + phone + '</td>';
 				tableBody += '<td><a href="mailto:(' + email + ')">' + email + '</a></td>';
 				tableBody += '<td>' + dateCreated + '</td>';
@@ -448,10 +438,11 @@
                 	<option value="lastName" <cfif FORM.sortBy EQ 'lastName'>selected="selected"</cfif> >Last Name</option>
                 	<option value="city" <cfif FORM.sortBy EQ 'city'>selected="selected"</cfif> >City</option>
                 	<option value="state" <cfif FORM.sortBy EQ 'state'>selected="selected"</cfif> >State</option>
-                	<option value="zipCode" <cfif FORM.sortBy EQ 'zipCode'>selected="selected"</cfif> >Zip Code</option>
+                	<!--- <option value="zipCode" <cfif FORM.sortBy EQ 'zipCode'>selected="selected"</cfif> >Zip Code</option> --->
                 	<option value="phone" <cfif FORM.sortBy EQ 'phone'>selected="selected"</cfif> >Phone</option>
                 	<option value="email" <cfif FORM.sortBy EQ 'email'>selected="selected"</cfif> >Email</option>
                 	<option value="dateCreated" <cfif FORM.sortBy EQ 'dateCreated'>selected="selected"</cfif> >Submitted On</option>
+                    <option value="dateLastLoggedIn" <cfif FORM.sortBy EQ 'dateLastLoggedIn'>selected="selected"</cfif> >Last Login</option>
                     <option value="regionAssigned" <cfif FORM.sortBy EQ 'regionAssigned'>selected="selected"</cfif> >Region</option>
                     <option value="areaRepAssigned" <cfif FORM.sortBy EQ 'areaRepAssigned'>selected="selected"</cfif> >Area Rep.</option>
                     <option value="statusAssigned" <cfif FORM.sortBy EQ 'statusAssigned'>selected="selected"</cfif> >Status</option>
@@ -472,8 +463,16 @@
                     </cfloop>
                 </select>
             </td>                
-            <td><input name="send" type="submit" value="Search" class="submitButton" onClick="getHostLeadList();" /></td>
+            <td><input name="send" type="submit" value="Search" class="submitButton" onClick="getHostLeadList();" /></td>            
         </tr>
+        
+        <cfif ListFind('1,2,3,4', CLIENT.userType)>
+            <tr>
+                <td align="center" colspan="8">
+                    <a class="jQueryModal" href="hostLeads/index.cfm?action=export">[ Export to Constant Contact ]</a>
+                </td>
+            </tr>                        
+        </cfif>
         
         <!--- Pagination information goes here --->
         <tr id="loadPaginationInfo"></tr>

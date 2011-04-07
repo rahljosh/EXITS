@@ -683,6 +683,86 @@
         </cfquery>
             
     </cffunction>
+
+
+	<cffunction name="exportHostLeads" access="public" returntype="query" output="false" hint="Export Leads to Excel">
+		<cfargument name="dateExported" default="" hint="Gets new leads if no date is passed">
+        
+        <cfquery 
+			name="qExportHostLeads" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	ID,
+                    firstName,
+                    lastName,
+                    email,
+					dateExported
+                FROM 
+                    smg_host_lead
+                WHERE
+ 					isListSubscriber = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND	
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        
+                <cfif isDate(ARGUMENTS.dateExported)>
+                    AND	                    
+                        dateExported = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateExported#">             
+				<cfelse>
+                	AND
+                    	dateExported IS NULL				
+				</cfif>
+                
+                ORDER BY
+                	dateCreated DESC
+		</cfquery>
+		
+        <cfscript>
+			// Add IDs to a list
+			vIDList = ValueList(qExportHostLeads.ID);
+		</cfscript>
+        
+        <!--- Record date leads were exported --->
+        <cfif LEN(vIDList)>
+       
+            <cfquery 
+                datasource="#APPLICATION.dsn#">
+                    UPDATE
+                        smg_host_lead
+                    SET	
+                    	dateExported = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    WHERE
+                        ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vIDList#" list="yes"> )
+            </cfquery>
+        
+        </cfif>
+           
+		<cfreturn qExportHostLeads>
+	</cffunction>
+
+
+	<cffunction name="getHostLeadExportHistory" access="public" returntype="query" output="false" hint="Lists export history">
+
+        <cfquery 
+			name="qGetHostLeadExportHistory" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	count(ID) AS totalLeads,
+					dateExported
+                FROM 
+                    smg_host_lead
+				WHERE
+                	dateExported IS NOT NULL                    
+                GROUP BY            
+                    dateExported                  
+                ORDER BY            
+                    dateExported DESC
+                LIMIT
+                	30
+		</cfquery>
+		   
+		<cfreturn qGetHostLeadExportHistory>
+	</cffunction>
+
     
     
     <!--- 
