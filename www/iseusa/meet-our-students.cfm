@@ -130,7 +130,7 @@
             // Parse XML we received back to a variable
             responseXML = XmlParse(cfhttp.filecontent);		
         
-            if ( responseXML.response.CountryCode.XmlText NEQ 'US' ) {
+            if ( responseXML.response.CountryCode.XmlText NEQ 'US' AND CGI.remote_addr NEQ '127.0.0.1') {
 				allowAccess = 0;		
             }
 			
@@ -252,7 +252,9 @@
                                 Other Specify: #qCheckLogin.hearAboutUsDetail# <br /> 
                             </cfif>
                             
-                            Would you like to join our mailing list? <cfif qCheckLogin.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
+                            <!---
+								Would you like to join our mailing list? <cfif qCheckLogin.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
+							--->
             				
                             Last Logged in #DateFormat(now(), 'mm/dd/yyyy')# #TimeFormat(now(), 'hh:mm tt')# EST <br /> <br />
                             
@@ -462,7 +464,12 @@
 			// Captcha
 			if ( Hash(UCase(FORM.captcha)) NEQ FORM.captchaHash ) {
                 ArrayAppend(pageMsg.Errors, "Enter text as displayed in the image");			
-			}			
+			}	
+			
+			// Terms and Conditions
+			if ( NOT VAL(FORM.isListSubscriber) ) {
+                ArrayAppend(pageMsg.Errors, "You must read and agree to the Terms and Conditions");			
+			}
         </cfscript>
 
        <!--- There are no errors --->
@@ -781,6 +788,8 @@
                                                                         
                                     Please follow the instructions on the email to meet our students. <br /><br />
                                     
+                                    Please click on "Forgot Password" and enter your email address to have your login information re-sent to you. <br /><br />
+                                    
                                     If you have any questions, please contact us at <a href="mailto:support@iseusa.com">support@iseusa.com</a> <br /><br />
 
                                		International Student Exchange
@@ -870,9 +879,17 @@
                             <cfinput type="text" name="captcha" id="captcha" class="largeInput" required="yes" message="Please enter text as displayed in the image above">
                             
                             <div style="clear:both;">&nbsp;</div>
-    
-                            <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
-                            <label for="isListSubscriber" class="inputCheckbox">Would you like to join our mailing list?</label> 
+    						
+                            <a href="/terms-and-conditions.cfm" target="_blank">Click to view the Terms and Conditions</a>
+
+                            <div style="clear:both;">&nbsp;</div>
+                            
+                            <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1">
+                            <label for="isListSubscriber" class="inputCheckbox">I have read and agree to the Terms and Conditions and Privacy Policy.</label> 
+                            <!--- 
+								<cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
+								<label for="isListSubscriber" class="inputCheckbox">Would you like to join our mailing list?</label>							
+							--->
                             
                             <span class="requiredFieldNote">* Required Fields</span>
                             
