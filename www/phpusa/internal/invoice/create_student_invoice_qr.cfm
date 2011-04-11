@@ -138,7 +138,7 @@ function OpenInvoice(url) {
 			AND chargetypeid = '#FORM.other_charges_id#'
 			AND amount = '#FORM.other_charges#'
 	</cfquery>			
-	<cfif IsDefined('FORM.other_charges_ckbox') AND other_charges_id NEQ '0' AND FORM.other_charges NEQ '' AND other_charges.recordcount EQ '0'>	
+	<cfif IsDefined('FORM.other_charges_ckbox') AND other_charges_id NEQ '0' AND FORM.other_charges NEQ '' <!--- AND other_charges.recordcount EQ '0' --->>	
 		<cfquery name="insert_charges" datasource="MySQL">
 			INSERT INTO egom_charges 
 				(studentid, chargetypeid, programid, amount, description, date)
