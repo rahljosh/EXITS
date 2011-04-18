@@ -1,9 +1,10 @@
 <!--- Kill extra output --->
+
 <cfsilent>
 
 	<!--- Param Form Variables --->
     <cfparam name="FORM.studentID" default="0">
-    <cfparam name="FORM.active" default="0">
+    <cfparam name="FORM.active" default="off">
     <cfparam name="FORM.active_reason" default="">   
     <cfparam name="FORM.region" default="0">
     <cfparam name="FORM.jan_App" default="0">
@@ -19,22 +20,24 @@
 		// Get Student Information 
 		qStudentInfo = AppCFC.STUDENT.getStudentByID(studentID=FORM.studentID); 
 	</cfscript>
-    
+    <!----
     <cfscript>
 		// Data validation
 		if ( NOT VAL(qStudentInfo.active) AND VAL(FORM.active) AND NOT LEN(FORM.active_reason) ) {
 			active_error ="You must specify a reason for making this student active.  Please use your browsers back button to make the change.";
 		} else if ( VAL(qStudentInfo.active) AND VAL(FORM.active) AND LEN(FORM.active_reason) ) {
 			active_error ="You provided an explanation for changing the status of a student, but didn't change the status. Please use your browsers back button to change the status to inactive, or remove the explanation.";
-		} else if ( NOT VAL(qStudentInfo.active) AND NOT VAL(FORM.active) AND LEN(FORM.active_reason) ) {
+	} else if ( NOT VAL(qStudentInfo.active) AND NOT VAL(FORM.active) AND LEN(FORM.active_reason) ) {
 			active_error ="You provided an explanation for changing the status of a student, but didn't change the status. Please use your browsers back button to change the status to active, or remove the explanation.";
 		} else IF ( VAL(qStudentInfo.active) AND NOT VAL(FORM.active) AND NOT LEN(FORM.active_reason) ) {
 			active_error ="You must specify a reason for making this student inactive.  Please use your browsers back button to make the change.";
 		}
 	</cfscript>
-
+	---->
 </cfsilent>
 
+		
+			
 <link rel="stylesheet" href="../smg.css" type="text/css">
 
 
@@ -460,7 +463,11 @@
 	UPDATE 
     	smg_students
 	SET 
-		active = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.active)#">,
+    <Cfif form.active is 'on'>
+		active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
+    <cfelse>
+    	active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+    </Cfif>
 		regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.region#">,
 		<!--- Regional Guarantee --->
         regionGuar = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.regionGuar#">, <!--- yes/no --->
