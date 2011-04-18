@@ -311,12 +311,15 @@
         <tr>
             <td>Your last visit was on #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')# MST</td>
             <td align="right">
+             <cfif (ListFind("5,6,7,9", CLIENT.userType)
+					 and ListFind("1,2,3,4,5,12", CLIENT.companyid)) >
                 <cfset tripcount = 7 - placed_students.Count>
                 <cfif placed_students.Count LT 7>
                     You're only #tripcount# placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip.pdf" target="_blank">#incentive_trip.trip_place#!</A>
                 <cfelse>
                     You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
                 </cfif>
+              </cfif>
             </td>
         </tr>
     </table>
@@ -355,6 +358,8 @@
           </td>
           <td align="right" valign="top" rowspan=2>
                 <!--- Intl. Rep Pictures --->
+               <cfif (ListFind("5,6,7,9", CLIENT.userType)
+					 and ListFind("1,2,3,4,5,12", CLIENT.companyid)) >  
                 <cfif CLIENT.usertype EQ 8>
                     <cfset pic_num = RandRange(1,34)>
                     <img src="pics/intrep/#pic_num#.jpg"><br>
@@ -372,6 +377,7 @@
                         <img src="pics/view_details.gif" border="0">                    
                     </cfif>
                 </cfif>	
+               </cfif>
             </td>
         </tr>
     </table>
@@ -408,7 +414,8 @@
 					<cfif CLIENT.usertype lte 4>
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets</td>
                     <!--- Field Users --->
-					<cfelseif ListFind("5,6,7,9", CLIENT.userType)>
+					 <cfelseif (ListFind("5,6,7,9", CLIENT.userType)
+					 and ListFind("1,2,3,4,5,12", CLIENT.companyid)) >
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> WebEx Calendar</td>
                     </cfif>
                 </tr>
@@ -446,7 +453,8 @@
                             </table>
 						</td>
 					<!--- Field Users --->                        
-                    <cfelseif ListFind("5,6,7,9", CLIENT.userType)>
+                    <cfelseif (ListFind("5,6,7,9", CLIENT.userType)
+					 and ListFind("1,2,3,4,5,12", CLIENT.companyid)) >
 						<td>
                             <table cellpadding=4 cellspacing =0 border=0>
                                 <tr>

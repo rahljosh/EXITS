@@ -16,8 +16,7 @@
 			var get_companies = '';
 		</cfscript>
 
-		<!--- Check if we are on Local Server --->
-        <cfif APPLICATION.IsServerLocal>
+
         
             <cfquery name="qGetCompany" datasource="mysql">
                 SELECT 
@@ -26,24 +25,13 @@
                 FROM 
                     smg_companies 
                 WHERE
-                    url_ref LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%student-management.com"> 
+                    url_ref LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.server_name#"> 
             </cfquery>
-
-        <!--- Production Server --->    
-        <cfelse>
-        
-            <cfquery name="qGetCompany" datasource="mysql">
-                SELECT 
-                    companyid, 
-                    companyname,
-                    website
-                FROM 
-                    smg_companies 
-                WHERE
-                    url_ref LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#cgi.server_name#"> 
-            </cfquery>
-        
-        </cfif>        
+		<!----
+		%student-management.com
+	
+		
+       	---->
 
 		<cfif NOT VAL(CLIENT.companyID) AND VAL(qGetCompany.recordcount)>
 			<cfset CLIENT.companyid = qGetCompany.companyid>
@@ -76,8 +64,7 @@
         <cfset CLIENT.app_menu_comp = CLIENT.companyid>
         <cfset CLIENT.exits_url = "https://" & submitting_info.url_ref>
         <cfset CLIENT.color = "#submitting_info.company_color#">
-
-
+	
 		<!--- student login --->
         <cfquery name="qAuhenticateStudent" datasource="#APPLICATION.dsn#">
             SELECT studentID, firstname, familylastname
@@ -121,7 +108,8 @@
             AND 
             	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         </cfquery>
-        
+       
+
         <cfif qAuthenticateUser.recordcount EQ 0>
         	<cfreturn 'Invalid Login'>            
         </cfif>
@@ -141,7 +129,7 @@
             ORDER 
             	BY user_access_rights.usertype
         </cfquery>
-
+	 	
         <cfif get_access.recordcount EQ 0>
         	<cfreturn 'You have no Company & Regional Access record assigned.  One must be assigned first before you can login.  Contact your facilitator.'>            
         </cfif>

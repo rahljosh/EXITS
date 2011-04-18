@@ -262,7 +262,23 @@
                         <cfcase value="5">
                             Region 5 - West
                         </cfcase>
+                    	<cfcase value="6">
+                            West
+                        </cfcase>
                     
+                        <cfcase value="7">
+                            Central
+                        </cfcase>
+                    
+                        <cfcase value="8">
+                            South
+                        </cfcase>
+                    
+                        <cfcase value="9">
+                            East
+                        </cfcase>
+                    
+                        
                         <cfdefaultcase>
                             n/a
                         </cfdefaultcase>

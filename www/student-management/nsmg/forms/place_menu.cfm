@@ -134,10 +134,10 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 					<!----Placement Approval Information---->
 					<cfif host_fam_Approved LT '8' and host_fam_approved GTE '5'> <!--- 5 TO 7 --->
 						<cfif client.usertype LT host_fam_Approved>
-						<tr><td align="center" colspan="3">  <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br></td></tr>
+						<tr><td align="center" colspan="3">  <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#&approve', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br></td></tr>
 						<tr><td align="center" colspan="3"><font color="FF3300">To approve this placement, please review the placement letter clicking on the link above.</font><br><br></td></tr>
 						<cfelse>
-						<tr><td align="center" colspan="3"   <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br><br></td></tr>
+						<tr><td align="center" colspan="3"   <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#&approve', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br><br></td></tr>
 						</cfif>
 						<tr><td align="center" colspan="3">Placement is being approved.  Last Approval: #DateFormat(get_student_info.date_host_fam_approved, 'mm/dd/yyyy')# by the 
 						  <Cfif host_fam_approved is '5'>Regional Manager
@@ -193,7 +193,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 						hideIt('hidedis');
 						</script>
 					<cfelseif host_fam_approved LTE '4'>
-						<tr><td align="center" colspan="3">   <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br><br></td></tr>
+						<tr><td align="center" colspan="3">   <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?studentID=#uniqueid#&approve', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a><br><br></td></tr>
 						<tr><td align="center" colspan="3">Placement approved on #DateFormat(get_student_info.date_host_fam_approved, 'mm/dd/yyyy')# by the HQ.</td></tr>	
 					</cfif>				
 				<cfelse> <!--- if placement status --->

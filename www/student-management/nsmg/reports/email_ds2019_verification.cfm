@@ -125,7 +125,7 @@
         <table width="80%" cellpadding=10 cellspacing="0" align="center" frame="below">
             <tr>
             	<td colspan="4">
-                    <strong>Starting this January 2011 season we will be launching a new application for completing verification reports. 
+                    <strong> 
                     As an agent, you are now required to complete all verifications electronically. <br />
                     Please find the directions below:</strong>
                     

@@ -80,10 +80,26 @@
 				<tr><td><cfif privateschool EQ '0'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse> <img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>
 					<td><em>Do not consider my child for J-1 Private Schools</em></td></tr>
 			</table>
-		</td>
-
-	
-	</tr>
+                </td>
+            </tr>
+            <tr><td align="center"><br><h2>- OR -</h2><br></td></tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr><td><input type="radio" name="privateschool" value='1' onClick="DataChanged();" <cfif privateschool  GTE '1' AND privateschool LTE '3'>checked</cfif>></td>
+                            <td><em>Consider my child for any school in the following tuition range: (select one)</em></td></tr>
+                        <tr><td colspan="2">
+                            <select name="tuitionprivateschool" onClick="DataChanged();">
+                            <option value="0"></option>
+                            <cfloop query="private_schools">
+                            <option value="#privateschoolid#" <cfif get_student_info.privateschool EQ privateschoolid>selected</cfif>>#privateschoolprice#</option>
+                            </cfloop>
+                            </select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
 </table><br><br><br>
 
 <table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
