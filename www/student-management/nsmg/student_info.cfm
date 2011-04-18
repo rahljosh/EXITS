@@ -934,7 +934,7 @@
 		<!--- FIELD USERS --->
 				<cfif CLIENT.usertype GTE '5' AND CLIENT.usertype LTE '7'>
 				<tr>
-					<td width="50%">: : <a href="javascript:OpenLetter('reports/placement_letter.cfm');">Placement</a></td>
+					<td width="50%">: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?studentID=#uniqueid#&profileType=web');">Placement</a></td>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/flight_information.cfm');">Flight Information</a></td>
 				</tr>
 				<tr>
