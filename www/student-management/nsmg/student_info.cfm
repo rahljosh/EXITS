@@ -431,9 +431,9 @@
 										<tr><cfif canceldate EQ ''>
 											<td width="80" align="right">				
 												<cfif VAL(active)>
-													<input name="active" type="checkbox"  value="1" checked <cfif FORM.edit EQ 'no'>disabled</cfif>>
+													<input name="active" type="checkbox"   checked <cfif FORM.edit EQ 'no'>disabled</cfif>>
 												<cfelse>
-													<input name="active" type="checkbox" value="0"  <cfif FORM.edit EQ 'no'>disabled</cfif>>
+													<input name="active" type="checkbox"  <cfif FORM.edit EQ 'no'>disabled</cfif>>
 												</cfif>
 											</td>
 											<td>Student is Active 
