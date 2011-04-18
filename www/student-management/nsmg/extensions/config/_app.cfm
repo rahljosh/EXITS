@@ -14,6 +14,7 @@
 	SELECT
     	companyID,
         support_email,
+        projectManager,
         url_ref
 	FROM
     	smg_companies
@@ -56,7 +57,7 @@
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
-	APPLICATION.EMAIL.admissions = 'bhause@iseusa.com';
+	APPLICATION.EMAIL.admissions = '#qCompanyInfo.projectManager#';
 	APPLICATION.EMAIL.finance = 'marcel@iseusa.com';	
 	APPLICATION.EMAIL.cbcNotifications = 'support@student-management.com;bill@iseusa.com;margarita@iseusa.com;diana@iseusa.com;gary@iseusa.com';
 	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com';
