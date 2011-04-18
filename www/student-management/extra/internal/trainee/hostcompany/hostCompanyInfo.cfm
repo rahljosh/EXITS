@@ -196,6 +196,8 @@
             FROM 
                 extra_hostcompany
             WHERE
+                companyID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.companyID#"> 
+            AND	
                 name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">
             <cfif VAL(FORM.hostCompanyID)>
                 AND
