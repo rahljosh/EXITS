@@ -255,7 +255,7 @@
             
             <cfset GetPageContext().GetOut().ClearBuffer() />
             
-            <cflocation url="/index.cfm" addtoken="no" />
+            <cflocation url="/extra/index.cfm" addtoken="no" />
         
         <cfelse>
 			
