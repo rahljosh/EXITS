@@ -192,21 +192,20 @@
         <cfquery 
 			name="qGetRegionRemote" 
                 datasource="#APPLICATION.DSN#">
-                SELECT
+                SELECT DISTINCT
 					r.regionID,
-                   <!---- CONCAT(r.regionName, ' - ', u.firstName, ' ', u.lastName)  AS---->  regionName
+                    r.regionName,
+                    CONCAT(r.regionName, ' - ', u.firstName, ' ', u.lastName)  AS regionInfo
                 FROM 
                     smg_regions r
-                <!----  
 				INNER JOIN                     
                    user_access_rights UAR on UAR.regionID = r.regionID                         
                        AND                                         
                            uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-               INNER JOIN                     
+               	INNER JOIN                     
 					smg_users u ON u.userID = uar.userID                         
 						AND                         
 							u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">        
-			    ---->  
                 WHERE
                     r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
                 AND
@@ -221,14 +220,16 @@
 				QueryAddRow(qGetRegionRemote, 1);
 				QuerySetCell(qGetRegionRemote, "regionID", 0);	
 				QuerySetCell(qGetRegionRemote, "regionName", "---- No Regions assigned to this company ----", 1);
+				QuerySetCell(qGetRegionRemote, "regionInfo", "---- No Regions assigned to this company ----", 1);
 			}
 			
 			// Return message if companyID is not valid
 			if ( NOT VAL(ARGUMENTS.companyID) ) {
-				qGetRegionRemote = QueryNew("regionID, regionName");
+				qGetRegionRemote = QueryNew("regionID, regionName, regionInfo");
 				QueryAddRow(qGetRegionRemote);
 				QuerySetCell(qGetRegionRemote, "regionID", 0);	
-				QuerySetCell(qGetRegionRemote, "regionName", "---- First Select a Company ----", 1);
+				QuerySetCell(qGetRegionRemote, "regionName", "---- Select a company first ----", 1);
+				QuerySetCell(qGetRegionRemote, "regionInfo", "---- Select a company first ----", 1);
 			}
 
 			return qGetRegionRemote;

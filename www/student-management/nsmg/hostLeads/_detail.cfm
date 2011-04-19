@@ -324,7 +324,7 @@
                                         id="regionID"
                                         class="xLargeField"
                                         value="regionID"
-                                        display="regionName"
+                                        display="regionInfo"
                                         selected="#FORM.regionID#" 
                                         bindonload="yes"
                                         bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" />

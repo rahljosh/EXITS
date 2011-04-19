@@ -791,7 +791,10 @@
 			datasource="#APPLICATION.dsn#">
                 SELECT
 					hl.ID,
-                    hl.hashID,
+                    <!--- 17E0 was being displayed as 17 or 17.0 --->
+					<!--- CAST(hl.hashID AS CHAR) AS hashID, --->
+                    <!--- CONVERT(hl.hashID USING utf8) AS hashID, --->                    
+                    CONCAT(hl.hashID, '&') AS hashID,
                     hl.statusID,
                     hl.regionID,
                     hl.areaRepID,
