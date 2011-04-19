@@ -312,7 +312,7 @@
                 </style>
     
                 <img src="../../pics/black_pixel.gif" width="100%" height="2">
-                <div class="title1">Students hired per company</div>
+                <div class="title1">Arrival Information</div>
                 <img src="../../pics/black_pixel.gif" width="100%" height="2">
                 
                 <!--- Include Report --->

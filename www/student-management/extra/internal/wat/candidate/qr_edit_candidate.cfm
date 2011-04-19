@@ -20,8 +20,6 @@
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfConfirmationNotes" default="">
 
-
-
 <cfquery name="qGetCandidateInfo" datasource="mysql">
     SELECT 
     	candidateID, 
@@ -35,14 +33,13 @@
 	
 <cfquery name="qGetCurrentPlacement" datasource="mysql">
     SELECT 
-    	MAX(candcompid) as candcompid
+    	MAX(candcompid) AS candcompid
     FROM 
     	extra_candidate_place_company
     WHERE 
     	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
 </cfquery>
 
-	
 <cfscript>
 	/*** Online Application ***/
 	
@@ -167,38 +164,46 @@
             	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">, 
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">, 
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
+                
                 <cfif IsDate(FORM.program_startdate)>
                 	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
+                
                 <cfif IsDate(FORM.program_enddate)>
                 	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
+                
                 <cfqueryparam cfsqltype="cf_sql_integer" value="1">, 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
+                
                 <cfif IsBoolean(FORM.selfWorkmenCompensation)>
                		<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_integer" null="yes">,
                 </cfif>
+                
                 <cfif IsDate(FORM.selfConfirmationDate)>
                 	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                 </cfif>
+                
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
+                
                 <cfif isDefined('form.transHousingAddress')>
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
                 </cfif>
+                
                 <cfif isDefined('form.transJobOffer')>
                 	 <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                 <cfelse>
@@ -210,68 +215,75 @@
                 <cfelse>
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
                 </cfif>
+                
                	<cfqueryparam cfsqltype="cf_sql_integer" value="#form.transfer#">
-              
-                
-              
-                
 			)
 		</cfquery>
-	
         
     <cfelse>
 		
-        <!--- Update Current Host Company Information --->
-		<cfquery  datasource="mysql">
-            UPDATE 
-            	extra_candidate_place_company
-            SET 
-				<cfif IsDate(FORM.program_startdate)>
-                    startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
-                <cfelse>
-                    startdate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                </cfif>
-				<cfif IsDate(FORM.program_enddate)>
-                    enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
-                <cfelse>
-                    enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                </cfif>
-                status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-                selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
-                selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
-                selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
-                selfAuthentication = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
-                <cfif IsBoolean(FORM.selfWorkmenCompensation)>
-               		selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#">,
-                <cfelse>
-                	selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" null="yes">,
-                </cfif>
-				<cfif IsDate(FORM.selfConfirmationDate)>
-                	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">,
-                <cfelse>
-                	selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                </cfif>
-                <cfif isDefined('form.transHousingAddress')>
-                	transNewHousingAddress = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-                 <cfelse>
-                 	transNewHousingAddress = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-                </cfif>
-                <cfif isDefined('form.transJobOffer')>
-                	transNewJobOffer = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-                <cfelse>
-                	transNewJobOffer = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-                </cfif>
-                <cfif isDefined('form.transSevisUpdate')>
-                	transSevisUpdate = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-                <cfelse>
-                	transSevisUpdate = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-                </cfif>
-                	
-               selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">
-            WHERE 
-            	candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candcompid#">
-		</cfquery>
+        <cfif VAL(qGetCurrentPlacement.candcompid)>
+        
+			<!--- Update Current Host Company Information --->
+            <cfquery  datasource="mysql">
+                UPDATE 
+                    extra_candidate_place_company
+                SET 
+                    <cfif IsDate(FORM.program_startdate)>
+                        startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
+                    <cfelse>
+                        startdate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    
+                    <cfif IsDate(FORM.program_enddate)>
+                        enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_enddate)#">,
+                    <cfelse>
+                        enddate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    
+                    status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                    selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
+                    selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
+                    selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
+                    selfAuthentication = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
+                    
+                    <cfif IsBoolean(FORM.selfWorkmenCompensation)>
+                        selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#">,
+                    <cfelse>
+                        selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" null="yes">,
+                    </cfif>
+                    
+                    <cfif IsDate(FORM.selfConfirmationDate)>
+                        selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.selfConfirmationDate)#">,
+                    <cfelse>
+                        selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    </cfif>
+                    
+                    <cfif isDefined('form.transHousingAddress')>
+                        transNewHousingAddress = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                     <cfelse>
+                        transNewHousingAddress = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                    </cfif>
+                    
+                    <cfif isDefined('form.transJobOffer')>
+                        transNewJobOffer = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                    <cfelse>
+                        transNewJobOffer = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                    </cfif>
+                    
+                    <cfif isDefined('form.transSevisUpdate')>
+                        transSevisUpdate = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                    <cfelse>
+                        transSevisUpdate = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                    </cfif>
+                        
+                   selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">
+                WHERE 
+                    candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candcompid#">
+            </cfquery>
 		
+        </cfif>
+        
 	</cfif>
 
 </cfif>
@@ -284,11 +296,13 @@
         firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">, 
         lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">, 
         middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#">,
+        
 		<cfif isDate(FORM.dob)>
         	dob = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.dob)#">,
         <cfelse>
         	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,        
         </cfif>
+        
         sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">, 
         intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">,
         birth_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.birth_city#">, 
@@ -351,6 +365,7 @@
         <cfelse>
         	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
         </cfif>
+        
         cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancel_reason#">,
         
 		<cfif isDate(FORM.program_startdate)>
