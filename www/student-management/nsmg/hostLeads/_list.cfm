@@ -242,7 +242,7 @@
 			var regionAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('REGIONASSIGNED')];
 			var areaRepAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('AREAREPASSIGNED')];
 			var statusAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('STATUSASSIGNED')];
-
+			
 			// Create Table Rows
 			var tableBody = "";	
 			if (i % 2 == 0) {
