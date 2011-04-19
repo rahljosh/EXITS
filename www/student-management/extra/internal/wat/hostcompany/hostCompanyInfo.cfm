@@ -936,7 +936,7 @@
                                         <cfloop query="qGetJobs">
                                             <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                                                 <td class="style1">
-                                                	<a href="javascript:openWindow('hostcompany/edit_newjob.cfm?jobid=#id#', 300, 600);">
+                                                	<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
 	                                                    #qGetJobs.title#
                                                     </a>
                                                 </td>
