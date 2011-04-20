@@ -109,8 +109,8 @@ function NextPage() {
 	</tr>
 </table>
 
-<!--- PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
-<cfif NOT ListFind("7,8,10,11", get_student_info.app_current_status) AND (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ 2)> 
+<!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
+<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("7,8,10,11", get_student_info.app_current_status) AND (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ 2)> 
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
