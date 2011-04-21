@@ -162,7 +162,6 @@
             ecpc.transNewJobOffer,
             ecpc.transSevisUpdate,
             ecpc.transfer
-		   
         FROM
         	extra_candidate_place_company ecpc
         INNER JOIN
@@ -865,10 +864,10 @@
 											</td>			                                                
                                         </tr>
                                         <tr>
-                                        	<td class="style1" align="Left" colspan=2><strong>Company Name:</strong></td>
+                                        	<td class="style1" align="Left" colspan="2"><strong>Company Name:</strong></td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" colspan=2 align="left">
+                                            <td class="style1" colspan="2" align="left">
                                             	<span class="readOnly">
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.name#</strong></a>
@@ -878,7 +877,7 @@
                                                 </span>
                                                 
                                                 <select name="hostcompanyID" id="hostcompanyID" class="style1 editPage" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo();"> 
-	                                                <option value="0"></option>
+	                                                <option value="0">Unplaced</option>
                                                     <cfloop query="qHostCompanyList">
                                                     	<option value="#qHostCompanyList.hostcompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostcompanyID>selected</cfif> > 
 															<cfif LEN(qHostCompanyList.name) GT 55>
@@ -891,28 +890,24 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr id="host_history" bgcolor="FFBD9D" style="display:none;">
-                                           <td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
-                                            <td class="style1"><textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="5"></textarea>
-                                            <br><Br>
-                                            Is this a transfer? 
-                                            <cfinput type="radio"  name="transfer" onclick="document.getElementById('showTransferInfo').style.display='table-row';" value="1" > Yes 
-                                            <cfinput type="radio"  name="transfer" onclick="document.getElementById('showTransferInfo').style.display='none';" value="0" > No
-                                            
+                                        <tr id="host_history" bgcolor="##FFBD9D" class="hiddenField">
+                                           	<td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
+                                            <td class="style1">
+                                            	<textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="5"></textarea>
+                                                <br><Br>
+                                                Is this a transfer? 
+                                                <input type="radio" name="transfer" onclick="document.getElementById('showTransferInfo').style.display='table-row';" value="1" > Yes 
+                                                <input type="radio" name="transfer" onclick="document.getElementById('showTransferInfo').style.display='none';" value="0" > No
                                             </td>
+                                        </tr>  
+                                        <tr id="showTransferInfo" bgcolor="##FFBD9D" class="hiddenField">
+                                            <td class="style1"  colspan="2" align="center" valign="middle">
+                                                <input type="checkbox" name="transHousingAddress" id="transHousingAddress" value="1" class="editPage"> <label for="transHousingAddress">New Housing Address</label> 
+                                                <input type="checkbox" name="transJobOffer" id="transJobOffer" value="1" class="editPage"> <label for="transJobOffer">New Job Offer</label> 
+                                                <input type="checkbox" name="transSEVISUpdate" id="transSEVISUpdate" value="1" class="editPage"> <label for="transSEVISUpdate">SEVIS Updated</label> 
                                             </td>
                                         </tr>
-                                     
-                                        <tr id="showTransferInfo" bgcolor="FFBD9D" style="display:none;">
-                                            <td class="style1"  colspan=2 align="center" valign="middle">
-                                            New Housing Address <input type="checkbox" class="editPage"  name="transHousingAddress">
-                                            New Job Offer <input type="checkbox" class="editPage"  name="transJobOffer">
-                                            SEVIS Updated <input type="checkbox" class="editPage"  name="transSEVISUpdate">
-                                            </td>
-                                           
-                                        </tr>
-                                       
-                                        <tr id="showTransferInfo" bgcolor="FFBD9D" style="display:none;">
+                                        <tr id="showTransferInfo" bgcolor="FFBD9D" class="hiddenField">
                                             <td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
                                             <td class="style1"><textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="5"></textarea></td>
                                         </tr>
@@ -922,17 +917,21 @@
 	                                        	#dateFormat(qCandidatePlaceCompany.placement_date, 'mm/dd/yyyy')#
                                             </td>
                                         </tr>
-                                        <!----transfer info    ---->
+                                        <!----transfer info ---->
                                         <cfif qCandidatePlaceCompany.transfer eq 1>
                                         	<tr>
-                                            	<td class="style1" colspan=2>This was a transfer.</td>
-                                          <tr>
-                                        	 <td class="style1"  colspan=2 align="center" valign="middle">
-                                           <input type="checkbox" id="transHousingAddress" value="1" class="formField" name="transHousingAddress" <Cfif qCandidatePlaceCompany.transNewHousingAddress eq 1>checked</cfif>> New Housing Address 
-                                            <input type="checkbox"  id="transJobOffer" value="1" class="formField" name="transJobOffer" <Cfif qCandidatePlaceCompany.transNewJobOffer eq 1>checked</cfif>> New Job Offer
-                                             <input type="checkbox" id="transSEVISUpdate" value="1" class="formField" name="transSEVISUpdate" <Cfif qCandidatePlaceCompany.transSevisUpdate eq 1>checked</cfif>>SEVIS Updated
-                                            </td>
-                                        </tr>
+                                            	<td class="style1" colspan="2">This was a transfer.</td>
+											</tr>                                                
+                                            <tr>
+                                                <td class="style1"  colspan="2" align="center" valign="middle">
+                                                    <input type="checkbox" value="1" class="formField" name="transHousingAddress" id="transHousingAddress2" <Cfif qCandidatePlaceCompany.transNewHousingAddress eq 1>checked</cfif>> 
+                                                    <label for="transHousingAddress2">New Housing Address</label> 
+                                                    <input type="checkbox" value="1" class="formField" name="transJobOffer" id="transJobOffer2" <Cfif qCandidatePlaceCompany.transNewJobOffer eq 1>checked</cfif>> 
+                                                    <label for="transJobOffer2">New Job Offer</label>
+                                                    <input type="checkbox" value="1" class="formField" name="transSEVISUpdate" id="transSEVISUpdate2" <Cfif qCandidatePlaceCompany.transSevisUpdate eq 1>checked</cfif>>
+                                                    <label for="transSEVISUpdate2">SEVIS Updated</label>
+                                                </td>
+                                        	</tr>
                                        </cfif>
                                     
                                         <!--- Only for Self Placement with Active Placement Information --->
@@ -1059,7 +1058,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr id="program_history" bgcolor="FFBD9D" style="display:none;">
+                                        <tr id="program_history" bgcolor="##FFBD9D" class="hiddenField">
                                         	<td class="style1" align="right"><strong>Reason:</strong></td>
                                         	<td class="style1" colspan="3"><input type="text" name="reason" id="reason" size="50" class="style1"></td>
                                         </tr>
@@ -1088,7 +1087,7 @@
 	                                        </td>
                                         </tr>
                                         <tr>
-    	                                    <td class="style1" align="left" colspan=2><strong>Requested Placement:</strong>
+    	                                    <td class="style1" align="left" colspan="2"><strong>Requested Placement:</strong>
                                         </tr>
                                         <tr>
                                         	<td class="style1" colspan="4"> 
