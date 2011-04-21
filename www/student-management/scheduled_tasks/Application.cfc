@@ -9,8 +9,8 @@
 		THIS.Name = "SMG-ScheduledTasks-" & Hash(GetCurrentTemplatePath());
 		THIS.ApplicationTimeout = CreateTimeSpan( 0, 1, 0, 0 );
 		THIS.clientManagement = true;
-		//THIS.SessionManagement = true;
-		//THIS.sessionTimeout = CreateTimeSpan( 0, 1, 0, 0 );
+		THIS.SessionManagement = true;
+		THIS.sessionTimeout = CreateTimeSpan( 0, 1, 0, 0 );
 		
 
 		/*
