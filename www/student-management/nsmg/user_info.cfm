@@ -931,8 +931,8 @@
                             </Cfquery>		
                             <strong>Supervising Payments:</strong> <Cfif super_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(super_payments.amount, 'local')#</cfif><br>
                             <strong>Placement Payments:</strong> <Cfif place_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(place_payments.amount, 'local')#</cfif><br>
-                            <font size = -2><a href="?curdoc=reports/rep_payments_made&user=#rep_info.userid#">view details</a></font>
-                            <cfif CLIENT.usertype lte 4> - <font size = -2><a href="?curdoc=forms/supervising_placement_payment_details&user=#rep_info.userid#">make payment</a></cfif>
+                            <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=paymentReport&userID=#rep_info.userid#">view details</a></font>
+                            <cfif CLIENT.usertype lte 4> - <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=selectPayment&user=#rep_info.userid#">make payment</a></cfif>
                         </td>
                     </tr>
                 </table>

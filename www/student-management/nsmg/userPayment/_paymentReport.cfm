@@ -13,33 +13,30 @@
 <cfsilent>
 
     <!--- Param Variables --->	
-    <cfparam name="URL.user" default="0">
+    <cfparam name="URL.userID" default="0">
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
     <cfscript>
-		allowAccess = APPCFC.USER.checkUserAccess(currentUserID=CLIENT.userID, currentRegionID=CLIENT.regionID, currentUserType=CLIENT.userType, viewUserID=URL.user);
+		// Check if User has access to view these payments
+		allowAccess = APPCFC.USER.checkUserAccess(currentUserID=CLIENT.userID, currentRegionID=CLIENT.regionID, currentUserType=CLIENT.userType, viewUserID=URL.userID );
 		
 		if (NOT allowAccess) {
-			URL.user = CLIENT.userID;		
+			URL.userID = CLIENT.userID;		
 		}
 		
 		// Get Rep Information
-		qRepInfo = APPCFC.USER.getUserByID(userID=VAL(URL.user));
+		qRepInfo = APPCFC.USER.getUserByID(userID=VAL(URL.userID));
 		
 		// Get Company Information
 		qGetCompanyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
 		
 		// Get Total Payments by Program
-		qGetRepTotalPayments = APPCFC.USER.getRepTotalPayments(userID=VAL(URL.user), companyID=CLIENT.companyID);
+		qGetRepTotalPayments = APPCFC.USER.getRepTotalPayments(userID=VAL(URL.userID), companyID=CLIENT.companyID);
 	</cfscript>
               
 </cfsilent>
-
-<cfif NOT VAL(URL.user)>
-	<cfinclude template="error_message.cfm">
-</cfif>
 
 <script language="JavaScript"> 
 	function displayPaymentDetails(trName) {
@@ -64,8 +61,6 @@
 	}
 </script>
 
-<link rel="stylesheet" href="../smg.css" type="text/css">
-
 <cfoutput>
 
 <!--- Call tableHeader CustomTag and pass the variables --->
@@ -74,6 +69,19 @@
     tableTitle="#qGetCompanyShort.companyshort#"
     tableRightTitle="Payment List for #qRepInfo.firstname# #qRepInfo.lastname# (###qRepInfo.userID#)"
 />
+
+<cfif NOT VAL(URL.userID)>
+
+    <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+        <tr><td><p>An error has occurred. Please go back and try again.</p></td></tr>
+        <tr><td align="center" width="50%">&nbsp;<input type="image" value="Back" src="pics/back.gif" onClick="javascript:history.back()"></td></tr>
+    </table>
+
+	<!--- Call tableFooter CustomTag --->
+    <gui:tableFooter />
+    
+    <cfabort>
+</cfif>
 
 <table width="100%" border="0" cellpadding="8" cellspacing="" class="section">
 	<tr>
@@ -107,7 +115,7 @@
         
         <cfscript>
 			// Get Payment List for current programID
-			qPaymentList = APPCFC.USER.getRepPaymentsBySeasonID(userID=URL.user, seasonID=qGetRepTotalPayments.seasonID, companyID=CLIENT.companyID);		
+			qPaymentList = APPCFC.USER.getRepPaymentsBySeasonID(userID=URL.userID, seasonID=qGetRepTotalPayments.seasonID, companyID=CLIENT.companyID);		
 		</cfscript>
         
         <tr id="programList#qGetRepTotalPayments.seasonID#" class="programList" style="display:none">

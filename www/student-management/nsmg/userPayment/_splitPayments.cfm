@@ -1,34 +1,34 @@
 <SCRIPT LANGUAGE="JavaScript">
-<!-- Begin
-var checkflag = "false";
-function check(field) {
-if (checkflag == "false") {
-for (i = 0; i < field.length; i++) {
-field[i].checked = true;}
-checkflag = "true";
-return "Uncheck All"; }
-else {
-for (i = 0; i < field.length; i++) {
-field[i].checked = false; }
-checkflag = "false";
-return "Check All"; }
-}
-//  End -->
-<!-- Begin
-var checkflag2 = "false";
-function check2(field) {
-if (checkflag2 == "false") {
-for (i = 0; i < field.length; i++) {
-field[i].checked = true;}
-checkflag2 = "true";
-return "Uncheck All"; }
-else {
-for (i = 0; i < field.length; i++) {
-field[i].checked = false; }
-checkflag2 = "false";
-return "Check All"; }
-}
-//  End -->
+	<!-- Begin
+	var checkflag = "false";
+	function check(field) {
+	if (checkflag == "false") {
+	for (i = 0; i < field.length; i++) {
+	field[i].checked = true;}
+	checkflag = "true";
+	return "Uncheck All"; }
+	else {
+	for (i = 0; i < field.length; i++) {
+	field[i].checked = false; }
+	checkflag = "false";
+	return "Check All"; }
+	}
+	//  End -->
+	<!-- Begin
+	var checkflag2 = "false";
+	function check2(field) {
+	if (checkflag2 == "false") {
+	for (i = 0; i < field.length; i++) {
+	field[i].checked = true;}
+	checkflag2 = "true";
+	return "Uncheck All"; }
+	else {
+	for (i = 0; i < field.length; i++) {
+	field[i].checked = false; }
+	checkflag2 = "false";
+	return "Check All"; }
+	}
+	//  End -->
 </script>
 
 <Cfif not isDefined('url.order')>
@@ -94,9 +94,9 @@ return "Check All"; }
 <cfoutput>
 <cfset rep = #rep_info.userid#>
 <h2>Representative: #rep_info.firstname# #rep_info.lastname# (#rep_info.userid#) &nbsp; <span class="get_attention"><b>::</b></span>
-<a href="" class="nav_bar" onClick="javascript: win=window.open('forms/supervising_history.cfm?userid=#rep_info.userid#', 'Settings', 'height=300, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Payment History</a></h2>
+<a href="javascript:openPopUp('userPayment/index.cfm?action=paymentHistory&userid=#rep_info.userid#', 700, 500);" class="nav_bar">Payment History</a></h2>
 
-<cfform method="post" action="?curdoc=forms/supervising_place_payment_details&split=yes">
+<cfform method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=processPayment&split=yes">
 
 <input type="hidden" name="user" value="#rep#">
 <table width=90% cellpadding=4 cellspacing=0>
@@ -110,9 +110,9 @@ return "Check All"; }
 		</td>
 	</tr>
 	<tr>
-		<td colspan=6 bgcolor="010066"><font color="white"><strong>Supervised Students &nbsp; - &nbsp; #get_supervised_students.recordcount#</strong></font></td>
+		<td colspan=6 bgcolor="##010066"><font color="white"><strong>Supervised Students &nbsp; - &nbsp; #get_supervised_students.recordcount#</strong></font></td>
 	</tr>
-	<tr bgcolor="CCCCCC">
+	<tr bgcolor="##CCCCCC">
 		<td><input type="checkbox" value="Check All" onClick="this.value=check2(this.form.supervised_selected_student)"></td>
 		<Td>ID</Td>
 		<td>Last Name, First Name</td>
@@ -122,14 +122,18 @@ return "Check All"; }
 	<cfloop query="get_supervised_students">
 	<tr>
 		<td><input type="checkbox" name="supervised_selected_student" value=#studentid#></td>
-		<Td><a href="" class="nav_bar" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentid=#studentid#', 'Settings', 'height=300, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#studentid#</a></Td>
-		<td><a href="" class="nav_bar" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentid=#studentid#', 'Settings', 'height=300, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#familylastname#, #firstname#</a></td>
+		<Td>
+			<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#studentid#</a>
+        </Td>
+		<td>
+        	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#familylastname#, #firstname#</a>
+        </td>
 		<Td>#programname#</Td>  
 		<td>&nbsp;</td>
 	</tr>
 	</cfloop>
 	<tr>
-	 	<td colspan=6 align="right"> <input name="submit" type="image" src="pics/next.gif" align="right" border=0 alt="search"></td>
+	 	<td colspan=6 align="right"> <input name="submit" type="image" src="pics/next.gif" align="right" border="0" alt="search"></td>
 	</Tr>
 	<!--- PLACED STUDENTS --->
 	<tr>
@@ -141,9 +145,9 @@ return "Check All"; }
 		</td>
 	</tr>
 	<tr>
-		<td colspan=6 bgcolor="010066"><font color="white"><strong>Placed Students &nbsp; - &nbsp; #get_placed_students.recordcount#</strong></font></td>
+		<td colspan=6 bgcolor="##010066"><font color="white"><strong>Placed Students &nbsp; - &nbsp; #get_placed_students.recordcount#</strong></font></td>
 	</tr>
-	<tr bgcolor="CCCCCC">
+	<tr bgcolor="##CCCCCC">
 		<td><input type="checkbox" value="Check All" onClick="this.value=check(this.form.placed_selected_student)"></td>
 		<Td>ID</Td>
 		<td>Last Name, First Name</td>
@@ -153,14 +157,18 @@ return "Check All"; }
 	<cfloop query="get_placed_students">
 	<tr>
 		<td><input type="checkbox" name="placed_selected_student" value=#studentid#></td>
-		<td><a href="" class="nav_bar" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentid=#studentid#', 'Settings', 'height=300, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#studentid#</a></Td>
-		<td><a href="" class="nav_bar" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentid=#studentid#', 'Settings', 'height=300, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#familylastname#, #firstname#</a></td>
+		<td>
+        	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#studentid#</a>
+		</Td>
+		<td>
+        	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#familylastname#, #firstname#</a>
+	    </td>
 		<Td>#programname#</Td>  
 		<td>&nbsp;</td>
 	</tr>
    </cfloop>
 	<tr>
-		<td colspan=6 align="right">  <input name="submit" type="image" src="pics/next.gif" align="right" border=0 alt="search"></td>
+		<td colspan=6 align="right">  <input name="submit" type="image" src="pics/next.gif" align="right" border="0" alt="search"></td>
 	</Tr>
 </table>
 </cfform>

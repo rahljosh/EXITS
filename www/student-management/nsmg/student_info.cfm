@@ -494,10 +494,10 @@
 				<!--- OFFICE USERS ONLY --->
 				<cfif CLIENT.usertype LTE 4> 
 					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
-					<a href="" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Rep. Payments</a> 					
-					<a href="" onClick="javascript: win=window.open('forms/missing_documents.cfm', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
-					<a href="" onClick="javascript: win=window.open('forms/notes.cfm', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif LEN(qStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 	
-                    <a href="" onClick="javascript: win=window.open('forms/ssp.cfm?studentid=#client.studentid#', 'Settings', 'height=450, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Services Project</a>	
+					<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qStudentInfo.studentID#', 700, 500);" class="nav_bar">Representative Payments</a> 					
+                    <a href="javascript:openPopUp('forms/missing_documents.cfm', 450, 500);" class="nav_bar">Missing Documents</a>
+					<a href="javascript:openPopUp('forms/notes.cfm', 450, 500);" class="nav_bar"><cfif LEN(qStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 	
+                    <a href="javascript:openPopUp('forms/ssp.cfm?studentid=#client.studentid#', 600, 450);" class="nav_bar">Student Services Project</a>	
 				</cfif> 
 				<!--- OFFICE - MANAGERS ONLY --->
 				<cfif CLIENT.usertype LTE 5> 
