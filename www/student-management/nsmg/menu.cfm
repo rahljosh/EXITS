@@ -299,10 +299,8 @@
     
                         <li><a href="index.cfm?curdoc=tools/regions">Regions</a></li>
     
-                        <li><a href="index.cfm?curdoc=forms/supervising_placement_payments">Rep Payments</a></li>
+                        <li><a href="index.cfm?curdoc=userPayment/index">Representative Payments</a></li>
                         
-                        <li><a href="index.cfm?curdoc=userPayment/index">New Rep Payments</a></li>
-        
                         <li><a href="index.cfm?curdoc=sevis/menu">SEVIS Batch</a>					
                             <!--- SEVIS Dev Access --->
                             <cfif CLIENT.usertype EQ 1>
