@@ -110,7 +110,7 @@
 	
 	/***** Create APPLICATION.EMAIL structure / Stores Email Information *****/
 	APPLICATION.EMAIL = StructNew();		
-	APPLICATION.EMAIL.flightReport = 'anca@csb-usa.com;elena@csb-usa.com;marcus@iseusa.com';
+	APPLICATION.EMAIL.flightReport = 'anca@csb-usa.com;elena@csb-usa.com';
 	
 	/***** Create APPLICATION.PATH structure *****/
 	APPLICATION.PATH = StructNew();	
