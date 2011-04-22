@@ -644,6 +644,7 @@
 						</select>
 					</td>
 				</tr>
+                <cfif qStudentInfo.studentID neq 28304>
 				<tr id="nfee_waived">
                 	<td width="140px">Guarantee Fee Waived</td>
 					<td>n/a</td>
@@ -654,6 +655,7 @@
 						<input type="radio" name="jan_app"  value=1 onClick="FeeWaived2();" <cfif jan_app EQ 1>checked</cfif> <cfif FORM.edit EQ 'no' OR jan_app NEQ '2'>disabled</cfif> >yes
 					</td>
 				</tr>
+                </cfif>
 			</table>	
 		</td>	
 	</tr>
@@ -801,12 +803,14 @@
 						<cfif direct_placement EQ 1><input type="radio" name="direct_placement" value="1" checked="yes" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes<cfelse><input type="radio" name="direct_placement" value="1" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes</cfif>													
 					</td>
 				</tr>
+                <cfif qStudentInfo.studentID neq 28304>
 				<tr>
 					<td>&nbsp;</td>
 					<td>Nature of Direct Placement &nbsp; 
 						<input type="text" name="direct_place_nature" size="20" value="#direct_place_nature#" <cfif FORM.edit EQ 'no'>readonly</cfif>>
 					</td>
 				</tr>	
+                </cfif>
 			</table>	
 		</td>
 		<td width="2%" valign="top">&nbsp;</td>

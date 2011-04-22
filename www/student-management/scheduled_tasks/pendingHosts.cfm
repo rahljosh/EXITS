@@ -1,3 +1,4 @@
+    <cfdump var="#Application#">
 <cfquery name="pending_hosts" datasource="MySQL">
 		SELECT 
         	s.host_fam_approved, 
@@ -39,13 +40,15 @@
 		ORDER BY 
         	host_fam_approved
 	</cfquery>
-    <cfdump var="#pending_hosts#">
+
+<cfabort>
     <cfoutput>
     <Cfloop query="pending_hosts">
     <cfset DisplayEndDate = #DateAdd('d', 4, '#dateplaced#')#>
    			
 	<cfif #DisplayEndDate# lt #now()#>
 		Reject
+        <!----
         <cfquery datasource="mysql">
         update smg_students
         set host_fam_approved = 99
@@ -67,7 +70,7 @@
                 </cfquery>
                
             
-            <cfsavecontent variable="email_message">
+            <cfmail to="#areaRepEmail.email#" from="support@iseusa.com" subject="Placement for #pending_hosts.firstname# #pending_hosts.student_lastname# has been rejected." cc="josh@iseusa.com">
             #areaRepEmail.firstname# #areaRepEmail.lastname#-<br /><br />
             The pending placement for <strong>#pending_hosts.firstname# #pending_hosts.student_lastname#</strong> with the <Strong>pending_hosts.familylastname</Strong> has
             been automatically rejected by EXITS due to the fact that it has been a pending placement for at least 96 hours.<br /><br />
@@ -78,17 +81,9 @@
             This information is also available on initial welcome page when you login under Pending Placements.
             </font> 
             
-            </cfsavecontent>
-                
-                <!--- send email --->
-                <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="#areaRepEmail.email#">
-                    <cfinvokeargument name="email_cc" value="josh@iseusa.com">
-                    <cfinvokeargument name="email_subject" value="Placement for #pending_hosts.firstname# #pending_hosts.student_lastname# has been rejected.">
-                    <cfinvokeargument name="email_message" value="#email_message#">
-                    <cfinvokeargument name="email_from" value="Automatic Reports <#company_info.support_email#>">
-                </cfinvoke>
-                
+            </cfmail>
+                ---->
+              
             <!----End of Email---->
                     
      

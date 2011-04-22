@@ -24,7 +24,9 @@
 	<cfparam name="FORM.submitted" default="0">    
     <cfparam name="FORM.companyID" default="0">
 	<cfparam name="FORM.programID" default="0">	
-    <cfparam name="FORM.regionID" default="0">    
+    <cfparam name="FORM.regionID" default="0">  
+    <cfparam name="FORM.directPlace" default="3">  
+      
 	
     <cfscript>
 		// Get Student By UniqueID
@@ -89,6 +91,9 @@
 			if ( FORM.companyID NEQ 6 AND NOT VAL(FORM.programID) ) {
 				SESSION.formErrors.Add('You must select a program');
 			}
+			if ( FORM.directPlace EQ 3 ) {
+				SESSION.formErrors.Add('Please indicate if this is a direct placement');
+			}
 
 			// Check if there are no errors 
 			if ( NOT SESSION.formErrors.length() ) {
@@ -119,6 +124,7 @@
 					companyID=FORM.companyID,
 					programID=FORM.programID,
 					regionID=FORM.regionID,
+					directPlace=FORM.directPlace,
 					approvedBy=CLIENT.userID
 				);
 				
@@ -236,7 +242,7 @@
                     </table>
             </td></tr>
             <tr>
-                <td><em>International Representative</em></td><td><em>Regional Guarantee</em></td><td><em>State Guarnatee</em></td>
+                <td><em>International Representative</em></td><td><em>Requested Region</em></td><td><em>Requested States</em></td>
             </tr>
             <tr>
                 <td valign="bottom">#qGetIntRepInfo.businessname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
@@ -342,6 +348,14 @@
                         </select>
                     </td>
                 </tr>
+                <Cfif qGetStudentInfo.studentid eq 28304>
+                <tr class="displayNone additionalInformation">
+                    <td align="right">Direct Placement: </td>
+                    <td>
+                       <input type="radio" name="directPlace" value=1>Yes &nbsp;&nbsp;&nbsp;<input type="radio" name="directPlace" value=0>No 
+                    </td>
+                </tr>
+                </Cfif>
                 <tr>
                     <td align="center" colspan="2">
                         <input name="submit" type=image src="pics/approve.gif" alt='Approve Application'>		
