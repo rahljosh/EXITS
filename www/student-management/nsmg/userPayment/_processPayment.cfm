@@ -5,10 +5,16 @@
 	Date:		April 20, 2011
 	Desc:		Process Payment
 	
-	Update:		04/21/2011 - Mutually Exclusive	Bonus
-				17 - Fast Track Bonus - $1500 by April 15th
-				15 - Early Placement  - #1000 April 16th to June 1st
-				 9 - Paperwork Bonus  - $500 June 2nd to August 1st			
+	Update:		04/22/2011 - Pre AYP Bonus - Mutually Exclusive
+					18 - Pre-AYP-250
+					19 - Pre-AYP-200
+					20 - Pre-AYP-150
+				
+				04/21/2011 - Mutually Exclusive	Bonus
+					17 - Fast Track Bonus - $1500 by April 15th
+					15 - Early Placement  - #1000 April 16th to June 1st
+					 9 - Paperwork Bonus  - $500 June 2nd to August 1st	
+						
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill extra output --->
@@ -29,7 +35,9 @@
     <cfscript>
 		// Mutually Exclusive Bonus
 		mutuallyExclusiveBonus = "9,15,17";
-
+		
+		mutuallyExclusivePreAyp = "18,19,20";
+		
 		// Get Rep Information
 		qGetRepInfo = APPCFC.USER.getUserByID(userID=VAL(user));
 		
@@ -490,6 +498,13 @@
 							<cfif ListFind(mutuallyExclusiveBonus, VAL(FORM.payment_type_place) )>
                                 AND 
                                     spt.id IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#mutuallyExclusiveBonus#" list="yes"> )
+                            <!--- 
+								These are mutually exclusive. Only one per student
+								18 - Pre-AYP-250 / 19 - Pre-AYP-200 / 20 - Pre-AYP-150 
+							--->
+							<cfelseif ListFind(mutuallyExclusivePreAyp, VAL(FORM.payment_type_place) )>
+                                AND 
+                                    spt.id IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#mutuallyExclusivePreAyp#" list="yes"> )
 							<cfelse>
                                 AND 
                                     spt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.payment_type_place)#">
