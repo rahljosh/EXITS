@@ -341,7 +341,7 @@
                  <cfif qGetStudentInfo.studentID eq 28304>
 					 <cfif VAL(qGetStatesRequested.state1) OR VAL(qGetStatesRequested.recordcount)>
                       <tr class="displayNone additionalInformation">
-                        <td align="right">State: </td>
+                        <td align="right">State (if needed): </td>
                         <td>
                           <cfquery name="get_states" datasource="#application.dsn#">
                                 SELECT state, statename

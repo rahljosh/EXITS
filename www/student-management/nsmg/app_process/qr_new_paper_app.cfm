@@ -75,9 +75,9 @@
 
 <cfquery name="insert_first_page" datasource="mysql">
 	INSERT INTO smg_students 
-		(uniqueid, familylastname, firstname, dob, sex, countryresident, active, app_current_status, dateapplication, entered_by, app_indicated_program, intrep)
+		(uniqueid, familylastname, firstname, dob, sex, countryresident, active, app_current_status, dateapplication, entered_by, app_indicated_program, intrep, companyid)
 	VALUES 
-		('#form.uniqueid#', '#form.familylastname#', '#form.firstname#', #CreateODBCDate(form.dob)#, '#form.sex#', #form.Countryresidence#, '1', '8', #now()#, '#client.userid#', '#form.app_indicated_program#', '#form.intrep#')
+		('#form.uniqueid#', '#form.familylastname#', '#form.firstname#', #CreateODBCDate(form.dob)#, '#form.sex#', #form.Countryresidence#, '1', '8', #now()#, '#client.userid#', '#form.app_indicated_program#', '#form.intrep#', #client.companyid#)
 </cfquery>
 
 <!--- APPLICATION RECEIVED - SEND OUT NOTIFICATION --->

@@ -86,7 +86,8 @@
 			#get_letter_info.ar_address#<br>
 			<Cfif get_letter_info.ar_address2 is ''><cfelse>#get_letter_info.ar_address2#<br></Cfif>
 			#get_letter_info.ar_city#, #get_letter_info.ar_state# #get_letter_info.ar_zip#<br>
-            <Cfif get_letter_info.ar_phone is ''><cfelse>Phone: &nbsp; #get_letter_info.ar_phone#<br></Cfif>
+            <Cfif get_letter_info.regionname is not ''>Region: #get_letter_info.regionname#<br></Cfif>
+			<Cfif get_letter_info.ar_phone is ''><cfelse>Phone: &nbsp; #get_letter_info.ar_phone#<br></Cfif>
             <Cfif get_letter_info.ar_email is ''><cfelse>Email: &nbsp; #get_letter_info.ar_email#<br></Cfif>
 		</div></td>
 	</tr>
