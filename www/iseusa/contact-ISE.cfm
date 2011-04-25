@@ -30,7 +30,14 @@
       Local: 631.893.4540<br />
       Fax: 631.893.4550<br />
       <br />
-    </p>
+   <strong>ISE's contact in China:</strong><br />
+	Brian Feng<br />
+	Chief Representative<br />
+	FLS CHINA OFFICE<br />
+	office:86-10-6271 2322<br />
+	fax:86-10-6271 6511<br />
+	E-mail: <a href="mailto:flschinabrian@gmail.com">flschinabrian@gmail.com</a><br />
+    
   <!-- end whtMiddle --></div>
   <div class="whtBottom"></div>
 <!-- end lead --></div>
