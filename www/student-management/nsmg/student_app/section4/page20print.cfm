@@ -127,33 +127,38 @@
 				<b>Note: There will be additional charges if you make a regional choice, please contact your representative for details.</b><br>
 				<br>
 				
-				<table width="100%" border=0 cellpadding=0 cellspacing=0 align="center">
-					<tr>
-						<td valign="top"><cfif check_guarantee.app_region_guarantee EQ '1'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>Region 1 - East<br><img src="#path#pics/region1.gif"></td>
-						<td valign="top"><cfif check_guarantee.app_region_guarantee EQ '2'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>Region 2 - South<br><img src="#path#pics/region2.gif"></td>
-					</tr>
-					<tr>
-						<td valign="top"><cfif check_guarantee.app_region_guarantee EQ '3'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>Region 3 - Central<br><img src="#path#pics/region3.gif"></td>
-						<td valign="top"><cfif check_guarantee.app_region_guarantee EQ '4'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>Region 4 - Rocky Mountain<br><img src="#path#pics/region4.gif"></td>
-						<td valign="top"><cfif check_guarantee.app_region_guarantee EQ '5'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>Region 5 - West<br><img src="#path#pics/region5.gif"></td>
-					</tr>
-				</table>			
-			</td>
-		</tr>
-	</table><br><br>
-	
-	<table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
-		<tr>
-			<td width="315"><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-			<td width="40"></td>
-			<td width="315"><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-		</tr>
-		<tr>
-			<td>Student's Name (print clearly)</td>
-			<td></td>
-			<td>Student's Signature</td>
-		</tr>
-	</table><br><br>
+				   <Cfif studentid neq 28304>
+                    <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
+                        <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
+                        <tr>
+                            <td valign="top"><input type="radio" name="region_choice" value="1" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '1'>checked</cfif>>Region 1 - East<br><img src="../pics/region1.gif"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="2" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '2'>checked</cfif>>Region 2 - South<br><img src="../pics/region2.gif"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><input type="radio" name="region_choice" value="3" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '3'>checked</cfif>>Region 3 - Central<br><img src="../pics/region3.gif"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="4" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '4'>checked</cfif>>Region 4 - Rocky Mountain<br><img src="../pics/region4.gif"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="5" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '5'>checked</cfif>>Region 5 - West<br><img src="../pics/region5.gif"></td>
+                        </tr>
+                    </table>
+                  <cfelse>
+                    
+                    <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
+                        <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
+                        <tr>
+                            <td valign="top"><input type="radio" name="region_choice" value="6" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '6'>checked</cfif>>West<br><img src="../pics/west.jpg"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="7" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '7'>checked</cfif>>Central<br><img src="../pics/central.jpg"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><input type="radio" name="region_choice" value="8" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '8'>checked</cfif>>South<br><img src="../pics/south.jpg"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="9" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '9'>checked</cfif>>East<br><img src="../pics/east.jpg"></td>
+                           
+                        </tr>
+                    </table>	
+                </Cfif>    			
+                    </div>
+                </td>
+            </tr>
+        </table><br><br>
 	<table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
 		<tr>
 			<td width="315"><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>

@@ -91,7 +91,8 @@
 			if ( FORM.companyID NEQ 6 AND NOT VAL(FORM.programID) ) {
 				SESSION.formErrors.Add('You must select a program');
 			}
-			if ( FORM.directPlace EQ 3 ) {
+			
+			if ( FORM.companyID NEQ 6 AND FORM.directPlace EQ 3)  {
 				SESSION.formErrors.Add('Please indicate if this is a direct placement');
 			}
 
@@ -337,6 +338,23 @@
                           bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" /> 
                     </td>
                 </tr>
+                 <cfif qGetStudentInfo.studentID eq 28304>
+					 <cfif VAL(qGetStatesRequested.state1) OR VAL(qGetStatesRequested.recordcount)>
+                      <tr class="displayNone additionalInformation">
+                        <td align="right">State: </td>
+                        <td>
+                          <cfquery name="get_states" datasource="#application.dsn#">
+                                SELECT state, statename
+                                FROM smg_states
+                                ORDER BY id
+                            </cfquery>
+                            <cfselect NAME="stateGurantee" query="get_states" value="state" display="statename" queryPosition="below">
+                                <option></option>
+                            </cfselect>
+                        </td>
+                    </tr>
+                    </cfif>
+                </cfif>
                 <tr class="displayNone additionalInformation">
                     <td align="right">Program: </td>
                     <td>
@@ -348,14 +366,15 @@
                         </select>
                     </td>
                 </tr>
-                <Cfif qGetStudentInfo.studentid eq 28304>
-                <tr class="displayNone additionalInformation">
-                    <td align="right">Direct Placement: </td>
-                    <td>
-                       <input type="radio" name="directPlace" value=1>Yes &nbsp;&nbsp;&nbsp;<input type="radio" name="directPlace" value=0>No 
-                    </td>
-                </tr>
-                </Cfif>
+                
+				
+                    <tr class="displayNone additionalInformation">
+                        <td align="right">Direct Placement: </td>
+                        <td>
+                           <input type="radio" name="directPlace" value=1>Yes &nbsp;&nbsp;&nbsp;<input type="radio" name="directPlace" value=0>No 
+                        </td>
+                    </tr>
+                  
                 <tr>
                     <td align="center" colspan="2">
                         <input name="submit" type=image src="pics/approve.gif" alt='Approve Application'>		
