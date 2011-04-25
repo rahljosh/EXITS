@@ -6,7 +6,7 @@ Move Region/Program <br /><br />
 
 <!--- REGION --->
 
-<!----
+<!---
 <cfset RegionFrom = 1387>
 <cfset RegionTo = 1157>
 <cfset reason = "Moved as Per Bob Keegan request">
@@ -162,3 +162,4 @@ Move Region/Program <br /><br />
 <cfoutput>
 	#qGetStudents.recordCount# records updated.
 </cfoutput>
+--->

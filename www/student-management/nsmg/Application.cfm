@@ -75,7 +75,7 @@ used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
 
 <!----Take Down site except for certain users
 <cfif not listFind("1,13282,7178", client.userid)>
-	Acess to EXITS has been currently shut down for a plan
+	THE SITE IS TEMPORARILY DOWN FOR MAINTENANCE
     <cfabort>
 </cfif>
 ---->

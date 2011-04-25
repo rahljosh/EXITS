@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="app.css">
-	<title>ISE - System Error</title>
+	<title>SMG - System Error</title>
 </head>
 <body>
 
