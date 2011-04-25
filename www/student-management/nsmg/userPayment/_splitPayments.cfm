@@ -113,7 +113,7 @@
 		<td colspan=6 bgcolor="##010066"><font color="white"><strong>Supervised Students &nbsp; - &nbsp; #get_supervised_students.recordcount#</strong></font></td>
 	</tr>
 	<tr bgcolor="##CCCCCC">
-		<td><input type="checkbox" value="Check All" onClick="this.value=check2(this.form.supervised_selected_student)"></td>
+		<td><input type="checkbox" value="Check All" onClick="this.value=check2(this.form.supervisedStudentIDList)"></td>
 		<Td>ID</Td>
 		<td>Last Name, First Name</td>
 		<td>Program</td>
@@ -121,7 +121,7 @@
 	</tr>
 	<cfloop query="get_supervised_students">
 	<tr>
-		<td><input type="checkbox" name="supervised_selected_student" value=#studentid#></td>
+		<td><input type="checkbox" name="supervisedStudentIDList" value=#studentid#></td>
 		<Td>
 			<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#studentid#</a>
         </Td>
@@ -148,7 +148,7 @@
 		<td colspan=6 bgcolor="##010066"><font color="white"><strong>Placed Students &nbsp; - &nbsp; #get_placed_students.recordcount#</strong></font></td>
 	</tr>
 	<tr bgcolor="##CCCCCC">
-		<td><input type="checkbox" value="Check All" onClick="this.value=check(this.form.placed_selected_student)"></td>
+		<td><input type="checkbox" value="Check All" onClick="this.value=check(this.form.placedStudentIDList)"></td>
 		<Td>ID</Td>
 		<td>Last Name, First Name</td>
 		<td>Program</td>
@@ -156,7 +156,7 @@
 	</tr>
 	<cfloop query="get_placed_students">
 	<tr>
-		<td><input type="checkbox" name="placed_selected_student" value=#studentid#></td>
+		<td><input type="checkbox" name="placedStudentIDList" value=#studentid#></td>
 		<td>
         	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#studentid#</a>
 		</Td>
