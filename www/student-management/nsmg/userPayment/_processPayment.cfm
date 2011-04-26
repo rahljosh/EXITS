@@ -455,7 +455,12 @@
 				</tr>
 
                 <cfloop list="#FORM.placedStudentIDList#" index="x">
-
+					
+                    <cfscript>
+						// Check if paperwork was received for Fast Start, Early Placement, Paperwork Bonus
+						vCheckPlacementPaperwork = APPLICATION.CFC.STUDENT.checkPlacementPaperwork(studentID=x, paymentTypeID=qGetPlacementPaymentType.id);
+					</cfscript>
+                    
                     <cfquery name="qGetStudentInfo" dbtype="query">
                         SELECT 
                             studentid, 
@@ -536,6 +541,13 @@
                                     <cfif qCheckPlacedCharges.recordcount>
                                         <br />
                                         #qCheckPlacedCharges.type# was paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# - Program #qCheckPlacedCharges.programname# - Rep: #qCheckPlacedCharges.firstname# #qCheckPlacedCharges.lastname# - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#.
+                                    </cfif>
+                                    
+                                    <cfif LEN(vCheckPlacementPaperwork)>
+                                    	<p style="color:##F00; margin:5px 0px 5px 0px;">
+	                                        Placement Paperwork needing attention: <br />
+                                        </p>
+                                        #vCheckPlacementPaperwork#
                                     </cfif>
                                 </td>
                                 <td valign="top"><cfinput type="text" name="#x#place_amount" size="6" value="#qGetPlacementPaymentType.amount#" required="yes" message="Oops! You forgot to enter the amount for student #x#."></td>

@@ -165,8 +165,9 @@
 
 
 	<cffunction name="getHostMemberByID" access="public" returntype="query" output="false" hint="Gets a host member by ID">
-    	<cfargument name="childID" type="numeric" hint="Child ID is required">
+    	<cfargument name="childID" default="0" type="numeric" hint="Child ID is not required">
         <cfargument name="hostID" default="0" hint="HostID is not required">
+        <cfargument name="liveAtHome" default="" hint="liveAtHome is not required">
         
         <cfquery 
 			name="qGetHostMemberByID" 
@@ -188,11 +189,21 @@
                 FROM 
                     smg_host_children
                 WHERE
-                	childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.childID#">
-                    
+                	1 = 1
+                
+                <cfif VAL(ARGUMENTS.childID)>
+                    AND
+                        childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.childID#">
+                </cfif>
+                
                 <cfif VAL(ARGUMENTS.hostID)>
-                AND
-                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                    AND
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.liveAtHome)>
+                    AND
+                        liveAtHome = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.liveAtHome)#">
                 </cfif>
 
 		</cfquery>

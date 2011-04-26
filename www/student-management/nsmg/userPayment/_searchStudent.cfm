@@ -1,4 +1,14 @@
-<cfoutput>
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		_searchStudent.cfm
+	Author:		Marcus Melo
+	Date:		April 20, 2011
+	Desc:		Searches for a student by name or ID
+				
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill extra output --->
+<cfsilent>
 
     <!--- Param URL Variables --->
 	<cfparam name="URL.orderBy" default="">
@@ -60,7 +70,8 @@
                  
     </cfquery>
 
-<HEAD>
+</cfsilent>
+
 <SCRIPT LANGUAGE="JavaScript">
 	<!-- Begin
 	function countChoices(obj) {
@@ -80,7 +91,7 @@
 	//  End -->
 </script>
 
-</HEAD>
+<cfoutput>
 
 <div class="application_section_header">Student Finder</div>
 
