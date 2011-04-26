@@ -17,6 +17,11 @@
     <cfparam name="FORM.amount" default="0">
     <cfparam name="FORM.comments" default="0">
 
+	<!--- Representative not selected - Display error message --->
+	<cfif NOT VAL(FORM.userID)>
+		<cflocation url="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&displayIncentiveTripError=1" addtoken="no">
+	</cfif>
+
     <cfquery name="qGetTripInfo" datasource="MySQL">
         SELECT 
         	id,

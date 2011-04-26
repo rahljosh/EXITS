@@ -23,10 +23,12 @@
     <cfparam name="URL.selected" default="" />
     <cfparam name="URL.search" default="" />
     <cfparam name="URL.searchStu" default="">
+    <cfparam name="URL.displaySplitPaymentError" default="0">
+    <cfparam name="URL.displayIncentiveTripError" default="0">
 	<!--- Search --->
     <cfparam name="URL.placing" default="" />
     <cfparam name="URL.supervising" default="" />
-    <cfparam name="URL.student" default="">
+    <cfparam name="URL.student" default="">    
     
 </cfsilent>
 	

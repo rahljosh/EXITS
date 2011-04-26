@@ -397,6 +397,245 @@
 
 	<!--- ------------------------------------------------------------------------- ----
 		
+		PLACEMENT PAPERWORK
+	
+	----- ------------------------------------------------------------------------- --->
+
+	<cffunction name="checkPlacementPaperwork" access="public" returntype="string" output="false" hint="Check if placement paperwork was received by deadline">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+		<cfargument name="paymentTypeID" default="0" hint="Payment Type ID">
+			
+        <cfquery 
+			name="qCheckPlacementPaperwork" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    studentID,
+                    hostID,
+                    date_pis_received,
+                    doc_full_host_app_date,
+                    doc_letter_rec_date,
+                    doc_rules_rec_date,
+                    doc_photos_rec_date,
+                    doc_school_profile_rec,
+                    doc_conf_host_rec,
+                    doc_date_of_visit,
+                    doc_ref_form_1,
+                    doc_ref_check1,
+                    doc_ref_form_2,
+                    doc_ref_check2,
+                    doc_income_ver_date,
+                    doc_school_accept_date,
+                    doc_school_sign_date,
+                    <!--- Non-Traditional Placement / Extra Paperwork --->
+                    doc_single_place_auth,
+                    doc_single_ref_form_1,
+                    doc_single_ref_check1,
+                    doc_single_ref_form_2,
+                    doc_single_ref_check2,
+                    doc_conf_host_rec2,
+                    doc_date_of_visit2
+                FROM 
+                	smg_students
+                WHERE 
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
+		</cfquery>
+        
+        <!---
+			Fast Track Bonus $1500 - Paperwork must be received by April 15th
+			Early Placement $1000 - Paperwork must be received by June 1st (April 16th - June 1st)
+			Paperwork Bunus $500 - Paperwork must be received by August 1st (June 2nd - August 1st)		
+			
+			Pre-AYP Bonus $250 - Placed by May 10th
+			Pre-AYP Bonus $200 - Placed by June 1st
+			Pre-AYP Bonus $150 - Placed by June 24th
+			
+			Non-Traditional Placement (Single Parent)
+				- Single Person Placement Verification
+				- Single Person Placement Reference 1
+				- Single Person Placement Reference 2
+				- 2nd Confidential Host Family Visit Form
+		--->
+			
+        <cfscript>
+			// Declare return structure
+			returnMessage = '';
+			
+			// Store deadline
+			setDeadline = '';
+			
+			// Stores total family members
+			totalFamilyMembers =  0;
+			
+			// Check if we are processing Fast Start, Early Placement, Paperwork Bonus, Pre-AYP 250, Pre-AYP 200, Pre-AYP-150
+			switch(ARGUMENTS.paymentTypeID) {
+				
+				// Set deadline based on payment type
+				
+				// Fast Track Bonus
+				case 17: {
+					setDeadline = '04/15/' &  Year(now());
+					break;
+				}
+				// Early Placement Bonus
+				case 15: {
+					setDeadline = '06/01/' &  Year(now());
+					break;
+				}
+				// Paperwork Bonus
+				case 9: {
+					setDeadline = '08/01/' &  Year(now());
+					break;
+				}
+				
+				// Pre-AYP Bonus $250
+				case 18: {
+					setDeadline = '05/10/' &  Year(now());
+					break;
+				}
+				// Pre-AYP Bonus $200
+				case 19: {
+					setDeadline = '06/01/' &  Year(now());
+					break;
+				}
+				// Pre-AYP Bonus $150
+				case 20: {
+					setDeadline = '06/24/' &  Year(now());
+					break;
+				}
+
+			}
+			
+			// Check if we have a deadline
+			if ( IsDate(setDeadline) ) {
+				
+				// Get Host Family Information
+				qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=VAL(qCheckPlacementPaperwork.hostID));
+	
+				// Check if there is a host father
+				if ( LEN(qGetHostInfo.fatherFirstName) ) {
+					totalFamilyMembers = totalFamilyMembers + 1;	 
+				}
+				
+				// Check if there is a host mother
+				if ( LEN(qGetHostInfo.motherFirstName) ) {
+					totalFamilyMembers = totalFamilyMembers + 1;	 
+				}
+				
+				// Get Host Children
+				qGetChildrenAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qCheckPlacementPaperwork.hostID,liveAtHome=1);
+	
+				totalFamilyMembers = totalFamilyMembers + qGetChildrenAtHome.recordCount;
+				
+				// Check PaperWork
+
+				// Placement Information Sheet
+				if ( NOT LEN(qCheckPlacementPaperwork.date_pis_received) OR qCheckPlacementPaperwork.date_pis_received GT setDeadline ) {
+					returnMessage = returnMessage & 'Placement Information Sheet has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.date_pis_received, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Application Received
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_full_host_app_date) OR qCheckPlacementPaperwork.doc_full_host_app_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Application has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_full_host_app_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Letter Received
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_letter_rec_date) OR qCheckPlacementPaperwork.doc_letter_rec_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Letter has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_letter_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Rules Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_rules_rec_date) OR qCheckPlacementPaperwork.doc_rules_rec_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Rules Form has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_rules_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Photos
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_photos_rec_date) OR qCheckPlacementPaperwork.doc_photos_rec_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Photos has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_photos_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// School & Community Profile Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_school_profile_rec) OR qCheckPlacementPaperwork.doc_school_profile_rec GT setDeadline ) {
+					returnMessage = returnMessage & 'School & Community Profile Form has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_school_profile_rec, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Confidential Host Family Visit Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec) OR qCheckPlacementPaperwork.doc_conf_host_rec GT setDeadline ) {
+					returnMessage = returnMessage & 'Confidential Host Family Visit Form has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Reference Form 1
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_ref_form_1) OR qCheckPlacementPaperwork.doc_ref_form_1 GT setDeadline ) {
+					returnMessage = returnMessage & 'Reference Form 1 has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_ref_form_1, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Reference Form 2
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_ref_form_2) OR qCheckPlacementPaperwork.doc_ref_form_2 GT setDeadline ) {
+					returnMessage = returnMessage & 'Reference Form 2 has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Income Verification Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_income_ver_date) OR qCheckPlacementPaperwork.doc_income_ver_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Income Verification Form has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_income_ver_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// School Acceptance Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_school_accept_date) OR qCheckPlacementPaperwork.doc_school_accept_date GT setDeadline ) {
+					returnMessage = returnMessage & 'School Acceptance Form has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_school_accept_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Host Father CBC
+				if ( LEN(qGetHostInfo.fatherFirstName) AND ( NOT LEN(qGetHostInfo.fathercbc_form) OR qGetHostInfo.fathercbc_form GT setDeadline ) ) {
+					returnMessage = returnMessage & 'Host Father CBC has not been received or received after deadline #DateFormat(qGetHostInfo.fathercbc_form, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Host Mother CBC
+				if ( LEN(qGetHostInfo.motherFirstName) AND ( NOT LEN(qGetHostInfo.mothercbc_form) OR qGetHostInfo.mothercbc_form GT setDeadline ) ) {
+					returnMessage = returnMessage & 'Host Mother CBC has not been received or received after deadline #DateFormat(qGetHostInfo.mothercbc_form, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Host Member CBC
+				
+				// Non-Traditional Placement - Extra Documents
+				if ( totalFamilyMembers EQ 1 ) {
+
+					// Single Person Placement Verification
+					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_place_auth) OR qCheckPlacementPaperwork.doc_single_place_auth GT setDeadline ) {
+						returnMessage = returnMessage & 'Single Person Placement Verification has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_single_place_auth, 'mm/dd/yyyy')#. <br />'; 	
+					}
+
+					// Single Person Placement Reference 1
+					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_1) OR qCheckPlacementPaperwork.doc_single_ref_form_1 GT setDeadline ) {
+						returnMessage = returnMessage & 'Single Person Placement Reference 1 has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_1, 'mm/dd/yyyy')#. <br />'; 	
+					}
+
+					// Single Person Placement Reference 2
+					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_2) OR qCheckPlacementPaperwork.doc_single_ref_form_2 GT setDeadline ) {
+						returnMessage = returnMessage & 'Single Person Placement Reference 2 has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
+					}
+					
+					// 2nd Confidential Host Family Visit Form
+					if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec2) OR qCheckPlacementPaperwork.doc_conf_host_rec2 GT setDeadline ) {
+						returnMessage = returnMessage & '2nd Confidential Host Family Visit Form has not been received or received after deadline #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec2, 'mm/dd/yyyy')#. <br />'; 	
+					}
+					
+				} // Non-Traditional Placement - Extra Documents
+
+			} // Check if we have a deadline
+			
+			return returnMessage;
+		</cfscript>
+        
+	</cffunction>
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		END OF PLACEMENT PAPERWORK
+	
+	----- ------------------------------------------------------------------------- --->
+
+
+	<!--- ------------------------------------------------------------------------- ----
+		
 		PROJECT HELP
 	
 	----- ------------------------------------------------------------------------- --->

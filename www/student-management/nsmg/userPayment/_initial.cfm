@@ -176,13 +176,13 @@
 	<cfif URL.search EQ 0>
         <tr>
             <td colspan="2" align="center">
-                <img src="pics/error.gif"><font color="##CC3300">Please enter one of the two criterias below.</font>
+                <img src="pics/error.gif" width="20" height="20" border="0"><font color="##CC3300">Please enter one of the two criterias below.</font>
             </td>
         </tr>                
 	<cfelseif URL.search EQ 2>
         <tr>
             <td colspan="2" align="center">
-	              <img src="pics/error.gif"><font color="##CC3300">You have filled more then one search box, please use only one criteria for searching.</font>
+	              <img src="pics/error.gif" width="20" height="20" border="0"><font color="##CC3300">You have filled more then one search box, please use only one criteria for searching.</font>
             </td>
         </tr>                
 	</cfif>
@@ -213,13 +213,13 @@
 	<cfif URL.selected EQ 0>
         <tr>
             <td colspan="2" align="center">
-                <img src="pics/error.gif"><font color="##CC3300">Please select a representative or student from the drop downs below.</font>
+                <img src="pics/error.gif" width="20" height="20" border="0"><font color="##CC3300">Please select a representative or student from the drop downs below.</font>
             </td>
         </tr>                
 	<cfelseif URL.selected EQ 2>
         <tr>
             <td colspan="2" align="center">
-	              <img src="pics/error.gif"><font color="##CC3300">You have selected more then one representative, please only select one.</font>
+	              <img src="pics/error.gif" width="20" height="20" border="0"><font color="##CC3300">You have selected more then one representative, please only select one.</font>
             </td>
         </tr>                
 	</cfif>
@@ -278,13 +278,13 @@
 	<cfif URL.searchStu EQ 0>
         <tr>
             <td colspan="2" align="center">
-                <img src="pics/error.gif"><font color="##CC3300">Please enter one of the two criterias below.</font>
+                <img src="pics/error.gif" width="20" height="20" border="0"><font color="##CC3300">Please enter one of the two criterias below.</font>
             </td>
         </tr>                
 	<cfelseif URL.searchStu EQ 2>
         <tr>
             <td colspan="2" align="center">
-	              <img src="pics/error.gif"><font color="##CC3300">You have filled more then one search box, please use only one criteria for searching.</font>
+	              <img src="pics/error.gif" width="20" height="20" border="0"><font color="##CC3300">You have filled more then one search box, please use only one criteria for searching.</font>
             </td>
         </tr>                
 	</cfif>
@@ -307,12 +307,20 @@
 	<tr>
 		<td class=thin-border-bottom bgcolor="##010066" colspan="2"><font color="white"><strong>Split Payments</strong></font></td>
 	</tr>	
+    <!--- Error Messages --->
+	<cfif VAL(URL.displaySplitPaymentError)>
+        <tr>
+            <td colspan="2" align="center">
+                <img src="pics/error.gif" width="20" height="20" border="0"><font color="##CC3300">Please select a representative</font>
+            </td>
+        </tr>                
+	</cfif>    
 	<tr>
 		<td align="right">Select the Rep: </td><td>
 			<select name="user">
 			<option value=0></option>
 			<cfloop query="qGetReps">
-			<option value="#userid#"<Cfif isDefined('URL.s')><cfif URL.s is #userid#>selected</cfif></Cfif>>#lastname#, #firstname# (#userid#)</option>
+			<option value="#userid#"<Cfif isDefined('URL.s')><cfif URL.s is userid>selected</cfif></Cfif>>#lastname#, #firstname# (#userid#)</option>
 			</cfloop>
 			</select>
 		</td>
@@ -328,6 +336,14 @@
 	<tr>
 		<td class=thin-border-bottom bgcolor="##010066" colspan="2"><font color="white"><strong>Incentive Trip Payments</strong></font></td>
 	</tr>	
+    <!--- Error Messages --->
+	<cfif VAL(URL.displayIncentiveTripError)>
+        <tr>
+            <td colspan="2" align="center">
+                <img src="pics/error.gif" width="20" height="20" border="0"><font color="##CC3300">Please select a representative</font>
+            </td>
+        </tr>                
+	</cfif>    
 	<tr>
 		<td align="right">Select the Rep: </td>
         <td>
