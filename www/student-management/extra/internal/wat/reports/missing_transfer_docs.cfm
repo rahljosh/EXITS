@@ -14,7 +14,7 @@
         FROM 
         	smg_users
         WHERE         
-        	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8"> 
+        	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
         AND 
         	businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
         ORDER BY 
@@ -33,11 +33,10 @@
 <cfif isDefined('form.submitted')>
 	<cfquery name="missingDocs" datasource="mysql">
     SELECT ecpc.candidateid, ecpc.hostcompanyid, ecpc.transNewHousingAddress, ecpc.transNewJobOffer, ecpc.transSevisUpdate,
-    ec.firstname, ec.lastname, ec.programid, ec.uniqueid,
+    ec.firstname, ec.lastname, ec.email, ec.programid, ec.uniqueid,
     u.businessname, u.email as agent_email,
     p.programname
     from extra_candidate_place_company ecpc
-
     LEFT JOIN extra_candidates ec on ec.candidateid = ecpc.candidateid
     LEFT JOIN smg_users u on u.userid = ec.intrep
     LEFT JOIN smg_programs p on p.programid = ec.programid
@@ -56,7 +55,6 @@
 
 </cfif>
 <Cfoutput>
-
 
 <form action="index.cfm?curdoc=reports/missing_transfer_docs" method="post">
  <input type="hidden" name="submitted" value="1" />
@@ -125,7 +123,7 @@
                 <td align="left" class="style1"><strong>ID</strong></td>
                 <td align="left" class="style1"><strong>Last Name</strong></td>
                 <td align="left" class="style1"><strong>First Name</strong></td>
-                <td align="left" class="style1"><strong>Host Company</strong></td>  
+                <td align="left" class="style1"><strong>Placement Information</strong></td>  
                 <td align="left" class="style1" width="130"><strong>Missing Trans Docs</strong></td>	  
                	
             </tr>
@@ -137,20 +135,21 @@
             </cfif>
             
             <cfloop query="missingDocs">
-            <Cfquery name="hostCompany" datasource="mysql">
-            select name, email
-            from extra_hostcompany
-            where hostcompanyid = #hostcompanyid#
-            </cfquery>
+            	<cfquery name="HostCompanyInfo" datasource="mysql">
+                select name, email
+                from extra_hostcompany
+                where hostcompanyid = #hostcompanyid#
+                </cfquery>
                 <tr <cfif missingDocs.currentrow mod 2>bgcolor="##E4E4E4"</cfif>>
-                    <td valign="top" class="style1">#missingDocs.businessname#</td>
-                    <td valign="top" class="style1">##missingDocs.candidateid#</td>
                     <td valign="top" class="style1">
-                    <a href="?curdoc=candidate/candidate_info&uniqueid=#missingDocs.uniqueID#" target="_blank" class="style4">#missingDocs.lastname#</a> </td>
+                    <a href="mailto:#missingDocs.agent_email#" class="style4">#missingDocs.businessname#</a> </td>
+                    <td valign="top" class="style1"><a href="?curdoc=candidate/candidate_info&uniqueid=#missingDocs.uniqueID#" target="_blank" class="style4">		#missingDocs.candidateid#</td>
                     <td valign="top" class="style1">
-                    <a href="?curdoc=candidate/candidate_info&uniqueid=#missingDocs.uniqueID#" target="_blank" class="style4">#missingDocs.firstname#</a> </td>
+                    <a href="mailto:#missingDocs.email#" class="style4">#missingDocs.lastname#</a> </td>
                     <td valign="top" class="style1">
-                    <a href="mailto:#hostCompany.email#" class="style4">#hostCompany.name#</a> </td>
+                    <a href="mailto:#missingDocs.email#" class="style4">#missingDocs.firstname#</a> </td>
+                    <td valign="top" class="style1">
+                    <a href="mailto:#HostCompanyInfo.email#" class="style4">#HostCompanyInfo.name#</a> </td>
                     <td valign="top" class="style1">
                         <cfif NOT VAL(missingDocs.transNewHousingAddress)><font color="##CC0000">Housing Address</font><br /></cfif>
                         <cfif NOT VAL(missingDocs.transNewJobOffer)><font color="##CC0000">Job Offer</font><br /></cfif>
