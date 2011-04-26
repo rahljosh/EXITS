@@ -6,6 +6,7 @@
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
     <Cfparam name="missingdocs.recordcount" default="0">
+    <Cfparam name="url.orderBy" default="intrep">
     
     <cfquery name="qGetIntlRepList" datasource="MySql">
         SELECT 
@@ -33,10 +34,11 @@
 <cfif isDefined('form.submitted')>
 	<cfquery name="missingDocs" datasource="mysql">
     SELECT ecpc.candidateid, ecpc.hostcompanyid, ecpc.transNewHousingAddress, ecpc.transNewJobOffer, ecpc.transSevisUpdate,
-    ec.firstname, ec.lastname, ec.email, ec.programid, ec.uniqueid,
+    ec.firstname, ec.lastname, ec.email, ec.programid, ec.uniqueid, hc.name as hostCompanyName, hc.email as hostCompanyEmail,
     u.businessname, u.email as agent_email,
     p.programname
     from extra_candidate_place_company ecpc
+    JOIN extra_hostcompany hc on hc.hostcompanyid = ecpc.hostcompanyid
     LEFT JOIN extra_candidates ec on ec.candidateid = ecpc.candidateid
     LEFT JOIN smg_users u on u.userid = ec.intrep
     LEFT JOIN smg_programs p on p.programid = ec.programid
@@ -50,7 +52,7 @@
     <Cfif form.userid gt 0>
     AND u.userid = #form.userid#
     </Cfif>
-    order by u.businessname, ec.programid
+    order by #url.orderby#
     </cfquery>
 
 </cfif>
@@ -119,11 +121,11 @@
                         
         <table width=99% cellpadding="4" align="center" cellspacing=0>
             <tr bgcolor="##FFFFCC">
-                <td align="left" class="style1"><strong>Intl. Rep.</strong></td>	 
-                <td align="left" class="style1"><strong>ID</strong></td>
-                <td align="left" class="style1"><strong>Last Name</strong></td>
-                <td align="left" class="style1"><strong>First Name</strong></td>
-                <td align="left" class="style1"><strong>Placement Information</strong></td>  
+                <td align="left" class="style1"><strong><a href="index.cfm?curdoc=reports/missing_transfer_docs&orderby=intrep"><font color="##000000">Intl. Rep.</strong></td>	 
+                <td align="left" class="style1"><strong><a href="index.cfm?curdoc=reports/missing_transfer_docs&orderby=candidateID"><font color="##000000">ID</strong></td>
+                <td align="left" class="style1"><strong><a href="index.cfm?curdoc=reports/missing_transfer_docs&orderby=lastname"><font color="##000000">Last Name</strong></td>
+                <td align="left" class="style1"><strong><a href="index.cfm?curdoc=reports/missing_transfer_docs&orderby=firstname"><font color="##000000">First Name</strong></td>
+                <td align="left" class="style1"><strong><a href="index.cfm?curdoc=reports/missing_transfer_docs&orderby=hostCompanyName"><font color="##000000">Placement Information</strong></td>  
                 <td align="left" class="style1" width="130"><strong>Missing Trans Docs</strong></td>	  
                	
             </tr>
@@ -149,7 +151,7 @@
                     <td valign="top" class="style1">
                     <a href="mailto:#missingDocs.email#" class="style4">#missingDocs.firstname#</a> </td>
                     <td valign="top" class="style1">
-                    <a href="mailto:#HostCompanyInfo.email#" class="style4">#HostCompanyInfo.name#</a> </td>
+                    <a href="mailto:#missingDocs.hostCompanyemail#" class="style4">#missingDocs.hostCompanyName#</a> </td>
                     <td valign="top" class="style1">
                         <cfif NOT VAL(missingDocs.transNewHousingAddress)><font color="##CC0000">Housing Address</font><br /></cfif>
                         <cfif NOT VAL(missingDocs.transNewJobOffer)><font color="##CC0000">Job Offer</font><br /></cfif>
