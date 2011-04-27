@@ -283,6 +283,10 @@
                                     <th align="right" style="padding-bottom:5px;">Last Updated:</th>
                                     <td style="padding-bottom:5px;">#DateFormat(qGetHostLead.dateUpdated, 'mm/dd/yyyy')# #TimeFormat(qGetHostLead.dateUpdated, 'hh:mm:tt')# EST</td>
                                 </tr>
+                                <tr>
+                                    <th align="right" style="padding-bottom:5px;">Last Login:</th>
+                                    <td style="padding-bottom:5px;">#DateFormat(qGetHostLead.dateLastLoggedIn, 'mm/dd/yyyy')# #TimeFormat(qGetHostLead.dateLastLoggedIn, 'hh:mm:tt')# EST</td>
+                                </tr>
                             </table>    
                                                     
                         </td>

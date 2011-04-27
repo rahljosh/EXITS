@@ -256,7 +256,7 @@
 				tableBody += '<td>' + state + '</td>';
 				// tableBody += '<td>' + zipCode + '</td>';
 				tableBody += '<td>' + phone + '</td>';
-				tableBody += '<td><a href="mailto:(' + email + ')">' + email + '</a></td>';
+				tableBody += '<td><a href="mailto:' + email + '">' + email + '</a></td>';
 				tableBody += '<td>' + dateCreated + '</td>';
 				tableBody += '<td>' + dateLastLoggedIn + '</td>';
 				tableBody += '<td>' + regionAssigned + '</td>';
