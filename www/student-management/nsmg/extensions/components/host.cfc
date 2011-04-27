@@ -420,6 +420,7 @@
                     hl.hearAboutUs,
                     hl.hearAboutUsDetail,
                     hl.isListSubscriber,
+                    hl.dateLastLoggedIn,
                     hl.dateCreated,
                     hl.dateUpdated,
                     <!--- State --->
@@ -849,8 +850,12 @@
 				
                 <!--- Get Only Leads Entered as of 04/01/2011 --->
                 AND
-                	hl.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="2011/04/01">
-                
+                	(
+                    	hl.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="2011/04/01">
+                	OR
+                    	hl.dateLastLoggedIn IS NOT NULL	
+                	)
+                    
                 <cfif VAL(ARGUMENTS.hasLoggedIn)>
                     AND	
                         hl.dateLastLoggedIn IS NOT NULL
