@@ -129,7 +129,7 @@
 	<td width="50%" align="left" valign="top">
 		<cfform action="reports/state_guarantee_per_region.cfm" method="POST" target="blank">
 			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">State Guarantee Students by Placing Rep.</th></tr>
+				<tr><th colspan="2" bgcolor="##e2efc7">State Preference Students by Placing Rep.</th></tr>
 				<tr align="left">
 					<td valign="top">Program :</td>
 					<td>

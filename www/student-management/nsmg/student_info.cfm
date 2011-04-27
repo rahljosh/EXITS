@@ -125,6 +125,7 @@
     where companyid = #client.companyid#
    	and seasonid = #qProgramInfo.seasonid#
     and insutypeid = #qIntAgent.insurance_typeid#
+
     </cfquery>
     <!----Get Expired Student Programs---->
     <cfquery name="qCheckForExpiredProgram" datasource="#application.dsn#">
@@ -494,10 +495,10 @@
 				<!--- OFFICE USERS ONLY --->
 				<cfif CLIENT.usertype LTE 4> 
 					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
-					<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qStudentInfo.studentID#', 700, 500);" class="nav_bar">Representative Payments</a> 					
-                    <a href="javascript:openPopUp('forms/missing_documents.cfm', 450, 500);" class="nav_bar">Missing Documents</a>
-					<a href="javascript:openPopUp('forms/notes.cfm', 450, 500);" class="nav_bar"><cfif LEN(qStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 	
-                    <a href="javascript:openPopUp('forms/ssp.cfm?studentid=#client.studentid#', 600, 450);" class="nav_bar">Student Services Project</a>	
+					<a href="" onClick="javascript: win=window.open('forms/supervising_student_history.cfm?studentID=#qStudentInfo.studentID#', 'Settings', 'height=400, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Rep. Payments</a> 					
+					<a href="" onClick="javascript: win=window.open('forms/missing_documents.cfm', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
+					<a href="" onClick="javascript: win=window.open('forms/notes.cfm', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif LEN(qStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 	
+                    <a href="" onClick="javascript: win=window.open('forms/ssp.cfm?studentid=#client.studentid#', 'Settings', 'height=450, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Services Project</a>	
 				</cfif> 
 				<!--- OFFICE - MANAGERS ONLY --->
 				<cfif CLIENT.usertype LTE 5> 
@@ -543,7 +544,7 @@
 							#qCheckForExpiredProgram.programname#
 							<input type="hidden" name="program" value="#qCheckForExpiredProgram.programid#">
 						<cfelse>
-							<select name="program" <cfif FORM.edit EQ 'no'>disabled</cfif>>
+							<select name="program" onChange="document.getElementById('program_history').style.display='table-row';" <cfif FORM.edit EQ 'no'>disabled</cfif>>
 							<option value="0">Unassigned</option>
 							<cfloop query="qProgramInfo">
 							<cfif qStudentInfo.programid EQ programid><option value="#programid#" selected>#programname#</option><cfelse>
@@ -553,7 +554,7 @@
 					</td>
 				</tr>
 				<!--- reason for changing programs --->
-				<tr id="program_history" bgcolor="FFBD9D">
+				<tr id="program_history" bgcolor="FFBD9D" style="display: none;">
 					<td>Reason:</td>
 					<td><input type="text" size="20" name="program_reason"></td>
 				</tr>
@@ -587,7 +588,7 @@
 				<tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Region  <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('forms/stu_region_history.cfm?unqid=#uniqueid#');"> History </a> ]</font></cfif></td></tr>
 				<tr>
                 	<td width="140px">Region :</td>
-					<td><select name="region" onChange="loadOptions('rguarantee'); Guaranteed();" <cfif FORM.edit EQ 'no'> disabled </cfif> >
+					<td><select name="region" onChange="loadOptions('rguarantee'); document.getElementById('region_history').style.display='table-row';" <cfif FORM.edit EQ 'no'> disabled </cfif> >
 							<option value="0">Select a Region</option> 
 							<option value="0">----------------</option>
 							<cfloop query="qRegions">
@@ -597,7 +598,7 @@
 					</td>
 				</tr>
 				<!--- reason for changing regions --->
-				<tr id="region_history" bgcolor="FFBD9D">
+				<tr id="region_history" bgcolor="FFBD9D" style="display: none;">
 					<td>Reason:</td>
 					<td><input type="text" size="16" name="region_reason"></td>
 				</tr>
@@ -606,7 +607,7 @@
 					<td>#DateFormat(dateassigned,'mm/dd/yyyy')#</td>
 				</tr>
 				<tr>
-                	<td>Region or State Guaranteed :</td>
+                	<td>Region or State Preference :</td>
 					<td>
 						<cfif regionguar EQ 'yes'>
                         	<input type="radio" name="regionguar" value="yes" checked onClick="Guaranteed();" <cfif FORM.edit EQ 'no'> disabled </cfif> >Yes <input type="radio" name="regionguar" value="no"  onClick="Guaranteed();" <cfif FORM.edit EQ 'no'> disabled </cfif> >No 
@@ -616,10 +617,11 @@
 					</td>
 				</tr>
 				<tr id="nreg_guarantee">
-                	<td width="140px">Regional Guaranteed :</td>
+                	<td width="140px">Regional Preference :</td>
 					<td>n/a</td>
 				</tr>
-				<tr id="reg_guarantee"><td>Regional Guaranteed :</td>
+				<tr id="reg_guarantee">
+					<td>Regional Preference :</td>
 					<td width="140px"><select name="rguarantee" <cfif FORM.edit EQ 'no'> disabled </cfif> >
 							<!--// add a bunch of blank option arrays to compensate for NS4 DOM display bug //-->
 							<option> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </option>
@@ -630,11 +632,11 @@
 					</td>
 				</tr>
 				<tr id="nsta_guarantee">
-                	<td width="140px">State Guaranteed :</td>
+                	<td width="140px">State Preference :</td>
 					<td>n/a</td>
 				</tr>
 				<tr id="sta_guarantee">
-                	<td width="140px">State Guaranteed :</td>
+                	<td width="140px">State Preference :</td>
 					<td><select name="state_guarantee" onChange="FeeWaived(#jan_app#);" <cfif FORM.edit EQ 'no'> disabled </cfif> >
 						<option value="0">Select a State</option>
 						<option value="0">--------------</option>
@@ -644,7 +646,7 @@
 						</select>
 					</td>
 				</tr>
-                <cfif qStudentInfo.studentID neq 28304>
+                <!----<cfif qStudentInfo.studentID neq 28304>
 				<tr id="nfee_waived">
                 	<td width="140px">Guarantee Fee Waived</td>
 					<td>n/a</td>
@@ -655,7 +657,7 @@
 						<input type="radio" name="jan_app"  value=1 onClick="FeeWaived2();" <cfif jan_app EQ 1>checked</cfif> <cfif FORM.edit EQ 'no' OR jan_app NEQ '2'>disabled</cfif> >yes
 					</td>
 				</tr>
-                </cfif>
+                </cfif>---->
 			</table>	
 		</td>	
 	</tr>
@@ -803,14 +805,14 @@
 						<cfif direct_placement EQ 1><input type="radio" name="direct_placement" value="1" checked="yes" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes<cfelse><input type="radio" name="direct_placement" value="1" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes</cfif>													
 					</td>
 				</tr>
-                <cfif qStudentInfo.studentID neq 28304>
+               <!---- <cfif qStudentInfo.studentID neq 28304>
 				<tr>
 					<td>&nbsp;</td>
 					<td>Nature of Direct Placement &nbsp; 
 						<input type="text" name="direct_place_nature" size="20" value="#direct_place_nature#" <cfif FORM.edit EQ 'no'>readonly</cfif>>
 					</td>
 				</tr>	
-                </cfif>
+                </cfif>---->
 			</table>	
 		</td>
 		<td width="2%" valign="top">&nbsp;</td>

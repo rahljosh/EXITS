@@ -122,8 +122,9 @@
         <cfargument name="companyID" hint="companyID is required">
         <cfargument name="programID" default="0" hint="programID is not required">
         <cfargument name="regionID" default="0" hint="regionID is not required">
-    	<!----<cfargument name="directPlace" default="0" hint"DirectPlace is required">---->
         <cfargument name="approvedBy" hint="approvedBy is required">
+        <cfargument name="regionGuarantee" default="0" hint="approvedBy is required">
+        <cfargument name="stateGuarantee" default="0" hint="approvedBy is required">
               
 		<cfscript>
 			// Stores Intl. Rep. and Student Email Addresses
@@ -162,8 +163,10 @@
                     programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">, 
                     regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">, 
                     entered_by = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.approvedBy#">,
-                    direct_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.directPlace#">,
-                    dateapplication = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    dateapplication = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    regionalguarantee = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionGuarantee#">,
+                    state_guarantee = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateGuarantee#">,
+                    direct_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.directPlace#">
                 WHERE 
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
 		</cfquery>
@@ -255,6 +258,7 @@
      	</cfif>
                   
 	</cffunction>
+
 
 
 </cfcomponent>

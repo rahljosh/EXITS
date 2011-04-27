@@ -183,8 +183,8 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 					<td width="9%">Last Name</td>
 					<td width="7%" align="center">Gender</td>
 					<td width="9%">Country</td>
-					<td width="10%">State Guarantee</td>
-                    <td width="10%">Regional Guarantee</td>
+					<td width="10%">State Preference</td>
+                    <td width="10%">Regional Preference</td>
 				
 					<td width="11%">Host Name</td>
 					<td width="10%">Host Phone</td>
