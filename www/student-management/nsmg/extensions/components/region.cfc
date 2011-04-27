@@ -198,6 +198,7 @@
                     CONCAT(r.regionName, ' - ', u.firstName, ' ', u.lastName)  AS regionInfo
                 FROM 
                     smg_regions r
+                  
 				INNER JOIN                     
                    user_access_rights UAR on UAR.regionID = r.regionID                         
                        AND                                         
@@ -206,10 +207,11 @@
 					smg_users u ON u.userID = uar.userID                         
 						AND                         
 							u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">        
-                WHERE
+               
+			    WHERE
                     r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
                 AND
-                    r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">    
+                    r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">    
                 ORDER BY
                 	r.regionName                
 		</cfquery>
@@ -236,7 +238,48 @@
 		</cfscript>
         
 	</cffunction>
-    
+   <!--- Start Region list with no names--->
+	<cffunction name="getActiveRegionNoNameRemote" access="remote" returntype="query" output="false" hint="Gets a list of Regions">
+		<cfargument name="companyID" default="0" hint="Get Regions based on companyID">
+               
+        <cfquery 
+			name="qGetRegionRemote" 
+                datasource="#APPLICATION.DSN#">
+                SELECT DISTINCT
+					r.regionID,
+                    r.regionName
+                FROM 
+                    smg_regions r
+			    WHERE
+                    r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
+                AND
+                    r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">    
+                ORDER BY
+                	r.regionName                
+		</cfquery>
+
+        <cfscript>
+			// Return message to user if not was found
+			if ( NOT VAL(qGetRegionRemote.recordCount) ) {
+				QueryAddRow(qGetRegionRemote, 1);
+				QuerySetCell(qGetRegionRemote, "regionID", 0);	
+				QuerySetCell(qGetRegionRemote, "regionName", "---- No Regions assigned to this company ----", 1);
+				QuerySetCell(qGetRegionRemote, "regionInfo", "---- No Regions assigned to this company ----", 1);
+			}
+			
+			// Return message if companyID is not valid
+			if ( NOT VAL(ARGUMENTS.companyID) ) {
+				qGetRegionRemote = QueryNew("regionID, regionName, regionInfo");
+				QueryAddRow(qGetRegionRemote);
+				QuerySetCell(qGetRegionRemote, "regionID", 0);	
+				QuerySetCell(qGetRegionRemote, "regionName", "---- Select a company first ----", 1);
+				QuerySetCell(qGetRegionRemote, "regionInfo", "---- Select a company first ----", 1);
+			}
+
+			return qGetRegionRemote;
+		</cfscript>
+        
+	</cffunction>    
 
 	<cffunction name="getRegionGuaranteeRemote" access="remote" returntype="query" output="false" hint="Gets a list of Region Guarantees">
 		<cfargument name="regionID" default="0" hint="Get Guarantees based on regionID">
@@ -244,17 +287,24 @@
         <cfquery 
 			name="qGetRegionGuaranteeRemote" 
                 datasource="#APPLICATION.DSN#">
-                SELECT DISTINCT
-					r.regionID,
-                    r.regionName
+               (SELECT 0 as regionID, 
+                	'' as regionName, 
+                	0 as columnsort
                 FROM 
-                    smg_regions r
-                WHERE
-                    r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
+                    smg_regions)
+                 UNION
+                (SELECT DISTINCT
+					regionID,
+                    regionName,
+                    1 as columnsort
+                FROM 
+                    smg_regions  WHERE
+                    active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND
-                    r.subOfRegion = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">    
+                    subOfRegion = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAl(ARGUMENTS.regionID)#">   )
+                  
                 ORDER BY
-                	r.regionName                
+                	columnsort, regionName       
 		</cfquery>
 
         <cfscript>

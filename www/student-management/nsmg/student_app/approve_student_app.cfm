@@ -26,7 +26,9 @@
 	<cfparam name="FORM.programID" default="0">	
     <cfparam name="FORM.regionID" default="0">  
     <cfparam name="FORM.directPlace" default="3">  
-      
+    <cfparam name="FORM.regionGuarantee" default="0">  
+    <cfparam name="FORM.stateGuarantee" default="0">
+    
 	
     <cfscript>
 		// Get Student By UniqueID
@@ -95,6 +97,7 @@
 			if ( FORM.companyID NEQ 6 AND FORM.directPlace EQ 3)  {
 				SESSION.formErrors.Add('Please indicate if this is a direct placement');
 			}
+			
 
 			// Check if there are no errors 
 			if ( NOT SESSION.formErrors.length() ) {
@@ -125,8 +128,11 @@
 					companyID=FORM.companyID,
 					programID=FORM.programID,
 					regionID=FORM.regionID,
+					regionGuarantee=FORM.regionGuarantee,
+					stateGuarantee=FORM.stateGuarantee,
 					directPlace=FORM.directPlace,
 					approvedBy=CLIENT.userID
+					
 				);
 				
 				// Set Up Page Message
@@ -157,6 +163,7 @@
 		}
 	}
 </script>
+
 
 <!--- FORM Submitted - Refresh Opener and Close PopUp --->
 <cfif FORM.submitted AND NOT SESSION.formErrors.length()>
@@ -248,6 +255,7 @@
             <tr>
                 <td valign="bottom">#qGetIntRepInfo.businessname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
                 <td valign="bottom">
+               
                     <cfswitch expression="#qGetStudentInfo.app_region_guarantee#">
         
                         <cfcase value="1">
@@ -329,32 +337,68 @@
                     <td align="right">Region: </td>
                     <td>
                       <cfselect
-                          name="regionID" 
-                          id="regionID"
-                          value="regionID"
-                          display="regionName"
-                          selected="#FORM.regionID#"
+                          bind="cfc:nsmg.extensions.components.region.getActiveRegionNoNameRemote({companyID})" enabled="No"
                           bindonload="yes"
-                          bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" /> 
+                          name="regionID" 
+                          id="regionID" multiple="no"
+                          value="regionID"
+                          display="regionName" queryPosition="below"
+                          selected="#FORM.regionID#" /> 
+                          
+                   
+                          
+                     
                     </td>
                 </tr>
-                 <cfif qGetStudentInfo.studentID eq 28304>
-					 <cfif VAL(qGetStatesRequested.state1) OR VAL(qGetStatesRequested.recordcount)>
+               
+                 <tr class="displayNone additionalInformation">
+                    <td align="right">Region Guarantee: </td>
+                    <td>
+                    <cfoutput>
+                   
+                     </cfoutput>
+                     <cfif qGetStudentInfo.app_region_guarantee is '' or qGetStudentInfo.app_region_guarantee eq 0>
+                     
+                          N/A - to assign a guarantee, update region choice on app
+                    <Cfelse>
+                              <cfselect
+                                  name="regionGuarantee" 
+                                  id="regionGuarantee"
+                                  value="regionID"
+                                  display="regionName"
+                                  selected="#FORM.regionID#"
+                                  bindonload="yes"
+                                  bind="cfc:nsmg.extensions.components.region.getRegionGuaranteeRemote({regionID})" />
+   
+                            </td>
+                        </tr>
+                        </cfif>
+                
+                 
+					
                       <tr class="displayNone additionalInformation">
-                        <td align="right">State (if needed): </td>
+                        <td align="right">State Guarantee: </td>
                         <td>
-                          <cfquery name="get_states" datasource="#application.dsn#">
-                                SELECT state, statename
-                                FROM smg_states
-                                ORDER BY id
-                            </cfquery>
-                            <cfselect NAME="stateGurantee" query="get_states" value="state" display="statename" queryPosition="below">
-                                <option></option>
-                            </cfselect>
+                          <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
+                          N/A - to assign state, update choices on app.
+                          <cfelse>
+                          <!----
+                              <cfquery name="get_states" datasource="#application.dsn#">
+                                    SELECT state, statename
+                                    FROM smg_states
+                                    ORDER BY id
+                                </cfquery>
+								---->
+                                <select NAME="stateGuarantee">
+                                	<option value="0"></option>
+                                    <option value='#qGetStatesRequested.state1#' <cfif #qGetStudentInfo.state_guarantee# eq #qGetStatesRequested.state1#>selected</cfif> >#qGetStatesRequested.statename1#</option>
+                                    <option value='#qGetStatesRequested.state2#' <cfif #qGetStudentInfo.state_guarantee# eq #qGetStatesRequested.state2#>selected</cfif>>#qGetStatesRequested.statename2#</option>
+                                    <option value='#qGetStatesRequested.state3#' <cfif #qGetStudentInfo.state_guarantee# eq #qGetStatesRequested.state3#>selected</cfif>>#qGetStatesRequested.statename3#</option>
+                                </select>
+                    		</cfif>
                         </td>
                     </tr>
-                    </cfif>
-                </cfif>
+         
                 <tr class="displayNone additionalInformation">
                     <td align="right">Program: </td>
                     <td>

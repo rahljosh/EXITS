@@ -146,7 +146,7 @@
 <td width="50%" valign="top">
 			<cfform action="reports/students_state_guarantee.cfm" method="POST" target="blank">
 			<Table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="#e2efc7">Students - State Guarantee Only</th></tr>
+				<tr><th colspan="2" bgcolor="#e2efc7">Students - State Preference Only</th></tr>
 				<tr align="left">
 					<td>Program :</td>
 					<td><select name="programid" multiple  size="6">

@@ -185,6 +185,7 @@
                     <option <cfif age EQ 15>selected</cfif>>15</option>
                     <option <cfif age EQ 16>selected</cfif>>16</option>
                     <option <cfif age EQ 17>selected</cfif>>17</option>
+
                     <option <cfif age EQ 18>selected</cfif>>18</option>
                 </select>
             </td>
@@ -289,7 +290,7 @@
                     FROM smg_states
                     ORDER BY statename
                 </cfquery>
-                State Guarantee<br />
+                State Preference<br />
                 <cfselect name="stateid" query="get_states" value="id" display="statename" selected="#stateid#" queryPosition="below">
                     <option value="">All</option>
                 </cfselect>
@@ -652,7 +653,7 @@
                       </tr>
                     </table>
                 </td>
-                <td><font color="CC0000">* Regional / State Guarantee.</font></td>
+                <td><font color="CC0000">* Regional / State Preference.</font></td>
             </tr>
         </table>
 

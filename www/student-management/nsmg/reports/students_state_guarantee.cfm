@@ -50,7 +50,7 @@
 
 
 <table width='90%' cellpadding=6 cellspacing="0" align="center">
-<span class="application_section_header"><cfoutput>#companyshort.companyshort# - Students State Guarantee per Region</cfoutput></span>
+<span class="application_section_header"><cfoutput>#companyshort.companyshort# - Students State Preference per Region</cfoutput></span>
 </table>
 <br>
 
@@ -98,7 +98,7 @@
 					<td width="10%"><b>Gender</b></td>
 					<td width="10%"><b>DOB</b></td>
 					<td width="20%"><b>Country</b></td>
-					<td width="14%"><b>State Guarantee</b></td></tr>	
+					<td width="14%"><b>State Preference</b></td></tr>	
 				<cfoutput query="get_students">
 				<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td>#studentid#</td>
