@@ -184,7 +184,7 @@
 	<tr>
 		<td colspan="6">
 		Please, select type of payment for the supervised students: 
-		<cfselect name="qGetSupervisingPaymentType" query="qGetSupervisingPaymentType" value="id" display="type" queryPosition="below">
+		<cfselect name="payment_type_super" query="qGetSupervisingPaymentType" value="id" display="type" queryPosition="below">
 			<option value=""></option>
 		</cfselect>
 		</td>
@@ -219,7 +219,7 @@
 	<tr>
 		<td colspan="6">
 		Please, select type of payment for the placed students: 
-		<cfselect name="qGetPlacingPaymentType" query="qGetPlacingPaymentType" value="id" display="type" queryPosition="below">
+		<cfselect name="payment_type_place" query="qGetPlacingPaymentType" value="id" display="type" queryPosition="below">
 			<option value=""></option>
 		</cfselect>
 		</td>
