@@ -75,6 +75,32 @@
 	</cffunction>
 
 
+	<cffunction name="getRegionFacilitatorByRegionID" access="public" returntype="query" output="false" hint="Returns the facilitator information for a region">
+    	<cfargument name="regionID" default="0" hint="regionID is not required">        
+              
+        <cfquery 
+			name="qGetRegionFacilitatorByRegionID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	r.regionID,
+                    r.company,
+                    r.regionName, 
+                    u.userID,
+                    u.firstname,
+                    u.lastname,
+                    u.email
+                FROM 
+                    smg_regions r
+                LEFT JOIN 
+                    smg_users u ON r.regionfacilitator = u.userid                    
+                WHERE
+                    r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">                
+		</cfquery>
+		   
+		<cfreturn qGetRegionFacilitatorByRegionID>
+	</cffunction>
+
+
 	<cffunction name="getRegionsByList" access="public" returntype="query" output="false" hint="Gets a list of regions by region list">
     	<cfargument name="regionIDList" default="" hint="regionID list is not required">        
         <cfargument name="companyID" default="0" hint="companyID is not required">
@@ -217,113 +243,101 @@
 		</cfquery>
 
         <cfscript>
+			var qReturnRegions = QueryNew("regionID, regionName, regionInfo");
+			
 			// Return message to user if not was found
 			if ( NOT VAL(qGetRegionRemote.recordCount) ) {
-				QueryAddRow(qGetRegionRemote, 1);
-				QuerySetCell(qGetRegionRemote, "regionID", 0);	
-				QuerySetCell(qGetRegionRemote, "regionName", "---- No Regions assigned to this company ----", 1);
-				QuerySetCell(qGetRegionRemote, "regionInfo", "---- No Regions assigned to this company ----", 1);
-			}
-			
-			// Return message if companyID is not valid
-			if ( NOT VAL(ARGUMENTS.companyID) ) {
+				
+				QueryAddRow(qReturnRegions, 1);
+				QuerySetCell(qReturnRegions, "regionID", 0);	
+				QuerySetCell(qReturnRegions, "regionName", "---- No Regions assigned to this company ----", 1);
+				QuerySetCell(qReturnRegions, "regionInfo", "---- No Regions assigned to this company ----", 1);
+				
+			} else if ( NOT VAL(ARGUMENTS.companyID) ) {
+				
+				// Return message if companyID is not valid
 				qGetRegionRemote = QueryNew("regionID, regionName, regionInfo");
-				QueryAddRow(qGetRegionRemote);
-				QuerySetCell(qGetRegionRemote, "regionID", 0);	
-				QuerySetCell(qGetRegionRemote, "regionName", "---- Select a company first ----", 1);
-				QuerySetCell(qGetRegionRemote, "regionInfo", "---- Select a company first ----", 1);
+				QueryAddRow(qReturnRegions, 1);
+				QuerySetCell(qReturnRegions, "regionID", 0);	
+				QuerySetCell(qReturnRegions, "regionName", "---- Select a company first ----", 1);
+				QuerySetCell(qReturnRegions, "regionInfo", "---- Select a company first ----", 1);
+				
+			} else {
+
+				// Add first row "Select a Guarantee"
+				QueryAddRow(qReturnRegions, 1);
+				QuerySetCell(qReturnRegions, "regionID", 0);	
+				QuerySetCell(qReturnRegions, "regionName", "---- Select a Region ----", 1);
+				QuerySetCell(qReturnRegions, "regionInfo", "---- Select a Region ----", 1);
+
+				For ( i=1; i LTE qGetRegionRemote.recordCount; i=i+1 ) {
+					QueryAddRow(qReturnRegions, 1);
+					QuerySetCell(qReturnRegions, "regionID", qGetRegionRemote.regionID[i]);
+					QuerySetCell(qReturnRegions, "regionName", qGetRegionRemote.regionName[i]);
+					QuerySetCell(qReturnRegions, "regionInfo", qGetRegionRemote.regionInfo[i]);
+				}
+
 			}
 
-			return qGetRegionRemote;
+			return qReturnRegions;
 		</cfscript>
         
 	</cffunction>
-   <!--- Start Region list with no names--->
-	<cffunction name="getActiveRegionNoNameRemote" access="remote" returntype="query" output="false" hint="Gets a list of Regions">
-		<cfargument name="companyID" default="0" hint="Get Regions based on companyID">
-               
-        <cfquery 
-			name="qGetRegionRemote" 
-                datasource="#APPLICATION.DSN#">
-                SELECT DISTINCT
-					r.regionID,
-                    r.regionName
-                FROM 
-                    smg_regions r
-			    WHERE
-                    r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
-                AND
-                    r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">    
-                ORDER BY
-                	r.regionName                
-		</cfquery>
-
-        <cfscript>
-			// Return message to user if not was found
-			if ( NOT VAL(qGetRegionRemote.recordCount) ) {
-				QueryAddRow(qGetRegionRemote, 1);
-				QuerySetCell(qGetRegionRemote, "regionID", 0);	
-				QuerySetCell(qGetRegionRemote, "regionName", "---- No Regions assigned to this company ----", 1);
-				QuerySetCell(qGetRegionRemote, "regionInfo", "---- No Regions assigned to this company ----", 1);
-			}
-			
-			// Return message if companyID is not valid
-			if ( NOT VAL(ARGUMENTS.companyID) ) {
-				qGetRegionRemote = QueryNew("regionID, regionName, regionInfo");
-				QueryAddRow(qGetRegionRemote);
-				QuerySetCell(qGetRegionRemote, "regionID", 0);	
-				QuerySetCell(qGetRegionRemote, "regionName", "---- Select a company first ----", 1);
-				QuerySetCell(qGetRegionRemote, "regionInfo", "---- Select a company first ----", 1);
-			}
-
-			return qGetRegionRemote;
-		</cfscript>
-        
-	</cffunction>    
-
+    
+    
 	<cffunction name="getRegionGuaranteeRemote" access="remote" returntype="query" output="false" hint="Gets a list of Region Guarantees">
 		<cfargument name="regionID" default="0" hint="Get Guarantees based on regionID">
                
         <cfquery 
 			name="qGetRegionGuaranteeRemote" 
                 datasource="#APPLICATION.DSN#">
-               (SELECT 0 as regionID, 
-                	'' as regionName, 
-                	0 as columnsort
-                FROM 
-                    smg_regions)
-                 UNION
-                (SELECT DISTINCT
+                SELECT DISTINCT
 					regionID,
-                    regionName,
-                    1 as columnsort
+                    regionName
                 FROM 
-                    smg_regions  WHERE
+                    smg_regions  
+                WHERE
                     active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND
-                    subOfRegion = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAl(ARGUMENTS.regionID)#">   )
-                  
+                    subOfRegion = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAl(ARGUMENTS.regionID)#"> 
                 ORDER BY
-                	columnsort, regionName       
+                	regionName       
 		</cfquery>
 
         <cfscript>
+			var qReturnGurantee = QueryNew("regionID, regionName");
+			
 			// Return message to user if not was found
 			if ( NOT VAL(qGetRegionGuaranteeRemote.recordCount) ) {
-				QueryAddRow(qGetRegionGuaranteeRemote, 1);
-				QuerySetCell(qGetRegionGuaranteeRemote, "regionID", 0);	
-				QuerySetCell(qGetRegionGuaranteeRemote, "regionName", "---- No Guarantees available ----", 1);
-			}
-			
-			// Return message if regionID is not valid
-			if ( NOT VAL(ARGUMENTS.regionID) ) {
-				qGetRegionGuaranteeRemote = QueryNew("regionID, regionName");
-				QueryAddRow(qGetRegionGuaranteeRemote);
-				QuerySetCell(qGetRegionGuaranteeRemote, "regionID", 0);	
-				QuerySetCell(qGetRegionGuaranteeRemote, "regionName", "---- First Select a Region ----", 1);
+				
+				// Return message to user if not was found
+				QueryAddRow(qReturnGurantee, 1);
+				QuerySetCell(qReturnGurantee, "regionID", 0);	
+				QuerySetCell(qReturnGurantee, "regionName", "---- No Guarantees available ----", 1);
+				
+			} else if ( NOT VAL(ARGUMENTS.regionID) ) {
+				
+				// Return message if regionID is not valid
+				QueryAddRow(qReturnGurantee, 1);
+				QuerySetCell(qReturnGurantee, "regionID", 0);	
+				QuerySetCell(qReturnGurantee, "regionName", "---- Select a Region first ----", 1);
+				
+			} else {
+				
+				// Add first row "Select a Guarantee"
+				QueryAddRow(qReturnGurantee, 1);
+				QuerySetCell(qReturnGurantee, "regionID", 0);	
+				QuerySetCell(qReturnGurantee, "regionName", "---- Select a Guarantee ----", 1);
+
+				For ( i=1; i LTE qGetRegionGuaranteeRemote.recordCount; i=i+1 ) {
+					QueryAddRow(qReturnGurantee, 1);
+					QuerySetCell(qReturnGurantee, "regionID", qGetRegionGuaranteeRemote.regionID[i]);
+					QuerySetCell(qReturnGurantee, "regionName", qGetRegionGuaranteeRemote.regionName[i]);
+				}
+
 			}
 
-			return qGetRegionGuaranteeRemote;
+			return qReturnGurantee;
 		</cfscript>
         
 	</cffunction>
