@@ -486,7 +486,7 @@
 		aypenglish = <cfif IsDefined("FORM.english_check")>'#FORM.ayp_englsh#'<cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,
 		ayporientation = <cfif IsDefined('FORM.orientation_check')>'#FORM.ayp_orientation#'<cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,
 		<cfif IsDefined('FORM.direct_placement')>direct_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.direct_placement#">,</cfif>
-		direct_place_nature = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.direct_place_nature#">,
+		<!----direct_place_nature = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.direct_place_nature#">,---->
 		verification_received =  <cfif FORM.verification_form EQ ''>null<cfelse>#CreateODBCDate(FORM.verification_form)#</cfif>,	
 		ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_no#">,
 		programID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.program#">,
