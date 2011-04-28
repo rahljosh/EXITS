@@ -194,7 +194,12 @@ Order by birthdate
 	</table>
 	<br> 
 	<table cellpadding=0 cellspacing=0 border=0 width=65% style="font-size:13px">
-		<tr><td><font face="" color="Gray">Age:</font></td><td>#DateDiff('yyyy', get_student_info.dob, now())#</td><td></td><td><font face="" color="Gray">Smoker:</font></td><td>#get_student_info.smoke#</td></tr>
+		<tr>
+        	<td><font face="" color="Gray">Age:</font></td>
+        	<td><cfif IsDate(get_student_info.dob)>#DateDiff('yyyy', get_student_info.dob, now())#<cfelse>Missing</cfif></td>
+            <td></td>
+            <td><font face="" color="Gray">Smoker:</font></td>
+            <td>#get_student_info.smoke#</td></tr>
 		<tr><td><font face="" color="Gray">Height:</font></td><td>#get_student_info.height#</td><td width=15%></td><td><font face="" color="Gray">Hair:</font></td><td>#get_student_info.haircolor#</td></tr>
 		<tr><td><font face="" color="Gray">Weight:</font></td><td>#get_student_info.weight#</td><td></td><td><font face="" color="Gray">Eyes:</font></td><td>#get_student_info.eyecolor#</td></tr>					
 	</table>
