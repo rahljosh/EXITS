@@ -337,7 +337,7 @@
                     <td align="right">Region: </td>
                     <td>
                       <cfselect
-                          bind="cfc:nsmg.extensions.components.region.getActiveRegionNoNameRemote({companyID})" enabled="No"
+                          bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" enabled="No"
                           bindonload="yes"
                           name="regionID" 
                           id="regionID" multiple="no"
