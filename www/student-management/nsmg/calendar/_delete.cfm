@@ -173,7 +173,7 @@
 					<cfquery name="qInsertException" datasource="#APPLICATION.DSN#">
 						INSERT INTO calendar_event_exception
 						(
-							[date],
+							dateException,
 							calendar_event_id
 						) VALUES (
 							<cfqueryparam value="#REQUEST.Attributes.viewas#" cfsqltype="CF_SQL_TIMESTAMP" />,
