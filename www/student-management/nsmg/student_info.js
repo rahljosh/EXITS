@@ -11,165 +11,208 @@ if (month < 10)
 
 // opens small pop up in a defined format
 var newwindow;
-function OpenSmallW(url) {
+
+var OpenSmallW = function(url) {	
 	newwindow=window.open(url, 'Application', 'height=300, width=400, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
 	if (window.focus) {newwindow.focus()}
 }
 
-function OpenMediumW(url) {
+var OpenMediumW = function(url) {		
 	newwindow=window.open(url, 'Application', 'height=500, width=400, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
 	if (window.focus) {newwindow.focus()}
 }
 
 // opens letters in a defined format
-function OpenLetter(url) {
+var OpenLetter = function(url) {		
 	newwindow=window.open(url, 'Application', 'height=580, width=820, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
 	if (window.focus) {newwindow.focus()}
 }
 
 //open region / program history
-function OpenHistory(url) {
+var OpenHistory = function(url) {		
 	newwindow=window.open(url, 'Application', 'height=400, width=600, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
 	if (window.focus) {newwindow.focus()}
 }
 
 //open placement management
-function OpenPlaceMan(url) {
+var OpenPlaceMan = function(url) {	
 	newwindow=window.open(url, 'Application', 'height=550, width=600, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=no'); 
 	if (window.focus) {newwindow.focus()}
 }
 
 // open online application 
-function OpenApp(url)
-{
+var OpenApp = function(url) {
 	newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
 	if (window.focus) {newwindow.focus()}
 }
 
 // Send online applications 
-function SendEmail(url, setHeight, setWidth)
-{
+var SendEmail = function(url, setHeight, setWidth) {
 	newwindow=window.open(url, 'Application', 'height=' + setHeight + ', width=' + setWidth + ', location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=no'); 
 	if (window.focus) {newwindow.focus()}
 }
 
 // DS 2019 verification_box  
-function PopulateDS2019Box() {
-	if (document.StudentInfo.verification_box.checked) {
-		document.StudentInfo.verification_form.value = (month + "/" + day + "/" + year);
-	}
-	else {
-		document.StudentInfo.verification_form.value = '';
+var PopulateDS2019Box = function() {	
+	if (document.studentForm.verification_box.checked) {
+		document.studentForm.verification_form.value = (month + "/" + day + "/" + year);
+	} else {
+		document.studentForm.verification_form.value = '';
 	}
 }
 
 // Student Canceled  
-function PopulateCancelBox() {
-	if (document.StudentInfo.student_cancel.checked) {
-		document.StudentInfo.date_canceled.value = (month + "/" + day + "/" + year);
+var PopulateCancelBox = function() {	
+	if (document.studentForm.student_cancel.checked) {
+		document.studentForm.date_canceled.value = (month + "/" + day + "/" + year);
+	} else {
+		document.studentForm.date_canceled.value = '';
 	}
-	else {
-		document.StudentInfo.date_canceled.value = '';
+}
+
+// Program Reason
+var displayProgramReason = function(previousProgramID, selectedProgramID) {
+	// Display Reason	
+	if ( previousProgramID > '0' && selectedProgramID != previousProgramID) {
+		$("#trProgramHistory").fadeIn();
+		$("#program_reason").focus();
+	} else {
+		$("#program_reason").val('');
+		$("#trProgramHistory").fadeOut();
+	}
+}
+
+// Region Reason
+var displayRegionReason = function(previousRegionID, selectedRegionID) {
+	// Display Reason	
+	if ( previousRegionID > '0' && selectedRegionID != previousRegionID) {
+		$("#trRegionHistory").fadeIn();
+		$("#region_reason").focus();
+	} else {
+		$("#region_reason").val('');
+		$("#trRegionHistory").fadeOut();
 	}
 }
 
 // Region Guaranteed
-function Guaranteed(){
- if ((document.StudentInfo.region.value == '0') && (document.StudentInfo.regionguar[0].checked)) {
-	alert("You must select a region in order to view Regions and States Guarantees");
-	document.StudentInfo.regionguar[1].checked = true;
- }
- if ((document.StudentInfo.regionguar[0].checked) && (document.StudentInfo.region.value != '0'))  {
-	 document.getElementById('reg_guarantee').style.display = 'inline';
-	 document.getElementById('sta_guarantee').style.display = 'inline';
-	 document.getElementById('fee_waived').style.display = 'inline';					 
-	 document.getElementById('nreg_guarantee').style.display = 'none';
-	 document.getElementById('nsta_guarantee').style.display = 'none';
-	 document.getElementById('nfee_waived').style.display = 'none';
- } else {
-	 document.getElementById('nreg_guarantee').style.display = 'inline';
-	 document.getElementById('nsta_guarantee').style.display = 'inline';
-	 document.getElementById('nfee_waived').style.display = 'inline';
-	 document.getElementById('reg_guarantee').style.display = 'none';
-	 document.getElementById('sta_guarantee').style.display = 'none';
-	 document.getElementById('fee_waived').style.display = 'none';		 
- }
+var displayGuaranteed = function(selectedRegionID) {	
+	
+	if ( selectedRegionID == 0 && document.studentForm.regionguar[0].checked ) {
+		alert("You must select a region in order to view Regions and States Preferences");
+		document.studentForm.regionguar[1].checked = true;
+	}
+	
+	if ( document.studentForm.regionguar[0].checked && selectedRegionID != '0')  {
+		// Hide fields
+		$(".displayNoGuarantee").fadeOut();
+		// Display fields
+		$(".displayGuarantee").fadeIn();
+	} else {
+	   	// Reset values
+	   	$("#rguarantee").val('');
+	   	$("#state_guarantee").val(0);
+		// Hide fields
+	   	$(".displayGuarantee").fadeOut();
+		// Display fields
+		$(".displayNoGuarantee").fadeIn();
+	}
 }
 
 // Fee waived = no if State guarantee is choosen
-function FeeWaived(fwaive) {
-  if (document.StudentInfo.state_guarantee.value != '0') {
-		document.StudentInfo.jan_app[0].checked = true ;
+var FeeWaived = function() {	
+  if (document.studentForm.state_guarantee.value != '0') {
+		document.studentForm.jan_app[0].checked = true ;
 	} else {
 	   if (fwaive = '1') {
-		document.StudentInfo.jan_app[1].checked = true ; 
+		document.studentForm.jan_app[1].checked = true ; 
 	   }
 	}
 }
-function FeeWaived2() {
-  if (document.StudentInfo.state_guarantee.value != '0') {
-		document.StudentInfo.jan_app[0].checked = true ;
+
+/*
+var FeeWaived2 = function() {	
+  if (document.studentForm.state_guarantee.value != '0') {
+		document.studentForm.jan_app[0].checked = true ;
 		alert("Fee waived must be NO for State Guarantees.");
 	}			  			  	
 }
+*/
 
 // Region / State Guarantee Choices
-function CheckGuarantee(sturegion, stuprogram) {
-  if ((document.StudentInfo.regionguar[0].checked) && (document.StudentInfo.rguarantee.value == '0') && (document.StudentInfo.state_guarantee.value == '0')) {
-	 alert("You must select either a State or a Region Guarantee.");
-	  return false; }			  	
-  if ((document.StudentInfo.regionguar[0].checked) && (document.StudentInfo.rguarantee.value != '0') && (document.StudentInfo.state_guarantee.value != '0')) {
-	 alert("You cannot select both region and state guarantee. You must select either a State or a Region Guarantee.");
-	  return false; }			  	
+var formValidation = function(previousRegionID, previousProgramID) {
+	
+	// Get Current Values
+	selectedProgramID = $("#program").val();
+	currentProgramReason = $("#program_reason").val();
+	
+	selectedRegionID = $("#region").val();
+	currentRegionReason = $("#region_reason").val();
+	
+	if ( (document.studentForm.regionguar[0].checked) && (document.studentForm.rguarantee.value == '0') && (document.studentForm.state_guarantee.value == '0') ) {
+		alert("You must select either a State or a Region Guarantee.");
+	  	return false; 
+	}	
+	
+	if ( (document.studentForm.regionguar[0].checked) && (document.studentForm.rguarantee.value != '0') && (document.studentForm.state_guarantee.value != '0') ) {
+		alert("You cannot select both region and state guarantee. You must select either a State or a Region Guarantee.");
+		return false; 
+	}			  	
 
-   // FEE WAIVED
-   var Counter = 0;
-   for (i=0; i<document.StudentInfo.jan_app.length; i++){
-      if (document.StudentInfo.jan_app[i].checked){
-         Counter++; }
-   }
-   if ((document.StudentInfo.regionguar[0].checked) && (Counter == 0)) {
-	 alert("You must select either Yes or NO for the Regional Fee Waived field.");
-	 return false; }		
-	 
-   // CHECK DIRECT PLACEMENT	 
-   var Counter2 = 0;
-   for (i=0; i<document.StudentInfo.direct_placement.length; i++) {
-      if (document.StudentInfo.direct_placement[i].checked){
-         Counter2++; }
-   }
-   if (Counter2 == 0) {
-	 alert("You must select either Yes or NO for Direct Placement field.");
-	 return false; }	
-
-	// if ((document.StudentInfo.direct_placement[1].checked) && (document.StudentInfo.direct_place_nature.value == '')) {	
-	// alert("You must enter the nature of direct placement.");
-	// document.StudentInfo.direct_place_nature.focus();
-	// return false; }
-
+   	// FEE WAIVED
+   	/*
+	var Counter = 0;
+   	for (i=0; i<document.studentForm.jan_app.length; i++){
+		if (document.studentForm.jan_app[i].checked){
+			Counter++; 
+		}
+   	}
+   
+	if ( (document.studentForm.regionguar[0].checked) && (Counter == 0) ) {
+		alert("You must select either Yes or NO for the Regional Fee Waived field.");
+		return false; 
+	}		
+	*/
+	
+   	// CHECK DIRECT PLACEMENT	 
+   	var Counter2 = 0;
+	
+   	for (i=0; i<document.studentForm.direct_placement.length; i++) {
+		if (document.studentForm.direct_placement[i].checked){
+        	Counter2++; }
+	   }
+	   
+   	if (Counter2 == 0) {
+		alert("You must select either Yes or NO for Direct Placement field.");
+		return false; 
+	}	
+	
 	// CANCELLING A STUDENT  
-   if ((document.StudentInfo.student_cancel.checked) && (document.StudentInfo.Reason_canceled.value == '')) {
-	 alert("In order to cancel this student you must enter a reason.");
-	 document.StudentInfo.Reason_canceled.focus(); 
-	 return false; } 
+	if ((document.studentForm.student_cancel.checked) && (document.studentForm.Reason_canceled.value == '')) {
+		alert("In order to cancel this student you must enter a reason.");
+		document.studentForm.Reason_canceled.focus(); 
+		return false; 
+	} 
 	
 	// REGION HISTORY
-   if ((sturegion > 0) && (document.StudentInfo.region.value != sturegion) && (document.StudentInfo.region_reason.value == '')) {
-	alert("In order to change the region you must enter a reason (for history purpose).");
-	document.getElementById('region_history').style.display = 'inline';
-	document.StudentInfo.region_reason.focus(); 
-	return false; } 
+	if ((previousRegionID > 0) && (selectedRegionID != previousRegionID) && (currentRegionReason == '')) {
+		alert("In order to change the region you must enter a reason (for history purpose).");
+		$("#trRegionHistory").fadeIn();
+		$("#region_reason").focus();
+		return false; 
+	} 
 	
 	// PROGRAM HISTORY
-   if ((stuprogram > '0') && (document.StudentInfo.program.value != stuprogram) && (document.StudentInfo.program_reason.value == '')) {
-	alert("In order to change the program you must enter a reason (for history purpose).");
-	document.getElementById('program_history').style.display = 'inline';
-	document.StudentInfo.program_reason.focus(); 
-	return false; }
+	if ((previousProgramID > '0') && (selectedProgramID != previousProgramID) && (currentProgramReason == '')) {
+		alert("In order to change the program you must enter a reason (for history purpose).");
+		$("#trProgramHistory").fadeIn();
+		$("#program_reason").focus();
+		return false; 
+	}
 	
 	//PRE AYP
-   if (((document.StudentInfo.english_check.checked) && (document.StudentInfo.ayp_englsh.value != 0)) && ((document.StudentInfo.orientation_check.checked) && (document.StudentInfo.ayp_orientation.value != 0))) {	
-	alert("The student cannot participate in both English and Orientation Camps. Please select only one.");
-	return false; }
+	if (((document.studentForm.english_check.checked) && (document.studentForm.ayp_englsh.value != 0)) && ((document.studentForm.orientation_check.checked) && (document.studentForm.ayp_orientation.value != 0))) {	
+		alert("The student cannot participate in both English and Orientation Camps. Please select only one.");
+		return false; 
+	}
 	
 }

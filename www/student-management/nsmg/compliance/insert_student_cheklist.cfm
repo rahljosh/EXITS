@@ -8,87 +8,102 @@
 <body>
 
 <cfoutput>
-<SCRIPT LANGUAGE="JavaScript">
-<!-- Begin
-function formHandler(form){
-var URL = document.form.sele_host.options[document.form.sele_host.selectedIndex].value;
-window.location.href = URL;
-}
-function todaydate3() {
-	if (document.checklist.check_host_app.checked) {
-		   document.checklist.host_application.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.host_application.value = ''; }
-}
-function todaydate4() {
-	if (document.checklist.check_school.checked) {
-		   document.checklist.school_acceptance.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.school_acceptance.value = ''; }
-}
-function todaydate5() {
-	if (document.checklist.check_confi.checked) {
-		   document.checklist.confidential_visit.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.confidential_visit.value = ''; }
-}
-function todaydate6() {
-	if (document.checklist.check_form1.checked) {
-		   document.checklist.reference1.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.reference1.value = ''; }
-}
-function todaydate7() {
-	if (document.checklist.check_form2.checked) {
-		   document.checklist.reference2.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.reference2.value = ''; }
-}
-function StuOrientation() {
-	if (document.checklist.check_student_orientation.checked) {
-		   document.checklist.student_orientation.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.student_orientation.value = ''; }
-}
-function HostOrientation() {
-	if (document.checklist.check_host_orientation.checked) {
-		   document.checklist.host_orientation.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.host_orientation.value = ''; }
-}
-function DoubleStudent() {
-	if (document.checklist.check_double_doc_stu.checked) {
-		   document.checklist.double_student.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.double_student.value = ''; }
-}
-function DoubleNatural() {
-	if (document.checklist.check_double_doc_fam.checked) {
-		   document.checklist.double_natural.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.double_natural.value = ''; }
-}
-function DoubleHost() {
-	if (document.checklist.check_double_doc_host.checked) {
-		   document.checklist.double_host.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.double_host.value = ''; }
-}
-function DoubleSchool() {
-	if (document.checklist.check_double_doc_school.checked) {
-		   document.checklist.double_school.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
-	else { document.checklist.double_school.value = ''; }
-}
-function AppComplete() {
-	if (document.checklist.missing_docs.value == '') {
-		   document.checklist.application_complete.check = true; }
-	else { document.checklist.application_complete.check = false;  }
-}
-function CheckDouble() {
-	if ((document.checklist.check_double_doc_stu.checked) && (document.checklist.check_double_doc_fam.checked) 
-	&& (document.checklist.check_double_doc_host.checked) && (document.checklist.check_double_doc_school.checked)) {
-	document.checklist.double_paperwork.checked = true; }
-	else {
-	document.checklist.double_paperwork.checked = false;
+<script language="javascript">	
+	<!-- Begin
+	
+	// Document Ready!
+    $(document).ready(function() {
+
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
+
+	});
+
+	function formHandler(form){
+	var URL = document.form.sele_host.options[document.form.sele_host.selectedIndex].value;
+	window.location.href = URL;
 	}
-}
-function CheckFields() {
-   if (document.checklist.hostid.value == '0') {
-      alert("You must link these documents to a host family.");
-	  document.checklist.hostid.focus();
-      return false;
-   } 
-}
+	function todaydate3() {
+		if (document.checklist.check_host_app.checked) {
+			   document.checklist.host_application.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.host_application.value = ''; }
+	}
+	function todaydate4() {
+		if (document.checklist.check_school.checked) {
+			   document.checklist.school_acceptance.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.school_acceptance.value = ''; }
+	}
+	function todaydate5() {
+		if (document.checklist.check_confi.checked) {
+			   document.checklist.confidential_visit.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.confidential_visit.value = ''; }
+	}
+	function todaydate6() {
+		if (document.checklist.check_form1.checked) {
+			   document.checklist.reference1.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.reference1.value = ''; }
+	}
+	function todaydate7() {
+		if (document.checklist.check_form2.checked) {
+			   document.checklist.reference2.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.reference2.value = ''; }
+	}
+	function StuOrientation() {
+		if (document.checklist.check_student_orientation.checked) {
+			   document.checklist.student_orientation.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.student_orientation.value = ''; }
+	}
+	function HostOrientation() {
+		if (document.checklist.check_host_orientation.checked) {
+			   document.checklist.host_orientation.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.host_orientation.value = ''; }
+	}
+	function DoubleStudent() {
+		if (document.checklist.check_double_doc_stu.checked) {
+			   document.checklist.double_student.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.double_student.value = ''; }
+	}
+	function DoubleNatural() {
+		if (document.checklist.check_double_doc_fam.checked) {
+			   document.checklist.double_natural.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.double_natural.value = ''; }
+	}
+	function DoubleHost() {
+		if (document.checklist.check_double_doc_host.checked) {
+			   document.checklist.double_host.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.double_host.value = ''; }
+	}
+	function DoubleSchool() {
+		if (document.checklist.check_double_doc_school.checked) {
+			   document.checklist.double_school.value = '#DateFormat(now(), 'mm/dd/yyyy')#'; }
+		else { document.checklist.double_school.value = ''; }
+	}
+	function AppComplete() {
+		if (document.checklist.missing_docs.value == '') {
+			   document.checklist.application_complete.check = true; }
+		else { document.checklist.application_complete.check = false;  }
+	}
+	function CheckDouble() {
+		if ((document.checklist.check_double_doc_stu.checked) && (document.checklist.check_double_doc_fam.checked) 
+		&& (document.checklist.check_double_doc_host.checked) && (document.checklist.check_double_doc_school.checked)) {
+		document.checklist.double_paperwork.checked = true; }
+		else {
+		document.checklist.double_paperwork.checked = false;
+		}
+	}
+	function CheckFields() {
+	   if (document.checklist.hostid.value == '0') {
+		  alert("You must link these documents to a host family.");
+		  document.checklist.hostid.focus();
+		  return false;
+	   } 
+	}
 //  End -->
 </script>
 </cfoutput>
@@ -273,7 +288,7 @@ function CheckFields() {
 			<td>&nbsp;</td>
 		<cfelse>
 			<td><cfinput type="checkbox" name="flight_info" checked="yes"></td>
-			<td>Flight Information &nbsp; <a href="../forms/flight_info.cfm?studentid=#get_student_info.studentid#" target="main_win">See Flight</a></td>
+			<td>Flight Information &nbsp; <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_info.uniqueID#" class="jQueryModal">See Flight</a></td>
 			<td></td>
 			<td>&nbsp;</td>
 		</cfif>

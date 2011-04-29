@@ -96,28 +96,43 @@
             AND 
                 s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')	
 	</Cfquery>
+
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
+
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
+
+	});
+</script>    
+    
+<!--- Upload XML --->
 <cfif ListFind("20,21,28,109,115,628,701,6584,7199,7502,8913,9106,11480,11565,12038,12201", CLIENT.userID)>
-	<br>
-		<table width=100%>
-	<tr><td bgcolor="##e2efc7" colspan=2><span class="get_attention"><b>:: </b></span>Upload flight info in an XML file.</td></tr>
-	<tr>
-				<tr>
-				
-					<td style="line-height:20px;" valign="top" width="100%"><br>
-					<form action="?curdoc=xml/get_flight_info" method="post" enctype="multipart/form-data">
-					Select your XML file: 
-				<input type="file" name="flights" size=50 required="yes" enctype="multipart/form-data">
-			<br><br>
-			Options:<br>
-			<input type="checkbox" name="display_results" checked>Display results on screen<br>
-			<input type="checkbox" name="receive_xml" checked> I'd like to receive back an XML file for verification.
-			<br><br>
-			Upload file and process: <input type="submit" value="Process" alt="Upload File to Server">
-			
-					</form>
-					</td>
-				</tr>
-			</table>
+    <br>
+    <table width=100%>
+        <tr><td bgcolor="##e2efc7" colspan=2><span class="get_attention"><b>:: </b></span>Upload flight info in an XML file.</td></tr>
+        <tr>
+            <td style="line-height:20px;" valign="top" width="100%">
+                <form action="?curdoc=xml/get_flight_info" method="post" enctype="multipart/form-data">
+                    Select your XML file: 
+                    <input type="file" name="flights" size=50 required="yes" enctype="multipart/form-data">
+                    <br><br>
+                    Options:<br>
+                    <input type="checkbox" name="display_results" checked>Display results on screen<br>
+                    <input type="checkbox" name="receive_xml" checked> I'd like to receive back an XML file for verification.
+                    <br><br>
+                    Upload file and process: <input type="submit" value="Process" alt="Upload File to Server">
+                </form>
+            </td>
+        </tr>
+    </table>
 </cfif>
 
 	<table width=100%>
@@ -142,8 +157,10 @@
 					</cfif>
 				</td>
 				<td>#programname#</td>
-				<td><a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#qStudentsMissingArrival.uniqueid#', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
-						<font color="Red">NEEDED - click to submit</font></a>
+				<td>
+	                <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival.uniqueID#" class="jQueryModal">
+						<font color="Red">NEEDED - click to submit</font>
+                    </a>
 				</td>
 			</tr>
 			</cfloop>
@@ -213,8 +230,10 @@
 					</cfif>
 				</td>
 				<td>#programname#</td>
-				<td><a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#qStudentsMissingDeparture.uniqueid#', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
-						<font color="Red">NEEDED - click to submit</font></a>
+				<td>
+                	<a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingDeparture.uniqueID#" class="jQueryModal">
+						<font color="Red">NEEDED - click to submit</font>
+                    </a>
 				</td>
 			</tr>
 			</cfloop>
@@ -243,8 +262,10 @@
 				<td>
 				</td>
 				<td>#programname#</td>
-				<td><a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#qStudentsMissingArrival_php.uniqueid#&php', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
-						<font color="Red">NEEDED - click to submit</font></a>
+				<td>
+                	<a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival_php.uniqueID#" class="jQueryModal">
+						<font color="Red">NEEDED - click to submit</font>
+                    </a>
 				</td>
 			</tr>
 			</cfloop>
@@ -273,8 +294,10 @@
 				<td>
 				</td>
 				<td>#programname#</td>
-				<td><a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#qStudentsMissingDeparture_php.uniqueid#&php', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
-						<font color="Red">NEEDED - click to submit</font></a>
+				<td>
+                	<a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingDeparture_php.uniqueID#" class="jQueryModal">
+						<font color="Red">NEEDED - click to submit</font>
+                    </a>
 				</td>
 			</tr>
 			</cfloop>

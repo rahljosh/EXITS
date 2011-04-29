@@ -1,5 +1,23 @@
-<cfif isdefined('url.studentid')>
-	<cfset client.studentid = #url.studentid#>
+<cfparam name="URL.studentID" default="0">
+<cfparam name="URL.uniqueID" default=""> 
+
+<cfif VAL(URL.studentID)>
+	<cfset CLIENT.studentid = URL.studentID>
+</cfif>
+
+<cfif LEN(URL.uniqueID)>
+
+    <!--- Get Student Information --->
+    <cfquery name="qGetStudentInfo" datasource="MySQL">
+        SELECT  
+        	s.studentID
+        FROM 
+        	smg_students s
+        WHERE 
+        	s.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.uniqueID#">
+    </cfquery>
+    
+    <cfset CLIENT.studentid = qGetStudentInfo.studentid>
 </cfif>
 
 <link rel="stylesheet" href="reports.css" type="text/css">

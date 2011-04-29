@@ -1,12 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>PHP Student Info</title>
-</head>
-
-<body>
-
 <cfif isdefined('url.unqid')>
 	<cfquery name="get_unqid" datasource="MySql">
 		SELECT *
@@ -116,6 +107,22 @@
 	where userid = '#get_Student_info.placerepid#'
 </cfquery>
 
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
+
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
+
+	});
+</script>
+
 <!----Header Table---->
 <table width=100% cellpadding=0 cellspacing=0 border=0 height="24">
 	<tr valign=middle height="24">
@@ -188,7 +195,7 @@
 				<div id="subMenuLinks">  
 				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>		
 				<a class=nav_bar href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#client.studentid#', 'Reports', 'height=250, width=620, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
-				<a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
+				<a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_info.uniqueID#" class="jQueryModal">Flight Information</a>
 			
 				<cfif get_student_info.hostid NEQ '0'>
 					<a class=nav_bar href="index.cfm?curdoc=intrep/int_host_fam_info&hostid=#get_student_info.hostid#">Host Family</A>

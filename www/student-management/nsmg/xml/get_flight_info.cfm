@@ -1,4 +1,21 @@
 <cfsetting requesttimeout="20000" />
+
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
+
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
+
+	});
+</script>  
+
 <table width=100%>
 	<tr><td bgcolor="#e2efc7" colspan=2><span class="get_attention"><b>:: </b></span>XML Upload Results</td></tr>
 
@@ -33,7 +50,7 @@ from smg_students
 where soid = '#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentid#'
 </cfquery>
 <cfif isDefined('form.display_results')>
-#i# - <a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#get_studentid.uniqueid#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentid#</a> 
+#i# - <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival.uniqueID#" class="jQueryModal">#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentid#</a> 
 </cfif><!----Put check for arrivals here---->
 
 <cfif get_studentid.recordcount eq 0>
