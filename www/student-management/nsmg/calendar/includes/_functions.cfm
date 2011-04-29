@@ -127,14 +127,14 @@
 	--->
 	<cfquery name="LOCAL.EventException" datasource="#APPLICATION.DSN#">
 		SELECT
-			e.date,
+			e.dateException,
 			e.calendar_event_id
 		FROM
 			calendar_event_exception e
 		WHERE
-			e.date >= <cfqueryparam value="#ARGUMENTS.From#" cfsqltype="CF_SQL_TIMESTAMP" />
+			e.dateException >= <cfqueryparam value="#ARGUMENTS.From#" cfsqltype="CF_SQL_TIMESTAMP" />
 		AND
-			e.date <= <cfqueryparam value="#ARGUMENTS.To#" cfsqltype="CF_SQL_TIMESTAMP" />
+			e.dateException <= <cfqueryparam value="#ARGUMENTS.To#" cfsqltype="CF_SQL_TIMESTAMP" />
 		AND
 			e.calendar_event_id IN 
 			(
@@ -154,7 +154,7 @@
 	<!--- Loop over exceptions. --->
 	<cfloop query="LOCAL.EventException">
 	
-		<cfset LOCAL.Exceptions[ "#LOCAL.EventException.calendar_event_id#:#Fix( LOCAL.EventException.date )#" ] = 1 />
+		<cfset LOCAL.Exceptions[ "#LOCAL.EventException.calendar_event_id#:#Fix( LOCAL.EventException.dateException )#" ] = 1 />
 	
 	</cfloop>
 	
