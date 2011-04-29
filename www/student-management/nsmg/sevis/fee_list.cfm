@@ -71,7 +71,7 @@
         <td align="center">Batch ID</td>
     </tr>
 	<cfloop query="qGetStudentList">
-		<tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
+		<tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
 			<td>#businessname#</td>
             <td>#firstname# #familylastname# &nbsp; (###studentid#)</td>
             <td>#DateFormat(dob, 'mm/dd/yyyy')#</td>
