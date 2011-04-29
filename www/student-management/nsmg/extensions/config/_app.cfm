@@ -61,16 +61,17 @@
 	APPLICATION.EMAIL.finance = 'marcel@iseusa.com';	
 	APPLICATION.EMAIL.cbcNotifications = 'support@student-management.com;bill@iseusa.com;margarita@iseusa.com;diana@iseusa.com;gary@iseusa.com';
 	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com';
+	APPLICATION.EMAIL.PHPContact = 'luke@phpusa.com';
 	
 	if ( VAL(qCompanyInfo.recordCount) ) {
 		
-		AppEmail.support = qCompanyInfo.support_email;
+		APPLICATION.EMAIL.support = qCompanyInfo.support_email;
 		// Phase Out this variable
 		APPLICATION.support_email = qCompanyInfo.support_email;
 		
 	} else {
 
-		AppEmail.support = 'support@student-management.com';
+		APPLICATION.EMAIL.support = 'support@student-management.com';
 		// Phase Out this variable
 		APPLICATION.support_email =  'support@student-management.com';
 	}

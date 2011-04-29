@@ -1,36 +1,40 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Student Information</title>
-</head>
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
 
-<body>
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
 
-<script language="JavaScript"> 	
-<!--//
-// opens small pop up in a defined format
-var newwindow;
-function OpenSmallW(url) {
-	newwindow=window.open(url, 'Application', 'height=300, width=400, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
-	if (window.focus) {newwindow.focus()}
-}
-// open online application 
-function OpenApp(url)
-{
-	newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
-	if (window.focus) {newwindow.focus()}
-}
-//-->
-<!--
-// opens letters in a defined format
-function OpenLetter(url) {
-	newwindow=window.open(url, 'Application', 'height=700, width=800, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
-	if (window.focus) {newwindow.focus()}
-}
-//-->
+	});
 
-</script>
+	<!--//
+	// opens small pop up in a defined format
+	var newwindow;
+	function OpenSmallW(url) {
+		newwindow=window.open(url, 'Application', 'height=300, width=400, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
+		if (window.focus) {newwindow.focus()}
+	}
+	// open online application 
+	function OpenApp(url)
+	{
+		newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
+		if (window.focus) {newwindow.focus()}
+	}
+	//-->
+	<!--
+	// opens letters in a defined format
+	function OpenLetter(url) {
+		newwindow=window.open(url, 'Application', 'height=700, width=800, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
+		if (window.focus) {newwindow.focus()}
+	}
+	//-->
+</script> 	
 
 <cfif isdefined('url.unqid')>
 	<cfquery name="get_unqid" datasource="MySql">
@@ -244,7 +248,7 @@ function OpenLetter(url) {
 				<div id="subMenuLinks">  
 				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>		
 				<a class=nav_bar href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#client.studentid#', 'Reports', 'height=250, width=620, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
-				<a class=nav_bar href="" onClick="javascript: win=window.open('intrep/int_flight_info.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=600, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
+                <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_info.uniqueID#" class="jQueryModal">Flight Information</a>
 				<cfif get_student_info.hostid NEQ '0' AND get_student_info.host_fam_approved LTE 4>
 					<a class=nav_bar href="index.cfm?curdoc=intrep/int_host_fam_info&hostid=#get_student_info.hostid#">Host Family</A>
 				</cfif>
@@ -375,7 +379,11 @@ function OpenLetter(url) {
 				<tr><td>: : <a href="" onClick="javascript: win=window.open('reports/acceptance_letter.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Acceptance Letter</a></td></tr>
 				<tr><td>: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?studentID=#uniqueid#');">Placement</a></td></tr>
                 <tr><td>: : <a href="javascript:OpenLetter('reports/labels_student_idcards.cfm?studentid=#studentid#');">Student ID Card</a></td></tr>
-				<tr><td><cfif get_student_info.hostid NEQ '0' AND get_student_info.host_fam_approved LTE 4>: : <a href="" onClick="javascript: win=window.open('intrep/int_flight_information_letter.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a></cfif></td></tr>
+				<cfif get_student_info.hostid NEQ '0' AND get_student_info.host_fam_approved LTE 4>
+	                <tr>
+                    	<td>: : <a href="" onClick="javascript: win=window.open('intrep/int_flight_information_letter.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a></td>
+                    </tr>
+				</cfif>                
 			</table>	
 		</td>	
 	</tr>
