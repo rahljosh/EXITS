@@ -311,26 +311,26 @@
 			if ( NOT VAL(qGetRegionGuaranteeRemote.recordCount) ) {
 				
 				// Return message to user if not was found
-				QueryAddRow(qReturnGurantee, 1);
+				QueryAddRow(qReturnGurantee);
 				QuerySetCell(qReturnGurantee, "regionID", 0);	
-				QuerySetCell(qReturnGurantee, "regionName", "---- No Guarantees available ----", 1);
+				QuerySetCell(qReturnGurantee, "regionName", "---- No Guarantees available ----");
 				
 			} else if ( NOT VAL(ARGUMENTS.regionID) ) {
 				
 				// Return message if regionID is not valid
-				QueryAddRow(qReturnGurantee, 1);
+				QueryAddRow(qReturnGurantee);
 				QuerySetCell(qReturnGurantee, "regionID", 0);	
-				QuerySetCell(qReturnGurantee, "regionName", "---- Select a Region first ----", 1);
+				QuerySetCell(qReturnGurantee, "regionName", "---- Select a Region first ----");
 				
 			} else {
 				
 				// Add first row "Select a Guarantee"
-				QueryAddRow(qReturnGurantee, 1);
+				QueryAddRow(qReturnGurantee);
 				QuerySetCell(qReturnGurantee, "regionID", 0);	
-				QuerySetCell(qReturnGurantee, "regionName", "---- Select a Guarantee ----", 1);
+				QuerySetCell(qReturnGurantee, "regionName", "---- Select a Guarantee ----");
 
 				For ( i=1; i LTE qGetRegionGuaranteeRemote.recordCount; i=i+1 ) {
-					QueryAddRow(qReturnGurantee, 1);
+					QueryAddRow(qReturnGurantee);
 					QuerySetCell(qReturnGurantee, "regionID", qGetRegionGuaranteeRemote.regionID[i]);
 					QuerySetCell(qReturnGurantee, "regionName", qGetRegionGuaranteeRemote.regionName[i]);
 				}

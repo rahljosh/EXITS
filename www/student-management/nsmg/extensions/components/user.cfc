@@ -195,11 +195,15 @@
                 	u.userid,
                     u.firstName,
                     u.lastName,
-                    u.email
+                    u.email,
+                    u.phone,
+                    r.regionName
                 FROM 
                 	smg_users u
                 INNER JOIN 
                 	user_access_rights uar ON u.userid = uar.userid
+				INNER JOIN
+                	smg_regions r ON r.regionID = uar.regionID                    
                 WHERE 
                 	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND 
