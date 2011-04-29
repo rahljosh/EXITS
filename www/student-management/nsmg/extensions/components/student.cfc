@@ -522,7 +522,8 @@
 	<cffunction name="emailFlightInformation" access="public" returntype="void" output="false" hint="Sends out flight notification when information is added/edited or deleted">
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
-		
+		<cfargument name="emailPDF" default="1" hint="Set to 0 to send the flight arrival in HTML format">
+        
 		<cfscript>
             var flightEmailTo = '';
             var flightEmailBody = '';
@@ -531,7 +532,14 @@
             // Get Student Information
             qGetStudentInfo = getStudentByID(ARGUMENTS.studentID);
             
+			// Path to save temp PDF files
 			pdfPath = APPLICATION.PATH.temp & '##' & qGetStudentInfo.studentID & qGetStudentInfo.firstName & qGetStudentInfo.familyLastName & '-FlightInformation.pdf';
+			
+			// Get Host Family Information
+			qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInfo.hostID);
+			
+			// Get School Dates
+			qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentInfo.schoolID, programID=qGetStudentInfo.programID);
 			
             // Get Current User
             qGetCurrentUser = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
@@ -541,6 +549,9 @@
 
 			// Get Regional Manager
 			qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetStudentInfo.regionAssigned);
+			
+			// Get Area Representative
+			qGetAreaRepresentative = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.areaRepID);
 			
             // Get Specific Flight Information
             qGetDeletedFlightInfo = getFlightInformationByFlightID(flightID=VAL(ARGUMENTS.flightID));
@@ -565,7 +576,8 @@
                 
             } else {
                 
-				flightInfoLink = '#CLIENT.exits_url#/nsmg/reports/flight_information.cfm?uniqueID=#qGetStudentInfo.uniqueid#';
+				flightInfoLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.studentID#';
+				//flightInfoLink = '#CLIENT.exits_url#/nsmg/reports/flight_information.cfm?uniqueID=#qGetStudentInfo.uniqueid#';
                 // Public Student - Email Facilitator
                 if ( IsValid("email", qGetFacilitator.email) ) {
                     flightEmailTo = qGetFacilitator.email;
@@ -579,6 +591,9 @@
             if ( APPLICATION.IsServerLocal ) {
                 flightEmailTo = APPLICATION.EMAIL.support;
             }
+			
+			// DELETE THIS
+			// flightEmailTo = 'marcus@iseusa.com';
         </cfscript>
         
         <!--- Send out Email if there is a flight information or if a leg has been deleted --->
@@ -586,37 +601,105 @@
         	
             <cfoutput>
             	
+                <!--- Information common for body and PDF--->
+                <cfsavecontent variable="basicInformation">
+
+                    <p style="color: ##333;">
+                        <span style="font-weight:bold;">Student:</span>
+                        #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#)
+                    </p>
+                
+                    <p style="color: ##333;">
+                        <span style="font-weight:bold;">Region:</span>
+                        #qGetRegionalManager.regionName#
+                    </p>
+    
+                    <p style="color: ##333;">
+                        <span style="font-weight:bold;">Regional Manager:</span>
+                        #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
+                        - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a> - Phone: #qGetRegionalManager.phone#
+                    </p>
+                    
+                    <p style="color: ##333;">
+                        <span style="font-weight:bold;">Area Representative:</span> 
+                        #qGetAreaRepresentative.firstName# #qGetAreaRepresentative.lastName# (###qGetAreaRepresentative.userID#)
+                        - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetAreaRepresentative.email#</a> - Phone: #qGetAreaRepresentative.phone#
+                    </p>
+                    
+                    <p style="color: ##333;">
+                        <span style="font-weight:bold;">Host Family:</span>
+                        <!--- Host Father --->
+                        <cfif LEN(qGetHostFamily.fatherFirstName)> 
+                            Mr. #qGetHostFamily.fatherFirstName# 
+                            <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                #qGetHostFamily.fatherLastName# 
+                            </cfif>							
+                        </cfif>
+                        
+                        <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
+                        
+                        <!--- Host Mother --->
+                        <cfif LEN(qGetHostFamily.motherFirstName)>
+                            Mrs. #qGetHostFamily.motherFirstName#
+                            <cfif qGetHostFamily.fatherFirstName NEQ qGetHostFamily.motherFirstName>
+                                #qGetHostFamily.motherFirstName#
+                            </cfif>
+                        </cfif>
+                        
+                        <!--- Family Last Name --->                            
+                        <cfif qGetHostFamily.fatherFirstName EQ qGetHostFamily.motherFirstName>
+                            #qGetHostFamily.familyLastName#		
+                        </cfif>
+                        
+                        (###qGetHostFamily.hostid#) - Phone: #qGetHostFamily.phone# <br />
+                        
+                        <!--- Address --->
+                        <span style="margin-left:67px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
+                    </p>
+                    
+                    <!--- Arrival Airport --->
+                    <p style="color: ##333;">
+                        <span style="font-weight:bold;">Arrival/Departure Airport:</span> 
+                        <cfif LEN(qGetHostFamily.airport_city)>#qGetHostFamily.airport_city# <cfelse> n/a </cfif>
+                        - Airport Code: <cfif LEN(qGetHostFamily.major_air_code)>#qGetHostFamily.major_air_code# <cfelse> n/a </cfif>
+                    </p>
+    
+                    <!--- Notes --->
+                    <p style="color: ##333;">
+                        <span style="font-weight:bold;">Notes:</span> 
+                        <cfif LEN(qGetStudentInfo.flight_info_notes)> #qGetStudentInfo.flight_info_notes# <cfelse> n/a </cfif>
+                    </p>
+                    
+                    <!--- Today's Date --->
+                    <p style="color: ##333;">
+                        <span style="font-weight:bold;">Today's Date:</span> 
+                        #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST
+                    </p>
+                    
+                </cfsavecontent>
+               
                 <!--- Email Body --->
                 <cfsavecontent variable="flightEmailBody">
 
                     <!--- Student Information --->
-                    <fieldset style="margin: 5px 0px 20px 0px; padding: 10px; border: ##DDD 1px solid;">
+                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
                         
-                        <legend style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                            Student: #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#)
+                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
+                            Flight Information
                         </legend>
 
-                        <p style="color: ##666;">
-                            Regional Manager: #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# ###qGetRegionalManager.userID# 
-                            <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a>
-                        </p>
-
-                        <p style="color: ##666;">
+                        <p style="color: ##333;">
                         	Please find flight information attached. If it looks good, please feel free to forward to your regional manager.                                                      
                         </p>
-                        
-                        <p style="color: ##666;">
-	                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a>.
+
+                        <p style="color: ##333;">
+	                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a> then click on "Flight Information".
 						</p>
-                        
-                        <p style="color: ##666;">
-                        	Click here if you would like to see it on EXITS
-                        </p>
                         
                         <!--- Flight Leg Deleted --->
                         <cfif qGetDeletedFlightInfo.recordCount>
                             
-                            <p style="color: ##666;">
+                            <p style="color: ##333;">
                             
                                 <cfif qGetDeletedFlightInfo.flight_type EQ 'arrival'>
                                     <p><strong>Arrival information has been deleted</strong></p>
@@ -628,33 +711,30 @@
                     
                                 <p>
                                     The flight leg from <strong>#qGetDeletedFlightInfo.dep_aircode#</strong> to <strong>#qGetDeletedFlightInfo.arrival_aircode#</strong> 
-                                    on <strong>#DateFormat(qGetDeletedFlightInfo.dep_date, 'mm/dd/yyyy')#</strong> has been deleted. Please see an updated flight information below.
+                                    on <strong>#DateFormat(qGetDeletedFlightInfo.dep_date, 'mm/dd/yyyy')#</strong> has been deleted. Please see an updated flight information attached.
                                 </p>
                             
                             </p>
                             
                         </cfif>
     					
-                        <p style="color: ##666;">
-                            Date: #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST
-                        </p>
-                        
-                        <p style="color: ##666;">
-                            Updated By: #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
-                                        <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname#) </cfif>
+						#basicInformation#
+
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Updated By:</span> 
+                            #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
+                            <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname#) </cfif>
                         </p>
                         
                         <cfif APPLICATION.IsServerLocal>
     
-                            <p style="color: ##666; padding-bottom:5px;">
+                            <p style="color: ##333; padding-bottom:5px; font-weight:bold;">
                                 PS: Development Server
                             </p>
                         
                         </cfif>
                         
                     </fieldset>
-    
-                    <br />
 
                 </cfsavecontent>
                 
@@ -663,24 +743,30 @@
                 <cfsavecontent variable="flightInfoReport">
                 
                     <!--- Student Information --->
-                    <fieldset style="margin: 5px 0px 20px 0px; padding: 10px; border: ##DDD 1px solid;">
+                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
                         
-                        <legend style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                            Student: #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#)
+                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
+                        	#CLIENT.companyName# - Flight Information
                         </legend>
+						
+                        <p style="color: ##333;">
+                            We are pleased to give you the flight information for the student below. 
+                            Please pass it to the host family information as soon as possible and in case of any doubt do not hesitate to contact us.
+                        </p>
+
+						#basicInformation#
                         
                     </fieldset>
-    
-                    <br />
+
                                     
                     <!--- Pre-AYP Arrival Information --->
                     <cfif qGetPreAYPArrival.recordCount>
                     
-                        <fieldset style="margin: 5px 0px 20px 0px; padding: 10px; border: ##DDD 1px solid;">
+                        <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
                             
-                            <legend style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">PRE-AYP ARRIVAL INFORMATION</legend>
+                            <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">PRE-AYP ARRIVAL INFORMATION</legend>
                             
-                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
+                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; color: ##333; font-size:13px;"">	
                                 <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                                     <td style="padding:4px 0px 4px 0px;">Date</td>
                                     <td style="padding:4px 0px 4px 0px;">Depart <br /> City</td>
@@ -704,25 +790,38 @@
                                         <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetPreAYPArrival.dep_time, 'hh:mm tt')#</td>
                                         <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetPreAYPArrival.arrival_time, 'hh:mm tt')#</td>
                                         <td style="padding:4px 0px 4px 0px;">#YesNoFormat(VAL(qGetPreAYPArrival.overnight))#</td>
-                                    </tr>                         
+                                    </tr>
+
+									<cfif VAL(qGetPreAYPArrival.overnight)>
+                                    	<tr style="text-align:center; <cfif qGetPreAYPArrival.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
+                                    		<td colspan="9">
+                                            	Please note arrival time is the next day due to an overnight flight.
+                                            </td>
+                                        </tr>
+                                    </cfif>
+                                    	
                                 </cfloop> 
                                                                
                             </table>
                             
                         </fieldset>
                         
-                        <br />
-                    
                     </cfif>
                     
+                    
                     <!--- Arrival Information --->
-                    <fieldset style="margin: 5px 0px 20px 0px; padding: 10px; border: ##DDD 1px solid;">
+                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
                         
-                        <legend style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">ARRIVAL TO HOST FAMILY INFORMATION</legend>
-                
+                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">ARRIVAL TO HOST FAMILY INFORMATION</legend>
+
+                        <!--- School Start Date --->
+                        <p style="color: ##333;">
+                            School Start Date: #qGetSchoolDates.startDate#
+                        </p>
+
                         <cfif qGetArrival.recordCount>
                                 
-                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
+                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; color: ##333; font-size:13px;"">	
                                 <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                                     <td style="padding:4px 0px 4px 0px;">Date</td>
                                     <td style="padding:4px 0px 4px 0px;">Depart <br /> City</td>
@@ -747,14 +846,23 @@
                                         <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetArrival.dep_time, 'hh:mm tt')#</td>
                                         <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetArrival.arrival_time, 'hh:mm tt')#</td>
                                         <td style="padding:4px 0px 4px 0px;">#YesNoFormat(VAL(qGetArrival.overnight))#</td>
-                                    </tr>                         
+                                    </tr>    
+                                    
+									<cfif VAL(qGetArrival.overnight)>
+                                    	<tr style="text-align:center; <cfif qGetArrival.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
+                                    		<td colspan="9">
+                                            	Please note arrival time is the next day due to an overnight flight.
+                                            </td>
+                                        </tr>
+                                    </cfif>
+                                                         
                                 </cfloop>    						
                             
                             </table>
                             
                         <cfelse>
                             
-                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
+                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;"">	
                                 <tr style="color: ##fff; font-weight: bold; background-color: ##0069aa;">
                                     <td align="center" style="padding:4px 0px 4px 0px;">No Arrival information at this moment</td>
                                 </tr>                                
@@ -763,17 +871,21 @@
                         </cfif>
                 
                     </fieldset>
-                
-                    <br />	
+                	
                     
                     <!--- Departure Information --->
-                    <fieldset style="margin: 5px 0px 20px 0px; padding: 10px; border: ##DDD 1px solid;">
+                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
                         
-                        <legend style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">DEPARTURE FROM USA INFORMATION</legend>
+                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">DEPARTURE FROM USA INFORMATION</legend>
+
+                        <!--- School End Date --->
+                        <p style="color: ##333;">
+                            School End Date: #qGetSchoolDates.endDate#
+                        </p>
                 
                         <cfif qGetDeparture.recordCount>
                                 
-                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
+                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;"">	
                                 <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                                     <td style="padding:4px 0px 4px 0px;">Date</td>
                                     <td style="padding:4px 0px 4px 0px;">Depart <br /> City</td>
@@ -797,14 +909,23 @@
                                         <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetDeparture.dep_time, 'hh:mm tt')#</td>
                                         <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetDeparture.arrival_time, 'hh:mm tt')#</td>
                                         <td style="padding:4px 0px 4px 0px;">#YesNoFormat(VAL(qGetDeparture.overnight))#</td>
-                                    </tr>                         
+                                    </tr>      
+
+									<cfif VAL(qGetDeparture.overnight)>
+                                    	<tr style="text-align:center; <cfif qGetDeparture.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
+                                    		<td colspan="9">
+                                            	Please note arrival time is the next day due to an overnight flight.
+                                            </td>
+                                        </tr>
+                                    </cfif>
+
                                 </cfloop>    						
                             
                             </table>
                             
                         <cfelse>
                             
-                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
+                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;"">	
                                 <tr style="color: ##fff; font-weight: bold; background-color: ##0069aa;">
                                     <td align="center" style="padding:4px 0px 4px 0px;">No Departure information at this moment</td>
                                 </tr>                                
@@ -813,12 +934,6 @@
                         </cfif>
                 
                     </fieldset>
-                
-                    <br />	
-
-                    <p style="color: ##666;">
-                        Date: #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST
-                    </p>
                 
                 </cfsavecontent>           
                 

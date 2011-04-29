@@ -43,7 +43,8 @@
         	s.studentID,
             s.uniqueID,
             s.companyID,
-            s.programID,             
+            s.programID,
+            s.schoolID,             
             s.familylastname, 
             s.firstname,             
             s.hostid, 
@@ -69,6 +70,9 @@
     </cfquery>
        
 	<cfscript>
+		// Get School Dates
+		qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentInfo.schoolID, programID=qGetStudentInfo.programID);
+	
 		// Could Not find Student
 		if ( NOT VAL(qGetStudentInfo.recordCount) ) {
 			// Set Page Message
@@ -483,7 +487,7 @@
         
                     <!--- EMAIL FLIGHT INFORMATION / Only Office Users --->
                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                        <table border="0" align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1">
+                        <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
                             <tr bgcolor="##D5DCE5">
                                 <td align="center" width="50%">REGIONAL DIRECTOR</td>
                                 <td align="center" width="50%">YOURSELF</td>
@@ -522,7 +526,7 @@
                     <!--- PRE-AYP ARRIVAL INFORMATION --->
                     <cfif VAL(qGetStudentInfo.AYPEnglish) OR VAL(qGetStudentInfo.AYPOrientation)>
                         
-                        <table border="0" align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1">
+                        <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
                             <th colspan="11" bgcolor="##A0D69A"> P R E - A Y P &nbsp;&nbsp; A R R I V A L &nbsp; &nbsp; I N F O R M A T I O N </th>
                             <tr bgcolor="##A0D69A">
 								<!--- Delete Option --->    
@@ -609,8 +613,22 @@
                     
                     
                     <!--- A R R I V A L    I N F O R M A T I O N --->
-                    <table border="0" align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1">
+                    <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
                         <th colspan="11" bgcolor="##ACB9CD"> A R R I V A L &nbsp;&nbsp; T O &nbsp; &nbsp; H O S T &nbsp; &nbsp; F A M I L Y &nbsp; &nbsp; I N F O R M A T I O N </th>
+
+                        <tr bgcolor="##ACB9CD">
+                            <td colspan="11">
+                                Arrival/Departure Airport: <cfif LEN(qGetStudentInfo.airport_city)>#qGetStudentInfo.airport_city# <cfelse> n/a </cfif>
+                                - Airport Code: <cfif LEN(qGetStudentInfo.major_air_code)>#qGetStudentInfo.major_air_code# <cfelse> n/a </cfif>
+                            </td>
+                        </tr> 
+                        
+                        <tr bgcolor="##ACB9CD">
+                            <td colspan="11">
+                                School Start Date: <cfif LEN(qGetSchoolDates.startDate)>#qGetSchoolDates.startDate# <cfelse> n/a </cfif>
+                            </td>
+                        </tr> 
+                        
                         <tr bgcolor="##ACB9CD">
 							<!--- Delete Option --->    
                             <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>                            
@@ -627,12 +645,6 @@
                             <th>Overnight <br /> Flight</th>
                             <th><font size="-2">Status</font></th>
                         </tr>
-                        
-                        <cfif LEN(qGetStudentInfo.airport_city) OR LEN(qGetStudentInfo.major_air_code)>
-                            <tr bgcolor="##ACB9CD">
-                                <td colspan="11">The Airport Arrival is: &nbsp; #qGetStudentInfo.airport_city# - #qGetStudentInfo.major_air_code#</td>
-                            </tr> 
-						</cfif>
                         
 						<!--- EDIT FLIGHT INFORMATION --->                
                         <input type="hidden" name="arrivalCount" value='#qGetArrival.recordcount#'>
@@ -699,7 +711,7 @@
 					
                     
                     <!--- N O T E S --->            
-                    <table border="0" align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1">
+                    <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
                         <th bgcolor="##ACB9CD"> N O T E S &nbsp; O N &nbsp; T H I S &nbsp; F L I G H T &nbsp; I N F O R M A T I O N </tr>
                         <tr bgcolor="##D5DCE5">
                             <td align="center"><textarea cols="75" rows="3" name="flightNotes" wrap="VIRTUAL">#qGetStudentInfo.flight_info_notes#</textarea></td>
@@ -709,8 +721,15 @@
                 
                 
                     <!--- D E P A R T U R E      I N F O R M A T I O N    --->
-                    <table border="0" align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1">
+                    <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
                         <th colspan="11" bgcolor="##FDCEAC">D E P A R T U R E &nbsp;&nbsp; F R O M &nbsp; &nbsp; U S A  &nbsp; &nbsp; I N F O R M A T I O N</th>
+
+                        <tr bgcolor="##FDCEAC">
+                            <td colspan="11">
+                                School End Date: <cfif LEN(qGetSchoolDates.endDate)>#qGetSchoolDates.endDate# <cfelse> n/a </cfif>
+                            </td>
+                        </tr> 
+                        
                         <tr bgcolor="##FDCEAC">
 							<!--- Delete Option --->    
                             <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>                            
@@ -796,7 +815,7 @@
         </table> <!--- end of main table --->
         
         <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType) AND VAL(qGetStudentInfo.recordCount)>
-            <table border="0" cellpadding="4" cellspacing="0" width="98%" class="section" align="center">
+            <table cellpadding="4" cellspacing="0" width="98%" class="section" align="center" style="border:1px solid ##CCC">
                 <tr>
                     <td align="center"><input name="Submit" type="image" src="../pics/update.gif" border="0" alt=" update ">&nbsp;</td>
                 </tr>
