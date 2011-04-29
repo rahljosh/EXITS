@@ -203,7 +203,7 @@
 
                 <cfif LEN(ARGUMENTS.liveAtHome)>
                     AND
-                        liveAtHome = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.liveAtHome)#">
+                        liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.liveAtHome#">
                 </cfif>
 
 		</cfquery>

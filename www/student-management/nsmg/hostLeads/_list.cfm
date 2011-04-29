@@ -250,8 +250,8 @@
 			} else {
 				tableBody = '<tr bgcolor="#FFFFFF" id="' + id + '">';
 			}
-				tableBody += '<td><a class="jQueryModal" href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '">' + firstName + '</a></td>';
-				tableBody += '<td><a class="jQueryModal" href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '">' + lastName + '</a></td>';
+				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">' + firstName + '</a></td>';
+				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">' + lastName + '</a></td>';
 				tableBody += '<td>' + city + '</a></td>';
 				tableBody += '<td>' + state + '</td>';
 				// tableBody += '<td>' + zipCode + '</td>';
@@ -263,9 +263,9 @@
 				tableBody += '<td>' + areaRepAssigned + '</td>';
 				tableBody += '<td>' + statusAssigned + '</td>';
 				<cfif ListFind('1,2,3,4', CLIENT.userType)>
-					tableBody += '<td align="center"><a class="jQueryModal" href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '">[Details]</a> &nbsp; | &nbsp; <a href="javascript:confirmDeleteHostLead(' + id + ');">[Delete]</a></td>';
+					tableBody += '<td align="center"><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">[Details]</a> &nbsp; | &nbsp; <a href="javascript:confirmDeleteHostLead(' + id + ');">[Delete]</a></td>';
 				<cfelse>
-					tableBody += '<td align="center"><a class="jQueryModal" href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '">[Details]</a></td>';
+					tableBody += '<td align="center"><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">[Details]</a></td>';
 				</cfif>
 			tableBody += '</tr>';
 			// Append table rows
