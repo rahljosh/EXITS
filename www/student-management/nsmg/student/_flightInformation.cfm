@@ -24,8 +24,9 @@
     <cfparam name="URL.flightID" default="0">
 		        
 	<!--- Param GLOBAL FORM Variables --->
-    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.subAction" type="string"  default="">
     <cfparam name="FORM.uniqueID" type="string" default="">
+    <cfparam name="FORM.flight_notes" type="string" default="">
     <cfparam name="FORM.preAYPArrivalCount" default="0">
     <cfparam name="FORM.arrivalCount" default="0">
     <cfparam name="FORM.departureCount" default="0">
@@ -95,8 +96,8 @@
     </cfscript>
 
 
-	<!--- FORM SUBMITTED --->
-	<cfif VAL(FORM.submitted)>
+	<!--- FORM SUBMITTED | Insert / Update --->
+	<cfif FORM.subAction EQ 'update'>
 		
 		<cfscript>
             // Update Flight Notes
@@ -151,7 +152,7 @@
         <cfloop From="1" To="#FORM.preAYPArrivalCount#" Index="i">
             
             <!--- Param specific FORM Variables --->
-            <cfparam name="FORM.incomingPreAYPFlightID#i#" default="">
+            <cfparam name="FORM.incomingPreAYPflightID#i#" default="">
             <cfparam name="FORM.incomingPreAYPFlightNumber#i#" default="">
             <cfparam name="FORM.incomingPreAYPDepartureCity#i#" default="">
             <cfparam name="FORM.incomingPreAYPDepartureAirCode#i#" default="">
@@ -164,7 +165,7 @@
             
             <cfscript>
                 APPLICATION.CFC.STUDENT.updateFlightInfo(
-                    flightID=FORM["incomingPreAYPFlightID" & i],
+                    flightID=FORM["incomingPreAYPflightID" & i],
 					studentID=qGetStudentInfo.studentID,
 					companyID=qGetStudentInfo.companyID,
 					programID=qGetStudentInfo.programID,
@@ -235,7 +236,7 @@
         <cfloop From="1" To="#FORM.arrivalCount#" Index="i">
             
             <!--- Param specific FORM Variables --->
-            <cfparam name="FORM.incomingFlightID#i#" default="">
+            <cfparam name="FORM.incomingflightID#i#" default="">
             <cfparam name="FORM.incomingFlightNumber#i#" default="">
             <cfparam name="FORM.incomingDepartureCity#i#" default="">
             <cfparam name="FORM.incomingDepartureAirCode#i#" default="">
@@ -248,7 +249,7 @@
             
             <cfscript>
                 APPLICATION.CFC.STUDENT.updateFlightInfo(
-                    flightID=FORM["incomingFlightID" & i],
+                    flightID=FORM["incomingflightID" & i],
 					studentID=qGetStudentInfo.studentID,
 					companyID=qGetStudentInfo.companyID,
 					programID=qGetStudentInfo.programID,
@@ -319,7 +320,7 @@
         <cfloop From="1" To="#FORM.departureCount#" Index="i">
 
             <!--- Param specific FORM Variables --->
-            <cfparam name="FORM.outgoingFlightID#i#" default="0">
+            <cfparam name="FORM.outgoingflightID#i#" default="0">
             <cfparam name="FORM.outgoingFlightNumber#i#" default="">
             <cfparam name="FORM.outgoingDepartureCity#i#" default="">
             <cfparam name="FORM.outgoingDepartureAirCode#i#" default="">
@@ -332,7 +333,7 @@
             
             <cfscript>
                 APPLICATION.CFC.STUDENT.updateFlightInfo(
-                    flightID=FORM["outgoingFlightID" & i],
+                    flightID=FORM["outgoingflightID" & i],
 					studentID=qGetStudentInfo.studentID,
 					companyID=qGetStudentInfo.companyID,
 					programID=qGetStudentInfo.programID,
@@ -355,15 +356,38 @@
 		---------------------------------------->
 
         <cfscript>
-			// Send out email notification
-			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID);
-		
+			// Send out email notification if flight information was entered by an International Representative / Branch
+			if ( ListFind("8,11,13", CLIENT.userType) ) {	 
+				APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID);
+			}
+			
 			// Set Page Message
 			SESSION.pageMessages.Add("Flight Information Updated");
 		</cfscript>
+
+
+	<cfelseif FORM.subAction EQ 'emailRegionalManager'>
+    
+        <cfscript>
+			// Send out email notification to the regional manager
+			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, sendEmailTo='regionalManager');
+			
+			// Set Page Message
+			SESSION.pageMessages.Add("Flight Information emailed to the Regional Manager");
+		</cfscript>
+            
+    <cfelseif FORM.subAction EQ 'emailCurrentUser'>
+
+        <cfscript>
+			// Send out email notification to the current user
+			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, sendEmailTo='currentUser');
+
+			// Set Page Message
+			SESSION.pageMessages.Add("Flight Information emailed to you");
+		</cfscript>
             
     </cfif> 
-	<!--- END OF FORM.submitted --->
+	<!--- END OF FORM.subAction --->
 
     <cfscript>
 		// Get Pre-AYP Arrival
@@ -449,7 +473,7 @@
             // -->
         </script>
 
-		<cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
+		<cfif LEN(FORM.subAction) AND NOT SESSION.formErrors.length()>
         
             <script language="javascript">
                 // Close Window After 1.5 Seconds
@@ -494,16 +518,20 @@
                             </tr>
                             <tr bgcolor="##D5DCE5">
                                 <td align="center" width="50%">
-                                    <form name="email" action="../reports/email_flight_html.cfm" method="post" onsubmit="return confirm ('Are you sure? This Flight Information will be sent to the Regional Director')">
-                                        <input type="image" src="../pics/sendemail.gif" value="send email"><br />
-                                        <font size="-2" color="##CC6600"><b>Be sure you have updated the flight information before sending the e-mail to the Regional Director.</b></font>
+                                    <form name="emailRegionalManager" action="#CGI.SCRIPT_NAME#" method="post">
+                                        <input type="hidden" name="subAction" value="emailRegionalManager" />
+                                        <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
+                                    	<input type="image" src="../pics/sendemail.gif" value="send email">
                                     </form>
+                                    <font size="-2" color="##CC6600"><b>Be sure you have updated the flight information before sending the e-mail to the Regional Director.</b></font>
                                 </td>
                                 <td align="center" width="50%">
-                                    <form name="email2" action="../reports/email_flight_html2.cfm" method="post" onsubmit="return confirm ('Are you sure? This Flight Information will be sent to Yourself')">
-                                        <input type="image" src="../pics/sendemail.gif" value="send email"><br />
-                                        <font size="-2" color="##CC6600"><b>Be sure you have updated the flight information before sending the e-mail to yourself.</b></font>
+                                    <form name="emailCurrentUser" action="#CGI.SCRIPT_NAME#" method="post">
+                                        <input type="hidden" name="subAction" value="emailCurrentUser" />
+                                        <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
+                                    	<input type="image" src="../pics/sendemail.gif" value="send email">
                                     </form>
+                                    <font size="-2" color="##CC6600"><b>Be sure you have updated the flight information before sending the e-mail to yourself.</b></font>
                                 </td>
                             </tr>
                         </table>
@@ -520,7 +548,7 @@
                     </cfif>
         
                     <form name="flightInformation" action="#CGI.SCRIPT_NAME#" method="post">
-                    <input type="hidden" name="submitted" value="1" />
+                    <input type="hidden" name="subAction" value="update" />
                     <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
                     
                     <!--- PRE-AYP ARRIVAL INFORMATION --->
@@ -548,12 +576,12 @@
                             <!--- EDIT FLIGHT INFORMATION --->
                             <input type="hidden" name="preAYPArrivalCount" value='#qGetPreAypArrival.recordcount#'>
                             <cfloop query="qGetPreAypArrival">
-                                <input type="hidden" name="incomingPreAYPFlightID#qGetPreAypArrival.currentrow#" value="#qGetPreAypArrival.flightid#">
+                                <input type="hidden" name="incomingPreAYPflightID#qGetPreAypArrival.currentrow#" value="#qGetPreAypArrival.flightID#">
                                 <tr bgcolor="##DDF0DD">  
                                     <!--- Delete Option --->                      
                                     <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
                                         <td align="center">
-                                            <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightid=#flightid#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
+                                            <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightID=#flightID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
                                         </td>
                                     </cfif>
                                     <td><input type="text" name="incomingPreAYPDepartureDate#qGetPreAypArrival.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="date-pick" maxlength="10"></td>
@@ -649,11 +677,11 @@
 						<!--- EDIT FLIGHT INFORMATION --->                
                         <input type="hidden" name="arrivalCount" value='#qGetArrival.recordcount#'>
                         <cfloop query="qGetArrival">
-                            <input type="hidden" name="incomingFlightID#qGetArrival.currentrow#" value="#flightid#">
+                            <input type="hidden" name="incomingflightID#qGetArrival.currentrow#" value="#flightID#">
                             <tr bgcolor="##D5DCE5">                        
                                 <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
     	                            <td align="center">
-                                        <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightid=#flightid#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
+                                        <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightID=#flightID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
 		                            </td>
                                 </cfif>                                
                                 <td><input type="text" name="incomingDepartureDate#qGetArrival.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="date-pick" maxlength="10"></td>
@@ -751,11 +779,11 @@
                         <input type="hidden" name="departureCount" value='#qGetDeparture.recordcount#'>
                     
                         <cfloop query="qGetDeparture">	
-                            <input type="hidden" name="outgoingFlightID#qGetDeparture.currentrow#" value="#flightid#">
+                            <input type="hidden" name="outgoingflightID#qGetDeparture.currentrow#" value="#flightID#">
                             <tr bgcolor="##FEE6D3">                        
                             	<cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
 	                                <td align="center">
-                                        <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightid=#flightid#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
+                                        <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightID=#flightID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
 	                                </td>
 								</cfif>
                                 <td><input type="text" name="outgoingDepartureDate#qGetDeparture.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="date-pick" maxlength="10"></td>
