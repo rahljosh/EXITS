@@ -52,6 +52,82 @@
 		<cfreturn qGetStudentByID>
 	</cffunction>
 
+
+	<cffunction name="getStudentFullInformationByID" access="public" returntype="query" output="false" hint="Gets a student, intl. rep, program, host family information by studentID or uniqueID">
+    	<cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="uniqueID" default="" hint="uniqueID is not required">
+              
+        <cfquery 
+			name="qGetStudentFullInformationByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					s.studentID,
+                    s.uniqueID,
+                    s.hostID,
+                    s.programID,
+                    s.schoolID,
+                    s.regionAssigned,
+                    s.intRep,
+                    s.areaRepID,
+                    s.placeRepID,
+                    s.firstName,
+                    s.familyLastName,
+                    s.dob,
+                    s.active,
+                    s.flight_info_notes,
+                    <!--- Intl Representative --->
+                    intlRep.userID AS intlRepUserID,
+                    intlRep.firstName AS intlRepFirstName,
+                    intlRep.lastName AS intlRepLastName,
+                    intlRep.businessName AS intlRepBusinessName,
+                    intlRep.email AS intlRepEmail,
+                    <!--- Program --->
+                    p.programName,
+                    <!--- Region --->
+					r.regionName,
+					<!--- Placing Representative --->
+                    place.userID AS placeUserID,
+                    place.firstName AS placeFirstName,
+                    place.lastName AS placeLastName,
+					place.email AS	placeEmail,
+                    place.phone AS placePhone,
+                    <!--- Area Representative --->
+                    areaRep.userID AS areaRepUserID,
+                    areaRep.firstName AS areaRepFirstName,
+                    areaRep.lastName AS areaRepLastName,
+					areaRep.email AS areaRepEmail,
+                    areaRep.phone AS areaRepPhone
+                    
+                FROM 
+                    smg_students s
+                INNER JOIN
+                	smg_users intlRep ON intlRep.userID = s.intRep    
+				LEFT OUTER JOIN
+                	smg_regions r ON r.regionID = s.regionAssigned                                 
+				LEFT OUTER JOIN
+                	smg_programs p ON p.programID = s.programID                    
+				LEFT OUTER JOIN
+                	smg_users place ON place.userID = s.placeRepID
+				LEFT OUTER JOIN
+                	smg_users areaRep ON areaRep.userID = s.areaRepID
+                                   
+                WHERE
+                	1 = 1
+					
+					<cfif VAL(ARGUMENTS.studentID)>
+	                    AND
+                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+					</cfif>
+                    
+					<cfif LEN(ARGUMENTS.uniqueID)>
+	                    AND
+                        	uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+					</cfif>
+		</cfquery>
+		   
+		<cfreturn qGetStudentFullInformationByID>
+	</cffunction>
+
 	
 	<cffunction name="isStudentAssignedToPHP" access="public" returntype="numeric" output="false" hint="Returns 1 if student is assigned to PHP">
     	<cfargument name="studentID" default="0" hint="studentID is not required">
@@ -523,77 +599,97 @@
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
 		<cfargument name="emailPDF" default="1" hint="Set to 0 to send the flight arrival in HTML format">
-        
+        <cfargument name="sendEmailTo" default="" hint="regionalManager | currentUser">
+       
+   		<!--- Import CustomTag --->
+		<cfimport taglib="../customTags/gui/" prefix="gui" />	
+
 		<cfscript>
             var flightEmailTo = '';
+			var flightEmailCC = '';
             var flightEmailBody = '';
 			var flightInfoReport = '';
         	
             // Get Student Information
-            qGetStudentInfo = getStudentByID(ARGUMENTS.studentID);
-            
+			qGetStudentFullInformation = getStudentFullInformationByID(ARGUMENTS.studentID);
+			
 			// Path to save temp PDF files
-			pdfPath = APPLICATION.PATH.temp & '##' & qGetStudentInfo.studentID & qGetStudentInfo.firstName & qGetStudentInfo.familyLastName & '-FlightInformation.pdf';
+			pdfPath = APPLICATION.PATH.temp & '##' & qGetStudentFullInformation.studentID & '-' & qGetStudentFullInformation.firstName & qGetStudentFullInformation.familyLastName & '-FlightInformation.pdf';
+			// Remove Empty Spaces
+			pdfPath = ReplaceNoCase(pdfPath, " ", "", "ALL");
 			
 			// Get Host Family Information
-			qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInfo.hostID);
+			qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentFullInformation.hostID);
 			
 			// Get School Dates
-			qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentInfo.schoolID, programID=qGetStudentInfo.programID);
+			qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentFullInformation.schoolID, programID=qGetStudentFullInformation.programID);
 			
             // Get Current User
             qGetCurrentUser = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
             
             // Get Facilitator Email
-            qGetFacilitator = APPLICATION.CFC.REGION.getRegionFacilitatorByRegionID(regionID=qGetStudentInfo.regionAssigned);
-
-			// Get Regional Manager
-			qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetStudentInfo.regionAssigned);
+            qGetFacilitator = APPLICATION.CFC.REGION.getRegionFacilitatorByRegionID(regionID=qGetStudentFullInformation.regionAssigned);
 			
-			// Get Area Representative
-			qGetAreaRepresentative = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.areaRepID);
+			// Get Regional Manager
+			qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetStudentFullInformation.regionAssigned);
 			
             // Get Specific Flight Information
             qGetDeletedFlightInfo = getFlightInformationByFlightID(flightID=VAL(ARGUMENTS.flightID));
             
             // Get Pre-AYP Arrival
-            qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="arrival", isPreAYP=1);
+            qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="arrival", isPreAYP=1);
     
             // Get Arrival
-            qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="arrival");
+            qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="arrival");
     
             // Get Departure
-            qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="departure");
+            qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="departure");
 
             // Check if it is a PHP student
-            isPHPStudent = isStudentAssignedToPHP(ARGUMENTS.studentID);
-
-            if ( isPHPStudent ) {
-                
-				flightInfoLink = 'http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetStudentInfo.uniqueID#';
-                // PHP Student - Email Luke
-                flightEmailTo = APPLICATION.EMAIL.PHPContact;				
-                
-            } else {
-                
-				flightInfoLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.studentID#';
-				//flightInfoLink = '#CLIENT.exits_url#/nsmg/reports/flight_information.cfm?uniqueID=#qGetStudentInfo.uniqueid#';
-                // Public Student - Email Facilitator
-                if ( IsValid("email", qGetFacilitator.email) ) {
-                    flightEmailTo = qGetFacilitator.email;
-                } else {
-                    flightEmailTo = APPLICATION.EMAIL.support;
-                }
-                
-            }
-            
-            // Local Server - Always email support
-            if ( APPLICATION.IsServerLocal ) {
-                flightEmailTo = APPLICATION.EMAIL.support;
-            }
+            isPHPStudent = isStudentAssignedToPHP(qGetStudentFullInformation.studentID);
 			
-			// DELETE THIS
-			// flightEmailTo = 'marcus@iseusa.com';
+			// Default Flight Information
+			flightInfoLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentFullInformation.studentID#';
+			
+			// Set Up EmailTo and FlightInfo Link
+            if ( isPHPStudent ) {
+            	
+				// PHP Student - Email Luke
+				flightInfoLink = 'http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
+                flightEmailTo = APPLICATION.EMAIL.PHPContact;				
+
+			} else if ( ARGUMENTS.sendEmailTo EQ 'regionalManager' AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", qGetCurrentUser.email) ) {
+				
+				// Public Student - Email Regional Manager and send a copy to the current user
+				flightEmailTo = qGetRegionalManager.email;
+				flightEmailCC = qGetCurrentUser.email;
+                
+            } else if ( ARGUMENTS.sendEmailTo EQ 'regionalManager' AND IsValid("email", qGetRegionalManager.email) ) {
+				
+				// Public Student - Email Regional Manager | No copy to the current user
+				flightEmailTo = qGetRegionalManager.email;
+
+            } else if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
+				
+				// Public Student - Email Current User
+				flightEmailTo = qGetCurrentUser.email;
+
+			} else if ( IsValid("email", qGetFacilitator.email) ) {
+                
+				// Public Student - Email Facilitator
+                flightEmailTo = qGetFacilitator.email;
+                
+            } else if ( APPLICATION.IsServerLocal ) {
+				
+				// Local Server - Always email support
+                flightEmailTo = APPLICATION.EMAIL.support;
+			
+			} else {
+				
+				// Not a valid email, use support
+                flightEmailTo = APPLICATION.EMAIL.support;
+            
+			}
         </cfscript>
         
         <!--- Send out Email if there is a flight information or if a leg has been deleted --->
@@ -602,72 +698,87 @@
             <cfoutput>
             	
                 <!--- Information common for body and PDF--->
-                <cfsavecontent variable="basicInformation">
-
+                <cfsavecontent variable="commonInformation">
+ 					
                     <p style="color: ##333;">
                         <span style="font-weight:bold;">Student:</span>
-                        #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#)
+                        #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)
                     </p>
-                
+
                     <p style="color: ##333;">
-                        <span style="font-weight:bold;">Region:</span>
-                        #qGetRegionalManager.regionName#
+                        <span style="font-weight:bold;">International Representative:</span>
+                        #qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)
                     </p>
-    
+
                     <p style="color: ##333;">
-                        <span style="font-weight:bold;">Regional Manager:</span>
-                        #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
-                        - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a> - Phone: #qGetRegionalManager.phone#
+                        <span style="font-weight:bold;">Program:</span>
+                        #qGetStudentFullInformation.programName#
                     </p>
+                	
+                    <!--- Do Not Display for PHP --->
+                    <cfif NOT isPHPStudent>
                     
-                    <p style="color: ##333;">
-                        <span style="font-weight:bold;">Area Representative:</span> 
-                        #qGetAreaRepresentative.firstName# #qGetAreaRepresentative.lastName# (###qGetAreaRepresentative.userID#)
-                        - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetAreaRepresentative.email#</a> - Phone: #qGetAreaRepresentative.phone#
-                    </p>
-                    
-                    <p style="color: ##333;">
-                        <span style="font-weight:bold;">Host Family:</span>
-                        <!--- Host Father --->
-                        <cfif LEN(qGetHostFamily.fatherFirstName)> 
-                            Mr. #qGetHostFamily.fatherFirstName# 
-                            <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
-                                #qGetHostFamily.fatherLastName# 
-                            </cfif>							
-                        </cfif>
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Region:</span>
+                            #qGetStudentFullInformation.regionName#
+                        </p>
+        
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Regional Manager:</span>
+                            #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
+                            - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a> - Phone: #qGetRegionalManager.phone#
+                        </p>
                         
-                        <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Area Representative:</span> 
+                            #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
+                            - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> - Phone: #qGetStudentFullInformation.areaRepPhone#
+                        </p>
                         
-                        <!--- Host Mother --->
-                        <cfif LEN(qGetHostFamily.motherFirstName)>
-                            Mrs. #qGetHostFamily.motherFirstName#
-                            <cfif qGetHostFamily.fatherFirstName NEQ qGetHostFamily.motherFirstName>
-                                #qGetHostFamily.motherFirstName#
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Host Family:</span>
+                            <!--- Host Father --->
+                            <cfif LEN(qGetHostFamily.fatherFirstName)> 
+                                Mr. #qGetHostFamily.fatherFirstName# 
+                                <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                    #qGetHostFamily.fatherLastName# 
+                                </cfif>							
                             </cfif>
-                        </cfif>
+                            
+                            <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
+                            
+                            <!--- Host Mother --->
+                            <cfif LEN(qGetHostFamily.motherFirstName)>
+                                Mrs. #qGetHostFamily.motherFirstName#
+                                <cfif qGetHostFamily.fatherFirstName NEQ qGetHostFamily.motherFirstName>
+                                    #qGetHostFamily.motherFirstName#
+                                </cfif>
+                            </cfif>
+                            
+                            <!--- Family Last Name --->                            
+                            <cfif qGetHostFamily.fatherFirstName EQ qGetHostFamily.motherFirstName>
+                                #qGetHostFamily.familyLastName#		
+                            </cfif>
+                            
+                            (###qGetHostFamily.hostid#) - Phone: #qGetHostFamily.phone# <br />
+                            
+                            <!--- Address --->
+                            <span style="margin-left:67px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
+                        </p>
                         
-                        <!--- Family Last Name --->                            
-                        <cfif qGetHostFamily.fatherFirstName EQ qGetHostFamily.motherFirstName>
-                            #qGetHostFamily.familyLastName#		
-                        </cfif>
-                        
-                        (###qGetHostFamily.hostid#) - Phone: #qGetHostFamily.phone# <br />
-                        
-                        <!--- Address --->
-                        <span style="margin-left:67px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
-                    </p>
+                        <!--- Arrival Airport --->
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Arrival/Departure Airport:</span> 
+                            <cfif LEN(qGetHostFamily.airport_city)>#qGetHostFamily.airport_city# <cfelse> n/a </cfif>
+                            - Airport Code: <cfif LEN(qGetHostFamily.major_air_code)>#qGetHostFamily.major_air_code# <cfelse> n/a </cfif>
+                        </p>
+        			
+                    </cfif>
                     
-                    <!--- Arrival Airport --->
-                    <p style="color: ##333;">
-                        <span style="font-weight:bold;">Arrival/Departure Airport:</span> 
-                        <cfif LEN(qGetHostFamily.airport_city)>#qGetHostFamily.airport_city# <cfelse> n/a </cfif>
-                        - Airport Code: <cfif LEN(qGetHostFamily.major_air_code)>#qGetHostFamily.major_air_code# <cfelse> n/a </cfif>
-                    </p>
-    
                     <!--- Notes --->
                     <p style="color: ##333;">
                         <span style="font-weight:bold;">Notes:</span> 
-                        <cfif LEN(qGetStudentInfo.flight_info_notes)> #qGetStudentInfo.flight_info_notes# <cfelse> n/a </cfif>
+                        <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
                     </p>
                     
                     <!--- Today's Date --->
@@ -678,9 +789,10 @@
                     
                 </cfsavecontent>
                
+               
                 <!--- Email Body --->
                 <cfsavecontent variable="flightEmailBody">
-
+					
                     <!--- Student Information --->
                     <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
                         
@@ -718,7 +830,7 @@
                             
                         </cfif>
     					
-						#basicInformation#
+						#commonInformation#
 
                         <p style="color: ##333;">
                             <span style="font-weight:bold;">Updated By:</span> 
@@ -741,12 +853,17 @@
                 	
 				<!--- Flight Report --->
                 <cfsavecontent variable="flightInfoReport">
+                	
+                    <!--- Include Header --->
+                    <gui:pageHeader
+                        headerType="pdf"
+                    />
                 
                     <!--- Student Information --->
                     <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
                         
                         <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                        	#CLIENT.companyName# - Flight Information
+                        	Flight Information
                         </legend>
 						
                         <p style="color: ##333;">
@@ -754,7 +871,7 @@
                             Please pass it to the host family information as soon as possible and in case of any doubt do not hesitate to contact us.
                         </p>
 
-						#basicInformation#
+						#commonInformation#
                         
                     </fieldset>
 
@@ -766,7 +883,7 @@
                             
                             <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">PRE-AYP ARRIVAL INFORMATION</legend>
                             
-                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; color: ##333; font-size:13px;"">	
+                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; color: ##333; font-size:13px;">	
                                 <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                                     <td style="padding:4px 0px 4px 0px;">Date</td>
                                     <td style="padding:4px 0px 4px 0px;">Depart <br /> City</td>
@@ -821,7 +938,7 @@
 
                         <cfif qGetArrival.recordCount>
                                 
-                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; color: ##333; font-size:13px;"">	
+                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; color: ##333; font-size:13px;">	
                                 <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                                     <td style="padding:4px 0px 4px 0px;">Date</td>
                                     <td style="padding:4px 0px 4px 0px;">Depart <br /> City</td>
@@ -862,7 +979,7 @@
                             
                         <cfelse>
                             
-                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;"">	
+                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;">	
                                 <tr style="color: ##fff; font-weight: bold; background-color: ##0069aa;">
                                     <td align="center" style="padding:4px 0px 4px 0px;">No Arrival information at this moment</td>
                                 </tr>                                
@@ -885,7 +1002,7 @@
                 
                         <cfif qGetDeparture.recordCount>
                                 
-                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;"">	
+                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;">	
                                 <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                                     <td style="padding:4px 0px 4px 0px;">Date</td>
                                     <td style="padding:4px 0px 4px 0px;">Depart <br /> City</td>
@@ -925,7 +1042,7 @@
                             
                         <cfelse>
                             
-                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;"">	
+                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;">	
                                 <tr style="color: ##fff; font-weight: bold; background-color: ##0069aa;">
                                     <td align="center" style="padding:4px 0px 4px 0px;">No Departure information at this moment</td>
                                 </tr>                                
@@ -946,7 +1063,7 @@
             
             <!--- Try To Email a PDF File, if unsuccessful adds the report to the email body --->
             <cftry>
-            
+                    
 				<!--- Create a PDF document in the temp folder --->
                 <cffile 
                     action="write"
@@ -956,7 +1073,8 @@
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#flightEmailTo#">
-                    <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
+                    <cfinvokeargument name="email_cc" value="#flightEmailCC#">
+                    <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
                     <cfinvokeargument name="email_message" value="#flightEmailBody#">
                     <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
                     <cfinvokeargument name="email_file" value="#pdfPath#">
@@ -967,7 +1085,8 @@
                     <!--- Send Out Email - NO PDF --->
                     <cfinvoke component="nsmg.cfc.email" method="send_mail">
                         <cfinvokeargument name="email_to" value="#flightEmailTo#">
-                        <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
+                        <cfinvokeargument name="email_cc" value="#flightEmailCC#">
+                        <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
                         <cfinvokeargument name="email_message" value="#flightInfoReport#">
                         <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
                     </cfinvoke>       

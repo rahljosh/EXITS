@@ -49,6 +49,15 @@
 		used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm 
 	*/
 	APPLICATION.address_lookup = 0; 
+	
+	
+	/***** Create APPLICATION.SITE structure *****/
+	APPLICATION.SITE = StructNew();		
+	// Create new structure to store site information
+	APPLICATION.SITE = APPLICATION.SITE.URL = StructNew();	
+	// Set Site URL
+	APPLICATION.SITE.URL.main = 'http://' & CGI.SERVER_NAME;
+	APPLICATION.SITE.URL.pics = APPLICATION.SITE.URL.main & '/nsmg/pics/';
 
 
 	/***** Create APPLICATION.EMAIL structure *****/
