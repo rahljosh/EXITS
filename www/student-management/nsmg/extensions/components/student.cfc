@@ -719,7 +719,7 @@
 			}
 			
 			// DELETE OR COMMENT THIS
-			flightEmailTo = 'marcus@iseusa.com';
+			// flightEmailTo = 'marcus@iseusa.com';
         </cfscript>
         
         <!--- Send out Email if there is a flight information or if a leg has been deleted --->
