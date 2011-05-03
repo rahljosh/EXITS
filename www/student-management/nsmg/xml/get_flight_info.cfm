@@ -1,5 +1,8 @@
 <cfsetting requesttimeout="20000" />
 
+<cfparam name="FORM.displayResults" default="0">
+<cfparam name="FORM.receiveXML" default="0">
+
 <script language="javascript">	
     // Document Ready!
     $(document).ready(function() {
@@ -18,235 +21,306 @@
 
 <table width=100%>
 	<tr><td bgcolor="#e2efc7" colspan=2><span class="get_attention"><b>:: </b></span>XML Upload Results</td></tr>
-
-	</table>
+</table>
 
 <cffile action="upload"
-    destination="#AppPath.xmlFiles#flight_verification/"
+    destination="#APPLICATION.PATH.xmlFiles#flight_verification/"
     nameConflict="overwrite"
-    fileField="form.flights"
+    fileField="FORM.flights"
 	mode="777"
 	accept="text/xml">
 
+<cfscript>
+	// Set to 1 to send email to facilitators
+	setSendEmail = 0;
 
-<cfset FlightXMLFile = XMLParse('#AppPath.xmlFiles#flight_verification/#file.serverfile#')>
-
-<cfset numberofstudents = ArrayLen(#FlightXMLFile.FlightInfoCollection.FlightInfo#)>
-<!----
-<cfdump var='#FlightXMLFile#'>
----->
-<cfoutput>
-<cfset batchid = CreateUUID()>
-Total Number of students flight info submitted: #numberofstudents#.<br><br>	<cfif not isDefined('form.display_results')> 
-	Depending on the number of records you are inserting. This may take a few momments.  You will receive a message that says
-	the process has completed. Please don't press reload or your browsers back button durring this time.<br>
-	</cfif>
-<cfloop from="1" to=#numberofstudents# index="i">
-
-
-<cfquery name="get_studentid" datasource="mysql">
-select studentid, firstname, familylastname, companyid, uniqueid
-from smg_students
-where soid = '#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentid#'
-</cfquery>
-<cfif isDefined('form.display_results')>
-#i# - <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival.uniqueID#" class="jQueryModal">#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentid#</a> 
-</cfif><!----Put check for arrivals here---->
-
-<cfif get_studentid.recordcount eq 0>
-<cfif isDefined('form.display_results')>
-<font color="##CC0000">Student is not currently in EXITS, no flight information updated/inserted.</font><br>
-</cfif>
-<cfelse>
-<!----set number of segments of arrivals--->
-			
-			<cfif Len(FlightXMLFile.flightinfocollection.flightinfo[i].arrival) gt 200>
-				<cfset numberflightsarrival = ArrayLen(#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight#)>
-				
-			
-				<cfquery name="check_for_current_arr" datasource="mysql">
-				select studentid 
-				from smg_flight_info
-				where studentid = #get_studentid.studentid#
-				and flight_type = 'arrival'
-				</cfquery>
-				<cfif check_for_current_arr.recordcount gt 0 and numberflightsarrival gt 0>
-					<cfquery name="del_arr" datasource="mysql">
-					delete from smg_flight_info
-					where studentid = #check_for_current_arr.studentid#
-					and flight_type="arrival"
-					</cfquery>
-				</cfif>
-				<cfloop from=1 to=#numberflightsarrival# index="noflight">
-						<cfset numbersegmentsarrival = ArrayLen(#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment#)>
-					<cfloop from=1 to=#numbersegmentsarrival# index="noseg">
-			
-				<cfquery name="insert_arrival_info" datasource="mysql">
-				insert into smg_flight_info (studentid, companyid, dep_date,dep_city,dep_aircode,dep_time,flight_number,
-												arrival_city,arrival_aircode,arrival_time,overnight,flight_type,batchid,depdatetime)
-							values(#get_studentid.studentid#, #get_studentid.companyid#, 
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_date.xmltext#',
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_airport.xmltext#',
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_code.xmltext#',
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_time.xmltext#',
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].flightnumber.xmltext#',
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].arrival_airport.xmltext#',
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].arrival_code.xmltext#',
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].arrival_time.xmltext#',
-							<cfif #FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].overnight.xmltext# is 'false'>0<cfelse>1</cfif>,
-							'arrival','#batchid#',
-							'#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_date.xmltext# #FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_time.xmltext#')
-				</cfquery>
-							
-				</cfloop>
-				</cfloop>
-				<cfquery name="insert_remarks" datasource="mysql">
-				update smg_students set flight_info_notes = '#FlightXMLFile.flightinfocollection.flightinfo[i].arrival.remarks.xmltext#'
-				where studentid = #get_studentid.studentid#
-				</cfquery>
-				<cfif isDefined('form.display_results')>
-				<font color="##009900">Arrival Information Received</font>
-				</cfif>
-				<cfelse>
-				<cfif isDefined('form.display_results')>
-				<font color="##FFCC33">No Arrival Information Submitted</font>
-				</cfif>
-			</cfif>
-			
-
-				<!----PUT CHECK FOR DEPARTURES HERE---->
-			
-			<cfif Len(FlightXMLFile.flightinfocollection.flightinfo[i].departure) gt 200>
-				
-				<cfset numberflightsdeparture = ArrayLen(#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight#)>
-				
-			
-				<cfquery name="check_for_current_dep" datasource="mysql">
-				select studentid 
-				from smg_flight_info
-				where studentid = #get_studentid.studentid#
-				and flight_type = 'departure'
-				</cfquery>
-				<cfif check_for_current_dep.recordcount gt 0 and numberflightsdeparture gt 0>
-					<cfquery name="del_arr" datasource="mysql">
-					delete from smg_flight_info
-					where studentid = #check_for_current_dep.studentid#
-					and flight_type='departure'
-					</cfquery>
-				</cfif>
-				<cfloop from=1 to=#numberflightsdeparture# index="nodepflight">
-						<cfset numbersegmentsdeparture = ArrayLen(#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment#)>
-					<cfloop from=1 to=#numbersegmentsdeparture# index="nodepseg">
-						
-							<cfquery name="insert_departure_info" datasource="mysql">
-							insert into smg_flight_info (studentid, companyid, dep_date,dep_city,dep_aircode,dep_time,flight_number,
-															arrival_city,arrival_aircode,arrival_time,overnight,flight_type,batchid,depdatetime)
-										values(#get_studentid.studentid#, #get_studentid.companyid#, 
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_date.xmltext#',
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_airport.xmltext#',
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_code.xmltext#',
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_time.xmltext#',
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].flightnumber.xmltext#',
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].arrival_airport.xmltext#',
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].arrival_code.xmltext#',
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].arrival_time.xmltext#',
-										<cfif #FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].overnight.xmltext# is 'false'>0<cfelse>1</cfif>,
-										'departure','#batchid#',
-										'#FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_datetime.xmltext#')
-							</cfquery>
-				
-			
-								
-						</cfloop>
-						
-				</cfloop>
-				<cfquery name="insert_remarks" datasource="mysql">
-				update smg_students set flight_info_notes = '#FlightXMLFile.flightinfocollection.flightinfo[i].departure.remarks.xmltext#'
-				where studentid = #get_studentid.studentid#
-				</cfquery>
-				<cfif isDefined('form.display_results')>
-				<font color="##009900">Departure Information Received</font>
-				</cfif>
-				<cfelse>
-				<cfif isDefined('form.display_results')>
-				<font color="##FFCC33">No Departure Information Submitted</font>
-				</cfif>
-				</cfif>
+	setBatchID = CreateUUID();
 	
-			<cfif isDefined('form.display_results')><br></cfif><cfflush>
-	</cfif>
- <!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A NEW FLIGHT INFORMATION ---->
-    <cfquery name="qGetEmailInfo" datasource="MySQL">
-            SELECT 
-            	s.studentID,
-                s.firstName,
-                s.familyLastName,
-                s.regionassigned,
-                s.intRep,
-                s.uniqueid,
-             
-                r.regionname, 
-                r.regionfacilitator, 
-                r.regionid, 
-                r.company,
-				
-                u.firstname as ufirstname, 
-                u.lastname ulastname, 
-                u.email,
-                intRep.businessName 
-            FROM 
-            	smg_students s 
-            INNER JOIN 
-            	smg_regions r ON s.regionassigned = r.regionid
-				
-            INNER JOIN
-            	smg_users intRep ON s.intRep = intRep.userID
-              
-            LEFT JOIN 
-            	smg_users u ON r.regionfacilitator = u.userid
-			
-            WHERE 
-            	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_studentid.studentid#">
-        </cfquery>
+	FlightXMLFile = XMLParse('#AppPath.xmlFiles#flight_verification/#file.serverfile#');
 
-        <cfif qGetEmailInfo.email EQ ''>
-            <cfset email_to = 'support@student-management.com'>
-        <cfelse>	
-            <cfset email_to = '#qGetEmailInfo.email#'>
-        </cfif>
+	setNumberOfStudents = ArrayLen(FlightXMLFile.FlightInfoCollection.FlightInfo);
+	
+	// writedump(FlightXMLFile); abort;
+</cfscript>
+
+<cfoutput>
+
+    <p>Total Number of students flight info submitted: #setNumberOfStudents#.</p>
+    
+    <cfif VAL(FORM.displayResults)> 
+        <p>
+        	Depending on the number of records you are inserting. This may take a few momments.  You will receive a message that says
+	        the process has completed. Please don't press reload or your browsers back button durring this time.
+        </p>	
+    </cfif>
+    
+    <cfloop from="1" to="#setNumberOfStudents#" index="i">
        
-           <cfsavecontent variable="email_message">
-           
-
-What: Flight Information<BR />
-Student: #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (###qGetEmailInfo.studentid#)<Br />
-Submitted By: #qGetEmailInfo.businessname#.<br><br>
-
-            Please click <a href="#CLIENT.exits_url#/nsmg/forms/flight_info.cfm?unqid=#qGetEmailInfo.uniqueid#">here</a>
-            to see the student's flight information.<br><br>
+        <cfscript>
+            // Get Student Information
+            qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=FlightXMLFile.flightinfocollection.flightinfo[i].studentID.xmltext);
+        </cfscript>
+    
+        <cfif VAL(FORM.displayResults)>
+            &nbsp; #i# - 
+            <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModal">
+            	#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentID#
+            </a> 
+        </cfif>
         
-            Sincerely,<br>
-            EXITS Flight Info<br><br>
-        </cfsavecontent>
-             
-      
+        <!---- CHECK FOR FLIGHT ---->
+        <cfif NOT VAL(qGetStudentInfo.recordcount)>
+        
+            <cfif VAL(FORM.displayResults)>
+                <p style="color:##CC0000">Student is not currently in EXITS, no flight information updated/inserted.</p>
+            </cfif>
+        
+        <cfelse>
+            
+            <!---- FLIGHT ARRIVAL ---->
+            <cfif Len(FlightXMLFile.flightinfocollection.flightinfo[i].arrival) GT 200>
+                
+                <cfscript>
+                    // set number of segments of arrivals
+                    setNumberFlightArrival = ArrayLen(FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight);
                     
-		<!--- send email --->
-        <cfinvoke component="nsmg.cfc.email" method="send_mail">
-           <cfinvokeargument name="email_to" value="#email_to#">
-           <cfinvokeargument name="email_subject" value="Flight Information for #qGetEmailInfo.firstname# #qGetEmailInfo.familylastname# (#qGetEmailInfo.studentid#)">
-           <cfinvokeargument name="email_message" value="#email_message#">
-           <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-        </cfinvoke>
-      
-
-        <!----End of Email---->
-</cfloop>
+                    // Get Arrival Information
+                    qGetCurrentArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, flightType='arrival'); 
+                    
+                    // Delete current flight information
+                    if ( VAL(qGetCurrentArrival.recordcount) AND VAL(setNumberFlightArrival) ) {
+                        
+                        APPLICATION.CFC.STUDENT.deleteCompleteFlightInformation(studentID=qGetStudentInfo.studentID, flightType='arrival', enteredByID=CLIENT.userID);
+                        
+                    }
+                </cfscript>
+                
+                <!--- Loop Segments --->
+                <cfloop from="1" to="#setNumberFlightArrival#" index="noflight">
+                    
+                    <cfscript>
+                        setNumberSegmentArrival = ArrayLen(FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment);
+                        
+                        setSendEmail = 1;
+                    </cfscript>
+                    
+                    <!--- Loop Flight Legs --->
+                    <cfloop from="1" to="#setNumberSegmentArrival#" index="noseg">
+                        
+                        <cfscript>
+                            // Insert Flight
+                            APPLICATION.CFC.STUDENT.insertFlightInfo(
+                                studentID=qGetStudentInfo.studentID,
+                                companyID=qGetStudentInfo.companyID,
+                                programID=qGetStudentInfo.programID,
+                                enteredByID=CLIENT.userID,
+                                batchID=setBatchID,
+                                flightNumber=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].flightnumber.xmltext,
+                                depCity=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_airport.xmltext,
+                                depAirCode=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_code.xmltext,
+                                depDate=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_date.xmltext,
+                                depTime=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].depart_time.xmltext,
+                                arrivalCity=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].arrival_airport.xmltext,
+                                arrivalAirCode=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].arrival_code.xmltext,
+                                arrivalTime=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].arrival_time.xmltext,
+                                overNight=VAL(FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight[noflight].segment[noseg].overnight.xmltext),
+                                flightType='arrival'
+                            );
+                        </cfscript>
+                        
+                    </cfloop>
+                    
+                </cfloop>
+    
+                <cfscript>
+                    // Update Flight Notes
+                    APPLICATION.CFC.STUDENT.updateFlightNotes(studentID=qGetStudentInfo.studentID, flightNotes=FlightXMLFile.flightinfocollection.flightinfo[i].arrival.remarks.xmltext);
+                </cfscript>
+                    
+                <cfif VAL(FORM.displayResults)>
+                    <font color="##009900"> &nbsp; | &nbsp;  Arrival Information Received</font>
+                </cfif>
+    
+            <cfelse>
+    
+                <cfif VAL(FORM.displayResults)>
+                    <font color="##FFCC33"> &nbsp; | &nbsp;  No Arrival Information Submitted</font>
+                </cfif>
+                    
+            </cfif>
+    
+    
+            <!---- FLIGHT DEPARTURE ---->
+            <cfif Len(FlightXMLFile.flightinfocollection.flightinfo[i].departure) gt 200>
+            
+                <cfscript>
+                    // set number of segments of departures
+                    setNumberFlightDeparture = ArrayLen(FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight);
+                    
+                    // Get Departure Information
+                    qGetCurrentDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, flightType='departure'); 
+                    
+                    // Delete current flight information
+                    if ( VAL(qGetCurrentDeparture.recordcount) AND VAL(setNumberFlightDeparture) ) {
+                        
+                        APPLICATION.CFC.STUDENT.deleteCompleteFlightInformation(studentID=qGetStudentInfo.studentID, flightType='departure', enteredByID=CLIENT.userID);
+                        
+                    }
+                </cfscript>
+    
+                <!--- Loop Segments --->
+                <cfloop from="1" to="#setNumberFlightDeparture#" index="nodepflight">
+                    
+                    <cfscript>
+                        setNumberSegmentDeparture = ArrayLen(FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment);
+                        
+                        setSendEmail = 1;
+                    </cfscript>
+                    
+                    
+                    <!--- Loop Flight Legs --->
+                    <cfloop from="1" to="#setNumberSegmentDeparture#" index="nodepseg">
+    
+                        <cfscript>
+                            // Insert Departure Flight
+                            APPLICATION.CFC.STUDENT.insertFlightInfo(
+                                studentID=qGetStudentInfo.studentID,
+                                companyID=qGetStudentInfo.companyID,
+                                programID=qGetStudentInfo.programID,
+                                enteredByID=CLIENT.userID,
+                                batchID=setBatchID,
+                                flightNumber=FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].flightnumber.xmltext,
+                                depCity=FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_airport.xmltext,
+                                depAirCode=FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_code.xmltext,
+                                depDate=FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_date.xmltext,
+                                depTime=FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].depart_time.xmltext,
+                                arrivalCity=FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].arrival_airport.xmltext,
+                                arrivalAirCode=FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].arrival_code.xmltext,
+                                arrivalTime=FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].arrival_time.xmltext,
+                                overNight=VAL(FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight[nodepflight].segment[nodepseg].overnight.xmltext),
+                                flightType='departure'
+                            );
+                        </cfscript>
+            
+                    </cfloop>
+            
+                </cfloop>
+            
+                <cfscript>
+                    // Update Flight Notes
+                    APPLICATION.CFC.STUDENT.updateFlightNotes(studentID=qGetStudentInfo.studentID, flightNotes=FlightXMLFile.flightinfocollection.flightinfo[i].departure.remarks.xmltext);
+                </cfscript>
+    
+            
+                <cfif VAL(FORM.displayResults)>
+                    <font color="##009900"> &nbsp; | &nbsp; Departure Information Received</font> <br /><br />
+                </cfif>
+                
+            <cfelse>
+            
+                <cfif VAL(FORM.displayResults)>
+                    <font color="##FFCC33"> &nbsp; | &nbsp; No Departure Information Submitted</font> <br /><br />
+                </cfif>
+                
+            </cfif> <!--- Len(FlightXMLFile.flightinfocollection.flightinfo[i].departure) gt 200 --->
+            
+            <cfflush>
+            
+        </cfif> <!--- NOT VAL(qGetStudentInfo.recordcount) --->
+        
+        
+        <cfscript>
+            // Send out email notification if flight information was entered by an International Representative / Branch
+            if ( setSendEmail AND ListFind("8,11,13", CLIENT.userType) ) {
+                APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID);
+            }
+        </cfscript>
+    
+    
+    </cfloop> <!--- numberofstudents --->
 
 </cfoutput>
-Script Ran and Finished Completely.
-<cfif isDefined('form.receive_xml')>
-<br>Generating XML results file as requested.  This may take a momment.  A link to the file will apear when the process is done.
-Please don't press reload or your back button until the process is finished.<br>
-	<cfinclude template="received_info_check_xml.cfm">
+
+<p>Script Ran and Finished Completely.</p>
+
+<!--- Display XML File --->
+<cfif VAL(FORM.receiveXML)>
+
+    <p>Generating XML results file as requested.  This may take a momment.  A link to the file will apear when the process is done.
+    Please don't press reload or your back button until the process is finished.</p>
+	
+    <cfquery name="getFlightByBatchID" datasource="mysql">
+        SELECT DISTINCT 
+        	flight.studentid, 
+            smg_students.soid
+        FROM
+	        smg_flight_info flight
+        LEFT OUTER JOIN
+        	smg_students on smg_students.studentid = flight.studentid
+        WHERE
+        	flight.batchid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#setBatchID#">
+        limit 50
+    </cfquery>
+    
+    <!---- Create an XML document object containing the data ---->
+    <cfoutput>
+    
+    <cfxml variable="submitted_fight_info">
+        <FlightInfoCollection>
+            <cfloop query="getFlightByBatchID">
+                <cfscript>
+                    // Get Arrival Information
+                    qGetFlightArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=getFlightByBatchID.studentID, flightType='arrival'); 
+                
+                    // Get Arrival Information
+                    qGetFlightDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=getFlightByBatchID.studentID, flightType='departure'); 
+                </cfscript>
+                <FlightInfo studentid="#getFlightByBatchID.soid#" so="INTO-DE" ro="SMG" soid="1" roid="1362">
+                    <arrival>
+                        <flight>
+                            <cfloop query="qGetFlightArrival">
+                                <segment>
+                                    <depart_date>#DateFormat(dep_date,'yyyy-mm-dd')#</depart_date>
+                                    <depart_time>#TimeFormat(dep_time, 'HH:mm')#</depart_time>
+                                    <depart_datetime>#DateFormat(dep_date,'yyyy-mm-dd')# #TimeFormat(dep_time, 'HH:mm')#</depart_datetime>
+                                    <depart_airport>#dep_city#</depart_airport>
+                                    <depart_code>#dep_aircode#</depart_code>
+                                    <arrival_time>#TimeFormat(arrival_time, 'HH:mm')#</arrival_time>
+                                    <arrival_airport>#arrival_city#</arrival_airport>
+                                    <arrival_code>#arrival_aircode#</arrival_code>
+                                    <flightnumber>#flight_number#</flightnumber>
+                                    <overnight><cfif overnight is 0>false<cfelse>true</cfif></overnight>
+                                </segment>
+                            </cfloop>
+                        </flight>
+                    </arrival>
+                    <departure>
+                        <flight>
+                            <cfloop query="qGetFlightDeparture">
+                                <segment>
+                                    <depart_date>#DateFormat(dep_date,'yyyy-mm-dd')#</depart_date>
+                                    <depart_time>#TimeFormat(dep_time, 'HH:mm')#</depart_time>
+                                    <depart_datetime>#DateFormat(dep_date,'yyyy-mm-dd')# #TimeFormat(dep_time, 'HH:mm')#</depart_datetime>
+                                    <depart_airport>#dep_city#</depart_airport>
+                                    <depart_code>#dep_aircode#</depart_code>
+                                    <arrival_time>#TimeFormat(arrival_time, 'HH:mm')#</arrival_time>
+                                    <arrival_airport>#arrival_city#</arrival_airport>
+                                    <arrival_code>#arrival_aircode#</arrival_code>
+                                    <flightnumber>#flight_number#</flightnumber>
+                                    <overnight><cfif overnight is 0>false<cfelse>true</cfif></overnight>
+                                </segment>
+                            </cfloop>
+                        </flight>
+                    </departure>
+                    </FlightInfo>
+            </cfloop>
+        </FlightInfoCollection>
+    </cfxml>
+    
+    <cffile action="write" file="#AppPath.xmlFiles#flight_verification/#setBatchID#.xml" output="#toString(submitted_fight_info)#">
+    
+    <p><a href="#CLIENT.exits_url#/nsmg/uploadedfiles/xml_files/flight_verification/#setBatchID#.xml">Results in an XML File</a></p>
+    
+    </cfoutput>
+    
 </cfif>
