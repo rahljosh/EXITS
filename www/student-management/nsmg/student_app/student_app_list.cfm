@@ -82,13 +82,13 @@
         FROM 
         	smg_students s 
         INNER JOIN 
-        	smg_users u ON u.userid = s.intRep
+        	smg_users u ON u.userID = s.intRep
         LEFT OUTER JOIN
         	smg_student_app_programs appProgram ON appProgram.app_programID = s.app_indicated_program
         LEFT OUTER JOIN 
         	smg_companies c ON c.companyid = s.companyid
         LEFT OUTER JOIN 
-        	smg_users branch ON branch.userid = s.branchid
+        	smg_users branch ON branch.userID = s.branchid
 		LEFT OUTER JOIN
         	smg_programs p ON p.programID = s.programID
         LEFT OUTER JOIN
@@ -112,15 +112,15 @@
 			<!--- Intl. Rep / EF Central Office --->
             <cfif LEN(URL.ef) AND CLIENT.usertype EQ 8>
                 AND 
-                	u.master_accountid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                	u.master_accountid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                 AND 
-                	u.userid != <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                	u.userID != <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             <cfelseif CLIENT.usertype EQ 8>
                 AND 
-                	s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                	s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             <cfelseif CLIENT.usertype EQ 11>
                 AND 
-                	s.branchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                	s.branchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             </cfif>
             
 			<!--- Filter for Case, WEP and ESI --->
@@ -129,7 +129,7 @@
                     s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             <cfelse>
                 AND
-                    s.companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                    s.companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
             </cfif>	
 
 			<!--- Display Branch Applications (3/4) in the Active list --->
@@ -197,10 +197,8 @@
 
     </cfquery>
 
-</cfsilent>    
-<Cfif client.companyid eq 11>
+</cfsilent>   
 
-</Cfif>
 <script language="JavaScript" type="text/JavaScript">
 	<!--
 	function displayAppList(seasonID) {
@@ -533,17 +531,17 @@
     
     </cfoutput>
 	
-    <tr><td colspan="11">&nbsp;</td></tr>
+    <tr><td colspan="13">&nbsp;</td></tr>
     
 	<cfif qStudents.recordcount AND NOT VAL(qCheckIntAgentInput.recordcount) AND CLIENT.usertype GTE 5>
         <tr bgcolor="#e2efc7">
-            <td colspan="11">Students highlighted in green are applications you are filling / filled out on behalf of the student.</td>
+            <td colspan="13">Students highlighted in green are applications you are filling / filled out on behalf of the student.</td>
         </tr>
 	</cfif>
 	
 	<cfif URL.status LTE 2>
         <tr bgcolor="#EEDFE1">
-            <td colspan="11">Students highlighted in this color have expired.  Click the name to extend the deadline.</td></td>
+            <td colspan="13">Students highlighted in this color have expired.  Click the name to extend the deadline.</td></td>
         </tr>
 	</cfif>
     
@@ -555,7 +553,7 @@
 	<cfoutput>
 
     <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section">	
-		<tr><th colspan="12" bgcolor="e2efc7">#qStudents.recordcount# &nbsp; APPLICATION(S) TO BE PRINTED / RECEIVED</th></tr>
+		<tr><th colspan="13" bgcolor="e2efc7">#qStudents.recordcount# &nbsp; APPLICATION(S) TO BE PRINTED / RECEIVED</th></tr>
 		<tr>
 			<td><a href="#setURL('studentID')#" title="Sort By Student ID"><strong>ID</strong></a></td>
 			<td><a href="#setURL('familyLastName')#" title="Sort by Last Name"><strong>Last Name</strong></a></td>
@@ -601,7 +599,7 @@
             </cfif>
 		</cfloop>
         
-		<tr><td colspan="11">&nbsp;</td></tr>
+		<tr><td colspan="13">&nbsp;</td></tr>
 	</table>
     
 	</cfoutput>
@@ -613,7 +611,7 @@
 
 	<!--- WAITING TO BE APPROVED - STATUS 8 --->
 	<table width="100%" border="0" cellpadding="4" cellspacing="0" class="section">	
-		<tr><th colspan="12" bgcolor="e2efc7">#qStudents.recordcount# &nbsp; ONLINE APPLICATION(S) TO BE APPROVED</th></tr>
+		<tr><th colspan="13" bgcolor="e2efc7">#qStudents.recordcount# &nbsp; ONLINE APPLICATION(S) TO BE APPROVED</th></tr>
 		<tr>
 			<td><a href="#setURL('studentID')#" title="Sort By Student ID"><strong>ID</strong></a></td>
 			<td><a href="#setURL('familyLastName')#" title="Sort by Last Name"><strong>Last Name</strong></a></td>
@@ -644,7 +642,7 @@
 			</tr>
 		</cfloop>
         
-		<tr><td colspan="11">&nbsp;</td></tr>		
+		<tr><td colspan="13">&nbsp;</td></tr>		
 	</table>
     
 	</cfoutput>

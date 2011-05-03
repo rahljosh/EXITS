@@ -52,7 +52,7 @@
                 s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         <cfelse>
             AND
-                s.companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                s.companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
         </cfif>	
         
 		<!--- Display Branch Applications (3/4) in the Active list --->
