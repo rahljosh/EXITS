@@ -303,8 +303,15 @@
         <cfargument name="userType" type="numeric" hint="userType is required">
         <cfargument name="regionID" type="numeric" hint="regionID is required">
         <cfargument name="areaRepID" type="numeric" default="0" hint="areaRepID is not required">
-        <cfargument name="lastLogin" type="date" default="" hint="lastLogin is not required">
+        <cfargument name="lastLogin" default="" hint="lastLogin is not required">
         <cfargument name="setClientVariable" type="numeric" default="0" hint="Set to 1 to display popUp on initial welcome">
+        
+        <cfscript>
+			// If there is no last login date, use now() instead
+			if ( NOT IsDate(ARGUMENTS.lastLogin) ) {
+				ARGUMENTS.lastLogin = now();
+			}		
+		</cfscript>
         
         <cfquery 
 			name="qGetPendingHostLeads" 
