@@ -67,7 +67,7 @@
                                 	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                             <cfelse>
                             	AND
-                                	companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                                	companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
                             </cfif>	
                       		
                         </cfquery> 
