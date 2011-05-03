@@ -109,7 +109,7 @@
 		-------------------------------------->
 		
 		<!--- New Flight Information --->
-        <cfloop From="1" to="3" Index="i">
+        <cfloop From="1" to="4" Index="i">
             
             <!--- Param specific FORM Variables --->
             <cfparam name="FORM.incomingNewPreAYPFlightNumber#i#" default="">
@@ -194,7 +194,7 @@
 		-------------------------------------->
         
 		<!--- New Flight Information --->
-        <cfloop From="1" to="3" Index="i">
+        <cfloop From="1" to="4" Index="i">
             
             <!--- Param specific FORM Variables --->
             <cfparam name="FORM.incomingNewFlightNumber#i#" default="">
@@ -278,7 +278,7 @@
 		---------------------------------------->
         
 		<!--- New Flight Information --->    
-        <cfloop From="1" to="3" Index="i">
+        <cfloop From="1" to="4" Index="i">
             
             <!--- Param specific FORM Variables --->
             <cfparam name="FORM.outgoingNewFlightNumber#i#" default="">
@@ -606,7 +606,7 @@
 							<!--- NEW FLIGHT INFORMATION --->
 							<cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
 								
-                                <cfloop from="1" to="3" index="i"> 
+                                <cfloop from="1" to="4" index="i"> 
                                     <tr bgcolor="##DDF0DD" class="trNewPreAYPArrival <cfif qGetPreAypArrival.recordCount> displayNone </cfif>">
                                         <td>&nbsp;</td>
                                         <td><input type="text" name="incomingNewPreAYPDepartureDate#i#" class="date-pick" maxlength="10" onChange="return checkDate(this)"></td>
@@ -706,7 +706,7 @@
                         <!--- NEW FLIGHT INFORMATION --->
                         <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
 							
-                            <cfloop from="1" to="3" index="i"> 
+                            <cfloop from="1" to="4" index="i"> 
                                 <tr bgcolor="##D5DCE5" class="trNewAYPArrival <cfif qGetArrival.recordCount> displayNone </cfif>">
                                     <td>&nbsp;</td>
                                     <td><input type="text" name="incomingNewDepartureDate#i#" class="date-pick" maxlength="10" onChange="return checkDate(this)"></td>
@@ -808,7 +808,7 @@
                         <!--- NEW FLIGHT INFORMATION --->
                         <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
                             
-                            <cfloop from="1" to="3" index="i"> 
+                            <cfloop from="1" to="4" index="i"> 
                                 <tr bgcolor="##FEE6D3" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
                                     <td>&nbsp;</td>
                                     <td><input type="text" name="outgoingNewDepartureDate#i#" class="date-pick" maxlength="10"></td>

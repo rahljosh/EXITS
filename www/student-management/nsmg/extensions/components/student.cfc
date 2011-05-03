@@ -428,6 +428,7 @@
         <cfargument name="companyID" default="0" hint="Company student is currently assigned to">
         <cfargument name="programID" default="0" hint="Program student is currently assigned to">
         <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
+        <cfargument name="batchID" default="0" hint="BatchID used for XML files">
         <cfargument name="flightNumber" default="" hint="flightNumber is not required">
         <cfargument name="depCity" default="" hint="depCity is not required">
         <cfargument name="depAirCode" default="" hint="depAirCode is not required">
@@ -439,7 +440,7 @@
         <cfargument name="overNight" default="0" hint="overNight is not required">
         <cfargument name="flightType" hint="Arrival/Departure is required">
         <cfargument name="isPreAYP" default="0" hint="Set to 1 for PRE-AYP flight arrival information"> 
-
+		
 		<cfquery datasource="MySQL">
             INSERT INTO 
             	smg_flight_info
@@ -448,6 +449,7 @@
                 companyID,
                 programID,
                 enteredByID,
+                batchID,
                 flight_number,                 
                 dep_city, 
                 dep_aircode, 
@@ -467,6 +469,7 @@
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.batchID#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">,
@@ -569,6 +572,7 @@
     	<cfargument name="flightID" hint="flightID is required">
         <cfargument name="studentID" hint="studentID is required">
         <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
+        <cfargument name="sendEmail" default="1" hint="Set to 0 to not send email notification">
 		
         <cfquery datasource="MySql">
             UPDATE
@@ -585,12 +589,35 @@
 
         <cfscript>
 			// Send out email notification
-			emailFlightInformation(
-				studentID=ARGUMENTS.studentID,
-				flightID=ARGUMENTS.flightID
-			);
+			if ( ARGUMENTS.sendEmail ) {
+				emailFlightInformation(
+					studentID=ARGUMENTS.studentID,
+					flightID=ARGUMENTS.flightID
+				);
+			}
 		</cfscript>
         
+	</cffunction>
+    
+
+	<!--- DELETE COMPLETE FLIGHT INFORMATION --->
+	<cffunction name="deleteCompleteFlightInformation" access="public" returntype="void" output="false" hint="Deletes Flight Information">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="flightType" hint="Arrival/Departure is required">
+        <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
+		
+        <cfquery datasource="MySql">
+            UPDATE
+            	smg_flight_info
+            SET
+            	enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
+            	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            WHERE 
+            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">  
+			AND	
+				flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">            	         
+        </cfquery>
+
 	</cffunction>
 
 	
@@ -690,6 +717,9 @@
                 flightEmailTo = APPLICATION.EMAIL.support;
             
 			}
+			
+			// DELETE OR COMMENT THIS
+			flightEmailTo = 'marcus@iseusa.com';
         </cfscript>
         
         <!--- Send out Email if there is a flight information or if a leg has been deleted --->
@@ -750,9 +780,9 @@
                             <!--- Host Mother --->
                             <cfif LEN(qGetHostFamily.motherFirstName)>
                                 Mrs. #qGetHostFamily.motherFirstName#
-                                <cfif qGetHostFamily.fatherFirstName NEQ qGetHostFamily.motherFirstName>
-                                    #qGetHostFamily.motherFirstName#
-                                </cfif>
+                                <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                    #qGetHostFamily.motherLastName# 
+                                </cfif>							
                             </cfif>
                             
                             <!--- Family Last Name --->                            
@@ -830,12 +860,13 @@
                             
                         </cfif>
     					
+                        <!--- Include Commom Information for Email Body and PDF --->
 						#commonInformation#
 
                         <p style="color: ##333;">
                             <span style="font-weight:bold;">Updated By:</span> 
                             #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
-                            <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname#) </cfif>
+                            <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
                         </p>
                         
                         <cfif APPLICATION.IsServerLocal>

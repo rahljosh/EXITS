@@ -125,8 +125,8 @@
                     <input type="file" name="flights" size=50 required="yes" enctype="multipart/form-data">
                     <br><br>
                     Options:<br>
-                    <input type="checkbox" name="display_results" checked>Display results on screen<br>
-                    <input type="checkbox" name="receive_xml" checked> I'd like to receive back an XML file for verification.
+                    <input type="checkbox" name="displayResults" value="1" checked>Display results on screen<br>
+                    <input type="checkbox" name="receiveXML" value="1" checked> I'd like to receive back an XML file for verification.
                     <br><br>
                     Upload file and process: <input type="submit" value="Process" alt="Upload File to Server">
                 </form>
