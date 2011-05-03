@@ -221,19 +221,17 @@
                 SELECT DISTINCT
 					r.regionID,
                     r.regionName,
-                    CONCAT(r.regionName, ' - ', u.firstName, ' ', u.lastName)  AS regionInfo
+                    CONCAT(r.regionName, ' - ', u.firstName, ' ', u.lastName) AS regionInfo
                 FROM 
                     smg_regions r
-                  
-				INNER JOIN                     
+				LEFT OUTER JOIN                 
                    user_access_rights UAR on UAR.regionID = r.regionID                         
                        AND                                         
                            uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-               	INNER JOIN                     
-					smg_users u ON u.userID = uar.userID                         
-						AND                         
-							u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">        
-               
+                LEFT OUTER JOIN                     
+                    smg_users u ON u.userID = uar.userID                         
+                        AND                         
+                            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">        
 			    WHERE
                     r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">  
                 AND

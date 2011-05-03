@@ -144,7 +144,7 @@
     </cfscript>
     
 </cfsilent>
-    
+   
 
 <script language="javascript">
 	// Load the list when page is ready
@@ -210,7 +210,7 @@
             <tr>
                 <td width="150" rowspan="10" align="left" valign="top">
                     <cfif file.recordcount>
-                        <img src="../uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
+                        <img src="../uploadedfiles/web-students/#file.name#" width="130" height="150"><br />
                     <cfelse>
                         <img src="pics/no_image.gif" border="0">
                     </cfif>
@@ -224,9 +224,9 @@
                 <td width="140"><em>Middle Name</em></td>		
             </tr>
             <tr>
-                <td valign="top">#qGetStudentInfo.familylastname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
-                <td valign="top">#qGetStudentInfo.firstname#<br><img src="pics/line.gif" width="175" height="1" border="0" align="absmiddle"></td>
-                <td valign="top">#qGetStudentInfo.middlename#<br><img src="pics/line.gif" width="135" height="1" border="0" align="absmiddle"></td>
+                <td valign="top">#qGetStudentInfo.familylastname#<br /><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
+                <td valign="top">#qGetStudentInfo.firstname#<br /><img src="pics/line.gif" width="175" height="1" border="0" align="absmiddle"></td>
+                <td valign="top">#qGetStudentInfo.middlename#<br /><img src="pics/line.gif" width="135" height="1" border="0" align="absmiddle"></td>
             </tr>
             <tr><td colspan="3">&nbsp;</td></tr>
             <tr><td colspan="3">
@@ -237,14 +237,14 @@
                             <td><em>Additional Programs</em></td>
                         </tr>
                         <tr>
-                            <td>#qGetProgramInfo.app_program#<br><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+                            <td>#qGetProgramInfo.app_program#<br /><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
                             <td>
                                 <cfif NOT VAL(qGetAdditionalProgramInfo.recordcount)>
                                     None
                                 <cfelse>
                                     #qGetAdditionalProgramInfo.app_program#
                                 </cfif>
-                                <br><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+                                <br /><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
                         </tr>
                         <tr><td colspan="2">&nbsp;</td></tr>
                     </table>
@@ -253,7 +253,7 @@
                 <td><em>International Representative</em></td><td><em>Requested Region</em></td><td><em>Requested States</em></td>
             </tr>
             <tr>
-                <td valign="bottom">#qGetIntRepInfo.businessname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
+                <td valign="bottom">#qGetIntRepInfo.businessname#<br /><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
                 <td valign="bottom">
                
                     <cfswitch expression="#qGetStudentInfo.app_region_guarantee#">
@@ -293,31 +293,30 @@
                             East
                         </cfcase>
                     
-                        
                         <cfdefaultcase>
                             n/a
                         </cfdefaultcase>
                     
                     </cfswitch>
-                    <br><img src="pics/line.gif" width="175" height="1" border="0" align="absmiddle">
+                    <br /><img src="pics/line.gif" width="175" height="1" border="0" align="absmiddle">
                 </td>
                 <td valign="bottom">
                     <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
                         n/a
                     <cfelse>
-                        1st Choice: #qGetStatesRequested.statename1# <br>
-                        2nd Choice: #qGetStatesRequested.statename2#<br>
+                        1st Choice: #qGetStatesRequested.statename1# <br />
+                        2nd Choice: #qGetStatesRequested.statename2# <br />
                         3rd Choice: #qGetStatesRequested.statename3#
                     </cfif>
-                    <br><img src="pics/line.gif" width="135" height="1" border="0" align="absmiddle">
+                    <br /><img src="pics/line.gif" width="135" height="1" border="0" align="absmiddle">
                 </td>
             </tr>
         </table>
         
-        <br>
+        <br />
         
         <!--- FORM --->
-        <cfform method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
+        <cfform name="approveStudent" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         	<input type="hidden" name="submitted" value="1">
             <input type="hidden" name="studentID" value="#qGetStudentInfo.studentID#">
             <table width="660px" border="0" cellpadding="4" cellspacing="2" align="center" style="border:1px solid ##CCC; padding:5px;">	
@@ -337,68 +336,47 @@
                     <td align="right">Region: </td>
                     <td>
                       <cfselect
-                          bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" enabled="No"
-                          bindonload="yes"
                           name="regionID" 
-                          id="regionID" multiple="no"
+                          id="regionID" 
+                          bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})"
+                          bindonload="yes"
                           value="regionID"
-                          display="regionName" queryPosition="below"
+                          display="regionName"
                           selected="#FORM.regionID#" /> 
-                          
-                   
-                          
-                     
                     </td>
                 </tr>
                
                  <tr class="displayNone additionalInformation">
                     <td align="right">Region Guarantee: </td>
                     <td>
-                    <cfoutput>
-                   
-                     </cfoutput>
-                     <cfif qGetStudentInfo.app_region_guarantee is '' or qGetStudentInfo.app_region_guarantee eq 0>
-                     
-                          N/A - to assign a guarantee, update region choice on app
-                    <Cfelse>
+		                <cfif NOT LEN(qGetStudentInfo.app_region_guarantee) OR NOT VAL(qGetStudentInfo.app_region_guarantee)>
+        		            N/A - to assign a guarantee, update region choice on application.
+                	    <cfelse>
                               <cfselect
                                   name="regionGuarantee" 
                                   id="regionGuarantee"
+                                  bind="cfc:nsmg.extensions.components.region.getRegionGuaranteeRemote({regionID})"
+                                  bindonload="no"
                                   value="regionID"
-                                  display="regionName"
-                                  selected="#FORM.regionID#"
-                                  bindonload="yes"
-                                  bind="cfc:nsmg.extensions.components.region.getRegionGuaranteeRemote({regionID})" />
-   
-                            </td>
-                        </tr>
+                                  display="regionName" />
+						</cfif>	
+					</td>
+				</tr>
+                <tr class="displayNone additionalInformation">
+                    <td align="right">State Guarantee: </td>
+                    <td>
+                        <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
+                            N/A - to assign state, update choices on application.
+                        <cfelse>
+                            <select name="stateGuarantee">
+                                <option value="0"></option>
+                                <option value='#qGetStatesRequested.state1#' <cfif qGetStudentInfo.state_guarantee EQ qGetStatesRequested.state1>selected</cfif>>#qGetStatesRequested.statename1#</option>
+                                <option value='#qGetStatesRequested.state2#' <cfif qGetStudentInfo.state_guarantee EQ qGetStatesRequested.state2>selected</cfif>>#qGetStatesRequested.statename2#</option>
+                                <option value='#qGetStatesRequested.state3#' <cfif qGetStudentInfo.state_guarantee EQ qGetStatesRequested.state3>selected</cfif>>#qGetStatesRequested.statename3#</option>
+                            </select>
                         </cfif>
-                
-                 
-					
-                      <tr class="displayNone additionalInformation">
-                        <td align="right">State Guarantee: </td>
-                        <td>
-                          <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
-                          N/A - to assign state, update choices on app.
-                          <cfelse>
-                          <!----
-                              <cfquery name="get_states" datasource="#application.dsn#">
-                                    SELECT state, statename
-                                    FROM smg_states
-                                    ORDER BY id
-                                </cfquery>
-								---->
-                                <select NAME="stateGuarantee">
-                                	<option value="0"></option>
-                                    <option value='#qGetStatesRequested.state1#' <cfif #qGetStudentInfo.state_guarantee# eq #qGetStatesRequested.state1#>selected</cfif> >#qGetStatesRequested.statename1#</option>
-                                    <option value='#qGetStatesRequested.state2#' <cfif #qGetStudentInfo.state_guarantee# eq #qGetStatesRequested.state2#>selected</cfif>>#qGetStatesRequested.statename2#</option>
-                                    <option value='#qGetStatesRequested.state3#' <cfif #qGetStudentInfo.state_guarantee# eq #qGetStatesRequested.state3#>selected</cfif>>#qGetStatesRequested.statename3#</option>
-                                </select>
-                    		</cfif>
-                        </td>
-                    </tr>
-         
+                    </td>
+                </tr>
                 <tr class="displayNone additionalInformation">
                     <td align="right">Program: </td>
                     <td>
@@ -410,15 +388,14 @@
                         </select>
                     </td>
                 </tr>
-                
-				
-                    <tr class="displayNone additionalInformation">
-                        <td align="right">Direct Placement: </td>
-                        <td>
-                           <input type="radio" name="directPlace" value=1>Yes &nbsp;&nbsp;&nbsp;<input type="radio" name="directPlace" value=0>No 
-                        </td>
-                    </tr>
-                  
+                <tr class="displayNone additionalInformation">
+                    <td align="right">Direct Placement: </td>
+                    <td>
+                       <input type="radio" name="directPlace" id="directPlace1" value="1"> <label for="directPlace1">Yes</label>
+                       &nbsp;&nbsp;&nbsp;
+                       <input type="radio" name="directPlace" id="directPlace0" value="0"> <label for="directPlace0">No</label>
+                    </td>
+                </tr>
                 <tr>
                     <td align="center" colspan="2">
                         <input name="submit" type=image src="pics/approve.gif" alt='Approve Application'>		
@@ -426,12 +403,12 @@
                 </tr>
             </table>
             
-            <br>
+            <br />
             
             <table width="660px" border="0" cellpadding="4" cellspacing="2" align="center">	
                 <tr>
                     <td align="center">
-                        Upon Approval and Company Assignment, notification will be sent to the student (if an email is on file) to let him/her know his/her application has been approved and they are awaiting placement.<br>
+                        Upon Approval and Company Assignment, notification will be sent to the student (if an email is on file) to let him/her know his/her application has been approved and they are awaiting placement.<br />
                         Student will also immediately show up in the unplaced listing of students waiting for placement.
                     </td>
                </tr>
