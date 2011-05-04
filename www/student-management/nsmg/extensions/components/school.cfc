@@ -284,6 +284,7 @@
     
 	<cffunction name="getAYPCamps" access="public" returntype="query" output="false" hint="Gets a list of AYP Camps, if campID is passed gets it by ID">
     	<cfargument name="campID" default="0" hint="IFFID is not required">
+        <cfargument name="campType" default="" hint="Orientation or English">
               
         <cfquery 
 			name="qGetAYPCamps" 
@@ -294,10 +295,19 @@
                     campType
                 FROM 
                     smg_aypcamps
-                <cfif VAL(ARGUMENTS.campID)>
-                	WHERE
-                    	campID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.campID#">
-                </cfif>    
+                WHERE
+                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+					
+                    <cfif LEN(ARGUMENTS.campType)>
+                    	AND
+                    		campType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.campType#">
+                    </cfif>	
+					
+					<cfif VAL(ARGUMENTS.campID)>
+                        AND
+                            campID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.campID#">
+                    </cfif>  
+                      
                 ORDER BY 
                     name
 		</cfquery>

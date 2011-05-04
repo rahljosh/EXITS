@@ -54,9 +54,12 @@
 		// Get IFF Schools
 		qIFFSchools = APPCFC.SCHOOL.getIFFSchools();
 		
-		// Get AYP Camps
-		qAYPCamps = APPCFC.SCHOOL.getAYPCamps();
-		
+		// Get AYP English Camps
+		qAYPEnglishCamps = APPCFC.SCHOOL.getAYPCamps(campType='english');
+
+		// Get AYP Orientation Camps
+		qAYPOrientationCamps = APPCFC.SCHOOL.getAYPCamps(campType='orientation');
+
 		// Get Intl. Rep List
 		qIntRepsList = APPCFC.USER.getUsers(usertype=8);
 
@@ -690,10 +693,10 @@
 					<td><cfif aypenglish EQ 0><input type="checkbox" name="english_check" value="0" <cfif FORM.edit EQ 'no'>disabled</cfif>>	<cfelse> <input type="checkbox" name="english_check" value="1" checked <cfif FORM.edit EQ 'no'>disabled</cfif>> </cfif> </td>
 					<td>Pre-AYP English Camp: &nbsp; &nbsp;
 						<select name="ayp_englsh" <cfif FORM.edit EQ 'no'>disabled</cfif>>
-						<option value="0"></option>
-						<cfloop query="qAYPCamps">
-						<cfif camptype EQ "english"><option value="#campid#" <cfif qGetStudentInfo.aypenglish EQ campid> selected </cfif>>#name#</option></cfif>
-						</cfloop>
+                            <option value="0"></option>
+                            <cfloop query="qAYPEnglishCamps">
+                            	<option value="#qAYPEnglishCamps.campid#" <cfif qGetStudentInfo.aypenglish EQ qAYPEnglishCamps.campid> selected </cfif>>#qAYPEnglishCamps.name#</option>
+                            </cfloop>
 						</select>
 					</td>
 				</tr>
@@ -701,10 +704,10 @@
 					<td><cfif ayporientation EQ 0><input type="checkbox" name="orientation_check" value="0" <cfif FORM.edit EQ 'no'>disabled</cfif>>	<cfelse><input type="checkbox" name="orientation_check" value="1" checked <cfif FORM.edit EQ 'no'>disabled</cfif>>	</cfif></td>
 					<td>Pre-AYP Orientation Camp:  &nbsp;
 					    <select name="ayp_orientation" <cfif FORM.edit EQ 'no'>disabled</cfif>>
-						<option value="0"></option>
-						<cfloop query="qAYPCamps">
-						<cfif camptype is "orientation"><option value="#campid#" <cfif qGetStudentInfo.ayporientation EQ campid> selected </cfif>>#name#</option></cfif>
-						</cfloop>
+                            <option value="0"></option>
+                            <cfloop query="qAYPOrientationCamps">
+                                <option value="#qAYPOrientationCamps.campid#" <cfif qGetStudentInfo.ayporientation EQ qAYPOrientationCamps.campid> selected </cfif>>#qAYPOrientationCamps.name#</option>
+                            </cfloop>
 						</select>
 					</td>
 				</tr>
