@@ -1379,6 +1379,67 @@
 
 	<!--- ------------------------------------------------------------------------- ----
 		
+		START OF PLACEMENT MANAGEMENT FUNCTIONS
+	
+	----- ------------------------------------------------------------------------- --->
+
+	<cffunction name="assignEnglishCamp" access="public" returntype="void" hint="Sets Pre-AYP english camp based on host family state">
+        <cfargument name="studentID" required="yes" hint="studentID is required">
+		
+        <cfscript>
+			var setEnglishCampID = 0;
+			/*
+				19 - MacDuffie, MA
+				20 - NorthRidge, CA
+			*/
+			
+			// Get Student Information
+			var qGetStudentInformation = getStudentByID(studentID=ARGUMENTS.studentID);
+			
+			// Get Host Family Information
+			var qGetHostInformation = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInformation.hostID);
+			
+			// Student is Pre-AYP and we have a valid host
+			if ( VAL(qGetStudentInformation.aypEnglish) AND qGetHostInformation.recordCount EQ 1) {
+			
+				// Get Camp Based on Host Family State Address
+				if ( ListFind(APPLICATION.CONSTANTS.aypStateList.mcDuffie, qGetHostInformation.state) ) {
+					// 19 - MacDuffie, MA
+					setEnglishCampID = 19;
+				} else if ( ListFind(APPLICATION.CONSTANTS.aypStateList.northRidge, qGetHostInformation.state) )  {
+					// 20 - NorthRidge, CA
+					setEnglishCampID = 20;
+				}
+				
+			}
+		</cfscript>
+        
+        <cfif VAL(setEnglishCampID)>
+            
+            <!--- Update Camp --->
+            <cfquery 
+                datasource="#APPLICATION.dsn#">
+                    UPDATE
+                        smg_students
+                    SET
+                        aypEnglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#setEnglishCampID#">
+                    WHERE
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+            </cfquery>
+		
+        </cfif>
+        		   
+	</cffunction>
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		END OF PLACEMENT PAPERWORK
+	
+	----- ------------------------------------------------------------------------- --->
+
+
+	<!--- ------------------------------------------------------------------------- ----
+		
 		PROJECT HELP
 	
 	----- ------------------------------------------------------------------------- --->
