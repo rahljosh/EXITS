@@ -320,7 +320,6 @@
 	<cffunction name="getFlightInformation" access="public" returntype="query" output="false" hint="Gets flight information by studentID and type">
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="flightType" hint="Arrival/Departure is required">
-		<cfargument name="isPreAYP" default="0" hint="Set to 1 to get PRE-AYP flight arrival information">   
         
         <cfquery 
 			name="qGetFlightInformation" 
@@ -341,7 +340,6 @@
                     arrival_time, 
                     overnight, 
                     flight_type,
-                    isPreAYP,
                     dateCreated,
                     dateUpdated,
                     isDeleted
@@ -351,12 +349,12 @@
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#"> 
                 AND 
                     flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">
-                AND 
-                    isPreAYP = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.isPreAYP#">
 				AND
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 ORDER BY 
-                    flightID <!--- dep_date, dep_time --->
+                    flightID,
+                    dep_date, 
+                    dep_time
 		</cfquery>
 		   
 		<cfreturn qGetFlightInformation>
@@ -386,7 +384,6 @@
                     arrival_time, 
                     overnight, 
                     flight_type,
-                    isPreAYP,
                     dateCreated,
                     dateUpdated,
                     isDeleted
@@ -439,7 +436,6 @@
         <cfargument name="arrivalTime" default="" hint="arrivalTime is not required">
         <cfargument name="overNight" default="0" hint="overNight is not required">
         <cfargument name="flightType" hint="Arrival/Departure is required">
-        <cfargument name="isPreAYP" default="0" hint="Set to 1 for PRE-AYP flight arrival information"> 
 		
 		<cfquery datasource="MySQL">
             INSERT INTO 
@@ -460,7 +456,6 @@
                 arrival_time,
             	overnight, 
                 flight_type,
-                isPreAYP,
                 dateCreated
             )
             VALUES 
@@ -497,7 +492,6 @@
 
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">,
-            	<cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isPreAYP#">,
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
             ) 
         </cfquery>
@@ -521,7 +515,6 @@
         <cfargument name="arrivalAirCode" default="" hint="arrivalAirCode is not required">
         <cfargument name="arrivalTime" default="" hint="arrivalTime is not required">
         <cfargument name="overNight" default="0" hint="overNight is not required">
-        <cfargument name="isPreAYP" default="0" hint="Set to 1 for PRE-AYP flight arrival information"> 
 
 		<cfquery datasource="MySQL">
             UPDATE
@@ -555,8 +548,7 @@
                 	arrival_time = <cfqueryparam cfsqltype="cf_sql_time" null="yes">,
                 </cfif>
             	
-                overnight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
-                isPreAYP =  <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isPreAYP#">
+                overnight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">
             WHERE 
             	flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
             AND	
@@ -664,7 +656,7 @@
             qGetDeletedFlightInfo = getFlightInformationByFlightID(flightID=VAL(ARGUMENTS.flightID));
             
             // Get Pre-AYP Arrival
-            qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="arrival", isPreAYP=1);
+            qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="PreAYPArrival");
     
             // Get Arrival
             qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="arrival");
@@ -726,100 +718,7 @@
         <cfif qGetDeletedFlightInfo.recordCount OR qGetPreAYPArrival.recordCount OR qGetArrival.recordCount OR qGetDeparture.recordCount>
         	
             <cfoutput>
-            	
-                <!--- Information common for body and PDF--->
-                <cfsavecontent variable="commonInformation">
- 					
-                    <p style="color: ##333;">
-                        <span style="font-weight:bold;">Student:</span>
-                        #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)
-                    </p>
-
-                    <p style="color: ##333;">
-                        <span style="font-weight:bold;">International Representative:</span>
-                        #qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)
-                    </p>
-
-                    <p style="color: ##333;">
-                        <span style="font-weight:bold;">Program:</span>
-                        #qGetStudentFullInformation.programName#
-                    </p>
-                	
-                    <!--- Do Not Display for PHP --->
-                    <cfif NOT isPHPStudent>
-                    
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Region:</span>
-                            #qGetStudentFullInformation.regionName#
-                        </p>
-        
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Regional Manager:</span>
-                            #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
-                            - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a> - Phone: #qGetRegionalManager.phone#
-                        </p>
-                        
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Area Representative:</span> 
-                            #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
-                            - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> - Phone: #qGetStudentFullInformation.areaRepPhone#
-                        </p>
-                        
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Host Family:</span>
-                            <!--- Host Father --->
-                            <cfif LEN(qGetHostFamily.fatherFirstName)> 
-                                Mr. #qGetHostFamily.fatherFirstName# 
-                                <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
-                                    #qGetHostFamily.fatherLastName# 
-                                </cfif>							
-                            </cfif>
-                            
-                            <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
-                            
-                            <!--- Host Mother --->
-                            <cfif LEN(qGetHostFamily.motherFirstName)>
-                                Mrs. #qGetHostFamily.motherFirstName#
-                                <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
-                                    #qGetHostFamily.motherLastName# 
-                                </cfif>							
-                            </cfif>
-                            
-                            <!--- Family Last Name --->                            
-                            <cfif qGetHostFamily.fatherFirstName EQ qGetHostFamily.motherFirstName>
-                                #qGetHostFamily.familyLastName#		
-                            </cfif>
-                            
-                            (###qGetHostFamily.hostid#) - Phone: #qGetHostFamily.phone# <br />
-                            
-                            <!--- Address --->
-                            <span style="margin-left:67px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
-                        </p>
-                        
-                        <!--- Arrival Airport --->
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Arrival/Departure Airport:</span> 
-                            <cfif LEN(qGetHostFamily.airport_city)>#qGetHostFamily.airport_city# <cfelse> n/a </cfif>
-                            - Airport Code: <cfif LEN(qGetHostFamily.major_air_code)>#qGetHostFamily.major_air_code# <cfelse> n/a </cfif>
-                        </p>
-        			
-                    </cfif>
-                    
-                    <!--- Notes --->
-                    <p style="color: ##333;">
-                        <span style="font-weight:bold;">Notes:</span> 
-                        <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
-                    </p>
-                    
-                    <!--- Today's Date --->
-                    <p style="color: ##333;">
-                        <span style="font-weight:bold;">Today's Date:</span> 
-                        #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST
-                    </p>
-                    
-                </cfsavecontent>
-               
-               
+            	              
                 <!--- Email Body --->
                 <cfsavecontent variable="flightEmailBody">
 					
@@ -831,11 +730,15 @@
                         </legend>
 
                         <p style="color: ##333;">
-                        	Please find flight information attached. If it looks good, please feel free to forward to your regional manager.                                                      
+                        	Please find flight information attached for #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#). 
+                            
+                            <cfif ARGUMENTS.sendEmailTo NEQ 'regionalManager'>
+	                            If it looks good, please feel free to forward to your regional manager.                                                      
+                            </cfif>
                         </p>
 
                         <p style="color: ##333;">
-	                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a> then click on "Flight Information".
+	                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a> then click on "Flight Information" on the right menu.
 						</p>
                         
                         <!--- Flight Leg Deleted --->
@@ -859,16 +762,7 @@
                             </p>
                             
                         </cfif>
-    					
-                        <!--- Include Commom Information for Email Body and PDF --->
-						#commonInformation#
 
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Updated By:</span> 
-                            #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
-                            <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
-                        </p>
-                        
                         <cfif APPLICATION.IsServerLocal>
     
                             <p style="color: ##333; padding-bottom:5px; font-weight:bold;">
@@ -902,8 +796,102 @@
                             Please pass it to the host family information as soon as possible and in case of any doubt do not hesitate to contact us.
                         </p>
 
-						#commonInformation#
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Student:</span>
+                            #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)
+                        </p>
+    
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">International Representative:</span>
+                            #qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)
+                        </p>
+    
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Program:</span>
+                            #qGetStudentFullInformation.programName#
+                        </p>
                         
+                        <!--- Do Not Display for PHP --->
+                        <cfif NOT isPHPStudent>
+                        
+                            <p style="color: ##333;">
+                                <span style="font-weight:bold;">Region:</span>
+                                #qGetStudentFullInformation.regionName#
+                            </p>
+            
+                            <p style="color: ##333;">
+                                <span style="font-weight:bold;">Regional Manager:</span>
+                                #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
+                                - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a> - Phone: #qGetRegionalManager.phone#
+                            </p>
+                            
+                            <p style="color: ##333;">
+                                <span style="font-weight:bold;">Area Representative:</span> 
+                                #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
+                                - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> - Phone: #qGetStudentFullInformation.areaRepPhone#
+                            </p>
+                            
+                            <p style="color: ##333;">
+                                <span style="font-weight:bold;">Host Family:</span>
+                                <!--- Host Father --->
+                                <cfif LEN(qGetHostFamily.fatherFirstName)> 
+                                    Mr. #qGetHostFamily.fatherFirstName# 
+                                    <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                        #qGetHostFamily.fatherLastName# 
+                                    </cfif>							
+                                </cfif>
+                                
+                                <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
+                                
+                                <!--- Host Mother --->
+                                <cfif LEN(qGetHostFamily.motherFirstName)>
+                                    Mrs. #qGetHostFamily.motherFirstName#
+                                    <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                        #qGetHostFamily.motherLastName# 
+                                    </cfif>							
+                                </cfif>
+                                
+                                <!--- Family Last Name --->                            
+                                <cfif qGetHostFamily.fatherFirstName EQ qGetHostFamily.motherFirstName>
+                                    #qGetHostFamily.familyLastName#		
+                                </cfif>
+                                
+                                (###qGetHostFamily.hostid#) - Phone: #qGetHostFamily.phone# <br />
+                                
+                                <!--- Address --->
+                                <span style="margin-left:67px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
+                            </p>
+                            
+                            <!--- Arrival Airport --->
+                            <p style="color: ##333;">
+                                <span style="font-weight:bold;">Arrival/Departure Airport:</span> 
+                                <cfif LEN(qGetHostFamily.airport_city)>#qGetHostFamily.airport_city# <cfelse> n/a </cfif>
+                                - Airport Code: <cfif LEN(qGetHostFamily.major_air_code)>#qGetHostFamily.major_air_code# <cfelse> n/a </cfif>
+                            </p>
+                        
+                        </cfif>
+                        
+                        <!--- Notes --->
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Notes:</span> 
+                            <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
+                        </p>
+						
+                        <!--- Updated By --->
+                        <cfif ARGUMENTS.sendEmailTo NEQ 'regionalManager'>
+                            <p style="color: ##333;">
+                                <span style="font-weight:bold;">Updated By:</span> 
+                                #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
+                                <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
+                            </p>
+                        </cfif>
+                        
+                        <!--- Today's Date --->
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Today's Date:</span> 
+                            #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST
+                        </p>
+                                            
                     </fieldset>
 
                                     
