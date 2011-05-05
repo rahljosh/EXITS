@@ -1724,7 +1724,20 @@
                     MAX(cbc.seasonID) AS seasonID,
                     h.familylastname,
                     p.endDate,
-                    IFNULL( (SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = 'departure'), p.endDate) AS dep_date
+                    IFNULL( 
+                    		(
+                                SELECT 
+                                    MAX(dep_date) 
+                                FROM 
+                                    smg_flight_info 
+                                WHERE 
+                                    studentID = s.studentID 
+                                AND 
+                                	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
+                                AND 
+                                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                             ), p.endDate
+							) AS dep_date
                 FROM 
                    	smg_hosts_cbc cbc 
                 INNER JOIN 

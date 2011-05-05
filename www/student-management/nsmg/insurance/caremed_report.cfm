@@ -97,6 +97,7 @@
 						FROM smg_flight_info
 						WHERE studentid = #get_students.studentid#
 							AND flight_type = 'departure'
+                            AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
 					</cfquery>
 				<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td>#studentid#</td>

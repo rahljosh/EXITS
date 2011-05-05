@@ -85,7 +85,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 				<cfloop list="#ad_users#" index='i' delimiters = ",">
 		 		'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.arearepid = </cfif> </Cfloop>)
 		</cfif>	
-		AND s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'departure')		
+		AND s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'departure' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">)		
 	GROUP BY s.studentid
 	ORDER BY r.regionname, u.lastname, s.firstname
 	</cfquery>

@@ -21,7 +21,9 @@
                 INNER JOIN  
                     smg_programs p ON p.programID = s.programID
                 WHERE 
-                    fi.flight_type like "%departure%"          
+                    fi.flight_type like "%departure%" 
+                AND 
+                	fi.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">         
                 GROUP BY 
                     fi.studentID
                 ORDER BY 

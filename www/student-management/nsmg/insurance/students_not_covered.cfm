@@ -113,10 +113,16 @@
 		<!--- NO TERMINATION DATE - GET FLIGHT INFO --->	
 		<cfelse>					
 			<cfquery name="get_flight" datasource="MySql">
-				SELECT DISTINCT dep_date
-				FROM smg_flight_info
-				WHERE studentid = #get_students.studentid#
-					AND flight_type = 'departure'
+				SELECT DISTINCT 
+                	dep_date
+				FROM 
+                	smg_flight_info
+				WHERE 
+                	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_students.studentid#">
+				AND 
+                	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+				AND 
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                    
 			</cfquery>
 			<cfif get_flight.dep_date GT get_last_insurance.end_date AND get_flight.dep_date GTE now()>
 			<tr>
