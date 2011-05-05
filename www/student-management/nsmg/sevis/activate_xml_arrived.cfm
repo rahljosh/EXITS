@@ -56,6 +56,8 @@
             	f.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
             AND
             	f.dep_date < <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(form.arrival_date)#">
+			AND
+            	f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
 	LEFT JOIN 
     	smg_hosts h ON s.hostid = h.hostid
 	WHERE 

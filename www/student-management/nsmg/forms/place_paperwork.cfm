@@ -43,11 +43,18 @@
 <cfinclude template="../querys/get_student_info.cfm">
 
 <cfquery name="get_arrival" datasource="MySql">
-	SELECT DISTINCT dep_date
-	FROM smg_flight_info
-	WHERE studentid = '#get_student_info.studentid#'
-		AND flight_type = 'arrival'
-	ORDER BY dep_date DESC
+	SELECT DISTINCT 
+    	dep_date
+	FROM 
+    	smg_flight_info
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+	AND 
+    	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+	AND
+		isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
+	ORDER BY 
+    	dep_date DESC
 </cfquery>
 
 <cfquery name="get_host" datasource="MySql">

@@ -65,7 +65,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 				s.programid = #prog# 
 				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
 			</cfloop> )
-		AND s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type = 'departure')
+		AND s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type = 'departure' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> )
 	ORDER BY s.studentid
 	</cfquery>
 	

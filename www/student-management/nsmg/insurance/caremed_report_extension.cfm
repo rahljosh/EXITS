@@ -140,6 +140,7 @@
 						FROM smg_flight_info
 						WHERE studentid = #get_students.studentid#
 							AND flight_type = 'departure'
+                            AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
 						ORDER BY dep_date DESC 
 					</cfquery>
 					<cfif get_flight.dep_date EQ ''>

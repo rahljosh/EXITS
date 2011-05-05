@@ -17,13 +17,6 @@
 	
 </cfquery>
 
-
-<cfquery name="single_date" datasource="mysql">
-select dep_date
-from smg_flight_info
-where studentid = 4928
-</cfquery>
-
 <cfheader name="Content-Disposition" value="attachment; filename=end_ins_report.xls"> 
 
 <cfoutput>
@@ -39,6 +32,7 @@ where studentid = 4928
 						FROM smg_flight_info
 						WHERE studentid = #studentid#
 							AND flight_type = 'departure'
+                            AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 						ORDER BY dep_date DESC 
 					</cfquery>
 					

@@ -111,11 +111,18 @@
 			</tr>	
 			<cfloop query="get_students_region">			
 			<cfquery name="get_arrival" datasource="MySql">
-				SELECT DISTINCT dep_date
-				FROM smg_flight_info
-				WHERE studentid = '#get_students_region.studentid#'
-					AND flight_type = 'arrival'
-				ORDER BY dep_date DESC
+                SELECT 
+                    dep_date
+                FROM 
+                    smg_flight_info
+                WHERE 
+                    studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_students_region.studentid#">
+                AND 
+                    flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                AND
+                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                ORDER BY 
+                    dep_date DESC
 			</cfquery>
 			<cfquery name="first_acceptance" datasource="MySql">
 				SELECT hostid, school_acceptance

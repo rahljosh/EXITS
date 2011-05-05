@@ -47,7 +47,9 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 			r.regionname
 	FROM smg_students s 
 	INNER JOIN smg_programs p ON s.programid = p.programid
-	INNER JOIN smg_flight_info f ON s.studentid = f.studentid
+	INNER JOIN 
+    	smg_flight_info f ON s.studentid = f.studentid
+        	AND f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	INNER JOIN smg_regions r ON s.regionassigned = r.regionid
 	LEFT OUTER JOIN smg_users u ON s.arearepid = u.userid
 	WHERE s.active = 1 
@@ -109,7 +111,12 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 				SELECT flightid, studentid, dep_date, dep_city, dep_aircode, dep_time, flight_number, arrival_city, 
 					arrival_aircode, arrival_time, overnight, flight_type
 				FROM smg_flight_info
-				WHERE studentid = '#get_students.studentid#' and flight_type = 'departure'
+				WHERE 
+                	studentid = '#get_students.studentid#' 
+                AND
+                	flight_type = 'departure'
+                AND 
+                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 				ORDER BY dep_date, dep_time
 			</cfquery>
 			<cfloop query="get_dep">

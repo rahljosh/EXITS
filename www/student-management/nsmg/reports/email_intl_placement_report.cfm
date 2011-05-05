@@ -69,6 +69,8 @@
                 	smg_flight_info flight ON flight.studentID = s.studentID 
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+					AND 
+                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
             </cfcase>
 
         	<cfcase value="receivedDeparture">
@@ -76,6 +78,8 @@
                 	smg_flight_info flight ON flight.studentID = s.studentID 
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+					AND 
+                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
             </cfcase>
 			
 		</cfswitch>        
@@ -112,6 +116,8 @@
 							flight.studentID = s.studentID	
                 		AND
                         	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                        AND 
+                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
                 	)
             </cfcase>
 
@@ -126,6 +132,8 @@
 							flight.studentID = s.studentID	
 						AND
                 			flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                        AND 
+                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
                 	)
             </cfcase>
            

@@ -58,7 +58,7 @@
 	SELECT flightid, studentid, dep_date, dep_city, dep_aircode, dep_time, flight_number, arrival_city, 
 			arrival_aircode, arrival_time, overnight, flight_type
 	FROM smg_flight_info
-	WHERE studentid = '#get_student_info.studentid#' and flight_type = 'arrival'
+	WHERE studentid = '#get_student_info.studentid#' and flight_type = 'arrival' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	ORDER BY dep_date, dep_time
 </cfquery>
 
@@ -66,7 +66,7 @@
 	SELECT flightid, studentid, dep_date, dep_city, dep_aircode, dep_time, flight_number, arrival_city, 
 			arrival_aircode, arrival_time, overnight, flight_type
 	FROM smg_flight_info
-	WHERE studentid = '#get_student_info.studentid#' and flight_type = 'departure'
+	WHERE studentid = '#get_student_info.studentid#' and flight_type = 'departure' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	ORDER BY dep_date, dep_time
 </cfquery>
 

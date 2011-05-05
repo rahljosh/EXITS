@@ -215,6 +215,8 @@
                         AND 
                             ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
                 WHERE 
+                    fi.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                AND
                     fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
                 AND
                     ib.studentID IS NULL
@@ -308,9 +310,20 @@
                 FROM
                     smg_students s 
                 INNER JOIN
-                    smg_flight_info fi ON fi.studentID = s.studentID 
-					AND 
-                         fi.dep_date = ( SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> ) 
+                    smg_flight_info fi ON fi.studentID = s.studentID 					
+                    AND 
+                         fi.dep_date = ( 
+				                         	SELECT 
+                                            	MAX(dep_date) 
+                                            FROM 
+                                            	smg_flight_info
+                                            WHERE 
+                                            	studentID = s.studentID 
+                                            AND 
+                                            	fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
+                                            AND 
+                                            	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
+										) 
                 INNER JOIN 
                     smg_users u ON u.userid = s.intrep 
                 INNER JOIN 
@@ -477,7 +490,18 @@
                 INNER JOIN
                     smg_flight_info fi ON fi.studentID = s.studentID 
 					AND 
-                         fi.dep_date = ( SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> ) 
+                         fi.dep_date = ( 	
+                         					SELECT 
+                                            	MAX(dep_date) 
+                                            FROM 
+                                            	smg_flight_info 
+                                           	WHERE 
+                                            	studentID = s.studentID 
+                                            AND 
+                                            	fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
+                                            AND 
+                                            	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
+										) 
                 INNER JOIN 
                     smg_users u ON u.userid = s.intrep 
                 INNER JOIN 

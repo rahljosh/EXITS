@@ -259,6 +259,8 @@
         	smg_students on smg_students.studentid = flight.studentid
         WHERE
         	flight.batchid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#setBatchID#">
+		AND 
+        	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">            
         limit 50
     </cfquery>
     

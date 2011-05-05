@@ -87,16 +87,28 @@
 			</tr>	
 			<cfloop query="get_students">			
 				<cfquery name="get_arrival" datasource="MySql">
-					SELECT DISTINCT dep_date
-					FROM smg_flight_info
-					WHERE studentid = #get_students.studentid#
-						AND flight_type = 'arrival'
+					SELECT DISTINCT 
+                    	dep_date
+					FROM 
+                    	smg_flight_info
+					WHERE 
+                    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_students.studentid#">
+					AND 
+                    	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                    AND
+                        isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
 				</cfquery>
 				<cfquery name="get_departure" datasource="MySql">
-					SELECT DISTINCT dep_date
-					FROM smg_flight_info
-					WHERE studentid = #get_students.studentid#
-						AND flight_type = 'departure'
+					SELECT DISTINCT 
+                    	dep_date
+					FROM 
+                    	smg_flight_info
+					WHERE 
+                    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_students.studentid#">
+					AND 
+                    	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                    AND
+                        isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
 				</cfquery>
 				<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td>#studentid#</td>

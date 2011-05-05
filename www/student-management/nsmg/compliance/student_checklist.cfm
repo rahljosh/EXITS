@@ -165,11 +165,19 @@
 </cfquery>
 
 <cfquery name="get_arrival" datasource="MySql">
-	SELECT studentid, dep_date
-	FROM smg_flight_info
-	WHERE studentid = <cfqueryparam value="#get_student_info.studentid#" cfsqltype="cf_sql_integer">
-		AND flight_type = 'arrival'
-	ORDER BY flightid
+    SELECT
+	    studentid, 
+        dep_date
+    FROM 
+        smg_flight_info
+    WHERE 
+        studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+    AND 
+        flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+    AND
+        isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+    ORDER BY 
+        flightid
 </cfquery>
 
 <cfloop index = "i" list = "10,12,2,4,6,8"> 

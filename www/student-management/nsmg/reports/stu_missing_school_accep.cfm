@@ -69,7 +69,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 		INNER JOIN smg_regions r ON s.regionassigned = r.regionid
 		INNER JOIN smg_schools sc ON s.schoolid = sc.schoolid
 		INNER JOIN smg_users u ON s.arearepid = u.userid
-		INNER JOIN smg_flight_info flight ON s.studentid = flight.studentid
+		INNER JOIN smg_flight_info flight ON s.studentid = flight.studentid AND flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 		<cfif form.preayp EQ 'all'>
 			INNER JOIN smg_aypcamps camp ON (camp.campid = s.aypenglish OR camp.campid = s.ayporientation)
 		<cfelseif form.preayp EQ 'english'>
@@ -118,7 +118,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 			<!--- 	<cfquery name="get_arrival" datasource="MySql">
 				SELECT max(flightid) as lastflight, dep_date
 				FROM smg_flight_info  
-				WHERE studentid = '#get_students.studentid#' and flight_type = 'arrival'
+				WHERE studentid = '#get_students.studentid#' and flight_type = 'arrival' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 				GROUP BY studentid
 			</cfquery> --->
 			<tr>

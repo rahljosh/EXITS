@@ -34,7 +34,7 @@
             AND 
                 s.host_fam_approved <= 4
             AND 
-                s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')	
+                s.studentid NOT IN ( SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> )	
 	</Cfquery>
     <!----PHP flight info---->
     	<Cfquery name="qStudentsMissingArrival_php" datasource="mysql">
@@ -64,7 +64,7 @@
             AND
                 (s.companyid != 0 and s.companyid = 6)
             AND 
-                s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')	
+                s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">)	
 	</Cfquery>
    
 <Cfquery name="qStudentsMissingDeparture_php" datasource="mysql">
@@ -94,7 +94,7 @@
             AND
                 (s.companyid != 0 and s.companyid = 6)
             AND 
-                s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival')	
+                s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'arrival' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">)	
 	</Cfquery>
 
 <script language="javascript">	
@@ -205,7 +205,7 @@
 			AND 
             	s.host_fam_approved <= 4
 			AND 
-            	s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'departure')	
+            	s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'departure' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">)	
             ORDER BY s.familylastname
 	</Cfquery>
 	<table width=100%>

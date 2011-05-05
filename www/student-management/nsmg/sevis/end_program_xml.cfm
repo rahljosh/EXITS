@@ -88,7 +88,9 @@
 		INNER JOIN 
         	smg_users u ON s.intrep = u.userid
 		INNER JOIN 
-        	smg_flight_info f on s.studentid = f.studentid
+        	smg_flight_info f on s.studentid = f.studentid 
+            	AND 
+                	f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 		WHERE 
         	s.active = '1'
         AND 
