@@ -312,7 +312,7 @@
             <td>Your last visit was on #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')# MST</td>
             <td align="right">
              <cfif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,12", CLIENT.companyid)) >
+					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
                 <cfset tripcount = 7 - placed_students.Count>
                 <cfif placed_students.Count LT 7>
                     You're only #tripcount# placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip.pdf" target="_blank">#incentive_trip.trip_place#!</A>
@@ -454,7 +454,7 @@
 						</td>
 					<!--- Field Users --->                        
                     <cfelseif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,12", CLIENT.companyid)) >
+					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
 						<td>
                             <table cellpadding=4 cellspacing =0 border=0>
                                 <tr>
