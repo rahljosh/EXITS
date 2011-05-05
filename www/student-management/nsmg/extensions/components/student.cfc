@@ -1387,8 +1387,8 @@
 			// Get Host Family Information
 			var qGetHostInformation = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInformation.hostID);
 			
-			// Student is Pre-AYP and we have a valid host
-			if ( VAL(qGetStudentInformation.aypEnglish) AND qGetHostInformation.recordCount EQ 1) {
+			// Student is Pre-AYP, not assigned to a camp and we have a valid host
+			if ( VAL(qGetStudentInformation.aypEnglish) AND NOT ListFind("19,20", qGetStudentInformation.aypEnglish) AND qGetHostInformation.recordCount EQ 1) {
 			
 				// Get Camp Based on Host Family State Address
 				if ( ListFind(APPLICATION.CONSTANTS.aypStateList.mcDuffie, qGetHostInformation.state) ) {
