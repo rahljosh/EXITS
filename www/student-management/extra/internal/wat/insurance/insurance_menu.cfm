@@ -113,7 +113,7 @@
                                                 <cfselect
                                                     name="intRep" 
                                                     id="intRep"
-                                                    class="style1"
+                                                    class="style1" 
                                                     value="userID"
                                                     display="businessName"
                                                     selected="#FORM.intRep#"
@@ -121,14 +121,17 @@
 											</td>
 										</tr>
                                         <tr>
-											<td class="style1">Verification Received :</td>
+											<td class="style1" valign="top">Verification Received :</td>
 											<td class="style1" align="left">
                                                 <cfselect 
-                                                    name="verification_received" 
+                                                    name="verification_received"
                                                     id="verification_received"
                                                     class="style1"
+                                                    style="width:100px;"
+                                                    multiple="yes"
+                                                    size="10"
                                                     value="verificationReceived"
-                                                    display="verificationReceived"
+                                                    display="verificationReceivedDisplay"
                                                     selected="#FORM.verification_received#"
                                                     bind="cfc:extra.extensions.components.user.getVerificationDate({intRep},{programID})" /> 
 											</td>
@@ -182,14 +185,17 @@
 											</td>
 										</tr>
                                         <tr>
-											<td class="style1">Verification Received :</td>
+											<td class="style1" valign="top">Verification Received :</td>
 											<td class="style1" align="left">
                                                 <cfselect 
                                                     name="verification_received" 
                                                     id="verification_received2"
                                                     class="style1"
+                                                    style="width:100px;"
+                                                    multiple="yes"
+                                                    size="10"
                                                     value="verificationReceived"
-                                                    display="verificationReceived"
+                                                    display="verificationReceivedDisplay"
                                                     selected="#FORM.verification_received#"
                                                     bind="cfc:extra.extensions.components.user.getVerificationDate({intRep2},{programID2})" /> 
 											</td>

@@ -37,13 +37,13 @@
                 c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
 			AND	
             	insuType.insutypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="14">
+            <cfif LEN(FORM.verification_received)>
+                AND 
+                    c.verification_received IN ( <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" list="yes"> )
+			</cfif>                
 			<cfif VAL(FORM.intRepID)>
                 AND 
                     c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRepID#">
-            </cfif>
-			<cfif IsDate(FORM.verification_received)>
-                AND 
-                    c.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#">
             </cfif>
 		ORDER BY 
             u.businessname, 

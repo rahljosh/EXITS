@@ -134,7 +134,8 @@
 			name="qGetVerificationDate" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
-                    DATE_FORMAT(verification_received, '%m/%e/%Y') as verificationReceived
+                	DATE_FORMAT(verification_received, '%Y/%m/%e') as verificationReceived,                
+                    DATE_FORMAT(verification_received, '%m/%e/%Y') as verificationReceivedDisplay
                 FROM 
                     extra_candidates
                 WHERE 
@@ -159,7 +160,8 @@
 			// Return message to user
 			if ( NOT VAL(qGetVerificationDate.recordCount) ) {
 				QueryAddRow(qGetVerificationDate, 1);
-				QuerySetCell(qGetVerificationDate, "verificationReceived", "---- No Verification Dates Found ----", 1);
+				QuerySetCell(qGetVerificationDate, "verificationReceived", 0, 1);
+				QuerySetCell(qGetVerificationDate, "verificationReceivedDisplay", "---- No Verification Dates Found ----", 1);
 			} 
 			
 			return qGetVerificationDate;
