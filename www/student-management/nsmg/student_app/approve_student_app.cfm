@@ -336,10 +336,10 @@
                     <td align="right">Region: </td>
                     <td>
                       <cfselect
-                          name="regionID" 
-                          id="regionID" 
                           bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})"
                           bindonload="yes"
+                          name="regionID" 
+                          id="regionID" 
                           value="regionID"
                           display="regionName"
                           selected="#FORM.regionID#" /> 
@@ -350,15 +350,16 @@
                     <td align="right">Region Guarantee: </td>
                     <td>
 		                <cfif NOT LEN(qGetStudentInfo.app_region_guarantee) OR NOT VAL(qGetStudentInfo.app_region_guarantee)>
-        		            N/A - to assign a guarantee, update region choice on application.
+        		            N/A - to assign a guarantee, update region choice on app
                 	    <cfelse>
                               <cfselect
-                                  name="regionGuarantee" 
-                                  id="regionGuarantee"
                                   bind="cfc:nsmg.extensions.components.region.getRegionGuaranteeRemote({regionID})"
                                   bindonload="no"
+                                  name="regionGuarantee" 
+                                  id="regionGuarantee"
                                   value="regionID"
-                                  display="regionName" />
+                                  display="regionName"
+                                  selected="#FORM.regionID#" />
 						</cfif>	
 					</td>
 				</tr>
@@ -366,7 +367,7 @@
                     <td align="right">State Guarantee: </td>
                     <td>
                         <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
-                            N/A - to assign state, update choices on application.
+                            N/A - to assign state, update choices on app.
                         <cfelse>
                             <select name="stateGuarantee">
                                 <option value="0"></option>
