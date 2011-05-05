@@ -139,8 +139,7 @@
                         arrivalAirCode=FORM["incomingNewPreAYPArrivalAirCode" & i],
                         arrivalTime=FORM["incomingNewPreAYPArrivalTime" & i],
                         overNight=FORM["incomingNewPreAYPOvernight" & i],
-                        flightType='arrival',
-                        isPreAyp=1
+                        flightType='preAYPArrival'
                     );
                     
                 }
@@ -179,7 +178,7 @@
                     arrivalAirCode=FORM["incomingPreAYPArrivalAirCode" & i],
                     arrivalTime=FORM["incomingPreAYPArrivalTime" & i],
                     overNight=FORM["incomingPreAYPOvernight" & i],
-                    isPreAyp=1
+                    flightType='preAYPArrival'
                 );
             </cfscript>
             
@@ -391,7 +390,7 @@
 
     <cfscript>
 		// Get Pre-AYP Arrival
-		qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="arrival", isPreAYP=1);
+		qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="preAYPArrival");
 
 		// Get Arrival
 		qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="arrival");
