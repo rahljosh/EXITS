@@ -1,14 +1,26 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>New Transaction Insurance</title>
-</head>
+<!--- Kill Extra Output --->
+<cfsilent>
+	
+    <!--- Param FORM variables --->
+    <cfparam name="FORM.programID" default="">
+    <cfparam name="FORM.intrep" default="">
+    <cfparam name="FORM.extra_insurance_typeid" default="">
+    <cfparam name="FORM.verification_received" default="">
 
-<body>
+</cfsilent>
 
-<cfif NOT IsDefined('form.programid')>
+<cfif NOT VAL(FORM.programid)>
 	Please select at least one program.
+	<cfabort>
+</cfif>
+
+<cfif NOT LEN(FORM.extra_insurance_typeid)>
+	Please select an insurance typ
+	<cfabort>
+</cfif>
+
+<cfif NOT LEN(FORM.verification_received)>
+	Please select at least one verification receive date.
 	<cfabort>
 </cfif>
 
@@ -27,20 +39,28 @@
 	INNER JOIN smg_companies comp ON comp.companyid = c.companyid
 	LEFT JOIN smg_countrylist country ON country.countryid =  c.residence_country
 	LEFT JOIN smg_insurance_codes insu_codes ON (u.extra_insurance_typeid = insu_codes.insutypeid AND c.companyid = insu_codes.companyid)
-	WHERE c.status = '1'
-		AND c.dob IS NOT NULL
-		AND cancel_date IS NULL
-		AND c.insurance_date IS NULL
-		AND c.verification_received = #CreateODBCDate(form.verification_received)#
-		AND u.extra_insurance_typeid = '#form.extra_insurance_typeid#'	
-		<cfif form.intrep NEQ 0>
-			AND c.intrep = '#form.intrep#'
-		</cfif>
-		AND ( <cfloop list="#form.programid#" index="prog">
-			 c.programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )  
-  ORDER BY u.businessname, c.lastname, c.firstname
+	WHERE 
+    	c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+    AND 
+        c.dob IS NOT NULL
+    AND 
+        cancel_date IS NULL
+    AND 
+        c.insurance_date IS NULL
+    AND 
+        u.extra_insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.extra_insurance_typeid#">	
+    AND 
+        c.verification_received IN ( <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" list="yes"> )
+    AND 
+    	c.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+	<cfif VAL(FORM.intrep)>
+        AND 
+        	c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+    </cfif>
+	ORDER BY 
+        u.businessname, 
+        c.lastname, 
+        c.firstname
 </cfquery>
 
 <!--- set content type --->
