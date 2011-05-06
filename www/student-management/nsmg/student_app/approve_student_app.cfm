@@ -336,10 +336,10 @@
                     <td align="right">Region: </td>
                     <td>
                       <cfselect
-                          bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})"
-                          bindonload="yes"
                           name="regionID" 
                           id="regionID" 
+                          bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})"
+                          bindonload="yes"
                           value="regionID"
                           display="regionName"
                           selected="#FORM.regionID#" /> 
@@ -350,16 +350,15 @@
                     <td align="right">Region Guarantee: </td>
                     <td>
 		                <cfif NOT LEN(qGetStudentInfo.app_region_guarantee) OR NOT VAL(qGetStudentInfo.app_region_guarantee)>
-        		            N/A - to assign a guarantee, update region choice on app
+        		            N/A - to assign a guarantee, update region choice on application.
                 	    <cfelse>
                               <cfselect
-                                  bind="cfc:nsmg.extensions.components.region.getRegionGuaranteeRemote({regionID})"
-                                  bindonload="no"
                                   name="regionGuarantee" 
                                   id="regionGuarantee"
+                                  bind="cfc:nsmg.extensions.components.region.getRegionGuaranteeRemote({regionID})"
+                                  bindonload="no"
                                   value="regionID"
-                                  display="regionName"
-                                  selected="#FORM.regionID#" />
+                                  display="regionName" />
 						</cfif>	
 					</td>
 				</tr>
@@ -367,7 +366,7 @@
                     <td align="right">State Guarantee: </td>
                     <td>
                         <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
-                            N/A - to assign state, update choices on app.
+                            N/A - to assign state, update choices on application.
                         <cfelse>
                             <select name="stateGuarantee">
                                 <option value="0"></option>
