@@ -247,7 +247,9 @@
 			if ( $("#cancel_date").val() == '' ) {
 				$("#cancel_date").val(getCurrentDate());
 			}
-		} else {
+		} else {			
+			$("#cancel_date").val("");
+			$("#cancel_reason").val("");
 			$("#divCancelation").fadeOut("fast");
 		}
 	}
@@ -341,7 +343,7 @@
 			<br />
             
             <!--- TOP SECTION --->
-            <table width="800px" border="1" align="center" cellpadding="8" cellspacing="8" bordercolor="##C7CFDC" bgcolor="##ffffff">	
+            <table width="1000px" border="1" align="center" cellpadding="8" cellspacing="8" bordercolor="##C7CFDC" bgcolor="##ffffff">	
                 <tr>
                     <td valign="top">
                     
@@ -464,7 +466,7 @@
             <br>                                    
             
 			<!--- INFORMATION SECTION --->
-            <table width="800px" border="0" cellpadding="0" cellspacing="0" align="center">	
+            <table width="1000px" border="0" cellpadding="0" cellspacing="0" align="center">	
                 <tr>
                     <!--- LEFT SECTION --->
                     <td width="49%" valign="top">
@@ -627,7 +629,7 @@
                                             <td class="style1" align="right"><strong>English Assessment CSB:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#qGetCandidate.personal_info#</span>
-                                                <textarea name="personal_info" class="style1 editPage" cols="30" rows="5">#qGetCandidate.personal_info#</textarea>
+                                                <textarea name="personal_info" class="style1 editPage" cols="30" rows="8">#qGetCandidate.personal_info#</textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -816,7 +818,7 @@
                     <td width="49%" valign="top">
 
                     	<!--- CANCELATION --->
-                    	<div id="divCancelation" <cfif qGetCandidate.status NEQ 'canceled'> style="display:none;" </cfif> >
+                    	<div id="divCancelation" <cfif qGetCandidate.status NEQ 'canceled' AND NOT LEN(qGetCandidate.cancel_date)> style="display:none;" </cfif> >
                             <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                                 <tr>
                                     <td bordercolor="##FFFFFF">
@@ -836,7 +838,7 @@
                                                 <td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
                                                 <td class="style1">
                                                     <span class="readOnly">#qGetCandidate.cancel_reason#</span>
-                                                    <input type="text" class="style1 editPage" name="cancel_reason" size="50" value="#qGetCandidate.cancel_reason#">
+                                                    <input name="cancel_reason" id="cancel_reason" type="text" class="style1 editPage" size="50" value="#qGetCandidate.cancel_reason#">
                                                 </td>								
                                             </tr>
                                         </table>	
@@ -893,7 +895,7 @@
                                         <tr id="host_history" bgcolor="##FFBD9D" class="hiddenField">
                                            	<td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
                                             <td class="style1">
-                                            	<textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="5"></textarea>
+                                            	<textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="8"></textarea>
                                                 <br><Br>
                                                 Is this a transfer? 
                                                 <input type="radio" name="transfer" onclick="document.getElementById('showTransferInfo').style.display='table-row';" value="1" > Yes 
@@ -909,7 +911,7 @@
                                         </tr>
                                         <tr id="showTransferInfo" bgcolor="FFBD9D" class="hiddenField">
                                             <td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
-                                            <td class="style1"><textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="5"></textarea></td>
+                                            <td class="style1"><textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="8"></textarea></td>
                                         </tr>
                                         <tr class="readOnly">
                                         	<td class="style1" align="right" width="35%"><strong>Placement Date:</strong></td>
@@ -1020,7 +1022,7 @@
                                                 <td class="style1" align="right" valign="top"><strong>Notes:</strong></td>
                                                 <td class="style1" colspan="3">
                                                     <span class="readOnly">#qCandidatePlaceCompany.selfConfirmationNotes#</span>
-                                                    <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage selfPlacementField" cols="60" rows="5">#qCandidatePlaceCompany.selfConfirmationNotes#</textarea>
+                                                    <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage selfPlacementField" cols="60" rows="8">#qCandidatePlaceCompany.selfConfirmationNotes#</textarea>
                                                 </td>
                                             </tr>
 										</cfif>                                            
@@ -1116,7 +1118,7 @@
 	                                        <td class="style1" align="right" valign="top"><strong>Comments:</strong></td>
     	                                    <td class="style1" colspan="3">
         	                                	<span class="readOnly">#qGetCandidate.change_requested_comment#</span>
-            		                            <textarea name="change_requested_comment" class="style1 editPage" cols="60" rows="10">#qGetCandidate.change_requested_comment#</textarea>
+            		                            <textarea name="change_requested_comment" class="style1 editPage" cols="60" rows="8">#qGetCandidate.change_requested_comment#</textarea>
                     	                    </td>
                                         </tr>
                                         <tr>
@@ -1283,7 +1285,7 @@
 			<!---- EDIT/UPDATE BUTTONS ---->
             <cfif ListFind("1,2,3,4", CLIENT.userType)>
                 
-                <table width="800px" border="0" cellpadding="0" cellspacing="0" align="center">	
+                <table width="1000px" border="0" cellpadding="0" cellspacing="0" align="center">	
                     <tr>
                         <td align="center">
                             
