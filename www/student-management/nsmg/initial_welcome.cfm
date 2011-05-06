@@ -415,7 +415,7 @@
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets</td>
                     <!--- Field Users --->
 					 <cfelseif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,12", CLIENT.companyid)) >
+					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> WebEx Calendar</td>
                     </cfif>
                 </tr>
