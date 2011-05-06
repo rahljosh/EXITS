@@ -158,15 +158,12 @@
                 
                 <li>
                 	<a href="index.cfm?curdoc=host_fam">Host Families</a>
-                    <!--- Not Live Yet For Field 03/30/2011 Marcus Melo --->
-                    <!---
                     <!--- Host Leads - ISE Only --->
 					<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) AND ListFind("5,6,7", CLIENT.userType)>
                         <ul>
                             <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>                
                         </ul>            
                     </cfif>
-					--->
                 </li>
                 
                 <li><a href="index.cfm?curdoc=schools">Schools</a></li>
