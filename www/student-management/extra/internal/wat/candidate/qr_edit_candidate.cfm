@@ -299,7 +299,6 @@
         home_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.home_country#">,
         home_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_phone#">,
         email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">, 
-        status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.status#">, 
         personal_info = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personal_info#">, 
         emergency_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_name#">,
         emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">, 
@@ -342,15 +341,17 @@
         
         <!--- change_requested_comment --->
         change_requested_comment = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.change_requested_comment#">,
+
+        status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.status#">, 
         
-        <cfif isDate(FORM.cancel_date)>
-        	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.cancel_date)#">, 
+		<cfif isDate(FORM.cancel_date) AND FORM.status EQ 'canceled'>
+        	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.cancel_date)#">,
             active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancel_reason#">,
         <cfelse>
         	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+            cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
         </cfif>
-        
-        cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancel_reason#">,
         
 		<cfif isDate(FORM.program_startdate)>
         	startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.program_startdate)#">,
