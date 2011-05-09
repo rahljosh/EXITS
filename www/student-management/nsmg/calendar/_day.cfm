@@ -336,6 +336,9 @@
 		</td>
 	</tr>
 	</table>
+
+    <!--- Insert Scheduled Sessions --->
+    #scheduledSessions#
 		
 </cfoutput>
 

@@ -138,7 +138,7 @@
 		<a href="#REQUEST.URLPath#&action=month&date=#Fix( dtNextMonth )#">#DateFormat( dtNextMonth, "mmmm yyyy" )#</a>
 		&raquo;
 	</p>
-
+	
 	<form id="calendarform" action="index.cfm" method="get">
 
     	<input type="hidden" name="curdoc" value="#REQUEST.Curdoc#" />
@@ -342,13 +342,16 @@
 		</cfif>
 		
 	</cfloop>
-	
+    
 	<tr class="footer">
 		<td colspan="8">
 			<br />
 		</td>
 	</tr>
 	</table>
+
+    <!--- Insert Scheduled Sessions --->
+    #scheduledSessions#
     
 </cfoutput>
 
