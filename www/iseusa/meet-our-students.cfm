@@ -207,6 +207,9 @@
                     hl.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(loginPassword)#">
 				AND	
                 	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+				<!--- 3 = Not Interested --->
+                AND	
+                	hl.statusID != <cfqueryparam cfsqltype="cf_sql_integer" value="3">
             </cfquery>
         	
             <!--- Valid Login Host Family --->
