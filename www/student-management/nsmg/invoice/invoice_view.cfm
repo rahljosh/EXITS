@@ -361,7 +361,7 @@ select *,
           <cfswitch expression="#invoice_info.testCompId#">
 
               <!--- Extra --->
-              <cfcase value="7, 8">
+              <cfcase value="7,8">
                   <span class="style3">CSB International</span><br />
                   JPMorgan Chase<br />
                   595 Sunrise Highway<br />
@@ -416,7 +416,9 @@ select *,
                   SWIFT code: CHASUS33<br />
 				  --->
               </cfdefaultcase>
+              
           </cfswitch>  
+          
         </cfif>
 	</td>
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>

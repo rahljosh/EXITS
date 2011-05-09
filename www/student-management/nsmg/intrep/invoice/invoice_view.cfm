@@ -181,17 +181,27 @@ order by s.stuid, s.chargeid
             	<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
             <cfelse>
                 <cfswitch expression="#invoice_info.testCompId#">
-                    <cfcase value="8">
-                        <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
+                    
+                    <!--- Extra --->
+                    <cfcase value="7,8">
+                        <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.jpg" width="640" height="114" align="center"/>
                     </cfcase>
                     
+                    <!--- Case --->
                     <cfcase value="10">
-						<img src="http://jan.case-usa.org/nsmg/pics/case_banner.jpg" width="665" height="113" align="Center">
+						<img src="http#linkSSL#://case.exitsapplication.com/nsmg/pics/case_banner.jpg" width="665" height="113" align="center" />
                     </cfcase>
                     
+                    <!--- ESI --->
+                    <cfcase value="14">
+						<img src="http#linkSSL#://es.exitsapplication.com/nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
+                    </cfcase>
+                    
+                    <!--- ISE --->   
                     <cfdefaultcase>
-						<img src="http#linkSSL#://www.student-management.com/nsmg/pics/ise_banner.jpg" align="Center">
+						<img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/ise_banner.jpg" align="center" />
                     </cfdefaultcase>
+                    
                 </cfswitch>                        
             </cfif>                   
     	</Td>
@@ -312,51 +322,68 @@ select *,
                 SWIFT code: CHASUS33<br>
                 
       <cfelse>
+          
           <cfswitch expression="#invoice_info.testCompId#">
-              <cfcase value="8">
-                  <span class="style3">CSB International</span><br>
-                  JPMorgan Chase<br>
-                  595 Sunrise Highway<br>
-                  West Babylon, NY 11704<br>
-                  ABA/Routing: 021000021<br>
-                  <span class="style3">Account: 745938175</span><br>
-                  SWIFT code: CHASUS33<br>            
+
+              <!--- Extra --->
+              <cfcase value="7,8">
+                  <span class="style3">CSB International</span><br />
+                  JPMorgan Chase<br />
+                  595 Sunrise Highway<br />
+                  West Babylon, NY 11704<br />
+                  ABA/Routing: 021000021<br />
+                  <span class="style3">Account: 745938175</span><br />
+                  SWIFT code: CHASUS33<br />            
               </cfcase>
               
+              <!--- Case --->
               <cfcase value="10">
-                  <span class="style3">Cultural Academic Student Exchange</span><br>
-                  Chase Bank<br>
-                  Red Bank, NJ 07701<br>
-                  <br>
-                  ABA/Routing: 021202337<br>
-                  <span class="style3">Account: 747523579</span><br>
-                  SWIFT## : CHASUS33<br>            
+                  <span class="style3">Cultural Academic Student Exchange</span><br />
+                  Chase Bank<br />
+                  Red Bank, NJ 07701<br /><br />
+                  ABA/Routing: 021202337<br />
+                  <span class="style3">Account: 747523579</span><br />
+                  SWIFT## : CHASUS33<br />            
               </cfcase>
               
+              <!--- ESI --->
+              <cfcase value="14">
+                  <span class="style3">SLB Consulting Corporation</span><br />
+                  Chase Bank<br />
+                  289 Market Street<br />
+                  Saddle Brook, NJ 07663<br /><br />
+                  ABA/Routing: 021202337<br />
+                  Account: 913619078<br />
+                  SWIFT code:  CHASUS33<br /><br />
+              </cfcase>
+              
+              <!--- ISE --->
               <cfdefaultcase>
                   <span class="style3">
                       Please note our new bank information <br />  <br />               
-                      International Student Exchange<br>
-                      Chase Bank<br>
-                      595 Sunrise Highway<br>
-                      West Babylon, NY 11704<br>
-                      ABA/Routing: 021000021<br>
-                      Account: 773701875<br>
-                      SWIFT code: CHASUS33<br>      
+                      International Student Exchange<br />
+                      Chase Bank<br />
+                      595 Sunrise Highway<br />
+                      West Babylon, NY 11704<br />
+                      ABA/Routing: 021000021<br />
+                      Account: 773701875<br />
+                      SWIFT code: CHASUS33<br />      
                   </span>            
                   
                   <!--- SMG ACCOUNT INFO --->
                   <!---
-                  Student Management Group<br>
-                  JPMorgan Chase<br>
-                  403 N. Little E. Neck Rd.<br>
-                  West Babylon, NY 11704<br>
-                  ABA/Routing: 021000021<br>
-                  Account: 773701750<br>
-                  SWIFT code: CHASUS33<br>
+                  Student Management Group<br />
+                  JPMorgan Chase<br />
+                  403 N. Little E. Neck Rd.<br />
+                  West Babylon, NY 11704<br />
+                  ABA/Routing: 021000021<br />
+                  Account: 773701750<br />
+                  SWIFT code: CHASUS33<br />
 				  --->
               </cfdefaultcase>
-          </cfswitch>  
+
+          </cfswitch> 
+           
         </cfif>
 
 	</td>
@@ -570,14 +597,24 @@ select *,
        					<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
                         
                         <cfelse>
-                            <cfswitch expression="#invoice_info.progType#">
+
+                            <cfswitch expression="#invoice_info.testCompId#">
+                                
+                                <!--- Extra --->
                                 <cfcase value="7,8,9,11,22,23">
-                                    <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
+                                    <img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
                                 </cfcase>
                                 
+                                <!--- ESI --->
+                                <cfcase value="14">
+                                    <img src="http#linkSSL#://es.exitsapplication.com/nsmg/pics/logos/14.gif" />
+                                </cfcase>
+                                
+                                <!--- ISE --->
                                 <cfdefaultcase>
-                                    <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/#invoice_info.companyid#.gif" height="100"/>
+                                    <img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/logos/#invoice_info.companyid#.gif" height="100"/>
                                 </cfdefaultcase>
+                                
                             </cfswitch>                        
                         
                     </cfif>
