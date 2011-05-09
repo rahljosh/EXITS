@@ -29,7 +29,32 @@
 				
 	<!--- Set the default date for this page request. --->
 	<cfset REQUEST.DefaultDate = Fix( Now() ) />
+	
+    <cfsavecontent variable="scheduledSessions">
+        
+        <h3 style="margin-top:10px;">&laquo; Recorded WebEx sessions available &raquo;</h3>
 
+        <p>     
+            [ &nbsp;
+            
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3680852&rKey=962a228bb9d3c2d2" target="_blank">Department of State Regulations</a> 
+            
+            &nbsp; &nbsp; | &nbsp; &nbsp;
+
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3469892&rKey=c358e2605164895e" target="_blank">Host Family Recruitment</a>
+            
+            &nbsp; &nbsp; | &nbsp; &nbsp;
+            
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3457042&rKey=a9e6bbf7446fdd27" target="_blank">New Area Reps</a> 
+            
+            &nbsp; &nbsp; | &nbsp; &nbsp;
+           
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3692602&rKey=5ba0602384323b89" target="_blank" style="width:300px;">New Lead System</a>
+            
+            &nbsp; ]
+        </p>
+    </cfsavecontent>
+    
 </cfsilent>
 
 <!--- Figure out which action to include. --->
