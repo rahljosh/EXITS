@@ -35,6 +35,7 @@ a:hover {
     <p class="p1Bold"><a href="Harvest.cfm">Harvest Party</a></p><br />
     <p class="p1Bold"><a href="Rollerskating.cfm">Rollerskating Outing</a></p><br />
     <p class="p1Bold"><a href="NYTrip.cfm">NY Trip</a></p><br />
+    <p class="p1Bold"><a href="NYTripII.cfm">NY Trip 2011</a></p><br />
     <p class="p1Bold"><a href="Bowling.cfm">Bowling</a></p><br />
     <p class="p1Bold"><a href="in-the-news.cfm">Articles</a></p><br />
   <!-- end whtMiddle --></div>
