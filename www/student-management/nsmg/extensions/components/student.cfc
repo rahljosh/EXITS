@@ -852,14 +852,14 @@
                                 </cfif>
                                 
                                 <!--- Family Last Name --->                            
-                                <cfif qGetHostFamily.fatherFirstName EQ qGetHostFamily.motherFirstName>
+                                <cfif qGetHostFamily.fatherLastName EQ qGetHostFamily.motherLastName>
                                     #qGetHostFamily.familyLastName#		
                                 </cfif>
                                 
                                 (###qGetHostFamily.hostid#) - Phone: #qGetHostFamily.phone# <br />
                                 
                                 <!--- Address --->
-                                <span style="margin-left:67px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
+                                <span style="margin-left:70px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
                             </p>
                             
                             <!--- Arrival Airport --->
