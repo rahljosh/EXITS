@@ -1,5 +1,6 @@
 <cfsetting requesttimeout="99999">
 
+<cfparam name="totalPaid" default="0">
 <cfparam name="linkSSL" default="s">
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -9,135 +10,133 @@
 <title>Invoice <cfoutput>#url.id#</cfoutput></title>
 <link rel="stylesheet" href="../profile.css" type="text/css">
 <style type="text/css">
-<!--
-
-body{
-	font-family: Arial, Helvetica, sans-serif;	
-}
-
-#page_Area {
-	background-color: #ffffff;
-	height: 11in;
-	width: 570px;
-}
-
-#title{
-	background-posistion: center;
-	color: #FF0000;
+	<!--
+	body{
+		font-family: Arial, Helvetica, sans-serif;	
 	}
 	
-#titleleft{
-	font-size: x-small;	
-}
-.title_center{
-	font-size: 12px;
-	font-family: Arial, Helvetica, sans-serif;
-	color: #000000;
-	font-style: normal;
-	font-weight: bold;
-	color: #000000;
+	#page_Area {
+		background-color: #ffffff;
+		height: 11in;
+		width: 570px;
+	}
 	
-}
-
-.application_section_header{
-	border-bottom: 1px dashed Gray;
-	text-transform: uppercase;
-	letter-spacing: 5px;
-	width:100%;
-	text-align:center;
-	background;
-	background: #DCDCDC;
-	font-size: small;
-}
-.application_section_header_bold {
-	border-bottom: 1px dashed Gray;
-	text-transform: uppercase;
-	letter-spacing: 5px;
-	width:100%;
-	text-align:center;
-
-	background;
-	background: #DCDCDC;
-	font-size: small;
-	font-weight: bold;
-
-	}.acceptance_letter_header {
-	border-bottom: 1px dashed Gray;
-	text-transform: capitalize;
-	letter-spacing: normal;
-	width:100%;
-	text-align:left;
-
-	background;
-	background: #DCDCDC;
-	font-size: small;
-	font-weight: bold;
-}
-.profile_section_header {
-
-	border-bottom: 1px dashed Gray;
-	text-transform: uppercase;
-	letter-spacing: 5px;
-	width:100%;
-	text-align:center;
-	background;
-	background: #DCDCDC;
-	font-size: x-small;
-}
-
-.sub_profile_section_header {
-
-	border-bottom: 1px dashed Gray;
-	width:100%;
-	text-align:center;
-	background;
-	background: #DCDCDC;
-	font-size: x-small;
-}
-.invoice_header{
-	text-align:center;
-	img-aling:center;
-}
-
-table,tr,td{
-	font-size:12px;
-}
-
-#pagecell_reports {
-	width:100%;
-	background-color: #ffffff;
-	font-size:10pt;
-	position: absolute;
-}
-  
-table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #000000; }
-
-.thin-border{ border: 1px solid #000000;}
-.thin-border-right{ border-right: 1px solid #000000;}
-.thin-border-left{ border-left: 1px solid #000000;}
-.thin-border-right-bottom{ border-right: 1px solid #000000; border-bottom: 1px solid #000000;}
-.thin-border-bottom{  border-bottom: 1px solid #000000;}
-.thin-border-top{ border-top: 1px solid #000000;}
-.thin-border-bottom-top{  border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
-.thin-border-left-bottom{ border-left: 1px solid #000000; border-bottom: 1px solid #000000;}
-.thin-border-right-bottom-top{ border-right: 1px solid #000000; border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
-.thin-border-left-bottom-top{ border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
-.thin-border-left-bottom-right{ border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000;}
-.thin-border-left-top-right{ border-left: 1px solid #000000; border-top: 1px solid #000000; border-right: 1px solid #000000;}
-.style1 {
-	color: #FF0000;
-	font-weight: bold;
-}
-.style3 {color: #FF0000; font-weight: bold; font-size: 16px; }
--->
+	#title{
+		background-posistion: center;
+		color: #FF0000;
+		}
+		
+	#titleleft{
+		font-size: x-small;	
+	}
+	.title_center{
+		font-size: 12px;
+		font-family: Arial, Helvetica, sans-serif;
+		color: #000000;
+		font-style: normal;
+		font-weight: bold;
+		color: #000000;
+		
+	}
+	
+	.application_section_header{
+		border-bottom: 1px dashed Gray;
+		text-transform: uppercase;
+		letter-spacing: 5px;
+		width:100%;
+		text-align:center;
+		background;
+		background: #DCDCDC;
+		font-size: small;
+	}
+	.application_section_header_bold {
+		border-bottom: 1px dashed Gray;
+		text-transform: uppercase;
+		letter-spacing: 5px;
+		width:100%;
+		text-align:center;
+	
+		background;
+		background: #DCDCDC;
+		font-size: small;
+		font-weight: bold;
+	
+		}.acceptance_letter_header {
+		border-bottom: 1px dashed Gray;
+		text-transform: capitalize;
+		letter-spacing: normal;
+		width:100%;
+		text-align:left;
+	
+		background;
+		background: #DCDCDC;
+		font-size: small;
+		font-weight: bold;
+	}
+	.profile_section_header {
+	
+		border-bottom: 1px dashed Gray;
+		text-transform: uppercase;
+		letter-spacing: 5px;
+		width:100%;
+		text-align:center;
+		background;
+		background: #DCDCDC;
+		font-size: x-small;
+	}
+	
+	.sub_profile_section_header {
+	
+		border-bottom: 1px dashed Gray;
+		width:100%;
+		text-align:center;
+		background;
+		background: #DCDCDC;
+		font-size: x-small;
+	}
+	.invoice_header{
+		text-align:center;
+		img-aling:center;
+	}
+	
+	table,tr,td{
+		font-size:12px;
+	}
+	
+	#pagecell_reports {
+		width:100%;
+		background-color: #ffffff;
+		font-size:10pt;
+		position: absolute;
+	}
+	  
+	table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #000000; }
+	
+	.thin-border{ border: 1px solid #000000;}
+	.thin-border-right{ border-right: 1px solid #000000;}
+	.thin-border-left{ border-left: 1px solid #000000;}
+	.thin-border-right-bottom{ border-right: 1px solid #000000; border-bottom: 1px solid #000000;}
+	.thin-border-bottom{  border-bottom: 1px solid #000000;}
+	.thin-border-top{ border-top: 1px solid #000000;}
+	.thin-border-bottom-top{  border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
+	.thin-border-left-bottom{ border-left: 1px solid #000000; border-bottom: 1px solid #000000;}
+	.thin-border-right-bottom-top{ border-right: 1px solid #000000; border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
+	.thin-border-left-bottom-top{ border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-top: 1px solid #000000;}
+	.thin-border-left-bottom-right{ border-left: 1px solid #000000; border-bottom: 1px solid #000000; border-right: 1px solid #000000;}
+	.thin-border-left-top-right{ border-left: 1px solid #000000; border-top: 1px solid #000000; border-right: 1px solid #000000;}
+	.style1 {
+		color: #FF0000;
+		font-weight: bold;
+	}
+	.style3 {color: #FF0000; font-weight: bold; font-size: 16px; }
+	-->
 </style>
 </head>
 
 <body>
 
-<cfparam name="totalPaid" default="0">
+<cfoutput>
 
-<Cfoutput>
 	<cfif client.usertype GT 4>
         <cfquery name="invoice_check" datasource="mysql">
             select distinct agentid from smg_charges
@@ -147,91 +146,113 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #0
             <table align="center" width="90%" frame="box">
                 <tr>
                     <td valign="top"><img src="http#linkSSL#://www.student-management.com/nsmg/pics/error.gif"></td>
-                    <td valign="top"><font color="##CC3300">You can only view your invoices. The invoice that you are trying to view is not yours.  <br>If you received this error from clicking directly on a link, contact the person who sent you the link.</td>
+                    <td valign="top"><font color="##CC3300">You can only view your invoices. The invoice that you are trying to view is not yours.  <br />If you received this error from clicking directly on a link, contact the person who sent you the link.</td>
                 </tr>
             </table>
             <cfabort>
         </cfif>
     </cfif>
     
-    <br>
-    <br>
+    <br />
+    <br />
 
 <cfquery name="invoice_info" datasource="MySQL">
-select s.*, sp.type AS progType, s.companyid, 
-		(CASE 
-			WHEN sp.type = 7 THEN 8
-			WHEN sp.type = 8 THEN 8
-			WHEN sp.type = 9 THEN 8
-			WHEN sp.type = 11 THEN 8
-			WHEN sp.type = 22 THEN 8
-			WHEN sp.type = 23 THEN 8
-			ELSE s.companyid
-			END) AS testCompId
-from smg_charges s
-LEFT JOIN smg_programs sp ON sp.programid = s.programid
-where s.invoiceid = #url.id#
-group by s.stuid
-order by s.stuid, s.chargeid
+    SELECT 
+    	s.*, 
+        sp.type AS progType, 
+        s.companyid, 
+        (CASE 
+            WHEN sp.type = 7 THEN 8
+            WHEN sp.type = 8 THEN 8
+            WHEN sp.type = 9 THEN 8
+            WHEN sp.type = 11 THEN 8
+            WHEN sp.type = 22 THEN 8
+            WHEN sp.type = 23 THEN 8
+            ELSE s.companyid
+            END) AS testCompId
+    FROM 
+    	smg_charges s
+    LEFT OUTER JOIN 
+    	smg_programs sp ON sp.programid = s.programid
+    WHERE 
+    	s.invoiceid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.id#">
+    GROUP BY 
+    	s.stuid
+    ORDER BY 
+    	s.stuid, 
+        s.chargeid
 </cfquery>
 
 <cfquery name="invoice_payments" datasource="MySQL">
-SELECT 
-    SUM(spc.amountapplied) AS amountapplied,
-    spr.paymenttype,
-    spr.paymentref,
-    spr.date,
-    spr.totalreceived
-FROM
-	smg_payment_charges spc
-LEFT JOIN
-	smg_payment_received spr ON spr.paymentid = spc.paymentid
-LEFT JOIN
-	smg_charges sc ON sc.chargeid = spc.chargeid
-WHERE
-	sc.invoiceid = #url.id#
-GROUP BY
-	spr.paymentref
-ORDER BY
-	spr.date DESC
+    SELECT 
+        SUM(spc.amountapplied) AS amountapplied,
+        spr.paymenttype,
+        spr.paymentref,
+        spr.date,
+        spr.totalreceived
+    FROM
+        smg_payment_charges spc
+    LEFT OUTER JOIN
+        smg_payment_received spr ON spr.paymentid = spc.paymentid
+    LEFT OUTER JOIN
+        smg_charges sc ON sc.chargeid = spc.chargeid
+    WHERE
+        sc.invoiceid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.id#">
+    GROUP BY
+        spr.paymentref
+    ORDER BY
+        spr.date DESC
 </cfquery>
     
     <table align="center">
     <Tr>
     	<td>
-			<cfif invoice_info.type IS 'trainee program'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-            	<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
+        	<!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
+			<cfif invoice_info.type IS 'trainee program'>
+            	<img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/logos/csb_banner.gif"/>
             <cfelse>
+                
                 <cfswitch expression="#invoice_info.testCompId#">
-                    <cfcase value="7, 8">
-                        <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.jpg"/>
+                    
+                    <!--- Extra --->
+                    <cfcase value="7,8">
+                        <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.jpg" width="640" height="114" align="center"/>
                     </cfcase>
                     
+                    <!--- Case --->
                     <cfcase value="10">
-						<img src="http://jan.case-usa.org/nsmg/pics/case_banner.jpg" width="665" height="113" align="Center">
+						<img src="http#linkSSL#://case.exitsapplication.com/nsmg/pics/case_banner.jpg" width="665" height="113" align="center" />
                     </cfcase>
                     
+                    <!--- ESI --->
+                    <cfcase value="14">
+						<img src="http#linkSSL#://es.exitsapplication.com/nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
+                    </cfcase>
+                    
+                    <!--- ISE --->   
                     <cfdefaultcase>
-						<img src="http#linkSSL#://www.student-management.com/nsmg/pics/ise_banner.jpg" align="Center">
+						<img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/ise_banner.jpg" align="center" />
                     </cfdefaultcase>
-                </cfswitch>                        
+                    
+                </cfswitch>  
+                                      
             </cfif>                   
     	</Td>
     </Tr>
     </table>
-    <br>
-    <br>
+    <br />
+    <br />
         
     <cfif not isdefined('url.id') or url.id is ''> 
         <table align="center" width="90%" frame="box">
-        <tr><th colspan="2">No invoice specified, please go back and select an invoice. <br>If you recieved this error from clicking directly on a link, contact the person who sent you the link.</th></tr>
+        <tr><th colspan="2">No invoice specified, please go back and select an invoice. <br />If you recieved this error from clicking directly on a link, contact the person who sent you the link.</th></tr>
         </table>
         <cfabort>
     </cfif>
     
 <cfif invoice_info.recordcount is 0> 
         <table align="center" width="90%" frame="box">
-        <tr><th colspan="2">No invoice was found with the id: #url.id# please go back and select a different invoice. <br>If you recieved this error from clicking directly on a link, contact the person who sent you the link.</th></tr>
+        <tr><th colspan="2">No invoice was found with the id: #url.id# please go back and select a different invoice. <br />If you recieved this error from clicking directly on a link, contact the person who sent you the link.</th></tr>
         </table>
         <cfabort>
     </cfif>
@@ -239,11 +260,11 @@ ORDER BY
 
 <cfoutput>
 
-<br>
-<br>
+<br />
+<br />
 <cfif not isdefined('url.id') or url.id is ''> 
         <table align="center" width="90%" frame="box">
-        <tr><th colspan="2">No invoice specified, please go back and select an invoice. <br>If you recieved this error from clicking directly on a link, contact the person who sent you the link.</th></tr>
+        <tr><th colspan="2">No invoice specified, please go back and select an invoice. <br />If you recieved this error from clicking directly on a link, contact the person who sent you the link.</th></tr>
         </table>
 		<cfabort>
 </cfif>
@@ -258,7 +279,7 @@ order by stuid
 </cfquery>
 	<cfif invoice_info.recordcount is 0> 
 				<table align="center" width="90%" frame="box">
-	<tr><th colspan="2">No invoice was found with the id: #url.id# please go back and select a different invoice. <br>If you recieved this error from clicking directly on a link, contact the person who sent you the link.</th></tr>
+	<tr><th colspan="2">No invoice was found with the id: #url.id# please go back and select a different invoice. <br />If you recieved this error from clicking directly on a link, contact the person who sent you the link.</th></tr>
 	</table>
 	<cfabort>
 	</cfif> --->
@@ -274,8 +295,8 @@ select *,
   billcountry.countryname as billcountryname
  
   from smg_users   
-  LEFT JOIN smg_countrylist ON smg_countrylist.countryid = smg_users.country  
-  LEFT JOIN smg_countrylist billcountry ON billcountry.countryid = smg_users.billing_country  
+  LEFT OUTER JOIN smg_countrylist ON smg_countrylist.countryid = smg_users.country  
+  LEFT OUTER JOIN smg_countrylist billcountry ON billcountry.countryid = smg_users.billing_country  
   where userid = #invoice_info.agentid# 
 </cfquery>
 
@@ -283,7 +304,7 @@ select *,
 <cfquery name="agent_info" datasource="MySQL">
 	select businessname, firstname, lastname, address, address2, city, userid, email, phone, fax, zip, billing_company, billing_address, billing_address2, billing_phone, billing_city, billing_zip, billing_fax, billing_country, smg_countrylist.countryname
 	from smg_users
-	LEFT JOIN smg_countrylist ON smg_countrylist.countryid = smg_users.country 
+	LEFT OUTER JOIN smg_countrylist ON smg_countrylist.countryid = smg_users.country 
 	where userid = #invoice_info.agentid#
 </cfquery>
 ---->
@@ -323,59 +344,76 @@ select *,
 	
 	
 	<td  valign="top" class="thin-border-left-bottom-right">
-	<B></B><br>
-    	<cfif invoice_info.type IS 'trainee program'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-                <span class="style3">CSB International</span><br>
-                JPMorgan Chase<br>
-                595 Sunrise Highway<br>
-                West Babylon, NY 11704<br>
-                ABA/Routing: 021000021<br>
-                <span class="style3">Account: 745938175</span><br>
-                SWIFT code: CHASUS33<br>
+    	
+    <!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
+   	<cfif invoice_info.type IS 'trainee program'>
+                
+            <span class="style3">CSB International</span><br />
+            JPMorgan Chase<br />
+            595 Sunrise Highway<br />
+            West Babylon, NY 11704<br />
+            ABA/Routing: 021000021<br />
+            <span class="style3">Account: 745938175</span><br />
+            SWIFT code: CHASUS33<br />
                 
       <cfelse>
+          
           <cfswitch expression="#invoice_info.testCompId#">
+
+              <!--- Extra --->
               <cfcase value="7, 8">
-                  <span class="style3">CSB International</span><br>
-                  JPMorgan Chase<br>
-                  595 Sunrise Highway<br>
-                  West Babylon, NY 11704<br>
-                  ABA/Routing: 021000021<br>
-                  <span class="style3">Account: 745938175</span><br>
-                  SWIFT code: CHASUS33<br>            
+                  <span class="style3">CSB International</span><br />
+                  JPMorgan Chase<br />
+                  595 Sunrise Highway<br />
+                  West Babylon, NY 11704<br />
+                  ABA/Routing: 021000021<br />
+                  <span class="style3">Account: 745938175</span><br />
+                  SWIFT code: CHASUS33<br />            
               </cfcase>
               
+              <!--- Case --->
               <cfcase value="10">
-                  <span class="style3">Cultural Academic Student Exchange</span><br>
-                  Chase Bank<br>
-                  Red Bank, NJ 07701<br>
-                  <br>
-                  ABA/Routing: 021202337<br>
-                  <span class="style3">Account: 747523579</span><br>
-                  SWIFT## : CHASUS33<br>            
+                  <span class="style3">Cultural Academic Student Exchange</span><br />
+                  Chase Bank<br />
+                  Red Bank, NJ 07701<br /><br />
+                  ABA/Routing: 021202337<br />
+                  <span class="style3">Account: 747523579</span><br />
+                  SWIFT## : CHASUS33<br />            
               </cfcase>
               
+              <!--- ESI --->
+              <cfcase value="14">
+                  <span class="style3">SLB Consulting Corporation</span><br />
+                  Chase Bank<br />
+                  289 Market Street<br />
+                  Saddle Brook, NJ 07663<br /><br />
+                  ABA/Routing: 021202337<br />
+                  Account: 913619078<br />
+                  SWIFT code:  CHASUS33<br /><br />
+              </cfcase>
+              
+              <!--- ISE --->
               <cfdefaultcase>
                   <span class="style3">
                       Please note our new bank information <br />  <br />               
-                      International Student Exchange<br>
-                      Chase Bank<br>
-                      595 Sunrise Highway<br>
-                      West Babylon, NY 11704<br>
-                      ABA/Routing: 021000021<br>
-                      Account: 773701875<br>
-                      SWIFT code: CHASUS33<br>      
+                      International Student Exchange<br />
+                      Chase Bank<br />
+                      595 Sunrise Highway<br />
+                      West Babylon, NY 11704<br />
+                      ABA/Routing: 021000021<br />
+                      Account: 773701875<br />
+                      SWIFT code: CHASUS33<br />      
                   </span>            
                   
                   <!--- SMG ACCOUNT INFO --->
                   <!---
-                  Student Management Group<br>
-                  JPMorgan Chase<br>
-                  403 N. Little E. Neck Rd.<br>
-                  West Babylon, NY 11704<br>
-                  ABA/Routing: 021000021<br>
-                  Account: 773701750<br>
-                  SWIFT code: CHASUS33<br>
+                  Student Management Group<br />
+                  JPMorgan Chase<br />
+                  403 N. Little E. Neck Rd.<br />
+                  West Babylon, NY 11704<br />
+                  ABA/Routing: 021000021<br />
+                  Account: 773701750<br />
+                  SWIFT code: CHASUS33<br />
 				  --->
               </cfdefaultcase>
           </cfswitch>  
@@ -384,15 +422,15 @@ select *,
 	<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td valign=top class="thin-border-left-bottom-right">
 
-		#agent_info.billing_company#<br>
-		#agent_info.billing_contact#<br>
-		#agent_info.billing_address#<br>
+		#agent_info.billing_company#<br />
+		#agent_info.billing_contact#<br />
+		#agent_info.billing_address#<br />
 		<cfif #agent_info.billing_address2# is ''><cfelse>#agent_info.billing_address2#</cfif>
 		#agent_info.billing_city# #agent_info.billcountryname# #agent_info.billing_zip#
-		<br>
-		E: #agent_info.billing_email#<br>
-		P: #agent_info.billing_phone#<br>
-		F: #agent_info.billing_fax#<br>
+		<br />
+		E: #agent_info.billing_email#<br />
+		P: #agent_info.billing_phone#<br />
+		F: #agent_info.billing_fax#<br />
 		
 		
 		
@@ -410,14 +448,14 @@ select *,
 </tr>
 <tr></tr>
 	<td valign=top class="thin-border-left-bottom-right">
-		#agent_info.businessname# (#agent_info.userid#)<br>
-		#agent_info.firstname# #agent_info.lastname#<br>
-		#agent_info.address#<br>
+		#agent_info.businessname# (#agent_info.userid#)<br />
+		#agent_info.firstname# #agent_info.lastname#<br />
+		#agent_info.address#<br />
 		<cfif #agent_info.address2# is ''><cfelse>#agent_info.address2#</cfif>
-		#agent_info.city#, #agent_info.countryname# #agent_info.zip#<br>
-		E: #agent_info.email#<br>
-		P: #agent_info.phone#<br>
-		F: #agent_info.fax#<br>
+		#agent_info.city#, #agent_info.countryname# #agent_info.zip#<br />
+		E: #agent_info.email#<br />
+		P: #agent_info.phone#<br />
+		F: #agent_info.fax#<br />
 		</td>
 </Tr>
 </cfif>
@@ -435,7 +473,7 @@ select *,
 		  </tr>
 		  <tr>
 			<td align="center" class="thin-border-right-bottom" >#DateFormat(now(), 'mm/dd/yy')#</td>
-			<td align="center" class="thin-border-bottom"><br><Br></td>
+			<td align="center" class="thin-border-bottom"><br /><br /></td>
 		  </tr>
 		</td>
 		</table>
@@ -447,10 +485,10 @@ select *,
 </tr>
 
 </table>
-<br>
+<br />
 
 <!-----Invoice with Students---->
-<div align="center"><img src="http#linkSSL#://www.student-management.com/nsmg/pics/detach.jpg" ></div><br>
+<div align="center"><img src="http#linkSSL#://www.student-management.com/nsmg/pics/detach.jpg" ></div><br />
 
 </cfoutput>
 
@@ -589,16 +627,26 @@ select *,
 					<cfif invoice_info.type IS 'trainee program' OR invoice_info.companyid EQ 7  OR invoice_info.companyid EQ 8>
 						<!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
        					<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
-                        <cfelse>
-                            <cfswitch expression="#invoice_info.progType#">
-                                <cfcase value="7,8,9,11,22,23">
-                                    <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
-                                </cfcase>
-                                
-                                <cfdefaultcase>
-                                    <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/#invoice_info.companyid#.gif" height="100"/>
-                                </cfdefaultcase>
-                            </cfswitch>                        
+					<cfelse>
+
+                        <cfswitch expression="#invoice_info.testCompId#">
+                            
+                            <!--- Extra --->
+                            <cfcase value="7,8,9,11,22,23">
+                                <img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
+                            </cfcase>
+							
+                            <!--- ESI --->
+                            <cfcase value="14">
+                                <img src="http#linkSSL#://es.exitsapplication.com/nsmg/pics/logos/14.gif" />
+                            </cfcase>
+							
+                            <!--- ISE --->
+                            <cfdefaultcase>
+                                <img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/logos/#invoice_info.companyid#.gif" height="100"/>
+                            </cfdefaultcase>
+                            
+                        </cfswitch>                        
                         
                     </cfif>
 				</td>
@@ -670,10 +718,10 @@ select *,
 		 a cumulative amount, result in a invoice pdf document with the wrong balance --->
 		<cfset totalPaid = 0>
 		</cfoutput>
-<br>
-		<br>
-		
 
-		</div>
+		<br />
+		<br />
+		
+	</div>
 </body>
 </html>
