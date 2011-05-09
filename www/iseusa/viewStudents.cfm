@@ -16,6 +16,10 @@ a:hover {
 a:active {
 	text-decoration: none;
 }
+p {
+	text-align: left;
+	padding-left: 20px;
+}
 -->
 </style>
 </head>
@@ -34,7 +38,7 @@ a:active {
       <div class="whtMiddleStretch">
         <div class="shopping">
           <h1 class="enter">Meet Our Students</h1>
-          <table width="600" border="0" color="8DC540"> 
+          <table width="600" border="0" color="8DC540" cellpadding="10" cellspacing="10"> 
           
    <Cfif not isdefined('client.hostid') or client.hostid eq 0>
    	<cfoutput>
@@ -81,27 +85,27 @@ a:active {
 	</cfquery>
 	
 	<cfoutput query="get_students">  
-      <tr>
-        <td class="lightGreen">
+      <tr <cfif get_students.currentrow mod 2> class="lightGreen" </cfif>>
+        <td>
 			<cfif FileExists('c:\websites\student-management\nsmg\pics\flags\#get_students.countryresident#.jpg')>
-            	<span class="style1" style="float:left; padding:5px;"><img src="http://ise.exitsapplication.com/nsmg/pics/flags/#get_students.countryresident#.jpg" width="133"></span>
+            	<span class="style1" style="float:left; padding:10px;"><img src="http://ise.exitsapplication.com/nsmg/pics/flags/#get_students.countryresident#.jpg" width="133"></span>
             <cfelse>
-                <span class="style1" style="float:left; padding:5px;"><img src="http://ise.exitsapplication.com/nsmg/pics/flags/0.jpg" width="133"></span>
+                <span class="style1" style="float:left; padding:10px;"><img src="http://ise.exitsapplication.com/nsmg/pics/flags/0.jpg" width="133"></span>
             </cfif>
-          <p class="StudentName">Name: #get_students.firstname# <cfif IsDate(dob)>(#datediff('yyyy',dob,now())#)</cfif><br />
-            Home Country: #get_students.countryname#<br />
-            Religion: #get_students.religionname#<br />
-            Interests:
+          <p class="StudentName"><strong>Name:</strong> #get_students.firstname# <cfif IsDate(dob)>(#datediff('yyyy',dob,now())#)</cfif><br />
+            <strong>Home Country:</strong> #get_students.countryname#<br />
+            <strong>Religion:</strong> #get_students.religionname#<br />
+            <strong>Interests:</strong>
                 <cfloop list=#get_students.interests# index=i>
 				<cfquery name="get_interests" datasource="#APPLICATION.DSN.Source#">
 				Select interest 
 				from smg_interests 
 				where interestid = #i#
 				</cfquery>
-				#LCASE(get_interests.interest)# &nbsp;&nbsp; 
+				#LCASE(get_interests.interest)#,  
 			</cfloop></p>
             
-          <p><span class="StudentName">About #get_students.firstname#:</span> <span class="incomingstudenttext">#get_students.interests_other#</span></p>
+          <p><span class="StudentName"><strong>About #get_students.firstname#:</strong></span> <span class="incomingstudenttext">#get_students.interests_other#</span></p>
         </td>
       </tr>
       </cfoutput>
