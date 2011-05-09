@@ -355,8 +355,8 @@
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-
+                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+				
                 AND
                     hl.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
 
@@ -368,10 +368,10 @@
                 
                 AND
                     (
-                    	<!--- Get New Host Leads --->
+                    	<!--- Get New Host Leads | 3 = Not Interested | 8 = Committed to Host | 9 - Interested in Hosting in the Future --->
                     	hl.dateUpdated >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.lastLogin#">
 					 AND
-                     	hl.statusID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8" list="yes"> )
+                     	hl.statusID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8,9" list="yes"> )
 
                      OR
                      	<!--- Get Host Leads That do not have a final disposition --->

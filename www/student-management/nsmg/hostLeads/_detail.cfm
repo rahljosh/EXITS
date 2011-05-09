@@ -364,7 +364,7 @@
                         <tr>
                             <th align="right" valign="top">Status:</th>
                             <td>
-                                <select name="statusID" id="statusID" class="largeField" onchange="displayFinalDecision();">
+                                <select name="statusID" id="statusID" class="xLargeField" onchange="displayFinalDecision();">
                                     <option value="0" <cfif FORM.statusID EQ 0>selected="selected"</cfif> >Please Select a Status</option>
                                     <cfloop query="qGetStatus">
                                         <option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
