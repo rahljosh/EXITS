@@ -73,7 +73,7 @@
         <td width="26" background="#ATTRIBUTES.imagePath#pics/header_background.gif"><img src="#ATTRIBUTES.imagePath#pics/#ATTRIBUTES.imageName#"></td>
         <td background="#ATTRIBUTES.imagePath#pics/header_background.gif"><h2>#ATTRIBUTES.tableTitle#</h2></td>
         <cfif LEN(ATTRIBUTES.tableRightTitle)>
-	        <td align="right" background="#ATTRIBUTES.imagePath#pics/header_background.gif"><h2>#ATTRIBUTES.tableRightTitle#</h2></td>
+	        <td align="right" background="#ATTRIBUTES.imagePath#pics/header_background.gif">#ATTRIBUTES.tableRightTitle#</td>
         </cfif>
         <td width="17" background="#ATTRIBUTES.imagePath#pics/header_rightcap.gif">&nbsp;</td>
     </tr>
