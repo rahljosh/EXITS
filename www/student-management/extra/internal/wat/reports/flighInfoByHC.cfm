@@ -315,7 +315,13 @@
                         	<span class="style1">
                             	<cfif qGetFlightInfo.recordCount>
                                     <cfloop query="qGetFlightInfo">
-                                        From #qGetFlightInfo.departAirportCode# to #qGetFlightInfo.arriveAirportCode# on #qGetFlightInfo.departDate# at #qGetFlightInfo.arriveTime# <br />
+                                        #qGetFlightInfo.departDate# - 
+                                        From #qGetFlightInfo.departAirportCode# to #qGetFlightInfo.arriveAirportCode# 
+                                        - Depart #qGetFlightInfo.departTime# arrive #qGetFlightInfo.arriveTime# 
+                                        <cfif qGetFlightInfo.isOvernightFlight EQ 1>
+                                        	- <span style="color:##F00">Overnight Flight</span>
+                                        </cfif>
+                                        <br />
                                     </cfloop>                                                        
                                 <cfelse>
                                 	n/a
