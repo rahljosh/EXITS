@@ -302,6 +302,7 @@
 						// Get Flight Information
 						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerIntlRep.candidateID, flightType=FORM.flightType);
 					</cfscript>
+                    
                     <tr <cfif qTotalPerIntlRep.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.candidateID#</a></td>
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.lastname#</a></td>
@@ -312,7 +313,13 @@
                         	<span class="style1">
                             	<cfif qGetFlightInfo.recordCount>
                                     <cfloop query="qGetFlightInfo">
-                                        From #qGetFlightInfo.departAirportCode# to #qGetFlightInfo.arriveAirportCode# on #qGetFlightInfo.departDate# at #qGetFlightInfo.arriveTime# <br />
+                                        #qGetFlightInfo.departDate# - 
+                                        From #qGetFlightInfo.departAirportCode# to #qGetFlightInfo.arriveAirportCode# 
+                                        - Depart #qGetFlightInfo.departTime# arrive #qGetFlightInfo.arriveTime# 
+                                        <cfif qGetFlightInfo.isOvernightFlight EQ 1>
+                                        	- <span style="color:##F00">Overnight Flight</span>
+                                        </cfif>
+                                        <br />
                                     </cfloop>                                                        
                                 <cfelse>
                                 	n/a
