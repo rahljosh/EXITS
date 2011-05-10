@@ -1246,7 +1246,16 @@
                                             <td class="style1">
 												<cfif qGetArrival.recordCount>
 	                                                <cfloop query="qGetArrival">
-                                                    	From #qGetArrival.departAirportCode# to #qGetArrival.arriveAirportCode# on #qGetArrival.departDate# at #qGetArrival.arriveTime# <br />
+                                                        Arrive on 
+                                                        <cfif qGetArrival.isOvernightFlight EQ 1>
+                                                            #DateFormat(DateAdd("d", 1, qGetArrival.departDate), 'mm/dd/yyyy')# 
+                                                        <cfelse>
+                                                            #qGetArrival.departDate#
+                                                        </cfif>
+                                                            at #qGetArrival.arriveTime#
+                                                        - Airport: #qGetArrival.arriveAirportCode# 
+                                                        - Flight Number: #qGetArrival.flightNumber# 
+                                                        <br />
 													</cfloop>                                                        
                                                 <cfelse>
                                                 	n/a
@@ -1258,7 +1267,10 @@
                                         	<td class="style1">
 												<cfif qGetDeparture.recordCount>
                                                     <cfloop query="qGetDeparture">
-                                                   		From #qGetDeparture.departAirportCode# to #qGetDeparture.arriveAirportCode# on #qGetDeparture.departDate# at #qGetDeparture.arriveTime# <br />
+                                                        Depart on #qGetDeparture.departDate# at #qGetDeparture.departTime#
+                                                        - Airport: #qGetDeparture.departAirportCode# 
+                                                        - Flight Number: #qGetDeparture.flightNumber# 
+                                                        <br />
                                                     </cfloop>    
                                                 <cfelse>
                                                 	n/a
