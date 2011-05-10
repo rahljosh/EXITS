@@ -1,92 +1,144 @@
-<cfparam name="submitted" default="0">
-<cfparam name="company_region" default="region,#client.regionid#">
-<cfparam name="user_type" default="">
-<cfparam name="assigned" default="1">
-<cfparam name="keyword" default="">
-<cfparam name="new_user" default="">
-<cfparam name="active" default="1">
-<cfparam name="orderby" default="lastname">
-<cfparam name="recordsToShow" default="25">
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		users.cfm
+	Author:		Marcus Melo
+	Date:		May 10, 2011
+	Desc:		User List
 
-<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-	<tr valign=middle height=24>
-		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-		<td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
-		<td background="pics/header_background.gif"><h2>Users</h2></td>
-	<!--- ONLY OFFICE, MANAGERS AND ADVISORS CAN ADD NEW USERS --->
-    <cfif client.usertype LTE 6>
-        <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/add_user">Add User</a></td>
-	</cfif>
-		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-	</tr>
-</table>
+	Updated:  	
+	
+----- ------------------------------------------------------------------------- --->
 
-<cfform action="index.cfm?curdoc=users" method="post">
+<!--- Kill extra output --->
+<cfsilent>
+	
+	<!--- Import CustomTag --->
+    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+	
+    <cfparam name="URL.startPage" default="1">
+    <cfparam name="submitted" default="0">
+    <cfparam name="company_region" default="region,#CLIENT.regionid#">
+    <cfparam name="user_type" default="">
+    <cfparam name="assigned" default="1">
+    <cfparam name="keyword" default="">
+    <cfparam name="new_user" default="">
+    <cfparam name="active" default="1">
+    <cfparam name="orderby" default="lastname">
+    <cfparam name="recordsToShow" default="25">
 
+    <cfquery name="qRegionList" datasource="#APPLICATION.DSN#">
+        SELECT 
+        	r.regionid, 
+            r.regionname, 
+            c.companyid, 
+            c.team_id
+        FROM 
+        	smg_regions r
+        INNER JOIN 
+        	smg_companies c ON r.company = c.companyid
+        WHERE 
+        	c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
+        AND 
+        	r.subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND 
+        	r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        ORDER BY 
+        	c.companyid, 
+            r.regionname
+    </cfquery>
+
+    <cfquery name="qGetUserTypeList" datasource="#APPLICATION.DSN#">
+        SELECT 
+            usertypeid, 
+            usertype
+        FROM 
+            smg_usertype
+        WHERE 
+            usertypeid BETWEEN 1 AND 9
+        ORDER BY 
+            usertypeid
+    </cfquery>
+
+</cfsilent>
+
+<!--- ONLY OFFICE, MANAGERS AND ADVISORS CAN ADD NEW USERS --->
+<cfif ListFind("1,2,3,4,5,6", CLIENT.usertype)>
+
+	<!--- Table Header --->
+    <gui:tableHeader
+        imageName="students.gif"
+        tableTitle="Users"
+        tableRightTitle='<a href="index.cfm?curdoc=forms/add_user">Add User</a>'
+        width="100%"
+    />    
+
+<cfelse>
+
+	<!--- Table Header --->
+    <gui:tableHeader
+        imageName="students.gif"
+        tableTitle="Users"
+        width="100%"
+    />    
+
+</cfif>
+
+<cfform name="searchUser" action="index.cfm?curdoc=users" method="post">
 <input name="submitted" type="hidden" value="1">
-<table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
+
+<table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
     <tr>
         <td><input name="send" type="submit" value="Submit" /></td>
-	<cfif client.usertype LTE 4>
-        <td>
-            <cfquery name="list_regions" datasource="#application.dsn#">
-                SELECT smg_regions.regionid, smg_regions.regionname, smg_companies.companyid, smg_companies.team_id
-                FROM smg_regions
-                INNER JOIN smg_companies ON smg_regions.company = smg_companies.companyid
-                WHERE smg_companies.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#client.company_submitting#">
-               		AND smg_regions.subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                	AND active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                ORDER BY smg_companies.companyid, smg_regions.regionname
-            </cfquery>
-            Program Manager - Region<br />
-			<select name="company_region">
-                <option value="" selected="selected">All</option>
-            	<cfoutput query="list_regions" group="companyid">
-                  <option value="company,#companyid#" >#team_id# (All Regions)</option> <!--- <cfif company_region EQ 'company,#companyid#'>selected</cfif> --->
-                    <cfoutput>
-                   		<option value="region,#regionid#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#team_id# - #regionname#</option> <!--- <cfif company_region EQ 'region,#regionid#'>selected</cfif> --->
+        
+		<!--- Office Options --->
+        <cfif ListFind("1,2,3,4", CLIENT.usertype)>
+            <td>
+                Program Manager - Region<br />
+                <select name="company_region">
+                    <option value="" selected="selected">All</option>
+                    <cfoutput query="qRegionList" group="companyid">
+                      <option value="company,#companyid#" >#team_id# (All Regions)</option> <!--- <cfif company_region EQ 'company,#companyid#'>selected</cfif> --->
+                        <cfoutput>
+                            <option value="region,#regionid#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#team_id# - #regionname#</option> <!--- <cfif company_region EQ 'region,#regionid#'>selected</cfif> --->
+                        </cfoutput>
                     </cfoutput>
-                </cfoutput>
-			</select>
-        </td>
+                </select>
+            </td>
+            <td>
+                User Type<br />
+                <cfselect name="user_type" query="qGetUserTypeList" value="usertypeid" display="usertype" selected="#user_type#" queryPosition="below">
+                    <option value="">All</option>
+                </cfselect>
+            </td>
+            <td>
+                Assigned<br />
+                <select name="assigned">
+                    <option value="1" <cfif assigned EQ 1>selected</cfif>>Yes</option>
+                    <option value="0" <cfif assigned EQ 0>selected</cfif>>No</option>
+                </select>
+            </td>
+        </cfif>
+        
+        <cfoutput>
         <td>
-            <cfquery name="get_usertypes" datasource="#application.dsn#">
-                SELECT usertypeid, usertype
-                FROM smg_usertype
-                WHERE usertypeid BETWEEN 1 AND 9
-                ORDER BY usertypeid
-            </cfquery>
-            User Type<br />
-            <cfselect NAME="user_type" query="get_usertypes" value="usertypeid" display="usertype" selected="#user_type#" queryPosition="below">
-                <option value="">All</option>
-            </cfselect>
-        </td>
-        <td>
-            Assigned<br />
-			<select name="assigned">
-				<option value="1" <cfif assigned EQ 1>selected</cfif>>Yes</option>
-				<option value="0" <cfif assigned EQ 0>selected</cfif>>No</option>
-			</select>
-        </td>
-	</cfif>
-  <td>
             Keyword / ID<br />
-			<cfinput type="text" name="keyword" value="#keyword#" size="10" maxlength="50">         
+            <input type="text" name="keyword" value="#keyword#" size="10" maxlength="50" style="width:150px;">         
         </td>
+        </cfoutput>
         <td>
             New Users<br />
-			<select name="new_user">
-				<option value="">All</option>
-				<option value="1" <cfif new_user EQ 1>selected</cfif>>Yes</option>
-			</select>            
+            <select name="new_user">
+                <option value="">All</option>
+                <option value="1" <cfif new_user EQ 1>selected</cfif>>Yes</option>
+            </select>            
         </td>
         <td>
             Active<br />
-			<select name="active">
-				<option value="">All</option>
-				<option value="1" <cfif active EQ 1>selected</cfif>>Yes</option>
-				<option value="0" <cfif active EQ 0>selected</cfif>>No</option>
-			</select>            
+            <select name="active">
+                <option value="">All</option>
+                <option value="1" <cfif active EQ 1>selected</cfif>>Yes</option>
+                <option value="0" <cfif active EQ 0>selected</cfif>>No</option>
+            </select>            
         </td>
         <td>
             Order By<br />
@@ -112,203 +164,329 @@
             </select>            
         </td>
     </tr>
-<cfif assigned EQ 0>
-    <tr>
-        <td>&nbsp;</td>
-        <td colspan="3"><font size="1"><em>Company - Region, and User Type are non-functional when Assigned=No.</em></font></td>
-    </tr>
-</cfif>
+    <cfif NOT VAL(assigned)>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3"><font size="1"><em>Company - Region, and User Type are non-functional when Assigned=No.</em></font></td>
+        </tr>
+    </cfif>
 </table>
 </cfform>
 
 <cfif submitted>
-
+	
     <!--- OFFICE PEOPLE AND ABOVE --->
-    <cfif client.usertype LTE 4>
+    <cfif ListFind("1,2,3,4", CLIENT.usertype)>
     
-        <cfquery name="getResults" datasource="#application.dsn#">
-            SELECT DISTINCT u.userid, u.firstname, u.lastname, u.city, u.state, u.phone, u.businessname, u.datecreated, smg_countrylist.countryname
-            FROM smg_users u
-            <!--- need left join on user_access_rights because of the "unassigned" search option. --->
-            LEFT JOIN user_access_rights ON u.userid = user_access_rights.userid
-            LEFT JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-            LEFT JOIN smg_countrylist ON u.country = smg_countrylist.countryid
-            WHERE 0=0
+        <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+            SELECT DISTINCT 
+            	u.userid, 
+                u.firstname, 
+                u.lastname, 
+                u.city, 
+                u.state, 
+                u.phone, 
+                u.businessname, 
+                u.datecreated, 
+                cl.countryname
+            FROM 
+            	smg_users u
+            <!--- need LEFT OUTER JOIN on user_access_rights because of the "unassigned" search option. --->
+            LEFT OUTER JOIN 
+            	user_access_rights uar ON u.userid = uar.userid
+            LEFT OUTER JOIN 
+            	smg_companies c ON uar.companyid = c.companyid
+            LEFT OUTER JOIN 
+            	smg_countrylist cl ON u.country = cl.countryid
+            WHERE 
+            	1=1			
+
 			<cfif assigned EQ 1>
-                AND smg_companies.website = '#client.company_submitting#'
-				<cfif company_region NEQ ''>
-                	<cfif listFirst(company_region) EQ 'company'>
-                    	AND user_access_rights.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#listLast(company_region)#">
-                	<cfelseif listFirst(company_region) EQ 'region'>
-                        AND user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#listLast(company_region)#">
-                    </cfif>
+	        
+                AND 
+                	c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
+	            
+				<cfif listFirst(company_region) EQ 'company'>
+                    AND 
+                        uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#listLast(company_region)#">
+                <cfelseif listFirst(company_region) EQ 'region'>
+                    AND 
+                        uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#listLast(company_region)#">
+                </cfif>	
+                
+				<cfif VAL(user_type)>
+                	AND 
+                    	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(user_type)#">
                 </cfif>
-                <cfif user_type NEQ ''>
-                    AND user_access_rights.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#user_type#">
-                </cfif>
-            <cfelseif assigned EQ 0>
-                AND user_access_rights.userid IS NULL
+            
+			<cfelseif assigned EQ 0>
+            	AND 
+                	uar.userid IS NULL
             </cfif>
-            <cfif trim(keyword) NEQ ''>
+            
+            <cfif LEN(TRIM(keyword))>
                 AND (
-                	u.userid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(keyword)#">
-                	OR u.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.lastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.phone LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.businessname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR smg_countrylist.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
+                        u.userid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(keyword)#">
+                    OR 
+                        u.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                    OR 
+                        u.lastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                    OR 
+                        u.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                    OR 
+                        u.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                    OR 
+                        u.phone LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                    OR 
+                        u.businessname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                    OR 
+                        cl.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
                 )
             </cfif>
-            <cfif new_user NEQ ''>
-                AND u.datecreated > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#client.lastlogin#">
+            
+            <cfif LEN(new_user)>
+            	AND 
+                	u.datecreated > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
             </cfif>
-            <cfif active NEQ ''>
-                AND u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
+            
+            <cfif LEN(active)>
+	            AND 
+                	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
             </cfif>
-            ORDER BY #orderby#
+            
+            ORDER BY 
+            	
+                <cfswitch expression="#orderby#">
+
+                	<cfcase value="userID,lastName,firstName,businessName,city,state,countryName,phone">
+                    	#orderby#
+                    </cfcase>
+
+                	<cfdefaultcase>
+                    	lastName,
+                        firstName
+                    </cfdefaultcase>
+				
+                </cfswitch>                 
+
         </cfquery>
 
 		<!--- this is used with a query of query in the output. --->
-        <cfquery name="get_user_access_rights" datasource="#application.dsn#">
-            SELECT user_access_rights.userid, smg_usertype.usertype, smg_companies.team_id, user_access_rights.regionid, smg_regions.regionname
-            FROM user_access_rights
-            INNER JOIN smg_usertype ON user_access_rights.usertype = smg_usertype.usertypeid
-            INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
+        <cfquery name="qGetUserAccessRights" datasource="#APPLICATION.DSN#">
+            SELECT 
+            	uar.userid, 
+                uar.regionid, 
+                u.usertype, 
+                c.team_id, 
+                r.regionname
+            FROM 
+            	user_access_rights uar
+            INNER JOIN 
+            	smg_usertype u ON uar.usertype = u.usertypeid
+            INNER JOIN 
+            	smg_companies c ON uar.companyid = c.companyid
             <!--- international don't have regions. --->
-            LEFT JOIN smg_regions ON user_access_rights.regionid = smg_regions.regionid
-            WHERE smg_companies.website = '#client.company_submitting#'
-            ORDER BY user_access_rights.companyid, user_access_rights.regionid, user_access_rights.usertype
+            LEFT OUTER JOIN 
+            	smg_regions r ON uar.regionid = r.regionid
+            WHERE 
+            	c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
+            ORDER BY 
+            	uar.companyid, 
+                uar.regionid, 
+                uar.usertype
         </cfquery>
         
     <!--- FIELD --->
     <cfelse>
     
-        <cfquery name="getResults" datasource="#application.dsn#">
-            SELECT DISTINCT u.userid, u.firstname, u.lastname, u.city, u.state, u.phone, u.businessname, u.datecreated, smg_countrylist.countryname
-            FROM user_access_rights uar
-            INNER JOIN smg_users u ON u.userid = uar.userid
-            LEFT JOIN smg_countrylist ON u.country = smg_countrylist.countryid
-            WHERE uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
-            <!--- manager --->
-            AND uar.usertype > 4
-            AND uar.usertype <= 7 <!--- DO NOT SHOW STUDENT VIEW --->		
-            <!--- advisor --->
-            <cfif client.usertype EQ 6>
-            	AND uar.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+            SELECT DISTINCT 
+            	u.userid, 
+                u.firstname, 
+                u.lastname, 
+                u.city, 
+                u.state, 
+                u.phone, 
+                u.businessname, 
+                u.datecreated, 
+                cl.countryname
+            FROM 
+            	user_access_rights uar
+            INNER JOIN 
+            	smg_users u ON u.userid = uar.userid
+            LEFT OUTER JOIN 
+            	smg_countrylist cl ON u.country = cl.countryid
+            WHERE 
+            	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+			
+			<!--- manager / DO NOT SHOW STUDENT VIEW --->
+            AND 
+            	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+            
+			<!--- advisor --->
+            <cfif CLIENT.usertype EQ 6>
+            	AND 
+                	uar.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+            <!--- Area Representative --->
+			<cfelseif CLIENT.userType EQ 7>
+            	AND 
+                	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
             </cfif>
-            <cfif trim(keyword) NEQ ''>
+            
+            <cfif LEN(TRIM(keyword))>
                 AND (
-                	u.userid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(keyword)#">
-                	OR u.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.lastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.phone LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR u.businessname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
-                	OR smg_countrylist.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
+                		u.userid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(keyword)#">
+                	OR 
+                    	u.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.lastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.phone LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.businessname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	cl.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
                 )
             </cfif>
-            <cfif new_user NEQ ''>
-                AND u.datecreated > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#client.lastlogin#">
+            
+            <cfif LEN(new_user)>
+                AND 
+                	u.datecreated > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">                    
             </cfif>
-            <cfif active NEQ ''>
-                AND u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
+            
+            <cfif LEN(active)>
+                AND 
+                	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
             </cfif>
-            ORDER BY #orderby#
+            
+            ORDER BY 
+            	
+                <cfswitch expression="#orderby#">
+
+                	<cfcase value="userID,lastName,firstName,businessName,city,state,countryName,phone">
+                    	#orderby#
+                    </cfcase>
+
+                	<cfdefaultcase>
+                    	lastName,
+                        firstName
+                    </cfdefaultcase>
+				
+                </cfswitch>   
+                              
         </cfquery>
                 
     </cfif>
 
-	<cfif getResults.recordCount GT 0>
-
-		<cfparam name="url.startPage" default="1">
-		<cfset totalPages = ceiling(getResults.recordCount / recordsToShow)>
-		<cfset startrow = 1 + ((url.startPage - 1) * recordsToShow)>
-		<cfif getResults.recordCount GT url.startPage * recordsToShow>
-			<cfset isNextPage = 1>
-			<cfset endrow = url.startPage * recordsToShow>
-		<cfelse>
-			<cfset isNextPage = 0>
-			<cfset endrow = getResults.recordCount>
-		</cfif>
-		<cfset urlVariables = "submitted=1&company_region=#company_region#&user_type=#user_type#&assigned=#assigned#&keyword=#urlEncodedFormat(keyword)#&new_user=#new_user#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#">
-
+	<cfif qGetResults.recordCount>
+		
+        <cfscript>
+			totalPages = ceiling(qGetResults.recordCount / recordsToShow);
+			startrow = 1 + ((url.startPage - 1) * recordsToShow);
+			
+			if ( qGetResults.recordCount GT url.startPage * recordsToShow ) {
+				isNextPage = 1;
+				endrow = url.startPage * recordsToShow;
+			} else {
+				isNextPage = 0;
+				endrow = qGetResults.recordCount;
+			}
+			
+			urlVariables = "submitted=1&company_region=#company_region#&user_type=#user_type#&assigned=#assigned#&keyword=#urlEncodedFormat(keyword)#&new_user=#new_user#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#";
+		</cfscript>
+        
         <cfoutput>
     
-        <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
-            <tr align="center">
-                <td>
-                <cfif client.usertype neq 7>
-					<cfif totalPages GT 1>
-                        <cfif url.startPage NEQ 1>
-                            <a href="?curdoc=users&startPage=#url.startPage - 1#&#urlVariables#">< PREV</a> &nbsp;
+    	<cfif CLIENT.usertype NEQ 7>
+        	<table width="100%" class="section" border="0" cellpadding="4" cellspacing="0">
+                <tr align="center">
+                    <td>
+						<cfif totalPages GT 1>
+                            <cfif url.startPage NEQ 1>
+                                <a href="?curdoc=users&startPage=#url.startPage - 1#&#urlVariables#">< PREV</a> &nbsp;
+                            </cfif>
+                            
+                            <cfloop from="1" to="#totalPages#" index="i">
+                                <cfif i is url.startPage>#i#<cfelse><a href="?curdoc=users&startPage=#i#&#urlVariables#">#i#</a></cfif>
+                            </cfloop>
+                            
+                            <cfif isNextPage>
+                                &nbsp; <a href="?curdoc=users&startPage=#url.startPage + 1#&#urlVariables#">NEXT ></a>
+                            </cfif>
+                            
+                            <br />
                         </cfif>
-                        <cfloop from="1" to="#totalPages#" index="i">
-                            <cfif i is url.startPage>#i#<cfelse><a href="?curdoc=users&startPage=#i#&#urlVariables#">#i#</a></cfif>
-                        </cfloop>
-                        <cfif isNextPage>
-                            &nbsp; <a href="?curdoc=users&startPage=#url.startPage + 1#&#urlVariables#">NEXT ></a>
-                        </cfif>
-                        <br>
-                    </cfif>
-                    Displaying #startrow# to #endrow# of #getResults.recordCount#
-              </cfif>
-                </td>
+                        
+                        Displaying #startrow# to #endrow# of #qGetResults.recordCount#
+                    </td>
+                </tr>
+	        </table>
+    	</cfif>
+
+		<cfif CLIENT.usertype EQ 7>
+        	<table width="100%" class="section" border="0" cellpadding="4" cellspacing="0">
+                <tr>
+                    <Td colspan="10" align="center">Your access level doesn't permit viewing other users.</Td>
+                </tr>
+			</table>
+        </cfif>
+        
+        <table width="100%" class="section" border="0" cellpadding="2" cellspacing="0">
+            <tr align="left" style="font-weight:bold;">
+                <td>ID</td>
+                <td>Last Name</td>
+                <td>First Name</td>
+				<cfif ListFind("1,2,3,4", CLIENT.usertype)>
+                    <td>Program Manager - Region - User Type</td>
+				</cfif>
+                <td>Company Name</td>
+                <td>City</td>
+                <td>State</td>
+                <td>Country</td>
+                <td>Phone</td>
             </tr>
-        </table>
             
-        <table width=100% class="section">
-            <tr align="left">
-                <th>ID</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-			<cfif client.usertype LTE 4>
-                <th>Program Manager - Region - User Type</th>
-            </cfif>
-                <th>Company Name</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Country</th>
-                <th>Phone</th>
-            </tr>
-            
-            <cfif client.usertype eq 7>
-            <Tr>
-            	<Td colspan=10 align="center">Your access level doesn't permit viewing of users.</Td>
-            </Tr>
-            <cfelse>
-            <cfloop query="getResults" startrow="#startrow#" endrow="#endrow#">
-            	<cfif datecreated GT client.lastlogin>
-                	<cfset bgcolor = "e2efc7">
-                <cfelse>
-                    <cfset bgcolor="">
-                </cfif>
-                <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
+            <cfloop query="qGetResults" startrow="#startrow#" endrow="#endrow#">
+                
+                <cfscript>
+                    if ( datecreated GT CLIENT.lastlogin ) {
+                        bgcolor = "##E2EFC7";
+                    } else {
+                        bgcolor="";
+                    }					
+                </cfscript>
+                
+                <tr bgcolor="###iif(currentRow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                     <td bgcolor="#bgcolor#"><a href="index.cfm?curdoc=user_info&userid=#userid#">#userid#</a></td>
                     <td>#lastname#</td>
                     <td>#firstname#</td>
-                <cfif client.usertype LTE 4>
-                    <cfquery name="get_my_user_access_rights" dbtype="query">
-                        SELECT *
-                        FROM get_user_access_rights
-                        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">
-                    </cfquery>
-                    <td>
-                        <table cellpadding="2" cellspacing="0">
-                        <cfloop query="get_my_user_access_rights">
-                          <tr>
-                            <td>#team_id#</td>
-                            <td>-</td>
-                            <td nowrap="nowrap">#regionname# (#regionid#)</td>
-                            <td>-</td>
-                            <td nowrap="nowrap">#usertype#</td>
-                          </tr>
-                        </cfloop>
-                        </table>
-                    </td>
-                </cfif>
+                    <cfif ListFind("1,2,3,4", CLIENT.usertype)>
+                        <cfquery name="qGetCurrentUserAccess" dbtype="query">
+                            SELECT 
+                                *
+                            FROM 
+                                qGetUserAccessRights
+                            WHERE 
+                                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">
+                        </cfquery>
+                        <td>
+                            <table cellpadding="2" cellspacing="0">
+                                <cfloop query="qGetCurrentUserAccess">
+                                    <tr>
+                                        <td>#team_id#</td>
+                                        <td>-</td>
+                                        <td nowrap="nowrap">#regionname# (#regionid#)</td>
+                                        <td>-</td>
+                                        <td nowrap="nowrap">#usertype#</td>
+                                    </tr>
+                                </cfloop>
+                            </table>
+                        </td>
+                    </cfif>
                     <td>#businessname#</td>
                     <td>#city#</td>
                     <td>#state#</td>
@@ -316,32 +494,32 @@
                     <td>#phone#</td>
                 </tr>
             </cfloop>
-         </cfif>
+                
         </table>
     
         </cfoutput>
 
-        <table width=100% bgcolor="#ffffe6" class="section">
+        <table width="100%" class="section" bgcolor="#ffffe6" border="0" cellpadding="2" cellspacing="0">
             <tr>
-                <td>
-                    <table>
-                      <tr>
-                        <td bgcolor="e2efc7" width="15">&nbsp;</td>
-                        <td>Added since your last vist.</td>
-                      </tr>
-                    </table>
-                </td>
+                <td bgcolor="#e2efc7" width="15">&nbsp;</td>
+                <td>Added since your last vist.</td>
             </tr>
         </table>
 
 	<cfelse>
-        <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
+    
+        <table width="100%" class="section" border="0" cellpadding="2" cellspacing="0">
             <tr>
                 <td>No users matched your criteria.</td>
             </tr>
         </table>
+        
     </cfif>
     
 </cfif>
+
    
-<cfinclude template="table_footer.cfm">
+<!--- Table Footer --->
+<gui:tableFooter 
+	width="100%"
+/>
