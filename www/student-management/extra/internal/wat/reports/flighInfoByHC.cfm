@@ -314,14 +314,26 @@
                         <td>
                         	<span class="style1">
                             	<cfif qGetFlightInfo.recordCount>
-                                    <cfloop query="qGetFlightInfo">
+                                    <cfloop query="qGetFlightInfo">                                       
+                                        Arrive on 
+                                        <cfif qGetFlightInfo.isOvernightFlight EQ 1>
+	                                        #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
+                                        <cfelse>
+                                        	#qGetFlightInfo.departDate#
+										</cfif>
+                                        	at #qGetFlightInfo.arriveTime#
+                                        - Airport: #qGetFlightInfo.arriveAirportCode# 
+                                        - Flight Number: #qGetFlightInfo.flightNumber# 
+                                        <br />
+                                        <!---
+											Old Format 
                                         #qGetFlightInfo.departDate# - 
                                         From #qGetFlightInfo.departAirportCode# to #qGetFlightInfo.arriveAirportCode# 
                                         - Depart #qGetFlightInfo.departTime# arrive #qGetFlightInfo.arriveTime# 
                                         <cfif qGetFlightInfo.isOvernightFlight EQ 1>
                                         	- <span style="color:##F00">Overnight Flight</span>
                                         </cfif>
-                                        <br />
+										--->                                        
                                     </cfloop>                                                        
                                 <cfelse>
                                 	n/a
