@@ -319,7 +319,7 @@
 
 	<cffunction name="getFlightInformation" access="public" returntype="query" output="false" hint="Gets flight information by studentID and type">
     	<cfargument name="studentID" hint="studentID is required">
-        <cfargument name="flightType" hint="Arrival/Departure is required">
+        <cfargument name="flightType" hint="PreAypArrival/Arrival/Departure is required">
         
         <cfquery 
 			name="qGetFlightInformation" 

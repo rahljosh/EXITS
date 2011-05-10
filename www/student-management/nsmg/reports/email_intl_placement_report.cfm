@@ -1,7 +1,7 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
-	<cfsetting requestTimeOut="500">
+	<cfsetting requestTimeOut="9999">
 
 	<!--- Param Form Variables --->
     <cfparam name="FORM.programID" default="0">
@@ -9,9 +9,6 @@
     <cfparam name="FORM.flightOption" default="">
     <cfparam name="FORM.send_email" default="0">
     <cfparam name="FORM.copy_user" default="0">
-
-	<!-----Company Information----->
-    <cfinclude template="../querys/get_company_short.cfm">
     
 	<!--- Get Program --->
 	<cfquery name="qGetProgram" datasource="MYSQL">
@@ -63,6 +60,15 @@
 
         <!--- Flight Option --->
         <cfswitch expression="#FORM.flightOption#">
+
+            <cfcase value="receivedPreAYPArrival">
+            	INNER JOIN	
+                	smg_flight_info flight ON flight.studentID = s.studentID 
+                    AND	
+                        flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival">
+					AND 
+                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
+            </cfcase>
         	
             <cfcase value="receivedArrival">
             	INNER JOIN	
@@ -88,6 +94,12 @@
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">        
         AND 
             s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+		
+        <cfif ListFind("missingPreAypArrival,receivedPreAypArrival",FORM.flightOption)>
+        	AND
+            	s.aypEnglish != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        </cfif>
+        
 		<cfif CLIENT.companyID EQ 5>
             AND
                 s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
@@ -95,15 +107,39 @@
             AND
                 s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
+		
 		<cfif VAL(FORM.intrep)>
-            AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+            AND 
+            	s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
         </cfif>
-          <cfif form.place_date1 is not '' and form.place_date2 is not ''>
-        	AND dateplaced between #CreateODBCDate(form.place_Date1)# and #CreateODBCDate(form.place_Date2)#
+        
+		<cfif form.place_date1 is not '' and form.place_date2 is not ''>
+        	AND 
+            	dateplaced 
+            BETWEEN 
+            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(form.place_Date1)#">
+	        AND
+            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(form.place_Date2)#">
         </cfif>
 
         <!--- Flight Option --->
         <cfswitch expression="#FORM.flightOption#">
+
+        	<cfcase value="missingPreAypArrival">
+                    AND NOT EXISTS	
+                    (
+                    	SELECT 
+                        	flight.studentID
+                        FROM
+                        	smg_flight_info flight
+                        WHERE
+							flight.studentID = s.studentID	
+                		AND
+                        	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival">
+                        AND 
+                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
+                	)
+            </cfcase>
 
         	<cfcase value="missingArrival">
                     AND NOT EXISTS	
@@ -202,15 +238,15 @@
             	<td width="6%" align="center"><b>ID</b></td>
                 <td width="20%"><b>Student</b></td>
                 <td width="8%" align="center"><b>Sex</b></td>
-                <td width="8"><b>DOB</b></td>
+                <td width="8%"><b>DOB</b></td>
                 <td width="12%"><b>Country</b></td>
                 <td width="12%"><b>Family</b></td>
-                <td width="10" align="center"><b>Program</b></td>
+                <td width="10%" align="center"><b>Program</b></td>
 				<!--- Flight Option --->                    
                 <cfif LISTFIND("receivedArrival,missingArrival", FORM.flightOption)>
-                    <td width="12" align="center"><b>Arrival Information</b></td>                            
+                    <td width="12%" align="center"><b>Arrival Information</b></td>                            
                 <cfelseif LISTFIND("receivedDeparture,missingDeparture", FORM.flightOption)>
-                    <td width="12" align="center"><b>Departure Information</b></td>                           
+                    <td width="12%" align="center"><b>Departure Information</b></td>                           
                 </cfif>
                 <td width="12%" align="center"><b>Placement Date</b></td>
             </tr>
