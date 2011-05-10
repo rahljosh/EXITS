@@ -203,10 +203,10 @@
                                                     <select name="listBatchID" id="listBatchID" multiple="multiple" size="9" style="width:300px;">
                                                         <cfloop query="qGetSevisHistory">
                                                             <option value="#qGetSevisHistory.batchID#">
-                                                            	<cfif CLIENT.companyID EQ 5>
-	                                                                #qGetSevisHistory.companyShort# - 
-                                                                </cfif>
-                                                                #DateFormat(qGetSevisHistory.datecreated, 'mm/dd/yy')# - ###qGetSevisHistory.batchID# - #qGetSevisHistory.totalPrint# student(s)
+	                                                            #qGetSevisHistory.companyShort# - 
+                                                                #DateFormat(qGetSevisHistory.datecreated, 'mm/dd/yy')# - 
+                                                                ###qGetSevisHistory.batchID# - 
+                                                                #qGetSevisHistory.totalPrint# student(s)
                                                             </option>
                                                         </cfloop>
                                                     </select>
