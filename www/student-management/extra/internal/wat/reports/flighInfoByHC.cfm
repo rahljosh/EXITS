@@ -325,15 +325,6 @@
                                         - Airport: #qGetFlightInfo.arriveAirportCode# 
                                         - Flight Number: #qGetFlightInfo.flightNumber# 
                                         <br />
-                                        <!---
-											Old Format 
-                                        #qGetFlightInfo.departDate# - 
-                                        From #qGetFlightInfo.departAirportCode# to #qGetFlightInfo.arriveAirportCode# 
-                                        - Depart #qGetFlightInfo.departTime# arrive #qGetFlightInfo.arriveTime# 
-                                        <cfif qGetFlightInfo.isOvernightFlight EQ 1>
-                                        	- <span style="color:##F00">Overnight Flight</span>
-                                        </cfif>
-										--->                                        
                                     </cfloop>                                                        
                                 <cfelse>
                                 	n/a
