@@ -572,6 +572,28 @@
         from smg_users
         where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentcompany#">
     </cfquery>
+    <cfquery name="intagent_messages" datasource="#application.dsn#">
+        select *
+        from smg_intagent_messages
+        where parentcompany = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentcompany#">
+        and expires > #now()#
+        and startdate < #now()#
+    </cfquery>
+    <cfquery name="intagent_alert_messages" dbtype="query">
+        select *
+        from intagent_messages
+        where messagetype = 'alert'
+    </cfquery>
+    <cfquery name="intagent_update_messages" dbtype="query">
+        select *
+        from intagent_messages
+        where messagetype = 'update'
+    </cfquery>
+    <cfquery name="intagent_news_messages" dbtype="query">
+        select *
+        from intagent_messages
+        where messagetype = 'news'
+    </cfquery>
 
 	<table cellpadding=2 cellspacing=4 width=100% bgcolor="##ffffff" class="section">
 		<tr>
@@ -580,56 +602,45 @@
 		</tr>
 		<tr>
 			<td valign="top">
-			<cfquery name="intagent_messages" datasource="#application.dsn#">
-                select *
-                from smg_intagent_messages
-                where parentcompany = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentcompany#">
-                and expires > #now()#
-                and startdate < #now()#
-			</cfquery>
-			<cfquery name="intagent_alert_messages" dbtype="query">
-                select *
-                from intagent_messages
-                where messagetype = 'alert'
-			</cfquery>
-			<cfquery name="intagent_update_messages" dbtype="query">
-                select *
-                from intagent_messages
-                where messagetype = 'update'
-			</cfquery>
-			<cfquery name="intagent_news_messages" dbtype="query">
-                select *
-                from intagent_messages
-                where messagetype = 'news'
-			</cfquery>
-			<div align="center"><h3>News</h3></div>
-			<cfif intagent_alert_messages.recordcount neq 0>
-                <cfloop query="intagent_news_messages">
-                    <cfif intagent_news_messages.details is not ''><b>#message#</b><br>
-                        <div align="justify">#DateFormat(startdate, 'MMMM D, YYYY')# - #ParagraphFormat(details)#</div>
+				<h3 style="text-align:center; padding:10px; text-decoration:underline;">News</h3>
+				<p>
+					<cfif intagent_alert_messages.recordcount neq 0>
+                        <cfloop query="intagent_news_messages">
+                            <cfif intagent_news_messages.details is not ''><b>#message#</b><br>
+                                <div align="justify">#DateFormat(startdate, 'MMMM D, YYYY')# - #ParagraphFormat(details)#</div>
+                            </cfif>
+                        </cfloop>
+                    <cfelse>
+                        There are currently no annoucements or news items from #companyname.businessname#
                     </cfif>
-                </cfloop>
-			<cfelse>
-				There are currently no annoucements or news items from #companyname.businessname#
-			</cfif>
-			<cfif intagent_alert_messages.recordcount neq 0>
-                <div class="alerts"><h3>Alerts</h3><br>
-                <cfloop query="intagent_alert_messages">
-                    <cfif intagent_alert_messages.details is not ''><b>#message#</b><br>
-                        <div align="justify">#DateFormat(startdate, 'MMMM D, YYYY')# - #ParagraphFormat(details)#</div>
-                    </cfif>
-                </cfloop>
-                </div>
-            </cfif>
-			<cfif intagent_update_messages.recordcount neq 0>
-                <div class="updates"><h3>Updates</h3><br>
-                <cfloop query="intagent_update_messages">
-                    <cfif intagent_update_messages.details is not ''><b>#message#</b><br>
-                        <div align="justify">#DateFormat(startdate, 'MMMM D, YYYY')# - #ParagraphFormat(details)#</div>
-                    </cfif>
-                </cfloop>
-                </div>
-            </cfif>
+				</p>
+                                
+				<cfif intagent_alert_messages.recordcount neq 0>
+                    <h3 style="text-align:center; padding:10px; text-decoration:underline;">Alerts</h3>
+                    <cfloop query="intagent_alert_messages">
+                        <cfif intagent_alert_messages.details is not ''><b>#message#</b><br>
+                            <p>#DateFormat(startdate, 'MMMM D, YYYY')# - #ParagraphFormat(details)#</p>
+                        </cfif>
+                    </cfloop>
+                </cfif>
+                
+				<cfif intagent_update_messages.recordcount neq 0>
+                    <h3 style="text-align:center; padding:10px; text-decoration:underline;">Updates</h3>
+                    <cfloop query="intagent_update_messages">
+                        <cfif intagent_update_messages.details is not ''><b>#message#</b><br>
+                            <p>#DateFormat(startdate, 'MMMM D, YYYY')# - #ParagraphFormat(details)#</p>
+                        </cfif>
+                    </cfloop>
+                </cfif>
+				
+                <!--- Flight Information --->
+            	<h3 style="text-align:center; padding:10px; text-decoration:underline;">Flight Schedule</h3>
+                <p>
+                	<a href="index.cfm?curdoc=intRep/index&action=flightInformationList">
+                        <img src="pics/iconPlane.gif" border="0" align="middle" />
+                        Click here to submit arrival/departure information for your students
+                   	</a>
+                </p>
 			</td>
 			<td valign="top">
 				<table cellpadding=4 cellspacing=0 border=0>
