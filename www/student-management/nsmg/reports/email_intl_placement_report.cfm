@@ -67,7 +67,9 @@
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival">
 					AND 
-                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
+                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	
+					AND
+                    	flight.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	                                               
             </cfcase>
         	
             <cfcase value="receivedArrival">
@@ -76,7 +78,9 @@
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
 					AND 
-                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
+                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	 
+					AND
+                    	flight.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	                                               
             </cfcase>
 
         	<cfcase value="receivedDeparture">
@@ -85,7 +89,9 @@
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
 					AND 
-                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
+                    	flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	
+					AND
+                    	flight.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	                                               
             </cfcase>
 			
 		</cfswitch>        
@@ -137,7 +143,9 @@
                 		AND
                         	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival">
                         AND 
-                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
+                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	 
+                        AND
+                            flight.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	                                               
                 	)
             </cfcase>
 
@@ -153,7 +161,9 @@
                 		AND
                         	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
                         AND 
-                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
+                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	
+                        AND
+                            flight.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	                                               
                 	)
             </cfcase>
 
@@ -169,7 +179,9 @@
 						AND
                 			flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
                         AND 
-                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	                        
+                            flight.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">	
+                        AND
+                            flight.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	                                               
                 	)
             </cfcase>
            

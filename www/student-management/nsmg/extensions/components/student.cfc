@@ -53,7 +53,7 @@
 	</cffunction>
 
 
-	<cffunction name="getStudentFullInformationByID" access="public" returntype="query" output="false" hint="Gets a student, intl. rep, program, host family information by studentID or uniqueID">
+	<cffunction name="getStudentFullInformationByID" access="public" returntype="query" output="false" hint="Gets a student, intl. rep, program, region, Area Rep by studentID or uniqueID">
     	<cfargument name="studentID" default="0" hint="studentID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
               
@@ -63,6 +63,7 @@
                 SELECT
 					s.studentID,
                     s.uniqueID,
+                    s.companyID,
                     s.hostID,
                     s.programID,
                     s.schoolID,
@@ -75,70 +76,72 @@
                     s.dob,
                     s.active,
                     s.flight_info_notes,
+                    s.AYPOrientation,
+                    s.AYPEnglish,
                     <!--- Intl Representative --->
                     intlRep.userID AS intlRepUserID,
                     intlRep.firstName AS intlRepFirstName,
                     intlRep.lastName AS intlRepLastName,
                     intlRep.businessName AS intlRepBusinessName,
-                    intlRep.email AS intlRepEmail,
+                    intlRep.email AS intlRepEmail, 
+                    intlRep.insurance_typeid,                 
                     <!--- Program --->
                     p.programName,
+                    <!--- Host Family --->
+                    host.airport_city, 
+                    host.major_air_code,
                     <!--- Region --->
 					r.regionName,
-					<!--- Placing Representative --->
-                    place.userID AS placeUserID,
-                    place.firstName AS placeFirstName,
-                    place.lastName AS placeLastName,
-					place.email AS	placeEmail,
-                    place.phone AS placePhone,
                     <!--- Area Representative --->
                     areaRep.userID AS areaRepUserID,
                     areaRep.firstName AS areaRepFirstName,
                     areaRep.lastName AS areaRepLastName,
 					areaRep.email AS areaRepEmail,
                     areaRep.work_phone AS areaRepPhone
-                    
                 FROM 
                     smg_students s
                 INNER JOIN
-                	smg_users intlRep ON intlRep.userID = s.intRep    
+                	smg_users intlRep ON intlRep.userID = s.intRep  
+				LEFT OUTER JOIN
+                	smg_programs p ON p.programID = s.programID  
+                LEFT OUTER JOIN 
+                    smg_hosts host ON host.hostID = s.hostID
 				LEFT OUTER JOIN
                 	smg_regions r ON r.regionID = s.regionAssigned                                 
 				LEFT OUTER JOIN
-                	smg_programs p ON p.programID = s.programID                    
-				LEFT OUTER JOIN
-                	smg_users place ON place.userID = s.placeRepID
-				LEFT OUTER JOIN
                 	smg_users areaRep ON areaRep.userID = s.areaRepID
-                                   
                 WHERE
                 	1 = 1
-					
-					<cfif VAL(ARGUMENTS.studentID)>
-	                    AND
-                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-					</cfif>
-                    
-					<cfif LEN(ARGUMENTS.uniqueID)>
-	                    AND
-                        	uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
-					</cfif>
+
+				<cfif VAL(ARGUMENTS.studentID)>
+                    AND
+                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.uniqueID)>
+                    AND
+                        s.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                </cfif>
 		</cfquery>
 		   
 		<cfreturn qGetStudentFullInformationByID>
 	</cffunction>
 
-	
+
 	<cffunction name="isStudentAssignedToPHP" access="public" returntype="numeric" output="false" hint="Returns 1 if student is assigned to PHP">
     	<cfargument name="studentID" default="0" hint="studentID is not required">
 
-    	<cfquery name="qIsStudentAssignedToPHP" datasource="MySql">
-            SELECT 
-            	studentID
-            FROM 
-            	php_students_in_program
-            WHERE 
-            	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+        <cfquery 
+			name="qIsStudentAssignedToPHP" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    studentID
+                FROM 
+                    php_students_in_program
+                WHERE 
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+				AND
+                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         </cfquery>
 		
         <cfscript>
@@ -149,6 +152,91 @@
 			}		
 		</cfscript>
         
+	</cffunction>
+
+
+	<cffunction name="getPHPStudent" access="public" returntype="query" output="false" hint="Returns PHP student">
+    	<cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="uniqueID" default="" hint="uniqueID is not required">
+        <cfargument name="assignedID" default="" hint="assignedID is not required">
+
+        <cfquery 
+			name="qGetPHPStudent" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    s.studentID, 
+                    s.uniqueID,                     
+                    s.regionAssigned,
+                    s.familylastname, 
+                    s.firstname, 
+                    s.middlename, 
+                    s.email, 
+                    s.sex, 
+                    s.dob, 
+                    s.flight_info_notes,
+                    s.AYPOrientation,
+                    s.AYPEnglish,
+                    <!--- PHP --->
+                    php.assignedID, 
+                    php.companyID, 
+                    php.programID, 
+                    php.hostID, 
+                    php.schoolID, 
+                    php.placeRepID, 
+                    php.areaRepID,
+                    php.datePlaced,
+                    <!--- Intl Representative --->
+                    intlRep.userID AS intlRepUserID,
+                    intlRep.firstName AS intlRepFirstName,
+                    intlRep.lastName AS intlRepLastName,
+                    intlRep.businessName AS intlRepBusinessName,
+                    intlRep.email AS intlRepEmail,
+                    intlRep.insurance_typeid,
+                    <!--- Program --->
+                    p.programName,
+                    p.insurance_startdate,
+                    <!--- Host Family --->
+                    host.airport_city, 
+                    host.major_air_code,
+                    <!--- Area Representative --->
+                    areaRep.userID AS areaRepUserID,
+                    areaRep.firstName AS areaRepFirstName,
+                    areaRep.lastName AS areaRepLastName,
+					areaRep.email AS areaRepEmail,
+                    areaRep.work_phone AS areaRepPhone
+                FROM 
+                    smg_students s
+                INNER JOIN 
+                    php_students_in_program php ON php.studentID = s.studentID
+                INNER JOIN
+                	smg_users intlRep ON intlRep.userID = s.intRep 
+                LEFT OUTER JOIN 
+                    smg_hosts host ON host.hostID = php.hostID
+				LEFT OUTER JOIN
+                	smg_programs p ON p.programID = php.programID                    
+				LEFT OUTER JOIN
+                	smg_users areaRep ON areaRep.userID = php.areaRepID
+                WHERE 
+                    php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+
+                <cfif VAL(ARGUMENTS.studentID)>
+                    AND                
+                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.uniqueID)>
+                    AND                
+                        s.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                </cfif>
+
+                <cfif VAL(ARGUMENTS.assignedID)>
+                    AND                
+                        php.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.assignedID#">
+                </cfif>
+                                    
+        </cfquery>
+        
+        <cfreturn qGetPHPStudent>            
 	</cffunction>
 
 
@@ -415,14 +503,15 @@
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="flightNotes" default="" hint="Notes is not required">
 
-        <cfquery datasource="MySQL">
-            UPDATE 
-                smg_students
-            SET 
-                flight_info_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNotes#">
-            WHERE 
-                studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-            LIMIT 1
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE 
+                    smg_students
+                SET 
+                    flight_info_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNotes#">
+                WHERE 
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                LIMIT 1
         </cfquery> 
 
 	</cffunction>
@@ -455,48 +544,49 @@
 			}
 		</cfscript>
         
-		<cfquery datasource="MySQL">
-            INSERT INTO 
-            	smg_flight_info
-            (
-            	studentID, 
-                companyID,
-                programID,
-                enteredByID,
-                batchID,
-                flight_number,                 
-                dep_city, 
-                dep_aircode, 
-                dep_date, 
-                dep_time, 
-                arrival_city, 
-                arrival_aircode, 
-                arrival_time,
-            	overnight, 
-                flight_type,
-                isCompleted,
-                dateCreated
-            )
-            VALUES 
-            (
-            	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.batchID#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
-                <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">,
-                <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#isCompleted#">,
-                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-            ) 
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                INSERT INTO 
+                    smg_flight_info
+                (
+                    studentID, 
+                    companyID,
+                    programID,
+                    enteredByID,
+                    batchID,
+                    flight_number,                 
+                    dep_city, 
+                    dep_aircode, 
+                    dep_date, 
+                    dep_time, 
+                    arrival_city, 
+                    arrival_aircode, 
+                    arrival_time,
+                    overnight, 
+                    flight_type,
+                    isCompleted,
+                    dateCreated
+                )
+                VALUES 
+                (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.batchID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
+                    <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">,
+                    <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
+                    <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">,
+                    <cfqueryparam cfsqltype="cf_sql_bit" value="#isCompleted#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                ) 
         </cfquery>
 
 	</cffunction>
@@ -528,28 +618,29 @@
 			}
 		</cfscript>
 
-		<cfquery datasource="MySQL">
-            UPDATE
-            	smg_flight_info
-            SET 
-                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
-                programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
-                enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-                flight_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,                 
-                dep_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">, 
-                dep_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">, 
-                dep_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
-                dep_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
-                arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">, 
-                arrival_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">, 
-                arrival_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
-                overnight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
-				isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#isCompleted#">
-            WHERE 
-            	flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
-            AND	
-                studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">           
-            LIMIT 1
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+                    smg_flight_info
+                SET 
+                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
+                    programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
+                    enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
+                    flight_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,                 
+                    dep_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">, 
+                    dep_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">, 
+                    dep_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
+                    dep_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
+                    arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">, 
+                    arrival_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">, 
+                    arrival_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
+                    overnight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
+                    isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#isCompleted#">
+                WHERE 
+                    flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
+                AND	
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">           
+                LIMIT 1
         </cfquery>
 
 	</cffunction>
@@ -562,17 +653,18 @@
         <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
         <cfargument name="sendEmail" default="1" hint="Set to 0 to not send email notification">
 		
-        <cfquery datasource="MySql">
-            UPDATE
-            	smg_flight_info
-            SET
-            	enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-            	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-            WHERE 
-            	flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
-			AND	
-            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">           
-            LIMIT 1
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+                    smg_flight_info
+                SET
+                    enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
+                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                WHERE 
+                    flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
+                AND	
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">           
+                LIMIT 1
         </cfquery>
 
         <cfscript>
@@ -594,16 +686,17 @@
         <cfargument name="flightType" hint="Arrival/Departure is required">
         <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
 		
-        <cfquery datasource="MySql">
-            UPDATE
-            	smg_flight_info
-            SET
-            	enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-            	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-            WHERE 
-            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">  
-			AND	
-				flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">            	         
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+                    smg_flight_info
+                SET
+                    enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
+                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                WHERE 
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">  
+                AND	
+                    flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">            	         
         </cfquery>
 
 	</cffunction>
@@ -615,6 +708,7 @@
         <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
 		<cfargument name="emailPDF" default="1" hint="Set to 0 to send the flight arrival in HTML format">
         <cfargument name="sendEmailTo" default="" hint="regionalManager | currentUser">
+        <cfargument name="isPHPStudent" default="0" hint="Set to 1 if it's a PHP student">
        
    		<!--- Import CustomTag --->
 		<cfimport taglib="../customTags/gui/" prefix="gui" />	
@@ -625,16 +719,27 @@
             var flightEmailBody = '';
 			var flightInfoReport = '';
         	
-            // Get Student Information
-			qGetStudentFullInformation = getStudentFullInformationByID(ARGUMENTS.studentID);
+			if ( NOT VAL(ARGUMENTS.isPHPStudent) ) {
+				// Public - Get Student Information
+				qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID);
+			} else {
+				// PHP - Get Student Information
+				qGetStudentFullInformation = getPHPStudent(studentID=ARGUMENTS.studentID);
+			}
 			
 			// Path to save temp PDF files
 			pdfPath = APPLICATION.PATH.temp & '##' & qGetStudentFullInformation.studentID & '-' & qGetStudentFullInformation.firstName & qGetStudentFullInformation.familyLastName & '-FlightInformation.pdf';
 			// Remove Empty Spaces
 			pdfPath = ReplaceNoCase(pdfPath, " ", "", "ALL");
+
+			// Default Flight Information
+			flightInfoLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentFullInformation.studentID#';
 			
 			// Get Host Family Information
 			qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentFullInformation.hostID);
+			
+			// Get School Information
+			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolByID(schoolID=qGetStudentFullInformation.schoolID);
 			
 			// Get School Dates
 			qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentFullInformation.schoolID, programID=qGetStudentFullInformation.programID);
@@ -659,15 +764,9 @@
     
             // Get Departure
             qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="departure");
-
-            // Check if it is a PHP student
-            isPHPStudent = isStudentAssignedToPHP(qGetStudentFullInformation.studentID);
-			
-			// Default Flight Information
-			flightInfoLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentFullInformation.studentID#';
 			
 			// Set Up EmailTo and FlightInfo Link
-            if ( isPHPStudent ) {
+            if ( ARGUMENTS.isPHPStudent ) {
             	
 				// PHP Student - Email Luke
 				flightInfoLink = 'http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
@@ -808,61 +907,71 @@
                         </p>
                         
                         <!--- Do Not Display for PHP --->
-                        <cfif NOT isPHPStudent>
+                        <cfif NOT ARGUMENTS.isPHPStudent>
                         
                             <p style="color: ##333;">
                                 <span style="font-weight:bold;">Region:</span>
                                 #qGetStudentFullInformation.regionName#
                             </p>
-            
+                        
                             <p style="color: ##333;">
                                 <span style="font-weight:bold;">Regional Manager:</span>
                                 #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
                                 - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a>
                                 <cfif LEN(qGetRegionalManager.work_phone)>
-                                	- Phone: #qGetRegionalManager.work_phone#
+                                    - Phone: #qGetRegionalManager.work_phone#
                                 </cfif>
                             </p>
+     
+                        </cfif>
+
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Area Representative:</span> 
+                            #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
+                            - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
+                            <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
+                                - Phone: #qGetStudentFullInformation.areaRepPhone#
+                            </cfif>                                    
+                        </p>
+                        
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">School:</span> 
+                            #qGetSchoolInfo.schoolName# (###qGetSchoolInfo.schoolID#)
+                        </p>
+
+                        <p style="color: ##333;">
+                            <span style="font-weight:bold;">Host Family:</span>
+                            <!--- Host Father --->
+                            <cfif LEN(qGetHostFamily.fatherFirstName)> 
+                                Mr. #qGetHostFamily.fatherFirstName# 
+                                <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                    #qGetHostFamily.fatherLastName# 
+                                </cfif>							
+                            </cfif>
                             
-                            <p style="color: ##333;">
-                                <span style="font-weight:bold;">Area Representative:</span> 
-                                #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
-                                - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
-                                <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
-	                                - Phone: #qGetStudentFullInformation.areaRepPhone#
-								</cfif>                                    
-                            </p>
+                            <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
                             
-                            <p style="color: ##333;">
-                                <span style="font-weight:bold;">Host Family:</span>
-                                <!--- Host Father --->
-                                <cfif LEN(qGetHostFamily.fatherFirstName)> 
-                                    Mr. #qGetHostFamily.fatherFirstName# 
-                                    <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
-                                        #qGetHostFamily.fatherLastName# 
-                                    </cfif>							
-                                </cfif>
-                                
-                                <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
-                                
-                                <!--- Host Mother --->
-                                <cfif LEN(qGetHostFamily.motherFirstName)>
-                                    Mrs. #qGetHostFamily.motherFirstName#
-                                    <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
-                                        #qGetHostFamily.motherLastName# 
-                                    </cfif>							
-                                </cfif>
-                                
-                                <!--- Family Last Name --->                            
-                                <cfif qGetHostFamily.fatherLastName EQ qGetHostFamily.motherLastName>
-                                    #qGetHostFamily.familyLastName#		
-                                </cfif>
-                                
-                                (###qGetHostFamily.hostid#) - Phone: #qGetHostFamily.phone# <br />
-                                
-                                <!--- Address --->
-                                <span style="margin-left:70px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
-                            </p>
+                            <!--- Host Mother --->
+                            <cfif LEN(qGetHostFamily.motherFirstName)>
+                                Mrs. #qGetHostFamily.motherFirstName#
+                                <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                    #qGetHostFamily.motherLastName# 
+                                </cfif>							
+                            </cfif>
+                            
+                            <!--- Family Last Name --->                            
+                            <cfif qGetHostFamily.fatherLastName EQ qGetHostFamily.motherLastName>
+                                #qGetHostFamily.familyLastName#		
+                            </cfif>
+                            
+                            (###qGetHostFamily.hostID#) - Phone: #qGetHostFamily.phone# <br />
+                            
+                            <!--- Address --->
+                            <span style="margin-left:70px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
+                        </p>
+
+                        <!--- Do Not Display for PHP --->
+                        <cfif NOT ARGUMENTS.isPHPStudent>
                             
                             <!--- Arrival Airport --->
                             <p style="color: ##333;">
@@ -870,9 +979,9 @@
                                 <cfif LEN(qGetHostFamily.airport_city)>#qGetHostFamily.airport_city# <cfelse> n/a </cfif>
                                 - Airport Code: <cfif LEN(qGetHostFamily.major_air_code)>#qGetHostFamily.major_air_code# <cfelse> n/a </cfif>
                             </p>
-                        
+						
                         </cfif>
-                        
+                                                
                         <!--- Notes --->
                         <p style="color: ##333;">
                             <span style="font-weight:bold;">Notes:</span> 
@@ -2023,10 +2132,13 @@
         <cfargument name="noHours" default="0" hint="To get students that haven't done any hours">
         <cfargument name="dumpArguments" default="0" hint="Dumps argument variables and aborts processing">
         
-        <cfif VAL(ARGUMENTS.dumpArguments)>
-            <cfdump var="#ARGUMENTS#">
-            <cfabort>
-        </cfif>
+        <cfscript>
+			// Dump Arguments
+			If ( VAL(ARGUMENTS.dumpArguments) ) {
+				WriteDump(ARGUMENTS);
+				abort;
+			}
+		</cfscript>
            
         <cfquery 
 			name="qGetProjectHelpReport" 

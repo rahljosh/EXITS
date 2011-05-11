@@ -72,9 +72,7 @@
         <!---- CHECK FOR FLIGHT ---->
         <cfif NOT VAL(qGetStudentInfo.recordcount)>
         
-            <cfif VAL(FORM.displayResults)>
-                <p style="color:##CC0000">Student is not currently in EXITS, no flight information updated/inserted.</p>
-            </cfif>
+            <p style="color:##CC0000">Student is not currently in EXITS, no flight information updated/inserted.</p>
         
         <cfelseif qGetStudentInfo.intRep NEQ CLIENT.userID>
 

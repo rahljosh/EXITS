@@ -37,40 +37,19 @@
 			FORM.uniqueID = URL.uniqueID;	
 		}	
 	</cfscript>
-    
-    <!--- Get Student Information --->
-    <cfquery name="qGetStudentInfo" datasource="MySQL">
-        SELECT  
-        	s.studentID,
-            s.uniqueID,
-            s.companyID,
-            s.programID,
-            s.schoolID,             
-            s.familylastname, 
-            s.firstname,             
-            s.hostid, 
-            s.flight_info_notes, 
-            s.insurance, 
-            s.AYPOrientation,
-            s.AYPEnglish,
-            u.insurance_typeid, 
-            u.businessname,
-            p.insurance_startdate,
-            h.airport_city, 
-            h.major_air_code
-        FROM 
-        	smg_students s
-        INNER JOIN 
-        	smg_users u ON u.userid = s.intrep
-        LEFT OUTER JOIN 	
-        	smg_programs p ON p.programid = s.programid
-        LEFT OUTER JOIN 
-        	smg_hosts h ON h.hostid = s.hostid
-        WHERE 
-        	s.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueID#">
-    </cfquery>
        
 	<cfscript>
+		// Get Student Information
+		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentFullInformationByID(uniqueID=FORM.uniqueID);
+		
+		// Check if it's an Active PHP Student
+		qGetPHPStudentInfo = APPLICATION.CFC.STUDENT.getPHPStudent(studentID=qGetStudentInfo.studentID);
+		
+		if ( qGetPHPStudentInfo.recordCount EQ 1 ) {
+			// Use PHP Data Instead
+			qGetStudentInfo = qGetPHPStudentInfo;
+		}
+		
 		// Get School Dates
 		qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentInfo.schoolID, programID=qGetStudentInfo.programID);
 	
@@ -357,7 +336,7 @@
         <cfscript>
 			// Send out email notification if flight information was entered by an International Representative / Branch
 			if ( ListFind("8,11,13", CLIENT.userType) ) {	 
-				APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID);
+				APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID,isPHPStudent=VAL(qGetPHPStudentInfo.recordCount) );
 			}
 			
 			// Set Page Message
