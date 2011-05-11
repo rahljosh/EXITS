@@ -197,6 +197,7 @@
                     u.lastName,
                     u.email,
                     u.phone,
+                    u.work_phone,
                     r.regionName
                 FROM 
                 	smg_users u
