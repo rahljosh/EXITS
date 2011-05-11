@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		students_missing_flight_info.cfm
+	File:		_flightInformationList.cfm
 	Author:		Marcus Melo
 	Date:		May 11, 2011
 	Desc:		Display a list of students missing flight arrival/departure
@@ -378,7 +378,7 @@
                     <td width="30%">Actions</td>
                 </tr>
                 <cfloop query="qStudentsMissingArrival">
-                    <tr bgcolor="###iif(qStudentsMissingArrival.currentrow MOD 2 ,DE("FFFFE6") ,DE("white") )#">
+                    <tr bgcolor="###iif(qStudentsMissingArrival.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                         <td>
                             <a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qStudentsMissingArrival.uniqueid#">
                                 #qStudentsMissingArrival.firstname# #qStudentsMissingArrival.familylastname# (###qStudentsMissingArrival.studentid#)
@@ -459,7 +459,7 @@
                     <td width="30%">Actions</td>
                 </tr>
                 <cfloop query="qStudentsMissingDeparture">
-                    <tr bgcolor="###iif(qStudentsMissingDeparture.currentrow MOD 2 ,DE("FFFFE6") ,DE("white") )#">
+                    <tr bgcolor="###iif(qStudentsMissingDeparture.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                         <td>
                             <a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qStudentsMissingDeparture.uniqueid#">
                                 #qStudentsMissingDeparture.firstname# #qStudentsMissingDeparture.familylastname# (###qStudentsMissingDeparture.studentid#)
@@ -528,7 +528,7 @@
                     <td width="30%">Actions</td>
                 </tr>
                 <cfloop query="qPHPStudentsMissingArrival">
-                    <tr bgcolor="###iif(qPHPStudentsMissingArrival.currentrow MOD 2 ,DE("FFFFE6") ,DE("white") )#">
+                    <tr bgcolor="###iif(qPHPStudentsMissingArrival.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                         <td>
                             <a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qPHPStudentsMissingArrival.uniqueid#">
                                 #qPHPStudentsMissingArrival.firstname# #qPHPStudentsMissingArrival.familylastname# (###qPHPStudentsMissingArrival.studentid#)
@@ -591,7 +591,7 @@
                     <td width="30%">Actions</td>
                 </tr>
                 <cfloop query="qPHPStudentsMissingDeparture">
-                    <tr bgcolor="###iif(qPHPStudentsMissingDeparture.currentrow MOD 2 ,DE("FFFFE6") ,DE("white") )#">
+                    <tr bgcolor="###iif(qPHPStudentsMissingDeparture.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                         <td>
                             <a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qPHPStudentsMissingDeparture.uniqueid#">
                                 #qPHPStudentsMissingDeparture.firstname# #qPHPStudentsMissingDeparture.familylastname# (###qPHPStudentsMissingDeparture.studentid#)
