@@ -96,7 +96,7 @@
                     areaRep.firstName AS areaRepFirstName,
                     areaRep.lastName AS areaRepLastName,
 					areaRep.email AS areaRepEmail,
-                    areaRep.phone AS areaRepPhone
+                    areaRep.work_phone AS areaRepPhone
                     
                 FROM 
                     smg_students s
@@ -320,6 +320,7 @@
 	<cffunction name="getFlightInformation" access="public" returntype="query" output="false" hint="Gets flight information by studentID and type">
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="flightType" hint="PreAypArrival/Arrival/Departure is required">
+        <cfargument name="programID" default="0" hint="programID is not required">
         
         <cfquery 
 			name="qGetFlightInformation" 
@@ -342,6 +343,7 @@
                     flight_type,
                     dateCreated,
                     dateUpdated,
+                    isCompleted,
                     isDeleted
                 FROM 
                     smg_flight_info
@@ -351,6 +353,12 @@
                     flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">
 				AND
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    
+				<cfif VAL(ARGUMENTS.programID)>
+                    AND 
+                        programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                </cfif> 
+                                   
                 ORDER BY 
                     flightID,
                     dep_date, 
@@ -386,6 +394,7 @@
                     flight_type,
                     dateCreated,
                     dateUpdated,
+                    isCompleted,
                     isDeleted
                 FROM 
                     smg_flight_info
@@ -437,6 +446,15 @@
         <cfargument name="overNight" default="0" hint="overNight is not required">
         <cfargument name="flightType" hint="Arrival/Departure is required">
 		
+        <cfscript>
+			var isCompleted = 1;
+			
+			// Check if Flight Info is Complete, these fields are required to get a complete flight information
+			if ( NOT IsDate(ARGUMENTS.depDate) OR NOT LEN(ARGUMENTS.depCity) OR NOT LEN(ARGUMENTS.arrivalCity) OR NOT LEN(ARGUMENTS.flightNumber) OR NOT LEN(ARGUMENTS.arrivalTime)	) {
+				isCompleted = 0;
+			}
+		</cfscript>
+        
 		<cfquery datasource="MySQL">
             INSERT INTO 
             	smg_flight_info
@@ -456,6 +474,7 @@
                 arrival_time,
             	overnight, 
                 flight_type,
+                isCompleted,
                 dateCreated
             )
             VALUES 
@@ -468,30 +487,14 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">,
-                
-				<cfif IsDate(ARGUMENTS.depDate)>
-	                <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.depDate)#">,
-                <cfelse>
-                	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                </cfif>
-                
-				<cfif IsDate(ARGUMENTS.depTime)>
-	                <cfqueryparam cfsqltype="cf_sql_time" value="#CreateODBCTime(ARGUMENTS.depTime)#">, 
-                <cfelse>
-                	<cfqueryparam cfsqltype="cf_sql_time" null="yes">,
-                </cfif>
-
+                <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
+                <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">,
-
-				<cfif IsDate(ARGUMENTS.arrivalTime)>
-	                <cfqueryparam cfsqltype="cf_sql_time" value="#CreateODBCTime(ARGUMENTS.arrivalTime)#">,
-                <cfelse>
-                	<cfqueryparam cfsqltype="cf_sql_time" null="yes">,
-                </cfif>
-
+                <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#isCompleted#">,
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
             ) 
         </cfquery>
@@ -516,6 +519,15 @@
         <cfargument name="arrivalTime" default="" hint="arrivalTime is not required">
         <cfargument name="overNight" default="0" hint="overNight is not required">
 
+        <cfscript>
+			var isCompleted = 1;
+			
+			// Check if Flight Info is Complete, these fields are required to get a complete flight information
+			if ( NOT IsDate(ARGUMENTS.depDate) OR NOT LEN(ARGUMENTS.depCity) OR NOT LEN(ARGUMENTS.arrivalCity) OR NOT LEN(ARGUMENTS.flightNumber) OR NOT LEN(ARGUMENTS.arrivalTime)	) {
+				isCompleted = 0;
+			}
+		</cfscript>
+
 		<cfquery datasource="MySQL">
             UPDATE
             	smg_flight_info
@@ -526,29 +538,13 @@
                 flight_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,                 
                 dep_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">, 
                 dep_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">, 
-                
-				<cfif IsDate(ARGUMENTS.depDate)>
-	                dep_date = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.depDate)#">,
-                <cfelse>
-                	dep_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                </cfif>
-                
-				<cfif IsDate(ARGUMENTS.depTime)>
-	                dep_time = <cfqueryparam cfsqltype="cf_sql_time" value="#CreateODBCTime(ARGUMENTS.depTime)#">,
-                <cfelse>
-                	dep_time = <cfqueryparam cfsqltype="cf_sql_time" null="yes">,
-                </cfif>
-                
+                dep_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
+                dep_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
                 arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">, 
                 arrival_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">, 
-                
-				<cfif IsDate(ARGUMENTS.arrivalTime)>
-	                arrival_time = <cfqueryparam cfsqltype="cf_sql_time" value="#CreateODBCTime(ARGUMENTS.arrivalTime)#">,
-                <cfelse>
-                	arrival_time = <cfqueryparam cfsqltype="cf_sql_time" null="yes">,
-                </cfif>
-            	
-                overnight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">
+                arrival_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
+                overnight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
+				isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#isCompleted#">
             WHERE 
             	flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
             AND	
@@ -822,13 +818,19 @@
                             <p style="color: ##333;">
                                 <span style="font-weight:bold;">Regional Manager:</span>
                                 #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
-                                - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a> - Phone: #qGetRegionalManager.phone#
+                                - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a>
+                                <cfif LEN(qGetRegionalManager.work_phone)>
+                                	- Phone: #qGetRegionalManager.work_phone#
+                                </cfif>
                             </p>
                             
                             <p style="color: ##333;">
                                 <span style="font-weight:bold;">Area Representative:</span> 
                                 #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
-                                - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> - Phone: #qGetStudentFullInformation.areaRepPhone#
+                                - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
+                                <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
+	                                - Phone: #qGetStudentFullInformation.areaRepPhone#
+								</cfif>                                    
                             </p>
                             
                             <p style="color: ##333;">
