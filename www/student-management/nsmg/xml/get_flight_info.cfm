@@ -62,10 +62,11 @@
         </cfscript>
     
         <cfif VAL(FORM.displayResults)>
-            &nbsp; #i# - 
+            &nbsp; #i# 
             <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModal">
             	#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentID#
             </a> 
+            - #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# ###qGetStudentInfo.studentID#
         </cfif>
         
         <!---- CHECK FOR FLIGHT ---->
@@ -75,6 +76,10 @@
                 <p style="color:##CC0000">Student is not currently in EXITS, no flight information updated/inserted.</p>
             </cfif>
         
+        <cfelseif qGetStudentInfo.intRep NEQ CLIENT.userID>
+
+            <p style="color:##CC0000">Student is not assigned to the company you are currently logged in to. Flight information has not been updated.</p>
+
         <cfelse>
             
             <!---- FLIGHT ARRIVAL ---->
