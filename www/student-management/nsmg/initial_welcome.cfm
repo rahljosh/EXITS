@@ -232,7 +232,7 @@
             <td width=40% valign="top">
             
                 <!----News & Announcements---->
-                <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+                <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
                     <tr height=24>
                         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
@@ -242,7 +242,7 @@
                     </tr>
                 </table>
                     
-                <table width=100% cellpadding=4 cellspacing=0 border=0 class="section" >
+                <table width=100% cellpadding="4" cellspacing=0 border="0" class="section" >
                     <tr>
                         <td  valign="top" width="100%"><br>
                             <img src="pics/tower_100.jpg" width=71 height=100 align="left">
@@ -325,7 +325,7 @@
     </table>
     
     <!----News & Announcements---->
-    <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+    <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
         <tr height=24>
             <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
             <td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
@@ -335,7 +335,7 @@
         </tr>
     </table>
     
-    <table width=100% cellpadding=4 cellspacing=0 border=0 class="section">
+    <table width=100% cellpadding="4" cellspacing=0 border="0" class="section">
         <tr>
            <td  valign="top" width="100%"><br>
                 <img src="pics/tower_100.jpg" width=71 height=100 align="left">
@@ -390,7 +390,7 @@
 <br>
 
 <!----CURRENT ITEMS---->
-<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+<table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
     <tr height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
         <td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
@@ -403,11 +403,11 @@
 <!---- OFFICE AND FIELD ---->			
 <cfif ListFind("1,2,3,4,5,6,7,9", CLIENT.usertype)>        
     
-    <table width=100% cellspacing=0 border=0 class="section">
+    <table width=100% cellspacing=0 border="0" class="section">
         <tr>
             <td align="center">               
                 
-                <table cellpadding=2 cellspacing=4 width=100%>
+                <table cellpadding="2" cellspacing="4" width=100%>
                 <tr>
                     <td class="get_attention"><span class="get_attention"><b>::</b></span> Items Needing Attention</u></td>
                     <!--- Office Users --->
@@ -437,11 +437,11 @@
          			<!--- Office Users --->
 					<cfif CLIENT.usertype LTE 4>
 						<td>
-                            <table cellpadding=4 cellspacing =0 border=0>
+                            <table cellpadding="4" cellspacing="0" border="0">
                                 <tr><td>Submitted</td><td>Title</td><td>Status</td></Tr>
                                 <cfif help_desk_user.recordcount>
                                     <cfloop query="help_desk_user">
-                                        <tr bgcolor="#iif(help_desk_user.currentrow MOD 2 ,DE("eeeeee") ,DE("white") )#">
+                                        <tr bgcolor="#iif(help_desk_user.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
                                             <td width="10%" valign="top">#DateFormat(date, 'mm/dd/yyyy')#</td>
                                             <td width="21%"valign="top"><a href="?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">#title#</a></td>
                                             <td width="10%"valign="top">#status#</td>
@@ -456,11 +456,11 @@
                     <cfelseif (ListFind("5,6,7,9", CLIENT.userType)
 					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
 						<td>
-                            <table cellpadding=4 cellspacing =0 border=0>
+                            <table cellpadding="4" cellspacing="0" border="0">
                                 <tr>
                                 	<td valign="top">
                                         <a href="index.cfm?curdoc=calendar/index">Click here to register for WebEx Meetings <br /></a>
-                                        <a href="index.cfm?curdoc=calendar/index"><img src="pics/webex-logo.jpg" border=0></a>                                        
+                                        <a href="index.cfm?curdoc=calendar/index"><img src="pics/webex-logo.jpg" border="0"></a>                                        
                                 	</td>
                                 </tr>
                             </table>
@@ -471,7 +471,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="get_attention" width=50%><span class="get_attention"><b>::</b></span> New Students <font size=-2>since #new_date#</font></u></td>
+                    <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> New Students <font size=-2>since #new_date#</font></u></td>
                     <td class="get_attention"><span class="get_attention"><b>::</b></span> New Users <font size=-2>since #new_date#</font></u></td>
                 </tr>
                 <tr valign="top">
@@ -518,7 +518,7 @@
                                
                                 	<Tr>
                                     	<td>
-                            	<a href="mailto:#email#"><img src="pics/email.gif" border=0 align="absmiddle"></a></td>
+                            	<a href="mailto:#email#"><img src="pics/email.gif" border="0" align="absmiddle"></a></td>
                                 	<td>
 								<!--- highlight if user was added since last login. --->
                                 <cfif datecreated GTE CLIENT.lastlogin>
@@ -595,13 +595,14 @@
         where messagetype = 'news'
     </cfquery>
 
-	<table cellpadding=2 cellspacing=4 width=100% bgcolor="##ffffff" class="section">
+	<table cellpadding="2" cellspacing="4" width=100% bgcolor="##FFFFFF" class="section">
 		<tr>
-			<td class="get_attention" width=50%><span class="get_attention"><b>::</b></span> News, Alerts, and Updates from #companyname.businessname#</u></td>
+			<td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> News, Alerts, and Updates from #companyname.businessname#</u></td>
 			<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets </Td>
 		</tr>
 		<tr>
 			<td valign="top">
+            
 				<h3 style="text-align:center; padding:10px; text-decoration:underline;">News</h3>
 				<p>
 					<cfif intagent_alert_messages.recordcount neq 0>
@@ -641,68 +642,94 @@
                         Click here to submit arrival/departure information for your students
                    	</a>
                 </p>
+                
 			</td>
 			<td valign="top">
-				<table cellpadding=4 cellspacing=0 border=0>
+            
+            	<!--- Help Desk Items --->
+				<table width="100%" cellpadding="4" cellspacing=0 border="0">
 					<tr>
-                    	<td>&nbsp;</td>
-                    	<td>Submitted</td>
-                        <td>Title</td>
-                        <td>Status</td>
+                    	<td width="20%">Submitted</td>
+                        <td width="50%">Title</td>
+                        <td width="20%">Status</td>
+                        <td width="10%">&nbsp;</td>
                     </tr>
-					<cfif help_desk_user.recordcount>
-                        <cfloop query="help_desk_user">
-                            <tr bgcolor="#iif(help_desk_user.currentrow MOD 2 ,DE("eeeeee") ,DE("white") )#">
-                                <td><a href="index.cfm?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">View</a></td>
-                                <td>#DateFormat(date, 'mm/dd/yyyy')#</td>
-                                <td>#title#</td>
-                                <td>#status#</td>
-                            </tr>
-                        </cfloop>
-                    <cfelse>
+                    <cfloop query="help_desk_user">
+                        <tr bgcolor="###iif(help_desk_user.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
+                            <td>#DateFormat(date, 'mm/dd/yyyy')#</td>
+                            <td>#title#</td>
+                            <td>#status#</td>
+                            <td><a href="index.cfm?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">View</a></td>
+                        </tr>
+                    </cfloop>
+                    <cfif NOT VAL(help_desk_user.recordcount)>
                         <tr><td colspan="4" bgcolor="ffffe6" valign="top">You have no open or recently completed tickets on the Help Desk</td></tr>
                     </cfif>
 				</table>
+                
 			</td>
 		</tr>
-		<tr><td>&nbsp;</td></tr>
 	</table>
 
 <!--- Intl Branch --->
 <cfelseif CLIENT.usertype EQ 11>
+
+    <cfquery name="companyname" datasource="#application.dsn#">
+        select businessname
+        from smg_users
+        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentcompany#">
+    </cfquery>
   
-		<table cellpadding=2 cellspacing=4 width=100% bgcolor="##ffffff" class="section">
-		<tr>
-			<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets</td>
-		</tr>
-		<tr>
-			<td valign="top">
-				<table cellpadding=4 cellspacing =0 border=0>
-					<tr><td>Submitted</td><td>Title</td><td>Status</td></Tr>
-					<cfif help_desk_user.recordcount NEQ 0>
-                        <cfloop query="help_desk_user">
-                            <tr bgcolor="#iif(help_desk_user.currentrow MOD 2 ,DE("eeeeee") ,DE("white") )#">
-                            	<td width="10%" valign="top">#DateFormat(date, 'mm/dd/yyyy')#</td>
-                                <td width="21%"valign="top"><a href="index.cfm?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">#title#</a></td>
-                                <td width="10%"valign="top">#status#</td>
-                            </tr>
-                        </cfloop>
-                    <cfelse>
-                        <tr><td colspan="6" bgcolor="ffffe6" valign="top">You have no open or recently completed tickets on the Help Desk</td></tr>
+    <table cellpadding="2" cellspacing="4" width=100% bgcolor="##FFFFFF" class="section">
+        <tr>
+            <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> News, Alerts, and Updates from #companyname.businessname#</u></td>
+            <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets </Td>
+        </tr>
+        <tr>
+            <td valign="top">
+				
+				<!--- Flight Information --->
+                <h3 style="text-align:center; padding:10px; text-decoration:underline;">Flight Schedule</h3>
+                <p>
+                    <a href="index.cfm?curdoc=intRep/index&action=flightInformationList">
+                        <img src="pics/iconPlane.gif" border="0" align="middle" />
+                        Click here to submit arrival/departure information for your students
+                    </a>
+                </p>
+                
+            </td>
+            <td valign="top">
+				
+				<!--- Help Desk Items --->
+                <table width="100%" cellpadding="4" cellspacing="0" border="0">
+                    <tr>
+                    	<td width="25%">Submitted</td>
+                        <td width="50%">Title</td>
+                        <td width="25%">Status</td>
+                        <td width="10%">&nbsp;</td>
+                    </tr>
+                    <cfloop query="help_desk_user">
+                        <tr bgcolor="###iif(help_desk_user.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
+                            <td>#DateFormat(date, 'mm/dd/yyyy')#</td>
+                            <td><a href="index.cfm?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">#title#</a></td>
+                            <td>#status#</td>
+                            <td><a href="index.cfm?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">View</a></td>
+                        </tr>
+                    </cfloop>
+                    <cfif NOT VAL(help_desk_user.recordcount)>
+                        <tr>
+                        	<td colspan="3" bgcolor="##FFFFE6" valign="top">You have no open or recently completed tickets on the Help Desk</td>
+                        </tr>
                     </cfif>
-				</table>
-			</td>
-		</tr>
-		<tr><td>&nbsp;</td></tr>
-		</table>
+                </table>
+                
+            </td>
+        </tr>
+    </table>
 
 </cfif>
 
 <!----footer of table---->
 <cfinclude template="table_footer.cfm">
-
-<!--- 	</td>
-</tr>
-</table> --->
 
 </cfoutput>

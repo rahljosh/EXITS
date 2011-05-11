@@ -427,7 +427,7 @@
                 </cfloop>
 				<cfif NOT VAL(qStudentsMissingArrival.recordcount)>
                     <tr>
-                    	<td colspan="6" align="center">                    
+                    	<td colspan="6" align="center" bgcolor="##FFFFE6">                    
 		                    You currently have no active students placed in the United States.
 						</td>
 					</tr>                                                    
@@ -496,7 +496,7 @@
                 </cfloop>
                 <cfif NOT VAL(qStudentsMissingDeparture.recordcount)>
                     <tr>
-                        <td colspan="6" align="center">                    
+                        <td colspan="6" align="center" bgcolor="##FFFFE6">                    
                             You currently have no active students placed in the United States.
                         </td>
                     </tr>                                                    
@@ -559,7 +559,7 @@
                 </cfloop>
                 <cfif NOT VAL(qPHPStudentsMissingArrival.recordcount)>
                     <tr>
-                        <td colspan="6" align="center">                    
+                        <td colspan="6" align="center" bgcolor="##FFFFE6">                    
                             You currently have no active students placed in the United States.
                         </td>
                     </tr>                                                    
@@ -622,7 +622,7 @@
                 </cfloop>
                 <cfif NOT VAL(qPHPStudentsMissingDeparture.recordcount)>
                     <tr>
-                        <td colspan="6" align="center">                    
+                        <td colspan="6" align="center" bgcolor="##FFFFE6">                    
                             You currently have no active students placed in the United States.
                         </td>
                     </tr>                                                    
