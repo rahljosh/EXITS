@@ -163,7 +163,7 @@
 	// These store the states to assign students to a AYP camp
 	APPLICATION.CONSTANTS.aypStateList = StructNew();	
 	APPLICATION.CONSTANTS.aypStateList.mcDuffie = 'ND,SD,NE,KS,OK,TX,MN,IA,MO,AR,LA,WI,IL,MI,IN,OH,KY,TN,MS,AL,GA,FL,ME,VT,NH,MA,RI,CT,NY,NJ,PA,DE,DC,MD,WV,VA,NC,SC';
-	APPLICATION.CONSTANTS.aypStateList.northRidge = 'WA,OR,CA,NV,MT,ID,UT,AZ,WY,GO,NM';
+	APPLICATION.CONSTANTS.aypStateList.northRidge = 'WA,OR,CA,NV,MT,ID,UT,AZ,WY,CO,NM';
 	
 	
 	// These are the values stored on application table
