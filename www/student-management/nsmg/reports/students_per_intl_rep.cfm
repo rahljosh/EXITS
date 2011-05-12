@@ -253,14 +253,6 @@
             WHERE 
                 intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#intrep#">
         </cfquery>					
-		
-		<cfscript>
-			// Get Pre-AYP Arrival Flight Information
-			qGetPreAypArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="preAYPArrival");
-
-			// Get Arrival to Host Flight Information
-			qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="arrival");
-		</cfscript>
         
         <table width="98%" cellpadding="3" cellspacing="0" align="center" style="border:1px solid ##999;">	
         	<tr>
@@ -282,14 +274,23 @@
 		            <td width="8%" style="border-bottom:1px solid ##999; font-weight:bold;">Region</td>
 	            </cfif>			
 	            <td width="8%" style="border-bottom:1px solid ##999; font-weight:bold;">Facilitator</td>
+                <td width="10%" style="border-bottom:1px solid ##999; font-weight:bold;">Arrival to Camp</td>
                 <td width="12%" style="border-bottom:1px solid ##999; font-weight:bold;">Flight Info</td>
-                <td width="10%" style="border-bottom:1px solid ##999; font-weight:bold;">Arrival</td>
+                <td width="10%" style="border-bottom:1px solid ##999; font-weight:bold;">Departure to Host</td>
                 <td width="12%" style="border-bottom:1px solid ##999; font-weight:bold;">Flight Info</td>
-                <td width="10%" style="border-bottom:1px solid ##999; font-weight:bold;">Departure</td>
                 <td width="8%" style="border-bottom:1px solid ##999; font-weight:bold;">Pre-AYP Camp</td>
             </tr>
         
-			<cfoutput>					
+			<cfoutput>		
+
+				<cfscript>
+                    // Get Pre-AYP Arrival Flight Information
+                    qGetPreAypArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="preAYPArrival",flightLegOption="lastLeg");
+        
+                    // Get Arrival to Host Flight Information
+                    qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="arrival",flightLegOption="firstLeg");
+                </cfscript>
+
                 <tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("FFFFFF") ,DE("EDEDED") )#">
                     <td>#qGetStudentList.studentid#</td>
                     <td>#qGetStudentList.firstname# #qGetStudentList.familylastname#</td>
@@ -304,31 +305,53 @@
                     <td>#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>					
                     <!--- Arrival to Pre-AYP --->
                     <td>
-                    	<cfloop query="qGetPreAypArrival">
-                        	#qGetPreAypArrival.dep_city# to #qGetPreAypArrival.arrival_city# 
-                            <cfif LEN(qGetPreAypArrival.flight_number)>
-	                            - #qGetPreAypArrival.flight_number#
-                            </cfif> <br />
-                        </cfloop>
-                    </td>
+                        <cfif qGetPreAypArrival.overnight EQ 1>
+                            #DateFormat(DateAdd("d", 1, qGetPreAypArrival.dep_date), 'mm/dd/yyyy')#
+                        <cfelse>
+                            #DateFormat(qGetPreAypArrival.dep_date, 'mm/dd/yy')#
+                        </cfif>
+                        
+                        <cfif LEN(qGetPreAypArrival.arrival_time)>
+                             at #TimeFormat(qGetPreAypArrival.arrival_time, 'hh:mm tt')#
+                        </cfif>
+                    </td>                    
                     <td>
-                    	<cfloop query="qGetPreAypArrival">
-                        	#DateFormat(qGetPreAypArrival.dep_date, 'mm/dd/yy')# at #TimeFormat(qGetPreAypArrival.arrival_time, 'hh:mm tt')#<br />
-                        </cfloop>
+						<cfif LEN(qGetPreAypArrival.dep_city)>
+                            From #qGetPreAypArrival.dep_city# #qGetArrival.dep_aircode#
+                        </cfif>
+                        
+                        <cfif LEN(qGetPreAypArrival.arrival_city)>
+                            to #qGetPreAypArrival.arrival_city# #qGetArrival.arrival_aircode#
+                        </cfif>
+                        
+                        <cfif LEN(qGetPreAypArrival.flight_number)>
+                           Fight #qGetPreAypArrival.flight_number#
+                        </cfif> <br />
                     </td>
                     <!--- Arrival to HF --->
                     <td>
-                    	<cfloop query="qGetArrival">
-                        	#qGetArrival.dep_city# to #qGetArrival.arrival_city# 
-                            <cfif LEN(qGetArrival.flight_number)>
-	                            - #qGetArrival.flight_number#
-                            </cfif> <br />
-                        </cfloop>
+						<cfif qGetArrival.overnight EQ 1>
+                            #DateFormat(DateAdd("d", 1, qGetArrival.dep_date), 'mm/dd/yyyy')#
+                        <cfelse>
+                            #DateFormat(qGetArrival.dep_date, 'mm/dd/yy')#
+                        </cfif>
+                        
+                        <cfif LEN(qGetArrival.arrival_time)>
+                             at #TimeFormat(qGetArrival.arrival_time, 'hh:mm tt')#
+                        </cfif>
                     </td>
                     <td>
-                    	<cfloop query="qGetArrival">
-                        	#DateFormat(qGetArrival.dep_date, 'mm/dd/yy')# at #TimeFormat(qGetArrival.arrival_time, 'hh:mm tt')#<br />
-                        </cfloop>
+						<cfif LEN(qGetArrival.dep_city)>
+                            From #qGetArrival.dep_city# #qGetArrival.dep_aircode#
+                        </cfif>
+                        
+                        <cfif LEN(qGetArrival.arrival_city)>
+                            to #qGetArrival.arrival_city# #qGetArrival.arrival_aircode#
+                        </cfif>
+                        
+                        <cfif LEN(qGetArrival.flight_number)>
+                           Fight #qGetArrival.flight_number#
+                        </cfif> <br />
                     </td>
                     <td>#qGetStudentList.englishcamp# #qGetStudentList.orientationcamp#</td>
                 </tr>							

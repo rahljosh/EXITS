@@ -409,6 +409,7 @@
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="flightType" hint="PreAypArrival/Arrival/Departure is required">
         <cfargument name="programID" default="0" hint="programID is not required">
+        <cfargument name="flightLegOption" default="" hint="firstLeg/lastLeg to get first or last leg of the flight">
         
         <cfquery 
 			name="qGetFlightInformation" 
@@ -446,11 +447,29 @@
                     AND 
                         programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
                 </cfif> 
-                                   
-                ORDER BY 
-                    flightID,
-                    dep_date, 
-                    dep_time
+				
+                <cfswitch expression="#ARGUMENTS.flightLegOption#">
+                
+                	<cfcase value="firstLeg">
+                        ORDER BY 
+                            dep_date
+						LIMIT 1                            
+                    </cfcase>
+
+                	<cfcase value="lastLeg">
+                        ORDER BY 
+                            dep_date DESC
+						LIMIT 1                            
+                    </cfcase>
+
+                	<cfdefaultcase>
+                        ORDER BY 
+                            flightID,
+                            dep_date, 
+                            dep_time
+                    </cfdefaultcase>
+                
+                </cfswitch>
 		</cfquery>
 		   
 		<cfreturn qGetFlightInformation>
