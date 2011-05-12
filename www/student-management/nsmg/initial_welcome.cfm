@@ -635,11 +635,9 @@
                 </cfif>
 				
                 <!--- Flight Information --->
-            	<h3 style="text-align:center; padding:10px; text-decoration:underline;">Flight Schedule</h3>
-                <p>
+                <p align="center">
                 	<a href="index.cfm?curdoc=intRep/index&action=flightInformationList">
-                        <img src="pics/iconPlane.gif" border="0" align="middle" />
-                        Click here to submit arrival/departure information for your students
+                        <img src="pics/flightSchedule.jpg" border="0" align="middle" />
                    	</a>
                 </p>
                 
@@ -688,13 +686,11 @@
         <tr>
             <td valign="top">
 				
-				<!--- Flight Information --->
-                <h3 style="text-align:center; padding:10px; text-decoration:underline;">Flight Schedule</h3>
-                <p>
-                    <a href="index.cfm?curdoc=intRep/index&action=flightInformationList">
-                        <img src="pics/iconPlane.gif" border="0" align="middle" />
-                        Click here to submit arrival/departure information for your students
-                    </a>
+                <!--- Flight Information --->
+                <p align="center">
+                	<a href="index.cfm?curdoc=intRep/index&action=flightInformationList">
+                        <img src="pics/flightSchedule.jpg" border="0" align="middle" />
+                   	</a>
                 </p>
                 
             </td>

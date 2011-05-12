@@ -219,7 +219,7 @@
             </tr>
             
 			<cfoutput>					
-                <tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
+                <tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
                     <td align="center">#studentid#</td>
                     <td>#firstname# #familylastname#</td>
                     <td align="center">#sex#</td>
