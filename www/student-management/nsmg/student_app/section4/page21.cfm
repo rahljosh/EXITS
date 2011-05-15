@@ -3,7 +3,11 @@
 	FROM smg_student_app_state_requested
 	WHERE studentid =  <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
 </cfquery>
-
+<cfquery name="check_guarantee" datasource="MySQL">
+	SELECT app_region_guarantee
+	FROM smg_students
+	WHERE studentid = '#client.studentid#'
+</cfquery>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -83,7 +87,7 @@ function NextPage() {
 <Cfset doc = 'page21'>
 
 <cfinclude template="../querys/get_student_info.cfm">
-
+<cfset closedList = ''>
 <!---- International Rep - EF ACCOUNTS ---->
 <cfquery name="int_agent" datasource="MySQL">
 	SELECT u.businessname, u.userid, u.master_account, u.master_accountid
@@ -91,11 +95,23 @@ function NextPage() {
 	WHERE u.userid = <cfif get_student_info.branchid EQ '0'>'#get_student_info.intrep#'<cfelse>'#get_student_info.branchid#'</cfif>
 </cfquery>
 
-<cfquery name="states" datasource="mysql">
-	SELECT id, statename
-	FROM smg_states
-	WHERE id != 2 AND id != 11
+
+<cfquery name="states" datasource="#application.dsn#">
+select s.statename, s.id
+from smg_states s
+where (s.id < 52 AND s.id !=11 and s.id !=2)
 </cfquery>
+
+<Cfquery name="statesClosed" datasource="#application.dsn#">
+select sc.fk_stateID, s.statename
+from regionStateClosure sc 
+LEFT join smg_states s on s.id = sc.fk_stateID
+where  sc.fk_programid = #get_student_info.programid#
+</cfquery>
+
+<Cfloop query="statesClosed">
+	<cfset closedList = #ListAppend(closedList, fk_stateID)#>
+</Cfloop>
 
 <cfquery name="check_if_answered" datasource="MySQL">
 	SELECT smg_students.regionalguarantee, smg_students.regionguar, smg_regions.regionname
@@ -161,9 +177,21 @@ function NextPage() {
 <cfoutput>
 
 <cfform method="post" name="page21" action="?curdoc=section4/qr_page21" onSubmit="return CheckStates();">
-
 <!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
-<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("7,8,10,11", get_student_info.app_current_status) AND (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ '1' OR get_student_info.app_indicated_program EQ '2')> 
+<cfif check_guarantee.app_region_guarantee gt 0> 
+	<div class="section"><br><br>
+	<table width="670" cellpadding=2 cellspacing=0 align="center">
+		<tr>
+			<td>You have already requested a Regional Guarantee.  You can not select both a Regional and State Guarantee.  If you would like to request a State Guarantee, please remove your requested Regional Guarantee. </td>
+		</tr>
+	</table><br><br>
+	</div>
+	<!--- FOOTER OF TABLE --->
+	<cfinclude template="../footer_table.cfm">
+	<cfabort>	
+</cfif>
+<!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
+<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("7,8,10,11", get_student_info.app_current_status) AND (DateFormat(now(), 'mm') EQ 4 ) AND (get_student_info.app_indicated_program EQ '1' OR get_student_info.app_indicated_program EQ '2')> 
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
@@ -239,19 +267,31 @@ function NextPage() {
                                 <td>1st Choice:</td>
                                 <td><cfselect name="state1" onClick="DataChanged();">
                                         <option value="0"></option>
-                                        <cfloop query="states"><option value="#id#" <cfif states_requested.state1 EQ id> selected </cfif> >#statename#</option></cfloop>
+                                        <cfloop query="states">
+                                        	<cfif not ListFind(closedList, id)>
+                                        		<option value="#id#" <cfif states_requested.state1 EQ id> selected </cfif> >#statename#</option>
+                                        	</cfif>
+                                        </cfloop>
                                     </cfselect>
                                 </td>
                                 <td>&nbsp; 2nd Choice:</td>
                                 <td><cfselect name="state2" onClick="DataChanged();">
                                         <option value="0"></option>
-                                        <cfloop query="states"><option value="#id#" <cfif states_requested.state2 EQ id> selected </cfif> >#statename#</option></cfloop>
+                                        <cfloop query="states">
+                                        	<cfif not ListFind(closedList, id)>
+                                            	<option value="#id#" <cfif states_requested.state2 EQ id> selected </cfif> >#statename#</option>
+                                        	</cfif>
+                                        </cfloop>
                                     </cfselect>
                                 </td>
                                 <td>&nbsp; 3rd Choice:</td>
                                 <td><cfselect name="state3" onClick="DataChanged();">
                                         <option value="0"></option>
-                                        <cfloop query="states"><option value="#id#" <cfif states_requested.state3 EQ id> selected </cfif> >#statename#</option></cfloop>
+                                        <cfloop query="states">
+                                        	<cfif not ListFind(closedList, id)>
+                                       			<option value="#id#" <cfif states_requested.state3 EQ id> selected </cfif> >#statename#</option>
+                                        	</cfif>
+                                        </cfloop>
                                     </cfselect>
                                 </td>							
                                 </tr>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -64,7 +65,8 @@
 			firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.firstName))#">,
 			middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.middleName))#">,
 			app_indicated_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">,  
-			app_additional_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_additional_program#">,  
+            programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#">,
+			app_additional_program = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_additional_program#">,  
 			app_canada_area = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_canada_area#">,
             address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
 			city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,

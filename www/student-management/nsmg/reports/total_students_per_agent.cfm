@@ -20,9 +20,12 @@
 	LEFT JOIN smg_countrylist agent_country ON u.country = agent_country.countryid
 	WHERE 	
     		s.canceldate IS NULL 
-        AND
-            programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
-
+        AND 
+        	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+		<cfif form.countryid neq 0>
+        	AND 
+            	s.countryresident = #form.countryid#
+        </cfif>
 		<cfif CLIENT.companyID EQ 5>
         AND
     		s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
@@ -30,7 +33,7 @@
         AND
     		s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 		</cfif>    
-
+           
 		<!--- AND u.businessname LIKE '%EF%' AND u.businessname != 'Treff' --->
 	GROUP BY Businessname
 	ORDER BY Businessname

@@ -4,7 +4,7 @@
 
 <Cfquery name="programs" datasource="MySQL">
 	SELECT 
-    	programid, programname, type, startdate, enddate, insurance_startdate, insurance_enddate, smg_programs.companyid, programfee,
+    	programid, programname, type, smg_programs.startdate, smg_programs.enddate, insurance_startdate, insurance_enddate, smg_programs.companyid, programfee,
         application_fee, insurance_w_deduct, insurance_wo_deduct, blank, hold, smg_programs.tripid, smg_programs.active, smg_programs.fieldviewable,
         smg_companies.companyshort,
         smg_program_type.programtype,

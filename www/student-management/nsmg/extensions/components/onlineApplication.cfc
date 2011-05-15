@@ -123,8 +123,12 @@
         <cfargument name="programID" default="0" hint="programID is not required">
         <cfargument name="regionID" default="0" hint="regionID is not required">
         <cfargument name="approvedBy" hint="approvedBy is required">
-        <cfargument name="regionGuarantee" default="0" hint="approvedBy is required">
-        <cfargument name="stateGuarantee" default="0" hint="approvedBy is required">
+        <cfargument name="regionGuarantee" default="0" hint="regionGuarantee is not required">
+        <cfargument name="stateGuarantee" default="0" hint="stateGuarantee is not required">
+        <cfargument name="privateSchool" default="0" hint="privateSchool is not required">
+    	<cfargument name="iffschool" default="0" hint="iffschool is not required">
+        <cfargument name="aypenglish" default="0" hint="iffschool is not required">
+        <cfargument name="directPlace" default="0" hint="iffschool is not required">
               
 		<cfscript>
 			// Stores Intl. Rep. and Student Email Addresses
@@ -166,7 +170,10 @@
                     dateapplication = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                     regionalguarantee = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionGuarantee#">,
                     state_guarantee = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateGuarantee#">,
-                    direct_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.directPlace#">
+                    direct_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.directPlace#">,
+                    iffschool = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.iffschool#">,
+                    privateschool = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.privateSchool#">,
+                    aypenglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.aypEnglish#">
                 WHERE 
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
 		</cfquery>
@@ -258,7 +265,6 @@
      	</cfif>
                   
 	</cffunction>
-
 
 
 </cfcomponent>

@@ -1,6 +1,6 @@
-
+<!----
 <cftry>
-
+---->
 <cfquery name="check_guarantee" datasource="MySQL">
 	SELECT app_region_guarantee
 	FROM smg_students
@@ -85,12 +85,41 @@ function NextPage() {
 </SCRIPT>
 
 <cfinclude template="../querys/get_student_info.cfm">
-
+<!----Get Regions that have been canceled for students Program---->
+<Cfquery name="unAvailableRegions" datasource="MySQL">
+select fk_regionID
+from regionStateClosure
+where fk_programid = #get_student_info.programid#
+</cfquery>
+<cfset closedList = ''>
+<Cfloop query="unAvailableRegions">
+	<cfset closedList = #ListAppend(closedList, fk_regionID)#>
+</Cfloop>
 <!---- International Rep - EF ACCOUNTS ---->
 <cfquery name="int_agent" datasource="MySQL">
 	SELECT u.businessname, u.userid, u.master_account, u.master_accountid
 	FROM smg_users u
 	WHERE u.userid = <cfif get_student_info.branchid EQ '0'>'#get_student_info.intrep#'<cfelse>'#get_student_info.branchid#'</cfif>
+</cfquery>
+<!----Check if States are Selected, if one is selected, don't show regional options---->
+<Cfquery name="checkStates" datasource="MySQL">
+	SELECT 
+    	state1, 
+        sta1.statename as statename1, 
+        state2, 
+        sta2.statename as statename2, 
+        state3, 
+        sta3.statename as statename3
+	FROM 
+    	smg_student_app_state_requested 
+	LEFT JOIN 
+    	smg_states sta1 ON sta1.id = state1
+	LEFT JOIN 
+    	smg_states sta2 ON sta2.id = state2
+	LEFT JOIN 
+    	smg_states sta3 ON sta3.id = state3
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
 <Cfset doc = 'page20'>
@@ -108,13 +137,25 @@ function NextPage() {
         <td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
-
-<!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
-<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("7,8,10,11", get_student_info.app_current_status) AND (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ 2)> 
+<!--- If student has selected a state guarantee, don't show regional guarantee --->
+<Cfif (checkStates.recordcount eq 0) OR (checkStates.state1 neq 0 AND checkStates.state2 nEQ 0 AND checkStates.state3 nEQ 0)> 
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
-			<td>Regional Choices are no longer available.</td>
+			<td>You have already requested a State Guarantee.  You can not select both a Regional and State Guarantee.  If you would like to request a Regional Guarantee, please remove your requested State Guarantee. </td>
+		</tr>
+	</table><br><br>
+	</div>
+	<!--- FOOTER OF TABLE --->
+	<cfinclude template="../footer_table.cfm">
+	<cfabort>	
+</cfif>
+<!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
+<cfif CLIENT.companyID EQ 14 OR  ListFind("7,8,10,11", get_student_info.app_current_status)> 
+	<div class="section"><br><br>
+	<table width="670" cellpadding=2 cellspacing=0 align="center">
+		<tr>
+			<td>Regional Choices are no longer available. </td>
 		</tr>
 	</table><br><br>
 	</div>
@@ -170,7 +211,7 @@ function NextPage() {
         <table width="670" cellpadding=2 cellspacing=0 align="center">
             <tr>
                 <td><h1>Student's Name: #get_student_info.firstname# #get_student_info.familylastname#</h1><br><br>
-                    You can choose your regional if you so desire. Both the Semester and Academic Year students can choose a region.<br>
+                    You can choose your region if you so desire. Both the Semester and Academic Year students can choose a region.<br>
                     You must request a regional choice by printing and signing this page.
                 </td>
             </tr>
@@ -198,34 +239,32 @@ function NextPage() {
             	
                     
                     <div id ="1" style="display:none">
-               <Cfif studentid neq 28304>
-                    <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
-                        <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
-                        <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="1" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '1'>checked</cfif>>Region 1 - East<br><img src="pics/region1.gif"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="2" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '2'>checked</cfif>>Region 2 - South<br><img src="pics/region2.gif"></td>
-                        </tr>
-                        <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="3" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '3'>checked</cfif>>Region 3 - Central<br><img src="pics/region3.gif"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="4" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '4'>checked</cfif>>Region 4 - Rocky Mountain<br><img src="pics/region4.gif"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="5" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '5'>checked</cfif>>Region 5 - West<br><img src="pics/region5.gif"></td>
-                        </tr>
-                    </table>
-                  <cfelse>
+           
                     
                     <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
                         <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
                         <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="6" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '6'>checked</cfif>>West<br><img src="pics/west.jpg"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="7" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '7'>checked</cfif>>Central<br><img src="pics/central.jpg"></td>
+                            <td valign="top"><cfif not ListFind(closedList, 6)><img src="pics/west.jpg"><cfelse><img src="pics/WestFade.jpg"></cfif></td>
+                            <td valign="top"><cfif not ListFind(closedList, 7)><img src="pics/central.jpg"><cfelse><img src="pics/centralFade.jpg"></cfif></td>
                         </tr>
                         <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="8" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '8'>checked</cfif>>South<br><img src="pics/south.jpg"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="9" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '9'>checked</cfif>>East<br><img src="pics/east.jpg"></td>
+                        	<td align="center"><input type="radio" name="region_choice" value="6" onChange="DataChanged();" <cfif ListFind(closedList, 6)>disabled</cfif> <cfif check_guarantee.app_region_guarantee EQ '6'>checked</cfif>>I'd like the be placed in the <strong>West</strong> Region.</td>
+                            <td align="Center"><input type="radio" name="region_choice" value="7" onChange="DataChanged();" <cfif ListFind(closedList, 7)>disabled</cfif> <cfif check_guarantee.app_region_guarantee EQ '7'>checked</cfif>>I'd like the be placed in the <strong>Central</strong> Region.</td>
+                        </tr>
+                        <tr>
+                        	<td colspan=2 align="center"><br><hr width=85%><br></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><cfif not ListFind(closedList, 8)><img src="pics/south.jpg"><cfelse><img src="pics/southFade.jpg"></cfif></td>
+                            <td valign="top"><cfif not ListFind(closedList, 9)><img src="pics/east.jpg"><cfelse><img src="pics/eastFade.jpg"></cfif></td>
                            
                         </tr>
+                        <tr>
+                        	<td align="Center"><input type="radio" name="region_choice" value="8" onChange="DataChanged();" <cfif ListFind(closedList, 8)>disabled</cfif> <cfif check_guarantee.app_region_guarantee EQ '8'>checked</cfif>>I'd like the be placed in the <strong>South</strong> Region.</td>
+                            <Td align="Center"><input type="radio" name="region_choice" value="9" onChange="DataChanged();" <cfif ListFind(closedList, 9)>disabled</cfif> <cfif check_guarantee.app_region_guarantee EQ '9'>checked</cfif>> I'd like the be placed in the <strong>East</strong> Region.</Td>
+                        </tr>
                     </table>	
-                </Cfif>    			
+          			
                     </div>
                 </td>
             </tr>
@@ -245,12 +284,13 @@ function NextPage() {
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
-
+<!----
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
-
+</cftry>
+---->
 </body>
 </html>
 
-</cftry>
+

@@ -1,6 +1,6 @@
 <cfquery name="get_Region_info" datasource="MySQL">
 	SELECT * 
-	from smg_Regions 
+	from smg_regions 
 	where regionid = #url.id#
 </cfquery>
 

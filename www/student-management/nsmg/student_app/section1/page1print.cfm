@@ -42,7 +42,11 @@
 	FROM smg_student_app_programs
 	WHERE app_programid = '#get_student_info.app_indicated_program#'
 </cfquery>
- 
+<Cfquery name="assignedProgram" datasource="mysql">
+select programname
+from smg_programs
+where programid = #get_student_info.programid#
+</cfquery>
 <cfquery name="app_other_programs" datasource="MySQL">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
@@ -110,8 +114,17 @@
 								<td><em>Additional Programs</em></td>
 							</tr>
 							<tr>
-								<td>#app_programs.app_program# <cfif LEN(get_student_info.app_canada_area)> - #get_student_info.app_canada_area#</cfif> <br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
-								<td><cfif app_other_programs.recordcount EQ '0'>None<cfelse>#app_other_programs.app_program#</cfif><br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+								<td>#assignedProgram.programname# - #app_programs.app_program# -  <cfif LEN(get_student_info.app_canada_area)> - #get_student_info.app_canada_area#</cfif> <br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+								<td><cfif app_other_programs.recordcount EQ '0'>None<cfelse>
+                                <cfloop list="#get_student_info.app_additional_program#" index=i>
+                                <cfquery name="app_other_programs" datasource="MySQL">
+                                    SELECT app_programid, app_program 
+                                    FROM smg_student_app_programs
+                                    WHERE app_programid = '#i#'
+                                </cfquery> 
+                                #app_other_programs.app_program#, 
+                                </cfloop>
+                                </cfif><br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
 							</tr>
 							<tr><td colspan="2">&nbsp;</td></tr>
 						</table>
