@@ -1,3 +1,5 @@
+
+
 <!--- ------------------------------------------------------------------------- ----
 	
 	File:		start_student.cfm
@@ -24,6 +26,8 @@
     <cfparam name="FORM.app_canada_area" default="">
     <cfparam name="FORM.app_additional_program" default="0">
     <cfparam name="FORM.extdeadline" default="0">    
+    <cfparam name="FORM.programID" default="0">  
+   
     
     <!--- Declare Option Variable - Option 1 - Student fills out an application / Option 2 - Agent fills out an application for the student --->
 	<cfparam name="option" default="1">
@@ -252,6 +256,7 @@
                     phone, 
                     app_indicated_program, 
                     app_additional_program, 
+                    programid,
                     app_canada_area,
                     randid, 
                     intrep, 
@@ -273,6 +278,7 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email1#">, 
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">, 
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_additional_program#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_canada_area#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#randid#">, 
@@ -557,7 +563,7 @@
         </tr>
         <tr>
             <td>&nbsp;</td>
-            <td><em>Select Program</em> <span class="requiredField">*</span></td>
+            <td><em>Select Program Type</em> <span class="requiredField">*</span></td>
             <!--- Canada Areas - Only Available for Canada Programs --->
             <td>
                 <div class="canadaAreaDiv" style="display:none">
@@ -589,17 +595,41 @@
 				</div>
             </td>
             <td>
-                <select name="app_additional_program">
-                    <cfloop query="qAppAddPrograms">
-                        <option value="#qAppAddPrograms.app_programID#" <cfif qAppAddPrograms.app_programID EQ FORM.app_additional_program> selected="selected" </cfif> >#qAppAddPrograms.app_program#</option>
-                    </cfloop>
-                </select>
+             <table>
+                	<tr>
+                    	<Td><input type="checkbox" name="selfPlacement" /></Td><td>Self Placement</td>
+                    </tr>
+                    <Tr>
+                    	<Td><input type="checkbox" name="preAYP" /></Td><td>Pre - AYP English</td>
+                    </tr>
+                    <Tr>
+                    	<Td><input type="checkbox" name="iff" /></Td><td>International Foreign Family</td>
+                </table>
             </td>
             <td>&nbsp;</td>
         </tr>
-        
-        <tr><td colspan="3">&nbsp;</td></tr>
-        
+          
+           <tr>
+            <td>&nbsp;</td>
+            <td><em>Select Program</em> </td>
+            <td></td>
+            <td></td>
+            </tr>
+          <tr>
+          	<td></td>
+            <td>
+                <cfselect
+                  name="internalProgram" 
+                  id="internalProgram"
+                  value="programID"
+                  display="programName"
+                  selected="#FORM.programID#"
+                  bindonload="yes"
+                  bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms({app_indicated_program})" />
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
         <tr>
             <td>&nbsp;</td>
             <td colspan="3"><b>Deadline</b></td>

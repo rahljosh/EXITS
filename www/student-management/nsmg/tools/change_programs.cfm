@@ -1,5 +1,17 @@
+
+<script type="text/javascript" language="javascript">
+                       $(document).ready(function() {
+               $(".jQueryModal").colorbox( {
+                       width:"60%",
+                       height:"90%",
+                       iframe:true,
+                       overlayClose:false,
+                       escKey:false
+               });
+                       });
+               </script>
 <cfquery name="get_program" datasource="MySQL">
-	SELECT programid, programname, type, startdate, enddate, insurance_startdate, progress_reports_active ,insurance_enddate, preayp_date, smg_programs.companyid, programfee, insurance_batch, sevis_startdate, sevis_enddate,
+	SELECT programid, programname, fk_smg_student_app_programID, type, startdate, enddate, insurance_startdate, progress_reports_active ,insurance_enddate, preayp_date, smg_programs.companyid, programfee, insurance_batch, sevis_startdate, sevis_enddate,
 			application_fee, insurance_w_deduct, insurance_wo_deduct, blank, hold, tripid, smg_programs.active, seasonid, smgseasonid, fieldviewable,
 			smg_companies.companyshort
 	FROM smg_programs
@@ -14,7 +26,13 @@
 	WHERE systemid = '1'
 	ORDER BY programtype
 </cfquery>
-
+<cfquery name="student_app_program_types" datasource="mysql">
+	SELECT app_programid, app_program 
+	FROM smg_student_app_programs
+	WHERE  companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
+    and isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+	ORDER BY app_program
+</cfquery>
 <cfquery name="smg_trips" datasource="MySql">
 	SELECT tripid, trip_place, trip_year  
 	FROM smg_incentive_trip
@@ -24,6 +42,8 @@
 	SELECT seasonid, season
 	FROM smg_seasons
 </cfquery>
+
+
 	
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
@@ -68,6 +88,16 @@
 				</cfloop>
 				</select></td>
 		</tr>
+        <tr>
+            <td align="right">Student Application: </td>
+            <td> <select name="studentAppType">
+                <option value=00>Select Type</option>
+                <cfloop query="student_app_program_types">
+                <option value="#app_programid#" <cfif get_program.fk_smg_student_app_programID is #app_programid#>selected</cfif>>#app_program#</option>
+                </cfloop>
+                </select>
+            </td>
+        </tr>
 		<tr><td align="right">Start Date:</td>
 			<td><cfinput type="text" name="startdate" value="#DateFormat(get_program.startdate, 'mm-dd-yyyy')#" size=9 maxlength="10" validate="date"> (mm-dd-yyyy)</td>
 		</tr>
@@ -107,6 +137,7 @@
 			<td><select name="seasonid">
 				<option value="0"></option>
 				<cfloop query="smg_seasons">
+                 <cfif smg_seasons.seasonid is #get_program.smgseasonid#><Cfset current_season = #seasonid#><Cfset current_season_label = #season#></cfif>
 				<option value="#seasonid#" <cfif smg_seasons.seasonid is #get_program.seasonid#>selected</cfif>>#season#</option>
 				</cfloop>
 				</select></td>
@@ -117,6 +148,7 @@
 			<td><select name="smgseasonid">
 				<option value="0"></option>
 				<cfloop query="smg_seasons">
+               
 				<option value="#seasonid#" <cfif smg_seasons.seasonid is #get_program.smgseasonid#>selected</cfif>>#season#</option>
 				</cfloop>
 				</select></td>
@@ -133,6 +165,12 @@
 		</tr>
 		<tr><th align="center" colspan=2 bgcolor="e2efc7">Program Options</th></tr>
 		<tr>
+					<tr>
+			<td align="right">Region / State Status:</td>
+			<td><a href="tools/regionStatus.cfm?programid=#url.progid#&seasonid=#current_season#&label=#current_season_label#&program=#get_program.programname#" class="jQueryModal">Region Status</a>  |  <a href="tools/stateStatus.cfm?programid=#url.progid#&seasonid=#current_season#&label=#current_season_label#&program=#get_program.programname#" class="jQueryModal">State Status</a></td>
+		</tr>
+
+    	<tr>
 					<tr>
 			<td align="right">Field Viewable:</td>
 			<td><select name="fieldviewable">

@@ -34,6 +34,7 @@
 <cfparam name="intrep" default="">
 <cfparam name="stateid" default="">
 <cfparam name="programID" default="">
+<cfparam name="privateschool" default="">
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24 bgcolor="#ffffff">
     <tr height=24>
@@ -162,6 +163,24 @@
                 First Name<br />
                 <cfinput type="text" name="firstname" value="#firstname#" size="10" maxlength="50">
             </td>
+             <td>
+            	Age<br />
+                <select name="age">
+                    <option value="">All</option>
+                    <option <cfif age EQ 15>selected</cfif>>15</option>
+                    <option <cfif age EQ 16>selected</cfif>>16</option>
+                    <option <cfif age EQ 17>selected</cfif>>17</option>
+                    <option <cfif age EQ 18>selected</cfif>>18</option>
+                </select>
+            </td>
+            <Td>
+           	 Sex<br />
+                <select name="sex">
+                    <option value="">All</option>
+                    <option <cfif sex EQ 'Male'>selected</cfif>>Male</option>
+                    <option <cfif sex EQ 'Female'>selected</cfif>>Female</option>
+                </select>
+             </Td>
             <td>
                 Pre-AYP<br />
                 <select name="preayp">
@@ -179,24 +198,15 @@
                 </select>            
             </td>
             <td>
-                Age<br />
-                <select name="age">
-                    <option value="">All</option>
-                    <option <cfif age EQ 15>selected</cfif>>15</option>
-                    <option <cfif age EQ 16>selected</cfif>>16</option>
-                    <option <cfif age EQ 17>selected</cfif>>17</option>
-
-                    <option <cfif age EQ 18>selected</cfif>>18</option>
-                </select>
+              Private School<br />
+                	<select name="privateschool">
+                    	<option value="">All</option>
+                    <option <cfif privateschool EQ '1'>selected</cfif>>Yes</option>
+                    <option <cfif privateschool EQ '0'>selected</cfif>>No</option>
+                    </select>  
             </td>
-            <td>
-            	Sex<br />
-                <select name="sex">
-                    <option value="">All</option>
-                    <option <cfif sex EQ 'Male'>selected</cfif>>Male</option>
-                    <option <cfif sex EQ 'Female'>selected</cfif>>Female</option>
-                </select>
-            </td>
+           
+            	
         </tr>
         <tr>
         	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -362,7 +372,7 @@
                     
     <cfquery name="getResults" datasource="#application.dsn#">
         SELECT  s.studentid, s.uniqueid, s.firstname, s.familylastname, s.sex, s.active, s.dateassigned, s.regionguar,
-            s.state_guarantee, s.aypenglish, s.ayporientation, s.hostid, s.scholarship,
+            s.state_guarantee, s.aypenglish, s.ayporientation, s.hostid, s.scholarship, s.privateschool,
             smg_regions.regionname, smg_g.regionname as r_guarantee, smg_states.state, smg_programs.programname,
             c.countryname, co.companyshort, smg_hosts.familylastname AS hostname
         FROM smg_students s
@@ -403,6 +413,11 @@
             </cfif>
             <cfif active NEQ ''>
                 AND s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
+            </cfif>
+            <cfif privateschool eq 1>
+            	AND privateschool > 0
+            <cfelseif privateschool eq 0>
+				AND privateschool = 0
             </cfif>
 			<cfif placed NEQ ''>
                 <cfif placed EQ 1>
@@ -608,6 +623,9 @@
                          <cfif scholarship NEQ 0>
                             * Scholarship
                          </cfif>
+                         <Cfif privateschool gt 0>
+                            * Private School
+                         </Cfif>
                         </font>
                     </td>
                     <td>#hostname#</td>

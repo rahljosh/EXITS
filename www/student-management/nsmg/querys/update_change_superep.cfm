@@ -27,7 +27,9 @@
 				update smg_students
 				set arearepid = '#form.arearepid#'
 				<cfif get_student_info.placerepid is not '0' and get_student_info.hostid is not '0' and get_student_info.schoolid is not '0'>
-				, host_fam_approved = #client.usertype#
+				<Cfif client.usertype gte 5>
+					, host_fam_approved = #client.usertype#
+                </Cfif>
 				, date_host_fam_approved = #CreateODBCDateTime(now())#		
 				</cfif>					
 				where studentid = '#get_student_info.studentid#'

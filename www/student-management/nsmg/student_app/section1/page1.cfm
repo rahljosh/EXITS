@@ -198,7 +198,7 @@ $(document).ready(function() {
 			<table width="100%" border=0 cellpadding=0 cellspacing=0 align="center">	
 				<tr><td colspan="2"><b>Program Information</b></td></tr>
 				<tr>
-					<td><em>Program</em></td>
+					<td><em>Program Type</em></td>
 					<td><em>Additional Programs</em></td>
 				</tr>
 				<tr>
@@ -209,14 +209,35 @@ $(document).ready(function() {
 							<option value="#app_programid#" <cfif get_student_info.app_indicated_program EQ app_programid>selected</cfif> >#app_program#</option>
 						</cfloop>
 						</cfselect>
+                        <br><br><em>Specific Program</em><Br>
+                         <cfselect
+                  name="internalProgram" 
+                  id="internalProgram"
+                  value="programID"
+                  display="programName"
+                  selected="#programID#"
+                  bindonload="yes"
+                  bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms({app_indicated_program})" />
 					</td>
-					<td valign="top"><cfselect name="app_additional_program">
-						<cfloop query="qAppAddPrograms">
-							<option value="#app_programid#" <cfif get_student_info.app_additional_program EQ app_programid>selected</cfif> >#app_program#</option>
-						</cfloop>
-						</cfselect>
+					<td valign="top">
+                         <table>
+                         
+						
+                        <cfloop query="qAppAddPrograms">
+                        	<Cfif app_programid neq 6 and app_programid neq 8>
+                        <tr>
+                            <Td><input type="checkbox" name="app_additional_program"  value="#app_programid#" <cfif ListFind(get_student_info.app_additional_program, app_programid)>checked</cfif>/></Td><td>#app_program#</td>
+                        </tr>
+                        	</Cfif>
+                        </cfloop>
+                      	</table>	
 					</td>
 				</tr>
+                <Tr>
+                	<td> 
+                  </td>
+                  <td>
+                </tr>
 				<tr class="canadaAreaDiv" style="display:none;"><td colspan="2">&nbsp;</td></tr>
 				<tr class="canadaAreaDiv" style="display:none;">
 					<td><em>Area in Canada</em></td>

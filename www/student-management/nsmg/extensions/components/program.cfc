@@ -159,14 +159,58 @@
                 	AND
                     	isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
                 </cfif>
-
-                ORDER BY 
-                   app_program
+				ORDER BY 
+                app_program
 		</cfquery>
 		   
 		<cfreturn qGetOnlineAppPrograms>
 	</cffunction>
+    
+	<!----Get available acive programs that match the type of program selected---->
+    <cffunction access="remote" name="qGetActiveInternalPrograms" output="no" returntype="query" hint="Gets a list of active programs associated with the program type indicated. Needs to get the program type id." verifyclient="no" securejson="false">
 
+    	<cfargument name="programTypeID" default="0" hint="programTypeID is not required">
+
+        <cfquery 
+			name="qGetActiveInternalPrograms" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	programid,
+					programname,
+                    startdate,
+                    enddate
+                FROM 
+                    smg_programs
+                WHERE
+                	fk_smg_student_app_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programTypeID)#">
+                    							  
+                AND
+                    active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                ORDER BY 
+                   programname
+		</cfquery>
+		   
+		<cfscript>
+			// Return message to user if not was found
+			if ( NOT VAL(qGetActiveInternalPrograms.recordCount) ) {
+				QueryAddRow(qGetActiveInternalPrograms, 1);
+				QuerySetCell(qGetActiveInternalPrograms, "programID", 0);	
+				QuerySetCell(qGetActiveInternalPrograms, "programname", "---- No Additional Program Info ----", 1);
+				
+			}
+			
+			// Return message if companyID is not valid
+			if ( NOT VAL(ARGUMENTS.programTypeID) ) {
+				qGetActiveInternalPrograms = QueryNew("programID, programname");
+				QueryAddRow(qGetActiveInternalPrograms);
+				QuerySetCell(qGetActiveInternalPrograms, "programID", 0);	
+				QuerySetCell(qGetActiveInternalPrograms, "programname", "---- Select a program type ----", 1);
+				
+			}
+
+			return qGetActiveInternalPrograms;
+		</cfscript>
+	</cffunction>
 
 	<cffunction name="insertProgramHistory" access="public" returntype="void" output="false" hint="Inserts a program history">
     	<cfargument name="studentID" hint="studentID is required">

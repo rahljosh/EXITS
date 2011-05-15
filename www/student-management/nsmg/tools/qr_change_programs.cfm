@@ -19,6 +19,7 @@
 		type = #form.programtype#,
 		startdate = #CreateODBCDate(form.startdate)#,
 		enddate = #CreateODBCDate(form.enddate)#,
+        fk_smg_student_app_programID = '#form.studentAppType#',
 		insurance_startdate = <cfif form.insurance_startdate is not ''>#CreateODBCDate(form.insurance_startdate)#<cfelse>null</cfif>,
 		insurance_enddate = <cfif form.insurance_enddate is not ''>#CreateODBCDate(form.insurance_enddate)#<cfelse>null</cfif>,
 		preayp_date = <cfif form.preayp_date is not ''>#CreateODBCDate(form.preayp_date)#<cfelse>null</cfif>,

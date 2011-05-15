@@ -31,7 +31,13 @@ if (document.new_program.smg_trip.value == '0') {
 		AND active = '1'
 	ORDER BY programtype
 </cfquery>
-
+<cfquery name="student_app_program_types" datasource="mysql">
+	SELECT app_programid, app_program 
+	FROM smg_student_app_programs
+	WHERE  companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
+    and isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+	ORDER BY app_program
+</cfquery>
 <cfquery name="smg_trips" datasource="MySql">
 	SELECT tripid, trip_place, trip_year  
 	FROM smg_incentive_trip
@@ -75,6 +81,19 @@ if (document.new_program.smg_trip.value == '0') {
 					</cfloop>
 					</select>
 				</td>
+			</tr>
+           	<tr>
+				<td align="right">Student Application: </td>
+				<td> <select name="studentAppType">
+					<option value=00>Select Type</option>
+					<cfloop query="student_app_program_types">
+					<option value="#app_programid#">#app_program#</option>
+					</cfloop>
+					</select>
+				</td>
+			</tr>
+            <tr>
+				<td colspan=2><em><font size=-2>Student Application: Description that shows on Student App when selectiong program.</font></td>
 			</tr>
 			<tr>
 				<td align="right">Start Date: </td>
