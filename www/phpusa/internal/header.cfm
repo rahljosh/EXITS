@@ -68,13 +68,12 @@
     <link rel="stylesheet" href="linked/css/colorBox.css" type="text/css"> <!-- Color Box -->
     <link rel="stylesheet" href="linked/css/baseStyle.css" type="text/css"> <!-- Base Style -->
     <cfoutput>
-        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
         <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
     </cfoutput>
     <script type="text/javascript" src="SpryAssets/SpryMenuBar.js"></script> <!-- Menu Script -->
-    <script type="text/javascript" src="linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput --> 
-    <script type="text/javascript" src="linked/js/jquery-ui-timepicker-addon.min.js"></script>  <!-- Time Picker -->   
+    <script type="text/javascript" src="linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker --> 
     <script type="text/javascript" src="linked/js/basescript.js"></script> <!-- Base Script -->
 </head>
 <body>
