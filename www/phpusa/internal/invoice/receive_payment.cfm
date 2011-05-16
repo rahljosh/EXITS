@@ -334,7 +334,7 @@ function findselected() {
                                     
 								</tr>
 								<tr>
-									<td>Date Received:</td><td><input type="text" name="date_received" value="" class="date-pick"/></td>
+									<td>Date Received:</td><td><input type="text" name="date_received" value="" class="smallField datePicker"/></td>
 									<td>Date Applied:</td><td>#DateFormat(now(),'mm/dd/yy')# </td>
 								</tr>
 							</table>

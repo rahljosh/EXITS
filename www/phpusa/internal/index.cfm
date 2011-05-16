@@ -1,19 +1,27 @@
-<link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		flightMenu.cfm
+	Author:		Marcus Melo
+	Date:		May 12, 2010
+	Desc:		Flight Reports Menu
 
-<CFIF not isdefined("url.curdoc")>
-	<CFSET url.curdoc = "initial_welcome">
-</cfif>
+	Updated:  	
+
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill extra output --->
+<cfsilent>
+	
+    <cfparam name="URL.curdoc" default="initial_welcome">
+
+</cfsilent>
 
 <cfinclude template="header.cfm">
-<table align="center" width=90% cellpadding=0 cellspacing=0  border=0 bgcolor="#e9ecf1"> 
-	<tr>
-		<td>
-		<Cfif #right(url.curdoc,4)# is '.cfr'>
-			<cfinclude template="#url.curdoc#">
-		<cfelse>
-			<cfinclude template="#url.curdoc#.cfm">
-		</Cfif>
-		</td>
-	</tr>
-</table>
+
+<cfif right(url.curdoc,4) is '.cfr'>
+    <cfinclude template="#url.curdoc#">
+<cfelse>
+    <cfinclude template="#url.curdoc#.cfm">
+</cfif>
+
 <cfinclude template="footer.cfm">

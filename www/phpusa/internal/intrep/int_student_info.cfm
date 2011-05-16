@@ -183,7 +183,7 @@ function OpenApp(url)
 					<td width="133">
 						<table width="100%" cellpadding="3">
 							<tr><td><td width="133">
-								<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
+								<cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 								<cfif file.recordcount>
 									<img src="uploadedfiles/web-students/#file.name#" width="135">
 								<cfelse>
@@ -374,7 +374,6 @@ function OpenApp(url)
 </div>
 
 </cfoutput>
-<cfinclude template="../table_footer.cfm">
 
 </body>
 </html>

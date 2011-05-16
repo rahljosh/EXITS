@@ -26,7 +26,7 @@ from smg_states
 where id = #school.state#
 </cfquery>
 <!--- Build image paths --->
-<CFSET imageFullPath=APPLICATION.PATH.PHP.schools & "#school.schoolID#.jpg">
+<CFSET imageFullPath=APPLICATION.PATH.PHP.schoolImage & "#school.schoolID#.jpg">
 <CFSET imageRelativePath="newSchools/#school.schoolID#.jpg">
 <link rel="shortcut icon" href="favicon.ico" />
 <style type="text/css">

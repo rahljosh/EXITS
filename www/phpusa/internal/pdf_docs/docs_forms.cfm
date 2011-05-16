@@ -21,7 +21,7 @@ function areYouSure() {
 ---->
 <cfoutput>
 
-<cfset currentDirectory = "#AppPath.pdfDocs##companyshort.companyshort#">
+<cfset currentDirectory = "#APPLICATION.PATH.pdfDocs##companyshort.companyshort#">
 
 <cfdirectory action="List" directory="#currentDirectory#" name="DirList" sort="name asc">
 

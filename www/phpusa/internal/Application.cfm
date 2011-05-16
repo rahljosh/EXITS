@@ -1,4 +1,8 @@
-<cfapplication name="phpusa" clientmanagement="yes">
+<cfapplication 
+	name="phpusa" 
+    clientmanagement="yes"
+    sessionmanagement="yes"
+    sessiontimeout="#CreateTimeSpan( 0, 12, 0, 0 )#">
 
     <cfparam name="APPLICATION.DSN" default="MySQL">
     <cfparam name="APPLICATION.site_url" default="http://www.phpusa.com">

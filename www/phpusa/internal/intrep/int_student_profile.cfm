@@ -156,7 +156,7 @@ Order by birthdate
 <table  width=650 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
 	<hr width=80% align="center">
 	<td bgcolor="F3F3F3" valign="top" width=133><div align="left">
-		<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
+		<cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 		<cfif file.recordcount>
 			<img src="uploadedfiles/web-students/#file.name#" width="135">
 		<cfelse>

@@ -1,0 +1,205 @@
+body {
+	font-size:12px;	
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+h2 {
+	font: bold 114% Arial,sans-serif;
+	color: #006699;
+	margin: 0px;
+	padding: 0px;
+}
+
+h2 a {
+	font: bold 100% Arial,sans-serif;
+	color: #006699;
+	margin: 0px;
+	padding: 0px;
+}
+
+.displayNone {
+	display:none;
+}
+
+.section {
+	border-top: 1px solid #c6c6c6;; 
+	border-right: 2px solid #c6c6c6;
+	border-left: 2px solid #c6c6c6;
+	border-bottom: 0px; 
+	background: #ffffff;
+}
+
+
+/********************************************
+	PAGE MESSAGE
+********************************************/
+div.pageMessages { 
+	font-size:0.8em;
+	display:none;
+	margin: 5px auto 5px auto; 
+	padding: 5px 10px; 
+	background-color: #c2d9e9;
+	border: #0069aa 1px solid; 
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+div.pageMessages p { 
+	margin: 0; 
+}
+
+div.pageMessages p em { 
+	color: #0069aa; 
+	font-weight: bold;
+}
+/********************************************
+	END OF PAGE MESSAGE
+********************************************/
+
+
+/********************************************
+	ERROR MESSAGE
+********************************************/
+div.errors { 
+    margin:0px auto 10px auto;
+	padding: 5px 10px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+}
+
+div.errorContainer label,
+div.errors label { 
+	color:#000;
+}
+
+div.errors p,
+div.errorContainer p { 
+	margin: 0; 
+}
+
+div.errors p em,
+div.errorContainer p em { 
+	color: #C00; 
+	font-style: normal; 
+	font-weight: bold; 
+}
+
+div.errors ol {
+	list-style: none;
+	text-indent:-3em;
+}
+/********************************************
+	END OF ERROR MESSAGE
+********************************************/
+
+
+/********************************************
+	TIME PICKER
+********************************************/
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div .ui_tpicker_hour div { padding-right: 2px; }
+.ui-timepicker-div .ui_tpicker_minute div { padding-right: 6px; }
+.ui-timepicker-div .ui_tpicker_second div { padding-right: 6px; }
+.ui-timepicker-div td { font-size: 90%; }
+/********************************************
+	END OF TIME PICKER
+********************************************/
+
+
+/********************************************
+	START OF FORM FIELDS
+********************************************/
+.fieldSize40 {
+	width:40px;
+	border:1px solid #021157;	
+}
+
+.fieldSize60 {
+	width:60px;
+	border:1px solid #021157;	
+}
+
+.fieldSize70 {
+	width:70px;
+	border:1px solid #021157;	
+}
+
+.fieldSize100 {
+	width:100px;
+	border:1px solid #021157;	
+}
+
+.smallField {
+	width:80px;
+	border:1px solid #021157;	
+}
+
+.mediumField {
+	width:130px;
+	border:1px solid #021157;	
+}
+
+.largeField {
+	width:200px;
+	border:1px solid #021157;	
+}
+
+/********************************************
+	END OF FORM FIELDS
+********************************************/
+
+
+/********************************************
+	START OF REPORTS 
+********************************************/
+.pageTitle {
+	width:98%;
+	background-color:#C4CDE7;
+	border:1px solid #021157;	
+	font-weight:bold;
+	text-transform:uppercase;
+	padding:5px;
+	margin-top:10px;
+	margin-bottom:10px;
+	clear:both;
+}
+
+.reportTableLeft {
+	width:47%;
+	float:left;
+	border:1px solid #021157;	
+	padding:5px;
+	margin:5px 0px 15px 25px;
+}
+
+.reportTableRight {
+	width:47%;
+	float:right;
+	border:1px solid #021157;	
+	padding:5px;
+	margin:5px 25px 15px 0px;
+}
+
+.reportTableLeft .title,
+.reportTableRight .title,
+.reportTableLeft .submitButton,
+.reportTableRight .submitButton {
+	text-transform:uppercase;
+	background-color:#C4CDE7;
+	border:1px solid #021157;	
+	font-weight:bold;
+	text-align:center;
+	height:30px;
+}
+
+.reportTableLeft .fieldTitle,
+.reportTableRight .fieldTitle {
+	vertical-align:top;
+	text-align:right;
+	padding:5px;
+}
+/********************************************
+	END OF REPORTS 
+********************************************/

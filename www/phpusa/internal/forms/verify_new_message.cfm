@@ -95,7 +95,7 @@ underline{border-bottom: 1px}
 
 <!--- Uploading FILE --->
 <cfif form.additional_file NEQ ''>
-	<cffile action="upload" filefield="form.additional_file" destination="#AppPath.newsMessage#" nameconflict="makeunique" mode="777" result="myResult">
+	<cffile action="upload" filefield="form.additional_file" destination="#APPLICATION.PATH.newsMessage#" nameconflict="makeunique" mode="777" result="myResult">
 	<cfinput type="hidden" name="additional_file" value="#myResult.ServerFile#">
 	<p><a href="uploadedfiles/news/#myResult.ServerFile#" target="_blank">Additional Information (pdf)</a></p>
 <cfelse>

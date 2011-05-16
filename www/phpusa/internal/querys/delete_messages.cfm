@@ -5,7 +5,7 @@
     AND additional_file IS NOT NULL
 </cfquery>
 
-<cfset currentDirectory = "#AppPath.newsMessage#">
+<cfset currentDirectory = "#APPLICATION.PATH.newsMessage#">
 
 <cfloop query="get_files">
 	<cfif fileExists("#currentDirectory##additional_file#")>

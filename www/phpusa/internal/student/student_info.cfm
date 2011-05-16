@@ -1,95 +1,153 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Student Information</title>
-<link href="../phpusa.css" rel="stylesheet" type="text/css">
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		_flightInfo.cfm
+	Author:		Marcus Melo
+	Date:		May 13, 2011
+	Desc:		Inserts/Updates Students flight information
 
-<script language="JavaScript"> 
-<!--// 
-// open online application 
-function OpenApp(url)
-{
-	newwindow=window.open(url, 'OpenApp', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
-	if (window.focus) {newwindow.focus()}
-}
+	Updated:  	
 
-// Send online applications 
-function SendEmail(url)
-{
-	newwindow=window.open(url, 'SendEmail', 'height=410, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=no'); 
-	if (window.focus) {newwindow.focus()}
-}
+----- ------------------------------------------------------------------------- --->
 
-// opens small pop up in a defined format
-var newwindow;
-function OpenSmallW(url) {
-	newwindow=window.open(url, 'OpenSmalW', 'height=300, width=400, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
-	if (window.focus) {newwindow.focus()}
-}
+<!--- Kill extra output --->
+<cfsilent>
 
-// Open Program History
-function OpenHistory(url)
-{
-	newwindow=window.open(url, 'OpenHistory', 'height=300, width=500, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
-	if (window.focus) {newwindow.focus()}
-}
+	<!--- Param URL Variables --->
+    <cfparam name="URL.unqID" default="">
+    
+	<cfif NOT LEN(url.unqid)>
+        <cfinclude template="../error_message.cfm">
+        <cfabort>
+    </cfif>
+    
+    <!--- Get Student Info by UniqueID --->
+    <cfinclude template="../querys/get_student_unqid.cfm">
+    
+    <cfinclude template="../querys/get_programs.cfm">
+    
+    <cfinclude template="../querys/get_intl_reps.cfm">
+    
+    <cfparam name="edit" default="no">
+    
+    <cfif isDefined('form.edit') AND CLIENT.usertype LTE '4'> <cfset edit = form.edit> </cfif>
+    
+    <!----International Rep---->
+    <cfquery name="int_Agent" datasource="mysql">
+        SELECT u.businessname, u.firstname, u.lastname, u.userid, u.php_insurance_typeid, insu.type
+        FROM smg_users u
+        LEFT JOIN smg_insurance_type insu ON insu.insutypeid = u.php_insurance_typeid
+        WHERE u.userid = '#get_student_unqid.intrep#'
+    </cfquery>
+    
+    <!--- CHECK IF STUDENT IS ASSIGNED TO MORE THAN ON PROGRAM --->
+    <cfquery name="get_programs_assigned" datasource="MySql">
+        SELECT php_stu.assignedid, php_stu.programid, php_stu.active, php_stu.canceldate, php_stu.cancelreason, php_stu.datecreated,
+            p.programname
+        FROM php_students_in_program php_stu
+        LEFT JOIN smg_programs p ON p.programid = php_stu.programid
+        WHERE php_stu.studentid = '#get_student_unqid.studentid#'
+        ORDER BY php_stu.assignedid DESC
+    </cfquery>
+    
+	<!--- INVOICES ARE BASED ON PROGRAMS - CHECK IF AN INVOICE HAS BEEN CREATED FOR THIS PROGRAM --->
+    <cfquery name="check_invoice" datasource="MySql">
+        SELECT chargeid
+        FROM egom_charges	
+        WHERE studentid = '#get_student_unqid.studentid#'
+            AND programid = '#get_student_unqid.programid#'							
+    </cfquery>
+    
+    <!--- GET PROGRAM NAME --->
+    <cfquery name="get_program" datasource="MySql">
+        SELECT programid, programname, enddate
+        FROM smg_programs
+        WHERE programid = '#get_student_unqid.programid#'
+    </cfquery>
+    
+    <cfquery name="qInsuranceInfo" datasource="mysql">
+        SELECT
+            startDate,
+            endDate
+        FROM 
+            php_insurance_batch
+        WHERE
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_unqid.studentID#">
+        AND	
+            assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_unqid.assignedID#">
+        AND
+            type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">    
+    </cfquery>
+    
+</cfsilent>
 
-var currentTime = new Date()
-var month = currentTime.getMonth() + 1
-var day = currentTime.getDate()
-var year = currentTime.getFullYear()
-if (day < 10) 
-	day = "0"+day;
-if (month < 10) 
-	month = "0"+month;
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
+				
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
 
-function CheckDates(ckname, frname) {
-	if (document.StudentInfo.elements[ckname].checked) {
-		document.StudentInfo.elements[frname].value = (month + "/" + day + "/" + year);
-		}
-	else { 
-		document.StudentInfo.elements[frname].value = '';  
+	});
+
+	<!--// 
+	// open online application 
+	function OpenApp(url)
+	{
+		newwindow=window.open(url, 'OpenApp', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
+		if (window.focus) {newwindow.focus()}
 	}
-}	
-
-function formHandler2(){
-	var URL = document.StudentInfo.sele_program.options[document.StudentInfo.sele_program.selectedIndex].value;
-	window.location.href = URL;
-}
-//-->
+	
+	// Send online applications 
+	function SendEmail(url)
+	{
+		newwindow=window.open(url, 'SendEmail', 'height=410, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=no'); 
+		if (window.focus) {newwindow.focus()}
+	}
+	
+	// opens small pop up in a defined format
+	var newwindow;
+	function OpenSmallW(url) {
+		newwindow=window.open(url, 'OpenSmalW', 'height=300, width=400, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
+		if (window.focus) {newwindow.focus()}
+	}
+	
+	// Open Program History
+	function OpenHistory(url)
+	{
+		newwindow=window.open(url, 'OpenHistory', 'height=300, width=500, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
+		if (window.focus) {newwindow.focus()}
+	}
+	
+	var currentTime = new Date()
+	var month = currentTime.getMonth() + 1
+	var day = currentTime.getDate()
+	var year = currentTime.getFullYear()
+	if (day < 10) 
+		day = "0"+day;
+	if (month < 10) 
+		month = "0"+month;
+	
+	function CheckDates(ckname, frname) {
+		if (document.StudentInfo.elements[ckname].checked) {
+			document.StudentInfo.elements[frname].value = (month + "/" + day + "/" + year);
+			}
+		else { 
+			document.StudentInfo.elements[frname].value = '';  
+		}
+	}	
+	
+	function formHandler2(){
+		var URL = document.StudentInfo.sele_program.options[document.StudentInfo.sele_program.selectedIndex].value;
+		window.location.href = URL;
+	}
+	//-->
 </script>
-
-</head>
-
-<body onLoad="init();" bgcolor=#b5b5bf>
-<!----
-<cftry>
----->
-
-<cfif NOT IsDefined('url.unqid')>
-	<cfinclude template="../error_message.cfm">
-	<cfabort>
-</cfif>
-
-<!-----Company Information----->
-<Cfquery name="companyshort" datasource="MySQL">
-	SELECT *
-	FROM smg_companies
-	WHERE companyid = '#client.companyid#'
-</Cfquery>
-
-<!--- Get Student Info by UniqueID --->
-<cfinclude template="../querys/get_student_unqid.cfm">
-
-<cfinclude template="../querys/get_programs.cfm">
-
-<cfinclude template="../querys/get_intl_reps.cfm">
-
-<cfparam name="edit" default="no">
-
-<cfif isDefined('form.edit') AND client.usertype LTE '4'> <cfset edit = '#form.edit#'> </cfif>
 
 <!--- student does not exist --->
 <cfif get_student_unqid.recordcount EQ 0>
@@ -103,62 +161,6 @@ function formHandler2(){
 	<cfabort>
 </cfif>
 
-<!----International Rep---->
-<cfquery name="int_Agent" datasource="mysql">
-	SELECT u.businessname, u.firstname, u.lastname, u.userid, u.php_insurance_typeid, insu.type
-	FROM smg_users u
-	LEFT JOIN smg_insurance_type insu ON insu.insutypeid = u.php_insurance_typeid
-	WHERE u.userid = '#get_student_unqid.intrep#'
-</cfquery>
-
-<!--- CHECK IF STUDENT IS ASSIGNED TO MORE THAN ON PROGRAM --->
-<cfquery name="get_programs_assigned" datasource="MySql">
-	SELECT php_stu.assignedid, php_stu.programid, php_stu.active, php_stu.canceldate, php_stu.cancelreason, php_stu.datecreated,
-		p.programname
-	FROM php_students_in_program php_stu
-	LEFT JOIN smg_programs p ON p.programid = php_stu.programid
-	WHERE php_stu.studentid = '#get_student_unqid.studentid#'
-	ORDER BY php_stu.assignedid DESC
-</cfquery>
-
-<!----Get Expired Student Programs
-is this used?
-<cfquery name="check_for_expired_program" datasource="mysql">
-	SELECT php_prog.studentid, php_prog.programid, smg_programs.programname
-	FROM smg_programs  
-	INNER JOIN php_students_in_program php_prog ON smg_programs.programid = php_prog.programid
-	WHERE smg_programs.enddate <= now() 
-		AND studentid = #get_student_unqid.studentid#
-</cfquery>---->
-
-<!--- INVOICES ARE BASED ON PROGRAMS - CHECK IF AN INVOICE HAS BEEN CREATED FOR THIS PROGRAM --->
-<cfquery name="check_invoice" datasource="MySql">
-	SELECT chargeid
-	FROM egom_charges	
-	WHERE studentid = '#get_student_unqid.studentid#'
-		AND programid = '#get_student_unqid.programid#'							
-</cfquery>
-
-<!--- GET PROGRAM NAME --->
-<cfquery name="get_program" datasource="MySql">
-	SELECT programid, programname, enddate
-	FROM smg_programs
-	WHERE programid = '#get_student_unqid.programid#'
-</cfquery>
-
-<cfquery name="qInsuranceInfo" datasource="mysql">
-    SELECT
-        startDate,
-        endDate
-    FROM 
-        php_insurance_batch
-    WHERE
-        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_unqid.studentID#">
-    AND	
-        assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_unqid.assignedID#">
-    AND
-        type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">    
-</cfquery>
 
 <!---- Header Table ---->
 <h2>&nbsp;&nbsp;&nbsp;&nbsp;S t u d e n t &nbsp;&nbsp;&nbsp;  I n f o r m a t i o n</h2>
@@ -198,7 +200,7 @@ is this used?
             <td width="135">
                 <table width="100%" cellpadding="2">
                     <tr><td width="135" valign="top">
-                        <cfdirectory directory="#AppPath.onlineApp.picture#" name="stupicture" filter="#studentid#.*">
+                        <cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="stupicture" filter="#studentid#.*">
                         <cfif stupicture.recordcount>
                             <img src="http://www.student-management.com/nsmg/uploadedfiles/web-students/#stupicture.name#" width="135" height="200">
                         <cfelse>
@@ -210,9 +212,9 @@ is this used?
             <td valign="top">
                 <table width="100%" cellpadding="2">
                     <tr><td align="center" colspan="2"><h2>#firstname# #middlename# #familylastname# (#studentid#)</h2></td></tr>
-                    <tr><td align="center" colspan="2"><font size=-1><span class="edit_link">[ <cfif client.usertype LTE '4'><a href="index.cfm?curdoc=student/student_form1&unqid=#uniqueid#">edit</a> &middot; </cfif> <a href='student/student_profile.cfm?unqid=#get_student_unqid.uniqueid#'>profile</a> ]</span></font></td></tr>
+                    <tr><td align="center" colspan="2"><font size=-1><span class="edit_link">[ <cfif CLIENT.usertype LTE '4'><a href="index.cfm?curdoc=student/student_form1&unqid=#uniqueid#">edit</a> &middot; </cfif> <a href='student/student_profile.cfm?unqid=#get_student_unqid.uniqueid#'>profile</a> ]</span></font></td></tr>
                     <tr><td align="center" colspan="2"><cfif dob EQ ''>n/a<cfelse>#dateformat (dob, 'mm/dd/yyyy')# - #datediff('yyyy',dob,now())# year old #sex# </cfif></td></tr> 
-                    <cfif client.usertype lte 4><tr><td width="15%" align="right">Intl. Rep. : </td>
+                    <cfif CLIENT.usertype lte 4><tr><td width="15%" align="right">Intl. Rep. : </td>
                         <td width="85%"><select name="intrep" <cfif edit EQ 'no'>disabled</cfif> >
                             <option value="0"></option>		
                             <cfloop query="get_intl_reps">
@@ -250,13 +252,13 @@ is this used?
                                 <cfif app_current_status NEQ 0>
                                 <tr>
                                     <td align="center">
-                                    <cfif client.usertype LTE '4'>
-                                        <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&userType=#client.usertype#&id=1');"><img src="pics/exits.jpg" border="0"></a>
+                                    <cfif CLIENT.usertype LTE '4'>
+                                        <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&userType=#CLIENT.usertype#&id=1');"><img src="pics/exits.jpg" border="0"></a>
                                     <cfelse>
-                                        <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_application.cfm?user=#client.userid#&unqid=#uniqueid#&userType=#client.usertype#&exits_app');"><img src="pics/exits.jpg" border="0"></a>
+                                        <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_application.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#&exits_app');"><img src="pics/exits.jpg" border="0"></a>
                                     </cfif>
-                                    <br><a href="javascript:OpenSmallW('http://www.student-management.com/nsmg/student_app/section4/page22print.cfm?user=#client.userid#&unqid=#uniqueid#&userType=#client.usertype#');"><img src="pics/attached-files.gif" border="0"></a>	
-                                    <br><a href="javascript:SendEmail('http://www.student-management.com/nsmg/student_app/email_form.cfm?userid=#client.userid#&unqid=#uniqueid#&companyShort=php');"><img src="pics/send-email.gif" border="0"></a>	
+                                    <br><a href="javascript:OpenSmallW('http://www.student-management.com/nsmg/student_app/section4/page22print.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#');"><img src="pics/attached-files.gif" border="0"></a>	
+                                    <br><a href="javascript:SendEmail('http://www.student-management.com/nsmg/student_app/email_form.cfm?userid=#CLIENT.userid#&unqid=#uniqueid#&companyShort=php');"><img src="pics/send-email.gif" border="0"></a>	
                                     </td>
                                 </tr>
                                 <cfelse>
@@ -273,18 +275,18 @@ is this used?
 		<td align="right" valign="top" width="200"  class="box">
 		<div id="subMenuNav"> 
 			<div id="subMenuLinks">  
-					<!----
-		 		<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#client.studentid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
+				<!----
+				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#CLIENT.studentid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
 				---->
 				<a href="" onClick="javascript: win=window.open('student/place_menu.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Placement Management</a> 		
 				<a href="" onClick="javascript: win=window.open('insurance/insurance_mgmt.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> 
 				<a href="" onClick="javascript: win=window.open('student/evaluations.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=320, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Evaluations / Grades</a> 
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?unqid=#get_student_unqid.uniqueid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
 				<a href="" onClick="javascript: win=window.open('http://www.student-management.com/nsmg/virtualfolder/list_vfolder.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>						
-				<a href="" onClick="javascript: win=window.open('student/flight_info.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>
+                <!--- Flight Information --->
+                <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_unqid.uniqueid#&programID=#get_student_unqid.programID#" class="jQueryModal">Flight Information</a>
 				<a href="" onClick="javascript: win=window.open('student/missing_documents.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
 				<a href="" onClick="javascript: win=window.open('forms/notes.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Notes</a> 				
-				<!--- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentid=#get_student_unqid.studentid#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Rep. Payments</a>  --->
 		  </div>
 		</div>
 		</td>
@@ -299,7 +301,7 @@ is this used?
 				<tr bgcolor="##C2D1EF">
 					<td colspan="2">
 						<span class="get_attention"><b>:: </b>Program 
-						<cfif client.usertype LTE '4'> &nbsp; &nbsp;
+						<cfif CLIENT.usertype LTE '4'> &nbsp; &nbsp;
 							[ <font size="-3"> <a href="javascript:OpenHistory('student/program_management.cfm?unqid=#uniqueid#');">Program Management</a> ]</font>
 						</cfif>
 						</span>
@@ -392,7 +394,7 @@ is this used?
 				<tr>
 					<td width="10"><cfif int_Agent.php_insurance_typeid LTE '1'><input type="checkbox" name="insurance_check" disabled><cfelse><input type="checkbox" name="insurance_check" checked disabled></cfif></td>
 					<td align="left" colspan="2"><cfif int_Agent.php_insurance_typeid EQ '0'> <font color="FF0000">Insurance Information is missing</font>
-						<cfelseif int_Agent.php_insurance_typeid EQ '1'> Does not take Insurance Provided by #companyshort.companyshort#
+						<cfelseif int_Agent.php_insurance_typeid EQ '1'> Does not take Insurance Provided by #CLIENT.companyshort#
 						<cfelse> Takes Insurance Provided by PHP</cfif>
 					</td>
 				</tr>
@@ -574,7 +576,7 @@ is this used?
 </form>
 		
 <!---- EDIT BUTTON - OFFICE USERS ---->
-<cfif client.usertype LTE '4' AND edit EQ 'no'>
+<cfif CLIENT.usertype LTE '4' AND edit EQ 'no'>
 <table width="100%" border=0 cellpadding=0 cellspacing=0 align="center" class="section">	
 <tr><td align="center">
 	<form action="?curdoc=student/student_info&unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" method="post">&nbsp;

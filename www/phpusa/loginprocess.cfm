@@ -1,96 +1,150 @@
-<link href="style.css" rel="stylesheet" type="text/css">
-<BODY bgcolor="#B5B5BF">
-
-<br><br><br>
-
-<Table bgcolor="#FFFFFF" ALIGN="CENTER">
-	<tr>
-		<td width="181" height="136"><img src="images/logo.jpg" width="160" height="95"></td>
-	  <td width="306"><H2 align="center">Welcome</H2>
-	    <div align="center">Please wait while your login is verified.</div></td>
-	</tr>
-</Table>
-
-<CFQUERY name="authenticate" datasource="#application.dsn#">
-	SELECT *
-	FROM smg_users 
-	WHERE username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.username)#">
-    AND password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.password)#">
-    AND active = 1
-</CFQUERY>
-
-<cfif authenticate.recordcount EQ 1>
-
-	<cfquery name="user_access" datasource="#application.dsn#">
-		SELECT user_access_rights.usertype
-		FROM user_access_rights
-        INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-        WHERE smg_companies.website = 'PHP'
-		AND user_access_rights.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#authenticate.userid#">
-	</cfquery>
+<!--- ------------------------------------------------------------------------- ----
 	
-	<cfset client.isLoggedIn = 'Yes'>
-	<cfset client.userid = authenticate.userid>
-	<cfset client.firstname = authenticate.firstname>
-	<cfset client.lastname =  authenticate.lastname>
-    <cfset client.email = authenticate.email>
-	<cfset client.lastlogin = authenticate.lastlogin>
-	<cfif authenticate.usertype EQ 8>
-		<cfset client.usertype = 8>
-	<cfelse>
-		<cfset client.usertype = user_access.usertype>
-	</cfif>
-	<cfset client.companyid = 6>
+	File:		loginProcess.cfm
+	Author:		Marcus Melo
+	Date:		May 13, 2011
+	Desc:		Process User/School Login
 
-	<!--- this is currently used only in the menu. --->
-    <cfset client.invoice_access = authenticate.invoice_access>
-
-	<cfquery name="lastlogin" datasource="#application.dsn#">
-		UPDATE smg_users
-        SET lastlogin = #now()#
-		WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-	</cfquery>
+	Updated:  	
 	
-	<!----Once more of site is complete, change this to an appropriate welcome page.--->
-	<cflocation url="internal/index.cfm?curdoc=initial_welcome" addtoken="no">
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill extra output --->
+<cfsilent>
+
+	<!--- Authenticate User --->
+    <cfquery name="qAuthenticateUser" datasource="#APPLICATION.dsn#">
+        SELECT 
+            u.userID,
+            u.firstName,
+            u.lastName,
+            u.email,
+            u.lastLogin,
+            u.invoice_access,
+            uar.usertype,
+            c.companyID,
+            c.companyName,
+            c.companyShort
+        FROM 
+            smg_users u
+        INNER JOIN
+            user_access_rights uar ON uar.userID = u.userID    
+        INNER JOIN 
+            smg_companies c ON uar.companyid = c.companyid
+        WHERE 
+            u.username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(form.username)#">
+        AND 
+            u.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(form.password)#">
+        AND 	
+            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND
+            c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHP">        
+    </cfquery>
     
-<cfelseif authenticate.recordcount eq 0>
+        
+    <!--- Authenticate School --->
+    <cfquery name="qAuthenticateSchool" datasource="#APPLICATION.dsn#">
+        SELECT 
+            schoolID,
+            contact,
+            email,
+            lastLogin
+        FROM 
+            php_schools
+        WHERE 
+            email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.username)#"> 
+        AND 
+            password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.password)#">
+        AND 
+            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    </cfquery>
 
-	<CFQUERY name="school" datasource="#application.dsn#">
-		SELECT * 
-		FROM php_schools
-		WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.username)#"> 
-        AND password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(form.password)#">
-        AND active = 1
-	</CFQUERY>
-
-	<cfif school.recordcount neq 0>
-
-		<cfset client.isLoggedIn = 'Yes'>
-		<cfset client.userid = school.schoolid>
-		<cfset client.firstname = school.contact>
-		<cfset client.lastname = ''>
-	    <cfset client.email = school.email>
-		<cfset client.lastlogin = school.lastlogin>
-		<cfset client.usertype = 12>
-		<cfset client.companyid = 6>
-	
-        <cfquery name="lastlogin" datasource="#application.dsn#">
-            UPDATE php_schools
-            SET lastlogin = #now()#
-            WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+	<!--- Valid User Account --->
+    <cfif VAL(qAuthenticateUser.recordcount)>
+        
+        <cfscript>
+            // Set CLIENT Variables
+            CLIENT.isLoggedIn = 1;
+            CLIENT.userID = qAuthenticateUser.userID;
+            CLIENT.usertype = qAuthenticateUser.usertype;
+			CLIENT.firstname = qAuthenticateUser.firstname;
+            CLIENT.lastname =  qAuthenticateUser.lastname;
+            CLIENT.email = qAuthenticateUser.email;
+            CLIENT.lastlogin = qAuthenticateUser.lastlogin;
+            // this is currently used only in the menu
+            CLIENT.invoice_access = qAuthenticateUser.invoice_access;
+			// Company Information
+            CLIENT.companyID = qAuthenticateUser.companyID;
+            CLIENT.companyName = qAuthenticateUser.companyName;
+            CLIENT.companyShort = qAuthenticateUser.companyShort;
+        </cfscript>
+        
+        <!--- Update User Last Login --->
+        <cfquery datasource="#APPLICATION.dsn#">
+            UPDATE 
+                smg_users
+            SET 
+                lastlogin = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#Now()#">
+            WHERE 
+                userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
         </cfquery>
         
-        <cflocation url="internal/index.cfm?curdoc=initial_welcome" addtoken="no">
+        <cfscript>
+            // Go to Initial Welcome Page
+            Location("internal/index.cfm?curdoc=initial_welcome", "no");
+        </cfscript>
         
-	<cfelse>
-		<cfset client.isLoggedIn = "No">
-		<cflocation url = "contactUs.cfm" addtoken="no">
-	</cfif>
+    <cfelseif VAL(qAuthenticateSchool.recordcount)>
     
-<cfelse>
+        <cfquery name="qGetCompanyInfo" datasource="#APPLICATION.dsn#">
+            SELECT 
+                c.companyID,
+                c.companyName,
+                c.companyShort
+            FROM 
+                smg_companies c
+            WHERE 
+                c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHP">        
+        </cfquery>
+    
+        <cfscript>
+            // Set CLIENT Variables
+            CLIENT.isLoggedIn = 1;
+            CLIENT.userID = qAuthenticateSchool.schoolID;
+			CLIENT.usertype = 12;
+            CLIENT.firstname = qAuthenticateSchool.contact;
+            CLIENT.lastname =  '';
+            CLIENT.email = qAuthenticateSchool.email;
+            CLIENT.lastlogin = qAuthenticateSchool.lastlogin;
+			// Company Information
+            CLIENT.companyID = qGetCompanyInfo.companyID;
+            CLIENT.companyName = qGetCompanyInfo.companyName;
+            CLIENT.companyShort = qGetCompanyInfo.companyShort;
+        </cfscript>
+        
+        <!--- Update School Last Login --->
+        <cfquery datasource="#APPLICATION.dsn#">
+            UPDATE 
+                php_schools
+            SET 
+                lastlogin = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#Now()#">
+            WHERE 
+                schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+        </cfquery>
+        
+        <cfscript>
+            // Go to Initial Welcome Page
+            Location("internal/index.cfm?curdoc=initial_welcome", "no");
+        </cfscript>
+        
+    <cfelse>
+    
+        <cfscript>
+            // NOT VALID LOGIN
+            CLIENT.isLoggedIn = 0;
+            Location("contactUs.cfm", "no");
+        </cfscript>
+    
+    </cfif>
 
-	<cfset client.isLoggedIn = "No">
-	<cflocation url = "contactUs.cfm" addtoken="no">
-
-</cfif>
+</cfsilent>
