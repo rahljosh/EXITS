@@ -115,10 +115,13 @@
 	}
 
 	/* jQuery Latest Version 
-	http://code.jquery.com/jquery-latest.min.js
-	http://code.jquery.com/jquery.js */		
+	http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
 	APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js';	
-	
+	APPLICATION.PATH.jQueryUI = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js';
+	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/excite-bike/jquery-ui.css';
+	// 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/redmond/jquery-ui.css';
+
+
 	APPLICATION.PATH.companyLogo = APPLICATION.PATH.base & "pics/logos/"; 
 	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & "uploadedfiles/";	
 	

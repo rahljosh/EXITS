@@ -137,13 +137,13 @@
         <tr>
             <td>From : </td>
             <td> 
-                <input type="text" name="dateFrom" value="#DateFormat(FORM.dateFrom, 'mm/dd/yyyy')#" class="date-pick" maxlength="10"> &nbsp; mm/dd/yyyy
+                <input type="text" name="dateFrom" value="#DateFormat(FORM.dateFrom, 'mm/dd/yyyy')#" class="datePicker" maxlength="10"> &nbsp; mm/dd/yyyy
             </td>
         </tr>
         <tr>
             <td>To : </td>
             <td>
-                <input type="text" name="dateTo" value="#DateFormat(FORM.dateTo, 'mm/dd/yyyy')#" class="date-pick" maxlength="10"> &nbsp; mm/dd/yyyy
+                <input type="text" name="dateTo" value="#DateFormat(FORM.dateTo, 'mm/dd/yyyy')#" class="datePicker" maxlength="10"> &nbsp; mm/dd/yyyy
             </td>
         </tr>
         <tr><td colspan="2" align="center"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>

@@ -1220,7 +1220,7 @@
                                     <table width="100%">
                                         <tr>
                                             <td><label for="dateTrained">Date Trained:</label></td>
-                                            <td><input type="text" name="dateTrained" value="#DateFormat(FORM.dateTrained, 'mm/dd/yyyy')#" id="dateTrained" class="date-pick" maxlength="10" />  (mm/dd/yyyy)</td>
+                                            <td><input type="text" name="dateTrained" value="#DateFormat(FORM.dateTrained, 'mm/dd/yyyy')#" id="dateTrained" class="datePicker" maxlength="10" />  (mm/dd/yyyy)</td>
                                         </tr>
                                         <tr>
                                             <td valign="top"><label for="trainingID">Training:</label></td>

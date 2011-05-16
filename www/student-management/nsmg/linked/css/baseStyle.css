@@ -1,8 +1,9 @@
 @charset "utf-8";
 /* CSS Document */
 
-/***** HEADER.CFM *****/
-
+/********************************************
+	HEADER.CFM
+********************************************/
 .smlink         		{font-size: 11px;}
 .section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #ffffff;}
 .sideborders			{border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6; background: #ffffff;}
@@ -10,46 +11,94 @@
 .sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionSubHead			{font-size:11px;font-weight:bold;}
+/********************************************
+	END OF HEADER.CFM
+********************************************/
 
-/***** END OF HEADER.CFM *****/
+
+/********************************************
+	TIME PICKER
+********************************************/
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div .ui_tpicker_hour div { padding-right: 2px; }
+.ui-timepicker-div .ui_tpicker_minute div { padding-right: 6px; }
+.ui-timepicker-div .ui_tpicker_second div { padding-right: 6px; }
+.ui-timepicker-div td { font-size: 90%; }
+/********************************************
+	END OF TIME PICKER
+********************************************/
 
 
-/***** Default FORM *****/
-
+/********************************************
+	FORM FIELDS
+********************************************/
 .columnTitle {
 	font-weight:bold;	
 }
 
 .defaultForm input { 
-	border: 1px solid #; 
+	border: 1px solid #999; 
 	/* margin-bottom: .5em; */		
 }
 
 .defaultForm select {
-	border: 1px solid #CCC; 
+	border: 1px solid #999; 
 	/* margin-bottom: .5em; */		
+}
+
+.fieldSize40 {
+	width:40px;
+	border:1px solid #999;	
+}
+
+.fieldSize60 {
+	width:60px;
+	border:1px solid #999;	
+}
+
+.fieldSize70 {
+	width:70px;
+	border:1px solid #999;	
+}
+
+.fieldSize100 {
+	width:100px;
+	border:1px solid #999;	
+}
+
+.datePicker {
+	width:80px;
+	border:1px solid #999;	
 }
 
 .smallField {
 	width : 80px;
+	border:1px solid #999;	
 }
 
 .mediumField {
 	width : 140px;
+	border:1px solid #999;	
 }
 
 .largeField {
 	width : 200px;
+	border:1px solid #999;	
 }
 
 .xLargeField {
 	width : 260px;
+	border:1px solid #999;	
 }
 
 .xLargeTextArea {
 	height: 80px;
 	width : 350px;
 	margin-bottom: .5em;
+	border:1px solid #999;	
 }
 
 .formNote {
@@ -76,23 +125,25 @@
 	padding:2px;
 	margin-top:15px; 
 	margin-bottom: .5em; 		
-	border: 1px solid #CCC; 
+	border: 1px solid #999; 
 }
-
-/***** END OF Default FORM *****/
-
-
-
-/***** HOST FAMILY LEAD *****/
+/********************************************
+	END OF FORM FIELDS
+********************************************/
 
 
+/********************************************
+	HOST FAMILY LEAD
+********************************************/
+
+/********************************************
+	END OF HOST FAMILY LEAD
+********************************************/
 
 
-/***** END OF HOST FAMILY LEAD *****/
-
-
-/***** PAGE MESSAGE *****/
-
+/********************************************
+	PAGE MESSAGE
+********************************************/
 div.pageMessages { 
 	font-size:0.8em;
 	display:none;
@@ -111,11 +162,14 @@ div.pageMessages p em {
 	color: #0069aa; 
 	font-weight: bold;
 }
+/********************************************
+	END OF PAGE MESSAGE
+********************************************/
 
-/***** END OF PAGE MESSAGE *****/
 
-
-/***** ERROR MESSAGE *****/
+/********************************************
+	 ERROR MESSAGE
+********************************************/
 div.errors { 
     margin:0px auto 10px auto;
 	padding: 5px 10px; 
@@ -144,13 +198,14 @@ div.errors ol {
 	list-style: none;
 	text-indent:-3em;
 }
+/********************************************
+	 END OF ERROR MESSAGE
+********************************************/
 
-/***** END OF ERROR MESSAGE *****/
 
-
-
-/***** DEFAULT TABLE STYLE *****/
-
+/********************************************
+	 DEFAULT TABLE STYLE
+********************************************/
 .defaultTableStyle {
 	background-color:#e2efc7;  /* #c6c6c6 #EAE8E8 */
 	line-height:15px;
@@ -162,13 +217,14 @@ div.errors ol {
 .defaultTableStyle a {
 	color:#000;
 }
+/********************************************
+	 END OF DEFAULT TABLE STYLE
+********************************************/
 
-/***** END OF DEFAULT TABLE STYLE *****/
 
-
-
-/***** PROJECT HELP *****/
-
+/********************************************
+	 PROJECT HELP
+********************************************/
 .projectHelpNote {
 	font-weight:bold;
 }
@@ -228,6 +284,6 @@ input.projectHelpHours {
 	color:c6c6c6;
 	height:1px;
 }
-
-/***** END OF PROJECT HELP *****/
-
+/********************************************
+	 END OF PROJECT HELP
+********************************************/

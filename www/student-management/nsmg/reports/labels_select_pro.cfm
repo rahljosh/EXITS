@@ -193,9 +193,9 @@
                                 <td>Date Entered: </td>
                                 <td>
                                     <span style="float:left">From: &nbsp;</span>
-                                    <input type="text" name="date1" class="date-pick" maxlength="10">
+                                    <input type="text" name="date1" class="datePicker" maxlength="10">
                                     <span style="float:left;">To: &nbsp;</span>
-                                    <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
+                                    <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
                             <tr><td align="right"><input type="checkbox" name="usa" disabled="disabled"></input></td></tr>				
@@ -391,9 +391,9 @@
                                 <td>Date Placed:</td>
                                 <td>
                                     <span style="float:left">From: &nbsp;</span>
-                                    <input type="text" name="date1" class="date-pick" maxlength="10">
+                                    <input type="text" name="date1" class="datePicker" maxlength="10">
                                     <span style="float:left;">To: &nbsp;</span>
-                                    <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
+                                    <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
@@ -430,9 +430,9 @@
                                 <td>Date Placed:</td>
                                 <td>
                                     <span style="float:left">From: &nbsp;</span>
-                                    <input type="text" name="date1" class="date-pick" maxlength="10">
+                                    <input type="text" name="date1" class="datePicker" maxlength="10">
                                     <span style="float:left;">To: &nbsp;</span>
-                                    <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
+                                    <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
                             
@@ -460,11 +460,11 @@
                             </tr>
                             <tr>
                             	<td>From: </td>
-                                <td><input type="text" name="date1" class="date-pick" maxlength="10"> mm/dd/yyyy</td>
+                                <td><input type="text" name="date1" class="datePicker" maxlength="10"> mm/dd/yyyy</td>
                             </tr>
                             <tr>
                             	<td>To: </td>
-                                <td><input type="text" name="date2" class="date-pick" maxlength="10"> mm/dd/yyyy</td>
+                                <td><input type="text" name="date2" class="datePicker" maxlength="10"> mm/dd/yyyy</td>
                             </tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
                         </table>
@@ -548,9 +548,9 @@
                                 <td>Date Placed:</td>
                                 <td>
                                     <span style="float:left">From: &nbsp;</span>
-                                    <input type="text" name="date1" class="date-pick" maxlength="10">
+                                    <input type="text" name="date1" class="datePicker" maxlength="10">
                                     <span style="float:left;">To: &nbsp;</span>
-                                    <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
+                                    <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
                             <tr><td colspan="2"><font size="-2" color="000066">* Date Placed (Leave blank for all)</font></td></tr>
@@ -584,9 +584,9 @@
                                 <td>Date Placed:</td>
                                 <td>
                                     <span style="float:left">From: &nbsp;</span>
-                                    <input type="text" name="date1" class="date-pick" maxlength="10">
+                                    <input type="text" name="date1" class="datePicker" maxlength="10">
                                     <span style="float:left;">To: &nbsp;</span>
-                                    <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
+                                    <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
                             <tr><td colspan="2"><font size="-2" color="000066">* Date Placed (Leave blank for all)</font></td></tr>
@@ -610,9 +610,9 @@
                                 <td>Date Placed:</td>
                                 <td>
                                     <span style="float:left">From: &nbsp;</span>
-                                    <input type="text" name="date1" class="date-pick" maxlength="10">
+                                    <input type="text" name="date1" class="datePicker" maxlength="10">
                                     <span style="float:left;">To: &nbsp;</span>
-                                    <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
+                                    <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
                                <tr>
@@ -640,9 +640,9 @@
                                 <td>Date Placed:</td>
                                 <td>
                                     <span style="float:left">From: &nbsp;</span>
-                                    <input type="text" name="date1" class="date-pick" maxlength="10">
+                                    <input type="text" name="date1" class="datePicker" maxlength="10">
                                     <span style="float:left;">To: &nbsp;</span>
-                                    <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
+                                    <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
                                  <tr>
@@ -685,9 +685,9 @@
                                 <td>Date Received:</td>
                                 <td>
                                     <span style="float:left">From: &nbsp;</span>
-                                    <input type="text" name="date1" class="date-pick" maxlength="10">
+                                    <input type="text" name="date1" class="datePicker" maxlength="10">
                                     <span style="float:left;">To: &nbsp;</span>
-                                    <input type="text" name="date2" class="date-pick" maxlength="10">                                                                                                                                   
+                                    <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
                             <tr><td colspan="2"><font size="-2" color="000066">* Application Received Date</font></td></tr>
