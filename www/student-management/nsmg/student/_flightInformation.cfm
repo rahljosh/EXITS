@@ -22,10 +22,12 @@
     <!--- Delete Flight Information --->
     <cfparam name="URL.uniqueID" type="string" default="">
     <cfparam name="URL.flightID" default="0">
+    <cfparam name="URL.programID" default="0">
 		        
 	<!--- Param GLOBAL FORM Variables --->
     <cfparam name="FORM.subAction" type="string"  default="">
     <cfparam name="FORM.uniqueID" type="string" default="">
+    <cfparam name="FORM.programID" type="string" default="0">
     <cfparam name="FORM.flight_notes" type="string" default="">
     <cfparam name="FORM.preAYPArrivalCount" default="0">
     <cfparam name="FORM.arrivalCount" default="0">
@@ -35,7 +37,11 @@
 		// Check if there is a valid URL variable
 		if ( LEN(URL.uniqueID) AND NOT LEN(FORM.uniqueID) ) {
 			FORM.uniqueID = URL.uniqueID;	
-		}	
+		}
+		
+		if ( VAL(URL.programID) ) {
+			FORM.programID = URL.programID;
+		}
 	</cfscript>
        
 	<cfscript>
@@ -43,7 +49,7 @@
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentFullInformationByID(uniqueID=FORM.uniqueID);
 		
 		// Check if it's an Active PHP Student
-		qGetPHPStudentInfo = APPLICATION.CFC.STUDENT.getPHPStudent(studentID=qGetStudentInfo.studentID);
+		qGetPHPStudentInfo = APPLICATION.CFC.STUDENT.getPHPStudent(studentID=qGetStudentInfo.studentID,programID=FORM.programID);
 		
 		if ( qGetPHPStudentInfo.recordCount EQ 1 ) {
 			// Use PHP Data Instead
@@ -107,7 +113,7 @@
                     APPLICATION.CFC.STUDENT.insertFlightInfo(
                         studentID=qGetStudentInfo.studentID,
 						companyID=qGetStudentInfo.companyID,
-						programID=qGetStudentInfo.programID,
+						programID=FORM.programID,
 						enteredByID=CLIENT.userID,
                         flightNumber=FORM["incomingNewPreAYPFlightNumber" & i],
                         depCity=FORM["incomingNewPreAYPDepartureCity" & i],
@@ -146,7 +152,7 @@
                     flightID=FORM["incomingPreAYPflightID" & i],
 					studentID=qGetStudentInfo.studentID,
 					companyID=qGetStudentInfo.companyID,
-					programID=qGetStudentInfo.programID,
+					programID=FORM.programID,
 					enteredByID=CLIENT.userID,
                     flightNumber=FORM["incomingPreAYPFlightNumber" & i],
                     depCity=FORM["incomingPreAYPDepartureCity" & i],
@@ -191,7 +197,7 @@
                     APPLICATION.CFC.STUDENT.insertFlightInfo(
                         studentID=qGetStudentInfo.studentID,
 						companyID=qGetStudentInfo.companyID,
-						programID=qGetStudentInfo.programID,
+						programID=FORM.programID,
 						enteredByID=CLIENT.userID,
                         flightNumber=FORM["incomingNewFlightNumber" & i],
                         depCity=FORM["incomingNewDepartureCity" & i],
@@ -230,7 +236,7 @@
                     flightID=FORM["incomingflightID" & i],
 					studentID=qGetStudentInfo.studentID,
 					companyID=qGetStudentInfo.companyID,
-					programID=qGetStudentInfo.programID,
+					programID=FORM.programID,
 					enteredByID=CLIENT.userID,
                     flightNumber=FORM["incomingFlightNumber" & i],
                     depCity=FORM["incomingDepartureCity" & i],
@@ -275,7 +281,7 @@
                     APPLICATION.CFC.STUDENT.insertFlightInfo(
                         studentID=qGetStudentInfo.studentID,
 						companyID=qGetStudentInfo.companyID,
-						programID=qGetStudentInfo.programID,
+						programID=FORM.programID,
 						enteredByID=CLIENT.userID,
                         flightNumber=FORM["outgoingNewFlightNumber" & i],
                         depCity=FORM["outgoingNewDepartureCity" & i],
@@ -314,7 +320,7 @@
                     flightID=FORM["outgoingflightID" & i],
 					studentID=qGetStudentInfo.studentID,
 					companyID=qGetStudentInfo.companyID,
-					programID=qGetStudentInfo.programID,
+					programID=FORM.programID,
 					enteredByID=CLIENT.userID,
                     flightNumber=FORM["outgoingFlightNumber" & i],
                     depCity=FORM["outgoingDepartureCity" & i],
@@ -368,14 +374,31 @@
 	<!--- END OF FORM.subAction --->
 
     <cfscript>
-		// Get Pre-AYP Arrival
-		qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="preAYPArrival");
+		// Public School
+		if ( NOT VAL(qGetPHPStudentInfo.recordCount) ) {
+		
+			// Get Pre-AYP Arrival
+			qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="preAYPArrival");
+	
+			// Get Arrival
+			qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="arrival");
+	
+			// Get Departure
+			qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="departure");
+		
+		// PHP - Get Flight According to Program
+		} else {
+			
+			// Get Pre-AYP Arrival
+			qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(qGetStudentInfo.programID), flightType="preAYPArrival");
+	
+			// Get Arrival
+			qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(qGetStudentInfo.programID), flightType="arrival");
+	
+			// Get Departure
+			qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(qGetStudentInfo.programID), flightType="departure");
 
-		// Get Arrival
-		qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="arrival");
-
-		// Get Departure
-		qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="departure");
+		}
 	</cfscript>
 
 </cfsilent>
@@ -499,6 +522,7 @@
                                     <form name="emailRegionalManager" action="#CGI.SCRIPT_NAME#" method="post">
                                         <input type="hidden" name="subAction" value="emailRegionalManager" />
                                         <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
+                                        <input type="hidden" name="programID" value="#qGetStudentInfo.programID#" />
                                     	<input type="image" src="../pics/sendemail.gif" value="send email">
                                     </form>
                                     <font size="-2" color="##CC6600"><b>Be sure you have updated the flight information before sending the e-mail to the Regional Director.</b></font>
@@ -507,6 +531,7 @@
                                     <form name="emailCurrentUser" action="#CGI.SCRIPT_NAME#" method="post">
                                         <input type="hidden" name="subAction" value="emailCurrentUser" />
                                         <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
+                                        <input type="hidden" name="programID" value="#qGetStudentInfo.programID#" />
                                     	<input type="image" src="../pics/sendemail.gif" value="send email">
                                     </form>
                                     <font size="-2" color="##CC6600"><b>Be sure you have updated the flight information before sending the e-mail to yourself.</b></font>
@@ -528,6 +553,7 @@
                     <form name="flightInformation" action="#CGI.SCRIPT_NAME#" method="post">
                     <input type="hidden" name="subAction" value="update" />
                     <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
+                    <input type="hidden" name="programID" value="#qGetStudentInfo.programID#" />
                     
                     <!--- PRE-AYP ARRIVAL INFORMATION --->
                     <cfif VAL(qGetStudentInfo.AYPEnglish) OR VAL(qGetStudentInfo.AYPOrientation)>
