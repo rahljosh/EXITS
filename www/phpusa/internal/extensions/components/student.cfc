@@ -306,7 +306,7 @@
 				LEFT OUTER JOIN
                 	smg_users areaRep ON areaRep.userID = php.areaRepID
                 WHERE 
-                    php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    1 = 1
 
 				<cfif VAL(ARGUMENTS.studentID)>
                     AND
@@ -664,7 +664,7 @@
         <cfargument name="programID" hint="programID is required">
         <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
 		<cfargument name="emailPDF" default="1" hint="Set to 0 to send the flight arrival in HTML format">
-        <cfargument name="sendEmailTo" default="" hint="emailSchool | emailCurrentUser">
+        <cfargument name="sendEmailTo" default="" hint="school | currentUser">
        
    		<!--- Import CustomTag --->
 		<cfimport taglib="../customTags/gui/" prefix="gui" />	
@@ -703,15 +703,15 @@
             // Get Departure
             qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=VAL(qGetStudentFullInformation.programID), flightType="departure");
 			
-			// PHP Student - Email Luke
+			// Link to Student Profile
 			flightInfoLink = '#APPLICATION.PATH.PHP.phpusa#/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
             
-			if ( ARGUMENTS.sendEmailTo EQ 'emailSchool' AND IsValid("email", qGetSchoolInfo.email) ) {
+			if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) ) {
 				
 				// Email School | No copy to the current user
 				flightEmailTo = qGetSchoolInfo.email;
 
-            } else if ( ARGUMENTS.sendEmailTo EQ 'emailCurrentUser' AND IsValid("email", qGetCurrentUser.email) ) {
+            } else if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
 				
 				// Email Current User
 				flightEmailTo = qGetCurrentUser.email;
@@ -852,7 +852,7 @@
                         </p>
 						
                         <!--- Updated By --->
-                        <cfif ARGUMENTS.sendEmailTo NEQ 'emailSchool'>
+                        <cfif ARGUMENTS.sendEmailTo NEQ 'school'>
                             <p style="color: ##333;">
                                 <span style="font-weight:bold;">Updated By:</span> 
                                 #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
