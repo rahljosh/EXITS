@@ -156,9 +156,10 @@
 
 
 	<cffunction name="getPHPStudent" access="public" returntype="query" output="false" hint="Returns PHP student">
-    	<cfargument name="studentID" default="0" hint="studentID is not required">
+    	<cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
         <cfargument name="assignedID" default="" hint="assignedID is not required">
+        <cfargument name="programID" default="0" hint="programID is not required">
 
         <cfquery 
 			name="qGetPHPStudent" 
@@ -219,9 +220,9 @@
                 WHERE 
                     php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 
-                <cfif VAL(ARGUMENTS.studentID)>
+                <cfif LEN(ARGUMENTS.studentID)>
                     AND                
-                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.uniqueID)>
@@ -229,11 +230,16 @@
                         s.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
                 </cfif>
 
-                <cfif VAL(ARGUMENTS.assignedID)>
+                <cfif LEN(ARGUMENTS.assignedID)>
                     AND                
-                        php.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.assignedID#">
+                        php.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
                 </cfif>
-                                    
+
+                <cfif VAL(ARGUMENTS.programID)>
+                    AND                
+                        php.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                </cfif>
+
         </cfquery>
         
         <cfreturn qGetPHPStudent>            
