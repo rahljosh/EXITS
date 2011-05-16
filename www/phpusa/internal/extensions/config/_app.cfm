@@ -33,20 +33,23 @@
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
 
-	AppEmail.support = 'support@phpusa.com';
-	AppEmail.finance = 'marcel@student-management.com';
-	AppEmail.programManager = 'luke@phpusa.com';
-	AppEmail.errors = 'errors@student-management.com';
+	APPLICATION.EMAIL.support = 'support@phpusa.com';
+	APPLICATION.EMAIL.finance = 'marcel@student-management.com';
+	APPLICATION.EMAIL.programManager = 'luke@phpusa.com';
+	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	
 
 	/***** Create APPLICATION.PATH structure *****/
-	APPLICATION.PATH = StructNew();		
+	APPLICATION.PATH = StructNew();	
+	// These are for EXITS links 
+	APPLICATION.PATH.PHP = StructNew();	
 	
-	// Set a short name for the APPLICATION.PATH
-	AppPath = APPLICATION.PATH;
-	// These are used in the PHP Application
-	AppPath.PHP = StructNew();
-
+	/* jQuery Latest Version 
+	http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
+	APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js';	
+	APPLICATION.PATH.jQueryUI = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js';
+	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/excite-bike/jquery-ui.css';
+	// 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/redmond/jquery-ui.css';
 
 	/***** Set Settings based on Live or Dev Servers *****/
 	
@@ -54,68 +57,77 @@
 	if ( APPLICATION.isServerLocal ) {
 		// DEVELOPMENT Server Settings	
 
-		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		// Base Path eg. C:\websites\php\internal\
-		AppPath.PHP.base = 'C:/websites/www/phpusa/';
-
 		// Set Site URL
 		APPLICATION.site_url = 'http://php.local/';
+		
+		// Getting error on querys/upload_logo.cfm. Getting full path including /query
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		APPLICATION.PATH.PHP.base = "C:/websites/phpusa/";
+		
+		APPLICATION.PATH.PHP.base = "C:/websites/www/phpusa/";
+		APPLICATION.PATH.PHP.baseInternal = "C:/websites/www/phpusa/internal";
+		APPLICATION.PATH.PHP.phpusa = "http://php.local/internal/";
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		AppPath.base = "C:/websites/www/student-management/nsmg/";
-		
-		AppPath.SmgURL = "http://www.student-management.com/nsmg/";
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		APPLICATION.PATH.base = "C:/websites/www/student-management/nsmg/";
+		APPLICATION.PATH.SmgURL = "http://ise.local/nsmg/";
 		
 	} else {
 		// PRODUCTION Server Settings
-
-		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		// Base Path eg. C:\websites\php\internal\
-		AppPath.PHP.base = "C:/websites/phpusa/";
 
 		// Set Site URL
 		APPLICATION.site_url = 'http://www.phpusa.com';
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// AppPath.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		AppPath.base = "C:/websites/student-management/nsmg/";
-		
-		AppPath.SmgURL = "http://www.student-management.com/nsmg/";
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		APPLICATION.PATH.PHP.base = "C:/websites/phpusa/";
+		APPLICATION.PATH.PHP.baseInternal = "C:/websites/phpusa/internal";
+		APPLICATION.PATH.PHP.phpusa = "http://www.phpusa.com/internal/";
 
+		// Getting error on querys/upload_logo.cfm. Getting full path including /query
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		APPLICATION.PATH.base = "C:/websites/student-management/nsmg/";
+		APPLICATION.PATH.SmgURL = "http://ise.exitsapplication.com/nsmg/";
 	}
 
+
+	/********************
+		PHP SPECIFIC
+	********************/ 
+	APPLICATION.PATH.PHP.schoolImage = APPLICATION.PATH.PHP.base & "newschools/";
+	APPLICATION.PATH.PHP.pics = APPLICATION.PATH.PHP.base & "pics/"; 
 	
-	AppPath.PHP.schools = AppPath.PHP.base & "newschools/";
-	
-	AppPath.companyLogo = AppPath.base & "pics/logos/"; 
-	AppPath.uploadedFiles = AppPath.base & "uploadedfiles/";	
+
+	/********************
+		EXITS SPECIFIC
+	********************/ 
+	APPLICATION.PATH.companyLogo = APPLICATION.PATH.base & "pics/logos/"; 
+	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & "uploadedfiles/";	
 	
 	// These are inside uploadedFiles folder
-	AppPath.cbcXML = AppPath.uploadedFiles & "xml_files/gis/";
-	AppPath.newsMessage = AppPath.uploadedFiles & "news/";
-	AppPath.pdfDocs = AppPath.uploadedFiles & "pdf_docs/";	
-	AppPath.sevis = AppPath.uploadedFiles & "sevis/";
-	AppPath.temp = AppPath.uploadedFiles & "temp/";	
-	AppPath.welcomePics = AppPath.uploadedFiles & "welcome_pics/";	
-	AppPath.xmlFiles = AppPath.uploadedFiles & "xml_files/";	
+	APPLICATION.PATH.cbcXML = APPLICATION.PATH.uploadedFiles & "xml_files/gis/";
+	APPLICATION.PATH.newsMessage = APPLICATION.PATH.uploadedFiles & "news/";
+	APPLICATION.PATH.pdfDocs = APPLICATION.PATH.uploadedFiles & "pdf_docs/";	
+	APPLICATION.PATH.sevis = APPLICATION.PATH.uploadedFiles & "sevis/";
+	APPLICATION.PATH.temp = APPLICATION.PATH.uploadedFiles & "temp/";	
+	APPLICATION.PATH.welcomePics = APPLICATION.PATH.uploadedFiles & "welcome_pics/";	
+	APPLICATION.PATH.xmlFiles = APPLICATION.PATH.uploadedFiles & "xml_files/";	
 
 	// These are used in the student online application
-	AppPath.onlineApp = StructNew();
+	APPLICATION.PATH.onlineApp = StructNew();
 	
 	// URL Used on Upload/Delete Files
-	AppPath.onlineApp.URL = "https://www.student-management.com/nsmg/student_app/";		
-	AppPath.onlineApp.reloadURL = "https://www.student-management.com/nsmg/student_app/querys/reload_window.cfm";
+	APPLICATION.PATH.onlineApp.URL = "https://ise.exitsapplication.com/nsmg/student_app/";		
+	APPLICATION.PATH.onlineApp.reloadURL = "https://ise.exitsapplication.com/nsmg/student_app/querys/reload_window.cfm";
 	
-	AppPath.onlineApp.uploadURL = "http://new.upload.student-management.com/";
-	AppPath.onlineApp.picture = AppPath.uploadedFiles & "web-students/";
-	AppPath.onlineApp.letters = AppPath.uploadedFiles & "letters/";
-	AppPath.onlineApp.studentLetter = AppPath.uploadedFiles & "letters/students/";
-	AppPath.onlineApp.parentLetter = AppPath.uploadedFiles & "letters/parents/";		
-	AppPath.onlineApp.familyAlbum = AppPath.uploadedFiles & "online_app/picture_album/";
-	AppPath.onlineApp.inserts = AppPath.uploadedFiles & "online_app/";
-	AppPath.onlineApp.virtualFolder = AppPath.uploadedFiles & "virtualfolder/";
-	AppPath.onlineApp.xmlApp = AppPath.uploadedFiles & "xml_app/";
+	APPLICATION.PATH.onlineApp.uploadURL = "http://new.upload.student-management.com/";
+	APPLICATION.PATH.onlineApp.picture = APPLICATION.PATH.uploadedFiles & "web-students/";
+	APPLICATION.PATH.onlineApp.letters = APPLICATION.PATH.uploadedFiles & "letters/";
+	APPLICATION.PATH.onlineApp.studentLetter = APPLICATION.PATH.uploadedFiles & "letters/students/";
+	APPLICATION.PATH.onlineApp.parentLetter = APPLICATION.PATH.uploadedFiles & "letters/parents/";		
+	APPLICATION.PATH.onlineApp.familyAlbum = APPLICATION.PATH.uploadedFiles & "online_app/picture_album/";
+	APPLICATION.PATH.onlineApp.inserts = APPLICATION.PATH.uploadedFiles & "online_app/";
+	APPLICATION.PATH.onlineApp.virtualFolder = APPLICATION.PATH.uploadedFiles & "virtualfolder/";
+	APPLICATION.PATH.onlineApp.xmlApp = APPLICATION.PATH.uploadedFiles & "xml_app/";
 </cfscript>

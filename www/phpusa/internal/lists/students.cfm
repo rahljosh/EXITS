@@ -5,7 +5,7 @@
 	<cfparam name="URL.order" default="familylastname">
 	<cfparam name="URL.placed" default="All">
     
-    <cfquery name="students" datasource="MySql">
+    <cfquery name="qGetStudentList" datasource="MySql">
         SELECT DISTINCT
         	s.studentid,
             s.uniqueid,
@@ -92,13 +92,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Students List</title>
+<title>Student List</title>
 
 <cfoutput>
 
 <table width=90% cellpadding=0 cellspacing=0 border=0 align="center">
 	<tr valign=middle height=24>
-		<td width="57%" valign="middle" bgcolor="##e9ecf1"><h2 align="left" class="style1">S t u d e n t s - #students.recordcount# records</h2></td>
+		<td width="57%" valign="middle" bgcolor="##e9ecf1"><h2 align="left" class="style1">S t u d e n t s - #qGetStudentList.recordcount# records</h2></td>
 		<td width="42%" align="right" valign="top" bgcolor="##e9ecf1"><br>
 			Filter: &nbsp;  <a href="?curdoc=lists/students&order=#url.order#&placed=all&status=all">All</a>
             &nbsp; | &nbsp; <a href="?curdoc=lists/students&order=#url.order#&placed=all&status=active">Active</a>
@@ -121,13 +121,13 @@
 		<th width=80 background="images/back_menu2.gif" align="left"><a href="?curdoc=lists/students&order=schoolname&placed=#url.placed#&status=#url.status#">Return/Trans/Ext</a></th>
 		<cfif client.usertype lte 4><th width=100 background="images/back_menu2.gif" align="left"><a href="?curdoc=lists/students&order=businessname&placed=#url.placed#&status=#url.status#">Intl. Rep.</a></th></cfif>
 	</tr>
-<cfif students.recordcount eq 0>
+<cfif qGetStudentList.recordcount eq 0>
 	<Tr>
 		<td colspan=9 align="center"><br>You currently have no students in the system.</td>
 	</Tr>
 <cfelse>
-<cfloop query="students">
-	<tr bgcolor="#iif(students.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+<cfloop query="qGetStudentList">
+	<tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("e9ecf1") ,DE("FFFFFF") )#">
 		<td><cfif client.usertype GTE 5><a href="?curdoc=student/student_profile&unqid=#uniqueid#&assignedid=#assignedid#"><cfelse><a href="?curdoc=student/student_info&unqid=#uniqueid#&assignedid=#assignedid#"></cfif>#studentid#</td>
 		<td><cfif client.usertype GTE 5><a href="?curdoc=student/student_profile&unqid=#uniqueid#&assignedid=#assignedid#"><cfelse><a href="?curdoc=student/student_info&unqid=#uniqueid#&assignedid=#assignedid#"></cfif>#firstname#</td>
 		<td><cfif client.usertype GTE 5><a href="?curdoc=student/student_profile&unqid=#uniqueid#&assignedid=#assignedid#"><cfelse><a href="?curdoc=student/student_info&unqid=#uniqueid#&assignedid=#assignedid#"></cfif>#familylastname#</td>
@@ -142,6 +142,7 @@
 </cfif>
 </table>
 <br><br>
+
 </cfoutput>
 <cfif client.usertype lte 4>
 <div align="center">

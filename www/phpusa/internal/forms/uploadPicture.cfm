@@ -29,7 +29,7 @@
 
 		<!----Upload File---->
 		<cffile action = "upload"
-				destination = "#APPLICATION.PATH.PHP.schools#"
+				destination = "#APPLICATION.PATH.PHP.schoolImage#"
 				fileField = "FORM.schoolFile"
 				nameConflict = "makeunique">
 
@@ -37,10 +37,10 @@
 		<!----Rename Image According to School ID--->
         <cffile	
             action="Move" 
-            source="#APPLICATION.PATH.PHP.schools##CFFILE.ServerFile#" 
-            destination="#APPLICATION.PATH.PHP.schools##FORM.schoolID#.#CFFILE.clientfileext#"> 
+            source="#APPLICATION.PATH.PHP.schoolImage##CFFILE.ServerFile#" 
+            destination="#APPLICATION.PATH.PHP.schoolImage##FORM.schoolID#.#CFFILE.clientfileext#"> 
 		
-        <!--- <cffile action="delete" file="#APPLICATION.PATH.PHP.schools##CFFILE.ServerFile#"> --->
+        <!--- <cffile action="delete" file="#APPLICATION.PATH.PHP.schoolImage##CFFILE.ServerFile#"> --->
 	
     <cfelseif FORM.submitted>
     	

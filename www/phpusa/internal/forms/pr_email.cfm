@@ -8,15 +8,15 @@
     <cfelse>
     
     	<!--- delete old files. --->
-        <cfdirectory directory="#AppPath.temp#" action="list" name="get_files">
+        <cfdirectory directory="#APPLICATION.PATH.temp#" action="list" name="get_files">
         <cfloop query="get_files">
         	<!--- delete older than 2 days. --->
             <cfif dateDiff("d", dateLastModified, now()) GTE 2>
-            	<cffile action="delete" file="#AppPath.temp##name#">
+            	<cffile action="delete" file="#APPLICATION.PATH.temp##name#">
             </cfif>
         </cfloop>
         
-        <cfset file_path = "#AppPath.temp#progress_report_#form.pr_id#.pdf">
+        <cfset file_path = "#APPLICATION.PATH.temp#progress_report_#form.pr_id#.pdf">
 
     	<cfdocument format="PDF" filename="#file_path#" overwrite="yes">
 			<style type="text/css">

@@ -53,3 +53,6 @@
 
 <!--- Set up Application variables --->
 <cfinclude template="_app.cfm" />
+
+<!--- Set up Session variables --->
+<cfinclude template="_session.cfm" />

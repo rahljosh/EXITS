@@ -78,7 +78,7 @@
 			</tr>
 			<tr>
 				<td align="center">
-                    <cfif FileExists(APPLICATION.PATH.PHP.schools & '#get_school.schoolid#.jpg')>
+                    <cfif FileExists(APPLICATION.PATH.PHP.schoolImage & '#get_school.schoolid#.jpg')>
                         <img src="../newschools/#get_school.schoolid#.jpg" width="220" height="140" border="0"><br>
                         <a class=nav_bar href="" onClick="javascript: win=window.open('forms/uploadPicture.cfm?schoolID=#url.sc#', 'Settings', 'height=300, width=500, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Change Picture</a>
                     <cfelse>

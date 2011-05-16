@@ -87,6 +87,7 @@ a:hover{
 	letter-spacing:2;
 }
 .upper{text-transform:uppercase;}
+
 /****Table specs****/
 	.vline { BACKGROUND-IMAGE: url(pics/table-borders/left-vert-line.gif); BACKGROUND-REPEAT: repeat-y }
 	.grouptopleft { BACKGROUND-POSITION: 50% bottom; BACKGROUND-IMAGE: url(pics/table-borders/topleft.gif); BACKGROUND-REPEAT: no-repeat }
@@ -160,9 +161,7 @@ TD#input { width: 245px; _width:245px }
 .accountNumber {font-weight:bold; color:blue }
 .accountCurrency {font-weight:bold; color:red }
 
-
 .strike{text-decoration:line-through;}
-
 
 
 /*****Pulled from and edited****/

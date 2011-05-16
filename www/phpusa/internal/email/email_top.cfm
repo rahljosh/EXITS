@@ -1,24 +1,11 @@
-<cfif client.companyid eq 1>
-	<cfset companycolor='0054A0'>
-<cfelseif client.companyid eq 2>
-	<cfset companycolor='0054A0'>
- <cfelseif client.companyid eq 3>
-	<cfset companycolor='0054A0'>
- <cfelseif client.companyid eq 4>
-	<cfset companycolor='0054A0'>
- <cfelseif client.companyid eq 10>
-	<cfset companycolor='98012E'>
-<cfelseif client.companyid eq 11>
-	<cfset companycolor='00b3d9'>
-<cfelse>
-	<cfset companycolor='0054A0'> 
-</cfif>
 
- <Cfquery name="company_info" datasource="#application.dsn#">
- select fax, toll_free, phone, company_color, companyName
- from smg_companies
- where companyid = #client.companyid#
- </Cfquery>
+<cfset companycolor='0054A0'> 
+
+<Cfquery name="company_info" datasource="#application.dsn#">
+    select fax, toll_free, phone, company_color, companyName
+    from smg_companies
+    where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+</Cfquery>
  
 <style type="text/css">
 <!--
@@ -37,17 +24,13 @@ table,tr,td					{font-family:Arial, Helvetica, sans-serif;}
 
 <cfoutput>
 <div class="thin-border">
-<table background="#APPLICATION.PATH..SmgURL#pics/email_textured_background.png" width=600>
+<table background="#APPLICATION.PATH.PHP.phpusa#pics/email_textured_background.png" width=600>
 	<Tr >
-     	<td width=94><img src="#APPLICATION.PATH..SmgURL#pics/logos/#client.companyid#_header_logo.png"></td>
-    <cfif client.companyid lte 5>
-        <td><strong><font size=+2>INTERNATIONAL <font color="#companycolor#">STUDENT EXCHANGE</font></font></strong></td>
-     <cfelse>
+     	<td width=94><img src="#APPLICATION.site_url#/images/logo.png"></td>
      	<td><strong><font size=+2>#company_info.companyname#</font></font></strong></td>
-     </cfif>
      </Tr>
      <tr>	
-     	<td colspan=2><img src="#APPLICATION.PATH..SmgURL#pics/logos/#client.companyid#_px.png" height=12 width=100%></td>
+     	<td colspan=2><img src="#APPLICATION.PATH.PHP.phpusa#pics/#client.companyid#_px.png" height=12 width=100%></td>
 	</tr>
 </table>
 

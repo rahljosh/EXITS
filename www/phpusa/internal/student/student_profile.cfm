@@ -84,8 +84,23 @@ left join php_students_in_program on php_students_in_program.schoolid = php_Scho
 where php_students_in_program.studentid = #get_student_unqid.studentid#
 </cfquery>
 
-	
 <link rel="stylesheet" href="profile.css" type="text/css">
+
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
+				
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
+
+	});
+</script>
 
 <cfoutput query="get_student_unqid">
 
@@ -111,7 +126,7 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 <table  width=650 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
 	<hr width=80% align="center">
 	<td bgcolor="F3F3F3" valign="top" width=133><div align="left">
-		<cfdirectory directory="#AppPath.onlineApp.picture#" name="stupicture" filter="#studentid#.*">
+		<cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="stupicture" filter="#studentid#.*">
 		<cfif stupicture.recordcount>
 			<img src="http://www.student-management.com/nsmg/uploadedfiles/web-students/#stupicture.name#" width="135" height="200">
 		<cfelse>
@@ -135,7 +150,7 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 	<br>
 	<table cellpadding=0 cellspacing=0 border=0 width=65% style="font-size:13px">
 		<tr><td align="center" width="360">
-				<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="stuletter" filter="#studentid#.*">
+				<cfdirectory directory="#APPLICATION.PATH.onlineApp.studentLetter#" name="stuletter" filter="#studentid#.*">
 				<cfif Right(stuletter.name, 3) EQ 'jpg' OR Right(stuletter.name, 3) EQ 'gif'>
 					<a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_letter_profile.cfm?studentid=#studentid#&letter=students');">Students Letter</a>
 				<cfelseif stuletter.recordcount>
@@ -146,7 +161,7 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 					Students Letter n/a					
 				</cfif>
 				&nbsp - &nbsp
-				<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="paletter" filter="#studentid#.*">
+				<cfdirectory directory="#APPLICATION.PATH.onlineApp.parentLetter#" name="paletter" filter="#studentid#.*">
 				<cfif Right(paletter.name, 3) EQ 'jpg' OR Right(paletter.name, 3) EQ 'gif'>
 					<a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_letter_profile.cfm?studentid=#studentid#&letter=parents');">Parents Letter</a>
 				<cfelseif paletter.recordcount>
@@ -157,7 +172,8 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 					Parents Letter n/a
 				</cfif>
 				&nbsp - &nbsp			
-				<a href="" onClick="javascript: win=window.open('reports/flight_information.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a>
+                <!--- Flight Information --->
+                <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_unqid.uniqueid#&programID=#get_student_unqid.programID#" class="jQueryModal">Flight Information</a>
 			</td></tr>
 	</table>
 </table>

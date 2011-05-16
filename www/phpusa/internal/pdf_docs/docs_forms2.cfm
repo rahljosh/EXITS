@@ -9,7 +9,7 @@
 ---->
 <cfoutput>
 
-<cfdirectory action="List" directory="#AppPath.pdfDocs##companyshort.companyshort#" name="DirList" sort="name asc" filter="*.pdf">
+<cfdirectory action="List" directory="#APPLICATION.PATH.pdfDocs##companyshort.companyshort#" name="DirList" sort="name asc" filter="*.pdf">
 <table width=100%>
 	<tr>
 	<td> <h2><img src="pics/docs.gif">PDF Documents</td>

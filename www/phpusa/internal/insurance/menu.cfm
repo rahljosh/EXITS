@@ -102,7 +102,7 @@
                             </tr>
                             <tr align="left">
                                 <td>Start Date :</td>
-                                <td><input type="text" name="startDate" class="date-pick" maxlength="10" /></td>
+                                <td><input type="text" name="startDate" class="smallField datePicker" maxlength="10" /></td>
                             </tr>
                             <tr>
                                 <td colspan="2">

@@ -18,7 +18,7 @@
 </cfif>
 
 <cfquery name="get_student_info" datasource="mysql">
-	SELECT s.studentid, s.uniqueid, s.familylastname, s.firstname, s.middlename, s.fathersname, s.fatheraddress,
+	SELECT DISTINCT s.studentid, s.uniqueid, s.familylastname, s.firstname, s.middlename, s.fathersname, s.fatheraddress,
 		s.fatheraddress2, s.fathercity, s.fathercountry, s.fatherzip, s.fatherbirth, s.fathercompany, s.fatherworkphone,
 		s.fatherworkposition, s.fatherworktype, s.fatherenglish, s.motherenglish, s.mothersname, s.motheraddress,
 		s.motheraddress2, s.mothercity, s.mothercountry, s.motherzip, s.motherbirth, s.mothercompany, s.motherworkphone,
@@ -143,7 +143,7 @@
 					<td width="133">
 						<table width="100%" cellpadding="3">
 							<tr><td><td width="133">
-								<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
+								<cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 								<cfif file.recordcount>
 									<img src="uploadedfiles/web-students/#file.name#" width="135">
 								<cfelse>
@@ -297,7 +297,6 @@
 </div>
 
 </cfoutput>
-<cfinclude template="../table_footer.cfm">
 
 </body>
 </html>

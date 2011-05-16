@@ -17,17 +17,29 @@
 	AppCFC = APPLICATION.CFC;
 
 	// Store the initialized UDF Library object in the Application scope
-	AppCFC.UDF = CreateCFC("udf").Init();
+	APPLICATION.CFC.UDF = CreateCFC("udf").Init();
 	
 	// Store Application.IsServerLocal - This needs be declare before the other CFC components
 	APPLICATION.IsServerLocal = AppCFC.UDF.IsServerLocal();
 	
 	// Store the initialized company object in the Application scope
-	AppCFC.company = CreateCFC("company").Init();
+	APPLICATION.CFC.company = CreateCFC("company").Init();
 
 	// Store the initialized flightInformation object in the Application scope
-	AppCFC.flightInformation = CreateCFC("flightInformation").Init();
+	APPLICATION.CFC.flightInformation = CreateCFC("flightInformation").Init();
 
-	// Store the initialized Insurance object in the Application scope
-	AppCFC.Insurance = CreateCFC("insurance").Init();
+	// Store the initialized insurance object in the Application scope
+	APPLICATION.CFC.insurance = CreateCFC("insurance").Init();
+	
+	// Store the initialized program object in the Application scope
+	APPLICATION.CFC.program = CreateCFC("program").Init();
+
+	// Store the initialized school object in the Application scope
+	APPLICATION.CFC.school = CreateCFC("school").Init();
+
+	// Store the initialized student object in the Application scope
+	APPLICATION.CFC.student = CreateCFC("student").Init();
+
+	// Store the initialized student object in the Application scope
+	APPLICATION.CFC.user = CreateCFC("user").Init();
 </cfscript>
