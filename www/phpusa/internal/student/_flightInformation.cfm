@@ -43,7 +43,7 @@
 	<cfscript>
 		// Get Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentFullInformationByID(uniqueID=FORM.uniqueID, programID=VAL(FORM.programID));
-						
+		
 		// Get School Dates
 		qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentInfo.schoolID, programID=VAL(FORM.programID));
 	
