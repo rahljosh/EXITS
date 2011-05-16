@@ -791,7 +791,17 @@
             qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="departure");
 			
 			// Set Up EmailTo and FlightInfo Link
-            if ( ARGUMENTS.isPHPStudent ) {
+            if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
+				
+				// Public Student - Email Current User
+				flightEmailTo = qGetCurrentUser.email;
+			
+			} else if ( APPLICATION.IsServerLocal ) {
+				
+				// Local Server - Always email support
+                flightEmailTo = APPLICATION.EMAIL.support;
+			
+			} else if ( ARGUMENTS.isPHPStudent ) {
             	
 				// PHP Student - Email Luke
 				flightInfoLink = 'http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
@@ -805,24 +815,14 @@
                 
             } else if ( ARGUMENTS.sendEmailTo EQ 'regionalManager' AND IsValid("email", qGetRegionalManager.email) ) {
 				
-				// Public Student - Email Regional Manager | No copy to the current user
+				// Public Student - Email Regional Manager | Do not send a copy to current user
 				flightEmailTo = qGetRegionalManager.email;
-
-            } else if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
-				
-				// Public Student - Email Current User
-				flightEmailTo = qGetCurrentUser.email;
 
 			} else if ( IsValid("email", qGetFacilitator.email) ) {
                 
 				// Public Student - Email Facilitator
                 flightEmailTo = qGetFacilitator.email;
                 
-            } else if ( APPLICATION.IsServerLocal ) {
-				
-				// Local Server - Always email support
-                flightEmailTo = APPLICATION.EMAIL.support;
-			
 			} else {
 				
 				// Not a valid email, use support
