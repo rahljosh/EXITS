@@ -527,7 +527,7 @@
 
                 <tr class="insertActivity" <cfif FORM.action NEQ 'activity' AND VAL(getPHTotalHours) OR ( VAL(qGetProjectHelpDetail.recordCount) AND NOT VAL(ArrayLen(Errors.Messages)) )> style="display:none;" </cfif>>
                     <td>&nbsp;</td>
-                    <td><input type="text" name="date_completed" value="#DateFormat(FORM.date_completed, 'mm/dd/yyyy')#" class="date-pick" maxlength="10"/></td>
+                    <td><input type="text" name="date_completed" value="#DateFormat(FORM.date_completed, 'mm/dd/yyyy')#" class="datePicker" maxlength="10"/></td>
                     <td><input type="text" name="activity" id="activity" value="#FORM.activity#" class="projectHelpActivity" maxlength="200" /></td>
                     <td><input type="text" name="hours" id="hours" value="#FORM.hours#" class="projectHelpHours" maxlength="3"/></td>
                     <td>

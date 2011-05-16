@@ -518,11 +518,11 @@
                                                 </tr>
                                                 <tr>
                                                     <td align="right"><label for="dateCreatedFrom">Hired From:</label></td>
-                                                    <td><input type="text" name="dateCreatedFrom" id="dateCreatedFrom" value="#FORM.dateCreatedFrom#" class="date-pick" maxlength="10" /></td>
+                                                    <td><input type="text" name="dateCreatedFrom" id="dateCreatedFrom" value="#FORM.dateCreatedFrom#" class="datePicker" maxlength="10" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td align="right"><label for="dateCreatedTo">To:</label></td>
-                                                    <td><input type="text" name="dateCreatedTo" id="dateCreatedTo"  value="#FORM.dateCreatedTo#" class="date-pick" maxlength="10" /></td>
+                                                    <td><input type="text" name="dateCreatedTo" id="dateCreatedTo"  value="#FORM.dateCreatedTo#" class="datePicker" maxlength="10" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>

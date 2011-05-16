@@ -3,12 +3,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Payments</title>
-<link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css"> <!-- Date Picker Style -->
-<script src="../linked/js/jquery.js" type="text/javascript"></script> <!-- jQuery -->
-<script src="../linked/js/jquery.cfjs.js" type="text/javascript"></script> <!-- Coldfusion functions for jquery -->
-<script src="../linked/js/date.js " type="text/javascript"></script> <!-- required plugins for date picker -->
-<script src="../linked/js/jquery.datePicker.js " type="text/javascript"></script> <!-- jquery.datePicker.js -->
-<script src="../linked/js/basescript.js " type="text/javascript"></script> <!-- BaseScript -->
+<link rel="stylesheet" href="../smg.css" type="text/css">
+<link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
+<link media="screen" rel="stylesheet" href="../linked/css/colorbox.css" /> <!-- Modal ColorBox -->
+<cfoutput>
+    <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
+    <script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
+    <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+</cfoutput>        
+<script type="text/javascript" src="../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
+<script type="text/javascript" src="../linked/js/jquery.cfjs.js"></script> <!-- Coldfusion functions for jquery -->
+<script type="text/javascript" src="../linked/js/basescript.js "></script> <!-- BaseScript -->
 
 <style type="text/css">
 
@@ -383,7 +388,7 @@ ORDER BY businessname
                     <font size=-1 color="#0052A4"><strong>Date Received:</strong></font>
                     </td>
                     <td>
-                    <input type="text" name="date_received" class="date-pick">
+                    <input type="text" name="date_received" class="datePicker">
                     </td>
                 </tr>
                 <tr>

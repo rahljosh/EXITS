@@ -94,13 +94,14 @@
                     <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" />
                     <link rel="stylesheet" href="../smg.css" type="text/css">
                     <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
-                    <link rel="stylesheet" href="../linked/css/datePicker.css" type="text/css"> <!-- Date Picker Style -->
 					<link media="screen" rel="stylesheet" href="../linked/css/colorbox.css" /> <!-- Modal ColorBox -->
-					<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
-                    <script type="text/javascript" src="../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput -->
+					<cfoutput>
+                        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
+                        <script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
+                        <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+                    </cfoutput>        
+                    <script type="text/javascript" src="../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
                     <script type="text/javascript" src="../linked/js/jquery.cfjs.js"></script> <!-- Coldfusion functions for jquery -->
-                    <script type="text/javascript" src="../linked/js/date.js "></script> <!-- JQuery date picker plugin -->
-                    <script type="text/javascript" src="../linked/js/jquery.datePicker.js "></script> <!-- JQuery.datePicker.js -->
                     <script type="text/javascript" src="../linked/js/basescript.js "></script> <!-- BaseScript -->
                 </head>
                 <body>

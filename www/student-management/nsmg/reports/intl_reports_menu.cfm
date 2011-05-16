@@ -90,11 +90,11 @@
                         <tr><td colspan="2">Date Placed (leave blank for no filter) :</td></tr>
                         <tr>
                             <td width="5">Between: </td>
-                            <td><cfinput type="text" name="place_date1" size="7" maxlength="10" validate="date" class="date-pick"> mm-dd-yyyy</td>
+                            <td><cfinput type="text" name="place_date1" size="7" maxlength="10" validate="date" class="datePicker"> mm-dd-yyyy</td>
                         </tr>
                         <tr>
                             <td width="5">And: </td>
-                            <td><cfinput type="text" name="place_date2" size="7" maxlength="10" validate="date" class="date-pick"> mm-dd-yyyy</td>
+                            <td><cfinput type="text" name="place_date2" size="7" maxlength="10" validate="date" class="datePicker"> mm-dd-yyyy</td>
                         </tr>				                    
                         <tr><td colspan="2"><input type="checkbox" name="send_email" value="1" onClick="copy_user.checked = false">&nbsp; Send automated emails to Intl. Agents.</input></td></tr>
                         <tr><td colspan="2"><input type="checkbox" name="copy_user" value="1" onClick="checkEmail(this)">&nbsp; I would like to receive a copy of the emails</input></td></tr>
@@ -128,7 +128,7 @@
                         </tr>
                         <tr>
                             <td>Deadline(optional):</td>
-                            <td><input type="text" name="deadline" maxlength="10" class="date-pick"> mm/dd/yyyy</td>
+                            <td><input type="text" name="deadline" maxlength="10" class="datePicker"> mm/dd/yyyy</td>
                         </tr>
                         <tr><td colspan="2"><input type="checkbox" name="send_email" value="1">&nbsp; Send automated emails to International Representatives</input></td></tr>
                         <tr><TD colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border="0" readonly="yes"></td></tr>

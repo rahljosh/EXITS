@@ -496,7 +496,7 @@
                             <cfloop query="qGetMotherSeason"><option value="#seasonID#">#season#</option></cfloop>
                         </select>
                     </td>
-                    <td><input type="Text" name="motherdate_authorized" value="" maxlength="10" class="date-pick"></td>
+                    <td><input type="Text" name="motherdate_authorized" value="" maxlength="10" class="datePicker"></td>
                     <td>n/a</td>
                     <td>n/a</td>
                     <td>n/a</td>
@@ -553,7 +553,7 @@
                             <cfloop query="qGetFatherSeason"><option value="#seasonID#">#season#</option></cfloop>
                         </select>
                     </td>
-                    <td><input type="Text" name="fatherdate_authorized" value="" maxlength="10" class="date-pick"></td>
+                    <td><input type="Text" name="fatherdate_authorized" value="" maxlength="10" class="datePicker"></td>
                     <td>n/a</td>
                     <td>n/a</td>
                     <td>n/a</td>
@@ -642,7 +642,7 @@
                                 </cfloop>
                             </cfselect>
                         </td>
-                        <td><input type="Text" name="#familyID#date_authorized" value="" maxlength="10" class="date-pick"></td>
+                        <td><input type="Text" name="#familyID#date_authorized" value="" maxlength="10" class="datePicker"></td>
                         <td>n/a</td>
                         <td>n/a</td>
                         <td>n/a</td>

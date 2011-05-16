@@ -777,7 +777,7 @@
 							name="date_started" 
 							value="<cfif IsDate( FORM.date_started )>#DateFormat( FORM.date_started, "mm/dd/yyyy" )#</cfif>" 
 							maxlength="10" 
-							class="date date-pick" 
+							class="date datePicker" 
 							/><br />
 					</td>
 					<td valign="top" rowspan="2">
@@ -790,7 +790,7 @@
 							name="date_ended" 
 							value="<cfif IsDate( FORM.date_ended )>#DateFormat( FORM.date_ended, "mm/dd/yyyy" )#</cfif>" 
 							maxlength="10" 
-							class="date date-pick" 
+							class="date datePicker" 
 							/><br />
 					</td>
 				</tr>
