@@ -138,7 +138,8 @@ where fk_programid = #get_student_info.programid#
 	</tr>
 </table>
 <!--- If student has selected a state guarantee, don't show regional guarantee --->
-<Cfif (checkStates.recordcount eq 0) OR (checkStates.state1 neq 0 AND checkStates.state2 nEQ 0 AND checkStates.state3 nEQ 0)> 
+<Cfif (checkStates.recordcount neq 0) > 
+	<cfif (checkStates.state1 neq 0 AND checkStates.state2 nEQ 0 AND checkStates.state3 nEQ 0)>
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
@@ -149,6 +150,7 @@ where fk_programid = #get_student_info.programid#
 	<!--- FOOTER OF TABLE --->
 	<cfinclude template="../footer_table.cfm">
 	<cfabort>	
+    </cfif>
 </cfif>
 <!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
 <cfif CLIENT.companyID EQ 14 OR  ListFind("7,8,10,11", get_student_info.app_current_status)> 

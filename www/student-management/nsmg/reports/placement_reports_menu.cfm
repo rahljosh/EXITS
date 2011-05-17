@@ -84,11 +84,11 @@
 				<tr><th colspan="2" bgcolor="##e2efc7">Placed Students by Placing Rep.</th></tr>
 				<tr align="left">
 					<td valign="top">Program :</td>
-					<td>
-					<select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
-					</select>
-					</td>
+					<td><select name="programid2" multiple  size="6">
+					  <cfloop query="get_program">
+					    <option value="#ProgramID#">#programname#</option>
+				      </cfloop>
+				    </select></td>
 				</tr>
 				<tr align="left">
 					<td valign="top">Region :</td>
@@ -294,6 +294,7 @@
                                 </td>		
                             </tr>
                         </cfif>
+
                         <tr align="left">
                             <td>Send as email to manager :</td>
                             <td>
@@ -365,13 +366,43 @@
 				<tr align="left">
 					<td>Region :</td>
 					<td>
-					<select name="regionid" size="1">
+					<select name="regionid">
 					<cfif client.usertype GT 4><cfelse>
 					<option value=0>All Regions</option>
 					</cfif>
 					<cfloop query="get_regions"><option value="#regionid#">#regionname#</option></cfloop>
 					</select>
-					</td>		
+					</td>
+					<!--- Add Option to List by Facilitator
+                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                            <tr align="left">
+                                <td>Facilitator :</td>
+                                <td>
+                                    <select name="facilitatorID" size="1">
+                                        <option value="0">All </option>		
+                                        <cfloop query="get_facilitators"><option value="#get_facilitators.userid#">#get_facilitators.firstname# #get_facilitators.lastname#</option></cfloop>
+                                    </select>
+                                </td>		
+                            </tr>
+                        </cfif> --->
+                        <tr align="left">
+                            <td>Send as email to manager :</td>
+                            <td>
+                                <input type="radio" name="sendemail" id="sendEmailNo" value="0" checked="checked"> <label for="sendEmailNo">No</label>  
+                                <input type="radio" name="sendemail" id="sendEmailYes" value="1"> <label for="sendEmailYes">Yes</label>
+                            </td>
+                        </tr>
+                        <!----
+                        <tr>
+                            <td>Report By :</td>
+                            <td>&nbsp;</td>
+                        </tr>	---->	
+				
+                <tr>
+				  <select name="reportBy2">
+				    <option value="Placing">Placing Representative</option>
+				    <option value="Supervising">Supervising Representative</option>
+			      </select>
 				</tr>
 				<tr>
 					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
@@ -386,20 +417,20 @@
 				<tr><th colspan="2" bgcolor="##e2efc7">Missing Double Placement Docs by Fac.</th></tr>
 				<tr align="left">
 					<td valign="top">Program :</td>
-					<td>
+				  <td>
 					<select name="programid" multiple  size="6">
 					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select>
-					</td>
+					<select name="userid" size="1">
+					  <option value=0>All </option>
+					  <cfloop query="get_facilitators">
+					    <option value="#userid#">#get_facilitators.firstname# #get_facilitators.lastname#</option>
+				      </cfloop>
+				    </select></td>
 				</tr>
 				<tr align="left">
 					<td valign="top">Facilitator :</td>
-					<td>
-					<select name="userid" size="1">
-					<option value=0>All </option>		
-					<cfloop query="get_facilitators"><option value="#userid#">#get_facilitators.firstname# #get_facilitators.lastname#</option></cfloop>
-					</select>
-					</td>		
+					<td>&nbsp;</td>		
 				</tr>
 				<tr>
 					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
