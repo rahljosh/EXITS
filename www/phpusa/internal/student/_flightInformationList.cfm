@@ -32,7 +32,8 @@
             h.state,
             php.dateplaced,
             php.assignedID,
-            php.programID
+            php.programID,
+            sc.schoolName 
 		FROM 
         	smg_students s
 		INNER JOIN 
@@ -41,6 +42,8 @@
         	smg_hosts h ON php.hostid = h.hostid
         INNER JOIN 
         	smg_programs p ON php.programid = p.programid
+		LEFT OUTER JOIN
+        	php_schools sc ON sc.schoolID = php.schoolID                   
 		WHERE
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -95,7 +98,8 @@
             h.state,
             php.dateplaced,
             php.assignedID,
-            php.programID
+            php.programID,
+            sc.schoolName 
 		FROM 
         	smg_students s
 		INNER JOIN 
@@ -104,6 +108,8 @@
         	smg_hosts h ON php.hostid = h.hostid
         INNER JOIN 
         	smg_programs p ON php.programid = p.programid
+		LEFT OUTER JOIN
+        	php_schools sc ON sc.schoolID = php.schoolID        
 		WHERE 
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -188,11 +194,12 @@
                             <table width="100%" align="center" cellspacing="0" cellpadding="3">
                                 <tr bgcolor="##E2EFC7" style="font-weight:bold;">
                                     <td width="20%">Student Name (ID)</td>
-                                    <td width="10%">Placed </td>
-                                    <td width="12%">Host</td>
-                                    <td width="18%">Program</td>
+                                    <td width="12%">Program</td>
+                                    <td width="10%">Placed On</td>
+                                    <td width="12%">Host Family</td>                    
+                                    <td width="22%">School</td>                    
                                     <td width="10%">Pre-AYP Camp</td>
-                                    <td width="30%">Actions</td>
+                                    <td width="14%">Actions</td>
                                 </tr>
                                 <cfloop query="qPHPStudentsMissingArrival">
                                     <tr bgcolor="###iif(qPHPStudentsMissingArrival.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
@@ -201,6 +208,7 @@
                                                 #qPHPStudentsMissingArrival.firstname# #qPHPStudentsMissingArrival.familylastname# (###qPHPStudentsMissingArrival.studentid#)
                                             </a>
                                         </td>
+                                        <td>#qPHPStudentsMissingArrival.programname#</td>
                                         <td>#DateFormat(qPHPStudentsMissingArrival.dateplaced, 'mm/dd/yy')#</td>
                                         <td>
                                             <cfif qPHPStudentsMissingArrival.fatherlastname EQ qPHPStudentsMissingArrival.motherlastname>
@@ -209,7 +217,7 @@
                                                 #qPHPStudentsMissingArrival.familylastname# (#qPHPStudentsMissingArrival.state#) 
                                             </cfif>
                                         </td>
-                                        <td>#qPHPStudentsMissingArrival.programname#</td>
+                                        <td>#qPHPStudentsMissingDeparture.schoolName#</td>
                                         <td>n/a</td>
                                         <td style="font-weight:bold;">
                                             <a href="student/index.cfm?action=flightInformation&uniqueID=#qPHPStudentsMissingArrival.uniqueID#&programID=#qPHPStudentsMissingArrival.programID#" class="jQueryModal">
@@ -245,11 +253,12 @@
                             <table width="100%" align="center" cellspacing="0" cellpadding="3">
                                 <tr bgcolor="##E2EFC7" style="font-weight:bold;">
                                     <td width="20%">Student Name (ID)</td>
-                                    <td width="10%">Placed </td>
-                                    <td width="12%">Host</td>
-                                    <td width="18%">Program</td>
+                                    <td width="12%">Program</td>
+                                    <td width="10%">Placed On</td>
+                                    <td width="12%">Host Family</td>                    
+                                    <td width="22%">School</td>                    
                                     <td width="10%">Pre-AYP Camp</td>
-                                    <td width="30%">Actions</td>
+                                    <td width="14%">Actions</td>
                                 </tr>
                                 <cfloop query="qPHPStudentsMissingDeparture">
                                     <tr bgcolor="###iif(qPHPStudentsMissingDeparture.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
@@ -258,6 +267,7 @@
                                                 #qPHPStudentsMissingDeparture.firstname# #qPHPStudentsMissingDeparture.familylastname# (###qPHPStudentsMissingDeparture.studentid#)
                                             </a>
                                         </td>
+                                        <td>#qPHPStudentsMissingDeparture.programname#</td>
                                         <td>#DateFormat(qPHPStudentsMissingDeparture.dateplaced, 'mm/dd/yy')#</td>
                                         <td>
                                             <cfif qPHPStudentsMissingDeparture.fatherlastname EQ qPHPStudentsMissingDeparture.motherlastname>
@@ -266,7 +276,7 @@
                                                 #qPHPStudentsMissingDeparture.familylastname# (#qPHPStudentsMissingDeparture.state#) 
                                             </cfif>
                                         </td>
-                                        <td>#qPHPStudentsMissingDeparture.programname#</td>
+                                        <td>#qPHPStudentsMissingDeparture.schoolName#</td>
                                         <td>n/a</td>
                                         <td style="font-weight:bold;">
                                             <a href="student/index.cfm?action=flightInformation&uniqueID=#qPHPStudentsMissingDeparture.uniqueID#&programID=#qPHPStudentsMissingDeparture.programID#" class="jQueryModal">

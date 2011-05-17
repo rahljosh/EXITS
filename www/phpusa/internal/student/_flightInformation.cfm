@@ -437,6 +437,7 @@
                         
                         <tr bgcolor="##ACB9CD">
                             <td colspan="11">
+                                School: #qGetStudentInfo.schoolName# <br />
                                 School Start Date: <cfif LEN(qGetSchoolDates.startDate)>#qGetSchoolDates.startDate# <cfelse> n/a </cfif>
                             </td>
                         </tr> 
