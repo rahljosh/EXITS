@@ -118,14 +118,18 @@
 <cfif VAL(FORM.hostcompanyID)>
 	
 	<!--- Update EIN on Host Company Table --->
-    <cfquery datasource="mysql">
-        UPDATE 
-            extra_hostCompany
-        SET 
-            EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">
-        WHERE
-            hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
-    </cfquery> 
+    <cfif LEN(FORM.EIN)>
+    
+        <cfquery datasource="mysql">
+            UPDATE 
+                extra_hostCompany
+            SET 
+                EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">
+            WHERE
+                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+        </cfquery> 
+
+	</cfif>
 
 	<!--- New Host Family --->
     <cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostcompanyID>
