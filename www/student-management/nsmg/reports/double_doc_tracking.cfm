@@ -218,7 +218,7 @@
         </cfsavecontent>
 		</cfoutput>
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+            <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
             <cfinvokeargument name="email_cc" value="#CLIENT.email#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
             <cfinvokeargument name="email_subject" value="Missing Documents Report - #companyshort.companyshort# - #get_region.regionName# Region">
