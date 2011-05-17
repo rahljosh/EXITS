@@ -99,7 +99,11 @@
             FROM
                 extra_candidates ec
             LEFT OUTER JOIN
-            	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID AND ecpc.hostCompanyID = ec.hostCompanyID
+            	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID 
+                	AND 
+                    	ecpc.hostCompanyID = ec.hostCompanyID 
+					AND 
+                    	ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
             LEFT OUTER JOIN 
                 extra_hostcompany ehc ON ehc.hostcompanyid = ecpc.hostcompanyid                
             INNER JOIN 
@@ -113,6 +117,7 @@
                 ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
             AND
             	ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+                
            	<cfif VAL(FORM.userID)>
                 AND 
                     ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
