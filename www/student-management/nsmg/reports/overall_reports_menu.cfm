@@ -2,6 +2,11 @@
 	table.nav_bar { font-size: 10px; background-color: #ffffe6; border: 1px solid e2efc7; }
 </style>
 
+<cfscript>
+	// Get AYP English Camps
+	qAYPEnglishCamps = APPCFC.SCHOOL.getAYPCamps(campType='english');
+</cfscript>
+
 <cfinclude template="../querys/get_programs.cfm">
 
 <cfinclude template="../querys/get_regions.cfm">
@@ -50,22 +55,22 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>All</option><option value=1>Placed</option><option value=2>Unplaced</option>
 						</select></td></tr>
 				<tr><td>Continent :</td>
-				<td><select name="continent" size="1">
+				<td><select name="continent">
 					<option value=0>All</option>
 					<option value="Asia">Asia</option><option value="Europe">Europe</option><option value="South America">South America</option>
 					</select></td></tr>
 				<tr><td>Pre-AYP :</td>
-				<td><select name="preayp" size="1">
+				<td><select name="preayp">
 					<option value='none'>None</option>
 					<option value="english">English Camp</option><option value="orientation">Orientation Camp</option><option value="all">Both Camps</option>
 					</select></td></tr>	
@@ -87,28 +92,46 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Intl. Rep:</td>
-					<td><select name="intrep" size="1">
+					<td><select name="intrep">
 						<option value=0>All Intl. Reps</option>
 						<cfoutput query="get_intl_rep"><option value="#intrep#">#businessname#</option></cfoutput>
 						</select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>All</option><option value=1>Placed</option><option value=2>Unplaced</option>
 					</select></td></tr>
 				<tr align="left">
 					<td>Active :</td>
-					<td><select name="active" size="1">
+					<td><select name="active">
 						<option value=1>Active</option>
 						<option value=0>Inactive</option>
 						<option value=2>Canceled</option>					
 						<option value=3>All</option>
-						</select></td></tr>					
-				<tr><td>Pre-AYP :</td>
-				<td><select name="preayp" size="1">
-					<option value='none'>None</option>
-					<option value="english">English Camp</option><option value="orientation">Orientation Camp</option><option value="all">Both Camps</option>
-					</select></td></tr>			
+						</select></td>
+                </tr>					
+				<tr>
+                	<td>Pre-AYP :</td>
+                    <td>
+                        <select name="preayp">
+                            <option value='None'>None</option>
+                            <option value='All'>All</option>
+                            <cfoutput query="qAYPEnglishCamps">
+                                <option value="#qAYPEnglishCamps.campid#">#qAYPEnglishCamps.name#</option>
+                            </cfoutput>
+                        </select>
+                    </td>
+                </tr>	
+				<tr>
+                	<td>Report Format :</td>
+                    <td>
+                        <select name="reportFormat">
+                            <option value='Screen'>Screen</option>
+                            <option value='Excel'>Excel</option>
+                        </select>
+                        * Only Available for Pre-AYP report
+                    </td>
+                </tr>	
 				<tr><td>&nbsp;</td></tr>
 				<tr><td colspan="2" align="center" bgcolor="#e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 			</table>
@@ -130,12 +153,12 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>All</option><option value=1>Placed</option><option value=2>Unplaced</option>
 						</select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
@@ -153,12 +176,12 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>All</option><option value=1>Placed</option><option value=2>Unplaced</option>
 						</select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
@@ -206,7 +229,7 @@
 				<tr align="left">
 					<td>Facilitator :</td>
 					<td>
-					<select name="userid" size="1">
+					<select name="userid">
 					<option value=0>All </option>		
 					<cfoutput query="get_facilitators"><option value="#userid#">#get_facilitators.firstname# #get_facilitators.lastname#</option></cfoutput>
 					</select>
@@ -234,7 +257,7 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 			<tr align="left">
 				<td>Country :</td>
-				<td><select name="countryid" size="1">			
+				<td><select name="countryid">			
 					<option value=0>All Countries</option>
 					<cfoutput query="get_countries"><option value="#Countryid#">#countryname#</option></cfoutput>
 					</select></td></tr>
@@ -253,7 +276,7 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
@@ -279,13 +302,13 @@
 				<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>All</option><option value=1>Placed</option><option value=2>Unplaced</option>
 						</select></td></tr>
 				<tr><td colspan="2" align="center" bgcolor="#e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
@@ -304,13 +327,13 @@
 					</select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>All</option><option value=1>Placed</option><option value=2>Unplaced</option>
 					</select></td></tr>
 				<tr><td colspan="2" align="center" bgcolor="#e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
@@ -335,13 +358,13 @@
 				</select></td></tr>
 			<tr align="left">
 				<td>Country :</td>
-				<td><select name="countryid" size="1">			
+				<td><select name="countryid">			
 					<option value=0>All Countries</option>
 					<cfoutput query="get_countries"><option value="#Countryid#">#countryname#</option></cfoutput>
 					</select></td></tr>
 			<tr align="left">
 				<td>Place Status :</td>
-				<td><select name="status" size="1">
+				<td><select name="status">
 					<option value=0>All</option><option value=1>Placed</option><option value=2>Unplaced</option>
 				</select></td></tr>
 			<tr><td align="right"><input type="checkbox" name="all" /></td><td>Include All Students (canceled and inactive)</td></tr>
@@ -363,7 +386,7 @@
 			</tr>
 			<tr align="left">
 				<td>Country :</td>
-				<td><select name="countryid" size="1">			
+				<td><select name="countryid">			
 					<option value=0>All Countries</option>
 					<cfoutput query="get_countries"><option value="#Countryid#">#countryname#</option></cfoutput>
 					</select></td></tr>
@@ -394,7 +417,7 @@
 			</tr>
 			<tr align="left">
 				<td>Country :</td>
-				<td><select name="countryid" size="1">			
+				<td><select name="countryid">			
 					<option value=0>All Countries</option>
 					<cfoutput query="get_countries"><option value="#Countryid#">#countryname#</option></cfoutput>
 					</select></td></tr>
@@ -418,7 +441,7 @@
 		</tr>
 		<tr align="left">
 			<td>Regions :</td>
-			<td><select name="regionid" size="1">
+			<td><select name="regionid">
 					<option value=0>All Regions</option>			
 					<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 				</select>
@@ -447,7 +470,7 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
@@ -471,7 +494,7 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
@@ -501,12 +524,12 @@
 				<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Intl. Rep:</td>
-					<td><select name="intrep" size="1">
+					<td><select name="intrep">
 						<option value=0>All Intl. Reps</option>
 						<cfoutput query="get_intl_rep"><option value="#intrep#"><cfif #len(get_intl_rep.businessname)# gt 45>#Left(get_intl_rep.businessname, 17)#...<cfelse>#businessname#</cfif></option></cfoutput>
 						</select></td></tr>
 				<tr><td>Pre-AYP :</td>
-				<td><select name="preayp" size="1">
+				<td><select name="preayp">
 					<option value='none'>None</option>
 					<option value="english">English Camp</option>
 					<option value="orientation">Orientation Camp</option>
@@ -526,12 +549,12 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
 				<tr><td>Pre-AYP :</td>
-				<td><select name="preayp" size="1">
+				<td><select name="preayp">
 					<option value='none'>None</option>
 					<option value="english">English Camp</option>
 					<option value="orientation">Orientation Camp</option>
@@ -557,7 +580,7 @@
 				<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Intl. Rep:</td>
-					<td><select name="intrep" size="1">
+					<td><select name="intrep">
 						<option value=0>All Intl. Reps</option>
 						<cfoutput query="get_intl_rep"><option value="#intrep#"><cfif #len(get_intl_rep.businessname)# gt 45>#Left(get_intl_rep.businessname, 17)#...<cfelse>#businessname#</cfif></option></cfoutput>
 						</select></td></tr>
@@ -575,7 +598,7 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
@@ -621,12 +644,12 @@
 				<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
 				<tr><td>Pre-AYP :</td>
-				<td><select name="preayp" size="1">
+				<td><select name="preayp">
 					<option value='none'>None</option>
 					<option value="english">English Camp</option>
 					<option value="orientation">Orientation Camp</option>
@@ -653,14 +676,14 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 			<tr align="left">
 				<td>Status :</td>
-				<td><select name="status" size="1">
+				<td><select name="status">
 					<option value=0>All</option>
 					<option value=1>Placed</option>
 					<option value=2>Unplaced</option>
 					</select></td></tr>
 			<tr align="left">
 				<td>Continent :</td>
-				<td><select name="continent" size="1">
+				<td><select name="continent">
 					<option value="Asia">Asia</option>
 	 				<!--- <!--- <option value="Africa">Africa</option> ---> --->
 					<option value="Europe">Europe</option>
@@ -683,13 +706,13 @@
 					<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput></select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>All</option>
 						<option value=1>Placed</option>
 						<option value=2>Unplaced</option>
 						</select></td></tr>
 				<tr></tr><td>Continent :</td>
-					<td><select name="continent" size="1">
+					<td><select name="continent">
 						<option value="Asia">Asia</option>
 	 					<!--- <!--- <option value="Africa">Africa</option> ---> --->
 						<option value="Europe">Europe</option>
@@ -699,7 +722,7 @@
 					</select></td></tr>						
 				<tr align="left">
 					<td>Region :</td>
-					<td><select name="regionid" size="1">
+					<td><select name="regionid">
 						<option value=0>All Regions</option>
 						<cfoutput query="get_regions"><option value="#regionid#">#regionname#</option></cfoutput>
 						</select></td></tr>
@@ -720,7 +743,7 @@
 				<tr><th colspan="2" bgcolor="#e2efc7">International Representatives by Country</th></tr>
 				<tr align="left">
 					<td>Intl. Rep:</td>
-					<td><select name="intrep" size="1">
+					<td><select name="intrep">
 						<option value=0>All Reps</option>
 						<cfoutput query="get_all_intl_rep"><option value="#userid#">#businessname#</option></cfoutput>
 						</select></td></tr>
@@ -732,7 +755,7 @@
 						</select></td></tr>
 				<tr align="left">
 					<td>Insurance :</td>
-					<td><select name="insurance" size="1">
+					<td><select name="insurance">
 						<option value="0">
 						<cfoutput query="get_insurance_type">
 						<option value="#insutypeid#">#type#</option>
@@ -740,7 +763,7 @@
 						</select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>Active</option>
 						<option value=1>Inactive</option>
 						<option value=2>All</option>
@@ -756,7 +779,7 @@
 				<tr><th colspan="2" bgcolor="#e2efc7">International Representatives</th></tr>
 				<tr align="left">
 					<td>Intl. Rep:</td>
-					<td><select name="intrep" size="1">
+					<td><select name="intrep">
 						<option value=0>All Reps</option>
 						<cfoutput query="get_all_intl_rep"><option value="#userid#">#businessname#</option></cfoutput>
 						</select></td></tr>
@@ -768,7 +791,7 @@
 						</select></td></tr>
 				<tr align="left">
 					<td>Insurance :</td>
-					<td><select name="insurance" size="1">
+					<td><select name="insurance">
 						<option value="0">
 						<cfoutput query="get_insurance_type">
 						<option value="#insutypeid#">#type#</option>
@@ -776,13 +799,13 @@
 						</select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>Active</option>
 						<option value=1>Inactive</option>
 						<option value=2>All</option>
 						</select></td></tr>
 				<tr></tr><td>Continent :</td>
-					<td><select name="continent" size="1">
+					<td><select name="continent">
 						<option value="0"></option>
 						<option value="Asia">Asia</option>
 	 					<!--- <!--- <option value="Africa">Africa</option> ---> --->
@@ -810,13 +833,13 @@
 				<tr><th colspan="2" bgcolor="#e2efc7">SMG Students per Country</th></tr>
 				<tr align="left">
 					<td>Country :</td>
-					<td><select name="countryid" size="1">			
+					<td><select name="countryid">			
 						<option value=0>All Countries</option>
 						<cfoutput query="get_countries"><option value="#countryid#">#countryname#</option></cfoutput>
 						</select></td></tr>
 				<tr align="left">
 					<td>Status :</td>
-					<td><select name="status" size="1">
+					<td><select name="status">
 						<option value=0>All</option>
 						<option value=1>Placed</option>
 						<option value=2>Unplaced</option>
