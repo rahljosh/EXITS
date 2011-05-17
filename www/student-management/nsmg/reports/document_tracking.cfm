@@ -160,6 +160,7 @@
             s.doc_date_of_visit, 
             s.doc_ref_form_1, 
             s.doc_ref_form_2, 
+            s.doc_single_place_auth,
             s.stu_arrival_orientation, 
             s.host_arrival_orientation, 
             s.doc_class_schedule,
@@ -240,6 +241,7 @@
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
         AND
             p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+
         AND 
             (                   	
                 s.doc_income_ver_date IS NULL
@@ -351,10 +353,14 @@
 
                                 // Set Variable to Handle Missing Documents
                                 missingDocumentsList = '';
-
+							
                                 // Required for Single Parents 
                                 if ( qGetStudentsByRep.seasonID GTE 8 AND totalFamilyMembers EQ 1 ) { // 
-                                    // Date of S.P. Reference Check 1
+                                     if ( NOT LEN(qGetStudentsByRep.doc_single_place_auth) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+									
+									// Date of S.P. Reference Check 1
                                     if ( NOT LEN(qGetStudentsByRep.doc_single_ref_check1) ) {
                                         missingDocumentsList = ListAppend(missingDocumentsList, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }

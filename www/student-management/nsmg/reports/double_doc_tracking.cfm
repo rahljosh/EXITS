@@ -65,7 +65,7 @@
 			'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or placerepid = </cfif> </Cfloop>)
 		</cfif>							
 </cfquery>
-
+<cfsavecontent variable="reportHeader">
 <table width='100%' cellpadding=4 cellspacing="0" align="center">
 	<tr><td><span class="application_section_header"><cfoutput>#companyshort.companyshort# - Missing Double Placement Documents Report</cfoutput></span></td></tr>
 </table><br>
@@ -77,6 +77,8 @@
 	<cfoutput query="get_program"><b>#programname# &nbsp; (#ProgramID#)</b><br></cfoutput>
 	<cfoutput>Total of Students <b>placed</b> in program: #get_total_students.recordcount#</cfoutput>
 </td></tr><br>
+</table>
+</cfsavecontent>
 
 <!--- table header --->
 <table width='100%' cellpadding=4 cellspacing="0" align="center" frame="box">	
@@ -85,7 +87,11 @@
 </table><br>
 
 <cfloop query="get_region">
-	
+    <cfscript>
+        // Get Regional Manager
+        qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=get_region.regionID);
+    </cfscript>
+	<cfsavecontent variable="doubleDocumentTrackingReport">
 	<cfset current_region = get_region.regionid>
 	
 	<Cfquery name="list_repid" datasource="MySQL">
@@ -194,5 +200,34 @@
 	</cfloop> <!--- cfloop query="list_repid" --->
 	
 	</cfif> <!---  get_total_in_region.recordcount --->
+
+    </cfsavecontent>
+	<!--- Display Report --->
+    <cfoutput>
+    #doubleDocumentTrackingReport#
+     </Cfoutput>           
+<!--- Email Regional Managers --->        
+    <cfif VAL(FORM.sendEmail) AND get_students_region.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>
+    	<cfoutput>
+        <cfsavecontent variable="emailBody">
+            <!--- Display Report Header --->
+            #reportHeader#	
+                                
+            <!--- Display Report --->
+            #doubleDocumentTrackingReport#
+        </cfsavecontent>
+		</cfoutput>
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+            <cfinvokeargument name="email_cc" value="#CLIENT.email#">
+            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+            <cfinvokeargument name="email_subject" value="Missing Documents Report - #companyshort.companyshort# - #get_region.regionName# Region">
+            <cfinvokeargument name="email_message" value="#emailBody#">
+        </cfinvoke>
+            
+    </cfif>   <!--- Email Regional Managers --->    
 </cfloop> <!--- cfloop query="get_region" --->
+
+
 <br>
+

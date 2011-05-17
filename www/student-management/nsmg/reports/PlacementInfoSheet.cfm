@@ -375,7 +375,7 @@ Where hostid = '#get_student_info.hostid#'
                     <td align="center"><span class="title">Age</span><br></td>
                     <td align="center"><span class="title">Sex</span><br></td>
                     <td align="center"><span class="title">At home</span><br></td>
-                   
+                   <td align="center"><span class="title">Relation</span><br></td>
                     </tr>
                     <cfloop query="get_host_children">
                   
@@ -392,6 +392,7 @@ Where hostid = '#get_student_info.hostid#'
                     <td align="center"><cfif get_host_children.birthdate is ''><cfelse>#DateDiff('yyyy', get_host_children.birthdate, now())#</cfif></td>
                     <td align="center">#get_host_children.sex#</td>
                     <td align="center">#get_host_children.liveathome#</td>
+                    <td align="center">#get_host_children.membertype#</td>
                     </tr>
                     </cfloop>
                     

@@ -127,20 +127,7 @@
 				<b>Note: There will be additional charges if you make a regional choice, please contact your representative for details.</b><br>
 				<br>
 				
-				   <Cfif studentid neq 28304>
-                    <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
-                        <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
-                        <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="1" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '1'>checked</cfif>>Region 1 - East<br><img src="../pics/region1.gif"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="2" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '2'>checked</cfif>>Region 2 - South<br><img src="../pics/region2.gif"></td>
-                        </tr>
-                        <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="3" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '3'>checked</cfif>>Region 3 - Central<br><img src="../pics/region3.gif"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="4" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '4'>checked</cfif>>Region 4 - Rocky Mountain<br><img src="../pics/region4.gif"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="5" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '5'>checked</cfif>>Region 5 - West<br><img src="../pics/region5.gif"></td>
-                        </tr>
-                    </table>
-                  <cfelse>
+				
                     
                     <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
                         <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
@@ -154,7 +141,7 @@
                            
                         </tr>
                     </table>	
-                </Cfif>    			
+                 			
                     </div>
                 </td>
             </tr>

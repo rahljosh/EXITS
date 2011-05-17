@@ -74,6 +74,7 @@
             s.branchid, 
             s.application_expires, 
             appProgram.short_name as programApplied,
+            p.programname,
             u.businessname, 
             c.companyshort,
             branch.businessname as branchname,
@@ -506,7 +507,7 @@
             
             <cfif CLIENT.usertype LTE 4>
                 <td>#businessname#</td>
-                <td>#programApplied#</td>
+                <td>#programApplied# - #programname#</td>
             </cfif>		
             
             <cfif URL.status LT 10>
@@ -587,7 +588,7 @@
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
                 <td><cfif qCheckPrevDenied.recordcount eq 0>N/A<cfelse>#DateFormat(qcheckPrevDenied.date, 'mm/dd/yyyy')#</cfif></td>
 				<td>#businessname#</td>
-                <td>#programApplied#</td>
+                <td>#programApplied# - #programname#</td>
 				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueid#');">Page</a></td>
 				<td><a href="javascript:AppReceived('student_app/querys/qr_app_received.cfm?unqid=#uniqueid#&status=#URL.status#');" onClick="return areYouSure(this);">Check</a></td>
 			</tr>
@@ -637,7 +638,7 @@
                 <td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#URL.status#" >Change</a></td>
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
 				<td>#businessname#</td>
-				<td>#programApplied#</td>
+				<td>#programApplied# - #programname#</td>
 				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueid#');">Page</a></td>
 			</tr>
 		</cfloop>
