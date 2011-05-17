@@ -284,7 +284,8 @@
                     <!--- Program --->
                     p.programName,
                     p.insurance_startdate,
-                    <!--- Host Family --->
+                    <!--- School --->
+                    school.schoolName,
                     school.airport_city, 
                     school.major_air_code,
                     <!--- Area Representative --->
@@ -706,21 +707,27 @@
 			// Link to Student Profile
 			flightInfoLink = '#APPLICATION.PATH.PHP.phpusa#/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
             
-			if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) ) {
-				
-				// Email School | No copy to the current user
-				flightEmailTo = qGetSchoolInfo.email;
+			if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
 
-            } else if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
-				
 				// Email Current User
 				flightEmailTo = qGetCurrentUser.email;
 
-            } else if ( APPLICATION.IsServerLocal ) {
+			} else if ( APPLICATION.IsServerLocal ) {
 				
 				// Local Server - Always email support
                 flightEmailTo = APPLICATION.EMAIL.support;
 			
+			} else if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) AND IsValid("email", qGetCurrentUser.email) ) {
+				
+				// Email School | send a copy to the current user
+				flightEmailTo = qGetSchoolInfo.email;
+				flightEmailCC = qGetCurrentUser.email;
+				
+			} else if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) ) {
+				
+				// Email School | do not send a copy
+				flightEmailTo = qGetSchoolInfo.email;
+
 			} else {
 				
 				// Not a valid email, use support

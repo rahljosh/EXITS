@@ -43,8 +43,8 @@
 			arrival_aircode, arrival_time, overnight, flight_type
 	FROM smg_flight_info
 	WHERE studentid = '#get_student_unqid.studentid#' 
-		
 		AND flight_type = 'arrival'
+        AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	ORDER BY flightid <!--- dep_date, dep_time --->
 </cfquery>
 
@@ -52,9 +52,9 @@
 	SELECT flightid, studentid, dep_date, dep_city, dep_aircode, dep_time, flight_number, arrival_city, 
 			arrival_aircode, arrival_time, overnight, flight_type
 	FROM smg_flight_info
-	WHERE studentid = '#get_student_unqid.studentid#' 
-		
+	WHERE studentid = '#get_student_unqid.studentid#' 		
 		AND flight_type = 'departure'
+        AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	ORDER BY flightid <!--- dep_date, dep_time --->
 </cfquery>
 
@@ -70,12 +70,6 @@
 			<tr><td>E-MAIL:</td><td><a href="mailto:#get_student_unqid.email#">#get_student_unqid.email#</a></td></tr>
 			<tr><td colspan="2">#DateFormat(now(), 'dddd, mmmm dd, yyyy')#</td></tr>
 			<tr><td>&nbsp;</td></tr>
-			<tr><td colspan="2">
-						<cfform action="flight_information_email.cfm?unqid=#url.unqid#&assignedid=#url.assignedid#" name="sendemail" method="post" onsubmit="return confirm ('Are you sure? This Acceptance Letter will be sent to #get_student_unqid.schoolname# at #get_student_unqid.email#')">
-						<cfinput name="send" type="image" src="../pics/send-email.gif" value="send email">
-					</cfform>
-				</td>
-			</tr>
 		</table>
 		</td>
 		<td valign="top" rowspan=4 align="center"><img src="../pics/dmd-logo.jpg"></td>
