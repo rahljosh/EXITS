@@ -1,3 +1,7 @@
+    <cfscript>
+		// Get Private Schools Prices
+		qPrivateSchools = APPCFC.SCHOOL.getPrivateSchools();
+    </cfscript>
 <cfparam name="submitted" default="0">
 <cfparam name="regionid" default="#client.regionid#">
 <cfparam name="keyword" default="">
@@ -34,7 +38,7 @@
 <cfparam name="intrep" default="">
 <cfparam name="stateid" default="">
 <cfparam name="programID" default="">
-<cfparam name="privateschool" default="">
+<cfparam name="privateschool" default="99">
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24 bgcolor="#ffffff">
     <tr height=24>
@@ -199,11 +203,16 @@
             </td>
             <td>
               Private School<br />
+              
                 	<select name="privateschool">
-                    	<option value="">All</option>
-                    <option <cfif privateschool EQ '1'>selected</cfif>>Yes</option>
-                    <option <cfif privateschool EQ '0'>selected</cfif>>No</option>
+                    	<option value="0">All</option>
+                        <cfoutput>
+							<cfloop query="qPrivateSchools">
+								<option value="#privateschoolid#" <cfif privateschool eq privateschoolid>selected</cfif>>#privateschoolprice#</option>
+							</cfloop>
+  						</cfoutput>
                     </select>  
+					
             </td>
            
             	
@@ -414,10 +423,11 @@
             <cfif active NEQ ''>
                 AND s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
             </cfif>
-            <cfif privateschool eq 1>
-            	AND privateschool > 0
-            <cfelseif privateschool eq 0>
-				AND privateschool = 0
+            <cfif privateschool eq 0>
+            	AND privateschool = 0
+            <cfelseif privateschool eq 99>
+            <cfelse>
+				AND privateschool = #form.privateschool#
             </cfif>
 			<cfif placed NEQ ''>
                 <cfif placed EQ 1>
