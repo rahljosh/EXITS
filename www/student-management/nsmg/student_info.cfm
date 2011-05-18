@@ -900,7 +900,7 @@
 				</tr>
 				<tr>
 					<td>: : <a href="javascript:OpenLetter('reports/school_relocation_letter.cfm');">School Relocation</a></td>
-					<td>: : <a href="javascript:OpenLetter('reports/flight_information.cfm');">Flight Information</a></td>
+					<td>: : <a href="student/index.cfm?action=printFlightInformation&uniqueID=#qGetStudentInfo.uniqueID#">Flight Information</a></td>
 				</tr>				
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_student_orientation.cfm');">Student Orient. Sign Off</a></td>
@@ -934,7 +934,7 @@
 			<cfif CLIENT.usertype GTE '5' AND CLIENT.usertype LTE '7'>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?studentID=#uniqueid#&profileType=web');">Placement</a></td>
-					<td width="50%">: : <a href="javascript:OpenLetter('reports/flight_information.cfm');">Flight Information</a></td>
+					<td width="50%">: :<a href="student/index.cfm?action=printFlightInformation&uniqueID=#qGetStudentInfo.uniqueID#">Flight Information</a></td>
 				</tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/host_thank_you_letter.cfm');">Family Thank You</a></td>

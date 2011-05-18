@@ -224,7 +224,7 @@ where id = #url.id#
 					Parents Letter n/a
 				</cfif>
 				&nbsp - &nbsp 
-				<a href="" onClick="javascript: win=window.open('reports/flight_information.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a>
+				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#">Flight Information</a>
 			</td></tr>
 	</table>
 	---->
