@@ -4,7 +4,7 @@
 <Cfquery name="company_info" datasource="#application.dsn#">
     select fax, toll_free, phone, company_color, companyName
     from smg_companies
-    where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+    where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
 </Cfquery>
  
 <style type="text/css">
@@ -23,19 +23,22 @@ table,tr,td					{font-family:Arial, Helvetica, sans-serif;}
 </style>
 
 <cfoutput>
-<div class="thin-border">
-<table width="600px" background="#APPLICATION.PATH.PHP.phpusa#pics/email_textured_background.png">
-    <tr>
-        <td>
-            <img src="#APPLICATION.site_url#/images/#ATTRIBUTES.companyID#_short_profile_header.jpg" />
-        </td>
-    </tr>
-     <tr>	
-     	<td colspan="2"><img src="#APPLICATION.PATH.PHP.phpusa#pics/#client.companyid#_px.png" height=12 width=100%></td>
-	</tr>
-</table>                                                            
 
-<Table width="600px">
-	<Tr>
-    	<td>
+<div class="thin-border">
+
+    <table width="800px" background="#APPLICATION.PATH.PHP.phpusa#pics/email_textured_background.png">
+        <tr>
+            <td>
+                <img src="#APPLICATION.site_url#/images/#CLIENT.companyid#_short_profile_header.jpg" />
+            </td>
+        </tr>
+         <tr>	
+            <td colspan="2"><img src="#APPLICATION.PATH.PHP.phpusa#pics/#CLIENT.companyid#_px.png" height=12 width=100%></td>
+        </tr>
+    </table>                                                            
+    
+    <table width="800px">
+        <tr>
+            <td>
+            
 </cfoutput>

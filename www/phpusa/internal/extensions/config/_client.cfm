@@ -23,5 +23,10 @@
 <cfparam name="CLIENT.companyID" default="0">
 <cfparam name="CLIENT.companyName" default="">  
 <cfparam name="CLIENT.companyShort" default="">  
+<cfparam name="CLIENT.companyToll_free" default="">  
+<cfparam name="CLIENT.companyPhone" default="">  
+<cfparam name="CLIENT.companyShort" default="">  
+<cfparam name="CLIENT.companyColor" default="">  
+
 
 <cfparam name="CLIENT.studentID" default="0">  
