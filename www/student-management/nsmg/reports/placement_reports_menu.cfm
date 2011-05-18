@@ -83,8 +83,8 @@
 			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
 				<tr><th colspan="2" bgcolor="##e2efc7">Placed Students by Placing Rep.</th></tr>
 				<tr align="left">
-					<td valign="top">Program :</td>
-					<td><select name="programid2" multiple  size="6">
+					<td valign="top">Program:</td>
+					<td><select name="programid" multiple  size="6">
 					  <cfloop query="get_program">
 					    <option value="#ProgramID#">#programname#</option>
 				      </cfloop>
