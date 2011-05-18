@@ -24,7 +24,11 @@
             uar.usertype,
             c.companyID,
             c.companyName,
-            c.companyShort
+            c.companyShort,
+            c.toll_free,
+            c.phone,
+            c.fax,
+            c.company_color
         FROM 
             smg_users u
         INNER JOIN
@@ -77,6 +81,10 @@
             CLIENT.companyID = qAuthenticateUser.companyID;
             CLIENT.companyName = qAuthenticateUser.companyName;
             CLIENT.companyShort = qAuthenticateUser.companyShort;
+			CLIENT.companyToll_free = qAuthenticateUser.toll_free;
+			CLIENT.companyPhone = qAuthenticateUser.phone;
+			CLIENT.companyFax = qAuthenticateUser.fax;
+			CLIENT.companyColor = qAuthenticateUser.company_color;
         </cfscript>
         
         <!--- Update User Last Login --->
@@ -100,11 +108,15 @@
             SELECT 
                 c.companyID,
                 c.companyName,
-                c.companyShort
+                c.companyShort,
+                c.toll_free,
+                c.phone,
+                c.fax,
+                c.company_color
             FROM 
                 smg_companies c
             WHERE 
-                c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHP">        
+                c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
         </cfquery>
     
         <cfscript>
@@ -120,6 +132,10 @@
             CLIENT.companyID = qGetCompanyInfo.companyID;
             CLIENT.companyName = qGetCompanyInfo.companyName;
             CLIENT.companyShort = qGetCompanyInfo.companyShort;
+			CLIENT.companyToll_free = qGetCompanyInfo.toll_free;
+			CLIENT.companyPhone = qGetCompanyInfo.phone;
+			CLIENT.companyFax = qGetCompanyInfo.fax;
+			CLIENT.companyColor = qGetCompanyInfo.company_color;
         </cfscript>
         
         <!--- Update School Last Login --->

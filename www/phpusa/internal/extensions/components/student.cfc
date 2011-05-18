@@ -1014,105 +1014,100 @@
 			// flightEmailTo = 'marcus@iseusa.com';
         </cfscript>
         
-        <!--- Send out Email if there is a flight information or if a leg has been deleted --->
-        <cfif qGetDeletedFlightInfo.recordCount OR qGetArrival.recordCount OR qGetDeparture.recordCount>
-        	
-            <cfoutput>
-            	              
-                <!--- Email Body --->
-                <cfsavecontent variable="flightEmailBody">
-					
-                    <!--- Student Information --->
-                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
-                        
-                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                            Flight Information
-                        </legend>
-
-                        <p style="color: ##333;">
-                        	Please find flight information attached for #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#). 
-                        </p>
-
-                        <p style="color: ##333;">
-	                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a> then click on "Flight Information" on the right menu.
-						</p>
-                        
-                        <!--- Flight Leg Deleted --->
-                        <cfif qGetDeletedFlightInfo.recordCount>
-                            
-                            <p style="color: ##333;">
-                            
-                                <cfif qGetDeletedFlightInfo.flight_type EQ 'arrival'>
-                                    <p><strong>Arrival information has been deleted</strong></p>
-                                </cfif>
-                    
-                                <cfif qGetDeletedFlightInfo.flight_type EQ 'departure'>
-                                    <p><strong>Departure information has been deleted</strong></p>
-                                </cfif>
-                    
-                                <p>
-                                    The flight leg from <strong>#qGetDeletedFlightInfo.dep_aircode#</strong> to <strong>#qGetDeletedFlightInfo.arrival_aircode#</strong> 
-                                    on <strong>#DateFormat(qGetDeletedFlightInfo.dep_date, 'mm/dd/yyyy')#</strong> has been deleted. Please see an updated flight information attached.
-                                </p>
-                            
-                            </p>
-                            
-                        </cfif>
-
-                        <cfif APPLICATION.IsServerLocal>
-    
-                            <p style="color: ##333; padding-bottom:5px; font-weight:bold;">
-                                PS: Development Server
-                            </p>
-                        
-                        </cfif>
-                        
-                    </fieldset>
-
-                </cfsavecontent>
-                                
-                <!--- Flight Information - PDF Format --->
-                <cfdocument name="pdfFlightInfo" format="pdf" localUrl="no" backgroundvisible="yes" margintop="0.2" marginright="0.2" marginbottom="0.2" marginleft="0.2">
-                    #flightInfoReport#
-                </cfdocument>
-            
-            </cfoutput>
-            
-            <!--- Try To Email a PDF File, if unsuccessful adds the report to the email body --->
-            <cftry>
-                    
-				<!--- Create a PDF document in the temp folder --->
-                <cffile 
-                    action="write"
-                    file="#pdfPath#"
-                    output="#pdfFlightInfo#"
-                    nameconflict="overwrite">
+		<cfoutput>
+                          
+            <!--- Email Body --->
+            <cfsavecontent variable="flightEmailBody">
                 
+                <!--- Student Information --->
+                <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
+                    
+                    <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
+                        Flight Information
+                    </legend>
+
+                    <p style="color: ##333;">
+                        Please find flight information attached for #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#). 
+                    </p>
+
+                    <p style="color: ##333;">
+                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a> then click on "Flight Information" on the right menu.
+                    </p>
+                    
+                    <!--- Flight Leg Deleted --->
+                    <cfif qGetDeletedFlightInfo.recordCount>
+                        
+                        <p style="color: ##333;">
+                        
+                            <cfif qGetDeletedFlightInfo.flight_type EQ 'arrival'>
+                                <p><strong>Arrival information has been deleted</strong></p>
+                            </cfif>
+                
+                            <cfif qGetDeletedFlightInfo.flight_type EQ 'departure'>
+                                <p><strong>Departure information has been deleted</strong></p>
+                            </cfif>
+                
+                            <p>
+                                The flight leg from <strong>#qGetDeletedFlightInfo.dep_aircode#</strong> to <strong>#qGetDeletedFlightInfo.arrival_aircode#</strong> 
+                                on <strong>#DateFormat(qGetDeletedFlightInfo.dep_date, 'mm/dd/yyyy')#</strong> has been deleted. Please see an updated flight information attached.
+                            </p>
+                        
+                        </p>
+                        
+                    </cfif>
+
+                    <cfif APPLICATION.IsServerLocal>
+
+                        <p style="color: ##333; padding-bottom:5px; font-weight:bold;">
+                            PS: Development Server
+                        </p>
+                    
+                    </cfif>
+                    
+                </fieldset>
+
+            </cfsavecontent>
+                            
+            <!--- Flight Information - PDF Format --->
+            <cfdocument name="pdfFlightInfo" format="pdf" localUrl="no" backgroundvisible="yes" margintop="0.2" marginright="0.2" marginbottom="0.2" marginleft="0.2">
+                #flightInfoReport#
+            </cfdocument>
+        
+        </cfoutput>
+        
+        <!--- Try To Email a PDF File, if unsuccessful adds the report to the email body --->
+        <cftry>
+                
+            <!--- Create a PDF document in the temp folder --->
+            <cffile 
+                action="write"
+                file="#pdfPath#"
+                output="#pdfFlightInfo#"
+                nameconflict="overwrite">
+            
+            <cfinvoke component="internal.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#flightEmailTo#">
+                <cfinvokeargument name="email_cc" value="#flightEmailCC#">
+                <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
+                <cfinvokeargument name="email_message" value="#flightEmailBody#">
+                <cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.programManager#">
+                <cfinvokeargument name="email_file" value="#pdfPath#">
+            </cfinvoke>       
+        
+            <cfcatch type="any">
+                    
+                <!--- Send Out Email - NO PDF --->
                 <cfinvoke component="internal.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#flightEmailTo#">
                     <cfinvokeargument name="email_cc" value="#flightEmailCC#">
                     <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
-                    <cfinvokeargument name="email_message" value="#flightEmailBody#">
+                    <cfinvokeargument name="email_message" value="#flightInfoReport#">
                     <cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.programManager#">
-                    <cfinvokeargument name="email_file" value="#pdfPath#">
                 </cfinvoke>       
-			
-                <cfcatch type="any">
-						
-                    <!--- Send Out Email - NO PDF --->
-                    <cfinvoke component="internal.cfc.email" method="send_mail">
-                        <cfinvokeargument name="email_to" value="#flightEmailTo#">
-                        <cfinvokeargument name="email_cc" value="#flightEmailCC#">
-                        <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
-                        <cfinvokeargument name="email_message" value="#flightInfoReport#">
-                        <cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.programManager#">
-                    </cfinvoke>       
-                
-                </cfcatch>
-			
-            </cftry>
             
-        </cfif>
+            </cfcatch>
+        
+        </cftry>
             
     </cffunction>
     
