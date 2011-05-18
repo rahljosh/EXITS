@@ -396,7 +396,7 @@
                         <tr>
                             <td>Report By :</td>
                             <td>&nbsp;</td>
-                        </tr>	---->	
+                        </tr>	
 				
                 <tr>
 				  <select name="reportBy2">
@@ -404,6 +404,7 @@
 				    <option value="Supervising">Supervising Representative</option>
 			      </select>
 				</tr>
+				---->	
 				<tr>
 					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
 				</tr>
