@@ -203,7 +203,7 @@ Order by birthdate
 				<a href="uploadedfiles/letters/parents/#get_student_info.studentid#.pdf">Parents Letter</a>
 				&nbsp &nbsp - &nbsp &nbsp
 			</cfif>
-			<a href="" onClick="javascript: win=window.open('reports/flight_information.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a>
+			<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#">Flight Information</a>
 			</td></tr>
 	</table>
 </table>

@@ -44,26 +44,6 @@
         default="#CLIENT.companyID#"
 		/>
 
-    <cfswitch expression="#CLIENT.companyID#">
-        
-        <cfcase value="1,2,3,4,12,13">
-            <cfset setCompanyColor='##0054A0'>
-        </cfcase>
-    
-        <cfcase value="10">
-            <cfset setCompanyColor='##98012E'>
-        </cfcase>
-    
-        <cfcase value="11">
-            <cfset setCompanyColor='##00b3d9'>
-        </cfcase>
-    
-        <cfdefaultcase>
-            <cfset setCompanyColor='##0054A0'> 
-        </cfdefaultcase>
-    
-    </cfswitch>
-
 </cfsilent>
 
 <!--- 
@@ -125,7 +105,7 @@
                 <table cellspacing="1" style="width: 100%;">
                     <tr>
                         <td>
-                            <img src="#APPLICATION.SITE.URL.pics#/#CLIENT.companyID#_short_profile_header.jpg" />
+                            <img src="#APPLICATION.SITE.URL.pics#/#ATTRIBUTES.companyID#_short_profile_header.jpg" />
 						</td>
 					</tr>
 				</table>                                                            
