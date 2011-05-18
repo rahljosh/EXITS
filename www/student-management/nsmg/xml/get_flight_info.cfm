@@ -60,9 +60,7 @@
             // Get Student Information
             qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(soID=FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentID);
         </cfscript>
-        
-        <cfdump var="##"><cfabort>
-        
+                
         <cfif VAL(FORM.displayResults)>
             &nbsp; #i# 
             <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModal">
