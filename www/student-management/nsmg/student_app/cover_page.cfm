@@ -38,7 +38,7 @@
         FROM 
         	smg_student_app_programs
         WHERE 
-        	app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.app_indicated_program#">
+        	app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.app_indicated_program)#">
     </cfquery>
      
     <cfquery name="qGetAdditionalProgram" datasource="MySQL">
@@ -47,7 +47,7 @@
         FROM
         	smg_student_app_programs
         WHERE 
-        	app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.app_additional_program#">
+        	app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.app_additional_program)#">
     </cfquery> 
     
     <cfquery name="qGetRegionPreference" datasource="MySQL">
