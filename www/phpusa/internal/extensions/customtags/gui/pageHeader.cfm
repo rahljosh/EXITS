@@ -43,6 +43,12 @@
         default=""
 		/>
 
+	<cfparam 
+		name="ATTRIBUTES.companyID"
+		type="integer"
+        default="#CLIENT.companyID#"
+		/>
+
 </cfsilent>
 
 <!--- 
@@ -118,12 +124,9 @@
             <cfcase value="pdf">     
                 <table cellspacing="1" style="width:100%;">
                     <tr>
-                        <td valign="top">
-                            <img src="#APPLICATION.site_url#/images/logo.png" />
+                        <td>
+                            <img src="#APPLICATION.site_url#/images/#ATTRIBUTES.companyID#_short_profile_header.jpg" />
 						</td>
-                        <td valign="top">
-                        	<h2>Private High School Program</h2>
-                        </td>
 					</tr>
 				</table>                                                            
             </cfcase>
