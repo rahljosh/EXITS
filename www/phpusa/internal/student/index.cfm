@@ -28,7 +28,7 @@
     
     <cfswitch expression="#action#">
     
-        <cfcase value="flightInformation" delimiters=",">
+        <cfcase value="flightInformation,printFlightInformation" delimiters=",">
     
             <!--- Include template --->
             <cfinclude template="_#action#.cfm" />
@@ -51,7 +51,7 @@
     <!--- Other Users Only Have Access to Certain Pages --->
     <cfswitch expression="#action#">
     
-        <cfcase value="flightInformation,flightInformationList" delimiters=",">
+        <cfcase value="flightInformation,flightInformationList,printFlightInformation" delimiters=",">
     
             <!--- Include template --->
             <cfinclude template="_#action#.cfm" />

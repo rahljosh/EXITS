@@ -659,32 +659,20 @@
 	</cffunction>
 
 	
-    <!--- EMAIL FLIGHT INFORMATION --->
-	<cffunction name="emailFlightInformation" access="public" returntype="void" output="false" hint="Sends out flight notification when information is added/edited or deleted">
+	<!--- printFlightInformation --->
+	<cffunction name="printFlightInformation" access="public" returntype="string" output="false" hint="Returns a formatted flight information">
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="programID" hint="programID is required">
         <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
-		<cfargument name="emailPDF" default="1" hint="Set to 0 to send the flight arrival in HTML format">
         <cfargument name="sendEmailTo" default="" hint="school | currentUser">
        
    		<!--- Import CustomTag --->
 		<cfimport taglib="../customTags/gui/" prefix="gui" />	
 
 		<cfscript>
-            var flightEmailTo = '';
-			var flightEmailCC = '';
-            var flightEmailBody = '';
 			var flightInfoReport = '';
         	
 			qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, programID=ARGUMENTS.programID);
-			
-			// Path to save temp PDF files
-			pdfPath = APPLICATION.PATH.temp & '##' & qGetStudentFullInformation.studentID & '-' & qGetStudentFullInformation.firstName & qGetStudentFullInformation.familyLastName & '-FlightInformation.pdf';
-			// Remove Empty Spaces
-			pdfPath = ReplaceNoCase(pdfPath, " ", "", "ALL");
-
-			// Default Flight Information
-			flightInfoLink = '#APPLICATION.PATH.PHP.phpusa#/student/index.cfm?action=flightInformation&uniqueID=#qGetStudentFullInformation.uniqueID#&programID=#qGetStudentFullInformation.programID#';
 			
 			// Get School Information
 			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentFullInformation.schoolID);
@@ -704,98 +692,11 @@
             // Get Departure
             qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=VAL(qGetStudentFullInformation.programID), flightType="departure");
 			
-			// Link to Student Profile
-			flightInfoLink = '#APPLICATION.PATH.PHP.phpusa#/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
-            
-			if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
-
-				// Email Current User
-				flightEmailTo = qGetCurrentUser.email;
-
-			} else if ( APPLICATION.IsServerLocal ) {
-				
-				// Local Server - Always email support
-                flightEmailTo = APPLICATION.EMAIL.support;
-			
-			} else if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) AND IsValid("email", qGetCurrentUser.email) ) {
-				
-				// Email School | send a copy to the current user
-				flightEmailTo = qGetSchoolInfo.email;
-				flightEmailCC = qGetCurrentUser.email;
-				
-			} else if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) ) {
-				
-				// Email School | do not send a copy
-				flightEmailTo = qGetSchoolInfo.email;
-
-			} else {
-				
-				// Not a valid email, use support
-                flightEmailTo = APPLICATION.EMAIL.programManager;
-            
-			}
-			
 			// DELETE OR COMMENT THIS
 			// flightEmailTo = 'marcus@iseusa.com';
         </cfscript>
         
-        <!--- Send out Email if there is a flight information or if a leg has been deleted --->
-        <cfif qGetDeletedFlightInfo.recordCount OR qGetArrival.recordCount OR qGetDeparture.recordCount>
-        	
             <cfoutput>
-            	              
-                <!--- Email Body --->
-                <cfsavecontent variable="flightEmailBody">
-					
-                    <!--- Student Information --->
-                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
-                        
-                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                            Flight Information
-                        </legend>
-
-                        <p style="color: ##333;">
-                        	Please find flight information attached for #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#). 
-                        </p>
-
-                        <p style="color: ##333;">
-	                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a> then click on "Flight Information" on the right menu.
-						</p>
-                        
-                        <!--- Flight Leg Deleted --->
-                        <cfif qGetDeletedFlightInfo.recordCount>
-                            
-                            <p style="color: ##333;">
-                            
-                                <cfif qGetDeletedFlightInfo.flight_type EQ 'arrival'>
-                                    <p><strong>Arrival information has been deleted</strong></p>
-                                </cfif>
-                    
-                                <cfif qGetDeletedFlightInfo.flight_type EQ 'departure'>
-                                    <p><strong>Departure information has been deleted</strong></p>
-                                </cfif>
-                    
-                                <p>
-                                    The flight leg from <strong>#qGetDeletedFlightInfo.dep_aircode#</strong> to <strong>#qGetDeletedFlightInfo.arrival_aircode#</strong> 
-                                    on <strong>#DateFormat(qGetDeletedFlightInfo.dep_date, 'mm/dd/yyyy')#</strong> has been deleted. Please see an updated flight information attached.
-                                </p>
-                            
-                            </p>
-                            
-                        </cfif>
-
-                        <cfif APPLICATION.IsServerLocal>
-    
-                            <p style="color: ##333; padding-bottom:5px; font-weight:bold;">
-                                PS: Development Server
-                            </p>
-                        
-                        </cfif>
-                        
-                    </fieldset>
-
-                </cfsavecontent>
-                
                 	
 				<!--- Flight Report --->
                 <cfsavecontent variable="flightInfoReport">
@@ -816,63 +717,87 @@
                             We are pleased to give you the flight information for the student below. 
                         </p>
 
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Student:</span>
-                            #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)
-                        </p>
-    
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">International Representative:</span>
-                            #qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)
-                        </p>
-    
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Program:</span>
-                            #qGetStudentFullInformation.programName#
-                        </p>
-                        
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Area Representative:</span> 
-                            #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
-                            - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
-                            <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
-                                - Phone: #qGetStudentFullInformation.areaRepPhone#
-                            </cfif>                                    
-                        </p>
-                        
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">School:</span> 
-                            #qGetSchoolInfo.schoolName# (###qGetSchoolInfo.schoolID#)
-                        </p>
+						<table style="width: 100%; margin-bottom:5px; padding:0px; font-size:13px; line-height:13px;">	
+                        	<tr>
+                            	<td width="150px;" style="font-weight:bold; text-align:right; vertical-align:top;">Student:</td>
+                                <td>#qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)</td>
+                            </tr>
 
-						<!--- Arrival Airport --->
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">International Representative:</td>
+                                <td>#qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)</td>
+                            </tr>
+                            
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Program:</td>
+                                <td>#qGetStudentFullInformation.programName#</td>
+                            </tr>
+
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Area Representative:</td>
+                                <td>
+                                    #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
+                                    - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
+                                    <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
+                                        - Phone: #qGetStudentFullInformation.areaRepPhone#
+                                    </cfif>                                    
+                                </td>
+                            </tr>
+
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">School:</td>
+                                <td>#qGetSchoolInfo.schoolName# (###qGetSchoolInfo.schoolID#)</td>
+                            </tr>
+
+                            <tr>
+                                <td style="font-weight:bold; text-align:right; vertical-align:top;">Arrival/Departure Airport::</td>
+                                <td>
+                                    <cfif LEN(qGetSchoolInfo.airport_city)>
+                                    	#qGetSchoolInfo.airport_city# 
+									<cfelse> 
+                                    	n/a 
+									</cfif>
+                                    
+                                    - Airport Code: 
+                                    <cfif LEN(qGetSchoolInfo.major_air_code)>
+                                    	#qGetSchoolInfo.major_air_code# 
+									<cfelse> 
+                                    	n/a 
+									</cfif>
+                                </td>
+                            </tr>
+                        
+							<!--- Updated By --->
+                            <cfif ARGUMENTS.sendEmailTo NEQ 'school'>
+                                <tr>
+                                    <td style="font-weight:bold; text-align:right; vertical-align:top;">Sent By:</td>
+                                    <td>
+                                        #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
+                                        <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
+                                    </td>
+                                </tr>
+							</cfif>
+							
+                            <!--- Today's Date --->
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Today's Date:</td>
+                                <td>#DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST</td>
+                            </tr>
+                                                        
+						</table>                            
+                                            
+                    </fieldset>
+
+
+					<!--- Notes --->                
+                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
+                        
+                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">NOTES ON THIS FLIGHT INFORMATION</legend>
+
                         <p style="color: ##333;">
-                            <span style="font-weight:bold;">Arrival/Departure Airport:</span> 
-                            <cfif LEN(qGetSchoolInfo.airport_city)>#qGetSchoolInfo.airport_city# <cfelse> n/a </cfif>
-                            - Airport Code: <cfif LEN(qGetSchoolInfo.major_air_code)>#qGetSchoolInfo.major_air_code# <cfelse> n/a </cfif>
-                        </p>
-						
-                        <!--- Notes --->
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Notes:</span> 
                             <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
                         </p>
-						
-                        <!--- Updated By --->
-                        <cfif ARGUMENTS.sendEmailTo NEQ 'school'>
-                            <p style="color: ##333;">
-                                <span style="font-weight:bold;">Updated By:</span> 
-                                #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
-                                <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
-                            </p>
-                        </cfif>
                         
-                        <!--- Today's Date --->
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Today's Date:</span> 
-                            #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST
-                        </p>
-                                            
                     </fieldset>
 
 
@@ -1003,7 +928,148 @@
                     </fieldset>
                 
                 </cfsavecontent>           
+
+            </cfoutput>
                 
+			<cfscript>
+                // Return Flight Info				
+                return flightInfoReport;
+            </cfscript>
+    </cffunction>
+    
+    
+    <!--- EMAIL FLIGHT INFORMATION --->
+	<cffunction name="emailFlightInformation" access="public" returntype="void" output="false" hint="Sends out flight notification when information is added/edited or deleted">
+    	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="programID" hint="programID is required">
+        <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
+        <cfargument name="sendEmailTo" default="" hint="school | currentUser">
+       
+   		<!--- Import CustomTag --->
+		<cfimport taglib="../customTags/gui/" prefix="gui" />	
+
+		<cfscript>
+            var flightEmailTo = '';
+			var flightEmailCC = '';
+            var flightEmailBody = '';
+			var flightInfoReport = '';
+        	
+			qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, programID=ARGUMENTS.programID);
+			
+			// Get School Information
+			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentFullInformation.schoolID);
+			
+            // Get Current User
+            qGetCurrentUser = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
+            			
+			// Get Formatted Flight Information
+			flightInfoReport = APPLICATION.CFC.STUDENT.printFlightInformation(
+				studentID=ARGUMENTS.studentID,
+				programID=ARGUMENTS.programID,
+				flightID=ARGUMENTS.flightID,
+				sendEmailTo=ARGUMENTS.sendEmailTo
+			);
+			
+			// Path to save temp PDF files
+			pdfPath = APPLICATION.PATH.temp & '##' & qGetStudentFullInformation.studentID & '-' & qGetStudentFullInformation.firstName & qGetStudentFullInformation.familyLastName & '-FlightInformation.pdf';
+			// Remove Empty Spaces
+			pdfPath = ReplaceNoCase(pdfPath, " ", "", "ALL");
+
+			// Default Flight Information
+			flightInfoLink = '#APPLICATION.PATH.PHP.phpusa#/student/index.cfm?action=flightInformation&uniqueID=#qGetStudentFullInformation.uniqueID#&programID=#qGetStudentFullInformation.programID#';			
+			
+			// Link to Student Profile
+			flightInfoLink = '#APPLICATION.PATH.PHP.phpusa#/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
+            
+			if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
+
+				// Email Current User
+				flightEmailTo = qGetCurrentUser.email;
+
+			} else if ( APPLICATION.IsServerLocal ) {
+				
+				// Local Server - Always email support
+                flightEmailTo = APPLICATION.EMAIL.support;
+			
+			} else if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) AND IsValid("email", qGetCurrentUser.email) ) {
+				
+				// Email School | send a copy to the current user
+				flightEmailTo = qGetSchoolInfo.email;
+				flightEmailCC = qGetCurrentUser.email;
+				
+			} else if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) ) {
+				
+				// Email School | do not send a copy
+				flightEmailTo = qGetSchoolInfo.email;
+
+			} else {
+				
+				// Not a valid email, use support
+                flightEmailTo = APPLICATION.EMAIL.programManager;
+            
+			}
+			
+			// DELETE OR COMMENT THIS
+			// flightEmailTo = 'marcus@iseusa.com';
+        </cfscript>
+        
+        <!--- Send out Email if there is a flight information or if a leg has been deleted --->
+        <cfif qGetDeletedFlightInfo.recordCount OR qGetArrival.recordCount OR qGetDeparture.recordCount>
+        	
+            <cfoutput>
+            	              
+                <!--- Email Body --->
+                <cfsavecontent variable="flightEmailBody">
+					
+                    <!--- Student Information --->
+                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
+                        
+                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
+                            Flight Information
+                        </legend>
+
+                        <p style="color: ##333;">
+                        	Please find flight information attached for #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#). 
+                        </p>
+
+                        <p style="color: ##333;">
+	                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a> then click on "Flight Information" on the right menu.
+						</p>
+                        
+                        <!--- Flight Leg Deleted --->
+                        <cfif qGetDeletedFlightInfo.recordCount>
+                            
+                            <p style="color: ##333;">
+                            
+                                <cfif qGetDeletedFlightInfo.flight_type EQ 'arrival'>
+                                    <p><strong>Arrival information has been deleted</strong></p>
+                                </cfif>
+                    
+                                <cfif qGetDeletedFlightInfo.flight_type EQ 'departure'>
+                                    <p><strong>Departure information has been deleted</strong></p>
+                                </cfif>
+                    
+                                <p>
+                                    The flight leg from <strong>#qGetDeletedFlightInfo.dep_aircode#</strong> to <strong>#qGetDeletedFlightInfo.arrival_aircode#</strong> 
+                                    on <strong>#DateFormat(qGetDeletedFlightInfo.dep_date, 'mm/dd/yyyy')#</strong> has been deleted. Please see an updated flight information attached.
+                                </p>
+                            
+                            </p>
+                            
+                        </cfif>
+
+                        <cfif APPLICATION.IsServerLocal>
+    
+                            <p style="color: ##333; padding-bottom:5px; font-weight:bold;">
+                                PS: Development Server
+                            </p>
+                        
+                        </cfif>
+                        
+                    </fieldset>
+
+                </cfsavecontent>
+                                
                 <!--- Flight Information - PDF Format --->
                 <cfdocument name="pdfFlightInfo" format="pdf" localUrl="no" backgroundvisible="yes" margintop="0.2" marginright="0.2" marginbottom="0.2" marginleft="0.2">
                     #flightInfoReport#
