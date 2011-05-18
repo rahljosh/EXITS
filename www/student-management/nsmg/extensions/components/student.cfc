@@ -1006,7 +1006,7 @@
                                         (###qGetHostFamily.hostID#) - Phone: #qGetHostFamily.phone# <br />
                                         
                                         <!--- Address --->
-                                        #qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#
+                                        #qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# #qGetHostFamily.zip#
 									</cfif>                                        
                                 </td>
                             </tr>
@@ -1036,7 +1036,7 @@
 							<!--- Updated By --->
                             <cfif ARGUMENTS.sendEmailTo NEQ 'regionalManager'>
                                 <tr>
-                                    <td style="font-weight:bold; text-align:right; vertical-align:top;">Updated By:</td>
+                                    <td style="font-weight:bold; text-align:right; vertical-align:top;">Sent By:</td>
                                     <td>
                                         #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
                                         <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
@@ -1053,6 +1053,18 @@
 
                     </fieldset>
 
+
+					<!--- Notes --->                
+                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
+                        
+                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">NOTES ON THIS FLIGHT INFORMATION</legend>
+
+                        <p style="color: ##333;">
+                            <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
+                        </p>
+                        
+                    </fieldset>
+                
                                     
                     <!--- Pre-AYP Arrival Information --->
                     <cfif qGetPreAYPArrival.recordCount>
@@ -1228,18 +1240,6 @@
                             
                         </cfif>
                 
-                    </fieldset>
-                
-                
-					<!--- Notes --->                
-                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
-                        
-                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">NOTES ON THIS FLIGHT INFORMATION</legend>
-
-                        <p style="color: ##333;">
-                            <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
-                        </p>
-                        
                     </fieldset>
                 
                 </cfsavecontent>           
