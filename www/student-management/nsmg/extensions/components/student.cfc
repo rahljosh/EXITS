@@ -574,7 +574,7 @@
 				isCompleted = 0;
 			}
 		</cfscript>
-        
+
         <cfquery 
 			datasource="#APPLICATION.dsn#">
                 INSERT INTO 
@@ -648,7 +648,7 @@
 				isCompleted = 0;
 			}
 		</cfscript>
-
+		
         <cfquery 
 			datasource="#APPLICATION.dsn#">
                 UPDATE
@@ -911,7 +911,7 @@
                     />
                 
                     <!--- Student Information --->
-                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
+                    <fieldset style="margin: 0px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
                         
                         <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
                         	Flight Information
@@ -922,112 +922,135 @@
                             Please pass it to the host family information as soon as possible and in case of any doubt do not hesitate to contact us.
                         </p>
 
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Student:</span>
-                            #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)
-                        </p>
-    
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">International Representative:</span>
-                            #qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)
-                        </p>
-    
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Program:</span>
-                            #qGetStudentFullInformation.programName#
-                        </p>
-                        
-                        <!--- Do Not Display for PHP --->
-                        <cfif NOT ARGUMENTS.isPHPStudent>
-                        
-                            <p style="color: ##333;">
-                                <span style="font-weight:bold;">Region:</span>
-                                #qGetStudentFullInformation.regionName#
-                            </p>
-                        
-                            <p style="color: ##333;">
-                                <span style="font-weight:bold;">Regional Manager:</span>
-                                #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
-                                - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a>
-                                <cfif LEN(qGetRegionalManager.work_phone)>
-                                    - Phone: #qGetRegionalManager.work_phone#
-                                </cfif>
-                            </p>
-     
-                        </cfif>
-
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Area Representative:</span> 
-                            #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
-                            - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
-                            <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
-                                - Phone: #qGetStudentFullInformation.areaRepPhone#
-                            </cfif>                                    
-                        </p>
-                        
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">School:</span> 
-                            #qGetSchoolInfo.schoolName# (###qGetSchoolInfo.schoolID#)
-                        </p>
-
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Host Family:</span>
-                            <!--- Host Father --->
-                            <cfif LEN(qGetHostFamily.fatherFirstName)> 
-                                Mr. #qGetHostFamily.fatherFirstName# 
-                                <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
-                                    #qGetHostFamily.fatherLastName# 
-                                </cfif>							
+						<table style="width: 100%; margin-bottom:5px; padding:0px; font-size:13px; line-height:13px;">	
+                        	<tr>
+                            	<td width="150px;" style="font-weight:bold; text-align:right; vertical-align:top;">Student:</td>
+                                <td>#qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)</td>
+                            </tr>
+                            
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">International Representative:</td>
+                                <td>#qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)</td>
+                            </tr>
+                            
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Program:</td>
+                                <td>#qGetStudentFullInformation.programName#</td>
+                            </tr>
+                            
+							<!--- Do Not Display for PHP --->
+                            <cfif NOT ARGUMENTS.isPHPStudent>
+                                <tr>
+                                    <td style="font-weight:bold; text-align:right; vertical-align:top;">Region:</td>
+                                    <td>#qGetStudentFullInformation.regionName#</td>
+                                </tr>
+                                
+                                <tr>
+                                    <td style="font-weight:bold; text-align:right; vertical-align:top;">Regional Manager:</td>
+                                    <td>
+                                        #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
+                                        - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a>
+                                        <cfif LEN(qGetRegionalManager.work_phone)>
+                                            - Phone: #qGetRegionalManager.work_phone#
+                                        </cfif>
+                                    </td>
+                                </tr>
                             </cfif>
                             
-                            <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Area Representative:</td>
+                                <td>
+                                    #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
+                                    - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
+                                    <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
+                                        - Phone: #qGetStudentFullInformation.areaRepPhone#
+                                    </cfif>                                    
+                                </td>
+                            </tr>
                             
-                            <!--- Host Mother --->
-                            <cfif LEN(qGetHostFamily.motherFirstName)>
-                                Mrs. #qGetHostFamily.motherFirstName#
-                                <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
-                                    #qGetHostFamily.motherLastName# 
-                                </cfif>							
-                            </cfif>
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">School:</td>
+                                <td>#qGetSchoolInfo.schoolName# (###qGetSchoolInfo.schoolID#)</td>
+                            </tr>
                             
-                            <!--- Family Last Name --->                            
-                            <cfif qGetHostFamily.fatherLastName EQ qGetHostFamily.motherLastName>
-                                #qGetHostFamily.familyLastName#		
-                            </cfif>
-                            
-                            (###qGetHostFamily.hostID#) - Phone: #qGetHostFamily.phone# <br />
-                            
-                            <!--- Address --->
-                            <span style="margin-left:70px;">#qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#</span>
-                        </p>
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Host Family:</td>
+                                <td>
+									<cfif NOT VAL(qGetHostFamily.recordCount)>
+                                    	n/a
+                                    <cfelse>
+									
+										<!--- Host Father --->
+                                        <cfif LEN(qGetHostFamily.fatherFirstName)> 
+                                            Mr. #qGetHostFamily.fatherFirstName# 
+                                            <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                                #qGetHostFamily.fatherLastName# 
+                                            </cfif>							
+                                        </cfif>
+                                        
+                                        <cfif LEN(qGetHostFamily.fatherFirstName) AND LEN(qGetHostFamily.motherFirstName)> and </cfif>                            
+                                        
+                                        <!--- Host Mother --->
+                                        <cfif LEN(qGetHostFamily.motherFirstName)>
+                                            Mrs. #qGetHostFamily.motherFirstName#
+                                            <cfif qGetHostFamily.fatherLastName NEQ qGetHostFamily.motherLastName> 
+                                                #qGetHostFamily.motherLastName# 
+                                            </cfif>							
+                                        </cfif>
+                                        
+                                        <!--- Family Last Name --->                            
+                                        <cfif qGetHostFamily.fatherLastName EQ qGetHostFamily.motherLastName>
+                                            #qGetHostFamily.familyLastName#		
+                                        </cfif>
+                                        
+                                        (###qGetHostFamily.hostID#) - Phone: #qGetHostFamily.phone# <br />
+                                        
+                                        <!--- Address --->
+                                        #qGetHostFamily.address#, #qGetHostFamily.city#, #qGetHostFamily.state# &nbsp #qGetHostFamily.zip#
+									</cfif>                                        
+                                </td>
+                            </tr>
 
-                        <!--- Do Not Display for PHP --->
-                        <cfif NOT ARGUMENTS.isPHPStudent>
-                            
-                            <!--- Arrival Airport --->
-                            <p style="color: ##333;">
-                                <span style="font-weight:bold;">Arrival/Departure Airport:</span> 
-                                <cfif LEN(qGetHostFamily.airport_city)>#qGetHostFamily.airport_city# <cfelse> n/a </cfif>
-                                - Airport Code: <cfif LEN(qGetHostFamily.major_air_code)>#qGetHostFamily.major_air_code# <cfelse> n/a </cfif>
-                            </p>
-						
-                        </cfif>
-                                                
-                        <!--- Updated By --->
-                        <cfif ARGUMENTS.sendEmailTo NEQ 'regionalManager'>
-                            <p style="color: ##333;">
-                                <span style="font-weight:bold;">Updated By:</span> 
-                                #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
-                                <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
-                            </p>
-                        </cfif>
-                        
-                        <!--- Today's Date --->
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Today's Date:</span> 
-                            #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST
-                        </p>
-                                            
+							<!--- Do Not Display for PHP --->
+                            <cfif NOT ARGUMENTS.isPHPStudent>
+                                <tr>
+                                    <td style="font-weight:bold; text-align:right; vertical-align:top;">Arrival/Departure Airport::</td>
+                                    <td>
+										<cfif LEN(qGetHostFamily.airport_city)>
+                                        	#qGetHostFamily.airport_city# 
+										<cfelse> 
+                                        	n/a 
+										</cfif>
+                                        
+                                        - Airport Code: 
+										<cfif LEN(qGetHostFamily.major_air_code)>
+                                        	#qGetHostFamily.major_air_code# 
+										<cfelse> 
+                                        	n/a 
+										</cfif>
+                                    </td>
+                                </tr>
+							
+                            </cfif>
+
+							<!--- Updated By --->
+                            <cfif ARGUMENTS.sendEmailTo NEQ 'regionalManager'>
+                                <tr>
+                                    <td style="font-weight:bold; text-align:right; vertical-align:top;">Updated By:</td>
+                                    <td>
+                                        #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
+                                        <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
+                                    </td>
+                                </tr>
+							</cfif>
+
+                        	<tr>
+                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Today's Date:</td>
+                                <td>#DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST</td>
+                            </tr>
+                                                        
+						</table>                            
+
                     </fieldset>
 
                                     
@@ -1222,7 +1245,7 @@
                 </cfsavecontent>           
                 
                 <!--- Flight Information - PDF Format --->
-                <cfdocument name="pdfFlightInfo" format="pdf" localUrl="no" backgroundvisible="yes" margintop="0.2" marginright="0.2" marginbottom="0.2" marginleft="0.2">
+                <cfdocument name="pdfFlightInfo" format="pdf" localUrl="no" backgroundvisible="yes" margintop="0.1" marginright="0.2" marginbottom="0.1" marginleft="0.2">
                     #flightInfoReport#
                 </cfdocument>
             

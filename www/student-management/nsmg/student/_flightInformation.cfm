@@ -509,9 +509,9 @@
         <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
             <tr>
                 <td>
-        
+
                     <!--- EMAIL FLIGHT INFORMATION / Only Office Users --->
-                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                    <cfif ListFind("1,2,3,4", CLIENT.userType) AND ( qGetPreAYPArrival.recordCount OR qGetArrival.recordCount OR qGetDeparture.recordCount )>
                         <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
                             <tr bgcolor="##D5DCE5">
                                 <td align="center" width="50%">REGIONAL DIRECTOR</td>
