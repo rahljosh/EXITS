@@ -244,7 +244,7 @@
 
 
 	<cffunction name="getStudentFullInformationByID" access="public" returntype="query" output="false" hint="Returns PHP student">
-    	<cfargument name="studentID" default="0" hint="studentID is not required">
+    	<cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
         <cfargument name="programID" default="" hint="programID is not required">
         <cfargument name="assignedID" default="" hint="assignedID is not required">
@@ -309,9 +309,9 @@
                 WHERE 
                     1 = 1
 
-				<cfif VAL(ARGUMENTS.studentID)>
+				<cfif LEN(ARGUMENTS.studentID)>
                     AND
-                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.uniqueID)>
@@ -661,7 +661,8 @@
 	
 	<!--- printFlightInformation --->
 	<cffunction name="printFlightInformation" access="public" returntype="string" output="false" hint="Returns a formatted flight information">
-    	<cfargument name="studentID" hint="studentID is required">
+    	<cfargument name="studentID" default="" hint="studentID is NOT required">
+        <cfargument name="uniqueID" default="" hint="uniqueID is NOT required">
         <cfargument name="programID" hint="programID is required">
         <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
         <cfargument name="sendEmailTo" default="" hint="school | currentUser">
@@ -672,7 +673,7 @@
 		<cfscript>
 			var flightInfoReport = '';
         	
-			qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, programID=ARGUMENTS.programID);
+			qGetStudentFullInformation = getStudentFullInformationByID(uniqueID=ARGUMENTS.uniqueID, programID=ARGUMENTS.programID);
 			
 			// Get School Information
 			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentFullInformation.schoolID);

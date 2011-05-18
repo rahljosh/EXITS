@@ -24,17 +24,18 @@ table,tr,td					{font-family:Arial, Helvetica, sans-serif;}
 
 <cfoutput>
 <div class="thin-border">
-<table background="#APPLICATION.PATH.PHP.phpusa#pics/email_textured_background.png" width=600>
-	<Tr >
-     	<td width=94><img src="#APPLICATION.site_url#/images/logo.png"></td>
-     	<td><strong><font size=+2>#company_info.companyname#</font></font></strong></td>
-     </Tr>
+<table width="600px" background="#APPLICATION.PATH.PHP.phpusa#pics/email_textured_background.png">
+    <tr>
+        <td>
+            <img src="#APPLICATION.site_url#/images/#ATTRIBUTES.companyID#_short_profile_header.jpg" />
+        </td>
+    </tr>
      <tr>	
-     	<td colspan=2><img src="#APPLICATION.PATH.PHP.phpusa#pics/#client.companyid#_px.png" height=12 width=100%></td>
+     	<td colspan="2"><img src="#APPLICATION.PATH.PHP.phpusa#pics/#client.companyid#_px.png" height=12 width=100%></td>
 	</tr>
-</table>
+</table>                                                            
 
-<Table width=600>
+<Table width="600px">
 	<Tr>
     	<td>
 </cfoutput>

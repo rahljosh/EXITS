@@ -10,15 +10,14 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
-    <!--- Declare Print Application Variable --->
-    <cfparam name="URL.uniqueID" default="">
-	<cfparam name="URL.studentID" default="">
+    <!--- PARAM URL Variables --->
+	<cfparam name="URL.uniqueID" default="">
     <cfparam name="URL.programID" default="">
 
 	<cfscript>
 		// Get Formatted Flight Information
 		flightInfoReport = APPLICATION.CFC.STUDENT.printFlightInformation(
-			studentID=URL.studentID,
+			uniqueID=URL.uniqueID,
 			programID=URL.programID																		 
 		);
 	</cfscript>	

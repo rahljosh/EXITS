@@ -203,7 +203,7 @@ Order by birthdate
 				<a href="uploadedfiles/letters/parents/#get_student_info.studentid#.pdf">Parents Letter</a>
 				&nbsp &nbsp - &nbsp &nbsp
 			</cfif>
-			<a href="student/index.cfm?action=printFlightInformation&studentID=#get_student_info.studentID#&programID=#get_student_info.programID#">Flight Information</a>
+			<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#&programID=#get_student_info.programID#">Flight Information</a>
 			</td></tr>
 	</table>
 </table>
