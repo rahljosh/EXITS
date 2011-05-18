@@ -486,7 +486,7 @@
 					<td width="50%">: : <a href="reports/letter_student_arrival.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Student Arrival Letter</a></td>
 				</tr>
 				<tr>
-					<td width="50%">: : <a href="reports/flight_information.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Flight Information</a></td>
+					<td width="50%">: : <a href="student/index.cfm?action=printFlightInformation&studentID=#get_student_unqid.studentID#&programID=#get_student_unqid.programID#">Flight Information</a></td>
 					<td width="50%">&nbsp;</td>
 				</tr>
 			</table>

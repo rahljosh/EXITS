@@ -20,13 +20,13 @@
 	param name="SESSION.pageMessages" default='';	
 	param name="SESSION.formErrors" default='';	
 	
-	// Check if we have a valid variable
+	// Check if we have a valid object
 	if ( NOT IsObject(SESSION.pageMessages) ) {
 		// Page Messages
 		SESSION.pageMessages = CreateCFC("pageMessages").Init();
 	}
 	
-	// Check if we have a valid variable
+	// Check if we have a valid object
 	if ( NOT IsObject(SESSION.formErrors) ) {
 		// Form Errors
 		SESSION.formErrors = CreateCFC("formErrors").Init();
