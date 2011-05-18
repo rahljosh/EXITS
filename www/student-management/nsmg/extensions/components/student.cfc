@@ -27,6 +27,7 @@
 	<cffunction name="getStudentByID" access="public" returntype="query" output="false" hint="Gets a student by studentID or uniqueID">
     	<cfargument name="studentID" default="0" hint="studentID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
+        <cfargument name="soID" default="" hint="INTO International Representative IDs">
               
         <cfquery 
 			name="qGetStudentByID" 
@@ -46,6 +47,11 @@
 					<cfif LEN(ARGUMENTS.uniqueID)>
 	                    AND
                         	uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+					</cfif>
+
+					<cfif LEN(ARGUMENTS.soID)>
+	                    AND
+                        	soID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.soID#">
 					</cfif>
 		</cfquery>
 		   
@@ -600,11 +606,11 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.batchID#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(ARGUMENTS.depCity)#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">,
                     <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
                     <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(ARGUMENTS.arrivalCity)#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">,
                     <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
@@ -652,11 +658,11 @@
                     programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
                     enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
                     flight_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,                 
-                    dep_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">, 
+                    dep_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(ARGUMENTS.depCity)#">, 
                     dep_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">, 
                     dep_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
                     dep_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
-                    arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">, 
+                    arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(ARGUMENTS.arrivalCity)#">, 
                     arrival_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">, 
                     arrival_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
                     overnight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
@@ -1007,12 +1013,6 @@
 						
                         </cfif>
                                                 
-                        <!--- Notes --->
-                        <p style="color: ##333;">
-                            <span style="font-weight:bold;">Notes:</span> 
-                            <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
-                        </p>
-						
                         <!--- Updated By --->
                         <cfif ARGUMENTS.sendEmailTo NEQ 'regionalManager'>
                             <p style="color: ##333;">
@@ -1205,6 +1205,18 @@
                             
                         </cfif>
                 
+                    </fieldset>
+                
+                
+					<!--- Notes --->                
+                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
+                        
+                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">NOTES ON THIS FLIGHT INFORMATION</legend>
+
+                        <p style="color: ##333;">
+                            <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
+                        </p>
+                        
                     </fieldset>
                 
                 </cfsavecontent>           
