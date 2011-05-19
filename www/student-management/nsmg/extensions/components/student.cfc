@@ -172,7 +172,8 @@
 			datasource="#APPLICATION.dsn#">
                 SELECT 
                     s.studentID, 
-                    s.uniqueID,                     
+                    s.uniqueID, 
+                    s.intRep,                    
                     s.regionAssigned,
                     s.familylastname, 
                     s.firstname, 
@@ -245,7 +246,9 @@
                     AND                
                         php.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
                 </cfif>
-
+				
+                ORDER BY
+                	assignedID DESC
         </cfquery>
         
         <cfreturn qGetPHPStudent>            
@@ -714,6 +717,7 @@
 	<!--- DELETE COMPLETE FLIGHT INFORMATION --->
 	<cffunction name="deleteCompleteFlightInformation" access="public" returntype="void" output="false" hint="Deletes Flight Information">
         <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="programID" default="" hint="programID is required">
         <cfargument name="flightType" hint="Arrival/Departure is required">
         <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
 		
@@ -727,7 +731,13 @@
                 WHERE 
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">  
                 AND	
-                    flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">            	         
+                    flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">   
+                     
+				<cfif LEN(ARGUMENTS.programID)>
+                    AND	
+                        programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">    
+                </cfif>  
+                                          	         
         </cfquery>
 
 	</cffunction>

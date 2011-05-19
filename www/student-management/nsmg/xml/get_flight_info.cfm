@@ -59,6 +59,14 @@
         <cfscript>
             // Get Student Information
             qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(soID=FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentID);
+			
+			// Check if it's an Active PHP Student
+			qGetPHPStudentInfo = APPLICATION.CFC.STUDENT.getPHPStudent(studentID=qGetStudentInfo.studentID);
+			
+			if ( qGetPHPStudentInfo.recordCount EQ 1 ) {
+				// Use PHP Data Instead
+				qGetStudentInfo = qGetPHPStudentInfo;
+			}
         </cfscript>
                 
         <cfif VAL(FORM.displayResults)>
@@ -88,12 +96,12 @@
                     setNumberFlightArrival = ArrayLen(FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight);
                     
                     // Get Arrival Information
-                    qGetCurrentArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, flightType='arrival'); 
+                    qGetCurrentArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, programID=qGetStudentInfo.programID, flightType='arrival'); 
                     
                     // Delete current flight information
                     if ( VAL(qGetCurrentArrival.recordcount) AND VAL(setNumberFlightArrival) ) {
                         
-                        APPLICATION.CFC.STUDENT.deleteCompleteFlightInformation(studentID=qGetStudentInfo.studentID, flightType='arrival', enteredByID=CLIENT.userID);
+                        APPLICATION.CFC.STUDENT.deleteCompleteFlightInformation(studentID=qGetStudentInfo.studentID, programID=qGetStudentInfo.programID, flightType='arrival', enteredByID=CLIENT.userID);
                         
                     }
                 </cfscript>
@@ -161,12 +169,12 @@
                     setNumberFlightDeparture = ArrayLen(FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight);
                     
                     // Get Departure Information
-                    qGetCurrentDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, flightType='departure'); 
+                    qGetCurrentDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, programID=qGetStudentInfo.programID, flightType='departure'); 
                     
                     // Delete current flight information
                     if ( VAL(qGetCurrentDeparture.recordcount) AND VAL(setNumberFlightDeparture) ) {
                         
-                        APPLICATION.CFC.STUDENT.deleteCompleteFlightInformation(studentID=qGetStudentInfo.studentID, flightType='departure', enteredByID=CLIENT.userID);
+                        APPLICATION.CFC.STUDENT.deleteCompleteFlightInformation(studentID=qGetStudentInfo.studentID, programID=qGetStudentInfo.programID, flightType='departure', enteredByID=CLIENT.userID);
                         
                     }
                 </cfscript>
