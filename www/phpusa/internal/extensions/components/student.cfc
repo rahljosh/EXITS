@@ -723,11 +723,14 @@
                             	<td width="150px;" style="font-weight:bold; text-align:right; vertical-align:top;">Student:</td>
                                 <td>#qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)</td>
                             </tr>
-
+							
+                            <!--- 05/19/2011 - Luke requested to be removed --->
+                            <!---
                         	<tr>
                             	<td style="font-weight:bold; text-align:right; vertical-align:top;">International Representative:</td>
                                 <td>#qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)</td>
                             </tr>
+                            --->
                             
                         	<tr>
                             	<td style="font-weight:bold; text-align:right; vertical-align:top;">Program:</td>
