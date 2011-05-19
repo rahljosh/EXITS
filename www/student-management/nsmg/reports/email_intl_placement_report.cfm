@@ -3,6 +3,9 @@
 
 	<cfsetting requestTimeOut="9999">
 
+	<!-----Company Information----->
+    <cfinclude template="../querys/get_company_short.cfm">
+
 	<!--- Param Form Variables --->
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.intrep" default="0">

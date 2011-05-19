@@ -95,11 +95,8 @@
                     // set number of segments of arrivals
                     setNumberFlightArrival = ArrayLen(FlightXMLFile.flightinfocollection.flightinfo[i].arrival.flight);
                     
-                    // Get Arrival Information
-                    qGetCurrentArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, programID=qGetStudentInfo.programID, flightType='arrival'); 
-                    
                     // Delete current flight information
-                    if ( VAL(qGetCurrentArrival.recordcount) AND VAL(setNumberFlightArrival) ) {
+                    if ( VAL(setNumberFlightArrival) ) {
                         
                         APPLICATION.CFC.STUDENT.deleteCompleteFlightInformation(studentID=qGetStudentInfo.studentID, programID=qGetStudentInfo.programID, flightType='arrival', enteredByID=CLIENT.userID);
                         
@@ -168,11 +165,8 @@
                     // set number of segments of departures
                     setNumberFlightDeparture = ArrayLen(FlightXMLFile.flightinfocollection.flightinfo[i].departure.flight);
                     
-                    // Get Departure Information
-                    qGetCurrentDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, programID=qGetStudentInfo.programID, flightType='departure'); 
-                    
                     // Delete current flight information
-                    if ( VAL(qGetCurrentDeparture.recordcount) AND VAL(setNumberFlightDeparture) ) {
+                    if ( VAL(setNumberFlightDeparture) ) {
                         
                         APPLICATION.CFC.STUDENT.deleteCompleteFlightInformation(studentID=qGetStudentInfo.studentID, programID=qGetStudentInfo.programID, flightType='departure', enteredByID=CLIENT.userID);
                         
