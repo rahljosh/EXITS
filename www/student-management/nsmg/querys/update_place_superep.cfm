@@ -18,9 +18,7 @@ WHERE studentid = '#client.studentid#'
 		<Cfquery name="super_placingrep" datasource="MySQL">
 		UPDATE smg_students
 			SET arearepid = #form.arearepid#
-<!--- 			<cfif double_check_placement.placerepid is not '0' and double_check_placement.hostid is not '0' and double_check_placement.schoolid is not '0'>
-				, host_fam_approved = #client.usertype#		
-			</cfif>		 --->	
+
 		WHERE studentid= #client.studentid#
 		LIMIT 1
 		</cfquery>

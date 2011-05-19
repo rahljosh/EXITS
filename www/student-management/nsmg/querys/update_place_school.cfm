@@ -18,9 +18,6 @@ WHERE studentid = '#client.studentid#'
 		<Cfquery name="place_school" datasource="MySQL">
 		UPDATE smg_students
 			SET schoolid = #form.schoolid#
-<!--- 			<cfif double_check_placement.arearepid is not '0' and double_check_placement.hostid is not '0' and double_check_placement.placerepid is not '0'>
-				, host_fam_approved = #client.usertype#
-			</cfif> --->
 		WHERE studentid= #client.studentid#
 		LIMIT 1
 		</cfquery>
@@ -36,5 +33,6 @@ WHERE studentid = '#client.studentid#'
 	</cftransaction>
 	
 </cfif>
+<cfabort>
 <cflocation url="../forms/place_menu.cfm?studentid=#client.studentid#" addtoken="no">	
 <!--- <cflocation url="../forms/place_school.cfm?studentid=#client.studentid#" addtoken="no"> --->
