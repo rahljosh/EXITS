@@ -653,6 +653,11 @@
 				vActions = vActions & "Status: #qGetStatus.name# <br /> #CHR(13)#";
 			}
 			
+			// Comments
+			if ( LEN(ARGUMENTS.comments) ) {
+				vActions = vActions & "Comment added <br /> #CHR(13)#";
+			}
+			
 			// Check if information has been updated
 			if ( LEN(vActions) ) {
 				
