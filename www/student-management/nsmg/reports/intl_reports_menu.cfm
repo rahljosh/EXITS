@@ -77,7 +77,7 @@
                         <tr align="left">
                             <td>Flight Option:</td>
                             <td><select name="flightOption" size="1">
-                                <option value="0">none</option>
+                                <option value="">none</option>
                                     <option value="missingPreAypArrival">Missing Pre-AYP Arrival Information</option>
                                     <option value="missingArrival">Missing Arrival Information</option>
                                     <option value="missingDeparture">Missing Departure Information</option>
