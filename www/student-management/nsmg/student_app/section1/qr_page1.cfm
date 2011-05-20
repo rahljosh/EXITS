@@ -18,6 +18,7 @@
 <!--- Param Form Variables --->
 <cfparam name="FORM.app_indicated_program" default="0">
 <cfparam name="FORM.app_canada_area" default="">
+<cfparam name="FORM.internalProgram" default="0">
 <cfparam name="FORM.app_additional_program" default="0">
 
 <cfquery name="check_username" datasource="MySql">
@@ -65,7 +66,7 @@
 			firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.firstName))#">,
 			middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#AppCFC.UDF.ProperCase(AppCFC.UDF.removeAccent(FORM.middleName))#">,
 			app_indicated_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">,  
-            programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#">,
+            programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#" >,
 			app_additional_program = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_additional_program#">,  
 			app_canada_area = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_canada_area#">,
             address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
