@@ -258,9 +258,11 @@
                 <td width="12%"><b>Family</b></td>
                 <td width="10%" align="center"><b>Program</b></td>
 				<!--- Flight Option --->                    
-                <cfif LISTFIND("receivedArrival,missingArrival", FORM.flightOption)>
+                <cfif ListFind("receivedPreAYPArrival,missingPreAypArrival", FORM.flightOption)>
+                    <td width="12%" align="center"><b>Pre-AYP Arrival Information</b></td>                            
+				<cfelseif ListFind("receivedArrival,missingArrival", FORM.flightOption)>
                     <td width="12%" align="center"><b>Arrival Information</b></td>                            
-                <cfelseif LISTFIND("receivedDeparture,missingDeparture", FORM.flightOption)>
+                <cfelseif ListFind("receivedDeparture,missingDeparture", FORM.flightOption)>
                     <td width="12%" align="center"><b>Departure Information</b></td>                           
                 </cfif>
                 <td width="12%" align="center"><b>Placement Date</b></td>
@@ -277,9 +279,9 @@
                     <td>#hostfamily#</td>
                     <td align="center">#programname#</td>
 					<!--- Flight Option --->                    
-					<cfif LISTFIND("receivedArrival,receivedDeparture", FORM.flightOption)>
+					<cfif ListFind("receivedPreAYPArrival,receivedArrival,receivedDeparture", FORM.flightOption)>
                         <td align="center">Received</td>                            
-                    <cfelseif LISTFIND("missingArrival,missingDeparture", FORM.flightOption)>
+                    <cfelseif ListFind("missingPreAypArrival,missingArrival,missingDeparture", FORM.flightOption)>
                         <td align="center"><font color="FF0000"><b>Missing</b></font></td>                            
                     </cfif>
                     <td align="center">#DateFormat(dateplaced, 'mm/dd/yyyy')#</td>
@@ -364,7 +366,7 @@
                         <p>&nbsp; &nbsp; &nbsp; <b>Please also send all flight information that may be shown on the report below. You can submit Flight Information thru EXITS.</b></p>
                     </cfif>
                     <p>&nbsp; &nbsp; &nbsp; Also remember that you can log on to EXITS yourself and check all placement information at your convenience. 
-                    	Please visit <a href="http://ise.exitsapplication.com">http://ise.exitsapplication.com</a> <!--- #CLIENT.site_url# ---> to login.
+                    	Please visit <a href="#CLIENT.site_url#">#CLIENT.site_url#</a> to login.
                     </p>
                     
                     <!--- Display Program Header --->
