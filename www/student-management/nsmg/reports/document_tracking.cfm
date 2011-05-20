@@ -257,7 +257,7 @@
             repName,
             s.firstName            
     </cfquery> 
-    
+   
     <cfquery name="qGetRepsInRegion" dbtype="query">
         SELECT DISTINCT	
             userID,
@@ -268,7 +268,7 @@
         ORDER BY
             repName            
     </cfquery> 
-        
+         
     <!--- Save Report in a Variable --->
     <cfsavecontent variable="documentTrackingReport">
 

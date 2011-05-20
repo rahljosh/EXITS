@@ -206,7 +206,8 @@
     <cfoutput>
     #doubleDocumentTrackingReport#
      </Cfoutput>           
-<!--- Email Regional Managers --->        
+<!--- Email Regional Managers --->    
+   <cfif isDefined('get_students_region')>
     <cfif VAL(FORM.sendEmail) AND get_students_region.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>
     	<cfoutput>
         <cfsavecontent variable="emailBody">
@@ -226,6 +227,10 @@
         </cfinvoke>
             
     </cfif>   <!--- Email Regional Managers --->    
+    <cfelse>
+    There are no students with missing documents for this region. 
+    </cfif>
+    
 </cfloop> <!--- cfloop query="get_region" --->
 
 
