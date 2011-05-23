@@ -163,6 +163,8 @@
                 fi.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
             AND            	    
                 fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+			AND
+            	fi.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">                
             AND
             	ib.studentID IS NULL
             <!--- PHP students might have previous program flight information - get only flights +- 2 months of program start date --->
@@ -300,9 +302,10 @@
                             ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="R">
                 WHERE 
                     fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+				AND
+					fi.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">                
                 AND
                     ib.studentID IS NULL
-                    
                 GROUP BY 
                     fi.studentID
                 ORDER BY 
