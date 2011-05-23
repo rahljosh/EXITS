@@ -149,13 +149,21 @@
 												<td class="style1" width="35%" align="left"><font size="1"><b>Social Security Number:</b></font></td>
 												<td class="style1" width="65%"><cfinput type="text" name="ssn" size=32 maxlength="15"></td>
 											</tr>
-											<tr>
-											  <td align="left" bordercolor="FFFFFF" class="style1"><font size="1"><b>English Assessment:</b></font><br>
-
-
-</td>
-											  <td class="style1" bordercolor="FFFFFF"><cftextarea name="personal_info" cols="25" rows="3"></cftextarea></td>
-											  </tr>
+                                            <tr>
+                                                <td class="style1" align="right" valign="top"><strong>English Assessment CSB:</strong></td>
+                                                <td class="style1"><textarea name="englishAssessment" class="style1" cols="30" rows="3"></textarea></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Date of Interview:</strong></td>
+                                                <td class="style1">
+                                                    <input type="text" name="englishAssessmentDate" class="datePicker style1" value="">
+                                                    <font size="1">(mm/dd/yyyy)</font>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right" valign="top"><strong>Comment:</strong></td>
+                                                <td class="style1"><textarea name="englishAssessmentComment" class="style1" cols="30" rows="6"></textarea></td>
+                                            </tr>
 										</table>
 										
 									</td>

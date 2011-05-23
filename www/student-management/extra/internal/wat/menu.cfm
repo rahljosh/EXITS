@@ -29,7 +29,7 @@
 <cfoutput>
 	
 <!--- Menu for Office Users --->
-<cfif CLIENT.userType LTE 4>
+<cfif ListFind("1,2,3,4", CLIENT.userType)>
 
     <table width=100%  cellpadding=0 cellspacing=0 id="menu1" class="ddmx">
         <tr bgcolor="##cfcfcf">
@@ -56,6 +56,7 @@
                 <div class="section">
                     <a class="item2" href="?curdoc=candidate/candidate_profile_batch">Batch Candidate Profiles</a>
                     <a class="item2" href="?curdoc=candidate/batchImmigrationLetter">Batch Imm. Letters</a>
+                    <a class="item2" href="?curdoc=tools/candidateProfile">Candidate Profile</a>
                     <a class="item2" href="?curdoc=tools/ds2019Verification">DS-2019 Verification</a>
                     <a class="item2" href="?curdoc=reports/idcards_menu">ID Cards</a>
                     <a class="item2" href="?curdoc=insurance/insurance_menu">Insurance</a>

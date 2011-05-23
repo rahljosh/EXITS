@@ -626,10 +626,26 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>English Assessment CSB:</strong></td>
+                                            <td class="style1" align="right" valign="top"><strong>English Assessment CSB:</strong></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#qGetCandidate.personal_info#</span>
-                                                <textarea name="personal_info" class="style1 editPage" cols="30" rows="8">#qGetCandidate.personal_info#</textarea>
+                                            	<span class="readOnly">#qGetCandidate.englishAssessment#</span>
+                                                <textarea name="englishAssessment" class="style1 editPage" cols="30" rows="3">#qGetCandidate.englishAssessment#</textarea>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Date of Interview:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#DateFormat(qGetCandidate.englishAssessmentDate, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="englishAssessmentDate" class="datePicker style1 editPage" value="#DateFormat(qGetCandidate.englishAssessmentDate, 'mm/dd/yyyy')#">
+                                                <font size="1">(mm/dd/yyyy)</font>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right" valign="top"><strong>Comment:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#qGetCandidate.englishAssessmentComment#</span>
+                                                <textarea name="englishAssessmentComment" class="style1 editPage" cols="30" rows="6">#qGetCandidate.englishAssessmentComment#</textarea>
                                             </td>
                                         </tr>
                                     </table>

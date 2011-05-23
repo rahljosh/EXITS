@@ -87,7 +87,7 @@
                 c.enddate, 
                 c.wat_placement, 
                 c.status,
-                c.personal_info,
+                c.englishAssessment,
                 u.businessname,
                 country.countryname
             FROM   
@@ -298,7 +298,7 @@
                         </cfif>
                         <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.personal_info#</span></td>
+                        <td><span class="style1">#qTotalPerHostCompany.englishAssessment#</span></td>
                     </tr>
                 </cfloop>
 
