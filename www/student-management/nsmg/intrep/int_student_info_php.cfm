@@ -9,7 +9,8 @@
 </cfif>
 
 <cfquery name="get_student_info" datasource="mysql">
-	SELECT s.studentid, s.uniqueid, s.familylastname, s.firstname, s.middlename, s.fathersname, s.fatheraddress,
+	SELECT DISTINCT 
+    	s.studentid, s.uniqueid, s.familylastname, s.firstname, s.middlename, s.fathersname, s.fatheraddress,
 		s.fatheraddress2, s.fathercity, s.fathercountry, s.fatherzip, s.fatherbirth, s.fathercompany, s.fatherworkphone,
 		s.fatherworkposition, s.fatherworktype, s.fatherenglish, s.motherenglish, s.mothersname, s.motheraddress,
 		s.motheraddress2, s.mothercity, s.mothercountry, s.motherzip, s.motherbirth, s.mothercompany, s.motherworkphone,
@@ -35,6 +36,7 @@
 	INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
 	LEFT JOIN php_schools ON php_schools.schoolid = stu_prog.schoolid
 	WHERE s.studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
+    AND stu_prog.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 	ORDER BY assignedid DESC
 </cfquery>
 

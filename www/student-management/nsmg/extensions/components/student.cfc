@@ -1175,12 +1175,12 @@
             var flightEmailBody = '';
 			var flightInfoReport = '';
         	
-			if ( NOT VAL(ARGUMENTS.isPHPStudent) ) {
-				// Public - Get Student Information
-				qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID);
-			} else {
+			if ( VAL(ARGUMENTS.isPHPStudent) ) {
 				// PHP - Get Student Information
 				qGetStudentFullInformation = getPHPStudent(studentID=ARGUMENTS.studentID);
+			} else {
+				// Public - Get Student Information
+				qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID);
 			}
 			
 			// Get Formatted Flight Information
@@ -1216,7 +1216,7 @@
 				// Local Server - Always email support
                 flightEmailTo = APPLICATION.EMAIL.support;
 			
-			} else if ( ARGUMENTS.isPHPStudent ) {
+			} else if ( VAL(ARGUMENTS.isPHPStudent) ) {
             	
 				// PHP Student - Email Luke
 				flightInfoLink = 'http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
