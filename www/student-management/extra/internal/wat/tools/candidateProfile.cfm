@@ -1,10 +1,10 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		ds2019Verification.cfm
+	File:		candidateProfile.cfm
 	Author:		Marcus Melo
-	Date:		August 19, 2010
-	Desc:		Verification Report. This page allows users/intl reps to update 
-				DS-2019 verification report data and check if a record is correct.
+	Date:		May 20, 2011
+	Desc:		Update Candidate Information:
+				English Assessment CSB.
 
 	Updated:  	
 
@@ -17,16 +17,8 @@
     <cfimport taglib="/extra/extensions/customTags/gui/" prefix="gui" /> 
     
     <cfscript>
-		if ( ListFind("1,2,3,4", CLIENT.userType) ) {
-			// Get All International Representatives List
-			qIntlRep = APPLICATION.CFC.USER.getUsers(userType=8, getAll=0);	
-		} else {
-			// Get Current International Representatives List
-			qIntlRep = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);	
-		}
-		
-		// Get Country List
-		qCountryList = APPLICATION.CFC.LOOKUPTABLES.getCountry();
+		// Get All International Representatives List
+		qIntlRep = APPLICATION.CFC.USER.getUsers(userType=8, getAll=0);	
 	</cfscript>
     
 </cfsilent>    
@@ -47,29 +39,30 @@
 	
 	// Bring the list when the page is ready
 	// $(document).ready(function() {
-	// 	getVerificationList();
+	// 	getProfileToolList();
 	// });
 
 	// --- START OF VERIFICATION LIST --- //
 
 	// Use an asynchronous call to get the candidate details. The function is called when the user selects a candidate. 
-	var getVerificationList = function() { 
+	var getProfileToolList = function() { 
 
 		// Create an instance of the proxy. 
 		var c = new candidate();
 		
 		// Get Search Form Values
+		var keyWord = $("#keyWord").val();
 		var intlRep = $("#intlRep").val();
 
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		c.setCallbackHandler(populateVerificationList); 
 		c.setErrorHandler(myErrorHandler); 
 		
-		// This time, pass the intlRep ID to the getVerificationList CFC function. 
-		c.getVerificationList(intlRep);
+		// This time, pass the intlRep ID to the getProfileToolList CFC function. 
+		c.getProfileToolList(keyWord,intlRep);
 	} 
 
-	// Callback function to handle the results returned by the getVerificationList function and populate the table. 
+	// Callback function to handle the results returned by the getProfileToolList function and populate the table. 
 	var populateVerificationList = function(verList) { 
 		
 		// Clear current result
@@ -81,13 +74,10 @@
         	tableHeader += "<td class='listTitle style2'>ID</td>";
         	tableHeader += "<td class='listTitle style2'>Last Name</td>";
 			tableHeader += "<td class='listTitle style2'>First Name</td>";
-        	tableHeader += "<td class='listTitle style2'>Middle Name</td>";        	
         	tableHeader += "<td class='listTitle style2'>Gender</td>";
-        	tableHeader += "<td class='listTitle style2'>DOB <br /> (mm/dd/yyyy)</td>";                                                            
-            tableHeader += "<td class='listTitle style2'>City of <br /> Birth</td>";                                                          
-            tableHeader += "<td class='listTitle style2'>Country of <br /> Birth</td>";                                                           
-            tableHeader += "<td class='listTitle style2'>Country of <br /> Citizenship</td>"; 
-            tableHeader += "<td class='listTitle style2'>Country of <br /> Residence</td>"; 
+			tableHeader += "<td class='listTitle style2'>Country</td>";
+			tableHeader += "<td class='listTitle style2'>Program</td>";
+			tableHeader += "<td class='listTitle style2'>Intl. Rep.</td>";
 			tableHeader += "<td class='listTitle style2'>Program <br /> Start Date</td>";
 			tableHeader += "<td class='listTitle style2'>Program <br /> End Date</td>";
             tableHeader += "<td class='listTitle style2' align='center'>Actions</td>";                                                          
@@ -98,7 +88,7 @@
 		
 		if( verList.DATA.length == 0) {
 			// No data returned, display message
-			$("#verificationList").append("<tr><th colspan='13'>Your search did not return any results.</th></tr>");
+			$("#verificationList").append("<tr><th colspan='11'>Your search did not return any results.</th></tr>");
 		}
 		
 		// Loop over results and build the grid
@@ -106,14 +96,11 @@
 			
 			var candidateID = verList.DATA[i][verList.COLUMNS.findIdx('CANDIDATEID')];		
 			var firstName = verList.DATA[i][verList.COLUMNS.findIdx('FIRSTNAME')];
-			var middleName = verList.DATA[i][verList.COLUMNS.findIdx('MIDDLENAME')];
 			var lastName = verList.DATA[i][verList.COLUMNS.findIdx('LASTNAME')];
 			var sex = verList.DATA[i][verList.COLUMNS.findIdx('SEX')];
-			var dob = verList.DATA[i][verList.COLUMNS.findIdx('DOB')];
-			var birthCity = verList.DATA[i][verList.COLUMNS.findIdx('BIRTH_CITY')];
-			var countryBirth = verList.DATA[i][verList.COLUMNS.findIdx('BIRTHCOUNTRY')];
-			var countryCitizen = verList.DATA[i][verList.COLUMNS.findIdx('CITIZENCOUNTRY')];
-			var countryResident = verList.DATA[i][verList.COLUMNS.findIdx('RESIDENTCOUNTRY')];
+			var countryName = verList.DATA[i][verList.COLUMNS.findIdx('COUNTRYNAME')];
+			var programName = verList.DATA[i][verList.COLUMNS.findIdx('PROGRAMNAME')];
+			var businessName = verList.DATA[i][verList.COLUMNS.findIdx('BUSINESSNAME')];
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
 			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
 
@@ -128,16 +115,13 @@
 				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>#" + candidateID + "</a></td>"
 				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + lastName + "</a></td>"
 				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + firstName + "</a></td>"
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + middleName + "</a></td>"				
 				tableBody += "<td class='style5'>" + sex + "</td>"
-				tableBody += "<td class='style5'>" + dob + "</td>"
-				tableBody += "<td class='style5'>" + birthCity + "</td>"
-				tableBody += "<td class='style5'>" + countryBirth + "</td>"
-				tableBody += "<td class='style5'>" + countryCitizen + "</td>"
-				tableBody += "<td class='style5'>" + countryResident + "</td>"
+				tableBody += "<td class='style5'>" + countryName + "</td>"
+				tableBody += "<td class='style5'>" + programName + "</td>"
+				tableBody += "<td class='style5'>" + businessName + "</td>"
 				tableBody += "<td class='style5'>" + startDate + "</td>"
 				tableBody += "<td class='style5'>" + endDate + "</td>"
-				tableBody += "<td align='center' class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>[Edit]</a> | <a href='javascript:setVerificationReceived(" + candidateID + ");' class='style4'>[Received]</a></td>"
+				tableBody += "<td align='center' class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>[Edit]</a></td>"
 			tableBody += "</tr>";
 			// Append table rows
 			$("#verificationList").append(tableBody);
@@ -163,36 +147,26 @@
 		c.getRemoteCandidateByID(candidateID);
 	} 
 	
-	// Callback function to handle the results returned by the getVerificationList function and populate the form fields. 
+	// Callback function to handle the results returned by the getProfileToolList function and populate the form fields. 
 	var populateCandidateDetails = function(candidate) { 
 		
 		//var candidateID = candidate.DATA[0][0];
 		var candidateID = candidate.DATA[0][candidate.COLUMNS.findIdx('CANDIDATEID')];		
 		var firstName = candidate.DATA[0][candidate.COLUMNS.findIdx('FIRSTNAME')];
-		var middleName = candidate.DATA[0][candidate.COLUMNS.findIdx('MIDDLENAME')];
 		var lastName = candidate.DATA[0][candidate.COLUMNS.findIdx('LASTNAME')];
-		var sex = candidate.DATA[0][candidate.COLUMNS.findIdx('SEX')];
-		var dob = candidate.DATA[0][candidate.COLUMNS.findIdx('DOB')];
-		var birthCity = candidate.DATA[0][candidate.COLUMNS.findIdx('BIRTH_CITY')];
-		var countryBirth = candidate.DATA[0][candidate.COLUMNS.findIdx('BIRTH_COUNTRY')];
-		var countryCitizen = candidate.DATA[0][candidate.COLUMNS.findIdx('CITIZEN_COUNTRY')];
-		var countryResident = candidate.DATA[0][candidate.COLUMNS.findIdx('RESIDENCE_COUNTRY')];
-		var startDate = candidate.DATA[0][candidate.COLUMNS.findIdx('STARTDATE')];
-		var endDate = candidate.DATA[0][candidate.COLUMNS.findIdx('ENDDATE')];
+		var middleName = candidate.DATA[0][candidate.COLUMNS.findIdx('MIDDLENAME')];
+		var englishAssessment = candidate.DATA[0][candidate.COLUMNS.findIdx('ENGLISHASSESSMENT')];
+		var englishAssessmentDate = candidate.DATA[0][candidate.COLUMNS.findIdx('ENGLISHASSESSMENTDATE')];
+		var englishAssessmentComment = candidate.DATA[0][candidate.COLUMNS.findIdx('ENGLISHASSESSMENTCOMMENT')];
 
 		// Populate fields
 		$("#candidateID").val(candidateID);
 		$("#firstName").val(firstName);
-		$("#middleName").val(middleName);
 		$("#lastName").val(lastName);
-		$("#sex").val(sex);
-		$("#dob").val(dob);
-		$("#birthCity").val(birthCity);
-		$("#countryBirth").val(countryBirth);
-		$("#countryCitizen").val(countryCitizen);
-		$("#countryResident").val(countryResident);
-		$("#startDate").val(startDate);
-		$("#endDate").val(endDate);
+		$("#middleName").val(middleName);
+		$("#englishAssessment").val(englishAssessment);
+		$("#englishAssessmentDate").val(englishAssessmentDate);
+		$("#englishAssessmentComment").val(englishAssessmentComment);
 
 		// Slide down form field div
 		if ($("#candidateDetailDiv").css("display") == "none") {
@@ -212,38 +186,6 @@
 		// last name			
 		if($("#lastName").val() == ''){
 			list_errors = (list_errors + 'Please provide a last name \n')
-		}
-		// Gender			
-		if($("#sex").val() == ''){
-			list_errors = (list_errors + 'Please select a gender \n')
-		}
-		// DOB			
-		if($("#dob").val() == ''){
-			list_errors = (list_errors + 'Please provide a valid date of birth (mm/dd/yyyy) \n')
-		}
-		// City of Birth			
-		if($("#birthCity").val() == ''){
-			list_errors = (list_errors + 'Please provide a city of birth \n')
-		}
-		// Country of Birth			
-		if($("#countryBirth").val() == ''){
-			list_errors = (list_errors + 'Please select a country of birth \n')
-		}
-		// Country of Citizen			
-		if($("#countryCitizen").val() == ''){
-			list_errors = (list_errors + 'Please select a country of citizen \n')
-		}
-		// Country of Resident			
-		if($("#countryResident").val() == ''){
-			list_errors = (list_errors + 'Please select a country of residence \n')
-		}
-		// StartDate			
-		if($("#StartDate").val() == ''){
-			list_errors = (list_errors + 'Please provide a valid start date (mm/dd/yyyy) \n')
-		}
-		// EndDate			
-		if($("#EndDate").val() == ''){
-			list_errors = (list_errors + 'Please provide a valid end date (mm/dd/yyyy) \n')
 		}
 		
 		// check if there are errors
@@ -268,20 +210,12 @@
 		c.setErrorHandler(myErrorHandler);
 		
 		// This time, pass the candidate data to the updateRemoteCandidateByID CFC function. 
-		c.updateRemoteCandidateByID(
-		  // Get values from the fields
-		  $("#candidateID").val(),
-		  $("#firstName").val(),
-		  $("#middleName").val(),
-		  $("#lastName").val(),
-		  $("#sex").val(),
-		  $("#dob").val(),
-		  $("#birthCity").val(),
-		  $("#countryBirth").val(),
-		  $("#countryCitizen").val(),
-		  $("#countryResident").val(),
-		  $("#startDate").val(),
-		  $("#endDate").val()
+		c.updateProfileToolListByID(
+		  	// Get values from the fields
+		  	$("#candidateID").val(),
+			$("#englishAssessment").val(),
+			$("#englishAssessmentDate").val(),
+			$("#englishAssessmentComment").val()
 		);
 		
 	}
@@ -298,20 +232,15 @@
 			// Reset form fields
 			$("#candidateID").val("");
 			$("#firstName").val("");
-			$("#middleName").val("");
 			$("#lastName").val("");
-			$("#sex").val("");
-			$("#dob").val("");
-			$("#birthCity").val("");
-			$("#countryBirth").val("");
-			$("#countryCitizen").val("");
-			$("#countryResident").val("");
-			$("#startDate").val("");
-			$("#endDate").val("");
+			$("#middleName").val("");
+			$("#englishAssessment").val("");
+			$("#englishAssessmentDate").val("");
+			$("#englishAssessmentComment").val("");
 		});
 		
 		// Refresh Search List
-		getVerificationList();
+		getProfileToolList();
 	}
 	// --- END OF STUDENT DETAILS --- //
 	
@@ -326,7 +255,7 @@
 		c.setCallbackHandler(verificationReceived(candidateID)); 
 		c.setErrorHandler(myErrorHandler); 
 		
-		// This time, pass the intlRep ID to the getVerificationList CFC function. 
+		// This time, pass the intlRep ID to the getProfileToolList CFC function. 
 		c.confirmVerificationReceived(candidateID);
 		
 	}
@@ -374,25 +303,9 @@
 		background-color:#4F8EA4;
 	}
 
-	.rowOn {
-		background-color:#e9ecf1;
-	}
-	
-	.rowOff {
-		background-color:#FFFFFF;
-	}
-	
 	.formTitle { 
 		padding-top:10px;
 		font-weight:800;
-	}
-
-	.largeField {
-		width:250px;
-	}
-
-	.smallField {
-		width:120px;
 	}
 
 	.pageMessage {
@@ -419,7 +332,7 @@
 
 	<!--- Table Header --->    
     <gui:tableHeader
-        tableTitle="DS-2019 Verification List"
+        tableTitle="Candidate Profile Update"
     />
 
 	<!--- This holds the candidate information messages --->
@@ -432,7 +345,7 @@
             <input type="hidden" name="candidateID" id="candidateID" value="" />
             <table cellpadding="0" cellspacing="0" align="center" class="section listTable">
                 <tr>
-                	<td class="formTitle" colspan="6">Please make your corrections below and click on submit.</td>
+                	<td class="formTitle" colspan="6">Update candidate information and click on submit.</td>
 				</tr>                    
                 <tr>
                     <td class="formTitle"><label for="lastName">Last Name</label></td>
@@ -440,65 +353,23 @@
                     <td class="formTitle"><label for="middleName">Middle Name</label></td>
                  </tr>   
                 <tr>
-                    <td><input type="text" name="lastName" id="lastName" value="" class="largeField" maxlength="100" /></td>
-                    <td><input type="text" name="firstName" id="firstName" value="" class="largeField" maxlength="100" /></td>
-                    <td><input type="text" name="middleName" id="middleName" value="" class="largeField" maxlength="100" /></td>                    
+                    <td><input type="text" name="lastName" id="lastName" value="" class="largeField" maxlength="100" disabled /></td>
+                    <td><input type="text" name="firstName" id="firstName" value="" class="largeField" maxlength="100" disabled /></td>
+                    <td><input type="text" name="middleName" id="middleName" value="" class="largeField" maxlength="100" disabled /></td>                    
             	</tr> 
-                <tr>   
-                    <td class="formTitle"><label for="sex">Gender</label></td>
-                    <td class="formTitle"><label for="dob">DOB (mm/dd/yy)</label></td>
-                    <td class="formTitle"><label for="birthCity">City of Birth</label></td> 
-				</tr>
                 <tr>
-                    <td>
-                    	<select name="sex" id="sex" class="smallField">
-                        	<option value=""></option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-						</select>                            
-                    </td>
-                    <td><input type="text" name="dob" id="dob" value="" class="datePicker smallField" maxlength="10" /></td>
-                    <td><input type="text" name="birthCity" id="birthCity" value="" class="largeField" maxlength="100" /></td>
+                    <td class="formTitle"><label for="englishAssessment">English Assessment CSB:</label></td>
+                    <td class="formTitle"><label for="englishAssessmentDate">Date of Interview</label></td>
+                    <td class="formTitle"><label for="englishAssessmentComment">Comment</label></td>
+                 </tr>   
+                <tr>
+                    <td valign="top"><textarea name="englishAssessment" id="englishAssessment" class="largeTextArea"></textarea></td>
+                    <td valign="top"><input type="text" name="englishAssessmentDate" id="englishAssessmentDate" value="" class="datePicker" maxlength="100" /></td>
+                    <td valign="top"><textarea name="englishAssessmentComment" id="englishAssessmentComment" class="largeTextArea"></textarea></td>                    
             	</tr> 
-                <tr>                    
-                    <td class="formTitle"><label for="countryBirth">Country of Birth</label></td>                                                            
-                    <td class="formTitle"><label for="countryCitizen">Country of Citizenship</label></td> 
-                    <td class="formTitle"><label for="countryResident">Country of Residence</label></td>   
-                </tr>            
-				<tr>	
-                    <td>
-                    	<select name="countryBirth" id="countryBirth" class="largeField">
-                        	<option value=""></option>
-                        	<cfloop query="qCountryList">
-                            	<option value="#qCountryList.countryID#">#qCountryList.countryName#</option>
-                            </cfloop>
-                        </select>
-                    </td>
-                    <td>
-                    	<select name="countryCitizen" id="countryCitizen" class="largeField">
-                        	<option value=""></option>
-                        	<cfloop query="qCountryList">
-                            	<option value="#qCountryList.countryID#">#qCountryList.countryName#</option>
-                            </cfloop>
-                        </select>
-                    </td>
-                    <td>
-                    	<select name="countryResident" id="countryResident" class="largeField">
-                        	<option value=""></option>
-                        	<cfloop query="qCountryList">
-                            	<option value="#qCountryList.countryID#">#qCountryList.countryName#</option>
-                            </cfloop>
-                        </select>
-                    </td>
-				</tr>
-                <tr>   
-                    <td class="formTitle"><label for="startDate">Start Date</label></td>
-                    <td class="formTitle"><label for="endDate">End Date</label></td>
-                    <td class="formTitle">&nbsp;</td>     
-				</tr>
                 <tr>
-                    <td><input type="text" name="startDate" id="startDate" value="" class="datePicker smallField" maxlength="10" /></td>
-                    <td><input type="text" name="endDate" id="endDate" value="" class="datePicker smallField" maxlength="10" /></td>
+                    <td></td>
+                    <td></td>
                     <td><input type="submit" name="submit" value="Submit" /></td>
                 </tr>
             </table>
@@ -510,22 +381,25 @@
     <table cellpadding="0" cellspacing="0" align="center" class="section listTable">
         <tr>
             <td class="formTitle">
-            	International Representative: 
-                &nbsp;
-                <select name="intlRep" id="intlRep" onchange="getVerificationList();">
+            	Keyword: <input type="text" name="keyWord" id="keyWord" class="mediumField">
+            </td>                
+            <td class="formTitle">
+                International Representative: 
+                <select name="intlRep" id="intlRep" onchange="getProfileToolList();">
                     <option value=""></option>
                     <cfloop query="qIntlRep">
                         <option value="#qIntlRep.userID#" <cfif CLIENT.userID EQ qIntlRep.UserID> selected </cfif> >#qIntlRep.businessName#</option>
                     </cfloop>
                 </select>
-                &nbsp;
-                <input name="send" type="submit" value="Submit" onclick="getVerificationList();" />
+            </td>    
+            <td class="formTitle">
+                <input name="send" type="submit" value="Search" onclick="getProfileToolList();" />
             </td>                
         </tr>            
     </table>
 
     <!--- Verification List --->
-    <table id="verificationList" cellpadding="4" cellspacing="0" align="center" class="section" width="95%"></table>
+    <table id="verificationList" cellpadding="4" cellspacing="0" align="center" class="section" width="95%" style="margin-bottom:10px;"></table>
                                             
     <!--- Table Footer --->    
     <gui:tableFooter />

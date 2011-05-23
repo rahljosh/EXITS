@@ -156,7 +156,7 @@
 </td>
 </tr>
 <tr>
-<td colspan="2"><font color="Gray" style="font-weight:bold;" size="2">Personal Info / Preferences:</font> #personal_info#
+<td colspan="2"><font color="Gray" style="font-weight:bold;" size="2">Personal Info / Preferences:</font> #englishAssessment#
 </td>
 </tr>
 </table>

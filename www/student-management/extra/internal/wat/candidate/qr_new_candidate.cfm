@@ -1,132 +1,188 @@
+<cfparam name="FORM.wat_participation" default="0">
 <cfparam name="FORM.wat_doc_walk_in_agreement" default="0">
+<cfparam name="FORM.wat_doc_agreement" default="0">
+<cfparam name="FORM.wat_doc_college_letter" default="0">
+<cfparam name="FORM.wat_doc_passport_copy" default="0">
+<cfparam name="FORM.wat_doc_job_offer" default="0">
+<cfparam name="FORM.wat_doc_orientation" default="0">
 
-<cfquery name="check_new_candidate" datasource="mysql">
-	SELECT candidateid, firstname, lastname, dob, uniqueid
-	FROM extra_candidates
-	WHERE firstname = '#form.firstname#' 
-		AND	lastname = '#form.lastname#'
-		AND DOB = '#DateFormat(form.dob, 'yyyy/mm/dd')#'
+<cfquery name="qCheckForExistingCandidate" datasource="mysql">
+	SELECT 
+    	candidateid, 
+        uniqueid,
+        firstname, 
+        lastname, 
+        dob        
+	FROM 
+    	extra_candidates
+	WHERE 
+    	firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">
+    AND	
+    	lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">
+    AND 
+    	DOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#">
 </cfquery>
 
-<cfif check_new_candidate.recordcount NEQ '0'><br>
-	<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=90%>
-		<tr><th background="images/back_menu2.gif" class="title1">EXITS - Error Message</th>
-		</tr>
-		<tr><td class="style1">Sorry, but this candidate has been entered in the database as follow:</td></tr>
-		<tr>
-			<td align="center">
-				<cfoutput query="check_new_candidate">
-				<a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#check_new_candidate.uniqueid#">#firstname# #lastname# (#candidateid#)</a>
-				</cfoutput>
-			</td>
-		</tr>
-		<tr><td align="center"><input name="back" type="image" src="../pics/goback.gif" align="middle" border=0 onClick="history.back()"></div><br></td></tr>
-	</table>
+<cfif VAL(qCheckForExistingCandidate.recordcount)>
+    <table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=90% style="margin-top:10px;">
+        <tr><th background="images/back_menu2.gif" class="title1">EXITS - Error Message</th></tr>
+        <tr><td class="style1">Sorry, but this candidate has been entered in the database as follow:</td></tr>
+        <tr>
+            <td align="center">
+				<cfoutput>
+                    <a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#qCheckForExistingCandidate.uniqueid#">
+	                    #qCheckForExistingCandidate.firstname# #qCheckForExistingCandidate.lastname# (###qCheckForExistingCandidate.candidateid#)
+                    </a>
+                </cfoutput>
+            </td>
+        </tr>
+        <tr><td align="center"><input name="back" type="image" src="../pics/goback.gif" align="middle" border=0 onClick="history.back()"></div><br></td></tr>
+    </table>
 	<cfabort>
 </cfif>
-<!----
-<cfif wat_length EQ''>
-	<cfset form.wat_length = '0'>
-</cfif> --->
-<cfif wat_participation EQ''>
-	<cfset form.wat_participation = '0'>
-</cfif>
 
-<cfif form.email NEQ ''>
-	<cfquery name="check_username" datasource="MySql">
+<cfif NOT LEN(FORM.email)>
+
+	<cfquery name="qCheckUsername" datasource="MySql">
 		SELECT email
 		FROM extra_candidates
-		WHERE email = '#form.email#'
+		WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
 	</cfquery>
-	<cfif check_username.recordcount NEQ '0'><br>
-		<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=90%>
-			<tr><th background="images/back_menu2.gif" class="title1">EXITS - Error Message</th>
-			</tr>
+    
+	<cfif VAL(qCheckUsername.recordcount)><br>
+		<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=90% style="margin-top:10px;">
+			<tr><th background="images/back_menu2.gif" class="title1">EXITS - Error Message</th></tr>
 			<cfoutput>
-			<tr><td class="style1">Sorry, the e-mail address <b>#form.email#</b> is being used by another account.</td></tr>
+			<tr><td class="style1">Sorry, the e-mail address <b>#FORM.email#</b> is being used by another account.</td></tr>
 			<tr><td class="style1">Please click on the "back" button below and enter a new e-mail address.</td></tr>
 			<tr><td align="center"><input name="back" type="image" src="../pics/goback.gif" align="middle" border=0 onClick="history.back()"></div><br></td></tr>
 			</cfoutput>
 		</table>
 		<cfabort>
 	</cfif>
+    
 </cfif>
 
-	<!--- CREATE UNIQUE ID ---->
-	<cfset form.uniqueid = createuuid()>
-	
-	<!---- ADD TO TABLE ---->
-	<cfquery name="insert_candidate" datasource="mysql">
-		INSERT INTO extra_candidates
-			(companyid, uniqueid, status, programid, intrep, wat_participation , entrydate, firstname, middlename, lastname, sex,
-			dob, home_address, home_city, home_zip, home_country, home_phone, birth_city, birth_country, citizen_country,
-			residence_country, emergency_phone, emergency_name, <!----emergency_relationship, ----->email, personal_info,
-			<!--- ticket 996
-			 earliestarrival, latestarrival, ---->
-			passport_number, <!---- passport_country, passport_date, passport_expires, ----> 
-			 ssn, wat_placement,  wat_vacation_start,
-			wat_vacation_end, <!---wat_length, --->
-			<!---- documents control --->
-			wat_doc_agreement, wat_doc_college_letter, wat_doc_passport_copy, wat_doc_job_offer, wat_doc_orientation, wat_doc_walk_in_agreement, requested_placement, startdate, enddate)
-		VALUES ('#client.companyid#', '#form.uniqueid#', '1', '#form.programid#', '#form.intrep#', '#form.wat_participation#',
-				#CreateODBCDate(now())#, '#form.firstname#', '#form.middlename#', '#form.lastname#', '#form.sex#',
-				<cfif form.dob NEQ ''>#CreateODBCDate(form.dob)#<cfelse>NULL</cfif>, '#form.home_address#',
-				'#form.home_city#', '#form.home_zip#', '#form.home_country#', '#form.home_phone#', '#form.birth_city#', '#form.birth_country#',
-				'#form.citizen_country#', '#form.residence_country#', '#form.emergency_phone#', '#form.emergency_name#', 
-				<!----'#form.emergency_relationship#',----> '#form.email#', '#form.personal_info#',
-				<!---ticket 996
-				<cfif form.earliestarrival NEQ ''>#CreateODBCDate(form.earliestarrival)#<cfelse>NULL</cfif>,
-				<cfif form.latestarrival NEQ ''>#CreateODBCDate(form.latestarrival)#<cfelse>NULL</cfif>,--->
-				
-				'#form.passport_number#',<!----	'#form.passport_country#',	
-				<cfif form.passport_date NEQ ''>#CreateODBCDate(form.passport_date)#<cfelse>NULL</cfif>,
-				<cfif form.passport_expires NEQ ''>#CreateODBCDate(form.passport_expires)#<cfelse>NULL</cfif>,----> 
-				'#APPLICATION.CFC.UDF.encryptVariable(FORM.SSN)#', '#form.wat_placement#', 
-				<cfif form.wat_vacation_start NEQ ''>#CreateODBCDate(form.wat_vacation_start)#<cfelse>NULL</cfif>,
-				<cfif form.wat_vacation_end NEQ ''>#CreateODBCDate(form.wat_vacation_end)#<cfelse>NULL</cfif>, <!----'#form.wat_length#',---->
-				<!--- document control --->
-				<cfif IsDefined('form.wat_doc_agreement')>1<cfelse>0</cfif>,
-				<cfif IsDefined('form.wat_doc_college_letter')>1<cfelse>0</cfif>,
-				<cfif IsDefined('form.wat_doc_passport_copy')>1<cfelse>0</cfif>,
-				<cfif IsDefined('form.wat_doc_job_offer')>1<cfelse>0</cfif>,
-				<cfif IsDefined('form.wat_doc_orientation')>1<cfelse>0</cfif>,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_walk_in_agreement#">,
-				'#form.combo_request#', 
-				<cfif form.startdate NEQ ''>#CreateODBCDate(form.startdate)#<cfelse>NULL</cfif>,
-				<cfif form.enddate NEQ ''>#CreateODBCDate(form.enddate)#<cfelse>NULL</cfif>
-				)
-	</cfquery>
-	
-	<!---- GET ID ---->
-	<cfquery name="get_candidateid" datasource="mysql">
-		SELECT Max(candidateid) AS candidateid
-		FROM extra_candidates 
-	</cfquery>
-	
-	
-	<!---- PROGRAM HISTORY ---->
-	<cfif #form.programid# NEQ ''>
-		<cfquery name="program_history" datasource="mysql">
-		INSERT INTO extra_program_history
-			(candidateid, reason, date, programid, userid )
-		VALUES (#get_candidateid.candidateid#, 'Candidate was unassigned', #CreateODBCDate(now())#, #form.programid#, #client.userid#)
-		</cfquery>
-	</cfif>
-		
-		
-		<cfquery name="get_max_candidate" datasource="mysql">
-		  SELECT uniqueid 
-		  FROM extra_candidates
-		  WHERE candidateid = #get_candidateid.candidateid#
-		</cfquery>
-		
-	<cfoutput query="get_max_candidate">
+<cfset FORM.uniqueID = CreateUUID()>
 
-	<script language="JavaScript">
-		location.replace("?curdoc=candidate/candidate_info&uniqueid=#uniqueid#");
-	</script>		
-	</cfoutput>
-		
+<!---- INSERT CANDIDATE ---->
+<cfquery datasource="mysql" result="newRecord">
+	INSERT INTO 
+		extra_candidates
+	(
+		companyid, 
+		uniqueid, 
+		status, 
+		programid, 
+		intrep, 
+		wat_participation, 
+		entrydate,
+		firstname, 
+		middlename, 
+		lastname, 
+		sex,
+		dob, 
+		email, 
+		home_address, 
+		home_city, 
+		home_zip, 
+		home_country, 
+		home_phone, 
+		birth_city, 
+		birth_country, 
+		citizen_country,
+		residence_country, 
+		emergency_phone, 
+		emergency_name,
+		passport_number,
+		ssn, 
+		englishAssessment,
+		englishAssessmentDate, 
+		englishAssessmentComment, 
+		wat_placement,  
+		wat_vacation_start,
+		wat_vacation_end, 
+		<!---- documents control --->
+		wat_doc_agreement, 
+		wat_doc_college_letter,
+		wat_doc_passport_copy, 
+		wat_doc_job_offer, 
+		wat_doc_orientation, 
+		wat_doc_walk_in_agreement, 
+		requested_placement, 
+		startdate, 
+		enddate
+	)
+	VALUES 
+	(	
+		<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueID#">,
+		<cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+		<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">,
+		<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_participation#">,
+		<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">, 
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">,
+		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#NOT IsDate(FORM.dob)#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">, 
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_address#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_city#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_zip#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_country#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_phone#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.birth_city#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.birth_country#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.citizen_country#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.residence_country#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_name#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.passport_number#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(FORM.SSN)#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.englishAssessment#">,
+		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.englishAssessmentDate#" null="#NOT IsDate(FORM.englishAssessmentDate)#">, 
+		<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.englishAssessmentComment#">, 
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_placement#">, 
+		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_start#" null="#NOT IsDate(FORM.wat_vacation_start)#">, 
+		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_end#" null="#NOT IsDate(FORM.wat_vacation_end)#">, 
+		<!--- document control --->
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_agreement)#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_college_letter)#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_passport_copy)#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_job_offer)#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_orientation)#">,
+		<cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.wat_doc_walk_in_agreement)#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.combo_request#">, 
+		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.startdate#" null="#NOT IsDate(FORM.startdate)#">, 
+		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.enddate#" null="#NOT IsDate(FORM.enddate)#"> 
+	)
+</cfquery>
 
-</body>
-</html>
+<!---- PROGRAM HISTORY ---->
+<cfif VAL(FORM.programid)>
+
+	<cfquery name="program_history" datasource="mysql">
+        INSERT INTO 
+        	extra_program_history
+        (
+        	candidateid, 
+            reason, 
+            date, 
+            programid, 
+            userid 
+		)
+        VALUES 
+        (
+        	<cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">, 
+            <cfqueryparam cfsqltype="cf_sql_varchar" value="Candidate was unassigned">, 
+            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">, 
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+		)
+	</cfquery>
+    
+</cfif>
+	
+<cflocation url="?curdoc=candidate/candidate_info&uniqueid=#FORM.uniqueid#" addtoken="no">

@@ -11,21 +11,103 @@
 	background-color:#E4E4E4;
 }
 
-/*
-**********************************************************************************
 
-These are used in the insert/edit pages
+/********************************************
+	FORM FIELDS
+********************************************/
+.rowOn {
+	background-color:#e9ecf1;
+}
 
-************************************************************************************/
-.editPage { display:none;}
-.hiddenField { display:none;}
+.rowOff {
+	background-color:#FFFFFF;
+}
 
-/*
-**********************************************************************************
+.fieldSize40 {
+	width:40px;
+	border:1px solid #999;	
+}
 
-css for timepicker
+.fieldSize60 {
+	width:60px;
+	border:1px solid #999;	
+}
 
-************************************************************************************/
+.fieldSize70 {
+	width:70px;
+	border:1px solid #999;	
+}
+
+.fieldSize100 {
+	width:100px;
+	border:1px solid #999;	
+}
+
+.datePicker {
+	width:90px;
+	border:1px solid #999;	
+}
+
+.smallField {
+	width : 90px;
+	border:1px solid #999;	
+}
+
+.mediumField {
+	width : 150px;
+	border:1px solid #999;	
+}
+
+.largeField {
+	width : 200px;
+	border:1px solid #999;	
+}
+
+.xLargeField {
+	width : 260px;
+	border:1px solid #999;	
+}
+
+.largeTextArea {
+	height: 80px;
+	width : 250px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.xLargeTextArea {
+	height: 80px;
+	width : 350px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.displayNone {
+	display:none;
+}
+/********************************************
+	END OF FORM FIELDS
+********************************************/
+
+
+/********************************************
+	These are used in the insert/edit pages
+********************************************/
+.editPage { 
+	display:none;
+}
+
+.hiddenField { 
+	display:none;
+}
+/********************************************
+	End of These are used in the insert/edit pages
+********************************************/
+
+
+/********************************************
+	css for timepicker
+********************************************/
 .ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
 .ui-timepicker-div dl{ text-align: left; }
 .ui-timepicker-div dl dt{ height: 25px; }
@@ -34,3 +116,7 @@ css for timepicker
 .ui-timepicker-div .ui_tpicker_minute div { padding-right: 6px; }
 .ui-timepicker-div .ui_tpicker_second div { padding-right: 6px; }
 .ui-timepicker-div td { font-size: 90%; }
+/********************************************
+	End of css for timepicker
+********************************************/
+

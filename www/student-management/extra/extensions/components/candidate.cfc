@@ -238,11 +238,7 @@
                     firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.firstName))#">,
                     middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.middleName))#">,                    
                     sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.sex)#">,
-                    <cfif IsDate(ARGUMENTS.dob)>
-	                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">,
-                    <cfelse>
-                    	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    </cfif>
+                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#" null="#NOT IsDate(ARGUMENTS.dob)#">,
                     birth_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.birth_city))#">,
                     birth_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.birth_country)#">,
                     residence_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.residence_country)#">,
@@ -256,26 +252,10 @@
                     passport_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.passport_number))#">,
                     emergency_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_name))#">,
                     emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_phone))#">,
-                    <cfif IsDate(ARGUMENTS.wat_vacation_start)>
-	                    wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_start)#">,
-                    <cfelse>
-                    	wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    </cfif>
-                    <cfif IsDate(ARGUMENTS.wat_vacation_end)>
-	                    wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_end)#">,
-                    <cfelse>
-                    	wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    </cfif>
-                    <cfif IsDate(ARGUMENTS.startDate)>
-	                    startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.startDate)#">,
-                    <cfelse>
-                    	startDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    </cfif>
-                    <cfif IsDate(ARGUMENTS.endDate)>
-	                    endDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.endDate)#">,
-                    <cfelse>
-                    	endDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    </cfif>
+                    wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_start)#" null="#NOT IsDate(ARGUMENTS.wat_vacation_start)#">,
+                    wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_end)#" null="#NOT IsDate(ARGUMENTS.wat_vacation_end)#">,
+                    startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.startDate)#" null="#NOT IsDate(ARGUMENTS.startDate)#">,
+                    endDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.endDate)#" null="#NOT IsDate(ARGUMENTS.endDate)#">,
                     wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.wat_placement))#">,
                     <cfif LEN(ARGUMENTS.wat_participation)>
                     	wat_participation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.wat_participation#">,
@@ -695,9 +675,9 @@
     </cffunction>
  
  
-	<!--- 
+	<!-------------------------------------------------- 
 		Check Required Candidate and Section Fields 
-	--->
+	--------------------------------------------------->
 	<cffunction name="checkCandidateRequiredFields" access="public" returntype="struct" output="false" hint="Check if required fields were answered">
         <cfargument name="candidateID" type="numeric" required="yes" hint="candidateID" />
         <cfargument name="sectionName" type="string" required="yes" hint="Section name" />
@@ -887,11 +867,99 @@
 		</cfscript>
         
 	</cffunction>
- 
 
-	<!--- 
+
+	<!-------------------------------------------------- 
+		Candidate Profile Update Tool
+	--------------------------------------------------->
+	<cffunction name="getProfileToolList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
+		<cfargument name="keyword" default="" hint="Keyword used in search">
+    	<cfargument name="intRep" default="0" hint="International Representative is not required">
+        
+        <cfquery 
+			name="qGetProfileToolList" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					ec.candidateID,
+                    ec.firstName,
+                    ec.middleName,
+                    ec.lastName,
+					CASE 
+                    	WHEN ec.sex = 'f' THEN 'female' 
+                        WHEN ec.sex = 'm' THEN 'male' 
+                        ELSE '' END AS sex,
+                    DATE_FORMAT(ec.dob, '%m/%e/%Y') as dob,
+                    DATE_FORMAT(ec.startDate, '%m/%e/%Y') as startDate,
+                    DATE_FORMAT(ec.endDate, '%m/%e/%Y') as endDate,
+                    IFNULL(u.businessName, '') AS businessName,
+                    IFNULL(p.programName, '') AS programName,
+                    IFNULL(c.countryName, '') AS countryName
+                FROM 
+                    extra_candidates ec
+				INNER JOIN
+                	smg_users u ON u.userID = ec.intRep
+                LEFT OUTER JOIN
+                	smg_programs p ON p.programID = ec.programID
+				LEFT OUTER JOIN
+                    smg_countrylist c ON c.countryid = ec.residence_country  
+                WHERE
+                    ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                AND
+                	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND    
+                    ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+				AND
+		        	ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+				
+				<cfif VAL(ARGUMENTS.intRep)>
+                    AND
+                        ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.keyword)>
+                	AND
+                    	(
+                        	ec.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.keyWord#%">
+						OR
+							ec.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.keyWord#%">                                                    
+                        )
+                </cfif>
+                
+			ORDER BY
+            	ec.lastName,
+                ec.firstName
+		</cfquery>
+		   
+		<cfreturn qGetProfileToolList>
+	</cffunction>
+    
+	<cffunction name="updateProfileToolListByID" access="remote" returntype="void" hint="Updates a candidate record.">
+        <cfargument name="candidateID" required="yes" hint="candidateID is required">
+        <cfargument name="englishAssessment" required="yes" hint="englishAssessment is required">
+        <cfargument name="englishAssessmentDate" required="yes" hint="englishAssessmentDate is required">
+        <cfargument name="englishAssessmentComment" required="yes" hint="englishAssessmentComment is required">
+
+        <cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+                UPDATE
+					extra_candidates
+				SET
+                    englishAssessment = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.englishAssessment)#">,
+                    englishAssessmentDate = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.englishAssessmentDate#" null="#NOT IsDate(ARGUMENTS.englishAssessmentDate)#">,
+                    englishAssessmentComment = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.englishAssessmentComment)#">
+                WHERE
+                    candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+		</cfquery>
+		   
+	</cffunction>
+	<!-------------------------------------------------- 
+		End of Candidate Profile Update Tool
+	--------------------------------------------------->
+
+
+	<!--------------------------------------------------
 		DS-2019 Online Verification Tool 
-	--->
+	--------------------------------------------------->
 	<cffunction name="getVerificationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         <cfargument name="receivedDate" default="" hint="Filter by verification received date">
@@ -904,7 +972,10 @@
                     ec.firstName,
                     ec.middleName,
                     ec.lastName,
-                    ec.sex,
+					CASE 
+                    	WHEN ec.sex = 'f' THEN 'female' 
+                        WHEN ec.sex = 'm' THEN 'male' 
+                        ELSE '' END AS sex,
                     DATE_FORMAT(ec.dob, '%m/%e/%Y') as dob,
                     ec.birth_city,
                     ec.birth_country,
@@ -931,10 +1002,12 @@
                     ec.ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 AND
                     ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+				
 				<cfif VAL(ARGUMENTS.intRep)>
                     AND
                         ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
                 </cfif>
+                
 				<cfif IsDate(ARGUMENTS.receivedDate)>
                 	AND
                     	ec.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.receivedDate#">
@@ -942,6 +1015,7 @@
                 	AND
                     	ec.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 </cfif>
+                
 			ORDER BY
             	ec.lastName,
                 ec.firstName
@@ -969,7 +1043,10 @@
                     ec.citizen_country,
                     ec.residence_country,
                     DATE_FORMAT(ec.startDate, '%m/%e/%Y') as startDate,
-                    DATE_FORMAT(ec.endDate, '%m/%e/%Y') as endDate
+                    DATE_FORMAT(ec.endDate, '%m/%e/%Y') as endDate,
+                    ec.englishAssessment,
+                    DATE_FORMAT(ec.englishAssessmentDate, '%m/%e/%Y') as englishAssessmentDate,
+                    ec.englishAssessmentComment
                 FROM 
                     extra_candidates ec
                 WHERE
@@ -1003,25 +1080,13 @@
                     middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.middleName)#">,
                     lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.lastName)#">,
                     sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sex#">,
-                    <cfif IsDate(ARGUMENTS.dob)>
-	                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">,
-                    <cfelse>
-                    	dob = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    </cfif>
+                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#" null="#NOT IsDate(ARGUMENTS.dob)#">,
                     birth_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.birthCity#">,
                     birth_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.birthCountry)#">,
                     citizen_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.citizenCountry)#">,
                     residence_country = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.residenceCountry)#">,
-                    <cfif IsDate(ARGUMENTS.startDate)>
-	                    startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.startDate)#">,
-                    <cfelse>
-                    	startDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    </cfif>
-                    <cfif IsDate(ARGUMENTS.endDate)>
-	                    endDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.endDate)#">
-                    <cfelse>
-                    	endDate = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                    </cfif>
+                    startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.startDate)#" null="#NOT IsDate(ARGUMENTS.startDate)#">,
+                    endDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.endDate)#" null="#NOT IsDate(ARGUMENTS.endDate)#">
                 WHERE
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
 		</cfquery>
@@ -1043,8 +1108,8 @@
 		</cfquery>
 		   
 	</cffunction>
-	<!--- 
+	<!-------------------------------------------------- 
 		End of DS-2019 Online Verification Tool 
-	--->
+	--------------------------------------------------->
 
 </cfcomponent>
