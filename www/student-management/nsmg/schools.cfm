@@ -1,32 +1,44 @@
-<cfif client.usertype EQ '9'>
+<cfif client.usertype EQ 9>
 	You do not have access to Schools.
     <cfabort>
 </cfif>
 
 <cfparam name="submitted" default="0">
-<cfparam name="state" default="">
+<cfparam name="stateShort" default="">
 <cfparam name="keyword" default="">
 <cfparam name="school_dates" default="">
-<cfparam name="orderby" default="schoolname">
+<cfparam name="orderBy" default="schoolname">
 <cfparam name="recordsToShow" default="25">
 
-<cfquery name="list_states" datasource="#application.dsn#">
-    SELECT DISTINCT state
-    FROM smg_schools
-    ORDER BY state
+<cfquery name="qGetStateList" datasource="#APPLICATION.dsn#">
+    SELECT DISTINCT 
+    	state
+    FROM 
+    	smg_schools
+    ORDER BY 
+    	state
 </cfquery>
 
 <!--- default state to user's state. --->
-<cfif NOT LEN(state)>
-    <cfquery name="qGetState" datasource="#application.dsn#">
+<cfif NOT LEN(stateShort)>
+
+    <cfquery name="qGetUserState" datasource="#APPLICATION.dsn#">
         SELECT 
-        	state
+        	u.state
         FROM 
-        	smg_users
+        	smg_users u
+		INNER JOIN
+        	smg_states s ON s.state = u.state          
         WHERE 
-        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
     </cfquery>
-	<cfset state = qGetState.state>
+	
+	<cfscript>
+		if (qGetUserState.recordCount) {
+			stateShort = qGetState.state;
+		}
+	</cfscript>
+
 </cfif>
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -39,20 +51,25 @@
     </tr>
 </table>
 
-<cfform action="?curdoc=schools" method="post">
+<cfoutput>
+
+<form action="?curdoc=schools" method="post">
 <input name="submitted" type="hidden" value="1">
 <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
     <tr>
         <td><input name="send" type="submit" value="Submit" /></td>
         <td>
             State<br />
-			<cfselect name="state" query="list_states" value="state" display="state" selected="#state#" queryPosition="below">
-				<option value="">All</option>
-			</cfselect>
+			<select name="stateShort" id="stateShort">
+            	<option value="" <cfif NOT LEN(stateShort)> selected="selected" </cfif>>All</option>
+            	<cfloop query="qGetStateList">
+                    <option value="#qGetStateList.state#" <cfif qGetStateList.state EQ stateShort> selected="selected" </cfif> >#qGetStateList.state#</option>
+                </cfloop>
+            </select>
         </td>
         <td>
             Keyword / ID<br />
-			<cfinput type="text" name="keyword" value="#keyword#" size="10" maxlength="50">         
+			<input type="text" name="keyword" value="#keyword#" size="10" maxlength="50">         
         </td>
         <td>
             School Dates<br />
@@ -63,12 +80,12 @@
         </td>
         <td>
             Order By<br />
-            <select name="orderby">
-                <option value="schoolid" <cfif orderby EQ 'schoolid'>selected</cfif>>ID</option>
-                <option value="schoolname" <cfif orderby EQ 'schoolname'>selected</cfif>>School Name</option>
-                <option value="principal" <cfif orderby EQ 'principal'>selected</cfif>>Contact</option>
-                <option value="city" <cfif orderby EQ 'city'>selected</cfif>>City</option>
-                <option value="state" <cfif orderby EQ 'state'>selected</cfif>>State</option>
+            <select name="orderBy">
+                <option value="schoolid" <cfif orderBy EQ 'schoolid'>selected</cfif>>ID</option>
+                <option value="schoolname" <cfif orderBy EQ 'schoolname'>selected</cfif>>School Name</option>
+                <option value="principal" <cfif orderBy EQ 'principal'>selected</cfif>>Contact</option>
+                <option value="city" <cfif orderBy EQ 'city'>selected</cfif>>City</option>
+                <option value="state" <cfif orderBy EQ 'state'>selected</cfif>>State</option>
             </select>            
         </td>
         <td>
@@ -83,11 +100,13 @@
         </td>
     </tr>
 </table>
-</cfform>
+</form>
+
+</cfoutput>
 
 <cfif submitted>
 
-    <cfquery name="getResults" datasource="#application.dsn#">
+    <cfquery name="getResults" datasource="#APPLICATION.dsn#">
         SELECT DISTINCT 
 			s.*
         FROM 
@@ -103,12 +122,12 @@
             	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
 		
-		<cfif LEN(state)>
+		<cfif LEN(stateShort)>
             AND 
-            	s.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#state#">
+            	s.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stateShort#">
         </cfif>
 
-        <cfif TRIM(keyword) NEQ ''>
+        <cfif LEN(TRIM(keyword))>
             AND 
             	(
                 	s.schoolid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(keyword)#">
@@ -122,12 +141,18 @@
                 	s.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
             	)
         </cfif>
+        
 		<cfif LEN(school_dates)>
             AND 
             	scd.schoolid IS NULL
         </cfif>
+        
         ORDER BY
-        	#orderby#
+            <cfif ListFind("schoolid,schoolname,principal,city,state", orderBy)>
+            	#orderBy#
+            <cfelse>
+            	s.schoolname
+            </cfif>
     </cfquery>
 
 	<cfif getResults.recordCount GT 0>
@@ -142,7 +167,7 @@
 			<cfset isNextPage = 0>
 			<cfset endrow = getResults.recordCount>
 		</cfif>
-		<cfset urlVariables = "submitted=1&state=#state#&keyword=#urlEncodedFormat(keyword)#&school_dates=#school_dates#&orderby=#orderby#&recordsToShow=#recordsToShow#">
+		<cfset urlVariables = "submitted=1&stateShort=#stateShort#&keyword=#urlEncodedFormat(keyword)#&school_dates=#school_dates#&orderBy=#orderBy#&recordsToShow=#recordsToShow#">
     
         <cfoutput>
     
@@ -167,15 +192,15 @@
         </table>
  
         <table width=100% class="section">
-            <tr align="left">
-                <th>ID</th>
-                <th>School Name</th>
-                <th>Contact</th>
-                <th>City</th>
-                <th>State</th>
+            <tr align="left" style="font-weight:bold;">
+                <td>ID</td>
+                <td>School Name</td>
+                <td>Contact</td>
+                <td>City</td>
+                <td>State</td>
             </tr>
             <cfloop query="getResults" startrow="#startrow#" endrow="#endrow#">
-            <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
+            <tr bgcolor="###iif(currentRow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                 <td><a href="?curdoc=school_info&schoolid=#schoolid#">#schoolid#</a></td>
                 <td><a href="?curdoc=school_info&schoolid=#schoolid#">#schoolname#</a></td>
                 <td>#principal#</td>
