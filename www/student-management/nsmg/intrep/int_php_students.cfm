@@ -1,42 +1,28 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>PHP Students List</title>
 <style type="text/css">
-<!--
-div.scroll {
-	height: 360px;
-	width: 100%;
-	overflow: auto;
-	border-left: 1px solid #c6c6c6; 
-	border-right: 1px solid #c6c6c6;
-	background: #Ffffe6;
-}
--->
+	<!--
+	div.scroll {
+		height: 360px;
+		width: 100%;
+		overflow: auto;
+		border-left: 1px solid #c6c6c6; 
+		border-right: 1px solid #c6c6c6;
+		background: #Ffffe6;
+	}
+	-->
 </style>
-</head>
 
-<body>
-
-<cfif not isDefined("url.student_order")>
-	<cfset url.student_order = "familylastname">
-</cfif>
-
-<cfif not isDefined("url.placed")>
-	<cfset url.placed = "no">
-</cfif>
+<cfparam name="URL.placed" default="no">
 
 <!----International Rep---->
 <cfquery name="int_Agent" datasource="MySQL">
 	SELECT  u.userid, u.master_account
 	FROM smg_users u
 	LEFT JOIN smg_insurance_type insu ON insu.insutypeid = u.insurance_typeid
-	WHERE u.userid = '#client.userid#'
+	WHERE u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
 </cfquery>
 
 <!--- INTL AGENT --->
-<cfif client.usertype NEQ '8' AND client.usertype NEQ '11'>
+<cfif NOT ListFind("8,11", CLIENT.usertype)>
 	You do not have rights to see the students.
 	<cfabort>
 </cfif>
@@ -44,7 +30,7 @@ div.scroll {
 <!--- PHP STUDENTS --->
 <cfquery name="php_students" datasource="MySql">
 	SELECT s.firstname, s.familylastname, s.sex, s.country, s.studentid, s.uniqueid, s.branchid,
-		stu_prog.programid, stu_prog.hostid, stu_prog.schoolid, stu_prog.datecreated,
+		stu_prog.programid, stu_prog.assignedID, stu_prog.hostid, stu_prog.schoolid, stu_prog.datecreated,
 		co.companyshort,
 		smg_countrylist.countryname, 
 		smg_programs.programname,
@@ -62,17 +48,19 @@ div.scroll {
 	LEFT JOIN smg_users office ON s.intrep = office.userid	
 	WHERE stu_prog.companyid = '6' 
 		  AND stu_prog.active = '1'
-		<cfif url.placed EQ 'no'>
+		<cfif URL.placed EQ 'no'>
 			AND stu_prog.schoolid = '0'
-		<cfelseif url.placed EQ 'yes'>
+		<cfelseif URL.placed EQ 'yes'>
 			AND stu_prog.schoolid != '0'	
 		</cfif>
-		<cfif client.usertype EQ '8'>
-			AND (s.intrep = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer"> OR office.master_accountid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">)
+		<cfif CLIENT.usertype EQ '8'>
+			AND (s.intrep = <cfqueryparam value="#CLIENT.userid#" cfsqltype="cf_sql_integer"> OR office.master_accountid = <cfqueryparam value="#CLIENT.userid#" cfsqltype="cf_sql_integer">)
 		<cfelse>
-			AND s.branchid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
+			AND s.branchid = <cfqueryparam value="#CLIENT.userid#" cfsqltype="cf_sql_integer">
 		</cfif>	
-	ORDER BY '#url.student_order#' 
+	ORDER BY 
+    	s.familylastname,
+        s.firstName
 </cfquery>
 
 <cfoutput>
@@ -85,64 +73,56 @@ div.scroll {
 		<td background="pics/header_background.gif" align="right"><cfoutput>
 			<font size=-1>[ <a href="?curdoc=intrep/int_students">Public High School</a> ] &nbsp; &middot; &nbsp;
 			[ 
-			<cfif url.placed is "yes"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif>	<cfif IsDefined('get_user_region.usertype') AND get_user_region.usertype is '9'><cfelse><a href="?curdoc=intrep/int_php_students&placed=yes">placed</a></span> &middot; </cfif> 			
-			<cfif url.placed is "no"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif>    <a href="?curdoc=intrep/int_php_students&placed=no">unplaced</a></span>  
-			<cfif url.placed is "all"><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif>   <cfif IsDefined('get_user_region.usertype') AND get_user_region.usertype is '9'><cfelse> &middot; <a href="?curdoc=intrep/int_php_students&placed=all">all</a></span></cfif>
+			<cfif URL.placed is "yes"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif>	<cfif IsDefined('get_user_region.usertype') AND get_user_region.usertype is '9'><cfelse><a href="?curdoc=intrep/int_php_students&placed=yes">placed</a></span> &middot; </cfif> 			
+			<cfif URL.placed is "no"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif>    <a href="?curdoc=intrep/int_php_students&placed=no">unplaced</a></span>  
+			<cfif URL.placed is "all"><span class="edit_link_Selected"><cfelse><span class="edit_link"></cfif>   <cfif IsDefined('get_user_region.usertype') AND get_user_region.usertype is '9'><cfelse> &middot; <a href="?curdoc=intrep/int_php_students&placed=all">all</a></span></cfif>
 			] #php_students.recordcount# students displayed</cfoutput></td>
 		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
 
+
 <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
-	<tr><td width="20"><a href="?curdoc=intrep/int_php_students&student_order=studentid&placed=#url.placed#">ID</a></td>
-		<td width="80"><a href="?curdoc=intrep/int_php_students&student_order=familylastname&placed=#url.placed#">Last Name</a></td>
-		<td width="80"><a href="?curdoc=intrep/int_php_students&student_order=firstname&placed=#url.placed#">First Name</a></td>
-		<td width="40"><a href="?curdoc=intrep/int_php_students&student_order=sex&placed=#url.placed#">Sex</a></td>
-		<td width="60"><a href="?curdoc=intrep/int_php_students&student_order=country&placed=#url.placed#">Country</a></td>
-		<td width="60"><a href="?curdoc=intrep/int_php_students&student_order=programid&placed=#url.placed#">Program</a></td>
-		<cfif url.placed NEQ "no">
-			<Td width="80"><a href="?curdoc=intrep/int_php_students&student_order=hostid&placed=#url.placed#">School</a></td>
-		</cfif>
-		<td width="40"><a href="?curdoc=intrep/int_php_students&student_order=companyshort&placed=#url.placed#">Company</a></td>
+	<tr style="font-weight:bold;">
+    	<td width="5%">ID</td>
+		<td width="20%">Last Name</td>
+		<td width="15%">First Name</td>
+		<td width="5%">Gender</td>
+		<td width="12%">Country</td>
+		<td width="12%">Program</td>
+        <Td width="19%">School</td>
 		<cfif int_Agent.master_account EQ '0'>
-		<td width="60"><a href="?curdoc=intrep/int_php_students&student_order=branchname&placed=#url.placed#">Branch</a></td>
+            <td width="10%">Branch</td>
 		<cfelse>
-		<td width="60"><a href="?curdoc=intrep/int_php_students&student_order=officename&placed=#url.placed#">Office</a></td>
+            <td width="10%">Office</td>
 		</cfif>
-		<td width="20">&nbsp;</td></td>
+		<td width="2%">&nbsp;</td>
 	</tr>
 </table>
 
 <div class="scroll">
-<table width=100%>
-<cfloop query="php_students">
-
-	<cfset urllink="index.cfm?curdoc=intrep/int_student_info_php&unqid=#uniqueid#"> <!--- PHP STUDENTS --->
-	
-	<Cfif datecreated GT client.lastlogin>
-		<tr bgcolor="##e2efc7">
-	<cfelse>
-		<tr bgcolor="#iif(php_students.currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-	</cfif>
-			<td width="20"><a href='#urllink#'>#Studentid#</a></td>
-			<td width="80"><a href='#urllink#'><cfif #len(familylastname)# gt 15>#Left(familylastname, 12)#...<Cfelse>#familylastname#</cfif></a></td>
-			<td width="80"><a href='#urllink#'>#firstname#</a></td>
-			<td width="40">#sex#</td>
-			<td width="60"><cfif len(#countryname#) lt 10>#countryname#<cfelse>#Left(countryname,13)#..</cfif></td>
-			<td width="60">#programname#</td>
-			<cfif url.placed NEQ "no">
-				<td width="60"><cfif schoolid NEQ '0'>#schoolname#</cfif></td>
-			</cfif>
-			<td width="40">#companyshort#</td>
-			<cfif int_Agent.master_account EQ '0'>
-			<td width="60"><cfif branchid EQ '0'>Main Office<cfelse>#branchname#</cfif></td>
-			<cfelse>
-			<td width="60">#officename#</td>
-			</cfif>
-			<td width="20">&nbsp;</td>
-		</tr>
-</cfloop>
-</table>
+    <table border="0" width=100%>
+        <cfloop query="php_students">
+            <Cfif datecreated GT CLIENT.lastlogin>
+                <tr bgcolor="##e2efc7">
+            <cfelse>
+                <tr bgcolor="###iif(php_students.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
+            </cfif>
+            <td width="5%"><a href='index.cfm?curdoc=intrep/int_student_info_php&unqid=#uniqueid#&assignedID=#assignedID#'>#Studentid#</a></td>
+            <td width="20%"><a href='index.cfm?curdoc=intrep/int_student_info_php&unqid=#uniqueid#&assignedID=#assignedID#'><cfif #len(familylastname)# gt 15>#Left(familylastname, 12)#...<Cfelse>#familylastname#</cfif></a></td>
+            <td width="15%"><a href='index.cfm?curdoc=intrep/int_student_info_php&unqid=#uniqueid#&assignedID=#assignedID#'>#firstname#</a></td>
+            <td width="5%">#sex#</td>
+            <td width="12%">#countryname#</td>
+            <td width="12%">#programname#</td>
+            <td width="19%">#schoolname#</td>
+            <cfif NOT VAL(int_Agent.master_account)>
+                <td width="10%"><cfif NOT VAL(branchid)>Main Office<cfelse>#branchname#</cfif></td>
+            <cfelse>
+                <td width="10%">#officename#</td>
+            </cfif>
+            </tr>
+        </cfloop>
+    </table>
 </div>
 <table width=100% bgcolor="ffffe6" class="section">
 	<tr>
@@ -160,6 +140,3 @@ div.scroll {
 </table><br />
 
 </cfoutput>
-
-</body>
-</html>

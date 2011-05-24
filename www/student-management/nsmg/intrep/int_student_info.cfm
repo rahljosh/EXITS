@@ -47,11 +47,6 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<!--- PHP STUDENTS --->
-<cfif get_student_info.companyid EQ '6'>
-	<cflocation url="index.cfm?curdoc=intrep/int_student_info_php&unqid=#get_student_info.uniqueid#" addtoken="no">
-</cfif>
-
 <!----International Rep---->
 <cfquery name="int_Agent" datasource="MySQL">
 	SELECT  u.userid, u.businessname, u.firstname, u.lastname, u.master_accountid, u.accepts_sevis_fee, u.insurance_typeid, insu.type

@@ -11,12 +11,16 @@
 <cfsilent>
 
     <!--- PARAM URL Variables --->
-	<cfparam name="URL.studentID" default="">
+    <cfparam name="URL.uniqueID" default="">
     <cfparam name="URL.programID" default="">
+    
+    <cfparam name="URL.test" default="">
 
 	<cfscript>
+		vIsPHPStudent = APPLICATION.CFC.STUDENT.isStudentAssignedToPHP(uniqueID=URL.uniqueID);
+		
 		// Get Formatted Flight Information
-		flightInfoReport = APPLICATION.CFC.STUDENT.printFlightInformation(uniqueID=URL.uniqueID);
+		flightInfoReport = APPLICATION.CFC.STUDENT.printFlightInformation(uniqueID=URL.uniqueID,programID=URL.programID,isPHPStudent=vIsPHPStudent);
 	</cfscript>	
         
 </cfsilent>

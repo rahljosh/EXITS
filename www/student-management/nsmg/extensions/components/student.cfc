@@ -135,19 +135,30 @@
 
 
 	<cffunction name="isStudentAssignedToPHP" access="public" returntype="numeric" output="false" hint="Returns 1 if student is assigned to PHP">
-    	<cfargument name="studentID" default="0" hint="studentID is not required">
+    	<cfargument name="studentID" default="" hint="studentID is not required">
+        <cfargument name="uniqueID" default="" hint="uniqueID is not required">
 
         <cfquery 
 			name="qIsStudentAssignedToPHP" 
 			datasource="#APPLICATION.dsn#">
                 SELECT 
-                    studentID
+                    s.studentID
                 FROM 
-                    php_students_in_program
+                    smg_students s
+                INNER JOIN 
+                    php_students_in_program php ON php.studentID = s.studentID
                 WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-				AND
-                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+				
+				<cfif LEN(ARGUMENTS.studentID)>
+                    AND
+                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.uniqueID)>
+                    AND
+                        s.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                </cfif>
         </cfquery>
 		
         <cfscript>
@@ -743,10 +754,11 @@
 	</cffunction>
 
 
-    <!--- EMAIL FLIGHT INFORMATION --->
+    <!--- DISPLAY FLIGHT INFORMATION IN PDF FORMAT --->
 	<cffunction name="printFlightInformation" access="public" returntype="string" output="false" hint="Returns a formatted flight information">
     	<cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
+        <cfargument name="programID" default="" hint="programID is not required">
         <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
         <cfargument name="sendEmailTo" default="" hint="regionalManager | currentUser">
         <cfargument name="isPHPStudent" default="0" hint="Set to 1 if it's a PHP student">
@@ -756,13 +768,13 @@
 
 		<cfscript>
 			var flightInfoReport = '';
-        	
+			
 			if ( NOT VAL(ARGUMENTS.isPHPStudent) ) {
 				// Public - Get Student Information
-				qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, uniqueID=ARGUMENTS.uniqueID);
+				qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, uniqueID=ARGUMENTS.uniqueID, programID=ARGUMENTS.programID);
 			} else {
 				// PHP - Get Student Information
-				qGetStudentFullInformation = getPHPStudent(studentID=ARGUMENTS.studentID, uniqueID=ARGUMENTS.uniqueID);
+				qGetStudentFullInformation = getPHPStudent(studentID=ARGUMENTS.studentID, uniqueID=ARGUMENTS.uniqueID, programID=ARGUMENTS.programID);
 			}
 			
 			// Path to save temp PDF files
@@ -799,9 +811,6 @@
     
             // Get Departure
             qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="departure");
-			
-			// DELETE OR COMMENT THIS
-			// flightEmailTo = 'marcus@iseusa.com';
         </cfscript>
 		
         <cfoutput>        
@@ -1247,6 +1256,7 @@
 			
 			// DELETE OR COMMENT THIS
 			// flightEmailTo = 'marcus@iseusa.com';
+			// flightEmailCC = 'marcus@iseusa.com';
         </cfscript>
         
         <!--- Send out Email if there is a flight information or if a leg has been deleted --->

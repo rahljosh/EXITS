@@ -35,7 +35,7 @@
 	<script language="JavaScript">
 	<!-- 
 	alert("You have successfully updated this page");
-			location.replace("?curdoc=intrep/int_student_info_php&unqid=#get_student.uniqueid#");
+			location.replace("?curdoc=intrep/int_student_info_php&unqid=#get_student.uniqueid#&assignedID=#get_student.assignedID#");
 	-->
 	</script>
 <cfelse>
