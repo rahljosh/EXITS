@@ -35,7 +35,7 @@
 	
 	<cfscript>
 		if (qGetUserState.recordCount) {
-			stateShort = qGetState.state;
+			stateShort = qGetUserState.state;
 		}
 	</cfscript>
 
