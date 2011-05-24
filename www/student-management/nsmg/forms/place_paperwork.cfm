@@ -113,7 +113,7 @@ where programid = #get_student_info.programid#
 </cfif>
 
 <input type="hidden" name="hostid" value="#get_student_info.hostid#">
-<cfif client.totalfam eq 1 and season.seasonid gt 8>
+<cfif client.totalfam eq 1 and season.seasonid gt 7>
 <div class="alert">
 <h1>Single Person Placement - additional screening will be required.</h1>
 <em>2 additional references and  Single Person Placement Authorization Form required</em> </div>
@@ -123,7 +123,7 @@ where programid = #get_student_info.programid#
 	<tr>
 		<td colspan=3><u>Paperwork Received</u></td>
 	</tr>
-    <Cfif client.totalfam eq 1 and and season.seasonid gt 8>
+    <Cfif client.totalfam eq 1 and season.seasonid gt 7>
     <tr> <!-- 0 - SINGLE PLACEMENT VEROFOCASTOPM --->
         <td width="5%"><Cfif #get_student_info.doc_single_place_auth# EQ ''>
                 <input type="checkbox" name="single_auth" OnClick="CheckDates('single_auth', 'doc_single_place_auth');" <cfif edit is 'no'>disabled</cfif>>
