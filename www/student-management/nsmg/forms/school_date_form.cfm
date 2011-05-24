@@ -159,7 +159,7 @@ function checkForm() {
     </tr>
     <tr>
     	<td class="label">Enrollment/Orientation:</td>
-        <td><cfinput type="text" name="enrollment" value="#dateFormat(form.enrollment, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Enrollment/Orientation."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="enrollment" value="#dateFormat(form.enrollment, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Enrollment/Orientation."> mm/dd/yyyy</td>
     </tr>
     <tr>
         <td colspan="2">
