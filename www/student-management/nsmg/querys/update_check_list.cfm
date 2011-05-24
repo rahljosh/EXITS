@@ -24,6 +24,8 @@
 		doc_single_ref_check1 = <cfif form.doc_single_ref_check1 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_ref_check1)#</cfif>,	
 		doc_single_ref_form_2 = <cfif form.doc_single_ref_form_2 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_ref_form_2)#</cfif>,
 		doc_single_ref_check2 = <cfif form.doc_single_ref_check2 EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_single_ref_check2)#</cfif>,
+        doc_conf_host_single_rec = <cfif form.doc_conf_host_single_rec EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_conf_host_single_rec)#</cfif>,
+        doc_date_of_single_visit = <cfif form.doc_date_of_single_visit EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_date_of_single_visit)#</cfif>,
         </cfif>
 		doc_school_accept_date = <cfif form.doc_school_accept_date EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_school_accept_date)#</cfif>,
 		doc_school_sign_date = <cfif form.doc_school_sign_date EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_school_sign_date)#</cfif>,

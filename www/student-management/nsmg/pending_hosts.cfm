@@ -211,24 +211,50 @@ div.scroll {
 
 <table border=0 cellpadding=4 cellspacing=0 width=100%>
 	<tr>
-		<td colspan=4 align="center" bgcolor="#EAEAF2">Student</td><td colspan=6 align="center" bgcolor="#FFDFE1">Host</td>
+		<td colspan=5 align="center" bgcolor="#afcee3"><strong>S T U D E N T &nbsp;&nbsp;&nbsp; I N F O</strong></td><td colspan=6 align="center" bgcolor="#ede3d0"><strong>H O S T &nbsp;&nbsp;&nbsp; I N F O</strong></td>
 	</tr>
 	<tr>
-		<td width="30">ID</td>
-		<td width="100">Last Name</td>
-		<td width="100">First Name</td>
-		<td width="80">Region</td>
-		<td width="80">Program</td>
-		<td width="30">ID</td>
-		<td width="100">Last Name(s)</td>
-		<td width="100">First Name(s)</td>
-        <td width="70">Date Placed</td>
+
+        <td >Student ID</td>
+		<td >Last Name</td>
+		<td >First Name</td>
+		<td >Region</td>
+		<td >Program</td>
+		<td >Host ID</td>
+		<td >Last Name(s)</td>
+		<td >First Name(s)</td>
+        <td >Date Placed</td>
         <td>Rejected in..</td>
-	</tr>
+
+    </tr>
 
 <cfoutput query="pending_hosts">
-<cfset DisplayEndDate = #DateAdd('d', 4, '#dateplaced#')#>
+    <cfquery name="kidsAtHome" datasource="mysql">
+    select count(childid) as kidcount
+    from smg_host_children
+    where liveathome = 'yes'
+    and hostid = #hostid#
+    </cfquery>
+<!----check for single placement---->
+	<Cfset father=0>
+    <cfset mother=0>
+    <Cfif pending_hosts.fatherfirstname is not ''>
+        <cfset father = 1>
+    </Cfif>
+    <Cfif pending_hosts.motherfirstname is not ''>
+        <cfset mother = 1>
+    </Cfif>
+    <cfset totalfam = #mother# + #father# + #kidsAtHome.kidcount#>
+
+    <Cfif totalfam gt 1>
+    	<cfset DisplayEndDate = #DateAdd('d', 4, '#dateplaced#')#>
+        <cfset singleFam = 0>
+   	<Cfelse>
+    	<cfset DisplayEndDate = #DateAdd('d', 14, '#dateplaced#')#>
+    </Cfif>
+
     <tr bgcolor="<Cfif host_fam_Approved EQ '7'>FCC8C8<cfelseif host_fam_Approved is '6'>FDFF6D<cfelseif host_fam_approved is '5'>A0E1A1<cfelseif host_fam_approved is '99'>FB8822</cfif>">
+
             <td>#studentid#</td>
             <td>#student_lastname#</td>
             <td>#firstname#</td>
@@ -249,7 +275,7 @@ div.scroll {
 			<cfset dtTo = Now() />
 			<cfset dtDiff = (dtTo - dtFrom) />
             #DateFormat( dtDiff, "d" )# d
-            #TimeFormat( dtDiff, "h" )# h
+            #TimeFormat( dtDiff, "h" )# h 
            <cfelse> <cf_timer dateEnd="#DisplayEndDate#"></cfif></td>
     </tr>
     <tr>
