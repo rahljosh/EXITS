@@ -1,14 +1,7 @@
-<cfif isdefined('url.unqid')>
-	<cfquery name="get_unqid" datasource="MySql">
-		SELECT *
-		FROM smg_students
-		WHERE uniqueid = '#url.unqid#'
-	</cfquery>
-	<cfset client.studentid = #get_unqid.studentid#>
-	
-</cfif>
+<cfparam name="URL.unqID" default="">
+<cfparam name="URL.assignedID" default="">
 
-<cfquery name="get_student_info" datasource="mysql">
+<cfquery name="qGetStudentInfo" datasource="mysql">
 	SELECT DISTINCT 
     	s.studentid, s.uniqueid, s.familylastname, s.firstname, s.middlename, s.fathersname, s.fatheraddress,
 		s.fatheraddress2, s.fathercity, s.fathercountry, s.fatherzip, s.fatherbirth, s.fathercompany, s.fatherworkphone,
@@ -35,21 +28,26 @@
 	FROM smg_students s
 	INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
 	LEFT JOIN php_schools ON php_schools.schoolid = stu_prog.schoolid
-	WHERE s.studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
-    AND stu_prog.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-	ORDER BY assignedid DESC
+    WHERE 
+    	s.uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.unqid#">
+    AND 
+    	stu_prog.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+    AND	
+    	stu_prog.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.assignedID)#">
 </cfquery>
+
+<cfset CLIENT.studentid = qGetStudentInfo.studentID>
 
 <!----International Rep---->
 <cfquery name="int_Agent" datasource="MySQL">
 	SELECT  u.userid, u.businessname, u.firstname, u.lastname, u.master_accountid, u.accepts_sevis_fee, u.insurance_typeid, insu.type
 	FROM smg_users u
 	LEFT JOIN smg_insurance_type insu ON insu.insutypeid = u.insurance_typeid
-	WHERE u.userid = '#get_student_info.intrep#'
+	WHERE u.userid = '#qGetStudentInfo.intrep#'
 </cfquery>
 
 <!--- error message if the student is not found --->
-<cfif get_student_info.recordcount is 0>
+<cfif qGetStudentInfo.recordcount is 0>
 	The student ID you are looking for, <cfoutput>#get_uniqid.studentid#</cfoutput>, was not found. This could be for a number of reasons.<br><br>
 	<ul>
 		<li>the student record was deleted or renumbered
@@ -61,7 +59,7 @@
 </cfif>
 
 <!--- error message if student does not belong to current int. rep --->
-<cfif get_Student_info.intrep NEQ client.userid AND get_Student_info.branchid NEQ client.userid AND int_Agent.master_accountid NEQ client.userid><br>
+<cfif qGetStudentInfo.intrep NEQ CLIENT.userid AND qGetStudentInfo.branchid NEQ CLIENT.userid AND int_Agent.master_accountid NEQ CLIENT.userid><br>
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 		<tr valign=middle height=24>
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -80,33 +78,33 @@
 <cfquery name="get_stu_company" datasource="MySql">
 	SELECT companyname, companyshort
 	FROM smg_companies
-	WHERE companyid = '#get_student_info.companyid#'
+	WHERE companyid = '#qGetStudentInfo.companyid#'
 </cfquery>
 
 <cfquery name="program" datasource="mysql">
 	select programname, programid
 	from smg_programs
-	where programid = '#get_student_info.programid#'
+	where programid = '#qGetStudentInfo.programid#'
 </cfquery>
 
 <cfquery name="get_branches" datasource="MySQL">
 	select userid, businessname
 	from smg_users 
-	where intrepid = '#get_Student_info.intrep#'
-	<cfif get_student_info.intrep NEQ client.userid>	
-		AND userid = '#client.userid#'
+	where intrepid = '#qGetStudentInfo.intrep#'
+	<cfif qGetStudentInfo.intrep NEQ CLIENT.userid>	
+		AND userid = '#CLIENT.userid#'
 	</cfif>
 	ORDER BY businessname
 </cfquery>
 
 <cfquery name="get_super_rep" datasource="MySQL">
 	Select firstname, lastname, userid from smg_users 
-	where userid = '#get_Student_info.arearepid#'
+	where userid = '#qGetStudentInfo.arearepid#'
 </cfquery>
 
 <cfquery name="get_place_rep" datasource="MySQL">
 	Select firstname, lastname, userid from smg_users 
-	where userid = '#get_Student_info.placerepid#'
+	where userid = '#qGetStudentInfo.placerepid#'
 </cfquery>
 
 <script language="javascript">	
@@ -135,15 +133,15 @@
 	</tr>
 </table>
 
-<cfoutput query="get_student_info">
+<cfoutput query="qGetStudentInfo">
 <div class="section">
 <table align="center" width="75%">  
 	<tr><td align="center" colspan="2"><h2>#get_stu_company.companyname#</h2></td></tr>
 	<tr>
 		<td>
-			<cfif get_student_info.schoolid EQ 0 AND get_student_info.canceldate EQ ''>
+			<cfif qGetStudentInfo.schoolid EQ 0 AND qGetStudentInfo.canceldate EQ ''>
 			<table background="pics/unplaced.jpg" cellpadding="2" width="100%"> 
-			<cfelseif get_student_info.schoolid EQ 0 and get_student_info.canceldate NEQ ''>
+			<cfelseif qGetStudentInfo.schoolid EQ 0 and qGetStudentInfo.canceldate NEQ ''>
 			<table background="pics/canceled.jpg" cellpadding="2" width="100%"> 
 			<cfelse>
 			<table width=100% align="Center" cellpadding="3">				
@@ -152,7 +150,7 @@
 					<td width="133">
 						<table width="100%" cellpadding="3">
 							<tr><td><td width="133">
-								<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
+								<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#qGetStudentInfo.studentid#.*">
 								<cfif file.recordcount>
 									<img src="uploadedfiles/web-students/#file.name#" width="135">
 								<cfelse>
@@ -168,14 +166,14 @@
 			 				<tr><td align="center" colspan="2"><cfif dob is ''><cfelse>#dateformat (dob, 'mm/dd/yyyy')# - #datediff('yyyy',dob,now())# year old #sex# </cfif></td></tr> 
 							<tr><td align="right">Intl. Rep. : </td><td>#int_agent.businessname#</td></tr>
 							<tr><td align="right">Branch : </td>
-								<cfif get_student_info.intrep EQ client.userid>
+								<cfif qGetStudentInfo.intrep EQ CLIENT.userid>
 									<cfform name="branch" action="?curdoc=intrep/qr_int_student_info" method="post">
 										<cfinput type="hidden" name="php" value="php">
 										<cfinput type="hidden" name="studentid" value="#studentid#">
 											<td valign="middle"><cfselect name="branchid">
 												<option value="0">Main Office</option>
 												<cfloop query="get_branches">
-												<option value="#userid#" <cfif get_student_info.branchid EQ	get_branches.userid>selected</cfif>>#businessname#</option>
+												<option value="#userid#" <cfif qGetStudentInfo.branchid EQ	get_branches.userid>selected</cfif>>#businessname#</option>
 												</cfloop>
 												</cfselect>
 												&nbsp; &nbsp; <cfinput name="submit" type="image" src="pics/update.gif" border=0 alt=" update branch information ">
@@ -195,12 +193,12 @@
 		<td align="right" valign="top">
 			<div id="subMenuNav"> 
 				<div id="subMenuLinks">  
-				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>		
-				<a class=nav_bar href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#client.studentid#', 'Reports', 'height=250, width=620, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
-				<a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_info.uniqueID#" class="jQueryModal">Flight Information</a>
+				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>		
+				<a class=nav_bar href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qGetStudentInfo.studentid#', 'Reports', 'height=250, width=620, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
+				<a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
 			
-				<cfif get_student_info.hostid NEQ '0'>
-					<a class=nav_bar href="index.cfm?curdoc=intrep/int_host_fam_info&hostid=#get_student_info.hostid#">Host Family</A>
+				<cfif qGetStudentInfo.hostid NEQ '0'>
+					<a class=nav_bar href="index.cfm?curdoc=intrep/int_host_fam_info&hostid=#qGetStudentInfo.hostid#">Host Family</A>
 				</cfif>
 				
 				</div>
@@ -215,8 +213,8 @@
 			<table cellpadding="3" width="100%">
 				<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>:: </b></span>Program</td></tr>
 				<tr><td>Program :</td><td><cfif program.recordcount NEQ '0'>#program.programname#<cfelse>n/a</cfif></td></tr>
-				<tr><td>Supervising Rep. :</td><td><cfif get_Student_info.arearepid is 0>Not Assigned<cfelse>#get_super_rep.firstname# #get_super_rep.lastname#</cfif></td></tr>
-				<tr><td>Placing Rep. :</td><td><cfif get_Student_info.placerepid is 0>Not Assigned<cfelse>#get_place_rep.firstname# #get_place_rep.lastname#</cfif> </td></tr>												
+				<tr><td>Supervising Rep. :</td><td><cfif qGetStudentInfo.arearepid is 0>Not Assigned<cfelse>#get_super_rep.firstname# #get_super_rep.lastname#</cfif></td></tr>
+				<tr><td>Placing Rep. :</td><td><cfif qGetStudentInfo.placerepid is 0>Not Assigned<cfelse>#get_place_rep.firstname# #get_place_rep.lastname#</cfif> </td></tr>												
 			</table>
 		</td>
 		<td width="50%" valign="top">
@@ -292,8 +290,8 @@
 			<table cellpadding="3" width="100%">
 				<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>:: </b></span>Letters</td></tr>
 				<tr><td>: : <a href="" onClick="javascript: win=window.open('reports/acceptance_letter.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Acceptance Letter</a></td></tr>
-				<tr><td><cfif get_student_info.schoolid NEQ '0'>: : <a href="" onClick="javascript: win=window.open('reports/placement_letter.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Placement</a> &nbsp;</cfif></td></tr>
-				<tr><td><cfif get_student_info.schoolid NEQ '0'>: : <a href="" onClick="javascript: win=window.open('intrep/int_flight_information_letter.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a></cfif></td></tr>
+				<tr><td><cfif qGetStudentInfo.schoolid NEQ '0'>: : <a href="" onClick="javascript: win=window.open('reports/placement_letter.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Placement</a> &nbsp;</cfif></td></tr>
+				<tr><td><cfif qGetStudentInfo.schoolid NEQ '0'>: : <a href="" onClick="javascript: win=window.open('intrep/int_flight_information_letter.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a></cfif></td></tr>
 			</table>
 			--->
 		</td>
