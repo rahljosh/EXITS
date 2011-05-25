@@ -1,10 +1,16 @@
 <cfparam name="FORM.wat_participation" default="0">
-<cfparam name="FORM.wat_doc_walk_in_agreement" default="0">
 <cfparam name="FORM.wat_doc_agreement" default="0">
-<cfparam name="FORM.wat_doc_college_letter" default="0">
+<cfparam name="FORM.wat_doc_walk_in_agreement" default="0">
+<cfparam name="FORM.wat_doc_cv" default="0">
 <cfparam name="FORM.wat_doc_passport_copy" default="0">
-<cfparam name="FORM.wat_doc_job_offer" default="0">
 <cfparam name="FORM.wat_doc_orientation" default="0">
+<cfparam name="FORM.wat_doc_signed_assessment" default="0">
+<cfparam name="FORM.wat_doc_college_letter" default="0">
+<cfparam name="FORM.wat_doc_college_letter_translation" default="0">
+<cfparam name="FORM.wat_doc_job_offer" default="0">
+<cfparam name="FORM.wat_doc_job_offer_applicant" default="0">
+<cfparam name="FORM.wat_doc_job_offer_employer" default="0">
+<cfparam name="FORM.wat_doc_other" default="">
 
 <cfquery name="qCheckForExistingCandidate" datasource="mysql">
 	SELECT 
@@ -103,12 +109,18 @@
 		wat_vacation_start,
 		wat_vacation_end, 
 		<!---- documents control --->
-		wat_doc_agreement, 
-		wat_doc_college_letter,
-		wat_doc_passport_copy, 
-		wat_doc_job_offer, 
-		wat_doc_orientation, 
-		wat_doc_walk_in_agreement, 
+        wat_doc_agreement,
+        wat_doc_walk_in_agreement,
+        wat_doc_cv,
+        wat_doc_passport_copy,
+        wat_doc_orientation,
+        wat_doc_signed_assessment,
+        wat_doc_college_letter,
+        wat_doc_college_letter_translation,
+        wat_doc_job_offer,
+        wat_doc_job_offer_applicant,
+        wat_doc_job_offer_employer,
+		wat_doc_other,
 		requested_placement, 
 		startdate, 
 		enddate
@@ -148,12 +160,19 @@
 		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_start#" null="#NOT IsDate(FORM.wat_vacation_start)#">, 
 		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_end#" null="#NOT IsDate(FORM.wat_vacation_end)#">, 
 		<!--- document control --->
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_agreement)#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_college_letter)#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_passport_copy)#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_job_offer)#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_doc_orientation)#">,
-		<cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.wat_doc_walk_in_agreement)#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_agreement#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_walk_in_agreement#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_cv#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_passport_copy#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_orientation#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_signed_assessment#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_college_letter#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_college_letter_translation#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_applicant#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_employer#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other#">,
+        
 		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.combo_request#">, 
 		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.startdate#" null="#NOT IsDate(FORM.startdate)#">, 
 		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.enddate#" null="#NOT IsDate(FORM.enddate)#"> 

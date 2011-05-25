@@ -17,32 +17,35 @@
 	AppCFC = APPLICATION.CFC;
 	
 	// Store the initialized UDF Library object in the Application scope
-	AppCFC.UDF = CreateCFC("udf").Init();
+	APPLICATION.CFC.UDF = CreateCFC("udf").Init();
 	
 	// Store Application.IsServerLocal - This needs be declare before the other CFC components
 	APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 	
 	// Store the initialized candidate Library object in the Application scope
-	AppCFC.candidate = CreateCFC("candidate").Init();
+	APPLICATION.CFC.candidate = CreateCFC("candidate").Init();
 	
 	// Store the initialized content Library object in the Application scope
-	AppCFC.content = CreateCFC("content").Init();
+	APPLICATION.CFC.content = CreateCFC("content").Init();
 	
 	// Store the initialized document Library object in the Application scope
-	AppCFC.document = CreateCFC("document").Init();
+	APPLICATION.CFC.document = CreateCFC("document").Init();
 	
 	// Store the initialized email Library object in the Application scope
-	AppCFC.email = CreateCFC("email").Init();
+	APPLICATION.CFC.email = CreateCFC("email").Init();
 
 	// Store the initialized flight information Library object in the Application scope
-	AppCFC.flightInformation = CreateCFC("flightInformation").Init();
+	APPLICATION.CFC.flightInformation = CreateCFC("flightInformation").Init();
 
 	// Store the initialized lookUpTables Library object in the Application scope
-	AppCFC.lookUpTables = CreateCFC("lookUpTables").Init();
+	APPLICATION.CFC.lookUpTables = CreateCFC("lookUpTables").Init();
 	
 	// Store the initialized onlineApp Library object in the Application scope
-	AppCFC.onlineApp = CreateCFC("onlineApp").Init();
-	
+	APPLICATION.CFC.onlineApp = CreateCFC("onlineApp").Init();
+
+	// Store the initialized program Library object in the Application scope
+	APPLICATION.CFC.program = CreateCFC("program").Init();
+
 	// Store the initialized User Library object in the Application scope
-	AppCFC.user = CreateCFC("user").Init();
+	APPLICATION.CFC.user = CreateCFC("user").Init();
 </cfscript>

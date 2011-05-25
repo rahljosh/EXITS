@@ -40,6 +40,10 @@
 	<cfset total = get_students_self.recordcount + get_students.recordcount>
 </cfif>
 
+<cfscript>
+	// Get Program List
+	qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+</cfscript>
 
 <cfoutput>
 
@@ -64,16 +68,11 @@
   	</tr>
 
     <tr>
-    <cfquery name="get_program" datasource="MySql">
-		SELECT programname, programid
-		FROM smg_programs 
-		where companyid = #client.companyid#
-    </cfquery>
     <td valign="middle" align="right" class="style1">Program: </td><td> 
 	<select name="program" class="style1">
 		<option></option>
-		<cfloop query="get_program">
-		<option value=#programid# <cfif IsDefined('form.program')><cfif get_program.programid eq #form.program#> selected</cfif></cfif>>#programname#</option>
+		<cfloop query="qGetProgramList">
+		<option value=#programid# <cfif IsDefined('form.program')><cfif qGetProgramList.programid eq #form.program#> selected</cfif></cfif>>#programname#</option>
 		</cfloop>
 	</select>
 	

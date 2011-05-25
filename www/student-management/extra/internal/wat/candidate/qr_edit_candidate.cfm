@@ -1,11 +1,17 @@
 
 <!--- Param FORM Variables --->
 <cfparam name="FORM.wat_doc_agreement" default="0">
-<cfparam name="FORM.wat_doc_college_letter" default="0">
-<cfparam name="FORM.wat_doc_passport_copy" default="0">
-<cfparam name="FORM.wat_doc_job_offer" default="0">
-<cfparam name="FORM.wat_doc_orientation" default="0">
 <cfparam name="FORM.wat_doc_walk_in_agreement" default="0">
+<cfparam name="FORM.wat_doc_cv" default="0">
+<cfparam name="FORM.wat_doc_passport_copy" default="0">
+<cfparam name="FORM.wat_doc_orientation" default="0">
+<cfparam name="FORM.wat_doc_signed_assessment" default="0">
+<cfparam name="FORM.wat_doc_college_letter" default="0">
+<cfparam name="FORM.wat_doc_college_letter_translation" default="0">
+<cfparam name="FORM.wat_doc_job_offer" default="0">
+<cfparam name="FORM.wat_doc_job_offer_applicant" default="0">
+<cfparam name="FORM.wat_doc_job_offer_employer" default="0">
+<cfparam name="FORM.wat_doc_other" default="">
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.verification_arrival" default="0">
@@ -269,25 +275,30 @@
         wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_placement#">,
         wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_start#" null="#NOT IsDate(FORM.wat_vacation_start)#">,
         wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_end#" null="#NOT IsDate(FORM.wat_vacation_end)#">,
-        
+		
 		<!--- document control --->
         wat_doc_agreement = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_agreement#">,
-        wat_doc_college_letter = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_college_letter#">,
-        wat_doc_passport_copy = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_passport_copy#">,
-        wat_doc_job_offer = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer#">,
-        wat_doc_orientation = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_orientation#">,
         wat_doc_walk_in_agreement = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_walk_in_agreement#">,
-        
+        wat_doc_cv = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_cv#">,
+        wat_doc_passport_copy = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_passport_copy#">,
+        wat_doc_orientation = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_orientation#">,
+        wat_doc_signed_assessment = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_signed_assessment#">,
+        wat_doc_college_letter = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_college_letter#">,
+        wat_doc_college_letter_translation = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_college_letter_translation#">,
+        wat_doc_job_offer = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer#">,
+        wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_applicant#">,
+        wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_employer#">,
+		wat_doc_other = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other#">,
+		
 		<!---- form DS-2019 ---->
         verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" null="#NOT IsDate(FORM.verification_received)#">,
         
-        <!--- DS2019 stuff ---> 
+		<!--- DS2019 stuff ---> 
         ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019#">, 
         requested_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.requested_placement#">,
         
-        <!--- change_requested_comment --->
+		<!--- change_requested_comment --->
         change_requested_comment = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.change_requested_comment#">,
-
         status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.status#">, 
         
 		<cfif isDate(FORM.cancel_date) AND FORM.status EQ 'canceled'>
@@ -311,4 +322,4 @@
     	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
 </cfquery>
 
-<cflocation url="index.cfm?curdoc=candidate/candidate_info&uniqueid=#url.uniqueid#" addtoken="no">
+<cflocation url="index.cfm?curdoc=candidate/candidate_info&uniqueid=#URL.uniqueID#" addtoken="no">

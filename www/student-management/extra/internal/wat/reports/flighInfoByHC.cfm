@@ -11,15 +11,10 @@
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
 
-    <cfquery name="qGetProgramList" datasource="MySql">
-        SELECT 
-        	programID,
-            programname             
-        FROM 
-        	smg_programs 
-        WHERE 
-        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-    </cfquery>
+    <cfscript>
+		// Get Program List
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+	</cfscript>
 
     <cfquery name="qGetHostCompanyList" datasource="MySql">
         SELECT 
