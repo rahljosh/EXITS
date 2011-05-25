@@ -23,15 +23,10 @@
             businessname
     </cfquery>
 
-    <cfquery name="qGetProgramList" datasource="MySql">
-        SELECT 
-        	programname, 
-            programid
-        FROM 
-        	smg_programs 
-        WHERE 
-        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-    </cfquery>
+    <cfscript>
+		// Get Program List
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+	</cfscript>
 
 </cfsilent>    
     

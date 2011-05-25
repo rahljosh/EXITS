@@ -1,5 +1,10 @@
 <cfoutput>
 
+<cfscript>
+	// Get Program List
+	qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+</cfscript>
+
 <form action="index.cfm?curdoc=reports/taxback" method="post">
 <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
   <tr valign="middle" height="24">
@@ -11,16 +16,11 @@
     <td valign="middle" colspan="2">&nbsp;</td>
   </tr>
     <tr>
-    <cfquery name="get_program" datasource="MySql">
-	SELECT programname, programid
-	FROM smg_programs 
-	where companyid = #client.companyid#
-    </cfquery>
     <td valign="middle" align="right" class="style1"><b>Program: </b></td><td>
 	 <select name="program" class="style1">
 		<option></option>
-	<cfloop query="get_program">
-	<option value=#programid# <cfif IsDefined('form.program')><cfif get_program.programid eq #form.program#> selected</cfif></cfif>>#programname#</option>
+	<cfloop query="qGetProgramList">
+	<option value=#programid# <cfif IsDefined('form.program')><cfif qGetProgramList.programid eq #form.program#> selected</cfif></cfif>>#programname#</option>
 	</cfloop>
 	</select>
 	

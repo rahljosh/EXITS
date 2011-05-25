@@ -3,17 +3,12 @@
 
     <!--- Param FORM Variables --->	
     <cfparam name="FORM.programID" default="0">
-    <cfparam name="FORM.printOption" default="">
+    <cfparam name="FORM.printOption" default="1">
 
-    <cfquery name="qGetProgram" datasource="MySql">
-        SELECT 
-            programid,
-            programname
-        FROM 
-            smg_programs 
-        WHERE 
-            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-    </cfquery>
+    <cfscript>
+		// Get Program List
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+	</cfscript>
 
 	<cfif LEN(printOption)>
      
@@ -25,11 +20,17 @@
                 c.lastname, 
                 c.candidateid, 
                 c.wat_doc_agreement,
-                c.wat_doc_college_letter, 
+                c.wat_doc_walk_in_agreement,
+                c.wat_doc_cv,
                 c.wat_doc_passport_copy,
+                c.wat_doc_orientation,
+                c.wat_doc_signed_assessment,
+                c.wat_doc_college_letter,
+                c.wat_doc_college_letter_translation,
                 c.wat_doc_job_offer,
-                c.wat_doc_orientation, 
-                c.wat_doc_walk_in_agreement, 
+                c.wat_doc_job_offer_applicant,
+                c.wat_doc_job_offer_employer,
+                c.wat_doc_other,
                 c.wat_placement, 
                 u.companyID, 
                 u.businessname, 
@@ -50,15 +51,36 @@
                     c.wat_doc_agreement = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
                     c.wat_doc_college_letter = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                OR 
+                    c.wat_doc_college_letter_translation = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                OR 
+                    c.wat_doc_signed_assessment = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                OR 
+                    c.wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                OR 
+                    c.wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR
                     c.wat_doc_passport_copy = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
                     c.wat_doc_job_offer = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
-                    c.wat_doc_orientation = <cfqueryparam cfsqltype="cf_sql_integer" value="0">        	
+                    c.wat_doc_orientation = <cfqueryparam cfsqltype="cf_sql_integer" value="0">   
                 OR
-                    <!--- Check only if wat_doc_agreement = Walk-In --->
-                    ( c.wat_doc_agreement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Walk-In"> AND wat_doc_walk_in_agreement = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> )
+                	c.wat_doc_other != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+				<!--- Check only if wat_doc_agreement = Walk-In --->                
+                OR                    
+                    ( 
+                    	c.wat_doc_agreement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Walk-In"> 
+                    AND 
+                    	c.wat_doc_walk_in_agreement = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+					)
+                <!--- Check only if wat_doc_agreement = CSB-Placement --->
+                OR                    
+                    ( 
+                    	c.wat_doc_agreement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement"> 
+                    AND 
+						c.wat_doc_cv = <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
+					)
                 )
             ORDER BY 
                 c.wat_placement, 
@@ -121,8 +143,8 @@
             <td> 
             	<select name="programID" class="style1">
                     <option value="0"></option>
-                    <cfloop query="qGetProgram">
-                        <option value="#qGetProgram.programID#" <cfif qGetProgram.programid eq FORM.programID> selected</cfif>>#qGetProgram.programname#</option>
+                    <cfloop query="qGetProgramList">
+                        <option value="#qGetProgramList.programID#" <cfif qGetProgramList.programid eq FORM.programID> selected</cfif>>#qGetProgramList.programname#</option>
                     </cfloop>
                 </select>
 	        </td>
@@ -157,12 +179,12 @@
         <img src="../../pics/black_pixel.gif" width="100%" height="2">
                         
         <table width=99% cellpadding="4" align="center" cellspacing=0>
-            <tr bgcolor="##FFFFCC">
-                <td align="left" class="style1"><strong>Intl. Rep.</strong></td>	 
-                <td align="left" class="style1"><strong>Student</strong></td>
-                <td align="left" class="style1"><strong>Placement Information</strong></td>  
-                <td align="left" class="style1" width="130"><strong>Missing Documents</strong></td>	  
-                <td align="left" class="style1"><strong>Option</strong></td>	  	
+            <tr bgcolor="##FFFFCC" style="font-weight:bold;">
+                <td align="left" class="style1" width="20%">Intl. Rep.</td>	 
+                <td align="left" class="style1" width="20%">Student</td>
+                <td align="left" class="style1" width="20%" >Placement Information</td>  
+                <td align="left" class="style1" width="30%">Missing Documents</td>	  
+                <td align="left" class="style1" width="10%">Option</td>	  	
             </tr>
     
             <img src="../../pics/black_pixel.gif" width="100%" height="2">
@@ -180,13 +202,19 @@
                         </a>
                     </td>		
                     <td valign="top" class="style1">#qGetCandidates.companyname#</td>
-                    <td valign="top" class="style1">
-                        <cfif NOT VAL(qGetCandidates.wat_doc_agreement)><font color="##CC0000">- Agreement</font><br /></cfif>
-                        <cfif NOT VAL(qGetCandidates.wat_doc_college_letter)><font color="##CC0000">- College Letter</font><br /></cfif>
-                        <cfif NOT VAL(qGetCandidates.wat_doc_passport_copy)><font color="##CC0000">- Passport Copy</font><br /></cfif>
-                        <cfif NOT VAL(qGetCandidates.wat_doc_job_offer)><font color="##CC0000">- Job Offer</font><br /></cfif>
-                        <cfif NOT VAL(qGetCandidates.wat_doc_orientation)><font color="##CC0000">- Orientation Sign Off</font><br /></cfif>
-                        <cfif NOT VAL(qGetCandidates.wat_doc_walk_in_agreement) AND qGetCandidates.wat_placement EQ 'Walk-In'><font color="##CC0000">- Walk-In Agreement</font></cfif>
+                    <td valign="top" class="style1" style="color:##CC0000">
+                        <cfif NOT VAL(qGetCandidates.wat_doc_agreement)>- Agreement<br /></cfif>
+                        <cfif NOT VAL(qGetCandidates.wat_doc_walk_in_agreement) AND qGetCandidates.wat_placement EQ 'Walk-In'>- Walk-In Agreement<br /></cfif>
+						<cfif LEN(qGetCandidates.wat_doc_cv) AND qGetCandidates.wat_placement EQ 'CSB-Placement'>- CV<br /></cfif>
+						<cfif NOT VAL(qGetCandidates.wat_doc_passport_copy)>- Passport Copy<br /></cfif>
+                        <cfif NOT VAL(qGetCandidates.wat_doc_orientation)>- Orientation Sign Off<br /></cfif>
+						<cfif NOT VAL(qGetCandidates.wat_doc_signed_assessment)>- Signed English Assessment<br /></cfif>
+                        <cfif NOT VAL(qGetCandidates.wat_doc_college_letter)>- College Letter<br /></cfif>
+						<cfif NOT VAL(qGetCandidates.wat_doc_college_letter_translation)>- College Letter (translation)<br /></cfif>
+                        <cfif NOT VAL(qGetCandidates.wat_doc_job_offer)>- Job Offer<br /></cfif>
+						<cfif NOT VAL(qGetCandidates.wat_doc_job_offer_applicant)>- Job Offer Agreement Applicant<br /></cfif>
+						<cfif NOT VAL(qGetCandidates.wat_doc_job_offer_employer)>- Job Offer Agreement Employer<br /></cfif>
+                        <cfif LEN(qGetCandidates.wat_doc_other)>- #qGetCandidates.wat_doc_other#<br /></cfif>
                     </td>
                     <td valign="top" class="style1">#qGetCandidates.wat_placement#</td>
                 </tr>

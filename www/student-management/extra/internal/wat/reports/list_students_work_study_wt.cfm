@@ -9,16 +9,10 @@
     
 	<cfinclude template="../querys/get_company_short.cfm">
 
-    <cfquery name="qGetProgramList" datasource="MySQL">
-        SELECT 
-        	programID,
-            programName,
-            extra_sponsor
-        FROM 
-        	smg_programs
-        WHERE
-        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-    </cfquery>
+	<cfscript>
+        // Get Program List
+        qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+    </cfscript>
 
     <cfif FORM.submitted>
     

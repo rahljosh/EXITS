@@ -22,15 +22,11 @@
         	businessname
     </cfquery>
 
-    <cfquery name="qGetProgramList" datasource="MySql">
-        SELECT 
-        	programname, 
-            programID
-        FROM 
-        	smg_programs 
-        where 
-        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-    </cfquery>
+    <cfscript>
+		// Get Program List
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+	</cfscript>
+
 <cfif isDefined('form.submitted')>
 	<cfquery name="missingDocs" datasource="mysql">
     SELECT ecpc.candidateid, ecpc.hostcompanyid, ecpc.transNewHousingAddress, ecpc.transNewJobOffer, ecpc.transSevisUpdate,
