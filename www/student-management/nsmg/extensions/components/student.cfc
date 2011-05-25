@@ -714,7 +714,7 @@
 
         <cfscript>
 			// Send out email notification
-			if ( ARGUMENTS.sendEmail ) {
+			if ( ListFind("8,11,13", CLIENT.userType) AND ARGUMENTS.sendEmail ) {
 				emailFlightInformation(
 					studentID=ARGUMENTS.studentID,
 					flightID=ARGUMENTS.flightID
@@ -726,7 +726,7 @@
     
 
 	<!--- DELETE COMPLETE FLIGHT INFORMATION --->
-	<cffunction name="deleteCompleteFlightInformation" access="public" returntype="void" output="false" hint="Deletes Flight Information">
+	<cffunction name="deleteCompleteFlightInformation" access="public" returntype="void" output="false" hint="Deletes Flight Information. Used in the XML tool for INTO">
         <cfargument name="studentID" hint="studentID is required">
         <cfargument name="programID" default="" hint="programID is required">
         <cfargument name="flightType" hint="Arrival/Departure is required">
@@ -1292,11 +1292,11 @@
                             <p style="color: ##333;">
                             
                                 <cfif qGetDeletedFlightInfo.flight_type EQ 'arrival'>
-                                    <p><strong>Arrival information has been deleted</strong></p>
+                                    <p><strong>*** Arrival information has been deleted*** </strong></p>
                                 </cfif>
                     
                                 <cfif qGetDeletedFlightInfo.flight_type EQ 'departure'>
-                                    <p><strong>Departure information has been deleted</strong></p>
+                                    <p><strong>*** Departure information has been deleted*** </strong></p>
                                 </cfif>
                     
                                 <p>
