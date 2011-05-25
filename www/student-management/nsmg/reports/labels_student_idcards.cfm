@@ -13,6 +13,7 @@
 <cfsilent>
 	
     <!--- Param Form Variables --->
+    <cfparam name="URL.studentID" default="0">
     <cfparam name="FORM.date1" default="">
     <cfparam name="FORM.date2" default="">
     <cfparam name="FORM.intRep" default="0">
@@ -52,7 +53,8 @@
             c.zip AS c_zip, 
             c.toll_free as c_tollfree, 
             c.phone as c_phone, 
-            c.iap_auth, c.emergencyPhone, 
+            c.iap_auth, 
+            c.emergencyPhone, 
             c.companyid, 
             c.url_ref,
             r.regionid, 
@@ -79,12 +81,10 @@
         LEFT OUTER JOIN
         	smg_hosts h ON s.hostid = h.hostid			
         WHERE 
-        	<!----s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-        AND ---->
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-       <Cfif isDefined('url.studentid')>
+       <cfif VAL(URL.studentID)>
 			AND 
-            	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
+            	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.studentID#">
        <cfelse>
             AND 
                 s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
@@ -105,11 +105,13 @@
                     s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
             </cfif>
             
-            <cfif FORM.insurance_typeid NEQ 0>
+            <cfif VAL(FORM.insurance_typeid)>
                 AND 
                     u.insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.insurance_typeid#">
             </cfif>	
-       </Cfif>
+            
+       </cfif>
+       
         ORDER BY
             u.businessname, 
             s.firstname,
@@ -122,7 +124,7 @@
         qGetRegion = APPCFC.REGION.getRegions(regionID=qGetStudents.regionassigned);
         qGetRegionGuaranteed = APPCFC.REGION.getRegions(regionID=qGetStudents.regionalguarantee);
     </cfscript>
-
+	
 </cfsilent>
 
 <style>
@@ -233,13 +235,13 @@
             INNER JOIN
                 smg_insurance_codes ic ON ic.insuTypeID =  it.insuTypeID
                     AND
-                        ic.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                        ic.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.companyID)#">
                     AND	
                         ic.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.seasonID)#"> 
                     AND
                         ic.insuTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.insurance_typeID)#">                           
         </cfquery>
-
+        
         <link rel="stylesheet" href="../linked/css/student_profile.css" type="text/css">
         
         <!--- Header --->
