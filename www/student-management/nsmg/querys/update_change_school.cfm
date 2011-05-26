@@ -29,7 +29,9 @@
 					doc_school_accept_date = NULL,
 					doc_school_sign_date = NULL
 					<cfif get_student_info.arearepid NEQ '0' and get_student_info.hostid NEQ '0' and get_student_info.placerepid NEQ '0'>
-                    
+                    <cfif client.usertype eq 5 or client.usertype eq 6 or client.usertype eq 7>
+                    , host_fam_approved = #client.usertype#
+                    </cfif>
 					, date_host_fam_approved = #CreateODBCDateTime(now())#		
 					</cfif>					
 				WHERE studentid = '#get_student_info.studentid#'

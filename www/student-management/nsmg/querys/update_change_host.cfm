@@ -135,7 +135,9 @@
 			welcome_family = '#form.welcome_family#',
 		</cfif>
 		date_host_fam_approved = #CreateODBCDateTime(now())#,
-		host_fam_approved = '7',
+		<cfif client.usertype eq 5 or client.usertype eq 6 or client.usertype eq 7>
+         host_fam_approved = #client.usertype#,
+        </cfif>
 		doubleplace = '0',
 		doc_full_host_app_date = NULL,
 		doc_letter_rec_date = NULL,
