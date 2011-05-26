@@ -372,8 +372,8 @@
 			<table cellpadding="3" width="100%">
 				<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>:: </b></span>Letters</td></tr>
 				<tr><td>: : <a href="" onClick="javascript: win=window.open('reports/acceptance_letter.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Acceptance Letter</a></td></tr>
-				<tr><td>: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?studentID=#uniqueid#');">Placement</a></td></tr>
-                <tr><td>: : <a href="javascript:OpenLetter('reports/labels_student_idcards.cfm?studentid=#studentid#');">Student ID Card</a></td></tr>
+				<tr><td>: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#get_student_info.uniqueid#');">Placement</a></td></tr>
+                <tr><td>: : <a href="javascript:OpenLetter('reports/labels_student_idcards.cfm?uniqueID=#get_student_info.studentid#');">Student ID Card</a></td></tr>
 				<cfif get_student_info.hostid NEQ '0' AND get_student_info.host_fam_approved LTE 4>
 	                <tr>
                     	<td>: : <a href="" onClick="javascript: win=window.open('intrep/int_flight_information_letter.cfm?unqid=#get_student_info.uniqueid#', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a></td>

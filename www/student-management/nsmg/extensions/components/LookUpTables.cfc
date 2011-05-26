@@ -187,7 +187,8 @@
 
 
 	<cffunction name="getInterest" access="public" returntype="query" output="false" hint="Returns a interest or a list of interests">
-    	<cfargument name="interestID" default="0" hint="interestID or a list of interestIDs - Not required">
+    	<cfargument name="interestID" default="" hint="interestID or a list of interestIDs - Not required">
+        <cfargument name="Limit" default="" hint="Total of interests">
 
         <cfquery 
         	name="qGetInterest"
@@ -198,10 +199,16 @@
                     student_app
 				FROM
                 	smg_interests
-				<cfif VAL(ARGUMENTS.interestID)>
+				<cfif LEN(ARGUMENTS.interestID)>
                     WHERE 
                         interestID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.interestID#" list="yes"> )
-                </cfif>                        
+                </cfif> 
+                
+                <cfif LEN(ARGUMENTS.Limit) AND ListFind("1,2,3,4,5,6,7,8,9,10", ARGUMENTS.Limit)>
+                	LIMIT
+                    	#ARGUMENTS.Limit#
+                </cfif>
+                                       
         </cfquery> 
 
 		<cfreturn qGetInterest>

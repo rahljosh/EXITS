@@ -365,7 +365,7 @@
                     <table cellpadding="2" cellspacing="2" border="0" width=100%>
                         <tr>
                             <td valign="top" width="50%">
-                                <span class="profileTitleSection">Regional Contact</span>
+                                <span class="profileTitleSection">REGIONAL CONTACT</span>
                                 
                                 <table cellpadding="2" cellspacing="2" border="0">
                                     <tr>
@@ -427,10 +427,6 @@
                                 
                                 <table cellpadding="2" cellspacing="2" border="0" width="100%">
                                     <tr>
-                                        <!---
-                                        <td>Global Secutive</td>
-                                        <td>&middot;</td>
-										--->
                                         <td>#qGetInsuranceInfo.type#</td>
                                         <td>&middot;</td>
                                         <td>Policy: #qGetInsuranceInfo.policycode#</td>
