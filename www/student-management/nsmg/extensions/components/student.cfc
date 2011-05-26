@@ -1487,7 +1487,7 @@
 			if ( IsDate(setDeadline) ) {
 				
 				// Get Host Family Information
-				qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=VAL(qCheckPlacementPaperwork.hostID));
+				qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qCheckPlacementPaperwork.hostID);
 	
 				// Check if there is a host father
 				if ( LEN(qGetHostInfo.fatherFirstName) ) {

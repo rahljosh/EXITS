@@ -143,8 +143,6 @@
                 	<strong>unplaced</strong>
 				</cfif> in report: &nbsp; 
 			</p> 
-            
-			<cfif FORM.preayp NEQ 'none'>Pre-AYP #FORM.preayp# camp students</cfif>
     	</td>
 	</tr>
 </table><br />
