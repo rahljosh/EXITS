@@ -36,10 +36,10 @@
         if ( FORM.flightType EQ 'Departure' ) {
             vColorTitle = 'FDCEAC';
             vColorRow = 'FEE6D3';
-        } else if ( FORM.flightType EQ 'preAypArrival' )
+        } else if ( FORM.flightType EQ 'preAypArrival' ) {
             vColorTitle = 'A0D69A';
             vColorRow = 'DDF0DD';
-		else {
+		} else {
             vColorTitle = 'ACB9CD';
             vColorRow = 'D5DCE5';
         }
@@ -73,14 +73,6 @@
             smg_students s
         INNER JOIN 
             smg_users u ON s.intrep = u.userid
-        INNER JOIN
-        	smg_flight_info fi ON fi.studentID AND s.studentID 
-				AND
-                	fi.programID = s.programID                     
-            	AND 
-                	fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.flightType#">
-                AND
-                	fi.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         WHERE
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
         AND 
@@ -98,6 +90,22 @@
                 AND
                     s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
             </cfif>
+		
+        AND	
+        	s.studentID IN (
+                                SELECT
+                                    studentID
+                                FROM
+                                    smg_flight_info fi
+                                WHERE
+                                    fi.studentID = s.studentID             
+                                AND
+                                    fi.programID = s.programID                     
+                                AND 
+                                    fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.flightType#">
+                                AND
+                                    fi.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+							)
             
         ORDER BY 
             u.businessName,
@@ -193,10 +201,10 @@
                     <td width="35%">#qGetResults.firstName# #qGetResults.familyLastName# (###qGetResults.studentID#)</td> 
                     <td width="35%">#qGetResults.businessName# (###qGetResults.userID#)</td>  
                     <td width="30%">
-                    	<cfif FORM.flightType EQ 'departure'>
+                        <cfif FORM.flightType EQ 'departure'>
                             School End Date: <cfif LEN(qGetSchoolDates.endDate)>#qGetSchoolDates.endDate# <cfelse> n/a </cfif>
                         <cfelse>
-	                        School Start Date: <cfif LEN(qGetSchoolDates.startDate)>#qGetSchoolDates.startDate# <cfelse> n/a </cfif>
+                            School Start Date: <cfif LEN(qGetSchoolDates.startDate)>#qGetSchoolDates.startDate# <cfelse> n/a </cfif>
                         </cfif>
                     </td>               
                 </tr>
@@ -230,7 +238,7 @@
             </table>
     
             <br />
-                    
+             
         </cfloop>
 
 	</cfoutput>
