@@ -47,6 +47,8 @@
 		LEFT OUTER JOIN
         	smg_flight_info preAYPArrival ON preAYPArrival.studentID = s.studentID
                 AND
+                	preAYPArrival.programID = s.programID
+                AND
                     preAYPArrival.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAYPArrival"> 
                 AND 
                     preAYPArrival.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
@@ -54,6 +56,8 @@
                     preAYPArrival.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
 		LEFT OUTER JOIN
         	smg_flight_info regularArrival ON regularArrival.studentID = s.studentID
+                AND
+                	regularArrival.programID = s.programID
                 AND
                     regularArrival.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
                 AND 
@@ -96,6 +100,8 @@
                                             smg_flight_info 
                                         WHERE 
                                             flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
+                                        AND
+                                            programID = s.programID
                                         AND 
                                             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
                                         AND 
@@ -112,6 +118,8 @@
                                                 smg_flight_info 
                                             WHERE 
                                                 flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAYPArrival"> 
+                                            AND
+                                                programID = s.programID
                                             AND 
                                                 isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
                                             AND 
@@ -185,6 +193,8 @@
                                     	smg_flight_info 
                                     WHERE 
                                     	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                                    AND
+                                        programID = s.programID
                                     AND 
                                     	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                                     AND 
