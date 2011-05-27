@@ -476,7 +476,7 @@
 				<!----All Users---->				
 				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(getVirtualFolder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>		
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qGetStudentInfo.studentID#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
-                <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModal">Flight Information</a>
+                <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
 				<a href="" onClick="javascript: win=window.open('forms/double_place_docs.cfm', 'Settings', 'height=380, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Double Place Docs</a>
                 <a href="" onClick="javascript: win=window.open('tours/trips.cfm', 'Settings', 'height=450, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Trips</a>
 				
@@ -900,7 +900,7 @@
 				</tr>
 				<tr>
 					<td>: : <a href="javascript:OpenLetter('reports/school_relocation_letter.cfm');">School Relocation</a></td>
-					<td>: : <a href="student/index.cfm?action=printFlightInformation&uniqueID=#qGetStudentInfo.uniqueID#">Flight Information</a></td>
+					<td>: : <a href="student/index.cfm?action=printFlightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#">Flight Information</a></td>
 				</tr>				
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_student_orientation.cfm');">Student Orient. Sign Off</a></td>
@@ -934,7 +934,7 @@
 			<cfif CLIENT.usertype GTE '5' AND CLIENT.usertype LTE '7'>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&profileType=web');">Placement</a></td>
-					<td width="50%">: :<a href="student/index.cfm?action=printFlightInformation&uniqueID=#qGetStudentInfo.uniqueID#">Flight Information</a></td>
+					<td width="50%">: :<a href="student/index.cfm?action=printFlightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#">Flight Information</a></td>
 				</tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/host_thank_you_letter.cfm');">Family Thank You</a></td>

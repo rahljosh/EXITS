@@ -189,7 +189,7 @@ window.location.href = URL;
 <!--- EVERYBODY SEES IT --->
 <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for All Users</td></tr>
 <tr>
-	<td><a href="?curdoc=reports/manager_reports">Flight Information Report</a></td>
+	<td><a href="?curdoc=reports/flightInfoMenu">Flight Information Report</a></td>
 	<td><a href="?curdoc=project_help/report">H.E.L.P. Community Service Hours Report</a></td>
 </tr>
 

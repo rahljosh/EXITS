@@ -261,10 +261,10 @@
                 
                     <cfscript>
                         // Get Pre-AYP Arrival Flight Information
-                        qGetPreAypArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="preAYPArrival",flightLegOption="lastLeg");
+                        qGetPreAypArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="preAYPArrival", programID=qGetStudentList.programID, flightLegOption="lastLeg");
                 
                         // Get Arrival to Host Flight Information
-                        qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="arrival",flightLegOption="firstLeg");
+                        qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="arrival", programID=qGetStudentList.programID, flightLegOption="firstLeg");
                     </cfscript>
                 
                     <tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("FFFFFF") ,DE("EDEDED") )#">

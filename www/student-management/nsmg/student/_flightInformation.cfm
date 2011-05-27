@@ -374,31 +374,16 @@
 	<!--- END OF FORM.subAction --->
 
     <cfscript>
-		// Public School
-		if ( NOT VAL(qGetPHPStudentInfo.recordCount) ) {
+		// Get Flight According to Program
 		
-			// Get Pre-AYP Arrival
-			qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="preAYPArrival");
-	
-			// Get Arrival
-			qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="arrival");
-	
-			// Get Departure
-			qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), flightType="departure");
-		
-		// PHP - Get Flight According to Program
-		} else {
-			
-			// Get Pre-AYP Arrival
-			qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(qGetStudentInfo.programID), flightType="preAYPArrival");
-	
-			// Get Arrival
-			qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(qGetStudentInfo.programID), flightType="arrival");
-	
-			// Get Departure
-			qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(qGetStudentInfo.programID), flightType="departure");
+		// Get Pre-AYP Arrival
+		qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=qGetStudentInfo.programID, flightType="preAYPArrival");
 
-		}
+		// Get Arrival
+		qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=qGetStudentInfo.programID, flightType="arrival");
+
+		// Get Departure
+		qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=qGetStudentInfo.programID, flightType="departure");
 	</cfscript>
 
 </cfsilent>
@@ -744,7 +729,7 @@
                     
                     <!--- N O T E S --->            
                     <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
-                        <th bgcolor="##ACB9CD"> N O T E S &nbsp; O N &nbsp; T H I S &nbsp; F L I G H T &nbsp; I N F O R M A T I O N </tr>
+                        <th bgcolor="##ACB9CD"> N O T E S &nbsp; O N &nbsp; T H I S &nbsp; F L I G H T &nbsp; I N F O R M A T I O N </th>
                         <tr bgcolor="##D5DCE5">
                             <td align="center"><textarea cols="75" rows="3" name="flightNotes" wrap="VIRTUAL">#qGetStudentInfo.flight_info_notes#</textarea></td>
                         </tr>
@@ -841,7 +826,9 @@
                         </cfif>
                        
                     </table>
-                    
+
+                   	</form>
+                   
                 </td>
             </tr>
         </table> <!--- end of main table --->
@@ -864,7 +851,5 @@
     <gui:pageFooter
         footerType="application"
     />
-
-</form>
 
 </cfoutput>

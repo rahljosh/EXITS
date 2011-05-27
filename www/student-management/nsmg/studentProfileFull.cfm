@@ -228,7 +228,7 @@ Order by birthdate
 					Parents Letter n/a
 				</cfif>
 				&nbsp - &nbsp 
-				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#">Flight Information</a>
+				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#&programID=#qGetStudentInfo.programID#">Flight Information</a>
 			</td></tr>
 	</table>
 </table>

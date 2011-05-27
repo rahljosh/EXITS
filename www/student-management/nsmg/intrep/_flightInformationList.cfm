@@ -426,7 +426,7 @@
                         </td>
                         <td style="font-weight:bold;">
                             <cfif VAL(qStudentsMissingArrival.aypEnglish) AND NOT LEN(qStudentsMissingArrival.preAYPFlightID)>
-                                <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival.uniqueID#" class="jQueryModal">
+                                <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival.uniqueID#&programID=#qStudentsMissingArrival.programID#" class="jQueryModal">
                                     [ Submit Pre-AYP Arrival ] 
                                 </a>
                             </cfif>
@@ -436,7 +436,7 @@
                             </cfif>
                             
                             <cfif NOT LEN(qStudentsMissingArrival.flightID)>
-                                <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival.uniqueID#" class="jQueryModal">
+                                <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival.uniqueID#&programID=#qStudentsMissingArrival.programID#" class="jQueryModal">
                                     [ Submit Arrival ]
                                 </a>
                             </cfif>
