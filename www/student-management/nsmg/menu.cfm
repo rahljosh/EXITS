@@ -64,6 +64,13 @@
             
                 <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
                 
+                <li>
+                	<a href="index.cfm?curdoc=reports/flightInfoMenu">Reports</a>
+                	<ul>
+                    	<li><a href="index.cfm?curdoc=reports/flightInfoMenu">Flight Information Report</a></li> 
+					</ul>                        
+                </li>
+                
                 <li><a href="index.cfm?curdoc=helpdesk/help_desk_list">Support</a></li>
                 
                 <!--- Case Store --->

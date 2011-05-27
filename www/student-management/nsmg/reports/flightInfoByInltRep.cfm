@@ -36,7 +36,10 @@
         if ( FORM.flightType EQ 'Departure' ) {
             vColorTitle = 'FDCEAC';
             vColorRow = 'FEE6D3';
-        } else {
+        } else if ( FORM.flightType EQ 'preAypArrival' )
+            vColorTitle = 'A0D69A';
+            vColorRow = 'DDF0DD';
+		else {
             vColorTitle = 'ACB9CD';
             vColorRow = 'D5DCE5';
         }
