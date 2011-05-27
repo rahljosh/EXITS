@@ -224,7 +224,7 @@ where id = #url.id#
 					Parents Letter n/a
 				</cfif>
 				&nbsp - &nbsp 
-				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#">Flight Information</a>
+				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#&programID=#get_student_info.programID#">Flight Information</a>
 			</td></tr>
 	</table>
 	---->

@@ -341,7 +341,7 @@
 			<td>&nbsp;</td>
 		<cfelse>
 			<td><cfinput type="checkbox" name="flight_info" checked="yes"></td>
-			<td>Flight Information &nbsp; <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_info.uniqueID#" class="jQueryModal">See Flight</a></td>
+			<td>Flight Information &nbsp; <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_info.uniqueID#&programID=#get_student_info.programID#" class="jQueryModal">See Flight</a></td>
 			<td></td>
 			<td>&nbsp;</td>
 		</cfif>

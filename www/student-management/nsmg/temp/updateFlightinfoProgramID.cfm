@@ -35,8 +35,6 @@
         	f.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">            
 		AND
         	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes"> )  
-        AND
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		LIMIT 
         	10000                      
     </cfquery>
@@ -62,8 +60,6 @@
         	f.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">            
 		AND
         	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes"> )   
-        AND
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		LIMIT 
         	10000                                           
     </cfquery>
@@ -89,8 +85,6 @@
 	        f.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">               
 		AND
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6"> 
-        AND
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		LIMIT 
         	10000                      
     </cfquery>
@@ -116,8 +110,6 @@
 	        f.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">               
 		AND
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">   
-        AND
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         LIMIT 
         	10000                      
     </cfquery>
@@ -129,7 +121,7 @@
 	<!--- ISE Arrival --->
     <cfloop query="qGetISEArrival">
         
-        <cfif qGetISEArrival.dep_date GT DateAdd("d", -60, qGetISEArrival.startDate) AND qGetISEArrival.dep_date LT DateAdd("d", 60, qGetISEArrival.endDate)>
+        <cfif qGetISEArrival.dep_date GT DateAdd("d", -180, qGetISEArrival.startDate) AND qGetISEArrival.dep_date LT DateAdd("d", 180, qGetISEArrival.endDate)>
         
             <cfquery datasource="mySQL">
                 UPDATE
@@ -143,7 +135,7 @@
         <cfelse>
             
             <p>
-                ISE | StudentID: #qGetISEArrival.studentID# | Arrival: #qGetISEArrival.dep_date# | Program Start: #DateAdd("d", -60, qGetISEArrival.startDate)# | Program End: #DateAdd("d", 60, qGetISEArrival.endDate)#
+                ISE | StudentID: #qGetISEArrival.studentID# | Arrival: #DateFormat(qGetISEArrival.dep_date, 'mm/dd/yy')# | Program Start: #DateFormat(qGetISEArrival.startDate, 'mm/dd/yy')# | Program End: #DateFormat(qGetISEArrival.endDate, 'mm/dd/yy')#
             </p>
             
         </cfif>
@@ -153,7 +145,7 @@
     <!--- ISE Departure --->
     <cfloop query="qGetISEDeparture">
         
-        <cfif qGetISEDeparture.dep_date GT DateAdd("d", -60, qGetISEDeparture.startDate) AND qGetISEDeparture.dep_date LT DateAdd("d", 60, qGetISEDeparture.endDate)>
+        <cfif qGetISEDeparture.dep_date GT DateAdd("d", -180, qGetISEDeparture.startDate) AND qGetISEDeparture.dep_date LT DateAdd("d", 180, qGetISEDeparture.endDate)>
         
             <cfquery datasource="mySQL">
                 UPDATE
@@ -167,7 +159,7 @@
         <cfelse>
             
             <p>
-                ISE | StudentID: #qGetISEDeparture.studentID# | Departure: #qGetISEDeparture.dep_date# | Program Start: #DateAdd("d", -60, qGetISEDeparture.startDate)# | Program End: #DateAdd("d", 60, qGetISEDeparture.endDate)#
+                ISE | StudentID: #qGetISEDeparture.studentID# | Departure: #DateFormat(qGetISEDeparture.dep_date, 'mm/dd/yy')# | Program Start: #DateFormat(qGetISEDeparture.startDate, 'mm/dd/yy')# | Program End: #DateFormat(qGetISEDeparture.endDate, 'mm/dd/yy')#
             </p>
             
         </cfif>
@@ -178,7 +170,7 @@
 	<!--- PHP Arrival --->
     <cfloop query="qGetPHPArrival">
         
-        <cfif qGetPHPArrival.dep_date GT DateAdd("d", -60, qGetPHPArrival.startDate) AND qGetPHPArrival.dep_date LT DateAdd("d", 60, qGetPHPArrival.endDate)>
+        <cfif qGetPHPArrival.dep_date GT DateAdd("d", -180, qGetPHPArrival.startDate) AND qGetPHPArrival.dep_date LT DateAdd("d", 180, qGetPHPArrival.endDate)>
         
             <cfquery datasource="mySQL">
                 UPDATE
@@ -192,7 +184,7 @@
         <cfelse>
             
             <p>
-                PHP | StudentID: #qGetPHPArrival.studentID# | Arrival: #qGetPHPArrival.dep_date# | Program Start: #DateAdd("d", -60, qGetPHPArrival.startDate)# | Program End: #DateAdd("d", 60, qGetPHPArrival.endDate)#
+                PHP | StudentID: #qGetPHPArrival.studentID# | Arrival: #DateFormat(qGetPHPArrival.dep_date, 'mm/dd/yy')# | Program Start: #DateFormat(qGetPHPArrival.startDate, 'mm/dd/yy')# | Program End: #DateFormat(qGetPHPArrival.endDate, 'mm/dd/yy')#
             </p>
             
         </cfif>
@@ -202,7 +194,7 @@
     <!--- PHP Departure --->
     <cfloop query="qGetPHPDeparture">
         
-        <cfif qGetPHPDeparture.dep_date GT DateAdd("d", -60, qGetPHPDeparture.startDate) AND qGetPHPDeparture.dep_date LT DateAdd("d", 60, qGetPHPDeparture.endDate)>
+        <cfif qGetPHPDeparture.dep_date GT DateAdd("d", -180, qGetPHPDeparture.startDate) AND qGetPHPDeparture.dep_date LT DateAdd("d", 180, qGetPHPDeparture.endDate)>
         
             <cfquery datasource="mySQL">
                 UPDATE
@@ -216,7 +208,7 @@
         <cfelse>
             
             <p>
-                PHP | StudentID: #qGetPHPDeparture.studentID# | Departure: #qGetPHPDeparture.dep_date# | Program Start: #DateAdd("d", -60, qGetPHPDeparture.startDate)# | Program End: #DateAdd("d", 60, qGetPHPDeparture.endDate)#
+                PHP | StudentID: #qGetPHPDeparture.studentID# | Departure: #DateFormat(qGetPHPDeparture.dep_date, 'mm/dd/yy')# | Program Start: #DateFormat(qGetPHPDeparture.startDate, 'mm/dd/yy')# | Program End: #DateFormat(qGetPHPDeparture.endDate, 'mm/dd/yy')#
             </p>
             
         </cfif>

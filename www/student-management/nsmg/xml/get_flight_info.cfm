@@ -71,7 +71,7 @@
                 
         <cfif VAL(FORM.displayResults)>
             &nbsp; #i# 
-            <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModal">
+            <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">
             	#FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentID#
             </a> 
             - #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# ###qGetStudentInfo.studentID#
@@ -256,17 +256,19 @@
 	
     <cfquery name="getFlightByBatchID" datasource="mysql">
         SELECT DISTINCT 
-        	flight.studentid, 
-            smg_students.soid
+        	s.studentid, 
+            s.soid,
+            s.programID
         FROM
-	        smg_flight_info flight
-        LEFT OUTER JOIN
-        	smg_students on smg_students.studentid = flight.studentid
+	        smg_students s
+        INNER JOIN
+        	 smg_flight_info f ON s.studentid = f.studentid
         WHERE
-        	flight.batchid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#setBatchID#">
+        	f.batchid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#setBatchID#">
 		AND 
-        	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">            
-        limit 50
+        	f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">            
+        LIMIT 
+        	50
     </cfquery>
     
     <!---- Create an XML document object containing the data ---->
@@ -277,10 +279,10 @@
             <cfloop query="getFlightByBatchID">
                 <cfscript>
                     // Get Arrival Information
-                    qGetFlightArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=getFlightByBatchID.studentID, flightType='arrival'); 
+                    qGetFlightArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=getFlightByBatchID.studentID, programID=getFlightByBatchID.programID, flightType='arrival'); 
                 
                     // Get Arrival Information
-                    qGetFlightDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=getFlightByBatchID.studentID, flightType='departure'); 
+                    qGetFlightDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=getFlightByBatchID.studentID, programID=getFlightByBatchID.programID, flightType='departure'); 
                 </cfscript>
                 <FlightInfo studentid="#getFlightByBatchID.soid#" so="INTO-DE" ro="SMG" soid="1" roid="1362">
                     <arrival>

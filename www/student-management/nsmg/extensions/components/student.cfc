@@ -434,7 +434,7 @@
 	<cffunction name="getFlightInformation" access="public" returntype="query" output="false" hint="Gets flight information by studentID and type">
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="flightType" hint="PreAypArrival/Arrival/Departure is required">
-        <cfargument name="programID" default="0" hint="programID is not required">
+        <cfargument name="programID" default="" hint="programID is not required">
         <cfargument name="flightLegOption" default="" hint="firstLeg/lastLeg to get first or last leg of the flight">
         
         <cfquery 
@@ -469,9 +469,9 @@
 				AND
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     
-				<cfif VAL(ARGUMENTS.programID)>
+				<cfif LEN(ARGUMENTS.programID)>
                     AND 
-                        programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                        programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
                 </cfif> 
 				
                 <cfswitch expression="#ARGUMENTS.flightLegOption#">
@@ -804,13 +804,13 @@
             qGetDeletedFlightInfo = getFlightInformationByFlightID(flightID=VAL(ARGUMENTS.flightID));
             
             // Get Pre-AYP Arrival
-            qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="PreAYPArrival");
+            qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="PreAYPArrival");
     
             // Get Arrival
-            qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="arrival");
+            qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="arrival");
     
             // Get Departure
-            qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), flightType="departure");
+            qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="departure");
         </cfscript>
 		
         <cfoutput>        
