@@ -20,6 +20,7 @@
     <cfparam name="uniqueID" default="">
     <cfparam name="profileType" default="">
     <cfparam name="URL.studentID" default="0">
+    <cfparam name="URL.print" default="">
 
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
@@ -173,7 +174,7 @@
                     &nbsp; &nbsp; &nbsp;
                     <input type="image" value="close window" src="../pics/close.gif" alt=" Close this Screen " onClick="javascript:window.close()">
                     &nbsp; &nbsp; &nbsp;
-                    <a href="PlacementInfoSheet.cfm?studentid=#uniqueid#&print"><img src="../pics/print.png"  border="0" alt=" Print "></a>
+                    <a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&print=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
                 </td>
             </tr>
             <tr>
@@ -205,7 +206,7 @@
         <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
             <tr>
                 <td width=50%>PRINTED: #DateFormat(now(), 'mmm. d, yyyy')# at #TimeFormat(now(), 'HH:mm')# by #CLIENT.name#</td>
-                <td align="right"><a href="PlacementInfoSheet.cfm?studentid=#uniqueid#&showemail"><img src="../pics/email.gif" border="0" alt=" Email "></a></td>
+                <td align="right"><a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&showemail"><img src="../pics/email.gif" border="0" alt=" Email "></a></td>
             </tr>
         </table>
     </body>
@@ -234,7 +235,7 @@
 
 				<cfif VAL(qGetStudentInfo.doubleplace)>
                     <div class="alert" align="Center">
-                    <h3>Double Placement: Two exchange students will be living with this host family. </h3>
+                    	<h3>Double Placement: Two exchange students will be living with this host family. </h3>
                     </div>
                 </cfif>
                 
@@ -265,8 +266,8 @@
                                     	<td width="100"><span class="title">Host Father:</span></td>
                                         <td width="250">
                                             #qGetHostFamily.fatherfirstname# #qGetHostFamily.fatherlastname#, 
-                                            <cfif VAL(qGetHostFamily.fatherbirth)>
-                                                (#DateDiff('yyyy', CreateDate(qGetHostFamily.fatherbirth,01,01), now())#)
+                                            <cfif IsDate(qGetHostFamily.fatherDOB)>
+                                                (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())#)
                                             </cfif>
                                         </td>
                                     </tr>
@@ -283,8 +284,8 @@
                                     	<td width="100"><span class="title">Host Mother:</span></td>
     	                            	<td width="250">
                                         	#qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#, 
-											<cfif VAL(qGetHostFamily.motherbirth)>
-                                                (#DateDiff('yyyy', CreateDate(qGetHostFamily.motherbirth,01,01), now())#)
+											<cfif IsDate(qGetHostFamily.motherDOB)>
+                                                (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
                                             </cfif>
                                         </td>
 									</tr>
@@ -645,6 +646,8 @@
             <cfdocument filename="#AppPath.temp##CLIENT.studentid#-idCard.pdf" format="PDF" backgroundvisible="yes" overwrite="yes" fontembed="yes" localurl="no">
 
                 <cfscript>
+					// form.pr_id and form.report_mode are required for the progress report in print mode.
+					// form.pdf is used to not display the logo which isn't working on the PDF. 
 					URL.studentID = qGetStudentInfo.studentID;
 					FORM.report_mode = 'print';
 					FORM.pdf = 1;
@@ -678,20 +681,27 @@
     
     <!--- Web Profile --->
     <cfdefaultcase>
+    
 		<!----Include Email Link at top---->
-        <Cfif not isDefined('url.print')>
-			<cfif CLIENT.usertype lte 4>
+        <cfif NOT LEN(URL.print)>
+        
+			<cfif ListFind("1,2,3,4", CLIENT.usertype)>
                 #emailLink#
 			</cfif>
+            
         <cfelse>
+        
             #openPrint#
-        </Cfif>
+            
+        </cfif>
 
 		<!--- Include PIS Template --->
         #PlacementInfo#
-    	<Cfif isDefined ('url.approve')>
+        
+    	<Cfif isDefined('URL.approve')>
 	         #approveLink#
     	</Cfif>
+        
     </cfdefaultcase>
 
 </cfswitch>
