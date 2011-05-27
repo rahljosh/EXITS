@@ -89,12 +89,10 @@
                 </cfif>
 
 				<cfif VAL(ARGUMENTS.dateActive)>
-                	<!---
                     AND
-                    	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-					--->
+                    	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', 6, now())#">
                     AND
-                    	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                    	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -3, now())#">
                 </cfif>
 
 				<cfif VAL(ARGUMENTS.isEndingSoon)>
