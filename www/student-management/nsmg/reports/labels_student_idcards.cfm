@@ -1,19 +1,9 @@
-<!--- Generate Avery Standard 5371 id cars for our students. --->
-<Cfif len(url.studentid) gt 10>
-	<cfquery name="stuid" datasource="mysql">
-    	select studentid
-        from smg_students
-        where uniqueid = '#url.studentid#'
-    </Cfquery>
-    <Cfset url.studentid = #stuid.studentid#>
-    
-</Cfif>
-
 <!--- Kill Extra Output --->
 <cfsilent>
 	
     <!--- Param Form Variables --->
-    <cfparam name="URL.studentID" default="0">
+    <cfparam name="URL.studentID" default="">
+    <cfparam name="URL.uniqueID" default="">
     <cfparam name="FORM.date1" default="">
     <cfparam name="FORM.date2" default="">
     <cfparam name="FORM.intRep" default="0">
@@ -82,10 +72,14 @@
         	smg_hosts h ON s.hostid = h.hostid			
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-       <cfif VAL(URL.studentID)>
+            
+       <cfif LEN(URL.studentID)>
 			AND 
-            	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.studentID#">
-       <cfelse>
+            	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.studentID)#">
+       <cfelseif LEN(URL.uniqueID)>
+			AND 
+            	s.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.uniqueID#">
+	   <cfelse>
             AND 
                 s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
             
