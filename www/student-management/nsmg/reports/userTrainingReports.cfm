@@ -5,7 +5,7 @@
 	Date:		March 22, 2011
 	Desc:		Training Reports
 
-	Updated:	
+	Updated:	05/31/2011 - Adding advisor access
 				
 ----- ------------------------------------------------------------------------- --->
 
@@ -164,7 +164,9 @@
                     // Get Results
                     qGetResults = APPLICATION.CFC.USER.reportTrainingByRegion(
                                         regionID=qGetRegions.regionID,
-                                        trainingID=FORM.trainingID
+                                        trainingID=FORM.trainingID,
+										userID=CLIENT.userID,
+										userType=CLIENT.userType
                                     );
                     
                     // set rowCount to 0 for new region
@@ -176,10 +178,12 @@
                         <td class="top" colspan="3"><strong>Region:</strong> <cfoutput>#qGetRegions.regionname#</td></cfoutput>
                     </tr>
                     <tr bgcolor="#FFFFE6">
-                        <td width="35%" valign="top"><strong>Representative</strong></td>
 						<!--- Only Apply for DOS Certification --->
                         <cfif FORM.trainingID EQ 2>
+                        	<td width="35%" valign="top"><strong>Representative</strong></td>
 	                        <td width="10%" valign="top" align="center"><strong>Status</strong></td>
+                        <cfelse>
+                        	<td width="45%" valign="top"><strong>Representative</strong></td>
 						</cfif>                        
                         <td width="55%" valign="top"><strong>Training Information</strong></td>
                     </tr>
@@ -194,11 +198,11 @@
                                 
                     <table class="report" align="center">
                         <tr bgcolor="#iif(rowCount MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                            <td width="35%" valign="top">
-                                #qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)
-                            </td>
 							<!--- Only Apply for DOS Certification --->
                             <cfif FORM.trainingID EQ 2>
+                                <td width="35%" valign="top">
+                                    #qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)
+                                </td>
                                 <td width="10%" valign="top" align="center"> 
                                     <cfif LEN(qGetResults.date_trained) AND NOT VAL(qGetResults.has_passed)>
                                         <span style="color:##F00;">Failed</span>
@@ -210,7 +214,11 @@
                                     	<span style="color:##F00;">Missing</span>
                                     </cfif>                                    
                                 </td>
-							</cfif>                               
+							<cfelse>
+                                <td width="45%" valign="top">
+                                    #qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)
+                                </td>
+							</cfif> 
                             <td width="55%" valign="top"> 
                             <cfoutput>                        
                                 <cfif LEN(qGetResults.date_trained)>
@@ -261,7 +269,9 @@
                     // Get Results
                     qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(
 									  regionID=qGetRegions.regionID,
-									  trainingID=FORM.trainingID
+									  trainingID=FORM.trainingID,
+									  userID=CLIENT.userID,
+									  userType=CLIENT.userType
 								  );
                     
                     // set rowCount to 0 for new region

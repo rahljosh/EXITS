@@ -485,7 +485,9 @@
 	<cffunction name="reportTrainingByRegion" access="public" returntype="query" output="false" hint="Gets a list of training records by region">
     	<cfargument name="regionID" default="" hint="List of region IDs">
         <cfargument name="trainingID" default="0" hint="Training ID is not required">
-              
+        <cfargument name="userID" default="" hint="userID is not required">
+        <cfargument name="userType" default="" hint="userType is not required">
+        
         <cfquery 
 			name="qReportTrainingByRegion" 
 			datasource="#APPLICATION.dsn#">
@@ -503,9 +505,15 @@
                     smg_users u
                 INNER JOIN 
                     user_access_rights uar ON uar.userID = u.userID 
-                        <cfif LEN(ARGUMENTS.regionID) AND ARGUMENTS.regionID NEQ 0>
+                        <cfif VAL(ARGUMENTS.regionID)>
                             AND 
                                 uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
+						</cfif>
+                        
+                        <!--- Advisor --->
+                        <cfif ARGUMENTS.userType EQ 6 AND VAL(ARGUMENTS.userID)>
+                            AND 
+                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
 						</cfif>
                 INNER JOIN
                 	smg_regions r ON r.regionID = uar.regionID   
@@ -542,10 +550,16 @@
                         smg_users u
                     INNER JOIN 
                         user_access_rights uar ON uar.userID = u.userID 
-                            <cfif LEN(ARGUMENTS.regionID) AND ARGUMENTS.regionID NEQ 0>
-                                AND 
-                                    uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
-							</cfif>                                    
+                        <cfif VAL(ARGUMENTS.regionID)>
+                            AND 
+                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
+						</cfif>
+                        
+                        <!--- Advisor --->
+                        <cfif ARGUMENTS.userType EQ 6 AND VAL(ARGUMENTS.userID)>
+                            AND 
+                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+						</cfif>
                     INNER JOIN
                         smg_regions r ON r.regionID = uar.regionID   
                     LEFT OUTER JOIN
@@ -574,7 +588,9 @@
 	<cffunction name="reportTrainingNonCompliance" access="public" returntype="query" output="false" hint="Gets a list of missing/expired training records by region">
     	<cfargument name="regionID" default="" hint="List of region IDs">
         <cfargument name="trainingID" default="0" hint="Training ID is not required">
-              
+        <cfargument name="userID" default="" hint="userID is not required">
+        <cfargument name="userType" default="" hint="userType is not required">
+
         <cfquery 
 			name="qReportTrainingNonCompliance" 
 			datasource="#APPLICATION.dsn#">
@@ -593,10 +609,16 @@
                     smg_users u
                 INNER JOIN 
                     user_access_rights uar ON uar.userID = u.userID 
-                        <cfif LEN(ARGUMENTS.regionID) AND ARGUMENTS.regionID NEQ 0>
+                        <cfif VAL(ARGUMENTS.regionID)>
                             AND 
                                 uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
-						</cfif>                                
+						</cfif>
+                        
+                        <!--- Advisor --->
+                        <cfif ARGUMENTS.userType EQ 6 AND VAL(ARGUMENTS.userID)>
+                            AND 
+                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+						</cfif>
                 INNER JOIN
                     smg_regions r ON r.regionID = uar.regionID   
                 LEFT OUTER JOIN
