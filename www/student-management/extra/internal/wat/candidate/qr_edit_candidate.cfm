@@ -24,6 +24,7 @@
 <cfparam name="FORM.EIN" default="">
 <cfparam name="FORM.selfWorkmanCompensation" default="">
 <cfparam name="FORM.selfConfirmationDate" default="">
+<cfparam name="FORM.selfFindJobOffer" default="">
 <cfparam name="FORM.selfConfirmationNotes" default="">
 <!--- Transfer ---->
 <cfparam name="FORM.transfer" default="0">
@@ -172,6 +173,7 @@
                 selfAuthentication,
                 selfWorkmenCompensation,
                 selfConfirmationDate,
+                selfFindJobOffer,
                 selfConfirmationNotes,
                 transNewHousingAddress,
                 transNewJobOffer,
@@ -193,6 +195,7 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#" null="#NOT IsBoolean(FORM.selfWorkmenCompensation)#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transHousingAddress#">,
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transJobOffer#">,
@@ -217,6 +220,7 @@
                 selfAuthentication = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
                 selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#" null="#NOT IsBoolean(FORM.selfWorkmenCompensation)#">,
                 selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
+                selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,     
                 selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,                
                 transNewHousingAddress = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transHousingAddress#">,
                 transNewJobOffer = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transJobOffer#">,

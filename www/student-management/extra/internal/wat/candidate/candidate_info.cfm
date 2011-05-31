@@ -157,6 +157,7 @@
             ecpc.selfAuthentication,
             ecpc.selfWorkmenCompensation,
             ecpc.selfConfirmationDate,
+            ecpc.selfFindJobOffer,
             ecpc.selfConfirmationNotes,
             ecpc.transNewHousingAddress,
             ecpc.transNewJobOffer,
@@ -786,8 +787,8 @@
                                                 <input type="checkbox" name="wat_doc_signed_assessment" id="wat_doc_signed_assessment" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_signed_assessment)> checked </cfif> >
                                                 <label for="wat_doc_signed_assessment">Signed English Assessment</label>
                                             </td>
-                                            <td>
-                                            	&nbsp;
+                                            <td>&nbsp;
+                                            	
                                             </td>
                                         </tr>
                                         <tr>
@@ -1069,6 +1070,22 @@
                                                         <option value="0" <cfif qCandidatePlaceCompany.selfWorkmenCompensation EQ 0>selected</cfif> >No</option>
                                                         <option value="1" <cfif qCandidatePlaceCompany.selfWorkmenCompensation EQ 1>selected</cfif> >Yes</option>                                                    
                                                         <option value="2" <cfif qCandidatePlaceCompany.selfWorkmenCompensation EQ 2>selected</cfif> >N/A</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr class="hiddenField selfPlacementInfo">
+                                                <td class="style1" align="right"><strong>Job Found:</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly">
+                                                        #qCandidatePlaceCompany.selfFindJobOffer#
+                                                    </span>
+                                                    <select name="selfFindJobOffer" id="selfFindJobOffer" class="style1 editPage selfPlacementField"> 
+                                                        <option value="" <cfif NOT LEN(qCandidatePlaceCompany.selfFindJobOffer)>selected</cfif> ></option>
+                                                        <option value="International Representative" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'International Representative'>selected</cfif> >International Representative</option>
+                                                        <option value="Employment Agency" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Employment Agency'>selected</cfif> >Employment Agency</option>                                                    
+                                                        <option value="Directly with the Employer" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Directly with the Employer'>selected</cfif> >Directly with the Employer</option>
+                                                        <option value="Internet" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Internet'>selected</cfif> >Internet</option>
+                                                        <option value="Other" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Other'>selected</cfif> >Other</option>
                                                     </select>
                                                 </td>
                                             </tr>
