@@ -362,7 +362,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
             </tr>
         </cfif>
                   
-        <cfif qGetStudentInfo.privateschool>
+        <cfif VAL(qGetStudentInfo.privateschool)>
             <tr>
                 <td colspan="4"><span class="title">Private HS:</span>The Student Accepts Private HS #qPrivateSchool.privateschoolprice#.</td>
             </tr>

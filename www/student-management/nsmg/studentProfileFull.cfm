@@ -228,7 +228,7 @@ Order by birthdate
 					Parents Letter n/a
 				</cfif>
 				&nbsp - &nbsp 
-				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#&programID=#qGetStudentInfo.programID#">Flight Information</a>
+				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#&programID=#get_student_info.programID#">Flight Information</a>
 			</td></tr>
 	</table>
 </table>
@@ -350,7 +350,7 @@ Order by birthdate
 			<tr><td> </td></tr>
 			<tr><td> </td></tr>	
 		</cfif>
-		<cfif get_student_info.privateschool is 0><cfelse>
+		<cfif VAL(get_student_info.privateschool)>
 			<cfquery name="private_schools" datasource="MySQL">
 				SELECT *
 				FROM smg_private_schools
