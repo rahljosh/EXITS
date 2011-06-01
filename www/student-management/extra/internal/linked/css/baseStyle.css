@@ -113,6 +113,8 @@
 ********************************************/
 .editPage { 
 	display:none;
+	font-size: 10px; 	
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .hiddenField { 

@@ -471,6 +471,11 @@
 		if ( $("#hostCompanyID").val() == 0 ) {
 			readOnlyEditPage();
 		}
+
+		<cfif SESSION.formErrors.length()>
+			// There are errors / display edit page
+			readOnlyEditPage();
+		</cfif>
 	});
 	
 	var jsCopyAddress = function () {
