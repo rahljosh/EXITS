@@ -25,6 +25,20 @@ var startApplicationType = function(selectedType) {
 
 }
 
+// Hide Display Fields on Edit Pages
+function readOnlyEditPage() {
+	if( $(".readOnly").css("display") == "none" ) {			
+		// Hide editPage and display readOnly
+		$(".editPage").fadeOut("fast");
+		$(".readOnly").fadeIn("fast");
+		$(".formField").attr("disabled","disabled");
+	} else {
+		// Hide readOnly and display editPage
+		$(".readOnly").fadeOut("fast");
+		$(".editPage").fadeIn("fast");	
+		$(".formField").removeAttr("disabled");
+	}
+}
 
 function getCurrentDate() {
 	var myDate = new Date();

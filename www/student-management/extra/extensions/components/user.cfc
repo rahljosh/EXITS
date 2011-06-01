@@ -181,7 +181,7 @@
                 FROM 
                     smg_users
                 WHERE	
-                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
 		</cfquery>
 		   
 		<cfreturn qGetUserByID>
@@ -198,8 +198,13 @@
 					*
                 FROM 
                     smg_users
-                WHERE	
-                    uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+				<cfif LEN(ARGUMENTS.uniqueID)>                    
+                    WHERE
+                        uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                <cfelse>
+                    WHERE
+                        1 != 1
+                </cfif> 
 		</cfquery>
 		   
 		<cfreturn qGetUserByUniqueID>

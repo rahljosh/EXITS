@@ -199,16 +199,9 @@
     
 </cfsilent>
 
-<style type="text/css">
-<!-- 
-	.editPage { display:none;}
--->
-</style>
-
 <script type='text/javaScript'>
 	$(document).ready(function() {
 		$(".formField").attr("disabled","disabled");
-		$(".dp-choose-date").fadeOut("fast");
 		displaySelfPlacementInfo();
 	});
 
@@ -227,21 +220,6 @@
 		}
 	}
 	
-	function readOnlyEditPage() {
-		if( $(".readOnly").css("display") == "none" ) {			
-			// Hide editPage and display readOnly
-			$(".editPage").fadeOut("fast");
-			$(".readOnly").fadeIn("fast");
-			$(".formField").attr("disabled","disabled");
-		} else {
-			// Hide readOnly and display editPage
-			$(".readOnly").fadeOut("fast");
-			$(".editPage").fadeIn("fast");	
-			$(".formField").removeAttr("disabled");
-			$(".dp-choose-date").fadeIn("fast");
-		}
-	}
-
 	function displayCancelation(selectedValue) {
 		if (selectedValue == 'canceled') {
 			$("#divCancelation").slideDown(1000);

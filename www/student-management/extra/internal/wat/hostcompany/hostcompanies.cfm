@@ -79,7 +79,7 @@
   <tr>
     <td bordercolor="##FFFFFF">
 
-		<table width=95% cellpadding=0 cellspacing=0 border=0 align="center">
+		<table width="95%" cellpadding="0" cellspacing="0" border=0 align="center">
 			<tr valign=middle height=24>
 				<td width="57%" valign="middle" bgcolor="##E4E4E4" class="title1">&nbsp;Host Companies</td>
 				<td width="42%" align="right" valign="top" bgcolor="##E4E4E4" class="style1">#qGetHostCompanies.recordcount# host companies found</td>
@@ -87,15 +87,15 @@
 			</tr>
 		</table>
 
-        <cfif VAL(CLIENT.userType) LTE 4>
-            <br />
-            <div align="center">
-                <a href="index.cfm?curdoc=hostcompany/hostCompanyInfo"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a></div>
+        <cfif ListFind("1,2,3,4", CLIENT.userType)>
+            <div align="center" style="margin-top:10px;">
+                <a href="index.cfm?curdoc=hostcompany/hostCompanyInfo"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a>
             </div>
 		</cfif>
+        
 		<br />
 
-		<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=95%>
+		<table border=0 cellpadding=4 cellspacing="0" class="section" align="center" width="95%">
 			<tr bgcolor="##4F8EA4" >
 				<th width="5%" align="left"><a href="?curdoc=hostcompany/hostcompanies&orderBy=hostCompanyID" class="style2">ID</a></th>
 				<th width="25%" align="left"><a href="?curdoc=hostcompany/hostcompanies&orderBy=name" class="style2">Company Name</a></th>
@@ -129,13 +129,11 @@
                 </tr>
             </cfif>
 		</table>
-	        
-        <br><br>
 
-        <cfif VAL(CLIENT.userType) LTE 4>
-            <div align="center">
-                <a href="index.cfm?curdoc=hostcompany/hostCompanyInfo"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a></div>
-            </div> <br>
+        <cfif ListFind("1,2,3,4", CLIENT.userType)>
+            <div align="center" style="margin-top:10px; margin-bottom:10px;">
+                <a href="index.cfm?curdoc=hostcompany/hostCompanyInfo"><img src="../pics/add-company.gif" border="0" align="middle" alt="Add a Host Company"></img></a>
+            </div>
 		</cfif>
         
 	</td>

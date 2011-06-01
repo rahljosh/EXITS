@@ -461,35 +461,18 @@
 
 <script language="JavaScript"> 
 	$(document).ready(function() {
-		$(".formField").attr("disabled","disabled");
+		// $(".formField").attr("disabled","disabled");
 		
 		showHideBusinessTypeOther();
 		displayHousingInfo();
 		displayPickUpInfo();
 		
-		// Get Host Company Value
-		hostCompanyID = $("#hostCompanyID").val();
-		// Set page to add/edit mode
-		if ( hostCompanyID == 0 ) {
+		// Get Host Company Value // If 0, we are inserting a new host company // Set page to add/edit mode
+		if ( $("#hostCompanyID").val() == 0 ) {
 			readOnlyEditPage();
 		}
 	});
 	
-	var readOnlyEditPage = function() { 
-		if( $(".readOnly").css("display") == "none" ) {			
-			// Hide editPage and display readOnly
-			$(".editPage").fadeOut("fast");
-			$(".readOnly").fadeIn("fast");
-			$(".formField").attr("disabled","disabled");
-		} else {
-			// Hide readOnly and display editPage
-			$(".readOnly").fadeOut("fast");
-			$(".editPage").fadeIn("fast");	
-			$(".formField").removeAttr("disabled");
-			$(".dp-choose-date").fadeIn("fast");
-		}
-	}
-
 	var jsCopyAddress = function () {
 		isChecked = $("#copyAddress").attr('checked');
 		if ( isChecked ) {
