@@ -181,16 +181,6 @@
                 SESSION.formErrors.Add('Country is required');
             }
 
-			if ( NOT LEN(FORM.wat_contact) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add('WAT contact is required');
-            }
-
-			if ( NOT LEN(FORM.wat_email) OR NOT IsValid("email", FORM.wat_email) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add('WAT email is required');
-            }
-
 			if ( NOT LEN(FORM.email) OR NOT IsValid("email", FORM.email) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add('Email is required');
@@ -471,6 +461,11 @@
 		if ( $("#uniqueID").val() == '' ) {
 			readOnlyEditPage();
 		}
+		
+		<cfif SESSION.formErrors.length()>
+			// There are errors / display edit page
+			readOnlyEditPage();
+		</cfif>
 	});
 	
 	var jsCopyContactInformation = function () {
@@ -576,7 +571,7 @@
                         <table width="100%" align="center" cellpadding="2" class="editPage">
                             <tr>
                                 <td width="40%" align="right" class="style1"><strong>Company Name:</strong> </td>
-                                <td><input type="text" name="businessName" id="businessName" value="#FORM.businessName#" class="style1" size="50" maxlength="250"></td>
+                                <td><input type="text" name="businessName" id="businessName" value="#FORM.businessName#" class="style1 xLargeField" maxlength="250"></td>
                             </tr>
                             <tr>
                                 <td class="fieldTitle">Status:</td>
@@ -616,28 +611,28 @@
                                             <td width="30%" class="fieldTitle">Address:</td>
                                             <td width="70%" class="style1">
                                             	<span class="readOnly">#FORM.address#</span>
-                                                <input type="text" name="address" id="address" value="#FORM.address#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="address" id="address" value="#FORM.address#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>                                        
                                         <tr>
                                             <td class="fieldTitle">Address 2:</td>
                                             <td class="style1">
                                             	<span class="readOnly">#FORM.address2#</span>
-                                                <input type="text" name="address2" id="address2" value="#FORM.address2#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="address2" id="address2" value="#FORM.address2#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">City</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.city#</span>
-                                                <input type="text" name="city" id="city" value="#FORM.city#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="city" id="city" value="#FORM.city#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>		
                                         <tr>
                                             <td class="fieldTitle">Country:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#qGetContactCountry.countryName#</span>
-                                                <select name="country" id="country" class="style1 editPage">
+                                                <select name="country" id="country" class="style1 editPage xLargeField">
                                                     <option value="0">Country...</option>
                                                     <cfloop query="qGetCountryList">
                                                     	<option value="#qGetCountryList.countryID#" <cfif qGetCountryList.countryID EQ FORM.country>selected</cfif>>#qGetCountryList.countryname#</option>
@@ -649,21 +644,21 @@
                                             <td class="fieldTitle">Postal Code:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.zip#</span>
-                                                <input type="text" name="zip" id="zip" value="#FORM.zip#" class="style1 editPage" size="35" maxlength="10">
+                                                <input type="text" name="zip" id="zip" value="#FORM.zip#" class="style1 editPage xLargeField" maxlength="10">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Phone:</td>
                                             <td class="style1">
                                             	<span class="readOnly">#FORM.phone#</span>
-                                                <input type="text" name="phone" id="phone" value="#FORM.phone#" class="style1 editPage" size="15" maxlength="100">
+                                                <input type="text" name="phone" id="phone" value="#FORM.phone#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Fax:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.fax#</span>
-                                                <input type="text" name="fax" id="fax" value="#FORM.fax#" class="style1 editPage" size="15" maxlength="100">
+                                                <input type="text" name="fax" id="fax" value="#FORM.fax#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>		
                                     </table>
@@ -687,28 +682,28 @@
                                             <td width="30%" class="fieldTitle">First Name:</td>
                                             <td width="70%" class="style1">
                                             	<span class="readOnly">#FORM.firstName#</span>
-                                                <input type="text" name="firstName" id="firstName" value="#FORM.firstName#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="firstName" id="firstName" value="#FORM.firstName#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Middle Name:</td>
                                             <td class="style1">
                                             	<span class="readOnly">#FORM.middleName#</span>
-                                                <input type="text" name="middleName" id="middleName" value="#FORM.middleName#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="middleName" id="middleName" value="#FORM.middleName#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Last Name:</td>
                                             <td class="style1">
                                             	<span class="readOnly">#FORM.lastName#</span>
-                                                <input type="text" name="lastName" id="lastName" value="#FORM.lastName#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="lastName" id="lastName" value="#FORM.lastName#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Date of Birth:</td>                                            
                                             <td class="style1">
                                             	<span class="readOnly">#DateFormat(FORM.dob, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="dob" id="dob" value="#DateFormat(FORM.dob, 'mm/dd/yyyy')#" class="style1 editPage datePicker" size="8" maxlength="10"> mm/dd/yyyy
+                                                <input type="text" name="dob" id="dob" value="#DateFormat(FORM.dob, 'mm/dd/yyyy')#" class="style1 editPage datePicker" maxlength="10"> mm/dd/yyyy
                                             </td>
                                         </tr>
                                         <tr>
@@ -729,14 +724,14 @@
                                             <td class="fieldTitle">Email:</td>
                                             <td class="style1">
                                             	<span class="readOnly">#FORM.email#</span>
-                                                <input type="text" name="email" id="email" value="#FORM.email#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="email" id="email" value="#FORM.email#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Alt. Email:</td>
                                             <td class="style1">
                                             	<span class="readOnly">#FORM.email2#</span>
-                                                <input type="text" name="email2" id="email2" value="#FORM.email2#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="email2" id="email2" value="#FORM.email2#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                     </table>
@@ -867,7 +862,7 @@
                                             	<input type="checkbox" name="copyContactInformation" id="copyContactInformation" onClick="jsCopyContactInformation()" class="style1">
                                             </td>
                                             <td width="70%" class="style1">
-                                                <label for="copyContactInformation" style="font-weight:bold;">Same as Contact Information</label> 
+                                                <label for="copyContactInformation">Same as Contact Information</label> 
                                             </td>
                                         </tr>					
                                         <tr>
@@ -875,56 +870,56 @@
                                             	<input type="checkbox" name="useBilling" id="useBilling" value="1" class="formField" disabled <cfif VAL(FORM.useBilling)> checked </cfif> >
                                             </td>
                                             <td class="style1">
-                                                <label for="useBilling" style="font-weight:bold;">Use billing address on invoice</label>
+                                                <label for="useBilling">Use billing address on invoice</label>
                                             </td>
                                         </tr>	
                                         <tr>
                                             <td class="fieldTitle">Company Name:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_company#</span>
-                                                <input type="text" name="billing_company" id="billing_company" value="#FORM.billing_company#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="billing_company" id="billing_company" value="#FORM.billing_company#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Contact:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_contact#</span>
-                                                <input type="text" name="billing_contact" id="billing_contact" value="#FORM.billing_contact#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="billing_contact" id="billing_contact" value="#FORM.billing_contact#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Email:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_email#</span>
-                                                <input type="text" name="billing_email" id="billing_email" value="#FORM.billing_email#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="billing_email" id="billing_email" value="#FORM.billing_email#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Address:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_address#</span>
-                                                <input type="text" name="billing_address" id="billing_address" value="#FORM.billing_address#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="billing_address" id="billing_address" value="#FORM.billing_address#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Address 2:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_address2#</span>
-                                                <input type="text" name="billing_address2" id="billing_address2" value="#FORM.billing_address2#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="billing_address2" id="billing_address2" value="#FORM.billing_address2#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">City:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_city#</span>
-                                                <input type="text" name="billing_city" id="billing_city" value="#FORM.billing_city#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="billing_city" id="billing_city" value="#FORM.billing_city#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Country:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#qGetBillingCountry.countryName#</span>
-                                                <select name="billing_country" id="billing_country" class="style1 editPage">
+                                                <select name="billing_country" id="billing_country" class="style1 editPage xLargeField">
                                                     <option value="0">Country...</option>
                                                     <cfloop query="qGetCountryList">
                                                     	<option value="#qGetCountryList.countryID#" <cfif qGetCountryList.countryID EQ FORM.billing_country>selected</cfif>>#qGetCountryList.countryname#</option>
@@ -936,21 +931,21 @@
                                             <td class="fieldTitle">Postal Code:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_zip#</span>
-                                                <input type="text" name="billing_zip" id="billing_zip" value="#FORM.billing_zip#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="billing_zip" id="billing_zip" value="#FORM.billing_zip#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Phone:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_phone#</span>
-                                                <input type="text" name="billing_phone" id="billing_phone" value="#FORM.billing_phone#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="billing_phone" id="billing_phone" value="#FORM.billing_phone#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Fax:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.billing_fax#</span>
-                                                <input type="text" name="billing_fax" id="billing_fax" value="#FORM.billing_fax#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="billing_fax" id="billing_fax" value="#FORM.billing_fax#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                     </table>
@@ -974,14 +969,14 @@
                                             <td width="30%" class="fieldTitle">Contact:</td>
                                             <td width="70%" class="style1">
                                                 <span class="readOnly">#FORM.wat_contact#</span>
-                                                <input type="text" name="wat_contact" id="wat_contact" value="#FORM.wat_contact#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="wat_contact" id="wat_contact" value="#FORM.wat_contact#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="fieldTitle">Email:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.wat_email#</span>
-                                                <input type="text" name="wat_email" id="wat_email" value="#FORM.wat_email#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="wat_email" id="wat_email" value="#FORM.wat_email#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                     </table>
@@ -1005,7 +1000,7 @@
                                             <td width="30%" class="fieldTitle">Username:</td>
                                             <td width="70%" class="style1">
                                                 <span class="readOnly">#FORM.username#</span>
-                                                <input type="text" name="username" id="username" value="#FORM.username#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="username" id="username" value="#FORM.username#" class="style1 editPage xLargeField" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
@@ -1016,7 +1011,7 @@
                                             <td class="fieldTitle">Password:</td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.password#</span>
-                                                <input type="text" name="password" id="password" value="#FORM.password#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="password" id="password" value="#FORM.password#" class="style1 editPage xLargeField" maxlength="50">
                                             </td>
                                         </tr>
                                     </table>
