@@ -24,6 +24,8 @@
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Confirmation</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flightInfoByIntlRep" class="style4">- Candidate Flight Information</a></p>
+                        
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missingIntlRepDocuments" class="style4">- Missing Intl. Rep. Documents</a></p>
                     </td>
 				</tr>
 			</table>
