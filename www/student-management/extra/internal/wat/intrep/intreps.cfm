@@ -75,7 +75,7 @@
 	<tr>
 		<td>
 
-            <table width=95% cellpadding=0 cellspacing=0 border="0" align="center">
+            <table width="95%" cellpadding="0" cellspacing="0" border="0" align="center">
                 <tr valign="middle" height="24" bgcolor="##E4E4E4">
                     <td width="57%" valign="middle" class="title1">&nbsp;International Representative</td>
                     <td width="42%" align="right" valign="top" class="style1">#qGetIntlReps.recordcount# International Representative(s) found</td>
@@ -83,21 +83,27 @@
                 </tr>
             </table>
             
-            <br>
+			<cfif ListFind("1,2,3,4", CLIENT.userType)>
+                <div align="center" style="margin-top:10px;">
+	          		<a href="index.cfm?curdoc=intRep/intlRepInfo"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a>
+                </div>
+            </cfif>
             
-            <table border="0" cellpadding=4 cellspacing=0 class="section" align="center" width=95%>
+            <br />
+
+            <table border="0" cellpadding="4" cellspacing="0" class="section" align="center" width="95%">
                 <tr bgcolor="##4F8EA4">
-                    <td width="6%"><a href="?curdoc=intrep/intreps&order=userID" class="style2">ID</a></td>
-                    <td width="30%"><a href="?curdoc=intrep/intreps&order=businessName" class="style2">International Rep.</a></td>
-                    <td width="18%"><a href="?curdoc=intrep/intreps&order=firstName" class="style2">First Name</a></td>
-                    <td width="18%"><a href="?curdoc=intrep/intreps&order=lastName" class="style2">Last Name</a></td>
-                    <td width="18%"><a href="?curdoc=intrep/intreps&order=countryName" class="style2">Country</a></td>
-                    <td width="10%"><a href="?curdoc=intrep/intreps&order=companyID" class="style2">Has Access to Extra?</a></td>
+                    <td width="6%"><a href="?curdoc=intRep/intReps&order=userID" class="style2">ID</a></td>
+                    <td width="30%"><a href="?curdoc=intRep/intReps&order=businessName" class="style2">International Rep.</a></td>
+                    <td width="18%"><a href="?curdoc=intRep/intReps&order=firstName" class="style2">First Name</a></td>
+                    <td width="18%"><a href="?curdoc=intRep/intReps&order=lastName" class="style2">Last Name</a></td>
+                    <td width="18%"><a href="?curdoc=intRep/intReps&order=countryName" class="style2">Country</a></td>
+                    <td width="10%"><a href="?curdoc=intRep/intReps&order=companyID" class="style2">Has Access to Extra?</a></td>
                 </tr>
                 <cfloop query="qGetIntlReps">
                     <tr bgcolor="###iif(qGetIntlReps.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
-                        <td class="style4"><a href="?curdoc=intrep/intrep_info&uniqueID=#qGetIntlReps.uniqueID#" class="style4">#qGetIntlReps.userID#</a></td>
-                        <td class="style4"><a href="?curdoc=intrep/intrep_info&uniqueID=#qGetIntlReps.uniqueID#" class="style4">#qGetIntlReps.businessName#</a></td>
+                        <td class="style4"><a href="?curdoc=intRep/intlRepInfo&uniqueID=#qGetIntlReps.uniqueID#" class="style4">#qGetIntlReps.userID#</a></td>
+                        <td class="style4"><a href="?curdoc=intRep/intlRepInfo&uniqueID=#qGetIntlReps.uniqueID#" class="style4">#qGetIntlReps.businessName#</a></td>
                         <td class="style5">#qGetIntlReps.firstName#</td>
                         <td class="style5">#qGetIntlReps.lastName#</td>
                         <td class="style5">#qGetIntlReps.countryName#</td>
@@ -105,18 +111,18 @@
                             <cfif VAL(qGetIntlReps.companyID)>
                             	Yes
                             <cfelse>
-                            	<a href="javascript:openWindow('intrep/grantAccess.cfm?uniqueID=#qGetIntlReps.uniqueID#', 500, 800);" class="style4">No - Grant Access</a>
+                            	<a href="javascript:openWindow('intRep/grantAccess.cfm?uniqueID=#qGetIntlReps.uniqueID#', 500, 800);" class="style4">No - Grant Access</a>
                             </cfif>
                         </td>
                     </tr>
                 </cfloop>
             </table>
-            
-            <br>
 
-            <div align="center">
-          		<a href="index.cfm?curdoc=intrep/new_intrep"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a></div>
-            <br>
+			<cfif ListFind("1,2,3,4", CLIENT.userType)>
+                <div align="center" style="margin-top:10px; margin-bottom:10px;">
+	          		<a href="index.cfm?curdoc=intRep/intlRepInfo"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a>
+                </div>
+            </cfif>
             
 		</td>
 	</tr>

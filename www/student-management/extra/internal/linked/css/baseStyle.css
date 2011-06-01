@@ -11,6 +11,24 @@
 	background-color:#E4E4E4;
 }
 
+.tablePageTitle {
+	height:25px;
+	width:95%;
+	color: #000000;
+	font-size: 0.9em;	
+	background-color: #E4E4E4;
+	font-weight: bold;
+	padding-left:10px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.fieldTitle {
+	font-size: 10px;
+	text-align:right;
+	font-weight:bold;
+	vertical-align:top;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
 
 /********************************************
 	FORM FIELDS

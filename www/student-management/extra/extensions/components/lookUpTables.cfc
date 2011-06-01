@@ -54,8 +54,9 @@
 	</cffunction>
 
 
-	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
-
+	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">		
+        <cfargument name="countryID" default="" hint="countryID is not required">
+        
         <cfquery 
         	name="qGetCountry"
         	datasource="#APPLICATION.DSN.Source#">
@@ -67,6 +68,12 @@
                     continent
 				FROM
                 	smg_countryList
+                    
+				<cfif LEN(ARGUMENTS.countryID)>
+                    WHERE 
+                        countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryID)#">
+                </cfif> 
+                                   
         </cfquery> 
 		       
 		<cfreturn qGetCountry>
