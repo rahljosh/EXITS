@@ -39,9 +39,9 @@
 	    <td bgcolor="##8FB6C9">
 			<a class="item1" href="?curdoc=reports/index">Reports</a>
 			<div class="section">
-				<a class="item2" href="?curdoc=reports/students_per_company">Students hired per company </a>	
-				<a class="item2" href="?curdoc=reports/ds2019_list_select_pro">DS2019/Verification Reports </a>	 
-				<a class="item2" href="?curdoc=reports/active_students_email">Active Trainee Emails </a>	 
+				<a class="item2" href="?curdoc=reports/students_per_company">Students hired per company</a>	
+				<a class="item2" href="?curdoc=reports/ds2019_list_select_pro">DS2019/Verification Reports</a>	 
+				<a class="item2" href="?curdoc=reports/active_students_email">Active Trainee Emails</a>	 
 			</div>
 		</td>
 		<td bgcolor="##8FB6C9">

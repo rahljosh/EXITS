@@ -448,7 +448,6 @@
 			$(".readOnly").fadeOut("fast");
 			$(".editPage").fadeIn("fast");	
 			$(".formField").removeAttr("disabled");
-			$(".dp-choose-date").fadeIn("fast");
 		}
 	}
 
