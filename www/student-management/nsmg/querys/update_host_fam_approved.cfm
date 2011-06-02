@@ -11,8 +11,9 @@
 </cfquery>
 
 <cfscript>
-	// Assign Pre-AYP English Camp based on host family state
-	APPLICATION.CFC.STUDENT.assignEnglishCamp(studentID=CLIENT.studentID);
+	/*** Holding it for now as per Brian Hause request - 06/02/2011 ****/
+	// Assign Pre-AYP English Camp based on host family state	
+	// APPLICATION.CFC.STUDENT.assignEnglishCamp(studentID=CLIENT.studentID);
 </cfscript>
 
 <cflocation url = "../forms/place_menu.cfm">
