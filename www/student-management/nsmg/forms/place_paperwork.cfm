@@ -245,8 +245,9 @@ where programid = #get_student_info.programid#
 			Date of Visit</td>
 		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit" size=9 value="#DateFormat(doc_date_of_visit, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
+    <!----
          <Cfif client.totalfam eq 1 >
-	<tr> <!-- 6 - CONFIDENTIAL HOST FAMILY VISIT FORM FOR SINGLES --->
+	<tr> <!---- 6 - CONFIDENTIAL HOST FAMILY VISIT FORM FOR SINGLES --->
 		<td><Cfif #get_student_info.doc_conf_host_single_rec# EQ ''>
 				<input type="checkbox" name="check_confi_single" OnClick="CheckDates('check_confi_single', 'doc_conf_host_single_rec');" <cfif edit is 'no'>disabled</cfif>>
 			<cfelse>
@@ -256,7 +257,7 @@ where programid = #get_student_info.programid#
 		<td>Confidential SINGLE Host Family Visit </td>
 		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_single_rec" size=9 value="#DateFormat(doc_conf_host_single_rec, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
-	<tr> <!-- 7 - VISIT DATE --->
+	<tr> <!---- 7 - VISIT DATE --->
 		<td>&nbsp;</td>
 		<td><!--- <Cfif #get_student_info.doc_date_of_visit# EQ ''>
 				<input type="checkbox" name="check_visit" OnClick="CheckDates('check_visit', 'doc_date_of_visit');" <cfif edit is 'no'>disabled</cfif>>
@@ -267,7 +268,7 @@ where programid = #get_student_info.programid#
 		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_single_visit" size=9 value="#DateFormat(doc_date_of_single_visit, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
     </Cfif>
-    <br>
+    <br>---->
 	<cfif season.seasonid gt 7>
     	<tr> <!-- 6 - CONFIDENTIAL HOST FAMILY 2 VISIT FORM --->
 		<td><Cfif #get_student_info.doc_conf_host_rec2# EQ ''>
