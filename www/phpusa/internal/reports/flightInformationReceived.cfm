@@ -40,7 +40,7 @@
         if ( LEN(FORM.date2) AND NOT IsDate(FORM.date2) ) {
             SESSION.formErrors.Add("Please enter a valid to date");
         }
-        
+		
         // Set Up Report Colors
         if ( FORM.reportOption EQ 'receivedDeparture' ) {
             vColorTitle = 'FDCEAC';
@@ -251,17 +251,17 @@
                <th width="75px">Overnight Flight</th>
             </tr>
             <cfoutput>
-            <tr bgcolor="###vColorRow#">
-                <td align="center">#DateFormat(qGetResults.dep_date , 'mm/dd/yyyy')#&nbsp;</td>
-                <td align="center">#qGetResults.dep_city#&nbsp;</td>
-                <td align="center">#qGetResults.dep_aircode#&nbsp;</td>
-                <td align="center">#qGetResults.arrival_city#&nbsp;</td>
-                <td align="center">#qGetResults.arrival_aircode#&nbsp;</td>
-                <td align="center">#qGetResults.flight_number#&nbsp;</td>
-                <td align="center">#TimeFormat(qGetResults.dep_time, 'hh:mm tt')#&nbsp;</td>
-                <td align="center">#TimeFormat(qGetResults.arrival_time, 'h:mm tt')#&nbsp;</td>
-                <td align="center">#YesNoFormat(qGetResults.overnight)#</td>
-            </tr>
+                <tr bgcolor="###vColorRow#">
+                    <td align="center">#DateFormat(qGetResults.dep_date , 'mm/dd/yyyy')#&nbsp;</td>
+                    <td align="center">#qGetResults.dep_city#&nbsp;</td>
+                    <td align="center">#qGetResults.dep_aircode#&nbsp;</td>
+                    <td align="center">#qGetResults.arrival_city#&nbsp;</td>
+                    <td align="center">#qGetResults.arrival_aircode#&nbsp;</td>
+                    <td align="center">#qGetResults.flight_number#&nbsp;</td>
+                    <td align="center">#TimeFormat(qGetResults.dep_time, 'hh:mm tt')#&nbsp;</td>
+                    <td align="center">#TimeFormat(qGetResults.arrival_time, 'hh:mm tt')#&nbsp;</td>
+                    <td align="center">#YesNoFormat(VAL(qGetResults.overnight))#</td>
+                </tr>
             </cfoutput>
         </table>		
         <br />
