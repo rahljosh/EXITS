@@ -24,90 +24,6 @@ body{
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-#page_Area {
-	background-color: #ffffff;
-	height: 11in;
-	width: 570px;
-}
-
-#title{
-	background-posistion: center;
-	color: #FF0000;
-	}
-	
-#titleleft{
-	font-size: x-small;	
-}
-.title_center{
-	font-size: 12px;
-	font-family: Arial, Helvetica, sans-serif;
-	color: #000000;
-	font-style: normal;
-	font-weight: bold;
-	color: #000000;
-	
-}
-
-.application_section_header{
-	border-bottom: 1px dashed Gray;
-	text-transform: uppercase;
-	letter-spacing: 5px;
-	width:100%;
-	text-align:center;
-	background;
-	background: #DCDCDC;
-	font-size: small;
-}
-.application_section_header_bold {
-	border-bottom: 1px dashed Gray;
-	text-transform: uppercase;
-	letter-spacing: 5px;
-	width:100%;
-	text-align:center;
-
-	background;
-	background: #DCDCDC;
-	font-size: small;
-	font-weight: bold;
-
-	}.acceptance_letter_header {
-	border-bottom: 1px dashed Gray;
-	text-transform: capitalize;
-	letter-spacing: normal;
-	width:100%;
-	text-align:left;
-
-	background;
-	background: #DCDCDC;
-	font-size: small;
-	font-weight: bold;
-}
-.profile_section_header {
-
-	border-bottom: 1px dashed Gray;
-	text-transform: uppercase;
-	letter-spacing: 5px;
-	width:100%;
-	text-align:center;
-	background;
-	background: #DCDCDC;
-	font-size: x-small;
-}
-
-.sub_profile_section_header {
-
-	border-bottom: 1px dashed Gray;
-	width:100%;
-	text-align:center;
-	background;
-	background: #DCDCDC;
-	font-size: x-small;
-}
-.invoice_header{
-	text-align:center;
-	img-aling:center;
-}
-
 table,tr,td{
 	font-size:12px;
 }
@@ -119,9 +35,6 @@ table,tr,td{
 	position: absolute;
 }
   
-table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #000000; }
-
-
 .style1 {font-size: 10px}
 
 .thin-border{ border: 1px solid #000000;}
