@@ -115,11 +115,11 @@
 		<cfloop query="get_school_dates">
 		<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 			<td align="center"><b>#season#</b> <cfinput type="hidden" name="schooldateid#currentrow#" value="#schooldateid#"></td>
-			<td align="center"><cfinput type="Text" name="enrollment#currentrow#" size="10" value="#DateFormat(enrollment, 'mm/dd/yyyy')#" validate="date" maxlength="10"></td>
-			<td align="center"><cfinput type="Text" name="year_begins#currentrow#"  size="10" value="#DateFormat(year_begins, 'mm/dd/yyyy')#" validate="date" maxlength="10"></td>
-			<td align="center"><cfinput type="Text" name="semester_ends#currentrow#" size="10" value="#DateFormat(semester_ends, 'mm/dd/yyyy')#" validate="date" maxlength="10"></td>
-			<td align="center"><cfinput type="Text" name="semester_begins#currentrow#" size="10" value="#DateFormat(semester_begins, 'mm/dd/yyyy')#" validate="date" maxlength="10"></td>
-			<td align="center"><cfinput type="Text" name="year_ends#currentrow#"  size="10" value="#DateFormat(year_ends, 'mm/dd/yyyy')#" validate="date" maxlength="10"></td>
+			<td align="center"><cfinput type="Text" name="enrollment#currentrow#" size="10" value="#DateFormat(enrollment, 'mm/dd/yyyy')#" validate="date" class="datePicker" maxlength="10"></td>
+			<td align="center"><cfinput type="Text" name="year_begins#currentrow#"  size="10" value="#DateFormat(year_begins, 'mm/dd/yyyy')#" validate="date" class="datePicker" maxlength="10"></td>
+			<td align="center"><cfinput type="Text" name="semester_ends#currentrow#" size="10" value="#DateFormat(semester_ends, 'mm/dd/yyyy')#" validate="date" class="datePicker" maxlength="10"></td>
+			<td align="center"><cfinput type="Text" name="semester_begins#currentrow#" size="10" value="#DateFormat(semester_begins, 'mm/dd/yyyy')#" validate="date" class="datePicker" maxlength="10"></td>
+			<td align="center"><cfinput type="Text" name="year_ends#currentrow#"  size="10" value="#DateFormat(year_ends, 'mm/dd/yyyy')#" validate="date" class="datePicker" maxlength="10"></td>
 		</tr>
 		</cfloop>
 	</cfif>
@@ -143,11 +143,11 @@
 				</cfloop>
 			</cfselect>
 		</td>
-		<td align="center"><cfinput type="Text" name="enrollment" size="10" value="" validate="date" maxlength="10"></td>
-		<td align="center"><cfinput type="Text" name="year_begins"  size="10" value="" validate="date" maxlength="10"></td>
-		<td align="center"><cfinput type="Text" name="semester_ends" size="10" value="" validate="date" maxlength="10"></td>
-		<td align="center"><cfinput type="Text" name="semester_begins" size="10" value="" validate="date" maxlength="10"></td>
-		<td align="center"><cfinput type="Text" name="year_ends"  size="10" value="" validate="date" maxlength="10"></td>
+		<td align="center"><cfinput type="Text" name="enrollment" size="10" value="" validate="date" class="datePicker" maxlength="10"></td>
+		<td align="center"><cfinput type="Text" name="year_begins"  size="10" value="" validate="date" class="datePicker" maxlength="10"></td>
+		<td align="center"><cfinput type="Text" name="semester_ends" size="10" value="" validate="date" class="datePicker" maxlength="10"></td>
+		<td align="center"><cfinput type="Text" name="semester_begins" size="10" value="" validate="date" class="datePicker" maxlength="10"></td>
+		<td align="center"><cfinput type="Text" name="year_ends"  size="10" value="" validate="date" class="datePicker" maxlength="10"></td>
 	</tr>
 	<tr><td colspan="6"><font size="-2" color="000099">* In order to add new dates you must select a season.</font></td></tr>
 	<cfelse>
