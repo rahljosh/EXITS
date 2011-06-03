@@ -55,9 +55,9 @@
                 <a class="item1" href="">Tools</a>
                 <div class="section">
                     <a class="item2" href="?curdoc=candidate/candidate_profile_batch">Batch Candidate Profiles</a>
-                    <a class="item2" href="?curdoc=candidate/batchImmigrationLetter">Batch Imm. Letters</a>
-                    <a class="item2" href="?curdoc=tools/candidateProfile">Candidate Profile</a>
+                    <a class="item2" href="?curdoc=candidate/batchImmigrationLetter">Batch Imm. Letters</a>                    
                     <a class="item2" href="?curdoc=tools/ds2019Verification">DS-2019 Verification</a>
+                    <a class="item2" href="?curdoc=tools/englishAssessment">English Assessment</a>
                     <a class="item2" href="?curdoc=reports/idcards_menu">ID Cards</a>
                     <a class="item2" href="?curdoc=insurance/insurance_menu">Insurance</a>
                         <div class="section">

@@ -1,10 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		candidateProfile.cfm
+	File:		englishAssessment..cfm
 	Author:		Marcus Melo
 	Date:		May 20, 2011
-	Desc:		Update Candidate Information:
-				English Assessment CSB.
+	Desc:		Update English Assessment CSB.
 
 	Updated:  	
 
@@ -39,13 +38,13 @@
 	
 	// Bring the list when the page is ready
 	// $(document).ready(function() {
-	// 	getProfileToolList();
+	// 	getCandidateList();
 	// });
 
 	// --- START OF VERIFICATION LIST --- //
 
 	// Use an asynchronous call to get the candidate details. The function is called when the user selects a candidate. 
-	var getProfileToolList = function() { 
+	var getCandidateList = function() { 
 
 		// Create an instance of the proxy. 
 		var c = new candidate();
@@ -58,11 +57,11 @@
 		c.setCallbackHandler(populateVerificationList); 
 		c.setErrorHandler(myErrorHandler); 
 		
-		// This time, pass the intlRep ID to the getProfileToolList CFC function. 
-		c.getProfileToolList(keyWord,intlRep);
+		// This time, pass the intlRep ID to the getEnglishAssessmentToolList CFC function. 
+		c.getEnglishAssessmentToolList(keyWord,intlRep);
 	} 
 
-	// Callback function to handle the results returned by the getProfileToolList function and populate the table. 
+	// Callback function to handle the results returned by the getEnglishAssessmentToolList function and populate the table. 
 	var populateVerificationList = function(verList) { 
 		
 		// Clear current result
@@ -147,7 +146,7 @@
 		c.getRemoteCandidateByID(candidateID);
 	} 
 	
-	// Callback function to handle the results returned by the getProfileToolList function and populate the form fields. 
+	// Callback function to handle the results returned by the getEnglishAssessmentToolList function and populate the form fields. 
 	var populateCandidateDetails = function(candidate) { 
 		
 		//var candidateID = candidate.DATA[0][0];
@@ -210,7 +209,7 @@
 		c.setErrorHandler(myErrorHandler);
 		
 		// This time, pass the candidate data to the updateRemoteCandidateByID CFC function. 
-		c.updateProfileToolListByID(
+		c.updateEnglishAssessmentByID(
 		  	// Get values from the fields
 		  	$("#candidateID").val(),
 			$("#englishAssessment").val(),
@@ -240,7 +239,7 @@
 		});
 		
 		// Refresh Search List
-		getProfileToolList();
+		getCandidateList();
 	}
 	// --- END OF STUDENT DETAILS --- //
 	
@@ -255,7 +254,7 @@
 		c.setCallbackHandler(verificationReceived(candidateID)); 
 		c.setErrorHandler(myErrorHandler); 
 		
-		// This time, pass the intlRep ID to the getProfileToolList CFC function. 
+		// This time, pass the intlRep ID to the getCandidateList CFC function. 
 		c.confirmVerificationReceived(candidateID);
 		
 	}
@@ -303,6 +302,13 @@
 		background-color:#4F8EA4;
 	}
 
+	.tableTitle { 
+		padding:10px;
+		font-weight:800;
+		border: 1px solid #666;
+		background-color: #F5F4F4;
+	}
+
 	.formTitle { 
 		padding-top:10px;
 		font-weight:800;
@@ -332,7 +338,7 @@
 
 	<!--- Table Header --->    
     <gui:tableHeader
-        tableTitle="Candidate Profile Update"
+        tableTitle="English Assessment Update Tool"
     />
 
 	<!--- This holds the candidate information messages --->
@@ -345,7 +351,7 @@
             <input type="hidden" name="candidateID" id="candidateID" value="" />
             <table cellpadding="0" cellspacing="0" align="center" class="section listTable">
                 <tr>
-                	<td class="formTitle" colspan="6">Update candidate information and click on submit.</td>
+                	<td class="tableTitle" colspan="6">Update candidate information and click on submit.</td>
 				</tr>                    
                 <tr>
                     <td class="formTitle"><label for="lastName">Last Name</label></td>
@@ -381,11 +387,11 @@
     <table cellpadding="0" cellspacing="0" align="center" class="section listTable">
         <tr>
             <td class="formTitle">
-            	Keyword: <input type="text" name="keyWord" id="keyWord" class="mediumField">
+            	Keyword: <input type="text" name="keyWord" id="keyWord" class="largeField">
             </td>                
             <td class="formTitle">
                 International Representative: 
-                <select name="intlRep" id="intlRep" onchange="getProfileToolList();">
+                <select name="intlRep" id="intlRep" onchange="getCandidateList();">
                     <option value=""></option>
                     <cfloop query="qIntlRep">
                         <option value="#qIntlRep.userID#" <cfif CLIENT.userID EQ qIntlRep.UserID> selected </cfif> >#qIntlRep.businessName#</option>
@@ -393,7 +399,7 @@
                 </select>
             </td>    
             <td class="formTitle">
-                <input name="send" type="submit" value="Search" onclick="getProfileToolList();" />
+                <input name="send" type="submit" value="Search" onclick="getCandidateList();" />
             </td>                
         </tr>            
     </table>
