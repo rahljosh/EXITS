@@ -244,6 +244,7 @@
                     	<font color="##CC3300">
                         	You can only view your invoices. The invoice that you are trying to view does not belong to you. <br />
                             If you received this error from clicking directly on a link, contact the person who sent you the link.
+                        </font>
                     </td>
                 </tr>
             </table>
