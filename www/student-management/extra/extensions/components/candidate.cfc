@@ -872,12 +872,12 @@
 	<!-------------------------------------------------- 
 		Candidate Profile Update Tool
 	--------------------------------------------------->
-	<cffunction name="getProfileToolList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
+	<cffunction name="getEnglishAssessmentToolList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
 		<cfargument name="keyword" default="" hint="Keyword used in search">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         
         <cfquery 
-			name="qGetProfileToolList" 
+			name="qGetEnglishAssessmentToolList" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
 					ec.candidateID,
@@ -909,8 +909,11 @@
                 AND    
                     ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 				AND
+                	ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
+                AND
 		        	ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 				
+                
 				<cfif VAL(ARGUMENTS.intRep)>
                     AND
                         ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
@@ -930,10 +933,10 @@
                 ec.firstName
 		</cfquery>
 		   
-		<cfreturn qGetProfileToolList>
+		<cfreturn qGetEnglishAssessmentToolList>
 	</cffunction>
     
-	<cffunction name="updateProfileToolListByID" access="remote" returntype="void" hint="Updates a candidate record.">
+	<cffunction name="updateEnglishAssessmentByID" access="remote" returntype="void" hint="Updates a candidate record.">
         <cfargument name="candidateID" required="yes" hint="candidateID is required">
         <cfargument name="englishAssessment" required="yes" hint="englishAssessment is required">
         <cfargument name="englishAssessmentDate" required="yes" hint="englishAssessmentDate is required">
