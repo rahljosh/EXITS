@@ -108,10 +108,10 @@
 		APPLICATION.PATH.base = 'C:/websites/granbyprep/';
 
 		// Email Settings
-		APPLICATION.EMAIL.headMaster = 'bchatterley@macduffie.org';
-		APPLICATION.EMAIL.admissions = 'admissions@macduffie.org';
-		APPLICATION.EMAIL.admissionsOfficer = 'askidmore@macduffie.org'; // askidmore@granbyprep.com
-		APPLICATION.EMAIL.submittedApplication = 'askidmore@granbyprep.com;bchatterley@macduffie.org';
+		APPLICATION.EMAIL.headMaster = 'bchatterley@macduffie.org;sclayton@macduffie.org';
+		APPLICATION.EMAIL.admissions = 'admissions@macduffie.org;sclayton@macduffie.org';
+		APPLICATION.EMAIL.admissionsOfficer = 'askidmore@macduffie.org;sclayton@macduffie.org'; // askidmore@granbyprep.com
+		APPLICATION.EMAIL.submittedApplication = 'sclayton@macduffie.org;askidmore@granbyprep.com;bchatterley@macduffie.org';
 		APPLICATION.EMAIL.contactUs = 'admissions@macduffie.org'; // info@granbyprep.com
 		APPLICATION.EMAIL.support = 'support@granbyprep.com';
 		APPLICATION.EMAIL.errors = 'errors@granbyprep.com';
