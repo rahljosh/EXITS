@@ -203,6 +203,8 @@ smg_charges
     	ss.host_fam_approved <= 4
     </cfif>
     AND
+    	ss.app_current_status = 11
+    AND
 		sp.seasonid = #form.seasonId#
     AND
 		sp.hold != 1
