@@ -113,7 +113,7 @@
             AND 
                 c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
-                c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+                c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
            <cfif VAL(FORM.hostcompanyID)> 
                 AND
                     c.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
@@ -122,7 +122,7 @@
                 ehc.name,
                 c.candidateID
 		</cfquery>
-		
+        
         <cffunction name="filterGetAllCandidates" hint="Gets total by Host Company">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
             <cfargument name="hostCompanyID" default="0" hint="hostCompanyID is not required">
