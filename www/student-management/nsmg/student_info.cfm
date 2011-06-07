@@ -43,10 +43,7 @@
 		qRegionAssigned = AppCFC.REGION.getRegions(regionID=qGetStudentInfo.regionAssigned);
 		
 		// Insurance Information
-		qInsuranceHistory = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qGetStudentInfo.studentID, type='N,R,EX');
-
-		// Insurance Information
-		qInsuranceCancelation = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qGetStudentInfo.studentID, type='X');
+		qInsuranceHistory = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qGetStudentInfo.studentID, type='N,R,EX,X');
 		
 		// Get Private Schools Prices
 		qPrivateSchools = APPCFC.SCHOOL.getPrivateSchools();
@@ -765,22 +762,36 @@
                 <cfloop query="qInsuranceHistory">
                     <tr>
                         <td>&nbsp;</td>
-                        <td>#qInsuranceHistory.type#</td>
+                        <td>
+							<cfswitch expression="#qInsuranceHistory.type#">
+                            
+                            	<cfcase value="N">
+                                	Enrollment
+                                </cfcase>
+                                
+                            	<cfcase value="R">
+                                	Return
+                                </cfcase>
+                                
+                            	<cfcase value="EX">
+                                	Extension
+                                </cfcase>
+                                
+                            	<cfcase value="X">
+                                	Cancelation
+                                </cfcase>
+                            	
+                                <cfdefaultcase>
+                                	#qInsuranceHistory.type#
+                                </cfdefaultcase>
+                            
+                            </cfswitch>
+                        </td>
                         <td>
                             From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')# 
                         </td>
                     </tr>
                 </cfloop>
-                <!--- Cancelation --->
-                <tr>
-                    <td>
-                        <input type="checkbox" name="insurance_Cancel" value="1" <cfif qInsuranceCancelation.recordCount> checked </cfif> disabled>
-                    </td>
-                    <td>Canceled on :</td>
-                    <td>                    	
-                        #DateFormat(qInsuranceCancelation.date, 'mm/dd/yyyy')#
-                    </td>
-                </tr>
 			</table>
 		</td>	
 	</tr>
