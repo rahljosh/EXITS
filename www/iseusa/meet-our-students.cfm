@@ -120,29 +120,42 @@
 			// Encrypt String
 			FORM.captchaHash = Hash(FORM.strCaptcha);
 		}
+		
+		if ( LEN(CGI.HTTP_X_Forwarded_For) ) {
+			getIPAddress = CGI.HTTP_X_Forwarded_For;
+		} else {
+			getIPAddress = CGI.remote_addr;
+		}
+		// getIPAddress = '96.56.128.58';		
 	</cfscript>
 
     <!--- Get User Location - If not US, do not allow access --->
     <cftry>
-        <cfhttp url="http://api.ipinfodb.com/v2/ip_query.php?key=#APPLICATION.SETTINGS.IPInfoDBKey#&ip=#CGI.remote_addr#&timezone=false" method="get" throwonerror="yes"></cfhttp>
+		
+		<!---
+			http://api.ipinfodb.com/v2/ip_query.php?key=0fc7fb53672eaf186d2c41db1c9b63224ef8f31e0270d8c351d2097794352bfb&ip=96.56.128.58&timezone=false
+			http://api.ipinfodb.com/v3/ip-country/?key=0fc7fb53672eaf186d2c41db1c9b63224ef8f31e0270d8c351d2097794352bfb&ip=96.56.128.58
+		--->
+
+        <cfhttp url="http://api.ipinfodb.com/v3/ip-country/?key=#APPLICATION.SETTINGS.IPInfoDBKey#&ip=#getIPAddress#" method="get" throwonerror="yes"></cfhttp>
         
         <cfscript>
-            // Parse XML we received back to a variable
-            responseXML = XmlParse(cfhttp.filecontent);		
-        
-            if ( responseXML.response.CountryCode.XmlText NEQ 'US' AND CGI.remote_addr NEQ '127.0.0.1') {
+			// Parse XML we received back to a variable
+            responseXML = XmlParse(cfhttp.fileContent);		
+			XMLHead = responseXML.Response;
+
+            if ( responseXML.response.CountryCode.XmlText NEQ 'US' AND getIPAddress NEQ '127.0.0.1') {
 				allowAccess = 0;		
             }
 			
 			// Set remoteCountry
 			FORM.remoteCountry = responseXML.response.CountryCode.XmlText;
         </cfscript>
-    	
         <cfcatch type="any">
             <!--- Error - Allow Access --->
         </cfcatch>
     </cftry>
-
+    
 	<!--- List of States --->
     <cfquery name="qStateList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
@@ -564,7 +577,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isListSubscriber#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.isAdWords#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_referer#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.remote_addr#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#getIPAddress#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.remoteCountry#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )		
