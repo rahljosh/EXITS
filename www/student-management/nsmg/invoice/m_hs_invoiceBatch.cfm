@@ -209,8 +209,7 @@ smg_charges
     AND
 		sp.hold != 1
     AND
-		(ss.companyid < 5
-		OR ss.companyid = 10 OR ss.companyid = 12)
+		ss.companyid in (1,2,3,4,10,12)
     AND
 		ss.studentid
 	NOT IN
