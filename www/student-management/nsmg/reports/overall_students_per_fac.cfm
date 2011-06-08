@@ -125,7 +125,7 @@
                 </tr>
                 <cfloop query="qGetStudents">
                     <tr>
-                        <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">#qGetStudents.firstname# #qGetStudents.familylastname# (###qGetStudents.studentid#)</td>
+                        <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">#qGetStudents.familylastname#, #qGetStudents.firstname# (###qGetStudents.studentid#)</td>
                         <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">#qGetStudents.regionname#</td>
                         <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">#qGetStudents.companyShort#</td>
                         <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">&nbsp;</td>							

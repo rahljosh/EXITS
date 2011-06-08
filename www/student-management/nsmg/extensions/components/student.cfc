@@ -562,6 +562,27 @@
 	</cffunction>
 
 
+	<cffunction name="isFlightInformationComplete" access="public" returntype="numeric" output="false" hint="Returns 1 if flight is complete">
+        <cfargument name="depDate" default="" hint="Departure is not required">
+        <cfargument name="depAirCode" default="" hint="depAirCode is not required">
+        <cfargument name="arrivalAirCode" default="" hint="arrivalAirCode is not required">
+        <cfargument name="flightNumber" default="" hint="flightNumber is not required">
+        <cfargument name="arrivalTime" default="" hint="arrivalTime is not required">
+
+        <cfscript>
+			var isCompleted = 1;
+			
+			// Check if Flight Info is Complete, these fields are required to get a complete flight information
+			if ( NOT IsDate(ARGUMENTS.depDate) OR NOT LEN(ARGUMENTS.depAirCode) OR NOT LEN(ARGUMENTS.arrivalAirCode) OR NOT LEN(ARGUMENTS.flightNumber) OR NOT LEN(ARGUMENTS.arrivalTime) ) {
+				isCompleted = 0;
+			}
+			
+			return isCompleted;
+		</cfscript>
+
+	</cffunction>
+
+
 	<!--- INSERT FLIGHT --->
 	<cffunction name="insertFlightInfo" access="public" returntype="void" output="false" hint="Inserts Flight Information">
     	<cfargument name="studentID" hint="studentID is required">
@@ -581,12 +602,13 @@
         <cfargument name="flightType" hint="Arrival/Departure is required">
 		
         <cfscript>
-			var isCompleted = 1;
-			
-			// Check if Flight Info is Complete, these fields are required to get a complete flight information
-			if ( NOT IsDate(ARGUMENTS.depDate) OR NOT LEN(ARGUMENTS.depCity) OR NOT LEN(ARGUMENTS.arrivalCity) OR NOT LEN(ARGUMENTS.flightNumber) OR NOT LEN(ARGUMENTS.arrivalTime)	) {
-				isCompleted = 0;
-			}
+			var isCompleted = isFlightInformationComplete(
+				depDate=ARGUMENTS.depDate,
+				depAirCode=ARGUMENTS.depAirCode,
+				arrivalAirCode=ARGUMENTS.arrivalAirCode,
+				flightNumber=ARGUMENTS.flightNumber,
+				arrivalTime=ARGUMENTS.arrivalTime
+			);
 		</cfscript>
 
         <cfquery 
@@ -655,12 +677,13 @@
         <cfargument name="overNight" default="0" hint="overNight is not required">
 
         <cfscript>
-			var isCompleted = 1;
-			
-			// Check if Flight Info is Complete, these fields are required to get a complete flight information
-			if ( NOT IsDate(ARGUMENTS.depDate) OR NOT LEN(ARGUMENTS.depCity) OR NOT LEN(ARGUMENTS.arrivalCity) OR NOT LEN(ARGUMENTS.flightNumber) OR NOT LEN(ARGUMENTS.arrivalTime)	) {
-				isCompleted = 0;
-			}
+			var isCompleted = isFlightInformationComplete(
+				depDate=ARGUMENTS.depDate,
+				depAirCode=ARGUMENTS.depAirCode,
+				arrivalAirCode=ARGUMENTS.arrivalAirCode,
+				flightNumber=ARGUMENTS.flightNumber,
+				arrivalTime=ARGUMENTS.arrivalTime
+			);
 		</cfscript>
 		
         <cfquery 
@@ -1671,6 +1694,8 @@
 		END OF PLACEMENT PAPERWORK
 	
 	----- ------------------------------------------------------------------------- --->
+
+
 
 
 	<!--- ------------------------------------------------------------------------- ----
