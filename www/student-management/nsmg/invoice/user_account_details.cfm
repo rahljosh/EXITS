@@ -722,7 +722,7 @@ SELECT invoiceid, invoicedate, SUM(amount_due) AS invoice_due, companyid
 FROM smg_charges
 WHERE agentid = #url.userid#
 AND invoiceid <> 0
-			<cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10) AND form.view is not 'all'>
+			<cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10 OR FORM.companyID EQ 14) AND form.view is not 'all'>
 			and companyid = #FORM.companyID#
 			</cfif>
 GROUP BY 
