@@ -7,7 +7,6 @@
 <cfparam name="FORM.wat_doc_signed_assessment" default="0">
 <cfparam name="FORM.wat_doc_college_letter" default="0">
 <cfparam name="FORM.wat_doc_college_letter_translation" default="0">
-<cfparam name="FORM.wat_doc_job_offer" default="0">
 <cfparam name="FORM.wat_doc_job_offer_applicant" default="0">
 <cfparam name="FORM.wat_doc_job_offer_employer" default="0">
 <cfparam name="FORM.wat_doc_other" default="">
@@ -117,7 +116,6 @@
         wat_doc_signed_assessment,
         wat_doc_college_letter,
         wat_doc_college_letter_translation,
-        wat_doc_job_offer,
         wat_doc_job_offer_applicant,
         wat_doc_job_offer_employer,
 		wat_doc_other,
@@ -168,11 +166,9 @@
         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_signed_assessment#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_college_letter#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_college_letter_translation#">,
-        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_applicant#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_employer#">,
 		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other#">,
-        
 		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.combo_request#">, 
 		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.startdate#" null="#NOT IsDate(FORM.startdate)#">, 
 		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.enddate#" null="#NOT IsDate(FORM.enddate)#"> 

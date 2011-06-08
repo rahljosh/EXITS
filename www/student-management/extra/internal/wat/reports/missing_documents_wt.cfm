@@ -27,7 +27,6 @@
                 c.wat_doc_signed_assessment,
                 c.wat_doc_college_letter,
                 c.wat_doc_college_letter_translation,
-                c.wat_doc_job_offer,
                 c.wat_doc_job_offer_applicant,
                 c.wat_doc_job_offer_employer,
                 c.wat_doc_other,
@@ -61,8 +60,6 @@
                     c.wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR
                     c.wat_doc_passport_copy = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
-                OR 
-                    c.wat_doc_job_offer = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
                     c.wat_doc_orientation = <cfqueryparam cfsqltype="cf_sql_integer" value="0">   
                 OR
@@ -211,7 +208,6 @@
 						<cfif NOT VAL(qGetCandidates.wat_doc_signed_assessment)>- Signed English Assessment<br /></cfif>
                         <cfif NOT VAL(qGetCandidates.wat_doc_college_letter)>- College Letter<br /></cfif>
 						<cfif NOT VAL(qGetCandidates.wat_doc_college_letter_translation)>- College Letter (translation)<br /></cfif>
-                        <cfif NOT VAL(qGetCandidates.wat_doc_job_offer)>- Job Offer<br /></cfif>
 						<cfif NOT VAL(qGetCandidates.wat_doc_job_offer_applicant)>- Job Offer Agreement Applicant<br /></cfif>
 						<cfif NOT VAL(qGetCandidates.wat_doc_job_offer_employer)>- Job Offer Agreement Employer<br /></cfif>
                         <cfif LEN(qGetCandidates.wat_doc_other)>- #qGetCandidates.wat_doc_other#<br /></cfif>

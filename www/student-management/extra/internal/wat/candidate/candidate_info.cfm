@@ -746,8 +746,8 @@
                                                 <label for="wat_doc_passport_copy">Passport Copy</label>
                                             </td>
                                             <td class="style1">
-                                                <input type="checkbox" name="wat_doc_job_offer" id="wat_doc_job_offer" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_job_offer)> checked </cfif> >
-                                                <label for="wat_doc_job_offer">Job Offer</label>
+                                                <input type="checkbox" name="wat_doc_job_offer_applicant" id="wat_doc_job_offer_applicant" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_job_offer_applicant)> checked </cfif> >
+                                                <label for="wat_doc_job_offer_applicant">Job Offer Agreement Applicant</label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -755,13 +755,6 @@
                                                 <input type="checkbox" name="wat_doc_orientation" id="wat_doc_orientation" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_orientation)> checked </cfif> > 
                                                 <label for="wat_doc_orientation">Orientation Sign Off</label>
                                             </td>
-                                            <td class="style1">
-                                                <input type="checkbox" name="wat_doc_job_offer_applicant" id="wat_doc_job_offer_applicant" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_job_offer_applicant)> checked </cfif> >
-                                                <label for="wat_doc_job_offer_applicant">Job Offer Agreement Applicant</label>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>&nbsp;</td>
                                             <td class="style1">
                                                 <input type="checkbox" name="wat_doc_job_offer_employer" id="wat_doc_job_offer_employer" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_job_offer_employer)> checked </cfif> >
                                                 <label for="wat_doc_job_offer_employer">Job Offer Agreement Employer</label>
