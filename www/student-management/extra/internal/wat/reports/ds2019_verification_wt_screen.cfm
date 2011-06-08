@@ -38,7 +38,6 @@
             c.startdate, 
             c.ds2019,
 			c.hostcompanyid,
-            c.wat_doc_job_offer,
             birth.countryname as countrybirth,
           	resident.countryname as countryresident,
             citizen.countryname as countrycitizen
@@ -65,7 +64,9 @@
 		AND
 			c.hostcompanyid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 		AND
-			c.wat_doc_job_offer = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+			c.wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND
+			c.wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            
         ORDER BY 
         	c.lastName, 
             c.firstName
