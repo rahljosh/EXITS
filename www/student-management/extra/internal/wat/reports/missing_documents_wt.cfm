@@ -205,7 +205,7 @@
                     <td valign="top" class="style1" style="color:##CC0000">
                         <cfif NOT VAL(qGetCandidates.wat_doc_agreement)>- Agreement<br /></cfif>
                         <cfif NOT VAL(qGetCandidates.wat_doc_walk_in_agreement) AND qGetCandidates.wat_placement EQ 'Walk-In'>- Walk-In Agreement<br /></cfif>
-						<cfif LEN(qGetCandidates.wat_doc_cv) AND qGetCandidates.wat_placement EQ 'CSB-Placement'>- CV<br /></cfif>
+						<cfif NOT VAL(qGetCandidates.wat_doc_cv) AND qGetCandidates.wat_placement EQ 'CSB-Placement'>- CV<br /></cfif>
 						<cfif NOT VAL(qGetCandidates.wat_doc_passport_copy)>- Passport Copy<br /></cfif>
                         <cfif NOT VAL(qGetCandidates.wat_doc_orientation)>- Orientation Sign Off<br /></cfif>
 						<cfif NOT VAL(qGetCandidates.wat_doc_signed_assessment)>- Signed English Assessment<br /></cfif>
