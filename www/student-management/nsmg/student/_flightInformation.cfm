@@ -396,11 +396,6 @@
     />	
 
 		<script type="text/javascript" language="javascript">
-			$(document).ready(function() {	
-				/* Date Pick Function */									   	
-				$('.datePicker').datePicker({startDate:'01/01/2009'});
-			});
-
             <!--
             function areYouSure() { 
                if(confirm("You are about to delete this flight information. \n Click OK to continue")) { 
@@ -827,19 +822,20 @@
                        
                     </table>
 
+					<cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType) AND VAL(qGetStudentInfo.recordCount)>
+                        <table align="center" width="99%" valign="top" cellpadding="3" cellspacing="1" style="margin-top:10px;">
+                            <tr>
+                                <td align="center"><input name="Submit" type="image" src="../pics/update.gif" border="0" alt=" update ">&nbsp;</td>
+                            </tr>
+                        </table>
+                    </cfif>
+
                    	</form>
-                   
+
                 </td>
             </tr>
         </table> <!--- end of main table --->
         
-        <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType) AND VAL(qGetStudentInfo.recordCount)>
-            <table cellpadding="4" cellspacing="0" width="98%" class="section" align="center" style="border:1px solid ##CCC">
-                <tr>
-                    <td align="center"><input name="Submit" type="image" src="../pics/update.gif" border="0" alt=" update ">&nbsp;</td>
-                </tr>
-            </table>
-		</cfif>
             
         <!--- Table Footer --->
         <gui:tableFooter 
