@@ -18,6 +18,7 @@ END) AS testCompId
         FROM smg_charges sc
         LEFT JOIN smg_programs sp ON sp.programid = sc.programid
         WHERE sc.agentid = #indexAgentId#
+        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
         UNION ALL
         SELECT 'payment', sc.invoiceid, spr.date, SUM( spc.amountapplied ) * -1 AS amountApplied, spr.companyid, (CASE 
 WHEN sp.type = 7 THEN 7
@@ -31,6 +32,7 @@ END) AS testCompId
         LEFT JOIN smg_programs sp ON sp.programid = sc.programid
         LEFT JOIN smg_payment_received spr ON spr.paymentid = spc.paymentid
         WHERE spr.agentid = #indexAgentId#
+        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
         GROUP BY sc.invoiceid
         )t
         GROUP BY t.invoiceid HAVING invBalance > 0
@@ -46,6 +48,7 @@ END) AS testCompId
         LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         WHERE sc.agentid = #indexAgentId#
+        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
         AND sc.active = 1
         GROUP BY creditid
         ORDER BY date DESC
@@ -220,6 +223,9 @@ END) AS testCompId
                             <cfcase value="10">
                                 <cfset company = 'CASE High School'>
                             </cfcase>
+                            <cfcase value="12">
+                                <cfset company = 'ISE High School'>
+                            </cfcase>
                         </cfswitch>
             
                         <tr <cfif getInvoicesCreditNotes.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
@@ -274,7 +280,7 @@ END) AS testCompId
     	</cfif>
 	
 	</cfif>
-    
+
 </cfloop>
 
 <cfif variables.missingEmail NEQ 1>

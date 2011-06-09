@@ -88,7 +88,7 @@ END) AS testCompId --->
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE sch.agentid = #url.userid#
-        AND sch.companyid IN (1,2,3,4,10,12)
+        AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
         	HAVING sch.companyid = #FORM.companyID#
@@ -107,7 +107,7 @@ END) AS testCompId --->
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE  sch.agentid = #url.userid#
-        AND sch.companyid IN (1,2,3,4,10,12)
+        AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
         	HAVING sch.companyid = #FORM.companyID#
@@ -126,7 +126,7 @@ END) AS testCompId --->
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sc.agentid
         WHERE sc.active =1
-        AND sc.companyid IN (1,2,3,4,10,12)
+        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
         AND sc.agentid = #url.userid#
 		GROUP BY sc.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
@@ -730,7 +730,7 @@ AND invoiceid <> 0
         and companyid = #FORM.companyID#
     </cfcase>
     <cfdefaultcase>
-        and companyid IN (1,2,3,4,5,10,12)
+        and companyid IN (1,2,3,4,5,7,8,10,12)
     </cfdefaultcase>
 </cfswitch>
 GROUP BY 
@@ -933,7 +933,7 @@ where agentid = #url.userid#
         and sc.companyid = #FORM.companyID#
     </cfcase>
     <cfdefaultcase>
-        and sc.companyid IN (1,2,3,4,5,10,12)
+        and sc.companyid IN (1,2,3,4,5,7,8,10,12)
     </cfdefaultcase>
 </cfswitch>
 and  active = 1
@@ -1008,7 +1008,7 @@ where agentid = #url.userid#
         and smg_credit.companyid = #FORM.companyID#
     </cfcase>
     <cfdefaultcase>
-        and smg_credit.companyid IN (1,2,3,4,5,10,12)
+        and smg_credit.companyid IN (1,2,3,4,5,7,8,10,12)
     </cfdefaultcase>
 </cfswitch>
 and active = 0
