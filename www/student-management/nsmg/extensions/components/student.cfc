@@ -1593,6 +1593,13 @@
 				if ( LEN(qGetHostInfo.motherFirstName) AND ( NOT LEN(qGetHostInfo.mothercbc_form) OR qGetHostInfo.mothercbc_form GT setDeadline ) ) {
 					returnMessage = returnMessage & 'Host Mother CBC has not been received or received after deadline - Date Received: #DateFormat(qGetHostInfo.mothercbc_form, 'mm/dd/yyyy')#. <br />'; 	
 				}
+
+				// 2nd Confidential Host Family Visit Form
+				/*
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec2) OR qCheckPlacementPaperwork.doc_conf_host_rec2 GT setDeadline ) {
+					returnMessage = returnMessage & '2nd Confidential Host Family Visit Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec2, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				*/
 				
 				// Host Member CBC
 				
@@ -1612,11 +1619,6 @@
 					// Single Person Placement Reference 2
 					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_2) OR qCheckPlacementPaperwork.doc_single_ref_form_2 GT setDeadline ) {
 						returnMessage = returnMessage & 'Single Person Placement Reference 2 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
-					}
-					
-					// 2nd Confidential Host Family Visit Form
-					if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec2) OR qCheckPlacementPaperwork.doc_conf_host_rec2 GT setDeadline ) {
-						returnMessage = returnMessage & '2nd Confidential Host Family Visit Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec2, 'mm/dd/yyyy')#. <br />'; 	
 					}
 					
 				} // Non-Traditional Placement - Extra Documents
