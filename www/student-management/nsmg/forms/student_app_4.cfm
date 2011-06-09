@@ -54,7 +54,7 @@ where studentid = #client.studentid#
 	</td>
 	<td width="20%" align="right" valign="top">
 		<table border=0 cellpadding=3 cellspacing=0 align="right">
-			<tr><td align="right"><cfinclude template="../student_app_menu.cfm"></td></tr>
+			<tr><td align="right"><cfinclude template="student_app_menu.cfm"></td></tr>
 		</table> 		
 	</td>
 	</tr>

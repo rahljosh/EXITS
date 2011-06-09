@@ -1,7 +1,9 @@
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfform action="querys/insert_student_school.cfm">
 <cfoutput query="get_student_info">
+
+<cfform action="querys/insert_student_school.cfm">
+<input type="hidden" name="studentID" value="#get_student_info.studentID#" />
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
@@ -42,7 +44,7 @@
 	</td>
 	<td width="20%" align="right" valign="top">
 		<table border=0 cellpadding=3 cellspacing=0 align="right">
-			<tr><td align="right"><cfinclude template="../student_app_menu.cfm"></td></tr>
+			<tr><td align="right"><cfinclude template="student_app_menu.cfm"></td></tr>
 		</table> 		
 	</td>
 	</tr>
@@ -59,5 +61,7 @@
 		<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
 	</tr>
 </table>
-</cfoutput>
+
 </cfform>
+
+</cfoutput>
