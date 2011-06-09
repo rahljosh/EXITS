@@ -88,6 +88,7 @@ END) AS testCompId --->
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE sch.agentid = #url.userid#
+        AND sch.companyid IN (1,2,3,4,10,12)
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
         	HAVING sch.companyid = #FORM.companyID#
@@ -106,6 +107,7 @@ END) AS testCompId --->
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE  sch.agentid = #url.userid#
+        AND sch.companyid IN (1,2,3,4,10,12)
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
         	HAVING sch.companyid = #FORM.companyID#
@@ -124,6 +126,7 @@ END) AS testCompId --->
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sc.agentid
         WHERE sc.active =1
+        AND sc.companyid IN (1,2,3,4,10,12)
         AND sc.agentid = #url.userid#
 		GROUP BY sc.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
@@ -722,9 +725,14 @@ SELECT invoiceid, invoicedate, SUM(amount_due) AS invoice_due, companyid
 FROM smg_charges
 WHERE agentid = #url.userid#
 AND invoiceid <> 0
-			<cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10 OR FORM.companyID EQ 14) AND form.view is not 'all'>
-			and companyid = #FORM.companyID#
-			</cfif>
+<cfswitch expression="#FORM.companyID#">
+    <cfcase value="5,10,14">
+        and companyid = #FORM.companyID#
+    </cfcase>
+    <cfdefaultcase>
+        and companyid IN (1,2,3,4,5,10,12)
+    </cfdefaultcase>
+</cfswitch>
 GROUP BY 
 	invoiceid DESC, companyID 
 </cfquery>
@@ -831,7 +839,7 @@ GROUP BY
 		</table>
 </cfform>
 	</div>
-				<table width=100% cellpadding=0 cellspacing=0 border=0>
+				<table width=100% cellpadd<strong></strong>ing=0 cellspacing=0 border=0>
 					<tr valign=bottom >
 						<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
 						<td width=100% background="pics/header_background_footer.gif"></td>
@@ -876,7 +884,7 @@ ORDER BY date DESC
 	right join smg_payment_charges spc on spc.paymentid = spr.paymentid
 	right join smg_charges sc on sc.chargeid = spc.chargeid
 	where paymentref = '#paymentref#' and spr.agentid = #url.userid# and paymenttype = '#paymenttype#'
-	<cfif client.companyid EQ 10>
+	<cfif client.companyid EQ 10 OR client.companyid EQ 14>
 		and sc.companyid = #client.companyid#
 	</cfif>
 	group by agentid
@@ -919,9 +927,15 @@ ORDER BY date DESC
 select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.creditid, sc.amount_applied, sc.credit_type, c.companyshort
 from smg_credit sc
 LEFT JOIN smg_companies c ON c.companyid = sc.companyid
-where agentid = #url.userid# <cfif (FORM.companyID EQ 10) AND form.view is not 'all'>
-								and sc.companyid = #FORM.companyID# 
-							 </cfif>
+where agentid = #url.userid# 
+<cfswitch expression="#FORM.companyID#">
+    <cfcase value="5,10,14">
+        and sc.companyid = #FORM.companyID#
+    </cfcase>
+    <cfdefaultcase>
+        and sc.companyid IN (1,2,3,4,5,10,12)
+    </cfdefaultcase>
+</cfswitch>
 and  active = 1
 ORDER BY creditid DESC, stuid DESC, chargeid ASC
 </cfquery>
@@ -988,9 +1002,15 @@ ORDER BY creditid DESC, stuid DESC, chargeid ASC
 select date, type, description, stuid, invoiceid, amount, creditid, credit_type, c.companyshort
 from smg_credit
 LEFT OUTER JOIN smg_companies c ON c.companyid = smg_credit.companyid
-where agentid = #url.userid# <cfif FORM.companyID EQ 10 AND form.view is not 'all'>
-								and smg_credit.companyid = #FORM.companyID# 
-							 </cfif>
+where agentid = #url.userid#
+<cfswitch expression="#FORM.companyID#">
+    <cfcase value="5,10,14">
+        and smg_credit.companyid = #FORM.companyID#
+    </cfcase>
+    <cfdefaultcase>
+        and smg_credit.companyid IN (1,2,3,4,5,10,12)
+    </cfdefaultcase>
+</cfswitch>
 and active = 0
 ORDER BY creditid DESC, stuid DESC, chargeid ASC
 </Cfquery>
