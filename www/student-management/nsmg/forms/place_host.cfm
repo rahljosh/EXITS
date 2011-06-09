@@ -150,15 +150,21 @@ function areYouSure() {
 	</tr>
 </table>
 
-<cfform action="place_change_host.cfm?studentid=#client.studentid#"  method="post">
-<table width="580" align="center">
-	<Tr>
-		<td align="right" width="50%"><br>
-		<CFIF client.usertype LTE 7><input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</cfif></td>
-		<td align="left" width="50%"><Br>&nbsp;&nbsp;<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
-	</tr>
-</table><br>
-</cfform>
+<!--- Check if student is active --->
+<cfif VAL(get_student_info.active)>
+
+    <cfform action="place_change_host.cfm?studentid=#client.studentid#"  method="post">
+        <table width="580" align="center">
+            <Tr>
+                <td align="right" width="50%"><br>
+                <CFIF client.usertype LTE 7><input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</cfif></td>
+                <td align="left" width="50%"><Br>&nbsp;&nbsp;<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
+            </tr>
+        </table><br>
+    </cfform>
+
+</cfif>
+<!--- End of Check if student is active --->
 
 <table width="580" align="center">
 <tr>

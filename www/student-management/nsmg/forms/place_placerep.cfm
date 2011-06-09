@@ -113,16 +113,26 @@
 				</table>
 			</cfif>
 		</cfoutput>
-		<cfform action="place_change_placerep.cfm?studentid=#client.studentid#"  method="post">
-			<table width="580" align="center">
-			<Tr>
-				<td align="right" width="50%"><font size=-1><br>
-					<input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</td>
-				<td align="left" width="50%"><font size=-1><Br>&nbsp;&nbsp;
-					<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
-			</tr>
-			</table><br>
-		</cfform>
+
+		<!--- Check if student is active --->
+        <cfif VAL(get_student_info.active)>
+        
+            <cfform action="place_change_placerep.cfm?studentid=#client.studentid#"  method="post">
+                <table width="580" align="center">
+                <Tr>
+                    <td align="right" width="50%"><br>
+                        <input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;
+                    </td>
+                    <td align="left" width="50%"><Br>&nbsp;&nbsp;
+                        <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">
+                    </td>
+                </tr>
+                </table><br>
+            </cfform>
+            
+		</cfif> 
+		<!--- End of Check if student is active --->
+                
 	</cfif> <!--- Supervising REP --->
 </cfif> <!--- UNPLACED --->
 

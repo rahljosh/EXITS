@@ -54,16 +54,23 @@
 	<tr><td align="center"><textarea cols=50 rows=10 name="placement_notes">#placement_notes#</textarea></td></tr>
 </table>
 
-<table width="580" align="center">
-<tr>
-	<td align="right" width="50%"><font size=-1><br>
-	<input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</form></td>
-	<td align="left" width="50%">
-		<font size=-1><Br>&nbsp;&nbsp;
-		<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">
-	</td>
-</tr>
-</table>
+<!--- Check if student is active --->
+<cfif VAL(get_student_info.active)>
+
+    <table width="580" align="center">
+    <tr>
+        <td align="right" width="50%"><font size=-1><br>
+        <input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</form></td>
+        <td align="left" width="50%">
+            <font size=-1><Br>&nbsp;&nbsp;
+            <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">
+        </td>
+    </tr>
+    </table>
+
+</cfif> 
+<!--- End of Check if student is active --->
+
 </cfoutput>
 
 <br>

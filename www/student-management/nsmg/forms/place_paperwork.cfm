@@ -449,16 +449,16 @@ where programid = #get_student_info.programid#
 <table width="560" align="center">
 <tr>
 	<cfif client.usertype GT 4>
-	<td align="center">
-		<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">
-	</td>
+        <td align="center">
+            <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">
+        </td>
 	<cfelse>
-	<td align="right" width="50%"><font size=-1><br>
-		<input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</form></td>
-	<td align="left" width="50%">
-		<font size=-1><Br>&nbsp;&nbsp;
-		<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">
-	</td>
+        <td align="right" width="50%"><font size=-1><br>
+            <input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</form></td>
+        <td align="left" width="50%">
+            <font size=-1><Br>&nbsp;&nbsp;
+            <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()">
+        </td>
 	</cfif>
 </tr>
 </table>

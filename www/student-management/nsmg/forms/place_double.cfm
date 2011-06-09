@@ -59,15 +59,26 @@
 		</cfif>
 	</table>
 	<br><br>
-	<table width="580" align="center">
-		<Tr>
-			<td align="right" width="50%">
-			<input name="submit" type="image" src="../pics/update.gif" align="right" border=0></cfform></td>
-			<td align="left" width="50%">
-			<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
-		</tr>
-	</table>
+
+	<!--- Check if student is active --->
+    <cfif VAL(get_student_info.active)>
+        
+        <table width="580" align="center">
+            <Tr>
+                <td align="right" width="50%">
+                <input name="submit" type="image" src="../pics/update.gif" align="right" border=0></td>
+                <td align="left" width="50%">
+                <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
+            </tr>
+        </table>
+
+	</cfif> 
+    <!--- End of Check if student is active --->
+    
+    </cfform>
+    
 <cfelse>
+
 	<cfquery name="get_double" datasource="MySql">
 		SELECT studentid, firstname, familylastname, countryresident,
 		countryname
@@ -77,22 +88,31 @@
 	</cfquery>
 	
 	<cfloop query="get_double">
-	<table width="580" align="center">
-		<tr><td><h3>Double Placement with student : </h3></td></tr>
-		<tr><td><h3>#firstname# #familylastname# (#studentid#)  &nbsp; -  &nbsp; from #countryname#</h3></td></tr>
-	</table>
-	<br>
-	<table width="580" align="center">				
-		<Tr>
-		<cfform action="place_double.cfm?studentid=#client.studentid#&update=yes" method="post">
-		<td align="right" width="50%"><br>
-		<input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</td>
-		</cfform>
-		<td align="left" width="50%"><Br>&nbsp;&nbsp;
-		<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
-		</tr>
-	</table>
+        <table width="580" align="center">
+            <tr><td><h3>Double Placement with student : </h3></td></tr>
+            <tr><td><h3>#firstname# #familylastname# (#studentid#)  &nbsp; -  &nbsp; from #countryname#</h3></td></tr>
+        </table>
+        <br>
+    
+        <!--- Check if student is active --->
+        <cfif VAL(get_student_info.active)>
+    
+            <table width="580" align="center">				
+                <Tr>
+                <cfform action="place_double.cfm?studentid=#client.studentid#&update=yes" method="post">
+                <td align="right" width="50%"><br>
+                <input name="submit" type="image" src="../pics/update.gif" align="right" border=0>&nbsp;&nbsp;</td>
+                </cfform>
+                <td align="left" width="50%"><Br>&nbsp;&nbsp;
+                <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
+                </tr>
+            </table>
+    
+        </cfif> 
+        <!--- End of Check if student is active --->
+    
 	</cfloop>
+    
 </cfif>
 <br /><br />
 
