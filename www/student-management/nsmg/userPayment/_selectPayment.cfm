@@ -14,7 +14,7 @@
     <cfparam name="FORM.supervising" default="0">
     <cfparam name="FORM.placing" default="0">
     <cfparam name="FORM.student" default="0">
-
+	
     <!----If coming from User Profile, don't check for form vaiables--->
     <Cfif isDefined('url.user')>
         
@@ -39,177 +39,216 @@
         
     </cfif>
     
-    <cfquery name="payment_type_super" datasource="MySql">
-        SELECT id, type
-        FROM smg_payment_types
-        WHERE active = '1' AND (paymenttype = 'Supervision' or paymenttype = '')
+    <cfquery name="qGetSupervisingPaymentType" datasource="MySql">
+        SELECT 
+        	id, 
+            type
+        FROM 
+        	smg_payment_types
+        WHERE 
+        	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
+        AND
+        	( 
+        		paymentType = <cfqueryparam cfsqltype="cf_sql_varchar" value="Supervision">
+            OR
+            	paymentType = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+            )
     </cfquery>
     
-    <cfquery name="payment_type_place" datasource="MySql">
-        SELECT id, type
-        FROM smg_payment_types
-        WHERE active = '1' AND (paymenttype = 'Placement' or paymenttype = '')
+    <cfquery name="qGetPlacingPaymentType" datasource="MySql">
+        SELECT 
+        	id, 
+            type
+        FROM 
+        	smg_payment_types
+        WHERE 
+        	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
+        AND
+        	( 
+        		paymentType = <cfqueryparam cfsqltype="cf_sql_varchar" value="Placement">
+            OR
+            	paymentType = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+            )
     </cfquery>
 
-	<!----Regardless of where rep selected, pull all students placed by that rep---->
-    <cfquery name="get_placed_students" datasource="mysql">
-        SELECT studentid, familylastname, firstname, smg_students.programid, programname
-        FROM smg_students
-        LEFT JOIN smg_programs p ON p.programid = smg_students.programid
-        WHERE 1=1
-        <Cfif FORM.placing gt 0>
-        AND	placerepid = #FORM.placing#
-        <cfelseif FORM.supervising gt 0>
-        AND	placerepid = #FORM.supervising#
-        </Cfif> 
-        AND smg_students.companyid = #client.companyid#
-        ORDER BY studentid DESC
+    <!----Regardless of where rep selected, pull all students supervised by that rep---->
+    <cfquery name="qGetSupervisedStudents" datasource="MySQL">
+        SELECT 
+        	s.studentid, 
+            s.familylastname, 
+            s.firstname, 
+            s.programid, 
+            p.programname
+        FROM
+        	smg_students s
+        LEFT JOIN 
+        	smg_programs p ON p.programid = s.programid
+        WHERE 
+        	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        AND
+        	p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
+            
+		<cfif VAL(FORM.placing)>
+            AND	
+            	s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.placing#">
+        <cfelseif VAL(FORM.supervising)>
+            AND	
+            	s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.supervising#">
+        </cfif> 
+        
+        ORDER BY
+        	p.startDate DESC,
+            p.programName,
+        	s.familyLastName,
+            s.firstName
     </cfquery>
     
-    <!----Regardless of where rep selected, pull all students supervised by that rep---->
-    <cfquery name="get_supervised_students" datasource="MySQL">
-        select studentid, familylastname, firstname, smg_students.programid, programname
-        from smg_students
-        LEFT JOIN smg_programs p ON p.programid = smg_students.programid
-        where 1=1
-        <Cfif FORM.placing gt 0>
-        AND arearepid = #FORM.placing#
-        <cfelseif FORM.supervising gt 0>
-        AND arearepid = #FORM.supervising#
-        </Cfif> 
-        AND smg_students.companyid = #client.companyid#
-        ORDER BY studentid DESC
+	<!----Regardless of where rep selected, pull all students placed by that rep---->
+    <cfquery name="qGetPlacedStudents" datasource="mysql">
+        SELECT 
+        	s.studentid, 
+            s.familylastname, 
+            s.firstname, 
+            s.programid, 
+            p.programname
+        FROM
+        	smg_students s
+        LEFT JOIN 
+        	smg_programs p ON p.programid = s.programid
+        WHERE 
+        	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        AND
+        	p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
+            
+		<cfif VAL(FORM.placing)>
+            AND	
+            	s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.placing#">
+        <cfelseif VAL(FORM.supervising)>
+            AND	
+            	s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.supervising#">
+        </cfif> 
+        
+        ORDER BY 
+        	p.startDate DESC,
+        	s.familyLastName,
+            s.firstName
     </cfquery>
     
     <Cfquery name="qGetRepInfo" datasource="MySQL">
-        select firstname, lastname, userid
-        from smg_users
-        where 
-        <Cfif VAL(FORM.placing)>
-            userid = #FORM.placing#
+        SELECT 
+        	userid,
+        	firstname, 
+            lastname
+        FROM 
+        	smg_users
+        WHERE 
+        <cfif VAL(FORM.placing)>
+			userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.placing#">
         <cfelseif VAL(FORM.supervising)>
-            userid = #FORM.supervising#
+            userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.supervising#">
         </cfif>
     </Cfquery>
     
 </cfsilent>
 
-<SCRIPT LANGUAGE="JavaScript">
-	<!-- Begin
-	var checkflag = "false";
-	function check(field) {
-	if (checkflag == "false") {
-	for (i = 0; i < field.length; i++) {
-	field[i].checked = true;}
-	checkflag = "true";
-	return "Uncheck All"; }
-	else {
-	for (i = 0; i < field.length; i++) {
-	field[i].checked = false; }
-	checkflag = "false";
-	return "Check All"; }
-	}
-	//  End -->
-	<!-- Begin
-	var checkflag2 = "false";
-	function check2(field) {
-	if (checkflag2 == "false") {
-	for (i = 0; i < field.length; i++) {
-	field[i].checked = true;}
-	checkflag2 = "true";
-	return "Uncheck All"; }
-	else {
-	for (i = 0; i < field.length; i++) {
-	field[i].checked = false; }
-	checkflag2 = "false";
-	return "Check All"; }
-	}
-	//  End -->
-</script>
-
-<div class="application_section_header">Supervising & Placement Payments</div>
-
 <cfoutput>
 
-<h2>
-	Representative: #qGetRepInfo.firstname# #qGetRepInfo.lastname# (#qGetRepInfo.userid#) &nbsp; <span class="get_attention"><b>::</b></span>
-	<a href="javascript:openPopUp('userPayment/index.cfm?action=paymentHistory&userid=#qGetRepInfo.userid#', 700, 500);" class="nav_bar">Payment History</a>
-</h2>
+	<div class="application_section_header">Supervising & Placement Payments</div>
 
-<cfform method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=processPayment">
-<input type="hidden" name="user" value="#qGetRepInfo.userid#">
-
-<table width=90% cellpadding=4 cellspacing=0>
-	<tr><td colspan="5">Check each student you want to apply payments for.</td></tr>
-	<tr>
-		<td colspan="5">
-		Please, select type of payment for the supervised students: 
-		<cfselect name="payment_type_super" query="payment_type_super" value="id" display="type" queryPosition="below">
-			<option value="">-- Select a Type --</option>
-		</cfselect>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="5" bgcolor="##010066"><font color="white"><strong>Supervised Students &nbsp; - &nbsp; #get_supervised_students.recordcount#</strong></font></td>
-	</tr>
-	<tr bgcolor="##CCCCCC">
-		<td><input type="checkbox" value="Check All" onClick="this.value=check2(this.FORM.supervised_selected_student)"></td>
-		<Td>ID</Td>
-		<td>Last Name, First Name</td>
-		<td>Program</td>
-	    <td>&nbsp;</td>
-	</tr>
-	<cfloop query="get_supervised_students">
-	<tr>
-		<td><input type="checkbox" name="supervisedStudentIDList" value="#studentid#"></td>
-		<Td>
-        	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#studentid#</a>
-		</Td>
-		<td>
-        	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#familylastname#, #firstname#</a>
-		</td>
-		<Td>#programname#</Td>  
-		<td>&nbsp;</td>
-	</tr>
-	</cfloop>
-	<tr>
-	 	<td colspan="5" align="right"> <input name="submit" type="image" src="pics/next.gif" align="right" border="0" alt="search"></td>
-	</Tr>
-	<!--- PLACED STUDENTS --->
-	<tr>
-		<td colspan="5">
-		Please, select type of payment for the placed students: 
-		<cfselect name="payment_type_place" query="payment_type_place" value="id" display="type" queryPosition="below">
-			<option value="">-- Select a Type --</option>
-		</cfselect>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="5" bgcolor="##010066"><font color="white"><strong>Placed Students &nbsp; - &nbsp; #get_placed_students.recordcount#</strong></font></td>
-	</tr>
-	<tr bgcolor="##CCCCCC">
-		<td><input type="checkbox" value="Check All" onClick="this.value=check(this.FORM.placed_selected_student)"></td>
-		<Td>ID</Td>
-		<td>Last Name>, First Name</td>
-		<td>Program</td>
-		<td>&nbsp;</td>
-	</tr>
-	<cfloop query="get_placed_students">
-	<tr>
-		<td><input type="checkbox" name="placedStudentIDList" value="#studentid#"></td>
-		<td>
-        	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#studentid#</a>
-		</td>
-		<td>
-        	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">#familylastname#, #firstname#</a>
-        </td>
-		<Td>#programname#</Td>  
-		<td>&nbsp;</td>
-	</tr>
-   </cfloop>
-	<tr>
-		<td colspan="5" align="right"><input name="submit" type="image" src="pics/next.gif" align="right" border="0" alt="search"></td>
-	</Tr>
-</table>
-</cfform>
+    <h2 style="margin-top:10px;">
+        Representative: #qGetRepInfo.firstname# #qGetRepInfo.lastname# (#qGetRepInfo.userid#) &nbsp; <span class="get_attention"><b>::</b></span>
+        <a href="javascript:openPopUp('userPayment/index.cfm?action=paymentHistory&userid=#qGetRepInfo.userid#', 700, 500);" class="nav_bar">Payment History</a>
+    </h2>
+    
+    <cfform method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=processPayment">
+        <input type="hidden" name="user" value="#qGetRepInfo.userid#">
+		
+        <div style="margin-top:10px;">Check each student you want to apply payments for.</div>        
+		
+        <!--- SUPERVISED STUDENTS --->
+        <table width="90%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;"> 
+            <tr>
+                <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Supervised Students &nbsp; - &nbsp; Total of #qGetSupervisedStudents.recordcount# student(s)</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="font-weight:bold;">
+                    Please, select type of payment for the supervised students: 
+                    <cfselect name="payment_type_super" query="qGetSupervisingPaymentType" value="id" display="type" queryPosition="below">
+                        <option value="">-- Select a Type --</option>
+                    </cfselect>
+                </td>
+            </tr>
+            <tr style="background-color:##E2EFC7; font-weight:bold;">
+                <td width="5%">&nbsp;</td>
+                <td width="10%">ID</td>
+                <td width="25%">Last Name, First Name</td>
+                <td width="25%">Program</td>
+                <td width="35%">&nbsp;</td>
+            </tr>
+            <cfloop query="qGetSupervisedStudents">
+                <tr bgcolor="###iif(qGetSupervisedStudents.currentrow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                    <td><input type="checkbox" name="supervisedStudentIDList" id="superCheckBox" value="#qGetSupervisedStudents.studentid#"></td>
+                    <td>
+                    	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetSupervisedStudents.studentid#', 700, 500);" class="nav_bar">
+                        	#qGetSupervisedStudents.studentid#
+                        </a>
+                    </td>
+                    <td>
+                    	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetSupervisedStudents.studentid#', 700, 500);" class="nav_bar">
+                        	#qGetSupervisedStudents.familylastname#, #qGetSupervisedStudents.firstname#
+                        </a>
+                    </td>
+                    <td>#qGetSupervisedStudents.programname#</td>
+                    <td>&nbsp;</td>  
+                </tr>
+            </cfloop>
+            <tr style="background-color:##E2EFC7;">
+            	<td colspan="5" align="right"> <input name="submit" type="image" src="pics/next.gif" align="right" border="0" alt="search"></td>
+            </Tr>
+		</table>
+        
+        <!--- PLACED STUDENTS --->
+        <table width="90%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+            <tr>
+                <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Placed Students &nbsp; - &nbsp; Total of #qGetPlacedStudents.recordcount# student(s)</td>
+            </tr>
+            <tr>
+                <td colspan="5" style="font-weight:bold;">
+                    Please, select type of payment for the placed students: 
+                    <cfselect name="payment_type_place" query="qGetPlacingPaymentType" value="id" display="type" queryPosition="below">
+                        <option value="">-- Select a Type --</option>
+                    </cfselect>
+                </td>
+            </tr>
+            <tr style="background-color:##E2EFC7; font-weight:bold;">
+                <td width="5%">&nbsp;</td>
+                <td width="10%">ID</td>
+                <td width="25%">Last Name, First Name</td>
+                <td width="25%">Program</td>
+                <td width="35%">&nbsp;</td>
+            </tr>
+            <cfloop query="qGetPlacedStudents">
+                <tr bgcolor="###iif(qGetPlacedStudents.currentrow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                    <td><input type="checkbox" name="placedStudentIDList" id="placeCheckBox" value="#qGetPlacedStudents.studentid#"></td>
+                    <td>
+                    	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetPlacedStudents.studentid#', 700, 500);" class="nav_bar">
+                        	#qGetPlacedStudents.studentid#
+                        </a>
+					</td>
+                    <td>
+                    	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetPlacedStudents.studentid#', 700, 500);" class="nav_bar">
+                        	#qGetPlacedStudents.familylastname#, #qGetPlacedStudents.firstname#
+						</a>
+					</td>
+                    <td>#qGetPlacedStudents.programname#</td> 
+                    <td>&nbsp;</td>  
+                </tr>
+            </cfloop>
+            <tr style="background-color:##E2EFC7;">
+                <td colspan="5" align="right"><input name="submit" type="image" src="pics/next.gif" align="right" border="0" alt="search"></td>
+            </Tr>
+        </table>
+	
+    </cfform>
+    
 </cfoutput>
