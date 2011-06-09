@@ -1,17 +1,17 @@
-<cftransaction action="BEGIN" isolation="SERIALIZABLE">
-
-<cfquery name="insert_student_school" datasource="MySQL">
-update smg_students
-set convalidation_needed= '#form.convalidation_needed#',
-	grades='#form.grades#',
-	<cfif IsDefined('form.app_completed_school')>app_completed_school = '#form.app_completed_school#',</cfif>			
-	estgpa='#form.estgpa#',
-	yearsenglish='#form.yearsenglish#',
-	slep_score='#form.slep_score#'
-	where studentid  = #client.studentid#		
+<cfquery datasource="MySQL">
+	UPDATE 
+    	smg_students
+	SET 
+        convalidation_needed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.convalidation_needed#">,
+        grades = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.grades#">,
+        <cfif IsDefined('FORM.app_completed_school')>
+        	app_completed_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_completed_school#">,
+		</cfif>			
+        estgpa = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.estgpa#">,
+        yearsenglish = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.yearsenglish#">,
+        slep_score = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.slep_score#">
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studentid#">	
 </cfquery>
 
-<cflocation url="../index.cfm?curdoc=forms/student_app_8" addtoken="No">
-
-</body>
-</html>
+<cflocation url="../index.cfm?curdoc=student_info&studentid=#FORM.studentid#" addtoken="No">
