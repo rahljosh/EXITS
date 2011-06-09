@@ -213,12 +213,14 @@ ORDER BY businessname
 		SELECT sch.invoiceid, sch.stuid, sch.chargeid, sch.companyid, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
 		FROM smg_charges sch
 		WHERE sch.invoiceid = #iInvoiceNumber#
+        AND sch.companyid IN (1,2,3,4,10,12)
 		GROUP BY sch.stuid
 		UNION ALL
 		SELECT sch.invoiceid, sch.stuid, sch.chargeid, sch.companyid, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
 		FROM smg_payment_charges spc
 		LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
 		WHERE sch.invoiceid = #iInvoiceNumber#
+        AND sch.companyid IN (1,2,3,4,10,12)
 		GROUP BY sch.stuid
 		) t
 		GROUP BY t.stuid
@@ -431,12 +433,14 @@ ORDER BY businessname
             SELECT sch.invoiceid, sch.date, sch.companyid, IFNULL( SUM( sch.amount_due ) , 0 ) AS total
             FROM smg_charges sch
             WHERE sch.agentid = #FORM.choseNAgent#
+            AND sch.companyid IN (1,2,3,4,10,12)
             GROUP BY sch.invoiceid
             UNION ALL
             SELECT sch.invoiceid, sch.date, sch.companyid, IFNULL( SUM( spc.amountapplied ) * -1, 0 ) AS total
             FROM smg_payment_charges spc
             LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
             WHERE sch.agentid = #FORM.choseNAgent#
+            AND sch.companyid IN (1,2,3,4,10,12)
             GROUP BY sch.invoiceid
             ) t
             GROUP BY t.invoiceid HAVING totalPerInvoice > 0
