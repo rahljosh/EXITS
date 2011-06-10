@@ -64,7 +64,7 @@ a:active {
                 <br />
               Athletic Heather with Black Logo<br />                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
            Quantity  <INPUT NAME="Qty" class="style1" VALUE="1" size=3> <br />
-																<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+																<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
 																<INPUT TYPE="HIDDEN" NAME="ID" VALUE="5930 1 color">
 																<INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Short Sleeve Tee">
 																<INPUT TYPE="HIDDEN" NAME="Price" VALUE="9.00">
@@ -88,7 +88,7 @@ a:active {
                 Features: 50% preshrunk cotton, 50% polyester, 5.6 oz., shoulder-to-shoulder tape, rib collar and cuffs, cover-seamed front neck; double-needle bottom hem. Athletic Heather with Black Logo<br />
                 <img src="images/webstore/greenLine.gif" width="208" height="20" /><br />
                Quantity  <INPUT NAME="Qty" class="style1" VALUE="1" size=3>
-																<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+																<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
 																<INPUT TYPE="HIDDEN" NAME="ID" VALUE="29L 1 color">
 																<INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Jerzees Long Sleeve Tee">
 																<INPUT TYPE="HIDDEN" NAME="Price" VALUE="15.00">
@@ -122,7 +122,7 @@ a:active {
                 <br />Navy with Black Logo
                   <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
              													Quantity	<INPUT NAME="Qty" class="style1" VALUE="1" size=3>
-													  <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+													  <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
 														<INPUT TYPE="HIDDEN" NAME="ID" VALUE="L500">
 														<INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Ladies Golf Shirt ">
 														<INPUT TYPE="HIDDEN" NAME="Price" VALUE="22.00">
@@ -145,7 +145,7 @@ a:active {
                 So silky smooth, it's hard to believe these shirts are made from easy-care, wrinkle resistant poly/cotton blend! Lightweight pique is soft and supple for a comfortable fit; shrinkage is minimal. This one is a winner for the whole crew: a shirt that is as wonderful to feel as it is to look at, and flatters all who wear it. <br />Navy with White Logo                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
                 		
                     Quantity    <INPUT NAME="Qty" class="style1" VALUE="" size=3> 
-														<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+														<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
 						                <INPUT TYPE="HIDDEN" NAME="ID" VALUE="K500">
             						    <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Mens Golf Shirt ">
 						                <INPUT TYPE="HIDDEN" NAME="Price" VALUE="22.00">
@@ -178,7 +178,7 @@ a:active {
                 <br /> 
                 Red with Navy Trim &amp; Logo              <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />    
                 			Quantity	<INPUT NAME="Qty" id="Qty" VALUE="1" size=3> 
-                            <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+                            <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
 														<INPUT TYPE="HIDDEN" NAME="ID" VALUE="L764">
 														<INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Ladies Jacket">
 														<INPUT TYPE="HIDDEN" NAME="Price" VALUE="36.00">
@@ -201,7 +201,7 @@ a:active {
                 A jacket with confident, versatile styling that's comfortable traveling from the boardroom to the seaside and everywhere in between. Features impeccable classic elements infused with modern sensibility.
 100% polyester shell, 100% polyester mesh upper back lining, 100% nylon lining on lower back/front/sleeves; contrasting neck trim.<br />Red with Navy Trim &  Logo                  <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
               Quantity   <INPUT NAME="Qty" size=3 VALUE="1"> 
-													  <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+													  <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
 														<INPUT TYPE="HIDDEN" NAME="ID" VALUE="J764">
 														<INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Mens Jacket ">
 														<INPUT TYPE="HIDDEN" NAME="Price" VALUE="36.00">
@@ -235,7 +235,7 @@ a:active {
                 Navy with White Logo
                 <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
                 Quantity <INPUT NAME="Qty" class="style1" VALUE="1" size=3> 
-                            <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+                            <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
 						                <INPUT TYPE="HIDDEN" NAME="ID" VALUE="JP73">
             						    <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Pakaway Jacket">
 						                <INPUT TYPE="HIDDEN" NAME="Price" VALUE="28.00">
