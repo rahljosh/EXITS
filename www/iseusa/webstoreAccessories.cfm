@@ -113,7 +113,7 @@ under:active {
                 18 oz. stainless steel interior with acrylic exterior.<img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
               <INPUT NAME="Qty" class="style1" VALUE="" size=3>
       Quantity - <strong>$7.00</strong> each  
- 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="TM">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Travel Mug">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="7.00">
@@ -127,7 +127,7 @@ under:active {
                 <FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="mug" id="mug" target="loja">               
                <INPUT NAME="Qty" class="style1" VALUE="" size=2> 
                 Quantity - <strong>$0.40</strong> each      
-                <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'> 
+                <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'> 
                 <INPUT TYPE="HIDDEN" NAME="ID" VALUE="IP">
                 <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Pens">
                 <INPUT TYPE="HIDDEN" NAME="Price" VALUE="0.40">
@@ -153,7 +153,7 @@ under:active {
                 7.75&quot; h x 9.25&quot;w x .25&quot; thick.<br /><img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
                 <INPUT NAME="Qty" class="style1" VALUE="" size=3> 
                 Quantity - <strong>$3.00</strong> each      
-                <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'> 
+                <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'> 
                 <INPUT TYPE="HIDDEN" NAME="ID" VALUE="MP">
                 <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Mouse pad">
                 <INPUT TYPE="HIDDEN" NAME="Price" VALUE="3.00">
@@ -172,7 +172,7 @@ under:active {
                 
                   <INPUT NAME="Qty" class="style1" VALUE="" size=3>
       Quantity - <strong>$1.25</strong> each  
- 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="LT">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Luggage Tag">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="1.25">
@@ -198,7 +198,7 @@ under:active {
                 2 3/8&quot; diameter.<br /><img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
 			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
      		 Quantity - <strong>$1.50</strong> each 
- 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="GMRC">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Globe Magnet Refrigerator Clip">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="1.50">
@@ -215,7 +215,7 @@ under:active {
                 Light blue mug with dark blue ISE logo, 13 oz.<img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
                 <INPUT NAME="Qty" class="style1" VALUE="" size=3>
       Quantity - <strong>$3.50</strong> each
- 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="CM">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Light Blue Mug">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="3.50">
@@ -242,7 +242,7 @@ under:active {
                 <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
 			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
      		 Quantity - <strong>$1.25</strong> each 
- 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="KC">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Key Chain">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="1.25">
@@ -260,7 +260,7 @@ under:active {
                 <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
 			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
      		 Quantity - <strong>$9.00</strong> each 
- 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="BC">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Ball Cap">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="9.00">
@@ -287,7 +287,7 @@ under:active {
                 <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
 			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
      		 Quantity - <strong>$4.50</strong> each 
- 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="TBG">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Tote Bag">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="4.50">
@@ -305,7 +305,7 @@ under:active {
                 <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
 			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
      		 Quantity - <strong>$3.00</strong> each 
- 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="CDR">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Calendar">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="3.00">
@@ -359,7 +359,7 @@ AN ARTWORK PROOF FOR YOUR APPROVAL.</p>
                 <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
 			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
      		 Quantity - <strong>$19.00</strong> each 
- 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='n'>
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
             <INPUT TYPE="HIDDEN" NAME="ID" VALUE="MGT">
             <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Car Magnet">
             <INPUT TYPE="HIDDEN" NAME="Price" VALUE="19.00">
