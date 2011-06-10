@@ -97,10 +97,7 @@
         </cfif> 
         
         ORDER BY
-        	p.startDate DESC,
-            p.programName,
-        	s.familyLastName,
-            s.firstName
+        	s.studentID DESC
     </cfquery>
     
 	<!----Regardless of where rep selected, pull all students placed by that rep---->
@@ -129,9 +126,7 @@
         </cfif> 
         
         ORDER BY 
-        	p.startDate DESC,
-        	s.familyLastName,
-            s.firstName
+        	s.studentID DESC
     </cfquery>
     
     <Cfquery name="qGetRepInfo" datasource="MySQL">
@@ -179,27 +174,27 @@
                 </td>
             </tr>
             <tr style="background-color:##E2EFC7; font-weight:bold;">
-                <td width="5%">&nbsp;</td>
+                <td width="4%">&nbsp;</td>
                 <td width="10%">ID</td>
                 <td width="25%">Last Name, First Name</td>
                 <td width="25%">Program</td>
-                <td width="35%">&nbsp;</td>
+                <td width="36%">Actions</td>
             </tr>
             <cfloop query="qGetSupervisedStudents">
                 <tr bgcolor="###iif(qGetSupervisedStudents.currentrow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                    <td><input type="checkbox" name="supervisedStudentIDList" id="superCheckBox" value="#qGetSupervisedStudents.studentid#"></td>
+                    <td align="center"><input type="checkbox" name="supervisedStudentIDList" id="superCheckBox#qGetSupervisedStudents.studentid#" value="#qGetSupervisedStudents.studentid#"></td>
                     <td>
-                    	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetSupervisedStudents.studentid#', 700, 500);" class="nav_bar">
+                    	<label for="superCheckBox#qGetSupervisedStudents.studentid#">
                         	#qGetSupervisedStudents.studentid#
-                        </a>
+                        </label>
                     </td>
                     <td>
-                    	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetSupervisedStudents.studentid#', 700, 500);" class="nav_bar">
+                    	<label for="superCheckBox#qGetSupervisedStudents.studentid#">
                         	#qGetSupervisedStudents.familylastname#, #qGetSupervisedStudents.firstname#
-                        </a>
+                        </label>
                     </td>
                     <td>#qGetSupervisedStudents.programname#</td>
-                    <td>&nbsp;</td>  
+                    <td><a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetSupervisedStudents.studentid#', 700, 500);" class="nav_bar">[ Payment History ]</a></td>  
                 </tr>
             </cfloop>
             <tr style="background-color:##E2EFC7;">
@@ -221,27 +216,27 @@
                 </td>
             </tr>
             <tr style="background-color:##E2EFC7; font-weight:bold;">
-                <td width="5%">&nbsp;</td>
+                <td width="4%">&nbsp;</td>
                 <td width="10%">ID</td>
                 <td width="25%">Last Name, First Name</td>
                 <td width="25%">Program</td>
-                <td width="35%">&nbsp;</td>
+                <td width="36%">Actions</td>
             </tr>
             <cfloop query="qGetPlacedStudents">
                 <tr bgcolor="###iif(qGetPlacedStudents.currentrow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                    <td><input type="checkbox" name="placedStudentIDList" id="placeCheckBox" value="#qGetPlacedStudents.studentid#"></td>
+                    <td align="center"><input type="checkbox" name="placedStudentIDList" id="placeCheckBox#qGetPlacedStudents.studentid#" value="#qGetPlacedStudents.studentid#"></td>
                     <td>
-                    	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetPlacedStudents.studentid#', 700, 500);" class="nav_bar">
+                    	<label for="placeCheckBox#qGetPlacedStudents.studentid#">
                         	#qGetPlacedStudents.studentid#
-                        </a>
+                        </label>
 					</td>
                     <td>
-                    	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetPlacedStudents.studentid#', 700, 500);" class="nav_bar">
+                    	<label for="placeCheckBox#qGetPlacedStudents.studentid#">
                         	#qGetPlacedStudents.familylastname#, #qGetPlacedStudents.firstname#
-						</a>
+						</label>
 					</td>
                     <td>#qGetPlacedStudents.programname#</td> 
-                    <td>&nbsp;</td>  
+                    <td><a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetPlacedStudents.studentid#', 700, 500);" class="nav_bar">[ Payment History ]</a></td>  
                 </tr>
             </cfloop>
             <tr style="background-color:##E2EFC7;">
