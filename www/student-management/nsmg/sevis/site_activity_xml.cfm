@@ -55,8 +55,6 @@
     	s.host_fam_approved < '5'
     AND 
     	s.sevis_batchid != '0'
-    AND 
-    	s.sevis_activated != '0'
 	<!--- Get only the last record. Student could relocate to a previous school --->
     AND 
     	sc.schoolname NOT IN (SELECT school_name FROM smg_sevis_history WHERE studentid = s.studentid AND historyID = (SELECT max(historyID) FROM smg_sevis_history WHERE studentid = s.studentID) )
