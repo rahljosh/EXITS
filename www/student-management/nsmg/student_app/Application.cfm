@@ -18,6 +18,11 @@
 
 	<!--- Added by Marcus Melo - 11/20/2009 --->
     <cfscript>
+        // Create a function that let us create CFCs from any location
+        function CreateCFC(strCFCName){
+            return(CreateObject("component", ("extensions.components." & ARGUMENTS.strCFCName)));
+        }
+	
 		if ( StructKeyExists(APPLICATION, "CFC") ) {
 			// Set a short name for the CFCs
 			AppCFC = APPLICATION.CFC;
@@ -46,6 +51,12 @@
 		// Current Intl. Rep: STB
 		APPLICATION.displayProfileNotAllowed = "19";
     </cfscript>
+
+	<!--- Include Application Config Files --->
+	<cfinclude template="../extensions/config/_app_index.cfm" />    
+    
+	<!--- Include Config Files --->
+	<cfinclude template="../extensions/config/_index.cfm" />    
 
 
 	<!--- always allow logout. --->
