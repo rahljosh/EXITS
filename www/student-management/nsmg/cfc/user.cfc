@@ -298,12 +298,12 @@
                     	and 
                         	user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
                     </cfquery>
-                   
-                    <cfif NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16 OR CLIENT.companyID NEQ 14>
+                   <cfif client.companyid neq 14>
+                    <cfif (NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16)>
                         <cfset CLIENT.trainingNeeded = 1>
                         <cflocation url="/nsmg/trainingNeeded.cfm">
                     </cfif>
-                    
+                   </cfif>
                </Cfif>
                
            </cfif>
