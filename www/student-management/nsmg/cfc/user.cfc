@@ -301,7 +301,7 @@
                    <cfif client.companyid neq 14>
                     <cfif (NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16)>
                         <cfset CLIENT.trainingNeeded = 1>
-                        <cflocation url="/nsmg/trainingNeeded.cfm">
+                        <cflocation url="/nsmg/trainingNeeded.cfm" addtoken="no">
                     </cfif>
                    </cfif>
                </Cfif>
