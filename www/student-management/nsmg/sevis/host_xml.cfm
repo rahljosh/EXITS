@@ -52,11 +52,14 @@
 	LEFT JOIN 
     	smg_hosts h ON s.hostid = h.hostid
 	WHERE  
-    	s.active = '1'
+    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">    
     AND 
-    	s.host_fam_approved < '5'
+    	s.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">    
+            
+    <!--- Get only active records --->
     AND 
-    	s.sevis_batchid != '0'
+    	s.sevis_activated != <cfqueryparam cfsqltype="cf_sql_integer" value="0">        
+        
     <!--- Get only the last record. Student could relocate to a previous host family --->
     AND 
     	h.hostid NOT IN (SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentID AND historyID = (SELECT max(historyID) FROM smg_sevis_history WHERE studentid = s.studentID) )
