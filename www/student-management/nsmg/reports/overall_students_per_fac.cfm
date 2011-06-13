@@ -15,6 +15,9 @@
 	<!--- Param FORM Variable --->
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.userID" default="0">
+    <cfparam name="FORM.placementStatus" default="">
+    <cfparam name="FORM.placedDateFrom" default="">
+    <cfparam name="FORM.placedDateTo" default="">
 
     <!--- Get Program --->
     <cfquery name="qGetPrograms" datasource="MYSQL">
@@ -36,18 +39,22 @@
         	smg_users u
         LEFT JOIN 
         	smg_regions r ON r.regionfacilitator = u.userID
-        WHERE 	
+        WHERE 
+        	
 		<cfif CLIENT.companyID EQ 5>
             r.company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
         <cfelse>
             r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
-        </cfif>        
+        </cfif>  
+              
 		AND 
         	subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            
         <cfif VAL(FORM.userID)>
         	AND 
             	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
 		</cfif>
+
         GROUP BY 
         	u.userID
         ORDER BY 
@@ -57,6 +64,7 @@
 </cfsilent>
 
 <link rel="stylesheet" href="reports.css" type="text/css">
+<link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css">
 
 <cfoutput>
 
@@ -69,6 +77,12 @@
                 <cfloop query="qGetPrograms">
                     #qGetPrograms.programname# &nbsp; (###qGetPrograms.programID#)<br />
                 </cfloop>
+               
+                Placement Status: #FORM.placementStatus# <br />
+                
+                <cfif isDate(FORM.placedDateFrom) AND IsDate(FORM.placedDateTo)>
+                	Date Placed From: #FORM.placedDateFrom# to #FORM.placedDateTo#
+                </cfif>
             </td>
         </tr>
     </table>
@@ -79,7 +93,8 @@
             SELECT 	
                 s.studentid, 
                 s.firstname, 
-                s.familylastname, 
+                s.familylastname,
+                s.datePlaced, 
                 r.regionname,
                 c.companyShort
             FROM 
@@ -92,15 +107,45 @@
                 s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
             AND 
                 r.regionfacilitator = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetFacilitators.userID#">
+                
 			<cfif CLIENT.companyID EQ 5>
                 AND
 	                r.company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
             <cfelse>
                 AND
 	                r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
-            </cfif>        
+            </cfif>  
+                  
             AND 
                 programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )        
+
+			<cfif FORM.placementStatus EQ "Placed">
+                AND 
+                    s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                AND 
+                    s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+            <cfelseif FORM.placementStatus EQ "Unplaced">
+                AND 
+                    ( 
+                    	s.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                     OR
+                     	(
+                            s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                        AND 
+                            s.host_fam_approved > <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+                        )
+				)                        
+            </cfif>
+            
+            <cfif isDate(FORM.placedDateFrom) AND IsDate(FORM.placedDateTo)>
+            	AND
+                	s.datePlaced 
+                    	BETWEEN 
+                        	<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.placedDateFrom#">
+                        AND 
+            				<cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, FORM.placedDateTo)#">
+            </cfif>
+                
             ORDER BY 
                 s.familyLastname,
                 s.firstName
@@ -108,28 +153,28 @@
     	
         <cfif qGetStudents.recordCount>
         
-            <table width="98%" align="center" cellpadding="3" cellspacing="0" style="border:1px solid ##021157; margin-top:5px; font-weight:bold;">
+            <table width="98%" align="center" cellpadding="3" cellspacing="0" class="reportFullBorder" style="font-weight:bold;">
                 <tr bgcolor="##CCCCCC">
                     <td width="70%">Facilitator: #qGetFacilitators.firstname# #qGetFacilitators.lastname# (###qGetFacilitators.userID#)</td>
                     <td width="30%" align="right">Total of #qGetStudents.recordcount# students</td>
                 </tr>
             </table>
             
-            <table width="98%" align="center" cellpadding="3" cellspacing="0" style="border:1px solid ##021157; margin-top:5px;">
+            <table width="98%" align="center" cellpadding="3" cellspacing="0" class="reportTable">
                 <tr bgcolor="##CCCCCC" style="font-weight:bold;">
-                    <td width="36%" style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">Student</td>
-                    <td width="16%" style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">Region</td>
-                    <td width="16%" style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">Program Manager</td>
-                    <td width="16%" style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">Facilitator Check</td>
-                    <td width="16%" style="border-bottom:1px solid ##021157;">PM Check</td>
+                    <td width="36%" class="reportColumn">Student</td>
+                    <td width="16%" class="reportColumn">Region</td>
+                    <td width="16%" class="reportColumn">Program Manager</td>
+                    <td width="16%" class="reportColumn">Facilitator Check</td>
+                    <td width="16%" class="reportRightColumn">PM Check</td>
                 </tr>
                 <cfloop query="qGetStudents">
                     <tr>
-                        <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">#qGetStudents.familylastname#, #qGetStudents.firstname# (###qGetStudents.studentid#)</td>
-                        <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">#qGetStudents.regionname#</td>
-                        <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">#qGetStudents.companyShort#</td>
-                        <td style="border-bottom:1px solid ##021157; border-right:1px solid ##021157;">&nbsp;</td>							
-                        <td style="border-bottom:1px solid ##021157;">&nbsp;</td>								
+                        <td class="reportColumn">#qGetStudents.familylastname#, #qGetStudents.firstname# (###qGetStudents.studentid#)</td>
+                        <td class="reportColumn">#qGetStudents.regionname#</td>
+                        <td class="reportColumn">#qGetStudents.companyShort#</td>
+                        <td class="reportColumn">&nbsp;</td>							
+                        <td class="reportRightColumn">&nbsp;</td>								
                     </tr>
                 </cfloop>        
             </table>
