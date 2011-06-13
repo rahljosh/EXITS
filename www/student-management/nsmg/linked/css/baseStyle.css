@@ -133,6 +133,46 @@
 
 
 /********************************************
+	REPORTS
+********************************************/
+.reportTitle {
+	font-weight:bold;
+	text-align:center;	
+	background-color:#E2EFC7;
+}
+
+.reportFullBorder {
+    margin-top:5px;
+	border:1px solid #021157;
+}
+
+.reportTable {
+    margin-top:5px;
+	border-top:1px solid #021157;
+	border-right:1px solid #021157;
+	border-left:1px solid #021157;
+}
+
+.reportFieldTitle {
+	text-align:right;
+	vertical-align:top;
+}
+
+.reportColumn {
+	border-bottom:1px solid #021157; 
+	border-right:1px solid #021157;
+}
+
+.reportRightColumn {
+	border-bottom:1px solid #021157;
+}
+
+/********************************************
+	END OF REPORTS
+********************************************/
+
+
+/********************************************
 	HOST FAMILY LEAD
 ********************************************/
 
