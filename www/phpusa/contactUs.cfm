@@ -13,7 +13,7 @@
 	float: right;
 	height: 120px;
 	width: 200px;
-	border: medium solid #202554;
+	border:1px solid #202554;
 	margin-top: 25px;
 	margin-left: 20px;
 	margin-bottom: 20px;
@@ -40,18 +40,21 @@
   
   <div id="mainContent">
   <div class="spacerlg"></div>
-  <cfform action="loginprocess.cfm" target="_top" method="post" name="login">
-    <div class="loginBox">username<br />
-<cfinput type="text" name="username" message="Please enter a username." required="yes" typeahead="no" showautosuggestloadingicon="true" />
-<br />
-<br />
-password<br />
-<cfinput type="password" name="password" message="Please enter a password." required="yes" />
-<br />
-<br />
-  <input type="submit" name="submit" id="submit" value="Submit" />
-</cfform>
-<!-- end loginBox --></div>
+  
+
+  	<div class="loginBox">
+        <cfform action="loginprocess.cfm" target="_top" method="post" name="login">
+            Username<br />
+            <cfinput type="text" name="username" message="Please enter a username." required="yes" typeahead="no" showautosuggestloadingicon="true" />
+            <br />
+            <br />
+            Password<br />
+            <cfinput type="password" name="password" message="Please enter a password." required="yes" />
+            <br />
+            <br />
+            <input type="submit" name="submit" id="submit" value="&nbsp; Login &nbsp;" />
+        </cfform>
+	</div><!-- end loginBox -->
 
      <p class="headline">Contact Us</p>
      <p><span class="bold">Luke Davis</span><br />
