@@ -93,31 +93,20 @@ function highlight(checkbox) {
             </tr>
           </table></span>
 <span class="infoBold">
-<br />
-<br />
-<cfquery name="qNextWebExMeeting" datasource="#application.dsn#">
-select date_started, time_started, time_ended, description, webEx_url, name
-from calendar_event
-where date_started > #now()#
-and name LIKE '%New Area Reps%'
-limit  30
-</cfquery>
+
+<br /><br />
 
 Don't worry, you didn't do anything wrong, all new accounts are suspended if you haven't completed the 'New Area Reps' training session within 21 days of your account being created. <Br /><Br />
 This hour long WebEx session will go over the requirments and procedures that are expected of all Area Representatives.   This training is all online via a shared desktop, so please pick a time when you can be near a computer, phone, and cup of coffee.
 
 <br /><Br />
-<table cellpadding=4 cellspacing=0 width=100%>
-	<Tr>
-    	<th>Date</th><Th>Session</Th><th>Start Time</th><th>End Time</th><Th>Additional Info</Th><th></th>
-    </tr>
-<cfloop query="qNextWebExMeeting">
-	<tr bgcolor="<cfif qNextWebExMeeting.currentrow mod 2>##F7F7F7<cfelse>##dbe9f2</cfif>" onMouseOver="this.bgColor='##cccccc';" onMouseOut="this.bgColor='<cfif qNextWebExMeeting.currentrow mod 2>##F7F7F7<cfelse>##dbe9f2</cfif>';">
-    	<td>#DateFormat(date_started, 'mmmm d, yyyy')#</td><td>#name#</td><td>#TimeFormat(time_started, 'h:mm tt')# EST</td><td>#TimeFormat(time_ended, 'h:mm tt')# EST</td><Td><Cfif description is ''><span class="infoItalic">None Avail.</span><cfelse>#description#</Cfif></Td>
-        <td><a href="#webex_url#"><img src="http://www.iseusa.com/trips/images/reserve_class.png" border=0/></a></td>
-    </tr>
-</cfloop>
-</table>
+
+<h2>Recorded WebEx sessions available</h2>
+
+<p>                    
+    &raquo; <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3457042&rKey=a9e6bbf7446fdd27" target="_blank">New Area Reps</a> 
+</p>
+
 </span>
 <!-- end info --></div>
 <div class="clear"></div>
