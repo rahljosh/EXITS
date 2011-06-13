@@ -469,6 +469,8 @@
                                             <cfelse>
                                             AND 
                                                 usertypeid >= <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
+                                            OR 
+                                            	usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="15">
                                             </cfif>
                                             ORDER BY 
                                                 usertypeid

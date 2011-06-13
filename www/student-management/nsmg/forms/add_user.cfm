@@ -34,10 +34,13 @@
               usertypeid >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
             AND
               usertypeid <= <cfqueryparam cfsqltype="cf_sql_integer" value="9">
+            OR
+              usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="15">
          </cfif>
     ORDER BY 
     	usertypeid
 </cfquery>
+
 
 <!--- this table is so the form is not 100% width. --->
 <table align="center">

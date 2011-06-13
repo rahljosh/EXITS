@@ -11,7 +11,7 @@
 	<cfinclude template="../check_rights.cfm">
 </cfif>
 
-<cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,ssn,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,active,datecancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
+<cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,ssn,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,datecancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
 
 <!--- the key for encrypting and decrypting the ssn. --->
 <cfset ssn_key = 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR'>
@@ -162,6 +162,8 @@
 		<cfset errorMsg = "Password and Confirm Password do not match.">
 	<cfelseif trim(form.date_contract_received) NEQ '' and not isValid("date", trim(form.date_contract_received))>
 		<cfset errorMsg = "Please enter a valid Contract Received.">
+	<cfelseif trim(form.date_2nd_visit_contract_received) NEQ '' and not isValid("date", trim(form.date_2nd_visit_contract_received))>
+		<cfset errorMsg = "Please enter a valid 2nd Visit Contract Received.">
 	<cfelseif trim(form.datecancelled) NEQ '' and not isValid("date", trim(form.datecancelled))>
 		<cfset errorMsg = "Please enter a valid Date Cancelled.">
 	<cfelseif isDefined("form.billing_email") and trim(form.billing_email) NEQ '' and not isValid("email", trim(form.billing_email))>
@@ -183,7 +185,7 @@
                     INSERT INTO smg_users (uniqueid, datecreated, firstname, middlename, lastname, occupation, businessname,
                     	address, address2, city, state, zip, country,
                     	drivers_license, dob, sex, ssn, phone, phone_ext, work_phone, work_ext, cell_phone, fax, email, email2, skype_id,
-                        username, password, changepass, bypass_checklist, invoice_access, date_contract_received, active, datecancelled,
+                        username, password, changepass, bypass_checklist, invoice_access, date_contract_received,date_2nd_visit_contract_received ,active, datecancelled,
 						<cfif form.usertype EQ 8>
 							usertype, 
                             usebilling, 
@@ -232,6 +234,7 @@
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#form.bypass_checklist#">,
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#form.invoice_access#">,
                     <cfqueryparam cfsqltype="cf_sql_date" value="#form.date_contract_received#" null="#yesNoFormat(trim(form.date_contract_received) EQ '')#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#form.date_2nd_visit_contract_received#" null="#yesNoFormat(trim(form.date_2nd_visit_contract_received) EQ '')#">,
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#form.active#">,
                     <cfqueryparam cfsqltype="cf_sql_date" value="#form.datecancelled#" null="#yesNoFormat(trim(form.datecancelled) EQ '')#">,
                     <cfif form.usertype EQ 8>
@@ -855,6 +858,7 @@ function CopyEmail() {
                     <cfinput type="hidden" name="datecreated" value="#form.datecreated#">
                 </td>
               </tr>
+             
               <tr>
                 <td align="right">Contract Received:</td>
                 <td>
@@ -866,6 +870,19 @@ function CopyEmail() {
                     </cfif>
                 </td>
               </tr>
+               <cfif url.usertype eq 15>
+              <tr>
+                <td align="right">2nd Visit Rep. Contract Received:</td>
+                <td>
+                    <cfif client.usertype LTE 4>
+                        <cfinput type="text" name="date_2nd_visit_contract_received" value="#dateFormat(form.date_2nd_visit_contract_received,'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid 2nd Visit Contract Received."> mm/dd/yyyy
+                    <cfelse>
+                        <cfoutput>#dateFormat(form.date_2nd_visit_contract_received, 'mm/dd/yyyy')#</cfoutput>
+	                    <cfinput type="hidden" name="date_2nd_visit_contract_received" value="#form.date_2nd_visit_contract_received#">
+                    </cfif>
+                </td>
+              </tr>
+              </cfif>
               <tr>
                 <td align="right">Active:</td>
                 <td>

@@ -10,7 +10,7 @@ where programid = #get_student_info.programid#
 </cfquery>
 	<!----Host Info---->
 <cfquery name="get_host_info" datasource="MySQL">
-	SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.hostid, stu.arearepid, stu.placerepid, stu.schoolid, 
+	SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.hostid, stu.arearepid, stu.placerepid, stu.secondVisitRepID, stu.schoolid, 
 		stu.uniqueid, stu.dateplaced, stu.host_fam_approved, stu.date_host_fam_approved, stu.address, stu.address2, stu.city, stu.country, stu.programid,
 		stu.zip,  stu.fax, stu.email, stu.phone, stu.welcome_family,
 		h.motherfirstname, h.fatherfirstname, h.familylastname as hostlastname, h.hostid as hostfamid
@@ -38,6 +38,8 @@ where programid = #get_student_info.programid#
 <cfset double_image = 'double_1'>
 <cfset paperwork_image = 'paperwork_1'>
 <cfset notes_image = 'notes_1'>
+<cfset secondVisit_image = 'secondVisit_1'>
+
     <!---number kids at home---->
     <cfquery name="kidsAtHome" datasource="#application.dsn#">
     select count(childid) as kidcount
@@ -62,6 +64,7 @@ where programid = #get_student_info.programid#
 <cfif schoolid is '0' and (hostid NEQ '0' or arearepid NEQ '0' or placerepid NEQ '0')><cfset school_image = 'school_2'></cfif>
 <cfif placerepid is '0' and (hostid NEQ '0' or schoolid NEQ '0' or arearepid NEQ '0')><cfset place_image = 'place_2'></cfif>
 <cfif arearepid is '0' and (hostid NEQ '0' or schoolid NEQ '0' or placerepid NEQ '0')><cfset super_image = 'super_2'></cfif>
+<cfif secondVisitRepid is '0' and (hostid NEQ '0' or schoolid NEQ '0' or placerepid NEQ '0')><cfset secondVisit_image = 'secondVisit_2'></cfif>
 
 <!--- PLACEMENT BUTTONS --->
 <cfif hostid NEQ '0'><cfset host_image = 'host_3'></cfif>
@@ -69,7 +72,7 @@ where programid = #get_student_info.programid#
 <cfif placerepid NEQ '0'><cfset place_image = 'place_3'></cfif>
 <cfif arearepid NEQ '0'><cfset super_image = 'super_3'></cfif>
 <cfif doubleplace NEQ '0'><cfset double_image = 'double_3'></cfif>
-
+<cfif secondVisitRepID NEQ '0'><cfset secondVisit_image = 'secondVisit_3'></cfif>
 <!--- PAPERWORK --->
 <cfif hostid NEQ '0'>
 	<!--- CHECK CBCS --->
@@ -147,7 +150,7 @@ where programid = #get_student_info.programid#
 </table>
 <P></P>
 <table width="580" border="0" bgcolor="##ffffe6" class="nav_bar" cellpadding="2" align="center">
-<tr bgcolor="##ffffe6"><td colspan="7" align="center">
+<tr bgcolor="##ffffe6"><td colspan="8" align="center">
 	Placement Status &nbsp; : &nbsp;
 	<cfif get_student_info.hostid is '0' and get_student_info.schoolid is '0' and get_student_info.arearepid is '0' and get_student_info.placerepid is '0'>
 		<u><i>U N P L A C E D</i></u>
@@ -164,12 +167,13 @@ where programid = #get_student_info.programid#
 	<td width="86" align="center"><a href="place_school.cfm?studentid=#client.studentid#"><img src="../pics/place_menu/#school_image#.gif"  alt="High School" border="0"></a></td>
 	<td width="86" align="center"><a href="place_placerep.cfm?studentid=#client.studentid#"><img src="../pics/place_menu/#place_image#.gif"  alt="Placing Representative" border="0"></a></td>		
 	<td width="86" align="center"><a href="place_superep.cfm?studentid=#client.studentid#"><img src="../pics/place_menu/#super_image#.gif"  alt="Supervising Representative" border="0"></a></td>
+<td width="86" align="center"><a href="place_secondVisitRep.cfm?studentid=#client.studentid#"><img src="../pics/place_menu/#secondVisit_image#.gif"  alt="Second Vist Representative" border="0"></a></td>
 	<td width="86" align="center"><a href="place_double.cfm?studentid=#client.studentid#"><img src="../pics/place_menu/#double_image#.gif"  alt="Double Placement" border="0"></a></td>
 	<td width="86" align="center"><a href="place_paperwork.cfm?studentid=#client.studentid#&update=no"><img src="../pics/place_menu/#paperwork_image#.gif"  alt="Placement Paperwork" border="0"></a></td>
 	<td width="86" align="center"><a href="place_notes.cfm?studentid=#client.studentid#&update=no"><img src="../pics/place_menu/#notes_image#.gif"  alt="Placement Notes" border="0"></a></td>
 </tr>
-<tr bgcolor="##ffffe6"><td colspan="7" align="center"><a href="place_menu.cfm"><b><u>M A I N &nbsp; M E N U</u></b></a></td></tr>
-<tr bgcolor="##ffffe6"><td colspan="7" align="center">Use the menu above to browse through the sections.</td></tr>
+<tr bgcolor="##ffffe6"><td colspan="8" align="center"><a href="place_menu.cfm"><b><u>M A I N &nbsp; M E N U</u></b></a></td></tr>
+<tr bgcolor="##ffffe6"><td colspan="8" align="center">Use the menu above to browse through the sections.</td></tr>
 </table>
 </cfoutput>
 <table width="580" align="center">
