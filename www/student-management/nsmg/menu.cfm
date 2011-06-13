@@ -122,7 +122,30 @@
             
             </ul>
         </cfcase>
-
+    
+        <!--- Menu for Second Visit Reps--->
+        <cfcase value="15">
+            <ul id="MenuBar1" class="MenuBarHorizontal">
+            
+                <li>
+                    <a href="index.cfm?curdoc=secondVisit/students">Students</a>
+                </li>
+                
+                
+            
+                <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
+                
+                <!--- Case Store --->
+                <cfif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+                 <cfelseif CLIENT.companyid EQ 14>
+                <!--- ISE Store --->
+                <cfelse>
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                </cfif>
+                
+            </ul>
+        </cfcase>
     
         <!--- Menu for MPD Tours--->
         <cfcase value="25">

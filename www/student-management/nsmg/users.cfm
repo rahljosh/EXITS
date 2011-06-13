@@ -54,7 +54,8 @@
         FROM 
             smg_usertype
         WHERE 
-            usertypeid BETWEEN 1 AND 9
+            usertypeid BETWEEN 1 AND 9 
+            OR usertypeid = 15
         ORDER BY 
             usertypeid
     </cfquery>
