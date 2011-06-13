@@ -50,11 +50,14 @@
 	INNER JOIN 
     	smg_schools sc ON s.schoolid = sc.schoolid
 	WHERE  
-    	s.active = '1'
+    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">    
     AND 
-    	s.host_fam_approved < '5'
+    	s.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
+           
+    <!--- Get only active records --->
     AND 
-    	s.sevis_batchid != '0'
+    	s.sevis_activated != <cfqueryparam cfsqltype="cf_sql_integer" value="0">        
+        
 	<!--- Get only the last record. Student could relocate to a previous school --->
     AND 
     	sc.schoolname NOT IN (SELECT school_name FROM smg_sevis_history WHERE studentid = s.studentid AND historyID = (SELECT max(historyID) FROM smg_sevis_history WHERE studentid = s.studentID) )
