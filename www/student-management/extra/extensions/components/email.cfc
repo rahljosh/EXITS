@@ -426,6 +426,7 @@
 		<cfargument name="emailTo" type="string" required="true" hint="Email To is required">
 		<cfargument name="emailReplyTo" type="string" default="" hint="Email Address to reply">
         <cfargument name="emailCC" type="string" default="" hint="Email CC Field">
+        <cfargument name="emailBCC" type="string" default="" hint="Email BCC Field">
         <cfargument name="emailSubject" type="string" default="" hint="Email Subject">
         <cfargument name="emailMessage" type="string" default="" hint="Email Message">
         <cfargument name="emailFilePath" type="string" default="" hint="Optional attachment file">
@@ -459,7 +460,8 @@
             from="#ARGUMENTS.emailFrom#" 
             to="#ARGUMENTS.emailTo#" 
             replyto="#ARGUMENTS.emailReplyTo#" 
-            cc="#ARGUMENTS.emailCC#" 
+            cc="#ARGUMENTS.emailCC#"
+            bcc="#ARGUMENTS.emailBCC#" 
             subject="#ARGUMENTS.emailSubject#" 
             type="html"
             priority="#ARGUMENTS.emailPriority#">
