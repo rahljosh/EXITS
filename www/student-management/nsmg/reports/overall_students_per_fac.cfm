@@ -162,19 +162,21 @@
             
             <table width="98%" align="center" cellpadding="3" cellspacing="0" class="reportTable">
                 <tr bgcolor="##CCCCCC" style="font-weight:bold;">
-                    <td width="36%" class="reportColumn">Student</td>
-                    <td width="16%" class="reportColumn">Region</td>
-                    <td width="16%" class="reportColumn">Program Manager</td>
-                    <td width="16%" class="reportColumn">Facilitator Check</td>
-                    <td width="16%" class="reportRightColumn">PM Check</td>
+                    <td width="30%" class="reportColumn">Student Information</td>
+                    <td width="12%" class="reportColumnAlignCenter">Date Placed</td>
+                    <td width="17%" class="reportColumnAlignCenter">Region</td>
+                    <td width="17%" class="reportColumnAlignCenter">Program Manager</td>
+                    <td width="12%" class="reportColumnAlignCenter">Facilitator Check</td>
+                    <td width="12%" class="reportRightColumnAlignCenter">PM Check</td>
                 </tr>
                 <cfloop query="qGetStudents">
                     <tr>
                         <td class="reportColumn">#qGetStudents.familylastname#, #qGetStudents.firstname# (###qGetStudents.studentid#)</td>
-                        <td class="reportColumn">#qGetStudents.regionname#</td>
-                        <td class="reportColumn">#qGetStudents.companyShort#</td>
-                        <td class="reportColumn">&nbsp;</td>							
-                        <td class="reportRightColumn">&nbsp;</td>								
+                        <td class="reportColumnAlignCenter">#DateFormat(qGetStudents.datePlaced, 'mm/dd/yyyy')#</td>
+                        <td class="reportColumnAlignCenter">#qGetStudents.regionname#</td>
+                        <td class="reportColumnAlignCenter">#qGetStudents.companyShort#</td>
+                        <td class="reportColumnAlignCenter">&nbsp;</td>							
+                        <td class="reportRightColumnAlignCenter">&nbsp;</td>								
                     </tr>
                 </cfloop>        
             </table>

@@ -163,10 +163,20 @@
 	border-right:1px solid #021157;
 }
 
+.reportColumnAlignCenter {
+	text-align:center;
+	border-bottom:1px solid #021157; 
+	border-right:1px solid #021157;
+}
+
 .reportRightColumn {
 	border-bottom:1px solid #021157;
 }
 
+.reportRightColumnAlignCenter {
+	text-align:center;
+	border-bottom:1px solid #021157;
+}
 /********************************************
 	END OF REPORTS
 ********************************************/
