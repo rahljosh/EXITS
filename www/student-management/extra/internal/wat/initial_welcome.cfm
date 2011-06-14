@@ -40,23 +40,7 @@
         AND 
         	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
     </cfquery>
-    
-    <cfquery name="qNewHostCompanies" datasource="mysql">
-        SELECT 
-        	ehc.hostcompanyid, 
-            ehc.name, 
-            ehc.city, 
-            ehc.state, 
-            ehc.homepage, 
-            s.statename
-        FROM 
-        	extra_hostcompany ehc
-        LEFT JOIN 
-        	smg_states s ON s.id = ehc.state 
-        WHERE 
-        	ehc.entrydate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
-    </cfquery>
-    
+
     <cfquery name="qNewCandidates" datasource="mysql">
         SELECT 
         	ec.firstname, 
@@ -83,7 +67,23 @@
                 ec.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
 		</cfif>
     </cfquery>
-
+   
+    <cfquery name="qNewHostCompanies" datasource="mysql">
+        SELECT 
+        	ehc.hostcompanyid, 
+            ehc.name, 
+            ehc.city, 
+            ehc.state, 
+            ehc.homepage, 
+            s.statename
+        FROM 
+        	extra_hostcompany ehc
+        LEFT JOIN 
+        	smg_states s ON s.id = ehc.state 
+        WHERE 
+        	ehc.entrydate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
+    </cfquery>
+    
 </cfsilent>
 
 <cfoutput>
