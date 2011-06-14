@@ -102,7 +102,7 @@
     <!-- Combine these into one single file -->
     <cfoutput>
     <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
-    <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+    <script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
     <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
     </cfoutput>
     <script type="text/javascript" src="../linked/js/jquery.popupWindow.js"></script> <!-- Jquery PopUp Window -->
