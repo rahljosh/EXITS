@@ -255,11 +255,11 @@
 		}
 	}
 	
-	function populateDate(dateValue) {
-		if (document.getElementById('ds2019Check').checked == true) {
-			document.getElementById('verification_received').value = dateValue;
+	function populateDate(dateValue, checkFieldID, fieldID) {
+		if (document.getElementById(checkFieldID).checked == true) {
+			$("#" + fieldID).val(dateValue);
 		} else {
-			document.getElementById('verification_received').value = '';
+			$("#" + fieldID).val('');
 		}
 	}
 
@@ -949,10 +949,10 @@
                                         <!--- Verification Received --->
                                         <tr>
                                             <td class="style1" align="right" width="80px">
-                                                <strong> <label for="ds2019Check"> Verific. Rcvd. </label> </strong>
+                                                <label for="ds2019Check"> <strong>  Verific. Rcvd. </strong> </label>
                                             </td>                                            
                                             <td class="style1" colspan="3">
-												<input type="checkbox" name="ds2019Check" id="ds2019Check" value="1" class="formField" onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#');" disabled <cfif LEN(qGetCandidate.verification_received)>checked="checked"</cfif> >                                                
+												<input type="checkbox" name="ds2019Check" id="ds2019Check" value="1" class="formField" onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#', this.id, 'verification_received');" disabled <cfif isDate(qGetCandidate.verification_received)>checked="checked"</cfif> >                                                
                                                 
                                                 &nbsp; 
                                                 
@@ -961,7 +961,7 @@
                                                 &nbsp; 
                                                 
                                                 <span class="readOnly">#DateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#</span>                                                
-                                                <input type="text" class="style1 editPage" name="verification_received" id="verification_received" value="#DateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#" maxlength="100">                                              
+                                                <input type="text" name="verification_received" id="verification_received" class="style1 editPage datePicker" value="#DateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#" maxlength="100">                                              
                                             </td>
                                         </tr>
                                         <!--- End of Verification Received --->			
@@ -973,6 +973,24 @@
                                                 <input type="text" class="style1 editPage" name="ds2019" size="15" value="#qGetCandidate.ds2019#" maxlength="100">
                                             </td>
                                         </tr>
+                                        
+                                        <tr>
+                                            <td class="style1" align="right">
+                                            	<label for="ds2019_dateActivatedCheck"> <strong>SEVIS Activation:</strong> </label>
+                                            </td>
+                                            <td class="style1" colspan="3">
+												<input type="checkbox" name="ds2019_dateActivatedCheck" id="ds2019_dateActivatedCheck" value="1" class="formField" onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#', this.id, 'ds2019_dateActivated');" disabled <cfif isDate(qGetCandidate.ds2019_dateActivated)>checked="checked"</cfif> >                                                
+
+                                                &nbsp; 
+                                                
+                                                <label for="ds2019_dateActivated"> <strong> Date: </strong> </label>
+                                                
+                                                &nbsp; 
+                                                
+                                                <span class="readOnly">#dateFormat(qGetCandidate.ds2019_dateActivated, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="ds2019_dateActivated" id="ds2019_dateActivated" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.ds2019_dateActivated, 'mm/dd/yyyy')#" maxlength="10">
+                                            </td>
+                                        </tr>                                       
                                         
                                         <tr>
                                             <td class="style1" valign="top" align="right"><b>Category:</b></td>
