@@ -220,9 +220,9 @@ ORDER BY businessname
         <cfcase value="7,8">
         	AND sch.companyid IN (7,8)
         </cfcase>
-        <cfcase value="1,2,3,4,7,8,12">
+        <cfdefaultcase>
         	AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
-        </cfcase>
+        </cfdefaultcase>
         </cfswitch>
 		GROUP BY sch.stuid
 		UNION ALL
@@ -237,9 +237,9 @@ ORDER BY businessname
         <cfcase value="7,8">
         	AND sch.companyid IN (7,8)
         </cfcase>
-        <cfcase value="1,2,3,4,7,8,12">
+        <cfdefaultcase>
         	AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
-        </cfcase>
+        </cfdefaultcase>
         </cfswitch>
 		GROUP BY sch.stuid
 		) t
@@ -460,9 +460,9 @@ ORDER BY businessname
             <cfcase value="7,8">
                 AND sch.companyid IN (7,8)
             </cfcase>
-            <cfcase value="1,2,3,4,7,8,12">
+            <cfdefaultcase>
                 AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
-            </cfcase>
+            </cfdefaultcase>
             </cfswitch>
             GROUP BY sch.invoiceid
             UNION ALL
@@ -477,9 +477,9 @@ ORDER BY businessname
             <cfcase value="7,8">
                 AND sch.companyid IN (7,8)
             </cfcase>
-            <cfcase value="1,2,3,4,7,8,12">
+            <cfdefaultcase>
                 AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
-            </cfcase>
+            </cfdefaultcase>
             </cfswitch>
             GROUP BY sch.invoiceid
             ) t
