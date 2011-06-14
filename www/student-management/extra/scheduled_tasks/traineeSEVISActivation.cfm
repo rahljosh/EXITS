@@ -67,7 +67,7 @@
             CURDATE() > DATE_ADD(ec.ds2019_startDate, INTERVAL 1 WEEK) 
         <!--- 45 Days before it was implemented - There is a 30 day window to activate records in SEVIS --->
         AND
-        	ec.ds2019_startDate > <cfqueryparam cfsqltype="cf_sql_date" value="2011-05-01">
+        	ec.ds2019_startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="2011-06-01">
         AND	
         	ec.ds2019_dateActivated IS NULL
 		ORDER BY
@@ -82,8 +82,8 @@
 			vEmailFrom = 'sergei@iseusa.com';
 			vEmailTo = '';
 	   	    vEmailCC = '';
-			// vEmailBCC = '';
-			vEmailBCC = 'sergei@iseusa.com';
+			vEmailBCC = '';
+			// vEmailBCC = 'sergei@iseusa.com';
 			
 			// check if we have a valid email for the candidate
 			if ( IsValid("email", qGetCandidates.email[i]) ) {
