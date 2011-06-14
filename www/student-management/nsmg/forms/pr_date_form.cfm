@@ -125,7 +125,7 @@ function checkForm() {
 <table border=0 cellpadding=4 cellspacing=0>
     <tr>
     	<td class="label">Date: <span class="redtext">*</span></td>
-        <td><cfinput type="text" name="prdate_date" value="#dateFormat(form.prdate_date, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" required="yes" validate="date" message="Please enter a valid Date."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="prdate_date" value="#dateFormat(form.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" required="yes" validate="date" message="Please enter a valid Date."> mm/dd/yyyy</td>
     </tr>
     <tr>
     	<td class="label">Type: <span class="redtext">*</span></td>
