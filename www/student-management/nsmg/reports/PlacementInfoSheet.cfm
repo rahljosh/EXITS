@@ -177,6 +177,7 @@
                     <a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&print=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
                 </td>
             </tr>
+            <!----
             <cfif client.usertype lte 3>
              <tr>	
                 <td align="Center" valign="center">
@@ -187,6 +188,7 @@
                 </td>
             </tr>
             </cfif>
+			---->
             <tr>
            		<td align="right">Do you want to add a message?</td>
                 <td>
@@ -327,6 +329,7 @@
                                 	<td width="100" valign="top"><span class="title">Email: </span></td>
                                     <td>#qGetHostFamily.email#</td>
                                 </tr>
+                                <!----
                                 <tr>
                                 	<td width="100" valign="top"><span class="title">Placed: </span></td>
                                     <td>
@@ -338,6 +341,7 @@
                                     </td>
                                 	
                                 </tr>
+								---->
                             </table>
     
                         </td>
