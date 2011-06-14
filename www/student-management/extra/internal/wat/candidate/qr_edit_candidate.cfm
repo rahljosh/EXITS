@@ -15,7 +15,6 @@
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.verification_arrival" default="0">
 <cfparam name="FORM.transfer" default="0">
-<cfparam name="FORM.ds2019_dateActivated" default="">
 <!--- Placement Information --->
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
@@ -298,7 +297,7 @@
         
 		<!--- DS2019 stuff ---> 
         ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019#">, 
-        ds2019_dateActivated = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_dateActivated#" null="#NOT IsDate(FORM.ds2019_dateActivated)#">,
+
         requested_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.requested_placement#">,
         
 		<!--- change_requested_comment --->

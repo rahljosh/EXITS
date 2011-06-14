@@ -11,7 +11,7 @@
 <cfsilent>
 
 	<cfscript>	
-		// Store Midterm Email Body in a variable
+		// Store Email Body in a variable
 		savecontent variable="evaluationEmailBody" {
 			WriteOutput(
 			"<p>Dear {traineeName},</p>
@@ -38,7 +38,7 @@
 		}	
 	</cfscript>
 
-	<!--- Get Midterm Evaluations --->
+	<!--- Get Pending Activation Candidates --->
     <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
         SELECT DISTINCT
             ec.candidateID,
@@ -71,7 +71,7 @@
         AND	
         	ec.ds2019_dateActivated IS NULL
 		ORDER BY
-        	ec.ds2019_startDate   
+        	ec.ds2019_startDate 
     </cfquery>
 	
 	<cfscript>
@@ -99,8 +99,6 @@
 			if ( IsValid("email", qGetCandidates.hostEmail[i]) ) {
 				vEmailCC = vEmailCC & qGetCandidates.hostEmail[i];	
 			}
-			
-			vEmailTo = 'marcus@iseusa.com';
 			
 			// At least one of the emails (candidate/host company) is valid
 			if ( LEN(vEmailTo) ) {

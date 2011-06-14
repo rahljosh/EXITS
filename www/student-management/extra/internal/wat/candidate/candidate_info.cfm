@@ -1226,14 +1226,6 @@
                                         	<td class="style1" align="right"><strong>Accepts SEVIS Fee:</strong></td>
                                             <td class="style1">#YesNoFormat(VAL(qGetIntlRepInfo.extra_accepts_sevis_fee))#</td>
                                         </tr>
-                                        
-                                        <tr>
-                                            <td class="style1" align="right"><strong>SEVIS Activation Date:</strong></td>
-                                            <td class="style1">
-                                            	<span class="readOnly">#dateFormat(qGetCandidate.ds2019_dateActivated, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="ds2019_dateActivated" id="ds2019_dateActivated" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.ds2019_dateActivated, 'mm/dd/yyyy')#" maxlength="10">
-                                            </td>
-                                        </tr>                                       
                                     </table>
                         
                                 </td>
