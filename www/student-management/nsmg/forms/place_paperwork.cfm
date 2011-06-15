@@ -1,9 +1,89 @@
-<link rel="stylesheet" href="../smg.css" type="text/css">
-<Title>Placement Paperwork</title>
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		place_paperwork.cfm
+	Author:		Marcus Melo
+	Date:		June 15, 2011
+	Desc:		Placement Paperwork Management
 
-<cfif not IsDefined('url.update')>
-	<cfset url.udpate = 'no'>
-</cfif>
+	Updated:																
+				
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<!--- Import CustomTag --->
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+
+	<!--- Student Info --->
+    <cfinclude template="../querys/get_student_info.cfm">
+    
+    <cfquery name="qGetArrival" datasource="MySql">
+        SELECT DISTINCT 
+            dep_date
+        FROM 
+            smg_flight_info
+        WHERE 
+            studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+        AND 
+            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+        AND
+            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
+        ORDER BY 
+            dep_date DESC
+    </cfquery>
+    
+    <cfquery name="qGetHostFamily" datasource="MySql">
+        SELECT 
+        	hostid, 
+            familylastname, 
+            fatherfirstname, 
+            fatherlastname, 
+            fatherdob, 
+            fathercbc_form, 
+            motherfirstname, 
+            motherlastname, 
+            motherdob,
+            mothercbc_form
+        FROM 
+        	smg_hosts
+        WHERE 
+        	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.hostid#">
+    </cfquery>
+    
+    <cfquery name="qGetFamilyMembers" datasource="MySql">
+        SELECT 
+        	childid, 
+            membertype, 
+            name, 
+            lastname, 
+            birthdate, 
+            cbc_form_received
+        FROM 
+        	smg_host_children  
+        WHERE 
+        	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.hostid#">
+        AND 
+        	(DATEDIFF(now(), birthdate)/365) > 18
+        AND 
+        	liveathome = 'yes'
+    </cfquery>
+    
+    <cfquery name="season" datasource="#application.dsn#">
+    	SELECT 
+        	seasonid
+        FROM 
+        	smg_programs
+        WHERE 
+        	programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+    </cfquery>
+
+</cfsilent>
+
+<!--- Page Header --->
+<gui:pageHeader
+	headerType="applicationNoHeader"
+/>	
 
 <cfoutput>
 	<SCRIPT LANGUAGE="JavaScript">
@@ -19,6 +99,7 @@
 	//  End -->
 	</script>
 </cfoutput>
+
 <style type="text/css">
 .alert{
 	width:550;
@@ -35,48 +116,11 @@
 
 }
 </style>
-<Title>Placement Check-Off List</title>
 
-<body bgcolor="white" background="white.jpg">
+<cfif not IsDefined('url.update')>
+	<cfset url.udpate = 'no'>
+</cfif>
 
-<!--- Student Info --->
-<cfinclude template="../querys/get_student_info.cfm">
-
-<cfquery name="get_arrival" datasource="MySql">
-	SELECT DISTINCT 
-    	dep_date
-	FROM 
-    	smg_flight_info
-	WHERE 
-    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
-	AND 
-    	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
-	AND
-		isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
-	ORDER BY 
-    	dep_date DESC
-</cfquery>
-
-<cfquery name="get_host" datasource="MySql">
-	SELECT hostid, familylastname, fatherfirstname, fatherlastname, fatherdob, fathercbc_form, 
-		motherfirstname, motherlastname, motherdob, mothercbc_form
-	FROM smg_hosts
-	WHERE hostid = '#get_student_info.hostid#'
-</cfquery>
-
-<cfquery name="get_host_members" datasource="MySql">
-	SELECT childid, membertype, name, lastname, birthdate, cbc_form_received
-	FROM smg_host_children  
-	WHERE hostid = '#get_student_info.hostid#'
-		AND (DATEDIFF(now(), birthdate)/365) > 18
-		AND liveathome = 'yes'
-</cfquery>
-
-<cfquery name="season" datasource="#application.dsn#">
-select seasonid
-from smg_programs
-where programid = #get_student_info.programid#
-</cfquery>
 <!--- include template page header --->
 <cfinclude template="placement_status_header.cfm">
 
@@ -132,7 +176,7 @@ where programid = #get_student_info.programid#
             </cfif>
         </td>
         <td width="55%">Single Person Placement Verification</td>
-        <td align="left" width="40%">Date: &nbsp;<input type="text" name="doc_single_place_auth" size=9 value="#DateFormat(doc_single_place_auth, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+        <td align="left" width="40%">Date: &nbsp;<input type="text" name="doc_single_place_auth" class="datePicker" size="9" value="#DateFormat(doc_single_place_auth, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr><tr> <!-- 8 - REFERENCE FORM 1 --->
 		<td><Cfif #get_student_info.doc_single_ref_form_1# EQ ''>
 				<input type="checkbox" name="single_check_form1" OnClick="CheckDates('single_check_form1', 'doc_single_ref_form_1');" <cfif edit is 'no'>disabled</cfif>>
@@ -141,12 +185,12 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Single Person Placement Reference 1</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_form_1" size=9 value="#DateFormat(doc_single_ref_form_1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_form_1" class="datePicker" size="9" value="#DateFormat(doc_single_ref_form_1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!-- REFERENCE CHECK FORM 1 --->
 		<td>&nbsp;</td>
 		<td>Date of S.P. Reference Check 1</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_check1" size=9 value="#DateFormat(doc_single_ref_check1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_check1" class="datePicker" size="9" value="#DateFormat(doc_single_ref_check1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!-- 9 - REFERENCE FORM 2 --->
 		<td><Cfif #get_student_info.doc_single_ref_form_2# EQ ''>
@@ -156,12 +200,12 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Single Person Placement Reference 2</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_form_2" size=9 value="#DateFormat(doc_single_ref_form_2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_form_2" class="datePicker" size="9" value="#DateFormat(doc_single_ref_form_2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr> <!--Single  REFERENCE CHECK FORM 2 --->
 		<td>&nbsp;</td>
 		<td>Date of S.P. Reference Check 2</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_check2" size=9 value="#DateFormat(doc_single_ref_check2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_check2" class="datePicker" size="9" value="#DateFormat(doc_single_ref_check2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>		
     </Cfif>    
 	<tr> <!-- 0 - PLACEMENT INFORMATION SHEET --->
@@ -172,7 +216,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td width="55%">Placement Information Sheet</td>
-		<td align="left" width="40%">Date: &nbsp;<input type="text" name="date_pis_received" size=9 value="#DateFormat(date_pis_received, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left" width="40%">Date: &nbsp;<input type="text" name="date_pis_received" class="datePicker" size="9" value="#DateFormat(date_pis_received, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr> <!-- 1 - Host Application Received --->
 		<td><Cfif #get_student_info.doc_full_host_app_date# EQ ''>
@@ -182,7 +226,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Host Application Received</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_full_host_app_date" size=9 value="#DateFormat(doc_full_host_app_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_full_host_app_date" class="datePicker" size="9" value="#DateFormat(doc_full_host_app_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr> <!-- 2 - Host Family Letter --->
 		<td><Cfif #get_student_info.doc_letter_rec_date# EQ ''>
@@ -192,7 +236,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Host Family Letter Received</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_letter_rec_date" size=9 value="#DateFormat(doc_letter_rec_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_letter_rec_date" class="datePicker" size="9" value="#DateFormat(doc_letter_rec_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!-- 3 - Host Family Rules Form --->
 		<td><Cfif #get_student_info.doc_rules_rec_date# EQ ''>
@@ -202,7 +246,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Host Family Rules Form</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_rules_rec_date" size=9 value="#DateFormat(doc_rules_rec_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_rules_rec_date" class="datePicker" size="9" value="#DateFormat(doc_rules_rec_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!-- 4 - Host Family Photos --->
 		<td><Cfif #get_student_info.doc_photos_rec_date# EQ ''>
@@ -212,7 +256,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Host Family Photos</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_photos_rec_date" size=9 value="#DateFormat(doc_photos_rec_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_photos_rec_date" class="datePicker" size="9" value="#DateFormat(doc_photos_rec_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!-- 5 - SCHOOL AND COMMUNITY PROFILE --->
 		<td><Cfif #get_student_info.doc_school_profile_rec# EQ ''>
@@ -222,7 +266,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>School & Community Profile Form</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_school_profile_rec" size=9 value="#DateFormat(doc_school_profile_rec, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_school_profile_rec" class="datePicker" size="9" value="#DateFormat(doc_school_profile_rec, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!-- 6 - CONFIDENTIAL HOST FAMILY VISIT FORM --->
 		<td><Cfif #get_student_info.doc_conf_host_rec# EQ ''>
@@ -232,7 +276,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Confidential Host Family Visit Form</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_rec" size=9 value="#DateFormat(doc_conf_host_rec, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_rec" class="datePicker" size="9" value="#DateFormat(doc_conf_host_rec, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 
 	<tr> <!-- 7 - VISIT DATE --->
@@ -243,7 +287,7 @@ where programid = #get_student_info.programid#
 				<input type="checkbox" name="check_visit" OnClick="CheckDates('check_visit', 'doc_date_of_visit');" checked <cfif edit is 'no'>disabled</cfif>>		
 			</cfif> &nbsp; --->
 			Date of Visit</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit" size=9 value="#DateFormat(doc_date_of_visit, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit" class="datePicker" size="9" value="#DateFormat(doc_date_of_visit, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
     <!----
          <Cfif client.totalfam eq 1 >
@@ -255,7 +299,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Confidential SINGLE Host Family Visit </td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_single_rec" size=9 value="#DateFormat(doc_conf_host_single_rec, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_single_rec" class="datePicker" size="9" value="#DateFormat(doc_conf_host_single_rec, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!---- 7 - VISIT DATE --->
 		<td>&nbsp;</td>
@@ -265,7 +309,7 @@ where programid = #get_student_info.programid#
 				<input type="checkbox" name="check_visit" OnClick="CheckDates('check_visit', 'doc_date_of_visit');" checked <cfif edit is 'no'>disabled</cfif>>		
 			</cfif> &nbsp; --->
 			Date of Visit</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_single_visit" size=9 value="#DateFormat(doc_date_of_single_visit, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_single_visit" class="datePicker" size="9" value="#DateFormat(doc_date_of_single_visit, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
     </Cfif>
     <br>---->
@@ -278,7 +322,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>2nd Confidential Host Family Visit Form</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_rec2" size=9 value="#DateFormat(doc_conf_host_rec2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_rec2" class="datePicker" size="9" value="#DateFormat(doc_conf_host_rec2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
    
 	<tr> <!-- 7 - VISIT DATE --->
@@ -289,7 +333,7 @@ where programid = #get_student_info.programid#
 				<input type="checkbox" name="check_visit" OnClick="CheckDates('check_visit', 'doc_date_of_visit');" checked <cfif edit is 'no'>disabled</cfif>>		
 			</cfif> &nbsp; --->
 			Date of 2nd Visit</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit2" size=9 value="#DateFormat(doc_date_of_visit2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit2" class="datePicker" size="9" value="#DateFormat(doc_date_of_visit2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
      </cfif>
 	<tr> <!-- 8 - REFERENCE FORM 1 --->
@@ -300,12 +344,12 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Reference Form 1</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_form_1" size=9 value="#DateFormat(doc_ref_form_1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_form_1" class="datePicker" size="9" value="#DateFormat(doc_ref_form_1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!-- REFERENCE CHECK FORM 1 --->
 		<td>&nbsp;</td>
 		<td>Date of Reference Check 1</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_check1" size=9 value="#DateFormat(doc_ref_check1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_check1" class="datePicker" size="9" value="#DateFormat(doc_ref_check1, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	<tr> <!-- 9 - REFERENCE FORM 2 --->
 		<td><Cfif #get_student_info.doc_ref_form_2# EQ ''>
@@ -315,12 +359,12 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Reference Form 2</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_form_2" size=9 value="#DateFormat(doc_ref_form_2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_form_2" class="datePicker" size="9" value="#DateFormat(doc_ref_form_2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr> <!-- REFERENCE CHECK FORM 2 --->
 		<td>&nbsp;</td>
 		<td>Date of Reference Check 2</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_check2" size=9 value="#DateFormat(doc_ref_check2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_ref_check2" class="datePicker" size="9" value="#DateFormat(doc_ref_check2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
     <tr> <!---- 3 - Income Verificaiont --->
 		<td><Cfif #get_student_info.doc_income_ver_date# EQ ''>
@@ -330,7 +374,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>Income Verification Form</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_income_ver_date" size=9 value="#DateFormat(doc_income_ver_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_income_ver_date" class="datePicker" size="9" value="#DateFormat(doc_income_ver_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>		
 </table><br>
 
@@ -338,7 +382,7 @@ where programid = #get_student_info.programid#
 <Table width="560" align="center" cellpadding=4 cellspacing="0">
 	<tr>
 		<td colspan="2"><u>Arrival Date Compliance</u></td>
-		<td bgcolor="##CCCCCC">Arrival Date: <b><cfif get_arrival.dep_date EQ ''>n/a<cfelse>#DateFormat(get_arrival.dep_date, 'mm/dd/yyyy')#</cfif></b></td>
+		<td bgcolor="##CCCCCC">Arrival Date: <b><cfif qGetArrival.dep_date EQ ''>n/a<cfelse>#DateFormat(qGetArrival.dep_date, 'mm/dd/yyyy')#</cfif></b></td>
 	</tr>
 	<tr> <!-- SCHOOL ACCEPTANCE FORM --->
 		<td width="5%"><Cfif #get_student_info.doc_school_accept_date# EQ ''>
@@ -348,38 +392,38 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td width="55%">School Acceptance Form</td>
-		<td width="40%" align="left">Date: &nbsp;<input type="text" name="doc_school_accept_date" size=9 value="#DateFormat(doc_school_accept_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td width="40%" align="left">Date: &nbsp;<input type="text" name="doc_school_accept_date" class="datePicker" size="9" value="#DateFormat(doc_school_accept_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr> <!-- SCHOOL ACCEPTANCE SIGNATURE DATE --->
 		<td>&nbsp;</td>
 		<td>Date of Signature</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_school_sign_date" size=9 value="#DateFormat(doc_school_sign_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="doc_school_sign_date" class="datePicker" size="9" value="#DateFormat(doc_school_sign_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 	
 	<tr>
 		<td colspan=3>CBC Forms</td>
 	</tr>	
 	<tr>
-		<td><input type="checkbox" name="fathercbc_form_check" OnClick="CheckDates('fathercbc_form_check', 'fathercbc_form');" <cfif get_host.fathercbc_form NEQ''>checked</cfif> <cfif edit is 'no'>disabled</cfif>></td>
+		<td><input type="checkbox" name="fathercbc_form_check" OnClick="CheckDates('fathercbc_form_check', 'fathercbc_form');" <cfif qGetHostFamily.fathercbc_form NEQ''>checked</cfif> <cfif edit is 'no'>disabled</cfif>></td>
 		<td>Host Father</td>
-		<td align="left">Date: &nbsp;<input type="text" name="fathercbc_form" size=9 value="#DateFormat(get_host.fathercbc_form, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="fathercbc_form" class="datePicker" size="9" value="#DateFormat(qGetHostFamily.fathercbc_form, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr> 
-		<td><input type="checkbox" name="mothercbc_form_check" OnClick="CheckDates('mothercbc_form_check', 'mothercbc_form');" <cfif get_host.mothercbc_form NEQ''>checked</cfif> <cfif edit is 'no'>disabled</cfif>></td>
+		<td><input type="checkbox" name="mothercbc_form_check" OnClick="CheckDates('mothercbc_form_check', 'mothercbc_form');" <cfif qGetHostFamily.mothercbc_form NEQ''>checked</cfif> <cfif edit is 'no'>disabled</cfif>></td>
 		<td>Host Mother</td>
-		<td align="left">Date: &nbsp;<input type="text" name="mothercbc_form" size=9 value="#DateFormat(get_host.mothercbc_form, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="mothercbc_form" class="datePicker" size="9" value="#DateFormat(qGetHostFamily.mothercbc_form, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr>
 		<td colspan=3>CBC Host Members 18+</td>
 	</tr>	
-	<input type="hidden" name="total_members" value="#get_host_members.recordcount#">
-	<cfif get_host_members.recordcount>
-		<cfloop query="get_host_members">
+	<input type="hidden" name="total_members" value="#qGetFamilyMembers.recordcount#">
+	<cfif qGetFamilyMembers.recordcount>
+		<cfloop query="qGetFamilyMembers">
 		<input type="hidden" name="childid_#currentrow#" value="#childid#">
 		<tr> 
 			<td><input type="checkbox" name="member#currentrow#_check" OnClick="CheckDates('member#currentrow#_check', 'cbc_form_received#currentrow#');" <cfif cbc_form_received NEQ''>checked</cfif> <cfif edit is 'no'>disabled</cfif>></td>
 			<td>#name# #lastname# - #DateDiff('yyyy', birthdate, now())# years old</td>
-			<td align="left">Date: &nbsp;<input type="text" name="cbc_form_received#currentrow#" size=9 value="#DateFormat(cbc_form_received, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+			<td align="left">Date: &nbsp;<input type="text" name="cbc_form_received#currentrow#" class="datePicker" size="9" value="#DateFormat(cbc_form_received, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 		</tr>
 		</cfloop>
 	<cfelse>
@@ -422,7 +466,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td width="55%">Student Orientation</td>
-		<td align="left" width="40%">Date: &nbsp;<input type="text" name="stu_orientation_date" size=9 value="#DateFormat(stu_arrival_orientation, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left" width="40%">Date: &nbsp;<input type="text" name="stu_orientation_date" class="datePicker" size="9" value="#DateFormat(stu_arrival_orientation, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr> <!-- 1 - Student --->
 		<td><Cfif host_arrival_orientation EQ ''>
@@ -432,7 +476,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td>HF Orientation</td>
-		<td align="left">Date: &nbsp;<input type="text" name="host_orientation_date" size=9 value="#DateFormat(host_arrival_orientation, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td align="left">Date: &nbsp;<input type="text" name="host_orientation_date" class="datePicker" size="9" value="#DateFormat(host_arrival_orientation, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>
 	<tr> <!-- CLASS SCHEDULE --->
 		<td width="5%"><Cfif #get_student_info.doc_class_schedule# EQ ''>
@@ -442,7 +486,7 @@ where programid = #get_student_info.programid#
 			</cfif>
 		</td>
 		<td width="55%">Class Schedule</td>
-		<td width="40%" align="left">Date: &nbsp;<input type="text" name="doc_class_schedule" size=9 value="#DateFormat(doc_class_schedule, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
+		<td width="40%" align="left">Date: &nbsp;<input type="text" name="doc_class_schedule" class="datePicker" size="9" value="#DateFormat(doc_class_schedule, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
 </table><br>
 
@@ -535,3 +579,9 @@ where programid = #get_student_info.programid#
 	</table>
 </cfif>
 <br></div>
+
+
+<!--- Page Footer --->
+<gui:pageFooter
+	footerType="application"
+/>
