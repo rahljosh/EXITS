@@ -18,6 +18,26 @@
 <body <cfif not IsDefined('url.curdoc')>onLoad="print()"</cfif>>
 
 <cfinclude template="../querys/get_student_info.cfm">
+<!----Check if States are Selected, if one is selected, don't show regional options---->
+<Cfquery name="checkStates" datasource="MySQL">
+	SELECT 
+    	state1, 
+        sta1.statename as statename1, 
+        state2, 
+        sta2.statename as statename2, 
+        state3, 
+        sta3.statename as statename3
+	FROM 
+    	smg_student_app_state_requested 
+	LEFT JOIN 
+    	smg_states sta1 ON sta1.id = state1
+	LEFT JOIN 
+    	smg_states sta2 ON sta2.id = state2
+	LEFT JOIN 
+    	smg_states sta3 ON sta3.id = state3
+	WHERE 
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+</cfquery> 
 
 <cfset doc = 'page20'>
 
@@ -63,7 +83,21 @@
 			<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
 		</tr>
 	</table>
-	
+	<!--- If student has selected a state guarantee, don't show regional guarantee --->
+<Cfif (checkStates.recordcount neq 0) > 
+	<cfif (checkStates.state1 neq 0 AND checkStates.state2 nEQ 0 AND checkStates.state3 nEQ 0)>
+	<div class="section"><br><br>
+	<table width="670" cellpadding=2 cellspacing=0 align="center">
+		<tr>
+			<td>A State Request was submitted, Regional Request does not apply to this application. </td>
+		</tr>
+	</table><br><br>
+	</div>
+	<!--- FOOTER OF TABLE --->
+	<cfinclude template="../footer_table.cfm">
+		
+    </cfif>
+<Cfelse>
 	<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 --->
 	<cfif IsDefined('client.usertype') AND client.usertype EQ 10 AND (int_agent.master_accountid EQ 10115 OR int_agent.userid EQ 10115 OR int_agent.userid EQ 8318)>
 		<div class="section"><br><br>
@@ -168,7 +202,7 @@
 			<td width="42"><img src="#path#pics/p_bottonright.gif" width="42"></td>
 		</tr>
 	</table>
-	
+
 	<cfif not IsDefined('url.curdoc')>
 		</td></tr>
 		</table>
@@ -176,7 +210,7 @@
 	</cfif>
 
 </cfif>
-
+ </cfif>
 </cfoutput>
 
 </body>
