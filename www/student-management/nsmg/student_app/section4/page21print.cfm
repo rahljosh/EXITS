@@ -20,7 +20,11 @@
 <cfinclude template="../querys/get_student_info.cfm">
 
 <cfset doc = 'page21'>
-
+<cfquery name="check_guarantee" datasource="MySQL">
+	SELECT app_region_guarantee
+	FROM smg_students
+	WHERE studentid = '#client.studentid#'
+</cfquery>
 <cfquery name="states_requested" datasource="MySQL">
 	SELECT 
     	state1, 
@@ -102,7 +106,18 @@
 			<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
 		</tr>
 	</table>
-	
+	<cfif check_guarantee.app_region_guarantee gt 0> 
+	<div class="section"><br><br>
+	<table width="670" cellpadding=2 cellspacing=0 align="center">
+		<tr>
+			<td>You have already requested a Regional Guarantee.  You can not select both a Regional and State Guarantee.  If you would like to request a State Guarantee, please remove your requested Regional Guarantee. </td>
+		</tr>
+	</table><br><br>
+	</div>
+	<!--- FOOTER OF TABLE --->
+	<cfinclude template="../footer_table.cfm">
+
+<cfelse>
 	<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 --->
 	<cfif IsDefined('client.usertype') AND client.usertype EQ 10 AND (int_agent.master_accountid EQ 10115 OR int_agent.userid EQ 10115 OR int_agent.userid EQ 8318)>
 		<div class="section"><br><br>
@@ -248,7 +263,7 @@
 	</cfif>
 
 </cfif>
-
+</cfif>
 </cfoutput>
 
 </body>
