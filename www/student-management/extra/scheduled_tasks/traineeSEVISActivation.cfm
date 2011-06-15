@@ -12,7 +12,7 @@
 
 	<cfscript>	
 		// Store Email Body in a variable
-		savecontent variable="evaluationEmailBody" {
+		savecontent variable="vEvaluationEmailBody" {
 			WriteOutput(
 			"<p>Dear {traineeName},</p>
 			
@@ -100,11 +100,17 @@
 				vEmailCC = vEmailCC & qGetCandidates.hostEmail[i];	
 			}
 			
+			// Debug Settings
+			// vEmailTo = 'marcus@iseusa.com';
+			// vEmailCC = '';
+
 			// At least one of the emails (candidate/host company) is valid
 			if ( LEN(vEmailTo) ) {
 
-				// Change variable on evaluationEmailBody to display midterm
-				evaluationEmailBody = ReplaceNoCase(evaluationEmailBody, "{traineeName}", qGetCandidates.firstName[i] & ' ' & qGetCandidates.lastName[i]);
+				vCandidateName = qGetCandidates.firstName[i] & ' ' & qGetCandidates.lastName[i];	
+	
+				// Change variable on vEvaluationEmailBody to display midterm
+				vEditedEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{traineeName}", vCandidateName);
 
 				// Email
 				APPLICATION.CFC.EMAIL.sendEmail(
@@ -113,8 +119,8 @@
 					emailCC=vEmailCC,
 					emailBCC=vEmailBCC,
 					emailReplyTo=vEmailFrom,
-					emailSubject=qGetCandidates.firstName[i] & ' ' & qGetCandidates.lastName[i] & " - SEVIS Activation Required",
-					emailMessage=evaluationEmailBody,
+					emailSubject=vCandidateName & " - SEVIS Activation Required",
+					emailMessage=vEditedEvaluationEmailBody,
 					emailPriority=1,
 					footerType="emailRegular",
 					companyID=7
@@ -142,7 +148,7 @@
 	</tr>
     <cfloop query="qGetCandidates">
         <tr>
-            <td style="border-bottom:1px solid ##999;">###qGetCandidates.candidateID# #qGetCandidates.firstName# #qGetCandidates.lastName#</td>
+            <td style="border-bottom:1px solid ##999;">#qGetCandidates.firstName# #qGetCandidates.lastName# (###qGetCandidates.candidateID#)</td>
             <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#qGetCandidates.email#</td>
             <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#qGetCandidates.programName#</td>
             <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#DateFormat(qGetCandidates.ds2019_startDate, 'mm/dd/yyyy')#</td>
