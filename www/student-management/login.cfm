@@ -1,6 +1,3 @@
-
-
-
 <!--- Kill Extra Output --->
 <cfsilent>
 
