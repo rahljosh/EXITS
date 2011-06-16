@@ -827,13 +827,13 @@
             qGetDeletedFlightInfo = getFlightInformationByFlightID(flightID=VAL(ARGUMENTS.flightID));
             
             // Get Pre-AYP Arrival
-            qGetPreAYPArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="PreAYPArrival");
+            qGetPreAYPArrival = getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="PreAYPArrival");
     
             // Get Arrival
-            qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="arrival");
+            qGetArrival = getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="arrival");
     
             // Get Departure
-            qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="departure");
+            qGetDeparture = getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=ARGUMENTS.programID, flightType="departure");
         </cfscript>
 		
         <cfoutput>        
@@ -1216,7 +1216,7 @@
 			}
 			
 			// Get Formatted Flight Information
-			flightInfoReport = APPLICATION.CFC.STUDENT.printFlightInformation(
+			flightInfoReport = printFlightInformation(
 				studentID=ARGUMENTS.studentID,
 				flightID=ARGUMENTS.flightID,
 				sendEmailTo=ARGUMENTS.sendEmailTo,

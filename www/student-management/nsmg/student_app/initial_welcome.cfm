@@ -648,7 +648,7 @@
         <tr>
             <td>
             
-                <cfif (qGetHostID.recordcount EQ 0 OR get_student_info.host_fam_approved GT 4)>
+                <cfif NOT VAL(qGetHostID.recordcount) OR NOT VAL(get_student_info.hostID) OR NOT ListFind("1,2,3,4", get_student_info.host_fam_approved)>
                     Information on your host family and location will be available here once you are assigned to a host family. <br><br>
                 <cfelse>
                     <cfset CLIENT.hostid = qGetHostID.hostid>
@@ -663,7 +663,7 @@
                     <cfquery name="host_children" datasource="MySQL">
                         SELECT *
                         FROM smg_host_children
-                        WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostid#">
+                        WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostid)#">
                         ORDER BY birthdate
                     </cfquery>
 
@@ -678,7 +678,7 @@
                     <cfquery name="get_region" datasource="MySQl">
                         SELECT regionid, regionname
                         FROM smg_regions
-                        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.regionid#">
+                        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.regionid)#">
                     </cfquery>
                 
 					<!--- SCHOOL ---->
