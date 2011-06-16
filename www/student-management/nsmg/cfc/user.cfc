@@ -26,7 +26,7 @@
                 FROM 
                     smg_companies 
                 WHERE
-                    url_ref LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%student-management.com"> 
+                    url_ref LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%ise.exitsapplication.com"> 
             </cfquery>
 
         <!--- Production Server --->    
@@ -65,17 +65,17 @@
             	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
         </cfquery>
 
-        <cfif submitting_info.recordcount eq 0>
-            Error during login.  Please try again shortly.
+        <cfif NOT VAL(submitting_info.recordcount)>
+            Error during login. Please try again shortly.
             <cfoutput>#CGI.server_name#</cfoutput>
             <cfabort>
         </cfif>
         
-        <cfset CLIENT.company_submitting = "#submitting_info.website#">
-        <cfset APPLICATION.company_short = "#submitting_info.website#">
+        <cfset CLIENT.company_submitting = submitting_info.website>
+        <cfset APPLICATION.company_short = submitting_info.website>
         <cfset CLIENT.app_menu_comp = CLIENT.companyid>
         <cfset CLIENT.exits_url = "https://" & submitting_info.url_ref>
-        <cfset CLIENT.color = "#submitting_info.company_color#">
+        <cfset CLIENT.color = submitting_info.company_color>
 
 
 		<!--- student login --->
