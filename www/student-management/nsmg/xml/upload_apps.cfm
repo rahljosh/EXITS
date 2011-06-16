@@ -8,9 +8,7 @@
 <cfoutput>
 Total Number of Applications: #numberofstudents# applications.<br /><br />
 
-
-
-<cfloop from="1" to=#numberofstudents# index="i">
+<cfloop from="1" to="#numberofstudents#" index="i">
 
 Len: #ArrayLen(StudentXMLFile.applications.application[i].page1.family.siblings)#
 <br /><rb><br />
@@ -33,7 +31,7 @@ from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlA
 </cfif>
 <cfif (check_soid.recordcount neq 0 and check_soid.app_current_status lt 11) or (check_soid.recordcount eq 0)>
 
-		<cfset unid = '#CreateUUID()#'>
+		<cfset unid = CreateUUID()>
 		<cfquery name="inset_soid" datasource="MySQL">
 		insert into smg_students  (soid, intrep, phone, randid, uniqueid, app_current_status)
 					values ('#StudentXMLFile.applications.application[i].XmlAttributes.studentid#',#client.userid#,'523-0944',8675309,'#unid#',5)
@@ -45,40 +43,18 @@ from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlA
 		</cfquery>
 		<cfset client.studentid = #get_studentid.studentid#>
 		
-	
-		
-		
-		<cfquery name="approved2" datasource="mysql">
+		<cfquery datasource="mysql">
 			insert into smg_student_app_status  (status, reason, studentid)
 			values (5, 'XML File upload not complete.', #get_studentid.studentid# )
 		</cfquery>
-		<cfquery name="get_accent" datasource="MySql">
-			SELECT accentid, accent, no_accent
-			FROM smg_foreign_accents 
-		</cfquery>
-		
-		<!--- COPIED TO smg_foreign_accents --->
-		<!---
-		  list1 = "Â,Á,À,Ã,Ä,â,á,à,ã,ä,É,Ê,é,ê,Í,Ì,í,ì,Ô,Ó,Õ,Ö,ô,ó,õ,ö,Ú,Ü,Û,ú,ü,û,Ç,ç,Ñ,ñ,S,Z,Ø,ø,å,',æ,Å,ß,Š";
-		  list2 = "A,A,A,A,A,a,a,a,a,a,E,E,e,e,I,I,i,i,O,O,O,O,o,o,o,o,U,U,U,u,u,u,C,c,N,n,S,Z,O,o,a, ,e,A,s,S";
-		--->
-		
-		<cfscript>
-		function removeAccent( p_string ) {
-		  var list1 = "#get_accent.accent#";
-		  var list2 = "#get_accent.no_accent#";
-		  var v_string = ReplaceList(p_string, list1, list2) ; 
-		 return( v_string );
-		}
-		</cfscript>
 
 		<cfscript>
-		function removecoma( p_string ) {
-		  var list1 = ",";
-		  var list2 = ".";
-		  var v_string = ReplaceList(p_string, list1, list2) ; 
-		 return( v_string );
-		}
+			function removecoma( p_string ) {
+			  var list1 = ",";
+			  var list2 = ".";
+			  var v_string = ReplaceList(p_string, list1, list2) ; 
+			 return( v_string );
+			}
 		</cfscript>
 		<!----
 <cfoutput>
@@ -154,9 +130,9 @@ from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlA
 			85%...<Br />
 			<!----Family Album:
 			<cfinclude template="fam_album.cfm">
-
 			<cfflush>
-			---->90%...
+			---->
+            90%...
 			Scanned Items: 
 			<cfinclude template="qr_scanned_items.cfm">
 			<cfflush>

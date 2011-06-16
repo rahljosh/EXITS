@@ -89,7 +89,7 @@
         <cfelse>
             
             <!---- FLIGHT ARRIVAL ---->
-            <cfif Len(FlightXMLFile.flightinfocollection.flightinfo[i].arrival) GT 200>
+            <cfif NOT ArrayIsEmpty( XMLSearch(FlightXMLFile.flightinfocollection.flightinfo[i].arrival, 'flight') )>
                 
                 <cfscript>
                     // set number of segments of arrivals
@@ -156,10 +156,9 @@
                 </cfif>
                     
             </cfif>
-    
-    
+    		   
             <!---- FLIGHT DEPARTURE ---->
-            <cfif Len(FlightXMLFile.flightinfocollection.flightinfo[i].departure) gt 200>
+            <cfif NOT ArrayIsEmpty( XMLSearch(FlightXMLFile.flightinfocollection.flightinfo[i].departure, 'flight') )>
             
                 <cfscript>
                     // set number of segments of departures
@@ -186,7 +185,7 @@
                     <!--- Loop Flight Legs --->
                     <cfloop from="1" to="#setNumberSegmentDeparture#" index="nodepseg">
     
-                        <cfscript>
+						<cfscript>
                             // Insert Departure Flight
                             APPLICATION.CFC.STUDENT.insertFlightInfo(
                                 studentID=qGetStudentInfo.studentID,
@@ -206,7 +205,7 @@
                                 flightType='departure'
                             );
                         </cfscript>
-            
+                        
                     </cfloop>
             
                 </cfloop>
