@@ -86,15 +86,15 @@
 
 <cfquery name="update_student" datasource="MySql">
 UPDATE smg_students
-	SET	familylastname = '#removeAccent(StudentXMLFile.applications.application[i].page1.student.lastname.XmlText)#',
-		firstname = '#removeAccent(StudentXMLFile.applications.application[i].page1.student.firstname.XmlText)#',
-		middlename = '#removeAccent(StudentXMLFile.applications.application[i].page1.student.middlenames.XmlText)#',
+	SET	familylastname = '#APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.student.lastname.XmlText)#',
+		firstname = '#APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.student.firstname.XmlText)#',
+		middlename = '#APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.student.middlenames.XmlText)#',
 		
 		app_indicated_program = #indicated_prog#,
 		<!----
 		app_additional_program = <cfif form.app_additional_program EQ '0'>null,<cfelse> '#form.app_additional_program#',</cfif>  
 		----->
-		address = '#removeAccent(StudentXMLFile.applications.application[i].page1.student.street.XmlText)#',
+		address = '#APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.student.street.XmlText)#',
 		city = '#StudentXMLFile.applications.application[i].page1.student.city.XmlText#',
 		zip = '#StudentXMLFile.applications.application[i].page1.student.zip.XmlText#',
 		country = #c_address.countryid#,
@@ -103,7 +103,7 @@ UPDATE smg_students
 		email = '#StudentXMLFile.applications.application[i].page1.student.email.XmlText#',
 		sex = '#StudentXMLFile.applications.application[i].page1.student.sex.XmlText#',
 		dob = #CreateODBCDate(StudentXMLFile.applications.application[i].page1.student.dateofbirth.XmlText)#,
-		citybirth = '#removeAccent(StudentXMLFile.applications.application[i].page1.student.placeofbirth.XmlText)#',
+		citybirth = '#APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.student.placeofbirth.XmlText)#',
 		countrybirth = #c_birth.countryid#,
 		countrycitizen = #c_citizen.countryid#,
 		countryresident = #c_resident.countryid#,
@@ -115,7 +115,7 @@ UPDATE smg_students
 		passportnumber = '#form.passportnumber#',
 		---->
 		<!--- father ---->
-		fathersname = '#removeAccent(StudentXMLFile.applications.application[i].page1.family.father.firstname.XmlText)# #removeAccent(StudentXMLFile.applications.application[i].page1.family.father.lastname.XmlText)#',
+		fathersname = '#APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.family.father.firstname.XmlText)# #APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.family.father.lastname.XmlText)#',
 		<!----
 		fatheraddress = '#form.fatheraddress#',
 		fathercountry = '#form.fathercountry#',
@@ -129,7 +129,7 @@ UPDATE smg_students
 		---->
 		fatherworkposition = '#StudentXMLFile.applications.application[i].page1.family.father.occupation.XmlText#',
 		<!--- mother --->
-		mothersname = '#removeAccent(StudentXMLFile.applications.application[i].page1.family.mother.firstname.XmlText)# #removeAccent(StudentXMLFile.applications.application[i].page1.family.mother.lastname.XmlText)# ',
+		mothersname = '#APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.family.mother.firstname.XmlText)# #APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.family.mother.lastname.XmlText)# ',
 		<!----
 		motheraddress = '#StudentXMLFile.applications.application[i].page1.family.mother.firstname.XmlText#',
 		
@@ -143,7 +143,7 @@ UPDATE smg_students
 		mothercompany = '#form.mothercompany#',
 		---->
 		motherworkposition = '#StudentXMLFile.applications.application[i].page1.family.mother.occupation.XmlText#',
-		emergency_name = '#removeAccent(StudentXMLFile.applications.application[i].page1.emergencycontact.firstname.XmlText)# #removeAccent(StudentXMLFile.applications.application[i].page1.emergencycontact.lastname.XmlText)#',
+		emergency_name = '#APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.emergencycontact.firstname.XmlText)# #APPLICATION.CFC.UDF.removeAccent(StudentXMLFile.applications.application[i].page1.emergencycontact.lastname.XmlText)#',
 		<!----emergency_address = '#form.emergency_address#',---->
 		emergency_phone = '#StudentXMLFile.applications.application[i].page1.emergencycontact.phonebusinessormobile.XmlText#',
 		<!----emergency_country = '#form.emergency_country#'--->
