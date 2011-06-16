@@ -87,6 +87,7 @@
                 c.lastname, 
                 c.hostCompanyID,
                 c.wat_placement,
+                c.startDate,
                 u.businessname,
                 country.countryname
             FROM   
@@ -166,15 +167,16 @@
 </cfsilent>
 
 <style type="text/css">
-<!--
-.tableTitleView {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
-	padding:2px;
-	color:#FFFFFF;
-	background:#4F8EA4;
-}
--->
+	<!--
+		.tableTitleView {
+			padding:5px;
+			color:#FFFFFF;
+			font-size: 10px;
+			font-weight:bold;
+			background:#4F8EA4;
+			font-family: Verdana, Arial, Helvetica, sans-serif;	
+		}
+	-->
 </style>
 
 <cfoutput>
@@ -184,8 +186,8 @@
 
     <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
         <tr valign="middle" height="24">
-            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
-                <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> Candidate Flight Information</font>
+            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan="2">
+                <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> Flight Information</font>
             </td>
         </tr>
         <tr valign="middle" height="24">
@@ -237,7 +239,7 @@
             </td>            
         </tr>
         <tr>
-            <td colspan=2 align="center"><br />
+            <td colspan="2" align="center"><br />
                 <input type="submit" value="Generate Report" class="style1" /><br />
             </td>
         </tr>
@@ -250,15 +252,6 @@
 <!--- Print --->
 <cfif FORM.submitted>
 	
-    <cfscript>
-		// On Screen
-		if (FORM.printOption EQ 1) {
-			tableTitleClass = 'tableTitleView';
-		} else {
-			tableTitleClass = 'style2';
-		}
-	</cfscript>
-
 	<cfsavecontent variable="reportContent">
 		
         <cfloop query="qGetHostCompany">
@@ -288,12 +281,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td width="5%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">ID</Td>
-                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
-                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
-                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
-                    <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Intl. Rep.</td>
-                    <td width="35%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Flight Information</td>
+                    <td width="5%" align="left" bgcolor="4F8EA4" class="tableTitleView">ID</Td>
+                    <td width="15%" align="left" bgcolor="4F8EA4" class="tableTitleView">Last Name</Td>
+                    <td width="15%" align="left" bgcolor="4F8EA4" class="tableTitleView">First Name</Td>
+                    <td width="15%" align="left" bgcolor="4F8EA4" class="tableTitleView">Country</td>
+                    <td width="20%" align="left" bgcolor="4F8EA4" class="tableTitleView">Intl. Rep.</td>
+                    <td width="10%" align="left" bgcolor="4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
+                    <td width="10%" align="left" bgcolor="4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
+                    <td width="10%" align="left" bgcolor="4F8EA4" class="tableTitleView">#FORM.flightType# Time</td>
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
                 	<cfscript>
@@ -304,27 +299,46 @@
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
-                        <td><span class="style1">#qTotalPerHostCompany.countryname#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.businessName#</span></td>                        
-                        <td>
-                        	<span class="style1">
+                        <td class="style1">#qTotalPerHostCompany.countryname#</td>
+                        <td class="style1">#qTotalPerHostCompany.businessName#</td>                        
+                        <td colspan="3" class="style1">
+                        	
+                            <table width="100%" cellpadding="0" cellspacing="0">
                             	<cfif qGetFlightInfo.recordCount>
-                                    <cfloop query="qGetFlightInfo">                                       
-                                        Arrive on 
-                                        <cfif qGetFlightInfo.isOvernightFlight EQ 1>
-	                                        #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
-                                        <cfelse>
-                                        	#qGetFlightInfo.departDate#
-										</cfif>
-                                        	at #qGetFlightInfo.arriveTime#
-                                        - Airport: #qGetFlightInfo.arriveAirportCode# 
-                                        - Flight Number: #qGetFlightInfo.flightNumber# 
-                                        <br />
-                                    </cfloop>                                                        
+                                
+	                                <cfloop query="qGetFlightInfo"> 
+                                        <tr>
+                                            <td width="34%" class="style1">
+												<cfif qGetFlightInfo.isOvernightFlight EQ 1>
+                                                    #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
+                                                <cfelse>
+                                                    #qGetFlightInfo.departDate#
+                                                </cfif>
+                                            </td>
+                                            <td width="33%" class="style1">
+                                                #qGetFlightInfo.arriveAirportCode#
+                                            </td>
+                                            <td width="33%" class="style1">
+                                                #qGetFlightInfo.arriveTime#
+                                            </td>
+                                         </tr>  
+    								</cfloop>
+                                         
+                                <cfelseif qTotalPerHostCompany.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerHostCompany.startDate) LTE now()>
+                                	<tr>
+                                    	<td colspan="3" class="style1" style="color:##F00; font-weight:bold;">
+		                                    Alert Arrival Missing - Program Start Date: #DateFormat(qTotalPerHostCompany.startDate, 'mm/dd/yy')#                                                           
+										</td>
+									</tr>                                                                                    
                                 <cfelse>
-                                	n/a
-                                </cfif>                            
-                            </span>
+                                	<tr>
+                                    	<td colspan="3" class="style1">
+		                                    n/a
+										</td>
+									</tr>                                                                                    
+                                </cfif>  
+							</table>  
+                                                              
                         </td>
                     </tr>
                 </cfloop>
@@ -337,9 +351,9 @@
         <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #totalCSBPlacements#</div>	
         <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
         <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
+        <div class="style1"><strong>&nbsp; &nbsp; -----------------------------------------------</strong></div>
         <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>  		
+        <div class="style1"><strong>&nbsp; &nbsp; -----------------------------------------------</strong></div>  		
 		    	
     </cfsavecontent>
 
@@ -362,16 +376,26 @@
                     font-size: 10px;
                     padding:2;
                 }
-                .style2 {
-                    font-family: Verdana, Arial, Helvetica, sans-serif;
-                    font-size: 8px;
-                    padding:2;
-                }
+				.style4 {
+					font-family: Verdana, Arial, Helvetica, sans-serif;
+					font-size: 10px;
+					color: ##006666;
+					font-weight: bold;
+					text-decoration:none;
+				}				
+				.tableTitleView {
+					padding:5px;
+					color:##FFFFFF;
+					font-size: 10px;
+					font-weight:bold;
+					background:##4F8EA4;
+					font-family: Verdana, Arial, Helvetica, sans-serif;	
+				}
                 .title1 {
                     font-family: Verdana, Arial, Helvetica, sans-serif;
                     font-size: 15px;
                     font-weight: bold;
-                    padding:5;
+                    padding:5px;
                 }					
                 -->
                 </style>
@@ -392,7 +416,7 @@
             <cfcontent type="application/msexcel">
             
             <!--- suggest default name for XLS file --->
-            <cfheader name="Content-Disposition" value="attachment; filename=studentsHiredPerCompany.xls"> 
+            <cfheader name="Content-Disposition" value="attachment; filename=flightInformation.xls"> 
     
             <style type="text/css">
             <!--
@@ -401,16 +425,26 @@
                 font-size: 10px;
                 padding:2;
             }
-            .style2 {
-                font-family: Verdana, Arial, Helvetica, sans-serif;
-                font-size: 10px;
-                padding:2;
+			.style4 {
+				font-family: Verdana, Arial, Helvetica, sans-serif;
+				font-size: 10px;
+				color: ##006666;
+				font-weight: bold;
+				text-decoration:none;
+			}				
+            .tableTitleView {
+				padding:5px;
+				color:##FFFFFF;
+				font-size: 10px;
+				font-weight:bold;
+				background:##4F8EA4;
+				font-family: Verdana, Arial, Helvetica, sans-serif;	
             }
             .title1 {
                 font-family: Verdana, Arial, Helvetica, sans-serif;
                 font-size: 15px;
                 font-weight: bold;
-                padding:5;
+                padding:5px;
             }					
             -->
             </style>
