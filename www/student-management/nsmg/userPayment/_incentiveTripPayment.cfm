@@ -9,19 +9,24 @@
 
 <!--- Kill extra output --->
 <cfsilent>
+	
+    <cfscript>
+		// Data Validation
+		if ( NOT VAL(FORM.userID) ) {
+			// Error Message
+			SESSION.formErrors.Add('You must select one representative');			
+		}
+		
+		// Check if there are errors
+		if ( SESSION.formErrors.length() ) {			
+			// Relocate to Inital page and display error message
+			Location("#CGI.SCRIPT_NAME#?curdoc=userPayment/index&errorSection=incentiveTrip", "no");
+		}
+		
+		// Get Rep Information
+		qGetRepInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(FORM.userID));
+	</cfscript>
     
-    <!--- Param FORM variables --->
-    <cfparam name="FORM.submitted" default="0">
-    <cfparam name="FORM.userID" default="0">
-    <cfparam name="FORM.paymentType" default="0">
-    <cfparam name="FORM.amount" default="0">
-    <cfparam name="FORM.comments" default="0">
-
-	<!--- Representative not selected - Display error message --->
-	<cfif NOT VAL(FORM.userID)>
-		<cflocation url="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&displayIncentiveTripError=1" addtoken="no">
-	</cfif>
-
     <cfquery name="qGetTripInfo" datasource="MySQL">
         SELECT 
         	id,
@@ -30,17 +35,6 @@
         	smg_payment_types 
         WHERE 
         	paymenttype = <cfqueryparam cfsqltype="cf_sql_varchar" value="Trip">
-    </cfquery>
-    
-    <cfquery name="qGetRepInfo" datasource="MySQL">
-        SELECT 
-        	userID,
-            firstName,
-            lastName
-        FROM 
-        	smg_users
-        WHERE 
-        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userID#">
     </cfquery>
 
     <cfquery name="qGetPaymentDetails" datasource="MySQL">
@@ -67,13 +61,13 @@
                 	smg_rep_payments 
                 (
                 	agentid, 
-                    studentid,
+                    studentID,
                     paymenttype, 
                     date, 
                     transtype, 
                     inputby, 
                     amount, 
-                    companyid, 
+                    companyID, 
                     comment
 				)
 				VALUES 
@@ -85,7 +79,7 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="Trip">,  
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.amount#">, 
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">, 
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#">
 				)
             </cfquery>
@@ -101,22 +95,25 @@
 
 <cfoutput>
 
-    <h2>
-        Representitive: #qGetRepInfo.firstname# #qGetRepInfo.lastname# (###qGetRepInfo.userid#) &nbsp; <span class="get_attention"><b>::</b></span>
-		<a href="javascript:openPopUp('userPayment/index.cfm?action=paymentHistory&userid=#qGetRepInfo.userid#', 700, 500);" class="nav_bar">Payment History</a>
-    </h2> <br />
+    <h2 style="margin-top:10px;">
+        Representative: #qGetRepInfo.firstName# #qGetRepInfo.lastname# (###qGetRepInfo.userid#) &nbsp; <span class="get_attention"><b>::</b></span>
+        <a href="javascript:openPopUp('userPayment/index.cfm?action=paymentHistory&userid=#qGetRepInfo.userid#', 700, 500);" class="nav_bar">Payment History</a>
+    </h2>
 
 	<!--- Display Payment Confirmation --->
     <cfif qGetPaymentDetails.recordCount>
     
-        Below is a summary of the payment recorded. <br />
-        
-        <table width="90%" cellpadding="4" cellspacing="0">
+        <div style="margin-top:10px;">Below is a summary of the recorded payments:</div>
+
+        <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;"> 
             <tr>
-                <td bgcolor="##010066" colspan="5"><font color="white"><strong>Placed Students</strong></font></td>
+                <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Incentive Trip Payment</td>
             </tr>
-            <tr bgcolor="##E5E5E5">
-                <Td >Payment ID</Td><td>Type</td><td>Amount</td><td>Comment</td>
+            <tr style="background-color:##E2EFC7; font-weight:bold;">
+                <td width="10%">Payment ID</td>
+                <td width="20%">Type</td>
+                <td width="10%">Amount</td>
+                <td width="60%">Comment</td>
             </tr>
             <tr>
                 <td width="10%">#qGetPaymentDetails.id#</td>
@@ -125,40 +122,43 @@
                 <td width="60%">#qGetPaymentDetails.comment#</td>
             </tr>
         </table>
-        <br />
         
+        <br />
+
         <div align="center"><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index"><img src="pics/newpayment.gif" border="0" align="bottom"></a></div>
         
     <!--- Display FORM --->
     <cfelse>
     
-        Fill in the details for the Incentive Trip Payment.<br />
+        <div style="margin-top:10px;">Fill in the details for the Incentive Trip Payment.</div>
         
         <cfform method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=incentiveTripPayment">
             <input type="hidden" name="submitted" value="1">
             <input type="hidden" name="userID" value="#FORM.userID#">
-        
-            <table width="90%" cellpadding="4" cellspacing="0">
+
+            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;"> 
                 <tr>
-                    <td bgcolor="##010066" colspan=3><font color="white"><strong>Incentive Trip </strong></font></td>
+                    <td colspan="3" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Incentive Trip Payment</td>
                 </tr>
-                <tr bgcolor="##E5E5E5">
-                    <td>Type</td><td>Amount</td><td>Comment</td>
-                </tr>
-                <tr>
-                    <td width="20%">
-                        <cfselect name="paymentType" required="yes" message="Please select a type">
+                <tr style="background-color:##E2EFC7; font-weight:bold;">
+                    <td width="20%">Type</td>
+                    <td width="10%">Amount</td>
+                    <td width="70%">Comment</td>
+				</tr>
+	            <tr>
+                    <td>
+                        <cfselect name="paymentType" required="yes" message="Please select a type" class="mediumField">
                             <Cfloop query="qGetTripInfo">
                                 <option value="#id#">#type#</option>	
                             </Cfloop>
                         </cfselect>
                     </td>  
-                    <td width="10%"><cfinput type="text" name="amount" size=6 required="yes" message="Please enter an amount"></td>
-                    <td width="70%"><input type="text" name="comments" size="40"></td>
+                    <td><cfinput type="text" name="amount" size="6" required="yes" message="Please enter an amount"></td>
+                    <td><input type="text" name="comments" size="40"></td>
                 </tr>                
-                <tr>
-                    <td colspan="5" align="right"><cfinput name="submit" type="image" src="pics/submit.gif" align="right" border="0" alt="submit" submitOnce></td>
-                </Tr>
+                <tr style="background-color:##E2EFC7;">
+                    <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
+                </tr>
             </table>
             
         </cfform>

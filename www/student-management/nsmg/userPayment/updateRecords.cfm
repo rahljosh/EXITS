@@ -47,7 +47,7 @@
         FROM
             smg_rep_payments
         WHERE
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetFastTrack.studentID#">              
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetFastTrack.studentID#">              
 		AND	
             paymentType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#mutuallyExclusiveBonus#" list="yes"> ) 
         AND
@@ -80,29 +80,29 @@
                 smg_rep_payments
             (
                 agentid, 
-                studentid, 
-                programid,
+                studentID, 
+                programID,
                 old_ProgramID,
                 paymenttype, 
                 date, 
                 transtype, 
                 inputby, 
                 amount, 
-                companyid, 
+                companyID, 
                 comment
             )
             VALUES 
             (
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRecords.agentid#">, 
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRecords.studentID#">, 
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRecords.programid#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRecords.programID#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRecords.old_ProgramID#">, 
                 <cfqueryparam cfsqltype="cf_sql_integer" value="17">, 
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetRecords.date#">, 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetRecords.transtype#">, 
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRecords.inputby#">, 
                 <cfqueryparam cfsqltype="cf_sql_decimal" value="300.00">, 
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRecords.companyid#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRecords.companyID#">, 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetRecords.comment#">
             )
         </cfquery>

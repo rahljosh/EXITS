@@ -10,60 +10,69 @@
 <!--- Kill extra output --->
 <cfsilent>
 
-    <!--- Param URL Variables --->
-	<cfparam name="URL.orderBy" default="">
-    <cfparam name="studentID" default="0">
-    <cfparam name="familyLastName" default="">
-
-	<!--- none information was entered --->
-	<cfif NOT LEN(familyLastName) AND NOT VAL(studentID)>
-		<cflocation url="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&searchstu=0" addtoken="no">
-	<!--- both informations were entered --->
-	<cfelseif LEN(familyLastName) AND VAL(studentID)>
-		<cflocation url="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&searchstu=2" addtoken="no">
-	</cfif>
+	<cfscript>
+		// Data Validation
+		if ( NOT LEN(FORM.familyLastName) AND NOT LEN(FORM.studentID) ) {
+			// Error Message
+			SESSION.formErrors.Add('You must enter one of the criterias below');			
+		} else if ( LEN(FORM.familyLastName) AND LEN(FORM.studentID) ) {
+			// Error Message
+			SESSION.formErrors.Add('You must select only ONE of the criterias below');		
+		}
+		
+		// Check if there are errors
+		if ( SESSION.formErrors.length() ) {			
+			// Relocate to Inital page and display error message
+			Location("#CGI.SCRIPT_NAME#?curdoc=userPayment/index&errorSection=searchStudent", "no");
+		}
+	</cfscript>
 
     <cfquery name="qSearchStudent" datasource="MySql">
         SELECT 
-            studentid, 
-            firstname, 
-            familylastname
+            s.studentID, 
+            s.firstName, 
+            s.familyLastName,
+            p.programName
         FROM 
-            smg_students 
+            smg_students s
+        INNER JOIN
+        	smg_programs p ON p.programID = s.programID
+                AND
+                    p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
         WHERE 
-            companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
 		<cfif LEN(familyLastName)>
             AND 
-                familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#familyLastName#%">
+                s.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#familyLastName#%">
         </cfif>
         
         <cfif VAL(studentID)>
             AND 
-                studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
+                s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
         </cfif>
 
         ORDER BY 
             <cfswitch expression="#URL.orderBy#">
             
                 <cfcase value="studentID">
-                    studentID,
-                    familylastname, 
+                    s.studentID,
+                    s.familyLastName 
                 </cfcase>
                 
                 <cfcase value="firstName">
-                    firstName, 
-                    familylastname, 
+                    s.firstName, 
+                    s.familyLastName 
                 </cfcase>
         
-                <cfcase value="familylastname">
-                    familylastname, 
-                    firstName
+                <cfcase value="familyLastName">
+                    s.familyLastName, 
+                    s.firstName
                 </cfcase>
     
                 <cfdefaultcase>
-                    familylastname, 
-                    firstName
+                    s.familyLastName, 
+                    s.firstName
                 </cfdefaultcase>
     
             </cfswitch>
@@ -93,52 +102,57 @@
 
 <cfoutput>
 
-<div class="application_section_header">Student Finder</div>
-
-<Br>Specify ONLY ONE Student from the list below:<br><br>
-
-<form method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=processStudentPayment" name="myform">
-<input type="hidden" name="student" value="0"><input type="hidden" name="supervising" value="0">
-<table width=90% cellpadding="4" cellspacing="0">
-	<tr>
-		<td colspan="4" bgcolor="##010066"><font color="white"><strong>Student</strong></font></td>
-	    <td>&nbsp;</td>
-	</tr>
-	<tr bgcolor="##CCCCCC">
-		<td>&nbsp;</td>
-		<Td><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=searchStudent&order=studentid&familylastname=#form.familyLastName#&userid=#form.studentID#">ID</a></Td>
-		<td><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=searchStudent&order=familylastname&familylastname=#form.familyLastName#&userid=#form.studentID#">Last Name</a>, 
-			<a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=searchStudent&order=firstname&familylastname=#form.familyLastName#&userid=#form.studentID#">First Name</a></td>
-		<td>&nbsp;</td>
-	</tr>
-	<cfif qSearchStudent.recordcount is '0'>
-	<tr>
-		<td colspan="3">Sorry, none students have matched your criteria. <br>Please change your criteria and try again.</td>
-	</tr>
-	<Tr>
-		<td align="center" colspan="3"><div class="button"><img border="0" src="pics/back.gif" onClick="javascript:history.back()"></td>
-	</Tr>
-	<cfelse>
-	<cfloop query="qSearchStudent">	
-	<tr>
-		<td><input type="checkbox" value="#studentid#" name="studentid" id="student#currentrow#" onClick="countChoices(this)"></td>
-		<Td>
-          	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">
-            	#studentid#
-			</a>
-		</td>
-		<td>
-          	<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#studentid#', 700, 500);" class="nav_bar">
-            	#firstname# #familylastname#
-			</a>
-		</td>
-		<td>&nbsp;</td>
-	</tr>
-	</cfloop>
-	<Tr>
-		<td align="center" colspan="3"><div class="button"><input name="submit" type="image" src="pics/next.gif" align="right" border="0" alt="Next"></td>
-	</Tr>
-	</cfif>
-</table>
-</form><br>
+    <div style="margin-top:10px;">Specify ONLY ONE Student from the list below:</div>
+    
+    <form name="myform" method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=selectPayment">
+        <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+            <tr>
+                <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Student Search</td>
+            </tr>
+            <tr style="background-color:##E2EFC7; font-weight:bold;">
+                <td width="4%">&nbsp;</td>
+                <td width="10%"><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=searchStudent&order=studentID&familyLastName=#form.familyLastName#&userid=#form.studentID#">ID</a></td>
+                <td width="25%">
+					<a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=searchStudent&order=familyLastName&familyLastName=#form.familyLastName#&userid=#form.studentID#">Last Name</a>, 	
+                    <a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=searchStudent&order=firstName&familyLastName=#form.familyLastName#&userid=#form.studentID#">First Name</a>                
+                </td>
+                <td width="25%">Program</td>
+                <td width="36%">Actions</td>
+            </tr>
+            
+            <cfloop query="qSearchStudent">	
+                <tr bgcolor="###iif(qSearchStudent.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                    <td><input type="checkbox" name="studentID" id="student#qSearchStudent.currentrow#" value="#qSearchStudent.studentID#" onClick="countChoices(this)"></td>
+                    <Td>
+                        <label for="student#qSearchStudent.currentrow#">#qSearchStudent.studentID#</label>
+                    </td>
+                    <td>
+                        <label for="student#qSearchStudent.currentrow#">#qSearchStudent.firstName# #qSearchStudent.familyLastName#</label>
+                    </td>
+                    <td>
+                    	#qSearchStudent.programName#
+                    </td>
+                    <td>
+                        <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#studentID#', 700, 500);" class="nav_bar">[ Payment History ]</a>
+                    </td>
+                </tr>
+            </cfloop>
+        
+            <cfif VAL(qSearchStudent.recordCount)>
+                <tr style="background-color:##E2EFC7;">
+                    <td colspan="5" align="center"> <input name="submit" type="image" src="pics/next.gif" border="0" alt="next"></td>
+                </tr>
+            <cfelse>
+                <tr>
+                    <td colspan="5" align="center">Sorry, none students have matched your criteria. <br>Please change your criteria and try again.</td>
+                </tr>
+                <tr style="background-color:##E2EFC7;">
+                    <td align="center" colspan="5"><img border="0" src="pics/back.gif" onClick="javascript:history.back()"></td>
+                </tr>
+            </cfif>
+            
+        </table>
+    
+    </form>
+    
 </cfoutput>
