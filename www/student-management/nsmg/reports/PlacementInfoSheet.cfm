@@ -329,7 +329,7 @@
                                 	<td width="100" valign="top"><span class="title">Email: </span></td>
                                     <td>#qGetHostFamily.email#</td>
                                 </tr>
-                                <!----
+                               
                                 <tr>
                                 	<td width="100" valign="top"><span class="title">Placed: </span></td>
                                     <td>
@@ -341,7 +341,7 @@
                                     </td>
                                 	
                                 </tr>
-								---->
+								
                             </table>
     
                         </td>
