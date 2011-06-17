@@ -5,7 +5,9 @@
 	Date:		April 20, 2011
 	Desc:		Process Payment
 	
-	Update:		04/22/2011 - Pre AYP Bonus - Mutually Exclusive
+	Update:		06/17/2011 - Blocking departure payments for ayp 5 month students	
+		
+				04/22/2011 - Pre AYP Bonus - Mutually Exclusive	
 					18 - Pre-AYP-250
 					19 - Pre-AYP-200
 					20 - Pre-AYP-150
@@ -19,311 +21,340 @@
 
 <!--- Kill extra output --->
 <cfsilent>
-	
-    <!--- Param FORM variables --->
-    <cfparam name="FORM.submitted" default="0">
-    <cfparam name="FORM.user" default="0">
-    <cfparam name="FORM.payment_type_super" default="0">
-    <cfparam name="FORM.payment_type_place" default="0">
-    <cfparam name="FORM.supervisedStudentIDList" default="">
-    <cfparam name="FORM.placedStudentIDList" default="">
 
-	<!--- Stores a list of payments recently made --->
-    <cfparam name="supervisedPaymentList" default="">
-    <cfparam name="placedPaymentList" default="">
+    <!--- Param FORM variables --->
 
     <cfscript>
 		// Mutually Exclusive Bonus
-		mutuallyExclusiveBonus = "9,15,17";
+		vMutuallyExclusiveBonus = "9,15,17";
+		// Mutually Exclusive PreAyp Bonus
+		vMutuallyExclusivePreAyp = "18,19,20";
 		
-		mutuallyExclusivePreAyp = "18,19,20";
-		
-		// Get Rep Information
-		qGetRepInfo = APPCFC.USER.getUserByID(userID=VAL(user));
+		// AYP 5 Program Type - Departure type must not be paid for 5 month students
+		vAYP5ProgramType = "3,4,25,26";
 		
 		// Stores All Students Selected
-		studentIDList = 0;
-		if ( LEN(supervisedStudentIDList) ) {
-			studentIDList = ListAppend(studentIDList, supervisedStudentIDList);
+		vStudentIDList = 0;
+		
+		if ( LEN(FORM.supervisedStudentIDList) ) {
+			vStudentIDList = ListAppend(vStudentIDList, FORM.supervisedStudentIDList);
 		}
-		if ( LEN(placedStudentIDList) ) {
-			studentIDList = ListAppend(studentIDList, placedStudentIDList);
+		if ( LEN(FORM.placedStudentIDList) ) {
+			vStudentIDList = ListAppend(vStudentIDList, FORM.placedStudentIDList);
 		}
+		
+		if ( LEN(URL.timeStamp) ) {
+			URL.timeStamp = URLDecode(URL.timeStamp);
+		}
+
+		// Get Rep Information
+		qGetRepInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(FORM.userID));
 	</cfscript>
     
-    <cfquery name="qGetSupervisingPaymentType" datasource="MySQL">
+    <cfquery name="qGetsupervisedPaymentType" datasource="MySQL">
         SELECT 
-            smg_payment_types.type, smg_payment_types.id, amount
+            pt.type, 
+            pt.id, 
+            pa.amount
         FROM 
-            smg_payment_types
+            smg_payment_types pt
         INNER JOIN 
-            smg_payment_amount ON smg_payment_types.id = smg_payment_amount.paymentid
+            smg_payment_amount pa ON pt.id = pa.paymentid
         WHERE 
-            id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.payment_type_super)#">
+            pt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.supervisedPaymentType)#">
         AND 
-            smg_payment_types.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            pt.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     </cfquery>
     
     <cfquery name="qGetPlacementPaymentType" datasource="MySQL">
         SELECT 
-            smg_payment_types.type, smg_payment_types.id, amount
+            pt.type, 
+            pt.id, 
+            pa.amount
         FROM 
-            smg_payment_types 
+            smg_payment_types pt
         INNER JOIN 
-            smg_payment_amount ON smg_payment_types.id = smg_payment_amount.paymentid
+            smg_payment_amount pa ON pt.id = pa.paymentid
         WHERE 
-            id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.payment_type_place)#"> 
+            pt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.placedPaymentType)#"> 
         AND 
-            smg_payment_types.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            pt.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     </cfquery>
 	
     <!--- Gets All Selected Students --->
     <cfquery name="qGetAllStudents" datasource="MySQL">
         SELECT 
-            studentid, 
-            firstname, 
-            familylastname, 
-            programid
+            s.studentID, 
+            s.firstName, 
+            s.familyLastName, 
+            p.programID,
+            p.type
         FROM 
-            smg_students
+            smg_students s
+        INNER JOIN
+        	smg_programs p ON p.programID = s.programID
         WHERE 
-            studentid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#studentIDList#" list="yes"> )
+            studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vStudentIDList#" list="yes"> )
+        ORDER BY
+        	studentID DESC
     </cfquery>
 
+    <cfquery name="qGetSupervisedStudentList" dbtype="query">
+        SELECT 
+            studentID, 
+            firstName, 
+            familyLastName, 
+            programID,
+            type
+        FROM 
+            qGetAllStudents
+        WHERE 
+            studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.supervisedStudentIDList#" list="yes"> )
+    </cfquery>
+
+    <cfquery name="qGetPlacedStudentList" dbtype="query">
+        SELECT 
+            studentID, 
+            firstName, 
+            familyLastName, 
+            programID,
+            type
+        FROM 
+            qGetAllStudents
+        WHERE 
+            studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.placedStudentIDList#" list="yes"> )
+    </cfquery>
+	
+    <!--- Get Recorded Payments --->
+    <cfif IsDate(URL.timeStamp)>
+    
+		<!--- Get Super Payments Made --->
+        <cfquery name="qGetSupervisedPaymentDetail" datasource="MySQL">
+            SELECT
+                srp.ID,
+                srp.amount,
+                srp.comment,
+                spt.type,
+                s.firstName,
+                s.familyLastName,
+                s.studentID
+            FROM 
+                smg_rep_payments srp
+            LEFT OUTER JOIN
+                smg_payment_types spt ON spt.ID = srp.paymentType
+            LEFT OUTER JOIN
+                smg_students s ON s.studentID = srp.studentID                                
+            WHERE
+               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
+            AND                
+                srp.date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#URL.timeStamp#">
+            AND
+            	srp.transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="Supervision">
+        </cfquery>
+        
+		<!--- Get Place Payments Made --->
+        <cfquery name="qGetPlacedPaymentDetail" datasource="MySQL">
+            SELECT
+                srp.ID,
+                srp.amount,
+                srp.comment,
+                spt.type,
+                s.firstName,
+                s.familyLastName,
+                s.studentID
+            FROM 
+                smg_rep_payments srp
+            LEFT OUTER JOIN
+                smg_payment_types spt ON spt.ID = srp.paymentType
+            LEFT OUTER JOIN
+                smg_students s ON s.studentID = srp.studentID                                
+            WHERE
+               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
+            AND    
+                srp.date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#URL.timeStamp#">
+            AND
+            	srp.transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="Placement">
+        </cfquery>
+	
+    </cfif>
+	
     <!--- FORM submitted --->
     <cfif FORM.submitted>
-    	
+
 		<cfscript>
-            // These are used in the Insert
-            supervisedPaymentList = '';
-            placedPaymentList = '';
+			vTimeStamp = now();
         </cfscript>
         
-        <!--- Supervised --->
-        <cfif LEN(FORM.supervisedStudentIDList)>
+        <!--- Supervised Payments --->
+        <cfif VAL(FORM.supervisedStudentIDList)>
         
-            <cfloop list="#FORM.supervisedStudentIDList#" index="x">
-            
-                <cfif LEN(Evaluate("FORM." & x & "super_type"))>
+            <cfloop list="#FORM.supervisedStudentIDList#" index="superID">
+                
+                <cfif LEN(Evaluate("FORM." & superID & "superPaymentTypeID"))>
                 
                     <cftransaction action="begin" isolation="serializable">
                         
-                        <cfquery name="qGetStudentProgram" datasource="MySQL">
-                            SELECT
-                                 programid
-                            FROM
-                            	smg_students
-                            WHERE 
-                            	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
-                        </cfquery>
-                        
                         <cfquery datasource="MySQL" result="newRecord">
                             INSERT INTO 
-                            	smg_rep_payments
+                                smg_rep_payments
                             (
-                            	agentid, 
-                                studentid, 
-                                programid, 
+                                agentid, 
+                                studentID, 
+                                programID, 
                                 paymenttype, 
                                 date, 
                                 transtype, 
                                 inputby, 
                                 amount, 
-                                companyid, 
+                                companyID, 
                                 comment
                             )
                             VALUES 
                             (
-                            	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.user#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentProgram.programid#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & x & 'super_type')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & x & 'super_transtype')#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#superID#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & superID & 'superProgramID')#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & superID & 'superPaymentTypeID')#">, 
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & superID & 'superTransType')#">, 
                                 <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & x & 'super_amount')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & x & 'super_comment')#">
-							)
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & superID & 'superAmount')#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & superID & 'superComment')#">
+                            )
                         </cfquery>
                         
                     </cftransaction>
-                    
-                    <cfset supervisedPaymentList = ListAppend(supervisedPaymentList, newRecord.GENERATED_KEY)>
                 
-				</cfif>	
+                </cfif>	
                 
             </cfloop>
-            
+		
         </cfif>
         
-        <!--- Placed --->
-        <cfif LEN(FORM.placedStudentIDList)>
-           
-            <cfloop list="#FORM.placedStudentIDList#" index="x">
+        
+        <!--- Placed Payments --->
+        <cfif VAL(FORM.placedStudentIDList)>
+        
+            <cfloop list="#FORM.placedStudentIDList#" index="placedID">
             
-                <cfif #Evaluate("FORM." & x & "place_type")# NEQ ''>
+                <cfif LEN(Evaluate("FORM." & placedID & "placePaymentTypeID"))>
                 
                     <cftransaction action="begin" isolation="serializable">
                     
-                        <cfquery name="qGetStudentProgram" datasource="MySQL">
-                            SELECT
-                                 programid
-                            FROM
-                            	smg_students
-                            WHERE 
-                            	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
-                        </cfquery>
-                        
                         <cfquery datasource="MySQL" result="newRecord">
                             INSERT INTO 
-                            	smg_rep_payments
+                                smg_rep_payments
                             (
-                            	agentid, 
-                                studentid, 
-                                programid, 
+                                agentid, 
+                                studentID, 
+                                programID, 
                                 paymenttype, 
                                 date, 
                                 transtype, 
                                 inputby, 
                                 amount, 
-                                companyid, 
+                                companyID, 
                                 comment
                             )
                             VALUES 
                             (
-                            	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.user#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentProgram.programid#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & x & 'place_type')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & x & 'place_transtype')#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#placedID#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & placedID & 'placeProgramID')#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & placedID & 'placePaymentTypeID')#">, 
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & placedID & 'placeTranstype')#">, 
                                 <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & x & 'place_amount')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & x & 'place_comment')#">
-							)
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & placedID & 'placeAmount')#">, 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & placedID & 'placeComment')#">
+                            )
                         </cfquery>
                         
                     </cftransaction>
-                    
-                    <cfset placedPaymentList = ListAppend(placedPaymentList, newRecord.GENERATED_KEY)>
                     
                 </cfif>
                 
             </cfloop>
-            
-        </cfif>
 		
+        </cfif>
+        
         <!--- Location --->
-        <cflocation url="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=processPayment&user=#FORM.user#&placedPaymentList=#placedPaymentList#&supervisedPaymentList=#supervisedPaymentList#" addtoken="no">
-
+        <cflocation url="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=processPayment&userID=#FORM.userID#&timeStamp=#URLEncodedFormat(vTimeStamp)#" addtoken="no">
+            
     </cfif>
     
 </cfsilent>
 
 <cfoutput>
 
-    <h2>
-    	Representative: #qGetRepInfo.firstname# #qGetRepInfo.lastname# (#qGetRepInfo.userid#) &nbsp; <span class="get_attention"><b>::</b></span>
+    <h2 style="margin-top:10px;">
+        Representative: #qGetRepInfo.firstName# #qGetRepInfo.lastname# (###qGetRepInfo.userid#) &nbsp; <span class="get_attention"><b>::</b></span>
         <a href="javascript:openPopUp('userPayment/index.cfm?action=paymentHistory&userid=#qGetRepInfo.userid#', 700, 500);" class="nav_bar">Payment History</a>
-	</h2> <br />
+    </h2>
     
 	<!--- Display Payment Confirmation --->
-    <cfif LEN(supervisedPaymentList) OR LEN(placedPaymentList)>
+    <cfif IsDate(URL.timeStamp)>
 
-        Below is a summary of the payments recorded. <br />
-        
-        <table width="90%" cellpadding="4" cellspacing="0">
-            <!--- Supervised Payments --->
+        <div style="margin-top:10px;">Below is a summary of the recorded payments:</div>
+
+        <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;"> 
             <tr>
-                <td bgcolor="##010066" colspan="5"><font color="white"><strong>Supervised Students </strong></font></td>
+                <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Supervised Students &nbsp; - &nbsp; Total of #qGetSupervisedPaymentDetail.recordCount# student(s)</td>
             </tr>
-            <tr bgcolor="##CCCCCC">
-                <Td>ID</Td>
-                <td>Student</td>
-                <td>Type</td>
-                <td>Amount</td>
-                <td>Comment</td>
+            <tr style="background-color:##E2EFC7; font-weight:bold;">
+                <td width="10%">Payment ID</td>
+                <td width="20%">Student</td>
+                <td width="20%">Type</td>
+                <td width="10%">Amount</td>
+                <td width="40%">Comment</td>
             </tr>
 
-            <cfloop list="#URL.supervisedPaymentList#" index = "x">
-            
-                <Cfquery name="qGetPaymentDetail" datasource="MySQL">
-                    SELECT
-                        srp.ID,
-                        srp.amount,
-                        srp.comment,
-                        spt.type,
-                        s.firstName,
-                        s.familyLastName,
-                        s.studentID
-                    FROM 
-                        smg_rep_payments srp
-                    LEFT OUTER JOIN
-                        smg_payment_types spt ON spt.ID = srp.paymentType
-                    LEFT OUTER JOIN
-                        smg_students s ON s.studentID = srp.studentID                                
-                    WHERE
-                        srp.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
-                </Cfquery>
+            <cfloop query="qGetSupervisedPaymentDetail">
 
-                <tr>
-                    <Td>#qGetPaymentDetail.ID#</Td>
-                    <td>#qGetPaymentDetail.firstname# #qGetPaymentDetail.familylastname# (###qGetPaymentDetail.studentid#)</td>
-                    <Td>#qGetPaymentDetail.type#</Td>  
-                    <td>#LSCurrencyFormat(qGetPaymentDetail.amount, 'local')#</td>
-                    <td>#qGetPaymentDetail.comment#</td>
+                <tr bgcolor="###iif(qGetSupervisedPaymentDetail.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                    <Td>#qGetSupervisedPaymentDetail.ID#</Td>
+                    <td>#qGetSupervisedPaymentDetail.firstName# #qGetSupervisedPaymentDetail.familyLastName# (###qGetSupervisedPaymentDetail.studentID#)</td>
+                    <Td>#qGetSupervisedPaymentDetail.type#</Td>  
+                    <td>#LSCurrencyFormat(qGetSupervisedPaymentDetail.amount, 'local')#</td>
+                    <td>#qGetSupervisedPaymentDetail.comment#</td>
                 </tr>
          
             </cfloop>
     
-            <Cfif NOT LEN(form.supervisedStudentIDList)>
+            <cfif NOT VAL(qGetSupervisedPaymentDetail.recordCount)>
                 <tr><td colspan="5" align="center">No supervision payments submitted.</td></tr>
             </cfif>
         
-            <tr><td>&nbsp;</td></tr>
-        	
-            <!--- Placed Payments --->
+		</table>
+            
+		<!--- PLACED STUDENTS --->
+        <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
             <tr>
-                <td bgcolor="##010066" colspan="5"><font color="white"><strong>Placed Students</strong></font></td>
+                <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Placed Students &nbsp; - &nbsp; Total of #qGetPlacedPaymentDetail.recordCount# student(s)</td>
             </tr>
-            <tr bgcolor="##CCCCCC">
-                <Td>Payment ID</Td><td>Student</td><td>Type</td><td>Amount</td><td>Comment</td>
+            <tr style="background-color:##E2EFC7; font-weight:bold;">
+                <td width="10%">Payment ID</td>
+                <td width="20%">Student</td>
+                <td width="20%">Type</td>
+                <td width="10%">Amount</td>
+                <td width="40%">Comment</td>
             </tr>
 
-            <cfloop list="#URL.placedPaymentList#" index = "x">
-            
-                <Cfquery name="qGetPaymentDetail" datasource="MySQL">
-                    SELECT
-                        srp.ID,
-                        srp.amount,
-                        srp.comment,
-                        spt.type,
-                        s.firstName,
-                        s.familyLastName,
-                        s.studentID
-                    FROM 
-                        smg_rep_payments srp
-                    LEFT OUTER JOIN
-                        smg_payment_types spt ON spt.ID = srp.paymentType
-                    LEFT OUTER JOIN
-                        smg_students s ON s.studentID = srp.studentID                                
-                    WHERE
-                        srp.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
-                </Cfquery>
+            <cfloop query="qGetPlacedPaymentDetail">
                 
-                <tr>
-                    <Td>#qGetPaymentDetail.ID#</Td>
-                    <td>#qGetPaymentDetail.firstname# #qGetPaymentDetail.familylastname# (###qGetPaymentDetail.studentid#)</td>
-                    <Td>#qGetPaymentDetail.type#</Td>  
-                    <td>#LSCurrencyFormat(qGetPaymentDetail.amount, 'local')#</td>
-                    <td>#qGetPaymentDetail.comment#</td>
+                <tr bgcolor="###iif(qGetPlacedPaymentDetail.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                    <Td>#qGetPlacedPaymentDetail.ID#</Td>
+                    <td>#qGetPlacedPaymentDetail.firstName# #qGetPlacedPaymentDetail.familyLastName# (###qGetPlacedPaymentDetail.studentID#)</td>
+                    <Td>#qGetPlacedPaymentDetail.type#</Td>  
+                    <td>#LSCurrencyFormat(qGetPlacedPaymentDetail.amount, 'local')#</td>
+                    <td>#qGetPlacedPaymentDetail.comment#</td>
                 </tr>
                 
             </cfloop>
             
-            <Cfif NOT LEN(URL.placedPaymentList)>
+            <cfif NOT VAL(qGetPlacedPaymentDetail.recordCount)>
                 <tr><td colspan="5" align="center">No placement payments submitted.</td></tr>
             </cfif>
 
@@ -336,244 +367,295 @@
     <!--- Display FORM --->
     <cfelse>
 
-        <p> Fill in the details for each student, all fields are optional. </p> <br /> 
+        <div style="margin-top:10px;">Fill in the details for each student, all fields are optional.</div>
         
         <cfform name="payments" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=processPayment" method="post">
             <input type="hidden" name="submitted" value="1" />
-            <input type="hidden" name="user" value="#FORM.user#">
+            <input type="hidden" name="userID" value="#FORM.userID#">
             <input type="hidden" name="supervisedStudentIDList" value="#FORM.supervisedStudentIDList#">
             <input type="hidden" name="placedStudentIDList" value="#FORM.placedStudentIDList#">
-        
-            <table width="90%" cellpadding="4" cellspacing="0">
-                <!---- SUPERVISED STUDENTS ---->
-                <tr><td bgcolor="##010066" colspan="5"><font color="white"><strong>Supervised Students </strong></font></td></tr>
-                <tr bgcolor="##CCCCCC">
-                	<td>ID</td>
-                    <td>Student</td>
-                    <td>Type</td>
-                    <td>Amount</td>
-                    <td>Comment</td>
+        	
+            <!---- SUPERVISED STUDENTS ---->
+            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;"> 
+                <tr>
+                    <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Supervised Students &nbsp; - &nbsp; Total of #ListLen(FORM.supervisedStudentIDList)# student(s)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="font-weight:bold;">
+                        Payment Type: <cfif LEN(qGetsupervisedPaymentType.type)>#qGetsupervisedPaymentType.type#<cfelse>n/a</cfif>
+                    </td>
+				</tr>                
+                <tr style="background-color:##E2EFC7; font-weight:bold;">
+                    <td width="10%">ID</td>
+                    <td width="20%">Student</td>
+                    <td width="15%">Type</td>
+                    <td width="10%">Amount</td>
+                    <td width="45%">Comment</td>
 				</tr>
 
-                <cfloop list="#FORM.supervisedStudentIDList#" index="x">
-                    
-                    <cfquery name="qGetStudentInfo" dbtype="query">
+                <cfloop query="qGetSupervisedStudentList">
+
+                    <cfquery name="qCheckSupervisedCharges" datasource="MySQL">
                         SELECT 
-                        	studentid, 
-                            firstname, 
-                            familylastname, 
-                            programid
+                            rep.date,
+                            rep.amount,
+                            spt.type,
+                            p.programName,
+                            u.firstName, 
+                            u.lastname
                         FROM 
-                        	qGetAllStudents
+                            smg_rep_payments rep
+                        INNER JOIN 
+                            smg_payment_types spt ON rep.paymenttype = spt.id
+                        LEFT JOIN 
+                            smg_programs p ON rep.programID = p.programID
+                        LEFT JOIN 
+                            smg_users u ON rep.agentid = u.userid
                         WHERE 
-                        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
+                            rep.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSupervisedStudentList.studentID#">
+                        AND 
+                            spt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.supervisedPaymentType)#"> 
+                        <!--- Do Not Include Club Leadership / It's not exclusive --->
+                        AND 
+                            spt.id != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 		
                     </cfquery>
                     
-                    <!--- Check if there is a valid student --->
-                    <cfif qGetStudentInfo.recordCount>
+                    <cfscript>
+						// Check if payment is allowed
+						vAllowSuperPayment = 0;
+						
+						if ( FORM.supervisedPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetSupervisedStudentList.type) ) {
+							// Departure Payment Type - AYP 5 Month Not Allowed
+							vAllowSuperPayment = 0;
+						} else if ( VAL(FORM.isSplitPayment) ) {
+							// Split Payment - Allow
+							vAllowSuperPayment = 1;
+						} else if ( NOT VAL(qCheckSupervisedCharges.recordcount) ) {
+							// Charge not paid - Allow
+							vAllowSuperPayment = 1;
+						}
+
+						// Split Payments - Default 50%
+						if ( FORM.isSplitPayment ) {
+							vPlaceAmoutToBePaid = DecimalFormat(VAL(qGetsupervisedPaymentType.amount) / 2);	
+						} else { 
+							vPlaceAmoutToBePaid = qGetsupervisedPaymentType.amount;
+						}						
+					</cfscript>
                     
-                        <cfquery name="qCheckSupervisedCharges" datasource="MySQL">
-                            SELECT 
-                                rep.date,
-                                rep.amount,
-                                spt.type,
-                                p.programname,
-                                u.firstname, 
-                                u.lastname
-                            FROM 
-                                smg_rep_payments rep
-                            INNER JOIN 
-                                smg_payment_types spt ON rep.paymenttype = spt.id
-                            LEFT JOIN 
-                                smg_programs p ON rep.programid = p.programid
-                            LEFT JOIN 
-                                smg_users u ON rep.agentid = u.userid
-                            WHERE 
-                                rep.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
-                            AND 
-                                spt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.payment_type_super)#"> 
-                            <!--- Do Not Include Club Leadership / It's not exclusive --->
-                            AND 
-                                spt.id != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 		
-                        </cfquery>
+                    <tr bgcolor="###iif(qGetSupervisedStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                        <input type="hidden" value="supervision" name="#qGetSupervisedStudentList.studentID#superTransType">
+                        <input type="hidden" name="#qGetSupervisedStudentList.studentID#superProgramID" value="#qGetSupervisedStudentList.programID#">
+                        <Td valign="top">
+                            <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetSupervisedStudentList.studentID#', 700, 500);" class="nav_bar">
+                                #qGetSupervisedStudentList.studentID#
+                            </a>
+                        </Td>
+                        <td valign="top">
+                            <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetSupervisedStudentList.studentID#', 700, 500);" class="nav_bar">
+                                #qGetSupervisedStudentList.firstName# #qGetSupervisedStudentList.familyLastName#
+                            </a>
+                        </td>
                         
-                        <tr>
-                            <input type="hidden" value="supervision" name="#x#super_transtype">
-                            <Td valign="top">
-                                <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#x#', 700, 500);" class="nav_bar">
-                                    #x#
-                                </a>
-                            </Td>
+                        <cfif vAllowSuperPayment>
                             <td valign="top">
-                                <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#x#', 700, 500);" class="nav_bar">
-                                    #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#
-                                </a>
+                                <select name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" class="largeField">
+                                    <option value="#qGetsupervisedPaymentType.id#">#qGetsupervisedPaymentType.type#</option>
+                                </select>
                             </td>
-                            <cfif qCheckSupervisedCharges.recordcount EQ 0 OR IsDefined('URL.split')>
-                                <td valign="top">
-                                    <cfselect name="#x#super_type">
-                                        <option value="#qGetSupervisingPaymentType.id#">#qGetSupervisingPaymentType.type#</option>
-                                    </cfselect>
-                                    
-                                    <cfif qCheckSupervisedCharges.recordcount>
-                                        <br />
-                                        #qCheckSupervisedCharges.type# was paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')# - Program #qCheckSupervisedCharges.programname# - Rep: #qCheckSupervisedCharges.firstname# #qCheckSupervisedCharges.lastname# - Total Paid: #DollarFormat(qCheckSupervisedCharges.amount)#.
-                                    </cfif>
-                                </td>
-                                <td valign="top"><cfinput type="text" name="#x#super_amount" value="#qGetSupervisingPaymentType.amount#" size="6" required="yes" message="Oops! You forgot to enter the amount for student #x#."></td>
-                                <td valign="top"><cfinput type="text" name="#x#super_comment" size="20"></td>
-                            <cfelse>
-                                <td>
-                                    <cfinput type="hidden" name="#x#super_type" value="">
-                                    #qCheckSupervisedCharges.type# was paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')# - Program #qCheckSupervisedCharges.programname# - Rep: #qCheckSupervisedCharges.firstname# #qCheckSupervisedCharges.lastname# - Total Paid: #DollarFormat(qCheckSupervisedCharges.amount)#.
-                                </td>
-                                <td>n/a</td>
-                                <td>n/a</td>
-                            </cfif>
-                        </tr>
-					
-                    </cfif>  <!--- Check if there is a valid student --->                    
+                            <td valign="top">
+                            	<cfinput type="text" name="#qGetSupervisedStudentList.studentID#superAmount" value="#vPlaceAmoutToBePaid#" class="smallField" required="yes" message="Oops! You forgot to enter the amount for student #qGetSupervisedStudentList.studentID#.">
+                            </td>
+                            <td valign="top" style="color:##F00">
+                                <input type="text" name="#qGetSupervisedStudentList.studentID#superComment" class="largeField">
+                            </td>
+                        <cfelse>
+                            <!--- Block Payment --->
+                            <td valign="top">
+                                <input type="hidden" name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" value="">
+                                n/a
+                            </td>
+                            <td valign="top">n/a</td>
+                            <td valign="top"style="color:##F00">
+                                <cfif FORM.supervisedPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetSupervisedStudentList.type)>
+                                    AYP 5 month programs are not eligible for #qGetsupervisedPaymentType.type# payment.
+                                <cfelse>
+                                    #qCheckSupervisedCharges.type# paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')# <br />
+                                    - Program: #qCheckSupervisedCharges.programName# <br />
+                                    - Rep: #qCheckSupervisedCharges.firstName# #qCheckSupervisedCharges.lastname# <br />
+                                    - Total Paid: #DollarFormat(qCheckSupervisedCharges.amount)#
+                                </cfif>
+                            </td>
+                        </cfif>
+                    </tr>
                        
                 </cfloop>
-
-				<cfif LEN(FORM.supervisedStudentIDList)>
-                    <tr><td colspan="5" align="right"><input name="submit" type="image" src="pics/submit.gif" align="right" border="0" alt="submit"></td></Tr>
+				
+				<cfif VAL(qGetSupervisedStudentList.recordCount)>
+                    <tr style="background-color:##E2EFC7;">
+                        <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
+                    </tr>
                 <cfelse>
                     <tr><td colspan="5" align="center">No students selected.</td></tr>
                 </cfif>
-                               
-                <tr><td>&nbsp;</td></tr>
-            	
-                <!---- PLACED STUDENTS ---->
-                <tr><td bgcolor="##010066" colspan="5"><font color="white"><strong>Placed Students</strong></font></td></tr>
-                <tr bgcolor="##CCCCCC">
-                	<Td>ID</Td>
-                    <td>Student</td>
-                    <td>Type</td>
-                    <td>Amount</td>
-                    <td>Comment</td>
+                
+            </table>
+            
+            <!--- PLACED STUDENTS --->
+            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+                <tr>
+                    <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Placed Students &nbsp; - &nbsp; Total of #ListLen(FORM.placedStudentIDList)# student(s)</td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="font-weight:bold;">
+                        Payment Type: <cfif LEN(qGetPlacementPaymentType.type)>#qGetPlacementPaymentType.type#<cfelse>n/a</cfif>
+                    </td>
+				</tr>                
+                <tr style="background-color:##E2EFC7; font-weight:bold;">
+                    <td width="10%">ID</td>
+                    <td width="20%">Student</td>
+                    <td width="15%">Type</td>
+                    <td width="10%">Amount</td>
+                    <td width="45%">Comment</td>
 				</tr>
 
-                <cfloop list="#FORM.placedStudentIDList#" index="x">
+                <cfloop query="qGetPlacedStudentList">
 					
+                    <cfquery name="qCheckPlacedCharges" datasource="MySQL">
+                        SELECT                                 
+                            rep.paymenttype,
+                            rep.date,
+                            rep.amount,
+                            spt.type,
+                            p.programName,
+                            u.firstName, 
+                            u.lastname
+                        FROM 
+                            smg_rep_payments rep
+                        INNER JOIN 
+                            smg_payment_types spt ON rep.paymenttype = spt.id
+                        LEFT JOIN 
+                            smg_programs p ON rep.programID = p.programID
+                        LEFT JOIN 
+                            smg_users u ON rep.agentid = u.userid
+                        WHERE 
+                            rep.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudentList.studentID#"> 
+                        
+                        <!--- 
+							These are mutually exclusive. Only one per student
+							17 - Fast Track Bonus / 15 - Early Placement / 9 - Paperwork Bonus 
+						--->
+                        <cfif ListFind(vMutuallyExclusiveBonus, VAL(FORM.placedPaymentType) )>
+                            AND 
+                                spt.id IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vMutuallyExclusiveBonus#" list="yes"> )
+                        <!--- 
+							These are mutually exclusive. Only one per student
+							18 - Pre-AYP-250 / 19 - Pre-AYP-200 / 20 - Pre-AYP-150 
+						--->
+                        <cfelseif ListFind(vMutuallyExclusivePreAyp, VAL(FORM.placedPaymentType) )>
+                            AND 
+                                spt.id IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vMutuallyExclusivePreAyp#" list="yes"> )
+                        <cfelse>
+                            AND 
+                                spt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.placedPaymentType)#">
+                        </cfif>                         
+
+                        <!--- Do Not Include Club Leadership / It's not exclusive --->
+                        AND 
+                            spt.id != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 	
+                    </cfquery>
+
                     <cfscript>
 						// Check if paperwork was received for Fast Start, Early Placement, Paperwork Bonus
-						vCheckPlacementPaperwork = APPLICATION.CFC.STUDENT.checkPlacementPaperwork(studentID=x, paymentTypeID=qGetPlacementPaymentType.id);
+						vCheckPlacementPaperwork = APPLICATION.CFC.STUDENT.checkPlacementPaperwork(studentID=qGetPlacedStudentList.studentID, paymentTypeID=qGetPlacementPaymentType.id);
+					
+						// Check if payment is allowed
+						vAllowPlacePayment = 0;
+						
+						if ( FORM.placedPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetPlacedStudentList.type) ) {
+							// Departure Payment Type - AYP 5 Month Not Allowed
+							vAllowPlacePayment = 0;
+						} else if ( VAL(FORM.isSplitPayment) ) {
+							// Split Payment - Allow
+							vAllowPlacePayment = 1;
+						} else if ( NOT VAL(qCheckPlacedCharges.recordcount) ) {
+							// Charge not paid - Allow
+							vAllowPlacePayment = 1;
+						}
+
+						// Split Payments - Default 50%
+						if ( FORM.isSplitPayment ) {
+							vPlaceAmoutToBePaid = VAL(qGetPlacementPaymentType.amount) / 2;	
+						} else { 
+							vPlaceAmoutToBePaid = qGetPlacementPaymentType.amount;
+						}
 					</cfscript>
                     
-                    <cfquery name="qGetStudentInfo" dbtype="query">
-                        SELECT 
-                            studentid, 
-                            firstname, 
-                            familylastname, 
-                            programid
-                        FROM 
-                            qGetAllStudents
-                        WHERE 
-                            studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
-                    </cfquery>
-                    
-                    <!--- Check if there is a valid student --->
-                    <cfif qGetStudentInfo.recordCount>
-                    	                       
-                        <cfquery name="qCheckPlacedCharges" datasource="MySQL">
-                            SELECT                                 
-                                rep.paymenttype,
-                                rep.date,
-                                rep.amount,
-                                spt.type,
-                                p.programname,
-                                u.firstname, 
-                                u.lastname
-                            FROM 
-                                smg_rep_payments rep
-                            INNER JOIN 
-                                smg_payment_types spt ON rep.paymenttype = spt.id
-                            LEFT JOIN 
-                                smg_programs p ON rep.programid = p.programid
-                            LEFT JOIN 
-                                smg_users u ON rep.agentid = u.userid
-                            WHERE 
-                                rep.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#"> 
-                        	
-                            <!--- 
-								These are mutually exclusive. Only one per student
-								17 - Fast Track Bonus / 15 - Early Placement / 9 - Paperwork Bonus 
-							--->
-							<cfif ListFind(mutuallyExclusiveBonus, VAL(FORM.payment_type_place) )>
-                                AND 
-                                    spt.id IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#mutuallyExclusiveBonus#" list="yes"> )
-                            <!--- 
-								These are mutually exclusive. Only one per student
-								18 - Pre-AYP-250 / 19 - Pre-AYP-200 / 20 - Pre-AYP-150 
-							--->
-							<cfelseif ListFind(mutuallyExclusivePreAyp, VAL(FORM.payment_type_place) )>
-                                AND 
-                                    spt.id IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#mutuallyExclusivePreAyp#" list="yes"> )
-							<cfelse>
-                                AND 
-                                    spt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.payment_type_place)#">
-							</cfif>                         
-
-                            <!--- Do Not Include Club Leadership / It's not exclusive --->
-                            AND 
-                                spt.id != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 	
-                        </cfquery>
+                    <tr bgcolor="###iif(qGetPlacedStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                        <input type="hidden" value="placement" name="#qGetPlacedStudentList.studentID#placeTranstype">
+                        <input type="hidden" name="#qGetPlacedStudentList.studentID#placeProgramID" value="#qGetPlacedStudentList.programID#">
+                        <Td valign="top">
+                            <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetPlacedStudentList.studentID#', 700, 500);" class="nav_bar">
+                                #qGetPlacedStudentList.studentID#
+                            </a>
+                        </Td>
+                        <td valign="top">
+                            <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetPlacedStudentList.studentID#', 700, 500);" class="nav_bar">
+                                #qGetPlacedStudentList.firstName# #qGetPlacedStudentList.familyLastName#
+                            </a>
+                        </td>
                         
-                        <tr>
-                            <input type="hidden" value="placement" name="#x#place_transtype">
-                            <Td valign="top">
-                                <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#x#', 700, 500);" class="nav_bar">
-                                    #x#
-                                </a>
-                            </Td>
+                        <cfif vAllowPlacePayment>
                             <td valign="top">
-                                <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#x#', 700, 500);" class="nav_bar">
-                                    #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#
-                                </a>
+                                <select name="#qGetPlacedStudentList.studentID#placePaymentTypeID" class="largeField">
+                                    <option value="#qGetPlacementPaymentType.id#">#qGetPlacementPaymentType.type#</option>
+                                </select>
                             </td>
-                            <cfif qCheckPlacedCharges.recordcount EQ 0 OR IsDefined('URL.split')>
-                                <td valign="top">
-                                    <cfselect name="#x#place_type">
-                                        <option value="#qGetPlacementPaymentType.id#">#qGetPlacementPaymentType.type#</option>
-                                    </cfselect>
-                                    
-                                    <cfif qCheckPlacedCharges.recordcount>
-                                        <br />
-                                        #qCheckPlacedCharges.type# was paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# - Program #qCheckPlacedCharges.programname# - Rep: #qCheckPlacedCharges.firstname# #qCheckPlacedCharges.lastname# - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#.
-                                    </cfif>
-                                    
-                                    <cfif LEN(vCheckPlacementPaperwork)>
-                                    	<p style="color:##F00; margin:5px 0px 5px 0px;">
-	                                        Placement Paperwork needing attention: <br />
-                                        </p>
-                                        #vCheckPlacementPaperwork#
-                                    </cfif>
-                                </td>
-                                <td valign="top"><cfinput type="text" name="#x#place_amount" size="6" value="#qGetPlacementPaymentType.amount#" required="yes" message="Oops! You forgot to enter the amount for student #x#."></td>
-                                <td valign="top"><cfinput type="text" name="#x#place_comment" size="20"></td>
-                            <cfelse>
-                                <td>
-                                    <cfinput type="hidden" name="#x#place_type" value="">
-                                    #qCheckPlacedCharges.type# was paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# - Program #qCheckPlacedCharges.programname# - Rep: #qCheckPlacedCharges.firstname# #qCheckPlacedCharges.lastname# - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#.
-                                </td>
-                                <td>n/a</td>
-                                <td>n/a</td>
-                            </cfif>
-                        </tr>
-                        
-                    </cfif> <!--- Check if there is a valid student --->
+                            <td valign="top">
+                                <cfinput type="text" name="#qGetPlacedStudentList.studentID#placeAmount" class="smallField" value="#vPlaceAmoutToBePaid#" required="yes" message="Oops! You forgot to enter the amount for student #qGetPlacedStudentList.studentID#.">
+                            </td>
+                            <td valign="top" style="color:##F00">
+                                <input type="text" name="#qGetPlacedStudentList.studentID#placeComment" class="largeField">
+								
+                                <!--- Placement Paperwork Alert --->
+                                <cfif LEN(vCheckPlacementPaperwork)>
+                                    <p style="color:##F00; margin:5px 0px 5px 0px;">
+                                        Placement Paperwork needing attention: <br />
+                                    </p>
+                                    #vCheckPlacementPaperwork#
+                                </cfif>
+                            </td>
+                        <cfelse>
+                            <!--- Block Payment --->
+                            <td valign="top">
+                                <cfinput type="hidden" name="#qGetPlacedStudentList.studentID#placePaymentTypeID" value="">
+                                n/a
+                            </td>
+                            <td valign="top">n/a</td>
+                            <td valign="top" style="color:##F00">
+                                <cfif FORM.placedPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetPlacedStudentList.type)>
+                                    AYP 5 month programs are not eligible for #qGetsupervisedPaymentType.type# payment.
+                                <cfelse>
+                                    #qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# <br />
+                                    - Program #qCheckPlacedCharges.programName# <br />
+                                    - Rep: #qCheckPlacedCharges.firstName# #qCheckPlacedCharges.lastname# <br />
+                                    - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#
+                                </cfif>
+                            </td>
+                        </cfif>
+                    </tr>
                         
                 </cfloop>
-                
-                <cfif LEN(FORM.placedStudentIDList)>
-                    <tr><td colspan="5" align="right"> <input name="submit" type="image" src="pics/submit.gif" align="right" border="0" alt="submit"></td></Tr>
-                <cfelse>
-					<tr><td colspan="5" align="center">No students selected.</td></tr>                	
-                </cfif>
 
+				<cfif VAL(qGetPlacedStudentList.recordCount)>
+                    <tr style="background-color:##E2EFC7;">
+                        <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
+                    </tr>
+                <cfelse>
+                    <tr><td colspan="5" align="center">No students selected.</td></tr>
+                </cfif>
             </table>
-	
+
    		</cfform>
 
 	</cfif>
@@ -584,22 +666,22 @@
 <!----
 <cfif CLIENT.userid EQ 510>
 	<cfquery name="get_students" datasource="MySql">
-		SELECT DISTINCT smg_students.studentid, smg_students.programid
+		SELECT DISTINCT smg_students.studentID, smg_students.programID
 		FROM smg_students
-		INNER JOIN smg_rep_payments ON smg_rep_payments.studentid = smg_students.studentid
-		AND smg_rep_payments.programid = '0'
-		ORDER BY smg_students.studentid
+		INNER JOIN smg_rep_payments ON smg_rep_payments.studentID = smg_students.studentID
+		AND smg_rep_payments.programID = '0'
+		ORDER BY smg_students.studentID
 	</cfquery>
 	
 	<cfloop query="get_students">
 		<cfquery name="update" datasource="MySql">
 			UPDATE smg_rep_payments
-			SET programid = '#get_students.programid#'
-			WHERE studentid = '#get_students.studentid#'
+			SET programID = '#get_students.programID#'
+			WHERE studentID = '#get_students.studentID#'
 		</cfquery>
 		
 		<cfoutput>
-		#get_students.studentid# <br />
+		#get_students.studentID# <br />
 		</cfoutput>
 	</cfloop>
 </cfif>

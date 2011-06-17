@@ -96,6 +96,34 @@
                 </cfcase>
 
 
+				<!--- Error displayed on divOnly --->
+                <cfcase value="divOnly">
+
+                    <div class="pageMessages">
+                    
+                        <!--- Loop over the message --->
+                        <cfloop from="1" to="#ArrayLen(ATTRIBUTES.pageMessages)#" index="i">
+                           <p><em>#ATTRIBUTES.pageMessages[i]#</em></p>    
+                        </cfloop>
+                    
+                    </div>                                    
+                    
+                    <script type="text/javascript">
+						// FadeIn and FadeOut Message
+                    	$(".pageMessages").fadeIn().fadeOut(5000);
+                    </script>
+                    
+					<cfscript>
+                        // Check to see if we are supposed to clear the queue 
+                        if ( ATTRIBUTES.Clear ) {
+							ATTRIBUTES.pageMessages.Clear();
+							SESSION.pageMessages.clear();
+                        }
+                    </cfscript>
+                
+                </cfcase>
+
+
 				<!--- Online Application --->
                 <cfcase value="onlineApplication">
 

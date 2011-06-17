@@ -1,11 +1,11 @@
 <cfoutput>
 
 <cfquery name="get_payments" datasource="MySql">
-	SELECT studentid, agentid, count( studentid ) AS totalstudents, paymenttype, programid
+	SELECT studentID, agentid, count( studentID ) AS totalstudents, paymenttype, programID
 	FROM smg_rep_payments
 	<!--- WHERE paymenttype = '3' OR paymenttype = '4' OR paymenttype = '5' OR paymenttype = '6' OR paymenttype = '7' OR paymenttype = '8' --->
-	GROUP BY inputby, studentid, agentid, programid, paymenttype
-	ORDER BY companyid, agentid, id
+	GROUP BY inputby, studentID, agentid, programID, paymenttype
+	ORDER BY companyID, agentid, id
 </cfquery>
 
 <table width="100%" cellpadding="0" cellpadding="0" border="below">
@@ -23,31 +23,31 @@
 	<cfloop query="get_payments">
 		<cfif totalstudents GTE 2>
 			<cfquery name="get_details" datasource="MySql">
-				SELECT payments.id, payments.studentid, payments.transtype, payments.amount,
-					 payments.comment, payments.date, payments.inputby, payments.companyid,
+				SELECT payments.id, payments.studentID, payments.transtype, payments.amount,
+					 payments.comment, payments.date, payments.inputby, payments.companyID,
 					 types.type,
 					 c.companyshort,
-					 p.programname,
-					 u.firstname as repfirst, u.lastname as replast, u.userid,
-					 s.firstname as stufirst, s.familylastname as stulast, 
-					 office.firstname as officefirst
+					 p.programName,
+					 u.firstName as repfirst, u.lastname as replast, u.userid,
+					 s.firstName as stufirst, s.familyLastName as stulast, 
+					 office.firstName as officefirst
 				FROM smg_rep_payments payments
 				LEFT JOIN smg_payment_types types ON types.id = payments.paymenttype
-				LEFT JOIN smg_companies c ON c.companyid = payments.companyid
-				LEFT JOIN smg_programs p ON p.programid = payments.programid
+				LEFT JOIN smg_companies c ON c.companyID = payments.companyID
+				LEFT JOIN smg_programs p ON p.programID = payments.programID
 				LEFT JOIN smg_users u ON u.userid = payments.agentid
-				LEFT JOIN smg_students s ON s.studentid = payments.studentid
+				LEFT JOIN smg_students s ON s.studentID = payments.studentID
 				LEFT JOIN smg_users office ON office.userid = payments.inputby
-				WHERE payments.studentid = '#studentid#' 
+				WHERE payments.studentID = '#studentID#' 
 					AND payments.paymenttype = '#paymenttype#'
 					AND payments.agentid = '#agentid#'
-					AND payments.programid = '#programid#'
+					AND payments.programID = '#programID#'
 					<!--- AND date = #date# --->
 			</cfquery>	
 			<cfloop query="get_details">
 				<tr><td>###id#</td>
 					<td>#officefirst#</td>
-					<td>#stufirst# #stulast# ###studentid#</td>
+					<td>#stufirst# #stulast# ###studentID#</td>
 					<td>#companyshort#</td>
 					<td>#repfirst# #replast# ###userid#</td>
 					<td>#type#</td>
@@ -88,7 +88,7 @@
 			
 			<cfquery name="insert" datasource="MySql">
 				INSERT INTO smg_users
-					(userid, uniqueid, username, password, companyid, intrepid, firstname, middlename, lastname, sex, SSN, drivers_license, address,
+					(userid, uniqueid, username, password, companyID, intrepid, firstName, middlename, lastname, sex, SSN, drivers_license, address,
 					address2, city, state, country, zip, phone, work_phone, cell_phone, email, email2, occupation, usebilling, businessname, 
 					businessphone, billing_company, billing_address, billing_address2, billing_city, billing_country, billing_zip, billing_phone,
 					billing_fax, billing_email, billing_contact, fax, usertype, accessrights, regions, compliance, comments, datecreated, datecancelled,
@@ -97,8 +97,8 @@
 					5_month_price, 10_month_ins, 5_month_ins, whocreatedaccount, datefirstlogin, accepts_sevis_fee, changepass, dob, cbc_auth_received, 
 					cbc_auth_type, studentcontactemail, logo, congrats_email)
 				VALUES		
-					('#get_backup.userid#', '#get_backup.uniqueid#', '#get_backup.username#', '#get_backup.password#', '#get_backup.companyid#', '#get_backup.intrepid#', 
-					'#get_backup.firstname#', '#get_backup.middlename#', '#get_backup.lastname#', '#get_backup.sex#', '#get_backup.SSN#', '#get_backup.drivers_license#', 
+					('#get_backup.userid#', '#get_backup.uniqueid#', '#get_backup.username#', '#get_backup.password#', '#get_backup.companyID#', '#get_backup.intrepid#', 
+					'#get_backup.firstName#', '#get_backup.middlename#', '#get_backup.lastname#', '#get_backup.sex#', '#get_backup.SSN#', '#get_backup.drivers_license#', 
 					'#get_backup.address#', '#get_backup.address2#', '#get_backup.city#', '#get_backup.state#', '#get_backup.country#', '#get_backup.zip#', '#get_backup.phone#', 
 					'#get_backup.work_phone#', '#get_backup.cell_phone#', '#get_backup.email#', '#get_backup.email2#', '#get_backup.occupation#', '#get_backup.usebilling#', 
 					'#get_backup.businessname#', '#get_backup.businessphone#', '#get_backup.billing_company#', '#get_backup.billing_address#', '#get_backup.billing_address2#',
@@ -131,7 +131,7 @@
 OLD TABLE
 			<cfquery name="insert" datasource="MySql">
 				INSERT INTO smg_users
-					(userid, uniqueid, username, password, companyid, intrepid, firstname, middlename, lastname, sex, SSN, drivers_license, address,
+					(userid, uniqueid, username, password, companyID, intrepid, firstName, middlename, lastname, sex, SSN, drivers_license, address,
 					address2, city, state, country, zip, phone, email, email2, occupation, usebilling, businessname, 
 					businessphone, billing_company, billing_address, billing_address2, billing_city, billing_country, billing_zip, billing_phone,
 					billing_fax, billing_email, billing_contact, fax, usertype, accessrights, regions, compliance, comments, datecreated, datecancelled,
@@ -140,8 +140,8 @@ OLD TABLE
 					5_month_price, 10_month_ins, 5_month_ins, whocreatedaccount, datefirstlogin, accepts_sevis_fee, changepass, dob, cbc_auth_received, 
 					cbc_auth_type)
 				VALUES		
-					('#get_backup.userid#', '#get_backup.uniqueid#', '#get_backup.username#', '#get_backup.password#', '#get_backup.companyid#', '#get_backup.intrepid#', 
-					'#get_backup.firstname#', '#get_backup.middlename#', '#get_backup.lastname#', '#get_backup.sex#', '#get_backup.SSN#', '#get_backup.drivers_license#', 
+					('#get_backup.userid#', '#get_backup.uniqueid#', '#get_backup.username#', '#get_backup.password#', '#get_backup.companyID#', '#get_backup.intrepid#', 
+					'#get_backup.firstName#', '#get_backup.middlename#', '#get_backup.lastname#', '#get_backup.sex#', '#get_backup.SSN#', '#get_backup.drivers_license#', 
 					'#get_backup.address#', '#get_backup.address2#', '#get_backup.city#', '#get_backup.state#', '#get_backup.country#', '#get_backup.zip#', '#get_backup.phone#', 
 					'#get_backup.email#', '#get_backup.email2#', '#get_backup.occupation#', '#get_backup.usebilling#', 
 					'#get_backup.businessname#', '#get_backup.businessphone#', '#get_backup.billing_company#', '#get_backup.billing_address#', '#get_backup.billing_address2#',
@@ -163,7 +163,7 @@ NEW TABLE INCLUDE NEW FIELDS
 
 			<cfquery name="insert" datasource="MySql">
 				INSERT INTO smg_users
-					(userid, uniqueid, username, password, companyid, intrepid, firstname, middlename, lastname, sex, SSN, drivers_license, address,
+					(userid, uniqueid, username, password, companyID, intrepid, firstName, middlename, lastname, sex, SSN, drivers_license, address,
 					address2, city, state, country, zip, phone, work_phone, cell_phone, email, email2, occupation, usebilling, businessname, 
 					businessphone, billing_company, billing_address, billing_address2, billing_city, billing_country, billing_zip, billing_phone,
 					billing_fax, billing_email, billing_contact, fax, usertype, accessrights, regions, compliance, comments, datecreated, datecancelled,
@@ -172,8 +172,8 @@ NEW TABLE INCLUDE NEW FIELDS
 					5_month_price, 10_month_ins, 5_month_ins, whocreatedaccount, datefirstlogin, accepts_sevis_fee, changepass, dob, cbc_auth_received, 
 					cbc_auth_type, studentcontactemail, logo, congrats_email)
 				VALUES		
-					('#get_backup.userid#', '#get_backup.uniqueid#', '#get_backup.username#', '#get_backup.password#', '#get_backup.companyid#', '#get_backup.intrepid#', 
-					'#get_backup.firstname#', '#get_backup.middlename#', '#get_backup.lastname#', '#get_backup.sex#', '#get_backup.SSN#', '#get_backup.drivers_license#', 
+					('#get_backup.userid#', '#get_backup.uniqueid#', '#get_backup.username#', '#get_backup.password#', '#get_backup.companyID#', '#get_backup.intrepid#', 
+					'#get_backup.firstName#', '#get_backup.middlename#', '#get_backup.lastname#', '#get_backup.sex#', '#get_backup.SSN#', '#get_backup.drivers_license#', 
 					'#get_backup.address#', '#get_backup.address2#', '#get_backup.city#', '#get_backup.state#', '#get_backup.country#', '#get_backup.zip#', '#get_backup.phone#', 
 					'#get_backup.work_phone#', '#get_backup.cell_phone#', '#get_backup.email#', '#get_backup.email2#', '#get_backup.occupation#', '#get_backup.usebilling#', 
 					'#get_backup.businessname#', '#get_backup.businessphone#', '#get_backup.billing_company#', '#get_backup.billing_address#', '#get_backup.billing_address2#',

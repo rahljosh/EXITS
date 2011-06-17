@@ -9,8 +9,8 @@
 ----- ------------------------------------------------------------------------- --->
 
 <cfscript>
-	// CLEAR SESSION SCOPE
-	StructClear(SESSION);
+	// CLEAR SESSION SCOPE - Use only when we switch to Application.cfc
+	// StructClear(SESSION);
 
 	// Param Session Variables
 	param name="SESSION.started" default=now();	

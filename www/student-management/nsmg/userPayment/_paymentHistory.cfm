@@ -44,14 +44,14 @@
 		runningTotal = 0;
 		
 		// Check if User has access to view these payments
-		allowAccess = APPCFC.USER.checkUserAccess(currentUserID=CLIENT.userID, currentRegionID=CLIENT.regionID, currentUserType=CLIENT.userType, viewUserID=URL.userID );
+		allowAccess = APPLICATION.CFC.USER.checkUserAccess(currentUserID=CLIENT.userID, currentRegionID=CLIENT.regionID, currentUserType=CLIENT.userType, viewUserID=URL.userID );
 		
 		if (NOT allowAccess) {
 			URL.userID = CLIENT.userID;		
 		}
 		
 		// Get Rep Information
-		qGetRepInfo = APPCFC.USER.getUserByID(userID=VAL(URL.userID));
+		qGetRepInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
 	</cfscript>
     
     <cfquery name="qGetPayments" datasource="MySQL">
@@ -62,22 +62,22 @@
             rep.comment, 
             rep.date, 
             rep.inputby, 
-            rep.companyid, 
+            rep.companyID, 
             rep.transtype,
-            s.firstname, 
-            s.familylastname, 
-            s.studentid,
+            s.firstName, 
+            s.familyLastName, 
+            s.studentID,
             type.type
         FROM 
             smg_rep_payments rep
         LEFT JOIN 
-            smg_students s ON s.studentid = rep.studentid
+            smg_students s ON s.studentID = rep.studentID
         LEFT JOIN 
             smg_payment_types type ON type.id = rep.paymenttype
         WHERE 
             rep.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#"> 
         AND 
-        	rep.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        	rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         ORDER BY         
             rep.date DESC,
             studentID
@@ -107,7 +107,7 @@
         <gui:tableHeader
             imageName="user.gif"
             tableTitle="Division: #CLIENT.programManager#"
-            tableRightTitle="Payment History for #qGetRepInfo.firstname# #qGetRepInfo.lastname# ###qGetRepInfo.userID#"
+            tableRightTitle="Payment History for #qGetRepInfo.firstName# #qGetRepInfo.lastname# ###qGetRepInfo.userID#"
             imagePath="../"
         />    
         
@@ -117,7 +117,7 @@
             messageType="tableSection"
             />
 
-        <table width="100%" border="0" cellpadding=4 cellspacing=0 class="section">
+        <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section">
             <tr>
                 <td><b>Date</b></td>
                 <Td><b>ID</b></Td>
@@ -136,7 +136,7 @@
                 <tr bgcolor="#iif(qGetPayments.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
                     <td>#DateFormat(date, 'mm/dd/yyyy')#</td>
                     <Td>#id#</Td>
-                    <td><cfif studentid is ''>n/a<cfelse>#firstname# #familylastname# (#studentid#)</cfif></td>
+                    <td><cfif studentID is ''>n/a<cfelse>#firstName# #familyLastName# (#studentID#)</cfif></td>
                     <Td>#type#</Td>  
                     <td>#LSCurrencyFormat(amount, 'local')#</td>
                     <td>#comment#</td>
@@ -165,7 +165,7 @@
             
         </table>
         
-        <table border="0" cellpadding=4 cellspacing=0 width=100% class="section" style="padding-top:5px;">
+        <table border="0" cellpadding="4" cellspacing="0" width=100% class="section" style="padding-top:5px;">
             <tr><td align="center" width="50%">&nbsp;<input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td></tr>
         </table>
         

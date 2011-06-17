@@ -19,16 +19,45 @@
     <cfparam name="userID" default="0" />
     <cfparam name="studentID" default="0" />
     <cfparam name="familyLastName" default="" />
-    <!--- These are used to display search messages --->
-    <cfparam name="URL.selected" default="" />
-    <cfparam name="URL.search" default="" />
-    <cfparam name="URL.searchStu" default="">
-    <cfparam name="URL.displaySplitPaymentError" default="0">
-    <cfparam name="URL.displayIncentiveTripError" default="0">
-	<!--- Search --->
-    <cfparam name="URL.placing" default="" />
-    <cfparam name="URL.supervising" default="" />
-    <cfparam name="URL.student" default="">    
+
+    <!--- Param URL Variables --->
+	<cfparam name="URL.orderBy" default="">
+    <cfparam name="URL.userID" default="0">
+    <cfparam name="URL.lastName" default="">
+	
+    <!--- Confirmed Variables --->
+    
+    <!--- Param URL Variables --->
+	<cfparam name="URL.errorSection" default="">
+    <cfparam name="URL.timeStamp" default="">   
+    <cfparam name="URL.orderBy" default="">
+    
+    <!--- Param FORM Variables --->
+    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.isSplitPayment" default="0">
+    <cfparam name="FORM.paymentType" default="0">
+    <cfparam name="FORM.amount" default="0">
+    <cfparam name="FORM.comments" default="0">
+    <!--- Student --->
+    <cfparam name="FORM.studentID" default="0">
+    <cfparam name="FORM.familyLastName" default="0">
+    <!--- Representative --->
+    <cfparam name="FORM.userID" default="0">
+    <cfparam name="FORM.areaRepID" default="0">
+    <cfparam name="FORM.placeRepID" default="0">
+    <cfparam name="FORM.lastName" default="0">
+	<!--- Process Payment --->
+    <cfparam name="FORM.supervisedPaymentType" default="0">
+    <cfparam name="FORM.placedPaymentType" default="0">
+    <cfparam name="FORM.supervisedStudentIDList" default="0">
+    <cfparam name="FORM.placedStudentIDList" default="0">
+        
+    <cfscript>
+		// URL.userID comes from user profile
+		if ( VAL(URL.userID) ) {
+			FORM.userID = URL.userID;		 
+		}
+	</cfscript>
     
 </cfsilent>
 	
@@ -36,11 +65,13 @@
 	Check to see which action we are taking. 
 --->
 
+<div class="application_section_header">Representative Payments</div>
+
 <cfif ListFind("1,2,3,4", CLIENT.userType)>
 
     <cfswitch expression="#action#">
     
-        <cfcase value="initial,searchRepresentative,selectPayment,searchStudent,splitPayments,incentiveTripPayment,maintenance,paymentHistory,processPayment,processStudentPayment,studentPaymentHistory,paymentReport" delimiters=",">
+        <cfcase value="initial,searchRepresentative,listStudentRepresentatives,selectPayment,searchStudent,incentiveTripPayment,maintenance,paymentHistory,processPayment,studentPaymentHistory,paymentReport" delimiters=",">
     
             <!--- Include template --->
             <cfinclude template="_#action#.cfm" />

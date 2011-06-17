@@ -20,20 +20,20 @@
     
     <cfscript>
 		// Check if User has access to view these payments
-		allowAccess = APPCFC.USER.checkUserAccess(currentUserID=CLIENT.userID, currentRegionID=CLIENT.regionID, currentUserType=CLIENT.userType, viewUserID=URL.userID );
+		allowAccess = APPLICATION.CFC.USER.checkUserAccess(currentUserID=CLIENT.userID, currentRegionID=CLIENT.regionID, currentUserType=CLIENT.userType, viewUserID=URL.userID );
 		
 		if (NOT allowAccess) {
 			URL.userID = CLIENT.userID;		
 		}
 		
 		// Get Rep Information
-		qRepInfo = APPCFC.USER.getUserByID(userID=VAL(URL.userID));
+		qRepInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
 		
 		// Get Company Information
-		qGetCompanyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+		qGetCompanyShort = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
 		
 		// Get Total Payments by Program
-		qGetRepTotalPayments = APPCFC.USER.getRepTotalPayments(userID=VAL(URL.userID), companyID=CLIENT.companyID);
+		qGetRepTotalPayments = APPLICATION.CFC.USER.getRepTotalPayments(userID=VAL(URL.userID), companyID=CLIENT.companyID);
 	</cfscript>
               
 </cfsilent>
@@ -67,7 +67,7 @@
 <gui:tableHeader
     imageName="user.gif"
     tableTitle="#qGetCompanyShort.companyshort#"
-    tableRightTitle="Payment List for #qRepInfo.firstname# #qRepInfo.lastname# (###qRepInfo.userID#)"
+    tableRightTitle="Payment List for #qRepInfo.firstName# #qRepInfo.lastname# (###qRepInfo.userID#)"
 />
 
 <cfif NOT VAL(URL.userID)>
@@ -115,7 +115,7 @@
         
         <cfscript>
 			// Get Payment List for current programID
-			qPaymentList = APPCFC.USER.getRepPaymentsBySeasonID(userID=URL.userID, seasonID=qGetRepTotalPayments.seasonID, companyID=CLIENT.companyID);		
+			qPaymentList = APPLICATION.CFC.USER.getRepPaymentsBySeasonID(userID=URL.userID, seasonID=qGetRepTotalPayments.seasonID, companyID=CLIENT.companyID);		
 		</cfscript>
         
         <tr id="programList#qGetRepTotalPayments.seasonID#" class="programList" style="display:none">
@@ -146,7 +146,7 @@
                         <tr bgcolor="#iif(qPaymentList.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
                             <td>#DateFormat(qPaymentList.date, 'mm/dd/yyyy')#</td>
                             <td>#qPaymentList.id#</Td>
-                            <td><cfif NOT VAL(qPaymentList.studentID)> n/a <cfelse> #qPaymentList.firstname# #qPaymentList.familylastname# (#qPaymentList.studentid#) </cfif></td>
+                            <td><cfif NOT VAL(qPaymentList.studentID)> n/a <cfelse> #qPaymentList.firstName# #qPaymentList.familyLastName# (#qPaymentList.studentID#) </cfif></td>
                             <td>#qPaymentList.programName#</Td> 
                             <td>#qPaymentList.type#</Td>  
                             <td>#LSCurrencyFormat(qPaymentList.amount, 'local')#</td>
