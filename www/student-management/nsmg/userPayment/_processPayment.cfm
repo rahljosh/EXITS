@@ -417,7 +417,9 @@
                             spt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.supervisedPaymentType)#"> 
                         <!--- Do Not Include Club Leadership / It's not exclusive --->
                         AND 
-                            spt.id != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 		
+                            spt.id != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 	
+                        ORDER BY
+                        	rep.date DESC	
                     </cfquery>
                     
                     <cfscript>
@@ -459,6 +461,7 @@
                         </td>
                         
                         <cfif vAllowSuperPayment>
+                        
                             <td valign="top">
                                 <select name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" class="largeField">
                                     <option value="#qGetsupervisedPaymentType.id#">#qGetsupervisedPaymentType.type#</option>
@@ -470,7 +473,18 @@
                             <td valign="top" style="color:##F00">
                                 <input type="text" name="#qGetSupervisedStudentList.studentID#superComment" class="largeField">
                             </td>
-                        <cfelse>
+							<!--- Display Previous Payment Information --->
+                            <cfloop query="qCheckSupervisedCharges">
+                                <p>
+                                    #qCheckSupervisedCharges.type# paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')# <br />
+                                    - Program: #qCheckSupervisedCharges.programName# <br />
+                                    - Rep: #qCheckSupervisedCharges.firstName# #qCheckSupervisedCharges.lastname# <br />
+                                    - Total Paid: #DollarFormat(qCheckSupervisedCharges.amount)# 
+                                </p>
+							</cfloop>
+                        
+						<cfelse>
+                        
                             <!--- Block Payment --->
                             <td valign="top">
                                 <input type="hidden" name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" value="">
@@ -481,12 +495,17 @@
                                 <cfif FORM.supervisedPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetSupervisedStudentList.type)>
                                     AYP 5 month programs are not eligible for #qGetsupervisedPaymentType.type# payment.
                                 <cfelse>
-                                    #qCheckSupervisedCharges.type# paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')# <br />
-                                    - Program: #qCheckSupervisedCharges.programName# <br />
-                                    - Rep: #qCheckSupervisedCharges.firstName# #qCheckSupervisedCharges.lastname# <br />
-                                    - Total Paid: #DollarFormat(qCheckSupervisedCharges.amount)#
+                                    <cfloop query="qCheckSupervisedCharges">
+                                        <p>
+                                            #qCheckSupervisedCharges.type# paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')# <br />
+                                            - Program: #qCheckSupervisedCharges.programName# <br />
+                                            - Rep: #qCheckSupervisedCharges.firstName# #qCheckSupervisedCharges.lastname# <br />
+                                            - Total Paid: #DollarFormat(qCheckSupervisedCharges.amount)# 
+                                        </p>
+                                    </cfloop>
                                 </cfif>
                             </td>
+                            
                         </cfif>
                     </tr>
                        
@@ -564,6 +583,8 @@
                         <!--- Do Not Include Club Leadership / It's not exclusive --->
                         AND 
                             spt.id != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 	
+                        ORDER BY
+                        	rep.date DESC	
                     </cfquery>
 
                     <cfscript>
@@ -584,9 +605,10 @@
 							vAllowPlacePayment = 1;
 						}
 
-						// Split Payments - Default 50%
+						// Split Payments - No Default value
 						if ( FORM.isSplitPayment ) {
-							vPlaceAmoutToBePaid = VAL(qGetPlacementPaymentType.amount) / 2;	
+							vPlaceAmoutToBePaid = '';
+							// vPlaceAmoutToBePaid = VAL(qGetPlacementPaymentType.amount) / 2;	
 						} else { 
 							vPlaceAmoutToBePaid = qGetPlacementPaymentType.amount;
 						}
@@ -607,6 +629,7 @@
                         </td>
                         
                         <cfif vAllowPlacePayment>
+                        
                             <td valign="top">
                                 <select name="#qGetPlacedStudentList.studentID#placePaymentTypeID" class="largeField">
                                     <option value="#qGetPlacementPaymentType.id#">#qGetPlacementPaymentType.type#</option>
@@ -625,8 +648,20 @@
                                     </p>
                                     #vCheckPlacementPaperwork#
                                 </cfif>
+                                
+                                <!--- Display Previous Payment Information --->
+                                <cfloop query="qCheckPlacedCharges">
+                                    <p>
+                                        #qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# <br />
+                                        - Program #qCheckPlacedCharges.programName# <br />
+                                        - Rep: #qCheckPlacedCharges.firstName# #qCheckPlacedCharges.lastname# <br />
+                                        - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#
+                                    </p>
+								</cfloop>                               
                             </td>
+                            
                         <cfelse>
+                        
                             <!--- Block Payment --->
                             <td valign="top">
                                 <cfinput type="hidden" name="#qGetPlacedStudentList.studentID#placePaymentTypeID" value="">
@@ -637,12 +672,17 @@
                                 <cfif FORM.placedPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetPlacedStudentList.type)>
                                     AYP 5 month programs are not eligible for #qGetsupervisedPaymentType.type# payment.
                                 <cfelse>
-                                    #qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# <br />
-                                    - Program #qCheckPlacedCharges.programName# <br />
-                                    - Rep: #qCheckPlacedCharges.firstName# #qCheckPlacedCharges.lastname# <br />
-                                    - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#
+                                    <cfloop query="qCheckPlacedCharges">
+                                        <p>
+                                            #qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# <br />
+                                            - Program #qCheckPlacedCharges.programName# <br />
+                                            - Rep: #qCheckPlacedCharges.firstName# #qCheckPlacedCharges.lastname# <br />
+                                            - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#
+                                        </p>
+                                    </cfloop>                               
                                 </cfif>
                             </td>
+                            
                         </cfif>
                     </tr>
                         
