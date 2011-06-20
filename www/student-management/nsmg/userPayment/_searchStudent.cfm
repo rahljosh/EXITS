@@ -42,14 +42,14 @@
         WHERE 
             s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
-		<cfif LEN(familyLastName)>
+		<cfif LEN(FORM.familyLastName)>
             AND 
-                s.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#familyLastName#%">
+                s.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#FORM.familyLastName#%">
         </cfif>
         
-        <cfif VAL(studentID)>
+        <cfif VAL(FORM.studentID)>
             AND 
-                s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
+                s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
         </cfif>
 
         ORDER BY 
@@ -78,7 +78,14 @@
             </cfswitch>
                  
     </cfquery>
-
+	
+    <cfscript>
+		// If only one student is found, locate to select representative page
+		if ( qSearchStudent.recordCount EQ 1 ) {
+			location("#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=listStudentRepresentatives&studentID=#qSearchStudent.studentID#", "no");
+		}
+	</cfscript>
+    
 </cfsilent>
 
 <SCRIPT LANGUAGE="JavaScript">

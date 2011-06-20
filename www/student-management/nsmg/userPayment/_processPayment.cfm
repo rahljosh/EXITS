@@ -435,9 +435,10 @@
 							vAllowSuperPayment = 1;
 						}
 
-						// Split Payments - Default 50%
+						// Split Payments - No Default value
 						if ( FORM.isSplitPayment ) {
-							vPlaceAmoutToBePaid = DecimalFormat(VAL(qGetsupervisedPaymentType.amount) / 2);	
+							vPlaceAmoutToBePaid = '';
+							// vPlaceAmoutToBePaid = DecimalFormat(VAL(qGetsupervisedPaymentType.amount) / 2);	
 						} else { 
 							vPlaceAmoutToBePaid = qGetsupervisedPaymentType.amount;
 						}						

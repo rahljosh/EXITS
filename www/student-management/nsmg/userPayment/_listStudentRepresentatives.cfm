@@ -15,20 +15,65 @@
             s.studentID,
             s.firstName,
             s.familyLastName,
-            sr.userID AS superUserID,
-            sr.firstName AS superFirstName, 
-            sr.lastname AS superLastName,
-            pl.userID AS placeUserID, 
-            pl.firstName AS placeFirstName, 
-            pl.lastname AS placeLastName                
+            s.areaRepID,
+            s.placeRepID
         FROM 
             smg_students s 
-        LEFT OUTER JOIN
-        	smg_users sr ON s.areaRepID = sr.userID
-        LEFT OUTER JOIN
-        	smg_users pl ON s.areaRepID = pl.userID
         WHERE
         	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.studentID)#">
+    </cfquery>
+	
+    <cfquery name="qGetAreaReps" datasource="MySql">
+        SELECT DISTINCT
+        	u.userid, 
+            u.firstname, 
+            u.lastname
+        FROM 
+        	smg_users u
+        WHERE 
+        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.areaRepID#">
+        UNION
+        SELECT 
+            u.userID,
+            u.firstname, 
+            u.lastname
+        FROM 
+        	smg_users u
+        INNER JOIN 
+        	smg_hosthistory ht ON u.userid = ht.areaRepID
+        WHERE 
+        	ht.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#"> 
+        AND 
+        	ht.areaRepID != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+        GROUP BY 
+        	ht.areaRepID
+            
+    </cfquery>
+
+    <cfquery name="qGetPlaceReps" datasource="MySql">
+        SELECT DISTINCT
+        	u.userid, 
+            u.firstname, 
+            u.lastname
+        FROM 
+        	smg_users u
+        WHERE 
+        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.placeRepID#">
+        UNION
+        SELECT 
+            u.userID,
+            u.firstname, 
+            u.lastname
+        FROM 
+        	smg_users u
+        INNER JOIN 
+        	smg_hosthistory ht ON u.userid = ht.placeRepID
+        WHERE 
+        	ht.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#"> 
+        AND 
+        	ht.placeRepID != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+        GROUP BY 
+        	ht.placeRepID
     </cfquery>
 
 </cfsilent>
@@ -50,15 +95,23 @@
                 <td colspan="2" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Supervising Representative</td>
             </tr>    
             
-            <cfif VAL(qGetStudentInfo.superUserID)>	
+            <cfif VAL(qGetStudentInfo.areaRepID)>	
                 <tr bgcolor="###iif(qGetStudentInfo.currentrow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                    <td width="45%" align="right" style="font-weight:bold;">
+                    <td width="45%" align="right" style="font-weight:bold; vertical-align:top;">
                     	Supervising Representative
                     </td>
                     <td>
                         <select name="areaRepID" class="largeField">
-                        	<option value="#qGetStudentInfo.superUserid#">#qGetStudentInfo.superLastName#, #qGetStudentInfo.superFirstName# (###qGetStudentInfo.superUserID#)</option>
+                        	<cfloop query="qGetAreaReps">
+                            	<option value="#qGetAreaReps.userID#">
+                                	#qGetAreaReps.lastName#, #qGetAreaReps.firstName# (###qGetAreaReps.userID#)
+									<cfif qGetStudentInfo.areaRepID EQ qGetAreaReps.userID>
+                                        *
+                                    </cfif>
+                                </option>
+                            </cfloop>
                        	</select>
+                        <p>* Current representative</p>
                     </td>
                 </tr>
                 <tr style="background-color:##E2EFC7;">
@@ -84,15 +137,23 @@
                 <td colspan="2" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Placing Representative</td>
             </tr>    
             
-            <cfif VAL(qGetStudentInfo.superUserID)>	
+            <cfif VAL(qGetStudentInfo.placeRepID)>	
                 <tr bgcolor="###iif(qGetStudentInfo.currentrow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                    <td width="45%" align="right" style="font-weight:bold;">
+                    <td width="45%" align="right" style="font-weight:bold; vertical-align:top;">
                     	Placing Representative
                     </td>                
                     <td>
                         <select name="placeRepID" class="largeField">
-                        	<option value="#qGetStudentInfo.placeUserid#">#qGetStudentInfo.placeLastName#, #qGetStudentInfo.placeFirstName# (###qGetStudentInfo.placeUserID#)</option>
+                        	<cfloop query="qGetPlaceReps">
+                            	<option value="#qGetPlaceReps.userID#">
+                                	#qGetPlaceReps.lastName#, #qGetPlaceReps.firstName# (###qGetPlaceReps.userID#)
+                                    <cfif qGetStudentInfo.placeRepID EQ qGetPlaceReps.userID>
+                                    	*
+                                    </cfif>
+                                </option>
+                            </cfloop>
                        	</select>
+                        <p>* Current representative</p>
                     </td>
                 </tr>
                 <tr style="background-color:##E2EFC7;">
