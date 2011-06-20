@@ -1628,9 +1628,6 @@
         <cfargument name="cbcType" type="string" hint="cbcType is required. User or member">
         
 		<cfscript>
-            //  Set expiration date - 11 months
-            var expirationDate = DateFormat(DateAdd('m', -12, now()),'yyyy-mm-dd');
-			
 			// Set Last Login
 			var lastLogin = DateFormat(DateAdd('yyyy', -1, now()),'yyyy-mm-dd');
         </cfscript>
@@ -1644,6 +1641,7 @@
                     cbc.companyID,
                     MAX(cbc.date_authorized) AS date_authorized,
                     MAX(cbc.date_sent) AS date_sent,
+                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 11 MONTH) AS renewal_date,
                     MAX(cbc.seasonID) AS seasonID,
                     u.firstName,
                     u.lastName,
@@ -1692,7 +1690,7 @@
                     cbc.userID                
                 
                 HAVING
-                	 date_sent <= <cfqueryparam cfsqltype="cf_sql_date" value="#expirationDate#"> 
+                	 renewal_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#"> 
                      
                 ORDER BY                     
                     date_sent
@@ -1705,11 +1703,6 @@
 	<cffunction name="getExpiredHostCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
         <cfargument name="cbcType" type="string" hint="cbcType is required. Father/Mother/Member">
         
-		<cfscript>
-            //  Set expiration date - 11 months
-            var expirationDate = DateFormat(DateAdd('m', -11, now()),'yyyy-mm-dd');
-        </cfscript>
-    
         <cfquery 
         	name="qGetExpiredHostCBC" 
         	datasource="#APPLICATION.dsn#">
@@ -1720,7 +1713,8 @@
                     h.companyID,
                     MAX(cbc.date_authorized) AS date_authorized,
                     MAX(cbc.date_sent) AS date_sent,
-                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 1 Year) AS expiration_date,
+                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 11 MONTH) AS renewal_date,
+					DATE_ADD(MAX(cbc.date_sent), INTERVAL 1 Year) AS expiration_date,
                     MAX(cbc.seasonID) AS seasonID,
                     h.familylastname,
                     p.endDate,
@@ -1795,7 +1789,7 @@
                     cbc.hostid	
                 
                 HAVING
-                	 date_sent <= <cfqueryparam cfsqltype="cf_sql_date" value="#expirationDate#"> 
+                	 renewal_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#"> 
 				AND                
                      expiration_date <= p.endDate
                 AND	
