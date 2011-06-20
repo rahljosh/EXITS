@@ -19,7 +19,7 @@
 	<cfscript>
 		// Get Expired CBCs
 		qGetExpiredHostCBC = APPLICATION.CFC.CBC.getExpiredHostCBC(cbcType=userType);
-	</cfscript>
+    </cfscript>
     
 </cfsilent>
 
