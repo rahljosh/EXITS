@@ -110,26 +110,30 @@
 			<!--- Display Errors --->
             <tr><td>#errorMessage#</td></tr>
 
-			<!--- Email Errors --->
-            <cfmail 
-                from="#APPLICATION.EMAIL.support#"
-                to="#APPLICATION.EMAIL.cbcNotifications#"
-                subject="Scheduled CBC Host #userType# Issues"
-                type="html">
-                    <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
-                        <tr>
-                            <td>
-                                <cfif APPLICATION.isServerLocal>
-                                    <p>DEVELOPMENT SERVER</p>
-                                </cfif>
-                                
-                                <!--- Include Error Message --->
-                                #errorMessage#
-                            </td>
-                        </tr>
-                    </table>   
-            </cfmail>
-        
+			<!--- Email Errors | Email only once --->
+            <cfif VAL(isUpcomingProgram)>
+            
+                <cfmail 
+                    from="#APPLICATION.EMAIL.support#"
+                    to="#APPLICATION.EMAIL.cbcNotifications#"
+                    subject="Scheduled CBC Host #userType# Issues"
+                    type="html">
+                        <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
+                            <tr>
+                                <td>
+                                    <cfif APPLICATION.isServerLocal>
+                                        <p>DEVELOPMENT SERVER</p>
+                                    </cfif>
+                                    
+                                    <!--- Include Error Message --->
+                                    #errorMessage#
+                                </td>
+                            </tr>
+                        </table>   
+                </cfmail>
+        	
+			</cfif>
+            
         </cfif>	
         
         <!--- Filter Query - Get only records that do not have any problems --->
@@ -262,26 +266,31 @@
 			<!--- Display Errors --->
             <tr><td>#errorMessage#</td></tr>
 
-			<!--- Email Errors --->
-            <cfmail 
-                from="#APPLICATION.EMAIL.support#"
-                to="#APPLICATION.EMAIL.cbcNotifications#"
-                subject="Scheduled CBC Host #userType# Issues"
-                type="html">
-                    <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
-                        <tr>
-                            <td>
-                                <cfif APPLICATION.isServerLocal>
-                                    <p>DEVELOPMENT SERVER</p>
-                                </cfif>
-                                
-                                <!--- Include Error Message --->
-                                #errorMessage#
-                            </td>
-                        </tr>
-                    </table>   
-            </cfmail>
-
+			<!--- Email Errors | Email only once --->
+            <cfif VAL(isUpcomingProgram)>
+    
+                <!--- Email Errors --->
+                <cfmail 
+                    from="#APPLICATION.EMAIL.support#"
+                    to="#APPLICATION.EMAIL.cbcNotifications#"
+                    subject="Scheduled CBC Host #userType# Issues"
+                    type="html">
+                        <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
+                            <tr>
+                                <td>
+                                    <cfif APPLICATION.isServerLocal>
+                                        <p>DEVELOPMENT SERVER</p>
+                                    </cfif>
+                                    
+                                    <!--- Include Error Message --->
+                                    #errorMessage#
+                                </td>
+                            </tr>
+                        </table>   
+                </cfmail>
+			
+            </cfif>
+            
         </cfif>	
     
         <!--- Filter Query - Get only records that do not have any problems --->
