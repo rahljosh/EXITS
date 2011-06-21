@@ -617,9 +617,12 @@
     <!--- Not Available in April or May - PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
     
     <!--- Do not display for ESI or Canada Application --->
+    
     <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", smg_students.app_indicated_program)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
-	<cfelse>    
+    <cfelseif smg_student_app_state_requested.state1 GT 0 or smg_student_app_state_requested.state2 GT 0 or smg_student_app_state_requested.state3 GT 0>
+    	<tr><td>You've requested a state guarantee, therefor a regional guarantee is not available. </td></tr>
+    <cfelse>    
 		<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
             <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
         <cfelse>
