@@ -31,7 +31,7 @@
         <cfargument name="companyID" default="" hint="CompanyID is not required">
         <cfargument name="isEndingSoon" default="0" hint="Get only programs that are ending soon for the insurance extension/early return">
         <cfargument name="isFullYear" default="0" hint="Get only 10 month programs">
-        <cfargument name="isUpcomingPrograms" default="0" hint="Get only upcoming programs, used to assign new student applications at the time of approval">         
+        <cfargument name="isUpcomingProgram" default="0" hint="Get only upcoming programs, used to assign new student applications at the time of approval">         
               
         <cfquery 
 			name="qGetPrograms" 
@@ -105,7 +105,7 @@
                     	p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,5" list="yes"> )
                 </cfif>
 
-				<cfif VAL(ARGUMENTS.isUpcomingPrograms)>
+				<cfif VAL(ARGUMENTS.isUpcomingProgram)>
                     AND
                     	p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -1, now())#">
                 </cfif>

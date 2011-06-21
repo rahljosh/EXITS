@@ -15,10 +15,16 @@
 
     <!--- Param Variables --->
     <cfparam name="userType" default="">
+    <cfparam name="isUpcomingProgram" default="">
 
 	<cfscript>
-		// Get Expired CBCs
-		qGetExpiredHostCBC = APPLICATION.CFC.CBC.getExpiredHostCBC(cbcType=userType);
+		if ( VAL(isUpcomingProgram) ) {
+			// Get Expired CBCs for hosts linked to an upcoming student
+			qGetExpiredHostCBC = APPLICATION.CFC.CBC.getExpiredHostCBC(cbcType=userType, isUpcomingProgram=isUpcomingProgram);
+		} else {
+			// Get Expired CBCs
+			qGetExpiredHostCBC = APPLICATION.CFC.CBC.getExpiredHostCBC(cbcType=userType);
+		}
     </cfscript>
     
 </cfsilent>
