@@ -40,7 +40,7 @@
 		}
 		
 		// Get Program List
-		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingPrograms=1);
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingProgram=1);
 		
 		// Get Company List
 		qGetCompanyList = APPLICATION.CFC.COMPANY.getCompanies(companyIDList=APPLICATION.SETTINGS.COMPANYLIST.All);

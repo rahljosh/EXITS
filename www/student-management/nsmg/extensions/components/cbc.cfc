@@ -1702,6 +1702,18 @@
 
 	<cffunction name="getExpiredHostCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
         <cfargument name="cbcType" type="string" hint="cbcType is required. Father/Mother/Member">
+        <cfargument name="isUpcomingProgram" type="numeric" default="0" hint="Set to 1 to run this query and search host families hosting upcoming students">
+        
+        <cfscript>
+			var vUpcomingProgramList = '';
+			
+			// Get Upcoming Programs
+			if ( VAL(ARGUMENTS.isUpcomingProgram) ) {
+				qGetUpcomingPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingProgram=1);
+				
+				vUpcomingProgramList = ValueList(qGetUpcomingPrograms.programID);
+			}
+		</cfscript>
         
         <cfquery 
         	name="qGetExpiredHostCBC" 
@@ -1717,7 +1729,10 @@
 					DATE_ADD(MAX(cbc.date_sent), INTERVAL 1 Year) AS expiration_date,
                     MAX(cbc.seasonID) AS seasonID,
                     h.familylastname,
+                    p.programName,
+                    p.startDate,
                     p.endDate,
+                    s.studentID,                    
                     IFNULL( 
                     		(
                                 SELECT 
@@ -1728,10 +1743,12 @@
                                     studentID = s.studentID 
                                 AND 
                                 	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
+                                AND
+                                	programID = p.programID
                                 AND 
                                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                              ), p.endDate
-							) AS dep_date
+							) AS studentDepartureDate
                 FROM 
                    	smg_hosts_cbc cbc 
                 INNER JOIN 
@@ -1744,12 +1761,17 @@
                         	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
                         AND
                         	s.host_fam_Approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+                        <!--- Get Upcoming Students --->
+						<cfif VAL(ARGUMENTS.isUpcomingProgram)>
+							AND
+                            	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vUpcomingProgramList#" list="yes"> )                        
+                        </cfif>
                 INNER JOIN	
                 	smg_programs p ON p.programID = s.programID 
-                    	AND 
+                        AND 
                         	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 						AND
-                        	p.endDate > now() 
+                        	p.endDate > now()
                 WHERE 
                     cbc.hostID NOT IN 
                     ( 
@@ -1789,12 +1811,14 @@
                     cbc.hostid	
                 
                 HAVING
-                	 renewal_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#"> 
+                	renewal_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#"> 
 				AND                
-                     expiration_date <= p.endDate
+                    expiration_date <= p.endDate
                 AND	
-                	expiration_date <= dep_date 
+					expiration_date <= studentDepartureDate 
+                
                 ORDER BY 
+                    p.endDate DESC,
                     date_sent 
         </cfquery>
 		
