@@ -42,9 +42,9 @@
 
 <cfquery name="regional_director" datasource="MySQL">
 	SELECT smg_users.firstname, smg_users.lastname, smg_users.userid, smg_users.address, smg_users.address2, smg_users.city, smg_users.state, smg_users.zip, smg_users.phone, smg_users.email, smg_users.fax,
-			user_access_rights.userid, user_Access_rights.usertype, user_Access_rights.companyid, user_access_rights.regionid
+			user_access_rights.userid, user_access_rights.usertype, user_access_rights.companyid, user_access_rights.regionid
 	FROM smg_users 
-	INNER JOIN user_Access_rights on smg_users.userid = user_Access_rights.userid
+	INNER JOIN user_access_rights on smg_users.userid = user_access_rights.userid
 	WHERE user_access_rights.regionid = #region# and user_access_rights.usertype = 5 AND smg_users.active = '1'
 </cfquery>
 
@@ -107,11 +107,11 @@
 	<!--- Advisors and Areas Under Manager --->
 	<cfquery name="userinfo" datasource="MySQL">
 		SELECT smg_users.firstname, smg_users.lastname, smg_users.userid, smg_users.address, smg_users.address2, smg_users.city, smg_users.state, 
-				smg_users.zip, smg_users.phone, smg_users.email, smg_users.fax, user_access_rights.userid, user_Access_rights.usertype, user_Access_rights.companyid, user_access_rights.regionid
+				smg_users.zip, smg_users.phone, smg_users.email, smg_users.fax, user_access_rights.userid, user_access_rights.usertype, user_access_rights.companyid, user_access_rights.regionid
 		FROM smg_users 
-		INNER JOIN user_Access_rights ON smg_users.userid = user_Access_rights.userid
+		INNER JOIN user_access_rights ON smg_users.userid = user_access_rights.userid
 		WHERE user_access_rights.regionid = #region# AND user_access_rights.usertype BETWEEN 6 and 7 
-			  AND user_Access_rights.advisorid = 0 AND smg_users.active = '1'
+			  AND user_access_rights.advisorid = 0 AND smg_users.active = '1'
 			and (datecreated between #CreateODBCDateTime(form.beg_date)# and #CreateODBCDateTime(form.end_date)#)
 		ORDER BY #form.orderby#
 	</cfquery>
