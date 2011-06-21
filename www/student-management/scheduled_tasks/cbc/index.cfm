@@ -16,6 +16,10 @@
     
     <cfparam name="CLIENT.companyID" default="1">
 
+    <!--- Param Variables --->
+    <cfparam name="userType" default="">
+    <cfparam name="isUpcomingProgram" default="">
+
 </cfsilent>
 
 
