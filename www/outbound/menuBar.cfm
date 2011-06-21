@@ -1,0 +1,2 @@
+<div class="blackBar"><span class= "whtText"><a href="index.cfm">HOME</a> &nbsp;&nbsp;&nbsp;  |  &nbsp;&nbsp;&nbsp;<a href="program.cfm"> PROGRAMS </a>&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a href="what.cfm">  WHAT IS OUTBOUND?</a> &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a href="why.cfm"> WHY IS IT BENEFICIAL?</a>&nbsp;&nbsp;&nbsp;  |  &nbsp;&nbsp;&nbsp;<a href="about.cfm"> ABOUT US</a> &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;<a href="contact.cfm"> CONTACT US</a><!-- end whtText --></span>
+    <!-- end blackBar --></div>

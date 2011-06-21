@@ -1,0 +1,366 @@
+body {
+	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
+	padding: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 100%;
+	background-color: #CCC;
+}
+.oneColFixCtrHdr #container {
+	width: 1000px;  /* using 20px less than a full 800px width allows for browser chrome and avoids a horizontal scroll bar */
+	background: #FFFFFF;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+	margin-top: 0;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	border-right-width: medium;
+	border-bottom-width: medium;
+	border-left-width: medium;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-color: #CCC;
+	border-bottom-color: #CCC;
+	border-left-color: #CCC;
+}
+.oneColFixCtrHdr #header {
+	height: 65px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-left: 20px;
+	background-color: #00539f;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 5px;
+}
+.oneColFixCtrHdr #header h1 {
+	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
+	padding: 10px 0;
+}
+.centerText {
+	text-align: center;
+	text-decoration: underline;
+}
+.oneColFixCtrHdr #mainContent {
+	background: #FFFFFF;
+	padding: 0px;
+}
+.oneColFixCtrHdr #mainContentPad {
+	background: #FFFFFF;
+	padding-top: 10px;
+	padding-right: 30px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+}
+.oneColFixCtrHdr #aboutContent {
+	background: #FFFFFF;
+	height: 450px;
+	padding-top: 20;
+	padding-right: 90px;
+	padding-bottom: 0px;
+	padding-left: 90px;
+}
+.bold {
+	font-weight: bold;
+}
+.oneColFixCtrHdr #footer {
+	position: fixed;
+	bottom: -5px;
+	padding-top: 0px;
+	padding-bottom: 0;
+	height: 60px;
+	width: 1000px;
+}
+.oneColFixCtrHdr #footer p {
+	margin: 0; /* zeroing the margins of the first element in the footer will avoid the possibility of margin collapse - a space between divs */
+	padding: 10px 0; /* padding on this element will create space, just as the the margin would have, without the margin collapse issue */
+}
+.logo {
+	height: 190px;
+	width: 970px;
+	background-image: url(../images/header.png);
+	background-repeat: no-repeat;
+	padding-left: 30px;
+}
+.OtopBar {
+	background-color: #000;
+	height: 10px;
+	padding-right: 20px;
+	padding-left: 30px;
+}
+.bBar {
+	background-color: #000;
+	height: 13px;
+	width: 1000px;
+	padding: 0px;
+	display: block;
+	clear: both;
+}
+.blackBar {
+	background-color: #000;
+	height: 29px;
+	text-align: center;
+	padding-top: 10px;
+}
+.blackBar .whtText {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFF;
+}
+.leftbox {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 424px;
+	width: 690px;
+}
+.rightbox {
+	float: right;
+	height: 424px;
+	width: 310px;
+	background-color: #EF8921;
+	background-image: url(../images/bulletGradient.png);
+	background-repeat: no-repeat;
+}
+.gradientBar {
+	height: 42px;
+	padding-right: 20px;
+	padding-left: 0px;
+	background-image: url(../images/topGradient.png);
+	background-repeat: repeat-x;
+	background-color: #FFF;
+	padding-top: 8px;
+}
+.BbottomBar {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	background-color: #125DAB;
+	text-align: center;
+	height: 30px;
+	color: #FFF;
+	padding-top: 10px;
+}
+.center {
+	width: 1015px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.note {
+	height: 150px;
+	width: 340px;
+	z-index: 10;
+	position: absolute;
+	margin-left: 250px;
+	margin-top: 25px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 15px;
+	line-height: 20px;
+	text-align: left;
+}
+.note .bold {
+	font-weight: bold;
+}
+
+#fade {
+	padding: 10px;
+	height: 350px;
+	width: 230px;
+	margin-top: 60px;
+	margin-right: 20px;
+	margin-bottom: 0px;
+	margin-left: 30px;
+	position: absolute;
+	z-index: 50;
+	display: block;
+	background-image: url(../images/fade.png);
+	background-repeat: repeat-y;
+}
+.menu:link {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 20px;
+	vertical-align: middle;
+	list-style-position: inside;
+	list-style-type: square;
+	line-height: 40px;
+	color: #000;
+}
+.menu:hover {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 20px;
+	vertical-align: middle;
+	list-style-position: inside;
+	list-style-type: square;
+	line-height: 40px;
+	color: #FFF;
+}
+.menu:visited {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 20px;
+	vertical-align: middle;
+	list-style-position: inside;
+	list-style-type: square;
+	line-height: 40px;
+	color: #000;
+}
+.menu:active {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 20px;
+	vertical-align: middle;
+	list-style-position: inside;
+	list-style-type: square;
+	line-height: 40px;
+	color: #000;
+}
+.country:link {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000;
+	vertical-align: middle;
+	font-weight: bold;
+}
+.country:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FC0;
+	vertical-align: middle;
+	font-weight: bold;
+}
+.country:visited {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000;
+	vertical-align: middle;
+	font-weight: bold;
+}
+.country:active {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000;
+	vertical-align: middle;
+	font-weight: bold;
+}
+.picWindow1 {
+	float: right;
+	height: 350px;
+	width: 300px;
+	margin-top: 25px;
+	margin-right: 25px;
+	margin-left: 30px;
+	border: thin solid #333;
+}
+.picWindow2 {
+	float: left;
+	width: 300px;
+	margin-top: 25px;
+	margin-right: 25px;
+	margin-left: 30px;
+	margin-bottom: 35px;
+	border: thin solid #333;
+}
+.picWindow3 {
+	float: right;
+	width: 350px;
+	margin-top: 25px;
+	margin-right: 25px;
+	margin-left: 30px;
+	border: thin solid #333;
+	right: 20px;
+	bottom: 20px;
+}
+.picWindow4 {
+	float: left;
+	margin-top: 25px;
+	margin-right: 25px;
+	margin-left: 30px;
+	margin-bottom: 35px;
+	border: thin solid #333;
+}
+.countries {
+	height: 20px;
+	width: 830px;
+	margin-right: auto;
+	margin-left: auto;
+	border-bottom-width: thin;
+	border-bottom-style: solid;
+	border-bottom-color: #666;
+	border-top-width: thin;
+	border-top-style: solid;
+	border-top-color: #666;
+	text-align: center;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+.menuIndex:link {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 20px;
+	vertical-align: middle;
+	list-style-position: inside;
+	list-style-type: square;
+	line-height: 32px;
+	color: #000;
+}
+.menuIndex:hover {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 20px;
+	vertical-align: middle;
+	list-style-position: inside;
+	list-style-type: square;
+	line-height: 32px;
+	color: #FFF;
+}
+.menuIndex:visited {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 20px;
+	vertical-align: middle;
+	list-style-position: inside;
+	list-style-type: square;
+	line-height: 32px;
+	color: #000;
+}
+.menuIndex:active {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 20px;
+	vertical-align: middle;
+	list-style-position: inside;
+	list-style-type: square;
+	line-height: 32px;
+	color: #000;
+}
+.visa {
+	height: 75px;
+	width: 100px;
+	z-index: 10;
+	position: relative;
+	margin-left: 250px;
+	margin-top: 5px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 15px;
+	line-height: 20px;
+	text-align: left;
+	float: right;
+	clear: right;
+}
+.italic {
+	font-size: 11px;
+	font-style: italic;
+	color: #903;
+}
+.black:link {
+	color: #000;
+	text-decoration: none;
+	font-weight: bold;
+}
+.black:visited {
+	text-decoration: none;
+	color: #000;
+}
+.black:hover {
+	text-decoration: underline;
+	color: #00539F;
+}
+.black:active {
+	text-decoration: none;
+}
