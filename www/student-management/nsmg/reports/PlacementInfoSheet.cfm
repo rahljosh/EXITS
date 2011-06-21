@@ -333,11 +333,9 @@
                                 <tr>
                                 	<td width="100" valign="top"><span class="title">Placed: </span></td>
                                     <td>
-                                    <cfif isDefined('form.NewDatePlaced')>
-                                    #DateFormat(form.NewDatePlaced, 'mmmm d, yyyy')#
-                                    <cfelse>
-                                    #DateFormat(qGetStudentInfo.datePlaced, 'mmmm d, yyyy')#
-                                    </cfif>
+                                   
+                                    #DateFormat(qGetStudentInfo.date_host_fam_approved, 'mmmm d, yyyy')#
+                                   
                                     </td>
                                 	
                                 </tr>
