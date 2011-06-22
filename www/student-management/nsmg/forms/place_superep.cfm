@@ -4,6 +4,11 @@
 <!--- Student Info --->
 <cfinclude template="../querys/get_student_info.cfm">
 
+<cfscript>
+	// Get Available Reps
+	qGetAvailableReps = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=get_student_info.regionAssigned);
+</cfscript>
+
 <cfquery name="check_cancel" datasource="mysql">
 	select canceldate
 	from smg_students
@@ -60,9 +65,6 @@
 
 <cfelse>  <!--- unplaced --->
 	
-	<!--- get reps for students region --->
-	<cfinclude template="../querys/get_available_reps.cfm">
-	
 	<cfif #get_student_info.arearepid# is 0> <!--- Supervising REP --->
 		<table width="580" align="center">
 		<tr><td>	
@@ -73,12 +75,13 @@
 		<cfform action="../querys/update_place_superep.cfm?studentid=#client.studentid#" method="post">
 			<table width="580" align="center">
 			<tr><td>				
-			<cfselect name="arearepid">
-				<option value="0"></option>
-				<cfoutput query="get_available_reps">
-						<option value=#userid#>#firstname# #lastname# (#userid#)</option>
-				</cfoutput>
-			</cfselect>
+                <select name="arearepid">
+                    <cfoutput query="qGetAvailableReps">
+                            <option value="#qGetAvailableReps.userid#" <cfif qGetAvailableReps.userID EQ CLIENT.userID> selected="selected" </cfif> >
+                                #qGetAvailableReps.firstname# #qGetAvailableReps.lastname# (###qGetAvailableReps.userid#)
+                            </option>
+                    </cfoutput>
+                </select>
 			</td></tr>
 			</table><br>
 			<table width="580" align="center">
@@ -142,7 +145,7 @@
 	INNER JOIN smg_users user ON user.userid = arearepid
 	INNER JOIN smg_users u ON u.userid = changedby
 	WHERE studentid = '#client.studentid#' AND hostid = 0 AND schoolid = 0 AND placerepid = 0
-	ORDER BY dateofchange desc	
+	ORDER BY historyID desc	
 </cfquery>
 <!--- SUPER HISTORY IF --->
 <Cfif supervising_history.recordcount is not 0> 

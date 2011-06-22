@@ -5,7 +5,7 @@
 
 <cfif IsDefined('url.studentid')>
 	
-	<cfif form.reason is ''> 
+	<cfif FORM.reason is ''> 
 		
 		<!--- include template page header --->
 		<cfinclude template="../forms/placement_status_header.cfm">
@@ -14,30 +14,36 @@
 		</table><br>
 		<table width="480" align="center">
 		<tr><td align="center">
-				<cfoutput>
-				<A HREF="../forms/place_change_secondVisitRep.cfm?studentid=#client.studentid#"><img border="0" src="../pics/back.gif"></A>
-				<!--- <input type="image" value="back" src="../pics/back.gif" onClick="javascript:history.back()"> --->
-				</cfoutput>
+				<input type="image" value="back" src="../pics/back.gif" onClick="javascript:history.back()">
 			</td></tr>
 		</table>
 		
 	 <cfelse>
 	   
 	    <cftransaction action="BEGIN" isolation="SERIALIZABLE">
-			<cfquery name="change_placerep" datasource="MySQL">
-				update smg_students
-				set secondVisitRepID = '#form.placerepid#'
-						
+
+            <cfquery name="updateSuperRep" datasource="MySQL">
+              update smg_students
+				set placeRepID = '#form.placeRepID#'
+				<cfif get_student_info.areaRepID is not '0' and get_student_info.hostid is not '0' and get_student_info.schoolid is not '0'>
+					<cfif client.usertype eq 5 or client.usertype eq 6 or client.usertype eq 7>
+                        , host_fam_approved = #client.usertype#
+                    </cfif>
+				, date_host_fam_approved = #CreateODBCDateTime(now())#		
+				</cfif>					
 				where studentid = '#get_student_info.studentid#'
-			</cfquery>						
-			 <cfquery name="school_history" datasource="MySQL"> <!--- school history --->
-				INSERT INTO smg_hosthistory	(hostid, studentid, schoolid, reason, dateofchange, arearepid, secondVisitRepID, changedby)
-				values('0', '#get_student_info.studentid#', '0', '#form.reason#',
-				 #CreateODBCDateTime(now())#, '0', '#get_student_info.placerepid#', '#client.userid#')
 			</cfquery>
+			 
+             <!--- Insert Place Rep History --->
+             <cfquery datasource="MySQL"> 
+				INSERT INTO smg_hosthistory	(hostid, studentid, schoolid, reason, dateofchange, arearepid, placeRepID, changedby)
+				values('0', '#get_student_info.studentid#', '0', '#FORM.reason#',
+				 #CreateODBCDateTime(now())#, '0', '#FORM.placerepid#', '#CLIENT.userid#')
+			</cfquery>
+            
 		</cftransaction>
-		<cflocation url="../forms/place_menu.cfm?studentid=#client.studentid#" addtoken="no">	
-<!--- 		<cflocation url="../forms/place_placerep.cfm?studentid=#client.studentid#" addtoken="no"> --->
+        
+		<cflocation url="../forms/place_menu.cfm?studentid=#CLIENT.studentid#" addtoken="no">	
 		
 	</cfif> <!--- reason ---->
 </cfif> <!--- url.student ---> 

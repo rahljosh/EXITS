@@ -124,8 +124,7 @@
 
 <script language="javascript">
 	function enableButtons() {
-		window.opener.showIt('hideapp');
-		window.opener.showIt('hidedis');
+		window.opener.displayApprovalButton('actionButtons');
 		window.close();
 	}
 </script>
@@ -142,6 +141,31 @@
             </td>
         </tr>
     </table>
+
+</cfsavecontent>
+
+<cfsavecontent variable="closeLink">
+
+    <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
+        <tr>
+            <Td align="center">
+			    <a href="javascript:window.close()"><img src="../pics/close.gif" border="0"><br />
+            </td>
+        </tr>
+    </table>
+
+</cfsavecontent>
+
+<cfsavecontent variable="openPrint">
+
+    <body onLoad="print();">
+        <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
+            <tr>
+                <td width=50%>PRINTED: #DateFormat(now(), 'mmm. d, yyyy')# at #TimeFormat(now(), 'HH:mm')# by #CLIENT.name#</td>
+                <td align="right"><a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&showemail"><img src="../pics/email.gif" border="0" alt=" Email "></a></td>
+            </tr>
+        </table>
+    </body>
 
 </cfsavecontent>
 
@@ -210,19 +234,6 @@
         
     </form>
       
-</cfsavecontent>
-
-<cfsavecontent variable="openPrint">
-
-    <body onLoad="print();">
-        <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
-            <tr>
-                <td width=50%>PRINTED: #DateFormat(now(), 'mmm. d, yyyy')# at #TimeFormat(now(), 'HH:mm')# by #CLIENT.name#</td>
-                <td align="right"><a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&showemail"><img src="../pics/email.gif" border="0" alt=" Email "></a></td>
-            </tr>
-        </table>
-    </body>
-
 </cfsavecontent>
 
 <!----Save profile as variable---->
@@ -713,17 +724,17 @@
 			</cfif>
             
         <cfelse>
-        
             #openPrint#
-            
         </cfif>
 
 		<!--- Include PIS Template --->
         #PlacementInfo#
         
-    	<Cfif isDefined('URL.approve')>
+    	<cfif isDefined('URL.approve')>
 	         #approveLink#
-    	</Cfif>
+    	<cfelse>
+			#closeLink#
+		</cfif>
         
     </cfdefaultcase>
 

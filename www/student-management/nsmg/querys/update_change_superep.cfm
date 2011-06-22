@@ -23,25 +23,29 @@
 	 <cfelse>
 	   
 	    <cftransaction action="BEGIN" isolation="SERIALIZABLE">
-			<cfquery name="change_placerep" datasource="MySQL">
-				update smg_students
+			
+            <cfquery name="updateSuperRep" datasource="MySQL">
+              update smg_students
 				set arearepid = '#form.arearepid#'
 				<cfif get_student_info.placerepid is not '0' and get_student_info.hostid is not '0' and get_student_info.schoolid is not '0'>
-				<cfif client.usertype eq 5 or client.usertype eq 6 or client.usertype eq 7>
-                    , host_fam_approved = #client.usertype#
+					<cfif client.usertype eq 5 or client.usertype eq 6 or client.usertype eq 7>
+                        , host_fam_approved = #client.usertype#
                     </cfif>
 				, date_host_fam_approved = #CreateODBCDateTime(now())#		
 				</cfif>					
 				where studentid = '#get_student_info.studentid#'
-			</cfquery>						
-			 <cfquery name="school_history" datasource="MySQL"> <!--- school history --->
+			</cfquery>
+            						
+             <!--- Insert Super Rep History --->
+             <cfquery datasource="MySQL"> 
 				INSERT INTO smg_hosthistory	(hostid, studentid, schoolid, reason, dateofchange, arearepid, placerepid, changedby)
 				values('0', '#get_student_info.studentid#', '0', '#form.reason#',
-				 #CreateODBCDateTime(now())#, '#get_student_info.arearepid#', '0', '#client.userid#')
+				 #CreateODBCDateTime(now())#, '#FORM.arearepid#', '0', '#client.userid#')
 			</cfquery>
+            
 		</cftransaction>
+        
 		<cflocation url="../forms/place_menu.cfm?studentid=#client.studentid#" addtoken="no">	
-<!--- 		<cflocation url="../forms/place_superep.cfm?studentid=#client.studentid#" addtoken="no"> --->
 		
 	</cfif> <!--- reason ---->
 </cfif> <!--- url.student ---> 

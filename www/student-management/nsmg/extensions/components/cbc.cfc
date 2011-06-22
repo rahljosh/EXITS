@@ -133,7 +133,7 @@
 	</cffunction>
 
 
-	<cffunction name="getEligibleHostMember" access="public" returntype="query" output="false" hint="Returns CBC for family members 18 years old and older">
+	<cffunction name="getEligibleHostMember" access="public" returntype="query" output="false" hint="Returns CBC for family members 17 years old and older">
 		<cfargument name="hostID" required="yes" hint="Host ID is required">
 
             <cfquery 
@@ -148,7 +148,7 @@
                         lastName, 
                         ssn, 
                         birthdate, 
-                        (DATEDIFF(now( ) , birthdate)/365)
+                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365)
                     FROM 
                         smg_host_children 
                     WHERE 
@@ -156,7 +156,7 @@
                     AND
                     	liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">                    
                     AND 
-                        (DATEDIFF(now( ) , birthdate)/365) > 17
+                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) >= 17
                     ORDER BY 
                         childID
             </cfquery>
@@ -1623,6 +1623,99 @@
     <!--- End of CBC Batch Functions --->
 
 	
+    
+    <!--- In Compliance --->
+	<cffunction name="checkHostFamilyCompliance" access="public" returntype="string" output="false" hint="Check if a host family is in compliance">
+        <cfargument name="hostID" type="numeric" hint="hostID is required">
+        <cfargument name="studentID" type="numeric" default="0" hint="studentID is not required">
+  
+		<cfscript>
+			var returnMessage = '';
+			var vMissingMessage = '';
+			var vExpiredMessage = '';
+			
+			// Gets Host Family Information
+			qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
+
+			// Get Eligible Family Member CBC
+			qGetEligibleMembers = getEligibleHostMember(hostID=ARGUMENTS.hostID);
+
+
+			// Check if CBCs are missing
+			qGetCBCMother = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='mother');
+			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) ) {
+				// Store Missing CBC Message
+				vMissingMessage = vMissingMessage & "<p>Missing CBC for host mother</p>";
+			}
+			
+			qGetCBCFather = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='father');
+			if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND NOT VAL(qGetCBCFather.recordCount) ) {
+				// Store Missing CBC Message
+				vMissingMessage = vMissingMessage & "<p>Missing CBC for host father</p>";
+			}
+
+			// Loop through eligible member query
+            For ( i=1; i LTE qGetEligibleMembers.recordCount; i=i+1 ) {
+
+				// Gets Host Member CBC
+				qGetCBCMember = getCBCHostByID(
+					hostID=ARGUMENTS.hostID,
+					familyMemberID=qGetEligibleMembers.childID[i],
+					cbcType='member'
+				);		
+				
+				if ( NOT VAL(qGetCBCMember.recordCount) ) {
+					// Store Missing CBC Message
+					vMissingMessage = vMissingMessage & "<p>Missing CBC for host member #qGetEligibleMembers.name# #qGetEligibleMembers.lastName#</p>";
+				}
+				
+            }
+			
+            // Check if CBCs are expired    
+            qGetExpiredCBCMother = getExpiredHostCBC(cbcType='mother', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
+            if ( qGetExpiredCBCMother.recordCount ) {            
+				vMissingMessage = vMissingMessage & "<p>Host mother - Expired on: #DateFormat(qGetExpiredCBCMother.expiration_date, 'mm/dd/yyyy')#</p>";
+			}
+			
+			qGetExpiredCBCFather = getExpiredHostCBC(cbcType='father', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
+            if ( qGetExpiredCBCFather.recordCount ) {
+				vMissingMessage = vMissingMessage & "<p>Host father - Expired on: #DateFormat(qGetExpiredCBCFather.expiration_date, 'mm/dd/yyyy')#</p>";
+			}
+			
+            qGetExpiredCBCMember = getExpiredHostCBC(cbcType='member', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
+            if ( qGetExpiredCBCMember.recordCount ) {
+				vMissingMessage = vMissingMessage & "<p>Host member - Expired on: #DateFormat(qGetExpiredCBCMember.expiration_date, 'mm/dd/yyyy')#</p>";
+			}
+        </cfscript>
+
+		<cfif LEN(vMissingMessage) OR LEN(vExpiredMessage)>
+        
+            <cfsavecontent variable="returnMessage">
+                <cfoutput>
+                
+                    <div style="color:##F00">
+                    
+                        <p>You can only approve a placement when CBCs are in compliance. Please see below:</p>
+                        
+                        <!--- Display Missing CBC --->
+                        #vMissingMessage#
+                        
+                        <!--- Display Expired CBC --->
+                        #vExpiredMessage#
+                        
+                    </div>
+                    
+                </cfoutput>                    
+            </cfsavecontent>
+        
+        </cfif>
+
+		<cfreturn returnMessage>        
+	</cffunction>    
+    <!--- End of In Compliance --->
+
+
+	
     <!--- CBC Re-Run Functions --->
 	<cffunction name="getExpiredUserCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
         <cfargument name="cbcType" type="string" hint="cbcType is required. User or member">
@@ -1703,6 +1796,8 @@
 	<cffunction name="getExpiredHostCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
         <cfargument name="cbcType" type="string" hint="cbcType is required. Father/Mother/Member">
         <cfargument name="isUpcomingProgram" type="numeric" default="0" hint="Set to 1 to run this query and search host families hosting upcoming students">
+        <cfargument name="hostID" type="numeric" default="0" hint="Pass hostID to check if there are CBCs expired">
+        <cfargument name="studentID" type="numeric" default="0" hint="Pass studentID to check if there are CBCs expired">
         
         <cfscript>
 			var vUpcomingProgramList = '';
@@ -1732,7 +1827,6 @@
                     p.programName,
                     p.startDate,
                     p.endDate,
-                    s.studentID,                    
                     IFNULL( 
                     		(
                                 SELECT 
@@ -1759,13 +1853,23 @@
                         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
                         AND 
                         	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
-                        AND
-                        	s.host_fam_Approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-                        <!--- Get Upcoming Students --->
+						
+						<cfif VAL(ARGUMENTS.studentID)>
+                        	<!--- Check For a Student Before Approving a placement --->
+							AND
+                            	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">                     
+                        <cfelse>
+                            <!--- Placement Approved --->
+                            AND
+                                s.host_fam_Approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+						</cfif>
+
+						<!--- Get Upcoming Students --->
 						<cfif VAL(ARGUMENTS.isUpcomingProgram)>
 							AND
                             	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vUpcomingProgramList#" list="yes"> )                        
                         </cfif>
+                        
                 INNER JOIN	
                 	smg_programs p ON p.programID = s.programID 
                         AND 
@@ -1784,6 +1888,11 @@
                         AND
                             cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
                     )   
+                
+                <cfif VAL(ARGUMENTS.hostID)>
+                	AND
+                    	h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                </cfif>
                 
                 <cfif ARGUMENTS.cbcType EQ 'father'>
                 	AND

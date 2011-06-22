@@ -4,6 +4,11 @@
 <!--- Student Info --->
 <cfinclude template="../querys/get_student_info.cfm">
 
+<cfscript>
+	// Get Available Reps
+	qGetAvailableReps = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=get_student_info.regionAssigned);
+</cfscript>
+
 <cfquery name="check_cancel" datasource="mysql">
 	select canceldate
 	from smg_students
@@ -61,9 +66,6 @@
 
 <cfelse>  <!--- unplaced --->
 	
-	<!--- get reps for students region --->
-	<cfinclude template="../querys/get_available_reps.cfm">
-	
 	<cfif #get_student_info.placerepid# is 0> <!--- PLACE REP --->
 		<table width="580" align="center">
 		<tr><td>	
@@ -74,12 +76,13 @@
 		<cfform action="../querys/update_place_placerep.cfm?studentid=#client.studentid#" method="post">
 			<table width="580" align="center">
 			<tr><td>				
-			<cfselect name="placerepid">
-				<option value="0"></option>
-				<cfoutput query="get_available_reps">
-						<option value=#userid#>#firstname# #lastname# (#userid#)</option>
+			<select name="placerepid">
+				<cfoutput query="qGetAvailableReps">
+						<option value="#qGetAvailableReps.userid#" <cfif qGetAvailableReps.userID EQ CLIENT.userID> selected="selected" </cfif> >
+                        	#qGetAvailableReps.firstname# #qGetAvailableReps.lastname# (###qGetAvailableReps.userid#)
+                        </option>
 				</cfoutput>
-			</cfselect>
+			</select>
 			</td></tr>
 			</table><br>
 			<table width="580" align="center">
@@ -145,7 +148,7 @@
 	INNER JOIN smg_users user ON user.userid = placerepid
 	INNER JOIN smg_users u ON u.userid = changedby
 	WHERE studentid = '#client.studentid#' AND hostid = 0 AND schoolid = 0 AND arearepid = 0
-	ORDER BY dateofchange desc	
+	ORDER BY historyID desc	
 </cfquery>
 	
 <!--- PLACE HISTORY IF --->
