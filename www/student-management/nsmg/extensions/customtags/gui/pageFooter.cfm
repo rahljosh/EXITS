@@ -35,6 +35,12 @@
 		type="integer"
         default="#CLIENT.companyID#"
 		/>
+
+	<cfparam 
+		name="ATTRIBUTES.filePath"
+		type="string"
+        default="../"
+		/>
         
 </cfsilent>
 
@@ -61,12 +67,12 @@
                 <cfif ATTRIBUTES.companyID EQ 11>
 	                <!--- WEP --->
                     <div align="center" style="margin-top:20px;">
-                        <img src="../pics/wep-footer.jpg" height=20  />
+                        <img src="#ATTRIBUTES.filePath#pics/wep-footer.jpg" height=20  />
 	                </div>
                 <cfelse>
 					<!--- Other Companies --->
                     
-	                <img src="../pics/logos/#ATTRIBUTES.companyID#_px.png" width="100%" height="12"  style="margin-top:20px;">
+	                <img src="#ATTRIBUTES.filePath#pics/logos/#ATTRIBUTES.companyID#_px.png" width="100%" height="12"  style="margin-top:20px;">
                 
                 	<div align="center">
                         Copyright &copy; #Year(now())# &nbsp; :: &nbsp; #CLIENT.companyname# &nbsp; :: &nbsp; Powered by 
@@ -77,7 +83,7 @@
                         </font>
                     </div>
                     
-                    <img src="../pics/logos/#ATTRIBUTES.companyID#_px.png" width="100%" height="1">
+                    <img src="#ATTRIBUTES.filePath#pics/logos/#ATTRIBUTES.companyID#_px.png" width="100%" height="1">
                 </cfif>
                 
             </cfcase>

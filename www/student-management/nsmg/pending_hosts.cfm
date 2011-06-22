@@ -14,13 +14,6 @@ var URL = document.form.sele_region.options[document.form.sele_region.selectedIn
 window.location.href = URL;
 }
 // End -->
-// opens small pop up in a defined format
-var newwindow;
-//open placement management
-function OpenPlaceMan(url) {
-	newwindow=window.open(url, 'Application', 'height=550, width=600, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=no'); 
-	if (window.focus) {newwindow.focus()}
-}
 </SCRIPT>
 
 <div class="application_section_header">Pending Placements</div>
@@ -265,9 +258,9 @@ div.scroll {
                 #regionname#
             </td>
             <td>#programname#</td>
-            <td> <a href="javascript:OpenPlaceMan('forms/place_menu.cfm?studentid=#studentid#' , 'Settings', 'height=400, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes');">#hostid#</a></td>
-            <td><a href="javascript:OpenPlaceMan('forms/place_menu.cfm?studentid=#studentid#' , 'Settings', 'height=400, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes');"><cfif fatherlastname is motherlastname> #fatherlastname#<Cfelseif fatherlastname is''> #motherlastname# <Cfelseif motherlastname is ''>#fatherlastname#<Cfelse>#fatherlastname# #motherlastname#</cfif></td>
-            <td><a href="javascript:OpenPlaceMan('forms/place_menu.cfm?studentid=#studentid#' , 'Settings', 'height=400, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes');"> #fatherfirstname# <Cfif fatherfirstname is '' or motherfirstname is ''><cfelse>&</Cfif> #motherfirstname#</td>
+            <td><a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#studentID#', 800, 600);">#hostid#</a></td>
+            <td><a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#studentID#', 800, 600);"><cfif fatherlastname is motherlastname> #fatherlastname#<Cfelseif fatherlastname is''> #motherlastname# <Cfelseif motherlastname is ''>#fatherlastname#<Cfelse>#fatherlastname# #motherlastname#</cfif></td>
+            <td><a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#studentID#', 800, 600);">#fatherfirstname# <Cfif fatherfirstname is '' or motherfirstname is ''><cfelse>&</Cfif> #motherfirstname#</td>
             <td>#DateFormat(dateplaced,'mm/dd/yyyy')#</td>
             <td><Cfif host_fam_approved eq 99>
            <!----If rejected, show how long its been rejected.---->
@@ -276,7 +269,10 @@ div.scroll {
 			<cfset dtDiff = (dtTo - dtFrom) />
             #DateFormat( dtDiff, "d" )# d
             #TimeFormat( dtDiff, "h" )# h 
-           <cfelse> <cf_timer dateEnd="#DisplayEndDate#"></cfif></td>
+           	<cfelse>
+                <cf_timer dateEnd="#DisplayEndDate#">
+		   	</cfif>
+	    </td>
     </tr>
     <tr>
         <td></td>

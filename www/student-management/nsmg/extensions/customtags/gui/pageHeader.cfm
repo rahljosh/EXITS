@@ -43,6 +43,12 @@
 		type="integer"
         default="#CLIENT.companyID#"
 		/>
+        
+	<cfparam 
+		name="ATTRIBUTES.filePath"
+		type="string"
+        default="../"
+		/>
 
 </cfsilent>
 
@@ -71,18 +77,18 @@
                     <title>EXITS</title>
                     <meta name="description" content="EXITS" />
                     <meta name="keywords" content="EXITS Online Application, Host Family, Exchange Program, Students" />
-                    <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" />
-                    <link rel="stylesheet" href="../smg.css" type="text/css">
-                    <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
-					<link media="screen" rel="stylesheet" href="../linked/css/colorbox.css" /> <!-- Modal ColorBox -->
-					<cfoutput>
+                    <cfoutput>
+                        <link rel="shortcut icon" href="#ATTRIBUTES.filePath#pics/favicon.ico" type="image/x-icon" />
+                        <link rel="stylesheet" href="#ATTRIBUTES.filePath#smg.css" type="text/css">
+                        <link rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
+                        <link media="screen" rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/colorbox.css" /> <!-- Modal ColorBox -->
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
                         <script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+						<script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
+                        <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/jquery.cfjs.js"></script> <!-- Coldfusion functions for jquery -->
+                        <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/basescript.js "></script> <!-- BaseScript -->
                     </cfoutput>        
-                    <script type="text/javascript" src="../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
-                    <script type="text/javascript" src="../linked/js/jquery.cfjs.js"></script> <!-- Coldfusion functions for jquery -->
-                    <script type="text/javascript" src="../linked/js/basescript.js "></script> <!-- BaseScript -->
                 </head>
                 <body>
             </cfcase>

@@ -34,12 +34,6 @@ var OpenHistory = function(url) {
 	if (window.focus) {newwindow.focus()}
 }
 
-//open placement management
-var OpenPlaceMan = function(url) {	
-	newwindow=window.open(url, 'Application', 'height=550, width=600, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=no'); 
-	if (window.focus) {newwindow.focus()}
-}
-
 // open online application 
 var OpenApp = function(url) {
 	newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
