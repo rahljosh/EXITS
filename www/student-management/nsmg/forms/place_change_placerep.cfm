@@ -1,20 +1,22 @@
 <link rel="stylesheet" href="smg.css" type="text/css">
 
 <cfif IsDefined('url.studentid')><cfelse>
-	<cfset url.studentid = #client.studentid#>
+	<cfset url.studentid = client.studentid>
 </cfif>
 
 <!--- Student Info --->
 <cfinclude template="../querys/get_student_info.cfm">
+
+<cfscript>
+	// Get Available Reps
+	qGetAvailableReps = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=get_student_info.regionAssigned);
+</cfscript>
 
 <cfquery name="get_region_assigned" datasource="MySQL">
 	SELECT regionname
 	FROM smg_regions
 	WHERE regionid = #get_student_info.regionassigned#
 </cfquery>
-
-<!--- get reps for students region --->
-<cfinclude template="../querys/get_available_reps.cfm">
 
 <!--- include template page header --->
 <cfinclude template="placement_status_header.cfm">
@@ -30,12 +32,13 @@
 <cfform action="../querys/update_change_placerep.cfm?studentid=#client.studentid#" method="post">
 <table width="580" align="center">
 <tr><td>				
-<cfselect name="placerepid">
-	<option value="0">Select Rep</option>
-	<cfoutput query="get_available_reps">
-			<option value=#userid#>#firstname# #lastname# (#userid#)</option>
-	</cfoutput>
-	</cfselect>
+        <select name="placerepid">
+            <cfoutput query="qGetAvailableReps">
+                    <option value="#qGetAvailableReps.userid#" <cfif qGetAvailableReps.userID EQ CLIENT.userID> selected="selected" </cfif> >
+                        #qGetAvailableReps.firstname# #qGetAvailableReps.lastname# (###qGetAvailableReps.userid#)
+                    </option>
+            </cfoutput>
+        </select>
 </td></tr>
 <tr><td>
 	Please indicate why you are changing the placing representative:<br>

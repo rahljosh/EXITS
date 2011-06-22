@@ -217,6 +217,84 @@
 	</cffunction>
 
 
+	<cffunction name="getSupervisedUsers" access="public" returntype="query" output="false" hint="Gets a list of supervised users">
+        <cfargument name="usertype" type="numeric" hint="usertype is required">
+        <cfargument name="userID" type="numeric" hint="userID is required">
+        <cfargument name="regionID" type="numeric" hint="companyID is required">
+        
+        <!--- Office Users --->
+        <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
+            
+            <!--- Get all users for a specific region --->  
+            <cfquery 
+                name="qGetSupervisedUsers" 
+                datasource="#APPLICATION.dsn#">
+                    SELECT
+                        u.*
+                    FROM 
+                    	smg_users u
+                    INNER JOIN 
+                    	user_access_rights uar ON uar.userid = u.userid
+                    WHERE 
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    AND 
+                    	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                    AND 
+                    	uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+                    ORDER BY 
+                    	u.lastname,
+                        u.firstName
+            </cfquery>
+
+		<cfelse>
+        
+            <cfquery 
+                name="qGetSupervisedUsers" 
+                datasource="#APPLICATION.dsn#">
+                    SELECT
+                        u.*
+                    FROM 
+                    	smg_users u
+                    INNER JOIN 
+                    	user_access_rights uar ON uar.userid = u.userid
+                    WHERE 
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    AND 
+                    	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                        
+                    <cfswitch expression="#ARGUMENTS.userType#">
+                    	
+                        <!--- Regional Manager --->
+                    	<cfcase value="5">
+                            AND 
+                                uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+                        </cfcase>
+                        
+                        <!--- Regional Advisor - Returns users under them --->
+                    	<cfcase value="6">
+                            AND 
+                                uar.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                        </cfcase>
+                        
+                    	<!--- Area Representative - Returns itself --->	
+                    	<cfcase value="7">
+                        	AND
+                            	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                        </cfcase>
+                        
+                    </cfswitch>
+
+                    ORDER BY 
+                    	u.lastname,
+                        u.firstName
+            </cfquery>
+        
+        </cfif>
+               
+		<cfreturn qGetSupervisedUsers>
+	</cffunction>
+
+
 	<cffunction name="getUserMemberByID" access="public" returntype="query" output="false" hint="Gets a user member by ID">
     	<cfargument name="ID" type="numeric" hint="ID is required">
         <cfargument name="userID" default="0" hint="userID is not required">
