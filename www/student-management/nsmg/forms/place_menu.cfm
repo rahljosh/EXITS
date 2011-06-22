@@ -220,7 +220,10 @@
                                 <cfif qGetStudentInfo.host_fam_approved EQ 99>
                                     <tr>
                                         <td align="center" colspan="3" font="red"> 
-                                            Placement has been <b><font color="##CC3300">R E J E C T E D</font></b> on #date_host_fam_approved# see the history below<br />
+                                            Placement has been <b><font color="##CC3300">R E J E C T E D</font></b> 
+                                            on #DateFormat(qGetStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# 
+                                            at #TimeFormat(qGetStudentInfo.date_host_fam_approved, 'hh:mm tt')# EST
+                                            see the history below<br />
                                         </td>
                                     </tr>
                                     <tr>
