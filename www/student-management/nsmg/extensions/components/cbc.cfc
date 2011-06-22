@@ -1638,11 +1638,77 @@
 
 	
     
-    <!--- In Compliance --->
+    <!--- CBC In Compliance --->
+	<cffunction name="hostCBCsubmittedUnderUser" access="public" returntype="query" output="false" hint="Cross data to get host CBCs submitted under user">
+        <cfargument name="firstName" type="string" hint="firstName is required">
+        <cfargument name="lastName" type="string" hint="lastName is required">
+        <cfargument name="dob" type="string" hint="dob is required">
+        <cfargument name="ssn" type="string" hint="ssn is required">
+
+		<!--- CROSS DATA - check if was submitted under a user --->
+        <cfquery name="qHostCBCsubmittedUnderUser" datasource="#application.dsn#">
+            SELECT DISTINCT 
+            	u.userid, 
+                u.firstName, 
+                u.lastName, 
+                cbc.requestid,
+                cbc.date_sent, 
+                cbc.date_received,
+                DATE_ADD(cbc.date_sent, INTERVAL 11 MONTH) AS expiration_date
+            FROM 
+            	smg_users u
+            INNER JOIN 
+            	smg_users_cbc cbc ON cbc.userid = u.userid
+            LEFT JOIN 
+            	smg_seasons ON smg_seasons.seasonid = cbc.seasonid
+            WHERE 
+            	cbc.familyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            AND
+                DATE_ADD(cbc.date_sent, INTERVAL 1 Year) >= CURRENT_DATE
+                                                   
+            <cfif isDate(ARGUMENTS.dob)>
+                AND 
+                    (
+                        (
+                        	u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.ssn#"> 
+                        AND 
+                        	u.ssn != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                         ) 
+                    OR 
+                        (
+                            u.firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.firstName#">
+                        AND 
+                            u.lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.lastName#">				
+                        AND 
+                            u.dob = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dob#">
+                        )
+                    )
+			<cfelse>
+                AND 
+                    (
+                        (
+                        	u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.ssn#"> 
+                        AND 
+                        	u.ssn != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                         ) 
+                    OR 
+                        (
+                            u.firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.firstName#">
+                        AND 
+                            u.lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.lastName#">				
+                        )
+                    )
+            </cfif>                
+        </cfquery>
+        
+        <cfreturn qHostCBCsubmittedUnderUser>
+    </cffunction>
+    
+    
 	<cffunction name="checkHostFamilyCompliance" access="public" returntype="string" output="false" hint="Check if a host family is in compliance">
         <cfargument name="hostID" type="numeric" hint="hostID is required">
         <cfargument name="studentID" type="numeric" default="0" hint="studentID is not required">
-  
+ 
 		<cfscript>
 			var returnMessage = '';
 			var vMissingMessage = '';
@@ -1651,18 +1717,32 @@
 			// Gets Host Family Information
 			qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
 
+			// Cross Data - Get CBC submitted under USER
+			qGetMotherCBCUnderUser = hostCBCsubmittedUnderUser(
+				firstName=qGetHost.motherFirstName,
+				lastName=qGetHost.motherLastName,
+				dob=qGetHost.motherDOB,
+				ssn=qGetHost.motherSSN);
+
+			// Cross Data - Get CBC submitted under USER
+			qGetFatherCBCUnderUser = hostCBCsubmittedUnderUser(
+				firstName=qGetHost.fatherFirstName,
+				lastName=qGetHost.fatherLastName,
+				dob=qGetHost.fatherDOB,
+				ssn=qGetHost.fatherSSN);
+			
 			// Get Eligible Family Member CBC
 			qGetEligibleMembers = getEligibleHostMember(hostID=ARGUMENTS.hostID, studentID=ARGUMENTS.studentID);
 			
 			// Check if CBCs are missing
 			qGetCBCMother = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='mother');
-			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) ) {
+			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) AND NOT VAL(qGetMotherCBCUnderUser.recordCount) ) {
 				// Store Missing CBC Message
 				vMissingMessage = vMissingMessage & "<p>Missing CBC for host mother</p>";
 			}
 			
 			qGetCBCFather = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='father');
-			if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND NOT VAL(qGetCBCFather.recordCount) ) {
+			if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND NOT VAL(qGetCBCFather.recordCount) AND NOT VAL(qGetFatherCBCUnderUser.recordCount) ) {
 				// Store Missing CBC Message
 				vMissingMessage = vMissingMessage & "<p>Missing CBC for host father</p>";
 			}
@@ -1687,17 +1767,17 @@
             // Check if CBCs are expired    
             qGetExpiredCBCMother = getExpiredHostCBC(cbcType='mother', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
             if ( qGetExpiredCBCMother.recordCount ) {            
-				vMissingMessage = vMissingMessage & "<p>Host mother - Expired on: #DateFormat(qGetExpiredCBCMother.expiration_date, 'mm/dd/yyyy')#</p>";
-			}
+				vMissingMessage = vMissingMessage & "<p>Host Mother - Expired on: #DateFormat(qGetExpiredCBCMother.expiration_date, 'mm/dd/yyyy')#</p>";
+			} 
 			
 			qGetExpiredCBCFather = getExpiredHostCBC(cbcType='father', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
             if ( qGetExpiredCBCFather.recordCount ) {
-				vMissingMessage = vMissingMessage & "<p>Host father - Expired on: #DateFormat(qGetExpiredCBCFather.expiration_date, 'mm/dd/yyyy')#</p>";
+				vMissingMessage = vMissingMessage & "<p>Host Father - Expired on: #DateFormat(qGetExpiredCBCFather.expiration_date, 'mm/dd/yyyy')#</p>";
 			}
 			
             qGetExpiredCBCMember = getExpiredHostCBC(cbcType='member', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
             if ( qGetExpiredCBCMember.recordCount ) {
-				vMissingMessage = vMissingMessage & "<p>Host member - Expired on: #DateFormat(qGetExpiredCBCMember.expiration_date, 'mm/dd/yyyy')#</p>";
+				vMissingMessage = vMissingMessage & "<p>Host Member - Expired on: #DateFormat(qGetExpiredCBCMember.expiration_date, 'mm/dd/yyyy')#</p>";
 			}
         </cfscript>
 
@@ -1725,7 +1805,7 @@
 
 		<cfreturn returnMessage>        
 	</cffunction>    
-    <!--- End of In Compliance --->
+    <!--- End of CBC In Compliance --->
 
 
 	
@@ -1796,7 +1876,7 @@
                     cbc.userID                
                 
                 HAVING
-                	 renewal_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#"> 
+                	 renewal_date <= CURRENT_DATE 
                      
                 ORDER BY                     
                     date_sent
@@ -1888,7 +1968,7 @@
                         AND 
                         	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 						AND
-                        	p.endDate > now()
+                        	p.endDate > CURRENT_DATE
                 WHERE 
                     cbc.hostID NOT IN 
                     ( 
@@ -1933,7 +2013,7 @@
                     cbc.hostid	
                 
                 HAVING
-                	renewal_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#"> 
+                	renewal_date <= CURRENT_DATE 
 				AND                
                     expiration_date <= p.endDate
                 AND	
