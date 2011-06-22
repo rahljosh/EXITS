@@ -134,8 +134,14 @@
 
 
 	<cffunction name="getEligibleHostMember" access="public" returntype="query" output="false" hint="Returns CBC for family members 17 years old and older">
-		<cfargument name="hostID" required="yes" hint="Host ID is required">
+		<cfargument name="hostID" required="yes" hint="HostID is required">
+        <cfargument name="studentID" default="0" hint="studentID is not required, pass to get only members that will not turn 18 during the program">
 
+			<cfscript>
+                // Get Student Program End Date
+                qGetProgramInfo = APPLICATION.CFC.PROGRAM.getProgramByStudentID(studentID=ARGUMENTS.studentID);
+			</cfscript>
+            
             <cfquery 
             	name="qGetEligibleHostMember" 
             	datasource="#APPLICATION.dsn#">
@@ -148,19 +154,27 @@
                         lastName, 
                         ssn, 
                         birthdate, 
-                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365)
+                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) AS age
                     FROM 
                         smg_host_children 
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
                     AND
                     	liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">                    
-                    AND 
-                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) >= 17
+                    
+					<cfif IsDate(qGetProgramInfo.endDate)> 
+                        <!--- Get only students that are turning 18 by the end of the program --->
+                        AND 
+                            FLOOR(DATEDIFF("#DateFormat(qGetProgramInfo.endDate, 'yyyy-mm-dd')#", birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                    <cfelse>                    
+                        AND 
+                            FLOOR(DATEDIFF(CURRENT_DATE, birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="17">
+                    </cfif>
+                    
                     ORDER BY 
                         childID
             </cfquery>
-
+			
 		<cfreturn qGetEligibleHostMember>
     </cffunction>
 
@@ -1638,9 +1652,8 @@
 			qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
 
 			// Get Eligible Family Member CBC
-			qGetEligibleMembers = getEligibleHostMember(hostID=ARGUMENTS.hostID);
-
-
+			qGetEligibleMembers = getEligibleHostMember(hostID=ARGUMENTS.hostID, studentID=ARGUMENTS.studentID);
+			
 			// Check if CBCs are missing
 			qGetCBCMother = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='mother');
 			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) ) {
@@ -1666,7 +1679,7 @@
 				
 				if ( NOT VAL(qGetCBCMember.recordCount) ) {
 					// Store Missing CBC Message
-					vMissingMessage = vMissingMessage & "<p>Missing CBC for host member #qGetEligibleMembers.name# #qGetEligibleMembers.lastName#</p>";
+					vMissingMessage = vMissingMessage & "<p>Missing CBC for host member #qGetEligibleMembers.name[i]# #qGetEligibleMembers.lastName[i]#</p>";
 				}
 				
             }

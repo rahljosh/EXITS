@@ -454,7 +454,7 @@
 		<div id="subMenuNav"> 
 			<div id="subMenuLinks">  
 				<!----All Users---->
-				<a href="javascript:OpenPlaceMan('forms/place_menu.cfm?studentID=#qGetStudentInfo.studentID#' , 'Settings', 'height=400, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes');">Placement Management</a>
+				<a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#qGetStudentInfo.studentID#', 800, 600);">Placement Management</a>
 	
 				<!--- OFFICE USERS ONLY --->
 				<cfif CLIENT.usertype LTE 4> 
