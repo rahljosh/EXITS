@@ -264,7 +264,13 @@
                                 </tr>
                                 <tr>
                                     <th align="right">Password:</th>
-                                    <td>#qGetHostLead.password#</td>
+                                    <td>
+                                    	<cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                        	#qGetHostLead.password#
+                                    	<cfelse>
+                                        	******
+                                        </cfif>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th align="right" valign="top">How did you hear about us :</th>
