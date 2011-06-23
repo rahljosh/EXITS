@@ -437,14 +437,18 @@
          			<!--- Office Users --->
 					<cfif CLIENT.usertype LTE 4>
 						<td>
-                            <table cellpadding="4" cellspacing="0" border="0">
-                                <tr><td>Submitted</td><td>Title</td><td>Status</td></Tr>
+                            <table cellpadding="4" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                	<td width="15%" style="font-weight:bold;">Submitted</td>
+                                    <td width="60%" style="font-weight:bold;">Title</td>
+                                    <td width="25%" style="font-weight:bold;">Status</td>
+                                </Tr>
                                 <cfif help_desk_user.recordcount>
                                     <cfloop query="help_desk_user">
                                         <tr bgcolor="#iif(help_desk_user.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
-                                            <td width="10%" valign="top">#DateFormat(date, 'mm/dd/yyyy')#</td>
-                                            <td width="21%"valign="top"><a href="?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">#title#</a></td>
-                                            <td width="10%"valign="top">#status#</td>
+                                            <td valign="top">#DateFormat(date, 'mm/dd/yyyy')#</td>
+                                            <td valign="top"><a href="?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">#title#</a></td>
+                                            <td valign="top">#status#</td>
                                         </tr>
                                     </cfloop>
                                 <cfelse>
