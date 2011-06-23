@@ -22,7 +22,7 @@
 	}
 	// open online application 
 	function OpenApp(url)
-	{
+	{get_region_info
 		newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
 		if (window.focus) {newwindow.focus()}
 	}
@@ -109,12 +109,21 @@
 <!---Facilitator--->
 <cfquery name="get_region_info" datasource="MySQL">
 	SELECT s.regionassigned,
-			r.regionname, r.regionfacilitator, r.regionid, r.company,
-			u.firstname, u.lastname 
-	from smg_students s 
-	INNER JOIN smg_regions r ON s.regionassigned = r.regionid
-	LEFT JOIN smg_users u ON r.regionfacilitator = u.userid
-	WHERE s.studentid = '#client.studentid#'
+			r.regionname, 
+            r.regionfacilitator, 
+            r.regionid, 
+            r.company,
+			u.firstname, 
+            u.lastname,
+            u.email
+	FROM 
+    	smg_students s 
+	INNER JOIN 
+    	smg_regions r ON s.regionassigned = r.regionid
+	LEFT JOIN 
+    	smg_users u ON r.regionfacilitator = u.userid
+	WHERE 
+    	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
 </cfquery>
 
 <cfquery name="get_super_rep" datasource="MySQL">
@@ -259,7 +268,7 @@
 			<table cellpadding="3" width="100%">
 				<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>:: </b></span>Program</td></tr>
 				<tr><td>Program :</td><td><cfif program.recordcount NEQ '0'>#program.programname#<cfelse>n/a</cfif></td></tr>
-				<tr><td>Facilitator :</td><td><cfif get_student_info.regionassigned is 0><div class="get_attention">No Region Assigned</div><cfelse>#get_region_info.firstname# #get_region_info.lastname#</cfif></td></tr>
+				<tr><td>Facilitator :</td><td><cfif get_student_info.regionassigned is 0><div class="get_attention">No Region Assigned</div><cfelse> <a href="mailto:#get_region_info.email#">#get_region_info.firstname# #get_region_info.lastname#</a></cfif></td></tr>
 				<tr><td>Supervising Rep. :</td><td><cfif get_Student_info.arearepid is 0 OR get_student_info.host_fam_approved GT 4>Not Assigned<cfelse>#get_super_rep.firstname# #get_super_rep.lastname#</cfif></td></tr>
 				<tr><td>Placing Rep. :</td><td><cfif get_Student_info.placerepid is 0 OR get_student_info.host_fam_approved GT 4>Not Assigned<cfelse>#get_place_rep.firstname# #get_place_rep.lastname#</cfif> </td></tr>												
 			</table>
