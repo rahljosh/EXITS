@@ -138,7 +138,7 @@
         <cfargument name="studentID" default="0" hint="studentID is not required, pass to get only members that will not turn 18 during the program">
 
 			<cfscript>
-                // Get Student Program End Date
+                // Get Student Program End Date - Remove 5 days from program end date to compensate for bissextile year
                 qGetProgramInfo = APPLICATION.CFC.PROGRAM.getProgramByStudentID(studentID=ARGUMENTS.studentID);
 			</cfscript>
             
@@ -165,7 +165,7 @@
 					<cfif IsDate(qGetProgramInfo.endDate)> 
                         <!--- Get only students that are turning 18 by the end of the program --->
                         AND 
-                            FLOOR(DATEDIFF("#DateFormat(qGetProgramInfo.endDate, 'yyyy-mm-dd')#", birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                            FLOOR(DATEDIFF("#DateFormat( DateAdd("d", -5, qGetProgramInfo.endDate), 'yyyy-mm-dd')#", birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
                     <cfelse>                    
                         AND 
                             FLOOR(DATEDIFF(CURRENT_DATE, birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="17">
