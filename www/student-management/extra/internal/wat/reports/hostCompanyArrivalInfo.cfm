@@ -201,7 +201,7 @@
 		
         <cfloop query="qGetHostCompany">
 			            
-            <table width="100%" cellpadding="6" cellspacing="0" align="center" style="border:1px solid ##CCC"> 
+            <table width="98%" cellpadding="3" cellspacing="0" align="center" style="margin-top:20px; border:1px solid ##4F8EA4">
                 <tr>
                     <td colspan="2">
                         <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetHostCompany.hostCompanyID#" target="_blank" class="companyTitle">

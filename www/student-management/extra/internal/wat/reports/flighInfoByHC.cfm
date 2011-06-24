@@ -280,7 +280,7 @@
                         </small>
                     </td>
                 </tr>
-                <tr>
+                <tr style="font-weight:bold;">
                     <td width="5%" align="left" bgcolor="4F8EA4" class="tableTitleView">ID</Td>
                     <td width="15%" align="left" bgcolor="4F8EA4" class="tableTitleView">Last Name</Td>
                     <td width="15%" align="left" bgcolor="4F8EA4" class="tableTitleView">First Name</Td>
@@ -308,17 +308,17 @@
                                 
 	                                <cfloop query="qGetFlightInfo"> 
                                         <tr>
-                                            <td width="34%" class="style1">
+                                            <td width="40%" class="style1">
 												<cfif qGetFlightInfo.isOvernightFlight EQ 1>
                                                     #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
                                                 <cfelse>
                                                     #qGetFlightInfo.departDate#
                                                 </cfif>
                                             </td>
-                                            <td width="33%" class="style1">
+                                            <td width="30%" class="style1">
                                                 #qGetFlightInfo.arriveAirportCode#
                                             </td>
-                                            <td width="33%" class="style1">
+                                            <td width="30%" class="style1">
                                                 #qGetFlightInfo.arriveTime#
                                             </td>
                                          </tr>  
