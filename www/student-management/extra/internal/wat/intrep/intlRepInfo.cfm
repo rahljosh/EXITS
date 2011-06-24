@@ -57,7 +57,7 @@
 	<cfparam name="FORM.password" default="">
     <!--- Documents Control --->
 	<cfparam name="FORM.watDocBusinessLicense" default="0">
-	<cfparam name="FORM.watDocBankrupcyDisclosure" default="0">
+	<cfparam name="FORM.watDocBankruptcyDisclosure" default="0">
 	<cfparam name="FORM.watDocWrittenReference1" default="0">
 	<cfparam name="FORM.watDocWrittenReference2" default="0">
 	<cfparam name="FORM.watDocWrittenReference3" default="0">
@@ -66,6 +66,7 @@
     <cfparam name="FORM.watDocEnglishCBC" default="0">
     <cfparam name="FORM.watDocOriginalAdvertisingMaterial" default="0">
     <cfparam name="FORM.watDocEnglishAdvertisingMaterial" default="0">
+    <cfparam name="FORM.watDocLetterNotEngageThirdParties" default="0">
 
     <cfscript>
 		// Get Intl. Rep.
@@ -243,7 +244,7 @@
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
                         <!--- Documents Control --->
                         watDocBusinessLicense = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBusinessLicense#">,
-                        watDocBankrupcyDisclosure = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBankrupcyDisclosure#">,
+                        watDocBankruptcyDisclosure = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBankruptcyDisclosure#">,
                         watDocWrittenReference1 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference1#">,
                         watDocWrittenReference2 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference2#">,
                         watDocWrittenReference3 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference3#">,
@@ -251,7 +252,8 @@
                         watDocOriginalCBC = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocOriginalCBC#">,
                         watDocEnglishCBC = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishCBC#">,
                         watDocOriginalAdvertisingMaterial = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocOriginalAdvertisingMaterial#">,
-                        watDocEnglishAdvertisingMaterial = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishAdvertisingMaterial#">
+                        watDocEnglishAdvertisingMaterial = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishAdvertisingMaterial#">,
+                        watDocLetterNotEngageThirdParties = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocLetterNotEngageThirdParties#">
                     WHERE
                         uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueID#">
                 </cfquery>
@@ -307,7 +309,7 @@
                         password,
                         <!--- Documents Control --->
                         watDocBusinessLicense,
-                        watDocBankrupcyDisclosure,
+                        watDocBankruptcyDisclosure,
                         watDocWrittenReference1,
                         watDocWrittenReference2,
                         watDocWrittenReference3,
@@ -316,6 +318,7 @@
                         watDocEnglishCBC,
                         watDocOriginalAdvertisingMaterial,
                         watDocEnglishAdvertisingMaterial,
+                        watDocLetterNotEngageThirdParties,
                         whoCreated,
                         datecreated
                     )                
@@ -360,7 +363,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
                         <!--- Documents Control --->
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBusinessLicense#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBankrupcyDisclosure#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBankruptcyDisclosure#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference1#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference2#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference3#">,
@@ -369,6 +372,7 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishCBC#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocOriginalAdvertisingMaterial#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishAdvertisingMaterial#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocLetterNotEngageThirdParties#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )
@@ -431,7 +435,7 @@
 				FORM.password = qGetIntlRepInfo.password;
 				// Documents Control
 				FORM.watDocBusinessLicense = qGetIntlRepInfo.watDocBusinessLicense;
-				FORM.watDocBankrupcyDisclosure = qGetIntlRepInfo.watDocBankrupcyDisclosure;
+				FORM.watDocBankruptcyDisclosure = qGetIntlRepInfo.watDocBankruptcyDisclosure;
 				FORM.watDocWrittenReference1 = qGetIntlRepInfo.watDocWrittenReference1;
 				FORM.watDocWrittenReference2 = qGetIntlRepInfo.watDocWrittenReference2;
 				FORM.watDocWrittenReference3 = qGetIntlRepInfo.watDocWrittenReference3;
@@ -440,7 +444,8 @@
 				FORM.watDocEnglishCBC = qGetIntlRepInfo.watDocEnglishCBC;
 				FORM.watDocOriginalAdvertisingMaterial = qGetIntlRepInfo.watDocOriginalAdvertisingMaterial;
 				FORM.watDocEnglishAdvertisingMaterial = qGetIntlRepInfo.watDocEnglishAdvertisingMaterial;
-
+				FORM.watDocLetterNotEngageThirdParties = qGetIntlRepInfo.watDocLetterNotEngageThirdParties;
+				
 			} else {
 				
 				// Login Information
@@ -761,10 +766,10 @@
                                         </tr>	
                                         <tr>
                                         	<td class="fieldTitle">
-                                            	<input type="checkbox" name="watDocBankrupcyDisclosure" id="watDocBankrupcyDisclosure" value="1" class="formField" disabled <cfif VAL(FORM.watDocBankrupcyDisclosure)> checked </cfif> >
+                                            	<input type="checkbox" name="watDocBankruptcyDisclosure" id="watDocBankruptcyDisclosure" value="1" class="formField" disabled <cfif VAL(FORM.watDocBankruptcyDisclosure)> checked </cfif> >
                                             </td>
                                             <td class="style1">
-                                                <label for="watDocBankrupcyDisclosure">Disclosure of any previous bankrupcy and of any pending legal actions</label>
+                                                <label for="watDocBankruptcyDisclosure">Disclosure of any previous bankruptcy and of any pending legal actions</label>
                                             </td>
                                         </tr>	
                                         <tr>
@@ -804,7 +809,7 @@
                                             	<input type="checkbox" name="watDocOriginalCBC" id="watDocOriginalCBC" value="1" class="formField" disabled <cfif VAL(FORM.watDocOriginalCBC)> checked </cfif> >
                                             </td>
                                             <td class="style1">
-                                                <label for="watDocOriginalCBC">Original criminal backgound check</label>
+                                                <label for="watDocOriginalCBC">Original criminal background check</label>
                                             </td>
                                         </tr>	
                                         <tr>
@@ -812,7 +817,7 @@
                                             	<input type="checkbox" name="watDocEnglishCBC" id="watDocEnglishCBC" value="1" class="formField" disabled <cfif VAL(FORM.watDocEnglishCBC)> checked </cfif> >
                                             </td>
                                             <td class="style1">
-                                                <label for="watDocEnglishCBC">English criminal backgound check</label>
+                                                <label for="watDocEnglishCBC">English criminal background check</label>
                                             </td>
                                         </tr>	
                                         <tr>
@@ -829,6 +834,14 @@
                                             </td>
                                             <td class="style1">
                                                 <label for="watDocEnglishAdvertisingMaterial">English copy of the sponsor-approved advertising materials</label>
+                                            </td>
+                                        </tr>	
+                                        <tr>
+                                        	<td class="fieldTitle">
+                                            	<input type="checkbox" name="watDocLetterNotEngageThirdParties" id="watDocLetterNotEngageThirdParties" value="1" class="formField" disabled <cfif VAL(FORM.watDocLetterNotEngageThirdParties)> checked </cfif> >
+                                            </td>
+                                            <td class="style1">
+                                                <label for="watDocLetterNotEngageThirdParties">Letter confirming that the organization will not engage in cooperation with third parties</label>
                                             </td>
                                         </tr>	
                                     </table>

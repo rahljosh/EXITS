@@ -34,7 +34,7 @@
                 u.businessname,
 				<!--- Documents Control --->
                 watDocBusinessLicense,
-                watDocBankrupcyDisclosure,
+                watDocBankruptcyDisclosure,
                 watDocWrittenReference1,
                 watDocWrittenReference2,
                 watDocWrittenReference3,
@@ -42,7 +42,8 @@
                 watDocOriginalCBC,
                 watDocEnglishCBC,
                 watDocOriginalAdvertisingMaterial,
-                watDocEnglishAdvertisingMaterial
+                watDocEnglishAdvertisingMaterial,
+                watDocLetterNotEngageThirdParties
             FROM 
                 smg_users u
                 
@@ -66,7 +67,7 @@
             AND (
                     u.watDocBusinessLicense = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
-                    u.watDocBankrupcyDisclosure = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                    u.watDocBankruptcyDisclosure = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
                     u.watDocWrittenReference1 = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
@@ -83,6 +84,8 @@
                     u.watDocOriginalAdvertisingMaterial = <cfqueryparam cfsqltype="cf_sql_integer" value="0">   
                 OR
                 	u.watDocEnglishAdvertisingMaterial = <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
+                OR
+                	u.watDocLetterNotEngageThirdParties = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 				)                    
             ORDER BY 
                 u.businessname 
@@ -177,15 +180,16 @@
                     <td valign="top" class="style1">#qGetResults.businessname#</td>
                     <td valign="top" class="style1" style="color:##CC0000">
                         <cfif NOT VAL(qGetResults.watDocBusinessLicense)>- Proof of business license<br /></cfif>
-                        <cfif NOT VAL(qGetResults.watDocBankrupcyDisclosure)>- Disclosure of any previous bankrupcy and of any pending legal actions<br /></cfif>
+                        <cfif NOT VAL(qGetResults.watDocBankruptcyDisclosure)>- Disclosure of any previous bankruptcy and of any pending legal actions<br /></cfif>
 						<cfif NOT VAL(qGetResults.watDocWrittenReference1)>- Written references from current business associates or partner organizations 1<br /></cfif>
 						<cfif NOT VAL(qGetResults.watDocWrittenReference2)>- Written references from current business associates or partner organizations 2<br /></cfif>
                         <cfif NOT VAL(qGetResults.watDocWrittenReference3)>- Written references from current business associates or partner organizations 3<br /></cfif>
 						<cfif NOT VAL(qGetResults.watDocPreviousExperience)>- Summary of previous experience conducting J-1 exchange visitor program activities<br /></cfif>
-                        <cfif NOT VAL(qGetResults.watDocOriginalCBC)>- Original criminal backgound check<br /></cfif>
-						<cfif NOT VAL(qGetResults.watDocEnglishCBC)>- English criminal backgound check<br /></cfif>
+                        <cfif NOT VAL(qGetResults.watDocOriginalCBC)>- Original criminal background check<br /></cfif>
+						<cfif NOT VAL(qGetResults.watDocEnglishCBC)>- English criminal background check<br /></cfif>
                         <cfif NOT VAL(qGetResults.watDocOriginalAdvertisingMaterial)>- Original copy of the sponsor-approved advertising materials<br /></cfif>
 						<cfif NOT VAL(qGetResults.watDocEnglishAdvertisingMaterial)>- English copy of the sponsor-approved advertising materials<br /></cfif>
+						<cfif NOT VAL(qGetResults.watDocLetterNotEngageThirdParties)>- Letter confirming that the organization will not engage in cooperation with third parties<br /></cfif>
                     </td>
                 </tr>
             </cfloop>
