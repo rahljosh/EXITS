@@ -173,6 +173,14 @@
             <!--- Email Regular Footer / It does not include the technical support information --->
             <cfcase value="emailRegular">
 
+                    #APPLICATION.CSB.WAT.name# <br />
+                    #APPLICATION.CSB.WAT.programName# <br />
+                    #APPLICATION.CSB.WAT.address# <br />
+                    #APPLICATION.CSB.WAT.city#, #APPLICATION.CSB.WAT.state# #APPLICATION.CSB.WAT.zipCode# <br />
+                    Phone: #APPLICATION.CSB.WAT.phone# <br />
+                    Toll Free: #APPLICATION.CSB.WAT.toolFreePhone# <br /> 
+                    <a href="#APPLICATION.SITE.URL.main#">#APPLICATION.SITE.URL.main#</a> <br /> 
+
                 </div>  <!--- End of class="form-container" --->
 
                 <div style="width:100%; height:20px; background-color:##FF7E0D;">

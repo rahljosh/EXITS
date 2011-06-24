@@ -6,6 +6,7 @@
     <!--- Param FORM Variables --->
 	<cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.hostCompanyID" default="0">
+	<cfparam name="FORM.flightType" default="Arrival">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
 
@@ -63,6 +64,8 @@
             	ehc.hostCompanyID
             ORDER BY
             	ehc.name
+
+	        LIMIT 100                
 		</cfquery>
 		
         <!--- Get All Candidates --->
@@ -150,18 +153,6 @@
 
 </cfsilent>
 
-<style type="text/css">
-<!--
-.tableTitleView {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
-	padding:2px;
-	color:#FFFFFF;
-	background:#4F8EA4;
-}
--->
-</style>
-
 <cfoutput>
 
 <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
@@ -198,6 +189,14 @@
             </td>
         </tr>
         <tr>
+            <td valign="middle" align="right" class="style1"><b>Flight Type: </b></td><td>
+                <select name="flightType" class="style1">
+                    <option value="Arrival" <cfif FORM.flightType EQ 'Arrival'> selected </cfif> >Arrival</option>
+                    <option value="Departure" <cfif FORM.flightType EQ 'Departure'> selected </cfif> >Departure</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td align="right" class="style1"><b>Format: </b></td>
             <td class="style1"> 
                 <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked="checked" </cfif> > <label for="printOption1">Onscreen (View Only)</label>
@@ -214,20 +213,11 @@
 
 </form>
 
-<br /><br />
+<br />
 
 <!--- Print --->
 <cfif FORM.submitted>
 	
-    <cfscript>
-		// On Screen
-		if (FORM.printOption EQ 1) {
-			tableTitleClass = 'tableTitleView';
-		} else {
-			tableTitleClass = 'style2';
-		}
-	</cfscript>
-
 	<cfsavecontent variable="reportContent">
 		
         <cfloop query="qGetHostCompany">
@@ -243,10 +233,9 @@
                 totalPerHostCompanyWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
             </cfscript>
 
-            <table width=99% cellpadding="4" cellspacing=0 align="center"> 
+            <table width="98%" cellpadding="3" cellspacing="0" align="center" style="margin-top:20px; margin-bottom:20px; border:1px solid ##4F8EA4"> 
                 <tr>
-                    <td colspan="12">
-                        <small>
+                    <td colspan="16">
                             <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
                             (
                                 #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
@@ -256,32 +245,39 @@
                         </small>
                     </td>
                 </tr>
-                <tr>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">ID</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Sex</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">DOB</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Email</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">SSN</Td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Start Date</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">End Date</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Intl. Rep.</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Option</td>
-                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">English Assessment CSB</td>
+                <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 11px; vertical-align:top;">
+                    <td>ID</Td>
+                    <td>Last Name</Td>
+                    <td>First Name</Td>
+                    <td>Sex</td>
+                    <td>DOB</Td>
+                    <td>Country</td>
+                    <td>Email</td>
+                    <td>SSN</Td>
+                    <td>Start Date</td>
+                    <td>End Date</td>
+                    <td>Intl. Rep.</td>
+                    <td>Option</td>
+                    <td>English Assessment CSB</td>
+                    <td>Arrival Date</td>
+                    <td>Airport</td>
+                    <td>Arrival Time</td>
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
-                    <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
+                	<cfscript>
+						// Get Flight Information
+						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType);
+					</cfscript>
+                    <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
-                        <td><span class="style1">#qTotalPerHostCompany.sex#</span></td>
-                        <td><span class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.countryname#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.email#</span></td>
+                        <td class="style1">#qTotalPerHostCompany.sex#</td>
+                        <td class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</td>
+                        <td class="style1">#qTotalPerHostCompany.countryname#</td>
+                        <td class="style1"><a href="mailto:#qTotalPerHostCompany.email#" class="style4">#qTotalPerHostCompany.email#</a></td>
                         <td>
-                        	<cfif LEN(qTotalPerHostCompany.SSN)>
+                        	<cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(qTotalPerHostCompany.SSN)>
                             	<span class="style1">#APPLICATION.CFC.UDF.decryptVariable(qTotalPerHostCompany.SSN)#</span>
                             </cfif>                        
                         </td>
@@ -294,20 +290,78 @@
                         <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.englishAssessment#</span></td>
+                        
+                        <td colspan="3">
+                        
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                            	<cfif qGetFlightInfo.recordCount>
+                                
+	                                <cfloop query="qGetFlightInfo"> 
+                                        <tr>
+                                            <td width="40%" class="style1">
+												<cfif qGetFlightInfo.isOvernightFlight EQ 1>
+                                                    #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
+                                                <cfelse>
+                                                    #qGetFlightInfo.departDate#
+                                                </cfif>
+                                            </td>
+                                            <td width="30%" class="style1">
+                                                #qGetFlightInfo.arriveAirportCode#
+                                            </td>
+                                            <td width="30%" class="style1">
+                                                #qGetFlightInfo.arriveTime#
+                                            </td>
+                                         </tr>  
+    								</cfloop>
+                                         
+                                <cfelse>
+                                	<tr>
+                                    	<td colspan="3" class="style1">
+		                                    n/a
+										</td>
+									</tr>                                                                                    
+                                </cfif>  
+							</table>  
+                        
+                        </td>
                     </tr>
+                	
+                	<!--- Seeking Employment - Display Reason --->
+                    <cfif qGetHostCompany.hostCompanyID EQ 195>
+                    
+                        <cfquery name="qGetHostHistory" datasource="MySql">
+                            SELECT  
+                            	reason_host
+                            FROM 
+                            	extra_candidate_place_company 
+                            WHERE 
+                            	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerHostCompany.candidateID#">
+                            AND	
+                            	reason_host != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                        </cfquery>
+
+                    	<tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                        	<td colspan="16" class="style1">
+                            	Reason: 
+                                <cfloop query="qGetHostHistory">
+                                	#qGetHostHistory.reason_host# <br />
+                                </cfloop>
+                            </td>
+                        </tr>
+                    </cfif>
+                    
                 </cfloop>
 
             </table>
-            <br />
          
 		</cfloop>
             
         <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #totalCSBPlacements#</div>	
         <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
         <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
+        <div class="style1"><strong>&nbsp; &nbsp; ---------------------------------------------</strong></div>
         <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>  		
+        <div class="style1"><strong>&nbsp; &nbsp; ---------------------------------------------</strong></div>  		
 		    	
     </cfsavecontent>
 
@@ -328,11 +382,6 @@
                 .style1 {
                     font-family: Verdana, Arial, Helvetica, sans-serif;
                     font-size: 10px;
-                    padding:2;
-                }
-                .style2 {
-                    font-family: Verdana, Arial, Helvetica, sans-serif;
-                    font-size: 8px;
                     padding:2;
                 }
                 .title1 {
@@ -365,11 +414,6 @@
             <style type="text/css">
             <!--
             .style1 {
-                font-family: Verdana, Arial, Helvetica, sans-serif;
-                font-size: 10px;
-                padding:2;
-            }
-            .style2 {
                 font-family: Verdana, Arial, Helvetica, sans-serif;
                 font-size: 10px;
                 padding:2;
