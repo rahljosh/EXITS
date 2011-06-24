@@ -11,8 +11,11 @@
 
 <cfscript>
 	/***** Create APPLICATION.CFC structure *****/
-	APPLICATION.CFC = StructNew();
-
+	
+	if ( NOT IsStruct(APPLICATION.CFC) ) {
+		APPLICATION.CFC = StructNew();
+	}
+	
 	// Set a short name for the CFCs
 	AppCFC = APPLICATION.CFC;
 
