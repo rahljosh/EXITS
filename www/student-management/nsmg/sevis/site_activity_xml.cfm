@@ -53,7 +53,10 @@
     	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">    
     AND 
     	s.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
-           
+    <!--- Get Only Students with a valid DS-2019 Number --->
+    AND
+    	s.ds2019_no LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="N%">
+                    
     <!--- Get only active records --->
     AND 
     	s.sevis_activated != <cfqueryparam cfsqltype="cf_sql_integer" value="0">        
@@ -74,11 +77,11 @@
     </cfif>
 
 	<cfif CLIENT.companyID EQ 10>
-    AND
-        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     <cfelse>
-    AND
-        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        AND
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
     </cfif>
    
 	ORDER BY 	    
