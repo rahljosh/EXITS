@@ -217,7 +217,7 @@
                 WHERE 
                     fi.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 AND
-                    fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                    fi.flight_type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival,preAypArrival" list="yes"> )
                 AND
                     ib.studentID IS NULL
                 GROUP BY 
