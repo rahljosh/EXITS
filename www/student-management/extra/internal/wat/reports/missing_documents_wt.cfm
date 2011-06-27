@@ -34,7 +34,7 @@
                 c.wat_placement, 
                 u.companyID, 
                 u.userID,
-                u.businessname,
+                u.businessName,
                 u.email AS intlRepEmail,
                 hc.name AS companyName
             FROM 
@@ -84,7 +84,7 @@
                 )
             ORDER BY 
                 c.wat_placement, 
-                u.businessname, 
+                u.businessName, 
                 c.firstname	
         </cfquery>
      
@@ -251,16 +251,17 @@
 				if ( VAL(FORM.emailIntlRep) AND IsValid("email", qGetCandidates.intlRepEmail) ) {
 					
 					// Send out Missing Documents Email
+					
 					APPLICATION.CFC.EMAIL.sendEmail(
 						emailFrom=APPLICATION.EMAIL.contactUs,
 						emailTo=qGetCandidates.intlRepEmail, // 'marcus@iseusa.com' | qGetCandidates.intlRepEmail
 						emailBCC=APPLICATION.EMAIL.watMissingDocuments,
 						emailMessage=reportIntlRepContent & "<br />",
 						emailTemplate='watMissingDocuments',
-						userID=qGetCandidates.userID,
+						businessName=qGetCandidates.businessName,
 						companyID=CLIENT.companyID,
 						footerType='emailRegular'
-					);					
+					);	
 
 				}
 			</cfscript>

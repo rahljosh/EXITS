@@ -266,7 +266,7 @@
                 <cfloop query="qTotalPerHostCompany">
                 	<cfscript>
 						// Get Flight Information
-						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType);
+						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType, getLastLeg=1);
 					</cfscript>
                     <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
@@ -296,24 +296,22 @@
                             <table width="100%" cellpadding="0" cellspacing="0">
                             	<cfif qGetFlightInfo.recordCount>
                                 
-	                                <cfloop query="qGetFlightInfo"> 
-                                        <tr>
-                                            <td width="40%" class="style1">
-												<cfif qGetFlightInfo.isOvernightFlight EQ 1>
-                                                    #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
-                                                <cfelse>
-                                                    #qGetFlightInfo.departDate#
-                                                </cfif>
-                                            </td>
-                                            <td width="30%" class="style1">
-                                                #qGetFlightInfo.arriveAirportCode#
-                                            </td>
-                                            <td width="30%" class="style1">
-                                                #qGetFlightInfo.arriveTime#
-                                            </td>
-                                         </tr>  
-    								</cfloop>
-                                         
+                                    <tr>
+                                        <td width="40%" class="style1">
+                                            <cfif qGetFlightInfo.isOvernightFlight EQ 1>
+                                                #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
+                                            <cfelse>
+                                                #qGetFlightInfo.departDate#
+                                            </cfif>
+                                        </td>
+                                        <td width="30%" class="style1">
+                                            #qGetFlightInfo.arriveAirportCode#
+                                        </td>
+                                        <td width="30%" class="style1">
+                                            #qGetFlightInfo.arriveTime#
+                                        </td>
+                                     </tr>  
+                                     
                                 <cfelse>
                                 	<tr>
                                     	<td colspan="3" class="style1">
@@ -338,6 +336,9 @@
                             	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerHostCompany.candidateID#">
                             AND	
                             	reason_host != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                            ORDER BY
+                            	candCompID DESC
+                            LIMIT 1		                           
                         </cfquery>
 
                     	<tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">

@@ -27,6 +27,7 @@
 	<cffunction name="getFlightInformationByCandidateID" access="public" returntype="query" output="false" hint="Returns flight information for a candidate">
     	<cfargument name="candidateID" required="yes" hint="candidateID is required">
         <cfargument name="flightType" required="yes" hint="arrival/departure">
+        <cfargument name="getLastLeg" default="0" hint="set to 1 to get the last leg only">
 
         <cfquery 
 			name="qGetFlightInformationByCandidateID" 
@@ -53,9 +54,18 @@
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(ARGUMENTS.candidateID)#">
                 AND
                     flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
-				ORDER BY	
-                	departDate,
-                    departTime                    
+
+				<cfif ARGUMENTS.getLastLeg>
+                    ORDER BY	
+                        departDate DESC,
+                        departTime DESC            
+					LIMIT 1
+				<cfelse>
+                    ORDER BY	
+                        departDate,
+                        departTime             
+                </cfif> 
+                                          		
 		</cfquery>
 
         <cfscript>
