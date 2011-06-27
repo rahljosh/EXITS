@@ -673,7 +673,11 @@
 		<cfscript>
 			var flightInfoReport = '';
         	
-			qGetStudentFullInformation = getStudentFullInformationByID(uniqueID=ARGUMENTS.uniqueID, programID=ARGUMENTS.programID);
+			if ( LEN(ARGUMENTS.uniqueID) ) {
+				qGetStudentFullInformation = getStudentFullInformationByID(uniqueID=ARGUMENTS.uniqueID, programID=ARGUMENTS.programID);
+			} else {
+				qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, programID=ARGUMENTS.programID);
+			}
 			
 			// Get School Information
 			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentFullInformation.schoolID);
@@ -688,10 +692,10 @@
             qGetDeletedFlightInfo = getFlightInformationByFlightID(flightID=VAL(ARGUMENTS.flightID));
             
             // Get Arrival
-            qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=VAL(qGetStudentFullInformation.programID), flightType="arrival");
+            qGetArrival = getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=VAL(qGetStudentFullInformation.programID), flightType="arrival");
     
             // Get Departure
-            qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=VAL(qGetStudentFullInformation.programID), flightType="departure");
+            qGetDeparture = getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=VAL(qGetStudentFullInformation.programID), flightType="departure");
 			
 			// DELETE OR COMMENT THIS
 			// flightEmailTo = 'marcus@iseusa.com';
@@ -958,8 +962,9 @@
             var flightEmailBody = '';
 			var flightInfoReport = '';
         	
+			// Get Student Info
 			qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, programID=ARGUMENTS.programID);
-			
+					
 			// Get School Information
 			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentFullInformation.schoolID);
 			
@@ -967,7 +972,7 @@
             qGetCurrentUser = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
             			
 			// Get Formatted Flight Information
-			flightInfoReport = APPLICATION.CFC.STUDENT.printFlightInformation(
+			flightInfoReport = printFlightInformation(
 				studentID=ARGUMENTS.studentID,
 				programID=ARGUMENTS.programID,
 				flightID=ARGUMENTS.flightID,
