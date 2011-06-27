@@ -31,6 +31,7 @@
         <cfargument name="intlRepID" type="numeric" default="0" hint="Used with the emailTemplate to get the Intl. Rep. Information">
         <cfargument name="companyID" type="numeric" default="0" hint="7=Trainee / 8=WAT">
         <cfargument name="userID" type="numeric" default="0" hint="User ID is not required">
+        <cfargument name="businessName" type="string" default="" hint="Intl. Rep. Business Name">
                
         <cfscript>
 			var csbEmailSubject = '';
@@ -420,7 +421,7 @@
                     </cfscript>
     
                     <cfsavecontent variable="stEmailStructure.message">
-                        <p>Dear #qGetIntlRep.businessName#-</p>
+                        <p>Dear #ARGUMENTS.businessName#-</p>
                         
                         <p>
                         	This is a notice that additional information is needed in order to adhere to United States Department of State regulations and to ensure that the 
@@ -457,6 +458,7 @@
         <cfargument name="companyID" type="numeric" default="0" hint="Company ID to get the correct subject/footer information">   
         <cfargument name="userID" type="numeric" default="0" hint="user ID in case we are emailing a user">    
         <cfargument name="footerType" type="string" default="email" hint="email / emailRegular">
+        <cfargument name="businessName" type="string" default="" hint="Intl. Rep. Business Name">
 		
 		<!--- Import CustomTag --->
 		<cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
@@ -471,7 +473,8 @@
 					emailTemplate=ARGUMENTS.emailTemplate, 
 					candidateID=ARGUMENTS.candidateID,
 					companyID=ARGUMENTS.companyID,
-					userID=ARGUMENTS.userID
+					userID=ARGUMENTS.userID,
+					businessName=ARGUMENTS.businessName
 				);
 				
 				ARGUMENTS.emailSubject = stGetEmailTemplate.subject;
