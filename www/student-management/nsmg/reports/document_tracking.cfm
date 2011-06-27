@@ -257,7 +257,7 @@
             repName,
             s.firstName            
     </cfquery> 
-   
+
     <cfquery name="qGetRepsInRegion" dbtype="query">
         SELECT DISTINCT	
             userID,
@@ -278,8 +278,8 @@
                 <td width="15%" align="center"><strong>#qGetAllStudentsInRegion.recordcount# student(s)</strong></td>
             </tr>
         </table>
-        
-        <cfif qGetAllStudentsInRegion.recordcount>
+
+		<cfif qGetAllStudentsInRegion.recordcount>
 
             <cfloop query="qGetRepsInRegion">
     
