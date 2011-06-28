@@ -876,7 +876,7 @@
                         </tr>
 
                         <!--- Do Not Display for PHP --->
-                        <cfif NOT ARGUMENTS.isPHPStudent>
+                        <cfif NOT VAL(ARGUMENTS.isPHPStudent)>
                             <tr>
                                 <td style="font-weight:bold; text-align:right; vertical-align:top;">International Representative:</td>
                                 <td>#qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)</td>
@@ -889,7 +889,7 @@
                         </tr>
                         
                         <!--- Do Not Display for PHP --->
-                        <cfif NOT ARGUMENTS.isPHPStudent>
+                        <cfif NOT VAL(ARGUMENTS.isPHPStudent)>
                             <tr>
                                 <td style="font-weight:bold; text-align:right; vertical-align:top;">Region:</td>
                                 <td>#qGetStudentFullInformation.regionName#</td>
@@ -962,7 +962,7 @@
                         </tr>
     
                         <!--- Do Not Display for PHP --->
-                        <cfif NOT ARGUMENTS.isPHPStudent>
+                        <cfif NOT VAL(ARGUMENTS.isPHPStudent)>
                             <tr>
                                 <td style="font-weight:bold; text-align:right; vertical-align:top;">Arrival/Departure Airport::</td>
                                 <td>

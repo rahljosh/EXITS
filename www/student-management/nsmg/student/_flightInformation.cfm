@@ -354,7 +354,7 @@
     
         <cfscript>
 			// Send out email notification to the regional manager
-			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, sendEmailTo='regionalManager');
+			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, sendEmailTo='regionalManager', isPHPStudent=VAL(qGetPHPStudentInfo.recordCount) );
 			
 			// Set Page Message
 			SESSION.pageMessages.Add("Flight Information emailed to the Regional Manager");
@@ -364,7 +364,7 @@
 
         <cfscript>
 			// Send out email notification to the current user
-			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, sendEmailTo='currentUser');
+			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, sendEmailTo='currentUser', isPHPStudent=VAL(qGetPHPStudentInfo.recordCount) );
 
 			// Set Page Message
 			SESSION.pageMessages.Add("Flight Information emailed to you");
