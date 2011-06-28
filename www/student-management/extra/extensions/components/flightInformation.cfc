@@ -155,8 +155,8 @@
                 AND
                     flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
 				ORDER BY	
-                	departDate,
-                    departTime                    
+                	departDate DESC,
+                    departTime DESC                   
 		</cfquery>
 
         <cfscript>

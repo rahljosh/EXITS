@@ -6,7 +6,6 @@
     <!--- Param FORM Variables --->
 	<cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.hostCompanyID" default="0">
-	<cfparam name="FORM.flightType" default="Arrival">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
 
@@ -189,14 +188,6 @@
             </td>
         </tr>
         <tr>
-            <td valign="middle" align="right" class="style1"><b>Flight Type: </b></td><td>
-                <select name="flightType" class="style1">
-                    <option value="Arrival" <cfif FORM.flightType EQ 'Arrival'> selected </cfif> >Arrival</option>
-                    <option value="Departure" <cfif FORM.flightType EQ 'Departure'> selected </cfif> >Departure</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
             <td align="right" class="style1"><b>Format: </b></td>
             <td class="style1"> 
                 <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked="checked" </cfif> > <label for="printOption1">Onscreen (View Only)</label>
@@ -233,7 +224,7 @@
                 totalPerHostCompanyWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
             </cfscript>
 
-            <table width="98%" cellpadding="3" cellspacing="0" align="center" style="margin-top:20px; margin-bottom:20px; border:1px solid ##4F8EA4"> 
+            <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
                 <tr>
                     <td colspan="16">
                             <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
@@ -259,15 +250,8 @@
                     <td>Intl. Rep.</td>
                     <td>Option</td>
                     <td>English Assessment CSB</td>
-                    <td>Arrival Date</td>
-                    <td>Airport</td>
-                    <td>Arrival Time</td>
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
-                	<cfscript>
-						// Get Flight Information
-						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType, getLastLeg=1);
-					</cfscript>
                     <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
@@ -290,38 +274,6 @@
                         <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.englishAssessment#</span></td>
-                        
-                        <td colspan="3">
-                        
-                            <table width="100%" cellpadding="0" cellspacing="0">
-                            	<cfif qGetFlightInfo.recordCount>
-                                
-                                    <tr>
-                                        <td width="40%" class="style1">
-                                            <cfif qGetFlightInfo.isOvernightFlight EQ 1>
-                                                #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
-                                            <cfelse>
-                                                #qGetFlightInfo.departDate#
-                                            </cfif>
-                                        </td>
-                                        <td width="30%" class="style1">
-                                            #qGetFlightInfo.arriveAirportCode#
-                                        </td>
-                                        <td width="30%" class="style1">
-                                            #qGetFlightInfo.arriveTime#
-                                        </td>
-                                     </tr>  
-                                     
-                                <cfelse>
-                                	<tr>
-                                    	<td colspan="3" class="style1">
-		                                    n/a
-										</td>
-									</tr>                                                                                    
-                                </cfif>  
-							</table>  
-                        
-                        </td>
                     </tr>
                 	
                 	<!--- Seeking Employment - Display Reason --->
@@ -342,8 +294,8 @@
                         </cfquery>
 
                     	<tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
-                        	<td colspan="16" class="style1">
-                            	Reason: 
+                        	<td colspan="16" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+                            	<strong>Reason:</strong> 
                                 <cfloop query="qGetHostHistory">
                                 	#qGetHostHistory.reason_host# <br />
                                 </cfloop>

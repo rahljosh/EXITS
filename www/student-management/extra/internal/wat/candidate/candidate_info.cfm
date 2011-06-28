@@ -520,7 +520,7 @@
                                         <tr>				
                                             <td class="style1" colspan="2">
             
-                                                <table width="100%" cellpadding="3" cellspacing="3" bordercolor="##C7CFDC" bgcolor="##F7F7F7">
+                                                <table width="100%" cellpadding="3" cellspacing="3" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
                                                     <tr>
                                                     	<td class="style1" align="right"><strong>Mailing Address:</strong></td>
                                                         <td class="style1">
@@ -593,7 +593,7 @@
                                         </tr>	
                                         <!--- Online App Field - Participant's English Level --->
                                         <tr>
-                                            <td class="style1" align="right"><strong><label for="#qGetQuestionsSection3.fieldKey[1]#">#qGetQuestionsSection3.displayField[1]# :</label></strong></td>
+                                            <td class="style1" align="right"><strong><label for="#qGetQuestionsSection3.fieldKey[1]#">#qGetQuestionsSection3.displayField[1]#:</label></strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#FORM[qGetQuestionsSection3.fieldKey[1]]# &nbsp;</span>
                                                 <select name="#qGetQuestionsSection3.fieldKey[1]#" id="#qGetQuestionsSection3.fieldKey[1]#" class="style1 editPage">
@@ -602,6 +602,13 @@
                                                         <option value="#i#" <cfif FORM[qGetQuestionsSection3.fieldKey[1]] EQ i> selected="selected" </cfif> >#i#</option>
                                                     </cfloop>
                                                 </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong><label for="#qGetQuestionsSection3.fieldKey[2]#">#qGetQuestionsSection3.displayField[2]#:</label></strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#FORM[qGetQuestionsSection3.fieldKey[2]]# &nbsp;</span>
+                                                <input name="#qGetQuestionsSection1.fieldKey[2]#" class="style1 editPage" value="#FORM[qGetQuestionsSection1.fieldKey[2]]#" type="text" size=32 maxlength="50">
                                             </td>
                                         </tr>
                                         <tr>
@@ -1255,6 +1262,15 @@
                                         		<input type="checkbox" name="verification_sevis" id="verification_sevis" value="1" class="formField" disabled <cfif VAL(qGetCandidate.verification_sevis)>checked="checked"</cfif> >
                                         	</td>
                                         </tr>
+                                        
+                                        <tr>
+                                        	<td class="style1" align="right"><label for="wat_checkIn"><strong>Check-In:</strong></label></td>
+                                        	<td class="style1">
+                                        		<input type="checkbox" name="wat_checkIn" id="wat_checkIn" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_checkIn)>checked="checked"</cfif> >
+                                        	</td>
+                                        </tr>
+
+                                        
                                         <tr>
                                         	<td class="style1" align="right"><label for="verification_arrival"><strong>Arrival Questionaire Received:</strong></label></td>
                                             <td class="style1">
