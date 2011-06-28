@@ -50,7 +50,7 @@
 		if ( FORM.submittedType EQ 'section3' ) {
 
 			// Date Interview
-			FORM[qGetQuestions.fieldKey[5]] = FORM.dateInterviewMonth & '/' & FORM.dateInterviewDay & '/' & FORM.dateInterviewYear;
+			FORM[qGetQuestions.fieldKey[4]] = FORM.dateInterviewMonth & '/' & FORM.dateInterviewDay & '/' & FORM.dateInterviewYear;
 
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
@@ -86,12 +86,12 @@
 			
 			if ( qGetAnswers.recordCount GTE 5 ) {
 				
-				FORM.dateInterview = FORM[qGetAnswers.fieldKey[5]];
+				FORM.dateInterview = FORM[qGetAnswers.fieldKey[4]];
 				// Break down interview date						
-				if ( IsDate(FORM[qGetAnswers.fieldKey[5]]) ) {
-					FORM.dateInterviewMonth = Month(FORM[qGetAnswers.fieldKey[5]]);
-					FORM.dateInterviewDay = Day(FORM[qGetAnswers.fieldKey[5]]);
-					FORM.dateInterviewYear = Year(FORM[qGetAnswers.fieldKey[5]]);
+				if ( IsDate(FORM[qGetAnswers.fieldKey[4]]) ) {
+					FORM.dateInterviewMonth = Month(FORM[qGetAnswers.fieldKey[4]]);
+					FORM.dateInterviewDay = Day(FORM[qGetAnswers.fieldKey[4]]);
+					FORM.dateInterviewYear = Year(FORM[qGetAnswers.fieldKey[4]]);
 				} 
 				
 			}
@@ -175,7 +175,7 @@
 			</cfif>
 		</div>
 
-		<!--- Test Score --->
+		<!--- Slep Score --->
 		<div class="field">
 			<label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label> 
             <cfif printApplication>
@@ -185,23 +185,13 @@
             </cfif>
 		</div>
 
-		<!--- Slep Score --->
+		<!--- Interviewer Name --->
 		<div class="field">
 			<label for="#qGetQuestions.fieldKey[3]#">#qGetQuestions.displayField[3]# <cfif qGetQuestions.isRequired[3]><em>*</em></cfif></label> 
             <cfif printApplication>
             	<div class="printField">#FORM[qGetQuestions.fieldKey[3]]# &nbsp;</div>
         	<cfelse>
                 <input type="text" name="#qGetQuestions.fieldKey[3]#" id="#qGetQuestions.fieldKey[3]#" value="#FORM[qGetQuestions.fieldKey[3]]#" class="#qGetQuestions.classType[3]#" maxlength="100" />
-            </cfif>
-		</div>
-
-		<!--- Interviewer Name --->
-		<div class="field">
-			<label for="#qGetQuestions.fieldKey[4]#">#qGetQuestions.displayField[4]# <cfif qGetQuestions.isRequired[4]><em>*</em></cfif></label> 
-            <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[4]]# &nbsp;</div>
-        	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[4]#" id="#qGetQuestions.fieldKey[4]#" value="#FORM[qGetQuestions.fieldKey[4]]#" class="#qGetQuestions.classType[4]#" maxlength="100" />
             </cfif>
 		</div>
 
@@ -213,7 +203,7 @@
        
         <!--- Date --->
         <div class="field">
-			<label for="dateInterviewMonth">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label>            
+			<label for="dateInterviewMonth">#qGetQuestions.displayField[4]# <cfif qGetQuestions.isRequired[4]><em>*</em></cfif></label>            
             <cfif printApplication>
 				<div class="printField">
                 	<cfif IsDate(FORM.dateInterview)>	
@@ -248,11 +238,11 @@
 
         <!--- Place --->
         <div class="field">
-			<label for="#qGetQuestions.fieldKey[6]#">#qGetQuestions.displayField[6]# <cfif qGetQuestions.isRequired[6]><em>*</em></cfif></label> 
+			<label for="#qGetQuestions.fieldKey[5]#">#qGetQuestions.displayField[5]# <cfif qGetQuestions.isRequired[5]><em>*</em></cfif></label> 
             <cfif printApplication>
-            	<div class="printField">#FORM[qGetQuestions.fieldKey[6]]# &nbsp;</div>
+            	<div class="printField">#FORM[qGetQuestions.fieldKey[5]]# &nbsp;</div>
         	<cfelse>
-                <input type="text" name="#qGetQuestions.fieldKey[6]#" id="#qGetQuestions.fieldKey[6]#" value="#FORM[qGetQuestions.fieldKey[6]]#" class="#qGetQuestions.classType[6]#" maxlength="100" />
+                <input type="text" name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" value="#FORM[qGetQuestions.fieldKey[5]]#" class="#qGetQuestions.classType[5]#" maxlength="100" />
             </cfif>
 		</div>
 

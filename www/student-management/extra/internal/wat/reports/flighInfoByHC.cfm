@@ -8,6 +8,7 @@
 	<cfparam name="FORM.programID" default="">
 	<cfparam name="FORM.flightType" default="Arrival">
     <cfparam name="FORM.isDisplayAll" default="1">
+    <cfparam name="FORM.getLastLeg" default="1">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
 
@@ -215,6 +216,14 @@
             </td>
         </tr>
         <tr>
+            <td valign="middle" align="right" class="style1"><b>Display Option: </b></td><td>
+                <select name="isDisplayAll" class="style1">
+                    <option value="1" <cfif FORM.isDisplayAll EQ 1> selected </cfif> >All Candidates</option>
+                    <option value="0" <cfif FORM.isDisplayAll EQ 0> selected </cfif> >Candidates with flight only</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td valign="middle" align="right" class="style1"><b>Flight Type: </b></td><td>
                 <select name="flightType" class="style1">
                     <option value="Arrival" <cfif FORM.flightType EQ 'Arrival'> selected </cfif> >Arrival</option>
@@ -223,12 +232,11 @@
             </td>
         </tr>
         <tr>
-            <td valign="middle" align="right" class="style1"><b>Display Option: </b></td><td>
-                <select name="isDisplayAll" class="style1">
-                    <option value="1" <cfif FORM.isDisplayAll EQ 1> selected </cfif> >All Candidates</option>
-                    <option value="0" <cfif FORM.isDisplayAll EQ 0> selected </cfif> >Candidates with flight only</option>
-                </select>
-            </td>
+            <td align="right" class="style1"><b>Flight Option: </b></td>
+            <td class="style1"> 
+                <input type="radio" name="getLastLeg" id="getLastLeg1" value="1" <cfif FORM.getLastLeg EQ 1> checked="checked" </cfif> > <label for="getLastLeg1">Last Flight Only</label>
+                <input type="radio" name="getLastLeg" id="getLastLeg2" value="0" <cfif FORM.getLastLeg EQ 0> checked="checked" </cfif> > <label for="getLastLeg2">Complete Flight Information</label> 
+            </td>            
         </tr>
         <tr>
             <td align="right" class="style1"><b>Format: </b></td>
@@ -247,7 +255,7 @@
 
 </form>
 
-<br /><br />
+<br />
 
 <!--- Print --->
 <cfif FORM.submitted>
@@ -267,33 +275,31 @@
                 totalPerHostCompanyWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
             </cfscript>
 
-            <table width=99% cellpadding="4" cellspacing=0 align="center"> 
+            <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
                 <tr>
                     <td colspan="12">
-                        <small>
-                            <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
-                            (
-                                #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
-                                #totalPerHostCompanySelfPlacements# Self; &nbsp; 
-                                #totalPerHostCompanyWalkInPlacements# Walk-In 
-                            )
-                        </small>
+                        <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
+                        (
+                            #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
+                            #totalPerHostCompanySelfPlacements# Self; &nbsp; 
+                            #totalPerHostCompanyWalkInPlacements# Walk-In 
+                        )
                     </td>
                 </tr>
                 <tr style="font-weight:bold;">
-                    <td width="5%" align="left" bgcolor="4F8EA4" class="tableTitleView">ID</Td>
-                    <td width="15%" align="left" bgcolor="4F8EA4" class="tableTitleView">Last Name</Td>
-                    <td width="15%" align="left" bgcolor="4F8EA4" class="tableTitleView">First Name</Td>
-                    <td width="15%" align="left" bgcolor="4F8EA4" class="tableTitleView">Country</td>
-                    <td width="20%" align="left" bgcolor="4F8EA4" class="tableTitleView">Intl. Rep.</td>
-                    <td width="10%" align="left" bgcolor="4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
-                    <td width="10%" align="left" bgcolor="4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
-                    <td width="10%" align="left" bgcolor="4F8EA4" class="tableTitleView">#FORM.flightType# Time</td>
+                    <td width="5%" align="left" bgcolor="##4F8EA4" class="tableTitleView">ID</Td>
+                    <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Last Name</Td>
+                    <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">First Name</Td>
+                    <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Country</td>
+                    <td width="20%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Intl. Rep.</td>
+                    <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
+                    <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
+                    <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Time / Flight ##</td>
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
                 	<cfscript>
 						// Get Flight Information
-						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType);
+						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType, getLastLeg=FORM.getLastLeg);
 					</cfscript>
                     <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
                         <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
@@ -319,7 +325,7 @@
                                                 #qGetFlightInfo.arriveAirportCode#
                                             </td>
                                             <td width="30%" class="style1">
-                                                #qGetFlightInfo.arriveTime#
+                                                #qGetFlightInfo.arriveTime# / #qGetFlightInfo.flightNumber#
                                             </td>
                                          </tr>  
     								</cfloop>
@@ -344,7 +350,6 @@
                 </cfloop>
 
             </table>
-            <br />
          
 		</cfloop>
             

@@ -864,7 +864,7 @@
         		
                 <div class="field">
                     <input type="radio" name="wat_placement" id="Walk-In" value="Walk-In" onclick="showHideRequestPlacement(this.value);" class="{validate:{required:true}}" <cfif ListFind(FORM.wat_placement, 'Walk-In')> checked="checked" </cfif> /> 
-                    <label for="Walk-In">Walk-In - (Limited - Valid solely for Argentina and Brazil)</label>
+                    <label for="Walk-In">Walk-In - (Limited - Valid solely for Visa Waiver Program countries)</label>
                 </div>
             </cfif>
 		</div>			
