@@ -793,11 +793,27 @@
 			var flightInfoReport = '';
 			
 			if ( NOT VAL(ARGUMENTS.isPHPStudent) ) {
+				
 				// Public - Get Student Information
 				qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, uniqueID=ARGUMENTS.uniqueID, programID=ARGUMENTS.programID);
+			
+				// Get School Information
+				qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolByID(schoolID=qGetStudentFullInformation.schoolID);
+				
+				// Get School Dates
+				qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentFullInformation.schoolID, programID=qGetStudentFullInformation.programID);
+				
 			} else {
+				
 				// PHP - Get Student Information
 				qGetStudentFullInformation = getPHPStudent(studentID=ARGUMENTS.studentID, uniqueID=ARGUMENTS.uniqueID, programID=ARGUMENTS.programID);
+
+				// PHP - Get School Information
+				qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getPHPSchoolByID(schoolID=qGetStudentFullInformation.schoolID);
+				
+				// PHP - Get School Dates
+				qGetSchoolDates = APPLICATION.CFC.SCHOOL.getPHPSchoolDates(schoolID=qGetStudentFullInformation.schoolID, programID=qGetStudentFullInformation.programID);
+
 			}
 			
 			// Path to save temp PDF files
@@ -807,12 +823,6 @@
 
 			// Get Host Family Information
 			qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentFullInformation.hostID);
-			
-			// Get School Information
-			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolByID(schoolID=qGetStudentFullInformation.schoolID);
-			
-			// Get School Dates
-			qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentFullInformation.schoolID, programID=qGetStudentFullInformation.programID);
 			
             // Get Current User
             qGetCurrentUser = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
@@ -864,12 +874,15 @@
                             <td width="150px;" style="font-weight:bold; text-align:right; vertical-align:top;">Student:</td>
                             <td>#qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)</td>
                         </tr>
-                        
-                        <tr>
-                            <td style="font-weight:bold; text-align:right; vertical-align:top;">International Representative:</td>
-                            <td>#qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)</td>
-                        </tr>
-                        
+
+                        <!--- Do Not Display for PHP --->
+                        <cfif NOT ARGUMENTS.isPHPStudent>
+                            <tr>
+                                <td style="font-weight:bold; text-align:right; vertical-align:top;">International Representative:</td>
+                                <td>#qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)</td>
+                            </tr>
+                        </cfif>
+                                                
                         <tr>
                             <td style="font-weight:bold; text-align:right; vertical-align:top;">Program:</td>
                             <td>#qGetStudentFullInformation.programName#</td>
