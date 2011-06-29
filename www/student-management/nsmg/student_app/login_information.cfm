@@ -1,6 +1,3 @@
-<!----
-<cftry>
----->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -51,41 +48,39 @@
 		<cfform name="login_info" action="login_information.cfm">
 		<cfinput type="hidden" name="unqid" value="#get_student_info.uniqueid#">
 		<tr><th colspan="2">Student : #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</th></tr>
+		
 		<!--- ACCOUNT IS NOT ACTIVE --->
 		<cfif get_student_info.email NEQ '' AND get_student_info.app_current_status EQ 1>
-		<tr><td colspan="2"><font size=-2>Student is not active - <a href="querys/resend_welcome_student.cfm?unqid=#get_student_info.uniqueid#&status=#get_student_info.app_current_status#">Resend Welcome email</A></font></td>
-		<tr><td width="25%">Email (username) :</td><td>#get_student_info.email#</td></tr>	
-		<tr><td colspan="2">* Email address can be changed on page 1 of the online application.</td></tr>
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><td colspan="2" align="center"><a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>
+            <tr><td colspan="2"><font size=-2>Student is not active - <a href="resendEmail.cfm?unqID=#get_student_info.uniqueid#&emailAction=welcomeEmail">Resend Welcome email</A></font></td>
+            <tr><td width="25%">Email (username) :</td><td>#get_student_info.email#</td></tr>	
+            <tr><td colspan="2">* Email address can be changed on page 1 of the online application.</td></tr>
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr><td colspan="2" align="center"><a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>
 		<!--- INTL. REP IS FILLING IT OUT --->
 		<cfelseif get_student_info.app_current_status EQ 5 OR get_student_info.password EQ ''>		
-		<tr><td colspan="2">#get_student_info.businessname# is filling out this application. <br> No login was created for this student.</td></td></tr>	
-		<tr><td colspan="2">If you would like to create a login for this student please fill out the forms below.</td></td></tr>	
-		<tr><td width="25%">Email (username) :</td><td><cfinput type="text" name="email" size="30" value="#get_student_info.email#" required="yes" message="Oops! Email is required and can not be blank, please enter a valid email." maxlength="50" validate="email" validateat="onserver,onsubmit"></td></tr>	
-		<tr><td>Password :</td><td><cfinput type="text" name="password" size="20" value="#get_student_info.password#" required="yes" message="Password is required and can not be blank." maxlength="10"></td></tr>
-		<tr><td colspan="2"><font size="-2">*Password must be at least 6 characters.</font></td></tr>				
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>
+            <tr><td colspan="2">#get_student_info.businessname# is filling out this application. <br> No login was created for this student.</td></td></tr>	
+            <tr><td colspan="2">If you would like to create a login for this student please fill out the forms below.</td></td></tr>	
+            <tr><td width="25%">Email (username) :</td><td><cfinput type="text" name="email" size="30" value="#get_student_info.email#" required="yes" message="Oops! Email is required and can not be blank, please enter a valid email." maxlength="50" validate="email" validateat="onserver,onsubmit"></td></tr>	
+            <tr><td>Password :</td><td><cfinput type="text" name="password" size="20" value="#get_student_info.password#" required="yes" message="Password is required and can not be blank." maxlength="10"></td></tr>
+            <tr><td colspan="2"><font size="-2">*Password must be at least 6 characters.</font></td></tr>				
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>
 		<!--- LOGIN INFORMATION --->
 		<cfelse>
-		<tr><td width="25%">Email (username) :</td><td><cfinput type="text" name="email" size="30" value="#get_student_info.email#" required="yes" message="Oops! Email is required and can not be blank, please enter a valid email." maxlength="50" validate="email" validateat="onserver,onsubmit"></td></tr>	
-		<tr><td>Password :</td><td><cfinput type="text" name="password" size="20" value="#get_student_info.password#" required="yes" message="Password is required and can not be blank." maxlength="100"></td></tr>
-		<tr><td colspan="2"><font size="-2">*Password must be at least 6 characters.</font></td></tr>				
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>
+            <tr><td width="25%">Email (username) :</td><td><cfinput type="text" name="email" size="30" value="#get_student_info.email#" required="yes" message="Oops! Email is required and can not be blank, please enter a valid email." maxlength="50" validate="email" validateat="onserver,onsubmit"></td></tr>	
+            <tr><td>Password :</td><td><cfinput type="text" name="password" size="20" value="#get_student_info.password#" required="yes" message="Password is required and can not be blank." maxlength="100"></td></tr>
+            <tr><td colspan="2"><font size="-2">*Password must be at least 6 characters.</font></td></tr>				
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>
 		</cfif>
+        
 		</cfform>
         
          <cfif URL.status neq 1>
-	<tr>
-		<td colspan=2 align="center"><a href="resend_student_login.cfm?unqid=#get_student_info.uniqueid#">Resend Login Info</a> - (if you changed the info, click save before clicking resend)</td>
-	</tr>
-    	<cfelse>
-        <tr><td colspan="2"><font size=-2>Student is not active - <a href="index.cfm?curdoc=student_app/querys/resend_welcome_student&unqid=#get_student_info.uniqueid#">Resend Welcome email</A></font></td>
-        </tr>
+            <tr>
+                <td colspan=2 align="center"><a href="resendEmail.cfm?unqID=#get_student_info.uniqueid#&emailAction=login">Resend Login Info</a> - (if you changed the info, click save before clicking resend)</td>
+            </tr>
     	</cfif>
-        
 
 	</table>		
 <cfelseif form.email EQ '' OR form.password EQ ''>
@@ -95,32 +90,31 @@
 		<tr><th colspan="2">Student : #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)</th></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr><td colspan="2"><font color="##FF0000">Email and Password must not be blank. Please enter the required information.</font></td></tr>
+		
 		<!--- ACCOUNT IS NOT ACTIVE --->
 		<cfif get_student_info.email NEQ '' AND get_student_info.app_current_status EQ 1>
-		<tr><td colspan="2"><font size=-2>Student is not active - <a href="index.cfm?curdoc=student_app/querys/resend_welcome_student&unqid=#get_student_info.uniqueid#">Resend Welcome email</A></font></td>
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><td colspan="2" align="center"><a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>						
+            <tr><td colspan="2"><font size=-2>Student is not active - <a href="resendEmail.cfm?unqID=#get_student_info.uniqueid#&emailAction=welcomeEmail">Resend Welcome email</A></font></td>
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr><td colspan="2" align="center"><a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>						
 		<!--- INTL. REP IS FILLING IT OUT --->
 		<cfelseif get_student_info.app_current_status EQ 5 OR get_student_info.password EQ ''>		
-		<tr><td colspan="2">#get_student_info.businessname# is filling out this application. <br> No login was created for this student.</td></td></tr>	
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><td colspan="2" align="center"><a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>				
+            <tr><td colspan="2">#get_student_info.businessname# is filling out this application. <br> No login was created for this student.</td></td></tr>	
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr><td colspan="2" align="center"><a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>				
 		<!--- LOGIN INFORMATION --->
 		<cfelse>
-		<tr><td width="25%">Email (username) :</td><td><cfinput type="text" name="email" size="30" value="#get_student_info.email#" required="yes" message="Oops! Email is required and can not be blank or please enter a valid email." maxlength="50" validate="email"></td></tr>	
-		<tr><td>Password :</td><td><cfinput type="text" name="password" size="20" value="#get_student_info.password#" required="yes" message="Password is required and can not be blank." maxlength="10"></td></tr>
-		<tr><td colspan="2"><font size="-2">*Password must be at least 6 characters.</font></td></tr>		
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>				
+            <tr><td width="25%">Email (username) :</td><td><cfinput type="text" name="email" size="30" value="#get_student_info.email#" required="yes" message="Oops! Email is required and can not be blank or please enter a valid email." maxlength="50" validate="email"></td></tr>	
+            <tr><td>Password :</td><td><cfinput type="text" name="password" size="20" value="#get_student_info.password#" required="yes" message="Password is required and can not be blank." maxlength="10"></td></tr>
+            <tr><td colspan="2"><font size="-2">*Password must be at least 6 characters.</font></td></tr>		
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr><td colspan="2" align="center"><cfinput name="Submit" type="image" src="pics/save.gif" border=0 alt="Update"> &nbsp; &nbsp; &nbsp; &nbsp; <a href="" onClick="javascript:window.close()"><img src="pics/close.gif" border="0"></a></td></tr>				
 		</cfif>
+        	
 		</cfform>
        <cfif URL.status neq 1>
-	<tr>
-		<td colspan=2 align="center"><a href="resend_student_login.cfm?unqid=#get_student_info.uniqueid#">Resend Login Info</a> - (if you changed the info, click save before clicking resend)</td>
-	</tr>
-    	<cfelse>
-        <tr><td colspan="2"><font size=-2>Student is not active - <a href="index.cfm?curdoc=student_app/querys/resend_welcome_student&unqid=#get_student_info.uniqueid#">Resend Welcome email</A></font></td>
-        </tr>
+            <tr>
+                <td colspan=2 align="center"><a href="resendEmail.cfm?unqID=#get_student_info.uniqueid#&emailAction=login">Resend Login Info</a> - (if you changed the info, click save before clicking resend)</td>
+            </tr>
     	</cfif>
 	</table>
 <cfelse>
@@ -207,9 +201,3 @@
 
 </body>
 </html>
-<!----
-<cfcatch type="any">
-	<cfinclude template="error_message.cfm">
-</cfcatch>
-</cftry>
----->

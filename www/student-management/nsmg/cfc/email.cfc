@@ -13,8 +13,7 @@
 		flash/login.cfm (forget password form), 
 		forms/pr_reject.cfm, 
 		forms/pr_email.cfm app_process/finalize_transfer.cfm, 		
-		student_app/resend_elcome_student.cfm, 
-		student_app/querys/resend_welcome_student.cfm
+		student_app/resendEmail.cfm
         student_app/querys/start_student.cfm
         student_app/querys/qr_deny_application.cfm
         student_app/querys/help_desk
