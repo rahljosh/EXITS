@@ -249,9 +249,11 @@
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Intl. Rep.</td>		
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Facilitator</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Arrival to Camp</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td>
+                <td style="border-bottom:1px solid #999; font-weight:bold;">Time</td>
+                <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td>                
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Departure to Host</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td>
+                <td style="border-bottom:1px solid #999; font-weight:bold;">Time</td>
+                <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td>                
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Pre-AYP Camp</td>
             </tr>
     
@@ -288,23 +290,22 @@
                             <cfelse>
                                 #DateFormat(qGetPreAypArrival.dep_date, 'mm/dd/yy')#
                             </cfif>
-                            
-                            <cfif LEN(qGetPreAypArrival.arrival_time)>
-                                 at #TimeFormat(qGetPreAypArrival.arrival_time, 'hh:mm tt')#
-                            </cfif>
+                        </td>
+                        <td style="border-bottom:1px solid ##999; vertical-align:top;">
+                            #TimeFormat(qGetPreAypArrival.arrival_time, 'hh:mm tt')#
                         </td>                    
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">
                             <cfif LEN(qGetPreAypArrival.dep_city)>
-                                From #qGetPreAypArrival.dep_city# #qGetPreAypArrival.dep_aircode# <br />
+                                From #qGetPreAypArrival.dep_city# #qGetPreAypArrival.dep_aircode#
                             </cfif>
                             
                             <cfif LEN(qGetPreAypArrival.arrival_city)>
-                                to #qGetPreAypArrival.arrival_city# #qGetPreAypArrival.arrival_aircode# <br />
+                                to #qGetPreAypArrival.arrival_city# #qGetPreAypArrival.arrival_aircode#
                             </cfif>
                             
                             <cfif LEN(qGetPreAypArrival.flight_number)>
                                Flight #qGetPreAypArrival.flight_number#
-                            </cfif> <br />
+                            </cfif>
                         </td>
                         <!--- Arrival to HF --->
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">
@@ -313,23 +314,22 @@
                             <cfelse>
                                 #DateFormat(qGetArrival.dep_date, 'mm/dd/yy')#
                             </cfif>
-                            
-                            <cfif LEN(qGetArrival.arrival_time)>
-                                 at #TimeFormat(qGetArrival.arrival_time, 'hh:mm tt')#
-                            </cfif>
                         </td>
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">
+							#TimeFormat(qGetArrival.arrival_time, 'hh:mm tt')#
+                        </td>                                            
+                        <td style="border-bottom:1px solid ##999; vertical-align:top;">
                             <cfif LEN(qGetArrival.dep_city)>
-                                From #qGetArrival.dep_city# #qGetArrival.dep_aircode# <br />
+                                From #qGetArrival.dep_city# #qGetArrival.dep_aircode#
                             </cfif>
                             
                             <cfif LEN(qGetArrival.arrival_city)>
-                                to #qGetArrival.arrival_city# #qGetArrival.arrival_aircode# <br />
+                                to #qGetArrival.arrival_city# #qGetArrival.arrival_aircode#
                             </cfif>
                             
                             <cfif LEN(qGetArrival.flight_number)>
                                Flight #qGetArrival.flight_number#
-                            </cfif> <br />
+                            </cfif>
                         </td>
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.englishcamp#</td>
                     </tr>							
