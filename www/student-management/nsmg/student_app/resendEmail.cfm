@@ -100,8 +100,8 @@
             </cfsavecontent>
 
 			<cfscript>
-				vEmailSubject = '#CLIENT.companyshort# Exchange Application - Login Information';
-				vSuccessfullMessage = 'EXITS - You have successfully resent the login information for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#. Thank You.';				
+				vEmailSubject = '#CLIENT.companyshort# Student Exchange Application - Login Information';
+				vSuccessfullMessage = '#CLIENT.companyshort# Student Exchange Application - You have successfully resent the login information for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#. Thank You.';				
 			</cfscript>
             
 		</cfcase>
@@ -152,8 +152,8 @@
             </cfsavecontent>
 
 			<cfscript>
-				vEmailSubject = 'EXITS - Online Student Application - Account Activation Required';
-				vSuccessfullMessage = 'EXITS - You have successfully resent the welcome email for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#. Thank You.';					
+				vEmailSubject = '#CLIENT.companyshort# Student Exchange Application - Account Activation Required';
+				vSuccessfullMessage = '#CLIENT.companyshort# Student Exchange Application - You have successfully resent the welcome email for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#. Thank You.';					
 			</cfscript>
 
 		</cfcase>
