@@ -15,6 +15,7 @@
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.verification_arrival" default="0">
 <cfparam name="FORM.transfer" default="0">
+<cfparam name="FORM.watDateCheckedIn" default="">
 <!--- Placement Information --->
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
@@ -319,8 +320,9 @@
         <!---  Arrival Verification  --->
         verification_address = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_address#">,
         verification_sevis = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_sevis#">,
-        verification_arrival = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_arrival#">
-            
+        verification_arrival = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_arrival#">,
+        watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">
+
     WHERE 
     	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
 </cfquery>

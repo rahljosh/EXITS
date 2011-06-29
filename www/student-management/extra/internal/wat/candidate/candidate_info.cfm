@@ -1262,20 +1262,18 @@
                                         		<input type="checkbox" name="verification_sevis" id="verification_sevis" value="1" class="formField" disabled <cfif VAL(qGetCandidate.verification_sevis)>checked="checked"</cfif> >
                                         	</td>
                                         </tr>
-                                        
-                                        <tr>
-                                        	<td class="style1" align="right"><label for="wat_checkIn"><strong>Check-In:</strong></label></td>
-                                        	<td class="style1">
-                                        		<input type="checkbox" name="wat_checkIn" id="wat_checkIn" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_checkIn)>checked="checked"</cfif> >
-                                        	</td>
-                                        </tr>
-
-                                        
                                         <tr>
                                         	<td class="style1" align="right"><label for="verification_arrival"><strong>Arrival Questionaire Received:</strong></label></td>
                                             <td class="style1">
                                                 <input type="checkbox" name="verification_arrival" id="verification_arrival" value="1" class="formField" disabled <cfif VAL(qGetCandidate.verification_arrival)>checked="checked"</cfif> >
                                             </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><label for="watDateCheckedIn"><strong>Checked-In Date:</strong></label></td>
+                                        	<td class="style1">
+                                                <span class="readOnly">#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="watDateCheckedIn" id="watDateCheckedIn" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#" maxlength="10">
+                                        	</td>
                                         </tr>
                         			</table>
                                     
