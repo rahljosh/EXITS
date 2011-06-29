@@ -870,6 +870,88 @@
 
 
 	<!-------------------------------------------------- 
+		Check-In Update Tool
+	--------------------------------------------------->
+	<cffunction name="getCheckInToolStudentList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
+    	<cfargument name="intRep" default="0" hint="International Representative is not required">
+        <cfargument name="programID" default="0" hint="programID is not required">
+        
+        <cfquery 
+			name="qGetCheckInToolStudentList" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					ec.candidateID,
+                    ec.firstName,
+                    ec.middleName,
+                    ec.lastName,
+					CASE 
+                    	WHEN ec.sex = 'f' THEN 'female' 
+                        WHEN ec.sex = 'm' THEN 'male' 
+                        ELSE '' END AS sex,
+                    DATE_FORMAT(ec.dob, '%m/%e/%Y') as dob,
+                    DATE_FORMAT(ec.startDate, '%m/%e/%Y') as startDate,
+                    DATE_FORMAT(ec.endDate, '%m/%e/%Y') as endDate,
+                    IFNULL(u.businessName, '') AS businessName,
+                    IFNULL(p.programName, '') AS programName,
+                    IFNULL(c.countryName, '') AS countryName
+                FROM 
+                    extra_candidates ec
+				INNER JOIN
+                	smg_users u ON u.userID = ec.intRep
+                LEFT OUTER JOIN
+                	smg_programs p ON p.programID = ec.programID
+				LEFT OUTER JOIN
+                    smg_countrylist c ON c.countryid = ec.residence_country  
+                WHERE
+                    ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                AND
+                	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND    
+                    ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+				AND
+                	ec.watDateCheckedIn IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                AND
+		        	ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+                
+				<cfif VAL(ARGUMENTS.intRep)>
+                    AND
+                        ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.programID)>
+                    AND
+                        ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                </cfif>
+                
+			ORDER BY
+            	ec.lastName,
+                ec.firstName
+		</cfquery>
+		   
+		<cfreturn qGetCheckInToolStudentList>
+	</cffunction>
+    
+    
+	<cffunction name="confirmCheckInReceived" access="remote" returntype="void" hint="Updates a candidate record.">
+        <cfargument name="candidateID" required="yes" hint="candidateID is required">
+
+        <cfquery 
+			datasource="#APPLICATION.DSN.Source#">
+                UPDATE
+					extra_candidates
+				SET
+                    watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                WHERE
+                    candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+		</cfquery>
+		   
+	</cffunction>
+	<!-------------------------------------------------- 
+		End of Check-In Update Tool
+	--------------------------------------------------->
+
+
+	<!-------------------------------------------------- 
 		Candidate Profile Update Tool
 	--------------------------------------------------->
 	<cffunction name="getEnglishAssessmentToolList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
@@ -912,7 +994,6 @@
                 	ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
                 AND
 		        	ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
-				
                 
 				<cfif VAL(ARGUMENTS.intRep)>
                     AND
@@ -935,6 +1016,7 @@
 		   
 		<cfreturn qGetEnglishAssessmentToolList>
 	</cffunction>
+    
     
 	<cffunction name="updateEnglishAssessmentByID" access="remote" returntype="void" hint="Updates a candidate record.">
         <cfargument name="candidateID" required="yes" hint="candidateID is required">

@@ -14,6 +14,8 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="/extra/extensions/customTags/gui/" prefix="gui" /> 
+
+    <cfsetting requesttimeout="9999">
     
     <cfscript>
 		// Get All International Representatives List
@@ -87,7 +89,7 @@
 		
 		if( verList.DATA.length == 0) {
 			// No data returned, display message
-			$("#verificationList").append("<tr><th colspan='11'>Your search did not return any results.</th></tr>");
+			$("#verificationList").append("<tr><th colspan='10'>Your search did not return any results.</th></tr>");
 		}
 		
 		// Loop over results and build the grid
@@ -243,32 +245,6 @@
 	}
 	// --- END OF STUDENT DETAILS --- //
 	
-	
-	// --- START OF VERICATION RECEIVED --- //
-	var setVerificationReceived = function(candidateID) {
-		
-		// Create an instance of the proxy. 
-		var c = new candidate();
-
-		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
-		c.setCallbackHandler(verificationReceived(candidateID)); 
-		c.setErrorHandler(myErrorHandler); 
-		
-		// This time, pass the intlRep ID to the getCandidateList CFC function. 
-		c.confirmVerificationReceived(candidateID);
-		
-	}
-	
-	var verificationReceived = function(candidateID) {
-		
-		// Set up page message, fade in and fade out after 2 seconds
-		$("#candidateDetailMessage").text("Verification report for candidate #" + candidateID + " received").fadeIn().fadeOut(3000);
-
-		// Fade out record from search list
-		$("#" + candidateID).fadeOut("slow");
-		
-	}
-	// --- END OF VERICATION RECEIVED --- //
 
 	// Error handler for the asynchronous functions. 
 	var myErrorHandler = function(statusCode, statusMsg) { 

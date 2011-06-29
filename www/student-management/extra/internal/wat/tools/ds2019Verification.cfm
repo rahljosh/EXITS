@@ -15,6 +15,8 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="/extra/extensions/customTags/gui/" prefix="gui" /> 
+
+    <cfsetting requesttimeout="9999">
     
     <cfscript>
 		if ( ListFind("1,2,3,4", CLIENT.userType) ) {
