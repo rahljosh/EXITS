@@ -478,13 +478,15 @@
                 
                 	<cfcase value="firstLeg">
                         ORDER BY 
-                            dep_date
+                            dep_date ASC,
+                            dep_time ASC
 						LIMIT 1                            
                     </cfcase>
 
                 	<cfcase value="lastLeg">
                         ORDER BY 
-                            dep_date DESC
+                            dep_date DESC,
+                            dep_time DESC
 						LIMIT 1                            
                     </cfcase>
 
