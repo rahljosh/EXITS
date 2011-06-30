@@ -54,10 +54,10 @@
             eh.zip,
             eh.db_number,
             eh.comp_received,
-            eh.workSiteAddress,
-            eh.workSiteCity,
-            eh.workSiteState,
-            eh.workSiteZip,
+            eh.hqAddress,
+            eh.hqCity,
+            eh.hqState,
+            eh.hqZip,
             eh.phone, 
             eh.fax,
             eh.email,
@@ -76,13 +76,13 @@
             eh.arrivalInstructions,
             et.business_type as typeBusiness, 
             s.stateName as stateName,  
-            workSiteS.stateName as workSiteStateName            
+            workSiteS.stateName as hqStateName            
         FROM 
         	extra_hostcompany eh
         LEFT OUTER JOIN 
         	smg_states s ON eh.state = s.ID
         LEFT OUTER JOIN 
-        	smg_states workSiteS ON eh.workSiteState = workSiteS.ID
+        	smg_states workSiteS ON eh.hqState = workSiteS.ID
         LEFT OUTER JOIN 
         	extra_typebusiness et ON et.business_typeID = eh.business_typeID
         WHERE 
