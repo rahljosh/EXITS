@@ -20,8 +20,8 @@
     
     <cfscript>
 		if ( ListFind("1,2,3,4", CLIENT.userType) ) {
-			// Get All International Representatives List
-			qIntlRep = APPLICATION.CFC.USER.getUsers(userType=8, getAll=0);	
+			// Get International Representatives List
+			qIntlRep = APPLICATION.CFC.USER.getIntlRepAssignedToCandidate();	
 		} else {
 			// Get Current International Representatives List
 			qIntlRep = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);	

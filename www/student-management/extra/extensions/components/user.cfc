@@ -27,7 +27,6 @@
 	<cffunction name="getUsers" access="public" returntype="query" output="false" hint="Gets a list of users, if usertype is passed gets users by usertype">
     	<cfargument name="usertype" default="0" hint="usertype is not required">
         <cfargument name="isActive" default="1" hint="isActive is not required">
-        <cfargument name="getAll" default="1" hint="getAll is not required. Set to 0 to get only users that are assigned to candidates">
 		       
         <cfquery 
 			name="qGetUsers" 
@@ -46,22 +45,7 @@
                 
                 <cfif LEN(ARGUMENTS.isActive)>
                 	AND
-                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
-                </cfif>
-                
-                <cfif NOT VAL(ARGUMENTS.getAll)>
-                	AND
-                    	userID IN 	
-                        ( 
-                            SELECT
-                                intRep
-                            FROM
-                                extra_candidates
-                            WHERE
-                                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                            GROUP BY
-                                intRep
-                        )                                                
+                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
                 </cfif>
                 
 				<cfif VAL(ARGUMENTS.usertype)>
@@ -74,6 +58,33 @@
 		</cfquery>
 		   
 		<cfreturn qGetUsers>
+	</cffunction>
+
+
+	<cffunction name="getIntlRepAssignedToCandidate" access="public" returntype="query" output="false" hint="Gets a list of intl. reps">
+
+        <cfquery 
+			name="qGetIntlRepAssignedToCandidate" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					u.*
+                FROM 
+                    smg_users u
+                INNER JOIN
+                	extra_candidates c ON c.intRep = u.userID
+                WHERE
+                    c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                AND	
+                    c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND
+                	u.businessName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                GROUP BY
+                	u.userID
+                ORDER BY
+                	u.businessName
+		</cfquery>
+
+		<cfreturn qGetIntlRepAssignedToCandidate>
 	</cffunction>
 
 	
