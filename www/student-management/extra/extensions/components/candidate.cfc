@@ -996,7 +996,8 @@
                 	ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
                 AND
 		        	ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
-                
+                AND
+                	ec.englishAssessment = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 				<cfif VAL(ARGUMENTS.intRep)>
                     AND
                         ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
