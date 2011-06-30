@@ -13,7 +13,6 @@
 <cfparam name="FORM.wat_doc_other" default="">
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
-<cfparam name="FORM.verification_arrival" default="0">
 <cfparam name="FORM.transfer" default="0">
 <cfparam name="FORM.watDateCheckedIn" default="">
 <!--- Placement Information --->
@@ -22,7 +21,7 @@
 <cfparam name="FORM.selfConfirmationMethod" default="">
 <cfparam name="FORM.selfAuthentication" default="">
 <cfparam name="FORM.EIN" default="">
-<cfparam name="FORM.selfWorkmanCompensation" default="">
+<cfparam name="FORM.selfWorkmenCompensation" default="">
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfFindJobOffer" default="">
 <cfparam name="FORM.selfConfirmationNotes" default="">
@@ -320,7 +319,6 @@
         <!---  Arrival Verification  --->
         verification_address = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_address#">,
         verification_sevis = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_sevis#">,
-        verification_arrival = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_arrival#">,
         watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">
 
     WHERE 

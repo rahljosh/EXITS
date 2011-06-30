@@ -201,8 +201,30 @@
 
 <script type='text/javaScript'>
 	$(document).ready(function() {
+		
 		$(".formField").attr("disabled","disabled");
 		displaySelfPlacementInfo();
+		
+		// Pop Up Application 
+		$('.popUpOnlineApplication').popupWindow({ 
+			height:600, 
+			width:1100,
+			centerBrowser:1,
+			scrollbars:1,
+			resizable:1,
+			windowName:'onlineApplication'
+		}); 
+		
+		// Pop Up Flight Information 
+		$('.popUpFlightInformation').popupWindow({ 
+			height:600, 
+			width:1100,
+			centerBrowser:1,
+			scrollbars:1,
+			resizable:1,
+			windowName:'flightInformation'
+		}); 
+			
 	});
 
 	function populateDate(dateValue) {
@@ -1263,12 +1285,6 @@
                                         	</td>
                                         </tr>
                                         <tr>
-                                        	<td class="style1" align="right"><label for="verification_arrival"><strong>Arrival Questionaire Received:</strong></label></td>
-                                            <td class="style1">
-                                                <input type="checkbox" name="verification_arrival" id="verification_arrival" value="1" class="formField" disabled <cfif VAL(qGetCandidate.verification_arrival)>checked="checked"</cfif> >
-                                            </td>
-                                        </tr>
-                                        <tr>
                                         	<td class="style1" align="right"><label for="watDateCheckedIn"><strong>Checked-In Date:</strong></label></td>
                                         	<td class="style1">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#</span>
@@ -1380,25 +1396,3 @@
 </cfform>
 
 </cfoutput>
-
-<script type="text/javascript">
-// Pop Up Application 
-$('.popUpOnlineApplication').popupWindow({ 
-	height:600, 
-	width:1100,
-	centerBrowser:1,
-	scrollbars:1,
-	resizable:1,
-	windowName:'onlineApplication'
-}); 
-
-// Pop Up Flight Information 
-$('.popUpFlightInformation').popupWindow({ 
-	height:600, 
-	width:1100,
-	centerBrowser:1,
-	scrollbars:1,
-	resizable:1,
-	windowName:'flightInformation'
-}); 
-</script>

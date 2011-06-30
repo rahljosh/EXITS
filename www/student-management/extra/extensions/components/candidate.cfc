@@ -880,7 +880,8 @@
 			name="qGetCheckInToolStudentList" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
-					ec.candidateID,
+					ec.uniqueID,
+                    ec.candidateID,
                     ec.firstName,
                     ec.middleName,
                     ec.lastName,
@@ -940,7 +941,8 @@
                 UPDATE
 					extra_candidates
 				SET
-                    watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                    watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                    verification_sevis = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
                 WHERE
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
 		</cfquery>
