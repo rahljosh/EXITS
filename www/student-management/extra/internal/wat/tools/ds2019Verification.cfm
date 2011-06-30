@@ -79,21 +79,21 @@
 		
 		// Create Table Header
 		var tableHeader = '';		
-		tableHeader += "<tr>";
-        	tableHeader += "<td class='listTitle style2'>ID</td>";
-        	tableHeader += "<td class='listTitle style2'>Last Name</td>";
-			tableHeader += "<td class='listTitle style2'>First Name</td>";
-        	tableHeader += "<td class='listTitle style2'>Middle Name</td>";        	
-        	tableHeader += "<td class='listTitle style2'>Gender</td>";
-        	tableHeader += "<td class='listTitle style2'>DOB <br /> (mm/dd/yyyy)</td>";                                                            
-            tableHeader += "<td class='listTitle style2'>City of <br /> Birth</td>";                                                          
-            tableHeader += "<td class='listTitle style2'>Country of <br /> Birth</td>";                                                           
-            tableHeader += "<td class='listTitle style2'>Country of <br /> Citizenship</td>"; 
-            tableHeader += "<td class='listTitle style2'>Country of <br /> Residence</td>"; 
-			tableHeader += "<td class='listTitle style2'>Program <br /> Start Date</td>";
-			tableHeader += "<td class='listTitle style2'>Program <br /> End Date</td>";
-            tableHeader += "<td class='listTitle style2' align='center'>Actions</td>";                                                          
-		tableHeader += "</tr>";
+		tableHeader += '<tr>';
+        	tableHeader += '<td class="listTitle style2">ID</td>';
+        	tableHeader += '<td class="listTitle style2">Last Name</td>';
+			tableHeader += '<td class="listTitle style2">First Name</td>';
+        	tableHeader += '<td class="listTitle style2">Middle Name</td>';        	
+        	tableHeader += '<td class="listTitle style2">Gender</td>';
+        	tableHeader += '<td class="listTitle style2">DOB <br /> (mm/dd/yyyy)</td>';                                                            
+            tableHeader += '<td class="listTitle style2">City of <br /> Birth</td>';                                                          
+            tableHeader += '<td class="listTitle style2">Country of <br /> Birth</td>';                                                           
+            tableHeader += '<td class="listTitle style2">Country of <br /> Citizenship</td>'; 
+            tableHeader += '<td class="listTitle style2">Country of <br /> Residence</td>'; 
+			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
+			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
+            tableHeader += '<td class="listTitle style2" align="center">Actions</td>';                                                          
+		tableHeader += '</tr>';
 		
 		// Append Table Header to HTML
 		$("#verificationList").append(tableHeader);
@@ -121,26 +121,25 @@
 
 			// Create Table Rows
 			var tableBody = '';	
-			
 				if (i % 2 == 0) {
-					tableBody += "<tr id='" + candidateID + "' class='rowOff'>";
+					tableBody += '<tr id="' + candidateID + '" class="rowOff">';
 				} else {
-					tableBody += "<tr id='" + candidateID + "' class='rowOn'>";
+					tableBody += '<tr id="' + candidateID + '" class="rowOn">';
 				}
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>#" + candidateID + "</a></td>"
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + lastName + "</a></td>"
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + firstName + "</a></td>"
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + middleName + "</a></td>"				
-				tableBody += "<td class='style5'>" + sex + "</td>"
-				tableBody += "<td class='style5'>" + dob + "</td>"
-				tableBody += "<td class='style5'>" + birthCity + "</td>"
-				tableBody += "<td class='style5'>" + countryBirth + "</td>"
-				tableBody += "<td class='style5'>" + countryCitizen + "</td>"
-				tableBody += "<td class='style5'>" + countryResident + "</td>"
-				tableBody += "<td class='style5'>" + startDate + "</td>"
-				tableBody += "<td class='style5'>" + endDate + "</td>"
-				tableBody += "<td align='center' class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>[Edit]</a> | <a href='javascript:setVerificationReceived(" + candidateID + ");' class='style4'>[Received]</a></td>"
-			tableBody += "</tr>";
+				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">#' + candidateID + '</a></td>';
+				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">' + lastName + '</a></td>';
+				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">' + firstName + '</a></td>';
+				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">' + middleName + '</a></td>';			
+				tableBody += '<td class="style5">' + sex + '</td>';
+				tableBody += '<td class="style5">' + dob + '</td>';
+				tableBody += '<td class="style5">' + birthCity + '</td>';
+				tableBody += '<td class="style5">' + countryBirth + '</td>';
+				tableBody += '<td class="style5">' + countryCitizen + '</td>';
+				tableBody += '<td class="style5">' + countryResident + '</td>';
+				tableBody += '<td class="style5">' + startDate + '</td>';
+				tableBody += '<td class="style5">' + endDate + '</td>';
+				tableBody += '<td align="center" class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">[Edit]</a> | <a href="javascript:setVerificationReceived(' + candidateID + ');" class="style4">[Received]</a></td>';
+			tableBody += '</tr>';
 			// Append table rows
 			$("#verificationList").append(tableBody);
 		} 

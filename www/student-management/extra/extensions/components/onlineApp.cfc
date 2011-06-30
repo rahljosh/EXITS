@@ -46,7 +46,7 @@
 	<cffunction name="isCurrentUserLoggedIn" output="false" access="public" returntype="boolean"  description="Returns whether or not user is logged in">
 		
         <cfscript>
-			 if ( structkeyexists(SESSION,"CANDIDATE") AND VAL(SESSION.CANDIDATE.isLoggedIn) ) {
+			 if ( structkeyexists(SESSION,"CANDIDATE") AND VAL(SESSION.CANDIDATE.isLoggedIn) AND VAL(SESSION.CANDIDATE.ID) ) {
 				return true;
 			 } else {
 				return false;				 

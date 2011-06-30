@@ -23,19 +23,39 @@
     <cfparam name="FORM.name" default="">
     <cfparam name="FORM.business_typeID" default="">
     <cfparam name="FORM.businessTypeOther" default="">
+    <!--- Work Site Address --->
     <cfparam name="FORM.address" default="">
     <cfparam name="FORM.city" default="">
     <cfparam name="FORM.state" default="">
     <cfparam name="FORM.zip" default="">
-    <cfparam name="FORM.workSiteAddress" default="">
-    <cfparam name="FORM.workSiteCity" default="">
-    <cfparam name="FORM.workSiteState" default="">
-    <cfparam name="FORM.workSiteZip" default="">
+    <!--- HQ Address --->
+    <cfparam name="FORM.hqAddress" default="">
+    <cfparam name="FORM.hqCity" default="">
+    <cfparam name="FORM.hqState" default="">
+    <cfparam name="FORM.hqZip" default="">
+    <!--- Housing Information --->
+    <cfparam name="FORM.isHousingProvided" default="0">
+	<cfparam name="FORM.housingProvidedInstructions" default="">    
     <cfparam name="FORM.housing_options" default="">
     <cfparam name="FORM.housing_cost" default="">
+	<!--- Primary Contact --->    
+    <cfparam name="FORM.supervisor" default="">
+    <cfparam name="FORM.phone" default="">
+    <cfparam name="FORM.cellPhone" default="">
+    <cfparam name="FORM.fax" default="">
+    <cfparam name="FORM.email" default="">
+    <!--- Supervisor --->    
+    <cfparam name="FORM.supervisor_name" default="">
+    <cfparam name="FORM.supervisor_phone" default="">
+    <cfparam name="FORM.supervisor_cellPhone" default="">
+    <cfparam name="FORM.supervisor_email" default="">
+    <!--- Other Information --->    
+    <cfparam name="FORM.personJobOfferName" default="">
+    <cfparam name="FORM.personJobOfferTitle" default="">
+    <cfparam name="FORM.EIN" default="">
+    <cfparam name="FORM.homepage" default="">
+    <cfparam name="FORM.observations" default="">
 	<!--- Arrival Information --->    
-    <cfparam name="FORM.isHousingProvided" default="0">
-    <cfparam name="FORM.housingProvidedInstructions" default="">
     <cfparam name="FORM.isPickUpProvided" default="0">
     <cfparam name="FORM.arrivalAirport" default="">
 	<cfparam name="FORM.arrivalAirportCity" default="">    
@@ -46,17 +66,6 @@
     <cfparam name="FORM.pickUpContactPhone" default="">    
     <cfparam name="FORM.pickUpContactEmail" default="">
     <cfparam name="FORM.pickUpContactHours" default="">
-	<!--- Supervisor --->    
-    <cfparam name="FORM.supervisor" default="">
-    <cfparam name="FORM.phone" default="">
-    <cfparam name="FORM.fax" default="">
-    <cfparam name="FORM.email" default="">
-    <cfparam name="FORM.supervisor_name" default="">
-    <cfparam name="FORM.supervisor_phone" default="">
-    <cfparam name="FORM.supervisor_email" default="">
-    <cfparam name="FORM.EIN" default="">
-    <cfparam name="FORM.homepage" default="">
-    <cfparam name="FORM.observations" default="">
     
     <cfquery name="qGetHostCompanyInfo" datasource="MySql">
         SELECT 
@@ -67,18 +76,22 @@
             eh.city, 
             eh.state,
             eh.zip,
-            eh.workSiteAddress,
-            eh.workSiteCity,
-            eh.workSiteState,
-            eh.workSiteZip,
+            eh.hqAddress,
+            eh.hqCity,
+            eh.hqState,
+            eh.hqZip,
             eh.phone, 
+            eh.cellPhone,
             eh.fax,
             eh.email,
             eh.supervisor,
             eh.supervisor_name,
-            eh.supervisor_phone, 
+            eh.supervisor_phone,
+            eh.supervisor_cellPhone, 
             eh.supervisor_email, 
             eh.homepage,
+            eh.personJobOfferName,
+            eh.personJobOfferTitle,
             eh.EIN,
             eh.observations,
             eh.housing_options,
@@ -100,14 +113,14 @@
             eh.pickUpContactHours,
             et.business_type as typeBusiness, 
             s.stateName,  
-            workSiteS.stateName as workSiteStateName,
+            workSiteS.stateName as hqStateName,
             airportS.stateName as arrivalAirportStateName            
         FROM 
         	extra_hostcompany eh
         LEFT OUTER JOIN 
         	smg_states s ON eh.state = s.ID
         LEFT OUTER JOIN 
-        	smg_states workSiteS ON eh.workSiteState = workSiteS.ID
+        	smg_states workSiteS ON eh.hqState = workSiteS.ID
         LEFT OUTER JOIN 
         	smg_states airportS ON eh.arrivalAirportState = airportS.ID
         LEFT OUTER JOIN 
@@ -115,7 +128,7 @@
         WHERE 
         	eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
     </cfquery>
-
+	
     <cfquery name="qGetenteredBy" datasource="MySql">
         SELECT 
         	firstname, 
@@ -142,10 +155,14 @@
     
     <cfquery name="qGetHousing" datasource="MySql">
         SELECT 
-        	type, 
-            id
+        	ID,
+            type
         FROM 
-        	extra_housing							
+        	extra_housing	
+        WHERE	
+        	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	
+        ORDER BY
+        	type					
     </cfquery>
 
     <cfquery name="qGetBusinessType" datasource="MySql">
@@ -168,6 +185,18 @@
       	ORDER BY
         	stateName
     </cfquery>
+
+    <cfquery name="qGetWorkSiteState" dbtype="query">
+        SELECT 
+        	id, 
+            state, 
+            stateName
+        FROM 
+        	qGetStateList
+      	WHERE
+        	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.state)#">
+    </cfquery>
+
     
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
@@ -266,7 +295,7 @@
         <cfif NOT SESSION.formErrors.length()>
         
 			<cfif VAL(FORM.hostCompanyID)>
-                
+
                 <!--- Update --->
                 <cfquery datasource="MySql">
                     UPDATE 
@@ -274,18 +303,39 @@
                     SET 
                         name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
                         business_typeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.business_typeID#">,
+                        <!--- Work Site Address --->
                         address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
                         state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
                         zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
-                        workSiteAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteAddress#">,
-                        workSiteCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteCity#">,
-                        workSiteState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workSiteState#">,
-                        workSiteZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteZip#">,
-                        housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
-                        housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        <!--- HQ Address --->
+                        hqAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqAddress#">,
+                        hqCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqCity#">,
+                        hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
+                        hqZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
+                        <!--- Housing Information --->
                         isHousingProvided = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isHousingProvided)#">,
                         housingProvidedInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
+                        housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
+                        housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        <!--- Contact --->
+                        supervisor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
+                        phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        cellPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cellPhone#">,
+                        fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
+                        email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+                        <!--- Supervisor --->
+                        supervisor_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
+                        supervisor_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
+                        supervisor_cellPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_cellPhone#">,
+                        supervisor_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
+                        <!--- Other Information --->
+                        personJobOfferName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
+                        personJobOfferTitle = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
+                        EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
+                        homepage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
+                        observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        <!--- Arrival Information --->
                         isPickUpProvided = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isPickUpProvided)#">,
                         arrivalAirport = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirport#">,
                         arrivalAirportCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirportCity#">,
@@ -295,17 +345,7 @@
                         pickUpContactName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactName#">,
                         pickUpContactPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactPhone#">,
                         pickUpContactEmail = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactEmail#">,
-                        pickUpContactHours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
-                        supervisor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
-                        phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
-                        fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
-                        email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
-                        supervisor_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
-                        supervisor_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
-                        supervisor_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
-                        EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
-                        homepage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
-                        observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">
+                        pickUpContactHours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">
                     WHERE
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
@@ -320,18 +360,39 @@
                         companyID,
                         name,
                         business_typeID,
+                        <!--- Work Site Address --->
                         address,
                         city,
                         state,
                         zip,
-                        workSiteAddress,
-                        workSiteCity,
-                        workSiteState,
-                        workSiteZip,
-                        housing_options,
-                        housing_cost,
+                        <!--- HQ Address --->
+                        hqAddress,
+                        hqCity,
+                        hqState,
+                        hqZip,
+                        <!--- Housing Information --->
                         isHousingProvided,
                         housingProvidedInstructions,
+                        housing_options,
+                        housing_cost,
+                        <!--- Contact --->
+                        supervisor,
+                        phone,
+                        cellPhone,
+                        fax,
+                        email,
+                        <!--- Supervisor --->
+                        supervisor_name,
+                        supervisor_phone,
+                        supervisor_cellPhone,
+                        supervisor_email,
+                        <!--- Other Information --->
+                        personJobOfferName,
+                        personJobOfferTitle,
+                        EIN,
+                        homepage,
+                        observations,
+                        <!--- Arrival Information --->
                         isPickUpProvided,
                         arrivalAirport,
                         arrivalAirportCity,
@@ -342,16 +403,7 @@
                         pickUpContactPhone,
                         pickUpContactEmail,
                         pickUpContactHours,
-                        supervisor,
-                        phone,
-                        fax,
-                        email,
-                        supervisor_name,
-                        supervisor_phone,
-                        supervisor_email,
-                        EIN,
-                        homepage,
-                        observations,
+                        <!--- Record Information --->
                         entryDate,
                         enteredBy
                     )                
@@ -360,18 +412,39 @@
                     	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.business_typeID#">,
+                        <!--- Work Site Address --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteAddress#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteCity#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workSiteState#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workSiteZip#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        <!--- HQ Address --->
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqAddress#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqCity#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
+						<!--- Housing Information --->
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isHousingProvided)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        <!--- Contact --->
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cellPhone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+                        <!--- Supervisor --->
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_cellPhone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
+						<!--- Other Information --->
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        <!--- Arrival Information --->
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isPickUpProvided)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirport#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirportCity#">,
@@ -382,16 +455,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactPhone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactEmail#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        <!--- Record Information --->
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                     )
@@ -421,19 +485,39 @@
 			// Escape Double Quotes
 			FORM.name = APPLICATION.CFC.UDF.escapeQuotes(qGetHostCompanyInfo.name);
 			FORM.business_typeID = qGetHostCompanyInfo.business_typeID;
+			// Work Site Address
 			FORM.address = qGetHostCompanyInfo.address;
 			FORM.city = qGetHostCompanyInfo.city;
 			FORM.state = qGetHostCompanyInfo.state;
 			FORM.zip = qGetHostCompanyInfo.zip;
-			FORM.EIN = qGetHostCompanyInfo.EIN;
-			FORM.workSiteAddress = qGetHostCompanyInfo.workSiteAddress;
-			FORM.workSiteCity = qGetHostCompanyInfo.workSiteCity;
-			FORM.workSiteState = qGetHostCompanyInfo.workSiteState;
-			FORM.workSiteZip = qGetHostCompanyInfo.workSiteZip;
-			FORM.housing_options = qGetHostCompanyInfo.housing_options;
-			FORM.housing_cost = qGetHostCompanyInfo.housing_cost;
+			// HQ Address
+			FORM.hqAddress = qGetHostCompanyInfo.hqAddress;
+			FORM.hqCity = qGetHostCompanyInfo.hqCity;
+			FORM.hqState = qGetHostCompanyInfo.hqState;
+			FORM.hqZip = qGetHostCompanyInfo.hqZip;
+			// Housing Information
 			FORM.isHousingProvided = qGetHostCompanyInfo.isHousingProvided;
 			FORM.housingProvidedInstructions = qGetHostCompanyInfo.housingProvidedInstructions;
+			FORM.housing_options = qGetHostCompanyInfo.housing_options;
+			FORM.housing_cost = qGetHostCompanyInfo.housing_cost;
+			// Primary Contact
+			FORM.supervisor = qGetHostCompanyInfo.supervisor;
+			FORM.phone = qGetHostCompanyInfo.phone;
+			FORM.cellPhone = qGetHostCompanyInfo.cellPhone;
+			FORM.fax = qGetHostCompanyInfo.fax;
+			FORM.email = qGetHostCompanyInfo.email;
+			// Supervisor
+			FORM.supervisor_name = qGetHostCompanyInfo.supervisor_name;
+			FORM.supervisor_phone = qGetHostCompanyInfo.supervisor_phone;
+			FORM.supervisor_cellPhone = qGetHostCompanyInfo.supervisor_cellPhone;
+			FORM.supervisor_email = qGetHostCompanyInfo.supervisor_email;
+			// Other Information
+			FORM.personJobOfferName = qGetHostCompanyInfo.personJobOfferName;
+			FORM.personJobOfferTitle = qGetHostCompanyInfo.personJobOfferTitle;
+			FORM.EIN = qGetHostCompanyInfo.EIN;
+			FORM.homepage = qGetHostCompanyInfo.homepage;
+			FORM.observations = qGetHostCompanyInfo.observations;
+			// Arrival Information
 			FORM.isPickUpProvided = qGetHostCompanyInfo.isPickUpProvided;
 			FORM.arrivalAirport = qGetHostCompanyInfo.arrivalAirport;
 			FORM.arrivalAirportCity  = qGetHostCompanyInfo.arrivalAirportCity;  
@@ -444,17 +528,36 @@
 			FORM.pickUpContactPhone = qGetHostCompanyInfo.pickUpContactPhone;    
 			FORM.pickUpContactEmail = qGetHostCompanyInfo.pickUpContactEmail;
 			FORM.pickUpContactHours = qGetHostCompanyInfo.pickUpContactHours;
-			FORM.supervisor = qGetHostCompanyInfo.supervisor;
-			FORM.phone = qGetHostCompanyInfo.phone;
-			FORM.fax = qGetHostCompanyInfo.fax;
-			FORM.email = qGetHostCompanyInfo.email;
-			FORM.supervisor_name = qGetHostCompanyInfo.supervisor_name;
-			FORM.supervisor_phone = qGetHostCompanyInfo.supervisor_phone;
-			FORM.supervisor_email = qGetHostCompanyInfo.supervisor_email;
-			FORM.homepage = qGetHostCompanyInfo.homepage;
-			FORM.observations = qGetHostCompanyInfo.observations;
 		</cfscript>
-    
+
+		<cfscript>
+			/**********
+				Google --> http://www.google.com/maps?q=4301+West+Vine+Street,+Kissimmee,+FL+34741&hl=en&t=h&z=16
+				Output --> http://www.google.com/maps?q=4301+W+Vine+St,+Kissimmee,+FL+34741&hl=en&t=h&z=16
+			**********/
+            
+			vGoogleMaps = '';
+			
+			if ( LEN(FORM.address) AND LEN(FORM.city) AND LEN(qGetWorkSiteState.state) ) {
+				// Address
+				vGoogleMapsAddress = ReplaceNoCase( ReplaceNoCase(FORM.address, ' ', '+', "All"), ',', '', "All") & ',';
+				
+				// City
+				vGoogleMapsAddress = vGoogleMapsAddress & '+' & ReplaceNoCase(FORM.city, ' ', '+', "All") & ',';
+				
+				// State
+				vGoogleMapsAddress = vGoogleMapsAddress & '+' & ReplaceNoCase(qGetWorkSiteState.state, ' ', '+', "All");
+				
+				// Zip Code
+				if ( LEN(FORM.hqZip) ) {
+					vGoogleMapsAddress = vGoogleMapsAddress & '+' & ReplaceNoCase(FORM.zip, ' ', '+', "All");
+				}
+				
+				// Set Up Google Maps Link
+				vGoogleMaps = 'http://www.google.com/maps?q=' & vGoogleMapsAddress & '&hl=en&t=h&z=16';
+			}
+        </cfscript>
+        
     </cfif>
 
 </cfsilent>
@@ -464,7 +567,6 @@
 		// $(".formField").attr("disabled","disabled");
 		
 		showHideBusinessTypeOther();
-		displayHousingInfo();
 		displayPickUpInfo();
 		
 		// Get Host Company Value // If 0, we are inserting a new host company // Set page to add/edit mode
@@ -481,15 +583,15 @@
 	var jsCopyAddress = function () {
 		isChecked = $("#copyAddress").attr('checked');
 		if ( isChecked ) {
-			$("#workSiteAddress").val($("#address").val());
-			$("#workSiteCity").val($("#city").val());
-			$("#workSiteState").val($("#state").val());
-			$("#workSiteZip").val($("#zip").val());
+			$("#hqAddress").val($("#address").val());
+			$("#hqCity").val($("#city").val());
+			$("#hqState").val($("#state").val());
+			$("#hqZip").val($("#zip").val());
 		} else {
-			$("#workSiteAddress").val("");
-			$("#workSiteCity").val("");
-			$("#workSiteState").val("");
-			$("#workSiteZip").val("");
+			$("#hqAddress").val("");
+			$("#hqCity").val("");
+			$("#hqState").val("");
+			$("#hqZip").val("");
 		}
 	}
 
@@ -498,23 +600,13 @@
 		if ( isChecked ) {
 			$("#supervisor_name").val($("#supervisor").val());
 			$("#supervisor_phone").val($("#phone").val());
+			$("#supervisor_cellPhone").val($("#cellPhone").val());
 			$("#supervisor_email").val($("#email").val());
 		} else {
 			$("#supervisor_name").val("");
 			$("#supervisor_phone").val("");
+			$("#supervisor_cellPhone").val("");
 			$("#supervisor_email").val("");
-		}
-	}
-
-	var displayHousingInfo = function() { 
-		// Get Housing Info
-		getHousingInfo = $('input:radio[name=isHousingProvided]:checked').val();
-		if ( getHousingInfo == 1 ) {
-			$(".housingInfo").fadeIn("fast");
-		} else {
-			//erase data
-			$("#housingProvidedInstructions").val("");
-			$(".housingInfo").fadeOut("fast");
 		}
 	}
 
@@ -554,8 +646,10 @@
 	// Fomat Phone Number
 	jQuery(function($){
 	   $("#phone").mask("(999)999-9999");
+	   $("#cellPhone").mask("(999)999-9999");
 	   $("#fax").mask("(999)999-9999");
 	   $("#supervisor_phone").mask("(999)999-9999");
+	   $("#supervisor_cellPhone").mask("(999)999-9999");
 	   $("#pickUpContactPhone").mask("(999)999-9999");
 	});	
 	// --> 
@@ -661,7 +755,7 @@
                 <tr>
                     <!--- LEFT SECTION --->
                     <td width="49%" valign="top">
-                        
+
                         <!--- ADDRESS --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
@@ -669,7 +763,14 @@
 
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Address</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Work Site Address
+                                            
+                                                <!--- Google Maps Link --->
+                                                <cfif LEN(vGoogleMaps)>
+                                                    &nbsp; - &nbsp; <a href="#vGoogleMaps#" class="style2" target="_blank">[ Google Maps ]</a>
+                                                </cfif>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
@@ -715,37 +816,37 @@
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
 								<td bordercolor="##FFFFFF">
-
+									
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Work Site Address</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: HQ Address</td>
                                         </tr>
                                         <tr class="editPage">
                                         	<td class="style1" align="right"><input type="checkbox" name="copyAddress" id="copyAddress" class="style1 editPage" onclick="jsCopyAddress();" /></td>
-                                            <td class="style1"><strong><label for="copyAddress">Same as Above</label></strong></td>
+                                            <td class="style1"><strong><label for="copyAddress">Same as Main Address</label></strong></td>
                                         </tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.workSiteAddress#</span>
-                                                <input type="text" name="workSiteAddress" id="workSiteAddress" value="#FORM.workSiteAddress#" class="style1 editPage" size="35" maxlength="100">
+                                            	<span class="readOnly">#FORM.hqAddress#</span>
+                                                <input type="text" name="hqAddress" id="hqAddress" value="#FORM.hqAddress#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>City</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.workSiteCity#</span>
-                                                <input type="text" name="workSiteCity" id="workSiteCity" value="#FORM.workSiteCity#" class="style1 editPage" size="35" maxlength="100">
+                                                <span class="readOnly">#FORM.hqCity#</span>
+                                                <input type="text" name="hqCity" id="hqCity" value="#FORM.hqCity#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>		
                                         <tr>
                                             <td class="style1" align="right"><strong>State:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#qGetHostCompanyInfo.workSitestateName#</span>
-                                                <select name="workSiteState" id="workSiteState" class="style1 editPage">
+                                                <span class="readOnly">#qGetHostCompanyInfo.hqStateName#</span>
+                                                <select name="hqState" id="hqState" class="style1 editPage">
                                               		<option value="0"></option>
                                               		<cfloop query="qGetStateList">
-		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.workSiteState>selected</cfif>>#qGetStateList.stateName#</option>
+		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.hqState>selected</cfif>>#qGetStateList.stateName#</option>
         	                                      	</cfloop>
 	                                            </select>
                                             </td>
@@ -753,8 +854,8 @@
                                         <tr>
                                             <td class="style1" align="right"><strong>Zip:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.workSiteZip#</span>
-                                                <input type="text" name="workSiteZip" id="workSiteZip" value="#FORM.workSiteZip#" class="style1 editPage" size="35" maxlength="10">
+                                                <span class="readOnly">#FORM.hqZip#</span>
+                                                <input type="text" name="hqZip" id="hqZip" value="#FORM.hqZip#" class="style1 editPage" size="35" maxlength="10">
                                             </td>
                                         </tr>
                                     </table>
@@ -764,19 +865,39 @@
                         </table> 
                         
                         <br />
-
+                        
                         <!--- HOUSING --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
                                 <td bordercolor="##FFFFFF">
-                        
+
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                            <td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Housing</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Housing Information</td>
                                         </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Is Housing Provided?</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#YesNoFormat(VAL(FORM.isHousingProvided))#</span>
+                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedNo" value="0" class="style1 editPage" <cfif FORM.isHousingProvided EQ 0> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isHousingProvidedNo">No</label>
+                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedYes" value="1" class="style1 editPage" <cfif VAL(FORM.isHousingProvided)> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isHousingProvidedYes">Yes</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right" valign="top"><strong>Housing Instructions:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.housingProvidedInstructions#</span>
+                                                <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">#FORM.housingProvidedInstructions#</textarea>
+                                            </td>
+                                        </tr>
+									</table>
+                        
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <cfloop query="qGetHousing">
                                             <cfif qGetHousing.currentrow MOD 2 EQ 1><tr></cfif>
-                                            <td class="style1"> 
+                                            <td width="20px" class="style1"> 
                                                 <input type="checkbox" name="housing_options" id="housing_options#qGetHousing.id#" value="#qGetHousing.id#" class="formField" disabled <cfif ListFind(FORM.housing_options, qGetHousing.id)>checked</cfif> > 
                                             </td>
                                             <td class="style1"><label for="housing_options#qGetHousing.id#">#qGetHousing.type#</label></td>
@@ -821,19 +942,26 @@
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Contact Information</td>
                                         </tr>
                                         <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Contact:&nbsp;</strong></td>
+                                            <td width="35%" class="style1" align="right"><strong>Primary Contact:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor#</span>
                                                 <input type="text" name="supervisor" id="supervisor" value="#FORM.supervisor#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>Phone:&nbsp;</strong></td>
+                                            <td class="style1" align="right"><strong>Office Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.phone#</span>
                                                 <input type="text" name="phone" id="phone" value="#FORM.phone#" class="style1 editPage" size="35" maxlength="50">
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Mobile Phone:&nbsp;</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#FORM.cellPhone#</span>
+                                                <input type="text" name="cellPhone" id="cellPhone" value="#FORM.cellPhone#" class="style1 editPage" size="35" maxlength="50">
+                                            </td>
+                                        </tr>                                        
                                         <tr>
                                             <td class="style1" align="right"><strong>Fax:&nbsp;</strong></td>
                                             <td class="style1">
@@ -853,6 +981,11 @@
                                                 <input type="text" name="email" id="email" value="#FORM.email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
+                                        
+                                        <!--- Supervisor --->
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Supervisor Information</td>
+                                        </tr>
                                         <tr class="editPage">
                                         	<td class="style1" align="right"><input type="checkbox" name="copyContact" id="copyContact" class="style1 editPage" onclick="jsCopyContact();" /></td>
                                             <td class="style1"><strong><label for="copyContact">Same as Above</label></strong></td>
@@ -865,21 +998,59 @@
                                             </td>                                            
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>Supervisor Phone:&nbsp;</strong></td>
+                                            <td class="style1" align="right"><strong>Office Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_phone#</span>
                                                 <input type="text" name="supervisor_phone" id="supervisor_phone" value="#FORM.supervisor_phone#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>Supervisor Email:&nbsp;</strong></td>
+                                            <td class="style1" align="right"><strong>Cell Phone:&nbsp;</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#FORM.supervisor_cellPhone#</span>
+                                                <input type="text" name="supervisor_cellPhone" id="supervisor_cellPhone" value="#FORM.supervisor_cellPhone#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>                                            
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Email:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_email#</span>
                                                 <input type="text" name="supervisor_email" id="supervisor_email" value="#FORM.supervisor_email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table> 
+                        
+                        <br />
+
+                        <!--- Other Information --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+								<td bordercolor="##FFFFFF">
+
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Other Information</td>
+                                        </tr>
                                         <tr>
-                                            <td width="35%" class="style1" align="right"><strong>EIN:</strong></td>
+                                            <td width="35%" class="style1" align="right"><strong>Person Signing Job Offer:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.personJobOfferName#</span>
+                                                <input type="text" name="personJobOfferName" id="personJobOfferName" value="#FORM.personJobOfferName#" class="style1 editPage" size="35" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Title:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.personJobOfferTitle#</span>
+                                                <input type="text" name="personJobOfferTitle" id="personJobOfferTitle" value="#FORM.personJobOfferTitle#" class="style1 editPage" size="35" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>EIN:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.EIN#</span>
                                                 <input type="text" name="EIN" id="EIN" value="#FORM.EIN#" class="style1 editPage" size="35" maxlength="10">
@@ -888,7 +1059,7 @@
                                         <tr>
                                             <td class="style1" align="right"><strong>Homepage:&nbsp;</strong></td>
                                             <td class="style1">
-                                                <span class="readOnly">#FORM.homepage#</span>
+                                                <span class="readOnly"><a href="#FORM.homepage#" target="_blank">#FORM.homepage#</a></span>
                                                 <input type="text" name="homepage" value="#FORM.homepage#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
@@ -948,40 +1119,6 @@
                         </table> 
 
 						<br />                        
-
-                        <!--- HOUSING INFORMATION --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-								<td bordercolor="##FFFFFF">
-
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Housing Information</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Is Housing Provided?</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#YesNoFormat(VAL(FORM.isHousingProvided))#</span>
-                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedNo" value="0" class="style1 editPage" onclick="displayHousingInfo();" <cfif FORM.isHousingProvided EQ 0> checked="checked" </cfif> /> 
-                                                <label class="style1 editPage" for="isHousingProvidedNo">No</label>
-                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedYes" value="1" class="style1 editPage" onclick="displayHousingInfo();" <cfif VAL(FORM.isHousingProvided)> checked="checked" </cfif> /> 
-                                                <label class="style1 editPage" for="isHousingProvidedYes">Yes</label>
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField housingInfo">
-                                            <td class="style1" align="right" valign="top"><strong>Housing Instructions:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.housingProvidedInstructions#</span>
-                                                <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">#FORM.housingProvidedInstructions#</textarea>
-                                            </td>
-                                        </tr>
-                                    </table>
-
-                                </td>
-                            </tr>
-                        </table> 
-                        
-						<br />
 
                         <!--- PICK UP/ARRIVAL INFORMATION --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">

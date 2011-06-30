@@ -71,18 +71,18 @@
 		
 		// Create Table Header
 		var tableHeader = '';		
-		tableHeader += "<tr>";
-        	tableHeader += "<td class='listTitle style2'>ID</td>";
-        	tableHeader += "<td class='listTitle style2'>Last Name</td>";
-			tableHeader += "<td class='listTitle style2'>First Name</td>";
-        	tableHeader += "<td class='listTitle style2'>Gender</td>";
-			tableHeader += "<td class='listTitle style2'>Country</td>";
-			tableHeader += "<td class='listTitle style2'>Program</td>";
-			tableHeader += "<td class='listTitle style2'>Intl. Rep.</td>";
-			tableHeader += "<td class='listTitle style2'>Program <br /> Start Date</td>";
-			tableHeader += "<td class='listTitle style2'>Program <br /> End Date</td>";
-            tableHeader += "<td class='listTitle style2' align='center'>Actions</td>";                                                          
-		tableHeader += "</tr>";
+		tableHeader += '<tr>';
+        	tableHeader += '<td class="listTitle style2">ID</td>';
+        	tableHeader += '<td class="listTitle style2">Last Name</td>';
+			tableHeader += '<td class="listTitle style2">First Name</td>';
+        	tableHeader += '<td class="listTitle style2">Gender</td>';
+			tableHeader += '<td class="listTitle style2">Country</td>';
+			tableHeader += '<td class="listTitle style2">Program</td>';
+			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
+			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
+			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
+            tableHeader += '<td class="listTitle style2" align="center">Actions</td>';                                                          
+		tableHeader += '</tr>';
 		
 		// Append Table Header to HTML
 		$("#verificationList").append(tableHeader);
@@ -107,23 +107,22 @@
 
 			// Create Table Rows
 			var tableBody = '';	
-			
 				if (i % 2 == 0) {
-					tableBody += "<tr id='" + candidateID + "' class='rowOff'>";
+					tableBody += '<tr id="' + candidateID + '" class="rowOff">';
 				} else {
-					tableBody += "<tr id='" + candidateID + "' class='rowOn'>";
+					tableBody += '<tr id="' + candidateID + '" class="rowOn">';
 				}
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>#" + candidateID + "</a></td>"
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + lastName + "</a></td>"
-				tableBody += "<td class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>" + firstName + "</a></td>"
-				tableBody += "<td class='style5'>" + sex + "</td>"
-				tableBody += "<td class='style5'>" + countryName + "</td>"
-				tableBody += "<td class='style5'>" + programName + "</td>"
-				tableBody += "<td class='style5'>" + businessName + "</td>"
-				tableBody += "<td class='style5'>" + startDate + "</td>"
-				tableBody += "<td class='style5'>" + endDate + "</td>"
-				tableBody += "<td align='center' class='style5'><a href='javascript:getCandidateDetails(" + candidateID + ");' class='style4'>[Edit]</a></td>"
-			tableBody += "</tr>";
+				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">#' + candidateID + '</a></td>';
+				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">' + lastName + '</a></td>';
+				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">' + firstName + '</a></td>';
+				tableBody += '<td class="style5">' + sex + '</td>';
+				tableBody += '<td class="style5">' + countryName + '</td>';
+				tableBody += '<td class="style5">' + programName + '</td>';
+				tableBody += '<td class="style5">' + businessName + '</td>';
+				tableBody += '<td class="style5">' + startDate + '</td>';
+				tableBody += '<td class="style5">' + endDate + '</td>';
+				tableBody += '<td align="center" class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">[Edit]</a></td>';
+			tableBody += '</tr>';
 			// Append table rows
 			$("#verificationList").append(tableBody);
 		} 

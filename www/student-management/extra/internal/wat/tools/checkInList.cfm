@@ -75,18 +75,18 @@
 		
 		// Create Table Header
 		var tableHeader = '';		
-		tableHeader += "<tr>";
-        	tableHeader += "<td class='listTitle style2'>ID</td>";
-        	tableHeader += "<td class='listTitle style2'>Last Name</td>";
-			tableHeader += "<td class='listTitle style2'>First Name</td>";
-        	tableHeader += "<td class='listTitle style2'>Gender</td>";
-			tableHeader += "<td class='listTitle style2'>Country</td>";
-			tableHeader += "<td class='listTitle style2'>Program</td>";
-			tableHeader += "<td class='listTitle style2'>Intl. Rep.</td>";
-			tableHeader += "<td class='listTitle style2'>Program <br /> Start Date</td>";
-			tableHeader += "<td class='listTitle style2'>Program <br /> End Date</td>";
-            tableHeader += "<td class='listTitle style2' align='center'>Actions</td>";                                                          
-		tableHeader += "</tr>";
+		tableHeader += '<tr>';
+        	tableHeader += '<td class="listTitle style2">ID</td>';
+        	tableHeader += '<td class="listTitle style2">Last Name</td>';
+			tableHeader += '<td class="listTitle style2">First Name</td>';
+        	tableHeader += '<td class="listTitle style2">Gender</td>';
+			tableHeader += '<td class="listTitle style2">Country</td>';
+			tableHeader += '<td class="listTitle style2">Program</td>';
+			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
+			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
+			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
+            tableHeader += '<td class="listTitle style2" align="center">Actions</td>';                                                          
+		tableHeader += '</tr>';
 		
 		// Append Table Header to HTML
 		$("#verificationList").append(tableHeader);
@@ -99,6 +99,7 @@
 		// Loop over results and build the grid
 		for(i=0;i<verList.DATA.length;i++) { 
 			
+			var uniqueID = verList.DATA[i][verList.COLUMNS.findIdx('UNIQUEID')];
 			var candidateID = verList.DATA[i][verList.COLUMNS.findIdx('CANDIDATEID')];		
 			var firstName = verList.DATA[i][verList.COLUMNS.findIdx('FIRSTNAME')];
 			var lastName = verList.DATA[i][verList.COLUMNS.findIdx('LASTNAME')];
@@ -111,23 +112,22 @@
 
 			// Create Table Rows
 			var tableBody = '';	
-			
 				if (i % 2 == 0) {
-					tableBody += "<tr id='" + candidateID + "' class='rowOff'>";
+					tableBody += '<tr id="' + candidateID + '" class="rowOff">';
 				} else {
-					tableBody += "<tr id='" + candidateID + "' class='rowOn'>";
+					tableBody += '<tr id="' + candidateID + '" class="rowOn">';
 				}
-				tableBody += "<td class='style5'>" + candidateID + "</td>"
-				tableBody += "<td class='style5'>" + lastName + "</td>"
-				tableBody += "<td class='style5'>" + firstName + "</td>"
-				tableBody += "<td class='style5'>" + sex + "</td>"
-				tableBody += "<td class='style5'>" + countryName + "</td>"
-				tableBody += "<td class='style5'>" + programName + "</td>"
-				tableBody += "<td class='style5'>" + businessName + "</td>"
-				tableBody += "<td class='style5'>" + startDate + "</td>"
-				tableBody += "<td class='style5'>" + endDate + "</td>"
-				tableBody += "<td align='center' class='style5'><a href='javascript:setCheckInReceived(" + candidateID + ");' class='style4'>[Received]</a></td>"
-			tableBody += "</tr>";
+				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">#' + candidateID + '</a></td>';
+				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">' + lastName + '</a></td>';
+				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">' + firstName + '</a></td>';
+				tableBody += '<td class="style5">' + sex + '</td>';
+				tableBody += '<td class="style5">' + countryName + '</td>';
+				tableBody += '<td class="style5">' + programName + '</td>';
+				tableBody += '<td class="style5">' + businessName + '</td>';
+				tableBody += '<td class="style5">' + startDate + '</td>';
+				tableBody += '<td class="style5">' + endDate + '</td>';
+				tableBody += '<td align="center" class="style5"><a href="javascript:setCheckInReceived(' + candidateID + ');" class="style4">[Received]</a></td>';
+			tableBody += '</tr>';
 			// Append table rows
 			$("#verificationList").append(tableBody);
 		} 

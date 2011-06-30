@@ -424,10 +424,13 @@
                         <p>Dear #ARGUMENTS.businessName#-</p>
                         
                         <p>
-                        	This is a notice that additional information is needed in order to adhere to United States Department of State regulations and to ensure that the 
-	                        student will have a complete application on file.
-    	                    <font color="##FF0000">Please send the requested missing information within 5 (five) business days of this notice.</font> 
-        	                It is crucial that we receive it on time.
+							This is a notice that additional information is needed in order to adhere to United States Department of State regulations and to ensure that 
+                            the student will have a complete application on file. 
+                            <font color="##FF0000">
+                            	Please send the requested missing information within 5 (five) business days of this notice. 
+                                The document(s) must be uploaded in EXTRA system (online application) for each participant listed below. 
+                            </font>
+                            It is crucial that we receive it on time. 
                         </p>
                     </cfsavecontent>
                 
