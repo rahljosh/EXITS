@@ -21,6 +21,7 @@
     <Cfquery name="qGetStudentList" datasource="MySQL">
         SELECT 
             s.studentid, 
+            s.flsID,
             s.countryresident, 
             s.firstname, 
             s.familylastname, 
@@ -237,6 +238,7 @@
             <tr>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">&nbsp;</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">ID</td>
+                <td style="border-bottom:1px solid #999; font-weight:bold;">FLS ID</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Student</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Sex</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">DOB</td>
@@ -271,7 +273,8 @@
                 
                     <tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("FFFFFF") ,DE("EDEDED") )#">
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.currentRow#</td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.studentid#</td>
+                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.studentID#</td>
+                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.flsID#</td>
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.firstname# #qGetStudentList.familylastname#</td>
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.sex#</td>
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#DateFormat(qGetStudentList.DOB, 'mm/dd/yy')#</td>
