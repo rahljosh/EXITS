@@ -18,8 +18,8 @@
     <cfsetting requesttimeout="9999">
     
     <cfscript>
-		// Get All International Representatives List
-		qIntlRep = APPLICATION.CFC.USER.getUsers(userType=8, getAll=0);	
+		// Get International Representatives List
+		qIntlRep = APPLICATION.CFC.USER.getIntlRepAssignedToCandidate();	
 	</cfscript>
     
 </cfsilent>    
