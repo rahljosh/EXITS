@@ -1714,6 +1714,67 @@
 
 
 
+	<!--- ------------------------------------------------------------------------- ----
+		
+		IMPORT FLS ID
+	
+	----- ------------------------------------------------------------------------- --->
+	<cffunction name="importFLSFile" access="public" returntype="void" output="true" hint="Reads Excel file received from FLS and stores the ID into the student table">
+    	<cfargument name="excelFile" hint="excelFile is required">
+        
+        <!--- Read Excel --->
+        <cfspreadsheet action="read" src="#ARGUMENTS.excelFile#" query="qUserListData" headerRow="1">          
+        
+        <!--- 
+        <cfdump var="#qUserListData.recordCount#">
+        <cfdump var="#qUserListData#">
+        <cfabort>
+		--->
+        
+		<cfscript>
+            // COLUMNS: ID, FLS ID, STUDENT, SEX, DOB, COUNTRY, REGION, INTL. REP. FACILITATOR, ARRIVAL TO CAMP, FLIGHT INFO, DEPARTURE TO HOST, FLIGHT INFO, PRE-AYP CMAP
+			
+			// Loop thru query
+            for (i=1;i LTE qUserListData.recordCount; i=i+1) {
+            	
+                // Check if we hava a valid ID
+                if ( LEN(qUserListData['FLS ID'][i]) ) {
+                    
+                    // Insert Training
+                    updateFLSID(
+						studentID=qUserListData['ID'][i], 
+						flsID=qUserListData['FLS ID'][i]
+					);
+                    
+                }
+
+            }		
+        </cfscript>
+        
+	</cffunction>  
+
+
+	<cffunction name="updateFLSID" access="public" returntype="void" output="false" hint="Inserts FLS ID to the student table">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="flsID" hint="flsID is required">
+		
+            <cfquery result="test"
+                datasource="#APPLICATION.dsn#">
+					UPDATE
+                    	smg_students
+                    SET
+                    	flsID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flsID#">
+					WHERE
+                    	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+            </cfquery>
+	</cffunction>
+	<!--- ------------------------------------------------------------------------- ----
+		
+		END OF IMPORT FLS ID
+	
+	----- ------------------------------------------------------------------------- --->
+
+
 
 	<!--- ------------------------------------------------------------------------- ----
 		

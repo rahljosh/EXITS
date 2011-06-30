@@ -312,6 +312,8 @@
                         <li><a href="index.cfm?curdoc=tools/countries">Countries</a></li>
 
     					<li><a href="index.cfm?curdoc=tools/verification_received">DS-2019 Verification List</a></li>
+
+    					<li><a href="index.cfm?curdoc=tools/importFLSID">FLS Import Tool</a></li>
                     
                         <li>
                             <a href="index.cfm?curdoc=insurance/insurance_menu">Insurance Menu</a>
