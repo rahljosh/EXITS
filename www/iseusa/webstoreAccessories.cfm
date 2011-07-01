@@ -323,6 +323,8 @@ under:active {
               <th class="lightGreen" scope="row"><img src="images/webstore/carmagnet-01.jpg" width="225" height="150" border="1" /></th>
               <td>&nbsp;</td>
               <td class="lightGText">
+             <strong> Ordering a magnet? </strong><Br /><Br /> Once your order is processed, you will be contacted regarding the information you would like on the magnet.
+              <!----
               <cfif not isDefined('form.sendEmail')>
 			  <cfoutput>
   <cfform id="RequestInfo" name="RequestInfo" method="post" action="#CGI.SCRIPT_NAME#">
@@ -350,7 +352,7 @@ under:active {
 <p class="paragraphText">AN ISE REPRESENTATIVE WILL BE SENDING YOU<br>
 AN ARTWORK PROOF FOR YOUR APPROVAL.</p>
               </cfif>
-               
+               --->
               <p><a href="mailto:budge@iseusa.com"></a><a href="pdfs/carmagnetInfo.pdf" title="Car Magnet Info" target="_blank"></a></p></td>
             </tr>
             <tr>
