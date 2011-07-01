@@ -97,7 +97,9 @@
                 smg_users
             WHERE
                 businessName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessName#">
-            <cfif LEN(FORM.uniqueID)>
+            AND
+            	userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+			<cfif LEN(FORM.uniqueID)>
                 AND
                     uniqueID != <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueID#">
             </cfif>
