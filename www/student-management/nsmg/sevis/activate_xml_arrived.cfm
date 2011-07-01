@@ -53,7 +53,7 @@
 	INNER JOIN 
     	smg_flight_info f ON s.studentid = f.studentid 
         	AND 
-            	f.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+            	f.flight_type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival,preAypArrival" list="yes"> )
             AND
             	f.dep_date < <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(form.arrival_date)#">
 			AND
@@ -79,11 +79,11 @@
     </cfif>
 
 	<cfif CLIENT.companyID EQ 10>
-    AND
-    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     <cfelse>
-    AND
-    	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        AND
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
     </cfif>
     
 	ORDER BY 
