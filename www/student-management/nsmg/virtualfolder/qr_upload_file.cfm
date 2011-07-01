@@ -31,17 +31,6 @@
         // Make sure the folder Exists
         AppCFC.UDF.createFolder(currentDirectory);
 
-		// Dev - Always Email Support
-        if ( APPLICATION.isServerLocal ) {
-			emailRecipient = APPLICATION.EMAIL.support; 	
-		// Check if is a PHP student - Email PHP
-		} else if ( qGetStudentInfo.companyid EQ 6 ) {
-            emailRecipient = APPLICATION.EMAIL.PHPContact; 	
-        // Check if there is a valid facilitator email address
-        } else if ( IsValid("email", qGetRegionInfo.email) ) {
-            emailRecipient = qGetRegionInfo.email;
-        }
-
 		studentProfileLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.studentID#';		
 		//studentProfileLink = '#CLIENT.exits_url#/nsmg/virtualfolder/#qGetStudentInfo.uniqueID#';
 		
@@ -90,6 +79,19 @@
         WHERE 
             s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
     </cfquery>
+    
+    <cfscript>
+		// Dev - Always Email Support
+        if ( APPLICATION.isServerLocal ) {
+			emailRecipient = APPLICATION.EMAIL.support; 	
+		// Check if is a PHP student - Email PHP
+		} else if ( qGetStudentInfo.companyid EQ 6 ) {
+            emailRecipient = APPLICATION.EMAIL.PHPContact; 	
+        // Check if there is a valid facilitator email address
+        } else if ( IsValid("email", qGetRegionInfo.email) ) {
+            emailRecipient = qGetRegionInfo.email;
+        }
+	</cfscript>	
     
 </cfsilent>
 
