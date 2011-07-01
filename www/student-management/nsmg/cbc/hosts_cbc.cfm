@@ -207,8 +207,6 @@
         
         <!--- Submit Batch 10/20/2009 --->
 		<cfscript>
-            // Declare newBatchID
-			newBatchID = 0;
 			// Set errorCount used in data validation
 			errorCount = 0;
 			

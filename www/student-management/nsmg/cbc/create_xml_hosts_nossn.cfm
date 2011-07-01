@@ -133,16 +133,6 @@
 
 	<!--- Check if there are records --->    
     <cfif qGetCBCHost.recordcount>
-
-		<cfscript>
-            // Create a batch ID - It must be unique
-            newBatchID = APPCFC.CBC.createBatchID(
-                companyID=qGetCompany.companyID,
-                userID=CLIENT.userid,
-                cbcTotal=qGetCBCHost.recordcount,
-                batchType='host'
-            );	
-        </cfscript>
                
         <cfloop query="qGetCBCHost"> 
         
@@ -151,7 +141,6 @@
                 CBCStatus = APPCFC.CBC.processBatch(
                     companyID=qGetCompany.companyID,
                     companyShort=qGetCompany.companyShort,
-                    batchID=newBatchID,
                     userType=FORM.userType,
                     hostID=qGetCBCHost.hostID,
                     cbcID=qGetCBCHost.CBCFamID,
@@ -265,16 +254,6 @@
 	<!--- Check if there are records --->    
     <cfif qGetCBCMember.recordcount>
     
-        <cfscript>
-            // Create a batch ID - It must be unique
-            newBatchID = APPCFC.CBC.createBatchID(
-                companyID=qGetCompany.companyID,
-                userID=CLIENT.userid,
-                cbcTotal=qGetCBCMember.recordcount,
-                batchType='host'
-            );	
-        </cfscript>
-    
         <cfloop query="qGetCBCMember"> 
 
 			<cfscript>
@@ -282,7 +261,6 @@
                 CBCStatus = APPCFC.CBC.processBatch(
                     companyID=qGetCompany.companyID,
                     companyShort=qGetCompany.companyShort,
-                    batchID=newBatchID,
                     userType=FORM.userType,
                     hostID=qGetCBCMember.hostID,
                     cbcID=qGetCBCMember.CBCFamID,
