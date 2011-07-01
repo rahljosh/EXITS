@@ -360,7 +360,7 @@
                                         <cfelse>
 											<cfif qGetStudentInfo.welcome_family EQ 1>*** This is a Welcome Family ***<br /></cfif>	                       
 											
-											<cfif CLIENT.totalfam EQ 1 AND qGetSeason.seasonID GT 8>
+											<cfif CLIENT.totalfam EQ 1 AND qGetStudentInfo.seasonID GT 8>
                                                 <font color="##CC0000">*** Single Person Placement***<br /></font>
 											</cfif>
                                             #qGetStudentInfo.hostlastname# (###qGetStudentInfo.hostid#)
