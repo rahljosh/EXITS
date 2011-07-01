@@ -360,7 +360,7 @@
                                         <cfelse>
 											<cfif qGetStudentInfo.welcome_family EQ 1>*** This is a Welcome Family ***<br /></cfif>	                       
 											
-											<cfif CLIENT.totalfam EQ 1 AND qGetStudentInfo.seasonid GT 8>
+											<cfif CLIENT.totalfam EQ 1 AND qGetSeason.seasonID GT 8>
                                                 <font color="##CC0000">*** Single Person Placement***<br /></font>
 											</cfif>
                                             #qGetStudentInfo.hostlastname# (###qGetStudentInfo.hostid#)
@@ -375,7 +375,7 @@
                                     <td class="dash" width="50%">
                                     	<b>School</b> 
 										<cfif VAL(qGetStudentInfo.schoolID) AND listFind("1,2,3,4", CLIENT.userType)>
-                                        	[ <a href="../index.cfm?curdoc=qGetSchoolInfo&schoolID=#qGetStudentInfo.schoolID#" target="_blank">view school</a> ]
+                                        	[ <a href="../index.cfm?curdoc=school_Info&schoolID=#qGetStudentInfo.schoolID#" target="_blank">view school</a> ]
 										</cfif>
                                     </td>
                                     <td rowspan="2" valign="top" width='10'></td>
