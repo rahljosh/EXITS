@@ -318,7 +318,7 @@
                         hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
                         hqZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
                         <!--- Housing Information --->
-                        isHousingProvided = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isHousingProvided)#">,
+                        isHousingProvided = <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
                         housingProvidedInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
                         housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
@@ -431,7 +431,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
 						<!--- Housing Information --->
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isHousingProvided)#">,
+                        <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
@@ -890,11 +890,19 @@
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Is Housing Provided?</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#YesNoFormat(VAL(FORM.isHousingProvided))#</span>
+                                            	<span class="readOnly">
+                                                    <cfif ListFind("0,1", FORM.isHousingProvided)>
+                                                        #YesNoFormat(VAL(FORM.isHousingProvided))#
+                                                    <cfelseif FORM.isHousingProvided EQ 2>
+                                                        Will assist in finding
+                                                    </cfif>
+                                                </span>
                                                 <input type="radio" name="isHousingProvided" id="isHousingProvidedNo" value="0" class="style1 editPage" <cfif FORM.isHousingProvided EQ 0> checked="checked" </cfif> /> 
                                                 <label class="style1 editPage" for="isHousingProvidedNo">No</label>
-                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedYes" value="1" class="style1 editPage" <cfif VAL(FORM.isHousingProvided)> checked="checked" </cfif> /> 
+                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedYes" value="1" class="style1 editPage" <cfif FORM.isHousingProvided EQ 1> checked="checked" </cfif> /> 
                                                 <label class="style1 editPage" for="isHousingProvidedYes">Yes</label>
+                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedWillAssist" value="2" class="style1 editPage" <cfif FORM.isHousingProvided EQ 2> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isHousingProvidedWillAssist">Will assist in finding</label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1084,10 +1092,8 @@
                                             <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">
-                                                    <cfif FORM.workmensCompensation EQ 0>
-                                                        No
-                                                    <cfelseif FORM.workmensCompensation EQ 1>
-                                                        Yes
+                                                    <cfif ListFind("0,1", FORM.workmensCompensation)>
+                                                        #YesNoFormat(VAL(FORM.workmensCompensation))#
                                                     <cfelseif FORM.workmensCompensation EQ 2>
                                                         N/A
                                                     </cfif>
