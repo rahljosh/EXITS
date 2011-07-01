@@ -88,7 +88,7 @@
                         h.cbcfamID, 
                         h.hostID, 
                         h.familyID,
-                        h.batchID,
+                        h.batchID,  <!--- phase out --->
                         h.cbc_type,
                         h.date_authorized, 
                         h.date_sent, 
@@ -218,7 +218,8 @@
                             companyID,
                             isNoSSN,
                             isReRun, 
-                            date_authorized
+                            date_authorized,
+                            dateCreated
                         )
                         VALUES 
                         (
@@ -230,10 +231,11 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNoSSN#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
                             <cfif LEN(ARGUMENTS.dateAuthorized)>
-                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">,
                             <cfelse>
-                                NULL                            
+                                NULL,                          
                             </cfif>
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                         )
                 </cfquery>	
                 
@@ -278,7 +280,6 @@
                     cbc.cbc_type,
                     cbc.seasonID,
                     cbc.companyID,
-                    cbc.batchID,
                     cbc.isNoSSN,
                     cbc.date_authorized, 
                     cbc.date_sent, 
@@ -374,7 +375,6 @@
                     cbc.cbc_type, 
                     cbc.seasonID,
                     cbc.companyID,
-                    cbc.batchID,                    
                     cbc.isNoSSN,
                     cbc.date_authorized, 
                     cbc.date_sent, 
@@ -443,7 +443,6 @@
 
 
 	<cffunction name="updateHostCBC" access="public" returntype="void" output="false" hint="Updates CBC Information">
-    	<cfargument name="batchID" type="numeric" required="yes">
         <cfargument name="ReportID" type="string" required="yes">  
         <cfargument name="cbcFamID" type="numeric" required="yes">      
         <cfargument name="xmlReceived" type="string" default="">
@@ -455,7 +454,6 @@
             SET 
             	date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
                 date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                batchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.batchID#">,
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
@@ -499,7 +497,7 @@
                         u.familyID,
                         u.seasonID,
                         u.companyID,
-                        u.batchID,
+                        u.batchID, <!--- phase out --->
                         u.requestID,
                         u.date_authorized,
                         u.date_sent,
@@ -612,7 +610,8 @@
                             seasonid, 
                             companyid,
                             isReRun, 
-                            date_authorized
+                            date_authorized,
+                            dateCreated
                         )
                         VALUES 
                         (
@@ -622,10 +621,11 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
                             <cfif LEN(ARGUMENTS.dateAuthorized)>
-                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">,
                             <cfelse>
-                                NULL                            
+                                NULL,                           
                             </cfif>
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                         )
                 </cfquery>	
 			
@@ -802,7 +802,6 @@
 
 
 	<cffunction name="updateUserCBC" access="public" returntype="void" output="false" hint="Updates User CBC Information">
-    	<cfargument name="batchID" type="numeric" required="yes">
         <cfargument name="ReportID" type="string" required="yes">  
         <cfargument name="cbcID" type="numeric" required="yes">  
         <cfargument name="xmlReceived" type="string" default=""> 
@@ -814,7 +813,6 @@
             SET 
                 date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
                 date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                batchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.batchID#">,
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
@@ -843,50 +841,8 @@
     
 
 	<!--- CBC Batch Functions --->
-	<cffunction name="createBatchID" access="public" returntype="numeric" output="false" hint="Returns the inserted batch ID">
-    	<cfargument name="companyID" required="yes">
-        <cfargument name="userID" required="yes">        
-        <cfargument name="cbcTotal" required="yes">
-	    <cfargument name="batchType" required="yes">
-    
-        <cfquery 
-        	name="qCreateBatchID" 
-            datasource="#APPLICATION.dsn#">
-                INSERT INTO 
-                	smg_users_cbc_batch  
-                (
-                    companyID, 
-                    createdby, 
-                    datecreated, 
-                    total, 
-                    type
-                )
-				VALUES 
-                (
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcTotal#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.batchType#">
-                )
-        </cfquery>
-        
-        <cfquery 
-        	name="qGetBatchID" 
-        	datasource="#APPLICATION.dsn#">
-                SELECT 
-                	MAX(cbcID) as cbcID
-                FROM 
-                	smg_users_cbc_batch
-        </cfquery>
-	
-    	<cfreturn qGetBatchID.cbcID>
-    </cffunction>    
-	
-
 	<cffunction name="processBatch" access="public" returntype="struct" output="false" hint="Process XML Batch. Creates, submits and sends email">
         <cfargument name="companyID" type="numeric" required="yes">
-        <cfargument name="batchID" type="numeric" default="0">
         <cfargument name="userType" type="string" required="yes" hint="Father,Mother,User,Member">
         <cfargument name="hostID" type="numeric" default="0">
         <cfargument name="cbcID" type="string" default="0" hint="ID of smg_users_cbc or smg_hosts_cbc so we know which record we need to update">
@@ -1082,26 +1038,24 @@
                         if ( VAL(ARGUMENTS.hostID) ) {
                             // Update Host CBC 
                             updateHostCBC(
-                                batchID=ARGUMENTS.BatchID,
                                 ReportID=ReportID,
                                 cbcFamID=ARGUMENTS.cbcID,
                                 xmlReceived=responseXML
                             );							
 							
 							// Set up URL Results
-							batchResult.URLResults = "view_host_cbc.cfm?hostID=#ARGUMENTS.hostID#&CBCFamID=#ARGUMENTS.cbcID#"; //&batchID=#ARGUMENTS.batchID#&hostType=#ARGUMENTS.userType#
+							batchResult.URLResults = "view_host_cbc.cfm?hostID=#ARGUMENTS.hostID#&CBCFamID=#ARGUMENTS.cbcID#";
 
 						} else {
                             // Update User CBC 
                             updateUserCBC(
-                                batchID=ARGUMENTS.BatchID,
                                 ReportID=ReportID,
                                 cbcID=ARGUMENTS.cbcID,
                                 xmlReceived=responseXML
                             );
 
 							// Set up URL Results
-							batchResult.URLResults = "view_user_cbc.cfm?userid=#ARGUMENTS.userID#&cbcID=#ARGUMENTS.cbcID#"; //&batchID=#ARGUMENTS.batchID#&userType=#ARGUMENTS.userType#
+							batchResult.URLResults = "view_user_cbc.cfm?userid=#ARGUMENTS.userID#&cbcID=#ARGUMENTS.cbcID#";
                         }
                     }
                     

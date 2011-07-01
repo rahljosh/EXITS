@@ -140,16 +140,6 @@
     <!--- Check if there are records ---> 
     <cfif qGetCBCUsers.recordcount>
     
-        <cfscript>
-            // Create a batch ID - It must be unique
-            newBatchID = APPLICATION.CFC.CBC.createBatchID(
-                companyID=qGetCBCUsers.companyID,
-                userID=CLIENT.userid,
-                cbcTotal=qGetCBCUsers.recordcount,
-                batchType='user'
-            );	
-        </cfscript>
-    
         <cfloop query="qGetCBCUsers">
     
             <cfscript>
@@ -157,7 +147,6 @@
                 CBCStatus = APPLICATION.CFC.CBC.processBatch(
                     companyID=qGetCBCUsers.companyID,
                     companyShort=qGetCBCUsers.companyShort,
-                    batchID=newBatchID,
                     userType=userType,
                     userID=qGetCBCUsers.userID,
                     cbcID=qGetCBCUsers.cbcID,

@@ -22,7 +22,10 @@
 		//componentsPath = '/components.';
 		componentsPath = 'nsmg.extensions.components.';
 		extensionsPath = '../nsmg/extensions/';
-
+		
+		// Creating Structure to not get an error on config\_app_components.cfm if ( NOT IsStruct(APPLICATION.CFC) ) {
+		APPLICATION.CFC = StructNew();
+		
 		// Create a function that let us create CFCs from any location
 		function CreateCFC(strCFCName){
 			return(CreateObject("component", (componentsPath & ARGUMENTS.strCFCName)));
