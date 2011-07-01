@@ -19,9 +19,11 @@
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
 <cfparam name="FORM.selfConfirmationMethod" default="">
-<cfparam name="FORM.selfAuthentication" default="">
+<!--- Host Company --->
+<cfparam name="FORM.authenticationType" default="">
 <cfparam name="FORM.EIN" default="">
-<cfparam name="FORM.selfWorkmenCompensation" default="">
+<cfparam name="FORM.workmensCompensation" default="">
+<!--- End of Host Company --->
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfFindJobOffer" default="">
 <cfparam name="FORM.selfConfirmationNotes" default="">
@@ -140,6 +142,34 @@
         </cfquery> 
 
 	</cfif>
+    
+	<!--- Update authenticationType on Host Company Table --->
+    <cfif LEN(FORM.authenticationType)>
+    
+        <cfquery datasource="mysql">
+            UPDATE 
+                extra_hostCompany
+            SET 
+                authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">
+            WHERE
+                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+        </cfquery> 
+
+	</cfif>
+    
+	<!--- Update workmensCompensation on Host Company Table --->
+    <cfif LEN(FORM.workmensCompensation)>
+    
+        <cfquery datasource="mysql">
+            UPDATE 
+                extra_hostCompany
+            SET 
+                workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsBoolean(FORM.workmensCompensation)#">
+            WHERE
+                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+        </cfquery> 
+
+	</cfif>
 
 	<!--- New Host Family --->
     <cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostcompanyID>
@@ -169,8 +199,6 @@
                 selfConfirmationName,
                 selfConfirmationMethod,
                 selfJobOfferStatus,
-                selfAuthentication,
-                selfWorkmenCompensation,
                 selfConfirmationDate,
                 selfFindJobOffer,
                 selfConfirmationNotes,
@@ -191,8 +219,6 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#" null="#NOT IsBoolean(FORM.selfWorkmenCompensation)#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
@@ -216,8 +242,6 @@
                 selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
-                selfAuthentication = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfAuthentication#">,
-                selfWorkmenCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.selfWorkmenCompensation#" null="#NOT IsBoolean(FORM.selfWorkmenCompensation)#">,
                 selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
                 selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,     
                 selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,                

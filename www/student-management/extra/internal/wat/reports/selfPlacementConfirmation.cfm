@@ -82,13 +82,13 @@
                 ec.wat_placement,
                 ehc.hostCompanyID,
                 ehc.name,
-                ehc.EIN,     
+                ehc.authenticationType, 
+                ehc.EIN, 
+                ehc.workmensCompensation,  
                 ecpc.selfJobOfferStatus,
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationDate,
                 ecpc.selfConfirmationMethod,  
-                ecpc.selfAuthentication,  
-                ecpc.selfWorkmenCompensation,  
                 ecpc.selfConfirmationNotes,          
                 u.businessName
             FROM
@@ -348,12 +348,12 @@
                             <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
-                            <td class="style1">#qTotalPerAgent.selfAuthentication#</td>
+                            <td class="style1">#qTotalPerAgent.authenticationType#</td>
                             <td class="style1">#qTotalPerAgent.EIN#</td>
                             <td class="style1">
-                            	<cfif ListFind("0,1", qTotalPerAgent.selfWorkmenCompensation)>
-                                	#YesNoFormat(qTotalPerAgent.selfWorkmenCompensation)#
-								<cfelseif qTotalPerAgent.selfWorkmenCompensation EQ 2>
+                            	<cfif ListFind("0,1", qTotalPerAgent.workmensCompensation)>
+                                	#YesNoFormat(qTotalPerAgent.workmensCompensation)#
+								<cfelseif qTotalPerAgent.workmensCompensation EQ 2>
                                 	N/A
 								</cfif>                                            
 							</td>
