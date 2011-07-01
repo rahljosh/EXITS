@@ -143,9 +143,13 @@
     
     <cfquery name="qCandidatePlaceCompany" datasource="MySQL">
         SELECT 
-        	eh.hostCompanyID,
-            eh.name,
+        	<!--- Host Company Specific --->
+            eh.hostCompanyID,
+            eh.name,            
+            eh.authenticationType,
             eh.EIN,
+            eh.workmensCompensation,
+            <!--- Candidate Place Company --->
             ecpc.status,
             ecpc.placement_date,
             ecpc.startDate,
@@ -154,8 +158,6 @@
             ecpc.selfConfirmationName,
             ecpc.selfConfirmationMethod,
             ecpc.selfJobOfferStatus,
-            ecpc.selfAuthentication,
-            ecpc.selfWorkmenCompensation,
             ecpc.selfConfirmationDate,
             ecpc.selfFindJobOffer,
             ecpc.selfConfirmationNotes,
@@ -1035,12 +1037,12 @@
                                             <tr class="hiddenField selfPlacementInfo">
                                                 <td class="style1" align="right"><strong>Authentication:</strong></td>
                                                 <td class="style1">
-                                                    <span class="readOnly">#qCandidatePlaceCompany.selfAuthentication#</span>
-                                                    <select name="selfAuthentication" id="selfAuthentication" class="style1 editPage selfPlacementField"> 
-                                                        <option value="" <cfif NOT LEN(qCandidatePlaceCompany.selfAuthentication)>selected</cfif> ></option>
-                                                        <option value="Secretary of State website" <cfif qCandidatePlaceCompany.selfAuthentication EQ 'Secretary of State website'>selected</cfif> >Secretary of State website</option>
-                                                        <option value="US Department of Labor website" <cfif qCandidatePlaceCompany.selfAuthentication EQ 'US Department of Labor website'>selected</cfif> >US Department of Labor website</option>
-                                                        <option value="Google Earth" <cfif qCandidatePlaceCompany.selfAuthentication EQ 'Google Earth'>selected</cfif> >Google Earth</option>
+                                                    <span class="readOnly">#qCandidatePlaceCompany.authenticationType#</span>
+                                                    <select name="authenticationType" id="authenticationType" class="style1 editPage selfPlacementField"> 
+                                                        <option value="" <cfif NOT LEN(qCandidatePlaceCompany.authenticationType)>selected</cfif> ></option>
+                                                        <option value="Secretary of State website" <cfif qCandidatePlaceCompany.authenticationType EQ 'Secretary of State website'>selected</cfif> >Secretary of State website</option>
+                                                        <option value="US Department of Labor website" <cfif qCandidatePlaceCompany.authenticationType EQ 'US Department of Labor website'>selected</cfif> >US Department of Labor website</option>
+                                                        <option value="Google Earth" <cfif qCandidatePlaceCompany.authenticationType EQ 'Google Earth'>selected</cfif> >Google Earth</option>
                                                     </select>
 												</td>	                                                    
                                             </tr>
@@ -1055,19 +1057,19 @@
                                                 <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
                                                 <td class="style1">
                                                     <span class="readOnly">
-                                                        <cfif qCandidatePlaceCompany.selfWorkmenCompensation EQ 0>
+                                                        <cfif qCandidatePlaceCompany.workmensCompensation EQ 0>
                                                             No
-                                                        <cfelseif qCandidatePlaceCompany.selfWorkmenCompensation EQ 1>
+                                                        <cfelseif qCandidatePlaceCompany.workmensCompensation EQ 1>
                                                             Yes
-                                                        <cfelseif qCandidatePlaceCompany.selfWorkmenCompensation EQ 2>
+                                                        <cfelseif qCandidatePlaceCompany.workmensCompensation EQ 2>
                                                             N/A
                                                         </cfif>
                                                     </span>
-                                                    <select name="selfWorkmenCompensation" id="selfWorkmenCompensation" class="style1 editPage selfPlacementField"> 
-                                                        <option value="" <cfif NOT LEN(qCandidatePlaceCompany.selfWorkmenCompensation)>selected</cfif> ></option>
-                                                        <option value="0" <cfif qCandidatePlaceCompany.selfWorkmenCompensation EQ 0>selected</cfif> >No</option>
-                                                        <option value="1" <cfif qCandidatePlaceCompany.selfWorkmenCompensation EQ 1>selected</cfif> >Yes</option>                                                    
-                                                        <option value="2" <cfif qCandidatePlaceCompany.selfWorkmenCompensation EQ 2>selected</cfif> >N/A</option>
+                                                    <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField"> 
+                                                        <option value="" <cfif NOT LEN(qCandidatePlaceCompany.workmensCompensation)>selected</cfif> ></option>
+                                                        <option value="0" <cfif qCandidatePlaceCompany.workmensCompensation EQ 0>selected</cfif> >No</option>
+                                                        <option value="1" <cfif qCandidatePlaceCompany.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
+                                                        <option value="2" <cfif qCandidatePlaceCompany.workmensCompensation EQ 2>selected</cfif> >N/A</option>
                                                     </select>
                                                 </td>
                                             </tr>

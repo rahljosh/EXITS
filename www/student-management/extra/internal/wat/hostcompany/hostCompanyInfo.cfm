@@ -52,7 +52,9 @@
     <!--- Other Information --->    
     <cfparam name="FORM.personJobOfferName" default="">
     <cfparam name="FORM.personJobOfferTitle" default="">
+    <cfparam name="FORM.authenticationType" default="">
     <cfparam name="FORM.EIN" default="">
+	<cfparam name="FORM.workmensCompensation" default="">
     <cfparam name="FORM.homepage" default="">
     <cfparam name="FORM.observations" default="">
 	<!--- Arrival Information --->    
@@ -92,7 +94,9 @@
             eh.homepage,
             eh.personJobOfferName,
             eh.personJobOfferTitle,
+            eh.authenticationType,
             eh.EIN,
+            eh.workmensCompensation,
             eh.observations,
             eh.housing_options,
             eh.housing_cost,
@@ -332,7 +336,9 @@
                         <!--- Other Information --->
                         personJobOfferName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
                         personJobOfferTitle = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
+                        authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
                         EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
+                        workmensCompensation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workmensCompensation#">,
                         homepage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
                         <!--- Arrival Information --->
@@ -389,7 +395,9 @@
                         <!--- Other Information --->
                         personJobOfferName,
                         personJobOfferTitle,
+                        authenticationType,
                         EIN,
+                        workmensCompensation,
                         homepage,
                         observations,
                         <!--- Arrival Information --->
@@ -441,7 +449,9 @@
 						<!--- Other Information --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workmensCompensation#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
                         <!--- Arrival Information --->
@@ -514,7 +524,9 @@
 			// Other Information
 			FORM.personJobOfferName = qGetHostCompanyInfo.personJobOfferName;
 			FORM.personJobOfferTitle = qGetHostCompanyInfo.personJobOfferTitle;
+			FORM.authenticationType = qGetHostCompanyInfo.authenticationType;
 			FORM.EIN = qGetHostCompanyInfo.EIN;
+			FORM.workmensCompensation = qGetHostCompanyInfo.workmensCompensation;
 			FORM.homepage = qGetHostCompanyInfo.homepage;
 			FORM.observations = qGetHostCompanyInfo.observations;
 			// Arrival Information
@@ -1050,10 +1062,42 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td class="style1" align="right"><strong>Authentication:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.authenticationType#</span>
+                                                <select name="authenticationType" id="authenticationType" class="style1 editPage"> 
+                                                    <option value="" <cfif NOT LEN(FORM.authenticationType)>selected</cfif> ></option>
+                                                    <option value="Secretary of State website" <cfif FORM.authenticationType EQ 'Secretary of State website'>selected</cfif> >Secretary of State website</option>
+                                                    <option value="US Department of Labor website" <cfif FORM.authenticationType EQ 'US Department of Labor website'>selected</cfif> >US Department of Labor website</option>
+                                                    <option value="Google Earth" <cfif FORM.authenticationType EQ 'Google Earth'>selected</cfif> >Google Earth</option>
+                                                </select>
+                                            </td>	                                                    
+                                        </tr>
+                                        <tr>
                                             <td class="style1" align="right"><strong>EIN:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.EIN#</span>
                                                 <input type="text" name="EIN" id="EIN" value="#FORM.EIN#" class="style1 editPage" size="35" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">
+                                                    <cfif FORM.workmensCompensation EQ 0>
+                                                        No
+                                                    <cfelseif FORM.workmensCompensation EQ 1>
+                                                        Yes
+                                                    <cfelseif FORM.workmensCompensation EQ 2>
+                                                        N/A
+                                                    </cfif>
+                                                </span>
+                                                <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField"> 
+                                                    <option value="" <cfif NOT LEN(FORM.workmensCompensation)>selected</cfif> ></option>
+                                                    <option value="0" <cfif FORM.workmensCompensation EQ 0>selected</cfif> >No</option>
+                                                    <option value="1" <cfif FORM.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
+                                                    <option value="2" <cfif FORM.workmensCompensation EQ 2>selected</cfif> >N/A</option>
+                                                </select>
                                             </td>
                                         </tr>
                                         <tr>
