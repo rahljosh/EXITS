@@ -211,7 +211,13 @@
                 </tr>
                 <tr>
                 	<td class="tableTitleView greyRow" width="15%">Housing:</td>
-                    <td class="greyRow tableDataView">#YesNoFormat(VAL(qGetHostCompany.isHousingProvided))#</td>
+                    <td class="greyRow tableDataView">
+						<cfif ListFind("0,1", qGetHostCompany.isHousingProvided)>
+                            #YesNoFormat(VAL(qGetHostCompany.isHousingProvided))#
+                        <cfelseif qGetHostCompany.isHousingProvided EQ 2>
+                            Will assist in finding
+                        </cfif>
+                    </td>
                 </tr>
 				<tr>               
                     <td class="tableTitleView" valign="top">Housing Instructions:</td>
