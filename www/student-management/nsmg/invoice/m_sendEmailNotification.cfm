@@ -68,6 +68,7 @@ END) AS testCompId
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE sch.agentid = #indexAgentId#
+        AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
         GROUP BY sch.agentid
         UNION ALL
         SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total,  
@@ -83,6 +84,7 @@ END) AS testCompId
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE  sch.agentid = #indexAgentId#
+        AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
         GROUP BY sch.agentid
         UNION ALL
         SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, 
@@ -98,6 +100,7 @@ END) AS testCompId
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sc.agentid
         WHERE sc.active =1
+        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
         AND sc.agentid = #indexAgentId#
         GROUP BY sc.agentid
         ) t
