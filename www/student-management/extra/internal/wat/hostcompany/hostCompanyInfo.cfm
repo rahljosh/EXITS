@@ -69,6 +69,10 @@
     <cfparam name="FORM.pickUpContactEmail" default="">
     <cfparam name="FORM.pickUpContactHours" default="">
     
+    <cfscript>
+		vGoogleMaps = '';
+	</cfscript>
+    
     <cfquery name="qGetHostCompanyInfo" datasource="MySql">
         SELECT 
         	eh.hostCompanyID,
@@ -547,8 +551,6 @@
 				Google --> http://www.google.com/maps?q=4301+West+Vine+Street,+Kissimmee,+FL+34741&hl=en&t=h&z=16
 				Output --> http://www.google.com/maps?q=4301+W+Vine+St,+Kissimmee,+FL+34741&hl=en&t=h&z=16
 			**********/
-            
-			vGoogleMaps = '';
 			
 			if ( LEN(FORM.address) AND LEN(FORM.city) AND LEN(qGetWorkSiteState.state) ) {
 				// Address

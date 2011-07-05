@@ -164,7 +164,7 @@
             UPDATE 
                 extra_hostCompany
             SET 
-                workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsBoolean(FORM.workmensCompensation)#">
+                workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">
             WHERE
                 hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
         </cfquery> 
