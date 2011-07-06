@@ -375,7 +375,7 @@
                                     <td class="dash" width="50%">
                                     	<b>School</b> 
 										<cfif VAL(qGetStudentInfo.schoolID) AND listFind("1,2,3,4", CLIENT.userType)>
-                                        	[ <a href="../index.cfm?curdoc=school_Info&schoolID=#qGetStudentInfo.schoolID#" target="_blank">view school</a> ]
+                                        	[ <a href="../index.cfm?curdoc=school_info&schoolID=#qGetStudentInfo.schoolID#" target="_blank">view school</a> ]
 										</cfif>
                                     </td>
                                     <td rowspan="2" valign="top" width='10'></td>
