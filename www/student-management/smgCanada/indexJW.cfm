@@ -93,6 +93,9 @@ You can reach him via email at smgCanada@iseusa.com or by phone at 631-893-4540 
           <h3 class="redText">SMG CANADA</h3>
           <p class="textspacing">Canada is a vibrant country with a rich cultural history. Student Management Group believes that an exchange program in Canada can provide students with a new perspective on life and an appreciation of a unique culture. We have partnered with several provinces in Canada to offer programs in a variety of high schools for our international partners.</p>
           <p class="textspacing">&nbsp;</p>
+          <p class="textspacing">&nbsp;</p>
+          <p class="textspacing">&nbsp;</p>
+          <p class="textspacing">&nbsp;</p>
           <!-- content --></div>
   </div></div>
   <!----- Canada End  ---->
