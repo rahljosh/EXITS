@@ -84,6 +84,59 @@
         
 	</cffunction>
 
+
+	<!--- Encrypt Variable --->
+	<cffunction name="encryptVariable" access="public" returntype="string" output="false" hint="Encrypts a variable">
+    	<cfargument name="varString" hint="String">
+
+		<cfscript>			
+			// Declare Key
+			var encryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
+			
+			try {
+				// Encrypt Variable
+				encryptVariable = Encrypt(TRIM(ARGUMENTS.varString), encryptKey, "desede", "hex");
+			} catch (Any e) {
+				// Set Encrypt Value to ''
+				encryptVariable = '';
+			}
+	
+			// Return Encrypted Variable
+			return(encryptVariable);
+        </cfscript>
+		   
+	</cffunction>
+
+	
+    <!--- Decrypt Variable --->
+	<cffunction name="decryptVariable" access="public" returntype="string" output="false" hint="Decrypts a variable">
+    	<cfargument name="varString" hint="String">
+        <cfargument name="displaySSN" default="0" hint="Set to 1 to return SSN in ***-**-9999 format">
+
+		<cfscript>
+			// Declare Key
+			var decryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
+
+			try {
+				// Decrypt Variable
+				decryptVariable = Decrypt(ARGUMENTS.varString, decryptKey, "desede", "hex");
+				
+				// Format SSN Display
+				if ( VAL(ARGUMENTS.displaySSN) ) {
+					decryptVariable = "XXX-XX-" & Right(decryptVariable, 4);
+				}
+			} catch (Any e) {
+				// Set Encrypt Value to ''
+				decryptVariable = '';
+			}
+	
+			// Return Encrypted Variable
+			return(decryptVariable);
+        </cfscript>
+		   
+	</cffunction>
+
+
 	<!--- This removes foreign accents from online application fields --->
 	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents from a string">
     	<cfargument name="varString" hint="String">

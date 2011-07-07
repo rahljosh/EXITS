@@ -379,21 +379,28 @@
     
 </cfsilent>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Host Family CBC Management</title>
-</head>
-<body>
-
 <style>
 	.columnHeader {
 		font-weight:bold;
 		vertical-align:top;
 	}
 </style>
+
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
+
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"60%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
+
+	});
+</script> 	
 
 <cfoutput>
 
@@ -443,14 +450,14 @@
         </cfif>
         	
         <tr>
-        	<th colspan="6" bgcolor="e2efc7">H O S T &nbsp; P A R E N T S</th>
-            <th bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_parents_info.cfm?hostID=#hostID#');">Edit Host Parents Info</a></th>
+        	<th colspan="6" bgcolor="##e2efc7">H O S T &nbsp; P A R E N T S</th>
+            <th bgcolor="##e2efc7"><a href="cbc/hostParentsInfo.cfm?hostID=#hostID#" class="jQueryModal">Edit Host Parents Info</a></th>
         </tr>
         <tr><td colspan="7">&nbsp;</td></tr>
         
         <!--- HOST MOTHER --->
         <cfif LEN(qGetHost.motherfirstname) AND LEN(qGetHost.motherlastname)>
-            <tr><td colspan="7" bgcolor="e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
+            <tr><td colspan="7" bgcolor="##e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
             <tr>
                 <td class="columnHeader">Company</td>
                 <td class="columnHeader">Season</td>		
@@ -507,7 +514,7 @@
         
         <!--- HOST FATHER --->
         <cfif LEN(qGetHost.fatherfirstname) AND LEN(qGetHost.fatherlastname)>
-            <tr><td colspan="7" bgcolor="e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
+            <tr><td colspan="7" bgcolor="##e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
             <tr>
                 <td class="columnHeader">Company</td>
                 <td class="columnHeader">Season</td>		
@@ -564,8 +571,8 @@
         
         <!--- OTHER FAMILY MEMBERS ---> 	
         <tr>
-        	<th colspan="6" bgcolor="e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 17 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
-        	<td bgcolor="e2efc7"><a href="javascript:OpenWindow('cbc/host_fam_cbc.cfm?hostID=#hostID#');">Edit Family Members Info</a></td>
+        	<th colspan="6" bgcolor="##e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 17 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
+            <th bgcolor="##e2efc7"><a href="cbc/hostMemberInfo.cfm?hostID=#hostID#" class="jQueryModal">Edit Family Members Info</a></th>
 		</tr>
         <tr><td colspan="7">&nbsp;</td></tr>
         <cfif NOT VAL(qGetHostMembers.recordcount)>
@@ -591,7 +598,7 @@
    				
    				<cfinput type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
    
-                <tr><td colspan="7" bgcolor="e2efc7"><b>#name# #lastname#</b></td></tr>
+                <tr><td colspan="7" bgcolor="##e2efc7"><b>#name# #lastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
@@ -666,6 +673,3 @@
 <gui:tableFooter />
 
 </cfoutput>
-
-</body>
-</html>
