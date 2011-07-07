@@ -23,7 +23,7 @@ text-align:center;
 	where companyid = #client.companyid#
 </cfquery>
 <cfquery name="user_info" datasource="mysql">
-	select smg_users.firstname, smg_users.lastname, smg_users.middlename, smg_users.ssn, smg_users.dob,
+	select smg_users.firstname, smg_users.lastname, smg_users.middlename, smg_users.dob,
 	 smg_users.drivers_license, smg_users.address, smg_users.address2, smg_users.city, smg_users.state, 
 	 smg_users.zip,
 	smg_states.statename
@@ -34,12 +34,7 @@ text-align:center;
 
 
 <cfoutput query=user_info>
-<cfif cgi.SERVER_PORT eq 443 and ssn is not ''>
-				<cfset key='BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR'>
-				<cfset decryptedssn = decrypt(ssn, key, "desede", "hex")>
-				<cfelse>
-				<cfset decryptedssn = #ssn#>
-				</cfif>
+
 <table width=612 align="center">
 	<tr>
 		<td><img src="../pics/logos/#original_company_info.companyshort#_clear.gif"></td>
@@ -62,7 +57,7 @@ text-align:center;
 		<td></td><td valign="top" align="center"><font size=-2>First Name</font></td><td valign="top" align="center"><font size=-2>Middle Name</font></td><td valign="top" align="center"><font size=-2>Last Name</font></td>
 	</tr>
 		<tr>
-		<Td width=5></Td><td class="bottom">#DateFormat(dob, 'mmm dd, yyyy')#&nbsp;</td><td class="bottom">#decryptedssn#&nbsp;</td> <td class="bottom">#drivers_license#&nbsp;</td> 
+		<Td width=5></Td><td class="bottom">#DateFormat(dob, 'mmm dd, yyyy')#&nbsp;</td><td class="bottom">&nbsp;</td> <td class="bottom">#drivers_license#&nbsp;</td> 
 	</tr>
 	<tr>
 		<td></td><td valign="top" align="center"><font size=-2>Date of Birth</font></td><td valign="top" align="center"><font size=-2>Socail Security Number</font></td><td valign="top" align="center"><font size=-2>Driver's License ##</font></td>

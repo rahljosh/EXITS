@@ -1,12 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Export Searches</title>
-</head>
-
-<body>
-
 <cfif client.usertype NEQ '1'>
 	Sorry but you do not have privileges to see this file.
 	<cfabort>
@@ -41,19 +32,10 @@ relatively correct Internet Explorer behavior. --->
 	<td>Middle Name</td>
 	<td>Last Name</td>
 	<td>DOB</td>
-	<td>SSN</td>
 	<td>State</td>
 </tr>
 
 <cfoutput query="get_searches">
-
-	<cfif Evaluate(cbc_type & "ssn") NEQ ''> 
-	
-	<cfset newssn = ''>
-	<!--- <cfset newssn = decrypt(Evaluate(cbc_type & "ssn"), 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', "desede", "hex")> --->	
-	
-	<!--- <cfset newssn = #Replace("#decrypt(Evaluate(cbc_type & "ssn"), 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR', 'desede', 'hex')#","-","","All")#> --->
-	<!--- <cfset newssn = #Replace("#newssn#", " ", "","All")#> --->
 
 	<tr>
 		<td>#hostid#</td>
@@ -62,13 +44,9 @@ relatively correct Internet Explorer behavior. --->
 		<td>#Evaluate(cbc_type & "middlename")#</td>
 		<td>#Evaluate(cbc_type & "lastname")#</td>
 		<td>#DateFormat(Evaluate(cbc_type & "dob"), 'mm/dd/yyyy')#</td>
-		<td>#newssn#</td>
 		<td>#state#</td>
 	</tr>
 	</cfif>
 </cfoutput>
 
 </table>
-
-</body>
-</html>
