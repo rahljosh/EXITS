@@ -36,22 +36,21 @@ a {
 <div id="subPages">
   <div class="whtTop"></div>
   <div class="whtMiddle">
-    <p class="header1">Jordan Nagler Memorial Scholarship Fund</p>
+    <p class="header1">2009 Jordan Nagler Memorial Scholarship Fund Recipient</p>
     <div class="subPic"><img src="images/scholarship.gif" width="415" height="277" /></div>
-<p class="p1"><strong>ISE is pleased to announce that the recipient of the Jordan Nagler Scholarship for 2011-2012 is Henna Merenheimo of Finland. Henna is 17 years old and lives in Tornio, a small town in the Lapland Region.</strong></p>
+<p class="p1"><strong>International Student Exchange has announced the first recipient of the Jordan Nagler Memorial Scholarship. She is Yoojin Kim from South Korea. The scholarship is awarded to students who are considered to be extremely diligent and successful at their studies and who would not otherwise be able to attend an international exchange program..</strong></p>
 
-<p class="p1">
-Henna is a straight A student and she enjoys life to the fullest. One of her special interests is singing. She sings with her school choral group and has been recognized as a very capable soloist. Henna also loves to cook and work with children. She combines both of these activities as the Director of the Children's Cooking Club during a summer program.</p>
+<p class="p1">Yoojin is 16 years old and comes from Seoul, where she lives with her parents<br />
+  and younger sister. She has been studying English since she was a child and earns very high marks in school. Excellence in school is only one component of her daily life. She is very active in her church, enjoys sports, and loves a new challenge. Yoojin hopes to become a dentist in the future and use her skills to help others.</p>
 
-<p class="p1">In selecting the scholarship recipient, ISE looks for a student who is well rounded &#8211; not just having excellent grades, but also being interested and involved in a variety of activities. Henna also enjoys badminton, basketball, cycling, camping, skiing, computers, and the movies. She is social and friendly, and was chosen as "Friend of the Year" by her schoolmates.</p>
-
+<p class="p1">Yoojin will be living with a family in Michigan while she is here in the United States.</p>
 <p class="p1"><i>The scholarship is in honor of Jordan Nagler who was the Executive Director of International Student Exchange from 2003 until his passing in October of 2008. The criteria for this scholarship selection is academic excellence and a diligent work ethic. These traits exemplify the work and life of Jordan Nagler, and ISE is proud to recognize and reward those characteristics in Henna Merenheimo.</i></p>
 
 <p class="p1">
 The young men chosen for this scholarship all work hard to be excellent students and have a full life. These traits exemplify the work and life of Jordan Nagler, and ISE is proud to recognize and reward those characteristics through this scholarship.
      </p>
      
-       <p class="p1">&nbsp;</p>
+     <p class="p1">&nbsp;</p>
     <table width="386" border="0" align="center" bgcolor="#E6e6e6" cellpadding="3">
       <tr>
         <td colspan="2" bgcolor="#8CC642" align="center" scope="row"><strong><a href="international-student-scholarships.cfm">2011 Recipient</a></strong>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="international-student-scholarships2010.cfm">2010 Recipient</a></strong>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="international-student-scholarships2009.cfm">2009 Recipient</a></strong></td>
