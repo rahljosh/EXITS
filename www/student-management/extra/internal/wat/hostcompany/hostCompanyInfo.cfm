@@ -342,7 +342,7 @@
                         personJobOfferTitle = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
                         authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
                         EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
-                        workmensCompensation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workmensCompensation#">,
+                        workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
                         homepage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
                         <!--- Arrival Information --->
@@ -455,7 +455,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.workmensCompensation#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
                         <!--- Arrival Information --->

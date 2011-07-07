@@ -161,10 +161,12 @@
             ecpc.selfConfirmationDate,
             ecpc.selfFindJobOffer,
             ecpc.selfConfirmationNotes,
-            ecpc.transNewHousingAddress,
-            ecpc.transNewJobOffer,
-            ecpc.transSevisUpdate,
-            ecpc.transfer
+            ecpc.reason_host,
+            ecpc.isTransfer,
+            ecpc.isTransferHousingAddressReceived,
+            ecpc.isTransferJobOfferReceived,
+            ecpc.isTransferSevisUpdated,
+            ecpc.dateTransferConfirmed
         FROM
         	extra_candidate_place_company ecpc
         INNER JOIN
@@ -204,8 +206,14 @@
 <script type='text/javaScript'>
 	$(document).ready(function() {
 		
+		// Disable forms
 		$(".formField").attr("disabled","disabled");
+		
+		// Display Self Placement Information
 		displaySelfPlacementInfo();
+
+		// Display Transfer Information
+		displayTransferInfo();
 		
 		// Pop Up Application 
 		$('.popUpOnlineApplication').popupWindow({ 
@@ -229,22 +237,63 @@
 			
 	});
 
-	function populateDate(dateValue) {
+
+	var populateDate = function(dateValue) { 
 		if ($('#ds2019Check').attr('checked')) {
 			$("#verification_received").val(dateValue);
 		} else {
 			$("#verification_received").val("");
 		}
 	}
-
-	function openWindow(url, setHeight, setWidth) {
+	
+	
+	var openWindow = function(url, setHeight, setWidth) { 
 		newwindow = window.open(url, 'Application', 'height=' + setHeight + ', width=' + setWidth + ', location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
 		if(window.focus) {
 			newwindow.focus()
 		}
 	}
 	
-	function displayCancelation(selectedValue) {
+	
+	var displayTransferInfo = function() { 
+		// Get Transfer Info
+		getTransferValue = $("#isTransfer").val();
+		if (getTransferValue == 1) {
+			// Display All Transfer Information
+			$("#trReasonInfo").fadeIn("fast");
+			$(".trTransferInfo").fadeIn("fast");
+			
+			// Reset Transfer Data
+			
+		} else {
+			// Hide Transfer Information
+			$(".trTransferInfo").fadeOut("fast");
+		}	
+		
+		// Display/Hide Self Placemet Info
+		displaySelfPlacementInfo();
+	}
+
+
+	var displaySelfPlacementInfo = function() { 
+		// Get Placement Info
+		getHostID = $("#hostcompanyID").val();
+		// Get Program Option
+		getProgramOption = $("#wat_placement").val();
+		// Get Transfer Info - Do not display self placement if it's a transfer
+		getTransferValue = $("#isTransfer").val();
+		
+		if ( getHostID > 0 && getProgramOption == 'Self-Placement' && getTransferValue == 0) {
+			$(".selfPlacementInfo").fadeIn("fast");
+		} else {
+			// Erase self placement data
+			$(".selfPlacementField").val("");
+			$(".selfPlacementInfo").fadeOut("fast");
+		}
+	}
+
+
+	var displayCancelation = function(selectedValue) { 
 		if (selectedValue == 'canceled') {
 			$("#divCancelation").slideDown(1000);
 			if ( $("#cancel_date").val() == '' ) {
@@ -256,8 +305,9 @@
 			$("#divCancelation").fadeOut("fast");
 		}
 	}
-
-	function displayProgramReason(currentProgramID, selectedProgramID) {
+	
+	
+	var displayProgramReason = function(currentProgramID, selectedProgramID) { 
 		if ( currentProgramID > '0' && currentProgramID != selectedProgramID && $("#program_history").css("display") == "none" ) {
 			$("#program_history").fadeIn("fast");
 			$("#reason").focus();
@@ -266,35 +316,23 @@
 		}
 	}
 
-	function displayHostReason(currentHostPlaceID, selectedHostID) {
-		if ( currentHostPlaceID > '0' && currentHostPlaceID != selectedHostID && $("#host_history").css("display") == "none" ) {
-			$("#host_history").fadeIn("fast");
+
+	var displayHostReason = function(currentHostPlaceID, selectedHostID) {
+		if ( currentHostPlaceID > '0' && currentHostPlaceID != selectedHostID && $(".trReasonInfo").css("display") == "none" ) {
+			$(".trReasonInfo").fadeIn("fast");
 			$("#host_startdate").val("");
 			$("#host_enddate").val("");
 			$("#reason_host").focus();
 			// Erase self placement data
 			$(".selfPlacementField").val("");
 		} else if (currentHostPlaceID == selectedHostID) {
-			$("#host_history").fadeOut("fast");
+			$(".trReasonInfo").fadeOut("fast");
 		}
 	}
 	
-	var displaySelfPlacementInfo = function() { 
-		// Get Placement Info
-		getHostID = $("#hostcompanyID").val();
-		// Get Program Option
-		getProgramOption = $("#wat_placement").val();
-		if ( getHostID > 0 && getProgramOption == 'Self-Placement' ) {
-			$(".selfPlacementInfo").fadeIn("fast");
-		} else {
-			// Erase self placement data
-			$(".selfPlacementField").val("");
-			$(".selfPlacementInfo").fadeOut("fast");
-		}
-	}
 	
 	// Check History
-	function checkHistory() {
+	var checkHistory = function() {
 		// PROGRAM HISTORY
 		if( $("#program_history").css("display") != "none" && $("#reason").val() == '' ){
 			alert("In order to change the program you must enter a reason (for history purpose).");
@@ -303,7 +341,7 @@
 		}
 		
 		// HOST HISTORY
-		if( $("#host_history").css("display") != "none" && $("#reason_host").val() == '' ){
+		if( $("#hostCompanyChangeReason").css("display") != "none" && $("#reason_host").val() == '' ){
 			alert("In order to change the host company you must enter a reason (for history purpose).");
 			$("#reason_host").focus();
 			return false; 
@@ -947,49 +985,67 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr id="host_history" bgcolor="##FFBD9D" class="hiddenField">
-                                           	<td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
-                                            <td class="style1">
-                                            	<textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="8"></textarea>
-                                                <br><Br>
-                                                Is this a transfer? 
-                                                <input type="radio" name="transfer" onclick="document.getElementById('showTransferInfo').style.display='table-row';" value="1" > Yes 
-                                                <input type="radio" name="transfer" onclick="document.getElementById('showTransferInfo').style.display='none';" value="0" > No
+                                        
+                                        <!--- Change Placement --->
+                                        <tr id="hostCompanyChangeReason" class="hiddenField trReasonInfo">
+                                           	<td width="35%" class="style1" align="right" valign="top"><strong>Reason:</strong></td>
+                                            <td width="65%" class="style1">
+                                            	<textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="8">#qCandidatePlaceCompany.reason_host#</textarea>
                                             </td>
                                         </tr>  
-                                        <tr id="showTransferInfo" bgcolor="##FFBD9D" class="hiddenField">
-                                            <td class="style1"  colspan="2" align="center" valign="middle">
-                                                <input type="checkbox" name="transHousingAddress" id="transHousingAddress" value="1" class="editPage"> <label for="transHousingAddress">New Housing Address</label> 
-                                                <input type="checkbox" name="transJobOffer" id="transJobOffer" value="1" class="editPage"> <label for="transJobOffer">New Job Offer</label> 
-                                                <input type="checkbox" name="transSEVISUpdate" id="transSEVISUpdate" value="1" class="editPage"> <label for="transSEVISUpdate">SEVIS Updated</label> 
-                                            </td>
-                                        </tr>
-                                        <tr id="showTransferInfo" bgcolor="FFBD9D" class="hiddenField">
-                                            <td class="style1" align="right" valign="top"><strong>Reason:</strong></td>
-                                            <td class="style1"><textarea name="reason_host" id="reason_host" class="style1 editPage" cols="60" rows="8"></textarea></td>
-                                        </tr>
+
+                                        <!--- Placement Date --->
                                         <tr class="readOnly">
                                         	<td class="style1" align="right" width="35%"><strong>Placement Date:</strong></td>
                                             <td class="style1" align="left" width="65%">
 	                                        	#dateFormat(qCandidatePlaceCompany.placement_date, 'mm/dd/yyyy')#
                                             </td>
                                         </tr>
-                                        <!----transfer info ---->
-                                        <cfif qCandidatePlaceCompany.transfer eq 1>
-                                        	<tr>
-                                            	<td class="style1" colspan="2">This was a transfer.</td>
-											</tr>                                                
-                                            <tr>
-                                                <td class="style1"  colspan="2" align="center" valign="middle">
-                                                    <input type="checkbox" value="1" class="formField" name="transHousingAddress" id="transHousingAddress2" <Cfif qCandidatePlaceCompany.transNewHousingAddress eq 1>checked</cfif>> 
-                                                    <label for="transHousingAddress2">New Housing Address</label> 
-                                                    <input type="checkbox" value="1" class="formField" name="transJobOffer" id="transJobOffer2" <Cfif qCandidatePlaceCompany.transNewJobOffer eq 1>checked</cfif>> 
-                                                    <label for="transJobOffer2">New Job Offer</label>
-                                                    <input type="checkbox" value="1" class="formField" name="transSEVISUpdate" id="transSEVISUpdate2" <Cfif qCandidatePlaceCompany.transSevisUpdate eq 1>checked</cfif>>
-                                                    <label for="transSEVISUpdate2">SEVIS Updated</label>
-                                                </td>
-                                        	</tr>
-                                       </cfif>
+                                        
+                                        <tr id="trReasonInfo" class="hiddenField trReasonInfo">
+                                        	<td class="style1" align="right" width="35%" valign="top"><strong>Is this a transfer?</strong></td>
+                                            <td class="style1" width="65%">
+                                                <span class="readOnly">#YesNoFormat(VAL(qCandidatePlaceCompany.isTransfer))#</span>
+                                                <select name="isTransfer" id="isTransfer" class="style1 editPage" onChange="displayTransferInfo();">
+                                                	<option value=""> </option>
+                                                    <option value="1" <cfif qCandidatePlaceCompany.isTransfer EQ 1> selected </cfif> > Yes </option>
+                                                    <option value="0" <cfif qCandidatePlaceCompany.isTransfer EQ 0> selected </cfif> > No </option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        
+                                        <!--- Transfer Info --->
+                                        <tr class="hiddenField trTransferInfo">
+                                            <td class="style1" align="right" width="35%" valign="top"><strong>Confirmation Date:</strong></td>
+                                            <td class="style1" width="65%">
+	                                            <span class="readOnly">#DateFormat(qCandidatePlaceCompany.dateTransferConfirmed, 'mm/dd/yyyy')#</span>
+                                                <input type="text" class="style1 datePicker editPage" name="dateTransferConfirmed" id="dateTransferConfirmed" value="#DateFormat(qCandidatePlaceCompany.dateTransferConfirmed, 'mm/dd/yyyy')#">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField trTransferInfo">
+                                        	<td colspan="2">
+                                            	
+                                                <table cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr class="hiddenField trTransferInfo">
+                                                        <td width="33%" class="style1" align="center">
+                                                            <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
+                                                            <label for="isTransferJobOfferReceived">New Job Offer</label> 
+                                                        </td>
+                                                        <td width="33%" class="style1" align="center">
+                                                            <input type="checkbox" name="isTransferHousingAddressReceived" id="isTransferHousingAddressReceived" value="1" class="formField" disabled <cfif qCandidatePlaceCompany.isTransferHousingAddressReceived EQ 1>checked</cfif> > 
+                                                            <label for="isTransferHousingAddressReceived">New Housing Address</label> 
+                                                        </td>
+                                                        <td width="33%" class="style1" align="center">
+                                                            <input type="checkbox" name="isTransferSevisUpdated" id="isTransferSevisUpdated" value="1" class="formField" disabled <cfif qCandidatePlaceCompany.isTransferSevisUpdated EQ 1>checked</cfif> > 
+                                                            <label for="isTransferSevisUpdated">SEVIS Updated</label> 
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                        	
+                                            </td>
+										</tr> 
+                                        <!--- End of Transfer Info ---> 
+
                                     
                                         <!--- Only for Self Placement with Active Placement Information --->
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="hiddenField selfPlacementInfo">
@@ -1000,6 +1056,7 @@
                                             <td class="style1">
                                                 <span class="readOnly">#qCandidatePlaceCompany.selfJobOfferStatus#</span>
                                                 <select name="selfJobOfferStatus" id="selfJobOfferStatus" class="style1 editPage selfPlacementField"> 
+                                                	<option value="" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ ''>selected</cfif> ></option>
                                                     <option value="Pending" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Pending'>selected</cfif> >Pending</option>
                                                     <option value="Approved" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Approved'>selected</cfif> >Approved</option>
                                                     <option value="Rejected" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Rejected'>selected</cfif> >Rejected</option>
