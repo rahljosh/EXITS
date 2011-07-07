@@ -14,43 +14,43 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
     <!--- Param URL Variables --->
-    <cfparam name="URL.hostID" default="">
+    <cfparam name="URL.userID" default="">
 
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
-	<cfparam name="FORM.hostID" default="0">    
+	<cfparam name="FORM.userID" default="0">    
 	<cfparam name="FORM.totalMembers" default="0">    
     
 	<cfscript>
-    	if ( VAL(URL.hostID) ) {
-			FORM.hostID = URL.hostID;	
+    	if ( VAL(URL.userID) ) {
+			FORM.userID = URL.userID;	
 		}
 		
-		if ( NOT VAL(FORM.hostID) ) {
+		if ( NOT VAL(FORM.userID) ) {
 			WriteOutput("An error has ocurred. Please go back and try again.");
 			abort;
 		}
 
 		// Get Host Family Info
-		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=FORM.hostID);
+		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=FORM.userID);
 		
 		// Get Host Family Members
-		qGetHostFamilyMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=FORM.hostID);
+		qGetUserMembers = APPLICATION.CFC.CBC.getEligibleUserMember(userID=FORM.userID);
 	</cfscript>
 
 	<!--- Param Host Member Form Variables --->
-	<cfloop query="qGetHostFamilyMembers">
+	<cfloop query="qGetUserMembers">
         
-        <cfparam name="FORM.childID#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.childID#">
-        <cfparam name="FORM.name#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.name#">
-        <cfparam name="FORM.middleName#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.middleName#">
-        <cfparam name="FORM.lastName#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.lastName#">
-        <cfparam name="FORM.sex#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.sex#">
-        <cfparam name="FORM.birthDate#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.birthDate#">
-        <cfparam name="FORM.SSN#qGetHostFamilyMembers.currentRow#" default="#APPLICATION.CFC.UDF.decryptVariable(varString=qGetHostFamilyMembers.SSN, displaySSN=1)#">
+        <cfparam name="FORM.ID#qGetUserMembers.currentRow#" default="#qGetUserMembers.ID#">
+        <cfparam name="FORM.firstName#qGetUserMembers.currentRow#" default="#qGetUserMembers.firstName#">
+        <cfparam name="FORM.middleName#qGetUserMembers.currentRow#" default="#qGetUserMembers.middleName#">
+        <cfparam name="FORM.lastName#qGetUserMembers.currentRow#" default="#qGetUserMembers.lastName#">
+        <cfparam name="FORM.sex#qGetUserMembers.currentRow#" default="#qGetUserMembers.sex#">
+        <cfparam name="FORM.DOB#qGetUserMembers.currentRow#" default="#qGetUserMembers.DOB#">
+        <cfparam name="FORM.SSN#qGetUserMembers.currentRow#" default="#APPLICATION.CFC.UDF.decryptVariable(varString=qGetUserMembers.SSN, displaySSN=1)#">
 
 	</cfloop>    
-	
+
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
 
@@ -60,7 +60,7 @@
 			// Loop through form variables
             For ( i=1; i LTE FORM.totalMembers; i=i+1 ) {
 
-				if ( NOT LEN(FORM["name" & i]) ) {
+				if ( NOT LEN(FORM["firstName" & i]) ) {
 					SESSION.formErrors.Add("First Name is required for member ##" & i);
 				}
 
@@ -72,8 +72,8 @@
 					SESSION.formErrors.Add("Gender is required for member ##" & i);
 				}
 
-				if ( LEN(FORM["birthDate" & i]) AND NOT IsDate(FORM["birthDate" & i]) ) {
-					FORM["birthDate" & i] = '';
+				if ( LEN(FORM["DOB" & i]) AND NOT IsDate(FORM["DOB" & i]) ) {
+					FORM["DOB" & i] = '';
 					SESSION.formErrors.Add("Please enter a valid DOB for member ##" & i);
 				}    
 				
@@ -107,21 +107,21 @@
 
                 <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE 
-                        smg_host_children
+                        smg_user_family
                     SET 
-                        name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['name' & i]#">,
+                        firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['firstName' & i]#">,
                         middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['middleName' & i]#">,
                         lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['lastName' & i]#">,
                         sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['sex' & i]#">,
-                        <!--- Father SSN --->
+                        <!--- SSN --->
                         <cfif VAL(FORM["updateSSN" & i])>
                             SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['SSN' & i]#">,
                         </cfif>
-                        birthDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['birthDate' & i]#" null="#NOT IsDate(FORM['birthDate' & i])#">                        
+                        DOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['DOB' & i]#" null="#NOT IsDate(FORM['DOB' & i])#">                        
                     WHERE 
-                        childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM['childID' & i])#">
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM['ID' & i])#">
                     AND
-                    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
+                    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
                 </cfquery>			
                 
             </cfloop>
@@ -147,15 +147,15 @@
         headerType="applicationNoHeader"
     />			
 		
-        <cfloop query="qGetHostFamilyMembers">
+        <cfloop query="qGetUserMembers">
         
 			<script type="text/JavaScript">
                 // Jquery Masks 
                 jQuery(function($){
                     // DOB
-                    $("##birthDate#qGetHostFamilyMembers.currentRow#").mask("99/99/9999");
+                    $("##DOB#qGetUserMembers.currentRow#").mask("99/99/9999");
                     // SSN
-                    $("##SSN#qGetHostFamilyMembers.currentRow#").mask("***-**-9999");
+                    $("##SSN#qGetUserMembers.currentRow#").mask("***-**-9999");
                 });	
                 //-->
             </script>
@@ -175,7 +175,7 @@
         <!--- Table Header --->
         <gui:tableHeader
             imageName="family.gif"
-            tableTitle="Info to Submit CBC - &nbsp; Host Family Members of #qGetHostFamilyInfo.familylastname# (###qGetHostFamilyInfo.hostID#)"
+            tableTitle="Info to Submit CBC - &nbsp; User Members of #qGetUserInfo.firstName# #qGetUserInfo.lastName# (###qGetUserInfo.userID#)"
             width="98%"
             imagePath="../"
         />    
@@ -193,15 +193,15 @@
             messageType="tableSection"
             width="98%"
             />
-            
-        <form name="hostMembersCBC" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+
+        <form name="userMembersCBC" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         	<input type="hidden" name="submitted" value="1">
-            <input type="hidden" name="hostID" value="#FORM.hostID#">
-            <input type="hidden" name="totalMembers" value='#qGetHostFamilyMembers.recordcount#'>
+            <input type="hidden" name="userID" value="#FORM.userID#">
+            <input type="hidden" name="totalMembers" value='#qGetUserMembers.recordcount#'>
             
             <table width="98%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
                 <tr style="background-color:##e2efc7">
-                	<th colspan="7">Eligible Host Family Members</th>
+                	<th colspan="7">Eligible User Members</th>
                 </tr>
                 <tr style="font-weight:bold; background-color:##ffffe6">
                 	<td width="5px;">&nbsp;</td>
@@ -212,26 +212,26 @@
                     <td>DOB</td>
                     <td>SSN</td>
                 </tr>	
-                <cfloop query="qGetHostFamilyMembers">
-                    <input type="hidden" name="childID#qGetHostFamilyMembers.currentrow#" value="#qGetHostFamilyMembers.childID#">
-                    <tr bgcolor="###iif(qGetHostFamilyMembers.currentrow MOD 2 ,DE("FFFFFF") ,DE("ffffe6") )#">
-                        <td valign="top">#qGetHostFamilyMembers.currentRow#</td>
-                        <td valign="top"><input type="text" name="name#qGetHostFamilyMembers.currentRow#" class="mediumField" value="#FORM['name' & qGetHostFamilyMembers.currentrow]#"></td>
-                        <td valign="top"><input type="text" name="middleName#qGetHostFamilyMembers.currentRow#" size="8" value="#FORM['middleName' & qGetHostFamilyMembers.currentrow]#"></td>
-                        <td valign="top"><input type="text" name="lastName#qGetHostFamilyMembers.currentRow#" class="mediumField" value="#FORM['lastName' & qGetHostFamilyMembers.currentrow]#"></td>
+                <cfloop query="qGetUserMembers">
+                    <input type="hidden" name="ID#qGetUserMembers.currentrow#" value="#qGetUserMembers.ID#">
+                    <tr bgcolor="###iif(qGetUserMembers.currentrow MOD 2 ,DE("FFFFFF") ,DE("ffffe6") )#">
+                        <td valign="top">#qGetUserMembers.currentRow#</td>
+                        <td valign="top"><input type="text" name="firstName#qGetUserMembers.currentRow#" class="mediumField" value="#FORM['firstName' & qGetUserMembers.currentrow]#"></td>
+                        <td valign="top"><input type="text" name="middleName#qGetUserMembers.currentRow#" size="8" value="#FORM['middleName' & qGetUserMembers.currentrow]#"></td>
+                        <td valign="top"><input type="text" name="lastName#qGetUserMembers.currentRow#" class="mediumField" value="#FORM['lastName' & qGetUserMembers.currentrow]#"></td>
                         <td valign="top">
-                        	<input type="radio" name="sex#qGetHostFamilyMembers.currentRow#" id="genderM#qGetHostFamilyMembers.currentRow#" value="Male" <cfif FORM['sex' & qGetHostFamilyMembers.currentrow] EQ 'male'> checked="checked" </cfif> > 
-                            <label for="genderM#qGetHostFamilyMembers.currentRow#">Male</label>
+                        	<input type="radio" name="sex#qGetUserMembers.currentRow#" id="genderM#qGetUserMembers.currentRow#" value="Male" <cfif FORM['sex' & qGetUserMembers.currentrow] EQ 'male'> checked="checked" </cfif> > 
+                            <label for="genderM#qGetUserMembers.currentRow#">Male</label>
                             &nbsp; 
-                            <input type="radio" name="sex#qGetHostFamilyMembers.currentRow#" id="genderF#qGetHostFamilyMembers.currentRow#" value="Female" <cfif FORM['sex' & qGetHostFamilyMembers.currentrow] EQ 'female'> checked="checked" </cfif> > 
-                            <label for="genderF#qGetHostFamilyMembers.currentRow#">Female</label>
+                            <input type="radio" name="sex#qGetUserMembers.currentRow#" id="genderF#qGetUserMembers.currentRow#" value="Female" <cfif FORM['sex' & qGetUserMembers.currentrow] EQ 'female'> checked="checked" </cfif> > 
+                            <label for="genderF#qGetUserMembers.currentRow#">Female</label>
                         </td>
                         <td valign="top">
-                        	<input type="text" name="birthDate#qGetHostFamilyMembers.currentRow#" id="birthDate#qGetHostFamilyMembers.currentRow#" class="smallField" value="#DateFormat(FORM['birthDate' & qGetHostFamilyMembers.currentrow],'mm-dd-yyyy')#" maxlength="10">
+                        	<input type="text" name="DOB#qGetUserMembers.currentRow#" id="DOB#qGetUserMembers.currentRow#" class="smallField" value="#DateFormat(FORM['DOB' & qGetUserMembers.currentrow],'mm-dd-yyyy')#" maxlength="10">
                         	<br /><font size="-2">mm/dd/yyyy</font>
                         </td>
                         <td valign="top">
-        					<input type="text" name="SSN#qGetHostFamilyMembers.currentRow#" id="SSN#qGetHostFamilyMembers.currentRow#" value="#FORM['SSN' & qGetHostFamilyMembers.currentrow]#" class="mediumField" maxlength="11">
+        					<input type="text" name="SSN#qGetUserMembers.currentRow#" id="SSN#qGetUserMembers.currentRow#" value="#FORM['SSN' & qGetUserMembers.currentrow]#" class="mediumField" maxlength="11">
                         </td>
                     </tr>	
                 </cfloop>
@@ -242,9 +242,9 @@
             		<td align="center"><input name="Submit" type="image" src="../pics/update.gif" border="0"></td>
             	</tr>
             </table>
-        
+
         </form>					
-        
+
         <!--- Table Footer --->
         <gui:tableFooter 
   	        width="98%"

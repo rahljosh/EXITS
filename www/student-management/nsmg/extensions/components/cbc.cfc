@@ -567,7 +567,7 @@
                     WHERE 
                     	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userid#">
                     AND 
-                    	(DATEDIFF(now( ) , dob)/365) > 18
+                    	(DATEDIFF(now( ) , dob)/365) > <cfqueryparam cfsqltype="cf_sql_integer" value="17">
                     ORDER BY 
                     	id                
             </cfquery>
