@@ -14,7 +14,6 @@
 	smg_user_family
 	where userid = #form.userid# and no_members = 1
 	</Cfquery>
-	<cfset key='BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR'>
 
 	<cfquery name="new_fam_member" datasource="MySQL">
 	insert into smg_user_family (userid, firstname, middlename, lastname, relationship, dob)
