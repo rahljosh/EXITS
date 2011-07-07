@@ -13,7 +13,6 @@
 <cfparam name="FORM.wat_doc_other" default="">
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
-<cfparam name="FORM.transfer" default="0">
 <cfparam name="FORM.watDateCheckedIn" default="">
 <!--- Placement Information --->
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
@@ -28,10 +27,11 @@
 <cfparam name="FORM.selfFindJobOffer" default="">
 <cfparam name="FORM.selfConfirmationNotes" default="">
 <!--- Transfer ---->
-<cfparam name="FORM.transfer" default="0">
-<cfparam name="FORM.transHousingAddress" default="0">
-<cfparam name="FORM.transJobOffer" default="0">
-<cfparam name="FORM.transSevisUpdate" default="0">
+<cfparam name="FORM.isTransfer" default="0">
+<cfparam name="FORM.dateTransferConfirmed" default="">
+<cfparam name="FORM.isTransferJobOfferReceived" default="0">
+<cfparam name="FORM.isTransferHousingAddressReceived" default="0">
+<cfparam name="FORM.isTransferSevisUpdated" default="0">
 <!--- English Assessment --->
 <cfparam name="FORM.englishAssessment" default="">
 <cfparam name="FORM.englishAssessmentDate" default="">
@@ -171,7 +171,7 @@
 
 	</cfif>
 
-	<!--- New Host Family --->
+	<!--- New Host Company --->
     <cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostcompanyID>
         
         <!--- Set old records to inactive --->
@@ -202,10 +202,11 @@
                 selfConfirmationDate,
                 selfFindJobOffer,
                 selfConfirmationNotes,
-                transNewHousingAddress,
-                transNewJobOffer,
-                transSevisUpdate,
-                transfer
+                isTransfer,
+                dateTransferConfirmed,
+                isTransferJobOfferReceived,
+                isTransferHousingAddressReceived,                
+                isTransferSevisUpdated
             )
             VALUES 
             (	
@@ -222,10 +223,11 @@
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transHousingAddress#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transJobOffer#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transSevisUpdate#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.transfer#">
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransfer)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTransferConfirmed#" null="#NOT IsDate(FORM.dateTransferConfirmed)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferJobOfferReceived)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferHousingAddressReceived)#">,                
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferSevisUpdated)#">
             )
         </cfquery>
         
@@ -245,9 +247,12 @@
                 selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
                 selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,     
                 selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,                
-                transNewHousingAddress = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transHousingAddress#">,
-                transNewJobOffer = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transJobOffer#">,
-                transSevisUpdate = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.transSevisUpdate#">
+				isTransfer = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransfer)#">, 
+                dateTransferConfirmed = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTransferConfirmed#" null="#NOT IsDate(FORM.dateTransferConfirmed)#">,
+                isTransferJobOfferReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferJobOfferReceived)#">,
+                isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferHousingAddressReceived)#">,                
+                isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferSevisUpdated)#">
+                
             WHERE 
                 candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentPlacement.candcompid)#">
         </cfquery>
