@@ -1,4 +1,25 @@
 <cfinclude template="extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
+<style type="text/css">
+a:link {
+	color: #000;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #000;
+}
+a:hover {
+	text-decoration: underline;
+	color: #FFF;
+}
+a:active {
+	text-decoration: none;
+	color: #000;
+}
+a {
+	font-size: 12px;
+}
+</style>
 </head>
 
 <body class="oneColFixCtr">
@@ -33,15 +54,18 @@ ISE has announced the recipients of the annual Jordan Nagler Scholarship for the
 <p class="p1">
 The young men chosen for this scholarship all work hard to be excellent students and have a full life. These traits exemplify the work and life of Jordan Nagler, and ISE is proud to recognize and reward those characteristics through this scholarship.
      </p>
-    <table width="386" border="0" align="center">
+    <p class="p1">&nbsp;</p>
+    <table width="386" border="0" align="center" bgcolor="#E6e6e6" cellpadding="3">
       <tr>
-        <th width="229" class="leftJust" scope="row">Jordan Nagler Memorial Scholarship Fund<br />
+        <td colspan="2" bgcolor="#8CC642" align="center" scope="row"><strong><a href="international-student-scholarships.cfm">2011 Recipient</a></strong>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="international-student-scholarships2010.cfm">2010 Recipient</a></strong>&nbsp;&nbsp;|&nbsp;&nbsp;<strong><a href="international-student-scholarships2009.cfm">2009 Recipient</a></strong></td>
+        </tr>
+      <tr>
+        <td width="229" align="center"  scope="row"><strong>Jordan Nagler Memorial Scholarship Fund</strong><br />
 119 Cooper Street<br />
-Babylon NY, 11702</th>
-        <td width="147" align="center"><a href="pdfs/NaglerScholarship.pdf"><img src="images/NaglerScholarship.png" width="115" height="125" border="0"/></a></td>
+Babylon NY, 11702</td>
+        <td width="147" align="center"><img src="images/NaglerScholarship.png" width="115" height="125" border="0"/></td>
       </tr>
     </table>
-    <p class="p1">&nbsp;</p>
     <p class="p1">&nbsp;</p>
   <!-- end whtMiddle --></div>
   <div class="whtBottom"></div>
