@@ -138,7 +138,7 @@
         <cfargument name="studentID" default="0" hint="studentID is not required, pass to get only members that will not turn 18 during the program">
 
 			<cfscript>
-                // Get Student Program End Date - Remove 5 days from program end date to compensate for bissextile year
+                // Get Student Program End Date - Remove 5 days from program end date to compensate for leap/bissextile year
                 qGetProgramInfo = APPLICATION.CFC.PROGRAM.getProgramByStudentID(studentID=ARGUMENTS.studentID);
 			</cfscript>
             
@@ -151,7 +151,8 @@
                         membertype, 
                         name, 
                         middlename, 
-                        lastName, 
+                        lastName,
+                        sex, 
                         ssn, 
                         birthdate, 
                         FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) AS age
