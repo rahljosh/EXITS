@@ -227,7 +227,10 @@
                     <td valign="top"><input type="text" name="fatherFirstName" class="mediumField" value="#FORM.fatherFirstName#"></td>
                     <td valign="top"><input type="text" name="fatherMiddleName" class="smallField" value="#FORM.fatherMiddleName#"></td>
                     <td valign="top"><input type="text" name="fatherLastName" class="mediumField" value="#FORM.fatherLastName#"></td>
-                    <td valign="top"><input type="text" name="fatherDOB" id="fatherDOB" class="smallField" value="#DateFormat(FORM.fatherDOB,'mm-dd-yyyy')#" maxlength="10"><br>mm-dd-yyyy</td>
+                    <td valign="top">
+                    	<input type="text" name="fatherDOB" id="fatherDOB" class="smallField" value="#DateFormat(FORM.fatherDOB,'mm-dd-yyyy')#" maxlength="10">
+                    	<br /><font size="-2">mm/dd/yyyy</font>
+					</td>                        
                     <td valign="top"><input type="text" name="fatherSSN" id="fatherSSN" value="#FORM.fatherSSN#" class="mediumField" maxlength="11"></td>
                 </tr>	
                 
@@ -247,7 +250,10 @@
                     <td valign="top"><input type="text" name="motherFirstName" class="mediumField" value="#FORM.motherFirstName#"></td>
                     <td valign="top"><input type="text" name="motherMiddleName" class="smallField" value="#FORM.motherMiddleName#"></td>
                     <td valign="top"><input type="text" name="motherLastName" class="mediumField" value="#FORM.motherLastName#"></td>
-                    <td valign="top"><input type="text" name="motherDOB" id="motherDOB" class="smallField" value="#DateFormat(FORM.motherDOB,'mm-dd-yyyy')#" maxlength="10"><br>mm-dd-yyyy</td>
+                    <td valign="top">
+                    	<input type="text" name="motherDOB" id="motherDOB" class="smallField" value="#DateFormat(FORM.motherDOB,'mm-dd-yyyy')#" maxlength="10">
+                    	<br /><font size="-2">mm/dd/yyyy</font>
+                    </td>
                     <td valign="top"><input type="text" name="motherSSN" id="motherSSN" value="#FORM.motherSSN#" class="mediumField" maxlength="11"></td>
                 </tr>		
             </table>

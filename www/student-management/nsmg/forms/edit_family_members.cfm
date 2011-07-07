@@ -57,7 +57,7 @@ function areYouSure() {
 
 	<table width=100% align="center" cellpadding=4 cellspacing="0">
 		<Tr>
-			<td><b>First Name</b></td><td><b>Middle Name</b></td><td><b>Last Name</b></td><td><b>Relationship</b></td><td><b>Birthdate</b></td><td><b>SSN</b></td><td></td><td></td>
+			<td><b>First Name</b></td><td><b>Middle Name</b></td><td><b>Last Name</b></td><td><b>Relationship</b></td><td><b>Birthdate</b></td><td></td><td></td>
 		</Tr>			
 			<cfoutput query="family_members">
 			<cfif no_members eq 1>
@@ -77,15 +77,6 @@ function areYouSure() {
 				<cfelse>#relationship#</cfif></td>
 				<td><cfif url.edit eq #id#><input type="text" name="dob" size=8 value=#DateFormat(dob, 'mm/dd/yyyy')#>
 				<cfelse>#DateFormat(dob, 'mm/dd/yyyy')# - (#DateDiff('yyyy', dob, now() )# yrs.)</cfif></td>
-				<td>
-				<cfif cgi.SERVER_PORT eq 443 and ssn is not ''>
-				<cfset key='BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR'>
-				<cfset decryptedssn = decrypt(ssn, key, "desede", "hex")>
-				<cfelse>
-				<cfset decryptedssn = #ssn#>
-				</cfif>
-				<cfif url.edit eq #id#><input type="text" name="ssn" size=10 value=#decryptedssn#>
-				<cfelse>#decryptedssn#</cfif></td>
 				<Td><cfif isDefined('url.edit')>
 							<cfif url.edit eq #id#><input name="submit" type="image" src="pics/arrow.gif" border=0><cfelse>
 							<a href="?curdoc=forms/edit_family_members&edit=#id#&userid=#url.userid#">
@@ -101,7 +92,6 @@ function areYouSure() {
 				<td><input type="text" name="lastname" size=16></td>
 				<td><input type="text" name="relationship" size=16></td>
 				<td><input type="text" name="dob" size=8></td>
-				<td><input type="text" name="ssn" size=16></td>
 			</tr>	
 			<cfif family_members.recordcount eq 0>
 			<tr>

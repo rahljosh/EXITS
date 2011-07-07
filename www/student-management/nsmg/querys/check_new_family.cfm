@@ -15,10 +15,10 @@
 	where userid = #form.userid# and no_members = 1
 	</Cfquery>
 	<cfset key='BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR'>
-<cfset encryptedssn = encrypt("#form.ssn#", key, "desede", "hex")>
+
 	<cfquery name="new_fam_member" datasource="MySQL">
-	insert into smg_user_family (userid, firstname, middlename, lastname, relationship, dob, ssn)
-	values(#form.userid#,'#form.firstname#', '#form.middlename#', '#form.lastname#','#form.relationship#',#CreateODBCDate(form.dob)#, '#encryptedssn#')
+	insert into smg_user_family (userid, firstname, middlename, lastname, relationship, dob)
+	values(#form.userid#,'#form.firstname#', '#form.middlename#', '#form.lastname#','#form.relationship#',#CreateODBCDate(form.dob)#)
 	</cfquery>
 	<cflocation url="../index.cfm?curdoc=forms/edit_family_members&userid=#url.userid#">
 </cfif>
