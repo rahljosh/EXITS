@@ -72,11 +72,12 @@
                		select smg_users.email
                     from smg_users
                     left join user_access_rights on user_access_rights.userid = smg_users.userid
-                    where user_access_rights.regionid = #regionid# and user_access_rights.usertype = 5
+                    where user_access_rights.regionid = #regionid# and user_access_rights.usertype = 5 AND active = 1
                </cfquery>
-               <cfset advisor_emails = #ListAppend(advisor_emails, '#get_email.email#')#>
+				   <cfif IsValid("email",get_email.email)>
+                        <cfset advisor_emails = ListAppend(advisor_emails, '#get_email.email#')>
+                   </cfif>
                </cfloop>
-               
              </cfoutput>
            <cfsavecontent variable="email_message">
            <cfoutput>
@@ -97,22 +98,20 @@
            <cfif client.companyid eq 10>
            stacy@case-usa.org
            <cfelse>
-           thea@iseusa.com,#client.programmanager_email#, #advisor_emails#
+           thea@iseusa.com,#client.programmanager_email#,#advisor_emails#
            </cfif>     
 				</cfoutput>
            </cfsavecontent>
 			
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
-          <Cfif client.companyid eq 10>
-          		<cfinvokeargument name="email_to" value="stacy@case-usa.org">
-          <Cfelse>
-          
-          
-<cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#, #advisor_emails#">          
-		  </Cfif>				
-					<!----
-                <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+				<Cfif client.companyid eq 10>
+                      <cfinvokeargument name="email_to" value="stacy@case-usa.org">
+                <Cfelse>
+                      <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#,#advisor_emails#">          
+                </Cfif>				
+				<!----
+				<cfinvokeargument name="email_to" value="josh@pokytrails.com">
 				---->
                 <cfinvokeargument name="email_subject" value="Notice of Address Change">
                 <cfinvokeargument name="email_message" value="#email_message#">
