@@ -94,10 +94,11 @@
 		   
 	</cffunction>
 
-	
+
     <!--- Decrypt Variable --->
 	<cffunction name="decryptVariable" access="public" returntype="string" output="false" hint="Decrypts a variable">
     	<cfargument name="varString" hint="String">
+        <cfargument name="displaySSN" default="0" hint="Set to 1 to return SSN in ***-**-9999 format">
 
 		<cfscript>
 			// Declare Key
@@ -106,6 +107,11 @@
 			try {
 				// Decrypt Variable
 				decryptVariable = Decrypt(ARGUMENTS.varString, decryptKey, "desede", "hex");
+				
+				// Format SSN Display
+				if ( VAL(ARGUMENTS.displaySSN) ) {
+					decryptVariable = "XXX-XX-" & Right(decryptVariable, 4);
+				}
 			} catch (Any e) {
 				// Set Encrypt Value to ''
 				decryptVariable = '';
