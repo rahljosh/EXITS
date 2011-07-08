@@ -123,7 +123,6 @@ table.nav_bar {  background-color: #ffffff; border: 1px solid #000000; }
 	
 	
 	<td  valign="top" class="thin-border-left-bottom-right">
-		DMD Discoveries <br>
 		Private High School Program<br>
 		119 Cooper St.<br />
 		Suite 5<br>

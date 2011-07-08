@@ -1,6 +1,6 @@
 <HTML>
 <HEAD>
-<TITLE>DM Discoveries : Private High School Program</TITLE>
+<TITLE>Private High School Program</TITLE>
 <META NAME="Keywords" CONTENT="exchange student, foreign students, student exchange, foreign exchange, foreign exchange program, academic exchange, student exchange program, high school, high school program, private high school program, private high school, American exchange, host family, host families">
 <META NAME="Description" CONTENT="The Private High School Program offers students, age 13-19 years old, the opportunity to study and live in the United States. Students are able to further their own education by attending a high level academic institution while at the same time interacting with American families and friends.">
 </head>
