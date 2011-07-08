@@ -81,7 +81,7 @@
 
 	/***** Create APPLICATION.SETTINGS structure *****/
 	APPLICATION.SETTINGS = StructNew();		
-	APPLICATION.SETTINGS.watDisplaySSNUserList = "7935,12038"; // Anca, Elena
+	APPLICATION.SETTINGS.watDisplayFullSSNUserList = "7935,12038"; // Anca, Elena
 
 
 	/***** Create APPLICATION.METADATA structure / Stores Default Metadata Information *****/
