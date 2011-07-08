@@ -95,10 +95,6 @@
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr><td height="13">&nbsp;</td></tr>
 					<tr>
-						<td>&nbsp;</td>
-						<td colspan="2" align="center" valign="top"><p class="style4"><b>DM Discoveries</b></p></td>
-					</tr>
-					<tr>
 						<td width="32%" rowspan="2" align="center" valign="top"><img src="../pics/php-logo-s.jpg" border="0"/></td>
 						<td colspan="2" align="center" valign="top"><p class="style4"><b>#companyname#</b></p></td>
 					</tr>
