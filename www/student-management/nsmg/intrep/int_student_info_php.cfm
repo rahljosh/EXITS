@@ -291,7 +291,6 @@
 				<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>:: </b></span>Letters</td></tr>
 				<tr><td>: : <a href="" onClick="javascript: win=window.open('reports/acceptance_letter.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Acceptance Letter</a></td></tr>
 				<tr><td><cfif qGetStudentInfo.schoolid NEQ '0'>: : <a href="" onClick="javascript: win=window.open('reports/placement_letter.cfm', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Placement</a> &nbsp;</cfif></td></tr>
-				<tr><td><cfif qGetStudentInfo.schoolid NEQ '0'>: : <a href="" onClick="javascript: win=window.open('intrep/int_flight_information_letter.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=480,width=800, location=yes, scrollbars=yes,  toolbar=yes, menubar=yes, resizable=yes'); win.opener=self; return false;">Flight Information</a></cfif></td></tr>
 			</table>
 			--->
 		</td>
