@@ -73,9 +73,6 @@
     <cfparam name="FORM.wat_placement" default="">
     <cfparam name="FORM.wat_participation" default="">
     <cfparam name="FORM.SSN" default="">
-    <cfparam name="FORM.ssnAreaNumber" default="">
-    <cfparam name="FORM.ssnGroupNumber" default="">
-    <cfparam name="FORM.ssnSerialNumber" default="">
 
 	<!--- Candidate Picture --->
     <cfdirectory name="candidatePicture" directory="#APPLICATION.PATH.uploadCandidatePicture#" filter="#FORM.candidateID#.*">
@@ -105,8 +102,7 @@
 			FORM.home_phone = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.homePhoneCountry, areaCode=FORM.homePhoneArea, prefix=FORM.homePhonePrefix, number=FORM.homePhoneNumber);
 			// Emergency Phone
 			FORM.emergency_phone = APPLICATION.CFC.UDF.formatPhoneNumber(countryCode=FORM.emergencyPhoneCountry, areaCode=FORM.emergencyPhoneArea, prefix=FORM.emergencyPhonePrefix, number=FORM.emergencyPhoneNumber);					
-			// SSN
-			FORM.SSN = APPLICATION.CFC.UDF.formatSSN(areaNumber=FORM.ssnAreaNumber, groupNumber=FORM.ssnGroupNumber, serialNumber=FORM.ssnSerialNumber);
+			
 			// WAT Start and End Dates
 			FORM.watStartVacation = FORM.watStartVacationMonth & "/" & FORM.watStartVacationDay & "/" & FORM.watStartVacationYear;
 			FORM.watEndVacation = FORM.watEndVacationMonth & "/" & FORM.watEndVacationDay & "/" & FORM.watEndVacationYear;
@@ -134,8 +130,26 @@
 				SESSION.formErrors.Add('Program must end after start date');
 			}
 			
+			// SSN
+			if ( LEN(FORM.SSN) AND Left(FORM.SSN, 3) NEQ 'XXX' AND NOT isValid("social_security_number", Trim(FORM.SSN)) ) {
+				SESSION.formErrors.Add("Please enter a valid SSN.");
+            }
+
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
+				
+				// SSN - Check if we need to update or not SSN
+				vUpdateSSN = 0;
+				// Will update if it's blank or there is a new number
+				if ( isValid("social_security_number", Trim(FORM.SSN)) ) {
+					// Encrypt Social
+					FORM.SSN = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN);
+					// Update
+					vUpdateSSN = 1;
+				} else if ( NOT LEN(FORM.SSN) ) {
+					// Update - Erase SSN
+					vUpdateSSN = 1;
+				}
 				
 				// Update Candidate Information
 				APPLICATION.CFC.CANDIDATE.updateCandidate(
@@ -164,7 +178,8 @@
 					endDate = FORM.programEnd,
 					wat_placement = FORM.wat_placement,
 					wat_participation = FORM.wat_participation,
-					ssn = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN)
+					updateSSN = vUpdateSSN,
+					ssn = FORM.SSN
 				);
 				
 				// Insert/Update Application Fields 
@@ -256,13 +271,7 @@
 			FORM.wat_placement = qGetCandidateInfo.wat_placement;
 			FORM.wat_participation = qGetCandidateInfo.wat_participation;
 			FORM.emergency_phone = qGetCandidateInfo.emergency_phone;
-			FORM.SSN = APPLICATION.CFC.UDF.decryptVariable(qGetCandidateInfo.SSN);
-			// Break Down SSN
-			stSSN = APPLICATION.CFC.UDF.breakDownSSN(FORM.SSN);
-			FORM.ssnAreaNumber = stSSN.areaNumber;
-			FORM.ssnGroupNumber = stSSN.groupNumber;
-			FORM.ssnSerialNumber = stSSN.serialNumber;
-			
+			FORM.SSN = APPLICATION.CFC.UDF.displaySSN(qGetCandidateInfo.SSN);
 			// Online Application Fields 
 			for ( i=1; i LTE qGetAnswers.recordCount; i=i+1 ) {
 				FORM[qGetAnswers.fieldKey[i]] = qGetAnswers.answer[i];
@@ -277,6 +286,12 @@
 	// Date picker
 	$(function() {
 		$(".datepicker").datepicker();
+	});	
+
+	// Jquery Masks 
+	jQuery(function($){
+		// SSN
+		$("#SSN").mask("***-**-9999");
 	});	
 
 	// JQuery Validator
@@ -901,11 +916,7 @@
                 	<cfif LEN(FORM.SSN)> #FORM.SSN# <cfelse> n/a </cfif> &nbsp;
 				</div>
         	<cfelse>
-                <input type="text" name="ssnAreaNumber" id="ssnAreaNumber" value="#FORM.ssnAreaNumber#" class="xxSmallField" maxlength="3" /> 
-                -
-                <input type="text" name="ssnGroupNumber" id="ssnGroupNumber" value="#FORM.ssnGroupNumber#" class="xxxSmallField" maxlength="2" />                  
-                - 
-                <input type="text" name="ssnSerialNumber" id="ssnSerialNumber" value="#FORM.ssnSerialNumber#" class="xxSmallField" maxlength="4" /> 
+                <input type="text" name="SSN" id="SSN" value="#FORM.SSN#" class="smallField" maxlength="11" /> 
                 <p class="note">(if applicable - xxx - xx - xxxx )</p>
             </cfif>            
         </div>

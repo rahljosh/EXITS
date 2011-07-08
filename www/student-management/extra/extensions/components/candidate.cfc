@@ -227,8 +227,9 @@
         <cfargument name="endDate" default="" hint="Program End Date">
         <cfargument name="wat_placement" default="" hint="Program Option">
         <cfargument name="wat_participation" default="" hint="Number of participations in program">
+        <cfargument name="updateSSN" default="0" hint="Set to 1 to update SSN">
         <cfargument name="ssn" default="" hint="Social Security Number">
-
+			
 		<cfquery 
 			datasource="#APPLICATION.DSN.Source#">
 				UPDATE
@@ -256,11 +257,17 @@
                     wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_end)#" null="#NOT IsDate(ARGUMENTS.wat_vacation_end)#">,
                     startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.startDate)#" null="#NOT IsDate(ARGUMENTS.startDate)#">,
                     endDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.endDate)#" null="#NOT IsDate(ARGUMENTS.endDate)#">,
-                    wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.wat_placement))#">,
-                    <cfif LEN(ARGUMENTS.wat_participation)>
+                    
+					<cfif LEN(ARGUMENTS.wat_participation)>
                     	wat_participation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.wat_participation#">,
                     </cfif>
-                    ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.ssn))#">
+                    
+                    <cfif VAL(ARGUMENTS.updateSSN)>
+	                    ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.ssn))#">,
+                    </cfif>
+                    
+                    wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.wat_placement))#">
+                    
 				WHERE
 	                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
 		</cfquery>

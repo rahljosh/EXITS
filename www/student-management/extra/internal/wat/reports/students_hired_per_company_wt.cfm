@@ -262,7 +262,7 @@
                         <td class="style1"><a href="mailto:#qTotalPerHostCompany.email#" class="style4">#qTotalPerHostCompany.email#</a></td>
                         <td>
                         	<cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(qTotalPerHostCompany.SSN)>
-                            	<span class="style1">#APPLICATION.CFC.UDF.decryptVariable(qTotalPerHostCompany.SSN)#</span>
+                            	<span class="style1">#APPLICATION.CFC.UDF.displaySSN(qTotalPerHostCompany.SSN)#</span>
                             </cfif>                        
                         </td>
                         <cfif LEN(qTotalPerHostCompany.ds2019)>

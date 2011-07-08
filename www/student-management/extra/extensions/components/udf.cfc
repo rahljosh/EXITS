@@ -79,46 +79,71 @@
 		<cfscript>			
 			// Declare Key
 			var encryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
+			var resultKey = '';
 			
 			try {
 				// Encrypt Variable
-				encryptVariable = Encrypt(ARGUMENTS.varString, encryptKey, "desede", "hex");
+				resultKey = Encrypt(TRIM(ARGUMENTS.varString), encryptKey, "desede", "hex");
 			} catch (Any e) {
 				// Set Encrypt Value to ''
-				encryptVariable = '';
+				resultKey = '';
 			}
 	
 			// Return Encrypted Variable
-			return(encryptVariable);
+			return(resultKey);
+        </cfscript>
+		   
+	</cffunction>
+
+	
+    <!--- Decrypt Variable --->
+	<cffunction name="decryptVariable" access="public" returntype="string" output="false" hint="Decrypts a variable">
+    	<cfargument name="varString" hint="String">
+
+		<cfscript>
+			// Declare Key
+			var decryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
+			var resultKey = '';
+			
+			try {
+				// Decrypt Variable
+				resultKey = Decrypt(ARGUMENTS.varString, decryptKey, "desede", "hex");
+			} catch (Any e) {
+				// Set Decrypt Value to ''
+				resultKey = '';
+			}
+	
+			// Return Decrypted Variable
+			return(resultKey);
         </cfscript>
 		   
 	</cffunction>
 
 
-    <!--- Decrypt Variable --->
-	<cffunction name="decryptVariable" access="public" returntype="string" output="false" hint="Decrypts a variable">
+	<cffunction name="displaySSN" access="public" returntype="string" output="false" hint="Decrypts a variable">
     	<cfargument name="varString" hint="String">
-        <cfargument name="displaySSN" default="0" hint="Set to 1 to return SSN in ***-**-9999 format">
-
+        <cfargument name="isMaskedSSN" default="1" hint="Set to 1 to return SSN in ***-**-9999 format">
+		
 		<cfscript>
-			// Declare Key
-			var decryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
-
-			try {
-				// Decrypt Variable
-				decryptVariable = Decrypt(ARGUMENTS.varString, decryptKey, "desede", "hex");
+			// Declare Variables
+			var vDecryptedSSN = decryptVariable(ARGUMENTS.varString);
+			var returnSSN = '';
+			
+			// Format SSN Display
+			if ( LEN(vDecryptedSSN) ) {
 				
-				// Format SSN Display
-				if ( VAL(ARGUMENTS.displaySSN) ) {
-					decryptVariable = "XXX-XX-" & Right(decryptVariable, 4);
+				if ( NOT VAL(ARGUMENTS.isMaskedSSN) AND ListFind(APPLICATION.SETTINGS.displayFullSSNUserList, CLIENT.userID) ) {
+					// return full SSN
+					returnSSN = vDecryptedSSN;
+				} else {
+					// Mask	
+					returnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
 				}
-			} catch (Any e) {
-				// Set Encrypt Value to ''
-				decryptVariable = '';
+				
 			}
-	
+			
 			// Return Encrypted Variable
-			return(decryptVariable);
+			return(returnSSN);
         </cfscript>
 		   
 	</cffunction>

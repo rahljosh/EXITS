@@ -58,6 +58,19 @@
 </cfquery>
 
 <cfscript>
+	// SSN - Check if we need to update or not SSN
+	vUpdateSSN = 0;
+	// Will update if it's blank or there is a new number
+	if ( isValid("social_security_number", Trim(FORM.SSN)) ) {
+		// Encrypt Social
+		FORM.SSN = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN);
+		// Update
+		vUpdateSSN = 1;
+	} else if ( NOT LEN(FORM.SSN) ) {
+		// Update - Erase SSN
+		vUpdateSSN = 1;
+	}
+
 	/*** Online Application ***/
 	
 	// Get Questions for section 1
@@ -301,8 +314,10 @@
         emergency_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_name#">,
         emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">, 
         passport_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.passport_number#">,
-        programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">, 
-        ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(FORM.SSN)#">, 
+        programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">,         
+        <cfif VAL(vUpdateSSN)>
+            ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">, 
+        </cfif>        
         wat_participation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.wat_participation#">, 
         wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_placement#">,
         wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_start#" null="#NOT IsDate(FORM.wat_vacation_start)#">,
