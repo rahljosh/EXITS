@@ -114,7 +114,7 @@
 			FORM.middleName = qGetUserInfo.middleName;
 			FORM.lastName = qGetUserInfo.lastName;
 			FORM.DOB = qGetUserInfo.DOB;
-			FORM.SSN = APPLICATION.CFC.UDF.decryptVariable(varString=qGetUserInfo.SSN, displaySSN=1);
+			FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, isMaskedSSN=1);
     	</cfscript>
     
     </cfif> <!--- FORM Submitted --->

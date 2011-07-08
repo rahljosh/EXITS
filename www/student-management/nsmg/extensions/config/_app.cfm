@@ -40,7 +40,10 @@
 	APPLICATION.SETTINGS.COMPANYLIST.Canada = "13";
 	APPLICATION.SETTINGS.COMPANYLIST.ESI = "14";
 	APPLICATION.SETTINGS.COMPANYLIST.All = "1,2,3,4,5,6,10,12,13,14";
-
+	
+	// Stores a list of users to
+	APPLICATION.SETTINGS.displayFullSSNUserList = '7657,9719'; // Thea Brewer | Bryan McCready
+	
 	/* 
 		this enables the address lookup. 
 		0=off, 

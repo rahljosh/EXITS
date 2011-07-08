@@ -14,6 +14,7 @@
 	<cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,datecancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
 
 	<!--- checkboxes, radio buttons aren't defined if not checked. --->
+    <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.SSN" default="">
     <cfparam name="FORM.sex" default="">
     <cfparam name="FORM.changepass" default="0">
@@ -43,16 +44,24 @@
         // allow SSN Field - If null or user has access.
         if ( NOT LEN(qGetUserInfo.SSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
             vDisplaySSN = 1;
-        }
-    
-        // allow SSN Field - If null or user has access.
-        if ( LEN(qGetUserInfo.SSN) ) {
-            FORM.SSN = APPLICATION.CFC.UDF.decryptVariable(varString=qGetUserInfo.SSN, displaySSN=1);
+			
+			if ( NOT VAL(FORM.submitted) ) {
+				
+				if (  ListFind(APPLICATION.SETTINGS.displayFullSSNUserList, CLIENT.userID) AND URL.userID NEQ CLIENT.userID ) {
+					// Display Full SSN
+					FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, isMaskedSSN=0);			  
+				} else {
+					// Display Masked SSN
+					FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, isMaskedSSN=1);	
+				}
+				
+			}
+			
         }
     </cfscript>
 
 <!--- Process Form Submission --->
-<cfif isDefined("FORM.submitted")>
+<cfif VAL(FORM.submitted)>
 
 	<!----Send email if address has changed---->
   <cfif URL.userid is not ''>
@@ -207,7 +216,6 @@
         </cfscript>
         
 		<cfif new>
-        	
             
         	<cflock timeout="30">
                 <cfquery datasource="#application.dsn#">
