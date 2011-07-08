@@ -327,11 +327,19 @@
 	var displayHostReason = function(currentHostPlaceID, selectedHostID) {
 		if ( currentHostPlaceID > '0' && currentHostPlaceID != selectedHostID && $(".trReasonInfo").css("display") == "none" ) {
 			$(".trReasonInfo").fadeIn("fast");
-			$("#host_startdate").val("");
-			$("#host_enddate").val("");
-			$("#reason_host").focus();
-			// Erase self placement data
+			
+			// Erase Data
+			$("#reason_host").val("");
+			$(".transferField").val("");
+			$(".transferCheckBox").removeAttr("checked");
 			$(".selfPlacementField").val("");
+			
+			// Set Focus
+			$("#reason_host").focus();
+			
+			// Display
+			displayTransferInfo();
+			
 		} else if (currentHostPlaceID == selectedHostID) {
 			$(".trReasonInfo").fadeOut("fast");
 		}
@@ -1009,7 +1017,7 @@
                                         	<td class="style1" align="right" width="35%" valign="top"><strong>Is this a transfer?</strong></td>
                                             <td class="style1" width="65%">
                                                 <span class="readOnly">#YesNoFormat(VAL(qCandidatePlaceCompany.isTransfer))#</span>
-                                                <select name="isTransfer" id="isTransfer" class="style1 editPage" onChange="displayTransferInfo();">
+                                                <select name="isTransfer" id="isTransfer" class="style1 editPage transferField" onChange="displayTransferInfo();">
                                                 	<option value=""> </option>
                                                     <option value="1" <cfif qCandidatePlaceCompany.isTransfer EQ 1> selected </cfif> > Yes </option>
                                                     <option value="0" <cfif qCandidatePlaceCompany.isTransfer EQ 0> selected </cfif> > No </option>
@@ -1022,7 +1030,7 @@
                                             <td class="style1" align="right" width="35%" valign="top"><strong>Confirmation Date:</strong></td>
                                             <td class="style1" width="65%">
 	                                            <span class="readOnly">#DateFormat(qCandidatePlaceCompany.dateTransferConfirmed, 'mm/dd/yyyy')#</span>
-                                                <input type="text" class="style1 datePicker editPage" name="dateTransferConfirmed" id="dateTransferConfirmed" value="#DateFormat(qCandidatePlaceCompany.dateTransferConfirmed, 'mm/dd/yyyy')#">
+                                                <input type="text"name="dateTransferConfirmed" id="dateTransferConfirmed" value="#DateFormat(qCandidatePlaceCompany.dateTransferConfirmed, 'mm/dd/yyyy')#" class="style1 datePicker editPage transferField">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField trTransferInfo">
@@ -1031,15 +1039,15 @@
                                                 <table cellpadding="0" cellspacing="0" width="100%">
                                                     <tr class="hiddenField trTransferInfo">
                                                         <td width="33%" class="style1" align="center">
-                                                            <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
+                                                            <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
                                                             <label for="isTransferJobOfferReceived">New Job Offer</label> 
                                                         </td>
                                                         <td width="33%" class="style1" align="center">
-                                                            <input type="checkbox" name="isTransferHousingAddressReceived" id="isTransferHousingAddressReceived" value="1" class="formField" disabled <cfif qCandidatePlaceCompany.isTransferHousingAddressReceived EQ 1>checked</cfif> > 
+                                                            <input type="checkbox" name="isTransferHousingAddressReceived" id="isTransferHousingAddressReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferHousingAddressReceived EQ 1>checked</cfif> > 
                                                             <label for="isTransferHousingAddressReceived">New Housing Address</label> 
                                                         </td>
                                                         <td width="33%" class="style1" align="center">
-                                                            <input type="checkbox" name="isTransferSevisUpdated" id="isTransferSevisUpdated" value="1" class="formField" disabled <cfif qCandidatePlaceCompany.isTransferSevisUpdated EQ 1>checked</cfif> > 
+                                                            <input type="checkbox" name="isTransferSevisUpdated" id="isTransferSevisUpdated" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferSevisUpdated EQ 1>checked</cfif> > 
                                                             <label for="isTransferSevisUpdated">SEVIS Updated</label> 
                                                         </td>
                                                     </tr>
