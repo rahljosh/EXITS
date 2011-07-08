@@ -238,6 +238,13 @@
 	});
 
 
+	// Jquery Masks 
+	jQuery(function($){
+		// SSN
+		$("#SSN").mask("***-**-9999");
+	});	
+
+
 	var populateDate = function(dateValue) { 
 		if ($('#ds2019Check').attr('checked')) {
 			$("#verification_received").val(dateValue);
@@ -643,14 +650,10 @@
                                         <tr>
                                             <td class="style1" align="right"><strong>Social Security ##:</strong></td>
                                             <td class="style1">
-                                            	<span class="readOnly">
-                                                	<cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                                    	#APPLICATION.CFC.UDF.decryptVariable(qGetCandidate.SSN)#
-                                                    <cfelse>
-                                                    	XXX-XX-XX#Right(APPLICATION.CFC.UDF.decryptVariable(qGetCandidate.SSN), 2)#
-                                                    </cfif>                                                    
+                                                <span class="readOnly">
+                                                    #APPLICATION.CFC.UDF.displaySSN(qGetCandidate.SSN)#
                                                 </span>
-                                                <input name="ssn" value="#APPLICATION.CFC.UDF.decryptVariable(qGetCandidate.SSN)#" type="text" class="style1 editPage" size="32" maxlength="100">
+                                                <input name="SSN" id="SSN" value="#APPLICATION.CFC.UDF.displaySSN(qGetCandidate.SSN)#" type="text" class="style1 editPage" size="32" maxlength="100">
                                             </td>
                                         </tr>	
                                         <!--- Online App Field - Participant's English Level --->

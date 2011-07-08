@@ -181,7 +181,7 @@
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
 						<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script type="text/javascript" src="../../../internal/linked/js/jquery-ui-timepicker-addon.min.js"></script> <!-- Time Picker -->
+                        <script type="text/javascript" src="../../../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
                         <script type="text/javascript" src="../../../internal/linked/js/ajaxUpload.js"></script> <!-- Ajax - Upload File -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.metadata.js"></script> <!-- JQuery Validation -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.validate.js"></script> <!-- JQuery Validation -->
@@ -205,7 +205,7 @@
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
 						<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script type="text/javascript" src="../../../internal/linked/js/jquery-ui-timepicker-addon.min.js"></script> <!-- Time Picker -->
+                        <script type="text/javascript" src="../../../internal/linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
                         <script type="text/javascript" src="../../../internal/linked/js/ajaxUpload.js"></script> <!-- Ajax - Upload File -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.metadata.js"></script> <!-- JQuery Validation -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.validate.js"></script> <!-- JQuery Validation -->

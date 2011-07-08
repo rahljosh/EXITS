@@ -108,7 +108,7 @@
     <script type="text/javascript" src="../linked/js/jquery.popupWindow.js"></script> <!-- Jquery PopUp Window -->
     <script type="text/javascript" src="../linked/js/jquery.validate.js"></script> <!-- jquery form validation -->
     <script type="text/javascript" src="../linked/js/jquery.metadata.js"></script> <!-- jquery form validation -->
-    <script type="text/javascript" src="../linked/js/jquery.maskedinput-1.2.2.min.js"></script> <!-- input plugin (phone,ssn,date) -->
+    <script type="text/javascript" src="../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
     <script type="text/javascript" src="../linked/js/basescript.js"></script> <!-- baseScript -->
 </head>
 <body>
