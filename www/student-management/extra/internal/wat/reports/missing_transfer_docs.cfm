@@ -39,6 +39,8 @@
                 ecpc.isTransferJobOfferReceived, 
                 ecpc.isTransferSevisUpdated,
                 ecpc.dateTransferConfirmed,
+                ecpc.selfConfirmationName,
+                ecpc.selfConfirmationMethod,
                 ec.firstname, 
                 ec.lastname, 
                 ec.email, 
@@ -61,7 +63,9 @@
                 smg_programs p on p.programid = ec.programid
             WHERE 
                 ecpc.isTransfer = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
-    
+    		AND
+            	ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                
             <!----Limit by Program, if selected---->
             <Cfif VAL(FORM.programid)>
                 AND 
