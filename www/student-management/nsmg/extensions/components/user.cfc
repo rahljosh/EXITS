@@ -565,11 +565,12 @@
         <cfargument name="trainingID" default="0" hint="Training ID is not required">
         <cfargument name="userID" default="" hint="userID is not required">
         <cfargument name="userType" default="" hint="userType is not required">
+        <cfargument name="programID" default="" hint="programID is not required">
         
         <cfquery 
 			name="qReportTrainingByRegion" 
 			datasource="#APPLICATION.dsn#">
-                SELECT
+                SELECT DISTINCT
 					u.userID,
                     u.firstName,
                     u.lastName,
@@ -595,6 +596,16 @@
 						</cfif>
                 INNER JOIN
                 	smg_regions r ON r.regionID = uar.regionID   
+                
+                <!--- Get Users that placed or are supervising a student --->
+                <cfif LEN(ARGUMENTS.programID)>
+                	INNER JOIN
+                    	smg_students s ON 
+                        		s.areaRepID = u.userID AND s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> ) 
+							OR 
+                            	s.placeRepID = u.userID AND s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> ) 
+                </cfif>
+                
                 LEFT OUTER JOIN
                 	smg_users_training sut ON sut.user_ID = u.userID
 				LEFT OUTER JOIN
@@ -640,6 +651,16 @@
 						</cfif>
                     INNER JOIN
                         smg_regions r ON r.regionID = uar.regionID   
+                        
+					<!--- Get Users that placed or are supervising a student --->
+                    <cfif LEN(ARGUMENTS.programID)>
+                        INNER JOIN
+                            smg_students s ON 
+                                    s.areaRepID = u.userID AND s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> ) 
+                                OR 
+                                    s.placeRepID = u.userID AND s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> ) 
+                    </cfif>
+                        
                     LEFT OUTER JOIN
                         smg_users_training sut ON sut.user_ID = u.userID
                             AND	

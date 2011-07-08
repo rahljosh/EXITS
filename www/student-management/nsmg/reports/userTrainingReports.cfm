@@ -15,6 +15,7 @@
     <!--- Param FORM Variable --->
     <cfparam name="FORM.action" default="">
     <cfparam name="FORM.regionID" default="">
+    <cfparam name="FORM.programID" default="">
     <cfparam name="FORM.trainingID" default="">
     <cfparam name="FORM.dateCreatedFrom" default="">
     <cfparam name="FORM.dateCreatedTo" default="">
@@ -29,6 +30,9 @@
 
 		// Get Training Options
 		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining');
+		
+		// Programs
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
 		
 		// Data Validation
 		switch(FORM.action) {
@@ -165,8 +169,9 @@
                     qGetResults = APPLICATION.CFC.USER.reportTrainingByRegion(
                                         regionID=qGetRegions.regionID,
                                         trainingID=FORM.trainingID,
-										userID=CLIENT.userID,
-										userType=CLIENT.userType
+										userID=CLIENT.userID,										
+										userType=CLIENT.userType,
+										programID=FORM.programID
                                     );
                     
                     // set rowCount to 0 for new region
@@ -175,7 +180,7 @@
         
                 <table class="report" align="center">
                     <tr bgcolor="#e2efc7">
-                        <td class="top" colspan="3"><strong>Region:</strong> <cfoutput>#qGetRegions.regionname#</td></cfoutput>
+                        <td class="top" colspan="3"><strong>Region:</strong> <cfoutput>#qGetRegions.regionname# &nbsp; - &nbsp; Total of #qGetResults.recordCount# users</cfoutput> </td>
                     </tr>
                     <tr bgcolor="#FFFFE6">
 						<!--- Only Apply for DOS Certification --->
@@ -204,15 +209,19 @@
                                     #qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)
                                 </td>
                                 <td width="10%" valign="top" align="center"> 
-                                    <cfif LEN(qGetResults.date_trained) AND NOT VAL(qGetResults.has_passed)>
-                                        <span style="color:##F00;">Failed</span>
-                                    <cfelseif LEN(qGetResults.date_trained) AND DateAdd("yyyy", 1, qGetResults.date_trained) LTE now()>
-                                        <span style="color:##F00;">Expired</span>
-                                    <cfelseif LEN(qGetResults.date_trained) AND VAL(qGetResults.has_passed)>
-                                        <span style="color:##00F;">Approved</span>                                      
-                                    <cfelse>
-                                    	<span style="color:##F00;">Missing</span>
-                                    </cfif>                                    
+                                    <cfoutput>
+										<cfif LEN(qGetResults.date_trained) AND NOT VAL(qGetResults.has_passed)>
+                                            <span style="color:##F00;">Failed</span>
+                                        <cfelseif LEN(qGetResults.date_trained) AND DateAdd("yyyy", 1, qGetResults.date_trained) LTE now()>
+                                            <span style="color:##F00;">Expired</span>
+                                        <cfelseif LEN(qGetResults.date_trained) AND VAL(qGetResults.has_passed)>
+                                            <span style="color:##00F;">Approved</span>                                      
+                                        <cfelse>
+                                            <span style="color:##F00;">Missing</span>
+                                        </cfif>  
+                                        
+                                        <br />   
+                                	</cfoutput>                               
                                 </td>
 							<cfelse>
                                 <td width="45%" valign="top">
@@ -453,6 +462,17 @@
                                                             <option value="#qGetTrainingOptions.fieldID#">#qGetTrainingOptions.name#</option>
                                                         </cfloop>
                                                     </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="right" valign="top"><label for="programID">Program:</label></td>
+                                                <td>
+                                                    <select name="programID" id="programID" multiple size="6">
+                                                        <cfloop query="qGetProgramList">
+                                                            <option value="#qGetProgramList.programID#">#programName#</option>
+                                                        </cfloop>
+                                                    </select>
+                                                    <font size="-2"><br />Get users that placed or are supervising students</font>
                                                 </td>
                                             </tr>
                                             <tr>
