@@ -274,6 +274,8 @@
                     	<cfcase value="6">
                             AND 
                                 uar.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                            OR
+                            	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                         </cfcase>
                         
                     	<!--- Area Representative - Returns itself --->	
