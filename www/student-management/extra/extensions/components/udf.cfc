@@ -132,7 +132,7 @@
 			// Format SSN Display
 			if ( LEN(vDecryptedSSN) ) {
 				
-				if ( NOT VAL(ARGUMENTS.isMaskedSSN) AND ListFind(APPLICATION.SETTINGS.displayFullSSNUserList, CLIENT.userID) ) {
+				if ( NOT VAL(ARGUMENTS.isMaskedSSN) AND ListFind(APPLICATION.SETTINGS.watDisplayFullSSNUserList, CLIENT.userID) ) {
 					// return full SSN
 					returnSSN = vDecryptedSSN;
 				} else {
