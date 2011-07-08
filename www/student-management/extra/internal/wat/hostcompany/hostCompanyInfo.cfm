@@ -1061,14 +1061,14 @@
                                             <td width="35%" class="style1" align="right"><strong>Person Signing Job Offer:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.personJobOfferName#</span>
-                                                <input type="text" name="personJobOfferName" id="personJobOfferName" value="#FORM.personJobOfferName#" class="style1 editPage" size="35" maxlength="10">
+                                                <input type="text" name="personJobOfferName" id="personJobOfferName" value="#FORM.personJobOfferName#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>Title:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.personJobOfferTitle#</span>
-                                                <input type="text" name="personJobOfferTitle" id="personJobOfferTitle" value="#FORM.personJobOfferTitle#" class="style1 editPage" size="35" maxlength="10">
+                                                <input type="text" name="personJobOfferTitle" id="personJobOfferTitle" value="#FORM.personJobOfferTitle#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
@@ -1087,7 +1087,7 @@
                                             <td class="style1" align="right"><strong>EIN:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.EIN#</span>
-                                                <input type="text" name="EIN" id="EIN" value="#FORM.EIN#" class="style1 editPage" size="35" maxlength="10">
+                                                <input type="text" name="EIN" id="EIN" value="#FORM.EIN#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>

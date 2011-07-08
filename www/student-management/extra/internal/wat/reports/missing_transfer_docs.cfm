@@ -82,7 +82,7 @@
                 OR 
                     ecpc.isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
                 OR
-                    ecpc.dateTransferConfirmed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    ecpc.dateTransferConfirmed IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 )
             
             ORDER BY 
