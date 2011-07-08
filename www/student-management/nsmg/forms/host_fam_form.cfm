@@ -163,7 +163,7 @@
 				SESSION.formErrors.Add("Please enter a valid Father's Cell Phone.");
             }    
 			
-			if ( LEN(FORM.motherDOB) AND NOT NOT IsDate(FORM.motherDOB) ) {
+			if ( LEN(FORM.motherDOB) AND NOT IsDate(FORM.motherDOB) ) {
 				FORM.motherDOB = '';
 				SESSION.formErrors.Add("Please enter a valid Mother's Date of Birth.");				
             }
