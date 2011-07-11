@@ -762,14 +762,14 @@
                                         WHERE
                                             sut1.user_id = sut2.user_id                              
                                         AND                         
-                                            training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
-                                    )                  
-                                AND
-                                	(
-                                        DATE_ADD(date_trained, INTERVAL 1 Year) <= NOW()
-                                    OR
-                                        has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                           
-									)
+                                            sut2.training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                                        AND
+                                        	(
+                                            	DATE_ADD(sut2.date_trained, INTERVAL 1 Year) <= NOW()
+                                        	OR
+                                            	sut2.has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="0">   
+                                   			) 
+                                    )        
 							)                                       
                         )
 				</cfif>

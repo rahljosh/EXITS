@@ -286,7 +286,7 @@
                     // set rowCount to 0 for new region
                     rowCount = 0;
                 </cfscript>
-        
+        		
                 <table class="report" align="center">
                     <tr bgcolor="#e2efc7">
                         <td class="top" colspan="3"><strong>Region:</strong> <cfoutput>#qGetRegions.regionname#</td></cfoutput>
@@ -313,7 +313,7 @@
                             <td width="10%" valign="top" align="center"> 
                                 <cfif LEN(qGetResults.date_trained) AND NOT VAL(qGetResults.has_passed)>
                                     <span style="color:##F00;">Failed</span>
-                                <cfelseif LEN(qGetResults.date_trained)>
+								<cfelseif LEN(qGetResults.date_trained) AND DateAdd("yyyy", 1, qGetResults.date_trained) LTE now()>
                                     <span style="color:##F00;">Expired</span>
                                 <cfelse>
                                     <span style="color:##F00;">Missing</span>
