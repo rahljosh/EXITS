@@ -11,7 +11,7 @@ window.location.href = URL;
 </SCRIPT>
 
 <cfparam name="form.showActive" default="0">
-<Cfdump var="#form#">
+
 <Cfif isDefined('form.processUpdate')>
         <cfloop list = "#FORM.question_list#" Index = "x">
         <cfset question = #Evaluate("FORM." & x & "_answer")#>
