@@ -528,6 +528,9 @@
                             * Please be aware that flight information provided by you will affect the student's insurance start or end date.<br />
                             Please submit only confirmed arrivals/departures.
                         </p>
+                        <p align="center" style="color:##F00; font-weight:bold;">
+                        	PS: Date, Depart Airport Code, Arrival Airport Code and Flight Number are required for a complete flight information.
+                        </p>
                     </cfif>
         
                     <form name="flightInformation" action="#CGI.SCRIPT_NAME#" method="post">
