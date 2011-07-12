@@ -1924,6 +1924,17 @@
                         	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 						AND
                         	p.endDate > CURRENT_DATE
+                
+                <!--- Get Only Members that live at home --->
+                <cfif ARGUMENTS.cbcType EQ 'member'>
+                	INNER JOIN
+                    	smg_host_children shc ON shc.hostID = cbc.hostID
+                        	AND
+                            	shc.childID = cbc.familyID 
+                			AND
+                            	shc.liveAtHome = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                </cfif>
+                
                 WHERE 
                     cbc.hostID NOT IN 
                     ( 
