@@ -70,6 +70,7 @@
             p.ar_cbc_auth_form,
             p.ar_agreement, 
             p.ar_training, 
+            p.secondVisit,
             s.season
         FROM 
         	smg_users_paperwork p
@@ -281,7 +282,6 @@
 </cfif>
 
 <cfoutput query="rep_info">
-
 <!--- SIZING TABLE --->
 <table border="0" width="100%">
 	<tr>
@@ -606,37 +606,7 @@
 
 <!--- NON-INTERNATIONAL REPRESENTATIVE --->
 <cfelse>
-
-	<!--- SIZING TABLE --->
-    <table width="100%" border="0" >
-        <tr>
-            <td width="50%" valign="top">
-    
-                <!----Regional & Company Information---->
-                <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
-                    <tr valign="middle" height="24">
-                        <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
-                        <td width="26" background="pics/header_background.gif"><img src="pics/usa.gif"></td>
-                        <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Company & Regional Access</h2></td>
-                        <cfif CLIENT.usertype LTE 5>
-	                        <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/access_rights_form&userid=#rep_info.userid#">Add</a></td>
-                        </cfif>
-                        <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
-                    </tr>
-                </table>
-                <table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
-                    <tr>
-                        <td style="line-height:20px;" valign="top">
-                            <style type="text/css">
-                            <!--
-                            div.scroll {
-                                height: 210px;
-                                overflow: auto;
-                            }
-                            -->
-                            </style>
-    
-                            <!----Regional Information---->
+ <!----Regional Information---->
                             <cfquery name="region_company_access" datasource="#application.dsn#">
                                 SELECT uar.id, uar.regionid, uar.usertype, uar.changedate, uar.default_access, r.regionname, c.companyshort, c.companyID, ut.usertype AS usertypename,
                                     adv.userid AS advisorid, adv.firstname, adv.lastname
@@ -655,7 +625,41 @@
                                 FROM region_company_access
                                 WHERE default_access = 1
                             </cfquery>
-                            
+                           
+	<!--- SIZING TABLE --->
+    <table width="100%" border="0" >
+        <tr>
+            <td width="50%" valign="top">
+    	
+                <!----Regional & Company Information---->
+                <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
+                    <tr valign="middle" height="24">
+                        <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
+                        <td width="26" background="pics/header_background.gif"><img src="pics/usa.gif"></td>
+                        <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Company & Regional Access</h2></td>
+                        <cfif CLIENT.usertype LTE 5>
+                        	<Cfif region_company_access.recordcount eq 1 and region_company_access.usertype eq 15>
+                            	<td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/convertToRep&userid=#rep_info.userid#">Convert to Rep</a></td>
+                        	 <cfelse>
+                           	 	<td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/access_rights_form&userid=#rep_info.userid#">Add</a></td>
+                         	</Cfif>
+                         </cfif>
+                        <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
+                    </tr>
+                </table>
+                <table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
+                    <tr>
+                        <td style="line-height:20px;" valign="top">
+                            <style type="text/css">
+                            <!--
+                            div.scroll {
+                                height: 210px;
+                                overflow: auto;
+                            }
+                            -->
+                            </style>
+    
+                           
                             <cfif check_default.recordCount EQ 0>
                                 <font color="##FF0000">You have no default selected.  Please select a default by clicking the "No" in the "Default" column.</font>
                             </cfif>
@@ -682,15 +686,19 @@
                                        
                                             <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffff") ,DE("ffffe6") )#">
                                             <cfif CLIENT.usertype LTE 5>
-                                                <td align="center">
-                                                    <!--- don't allow delete if user has only one record or for the default record. --->
-                                                    <cfif CLIENT.usertype LTE 4 AND ( not (region_company_access.recordcount EQ 1 OR default_access))>
-                                                        <a href="index.cfm?curdoc=user_info&action=delete_uar&id=#id#&userid=#rep_info.userid#" onClick="return confirm('Are you sure you want to delete this Company & Regional Access record?')">
-                                                        	<img src="pics/deletex.gif" border="0" alt="Delete">
-                                                        </a>                                                    
-                                                    	 -
-                                                    </cfif>
+                                                <td>
+                                                    <!--- don't allow delete if user has only one record or for the default record. Dont allow edit on 2nd VIsit Reps.  Must convert to re-block access according to training. --->
+                                                    <cfif region_company_access.usertype neq 15>
+														<cfif CLIENT.usertype LTE 4 AND ( not (region_company_access.recordcount EQ 1 OR default_access))>
+                                                            <a href="index.cfm?curdoc=user_info&action=delete_uar&id=#id#&userid=#rep_info.userid#" onClick="return confirm('Are you sure you want to delete this Company & Regional Access record?')">
+                                                                <img src="pics/deletex.gif" border="0" alt="Delete">
+                                                            </a>                                                    
+                                                             -
+                                                        </cfif>
                                                     <a href="index.cfm?curdoc=forms/access_rights_form&id=#id#&companyID=#companyID#&userid=#rep_info.userid#" title="Edit Access Level">Edit</a>
+                                                    <cfelse>
+                                                    <a href="index.cfm?curdoc=forms/convertToRep&userid=#rep_info.userid#"><img src="pics/convertBut.png" /></a>
+                                                    </cfif>
                                                 </td> 
                                                 <!---<td><a href="index.cfm?curdoc=forms/access_rights_form&id=#id#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>--->
                                             </cfif>
@@ -788,6 +796,7 @@
                 <table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
                     <tr>
                         <td style="line-height:20px;" valign="top">
+                       
                             <!----Query for placed students---->
                             <cfquery name="get_placed_students" datasource="#application.dsn#">
                                 SELECT smg_students.studentid, smg_students.familylastname, smg_students.firstname, smg_students.placerepid,
@@ -819,7 +828,21 @@
 								 
 	                               AND smg_students.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
                                 
-                            </cfquery>				
+                            </cfquery>	
+                             <!----Query for 2nd visit students---->
+                            <cfquery name="get_2ndvisit_students" datasource="#application.dsn#">
+                                SELECT smg_students.studentid, smg_students.familylastname, smg_students.firstname, smg_students.placerepid,
+                                    smg_students.sex, smg_countrylist.countryname, smg_students.countryresident, smg_students.city, smg_students.branchid as branch,
+                                    smg_users.firstname as intl_firstname, smg_users.lastname as intl_lastname, smg_users.businessname as intl_businessname,
+                                    p.programname
+                                FROM smg_students 
+                                LEFT JOIN smg_countrylist ON smg_students.countryresident = smg_countrylist.countryid 
+                                INNER JOIN smg_users ON smg_students.secondvisitrepid = smg_users.userid
+                                INNER JOIN smg_programs p ON p.programid = smg_students.programid
+                                WHERE smg_students.secondvisitrepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
+                                
+								AND smg_students.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
+                            </cfquery>			
                             <style type="text/css">
                             <!--
                             div.scroll1 {
@@ -881,6 +904,27 @@
                                 </cfloop>
                             </table>
                             <cfif get_supervised_students.recordcount gt 2></div></cfif>
+                            <!----Second Visit Students---->
+                             <u>Second Visit Students:</u> &nbsp; (#get_2ndvisit_students.recordcount#)
+                            <cfif get_2ndvisit_students.recordcount gt 2><div class="scroll1"></cfif>
+                            <!----scrolling table with secondvisit information---->
+                            <table border="0" width="100%">
+                                <Cfif get_2ndvisit_students.recordcount EQ 0>
+                                    <tr><td colspan="6" align="Center">Rep is not responsible for 2nd Visit on any students.</td></tr>
+                                </Cfif>
+                                <cfloop query="get_2ndvisit_students">
+                                <tr bgcolor="#iif(get_2ndvisit_students.currentrow MOD 2 ,DE("fffff6") ,DE("ffffe6") )#">		
+                                    <td width="30" align="left">#studentid#</td>
+                                    <td width="70" align="left">#familylastname#</td>
+                                    <td width="70" align="left">#firstname#</td>
+                                    <td width="30" align="left">#Left(sex,1)#</td>
+                                    <td width="70" align="left">#Left(countryname,13)#</td>
+                                    <td width=140 align="left"><cfif len(intl_businessname) gt 17>#Left(intl_businessname,17)#...<cfelse>#intl_businessname#</cfif></td>
+                                    <td width="70" align="left"><u>#programname#</u></td>
+                                </tr>
+                                </cfloop>
+                            </table>
+                            
                         </td>
                     </tr>
                 </table>
@@ -1044,13 +1088,14 @@
                     <tr valign="middle" height="24">
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width="26" background="pics/header_background.gif"><img src="pics/clock.gif"></td>
-                        <td background="pics/header_background.gif"><h2>Area Representative Paperwork</td>
+                        <td background="pics/header_background.gif"><h2>Paperwork</td>
                         <td background="pics/header_background.gif" width="16"><a href="?curdoc=forms/user_paperwork&userid=#rep_info.userid#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
                 </table>
                 <table width="100%" cellpadding=2 cellspacing="0" border="0" class="section">
                     <tr style="line-height:20px;"><td><b>Season: #get_paperwork.season#</td></tr>
+                <Cfif region_company_access.recordcount eq 1 and region_company_access.usertype neq 15>
                     <tr bgcolor="##FFFFFF"><td width="40%">AR Information Sheet</td>
                         <td><input type="checkbox" name="ar_info_sheet_check" disabled="disabled" <cfif get_paperwork.ar_info_sheet NEQ ''>checked="checked"</cfif>>
                             Date: #DateFormat(get_paperwork.ar_info_sheet, 'mm/dd/yyyy')#				
@@ -1080,7 +1125,13 @@
                         <td><input type="checkbox" name="ar_training_check" disabled="disabled" <cfif get_paperwork.ar_training NEQ ''>checked="checked"</cfif>> 
                             Date: #DateFormat(get_paperwork.ar_training, 'mm/dd/yyyy')#
                         </td>
-                    </tr>							
+                    </tr>
+                  </Cfif>	
+                    <tr><td>2nd Visit User Info Sheet</td>
+                        <td><input type="checkbox" name="ar_secondVisist_check" disabled="disabled" <cfif get_paperwork.secondVisit NEQ ''>checked="checked"</cfif>> 
+                            Date: #DateFormat(get_paperwork.secondVisit, 'mm/dd/yyyy')#
+                        </td>
+                    </tr>						
                 </table>
                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr valign="bottom">
@@ -1220,7 +1271,7 @@
                                     <table width="100%">
                                         <tr>
                                             <td><label for="dateTrained">Date Trained:</label></td>
-                                            <td><input type="text" name="dateTrained" value="#DateFormat(FORM.dateTrained, 'mm/dd/yyyy')#" id="dateTrained" class="datePicker" maxlength="10" />  (mm/dd/yyyy)</td>
+                                            <td><input type="text" name="dateTrained" value="#DateFormat(FORM.dateTrained, 'mm/dd/yyyy')#" id="dateTrained" class="date-pick" maxlength="10" />  (mm/dd/yyyy)</td>
                                         </tr>
                                         <tr>
                                             <td valign="top"><label for="trainingID">Training:</label></td>
