@@ -53,6 +53,7 @@ width:190px;
 
 #stylized .inputLabel{
 padding-right: 15px;
+vertical-align: top;
 }
 
 #stylized button{
@@ -72,15 +73,353 @@ font-weight:bold;
 
 <body>
 
+
+
+<cfparam name="perform_edit" default="0">
+<cfif isDefined('url.reportID')>
+	<cfset form.pr_id = #url.reportID#>
+</cfif>
+<cfif isDefined('form.pr_action')>
+	<!----Edit Report---->
+	<Cfif pr_action is 'edit_report'>
+    	<cfset perform_edit = 1>
+    </Cfif>
+    <!--- approve report --->
+    <cfif pr_action is 'approve'>
+        <cfquery name="get_report" datasource="#application.dsn#">
+            SELECT *
+            FROM progress_reports
+            WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+        </cfquery>
+        <cfset approve_field = ''>
+        <!--- in case the user has multiple approval levels, check them in order and just do the first one. --->
+        <!--- supervising rep --->
+        <cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ ''>
+            <cfset approve_field = 'pr_sr_approved_date'>
+        <!--- regional advisor --->
+        <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ ''>
+            <cfset approve_field = 'pr_ra_approved_date'>
+        <!--- regional director --->
+        <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ ''>
+            <cfset approve_field = 'pr_rd_approved_date'>
+        <!--- facilitator OR any office user --->
+        <cfelseif get_report.pr_ny_approved_date EQ '' AND (CLIENT.userid EQ get_report.fk_ny_user OR CLIENT.userType LTE 4)>
+            <cfset approve_field = 'pr_ny_approved_date'>
+        </cfif>
+        <cfif approve_field NEQ ''>
+            <cfquery datasource="#application.dsn#">
+                UPDATE progress_reports SET
+                #approve_field# = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                pr_rejected_date = NULL
+                WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+            </cfquery>
+        </cfif>
+        <cflocation url="index.cfm?curdoc=progress_reports">
+    </cfif>
+</cfif>
+<Cfquery name="secondVisitAnswers" datasource="#application.dsn#">
+select *
+from secondVisitAnswers
+where fk_reportID = #form.pr_id#
+</cfquery>
+<Cfquery name="reportDates" datasource="#application.dsn#">
+select *
+from progress_reports
+where pr_id = #form.pr_id#
+</cfquery>
+
+
+<cfsilent>
+	<!--- Import CustomTag Used for Page Messages and Form Errors --->
+   
+<cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />
+<cfset approve_error_msg = ''>
+    <cfquery name="get_report" datasource="#application.dsn#">
+        SELECT *
+        FROM progress_reports
+        WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+    </cfquery>
+    <cfquery name="secondVisitAnswers" datasource="#application.dsn#">
+        SELECT *
+        FROM secondVisitAnswers
+        WHERE fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+    </cfquery>
+	<cfquery name="get_rep" datasource="#application.dsn#">
+    SELECT userid, firstname, lastname
+    FROM smg_users
+    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_sr_user#">
+</cfquery>
+<cfif get_report.fk_ra_user NEQ ''>
+	<cfquery name="get_advisor_for_rep" datasource="#application.dsn#">
+		SELECT userid, firstname, lastname
+		FROM smg_users
+		WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_ra_user#">
+	</cfquery>
+</cfif>
+<cfquery name="get_regional_director" datasource="#application.dsn#">
+    SELECT userid, firstname, lastname
+    FROM smg_users
+    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_rd_user#">
+</cfquery>
+<cfquery name="get_facilitator" datasource="#application.dsn#">
+    SELECT userid, firstname, lastname
+    FROM smg_users
+    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_ny_user#">
+</cfquery>
+<cfquery name="get_host_family" datasource="#application.dsn#">
+    SELECT hostid, familylastname, fatherfirstname, motherfirstname
+    FROM smg_hosts
+    WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_host#">
+</cfquery>
+<cfquery name="get_international_rep" datasource="#application.dsn#">
+    SELECT userid, businessname
+    FROM smg_users
+    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_intrep_user#">
+</cfquery>
+
+<Cfif isDefined('form.submitted')>
+
+
+<cfparam name="form.neighborhoodAppearance" default="">
+    <cfparam name="form.avoid" default="">
+    <cfparam name="form.homeAppearance" default="">
+    <cfparam name="form.typeOfHome" default="">
+    <cfparam name="form.numberBedRooms" default="0">
+    <cfparam name="form.numberBathRooms" default="0">
+    <cfparam name="form.livingRoom" default="">
+    <cfparam name="form.diningRoom" default="">
+    <cfparam name="form.kitchen" default="">
+    <cfparam name="form.homeDetailsOther" default="">
+    <cfparam name="form.ownBed" default="">
+    <cfparam name="form.bathRoom" default="">
+    <cfparam name="form.outdoorsFromBedroom" default="">
+    <cfparam name="form.storageSpace" default="">
+    <cfparam name="form.privacy" default="">
+    <cfparam name="form.studySpace" default="">
+    <cfparam name="form.pets" default="">
+    <cfparam name="form.other" default="">
+			<!----Commit info to DB so that it isn't lost if there is an error in one field.---->
+             <cfquery datasource="mysql">
+                UPDATE 
+                    secondVisitAnswers 
+                SET
+                	neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
+					avoid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
+                    homeAppearance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
+                    typeOfHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
+               
+                    numberBedRooms =   <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#FORM.numberBedRooms#">,
+                    numberBathRooms =  <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#FORM.numberBathRooms#">,
+                  
+					livingRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
+                    diningRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
+                    kitchen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
+                    homeDetailsOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeDetailsOther#">,
+                    ownBed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
+                    bathRoom =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
+                    outdoorsFromBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
+                    storageSpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
+                    studySpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
+                    privacy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
+                    pets = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
+                    other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
+                where fk_reportID = #form.pr_id#
+                  
+            </cfquery>
+
+
+
+<!--- certain things are required for approval. --->
+<cfset approve_error_msg = ''>
+
 	<cfscript>
+    // Data Validation
+    
+    // Neighborhood Appearance
+    if ( NOT LEN(TRIM(FORM.neighborhoodAppearance)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please describe the neighboorhoods appearance.");
+    }		
+	// Neighborhood Location
+    if ( NOT LEN(TRIM(FORM.avoid)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please describe the neighboorhoods location.");
+    }
+	// Home Appearance
+    if ( NOT LEN(TRIM(FORM.homeAppearance)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please describe the homes appearance.");
+    }
+	// Home Type
+    if ( NOT LEN(TRIM(FORM.typeOfHome)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please describe the type of home.");
+    }
+	// Home detials
+    if ( NOT LEN(TRIM(FORM.numberBedRooms)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate the number of bedrooms.");
+    }
+	// Home detials
+    if ( NOT LEN(TRIM(FORM.numberBathRooms)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate the number of bathrooms.");
+    }
+	// Home detials
+    if ( NOT LEN(TRIM(FORM.livingRoom)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please describe the living room.");
+    }
+	// Home detials
+    if ( NOT LEN(TRIM(FORM.diningRoom)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please describe the dining room.");
+    }
+	// Home detials
+    if ( NOT LEN(TRIM(FORM.kitchen)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please describe the kitchen.");
+    }
+	// Home detials
+    if ( NOT LEN(TRIM(FORM.homeDetailsOther)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate any other items about the home.");
+    }
+	// Home detials
+    if ( NOT LEN(TRIM(FORM.ownBed)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate if #form.studentName# has #form.studentSex# own bed.");
+    }
+  // Home detials
+    if ( NOT LEN(TRIM(FORM.bathRoom)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate if #form.studentName# has access to #form.studentSex# own bathroom.");
+    }
+  // Home detials
+   if ( NOT LEN(TRIM(FORM.bathRoom)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate if #form.studentName# has access to #form.studentSex# own bathroom.");
+    }
+  // Home detials
+   if ( NOT LEN(TRIM(FORM.storageSpace)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate if #form.studentName# has adequete storage space.");
+    }
+	  // Home detials
+   if ( NOT LEN(TRIM(FORM.studySpace)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate if #form.studentName# has adequete study space.");
+    }
+  // Home detials
+   if ( NOT LEN(TRIM(FORM.privacy)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate if #form.studentName# has adequete privacy.");
+    }
+  // Home detials
+   if ( NOT LEN(TRIM(FORM.pets)) ) {
+        // Get all the missing items in a list
+        SESSION.formErrors.Add("Please indicate how many and what kind of pets are in the home.");
+    }
+    </cfscript>
+    
+    
+		<!--- set the edit/approve/reject/delete access. --->
+        <cfset allow_edit = 0>
+        <cfset allow_approve = 0>
+        <cfset allow_reject = 0>
+        <cfset allow_delete = 0>
+        
+        <!--- used to display the pending message for the supervising rep. --->
+        <cfset pending_msg = 0>
+
+
+
+            <!--- Check if there are no errors --->
+        <cfif NOT SESSION.formErrors.length()>
+            
+			<!--- No Erros --->				
+			<!----check to allow for editing---->
+			<!--- users are allowed access until they approve the report.  Also, if a higher level has already approved then they are not allowed access. --->
+            <!--- second visit rep --->
+          
+     <!--- Update Record --->
+               <cfquery datasource="mysql">
+                UPDATE 
+                    secondVisitAnswers 
+                SET
+                	neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
+					avoid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
+                    homeAppearance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
+                    typeOfHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
+                    numberBedRooms =  <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#FORM.numberBedRooms#">,
+                    numberBathRooms = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#FORM.numberBathRooms#">,
+                    livingRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
+                    diningRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
+                    kitchen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
+                    homeDetailsOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeDetailsOther#">,
+                    ownBed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
+                    bathRoom =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
+                    outdoorsFromBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
+                    storageSpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
+                    studySpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
+                    privacy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
+                    pets = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
+                    other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
+                where fk_reportID = #form.pr_id#
+                  
+            </cfquery>
+           
+           <!---Auto approve the Submitting rep so REgional Manager can approve.---->
+           <cfquery datasource="#application.dsn#">
+           update progress_reports
+           set pr_sr_approved_date = #now()#
+           where pr_id = #form.pr_id#
+           </cfquery>
+           
+           	
+        <!--- Successfully Updated - Go to Next Page --->
+            <cflocation url="index.cfm?curdoc=progress_reports" addtoken="No">
+    
+    	</cfif> 
+		<!--- NOT SESSION.formErrors.length() --->
+    
+    <!--- FORM NOT SUBMITTED --->
+    <cfelse>
+
+         <cfscript>
+			 // Set FORM Values   
+			FORM.neighborhoodAppearance = secondVisitAnswers.neighborhoodAppearance;
+			FORM.avoid = secondVisitAnswers.avoid;
+			FORM.homeAppearance = secondVisitAnswers.homeAppearance;
+			FORM.typeOfHome = secondVisitAnswers.typeOfHome;
+			FORM.numberBedRooms = secondVisitAnswers.numberBedRooms;
+			FORM.numberBathRooms = secondVisitAnswers.numberBedRooms;
+			FORM.livingRoom = secondVisitAnswers.livingRoom;
+			FORM.diningRoom = secondVisitAnswers.diningRoom;
+			FORM.kitchen = secondVisitAnswers.kitchen;
+			FORM.homeDetailsOther = secondVisitAnswers.homeDetailsOther;
+			FORM.ownBed = secondVisitAnswers.ownBed;
+			FORM.bathRoom = secondVisitAnswers.bathRoom;
+			FORM.outdoorsFromBedroom = secondVisitAnswers.outdoorsFromBedroom;
+			FORM.storageSpace = secondVisitAnswers.storageSpace;
+			FORM.privacy = secondVisitAnswers.privacy;
+			FORM.pets = secondVisitAnswers.pets;
+			FORM.other = secondVisitAnswers.other;
+         </cfscript>
+         
+		<cfset allow_edit = 0>
+        <cfset allow_approve = 0>
+        <cfset allow_reject = 0>
+        <cfset allow_delete = 0>
+             
+    </cfif>  
+  </cfsilent>  
+ 
+<cfscript>
 
 		// Get Student By UniqueID
-		if ( LEN(URL.studentid) ) {
-					qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentid=URL.studentid);
-					CLIENT.studentID = qGetStudentInfo.studentID;
-				} else {
-					qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=studentID);	
-				}
+		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=reportDates.fk_student);
+					CLIENT.studentID = reportDates.fk_student;
 		
 		// Program Information
 		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programid=qGetStudentInfo.programid);
@@ -88,141 +427,430 @@ font-weight:bold;
 		//Host Family Info
 		qGetHosts = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInfo.hostID);
 	</cfscript>
-   
+
+
+
+
+
+
     <cfoutput>
+    <Cfset NumberList = '0,1,2,3,4,5,6,7,8,9,10'>
+ <cfif CLIENT.userid EQ get_report.fk_secondVisitRep and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+                <cfset allow_edit = 1>
+                <cfset allow_approve = 1>
+                <cfset allow_reject = 0>
+                <cfset allow_delete = 1>
+                <cfset pending_msg = 1>
+            <!--- supervising rep --->
+            <cfelseif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ '' and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+                <cfset allow_edit = 1>
+                <cfset allow_approve = 1>
+                <cfset allow_reject = 1>
+                <cfset allow_delete = 1>
+                <cfset pending_msg = 1>
+            <!--- regional advisor --->
+            <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+                <cfset allow_edit = 1>
+                <cfset allow_approve = 1>
+                <cfset allow_reject = 1>
+                <cfset allow_delete = 1>
+            <!--- regional director --->
+            <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+                <cfset allow_edit = 1>
+                <cfset allow_approve = 1>
+                <cfset allow_reject = 1>
+                <cfset allow_delete = 1>
+            <!--- facilitator --->
+            <cfelseif CLIENT.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
+                <cfset allow_edit = 1>
+                <cfset allow_approve = 1>
+                <cfset allow_reject = 1>
+                <cfset allow_delete = 1>
+            <!--- Program Manager - Office User - Gary request - 10/01/2010 - Managers should be able to approve progress reports --->
+            <cfelseif CLIENT.userType LTE 4 AND NOT LEN(get_report.pr_ny_approved_date)>
+                <cfset allow_edit = 1>
+                <cfset allow_approve = 1>
+                <cfset allow_reject = 1>
+                <cfset allow_delete = 1>
+           
+ </cfif>
+
+        
 <div id="stylized" class="myform">
-<form id="form" name="form" method="post" action="index.html">
+
+        
+<form method="post" action="index.cfm?curdoc=forms/secondHomeVisitReport">
+<input type="hidden" name="studentName" value="#qGetStudentInfo.firstname#" />
+<input type="hidden" name="studentSex" value=<cfif qGetStudentInfo.firstname is 'male'>
+"his"
+<cfelse>
+"her"
+</cfif> >
+<input type="hidden" name="pr_id" value=#form.pr_id#  />
+<input type="hidden" name="submitted" value=1 />
+
+    <cfif allow_approve and get_report.pr_rejected_date NEQ ''>
+        <table border=0 cellpadding=4 cellspacing=0 align="Center">
+            <tr>
+                <td><font color="FF0000">
+                   	This report has been rejected.  Approval will "unreject" this report.
+                </font></td>
+            </tr>
+        </table>
+    </cfif>
 <h1>Second Host Family Home Visit</h1>
 <p><strong>Student:</strong> #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (#qGetStudentInfo.studentid#)<br />
+<strong>Report ID</strong> #form.pr_id#<br />
 <strong>Program:</strong> #qGetProgramInfo.programName#
 </p>
+
 <p>
 <strong>Family:</strong> #qGetHosts.fatherfirstname# <cfif qGetHosts.fatherfirstname is not ''>&amp;</cfif> #qGetHosts.motherfirstname# #qGetHosts.familylastname# <br />
 #qGetHosts.address#<br />
-<cfif #qGetHosts.address2# is not ''>#qGetHosts.address2#<br /></cfif>
+<cfif #qGetHosts.address2# is not ''>#qGetHosts.address2# <br /></cfif>
 #qGetHosts.city# #qGetHosts.state#, #qGetHosts.zip#</p>
 
+<p><strong>Supervising Representative::</strong> #get_rep.firstname# #get_rep.lastname# (#get_rep.userid#)<br />
+<strong>Regional Advisor:</strong> <cfif get_report.fk_ra_user EQ ''>
+            Reports Directly to Regional Director
+        <cfelse>
+            #get_advisor_for_rep.firstname# #get_advisor_for_rep.lastname# (#get_advisor_for_rep.userid#)
+        </cfif><br />
+<strong>Regional Director:</strong> #get_regional_director.firstname# #get_regional_director.lastname# (#get_regional_director.userid#)<br />
+<strong>Facilitator:</strong> #get_facilitator.firstname# #get_facilitator.lastname# (#get_facilitator.userid#)
+</p>
+<!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
 <label>Neighborhood Appearance
 <span class="small">General look and feel</span>
 </label>
-<input type="radio" name="neighborhoodAppearance" id="name" value='Excellent' /> <span class="inputLabel">Excellent</span>
-<input type="radio" name="neighborhoodAppearance" id="name" value='Average' /> <span class="inputLabel">Average</span>
-<input type="radio" name="neighborhoodAppearance" id="name" value='Poor' /> <span class="inputLabel">Poor</span>
+<Cfif perform_edit eq 1>
+    <input type="radio" name="neighborhoodAppearance" id="name" value='Excellent' <cfif secondVisitAnswers.neighborhoodAppearance is 'Excellent'>checked</cfif> /> 
+        <span class="inputLabel">Excellent</span>
+    <input type="radio" name="neighborhoodAppearance" id="name" value='Average' <cfif secondVisitAnswers.neighborhoodAppearance is 'Average'>checked</cfif> /> 
+        <span class="inputLabel">Average</span>
+     <input type="radio" name="neighborhoodAppearance" id="name2" value='Poor' <cfif secondVisitAnswers.neighborhoodAppearance is 'Poor'>checked</cfif> />    
+        <span class="inputLabel">Poor</span>
+<cfelse>
+	#secondVisitAnswers.neighborhoodAppearance#
+</Cfif>
 <br /><br /><br />
 <label>Neighborhood Location
 <span class="small">Is home in or near an area to be avoided.</span>
 </label>
-<input type="radio" value=1 name="avoid" /> <span class="inputLabel">Yes</span> 
-<input type="radio" value=0 name="avoid" /> <span class="inputLabel">No</span>
+<Cfif perform_edit eq 1>
+    <input type="radio" value='Yes' name="avoid" <cfif secondVisitAnswers.avoid is 'Yes'>checked</cfif>/> <span class="inputLabel">Yes</span> 
+    <input type="radio" value='No' name="avoid" <cfif secondVisitAnswers.avoid eq 'no'>checked</cfif> /> <span class="inputLabel">No</span>
+<cfelse>
+	#secondVisitAnswers.avoid#
+</Cfif>
+
 <br /><br /><br />
 <label>Home Appearance
 <span class="small">Cleanliness, Maintenance</span>
 </label>
-<input type="radio" name="neighborhoodAppearance" id="name" value='Excellent' /> <span class="inputLabel">Excellent</span>
-<input type="radio" name="neighborhoodAppearance" id="name" value='Average' /> <span class="inputLabel">Average</span> 
-<input type="radio" name="neighborhoodAppearance" id="name" value='Poor' /> <span class="inputLabel">Poor</span>
-
+<Cfif perform_edit eq 1>
+    <input type="radio" name="homeAppearance" id="name" value='Excellent' <cfif secondVisitAnswers.homeAppearance is 'Excellent'>checked</cfif> /> <span class="inputLabel">Excellent</span>
+    <input type="radio" name="homeAppearance" id="name" value='Average' <cfif secondVisitAnswers.homeAppearance is 'Average'>checked</cfif>/> <span class="inputLabel">Average</span> 
+    <input type="radio" name="homeAppearance" id="name" value='Poor' <cfif secondVisitAnswers.homeAppearance is 'Poor'>checked</cfif>/> <span class="inputLabel">Poor</span>
+<cfelse>
+	#secondVisitAnswers.homeAppearance#
+</Cfif>
 <br /><br /><br />
 
 <label>Type of Home
 <span class="small">&nbsp;</span>
 </label>
-<input type="radio" name="typeOfHome" id="name" value='Single Family' /> <span class="inputLabel">Single Family</span>
-<input type="radio" name="typeOfHome" id="name" value='Condominium' /> <span class="inputLabel">Condominium</span> 
-<input type="radio" name="typeOfHome" id="name" value='Apartment' /> <span class="inputLabel">Apartment</span><br />
-<input type="radio" name="typeOfHome" id="name" value='Duplex' /> <span class="inputLabel">Duplex</span>
-<input type="radio" name="typeOfHome" id="name" value='Mobile Home' /> <span class="inputLabel">Mobile Home</span> 
+<Cfif perform_edit eq 1>
+    <input type="radio" name="typeOfHome" id="name" value='Single Family' <cfif secondVisitAnswers.typeOfHome is 'Single Family'>checked</cfif> />
+       <span class="inputLabel">Single Family</span>
+    <input type="radio" name="typeOfHome" id="name" value='Condominium' <cfif secondVisitAnswers.typeOfHome is 'Condominium'>checked</cfif> /> 
+      <span class="inputLabel">Condominium</span> 
+    <input type="radio" name="typeOfHome" id="name" value='Apartment' <cfif secondVisitAnswers.typeOfHome is 'Apartment'>checked</cfif> /> 
+      <span class="inputLabel">Apartment</span><br />
+    <input type="radio" name="typeOfHome" id="name" value='Duplex' <cfif secondVisitAnswers.typeOfHome is 'Duplex'>checked</cfif> /> 
+      <span class="inputLabel">Duplex</span>
+    <input type="radio" name="typeOfHome" id="name" value='Mobile Home' <cfif secondVisitAnswers.typeOfHome is 'Mobile Home'>checked</cfif> /> 
+      <span class="inputLabel">Mobile Home</span> 
+<cfelse>
+	#secondVisitAnswers.typeOfHome#
+</Cfif>
 <br /><br /><br />
 <label>Home Details
 <span class="small">Short Descriptions<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /></span>
 </label>
 <span class="inputLabel">Bedrooms&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<select name="numberBedRooms">
-	<option value=0>0</option>
-    <option value=1>1</option>
-    <option value=2>2</option>
-    <option value=3>3</option>
-    <option value=4>4</option>
-    <option value=5>5</option>
-    <option value=6>6</option>
-    <option value=7>7</option>
-    <option value=8>8</option>
-    <option value=9>9</option>
-    <option value=10>10</option>
- </select><br />
-<span class="inputLabel">Bathrooms&nbsp;&nbsp;&nbsp;</span>     
- <select name="numberBathRooms">
-	<option value=0>0</option>
-    <option value=1>1</option>
-    <option value=2>2</option>
-    <option value=3>3</option>
-    <option value=4>4</option>
-    <option value=5>5</option>
-    <option value=6>6</option>
-    <option value=7>7</option>
-    <option value=8>8</option>
-    <option value=9>9</option>
-    <option value=10>10</option>
- </select>
+<Cfif perform_edit eq 1>
+    <select name="numberBedRooms">
+        <option value='99'></option>
+      <cfloop list='#numberlist#' index=i>
+        <option value=#i# <cfif secondVisitAnswers.numberBedRooms eq  #i#>selected</cfif>>#i#</option>
+    </cfloop>
+     </select>
+ <cfelse>
+	#secondVisitAnswers.numberBedRooms#
+</Cfif>
  <br />
+<span class="inputLabel">Bathrooms&nbsp;&nbsp;&nbsp;</span>     
+<Cfif perform_edit eq 1>
+     <select name="numberBathRooms">
+        <option value='99'></option>
+      <cfloop list='#numberlist#' index=i>
+        <option value=#i# <cfif secondVisitAnswers.numberBathRooms eq  #i#>selected</cfif>>#i#</option>
+    </cfloop>
+     </select>
+<cfelse>
+	#secondVisitAnswers.numberBathRooms#
+</Cfif>
+ <br />
+
  <span class="inputLabel">Living Room&nbsp;</span>
-<input type="text" name="livingRoom" id="name" size=25/>
+ <Cfif perform_edit eq 1>
+	<input type="text" name="livingRoom" id="name" size=25 value="#secondVisitAnswers.livingRoom#"/>
+ <cfelse>
+ 	#secondVisitAnswers.livingRoom#
+ </Cfif>
 <br />
  <span class="inputLabel">Dining Room</span>
-<input type="text" name="dinningRoom" id="name" size=25/>
+  <Cfif perform_edit eq 1>
+	<input type="text" name="diningRoom" id="name" size=25 value="#secondVisitAnswers.diningRoom#"/>
+ <cfelse>
+ 	#secondVisitAnswers.diningRoom#
+ </Cfif>
  <br />
  <span class="inputLabel">Kitchen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<input type="text" name="kitchen" id="name" size=25/>
+ <Cfif perform_edit eq 1>
+	<input type="text" name="kitchen" id="name" size=25  value="#secondVisitAnswers.kitchen#"/>
+ <cfelse>
+ 	#secondVisitAnswers.kitchen#
+ </Cfif>
  <br />
  <span class="inputLabel">Other&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<textarea cols=10 rows=3></textarea>
-<br />
+ <Cfif perform_edit eq 1>
+	<textarea name="homeDetailsOther" cols=20 rows=3>#secondVisitAnswers.homeDetailsOther#</textarea>
+  <cfelse>
+ 	#secondVisitAnswers.homeDetailsOther#
+ </Cfif>
+<br /><br /><Br />
 <hr width=60% />
-<label>Does #qGetStudentInfo.firstname# have their own permanet bed? 
-<span class="small">Bed may not be a futon or inflatable</span>
-</label>
-<input type="text" name="ownBed" size = 30/>
-<br /><Br /><Br />
-<label>Does #qGetStudentInfo.firstname# have access to a bathroom? 
-<span class="small"></span>
-</label>
-<input type="text" name="bathRoom" size = 30/>
-<br /><Br /><Br />
-<label>Does #qGetStudentInfo.firstname# have access to the outdoors from their bedroom? 
-<span class="small"></span>
-</label>
-<input type="text" name="outdoorsFromBedroom" size = 30/>
-<br /><Br /><Br />
-<label>Does #qGetStudentInfo.firstname# have adequete storage space? 
-<span class="small"></span>
-</label>
-<input type="text" name="storageSpace" size = 30/>
-<br /><Br /><Br />
-<label>Does #qGetStudentInfo.firstname# have privacy? 
-<span class="small">i.e. a door on their room</span>
-</label>
-<input type="text" name="privacy" size = 30/>
-<br /><Br /><Br />
-<label>Does #qGetStudentInfo.firstname# have adequate study space? 
-<span class="small"></span>
-</label>
-<input type="text" name="studySpace" size = 30/>
-<br /><Br /><Br />
-<label>Are there pets present in the home? 
-<span class="small">How many & what kind</span>
-</label>
-<input type="text" name="pets" size = 30/>
-<br /><Br /><Br />
-<label>Other Comments 
-<span class="small"></span>
-</label>
-<textarea cols="50" rows=5></textarea>
-<button type="submit">Submit</button>
-<div class="spacer"></div>
+<br />
+  <label>Does #qGetStudentInfo.firstname# have 
+    <cfif #qGetStudentInfo.sex# is 'male'>
+      his
+      <cfelse>her
+    </cfif>  
+    own permanet bed? 
+    <span class="small">Bed may not be a futon or inflatable</span>
+  </label>
+  <Cfif perform_edit eq 1>
+    <input type="text" name="ownBed" size = 30 value="#secondVisitAnswers.ownBed#"/>
+    <cfelse>
+    #secondVisitAnswers.ownBed#
+  </Cfif>
+  <br /><Br /><Br />
+  <label>Does #qGetStudentInfo.firstname# have access to a bathroom? 
+    <span class="small"></span>
+  </label>
+  
+  <Cfif perform_edit eq 1>	
+    <input type="text" name="bathRoom" size = 30 value="#secondVisitAnswers.bathRoom#"/>
+    <cfelse>
+    #secondVisitAnswers.bathRoom#
+  </Cfif>
+  <br /><Br /><Br />
+  <label>Does #qGetStudentInfo.firstname# have access to the outdoors from 
+    <cfif #qGetStudentInfo.sex# is 'male'>
+      his
+      <cfelse>her
+    </cfif> 
+    bedroom? 
+    <span class="small"></span>
+  </label>
+  <br />
+  <Cfif perform_edit eq 1>	
+    <input type="text" name="outdoorsFromBedroom" size = 30 value="#secondVisitAnswers.outdoorsFromBedroom#"/>
+    <cfelse>
+    #secondVisitAnswers.outdoorsFromBedroom#
+  </Cfif>
+  <br /><Br /><Br />
+  <label>Does #qGetStudentInfo.firstname# have adequete storage space? 
+    <span class="small"></span>
+  </label>
+  <Cfif perform_edit eq 1>	
+    <input type="text" name="storageSpace" size = 30 value="#secondVisitAnswers.storageSpace#"/>
+    <cfelse>
+    #secondVisitAnswers.storageSpace#
+  </Cfif>
+  <br /><Br /><Br />
+  <label>Does #qGetStudentInfo.firstname# have privacy? 
+    <span class="small">i.e. a door on their room</span>
+  </label>
+  <Cfif perform_edit eq 1>	
+    <input type="text" name="privacy" size = 30 value="#secondVisitAnswers.privacy#"/>
+    <cfelse>
+    #secondVisitAnswers.privacy#
+  </Cfif>
+  <br /><Br /><Br />
+  <label>Does #qGetStudentInfo.firstname# have adequate study space? 
+    <span class="small"></span>
+  </label>
+  <Cfif perform_edit eq 1>	
+    <input type="text" name="studySpace" size = 30 value="#secondVisitAnswers.studySpace#"/>
+    <cfelse>
+    #secondVisitAnswers.studySpace#
+  </Cfif>
+  <br /><Br /><Br />
+  <label>Are there pets present in the home? 
+    <span class="small">How many & what kind</span>
+  </label>
+  <Cfif perform_edit eq 1>	
+    <input type="text" name="pets"  value="#secondVisitAnswers.pets#" size = 30/>
+    <cfelse>
+    #secondVisitAnswers.pets#
+  </Cfif>
+  <br /><Br /><Br />
+  <label>Other Comments 
+    <span class="small"></span>
+  </label>
+  <Cfif perform_edit eq 1>	
+    <textarea name="other" cols="40" rows=5>#secondVisitAnswers.other#</textarea>
+    <cfelse>
+    #secondVisitAnswers.pets#
+  </Cfif>
+  
+  <br /><Br /><br />
+</p>
 
+<div align="right" >
+<cfif CLIENT.userid EQ get_report.fk_secondVisitRep and perform_edit eq 1>
+	<button type="submit">Verify & Submit Information</button>
+</cfif>
+</div>
 </form>
 
 </div>
+<!--- approve error messages. --->
+    <cfif approve_error_msg NEQ ''>
+        <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
+            <tr>
+                <td><font color="FF0000">
+                   	Approval is not allowed until the following missing information is entered:
+                    <ul>
+                	<!--- questions error message. --->
+					<cfif listFind(approve_error_msg, 'question')>
+                        <p><li>Questions: all questions must be answered.</li></p>
+                    </cfif>
+                    </ul>
+                </font></td>
+            </tr>
+        </table>
+    </cfif>
+  <cfif allow_approve and get_report.pr_rejected_date NEQ ''>
+        <table border=0 cellpadding=4 cellspacing=0 align="center" >
+            <tr>
+                <td><font color="FF0000">
+                   	This report has been rejected.  Approval will "unreject" this report.
+                </font></td>
+            </tr>
+        </table>
+    </cfif>
+<Cfif perform_edit neq 1>	
+    <cfif not isDefined('url.p')>
+        <table border=0 align="center">
+        <tr>
+         <td>
+          	<!--- edit --->
+            <cfif allow_edit>
+                <form action="index.cfm?curdoc=forms/secondHomeVisitReport" method="post">
+                <input type="hidden" name="pr_action" value="edit_report">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input name="Submit" type="image" src="pics/edit.gif" alt="Edit Report" border=0>
+                </form>
+            <cfelse>
+            	<img src="pics/no_edit.jpg" alt="Delete Report"  border=0>
+            </cfif>
+          </td>
+         <cfif client.usertype lte 6>
+           <td width="15">&nbsp;</td>
+          <td>
+          	<!--- approve --->
+            
+            <cfif allow_approve>
+                <form action="index.cfm?curdoc=forms/secondHomeVisitReport" method="post" onclick="return confirm('Are you sure you want to approve this report?  You will no longer be able to edit this report after approval.')">
+                <input type="hidden" name="pr_action" value="approve">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input name="Submit" type="image" src="pics/approve.gif" alt="Approve Report" border=0>
+                </form>
+            <cfelse>
+            	<img src="pics/no_approve.jpg" alt="Approve Report" border=0>
+            </cfif>
+          </td>
+         
+          <td width="15">&nbsp;</td>
+          <td>
+          	<!--- reject --->
+            <cfif allow_reject>
+                <form action="index.cfm?curdoc=forms/pr_reject" method="post">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input name="Submit" type="image" src="pics/reject.gif" alt="Reject Report" border=0>
+                </form>
+            <cfelse>
+            	<img src="pics/no_reject.jpg" alt="Reject" border=0>
+            </cfif>
+          </td>
+          </cfif>
+          <td width="15">&nbsp;</td>
+          <td>
+          	<!--- delete --->
+            <cfif allow_delete>
+                <form action="index.cfm?curdoc=progress_report_info" method="post" onclick="return confirm('Are you sure you want to delete this report?')">
+                <input type="hidden" name="pr_action" value="delete_report">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input name="Submit" type="image" src="pics/delete.gif" alt="Delete Report" border=0>
+                </form>
+            <cfelse>
+            	<img src="pics/no_delete.jpg" alt="Delete Report"  border=0>
+            </cfif>
+          </td>
+
+		<!--- disable print and email for rejected reports. --->
+        <cfif get_report.pr_rejected_date EQ ''>
+              <td width="15">&nbsp;</td>
+              <td>
+                <!--- print --->
+                <form action="forms/secondHomeVisitReport.cfm?p" method="post" target="_blank">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input type="hidden" name="report_mode" value="print">
+                <input name="Submit" type="image" src="pics/printer.gif" alt="Print Report" border=0>
+                </form>
+                <!---<A href="progress_report_info.cfm?pr_id=#form.pr_id#&report_mode=print" title="Print Report" target="_blank"><img src="pics/printer.gif" border=0 align="absmiddle"> Print</A>--->
+              </td>
+			  <!----
+            <cfif CLIENT.usertype LTE 4>
+                <td width="15">&nbsp;</td>
+                <td>
+                    <!--- email --->
+                    <form action="index.cfm?curdoc=forms/pr_email" method="post">
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input name="Submit" type="image" src="pics/email.gif" alt="Email Report" border=0>
+                    </form>
+                    <!---<a href="javascript:OpenLetter('../nsmg/reports/email_progress_report.cfm?number=#form.pr_id#');" title="Email Progress Report"><img src="pics/email.gif" border="0" align="absmiddle"> Email</a>--->
+                </td>
+            </cfif>
+			---->
+        </cfif>
+		
+        </tr>
+      </table>
+      </cfif>	
+    
+	</cfif>
+      <div align="center">
+      <a href="index.cfm?curdoc=progress_reports">Back to Reports</a>
+      </div>
 </cfoutput>
 </body>
 </html>
