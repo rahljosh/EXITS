@@ -66,7 +66,7 @@
     <tr>
         <th align="left">
             <cfquery name="get_question" datasource="#application.dsn#">
-                SELECT text
+                SELECT text, yn,ynValues
                 FROM smg_prquestions
                 WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_prquestion#">
             </cfquery>
@@ -74,7 +74,16 @@
         </th>
     </tr>
     <tr>
-        <td><cftextarea name="x_pr_question_response" value="#form.x_pr_question_response#" cols="65" rows="15" /></td>
+        <td>
+        <cfoutput>
+        <Cfif get_question.yn is 'no'>
+      	  <cftextarea name="x_pr_question_response" value="#form.x_pr_question_response#" cols="65" rows="15" /></td>
+    	<cfelse>
+            <Cfloop list="#get_question.ynValues#" index=i>
+            <input type="radio" name="x_pr_question_response" value="#i#" /> #i# &nbsp;&nbsp;
+            </Cfloop>
+        </Cfif>
+        </Cfoutput>
     </tr>
 </table>
 

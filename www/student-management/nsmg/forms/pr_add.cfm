@@ -1,14 +1,18 @@
 <!--- Process Form Submission --->
+
 <cfif isDefined("form.submitted")>
+
 
     <cflock timeout="30">
         <cfquery datasource="#application.dsn#">
-            INSERT INTO progress_reports (fk_student, pr_uniqueid, pr_month_of_report, fk_program, fk_sr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host, fk_intrep_user)
+            INSERT INTO progress_reports (fk_reportType, fk_student, pr_uniqueid, pr_month_of_report, fk_program, fk_secondVisitRep, fk_sr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host, fk_intrep_user)
             VALUES (
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">,
             <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.month_of_report#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_secondVisitRep#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_sr_user#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_ra_user#" null="#yesNoFormat(trim(form.fk_ra_user) EQ '')#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_rd_user#">,
@@ -22,13 +26,16 @@
             FROM progress_reports
         </cfquery>
     </cflock>
+    
+<Cfif client.reportType neq 2>
     <cfquery name="get_questions" datasource="#application.dsn#">
         SELECT id
         FROM smg_prquestions
-        WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.companyid#"> 
+        WHERE companyGroup = <cfqueryparam cfsqltype="cf_sql_varchar" value="#client.company_submitting#"> 
         AND active = 1
         AND month = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.month_of_report#">
     </cfquery>
+   
     <cfloop query="get_questions">
         <cfquery datasource="#application.dsn#">
             INSERT INTO x_pr_questions (fk_progress_report, fk_prquestion)
@@ -38,7 +45,17 @@
             )
         </cfquery>
     </cfloop>
+<Cfelseif client.reportType eq 2>
+	<cfquery  datasource="#application.dsn#">
+    	insert into secondVisitAnswers (fk_reportID, fk_studentID)
+        			values(#get_id.pr_id#, #form.studentid#)
+    </Cfquery>
+</Cfif>
+   <Cfif client.reportType eq 1 or client.reportType eq 3>
     <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm" id="theForm">
+   <Cfelseif client.reportType eq 2>
+   	<form action="index.cfm?curdoc=forms/secondHomeVisitReport" method="post" name="theForm" id="theForm">
+   </cfif> 
     <input type="hidden" name="pr_id" value="<cfoutput>#get_id.pr_id#</cfoutput>">
     </form>
     <script>
@@ -50,24 +67,30 @@
 
 	<cfparam name="form.studentid" default="">
 	<cfif not isNumeric(form.studentid)>
-        a numeric studentid is required to add a new progress report.
+        a numeric studentid is required to add a new report.
         <cfabort>
 	</cfif>
 
 	<cfparam name="form.month_of_report" default="">
 	<cfif not isNumeric(form.month_of_report)>
-        a numeric month is required to add a new progress report.
+        a numeric month is required to add a new report.
         <cfabort>
 	</cfif>
-
+	
+    <cfparam name="form.type_of_report" default="">
+	<cfif not isNumeric(form.type_of_report)>
+        a numeric type of report is required to add a new report.
+        <cfabort>
+	</cfif>
     <cfquery name="get_student" datasource="#application.dsn#">
-        SELECT arearepid, intrep, regionassigned, hostid, programid, companyid
+        SELECT secondVisitRepID, arearepid, intrep, regionassigned, hostid, programid, companyid, secondVisitRepID
         FROM smg_students
         WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">
     </cfquery>
     
     <cfset form.companyid = get_student.companyid>
     <cfset form.fk_sr_user = get_student.arearepid>
+    <cfset form.fk_secondVisitRep = get_student.secondVisitRepID>
     
     <cfset form.programid = get_student.programid>
     <cfif form.programid EQ 0 or form.programid EQ ''>
@@ -136,7 +159,7 @@
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 		<td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-		<td background="pics/header_background.gif"><h2>Add Progress Report</h2></td>
+		<td background="pics/header_background.gif"><h2>Add Report</h2></td>
 		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
@@ -150,6 +173,7 @@
 <cfinput type="hidden" name="month_of_report" value="#form.month_of_report#">
 <cfinput type="hidden" name="companyid" value="#form.companyid#">
 <cfinput type="hidden" name="programid" value="#form.programid#">
+<cfinput type="hidden" name="fk_secondVisitRep" value="#form.fk_secondVisitRep#">
 <cfinput type="hidden" name="fk_sr_user" value="#form.fk_sr_user#">
 <cfinput type="hidden" name="fk_ra_user" value="#form.fk_ra_user#">
 <cfinput type="hidden" name="fk_rd_user" value="#form.fk_rd_user#">
@@ -166,32 +190,64 @@
 <cfoutput>
 <h2>Student: #get_student.firstname# #get_student.familylastname# (#form.studentid#)
 <br />
-<cfswitch expression="#form.month_of_report#">
-<cfcase value="10">
-    Phase 1<br>
-    <font size=-1>Due Oct 1st - includes information from Aug 1 through Oct 1</font>
-</cfcase>
-<cfcase value="12">
-    Phase 2<br>
-    <font size=-1>Due Dec 1st - includes information from Oct 1 through Dec 1</font>
-</cfcase>
-<cfcase value="2">
-    Phase 3<br>
-    <font size=-1>Due Feb 1st - includes information from Dec 1 through Feb 1st</font>
-</cfcase>
-<cfcase value="4">
-    Phase 4<br>
-    <font size=-1>Due April 1st - includes information from Feb 1st through April 1st</font>
-</cfcase>
-<cfcase value="6">
-    Phase 5<br>
-    <font size=-1>Due June 1st - includes information from April 1st through June  1st</font>
-</cfcase>
-<cfcase value="8">
-    Phase 6<br>
-    <font size=-1>Due August 1st - includes information from June 1st through August 1st</font>
-</cfcase>
-</cfswitch>
+<cfif client.reportType eq 1>
+    <cfswitch expression="#form.month_of_report#">
+        <cfcase value="10">
+            Phase 1<br>
+            <font size=-1>Due Oct 1st - includes information from Aug 1st through Oct 1st</font>
+        </cfcase>
+        <cfcase value="12">
+            Phase 2<br>
+            <font size=-1>Due Dec 1st - includes information from Oct 1st through Dec 1st</font>
+        </cfcase>
+        <cfcase value="2">
+            Phase 3<br>
+            <font size=-1>Due Feb 1st - includes information from Dec 1st through Feb 1st</font>
+        </cfcase>
+        <cfcase value="4">
+            Phase 4<br>
+            <font size=-1>Due April 1st - includes information from Feb 1st through April 1st</font>
+        </cfcase>
+        <cfcase value="6">
+            Phase 5<br>
+            <font size=-1>Due June 1st - includes information from April 1st through June  1st</font>
+        </cfcase>
+        <cfcase value="8">
+            Phase 6<br>
+            <font size=-1>Due August 1st - includes information from June 1st through August 1st</font>
+        </cfcase>
+	</cfswitch>
+</cfif>
+
+<cfif client.reportType eq 3>
+    <cfswitch expression="#form.month_of_report#">
+        <cfcase value="9">
+            Student Update 1<br>
+            <font size=-1>Due Sept 1st - includes information from Aug 1st through Sept 1st</font>
+        </cfcase>
+        <cfcase value="11">
+            Student Update 2<br>
+            <font size=-1>Due Nov 1st - includes information from Oct 1st through Nov 1st</font>
+        </cfcase>
+        <cfcase value="1">
+            Student Update 3<br>
+            <font size=-1>Due Jan 1st - includes information from Dec 1st through Jan 1st</font>
+        </cfcase>
+        <cfcase value="3">
+            Student Update 4<br>
+            <font size=-1>Due March 1st - includes information from Feb 1st through March 1st</font>
+        </cfcase>
+        <cfcase value="5">
+            Student Update 5<br>
+            <font size=-1>Due May 1st - includes information from April 1st through May 1st</font>
+        </cfcase>
+        <cfcase value="7">
+            Student Update 6<br>
+            <font size=-1>Due June 1st - includes information from May 1st through June  1st</font>
+        </cfcase>
+    </cfswitch>
+
+</cfif>
 </h2>
 <br />
 <table border=0 cellpadding=4 cellspacing=0>
@@ -205,6 +261,11 @@
             SELECT programname
             FROM smg_programs
             WHERE programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#">
+        </cfquery>
+        <cfquery name="get_second_rep" datasource="#application.dsn#">
+            SELECT firstname, lastname
+            FROM smg_users
+            WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_secondVisitRep#">
         </cfquery>
         <cfquery name="get_rep" datasource="#application.dsn#">
             SELECT firstname, lastname
@@ -236,6 +297,10 @@
           <tr>
             <th align="right">Program Name:</th>
             <td>#get_program.programname# (#form.programid#)</td>
+          </tr>
+          <tr>
+            <th align="right">Second Visit Representative:</th>
+            <td>#get_second_rep.firstname# #get_second_rep.lastname# (#form.fk_secondVisitRep#)</td>
           </tr>
           <tr>
             <th align="right">Supervising Representative:</th>
