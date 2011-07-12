@@ -48,7 +48,7 @@ function CheckDates(ckname, frname) {
 </cfquery>
 
 <cfquery name="get_paperwork" datasource="MySQL">
-	SELECT p.paperworkid, p.userid, p.seasonid, p.ar_info_sheet, p.ar_ref_quest1, p.ar_ref_quest2, p.ar_cbc_auth_form, p.ar_agreement, p.ar_training,
+	SELECT p.paperworkid, p.userid, p.seasonid, p.ar_info_sheet, p.ar_ref_quest1, p.ar_ref_quest2, p.ar_cbc_auth_form, p.ar_agreement, p.ar_training, p.secondVisit,
 		s.season
 	FROM smg_users_paperwork p
 	LEFT JOIN smg_seasons s ON s.seasonid = p.seasonid
@@ -135,12 +135,13 @@ function CheckDates(ckname, frname) {
 		<td width="25%" valign="top">
 			<table cellpadding="2" border="0" width="100%">
 				<tr><td bgcolor="e2efc7" height="26"><b><span class="get_attention">></span> <u>Paperwork</u></b></td></tr>
-				<tr height="28"><td ><b>AR Information Sheet</b></td></tr>
-				<tr height="28"><td ><b>AR Ref. Questionnaire ##1</b></td></tr>
-				<tr height="28"><td ><b>AR Ref. Questionnaire ##2</b></td></tr>
-				<tr height="28"><td ><b>CBC Authorization Form</b></td></tr>
-				<tr height="28"><td><b>AR Agreement</b></td></tr>
-				<tr height="28"><td><b>AR Training Sign-off Form</b></td></tr>
+				<tr height="28"><td ><font color="red">*</font><b>AR Information Sheet</b></td></tr>
+				<tr height="28"><td ><font color="red">*</font><b>AR Ref. Questionnaire ##1</b></td></tr>
+				<tr height="28"><td ><font color="red">*</font><b>AR Ref. Questionnaire ##2</b></td></tr>
+				<tr height="28"><td ><font color="red">*</font><b>CBC Authorization Form</b></td></tr>
+				<tr height="28"><td><font color="red">*</font><b>AR Agreement</b></td></tr>
+				<tr height="28"><td><font color="red">*</font><b>AR Training Sign-off Form</b></td></tr>
+                <tr height="28"><td><b>2nd Visit User Info Sheet</b></td></tr>
 			</table>
 		</td>
 		<td  valign="top">
@@ -180,7 +181,11 @@ function CheckDates(ckname, frname) {
 					<tr><td><cfinput type="checkbox" name="ar_training_check" OnClick="CheckDates('ar_training_check', 'ar_training');"> 
 							Date: <cfinput type="text" name="ar_training" value="" size="8" maxlength="10" validate="date">
 						</td>
-					</tr>				
+					</tr>	
+                    <tr><td><cfinput type="checkbox" name="ar_secondVisit_check" OnClick="CheckDates('ar_secondVisit_check', 'ar_secondVisit');"> 
+							Date: <cfinput type="text" name="ar_secondVisit" value="" size="8" maxlength="10" validate="date">
+						</td>
+					</tr>			
 				</table>
 			</cfif>
 
@@ -191,11 +196,13 @@ function CheckDates(ckname, frname) {
 					<cfinput type="hidden" name="paperworkid_#currentrow#" value="#paperworkid#">
 					<table cellpadding="2" border="0" align="left">	
 						<tr bgcolor="e2efc7" height="26"><td><b><span class="get_attention">></span> <u>#season#</u></b></td></tr>
-						<tr <Cfif get_rep.active eq 0 and get_paperwork.ar_info_sheet is ''> bgcolor="##FFCBC4" </cfif>><td ><cfif ar_info_sheet EQ ''>
-									<cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');">
-								<cfelse>
-									<cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');" value="">					
-								</cfif>	
+						<tr 
+						<Cfif get_rep.active eq 0 and get_paperwork.ar_info_sheet is ''> bgcolor="##FFCBC4" </cfif>><td >
+						
+						<cfif ar_info_sheet EQ ''>
+							<cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');">
+						<cfelse>
+							<cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');" checked="yes">				</cfif>	
 								Date: <cfinput type="text" name="ar_info_sheet_#currentrow#" value="#DateFormat(ar_info_sheet, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">					
 							</td>
 						</tr>
@@ -239,6 +246,14 @@ function CheckDates(ckname, frname) {
 								Date: <cfinput type="text" name="ar_training_#currentrow#" value="#DateFormat(ar_training, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">
 							</td>
 						</tr>
+                        <tr><td><cfif secondVisit EQ ''>
+									<cfinput type="checkbox" name="ar_secondVisit_#currentrow#" OnClick="CheckDates('ar_secondVisit_check_#currentrow#', 'ar_secondVisit_#currentrow#');"> 
+								<cfelse>
+									<cfinput type="checkbox" name="ar_secondVisit_check_#currentrow#" OnClick="CheckDates('ar_secondVisit_check_#currentrow#', 'ar_secondVisit_#currentrow#');" checked="yes"> 
+								</cfif>
+								Date: <cfinput type="text" name="ar_secondVisit_#currentrow#" value="#DateFormat(secondVisit, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">
+							</td>
+						</tr>
 					</table>
                     
       
@@ -270,6 +285,10 @@ function CheckDates(ckname, frname) {
 						</tr>
 						<tr><td><input type="checkbox" name="ar_training_check_#currentrow#" disabled="disabled" <cfif ar_training NEQ ''>checked="checked"</cfif>> 
 								Date: <input name="ar_training_#currentrow#" value="#DateFormat(ar_training, 'mm/dd/yyyy')#" size="8" disabled="disabled" />
+							</td>
+						</tr>
+                        <tr><td><input type="checkbox" name="ar_secondVisit_check_#currentrow#" disabled="disabled" <cfif ar_secondVisit NEQ ''>checked="checked"</cfif>> 
+								Date: <input name="ar_secondVisit_#currentrow#" value="#DateFormat(secondVisit, 'mm/dd/yyyy')#" size="8" disabled="disabled" />
 							</td>
 						</tr>
 					</table>				
