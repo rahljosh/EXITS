@@ -86,7 +86,7 @@
     <cfdirectory name="getVirtualFolder" directory="#virtualDirectory#" filter="*.*">
 
     <!----International Rep---->
-    <cfquery name="qIntAgent" datasource="#application.dsn#">
+    <cfquery name="qGetIntlRep" datasource="#application.dsn#">
         SELECT 
         	u.businessname, 
             u.firstname, 
@@ -134,7 +134,7 @@
         AND 
         	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qProgramInfo.seasonid#">
         AND 
-        	insutypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qIntAgent.insurance_typeid#">
+        	insutypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetIntlRep.insurance_typeid#">
     </cfquery>
     
     <!----Get Expired Student Programs---->
@@ -455,7 +455,11 @@
 			<div id="subMenuLinks">  
 				<!----All Users---->
 				<a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#qGetStudentInfo.studentID#', 800, 600);">Placement Management</a>
-	
+				
+                <cfif CLIENT.userID EQ 510>
+                	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModal">New Placement Management</a>
+                </cfif>
+                
 				<!--- OFFICE USERS ONLY --->
 				<cfif CLIENT.usertype LTE 4> 
 					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qGetStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
@@ -715,11 +719,11 @@
 			<table cellpadding="2" width="100%">
 				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Insurance</td></tr>
 				<tr>
-					<td width="10"><cfif qIntAgent.insurance_typeid LTE '1'><input type="checkbox" name="insurance_check" value="0" disabled><cfelse><input type="checkbox" name="insurance_check" value="1" checked disabled></cfif></td>
+					<td width="10"><cfif qGetIntlRep.insurance_typeid LTE '1'><input type="checkbox" name="insurance_check" value="0" disabled><cfelse><input type="checkbox" name="insurance_check" value="1" checked disabled></cfif></td>
 					<td align="left" colspan="2">
-						<cfif qIntAgent.insurance_typeid EQ '0'> 
+						<cfif qGetIntlRep.insurance_typeid EQ 0> 
                         	<font color="FF0000">Intl. Rep. Insurance Information is missing</font>
-						<cfelseif qIntAgent.insurance_typeid EQ 1> 
+						<cfelseif qGetIntlRep.insurance_typeid EQ 1> 
                         	Does not take Insurance Provided by #qCompanyShort.companyshort#
 						<cfelse> 
                         	Takes Insurance Provided by #qCompanyShort.companyshort# 
@@ -727,14 +731,14 @@
 					</td>
 				</tr>
 				<tr>
-					<td><cfif qIntAgent.insurance_typeid LTE '1'><input type="checkbox" name="insurance_check" value="0" disabled><cfelse><input type="checkbox" name="insurance_check" value="1" checked disabled></cfif></td>
+					<td><cfif qGetIntlRep.insurance_typeid LTE 1><input type="checkbox" name="insurance_check" value="0" disabled><cfelse><input type="checkbox" name="insurance_check" value="1" checked disabled></cfif></td>
 					<td>Policy Type :</td>
-					<td><cfif qIntAgent.insurance_typeid EQ '0'>
+					<td><cfif qGetIntlRep.insurance_typeid EQ 0>
 							<font color="FF0000">Missing Policy Type</font>
-						<cfelseif qIntAgent.insurance_typeid EQ 1> 
+						<cfelseif qGetIntlRep.insurance_typeid EQ 1> 
                         	n/a
 						<cfelse> 
-                        	#qIntAgent.type#	
+                        	#qGetIntlRep.type#	
 						</cfif>		
 					</td>
 				</tr>
@@ -750,7 +754,7 @@
                     </td>
 					<td>Insured on :</td>
 					<td>
-						<cfif qIntAgent.insurance_typeid EQ 1>
+						<cfif qGetIntlRep.insurance_typeid EQ 1>
                             n/a
                         <cfelseif qInsuranceHistory.recordCount>
                             #DateFormat(qInsuranceHistory.date, 'mm/dd/yyyy')# &nbsp; - &nbsp; <a href="http://www.esecutive.com/MyInsurance/" target="_blank">[ Print Card ]</a><br />
@@ -809,7 +813,7 @@
 				<tr>
 					<td>&nbsp;</td>
 					<td>Direct Placement &nbsp; 
-						<cfif direct_placement EQ '0'><input type="radio" name="direct_placement" value="0" checked="yes" <cfif FORM.edit EQ 'no'>disabled</cfif>>No<cfelse><input type="radio" name="direct_placement" value="0" <cfif FORM.edit EQ 'no'>disabled</cfif>>No</cfif> &nbsp; 
+						<cfif direct_placement EQ 0><input type="radio" name="direct_placement" value="0" checked="yes" <cfif FORM.edit EQ 'no'>disabled</cfif>>No<cfelse><input type="radio" name="direct_placement" value="0" <cfif FORM.edit EQ 'no'>disabled</cfif>>No</cfif> &nbsp; 
 						<cfif direct_placement EQ 1><input type="radio" name="direct_placement" value="1" checked="yes" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes<cfelse><input type="radio" name="direct_placement" value="1" <cfif FORM.edit EQ 'no'>disabled</cfif>>Yes</cfif>													
 					</td>
 				</tr>
@@ -856,13 +860,13 @@
 					<td>DS 2019 Verification Received &nbsp; &nbsp; Date: &nbsp;<input type="text" name="verification_form" size=8 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
 				</tr>
 				<tr>
-					<td width="10"><cfif VAL(qIntAgent.accepts_sevis_fee)><input type="checkbox" name="accepts_sevis_fee" value="1" checked disabled><cfelse><input type="checkbox" name="accepts_sevis_fee" value="0" disabled></cfif></td>
-					<td><cfif qIntAgent.accepts_sevis_fee EQ ''>
-							<font color="FF0000">SEVIS Fee Information is missing</font>
-						<cfelseif qIntAgent.accepts_sevis_fee EQ '0'>
-							Intl. Agent does not accept SEVIS Fee
-						<cfelseif qIntAgent.accepts_sevis_fee EQ 1>
-							Intl. Agent Accepts SEVIS Fee
+					<td width="10">&nbsp;</td>
+					<td><cfif NOT LEN(qGetIntlRep.accepts_sevis_fee)>
+							<font color="FF0000">SEVIS Fee information is missing</font>
+						<cfelseif qGetIntlRep.accepts_sevis_fee EQ 0>
+							#qGetIntlRep.businessName# <span style="font-weight:bold; text-decoration:underline;">DOES NOT</span> accept SEVIS Fee
+						<cfelseif qGetIntlRep.accepts_sevis_fee EQ 1>
+							#qGetIntlRep.businessName# <span style="font-weight:bold; text-decoration:underline;">ACCEPTS</span> SEVIS Fee
 						</cfif>
 					</td>
 				</tr>
@@ -872,11 +876,20 @@
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td>Fee Status: &nbsp; <cfif qIntAgent.accepts_sevis_fee NEQ 1 AND sevis_fee_paid_date EQ ''>n/a<cfelseif sevis_fee_paid_date NEQ ''>Paid  on: &nbsp; #DateFormat(sevis_fee_paid_date, 'mm/dd/yyyy')# <cfelse> Unpaid </cfif></td>
+					<td>
+                    	Fee Status: &nbsp; 
+						<cfif LEN(sevis_fee_paid_date)>
+                        	Paid  on #DateFormat(sevis_fee_paid_date, 'mm/dd/yyyy')#
+						<cfelseif qGetIntlRep.accepts_sevis_fee NEQ 1>
+                        	n/a 
+						<cfelse> 
+                       		Unpaid 
+						</cfif>
+                	</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td>Sevis Status: &nbsp; <cfif qSevisStatus.recordcount> Active since #DateFormat(qSevisStatus.datecreated, 'mm/dd/yyyy')# <cfelseif sevis_batchid NEQ '0'> Initial <cfelse> n/a </cfif></td>
+					<td>Sevis Status: &nbsp; <cfif qSevisStatus.recordcount> Active since #DateFormat(qSevisStatus.datecreated, 'mm/dd/yyyy')# <cfelseif sevis_batchid NEQ 0> Initial <cfelse> n/a </cfif></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -896,10 +909,7 @@
 				<cfif CLIENT.usertype LTE '4'>
 				<tr>
 					<td>: : <a href="javascript:OpenLetter('reports/acceptance_letter.cfm');">Acceptance</a></td>
-                  
-					<td>: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#');">Placement</a>
-                  </td>
-                   
+					<td>: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#');">Placement</a></td>
 				</tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/host_welcome_letter.cfm');">Family Welcome</a></td>
