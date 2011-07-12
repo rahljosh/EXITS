@@ -57,7 +57,7 @@
             </cfquery>
             <cfsavecontent variable="email_message">
             <cfoutput>				
-                <p>A progress report has been rejected.</p>
+                <p>A  report has been rejected.</p>
                 <p>Student: #get_student.firstname# #get_student.familylastname# (#get_student.studentid#)</p>
                 <p>Rejection Reason:<br />
                 #replaceList(form.pr_rejection_reason, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</p>
@@ -121,7 +121,7 @@
 <tr valign=middle height=24>
 	<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 	<td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-	<td background="pics/header_background.gif"><h2>Reject Progress Report</h2></td>
+	<td background="pics/header_background.gif"><h2>Reject Report</h2></td>
 	<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
@@ -150,7 +150,7 @@
         <td><font color="FF0000">
             On rejection the following will occur:
             <ul>
-                <p><li>The status will return to Pending, and only the Supervising Rep will be able to view this report.</li></p>
+                <p><li>The status will return to Pending, and only the Submitting  Rep will be able to view this report.</li></p>
                 <p><li>An email will be sent to those who have approved the report.</li></p>
             </ul>
         </font></td>
