@@ -95,7 +95,7 @@ function OpenLetter(url) {
     ORDER BY progress_report_dates.prdate_date
 </cfquery>
 <cfquery name="get_questions" datasource="#application.dsn#">
-    SELECT x_pr_questions.x_pr_question_id, x_pr_questions.x_pr_question_response, smg_prquestions.text
+    SELECT x_pr_questions.x_pr_question_id, x_pr_questions.x_pr_question_response, smg_prquestions.text, smg_prquestions.required
     FROM x_pr_questions
     INNER JOIN smg_prquestions ON x_pr_questions.fk_prquestion = smg_prquestions.id
     WHERE x_pr_questions.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
@@ -218,10 +218,12 @@ function OpenLetter(url) {
 	<!--- questions: all questions must be answered. --->
     <cfset questionsOK = 1>
     <cfloop query="get_questions">
-		<cfif x_pr_question_response EQ ''>
+		<cfif x_pr_question_response EQ ''  AND  required eq 1 >
 		    <cfset questionsOK = 0>
         </cfif>
     </cfloop>
+   
+    
     <cfif not questionsOK>
         <cfset allow_approve = 0>
         <cfset approve_error_msg = listAppend(approve_error_msg, 'question')>
@@ -243,7 +245,7 @@ function OpenLetter(url) {
         <tr height=24>
             <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
             <td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-            <td background="pics/header_background.gif"><h2>Progress Report</h2></td>     
+            <td background="pics/header_background.gif"><h2> Report</h2></td>     
             <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
         </tr>
     </table>
