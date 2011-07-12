@@ -283,7 +283,7 @@
         <!----For Accounts Created after Sept 1, 2010---->
         <Cfif qAuthenticateUser.datecreated gt '2010-09-01'>
        		
-			<cfif #DateDiff('d',qAuthenticateUser.datecreated, now())# gte 21>
+			<cfif #DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now())# gte 21>
 				
 				<!----Check if WebEX Training has been completed ---->
                 <cfif listfind('5,6,7', client.usertype)>
