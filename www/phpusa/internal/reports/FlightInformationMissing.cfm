@@ -179,6 +179,22 @@
 
 <!--- Report --->
 <cfelse>
+
+	<script language="javascript">	
+        // Document Ready!
+        $(document).ready(function() {
+    
+            // JQuery Modal
+            $(".jQueryModal").colorbox( {
+                width:"60%", 
+                height:"90%", 
+                iframe:true,
+                overlayClose:false,
+                escKey:false 
+            });		
+    
+        });
+    </script>    
  
 	<cfoutput>
     
@@ -187,7 +203,7 @@
                 <td width="300px">Student</td>
                 <td width="200px">International Representative</td>
                 <td width="200px">School</td>
-                <td width="100px">Flight Missing</td>
+                <td width="100px">Missing</td>
             </tr>
             <cfloop query="qGetResults">
                 <tr bgcolor="###vColorRow#">
@@ -195,11 +211,13 @@
                     <td>#qGetResults.businessName# (###qGetResults.userID#)</td>                
                     <td>#qGetResults.schoolName# (###qGetResults.schoolID#)</td>  
                     <td>
-                    	<cfif FORM.reportOption EQ 'missingArrival'>
+                    	<a href="student/index.cfm?action=flightInformation&uniqueID=#qGetResults.uniqueID#&programID=#qGetResults.programID#" class="jQueryModal">
+						<cfif FORM.reportOption EQ 'missingArrival'>
                         	Arrival Information
                         <cfelse>
                         	Departure Information
                         </cfif>
+                        </a>
                     </td>  
                 </tr>
             </cfloop>

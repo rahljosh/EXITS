@@ -126,8 +126,8 @@
 							<td>
 								<select name="reportOption" class="xLargeField">
 									<option value="" <cfif NOT LEN(FORM.reportOption)> selected="selected" </cfif> >Select an Option</option>
-									<option value="receivedArrival" <cfif FORM.reportOption EQ 'missingArrival'> selected="selected" </cfif> >Missing Arrival Information</option>
-									<option value="receivedDeparture" <cfif FORM.reportOption EQ 'missingDeparture'> selected="selected" </cfif> >Missing Departure Information</option>
+									<option value="missingArrival" <cfif FORM.reportOption EQ 'missingArrival'> selected="selected" </cfif> >Missing Arrival Information</option>
+									<option value="missingDeparture" <cfif FORM.reportOption EQ 'missingDeparture'> selected="selected" </cfif> >Missing Departure Information</option>
 								</select>
 							</td>
 						</tr>		
