@@ -324,7 +324,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     </tr>
     <tr>
     	<Td colspan=5 align="Center">
-		<cfif client.reportType neq 3>
+		<cfif client.reportType neq 2>
 			<cfoutput>These reports are available to be submitted between #DateFormat(startDate,'mm/dd/yyyy')# and #DateFormat(endDate,'mm/dd/yyyy')#.</cfoutput>
         </cfif>
         </Td>
