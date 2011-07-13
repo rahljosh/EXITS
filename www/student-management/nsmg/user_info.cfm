@@ -697,7 +697,7 @@
                                                         </cfif>
                                                     <a href="index.cfm?curdoc=forms/access_rights_form&id=#id#&companyID=#companyID#&userid=#rep_info.userid#" title="Edit Access Level">Edit</a>
                                                     <cfelse>
-                                                    <a href="index.cfm?curdoc=forms/convertToRep&userid=#rep_info.userid#"><img src="pics/convertBut_sm.png" /></a>
+                                                    <a href="index.cfm?curdoc=forms/convertToRep&userid=#rep_info.userid#"><img src="pics/convertBut_sm.jpg" /></a>
                                                     </cfif>
                                                 </td> 
                                                 <!---<td><a href="index.cfm?curdoc=forms/access_rights_form&id=#id#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>--->
