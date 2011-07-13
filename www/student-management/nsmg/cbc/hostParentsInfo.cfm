@@ -144,12 +144,12 @@
 			FORM.fatherFirstName = qGetHostFamilyInfo.fatherFirstName;
 			FORM.fatherMiddleName = qGetHostFamilyInfo.fatherMiddleName;
 			FORM.fatherDOB = qGetHostFamilyInfo.fatherDOB;
-			FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, isMaskedSSN=1);
+			FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, displayType='hostFamily');
 			FORM.motherFirstName = qGetHostFamilyInfo.motherFirstName;
 			FORM.motherLastName = qGetHostFamilyInfo.motherLastName;
 			FORM.motherMiddleName = qGetHostFamilyInfo.motherMiddleName;
 			FORM.motherDOB = qGetHostFamilyInfo.motherDOB;
-			FORM.motherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.motherSSN, isMaskedSSN=1);
+			FORM.motherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.motherSSN, displayType='hostFamily');
     	</cfscript>
     
     </cfif> <!--- FORM Submitted --->

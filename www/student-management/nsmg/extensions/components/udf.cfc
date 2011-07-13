@@ -136,27 +136,69 @@
 	<cffunction name="displaySSN" access="public" returntype="string" output="false" hint="Decrypts a variable">
     	<cfargument name="varString" hint="String">
         <cfargument name="isMaskedSSN" default="1" hint="Set to 1 to return SSN in ***-**-9999 format">
-		
+		<cfargument name="displayType" default="" hint="user / hostFamily">
+        
 		<cfscript>
-			// Declare Variables
-			var vDecryptedSSN = decryptVariable(ARGUMENTS.varString);
-			var returnSSN = '';
+			/*** Display SSN Rules
+				ISE
+					- Host Family - No one is allowed to view full SSN
+					- User - Thea Brewer and Bryan McCready are allowed to view full SSN
+				CASE
+					- Host Family - No one is allowed to view full SSN
+					- User - Stacy Brewer is allowed to view full SSN
+				ESI
+					- Host Family - Stacy Brewer is allowed to view full SSN
+					- User - Stacy Brewer is allowed to view full SSN
+			***/
+		
+			// Declare Variables		
 			
+			// ISE
+			var vUserListISE = '7657,9719'; // Thea Brewer | Bryan McCready 
+			
+			// CASE
+			var vUserListCASE = '11364'; // Stacy Brewer
+			
+			// ESI
+			var vListESI = '11364'; // Stacy Brewer
+			
+			// Stores all IDs so we can check quickly and return a masked SSN
+			var vAllowedIDList = '7657,9719,11364';
+			
+			// Stores the return variable
+			var vReturnSSN = '';
+			
+			// Decrypt SSN
+			var vDecryptedSSN = decryptVariable(ARGUMENTS.varString);
+
+			// SET return masked SSN as default
+			vReturnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
+
 			// Format SSN Display
-			if ( LEN(vDecryptedSSN) ) {
-				
-				if ( NOT VAL(ARGUMENTS.isMaskedSSN) AND ListFind(APPLICATION.SETTINGS.displayFullSSNUserList, CLIENT.userID) ) {
+			if ( LEN(vDecryptedSSN) AND ListFind(vAllowedIDList, CLIENT.userID) ) {
+
+				// ISE - SHOW ONLY FOR USER 
+				if ( ListFind(vUserListISE, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID) AND ARGUMENTS.displayType EQ 'user' ) {
 					// return full SSN
-					returnSSN = vDecryptedSSN;
-				} else {
-					// Mask	
-					returnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
+					vReturnSSN = vDecryptedSSN;
+				}
+				
+				// CASE - SHOW ONLY FOR USER
+				if ( ListFind(vUserListCASE, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.CASExchange, CLIENT.companyID) AND ARGUMENTS.displayType EQ 'user' ) {
+					// return full SSN
+					vReturnSSN = vDecryptedSSN;
+				}
+					
+				// ESI - SHOW FOR HOST FAMILY AND USER
+				if ( ListFind(vListESI, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID) AND listFind("user,hostFamily", ARGUMENTS.displayType) ) {
+					// return full SSN
+					vReturnSSN = vDecryptedSSN;
 				}
 				
 			}
 			
 			// Return Encrypted Variable
-			return(returnSSN);
+			return(vReturnSSN);
         </cfscript>
 		   
 	</cffunction>

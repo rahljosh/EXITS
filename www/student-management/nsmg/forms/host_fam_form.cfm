@@ -362,14 +362,14 @@
 			FORM.fatherFirstName = qGetHostFamilyInfo.fatherFirstName;
 			FORM.fatherMiddleName = qGetHostFamilyInfo.fatherMiddleName;
 			FORM.fatherDOB = qGetHostFamilyInfo.fatherDOB;
-			FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, isMaskedSSN=1);
+			FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, displayType='hostFamily');
 			FORM.fatherWorkType = qGetHostFamilyInfo.fatherWorkType;
 			FORM.father_cell = qGetHostFamilyInfo.father_cell;
 			FORM.motherFirstName = qGetHostFamilyInfo.motherFirstName;
 			FORM.motherLastName = qGetHostFamilyInfo.motherLastName;
 			FORM.motherMiddleName = qGetHostFamilyInfo.motherMiddleName;
 			FORM.motherDOB = qGetHostFamilyInfo.motherDOB;
-			FORM.motherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.motherSSN, isMaskedSSN=1);
+			FORM.motherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.motherSSN, displayType='hostFamily');
 			FORM.motherWorkType = qGetHostFamilyInfo.motherWorkType;
 			FORM.mother_cell = qGetHostFamilyInfo.mother_cell;
 			FORM.address = qGetHostFamilyInfo.address;
