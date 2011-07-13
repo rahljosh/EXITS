@@ -1,3 +1,4 @@
+<Cfparam name="form.showActive" default="0">
 
 <cfloop list = "#FORM.question_list#" Index = "x">
 <cfset question = #Evaluate("FORM." & x & "_answer")#>
@@ -21,4 +22,4 @@
 		values('#newq2#', 'yes', #client.companyid#, #form.month#)
 	</cfquery>
 </cfif>
-<cflocation url="../index.cfm?curdoc=tools/progress_report_questions&u&month=#form.month#">
+<cflocation url="../index.cfm?curdoc=tools/progress_report_questions&u&month=#form.month#&active=#form.showActive#">

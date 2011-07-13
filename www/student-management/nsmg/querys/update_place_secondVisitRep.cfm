@@ -17,7 +17,7 @@ WHERE studentid = '#client.studentid#'
 	<cftransaction action="BEGIN" isolation="SERIALIZABLE">
 		<Cfquery name="place_placingrep" datasource="MySQL">
 		UPDATE smg_students
-			SET secondVisitRepID = #form.placerepid#
+			SET secondVisitRepID = #form.secondVisistRepID#
 
 		WHERE studentid= #client.studentid#
 		LIMIT 1
