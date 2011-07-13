@@ -137,7 +137,6 @@
 				<!--- Online Application --->
                 <cfcase value="onlineApplication">
 					
-                    
                     <div class="errors" style="width:#ATTRIBUTES.width#;">
                         <p><em>Oops... the following errors were encountered:</em></p>
                 
