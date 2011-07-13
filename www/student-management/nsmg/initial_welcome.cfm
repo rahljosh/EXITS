@@ -245,6 +245,7 @@
                 <table width=100% cellpadding="4" cellspacing=0 border="0" class="section" >
                     <tr>
                         <td  valign="top" width="100%"><br>
+                         
                             <img src="pics/tower_100.jpg" width=71 height=100 align="left">
                             <!---<img src="#CLIENT.exits_url#/nsmg/pics/clover.gif" width="75" align="left" >--->
                             <cfif news_messages.recordcount is 0>
@@ -262,6 +263,7 @@
 							<cfif CLIENT.usertype gte 8>
                                 <br><br>Please see below for announcements from your organization.
                             </cfif>
+                        
                         </td>
                         <td align="right" valign="top" rowspan=2></td>
                     </tr>
@@ -339,6 +341,8 @@
         <tr>
            <td  valign="top" width="100%"><br>
                 <img src="pics/tower_100.jpg" width=71 height=100 align="left">
+                <cfif client.usertype neq 15>
+                           
                 <!---<img src="#CLIENT.exits_url#/nsmg/pics/clover.gif" width="75" align="left" >--->
                 <cfif news_messages.recordcount is 0>
                     <br>There are currently no announcements or news items.
@@ -354,6 +358,9 @@
                 </cfif>
                 <cfif CLIENT.usertype gte 8>
                     <br><br>Please see below for announcements from your organization.
+                </cfif>
+                <cfelse>
+               			 Announcement for 2nd Visit Rep will go here when received.
                 </cfif>
           </td>
           <td align="right" valign="top" rowspan=2>
@@ -401,7 +408,7 @@
 </table>
 
 <!---- OFFICE AND FIELD ---->			
-<cfif ListFind("1,2,3,4,5,6,7,9", CLIENT.usertype)>        
+<cfif ListFind("1,2,3,4,5,6,7,9,15", CLIENT.usertype)>        
     
     <table width=100% cellspacing=0 border="0" class="section">
         <tr>
@@ -422,11 +429,16 @@
                 <tr valign="top">
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
-                        <a href="index.cfm?curdoc=progress_reports">Progress Reports</a><br>
-                        <cfif CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10>
+                        
+                        <a href="index.cfm?curdoc=progress_reports">Online Reports</a><br>
+                        
+                        
+                        <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10) and client.usertype lte 7>
                         	<a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
                         </cfif>
+                        <cfif client.usertype lte 7>
                         <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a><br />
+                        </cfif>
                         <cfif CLIENT.userType LTE 4 and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
                         	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
                         </cfif>
@@ -471,35 +483,20 @@
 						</td>
                     </cfif>
                 </tr>
+                <cfif client.usertype neq 15>
                 <tr>
                     <td></td>
                 </tr>
                 <tr>
-                    <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> New Students <font size=-2>since #new_date#</font></u></td>
+                   	<td class="get_attention"><span class="get_attention"><b>::</b></span> Marketing Material <img src="pics/new_03.png" /></td>
                     <td class="get_attention"><span class="get_attention"><b>::</b></span> New Users <font size=-2>since #new_date#</font></u></td>
                 </tr>
                 <tr valign="top">
-                    <td>
-                        <cfif new_students.recordcount eq 0>
-                            There are no new students.
-                        <cfelse>
-                            <!--- this is used to display the message if the user was added since last login. --->
-                            <cfset since_lastlogin = 0>
-                            <cfloop query="new_students">
-								<!--- highlight if user was added since last login. --->
-                                <cfif dateapplication GTE CLIENT.lastlogin>
-                                    <a href="index.cfm?curdoc=student_info&studentid=#studentid#"><font color="FF0000">#firstname# #familylastname#</font></a>
-			                        <cfset since_lastlogin = 1>
-                                <cfelse>
-                                    <a href="index.cfm?curdoc=student_info&studentid=#studentid#">#firstname# #familylastname#</a>
-                                </cfif>
-                                <br>
-                            </cfloop>
-                            <cfif since_lastlogin>
-                            	<br /><font color="FF0000">students in red were added since your last visit</font>
-                            </cfif>
-                        </cfif>
-                    </td>
+               	  <td>
+                    Here are some new brochures to help in your marketing.<Br />
+                    <a href="marketingMaterial/openheart/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
+                 	<A href="marketingMaterial/schoolWorld/SchoolAroundWorld.cfm" target="_blank"> School Around the World</A></td>
+                   
                     <td>
                         <cfif get_new_users.recordcount eq 0 or CLIENT.usertype gte 6>
                             There are no new reps in your region.
@@ -545,9 +542,35 @@
                      </td>
                 </tr>
                 <tr>
-                    <td></td>
+                	<td></td>
+                     <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> New Students <font size=-2>since #new_date#</font></u></td>
                 </tr>
                 <tr>
+                    <td></td>
+                     <td>
+                        <cfif new_students.recordcount eq 0>
+                            There are no new students.
+                        <cfelse>
+                            <!--- this is used to display the message if the user was added since last login. --->
+                            <cfset since_lastlogin = 0>
+                            <cfloop query="new_students">
+								<!--- highlight if user was added since last login. --->
+                                <cfif dateapplication GTE CLIENT.lastlogin>
+                                    <a href="index.cfm?curdoc=student_info&studentid=#studentid#"><font color="FF0000">#firstname# #familylastname#</font></a>
+			                        <cfset since_lastlogin = 1>
+                                <cfelse>
+                                    <a href="index.cfm?curdoc=student_info&studentid=#studentid#">#firstname# #familylastname#</a>
+                                </cfif>
+                                <br>
+                            </cfloop>
+                            <cfif since_lastlogin>
+                            	<br /><font color="FF0000">students in red were added since your last visit</font>
+                            </cfif>
+                        </cfif>
+                    </td>
+                </tr>
+                <tr>
+                	<Td></Td>
                     <form name="form" id="form">
                     <td><font size="1">
 						Display students & users newer than
@@ -562,10 +585,12 @@
                     </font></td>
                     </form>
                 </tr>
+                </cfif>
             </table>
             
             </td>
         </tr>
+        
     </table>
 
 <!---- WELCOME SCREEN FOR INTL. AGENTS ---->
