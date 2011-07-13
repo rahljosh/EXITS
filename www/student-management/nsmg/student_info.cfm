@@ -36,6 +36,9 @@
 		// Get Super Rep
 		qEnteredBy = APPCFC.USER.getUserByID(userID=VAL(qGetStudentInfo.entered_by));
 		
+		// Get 2nd Visit Rep
+		qGet2ndVisitRep = APPCFC.USER.getUserByID(userID=VAL(qGetStudentInfo.secondVisitRepID));
+		
 		// Get Student Company Assigned
 		qAssignedCompany = AppCFC.COMPANY.getCompanyByID(companyID=qGetStudentInfo.companyID);
 
@@ -551,6 +554,11 @@
 				<tr><td>Placing Rep. :</td>
 					<td><cfif placerepid is 0>	Not Assigned <cfelse> 
 						<a href="index.cfm?curdoc=user_info&userid=#qGetPlaceRep.userid#">#qGetPlaceRep.firstname# #qGetPlaceRep.lastname#</a></cfif> 
+					</td>				
+				</tr>	
+                <tr><td>2nd Visit Rep. :</td>
+					<td><cfif secondVisitRepID is 0>	Not Assigned <cfelse> 
+						<a href="index.cfm?curdoc=user_info&userid=#qGet2ndVisitRep.userid#">#qGet2ndVisitRep.firstname# #qGet2ndVisitRep.lastname#</a></cfif> 
 					</td>				
 				</tr>												
 			</table>
