@@ -24,25 +24,20 @@
 
             <cfquery name="updateSuperRep" datasource="MySQL">
               update smg_students
-				set placeRepID = '#form.placeRepID#'
-				<cfif get_student_info.areaRepID is not '0' and get_student_info.hostid is not '0' and get_student_info.schoolid is not '0'>
-					<cfif client.usertype eq 5 or client.usertype eq 6 or client.usertype eq 7>
-                        , host_fam_approved = #client.usertype#
-                    </cfif>
-				, date_host_fam_approved = #CreateODBCDateTime(now())#		
-				</cfif>					
+				set secondVisitRepID = '#form.secondVisitRepID#'
+								
 				where studentid = '#get_student_info.studentid#'
 			</cfquery>
 			 
              <!--- Insert Place Rep History --->
              <cfquery datasource="MySQL"> 
-				INSERT INTO smg_hosthistory	(hostid, studentid, schoolid, reason, dateofchange, arearepid, placeRepID, changedby)
+				INSERT INTO smg_hosthistory	(hostid, studentid, schoolid, reason, dateofchange, arearepid, placeRepID,secondVisitRepID, changedby)
 				values('0', '#get_student_info.studentid#', '0', '#FORM.reason#',
-				 #CreateODBCDateTime(now())#, '0', '#FORM.placerepid#', '#CLIENT.userid#')
+				 #CreateODBCDateTime(now())#, '0', 0, '#form.secondVisitRepId#', '#CLIENT.userid#')
 			</cfquery>
             
 		</cftransaction>
-      
+        
 		<cflocation url="../forms/place_menu.cfm?studentid=#CLIENT.studentid#" addtoken="no">	
 		
 	</cfif> <!--- reason ---->
