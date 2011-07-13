@@ -323,7 +323,11 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
         </td>
     </tr>
     <tr>
-    	<Td colspan=5 align="Center"><cfoutput>These reports are available to be submitted between #DateFormat(startDate,'mm/dd/yyyy')# and #DateFormat(endDate,'mm/dd/yyyy')#.</cfoutput></Td>
+    	<Td colspan=5 align="Center">
+		<cfif client.reportType neq 3>
+			<cfoutput>These reports are available to be submitted between #DateFormat(startDate,'mm/dd/yyyy')# and #DateFormat(endDate,'mm/dd/yyyy')#.</cfoutput>
+        </cfif>
+        </Td>
     </tr>
 </table>
 </cfform>
@@ -510,7 +514,7 @@ But in the output below we use the report fields where a report has been submitt
                             </cfif>
                         	
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
-                                <cfif #submittingRep# EQ client.userid  and #isBetween(now(), startDate, endDate)#>
+                                <cfif #submittingRep# EQ client.userid  and (#isBetween(now(), startDate, endDate)# OR client.reportType neq 3)>
                                     <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                     <input type="hidden" name="studentid" value="#studentid#">
                                     <input type="hidden" name="type_of_report" value="#client.reportType#">
