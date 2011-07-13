@@ -493,7 +493,7 @@
                 </tr>
                 <tr valign="top">
                	  <td>
-                  <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyid) >
+                  <cfif ListFind("1,2,3,4,5,12", CLIENT.companyid) >
                     Here are some new brochures to help in your marketing.<Br />
                     <a href="marketingMaterial/openheart/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
                  	<A href="marketingMaterial/schoolWorld/SchoolAroundWorld.cfm" target="_blank"> School Around the World</A></td>
