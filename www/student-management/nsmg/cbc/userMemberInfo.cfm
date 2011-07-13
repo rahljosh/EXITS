@@ -47,7 +47,7 @@
         <cfparam name="FORM.lastName#qGetUserMembers.currentRow#" default="#qGetUserMembers.lastName#">
         <cfparam name="FORM.sex#qGetUserMembers.currentRow#" default="#qGetUserMembers.sex#">
         <cfparam name="FORM.DOB#qGetUserMembers.currentRow#" default="#qGetUserMembers.DOB#">
-        <cfparam name="FORM.SSN#qGetUserMembers.currentRow#" default="#APPLICATION.CFC.UDF.displaySSN(varString=qGetUserMembers.SSN, isMaskedSSN=1)#">
+        <cfparam name="FORM.SSN#qGetUserMembers.currentRow#" default="#APPLICATION.CFC.UDF.displaySSN(varString=qGetUserMembers.SSN, displayType='user')#">
 
 	</cfloop>    
 

@@ -47,7 +47,7 @@
         <cfparam name="FORM.lastName#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.lastName#">
         <cfparam name="FORM.sex#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.sex#">
         <cfparam name="FORM.birthDate#qGetHostFamilyMembers.currentRow#" default="#qGetHostFamilyMembers.birthDate#">
-        <cfparam name="FORM.SSN#qGetHostFamilyMembers.currentRow#" default="#APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyMembers.SSN, isMaskedSSN=1)#">
+        <cfparam name="FORM.SSN#qGetHostFamilyMembers.currentRow#" default="#APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyMembers.SSN, displayType='hostFamily')#">
 
 	</cfloop>    
 	
