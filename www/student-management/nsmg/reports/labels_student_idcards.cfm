@@ -242,7 +242,10 @@
         <table align="center" class="profileTable" width="750" border="0">
             <tr>
                 <td class="titleRight">
-                    <img src="../pics/logos/#companyid#.gif" align="right" width="110px" height="110px"> <!--- Image is 144x144 --->
+               
+                    <img src="../pics/logos/#companyid#.gif" align="right"  width="110px"> <!--- Image is 144x144 --->
+               
+                	
                 </td>
                 <td class="titleCenter" valign="center">
                     <h1>#companyname#</h1>      
@@ -295,10 +298,12 @@
                                         <td><span class="title">ID</span></td>
                                         <td>###studentid#</td>
                                     </tr>
+                                   <Cfif client.companyid neq 14>
                                     <tr>
                                         <td><span class="title">DS-2019</span></td>
                                         <td>#ds2019_no#</td>
                                     </tr>
+                                    </Cfif>
                                     <tr>
                                         <td><span class="title">Program</span></td>
                                         <td>#qGetProgram.programname#</td>
@@ -421,9 +426,9 @@
                                 
                                 <table cellpadding="2" cellspacing="2" border="0" width="100%">
                                     <tr>
-                                        <td>#qGetInsuranceInfo.type#</td>
+                                        <td><Cfif client.companyid eq 14>Elite<cfelse>#qGetInsuranceInfo.type#</Cfif></td>
                                         <td>&middot;</td>
-                                        <td>Policy: #qGetInsuranceInfo.policycode#</td>
+                                        <td>Policy: <Cfif client.companyid eq 14>IEGE000185586<cfelse>#qGetInsuranceInfo.policycode#</Cfif></td>
                                         <td>&middot;</td>
                                         <td>(727) 894 7282</td>
                                         <td>&middot;</td>
@@ -432,7 +437,8 @@
                                 </table>
             
                             </td>
-                        </Tr>     
+                        </Tr> 
+                        <Cfif client.companyid neq 14>    
                         <Tr>
                             <td valign="top" width="100%" colspan=2>
                                 <span class="profileTitleSection">DEPARTMENT OF STATE</span>
@@ -454,6 +460,7 @@
             
                             </td>
                         </Tr>                       
+                        </Cfif>
                 	</table> 
                     
 				</td>
