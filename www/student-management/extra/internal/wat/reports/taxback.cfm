@@ -9,7 +9,7 @@
 <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
   <tr valign="middle" height="24">
     <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
-        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Program Reports -> Report for Taxback</font>
+        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Program Reports -> Report for Taxback / Candidate Email Address List</font>
     </td>
   </tr>
   <tr valign="middle" height="24">

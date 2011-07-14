@@ -14,6 +14,8 @@
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.watDateCheckedIn" default="">
+<cfparam name="FORM.watDateEvaluation1" default="">
+<cfparam name="FORM.watDateEvaluation2" default="">
 <!--- Placement Information --->
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
@@ -197,6 +199,11 @@
                 candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
         </cfquery>
         
+        <cfscript>
+			// Add user and time stamp to reason_host
+			FORM.reason_host = FORM.reason_host & '<br /> Added by ' & CLIENT.firstName & ' ' & CLIENT.lastName & ' on ' & DateFormat(now(), 'mm/dd/yyyy') & ' at ' & TimeFormat(now(), 'hh:mm tt');		
+		</cfscript>
+        
 		<!--- New Host Company Information --->
         <cfquery datasource="mysql">
             INSERT INTO 
@@ -356,15 +363,15 @@
         	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
             cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
         </cfif>
-        
         startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_startdate#" null="#NOT IsDate(FORM.program_startdate)#">,
         enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_enddate#" null="#NOT IsDate(FORM.program_enddate)#">,
-        
         <!---  Arrival Verification  --->
         verification_address = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_address#">,
         verification_sevis = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_sevis#">,
-        watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">
-
+        watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">,
+        <!---  Evaluation  --->
+        watDateEvaluation1 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation1#" null="#NOT IsDate(FORM.watDateEvaluation1)#">,
+        watDateEvaluation2 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation2#" null="#NOT IsDate(FORM.watDateEvaluation2)#">
     WHERE 
     	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
 </cfquery>

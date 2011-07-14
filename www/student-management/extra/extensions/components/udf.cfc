@@ -132,14 +132,9 @@
 			// Format SSN Display
 			if ( LEN(vDecryptedSSN) ) {
 				
-				if ( NOT VAL(ARGUMENTS.isMaskedSSN) AND ListFind(APPLICATION.SETTINGS.watDisplayFullSSNUserList, CLIENT.userID) ) {
-					// return full SSN
-					returnSSN = vDecryptedSSN;
-				} else {
-					// Mask	
-					returnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
-				}
-				
+				// Mask	
+				returnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
+
 			}
 			
 			// Return Encrypted Variable
