@@ -21,8 +21,7 @@
 		if (window.focus) {newwindow.focus()}
 	}
 	// open online application 
-	function OpenApp(url)
-	{get_region_info
+	function OpenApp(url) {
 		newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
 		if (window.focus) {newwindow.focus()}
 	}
