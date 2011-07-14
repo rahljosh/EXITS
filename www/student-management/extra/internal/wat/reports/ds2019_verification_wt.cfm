@@ -96,8 +96,6 @@
             <td align="right" class="style1"><b>Format:</b></td>
             <td class="style1"> 
             	<input type="radio" name="print" value="0" checked="checked"> Onscreen (View Only) 
-                <input type="radio" name="print" value="1"> Print (FlashPaper) 
-                <input type="radio" name="print" value="2"> Print (PDF)
 			</td>                
         </Tr>
         <tr>

@@ -118,20 +118,6 @@
 <!-----Display Reports---->
 <cfif LEN(FORM.print)>
 	
-	<cfif FORM.print eq 1>
-		<!--- Flash Paper --->
-        <span class="style1">
-        	<center><b>Results are being generated...</b></center>
-        </span><br /><br /><br />
-		<meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/ds2019_verification&intRep=#FORM.intRep#&program=#FORM.program#&format=FlashPaper">
-	<cfelseif FORM.print eq 2>
-		<!--- PDF --->
-        <span class="style1">
-        	<center><b>Results are being generated...</b></center>
-		</span><br /><br /><br />
-		<meta http-equiv="refresh" content="1;url=reports/ds2019_verification.cfm&intRep=#FORM.intRep#&program=#FORM.program#&format=PDF">
-	<cfelse>
-	
 		<cfif isDefined('FORM.email_intRep')> 
             <cfset toLine = ListAppend(toLine, qGetIntlAgent.email)>
         </cfif>
@@ -287,8 +273,6 @@
             </cfmail>
     
         </cfif>
-
-    </cfif>
 
 <cfelse> <!--- LEN(FORM.print) --->
 	

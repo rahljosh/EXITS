@@ -1016,7 +1016,9 @@
                                         <tr id="trReasonInfo" class="hiddenField trReasonInfo">
                                         	<td class="style1" align="right" width="35%" valign="top"><strong>Is this a transfer?</strong></td>
                                             <td class="style1" width="65%">
-                                                <span class="readOnly">#YesNoFormat(VAL(qCandidatePlaceCompany.isTransfer))#</span>
+                                            	<cfif LEN(qCandidatePlaceCompany.isTransfer)>
+                                                	<span class="readOnly">#YesNoFormat(VAL(qCandidatePlaceCompany.isTransfer))#</span>
+                                                </cfif>
                                                 <select name="isTransfer" id="isTransfer" class="style1 editPage transferField" onChange="displayTransferInfo();">
                                                 	<option value=""> </option>
                                                     <option value="1" <cfif qCandidatePlaceCompany.isTransfer EQ 1> selected </cfif> > Yes </option>
@@ -1359,6 +1361,20 @@
                                         	<td class="style1">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateCheckedIn" id="watDateCheckedIn" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#" maxlength="10">
+                                        	</td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><label for="watDateCheckedIn"><strong>Evaluation 1 Date:</strong></label></td>
+                                        	<td class="style1">
+                                                <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="watDateEvaluation1" id="watDateEvaluation1" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#" maxlength="10">
+                                        	</td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><label for="watDateCheckedIn"><strong>Evaluation 2 Date:</strong></label></td>
+                                        	<td class="style1">
+                                                <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation2, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="watDateEvaluation2" id="watDateEvaluation2" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation2, 'mm/dd/yyyy')#" maxlength="10">
                                         	</td>
                                         </tr>
                         			</table>
