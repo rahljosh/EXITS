@@ -21,6 +21,9 @@
 		// Get Candidate Information
 		qGetCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
 		
+		// Get Placement Information
+		qCandidatePlaceCompany = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidate.candidateID);
+		
 		// List of Countries
 		qGetCountryList = APPLICATION.CFC.LOOKUPTABLES.getCountry();
 		
@@ -38,6 +41,9 @@
 			candidateID=qGetCandidate.candidateID,
 			flightType='departure'
 		);
+		
+		// Get Incident Report
+		qGetIncidentReport = APPLICATION.CFC.CANDIDATE.getIncidentReport(candidateID=qGetCandidate.candidateID);
 		
 		/*** Online Application ***/
 
@@ -140,43 +146,7 @@
         WHERE 
             u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.intrep#">
     </cfquery>
-    
-    <cfquery name="qCandidatePlaceCompany" datasource="MySQL">
-        SELECT 
-        	<!--- Host Company Specific --->
-            eh.hostCompanyID,
-            eh.name,            
-            eh.authenticationType,
-            eh.EIN,
-            eh.workmensCompensation,
-            <!--- Candidate Place Company --->
-            ecpc.status,
-            ecpc.placement_date,
-            ecpc.startDate,
-            ecpc.endDate,
-            ecpc.selfJobOfferStatus,
-            ecpc.selfConfirmationName,
-            ecpc.selfConfirmationMethod,
-            ecpc.selfJobOfferStatus,
-            ecpc.selfConfirmationDate,
-            ecpc.selfFindJobOffer,
-            ecpc.selfConfirmationNotes,
-            ecpc.reason_host,
-            ecpc.isTransfer,
-            ecpc.isTransferHousingAddressReceived,
-            ecpc.isTransferJobOfferReceived,
-            ecpc.isTransferSevisUpdated,
-            ecpc.dateTransferConfirmed
-        FROM
-        	extra_candidate_place_company ecpc
-        INNER JOIN
-        	extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
-        WHERE 
-        	ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">
-        AND 	
-        	ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    </cfquery>
-    
+        
     <cfquery name="qHostCompanyList" datasource="MySQL">
         SELECT 
         	hostcompanyID,
@@ -234,6 +204,16 @@
 			resizable:1,
 			windowName:'flightInformation'
 		}); 
+			
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"50%", 
+			height:"60%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false,
+			onClosed:function(){ window.location.reload(); }
+		});		
 			
 	});
 
@@ -865,7 +845,9 @@
                                             <td colspan="3" class="style2" bgcolor="##8FB6C9">
                                                 &nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; 
                                                 <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                [ <a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);"><font class="style2" color="##FFFFFF">Insurance Management</font></a> ]
+	                                                <span style="float:right; padding-right:20px;">
+                                                    	<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);"><font class="style2" color="##FFFFFF">[ Insurance Management ]</a>
+                                                    </span>
                                                 </cfif>
                                             </td>
                                         </tr>
@@ -965,7 +947,9 @@
             	                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
                                             	&nbsp;:: Placement Information 
                                             	<cfif ListFind("1,2,3,4", CLIENT.userType)>
-		                                            [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#qGetCandidate.uniqueid#', 400, 750);" class="style2"> History </a> ]</span>
+		                                            <span style="float:right; padding-right:20px;">
+                                                    	<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#qGetCandidate.uniqueid#', 400, 750);" class="style2">[ History ]</a>
+                                                    </span>
         										</cfif>
 											</td>			                                                
                                         </tr>
@@ -976,9 +960,9 @@
                                             <td class="style1" colspan="2" align="left">
                                             	<span class="readOnly">
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.name#</strong></a>
+	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.hostCompanyName#</strong></a>
                                                 	<cfelse>
-                                                    	#qCandidatePlaceCompany.name#
+                                                    	#qCandidatePlaceCompany.hostCompanyName#
                                                     </cfif>
                                                 </span>
                                                 
@@ -1185,7 +1169,9 @@
                                         	<td class="style2" bgcolor="##8FB6C9" colspan="4">
                                             	&nbsp;:: Program Information &nbsp;  
                                             	<cfif ListFind("1,2,3,4", CLIENT.userType)>    
-                                                	[ <a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);"> <font class="style2" color="##FFFFFF"> History </font> </a> ]</span>
+                                                	<span style="float:right; padding-right:20px;">
+                                                    	<a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);"> <font class="style2" color="##FFFFFF">[ History ]</a>
+                                                    </span>
                                             	</cfif>
                                             </td>
                                         </tr>						
@@ -1345,8 +1331,8 @@
                                         	<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Verification</td>
                                         </tr>	
                                         <tr>
-                                        	<td class="style1" width="50%" align="right"><label for="verification_address"><strong>House Address Verified:</strong></label></td>
-                                            <td class="style1">
+                                        	<td class="style1" width="35%" align="right"><label for="verification_address"><strong>House Address Verified:</strong></label></td>
+                                            <td class="style1" width="65%">
                                             	<input type="checkbox" name="verification_address" id="verification_address" value="1" class="formField" disabled <cfif VAL(qGetCandidate.verification_address)>checked="checked"</cfif> >
                                             </td>
                                         </tr>
@@ -1363,9 +1349,26 @@
                                                 <input type="text" name="watDateCheckedIn" id="watDateCheckedIn" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#" maxlength="10">
                                         	</td>
                                         </tr>
+                        			</table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+
+						<br />
+ 
+ 						<!---- Monthly Evaluations --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Monthly Evaluations</td>
+                                        </tr>	
                                         <tr>
-                                        	<td class="style1" align="right"><label for="watDateCheckedIn"><strong>Evaluation 1 Date:</strong></label></td>
-                                        	<td class="style1">
+                                        	<td class="style1" width="35%" align="right"><label for="watDateCheckedIn"><strong>Evaluation 1 Date:</strong></label></td>
+                                        	<td class="style1" width="65%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation1" id="watDateEvaluation1" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#" maxlength="10">
                                         	</td>
@@ -1393,8 +1396,10 @@
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
                                         	<td colspan="4" class="style2" bgcolor="##8FB6C9">
-                                            	&nbsp;:: Flight Information  &nbsp;
-                                                <a href="onlineApplication/index.cfm?action=flightInfo&uniqueID=#qGetCandidate.uniqueID#&completeApplication=0" class="style2 popUpFlightInformation">[ Add/Edit ]</a>
+                                            	&nbsp;:: Flight Information
+                                                <span style="float:right; padding-right:20px;">
+                                                	<a href="onlineApplication/index.cfm?action=flightInfo&uniqueID=#qGetCandidate.uniqueID#&completeApplication=0" class="style2 popUpFlightInformation">[ Add/Edit ]</a>
+                                                </span>
                                             </td>
                                         </tr>	
                                         <tr>
@@ -1433,6 +1438,58 @@
                                                 </cfif>
                                         	</td>
                                         </tr>
+                        			</table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+
+						<br />
+ 
+ 						<!---- Incident Report --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Incident Report
+	                                            <span style="float:right; padding-right:20px;">
+                                                	<a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Incident ]</a>
+                                                </span>
+                                            </td>
+                                        </tr>	
+                                        <tr>
+                                        	<td class="style1" valign="top"><strong>Date</strong></td>
+                                            <td class="style1" valign="top"><strong>Subject</strong></td>
+                                            <td class="style1" valign="top"><strong>Host Company</strong></td>
+                                            <td class="style1" valign="top"><strong>Resolved?</strong></td>
+                                        </tr>
+                                        
+                                        <cfloop query="qGetIncidentReport">
+                                            <tr <cfif qGetIncidentReport.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                <td class="style1" valign="top">
+                                                	<a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                    	#DateFormat(qGetIncidentReport.dateIncident, 'mm/dd/yy')#
+                                                	</a>
+                                                </td>
+                                                <td class="style1" valign="top">
+                                                	<a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                    	#qGetIncidentReport.subject#
+                                                	</a>
+                                                </td>
+                                                <td class="style1" valign="top">#qGetIncidentReport.hostCompanyName#</td>
+                                                <td class="style1" valign="top">#YesNoFormat(VAL(qGetIncidentReport.isResolved))#</td>
+                                            </tr>
+                                       	</cfloop>
+                                        
+                                        <cfif NOT VAL(qGetIncidentReport.recordCount)>
+                                        	<tr>
+                                            	<td colspan="4" class="style1" align="center">There are no incidents</td>                                                
+                                            </tr>
+										</cfif> 
+                                                                                       
                         			</table>
                                     
                                 </td>

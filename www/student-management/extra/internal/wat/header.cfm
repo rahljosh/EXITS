@@ -99,6 +99,7 @@
     <link rel="stylesheet" href="../style.css" type="text/css">
     <link rel="stylesheet" href="../linked/css/onlineApplication.css" type="text/css">
     <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css">
+    <link media="screen" rel="stylesheet" href="../linked/css/colorbox.css" /> <!-- Modal ColorBox -->
     <!-- Combine these into one single file -->
     <cfoutput>
     <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 

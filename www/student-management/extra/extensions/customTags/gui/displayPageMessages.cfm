@@ -119,6 +119,42 @@
                     </cfscript>
                 
                 </cfcase>
+                
+                
+				<!--- Error displayed on sections --->
+                <cfcase value="tableSection">
+
+                    <table width="#ATTRIBUTES.width#" align="center" cellpadding="0" cellspacing="0">
+                    	<tr>
+                        	<td>
+                    
+                                <div class="pageMessages">
+                
+                                    <!--- Loop over the message --->
+                                    <cfloop from="1" to="#ArrayLen(ATTRIBUTES.pageMessages)#" index="i">
+                                       <p><em>#ATTRIBUTES.pageMessages[i]#</em></p>    
+                                    </cfloop>
+            
+                                </div>
+                                
+                                <script type="text/javascript">
+                                    // FadeIn and FadeOut Message
+                                    $(".pageMessages").fadeIn().fadeOut(5000);
+                                </script>
+                                
+                                <cfscript>
+                                    // Check to see if we are supposed to clear the queue 
+                                    if ( ATTRIBUTES.Clear ) {
+                                        ATTRIBUTES.pageMessages.Clear();
+                                        SESSION.pageMessages.clear();
+                                    }
+                                </cfscript>
+
+                    		</td>
+						</tr>
+					</table>
+                
+                </cfcase>
              
              </cfswitch>
                        

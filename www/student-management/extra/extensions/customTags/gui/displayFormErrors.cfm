@@ -125,6 +125,44 @@
                     </cfscript>
                 
                 </cfcase>
+
+
+				<!--- Error displayed on tableSection --->
+                <cfcase value="tableSection">
+					
+                    <table width="#ATTRIBUTES.width#" align="center" cellpadding="0" cellspacing="0">
+                    	<tr>
+                        	<td>
+                            
+                                <div class="errors">
+                                    <p><em>Oops... the following errors were encountered:</em></p>
+                            
+                                    <ol>
+                
+                                        <!--- Loop over the message --->
+                                        <cfloop from="1" to="#ArrayLen(ATTRIBUTES.formErrors)#" index="i">
+                                           <li>#ATTRIBUTES.formErrors[i]#</li>        	
+                                        </cfloop>
+                
+                                    </ol>
+                                    
+                                    <p>Data has <strong>not</strong> been saved.</p>
+                                </div>
+					
+                    		</td>
+						</tr>
+					</table>
+                                                                    
+					<cfscript>
+                        // Check to see if we are supposed to clear the queue 
+                        if ( ATTRIBUTES.Clear ) {
+							ATTRIBUTES.formErrors.Clear();
+							SESSION.formErrors.Clear();
+                        }
+                    </cfscript>
+                
+                </cfcase>
+
              
              </cfswitch>
                        

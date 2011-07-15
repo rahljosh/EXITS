@@ -132,7 +132,7 @@
 
         
             <!--- Application Footer --->
-            <cfcase value="application">
+            <cfcase value="application,extra">
     			
                 <!--- End of <div class="wrapper"> placed on the header --->
                 </div> <!-- End of <div class="wrapper"> placed on the header -->   

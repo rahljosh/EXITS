@@ -1,0 +1,77 @@
+body {
+	font-size: 10px; 
+	font-family: Verdana, Arial, Helvetica, sans-serif;	
+	background-image: url(pics/back.gif);
+	margin-left: 10px;
+	margin-top: 10px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+a:link {
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+a:active {
+	text-decoration: none;
+}
+.style1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px; }
+.style2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+.style3 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8px;
+}
+.style4 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #006666;
+	font-weight: bold;
+}
+.filterOff {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #006666;
+	font-weight: bold;
+}
+.filterOn {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #fa7d15;
+	font-weight: bold;
+}
+.style4Big {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #006666;
+}
+.style5 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+.title1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #000000;
+	font-weight: bold;
+}
+
+
+.grouptopleft { background-position: 50% bottom; background-image: url(pics/table-borders/topleft.gif); background-repeat: no-repeat; }
+.groupTop { background-position: 50% bottom; background-image: url(pics/table-borders/top.gif); background-repeat: repeat-x ;}
+.groupTopRight { background-position: left bottom; background-image: url(pics/table-borders/topright.gif); background-repeat: no-repeat; }
+.groupLeft { background-image: url(pics/table-borders/left-vert-line.gif); background-repeat: repeat-y; }
+.groupRight { background-image: url(pics/table-borders/right.gif); background-repeat: repeat-y; }
+.groupBottomLeft { background-position: right top; background-image: url(pics/table-borders/bottomleft.gif); background-repeat: no-repeat; }
+.groupBottom { background-position: 50% top; background-image: url(pics/table-borders/bottom.gif); background-repeat: repeat-x; }
+.groupBottomRight { background-position: left top; background-image: url(pics/table-borders/bottomright.gif); background-repeat: no-repeat; }
