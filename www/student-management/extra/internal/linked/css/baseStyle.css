@@ -1,3 +1,8 @@
+@charset "utf-8";
+/* CSS Document */
+
+/**** Copy of internal/style.css ***/
+
 .divPageBox {
 	width:100%;
 	padding:0px;
@@ -83,6 +88,11 @@
 
 .xLargeField {
 	width : 260px;
+	border:1px solid #999;	
+}
+
+.xxLargeField {
+	width : 350px;
 	border:1px solid #999;	
 }
 

@@ -877,10 +877,197 @@
 
 
 	<!-------------------------------------------------- 
+		EXTRA - Intranet
+	--------------------------------------------------->
+
+	<cffunction name="getCandidatePlacementInformation" access="public" returntype="query" output="false" hint="Gets host company information for a candidate">
+    	<cfargument name="candidateID" required="yes" hint="candidateID is required">
+
+        <cfquery 
+        	name="qGetCandidatePlacementInformation" 
+			datasource="#APPLICATION.DSN.Source#">
+            SELECT 
+                <!--- Host Company Specific --->
+                eh.hostCompanyID,
+                eh.name AS hostCompanyName,            
+                eh.authenticationType,
+                eh.EIN,
+                eh.workmensCompensation,
+                <!--- Candidate Place Company --->
+                ecpc.status,
+                ecpc.placement_date,
+                ecpc.startDate,
+                ecpc.endDate,
+                ecpc.selfJobOfferStatus,
+                ecpc.selfConfirmationName,
+                ecpc.selfConfirmationMethod,
+                ecpc.selfJobOfferStatus,
+                ecpc.selfConfirmationDate,
+                ecpc.selfFindJobOffer,
+                ecpc.selfConfirmationNotes,
+                ecpc.reason_host,
+                ecpc.isTransfer,
+                ecpc.isTransferHousingAddressReceived,
+                ecpc.isTransferJobOfferReceived,
+                ecpc.isTransferSevisUpdated,
+                ecpc.dateTransferConfirmed
+            FROM
+                extra_candidate_place_company ecpc
+            INNER JOIN
+                extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
+            WHERE 
+                ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+            AND 	
+                ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        </cfquery>
+        
+		<cfreturn qGetCandidatePlacementInformation>
+	</cffunction>
+
+
+	<!--------------------------------------------------
+		Candidate Incident Report 
+	--------------------------------------------------->
+	<cffunction name="getIncidentReport" access="public" returntype="query" output="false" hint="Gets a incidents for a candidate">
+    	<cfargument name="incidentID" default="" hint="incidentID is not required">
+        <cfargument name="candidateID" default="" hint="candidateID is not required">
+        <cfargument name="uniqueID" default="" hint="uniqueID is not required">
+              
+        <cfquery 
+			name="qGetIncidentReport" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					eir.ID,
+                    eir.candidateID,
+                    eir.hostCompanyID,
+                    eir.userID,
+                    eir.dateIncident,
+                    eir.subject,
+                    eir.notes,
+                    eir.isResolved,
+                    eir.dateCreated,
+                    eir.dateUpdated,
+                    eh.name AS hostCompanyName
+                FROM 
+                    extra_incident_report eir
+                INNER JOIN
+                	extra_candidates ec ON ec.candidateID = eir.candidateID
+				LEFT OUTER JOIN
+                	extra_hostCompany eh ON eh.hostCompanyID = eir.hostCompanyID                    
+                WHERE
+                	1 = 1 
+
+				<cfif LEN(ARGUMENTS.incidentID)>
+                    AND
+                        eir.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.incidentID)#">
+                </cfif>
+                    
+				<cfif LEN(ARGUMENTS.candidateID)>
+                    AND
+                        ec.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.uniqueID)>
+                    AND
+                        ec.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.uniqueID)#">
+                </cfif>
+			
+            ORDER BY
+            	eir.dateIncident DESC                
+		</cfquery>
+		   
+		<cfreturn qGetIncidentReport>
+	</cffunction>
+    
+
+	<cffunction name="insertUpdateIncident" access="public" returntype="void" output="false" hint="Insert/Update Incident Information">
+		<cfargument name="incidentID" default="0" hint="Incident ID" />
+		<cfargument name="candidateID" required="yes" hint="Candidate ID is required">
+        <cfargument name="hostCompanyID" required="yes" hint="hostCompany ID is required">
+        <cfargument name="userID" required="yes" hint="User entering/updating information">
+        <cfargument name="dateIncident" default="" hint="dateIncident">
+        <cfargument name="subject" default="" hint="subject">
+        <cfargument name="notes" default="" hint="notes">
+        <cfargument name="isResolved" default="" hint="Set to 0 or 1">
+		
+        <cfscript>
+			// Get Current User
+			qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID);
+			
+			// Get Current Notes
+			qGetPreviousNotes = getIncidentReport(incidentID=ARGUMENTS.incidentID, candidateID=ARGUMENTS.candidateID);
+			
+			if ( LEN(ARGUMENTS.notes) ) {
+				// Add User Time Stamp to notes
+				ARGUMENTS.notes = qGetPreviousNotes.notes & Chr(13) & "<p><strong>" & ARGUMENTS.notes & "</strong> <br / > Added by #qGetUserInfo.firstName# #qGetUserInfo.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST </p>";
+			}
+        </cfscript>
+        
+        <!--- Update --->
+        <cfif VAL(ARGUMENTS.incidentID)>
+        	
+            <cfquery 
+                datasource="#APPLICATION.DSN.Source#">
+                    UPDATE
+                        extra_incident_report
+                    SET
+                    	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.hostCompanyID)#">,
+                        userID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.userID)#">,
+                        dateIncident = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateIncident#" null="#NOT IsDate(ARGUMENTS.dateIncident)#">,
+                        subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.subject#">,  
+                        <cfif LEN(ARGUMENTS.notes)>
+                            notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
+                        </cfif>
+                        isResolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">
+                    WHERE
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.incidentID#">
+                    AND
+                    	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+            </cfquery>
+		
+        <!--- Insert --->
+        <cfelse>
+        
+            <cfquery 
+                datasource="#APPLICATION.DSN.Source#">
+                    INSERT INTO
+                        extra_incident_report
+                    (
+						candidateID,
+                        hostCompanyID,
+                        userID,
+                        dateIncident,
+                        subject,
+                        notes,
+                        isResolved,
+                        dateCreated                    
+                    )
+                    VALUES
+                    (
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.hostCompanyID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.userID)#">,
+                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateIncident#" null="#NOT IsDate(ARGUMENTS.dateIncident)#">,
+                    	<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.subject#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    )
+            </cfquery>
+        
+        </cfif>
+        	
+	</cffunction>
+	<!-------------------------------------------------- 
+		End of Candidate Incident Report 
+	--------------------------------------------------->
+
+
+	<!-------------------------------------------------- 
 		Check-In Update Tool
 	--------------------------------------------------->
 	<cffunction name="getCheckInToolStudentList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
-    	<cfargument name="intRep" default="0" hint="International Representative is not required">
+    	<cfargument name="intRep" default="0" hint="candidateID is not required">
         <cfargument name="programID" default="0" hint="programID is not required">
         
         <cfquery 
@@ -1330,5 +1517,6 @@
 	<!-------------------------------------------------- 
 		End of DS-2019 Online Verification Tool 
 	--------------------------------------------------->
+
 
 </cfcomponent>

@@ -178,10 +178,11 @@
                         #csbMetaData#
                         <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/appSection.css" />
                         <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/baseStyle.css" />
+                        <link media="screen" rel="stylesheet" href="../../../internal/linked/css/colorbox.css" /> <!-- Modal ColorBox -->
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
 						<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-                        <script type="text/javascript" src="../../../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
+                        <script type="text/javascript" src="../../../internal/linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
                         <script type="text/javascript" src="../../../internal/linked/js/ajaxUpload.js"></script> <!-- Ajax - Upload File -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.metadata.js"></script> <!-- JQuery Validation -->
 						<script type="text/javascript" src="../../../internal/linked/js/jquery.validate.js"></script> <!-- JQuery Validation -->
@@ -191,7 +192,7 @@
                 <body>
             </cfcase>
 
-    
+
             <!--- Application Header --->
             <cfcase value="application">
                	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -324,9 +325,36 @@
 				<!--- Application Body --->
                 <div style="width:95%; margin:0px; padding:20px; background-color: ##FFF; border: ##EEE 1px solid; min-height:150px;">
             </cfcase>
+
+
+            <!--- Extra with no top menu --->
+            <cfcase value="extraNoHeader">
+               	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+				<html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <cfoutput>
+                        #csbMetaData#
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/appSection.css" />
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/baseStyle.css" />
+                        <link rel="stylesheet" media="all" type="text/css" href="../../../internal/linked/css/extraBaseStyle.css" /> <!-- Extra -->
+                        <link media="screen" rel="stylesheet" href="../../../internal/linked/css/colorbox.css" /> <!-- Modal ColorBox -->
+                        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+						<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
+                        <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+                        <script type="text/javascript" src="../../../internal/linked/js/basescript.js"></script> <!-- Basescript -->
+						<script type="text/javascript" src="../../../internal/linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
+                        <script type="text/javascript" src="../../../internal/linked/js/ajaxUpload.js"></script> <!-- Ajax - Upload File -->
+						<script type="text/javascript" src="../../../internal/linked/js/jquery.metadata.js"></script> <!-- JQuery Validation -->
+						<script type="text/javascript" src="../../../internal/linked/js/jquery.validate.js"></script> <!-- JQuery Validation -->
+                        <script type="text/javascript" src="../../../internal/linked/js/appSection.js"></script> <!-- UDF -->
+                    </cfoutput>
+                </head>
+                <body>
+            </cfcase>
     
         </cfswitch>
-    
+
     </cfoutput>
     	
 </cfif>
