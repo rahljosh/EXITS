@@ -944,7 +944,7 @@
                     eir.dateIncident,
                     eir.subject,
                     eir.notes,
-                    eir.isResolved,
+                    eir.isSolved,
                     eir.dateCreated,
                     eir.dateUpdated,
                     eh.name AS hostCompanyName
@@ -988,7 +988,7 @@
         <cfargument name="dateIncident" default="" hint="dateIncident">
         <cfargument name="subject" default="" hint="subject">
         <cfargument name="notes" default="" hint="notes">
-        <cfargument name="isResolved" default="" hint="Set to 0 or 1">
+        <cfargument name="isSolved" default="" hint="Set to 0 or 1">
 		
         <cfscript>
 			// Get Current User
@@ -1018,7 +1018,7 @@
                         <cfif LEN(ARGUMENTS.notes)>
                             notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
                         </cfif>
-                        isResolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">
+                        isSolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isSolved)#">
                     WHERE
                         ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.incidentID#">
                     AND
@@ -1039,7 +1039,7 @@
                         dateIncident,
                         subject,
                         notes,
-                        isResolved,
+                        isSolved,
                         dateCreated                    
                     )
                     VALUES
@@ -1050,7 +1050,7 @@
                     	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateIncident#" null="#NOT IsDate(ARGUMENTS.dateIncident)#">,
                     	<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.subject#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isSolved)#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )
             </cfquery>

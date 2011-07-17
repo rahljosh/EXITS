@@ -1445,58 +1445,62 @@
                         </table> 
 
 						<br />
- 
- 						<!---- Incident Report --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">
+ 						
+                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
                         
-                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
-                                        <tr bgcolor="##C2D1EF">
-                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">
-                                            	&nbsp;:: Incident Report
-	                                            <span style="float:right; padding-right:20px;">
-                                                	<a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Incident ]</a>
-                                                </span>
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="style1" valign="top"><strong>Date</strong></td>
-                                            <td class="style1" valign="top"><strong>Subject</strong></td>
-                                            <td class="style1" valign="top"><strong>Host Company</strong></td>
-                                            <td class="style1" valign="top"><strong>Resolved?</strong></td>
-                                        </tr>
-                                        
-                                        <cfloop query="qGetIncidentReport">
-                                            <tr <cfif qGetIncidentReport.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
-                                                <td class="style1" valign="top">
-                                                	<a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
-                                                    	#DateFormat(qGetIncidentReport.dateIncident, 'mm/dd/yy')#
-                                                	</a>
+							<!---- Incident Report --->
+                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td bordercolor="##FFFFFF">
+                            
+                                        <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                            <tr bgcolor="##C2D1EF">
+                                                <td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                                    &nbsp;:: Incident Report
+                                                    <span style="float:right; padding-right:20px;">
+                                                        <a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Incident ]</a>
+                                                    </span>
                                                 </td>
-                                                <td class="style1" valign="top">
-                                                	<a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
-                                                    	#qGetIncidentReport.subject#
-                                                	</a>
-                                                </td>
-                                                <td class="style1" valign="top">#qGetIncidentReport.hostCompanyName#</td>
-                                                <td class="style1" valign="top">#YesNoFormat(VAL(qGetIncidentReport.isResolved))#</td>
+                                            </tr>	
+                                            <tr>
+                                                <td class="style1" valign="top"><strong>Date</strong></td>
+                                                <td class="style1" valign="top"><strong>Subject</strong></td>
+                                                <td class="style1" valign="top"><strong>Host Company</strong></td>
+                                                <td class="style1" valign="top"><strong>Solved</strong></td>
                                             </tr>
-                                       	</cfloop>
+                                            
+                                            <cfloop query="qGetIncidentReport">
+                                                <tr <cfif qGetIncidentReport.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                    <td class="style1" valign="top">
+                                                        <a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                            #DateFormat(qGetIncidentReport.dateIncident, 'mm/dd/yy')#
+                                                        </a>
+                                                    </td>
+                                                    <td class="style1" valign="top">
+                                                        <a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                            #qGetIncidentReport.subject#
+                                                        </a>
+                                                    </td>
+                                                    <td class="style1" valign="top">#qGetIncidentReport.hostCompanyName#</td>
+                                                    <td class="style1" valign="top">#YesNoFormat(VAL(qGetIncidentReport.isSolved))#</td>
+                                                </tr>
+                                            </cfloop>
+                                            
+                                            <cfif NOT VAL(qGetIncidentReport.recordCount)>
+                                                <tr>
+                                                    <td colspan="4" class="style1" align="center">There are no incidents</td>                                                
+                                                </tr>
+                                            </cfif> 
+                                                                                           
+                                        </table>
                                         
-                                        <cfif NOT VAL(qGetIncidentReport.recordCount)>
-                                        	<tr>
-                                            	<td colspan="4" class="style1" align="center">There are no incidents</td>                                                
-                                            </tr>
-										</cfif> 
-                                                                                       
-                        			</table>
-                                    
-                                </td>
-                            </tr>
-                        </table> 
-
-						<br />
+                                    </td>
+                                </tr>
+                            </table> 
+    
+                            <br />
+                            
+                        </cfif>
                         
                     </td>
                     <!--- END OF RIGHT SECTION --->
