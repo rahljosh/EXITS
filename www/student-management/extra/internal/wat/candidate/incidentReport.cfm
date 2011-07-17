@@ -24,7 +24,7 @@
     <cfparam name="FORM.dateIncident" default="">
 	<cfparam name="FORM.subject" default="">
 	<cfparam name="FORM.notes" default="">
-    <cfparam name="FORM.isResolved" default="0">
+    <cfparam name="FORM.isSolved" default="0">
 
     <cfscript>
 		if ( LEN(URL.uniqueID) ) {
@@ -72,7 +72,7 @@
 					dateIncident = FORM.dateIncident,
 					subject = FORM.subject,
 					notes = FORM.notes,
-					isResolved = FORM.isResolved
+					isSolved = FORM.isSolved
 				);
 
 				// Set Page Message
@@ -89,7 +89,7 @@
 			if ( NOT VAL(qGetIncidentInfo.recordCount) ) {
 				FORM.notes = FORM.notes;
 			}
-			FORM.isResolved = qGetIncidentInfo.isResolved;
+			FORM.isSolved = qGetIncidentInfo.isSolved;
 			
 		}
     </cfscript>
@@ -176,11 +176,11 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px; vertical-align:top;">Resolved?</td>
+                                <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px; vertical-align:top;">Solved</td>
                                 <td style="border-bottom:1px solid ##C7CFDC;">
-                                    <select name="isResolved" id="isResolved">
-                                    	<option value="0" <cfif FORM.isResolved EQ 0>selected</cfif> >No</option>
-                                        <option value="1" <cfif FORM.isResolved EQ 1>selected</cfif> >Yes</option>                                    
+                                    <select name="isSolved" id="isSolved">
+                                    	<option value="0" <cfif FORM.isSolved EQ 0>selected</cfif> >No</option>
+                                        <option value="1" <cfif FORM.isSolved EQ 1>selected</cfif> >Yes</option>                                    
                                     </select>
                                 </td>
                             </tr>
