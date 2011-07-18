@@ -153,7 +153,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>CSB - Mandatory Summer Work Travel Questionnaire</title>
-<link rel="stylesheet" href="../css/baseStyle.css" type="text/css">
+
 <style type="text/css">
 .wHeader {
 	font-family: Georgia, "Times New Roman", Times, serif;
@@ -242,6 +242,69 @@ a:active {
 	text-decoration: none;
 	color: #FF0;
 }
+
+/********************************************
+	PAGE MESSAGE
+********************************************/
+div.pageMessages { 
+	font-size:0.8em;
+	display:none;
+	margin: 5px auto 5px auto; 
+	padding: 5px 10px; 
+	text-align:center;
+	background-color: #c2d9e9;
+	border: #0069aa 1px solid; 
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+div.pageMessages p { 
+	margin: 0; 
+}
+
+div.pageMessages p em { 
+	color: #0069aa; 
+	font-weight: bold;
+}
+/********************************************
+	END OF PAGE MESSAGE
+********************************************/
+
+
+/********************************************
+	 ERROR MESSAGE
+********************************************/
+div.errors { 
+	text-align:center;
+    margin:0px auto 10px auto;
+	padding: 5px 10px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+}
+
+div.errorContainer label,
+div.errors label { 
+	color:#000;
+}
+
+div.errors p,
+div.errorContainer p { 
+	margin: 0; 
+}
+
+div.errors p em,
+div.errorContainer p em { 
+	color: #C00; 
+	font-style: normal; 
+	font-weight: bold; 
+}
+
+div.errors ol {
+	list-style: none;
+	text-indent:-3em;
+}
+/********************************************
+	 END OF ERROR MESSAGE
+********************************************/
 </style>
 
 </head>
