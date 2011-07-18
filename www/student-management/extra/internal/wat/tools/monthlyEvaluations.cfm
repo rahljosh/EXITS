@@ -82,8 +82,8 @@
         	tableHeader += '<td class="listTitle style2">ID</td>';
         	tableHeader += '<td class="listTitle style2">Last Name</td>';
 			tableHeader += '<td class="listTitle style2">First Name</td>';
-        	tableHeader += '<td class="listTitle style2">Gender</td>';
-			tableHeader += '<td class="listTitle style2">Country</td>';
+			tableHeader += '<td class="listTitle style2">DS-2019</td>';
+			tableHeader += '<td class="listTitle style2">Host Company</td>';
 			tableHeader += '<td class="listTitle style2">Program</td>';
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
@@ -96,8 +96,8 @@
 				tableHeader += '<td class="listTitle style2" align="center">Evaluation 2</td>';
 			} else { 
 				// Display Both Evaluations
-				tableHeader += '<td class="listTitle style2" align="center">Evaluation 1</td>';
-				tableHeader += '<td class="listTitle style2" align="center">Evaluation 2</td>';
+				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 1</td>';
+				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 2</td>';
 			}
 		tableHeader += '</tr>';
 		
@@ -116,8 +116,8 @@
 			var candidateID = verList.DATA[i][verList.COLUMNS.findIdx('CANDIDATEID')];		
 			var firstName = verList.DATA[i][verList.COLUMNS.findIdx('FIRSTNAME')];
 			var lastName = verList.DATA[i][verList.COLUMNS.findIdx('LASTNAME')];
-			var sex = verList.DATA[i][verList.COLUMNS.findIdx('SEX')];
-			var countryName = verList.DATA[i][verList.COLUMNS.findIdx('COUNTRYNAME')];
+			var ds2019 = verList.DATA[i][verList.COLUMNS.findIdx('DS2019')];
+			var hostCompanyName = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYNAME')];
 			var programName = verList.DATA[i][verList.COLUMNS.findIdx('PROGRAMNAME')];
 			var businessName = verList.DATA[i][verList.COLUMNS.findIdx('BUSINESSNAME')];
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
@@ -135,8 +135,8 @@
 				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">#' + candidateID + '</a></td>';
 				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">' + lastName + '</a></td>';
 				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">' + firstName + '</a></td>';
-				tableBody += '<td class="style5">' + sex + '</td>';
-				tableBody += '<td class="style5">' + countryName + '</td>';
+				tableBody += '<td class="style5">' + ds2019 + '</td>';
+				tableBody += '<td class="style5">' + hostCompanyName + '</td>';
 				tableBody += '<td class="style5">' + programName + '</td>';
 				tableBody += '<td class="style5">' + businessName + '</td>';
 				tableBody += '<td class="style5">' + startDate + '</td>';
