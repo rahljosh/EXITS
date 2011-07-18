@@ -1,0 +1,354 @@
+@charset "utf-8";
+/* CSS Document */
+
+/********************************************
+	HEADER.CFM
+********************************************/
+.smlink         		{font-size: 11px;}
+.section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #ffffff;}
+.sideborders			{border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6; background: #ffffff;}
+.sectionFoot    		{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;font-size:2px;}
+.sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
+.sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
+.sectionSubHead			{font-size:11px;font-weight:bold;}
+/********************************************
+	END OF HEADER.CFM
+********************************************/
+
+
+/********************************************
+	TIME PICKER
+********************************************/
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div .ui_tpicker_hour div { padding-right: 2px; }
+.ui-timepicker-div .ui_tpicker_minute div { padding-right: 6px; }
+.ui-timepicker-div .ui_tpicker_second div { padding-right: 6px; }
+.ui-timepicker-div td { font-size: 90%; }
+/********************************************
+	END OF TIME PICKER
+********************************************/
+
+
+/********************************************
+	FORM FIELDS
+********************************************/
+.columnTitle {
+	font-weight:bold;	
+}
+
+.defaultForm input { 
+	border: 1px solid #999; 
+	/* margin-bottom: .5em; */		
+}
+
+.defaultForm select {
+	border: 1px solid #999; 
+	/* margin-bottom: .5em; */		
+}
+
+.fieldSize40 {
+	width:40px;
+	border:1px solid #999;	
+}
+
+.fieldSize60 {
+	width:60px;
+	border:1px solid #999;	
+}
+
+.fieldSize70 {
+	width:70px;
+	border:1px solid #999;	
+}
+
+.fieldSize100 {
+	width:100px;
+	border:1px solid #999;	
+}
+
+.datePicker {
+	width:80px;
+	border:1px solid #999;	
+}
+
+.smallField {
+	width : 80px;
+	border:1px solid #999;	
+}
+
+.mediumField {
+	width : 140px;
+	border:1px solid #999;	
+}
+
+.largeField {
+	width : 200px;
+	border:1px solid #999;	
+}
+
+.xLargeField {
+	width : 260px;
+	border:1px solid #999;	
+}
+
+.xLargeTextArea {
+	height: 80px;
+	width : 350px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.formNote {
+	padding:2px 0 0 0;
+	margin:0 0 0 2px;
+	font-size:0.8em;
+}
+
+.formWarning {
+	color:#F00;
+	padding:2px 0 0 0;
+	margin:0 0 0 2px;
+	font-size:0.8em;
+	font-weight:bold;
+}
+
+.displayNone {
+	display:none;
+}
+
+.submitButton {
+	cursor:pointer;
+	width:80px;
+	padding:2px;
+	margin-top:15px; 
+	margin-bottom: .5em; 		
+	border: 1px solid #999; 
+}
+/********************************************
+	END OF FORM FIELDS
+********************************************/
+
+
+/********************************************
+	REPORTS
+********************************************/
+.reportTitle {
+	font-weight:bold;
+	text-align:center;	
+	background-color:#E2EFC7;
+}
+
+.reportFullBorder {
+    margin-top:5px;
+	border:1px solid #021157;
+}
+
+.reportTable {
+    margin-top:5px;
+	border-top:1px solid #021157;
+	border-right:1px solid #021157;
+	border-left:1px solid #021157;
+}
+
+.reportFieldTitle {
+	text-align:right;
+	vertical-align:top;
+}
+
+.reportColumn {
+	border-bottom:1px solid #021157; 
+	border-right:1px solid #021157;
+}
+
+.reportColumnAlignCenter {
+	text-align:center;
+	border-bottom:1px solid #021157; 
+	border-right:1px solid #021157;
+}
+
+.reportRightColumn {
+	border-bottom:1px solid #021157;
+}
+
+.reportRightColumnAlignCenter {
+	text-align:center;
+	border-bottom:1px solid #021157;
+}
+/********************************************
+	END OF REPORTS
+********************************************/
+
+
+/********************************************
+	HOST FAMILY LEAD
+********************************************/
+
+/********************************************
+	END OF HOST FAMILY LEAD
+********************************************/
+
+
+/********************************************
+	PAGE MESSAGE
+********************************************/
+div.pageMessages { 
+	font-size:0.8em;
+	display:none;
+	margin: 5px auto 5px auto; 
+	padding: 5px 10px; 
+	text-align:center;
+	background-color: #c2d9e9;
+	border: #0069aa 1px solid; 
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+div.pageMessages p { 
+	margin: 0; 
+}
+
+div.pageMessages p em { 
+	color: #0069aa; 
+	font-weight: bold;
+}
+/********************************************
+	END OF PAGE MESSAGE
+********************************************/
+
+
+/********************************************
+	 ERROR MESSAGE
+********************************************/
+div.errors { 
+	text-align:center;
+    margin:0px auto 10px auto;
+	padding: 5px 10px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+}
+
+div.errorContainer label,
+div.errors label { 
+	color:#000;
+}
+
+div.errors p,
+div.errorContainer p { 
+	margin: 0; 
+}
+
+div.errors p em,
+div.errorContainer p em { 
+	color: #C00; 
+	font-style: normal; 
+	font-weight: bold; 
+}
+
+div.errors ol {
+	list-style: none;
+	text-indent:-3em;
+}
+/********************************************
+	 END OF ERROR MESSAGE
+********************************************/
+
+
+/********************************************
+	 REPORTS STYLE
+********************************************/
+table.nav_bar { 
+	font-size: 10px; 
+	background-color: #ffffe6; 
+	border: 1px solid e2efc7; 
+}
+/********************************************
+	 END OF REPORTS STYLE
+********************************************/
+
+
+/********************************************
+	 DEFAULT TABLE STYLE
+********************************************/
+.defaultTableStyle {
+	background-color:#e2efc7;  /* #c6c6c6 #EAE8E8 */
+	line-height:15px;
+	margin-bottom:50px;
+	padding-bottom:50px;
+	font-weight:bold;
+}
+
+.defaultTableStyle a {
+	color:#000;
+}
+/********************************************
+	 END OF DEFAULT TABLE STYLE
+********************************************/
+
+
+/********************************************
+	 PROJECT HELP
+********************************************/
+.projectHelpNote {
+	font-weight:bold;
+}
+
+.projectHelpTitle {
+	background-color:#e2efc7;  /* #c6c6c6 #EAE8E8 */
+	line-height:15px;
+	margin-bottom:50px;
+	padding-bottom:50px;
+}
+
+.projectHelpActivityTitle {
+	font-weight:bold;	
+}
+
+.projectHelpReason {
+	width:400px;
+	height:75px;
+}
+
+.projectHelpNew {
+	padding-right:50px;
+}
+
+.projectHelpAdvisor {
+	font-size: 13px;
+	font-weight: bold;
+	background-color: #FFDDBB;
+	line-height: 20px;
+}
+
+.projectHelpAreaRep {
+	font-weight: bold;
+	background-color: #CCCCCC;
+}
+
+input.projectHelpActivity {
+	width:320px;
+}
+
+input.projectHelpHours {
+	width:50px;
+}
+
+.projectHelpWArning {
+	color:#F00;
+	font-size:1.2em;
+	padding:10px, 10px, 10px, 10px;
+}
+
+.projectHelpAttention {
+	color:#F00;	
+}
+
+.projectHelpRule {
+	width:80%;
+	color:c6c6c6;
+	height:1px;
+}
+/********************************************
+	 END OF PROJECT HELP
+********************************************/
