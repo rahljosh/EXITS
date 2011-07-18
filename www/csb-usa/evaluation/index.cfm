@@ -62,6 +62,13 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please answer the Yes/No question: Have you changed your housing address since your last report to CSB?");
             }
+
+			// Q5 Expalin if Yes
+            if ( q5 eq 'yes' and NOT LEN(TRIM(FORM.q5_explain) ) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("You  answered Yes to: Have you changed your housing address since your last report to CSB, but did not provide your new address.");
+            }
+
 			
 
 			
@@ -71,6 +78,11 @@
                 SESSION.formErrors.Add("Please answer the Yes/No question: Have you changed your employer since your last report to CSB?");
             }
 			
+			// Q6 Expalin if Yes
+            if ( q6 eq 'yes' and NOT LEN(TRIM(FORM.q6_explain) ) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("You answered Yes to: Have you changed your employer since your last report to CSB, but did not provide your new employer information.");
+            }
 
 			
 			// Q7
@@ -91,7 +103,7 @@
         
         
       
-                <cfmail to="jeimi@exitgroup.org,anca@csb-usa.com, josh@pokytrails.com" from="info@csb-usa.com" subject="CSB Mandatory Summer Work Travel Questionnaire" type="html">
+                <cfmail to="jeimi@exitgroup.org,anca@csb-usa.com,josh@pokytrails.com" from="info@csb-usa.com" subject="CSB Mandatory Summer Work Travel Questionnaire" type="html">
             
                <h3> CSB - Mandatory Summer Work Travel Questionnaire  - #dateformat(Now())#.</h3>
                 
@@ -201,7 +213,6 @@ body table  {
 	font-weight: bold;
 	color: #FFF;
 	text-align: center;
-
 	padding-top: 20px;
 	padding-right: 10px;
 	padding-bottom: 20px;
