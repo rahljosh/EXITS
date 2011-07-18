@@ -1,11 +1,20 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		incidentReport.cfm
+	Author:		Marcus Melo
+	Date:		July 18, 2011
+	Desc:		Incident Report
+
+----- ------------------------------------------------------------------------- --->
+
 <!--- Kill extra output --->
 <cfsilent>
 
     <!--- Param FORM Variables --->	
+    <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.hostCompanyID" default="0">
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.printOption" default="1">
-    <cfparam name="FORM.submitted" default="0">
 
     <cfscript>
 		// Get Program List
@@ -81,53 +90,53 @@
 
 <cfoutput>
 
-<form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-	<input type="hidden" name="submitted" value="1">
+    <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+        <input type="hidden" name="submitted" value="1">
+        
+        <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
+            <tr valign="middle" height="24">
+                <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
+                    <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Program Reports -> Incident Report</font>
+                </td>
+            </tr>
+            <tr valign="middle">
+                <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
+                <td valign="middle">  
+                    <select name="hostCompanyID" class="style1">
+                        <option value="ALL">---  All Host Companies  ---</option>
+                        <cfloop query="qGetHostCompanyList">
+                            <option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
+                        </cfloop>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td valign="middle" align="right" class="style1"><b>Program: </b></td>
+                <td> 
+                    <select name="programID" class="style1">
+                        <option value="0"></option>
+                        <cfloop query="qGetProgramList">
+                            <option value="#qGetProgramList.programID#" <cfif qGetProgramList.programid EQ FORM.programID> selected</cfif>>#qGetProgramList.programname#</option>
+                        </cfloop>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"  class="style1"><b>Format: </b></td>
+                <td class="style1"> 
+                    <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked </cfif> > <label for="printOption1">Onscreen (View Only)</label>
+                    <input type="radio" name="printOption" id="printOption2" value="2" <cfif FORM.printOption EQ 2> checked </cfif> > <label for="printOption2">Print (FlashPaper)</label> 
+                    <input type="radio" name="printOption" id="printOption3" value="3" <cfif FORM.printOption EQ 3> checked </cfif> > <label for="printOption3">Print (PDF)</label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <br /> <input type="submit" class="style1" value="Generate Report" />
+                </td>
+            </tr>
+        </table> <br/>
     
-    <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
-        <tr valign="middle" height="24">
-            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
-                <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Program Reports -> Incident Report</font>
-            </td>
-        </tr>
-        <tr valign="middle">
-            <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
-            <td valign="middle">  
-                <select name="hostCompanyID" class="style1">
-                    <option value="ALL">---  All Host Companies  ---</option>
-                    <cfloop query="qGetHostCompanyList">
-                    	<option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
-                    </cfloop>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td valign="middle" align="right" class="style1"><b>Program: </b></td>
-            <td> 
-            	<select name="programID" class="style1">
-                    <option value="0"></option>
-                    <cfloop query="qGetProgramList">
-                        <option value="#qGetProgramList.programID#" <cfif qGetProgramList.programid EQ FORM.programID> selected</cfif>>#qGetProgramList.programname#</option>
-                    </cfloop>
-                </select>
-	        </td>
-        </tr>
-        <tr>
-            <td align="right"  class="style1"><b>Format: </b></td>
-            <td class="style1"> 
-            	<input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked </cfif> > <label for="printOption1">Onscreen (View Only)</label>
-                <input type="radio" name="printOption" id="printOption2" value="2" <cfif FORM.printOption EQ 2> checked </cfif> > <label for="printOption2">Print (FlashPaper)</label> 
-	            <input type="radio" name="printOption" id="printOption3" value="3" <cfif FORM.printOption EQ 3> checked </cfif> > <label for="printOption3">Print (PDF)</label>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-        		<br /> <input type="submit" class="style1" value="Generate Report" />
-			</td>
-        </tr>
-    </table> <br/>
-
-</form>
+    </form>
 
 </cfoutput>
 
