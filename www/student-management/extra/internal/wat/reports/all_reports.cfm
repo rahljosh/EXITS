@@ -7,10 +7,10 @@
 <br>
 
 <!--- International Representative Reports ---> 
-<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="#C7CFDC">	
 	<tr>
 		<td width="49%" valign="top">
-			<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+			<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
 				<tr>
                     <td bordercolor="FFFFFF">
                         <span class="style1"><strong>1. International Representative Reports</strong></span><br />
@@ -38,10 +38,10 @@
 <br />
 
 <!--- Host Companies --->
-<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="#C7CFDC">	
     <tr>
         <td width="49%" valign="top">
-            <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+            <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
                 <tr>
     	            <td bordercolor="FFFFFF">
                         <span class="style1"><strong>2. Host Company Reports</strong></span><br />
@@ -63,10 +63,10 @@
 <br />
 
 <!--- Program Reports --->
-<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="#C7CFDC">	
 	<tr>
 		<td width="49%" valign="top">
-			<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+			<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
 				<tr>
 					<td bordercolor="FFFFFF">
 	                    <span class="style1"><strong>3. Program Reports</strong></span><br />
@@ -81,7 +81,7 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_students_work_study_wt" class="style4">- List of Candidates for DOS</a></p>
                         
-                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/taxback" class="style4">- Report for Taxback / Candidate Email Address List</a></p>
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/taxback" class="style4">- Report for Taxback</a></p>
 				  </td>
 				</tr>
 			</table>
@@ -92,15 +92,20 @@
 <br />
 
 <!--- Mass Email Reports --->
-<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
+<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="#C7CFDC">	
 	<tr>
 		<td width="49%" valign="top">
-			<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+			<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
 				<tr>
 					<td bordercolor="FFFFFF">
 	                    <span class="style1"><strong>4. Mass Email Reports</strong></span><br />
-                        
-				  </td>
+
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/exportEmailTool&action=candidate" class="style4">- Export Candidate Email Address List</a></p>
+
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/exportEmailTool&action=hostCompany" class="style4">- Export Host Company Email Address List</a></p>
+
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/exportEmailTool&action=intlRep" class="style4">- Export Intl. Representative Email Address List</a></p>
+					</td>
 				</tr>
 			</table>
 		</td>
