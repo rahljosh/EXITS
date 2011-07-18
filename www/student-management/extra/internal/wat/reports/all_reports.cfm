@@ -71,6 +71,8 @@
 					<td bordercolor="FFFFFF">
 	                    <span class="style1"><strong>3. Program Reports</strong></span><br />
                         
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/incidentReport"  class="style4">- Incident Report</a></p>
+                        
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_documents_wt"  class="style4">- Missing Documents</a></p>
 						
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_transfer_docs"  class="style4">- Missing Transfer Documents</a></p>
