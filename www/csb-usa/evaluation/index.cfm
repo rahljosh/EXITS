@@ -103,7 +103,7 @@
         
         
       
-                <cfmail to="jeimi@exitgroup.org,anca@csb-usa.com,josh@pokytrails.com" from="info@csb-usa.com" subject="CSB Mandatory Summer Work Travel Questionnaire" type="html">
+                <cfmail to="anca@csb-usa.com" from="info@csb-usa.com" subject="CSB Mandatory Summer Work Travel Questionnaire" type="html">
             
                <h3> CSB - Mandatory Summer Work Travel Questionnaire  - #dateformat(Now())#.</h3>
                 
