@@ -112,6 +112,8 @@
 				<cfquery name="qGetResults" datasource="MySQL">
                     SELECT
                         u.businessName,
+                        u.wat_contact,
+                        u.wat_email,
                         u.email
                     FROM 
                         smg_users u
@@ -336,11 +338,15 @@
                 <table width="98%" cellpadding="4" cellspacing="0"> 
                     <tr style="font-weight:bold;">
                         <td>Business Name</Td>
+                        <td>WAT Contact</Td>
+                        <td>WAT Email Address</td>
                         <td>Email Address</td>
                     </tr>
                     <cfloop query="qGetResults">
                         <tr>
                             <td>#qGetResults.businessName#</td>
+                            <td>#qGetResults.wat_contact#</td>
+                            <td>#qGetResults.wat_email#</td>
                             <td>#qGetResults.email#</td>
                         </tr>
                     </cfloop>

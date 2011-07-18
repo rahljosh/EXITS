@@ -1164,26 +1164,23 @@
                     ec.firstName,
                     ec.middleName,
                     ec.lastName,
+                    ec.ds2019,
                     IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
                     IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
-					CASE 
-                    	WHEN ec.sex = 'f' THEN 'female' 
-                        WHEN ec.sex = 'm' THEN 'male' 
-                        ELSE '' END AS sex,
                     DATE_FORMAT(ec.dob, '%m/%e/%Y') AS dob,
                     DATE_FORMAT(ec.startDate, '%m/%e/%Y') AS startDate,
                     DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
                     IFNULL(u.businessName, '') AS businessName,
                     IFNULL(p.programName, '') AS programName,
-                    IFNULL(c.countryName, '') AS countryName
+                    IFNULL(eh.name, '') AS hostCompanyName
                 FROM 
                     extra_candidates ec
 				INNER JOIN
                 	smg_users u ON u.userID = ec.intRep
                 LEFT OUTER JOIN
+                	extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+                LEFT OUTER JOIN
                 	smg_programs p ON p.programID = ec.programID
-				LEFT OUTER JOIN
-                    smg_countrylist c ON c.countryid = ec.residence_country  
                 WHERE
                     ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 AND
