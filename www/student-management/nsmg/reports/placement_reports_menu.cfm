@@ -478,6 +478,70 @@
 			</cfform>
 		</td>
 		<td width="50%" align="right" valign="top">
+        
+          <form action="reports/studentMissingSecondVisitRep.cfm" method="POST" target="blank">
+                <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
+                   <tr><th colspan="2" bgcolor="##e2efc7">Student Missing Second Visit Rep</td></tr>
+                    <tr>
+                        <td class="reportFieldTitle">Program:</td>
+                        <td>
+                            <select name="programID" multiple size="6">
+                                <cfloop query="get_program">
+                                    <option value="#programID#">#programname#</option>
+                                </cfloop>
+                            </select>               
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="reportFieldTitle">Region:</td>
+                        <td>
+                        <select name="regionid">
+							<cfif client.usertype GT 4><cfelse>
+                            <option value=0>All Regions</option>
+                            </cfif>
+                            <cfloop query="get_regions"><option value="#regionid#">#regionname#</option></cfloop>
+                            </select>
+					            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="reportFieldTitle">Status:</td>
+                        <td>
+                        	<select name="status">
+                                <option value="0">All</option>
+                                <option value="1">Placed</option>
+                                <option value="2">Unplaced</option>
+                            </select>               
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="reportFieldTitle">Active:</td>
+                        <td>
+                        	<select name="active">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                                <option value="2">Canceled</option>					
+                                <option value="3">All</option>
+	                        </select>
+						</td>
+                    </tr>					
+<!---
+                    <tr>
+                        <td class="reportFieldTitle">Report Format:</td>
+                        <td>
+                            <select name="reportFormat">
+                                <option value='Screen'>Screen</option>
+                                <option value='Excel'>Excel</option>
+                            </select>
+                            * Only Available for Pre-AYP report
+                        </td>
+                    </tr>	
+--->
+    				<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                 </table>
+            </form>
+
+        
 		</td>
 	</tr>
 	</table><br>
