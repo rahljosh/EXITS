@@ -100,7 +100,10 @@
 				
 <!----Info for agents---->
 <cfelse>
-
+	
+    <!--- 07/19/2011 - Commenting this out - Need to check if information is accurate --->
+    <!---
+    
     <tr>
         <td width="10">&nbsp;</td>
         <td>
@@ -207,7 +210,9 @@
 		</td>
 		<td width="10">&nbsp;</td>
 	</tr>
-				
+	
+	--->
+    		
 </cfif>
 			
     <tr>
