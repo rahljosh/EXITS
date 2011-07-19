@@ -124,7 +124,7 @@
                 	s.branchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             </cfif>
             
-			<!--- Filter for Case, WEP and ESI --->
+			<!--- Filter for Case, WEP, Canada and ESI --->
             <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
                 AND 
                     s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
