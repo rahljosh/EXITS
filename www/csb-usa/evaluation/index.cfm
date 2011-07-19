@@ -103,7 +103,7 @@
         
         
       
-                <cfmail to="anca@csb-usa.com" from="info@csb-usa.com" subject="CSB Mandatory Summer Work Travel Questionnaire" type="html">
+                <cfmail to="anca@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.LastName# #form.FirstName# Questionnaire Response" type="html">
             
                <h3> CSB - Mandatory Summer Work Travel Questionnaire  - #dateformat(Now())#.</h3>
                 
@@ -114,7 +114,7 @@
                 5. Have you changed your housing address since your last report to CSB?<strong> #form.Q5#</strong><br />
                 &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i><strong> #form.Q5_explain#</strong><br /><br /> 
                 
-                6. Have you changed your employer since your last report to CSB?<strong> #form.Q5#</strong><br /> 
+                6. Have you changed your employer since your last report to CSB?<strong> #form.Q6#</strong><br /> 
                 &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new employer information (name, address and phone number) and a new signed job offer for verification:</i><strong> #form.Q6_explain#</strong><br /> <br /> 
                 
                 7. Do you have any current problems or concerns?<strong> #form.Q7#</strong><br /> 
@@ -133,7 +133,7 @@
                 5. Have you changed your housing address since your last report to CSB?<strong> #form.Q5#</strong><br />
                 &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i><strong> #form.Q5_explain#</strong><br /><br /> 
                 
-                6. Have you changed your employer since your last report to CSB?<strong> #form.Q5#</strong><br /> 
+                6. Have you changed your employer since your last report to CSB?<strong> #form.Q6#</strong><br /> 
                 &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new employer information (name, address and phone number) and a new signed job offer for verification:</i><strong> #form.Q6_explain#</strong><br /> <br /> 
                 
                 7. Do you have any current problems or concerns?<strong> #form.Q7#</strong><br /> 
