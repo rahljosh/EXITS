@@ -67,14 +67,15 @@
                                 canceldate IS NULL
                         </cfif>
                         
-						<!--- Keep Exchange Service Information Apps separate --->
-                        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
-                            AND
+						<!--- Filter for Case, WEP, Canada and ESI --->
+                        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
+                            AND 
                                 companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                        <cfelse>
+                        <!--- ISE Apps --->
+						<cfelse>
                             AND
-                                companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ESI#">
-                        </cfif>
+                                companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
+                        </cfif>	
                         
                     </cfquery>
                     
