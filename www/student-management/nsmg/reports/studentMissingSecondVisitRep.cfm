@@ -1,3 +1,9 @@
+<Cfif not isDefined('form.programid')>
+<h2>You must select at least one program before running the report. </h2>
+Please close this window/tab, select a program and run it again.
+<cfabort>
+</Cfif>
+
 <!--- Kill Extra Output --->
 <cfsilent>
 
@@ -32,13 +38,16 @@
 
 <cfquery name="qMissingSecond" datasource="#application.dsn#">
 SELECT s.studentid, s.firstname, r.regionname, s.familylastname, h.familylastname as hostfamily, u.firstname as arearep_first, u.lastname as arearep_last, u.userid as repid,
-u2.lastname as placelast, u2.firstname as placefirst, u2.userid as placeid
+u2.lastname as placelast, u2.firstname as placefirst, u2.userid as placeid, p.programname
 FROM smg_students s
 LEFT JOIN smg_users as u on s.arearepid = u.userid
 LEFT JOIN smg_users as u2 on s.placerepid = u2.userid
+LEFT JOIN smg_programs p on p.programid = s.programid
 LEFT JOIN smg_hosts h on h.hostid = s.hostid
 LEFT JOIN smg_regions r on r.regionid = s.regionassigned
 WHERE s.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+AND
+  s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
   <cfif CLIENT.companyID EQ 5>
                 AND
                     s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
@@ -126,6 +135,7 @@ WHERE s.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 	</tr>
 </table><br />
 </Cfoutput>
+<Cfif #qMissingSecond.recordcount# gt 0>
     <table width="98%" cellpadding="3" cellspacing="0" align="center" style="border:1px solid ##999;">
         <tr>
        		<th width="25%"></th>
@@ -164,7 +174,8 @@ WHERE s.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             
 		<table width="98%" frame="below" cellpadding="3" cellspacing="0" align="center" style="border:1px solid ##999;">
             <tr>
-                <td width="6%" align="center"><strong>ID</strong></th>
+            
+                <td width="6%" align="center"><strong>ID</strong></td>
                 <td width="18%"><strong>Student</strong></td>
               <cfif FORM.status EQ 1>
 	                <td width="12%"><strong>Family</strong></td>
@@ -173,8 +184,9 @@ WHERE s.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             </tr>
            <Cfoutput>
             <tr bgcolor="###iif(qMissingSecond.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
+                  
                     <td align="center">#studentid#</td>
-                    <td>#firstname# #familylastname#</td>
+                    <td>#firstname# #familylastname# <font size=-a>(#programname#)</font></td>
                    <cfif FORM.status is 1>
                     <td>#hostfamily#</td>	
                      </cfif>	
@@ -184,7 +196,9 @@ WHERE s.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             </Cfoutput>
             </table>
         </cfoutput>
-
+<CFelse>
+<div align="Center"><h3>No students were found</h3></div>
+</Cfif>
 
 </body>
 </html>
