@@ -155,7 +155,7 @@
     </table>
 
 </cfsavecontent>
-
+<!----
 <cfsavecontent variable="openPrint">
 
     <body onLoad="print();">
@@ -168,7 +168,7 @@
     </body>
 
 </cfsavecontent>
-
+---->
 <!--- Save Email Option as Link --->
 <cfsavecontent variable="emailLink">
 
@@ -277,7 +277,7 @@
 				<!--- Student Information #qGetStudentInfo.countryresident# --->
                 <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
-                        <td colspan=5 align="center"><img src="../pics/HFBanner.png" /></Td>
+                        <td colspan=5 align="center"><img src="../pics/HFbanner.png" /></Td>
                     </td>
                     <tr>
                         <td valign="top">
@@ -588,9 +588,13 @@
 		                                <Cfif LEN(qGetAreaRep.address2)>#qGetAreaRep.address2#<br /></Cfif>
 		                                #qGetAreaRep.city# #qGetAreaRep.state#, #qGetAreaRep.zip#
                                     </Td>
-                                	<td valign="top" valign="top"><span class="title">Phone:</span></td>
+                                	<td  valign="top"><span class="title">Phone:</span></td>
                                     <Td valign="top">#qGetAreaRep.phone#</Td>
                                 </tr>
+                                <tr>
+                                <td colspan="4"></td>
+                                <td  valign="top"><span class="title">Email:</span></td>
+                                <td  valign="top">#qGetAreaRep.email#</td>
                         	</table>
    
     					</Td>
