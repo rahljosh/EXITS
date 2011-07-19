@@ -25,22 +25,26 @@ function getStyleObject(objectId) {
     return false;
   }
 }
-function extensiondate(startdate,enddate,progenddate)
-{
+function extensiondate(startdate,originalStartDate) { 		
 	if (document.form1.insu_trans_type.value == 'extension') {
-		document.form1.new_start_date.value = (startdate);
-		if (progenddate == enddate) {
-			document.form1.new_start_date.value = "";
-		} else {
-			document.form1.new_end_date.value = (progenddate);
-			   }
-	} else if ((document.form1.insu_trans_type.value == 'correction') || (document.form1.insu_trans_type.value == 'early return') || (document.form1.insu_trans_type.value == 'cancellation')) {
-		document.form1.new_end_date.value = (enddate);
-		document.form1.new_start_date.value = "";
+		
+		document.form1.new_start_date.value = startdate;
+		document.form1.new_end_date.value = "";
+		document.form1.new_start_date.disabled = "true";
+		
+	} else if ( (document.form1.insu_trans_type.value == 'cancellation') ) {
+		
+		document.form1.new_start_date.value = originalStartDate;
+		document.form1.new_end_date.value = "";
+		document.form1.new_start_date.disabled = "true";
+		
 	}
 	else {
+		
+		document.form1.new_start_date.enabled = "true";
 		document.form1.new_start_date.value = "";
 		document.form1.new_end_date.value = "";
+		
 	}
 }
 // -->
@@ -114,8 +118,8 @@ function extensiondate(startdate,enddate,progenddate)
 							<cfif filed_date EQ ''> 
 								<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#" class="style1" align="center">
 									<td>#transtype#	<cfinput type="hidden" name="insuranceid" value="#insuranceid#"></td>
-									<td><cfinput type="text" name="start_date" value="#DateFormat(start_date, 'mm/dd/yyyy')#" size="10" maxlength="10" validate="date" message="Please enter a valid date for the insurance start date"></td>
-									<td><cfinput type="text" name="end_date" value="#DateFormat(end_date, 'mm/dd/yyyy')#" size="10" maxlength="10" validate="date" message="Please enter a valid date for the insurance end date"></td>
+									<td><cfinput type="text" name="start_date" value="#DateFormat(start_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" validate="date" message="Please enter a valid date for the insurance start date"></td>
+									<td><cfinput type="text" name="end_date" value="#DateFormat(end_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" validate="date" message="Please enter a valid date for the insurance end date"></td>
 									<td>not been sent</td>
 									<td><cfinput type="checkbox" name="check" disabled></td>					
 								</tr>
@@ -134,7 +138,6 @@ function extensiondate(startdate,enddate,progenddate)
 									</td>					
 								</tr>
 							</cfif>
-							<cfset last_insurance_date = #DateFormat(end_date, 'mm/dd/yyyy')#>						
 						</cfloop>						
 						</table>
 						<!--- ADD NEW IF CHECKBOX NEW IS CHECKED--->
@@ -143,13 +146,11 @@ function extensiondate(startdate,enddate,progenddate)
 							<tr bgcolor="e9ecf1" class="style1" align="center">
 								<td width="15%">
 									<select name="insu_trans_type" 
-									onChange="extensiondate('#DateFormat(DateAdd('y', 1, last_insurance_date), 'mm/dd/yyyy')#','#DateFormat(last_insurance_date, 'mm/dd/yyyy')#','#DateFormat(get_program_end_date.insurance_enddate, 'mm/dd/yyyy')#')">
+										onChange="extensiondate('#DateFormat(DateAdd('y', 1, get_insurance.end_date[get_insurance.recordCount]), 'mm/dd/yyyy')#', '#DateFormat(get_insurance.start_date[get_insurance.recordCount], 'mm/dd/yyyy')#')">
 										<option value="0"></option>
-										<option value="new">New App</option>
-										<option value="correction">Correction</option>
-										<option value="early return">Early Return</option>
+										<option value="new">Enrollment</option>
 										<option value="cancellation">Cancellation</option>
-										<option value="extension">Extension</option>
+                                        <option value="extension">Extension</option>
 									</select>
 								</td>
 								<td width="32%"><cfinput type="text" name="new_start_date" value="" size="10" maxlength="10" validate="date" message="Please enter a valid date for the insurance start date"></td>
@@ -157,7 +158,6 @@ function extensiondate(startdate,enddate,progenddate)
 								<td width="25%">n/a</td>
 								<td width="6%"><cfinput type="checkbox" name="check" disabled></td>
 							</tr>
-							<tr><td colspan="5"><em><font color="FF0000">PS: For Early Return or Cancelation, please enter the Departure Date on the Start Date box</em></font></td></tr>
 							<tr><td colspan="5" align="center" bgcolor="e9ecf1"><cfinput name="Submit" type="image" src="../../pics/update.gif" border=0 alt=" update ">&nbsp;</td>
 						</table>
 						</div>
@@ -178,11 +178,18 @@ function extensiondate(startdate,enddate,progenddate)
 				<td bordercolor="FFFFFF">
 					<table width="100%" cellpadding=5 cellspacing=1 border=0>
 						<tr bgcolor="##8FB6C9" class="style2"><td><b>Transaction Type</b></td><td><b>Description</b></td></tr>
-						<tr class="style1"><td>New App</td><td>Initial coverage for a participant</td></tr>		
-						<tr class="style1"><td>Correction</td><td>If any details to the participant's coverage requires change</td></tr>		
-						<tr class="style1"><td>Cancellation</td><td>If the participant never left his/her country of origin</td></tr>
-						<tr class="style1"><td>Early Return</td><td>If the participant returns to his/her country of origin prior to the end date of coverage</td></tr>		
-						<tr class="style1"><td>Extension</td><td>If the coverage end date needs to be extended</td></tr>		
+						<tr class="style1">
+                        	<td>Enrollment</td>
+                            <td>Enroll a participant</td>
+                        </tr>		
+						<tr class="style1">
+                        	<td>Cancellation</td>
+                            <td>Insurance Cancelation / Early Return</td>
+                        </tr>
+						<tr class="style1">
+                        	<td>Extension</td>
+                            <td>Extends an active insurance record, if record is no longer active please select "new"</td>
+                        </tr>                        
 					</table>
 				</td>
 			</tr>
@@ -197,12 +204,9 @@ function extensiondate(startdate,enddate,progenddate)
 							<td>Transaction</td>
 							<td>First Name</td>
 							<td>Last Name</td>
-							<td>Sex</td>
 							<td>DOB</td>
 							<td>Start Date</td>
 							<td>End Date</td>
-							<td>Org. Code</td>
-							<td>Policy Code</td>
 							<td>Filed</td>
 						</tr>
 						<cfloop query="get_insurance">
@@ -210,12 +214,9 @@ function extensiondate(startdate,enddate,progenddate)
 								<td>#transtype#</td>
 								<td>#firstname#</td>
 								<td>#lastname#</td>
-								<td>#sex#</td>
 								<td>#DateFormat(dob, 'mm/dd/yyyy')#</td>
 								<td>#DateFormat(start_date, 'mm/dd/yyyy')#</td>
 								<td>#DateFormat(end_date, 'mm/dd/yyyy')#</td>
-								<td>#org_code#</td>
-								<td>#policy_code#</td>
 								<td>#DateFormat(filed_date, 'mm/dd/yyyy')#</td>						
 							</tr>
 						</cfloop>

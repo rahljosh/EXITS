@@ -18,7 +18,7 @@
     <cfparam name="FORM.verification_received" default="">
     <cfparam name="FORM.submitted" default="0">
 
-    <cfquery name="qGetInsuranceTypes" datasource="MySql">
+    <cfquery name="qGetInsuranceTypeList" datasource="MySql">
         SELECT 
         	insutypeid, type
         FROM 
@@ -49,6 +49,7 @@
         SELECT 
         	h.transtype, 
             h.filed_date, 
+            h.input_date,
             count(h.candidateid) AS total  
         FROM 
         	extra_insurance_history h
@@ -59,10 +60,10 @@
         AND 
         	h.filed_date IS NOT NULL
         GROUP BY 
-        	filed_date, 
+        	input_date, 
             transtype
         ORDER BY 
-        	filed_date DESC, 
+        	input_date DESC, 
             transtype
         LIMIT 50
     </cfquery>
@@ -79,7 +80,7 @@
 				<tr bgcolor="##CCCCCC">
 					<td class="title1">&nbsp; &nbsp; Insurance</td>
 				</tr>
-			</table><br>
+			</table><br />
 		
 			<!--- INSURANCE FILES --->
 			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
@@ -138,7 +139,7 @@
 										</tr>
 										<tr>
 											<td class="style1">Insurance Type</td>
-											<td><cfselect name="extra_insurance_typeid" query="qGetInsuranceTypes" value="insutypeid" display="type" class="style1" /></td>
+											<td><cfselect name="extra_insurance_typeid" query="qGetInsuranceTypeList" value="insutypeid" display="type" class="style1" /></td>
 										</tr>																														
 										<tr><td align="center" colspan="2"><input type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>										
 									</table>
@@ -216,7 +217,7 @@
 						</table>
 					</td>
 				</tr>
-			</table><br>
+			</table><br />
 	
 			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
 				<tr>
@@ -226,7 +227,7 @@
 						</table>
 					</td>
 				</tr>
-			</table><br>
+			</table><br />
 	
 			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
 				<tr>
@@ -263,10 +264,8 @@
 											<td class="style1">Transaction Type :</td>
 											<td class="style1" align="left">
 												<select name="transtype"  class="style1">
-													<option value="0"></option>
+													<option value=""></option>
 													<option value="new">New App</option>
-													<option value="correction">Correction</option>
-													<option value="early return">Early Return</option>
 													<option value="cancellation">Cancellation</option>
 													<option value="extension">Extension</option>
 												</select>
@@ -280,7 +279,7 @@
 						</table>
 					</td>
 				</tr>
-			</table><br>	
+			</table><br />	
 
 			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="##C7CFDC">	
 				<tr>
@@ -288,23 +287,27 @@
 						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
 							<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="4">&nbsp;:: Insurance History - Excel Files</td></tr>
 							<tr>
-								<th width="25%" class="style1">Transaction Type</th>
-								<th width="25%" class="style1">Filed Date</th>
-								<th width="25%" class="style1">Total of Candidates</th>
-								<th width="25%" class="style1">List of Candidates</th>
+								<th width="10%" class="style1">Transaction Type</th>
+								<th width="15%" class="style1">Filed Date</th>
+								<th width="15%" class="style1">Total of Candidates</th>
+                                <td width="20%"><strong>Actions</strong></td>
 							</tr>
 							<cfloop query="qGetHistory">
 							<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-								<td align="center" class="style1"><a href="insurance/open_history.cfm?type=#transtype#&date=#DateFormat(filed_date, 'yyyy/mm/dd')#" class="style4">#transtype#</a></td>
-								<td align="center" class="style1"><a href="insurance/open_history.cfm?type=#transtype#&date=#DateFormat(filed_date, 'yyyy/mm/dd')#" class="style4">#DateFormat(filed_date, 'mm/dd/yyyy')#</a></td>
-								<td align="center" class="style1"><a href="insurance/open_history.cfm?type=#transtype#&date=#DateFormat(filed_date, 'yyyy/mm/dd')#" class="style4">#total#</a></td>
-								<td align="center" class="style1"><a href="insurance/transaction_cand_list.cfm?type=#transtype#&date=#DateFormat(filed_date, 'yyyy/mm/dd')#" class="style4" target="_blank">List</a></td>
+								<td align="center" class="style1">#transtype#</td>
+								<td align="center" class="style1">#DateFormat(filed_date, 'mm/dd/yyyy')#</td>
+								<td align="center" class="style1">#total#</td>
+								<td align="center" class="style1">
+                                	<a href="insurance/downloadFile.cfm?type=#URLEncodedFormat(qGetHistory.transType)#&date=#URLEncodedFormat(qGetHistory.input_date)#" class="style4">[ Download ]</a>
+                                    &nbsp; | &nbsp;
+                                    <a href="insurance/downloadFile.cfm?type=#URLEncodedFormat(qGetHistory.transType)#&date=#URLEncodedFormat(qGetHistory.input_date)#&option=list" class="style4" target="_blank">[ List ]</a>
+                                </td>
 							</tr>
 							</cfloop>
 						</table>
 					</td>
 				</tr>
-			</table><br>
+			</table><br />
 		</td>
 	</tr>
 </table>
