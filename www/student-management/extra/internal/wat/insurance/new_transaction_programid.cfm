@@ -1,3 +1,14 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		new_transaction_programID.cfm
+	Author:		Marcus Melo
+	Date:		July 19, 2011
+	Desc:		
+	
+	Updated: 	Enroll Candidates
+
+----- ------------------------------------------------------------------------- --->
+
 <!--- Kill Extra Output --->
 <cfsilent>
 	
@@ -7,121 +18,207 @@
     <cfparam name="FORM.extra_insurance_typeid" default="">
     <cfparam name="FORM.verification_received" default="">
 
+	<cfscript>
+		if ( NOT VAL(FORM.programid) ) {
+			WriteOutput("Please select at least one program.");
+			abort;
+		}
+		
+		if ( NOT LEN(FORM.extra_insurance_typeid) ) {
+			WriteOutput( "Please select an insurance type");
+			abort;
+		}
+		
+		if ( NOT LEN(FORM.verification_received) ) {
+			WriteOutput( "Please select at least one verification receive date.");
+			abort;
+		}
+		
+		// Set XLS File Name
+		XLSFileName = 'WAT_Enroll_Confort50L_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
+	</cfscript>
+
+	<!--- get student info --->
+    <cfquery name="qGetCandidates" datasource="MySQL">
+        SELECT 
+            c.candidateID, 
+            c.firstname, 
+            c.lastname, 
+            c.sex, 
+            c.dob,
+            c.email, 
+            c.startdate, 
+            c.enddate, 
+            c.status,
+            u.businessname, 
+            u.extra_insurance_typeid,
+            country.countrycode,
+            comp.orgcode,
+            insu_codes.policycode
+        FROM 
+            extra_candidates c
+        INNER JOIN 
+            smg_users u ON u.userid = c.intrep
+        INNER JOIN 
+            smg_companies comp ON comp.companyid = c.companyid
+        LEFT JOIN 
+            smg_countrylist country ON country.countryid =  c.residence_country
+        LEFT JOIN 
+            smg_insurance_codes insu_codes ON (u.extra_insurance_typeid = insu_codes.insutypeid AND c.companyid = insu_codes.companyid)
+        WHERE 
+            c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND 
+            c.dob IS NOT NULL
+        AND 
+            cancel_date IS NULL
+        AND 
+            c.insurance_date IS NULL
+        AND 
+            u.extra_insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.extra_insurance_typeid#">	
+        AND 
+            c.verification_received IN ( <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" list="yes"> )
+        AND 
+            c.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+        <cfif VAL(FORM.intrep)>
+            AND 
+                c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+        </cfif>
+        ORDER BY 
+            u.businessname, 
+            c.lastname, 
+            c.firstname
+            
+        LIMIT 1
+    </cfquery>
+
+	<cfscript>
+		if ( NOT VAL(qGetCandidates.recordCount) ) {
+			WriteOutput("No candidates that match your criteria.");
+			abort;
+		}
+	</cfscript>		
+
 </cfsilent>
-
-<cfif NOT VAL(FORM.programid)>
-	Please select at least one program.
-	<cfabort>
-</cfif>
-
-<cfif NOT LEN(FORM.extra_insurance_typeid)>
-	Please select an insurance typ
-	<cfabort>
-</cfif>
-
-<cfif NOT LEN(FORM.verification_received)>
-	Please select at least one verification receive date.
-	<cfabort>
-</cfif>
 
 <!--- use cfsetting to block output of HTML outside of cfoutput tags --->
 <cfsetting enablecfoutputonly="Yes">
 
-<!--- get student info --->
-<cfquery name="get_candidates" datasource="MySQL">
-	SELECT c.candidateid, c.firstname, c.lastname, c.sex, c.dob, c.startdate, c.enddate, c.status,
-		u.businessname, u.extra_insurance_typeid,
-		country.countrycode,
-		comp.orgcode,
-		insu_codes.policycode
-	FROM extra_candidates c
-	INNER JOIN smg_users u ON u.userid = c.intrep
-	INNER JOIN smg_companies comp ON comp.companyid = c.companyid
-	LEFT JOIN smg_countrylist country ON country.countryid =  c.residence_country
-	LEFT JOIN smg_insurance_codes insu_codes ON (u.extra_insurance_typeid = insu_codes.insutypeid AND c.companyid = insu_codes.companyid)
-	WHERE 
-    	c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-    AND 
-        c.dob IS NOT NULL
-    AND 
-        cancel_date IS NULL
-    AND 
-        c.insurance_date IS NULL
-    AND 
-        u.extra_insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.extra_insurance_typeid#">	
-    AND 
-        c.verification_received IN ( <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" list="yes"> )
-    AND 
-    	c.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
-	<cfif VAL(FORM.intrep)>
-        AND 
-        	c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-    </cfif>
-	ORDER BY 
-        u.businessname, 
-        c.lastname, 
-        c.firstname
-</cfquery>
-
 <!--- set content type --->
 <cfcontent type="application/msexcel">
 
-<!--- suggest default name for XLS file --->
-<!--- "Content-Disposition" in cfheader also ensures 
-relatively correct Internet Explorer behavior. --->
-<cfheader name="Content-Disposition" value="attachment; filename=insurance-wat.xls"> 
-
-<!--- <cfheader name="Content-Disposition"filename=caremed_template.xls">  Open in the Browser --->
+<!--- "Content-Disposition" in cfheader also ensures relatively correct Internet Explorer behavior. --->
+<cfheader name="Content-Disposition" value="attachment; filename=#XLSFileName#">
 
 <!--- Format data using cfoutput and a table. Excel converts the table to a spreadsheet.
 The cfoutput tags around the table tags force output of the HTML when using cfsetting enablecfoutputonly="Yes" --->
 <cfoutput>
-<table border="1" cellpadding="3" cellspacing="0">
-	<tr>
-		<td colspan="8"><center><b>Student Management Group (Comfort 50)</b></center></td>
-	</tr>
-	<tr>
-		<td>N/X</td>
-		<td>IHI Policy Number</td>
-		<td>Last Name</td>
-		<td>First Name</td>
-		<td>Birth Date</td>
-		<td>Start Date</td>
-		<td>End Date</td>
-	</tr>
-	<cfloop query="get_candidates">
-		<cfif startdate NEQ '' AND enddate NEQ ''>
-			<tr>
-				<td>N</td>
-				<td><cfif extra_insurance_typeid NEQ '0'>#policycode#<cfelse>Missing Policy Type - #businessname#</cfif></td>
-				<td>#lastname#</td>
-				<td>#FirstName#</td>
-				<td>#DateFormat(dob, 'dd/mmm/yyyy')#</td>
-				<td><cfif startdate NEQ ''>#DateFormat(startdate, 'dd/mmm/yyyy')#<cfelse>Missing</cfif></td>
-				<td><cfif enddate NEQ ''>#DateFormat(enddate, 'dd/mmm/yyyy')#<cfelse>Missing</cfif></td>
-			</tr>
-			<cfif policycode NEQ '' AND startdate NEQ '' AND enddate NEQ ''> 
-				<cfquery name="update_candidate" datasource="MySql">
-					UPDATE extra_candidates 
-					SET insurance_date = #CreateODBCDate(now())# 
-					WHERE candidateid = '#candidateid#'
-					LIMIT 1
-				</cfquery>				
-				<!--- CREATE HISTORY FILE --->
-				<cfquery name="insert_history" datasource="MySql">
-					INSERT INTO extra_insurance_history 
-						(candidateid, firstname, lastname, sex, dob, country_code, start_date, end_date, org_code, policy_code, filed_date, 
-						transtype, excel_sheet)
-					VALUES
-						('#candidateid#', '#firstname#', '#lastname#', '#sex#', #CreateODBCDate(dob)#, '#countrycode#',
-						#CreateODBCDate(startdate)#, #CreateODBCDate(enddate)#, '#orgcode#', '#policycode#',
-						#CreateODBCDate(now())#, 'new', '1');	
-				</cfquery>
-			</cfif>
-		</cfif>
-	</cfloop>
-</table>
-</cfoutput> 
 
-</body>
-</html>
+    <table border="1" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">
+        <tr>
+            <td colspan="6" style="font-size:18pt; font-weight:bold; text-align:center; border:none;">
+                Enrollment Sheet         
+            </td>
+            <td style="font-size:11pt; text-align:right;  border:none;">
+                eSecutive                
+            </td>
+        </tr>
+        <tr>
+            <td colspan="8" style="background-color:##CCCCCC; border:none;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width:200px; text-align:left; font-weight:bold;">Last Name</td>
+            <td style="width:200px; text-align:left; font-weight:bold;">First Name</td>
+            <td style="width:100px; text-align:center; font-weight:bold;">Date of Birth</td>
+            <td style="width:80px; text-align:center; font-weight:bold;">Start Date</td>
+            <td style="width:80px; text-align:center; font-weight:bold;">End Date</td>
+            <td style="width:1px;">&nbsp;</td>
+            <td style="width:80px; text-align:center; font-weight:bold;">Days</td>
+            <td style="width:300px; text-align:left; font-weight:bold;">Email Address (optional)</td>
+        </tr>
+        <cfloop query="qGetCandidates">
+            
+            <tr>
+                <td>#qGetCandidates.lastName#</td>
+                <td>#qGetCandidates.firstName#</td>
+                <td>#DateFormat(qGetCandidates.dob, 'dd/mmm/yyyy')#</td>
+                <td>
+                    <cfif IsDate(qGetCandidates.startDate)>
+                        #DateFormat(qGetCandidates.startDate, 'dd/mmm/yyyy')#
+                    <cfelse>
+                        Missing
+                    </cfif>
+                </td>
+                <td>
+                    <cfif IsDate(qGetCandidates.endDate)>
+                        #DateFormat(qGetCandidates.endDate, 'dd/mmm/yyyy')#
+                    <cfelse>
+                        Missing
+                    </cfif>
+                </td>
+                <td>&nbsp;</td>
+                <td>
+                  	<cfif IsDate(qGetCandidates.startDate) AND IsDate(qGetCandidates.endDate)>
+                    	#DateDiff("d", qGetCandidates.startDate, qGetCandidates.endDate)#
+                    </cfif>             
+    			</td>            
+                <td>
+                    <cfif IsValid("email", qGetCandidates.email)>
+                        #qGetCandidates.email#
+                    <cfelse>
+                        &nbsp;
+                    </cfif>
+                </td>                              
+            </tr>
+            
+            <cfif LEN(qGetCandidates.policycode) AND IsDate(qGetCandidates.startDate) AND IsDate(qGetCandidates.endDate)>
+
+                    <cfquery datasource="MySql">
+                        UPDATE 
+                        	extra_candidates 
+                        SET 
+                        	insurance_date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                            insurance_cancel_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        WHERE 
+                        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidates.candidateID)#">
+                    </cfquery>	
+                    			
+                    <!--- CREATE HISTORY FILE --->
+                    <cfquery  datasource="MySql">
+                        INSERT INTO 
+                       		extra_insurance_history 
+                            (
+                            	candidateID, 
+                                firstname, 
+                                lastname, 
+                                sex, 
+                                dob, 
+                                country_code, 
+                                start_date, 
+                                end_date, 
+                                filed_date, 
+                            	transtype, 
+                                excel_sheet
+                            )
+                        VALUES
+                        (
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidates.candidateID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.firstname#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.lastname#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.sex#">, 
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidates.dob#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.countrycode#">,
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidates.startdate#">, 
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidates.enddate#">, 
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="new">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        );	
+                    </cfquery>
+	
+            </cfif>
+            
+        </cfloop>
+        
+    </table>
+    
+</cfoutput> 
