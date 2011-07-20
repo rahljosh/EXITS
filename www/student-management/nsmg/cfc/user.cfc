@@ -282,30 +282,32 @@
 		
         <!----For Accounts Created after Sept 1, 2010---->
         <Cfif qAuthenticateUser.datecreated gt '2010-09-01'>
-       		
-			<cfif #DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now())# gte 21>
-				
-				<!----Check if WebEX Training has been completed ---->
-                <cfif listfind('5,6,7', client.usertype)>
+       		<!----Let CASE bypass the webex check for a while---->
+            <cfif listfind('1,2,3,4,5,12', client.companyid)>
+            <cfabort>
+				<cfif #DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now())# gte 21>
                     
-                    <cfquery name="webexTraining" datasource="#application.dsn#">
-                    	SELECT
-                        	training_id
-                    	FROM 
-                        	smg_users_training
-                    	WHERE 
-                        	training_id = <cfqueryparam cfsqltype="cf_sql_numeric" value="6">
-                    	and 
-                        	user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                    </cfquery>
-                   <cfif client.companyid neq 14>
-                    <cfif (NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16)>
-                        <cfset CLIENT.trainingNeeded = 1>
-                        <cflocation url="/nsmg/trainingNeeded.cfm" addtoken="no">
-                    </cfif>
-                   </cfif>
-               </Cfif>
-               
+                    <!----Check if WebEX Training has been completed ---->
+                    <cfif listfind('5,6,7', client.usertype)>
+                        
+                        <cfquery name="webexTraining" datasource="#application.dsn#">
+                            SELECT
+                                training_id
+                            FROM 
+                                smg_users_training
+                            WHERE 
+                                training_id = <cfqueryparam cfsqltype="cf_sql_numeric" value="6">
+                            and 
+                                user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                        </cfquery>
+                       <cfif client.companyid neq 14>
+                        <cfif (NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16)>
+                            <cfset CLIENT.trainingNeeded = 1>
+                            <cflocation url="/nsmg/trainingNeeded.cfm" addtoken="no">
+                        </cfif>
+                       </cfif>
+                   </Cfif>
+               </cfif>
            </cfif>
         <cfelse>
         	<cfif isDefined('client.trainingNeeded')>
