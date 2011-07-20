@@ -1,9 +1,8 @@
-<cfset client.companyid = 1>
-<cfset client.userid = 1>
+
 <Cfquery name="repInfo" datasource="MySQL">
 select firstname, lastname, email, phone
 from smg_users
-where userid = #client.userid#
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
 </cfquery>
 
 <cfdocument format="PDF" margintop=".45" marginbottom=".25" marginright=".25" marginleft=".25" backgroundvisible="yes" overwrite="no" fontembed="yes" bookmark="false" localurl="no" saveasname="SchoolAroundtheWorld.pdf" >

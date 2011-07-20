@@ -2,7 +2,7 @@
 <Cfquery name="repInfo" datasource="MySQL">
 select firstname, lastname, email, phone
 from smg_users
-where userid = #client.userid#
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
 </cfquery>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -131,7 +131,8 @@ p {
   <cfoutput>
 <div id="menu"><table width="275" border="0" cellspacing="5">
   <tr>
-    <td><a href="AWsave.cfm? filetype=pdf"><img src="images/save.png" height="20" alt="save icon" border="0" /></a></td>
+    <td><a href="AWsave.cfm? filetype=pdf"><img src="images/save.png" height="20" alt="save icon" border="0" /></a>
+    </td>
     </tr>
 </table>
 </div>
