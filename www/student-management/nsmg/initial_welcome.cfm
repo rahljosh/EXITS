@@ -492,15 +492,19 @@
                     <td class="get_attention"><span class="get_attention"><b>::</b></span> New Users <font size=-2>since #new_date#</font></u></td>
                 </tr>
                 <tr valign="top">
-               	  <td>
-                  Marketing Materials will be available here shortly.
-                  <!----
-                  <cfif ListFind("1,2,3,4,5,12", CLIENT.companyid) >
+               	  <td >
+                  
+                  <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyid) >
                     Here are some new brochures to help in your marketing.<Br />
-                    <a href="marketingMaterial/openheart/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
-                 	<A href="marketingMaterial/schoolWorld/SchoolAroundWorld.cfm" target="_blank"> School Around the World</A></td>
+                    <a href="marketing/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
+                 	<A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A>
+                    <br /><br />
+                     <font size=-1> <em>Click on the Save/Print option to generate a PDF that is suitable for printing.</em></font>
+                     <Cfelse>
+                   Coming Soon!!
+                  
                   </cfif>
-				  ---->
+				 </td>
                     <td>
                         <cfif get_new_users.recordcount eq 0 or CLIENT.usertype gte 6>
                             There are no new reps in your region.
