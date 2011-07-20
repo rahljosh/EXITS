@@ -227,6 +227,7 @@
         <cfargument name="endDate" default="" hint="Program End Date">
         <cfargument name="wat_placement" default="" hint="Program Option">
         <cfargument name="wat_participation" default="" hint="Number of participations in program">
+        <cfargument name="wat_participation_info" default="" hint="Year and Sponsor of previous participations">
         <cfargument name="updateSSN" default="0" hint="Set to 1 to update SSN">
         <cfargument name="ssn" default="" hint="Social Security Number">
 			
@@ -261,7 +262,9 @@
 					<cfif LEN(ARGUMENTS.wat_participation)>
                     	wat_participation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.wat_participation#">,
                     </cfif>
-                    
+
+                    wat_participation_info = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.wat_participation_info#">,
+
                     <cfif VAL(ARGUMENTS.updateSSN)>
 	                    ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.ssn))#">,
                     </cfif>

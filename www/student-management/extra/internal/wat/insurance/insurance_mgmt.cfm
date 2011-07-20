@@ -30,18 +30,18 @@ function extensiondate(startdate,originalStartDate) {
 		
 		document.form1.new_start_date.value = startdate;
 		document.form1.new_end_date.value = "";
-		document.form1.new_start_date.disabled = "true";
+		document.form1.new_start_date.readOnly = "true";
 		
 	} else if ( (document.form1.insu_trans_type.value == 'cancellation') ) {
 		
 		document.form1.new_start_date.value = originalStartDate;
 		document.form1.new_end_date.value = "";
-		document.form1.new_start_date.disabled = "true";
+		document.form1.new_start_date.readOnly = "true";
 		
 	}
 	else {
 		
-		document.form1.new_start_date.enabled = "true";
+		document.form1.new_start_date.readOnly = "true";
 		document.form1.new_start_date.value = "";
 		document.form1.new_end_date.value = "";
 		
