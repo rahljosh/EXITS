@@ -168,12 +168,11 @@ p {
 </style></head>
 
 <body>
-<Cfset client.companyid = 1>
-<Cfset client.userid = 1>
+
 <Cfquery name="repInfo" datasource="MySQL">
 select firstname, lastname, email, phone
 from smg_users
-where userid = #client.userid#
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
 </cfquery>
 
 <div id="menu"><table width="275" border="0" cellspacing="5">
