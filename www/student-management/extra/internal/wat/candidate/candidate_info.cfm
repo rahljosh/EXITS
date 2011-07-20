@@ -1176,8 +1176,8 @@
                                             </td>
                                         </tr>						
                                         <tr>
-                                        	<td class="style1" align="right" width="27%"><strong>Program:</strong></td>
-                                            <td class="style1" colspan="3">
+                                        	<td class="style1" align="right" width="35%"><strong>Program:</strong></td>
+                                            <td class="style1" width="65%">
                                                 <span class="readOnly">#qGetProgramInfo.programName#</span>
                                                 <select name="programid" class="style1 editPage" onChange="displayProgramReason(#VAL(qGetCandidate.programid)#, this.value);">
                                                     <option value="0">Unassigned</option>
@@ -1189,12 +1189,12 @@
                                         </tr>
                                         <tr id="program_history" bgcolor="##FFBD9D" class="hiddenField">
                                         	<td class="style1" align="right"><strong>Reason:</strong></td>
-                                        	<td class="style1" colspan="3"><input type="text" name="reason" id="reason" size="50" class="style1"></td>
+                                        	<td class="style1"><input type="text" name="reason" id="reason" size="50" class="style1"></td>
                                         </tr>
                                         <tr>
                                         	<!--- Placement--->
                                         	<td class="style1" align="right"><strong>Option:</strong></td>
-                                        	<td class="style1" colspan="3">
+                                        	<td class="style1">
 												<span class="readOnly">#qGetCandidate.wat_placement#</span>
                                                 <select name="wat_placement" id="wat_placement" onChange="displaySelfPlacementInfo();" class="style1 editPage">
                                                     <option value="">Select....</option>
@@ -1205,8 +1205,8 @@
 	                                        </td>
                                         </tr>		
                                         <tr>
-                                        	<td class="style1" align="left" colspan="4">
-                                            	<strong>Number of Participation in the Program:</strong>
+                                        	<td class="style1" align="right" valign="top"><strong>Number of Participation in the Program:</strong>
+                                            <td class="style1" valign="top">
                                         		<span class="readOnly">#qGetCandidate.wat_participation#</span>
                                                 <select name="wat_participation" class="style1 editPage">
                                                 	<cfloop from="0" to="15" index="i">
@@ -1214,24 +1214,29 @@
                                                     </cfloop>
                                  				</select>               
 	                                        </td>
+                                        </tr>   
+                                        <tr>
+                                        	<td class="style1" align="right" valign="top"><strong>Year(s) and sponsor(s) of previous participation:</strong>
+                                            <td class="style1" valign="top">
+                                            	<div class="readOnly">#APPLICATION.CFC.UDF.TextAreaOutput(qGetCandidate.wat_participation_info)#</div>
+                                                <textarea name="wat_participation_info" id="wat_participation_info" class="style1 editPage mediumTextArea">#qGetCandidate.wat_participation_info#</textarea>          
+	                                        </td>
                                         </tr>
                                         <tr>
-    	                                    <td class="style1" align="left" colspan="2"><strong>Requested Placement:</strong>
-                                        </tr>
-                                        <tr>
-                                        	<td class="style1" colspan="4"> 
-                                            	<span class="readOnly">
+                                        	<td class="style1" align="right" valign="top"><strong>Requested Placement:</strong>
+                                            <td class="style1" valign="top">
+                                                <span class="readOnly">
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qRequestedPlacement.hostcompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
                                                     <cfelse>
                                                     	#qRequestedPlacement.name#
                                                     </cfif>
                                                 </span>
-                                                <select name="requested_placement" class="style1 editPage">
+                                                <select name="requested_placement" class="style1 editPage xLargeField">
                                                     <option value="0"></option>
                                                     <cfloop query="qHostCompanyList">
                                                     	<option value="#qHostCompanyList.hostcompanyID#" <cfif qGetCandidate.requested_placement EQ qHostCompanyList.hostcompanyID>selected</cfif>> 
-															<cfif LEN(qHostCompanyList.name) GT 55>
+															<cfif LEN(qHostCompanyList.name) GT 40>
                                                                 #Left(qHostCompanyList.name, 52)#...
                                                             <cfelse>
                                                                 #qHostCompanyList.name#
@@ -1243,21 +1248,21 @@
                                         </tr>			
                                         <tr>
 	                                        <td class="style1" align="right" valign="top"><strong>Comments:</strong></td>
-    	                                    <td class="style1" colspan="3">
+    	                                    <td class="style1">
         	                                	<span class="readOnly">#qGetCandidate.change_requested_comment#</span>
             		                            <textarea name="change_requested_comment" class="style1 editPage" cols="60" rows="8">#qGetCandidate.change_requested_comment#</textarea>
                     	                    </td>
                                         </tr>
                                         <tr>
                                         	<td class="style1" align="right"><strong>Start Date:</strong></td>
-                                        	<td class="style1" colspan="3">
+                                        	<td class="style1">
                                             	<span class="readOnly">#dateFormat(qGetCandidate.startdate, 'mm/dd/yyyy')#</span>
                                             	<input type="text" class="style1 datePicker editPage" name="program_startdate" value="#dateFormat(qGetCandidate.startdate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><strong>End Date:</strong></td>
-                                            <td class="style1" colspan="3">
+                                            <td class="style1">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.enddate, 'mm/dd/yyyy')#</span>
                                                 <input type="text" class="style1 datePicker editPage" name="program_enddate" value="#dateFormat(qGetCandidate.enddate, 'mm/dd/yyyy')#" maxlength="10"><font size="1">(mm/dd/yyyy)</font>
                                             </td>

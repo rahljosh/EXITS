@@ -72,6 +72,7 @@
 	<!--- Program Program Option --->
     <cfparam name="FORM.wat_placement" default="">
     <cfparam name="FORM.wat_participation" default="">
+    <cfparam name="FORM.wat_participation_info" default="">
     <cfparam name="FORM.SSN" default="">
 
 	<!--- Candidate Picture --->
@@ -130,6 +131,14 @@
 				SESSION.formErrors.Add('Program must end after start date');
 			}
 			
+			if ( NOT LEN(wat_participation) ) {
+				SESSION.formErrors.Add('Please select number of previous participation in the program');
+			}
+			
+			if ( VAL(wat_participation) AND NOT LEN(FORM.wat_participation_info) ) {
+				SESSION.formErrors.Add('Please enter previous program information');
+			}
+			
 			// SSN
 			if ( LEN(FORM.SSN) AND Left(FORM.SSN, 3) NEQ 'XXX' AND NOT isValid("social_security_number", Trim(FORM.SSN)) ) {
 				SESSION.formErrors.Add("Please enter a valid SSN.");
@@ -178,6 +187,7 @@
 					endDate = FORM.programEnd,
 					wat_placement = FORM.wat_placement,
 					wat_participation = FORM.wat_participation,
+					wat_participation_info = FORM.wat_participation_info,
 					updateSSN = vUpdateSSN,
 					ssn = FORM.SSN
 				);
@@ -270,6 +280,7 @@
 			// Program Option
 			FORM.wat_placement = qGetCandidateInfo.wat_placement;
 			FORM.wat_participation = qGetCandidateInfo.wat_participation;
+			FORM.wat_participation_info = qGetCandidateInfo.wat_participation_info;
 			FORM.emergency_phone = qGetCandidateInfo.emergency_phone;
 			FORM.SSN = APPLICATION.CFC.UDF.displaySSN(qGetCandidateInfo.SSN);
 			// Online Application Fields 
@@ -294,6 +305,19 @@
 		$("#SSN").mask("***-**-9999");
 	});	
 
+	var displayPreviousParticipationInfo = function() { 
+
+		// Get current program option
+		numberOfPrevious = $("#wat_participation").val();
+		if ( numberOfPrevious > 0 ) {
+			$("#trParticipationInfo").slideDown("slow");
+		} else {
+			$("#wat_participation_info").val("");
+			$("#trParticipationInfo").slideUp("slow");
+		}
+
+	}
+
 	// JQuery Validator
 	$().ready(function() {
 		
@@ -301,7 +325,10 @@
 		selectedOption = $(":radio[name=wat_placement]").filter(":checked").val();
 		// Display Request Placement
 		showHideRequestPlacement(selectedOption);
-	
+		
+		// Display Previous Participation
+		displayPreviousParticipationInfo();
+		
 		// Ajax Image Upload
 		var thumb = $('img#thumb');	
 		var candidateID = $('#candidateID').val();
@@ -898,15 +925,28 @@
             <cfif printApplication>
 				<div class="printField"><cfif LEN(FORM.wat_participation)>#FORM.wat_participation# time(s)</cfif> &nbsp;</div>
         	<cfelse>
-                <select name="wat_participation" id="wat_participation" class="smallField">
+                <select name="wat_participation" id="wat_participation" class="smallField" onchange="displayPreviousParticipationInfo();">
                     <option value=""></option>
-                    <cfloop from="0" to="15" index="i">
+                    <option value="0">None</option>
+                    <option value="1">1 Time</option>
+                    <cfloop from="2" to="15" index="i">
                         <option value="#i#" <cfif FORM.wat_participation EQ i> selected="selected" </cfif> >#i# time(s)</option>
                     </cfloop>
                 </select>
             </cfif>            
         </div>
         <p class="note">(Regardless of sponsor - Please select 0 if this is the first one)</p>
+
+        <!--- Years of previous participations in the program --->
+        <div class="field" id="trParticipationInfo" class="displayNone">
+            <label for="wat_participation_info">Year(s) and sponsor(s) of previous participation in the program <em>*</em></label> 
+            <cfif printApplication>
+				<div class="printField"><cfif LEN(FORM.wat_participation_info)>#FORM.wat_participation_info#</cfif> &nbsp;</div>
+        	<cfelse>
+            	<textarea name="wat_participation_info" id="wat_participation_info" class="mediumTextArea">#FORM.wat_participation_info#</textarea>
+            </cfif>            
+        </div>
+        <p class="note">(if applicable - E.g.: 2010 - CSB)</p>
 
         <!--- Social Security Number --->
         <div class="field">

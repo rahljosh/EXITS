@@ -96,9 +96,16 @@
 	border:1px solid #999;	
 }
 
+.mediumTextArea {
+	height: 50px;
+	width : 260px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
 .largeTextArea {
 	height: 80px;
-	width : 250px;
+	width : 260px;
 	margin-bottom: .5em;
 	border:1px solid #999;	
 }

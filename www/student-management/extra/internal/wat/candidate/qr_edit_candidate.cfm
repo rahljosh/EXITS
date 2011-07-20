@@ -20,6 +20,9 @@
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
 <cfparam name="FORM.selfConfirmationMethod" default="">
+<!--- Program Information --->
+<cfparam name="FORM.wat_participation" default="">
+<cfparam name="FORM.wat_participation_info" default="">
 <!--- Host Company --->
 <cfparam name="FORM.authenticationType" default="">
 <cfparam name="FORM.EIN" default="">
@@ -325,7 +328,8 @@
         <cfif VAL(vUpdateSSN)>
             ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">, 
         </cfif>        
-        wat_participation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.wat_participation#">, 
+        wat_participation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.wat_participation)#">,
+        wat_participation_info = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_participation_info#">,
         wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_placement#">,
         wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_start#" null="#NOT IsDate(FORM.wat_vacation_start)#">,
         wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.wat_vacation_end#" null="#NOT IsDate(FORM.wat_vacation_end)#">,
