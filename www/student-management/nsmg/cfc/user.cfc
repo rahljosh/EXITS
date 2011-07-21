@@ -284,7 +284,7 @@
         <Cfif qAuthenticateUser.datecreated gt '2010-09-01'>
        		<!----Let CASE bypass the webex check for a while---->
             <cfif listfind('1,2,3,4,5,12', client.companyid)>
-            <cfabort>
+           
 				<cfif #DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now())# gte 21>
                     
                     <!----Check if WebEX Training has been completed ---->
