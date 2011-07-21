@@ -14,6 +14,7 @@
 	
     <!--- Param FORM Variable --->
     <cfparam name="FORM.action" default="">
+    <cfparam name="FORM.exportOption" default="">
     <cfparam name="FORM.regionID" default="">
     <cfparam name="FORM.programID" default="">
     <cfparam name="FORM.trainingID" default="">
@@ -357,6 +358,7 @@
                 qGetResults = APPLICATION.CFC.USER.exportDOSUserList(
 									regionID=FORM.regionID,
 									companyID=CLIENT.companyID,
+									exportOption=FORM.exportOption,
 									dateCreatedFrom=FORM.dateCreatedFrom,
 									dateCreatedTo=FORM.dateCreatedTo
 								);
@@ -370,7 +372,7 @@
 			
             <table class="report" align="center" border="1">
                 <tr>
-                    <th bgcolor="#e2efc7" colspan="6">User List</th>
+                    <th bgcolor="#e2efc7" colspan="7">User List</th>
                 </tr>
                 <tr>
                     <td bgcolor="#FFFFE6"><strong>First Name</strong></td>
@@ -379,6 +381,11 @@
                     <td bgcolor="#FFFFE6"><strong>Person ID</strong></td>
                     <td bgcolor="#FFFFE6"><strong>Comments</strong></td>
                     <td bgcolor="#FFFFE6"><strong>Date Created</strong></td>
+                    <cfif FORM.exportOption EQ 'inactivated'>
+                        <td bgcolor="#FFFFE6"><strong>Date Cancelled</strong></td>
+                    <cfelseif FORM.exportOption EQ 'notLoggedIn'>
+                        <td bgcolor="#FFFFE6"><strong>Last Log In</strong></td>
+                  	</cfif>  
                 </tr>
 				<cfoutput query="qGetResults" group="userID">
                     
@@ -395,6 +402,11 @@
                         <td>#qGetResults.userID#</td>
                         <td>#qGetResults.regionName#</td>
                         <td>#DateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
+						<cfif FORM.exportOption EQ 'inactivated'>
+                            <td>#DateFormat(qGetResults.dateCancelled, 'mm/dd/yyyy')#</td>
+                        <cfelseif FORM.exportOption EQ 'notLoggedIn'>
+                            <td>#DateFormat(qGetResults.lastLogin, 'mm/dd/yyyy')#</td>
+                        </cfif>  
                     </tr>
                 </cfoutput>
             </table>
@@ -546,8 +558,24 @@
                                                         </select>
                                                     </td>		
                                                 </tr>
+                                                <tr align="left">
+                                                    <td valign="top" align="right"><label for="reportOption">Export Option:</label></td>
+                                                    <td>
+                                                        <select name="exportOption" id="exportOption">
+                                                        	<option value="hired">Hired Users</option>
+                                                            <option value="inactivated">Inactivated Users</option>
+                                                            <option value="notLoggedIn">Users that Hasn't Logged In</option>
+                                                        </select>
+                                                        <font size="-2"><br />
+                                                            Hired - Gets hired users within the period below <br />
+                                                            Inactived - Gets inactivated/canceled users within the period below <br />
+                                                            Hasn't Logged In - Get users that hasn't logged in within the period below
+                                                        </font>
+                                                    </td>		
+                                                </tr>
+                                                
                                                 <tr>
-                                                    <td align="right"><label for="dateCreatedFrom">Hired From:</label></td>
+                                                    <td align="right"><label for="dateCreatedFrom">From:</label></td>
                                                     <td><input type="text" name="dateCreatedFrom" id="dateCreatedFrom" value="#FORM.dateCreatedFrom#" class="datePicker" maxlength="10" /></td>
                                                 </tr>
                                                 <tr>
