@@ -43,9 +43,6 @@
 
 <!--- Format data using cfoutput and a table. Excel converts the table to a spreadsheet.
 The cfoutput tags around the table tags force output of the HTML when using cfsetting enablecfoutputonly="Yes" --->
-
-<!--- Format data using cfoutput and a table. Excel converts the table to a spreadsheet.
-The cfoutput tags around the table tags force output of the HTML when using cfsetting enablecfoutputonly="Yes" --->
 <cfoutput>
 
 	<!--- New and Return --->

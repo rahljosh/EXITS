@@ -788,6 +788,7 @@
 	<cffunction name="exportDOSUserList" access="public" returntype="query" output="false" hint="Gets a list of users that needs to be registered for the DOS">
     	<cfargument name="regionID" default="" hint="List of region IDs">
         <cfargument name="companyID" default="0" hint="companyID">
+        <cfargument name="exportOption" default="" hint="hired | inactivated | notLoggedIn Users">
         <cfargument name="dateCreatedFrom" default="" hint="dateCreatedFrom is not required">
         <cfargument name="dateCreatedTo" default="" hint="dateCreatedTo is not required">
               
@@ -800,6 +801,8 @@
                     u.lastName,
                     u.email,
                     u.dateCreated,
+                    u.lastLogin,
+                    u.dateCancelled,
                     r.regionID,
                     r.regionName
                 FROM 
@@ -817,19 +820,46 @@
                     	AND
                         	r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">               
                 WHERE	
-                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                				
-				<cfif IsDate(ARGUMENTS.dateCreatedFrom) AND IsDate(ARGUMENTS.dateCreatedTo)>
+                    1 = 1
+                              				
+				<cfif FORM.exportOption EQ 'hired' AND IsDate(ARGUMENTS.dateCreatedFrom) AND IsDate(ARGUMENTS.dateCreatedTo)>
+                
+                	AND	
+	                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">      
                 	AND
-                    	dateCreated 
+                    	u.dateCreated 
                    	BETWEEN 
                     	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedFrom#">
                     AND 
                     	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedTo#">
-                </cfif>
+				
+				<cfelseif FORM.exportOption EQ 'inactivated' AND IsDate(ARGUMENTS.dateCreatedFrom) AND IsDate(ARGUMENTS.dateCreatedTo)>
+                
+                	AND	
+	                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">      
+                	AND
+                    	u.dateCancelled 
+                   	BETWEEN 
+                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedFrom#">
+                    AND 
+                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedTo#">
+                
+				<cfelseif FORM.exportOption EQ 'notLoggedIn' AND IsDate(ARGUMENTS.dateCreatedFrom) AND IsDate(ARGUMENTS.dateCreatedTo)>
+                
+                	AND	
+	                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">      
+                	AND
+                    	u.lastLogin 
+                   	BETWEEN 
+                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedFrom#">
+                    AND 
+                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedTo#">
+                        
+				</cfif>
                 ORDER BY 
-                    regionName,
-                    lastName,
-                    userID
+                    r.regionName,
+                    u.lastName,
+                    u.userID
 		</cfquery>
 		   
 		<cfreturn qExportDOSUserList>
