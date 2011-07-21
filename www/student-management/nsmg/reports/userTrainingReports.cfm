@@ -383,7 +383,7 @@
                     <td bgcolor="#FFFFE6"><strong>Date Created</strong></td>
                     <cfif FORM.exportOption EQ 'inactivated'>
                         <td bgcolor="#FFFFE6"><strong>Date Cancelled</strong></td>
-                    <cfelseif FORM.exportOption EQ 'notLoggedIn'>
+                    <cfelseif FORM.exportOption EQ 'lastLoggedIn'>
                         <td bgcolor="#FFFFE6"><strong>Last Log In</strong></td>
                   	</cfif>  
                 </tr>
@@ -404,7 +404,7 @@
                         <td>#DateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
 						<cfif FORM.exportOption EQ 'inactivated'>
                             <td>#DateFormat(qGetResults.dateCancelled, 'mm/dd/yyyy')#</td>
-                        <cfelseif FORM.exportOption EQ 'notLoggedIn'>
+                        <cfelseif FORM.exportOption EQ 'lastLoggedIn'>
                             <td>#DateFormat(qGetResults.lastLogin, 'mm/dd/yyyy')#</td>
                         </cfif>  
                     </tr>
@@ -564,12 +564,12 @@
                                                         <select name="exportOption" id="exportOption">
                                                         	<option value="hired">Hired Users</option>
                                                             <option value="inactivated">Inactivated Users</option>
-                                                            <option value="notLoggedIn">Users that Hasn't Logged In</option>
+                                                            <option value="lastLoggedIn">Last Logged In Date</option>
                                                         </select>
                                                         <font size="-2"><br />
-                                                            Hired - Gets hired users within the period below <br />
+                                                            Hired - Gets active hired users within the period below <br />
                                                             Inactived - Gets inactivated/canceled users within the period below <br />
-                                                            Hasn't Logged In - Get users that hasn't logged in within the period below
+                                                            Last Logged In Date - Get active users their last logged in date is within the period below
                                                         </font>
                                                     </td>		
                                                 </tr>

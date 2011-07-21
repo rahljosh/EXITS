@@ -788,7 +788,7 @@
 	<cffunction name="exportDOSUserList" access="public" returntype="query" output="false" hint="Gets a list of users that needs to be registered for the DOS">
     	<cfargument name="regionID" default="" hint="List of region IDs">
         <cfargument name="companyID" default="0" hint="companyID">
-        <cfargument name="exportOption" default="" hint="hired | inactivated | notLoggedIn Users">
+        <cfargument name="exportOption" default="" hint="hired | inactivated | lastLoggedIn Users">
         <cfargument name="dateCreatedFrom" default="" hint="dateCreatedFrom is not required">
         <cfargument name="dateCreatedTo" default="" hint="dateCreatedTo is not required">
               
@@ -844,7 +844,7 @@
                     AND 
                     	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedTo#">
                 
-				<cfelseif FORM.exportOption EQ 'notLoggedIn' AND IsDate(ARGUMENTS.dateCreatedFrom) AND IsDate(ARGUMENTS.dateCreatedTo)>
+				<cfelseif FORM.exportOption EQ 'lastLoggedIn' AND IsDate(ARGUMENTS.dateCreatedFrom) AND IsDate(ARGUMENTS.dateCreatedTo)>
                 
                 	AND	
 	                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">      
