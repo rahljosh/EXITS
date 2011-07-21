@@ -140,7 +140,7 @@
 					AND
                     	php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 	AND 
-                    	php.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
+                    	php.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )   
             INNER JOIN
             	smg_students s ON fi.studentID = s.studentID
             INNER JOIN 
@@ -158,20 +158,20 @@
                     AND 
                         ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
                     AND
-                    	ib.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)  
+                    	ib.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )    
             WHERE 
                 fi.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
             AND            	    
                 fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
 			AND
-            	fi.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">                
+            	fi.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )                  
             AND
             	ib.studentID IS NULL
-            <!--- PHP students might have previous program flight information - get only flights +- 2 months of program start date --->
+            <!--- PHP students might have previous program flight information - get only flights +- 3 months of program start date --->
 			AND 
-                fi.dep_date >= DATE_ADD(p.startDate, INTERVAL -75 DAY)
+                fi.dep_date >= DATE_ADD(p.startDate, INTERVAL -90 DAY)
 			AND 
-                fi.dep_date <= DATE_ADD(p.startDate, INTERVAL 75 DAY)
+                fi.dep_date <= DATE_ADD(p.startDate, INTERVAL 90 DAY)
             GROUP BY 
                 fi.studentID
             ORDER BY 
@@ -232,11 +232,11 @@
                     AND 
                         ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
                     AND
-                    	ib.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)  
+                    	ib.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )  
             WHERE 
                 php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND 
-                php.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)  
+                php.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )  
             AND
             	ib.studentID IS NULL
             ORDER BY 
