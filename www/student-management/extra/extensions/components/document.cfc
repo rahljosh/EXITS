@@ -403,6 +403,53 @@
 		<cfreturn qGetDocuments />
 	</cffunction>
 
+
+    <!--- Gets a list of documents uploaded --->
+	<cffunction name="getDailyDocumentReport" access="public" returntype="query" output="false" hint="Returns a list of uploaded documents in the last 24 hours">
+    	<cfargument name="foreignTable" required="yes" hint="Foreign Table Name">
+
+        <cfquery 
+			name="qGetDailyDocumentReport" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					d.ID,
+                    CONCAT(d.serverName, '.', d.serverExt) AS fileName,
+                    d.fileSize,
+                    d.location,
+                    d.dateCreated,
+                    DATE_FORMAT(d.dateCreated, '%m/%d/%y') as displayDateCreated,
+                    CONVERT(CONCAT('<a href=''#APPLICATION.SITE.URL.main#internal/wat/onlineApplication/publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[ Download ]</a> ') USING latin1) AS action,
+                    dt.name as documentType,
+                    c.candidateID,
+                    c.firstName,
+                    c.lastName,
+                    u.businessName
+                FROM 
+                    document d
+				LEFT OUTER JOIN                      
+                	documentType dt ON dt.ID = d.documentTypeID
+                INNER JOIN
+                	extra_candidates c ON c.candidateID = d.foreignID
+						AND
+                        	c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        AND
+                        	c.applicationStatusID >= <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+                INNER JOIN
+                	smg_users u ON u.userID = c.intRep
+                WHERE 
+                	d.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                AND    
+                    d.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+				AND
+                   	d.dateUpdated >= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -25 HOUR)                     
+                ORDER BY
+                    c.candidateID,
+                    d.dateCreated DESC     
+		</cfquery>
+		
+		<cfreturn qGetDailyDocumentReport />
+	</cffunction>
+
 	
     <!--- Remote function to get a document list for a candidate --->
 	<cffunction name="getDocumentsRemote" access="remote" returnFormat="json" output="false" hint="Returns a list of documents">
