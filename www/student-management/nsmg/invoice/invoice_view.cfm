@@ -370,7 +370,7 @@
                         </cfcase>
                         
                         <!--- CASE --->
-                            <cfcase value="10">
+                        <cfcase value="10">
                             <span class="style3">Cultural Academic Student Exchange</span><br />
                             Chase Bank<br />
                             Red Bank, NJ 07701<br /><br />
