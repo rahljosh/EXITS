@@ -84,6 +84,7 @@
                 c.lastname, 
                 c.intRep,                
                 c.wat_placement,
+                c.startDate,
                 ehc.name AS hostCompanyName,
                 country.countryname
             FROM   
@@ -167,6 +168,7 @@
 .tableTitleView {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
+	font-weight:bold;
 	padding:2px;
 	color:#FFFFFF;
 	background:#4F8EA4;
@@ -318,10 +320,15 @@
                                         - Airport: #qGetFlightInfo.arriveAirportCode# 
                                         - Flight Number: #qGetFlightInfo.flightNumber# 
                                         <br />
-                                    </cfloop>                                                        
+                                    </cfloop>   
+                                <!--- Alert Arrival Missing --->
+                                <cfelseif qTotalPerIntlRep.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerIntlRep.startDate) LTE now()>
+                                    <span style="color:##F00; font-weight:bold;">
+                                        Alert Arrival Missing - Program Start Date: #DateFormat(qTotalPerIntlRep.startDate, 'mm/dd/yy')#                                                           
+                                    </span>
                                 <cfelse>
                                 	n/a
-                                </cfif>                            
+                                </cfif> 
                             </span>
                         </td>
                     </tr>

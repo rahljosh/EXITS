@@ -59,7 +59,6 @@
                     <a class="item2" href="?curdoc=tools/checkInList">Check-In List</a>                 
                     <a class="item2" href="?curdoc=tools/ds2019Verification">DS-2019 Verification</a>
                     <a class="item2" href="?curdoc=tools/englishAssessment">English Assessment</a>
-                    <a class="item2" href="?curdoc=tools/monthlyEvaluations">Evaluations</a>
                     <a class="item2" href="?curdoc=reports/idcards_menu">ID Cards</a>
                     <a class="item2" href="?curdoc=insurance/insurance_menu">Insurance</a>
                         <div class="section">
@@ -67,6 +66,7 @@
                         </div>
 					<a class="item2" href="?curdoc=tools/intlRepFeeInfo">Intl. Rep. Fee Information</a>  
                     <a class="item2" href="?curdoc=tools/labels_select_pro">Labels</a>
+                    <a class="item2" href="?curdoc=tools/monthlyEvaluations">Monthly Evaluation Tool</a>
                     <a class="item2" href="?curdoc=tools/programs">Programs</a>
                 </div>
             </td>

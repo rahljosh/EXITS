@@ -84,7 +84,7 @@
 			tableHeader += '<td class="listTitle style2">First Name</td>';
 			tableHeader += '<td class="listTitle style2">DS-2019</td>';
 			tableHeader += '<td class="listTitle style2">Host Company</td>';
-			tableHeader += '<td class="listTitle style2">Program</td>';
+			tableHeader += '<td class="listTitle style2">Email</td>';
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
@@ -118,7 +118,7 @@
 			var lastName = verList.DATA[i][verList.COLUMNS.findIdx('LASTNAME')];
 			var ds2019 = verList.DATA[i][verList.COLUMNS.findIdx('DS2019')];
 			var hostCompanyName = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYNAME')];
-			var programName = verList.DATA[i][verList.COLUMNS.findIdx('PROGRAMNAME')];
+			var email = verList.DATA[i][verList.COLUMNS.findIdx('EMAIL')];
 			var businessName = verList.DATA[i][verList.COLUMNS.findIdx('BUSINESSNAME')];
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
 			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
@@ -137,7 +137,7 @@
 				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">' + firstName + '</a></td>';
 				tableBody += '<td class="style5">' + ds2019 + '</td>';
 				tableBody += '<td class="style5">' + hostCompanyName + '</td>';
-				tableBody += '<td class="style5">' + programName + '</td>';
+				tableBody += '<td class="style5"><a href="mailto:' + email + '" class="style4">' + email + '</a></td>';
 				tableBody += '<td class="style5">' + businessName + '</td>';
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';
@@ -272,7 +272,7 @@
 
 	<!--- Table Header --->    
     <gui:tableHeader
-        tableTitle="Monthly Evaluation Update Tool"
+        tableTitle="Monthly Evaluation Tool"
     />
 
 	<!--- This holds the candidate information messages --->
