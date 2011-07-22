@@ -1167,6 +1167,7 @@
                     ec.firstName,
                     ec.middleName,
                     ec.lastName,
+                    ec.email,
                     ec.ds2019,
                     IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
                     IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,

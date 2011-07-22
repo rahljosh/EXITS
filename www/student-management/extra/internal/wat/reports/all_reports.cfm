@@ -52,7 +52,7 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
                         
-                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInfo" class="style4">- Arrival Information</a></p>
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInstructions" class="style4">- Arrival Instructions</a></p>
  	               </td>
                 </tr>
             </table>
