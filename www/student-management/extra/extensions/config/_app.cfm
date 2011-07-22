@@ -36,8 +36,9 @@
 	APPLICATION.CSB.WAT.programName = "Summer Work Travel Program";
 	APPLICATION.CSB.WAT.shortProgramName = "CSB SWT";
 	APPLICATION.CSB.WAT.programNumber = "P-4-13299";
-	APPLICATION.CSB.WAT.phone = "(631) 893-4549";
-	APPLICATION.CSB.WAT.toolFreePhone = "1-877-669-0717";		
+	APPLICATION.CSB.WAT.phone = "1-631-893-4549";
+	APPLICATION.CSB.WAT.toolFreePhone = "1-877-669-0717";
+	APPLICATION.CSB.WAT.fax = "1-631-893-4547";
 	APPLICATION.CSB.WAT.phoneIDCard = "1-877-669-0717";
 	APPLICATION.CSB.WAT.logo = "8.gif";
 	APPLICATION.CSB.WAT.smallLogo = "8s.gif";
