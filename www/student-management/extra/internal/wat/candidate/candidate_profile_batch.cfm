@@ -23,36 +23,45 @@
 <!--- Check if form submitted --->
 <cfif FORM.submitted>
 
-    <cfquery name="get_candidate_unqid" datasource="mysql">
-        SELECT 
-        	ec.*
-        FROM 
-        	extra_candidates ec
-		INNER JOIN
-        	smg_users u ON u.userID = ec.intRep
+    <cfquery name="get_candidate_unqID" datasource="mysql">
+        SELECT
+            ec.*,
+            u.businessName
+        FROM
+            extra_candidates ec
+        INNER JOIN
+            smg_users u ON u.userID = ec.candidateID
+        LEFT OUTER JOIN
+            applicationStatusJN asJN ON ec.candidateID = asJN.foreignID
+                AND
+                    asJN.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.foreignTable#">
+                AND
+                    asJN.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                   	
         WHERE
-        	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        
-        <cfif IsDate(FORM.enteredDate)>
-			AND
-            	ec.entryDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.enteredDate#">
-        </cfif>
-        
-        ORDER BY
-        	u.businessName,
-            ec.candidateID
+            ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        AND
+            ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND                    
+        (
+            DATE(asJN.dateCreated) = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.enteredDate#">
+        OR
+            DATE(ec.entryDate) = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.enteredDate#">
+        )
+    ORDER BY
+        u.businessName,
+        ec.candidateID
     </cfquery>
 
 	<!--- Query did not return data --->
-    <cfif NOT VAL(get_candidate_unqid.recordCount)>
+    <cfif NOT VAL(get_candidate_unqID.recordCount)>
         <p>
-            Your search did not return any date. Please try again. <br>
+            Your search did not return any date. Please try again. <br />
             If you feel this is incorrect, please contact <a href="mailto:support@student-management.com">Support</a>
         </p>
         <cfabort>
     </cfif>
 
-	<cfloop query="get_candidate_unqid">
+	<cfloop query="get_candidate_unqID">
     
         <cfquery name="qProgram" datasource="mysql">
             SELECT 
@@ -63,7 +72,7 @@
             FROM 
                 smg_programs
             WHERE 
-                programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.programid#">
+                programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.programid)#">
             ORDER BY 
                 programname
         </cfquery>
@@ -74,7 +83,7 @@
             FROM 
                 extra_candidate_place_company
             WHERE 
-                candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.candidateid#">
+                candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.candidateid#">
             ORDER BY 
                 candcompid DESC
         </Cfquery>
@@ -94,7 +103,7 @@
             AND 
                 active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND 
-                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.intrep#">
+                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqID.intrep#">
         </Cfquery>
         
         <cfquery name="qRequestedPlacement" datasource="mysql">
@@ -105,7 +114,7 @@
             INNER JOIN 
                 extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidates.requested_placement
             WHERE 
-                uniqueid = <cfqueryparam value="#get_candidate_unqid.uniqueid#" cfsqltype="cf_sql_char">
+                uniqueid = <cfqueryparam cfsqltype="cf_sql_char" value="#get_candidate_unqID.uniqueid#">
         </cfquery>
     
         <!--- Query of Queries --->
@@ -116,7 +125,7 @@
             FROM 
                 countrylist
             WHERE
-                countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.home_country#">
+                countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.home_country)#">
         </cfquery>
         
         <cfquery name="qBirthCountry" dbtype="query">
@@ -126,7 +135,7 @@
             FROM 
                 countrylist
             WHERE
-                countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.birth_country#">
+                countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.birth_country)#">
         </cfquery>
     
         <cfquery name="qCitizenCountry" dbtype="query">
@@ -136,7 +145,7 @@
             FROM 
                 countrylist
             WHERE
-                countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.citizen_country#">
+                countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.citizen_country)#">
         </cfquery>
     
         <cfquery name="qResidenceCountry" dbtype="query">
@@ -146,7 +155,7 @@
             FROM 
                 countrylist
             WHERE
-                countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_candidate_unqid.residence_country#">
+                countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_candidate_unqID.residence_country)#">
         </cfquery>
     
         <!--- Include Profile Content --->
@@ -166,7 +175,7 @@
         <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="CCCCCC">
             <tr>
                 <td>
-                    <br>
+                    <br />
                     <table cellpadding=3 cellspacing=3 border=1 align="center" width="50%" bordercolor="C7CFDC">
                         <tr>
                             <td valign="top">
@@ -186,7 +195,7 @@
                             </td>
                         </tr>
                     </table>
-                    <br>
+                    <br />
                 </td>
             </tr>
         </table>
