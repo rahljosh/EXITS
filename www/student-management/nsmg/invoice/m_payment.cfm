@@ -372,10 +372,11 @@ ORDER BY businessname
                         <cfselect name="payment_method" message="Please Select a Payment Type" required="yes">
                             <option value='wire transfer'><font size=-1>Wire Transfer</font></option>
                             <option value='check'><font size=-1>Check</font></option>
+                            <option value='ACH Credit'><font size=-1>ACH Credit</font></option>
+                            <option value='Direct Deposit'><font size=-1>Direct Deposit</font></option>
                             <option value='travelers check'><font size=-1>Travelers Check</font></option>
                             <option value='cash'><font size=-1>Cash</font></option>
                             <option value='money order'><font size=-1>Money Order</font></option>
-                            <option value='Direct Deposit'><font size=-1>Direct Deposit</font></option>
                         </cfselect>
                     </td>
                 </tr>
