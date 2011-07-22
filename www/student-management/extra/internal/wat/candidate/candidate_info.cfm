@@ -46,7 +46,10 @@
 		qGetIncidentReport = APPLICATION.CFC.CANDIDATE.getIncidentReport(candidateID=qGetCandidate.candidateID);
 		
 		/*** Online Application ***/
-
+		
+		// Get Uploaded Resume
+		qGetUploadedResume = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidate.candidateID, documentTypeID=9);
+		
 		// Get Questions for section 1
 		qGetQuestionsSection1 = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section1');
 		
@@ -406,8 +409,12 @@
                                     <cfif VAL(qGetCandidate.applicationStatusID)>
                                     	<a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidate.uniqueID#" class="style4 popUpOnlineApplication">[ Online Application ]</a> &nbsp;
                                     </cfif>
+                                    
+                                    <!--- Display Resume Link --->
+                                    #qGetUploadedResume.downloadLink#
+                                    
                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                        <a href="candidate/candidate_profile.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ profile ]</span></a> &nbsp;
+                                        <a href="candidate/candidate_profile.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Profile ]</span></a> &nbsp;
                                         <a href="candidate/immigrationLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Immigration Letter ]</span></a>
 									</cfif>
                                 </td>

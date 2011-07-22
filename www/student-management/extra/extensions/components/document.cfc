@@ -227,6 +227,7 @@
                     fileSize,
                     location,
                     CONCAT(location, serverName, '.', serverExt) AS filePath,
+                    CONVERT(CONCAT('<a href="onlineApplication/publicDocument.cfm?ID=', ID, '&Key=', hashID, '" class="style4">[ Download Resume ]</a> &nbsp; ') USING latin1) AS downloadLink,
                     isDeleted,
                     dateCreated,
                     dateUpdated
