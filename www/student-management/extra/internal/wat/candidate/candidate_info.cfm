@@ -415,7 +415,7 @@
                                     
                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         <a href="candidate/candidate_profile.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Profile ]</span></a> &nbsp;
-                                        <a href="candidate/immigrationLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Immigration Letter ]</span></a>
+                                        <a href="candidate/supportLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Support Letter ]</span></a>
 									</cfif>
                                 </td>
                             </tr>
