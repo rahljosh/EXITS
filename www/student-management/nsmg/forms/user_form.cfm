@@ -29,27 +29,6 @@
     <cfparam name="FORM.date_2nd_visit_contract_received" default="">
 
 	<cfscript>
-		
-		/**** 
-			SSN Display Rules
-			- Users
-				- ISE
-					- Thea Brewer and Bryan McCready can view full SSN
-				- CASE
-					Stacy Brewer can view full SSN
-				- ESI
-					Stacy Brewer can view full SSN
-			
-			- Host Families
-				- ISE
-					- Masked SSN are displayed (no exception)
-				- CASE
-					- Masked SSN are displayed (no exception)
-				- ESI	
-					- Stacy Brewer can view full SSN
-		****/
-		
-	
         // Get Current User Information
         qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
     
