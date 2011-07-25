@@ -335,6 +335,7 @@ Students are ordered by Registration Date.  You can always search a list by simp
                 select sts.siblingid, smg_host_children.name, smg_host_children.lastname, smg_host_children.sex
                 from student_tours_siblings sts
                 left join smg_host_children on smg_host_children.childid = sts.siblingid
+                	AND smg_host_children.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 where fk_studentID = #studentid# and mastertripid = #id#
                 </cfquery>
        

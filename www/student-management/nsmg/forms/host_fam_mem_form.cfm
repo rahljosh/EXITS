@@ -79,6 +79,7 @@
 		SELECT *
 		FROM smg_host_children
 		WHERE childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.childid#">
+        AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	</cfquery>
 	<cfloop list="#field_list#" index="counter">
     	<cfset "form.#counter#" = evaluate("get_record.#counter#")>

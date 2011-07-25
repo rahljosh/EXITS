@@ -26,6 +26,7 @@ function areYouSure() {
 	SELECT *
 	FROM smg_host_children
 	WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostid#">
+    AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	ORDER BY birthdate
 </cfquery>
 
@@ -141,7 +142,7 @@ div.scroll2 {
 			<tr><td>Closest City:</td><td><cfif family_info.nearbigcity is ''>n/a<cfelse> #family_info.nearbigcity#</cfif></td><td>Distance:</td><td>#family_info.near_City_dist# miles</td></tr>
 			<tr><td>Airport Code:</td><td colspan="3"><cfif family_info.major_air_code is ''>n/a<cfelse> #family_info.major_air_code#</cfif></td></tr>
 			<tr><td>Airport City:</td><td colspan="3"><cfif family_info.airport_city is '' and family_info.airport_state is ''>n/a<cfelse>#family_info.airport_city# / #family_info.airport_state#</cfif></td></tr>
-			<tr><td valign="top">Interests: </td><td colspan="3"><cfif len(#family_info.pert_info#) gt '100'>#Left(family_info.pert_info,92)# <a href="?curdoc=forms/family_app_7_pis">more...</a><cfelse>#family_info.pert_info#</cfif></td></tr>
+			<tr><td valign="top">Interests: </td><td colspan="3"><cfif len(#family_info.pert_info#) gt '100'>#Left(family_info.pert_info,92)# <a href="?curdoc=forms/host_fam_pis_7">more...</a><cfelse>#family_info.pert_info#</cfif></td></tr>
 		</table>				
 		<!--- BOTTOM OF A TABLE  --- COMMUNITY INFO --->
 		<table width=100% cellpadding=0 cellspacing=0 border=0>

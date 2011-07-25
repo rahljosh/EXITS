@@ -45,6 +45,7 @@ where programid = #get_student_info.programid#
     select count(childid) as kidcount
     from smg_host_children
     where liveathome = 'yes' and hostid =#get_student_info.hostid#
+    AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
     </cfquery>
  
 <cfoutput query="get_student_info">
@@ -89,6 +90,7 @@ where programid = #get_student_info.programid#
 		WHERE hostid = '#get_student_info.hostid#'
 			AND (DATEDIFF(now(), birthdate)/365) > 18
 			AND liveathome = 'yes'
+            AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	</cfquery>
 
 	<cfset member_missing = 0>

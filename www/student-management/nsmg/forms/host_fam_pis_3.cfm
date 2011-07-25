@@ -30,6 +30,7 @@ where hostid = #client.hostid# and active = 1
 select childid, name, shared
 from smg_host_children
 where hostid = #client.hostid#
+AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 </cfquery>
 
 <cfinclude template="../querys/family_info.cfm">
@@ -61,6 +62,7 @@ where hostid = #client.hostid#
 				select shared
 				from smg_host_children
 				where hostid = #client.hostid# and shared = 'yes'
+                AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 				</cfquery>
 			<tr><Td colspan="2">Will the student share a bedroom?</Td>
 				<td><cfif check_share.recordcount gt 0>
@@ -91,6 +93,7 @@ where hostid = #client.hostid#
 							select shared, roomsharewith, childid
 							from smg_host_children
 							where roomsharewith = #studentid#
+                            AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 							</Cfquery>
 							<!----Check if sharing with a double placement---->
 							<Cfquery name="check_share_double" datasource="MySQL">

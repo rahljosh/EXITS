@@ -19,6 +19,7 @@
 	FROM smg_hosts_cbc cbc
 	LEFT JOIN smg_hosts h ON h.hostid = cbc.hostid
 	LEFT JOIN smg_host_children kids ON kids.childid = cbc.familyid	
+        AND	kids.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">    
 	WHERE cbc.companyid = <cfqueryparam value="#client.companyid#" cfsqltype="cf_sql_integer">
 		<cfif form.usertype EQ '1'>
 			AND cbc.familyid = '0'
@@ -54,7 +55,7 @@
 						#motherfirstname# #motherlastname# (###hostid#) 
 					</cfif>
 				<cfelse>
-					#name# #famlast# - member of #familylastname# (###hostid#)
+					#name# #lastname# - member of #familylastname# (###hostid#)
 				</cfif>
 			</td>
 			<td width="15%" align="center">#DateFormat(date_authorized, 'mm/dd/yyyy')#</td>

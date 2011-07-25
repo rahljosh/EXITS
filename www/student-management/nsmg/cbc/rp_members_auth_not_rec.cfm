@@ -70,6 +70,7 @@
 			WHERE h.active = '1'
 				AND s.active = '1'
 				AND kids.liveathome = 'yes'
+                AND kids.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 				AND (DATEDIFF(now(), kids.birthdate)/365) > 18
 				AND p.enddate > now()
 				AND p.seasonid = <cfqueryparam value="#form.seasonid#" cfsqltype="cf_sql_integer">
@@ -99,6 +100,7 @@
 							AND s.active = '1'
 							AND (DATEDIFF(now(), kids.birthdate)/365) > 18
 							AND kids.liveathome = 'yes'
+                            AND kids.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 							AND kids.childid NOT IN (SELECT familyid FROM smg_hosts_cbc WHERE cbc_type = 'member')
 					</cfquery>
 					<cfloop query="get_kids">

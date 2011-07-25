@@ -22,4 +22,4 @@ set schooltransportation = "#form.transportation#",
 where hostid = #client.hostid#
 </cfquery>
 </cftransaction>
-<Cflocation url="index.cfm?curdoc=forms/family_App_7_pis" addtoken="no">
+<Cflocation url="index.cfm?curdoc=forms/host_fam_pis_7" addtoken="no">

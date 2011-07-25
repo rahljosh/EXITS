@@ -223,10 +223,13 @@ div.scroll {
 
 <cfoutput query="pending_hosts">
     <cfquery name="kidsAtHome" datasource="mysql">
-    select count(childid) as kidcount
-    from smg_host_children
-    where liveathome = 'yes'
-    and hostid = #hostid#
+        select count(childid) as kidcount
+        from smg_host_children
+        where liveathome = 'yes'
+        and 
+            hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostid#">
+        AND
+            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">    
     </cfquery>
 <!----check for single placement---->
 	<Cfset father=0>

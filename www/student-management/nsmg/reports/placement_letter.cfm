@@ -61,6 +61,7 @@ where companyid = #get_student_info.companyid#
 	Select *
 	From smg_host_children
 	Where hostid = '#get_student_info.hostid#'
+    	AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	Order by birthdate
 </cfquery>
 
