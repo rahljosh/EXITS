@@ -37,6 +37,14 @@
 ********************************************/
 .columnTitle {
 	font-weight:bold;	
+	vertical-align:top;
+	color:#F00;
+}
+
+.columTitleRight {
+	font-weight:bold;	
+	text-align:right;
+	vertical-align:top;
 }
 
 .defaultForm input { 
@@ -138,6 +146,18 @@
 .reportTitle {
 	font-weight:bold;
 	text-align:center;	
+	background-color:#E2EFC7;
+}
+
+.reportTitleLeft {
+	font-weight:bold;
+	text-align:left;
+	background-color:#E2EFC7;
+}
+
+.reportTitleRight {
+	font-weight:bold;
+	text-align:right;
 	background-color:#E2EFC7;
 }
 
