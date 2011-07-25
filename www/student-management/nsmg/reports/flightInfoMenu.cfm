@@ -56,10 +56,10 @@
                 <tr>
                     <td width="50%" valign="top">
     
-                        <cfform action="reports/flight_information_report.cfm" method="post" target="blank">
+                        <form action="reports/flight_information_report.cfm" method="post" target="blank">
                             <Table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Flight Arrival Information</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program:</td>
                                     <td>
                                         <select name="programID" multiple size="6">
@@ -69,10 +69,10 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region:</td>
                                     <td>
-                                        <select name="regionid" size="1">
+                                        <select name="regionID">
                                             <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                 <option value="0">All Regions</option>
                                             </cfif>
@@ -80,18 +80,27 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr><td colspan="2"><input type="checkbox" name="dates">&nbsp; Including Period Below (Arrival Date)</input></td></tr>
                                 <tr>
-                                    <td width="5">From:</td>
-                                    <td><cfinput type="text" name="date1" size="7" maxlength="10" validate="date" class="datePicker"> mm-dd-yyyy</td>
+                                    <td>Arrival Type:</td>
+                                    <td>
+                                        <select name="flight_type">
+                                            <option value="arrival">Arrival to Host Family</option>
+                                            <option value="preAypArrival">Arrival to Pre-Ayp</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="2">Including Period Below (Arrival Date)</td></tr>
+                                <tr>
+                                    <td>From:</td>
+                                    <td><input type="text" name="date1" size="7" maxlength="10" class="datePicker"> mm-dd-yyyy</td>
                                 </tr>
                                 <tr>
-                                    <td width="5">To: </td>
-                                    <td><cfinput type="text" name="date2" size="7" maxlength="10" validate="date" class="datePicker"> mm-dd-yyyy</td>
+                                    <td>To: </td>
+                                    <td><input type="text" name="date2" size="7" maxlength="10" class="datePicker"> mm-dd-yyyy</td>
                                 </tr>			
                                 <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
                             </table>
-                        </cfform>
+                        </form>
                     
 	                </td>
 
@@ -100,7 +109,7 @@
                         <cfform action="reports/flight_info_depart_report.cfm" method="post" target="blank">
                             <Table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Flight Departure Information</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program:</td>
                                     <td>
                                         <select name="programID" multiple size="6">
@@ -110,10 +119,10 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region:</td>
                                     <td>
-                                        <select name="regionid" size="1">
+                                        <select name="regionid">
                                             <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                 <option value="0">All Regions</option>
                                             </cfif>
@@ -123,7 +132,7 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr><td colspan="2"><input type="checkbox" name="dates">&nbsp; Including Period Below (Arrival Date)</input></td></tr>
+                                <tr><td colspan="2"><input type="checkbox" name="dates">&nbsp; Including Period Below (Departure Date)</input></td></tr>
                                 <tr>
                                     <td width="5">From:</td>
                                     <td><cfinput type="text" name="date1" size="7" maxlength="10" validate="date" class="datePicker"> mm-dd-yyyy</td>
@@ -145,7 +154,7 @@
                         <cfform action="reports/flight_info_missing_by_region.cfm" method="post" target="blank">
                             <Table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Flight Info Missing By Region</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program:</td>
                                     <td>
                                         <select name="programID" multiple size="6">
@@ -155,10 +164,10 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region:</td>
                                     <td>
-                                        <select name="regionid" size="1">
+                                        <select name="regionid">
                                             <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                 <option value="0">All Regions</option>
                                             </cfif>
@@ -171,7 +180,7 @@
                                 <tr>
                                     <td>Pre-AYP :</td>
                                     <td>
-                                        <select name="preayp" size="1">
+                                        <select name="preayp">
                                             <option value='none'>None</option>
                                             <option value="english">English Camp</option>
                                             <option value="orientation">Orientation Camp</option>
@@ -213,7 +222,7 @@
                         <cfform action="reports/flightInfoByInltRep.cfm" method="post" target="blank">
                             <Table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Received Flight Information By International Representative</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program:</td>
                                     <td>
                                         <select name="programID" multiple size="6">
@@ -223,10 +232,10 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Intl. Rep.</td>
                                     <td>
-                                        <select name="intRep" size="1">
+                                        <select name="intRep">
                                             <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                 <option value="0">All Intl. Rep.</option>
                                             </cfif>
@@ -239,7 +248,7 @@
                                 <tr>
                                     <td>Flight Type :</td>
                                     <td>
-                                        <select name="flightType" size="1">
+                                        <select name="flightType">
                                             <option value=""></option>
                                             <option value="preAypArrival">Pre-Ayp Arrival</option>
                                             <option value="Arrival">Arrival</option>
