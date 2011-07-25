@@ -240,6 +240,7 @@
                     (
                     	uniqueid, 
                         datecreated, 
+                        trainingDeadlineDate,
                         firstname,
                         middlename, 
                         lastname, 
@@ -293,6 +294,7 @@
                         comments, whocreated, accountCreationVerified, dateAccountVerified)
                     VALUES (
                     <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                     <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#" null="#yesNoFormat(trim(FORM.middlename) EQ '')#">,
