@@ -334,6 +334,8 @@
                                     liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
                                 AND
                                     hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsByRep.hostID#">
+                                AND	
+                                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                             </cfquery>
                             
                             <cfscript>

@@ -168,6 +168,7 @@
     	<cfargument name="childID" default="" hint="Child ID is not required">
         <cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="liveAtHome" default="" hint="liveAtHome is not required">
+        <cfargument name="getAllMembers" default="0" hint="Returns all family members including deleted">
         
         <cfquery 
 			name="qGetHostMemberByID" 
@@ -191,6 +192,11 @@
                 WHERE
                 	1 = 1
                 
+                <cfif NOT VAL(ARGUMENTS.getAllMembers)>    
+                    AND
+	                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">    
+                </cfif>
+                
                 <cfif LEN(ARGUMENTS.childID)>
                     AND
                         childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.childID)#">
@@ -205,7 +211,7 @@
                     AND
                         liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.liveAtHome#">
                 </cfif>
-
+				
 		</cfquery>
 		   
 		<cfreturn qGetHostMemberByID>

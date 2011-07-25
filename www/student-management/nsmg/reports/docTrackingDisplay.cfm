@@ -46,6 +46,7 @@
                         select count(childid) as kidcount
                         from smg_host_children
                         where liveathome = 'yes' and hostid =#get_host_info.hostid#
+                        AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                         </cfquery>
 						
 						<Cfset father=0>

@@ -162,7 +162,8 @@
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
                     AND
                     	liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">                    
-                    
+                    AND
+                    	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 					<cfif IsDate(qGetProgramInfo.endDate)> 
                         <!--- Get only students that are turning 18 by the end of the program --->
                         AND 
@@ -395,6 +396,8 @@
                 	smg_hosts_cbc cbc
                 INNER JOIN 
                 	smg_host_children child ON child.childID = cbc.familyID
+						AND	
+                        	child.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
                 LEFT OUTER JOIN
                 	smg_companies c ON c.companyID = cbc.companyID    
                 WHERE 
@@ -1933,6 +1936,8 @@
                             	shc.childID = cbc.familyID 
                 			AND
                             	shc.liveAtHome = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            AND	
+                            	shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 </cfif>
                 
                 WHERE 

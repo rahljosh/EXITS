@@ -385,6 +385,7 @@ select st.tripid, st.cc, st.cc_year, st.cc_month, st.paid, st.refCode,
 st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, shc.lastname, shc.name, smg_tours.tour_name
 from student_tours_siblings st
 left join smg_host_children shc on shc.childid = st.siblingid
+	AND shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 left join smg_tours on smg_tours.tour_id = st.tripid
 where mastertripid = #url.id#
 </cfquery>

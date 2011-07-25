@@ -67,6 +67,8 @@
         	(DATEDIFF(now(), birthdate)/365) > 18
         AND 
         	liveathome = 'yes'
+        AND
+        	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
     </cfquery>
     
     <cfquery name="season" datasource="#application.dsn#">

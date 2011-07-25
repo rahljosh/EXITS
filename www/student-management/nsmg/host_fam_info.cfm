@@ -35,6 +35,21 @@
         );
     </cfscript>
 
+
+	<!--- delete other family member. --->
+    <cfif isDefined("url.delete_child")>
+        
+        <cfquery datasource="#application.dsn#">
+            UPDATE 
+                smg_host_children
+            SET
+                isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            WHERE 
+                childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.delete_child#">
+        </cfquery>
+        
+    </cfif>
+
     <cfquery name="user_compliance" datasource="#application.dsn#">
         SELECT userid, compliance
         FROM smg_users
@@ -50,7 +65,10 @@
      <cfquery name="host_children" datasource="#application.dsn#">
         SELECT *
         FROM smg_host_children
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
+        WHERE 
+        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
+        AND
+        	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
         ORDER BY birthdate
     </cfquery>
     <!---number kids at home---->
@@ -119,26 +137,6 @@
     </cfquery>
 
 </cfsilent>
-
-
-<!--- delete other family member. --->
-<cfif isDefined("url.delete_child")>
-    <cfquery name="get_cbc" datasource="#application.dsn#">
-        SELECT familyid
-        FROM smg_hosts_cbc
-        WHERE familyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.delete_child#">
-    </cfquery>
-	<cfif get_cbc.recordCount>
-		<script language="JavaScript">
-            alert('This Family Member has a CBC record. You can not delete it.');
-        </script>
-    <cfelse>
-        <cfquery datasource="#application.dsn#">
-            DELETE FROM smg_host_children
-            WHERE childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.delete_child#">
-        </cfquery>
-    </cfif>
-</cfif>
 
 
 <cfif not isNumeric(url.hostID)>
@@ -306,7 +304,7 @@ div.scroll2 {
 		<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 			<tr valign=middle height=24>
 				<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td><td width=26 background="pics/header_background.gif"><img src="pics/family.gif"></td>
-				<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Community Information</h2></td><td background="pics/header_background.gif" width=16><a href="?curdoc=forms/family_app_7_pis&hostID=#family_info.hostID#"><img src="pics/edit.png" border=0 alt="Edit"></a></td>
+				<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Community Information</h2></td><td background="pics/header_background.gif" width=16><a href="?curdoc=forms/host_fam_pis_7&hostID=#family_info.hostID#"><img src="pics/edit.png" border=0 alt="Edit"></a></td>
 				<td width=17 background="pics/header_rightcap.gif">&nbsp;</td></tr>
 		</table>
 		<!--- BODY OF TABLE --->
@@ -316,7 +314,7 @@ div.scroll2 {
 			<tr><td>Closest City:</td><td><cfif family_info.nearbigcity is ''>n/a<cfelse>#family_info.nearbigcity#</cfif></td><td>Distance:</td><td>#family_info.near_City_dist# miles</td></tr>
 			<tr><td>Airport Code:</td><td colspan="3"><cfif family_info.major_air_code is ''>n/a<cfelse>#family_info.major_air_code#</cfif></td></tr>
 			<tr><td>Airport City:</td><td colspan="3"><cfif family_info.airport_city is '' and family_info.airport_state is ''>n/a<cfelse>#family_info.airport_city# / #family_info.airport_state#</cfif></td></tr>
-			<tr><td valign="top">Interests: </td><td colspan="3"><cfif len(#family_info.pert_info#) gt '100'>#Left(family_info.pert_info,92)# <a href="?curdoc=forms/family_app_7_pis">more...</a><cfelse>#family_info.pert_info#</cfif></td></tr>
+			<tr><td valign="top">Interests: </td><td colspan="3"><cfif len(#family_info.pert_info#) gt '100'>#Left(family_info.pert_info,92)# <a href="?curdoc=forms/host_fam_pis_7">more...</a><cfelse>#family_info.pert_info#</cfif></td></tr>
 		</table>				
 		<!--- BOTTOM OF A TABLE  --- COMMUNITY INFO --->
 		<table width=100% cellpadding=0 cellspacing=0 border=0>
@@ -534,7 +532,7 @@ div.scroll2 {
                 
                 <cfscript>
 					// Get Member Details
-					qGetMemberDetail = APPCFC.HOST.getHostMemberByID(childID=qGetHostMembers.familyID);
+					qGetMemberDetail = APPCFC.HOST.getHostMemberByID(childID=qGetHostMembers.familyID, getAllMembers=1);
 				</cfscript>
                 
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 

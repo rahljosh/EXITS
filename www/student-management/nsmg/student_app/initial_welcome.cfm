@@ -664,6 +664,7 @@
                         SELECT *
                         FROM smg_host_children
                         WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostid)#">
+                        AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                         ORDER BY birthdate
                     </cfquery>
 
