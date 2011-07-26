@@ -155,16 +155,17 @@
     <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
         <tr>
             <Td align="center">
-			    <a href="javascript:window.close()"><img src="../pics/close.gif" border="0"><br />
+			    <a href="javascript:window.close()"><img src="../pics/close.gif" border="0"><br /></a>
             </td>
         </tr>
     </table>
 
 </cfsavecontent>
-<!----
+
 <cfsavecontent variable="openPrint">
 
     <body onLoad="print();">
+    <!----
         <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
             <tr>
                 <td width=50%>PRINTED: #DateFormat(now(), 'mmm. d, yyyy')# at #TimeFormat(now(), 'HH:mm')# by #CLIENT.name#</td>
@@ -172,9 +173,9 @@
             </tr>
         </table>
     </body>
-
-</cfsavecontent>
 ---->
+</cfsavecontent>
+
 <!--- Save Email Option as Link --->
 <cfsavecontent variable="emailLink">
 
