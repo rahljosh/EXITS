@@ -25,7 +25,13 @@
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.emailTo" default="">
-
+ 			<Cfif isDefined('form.NewDatePlaced')>
+            	<cfquery name="updatePlacementDate" datasource="#application.dsn#">
+                update smg_students
+                set date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#form.newDatePlaced#">
+                where uniqueid = <cfqueryparam cfsqltype="integer" value="#url.uniqueID#">
+                </Cfquery>
+            </Cfif>
     <cfscript>
 		// Create Structure to store errors
 		Errors = StructNew();
@@ -201,18 +207,24 @@
                     <a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&print=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
                 </td>
             </tr>
-            <!----
-            <cfif client.usertype lte 3>
+            <!----Only allow Josh-1, Brian-12313, Diana - 1077, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431 to change the dates---->
+            <cfif client.userid eq 1 or 
+			      client.userid eq 12313 or  
+				  client.userid eq 1077 or 
+				  client.userid eq 510 or 
+				  client.userid eq 8731 or 
+				  client.userid eq 8743 or 
+				  client.userid eq 12431>
              <tr>	
                 <td align="Center" valign="center">
-                   Placement Date: &nbsp; <input name="NewDatePlaced" type="text" size=15 value="#DateFormat(qGetStudentInfo.datePlaced, 'mm/dd/yyyy')#">		
+                   Placement Date: &nbsp; <input name="NewDatePlaced" type="text" size=15 value="#DateFormat(qGetStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')#">		
                 </td>
                 <td calign="Center">
                     
                 </td>
             </tr>
             </cfif>
-			---->
+			
             <tr>
            		<td align="right">Do you want to add a message?</td>
                 <td>
@@ -679,6 +691,7 @@
             </cfdocument>
             
             <!--- Save PDF File --->
+            
             <cffile action="write" file="#AppPath.temp##qGetStudentInfo.studentID#-placementInfo.pdf" output="#profile#" nameconflict="overwrite">    
             
             <cfdocument filename="#AppPath.temp##CLIENT.studentid#-idCard.pdf" format="PDF" backgroundvisible="yes" overwrite="yes" fontembed="yes" localurl="no">
@@ -701,15 +714,16 @@
                 <cfinvokeargument name="email_subject" value="Placement Information for #qGetStudentInfo.firstName# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
                 <cfinvokeargument name="email_message" value="#emailMessage#">
                 <cfinvokeargument name="email_from" value="""#qGetCompany.companyshort_nocolor# - #qGetFacilitator.firstname# #qGetFacilitator.lastname#"" <#qGetFacilitator.email#>">
-                <!--- Attach Students Profile --->
+                <!--- Attach Students Profile  --->
                 <cfinvokeargument name="email_file" value="#AppPath.temp##qGetStudentInfo.studentID#-placementInfo.pdf">
          		
                 <!--- Do not include ID Card for ESI until it's reformatted as per Stacy Request --->
                 <cfif CLIENT.companyID NEQ 14>
                     <cfinvokeargument name="email_file2" value="#AppPath.temp##qGetStudentInfo.studentID#-idCard.pdf">
                 </cfif>
-                
+               
             </cfinvoke>
+           
         
             <script language="JavaScript">
 				// Close Window
