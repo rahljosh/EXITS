@@ -8,18 +8,6 @@
 	<cfparam name="URL.order" default="lastName">
 	<cfparam name="URL.isProgramUnassigned" default="0">
 	<cfparam name="URL.isCompanyUnassigned" default="0">
-
-	<!--- Inactivate Students --->
-    <cfquery name="qSetExpiredCandidates" datasource="mysql">
-        UPDATE 
-            extra_candidates
-        SET 
-            status = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        WHERE 
-            status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND
-            endDate < <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(now(), 'yyyy-mm-dd')#">
-    </cfquery> 
     
     <!--- Get Candidates --->   
     <cfquery name="qCandidates" datasource="MySql">
