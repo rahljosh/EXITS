@@ -1,3 +1,5 @@
+
+
 <cfparam name="URL.userid" default="">
 <cfif URL.userid EQ "">
 	<cfset new = true>
@@ -135,7 +137,7 @@
             </cfif>
         </cfquery>
     </cfif>
-    
+
 	<cfif FORM.lookup_success NEQ "1">
 		<cfset errorMsg = 'Please lookup the address.'>
 	<cfelseif trim(FORM.firstname) EQ ''>
