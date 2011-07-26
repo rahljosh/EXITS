@@ -46,6 +46,7 @@
 	APPLICATION.CSB.WAT.city = 'Babylon';
 	APPLICATION.CSB.WAT.state = 'NY';
 	APPLICATION.CSB.WAT.zipCode = '11702';
+	APPLICATION.CSB.WAT.country = 'United States';
 
 	// Set INTO Information
 	APPLICATION.CSB.INTO = StructNew();		
@@ -62,6 +63,7 @@
 	APPLICATION.CSB.INTO.city = 'Babylon';
 	APPLICATION.CSB.INTO.state = 'NY';
 	APPLICATION.CSB.INTO.zipCode = '11702';
+	APPLICATION.CSB.INTO.country = 'United States';
 
 	// Set CSB Trainee Information
 	APPLICATION.CSB.Trainee = StructNew();		
@@ -78,6 +80,7 @@
 	APPLICATION.CSB.Trainee.city = 'Babylon';
 	APPLICATION.CSB.Trainee.state = 'NY';
 	APPLICATION.CSB.Trainee.zipCode = '11702';
+	APPLICATION.CSB.Trainee.country = 'United States';
 
 
 	/***** Create APPLICATION.SETTINGS structure *****/

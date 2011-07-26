@@ -366,7 +366,6 @@
 <input type="hidden" name="candidateID" value="#qGetCandidate.candidateID#">
 <input type="hidden" name="submitted" value="1">
 
-
 <!--- TABLE HOLDER --->
 <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="##CCCCCC" bgcolor="##F4F4F4">
     <tr>
@@ -493,6 +492,10 @@
                         <table width="20%" align="right" cellpadding="2">
                             <tr>
                                 <td valign="top" align="center">
+                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                        <p><a href="candidate/candidate_profile.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Profile ]</a></p>
+									</cfif>
+				
                                     <cfif VAL(qGetCandidate.applicationStatusID)>
                                     	<p><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidate.uniqueID#" class="style4 popUpOnlineApplication">[ Online Application ]</a></p>
                                     </cfif>
@@ -503,11 +506,9 @@
                                     </cfif>
                                     
                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                        <!--- <p><a href="candidate/employerLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Employer Letter ]</a></p> --->
-                                        
-                                        <p><a href="candidate/candidate_profile.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Profile ]</a></p>
+                                        <p><a href="candidate/employerLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Employer Letter ]</a></p>
 
-                                        <!--- <p><a href="candidate/sevisFeeLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ SEVIS Fee Payment Instructions ]</a></p> --->
+                                        <p><a href="candidate/sevisFeeLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ SEVIS Fee Payment Instructions ]</a></p>
                                         
                                         <p><a href="candidate/supportLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Support Letter ]</a></p>
 									</cfif>
@@ -1177,7 +1178,7 @@
                                                 <td class="style1" align="right"><strong>Notes:</strong></td>
                                                 <td class="style1" colspan="3">
                                                     <span class="readOnly">#qCandidatePlaceCompany.selfConfirmationNotes#</span>
-                                                    <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage selfPlacementField largeTextArea">#qCandidatePlaceCompany.selfConfirmationNotes#</textarea>
+                                                    <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage selfPlacementField largeTextArea">#APPLICATION.CFC.UDF.displayTextArea(qCandidatePlaceCompany.selfConfirmationNotes)#</textarea>
                                                 </td>
                                             </tr>
 										</cfif>                                            

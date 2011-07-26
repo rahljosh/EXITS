@@ -897,6 +897,7 @@
                 eh.EIN,
                 eh.workmensCompensation,
                 <!--- Candidate Place Company --->
+                ecpc.candCompID,
                 ecpc.status,
                 ecpc.placement_date,
                 ecpc.startDate,

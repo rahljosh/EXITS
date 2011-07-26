@@ -53,16 +53,9 @@
     	uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#">
 </cfquery>
 	
-<cfquery name="qGetCurrentPlacement" datasource="mysql">
-    SELECT 
-    	MAX(candcompid) AS candcompid
-    FROM 
-    	extra_candidate_place_company
-    WHERE 
-    	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
-</cfquery>
-
 <cfscript>
+	qGetCurrentPlacement = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=FORM.candidateID);
+
 	// SSN - Check if we need to update or not SSN
 	vUpdateSSN = 0;
 	// Will update if it's blank or there is a new number
@@ -75,7 +68,13 @@
 		// Update - Erase SSN
 		vUpdateSSN = 1;
 	}
-
+	
+	// Add stamp to notes
+	if ( LEN(FORM.selfConfirmationNotes) AND FORM.selfConfirmationNotes NEQ qGetCurrentPlacement.selfConfirmationNotes ) {
+		// Add User Time Stamp to notes
+		FORM.selfConfirmationNotes = FORM.selfConfirmationNotes & " <br /> Added by #CLIENT.firstName# #CLIENT.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST <br />";
+	}
+	
 	/*** Online Application ***/
 	
 	// Get Questions for section 1
@@ -275,13 +274,13 @@
                 isTransferJobOfferReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferJobOfferReceived)#">,
                 isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferHousingAddressReceived)#">,                
                 isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferSevisUpdated)#">
-                
             WHERE 
                 candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentPlacement.candcompid)#">
         </cfquery>
 	
     </cfif>
 
+<!--- Not a valid Host Company Assigned --->
 <cfelseif VAL(qGetCurrentPlacement.candcompid)>
 	
 	<!--- Set as Unplaced / Set old records to inactive --->

@@ -378,6 +378,25 @@
 	</cffunction>
 
 
+	<!---
+		Adds line breaks from a textarea input. All "paragraph data is outputted with a bottom margin.
+	--->
+	<cffunction name="displayTextArea" access="public" returntype="string" output="No" hint="Displays correct format on text area inputs">
+		<cfargument name="Text" type="string" required="Yes" />
+		
+		<cfscript>
+			// Set up local variables
+			var returnText = '';
+			
+			returnText = ReplaceNoCase(ARGUMENTS.text, "<br />", chr(10), "ALL");
+			returnText = ReplaceNoCase(returnText, "<br>", chr(10), "ALL");
+			
+			// Return text
+			return(returnText);
+		</cfscript>
+	</cffunction>
+
+
 	<!--- Returns a formatted SSN number --->
 	<cffunction name="formatSSN" access="public" returntype="string" output="no" hint="Returns a formatted SSN">
 		<cfargument name="areaNumber" type="string" default="The first three digits" />
