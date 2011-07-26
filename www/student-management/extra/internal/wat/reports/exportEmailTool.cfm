@@ -16,6 +16,7 @@
     <!--- Param FORM Variables --->	
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.programID" default="0">
+    <cfparam name="FORM.intRep" default="0">
     <cfparam name="FORM.hostCompanyID" default="0">
     <cfparam name="FORM.candidateStatus" default="1">
     <cfparam name="FORM.action" default="candidate">
@@ -47,6 +48,24 @@
             eh.name
     </cfquery>
 	
+    <cfquery name="qGetIntlRepList" datasource="MySql">
+        SELECT 
+        	u.userid, 
+            u.businessname
+        FROM 
+        	smg_users u
+		INNER JOIN 
+        	extra_candidates ec ON ec.intRep = u.userID AND ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        WHERE         
+        	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+        AND 
+        	u.businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+		GROUP BY
+        	u.userID            
+        ORDER BY 
+        	u.businessname
+    </cfquery>
+    
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
     
@@ -72,6 +91,11 @@
                         AND 
                             ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.candidateStatus#">
 					</cfif>
+
+                    <cfif VAL(FORM.intRep)> 
+                        AND
+                            ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#">                               
+                    </cfif>                
                     
                     <cfif VAL(FORM.hostcompanyID)> 
                         AND
@@ -168,6 +192,18 @@
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td align="right" class="style1"><b>Intl. Rep.:</b> </td>
+                        <td> 
+                            <select name="intRep" class="style1">
+                                <option value="All">---  All International Representatives  ---</option>
+                                <cfloop query="qGetIntlRepList">
+                                    <option value="#qGetIntlRepList.userID#" <cfif qGetIntlRepList.userID EQ FORM.intRep> selected</cfif> >#qGetIntlRepList.businessname#</option>
+                                </cfloop>
+                            </select>
+                        </td>
+                    </tr>
+                    
                     <tr>
                         <td align="right" class="style1"><b>Host Company: </b></td>
                         <td>  

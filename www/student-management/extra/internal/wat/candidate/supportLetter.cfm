@@ -132,9 +132,9 @@
             
             <p class="style1">   
                 Please accept this letter as an official document attesting to the fact that 
-                #qGetCandidate.firstname# #qGetCandidate.middlename# #qGetCandidate.lastname# (DOB: #DateFormat(qGetCandidate.dob, 'mm/dd/yyyy')#) 
+                <strong>#qGetCandidate.firstname# #qGetCandidate.middlename# #qGetCandidate.lastname# (DOB: #DateFormat(qGetCandidate.dob, 'mm/dd/yyyy')#)</strong> 
                 is a participant in the CSB Summer Work Travel Program.  Form DS-2019 (Certificate of Eligibility for Exchange Visitor (J-1) Status) with SEVIS ID 
-                #qGetCandidate.ds2019# has been issued by CSB for the above mentioned participant. 
+                <strong>#qGetCandidate.ds2019#</strong> has been issued by CSB for the above mentioned participant. 
             </p>
             
             <p class="style1">    
