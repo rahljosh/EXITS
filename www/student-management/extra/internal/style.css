@@ -21,7 +21,9 @@ a:active {
 }
 .style1 {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px; }
+	font-size: 10px; 
+	vertical-align:top;
+}
 .style2 {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
