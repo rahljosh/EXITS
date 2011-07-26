@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		supportLetter.cfm
+	File:		employerLetter.cfm
 	Author:		Marcus Melo
-	Date:		July 22, 2011
-	Desc:		Immigration Letter
+	Date:		July 26, 2011
+	Desc:		Employer Letter
 	
 	Updates:	
 
@@ -11,7 +11,19 @@
 
 <!--- Kill Extra Output --->
 <cfsilent>
-	
+
+    <!--- Param URL Variables --->
+	<cfparam name="URL.uniqueID" default="">
+
+    <!--- Param URL Variables --->
+	<cfparam name="FORM.uniqueID" default="">
+
+	<cfscript>
+		if ( LEN(URL.uniqueID) ) {
+			FORM.uniqueID = URL.uniqueID;	
+		}
+	</cfscript>
+
     <!--- Param URL Variables --->
 	<cfparam name="URL.uniqueID" default="">
 
@@ -53,31 +65,17 @@
     </tr>
 </table>
 
-<table width="800px" border="0" align="center" style="padding-left:30px; padding-right:10px; margin-top:10px;">
-    <tr>
-        <td valign="top" class="style1" width="60px;">TO: </td>
-        <td class="style1" valign="top">
-        	United States Embassy/Consulate <br />
-    		Social Security Administration <br />
-            Employer in the United States <br />
-		</td>
-    </tr>
-</table>
-
-<table width="800px" border="0" align="center" style="padding-left:30px; padding-right:10px; margin-top:10px;">
-    <tr>
-        <td valign="top" class="style1" width="60px;">From: </td>
-        <td class="style1">
-        	Craig Brewer <br />
-            Executive Director / Responsible Officer <br />
-            United States Department of State Designated Sponsor #APPLICATION.CSB.WAT.programNumber#
-       </td>
-    </tr>
-</table>
-
 <table width="800px" border="0" align="center" style="padding-left:30px; padding-right:10px; margin-top:30px;">
     <tr>
 		<td style="text-align:justify;">
+            <p class="style1"> 
+                Date: #DateFormat(now(), "long")#
+            </p>
+           
+            <p class="style1"> 
+                To: Host Company Payroll Department 
+            </p>
+           
             <p class="style1"> 
                 To Whom it May Concern: 
             </p>
@@ -104,12 +102,22 @@
             <p class="style1">    
                 The participant is admitted to the United States under Section 101 (a) (15) (J) of the Immigration and Nationality Act (INA). 
                 The J-1 visa status is evidenced by the Form DS-2019, the J-1 visa in the passport and the I-94 card (arrival-departure record).  
-                These forms should serve as a confirmation of the participant’s eligibility for employment, under the Immigration Reform and Control Act of 1986 (IRCA). 
-                The participant is also entitled to receive compensation from employers for <cfif qGetCandidate.sex EQ 'm'>his<cfelseif qGetCandidate.sex EQ 'f'>her</cfif> 
-                effort while on the program (program dates are specified on Form DS-2019). 
-                For payroll purposes, the participant must obtain a Social Security Number. Based on IRS Publication 515, as a Non-Resident Alien Authorized to work, 
-                the participant must pay local, state and federal taxes; the participant must not pay Social Security and Medicare Taxes (FICA) and/or Federal Unemployment Taxes (FUTA). 
+                These forms should serve as a <strong>confirmation of the participant’s eligibility for employment</strong>, under the Immigration Reform and Control Act of 1986 (IRCA). 
             </p>
+
+            <p class="style1">    
+				The participant is also <strong>entitled to receive compensation from employers</strong> for <cfif qGetCandidate.sex EQ 'm'>his<cfelseif qGetCandidate.sex EQ 'f'>her</cfif> 
+                effort while on the program (program dates are specified on Form DS-2019). Based on <strong>IRS Publication 515</strong>, as a <strong>Non-Resident Alien Authorized to work</strong>, 
+                the participant must pay local, state and federal taxes; the participant must not pay Social Security and Medicare Taxes (FICA) and/or Federal Unemployment Taxes (FUTA).                
+			</p>
+            
+            <p class="style1">    
+                For payroll purposes, the participant <strong>must obtain a Social Security Number</strong>. The participant must apply on 
+				<cfif qGetCandidate.sex EQ 'm'>his<cfelseif qGetCandidate.sex EQ 'f'>her</cfif> own behalf and in person at the nearest Social Security Office. As proof of application, 
+                the participant will be issued Form SSA-5028. If you wish to prepare a report of earnings before the participant has received their Social Security card, you may leave the 
+                space for the Social Security number blank. For further information regarding employer responsibilities when engaging foreign personnel, please visit: 
+                <a href="http://www.ssa.gov/employer/hiring.htm">http://www.ssa.gov/employer/hiring.htm</a>
+			</p>
             
             <p class="style1">    
                 CSB would like to thank you in advance for your cooperation. If you should have any questions or concerns, please feel free to contact us by phone at #APPLICATION.CSB.WAT.toolFreePhone#
@@ -118,9 +126,9 @@
             
             <p class="style1" style="margin-top:30px;">
             	Kind Regards,  <br /> <br />            
-                <img src="../../pics/craigSignature.gif">  <br /> 
-                Craig Brewer <br />
-                Executive Director / Responsible Officer
+                <img src="../../pics/ancaSignature.gif">  <br /> 
+                Anca Radoi-Bodnarescu  <br />   
+                Program Director
             </p>
         </td>
 	</tr>
