@@ -717,11 +717,9 @@
                 <cfinvokeargument name="email_from" value="""#qGetCompany.companyshort_nocolor# - #qGetFacilitator.firstname# #qGetFacilitator.lastname#"" <#qGetFacilitator.email#>">
                 <!--- Attach Students Profile  --->
                 <cfinvokeargument name="email_file" value="#AppPath.temp##qGetStudentInfo.studentID#-placementInfo.pdf">
-         		
-                <!--- Do not include ID Card for ESI until it's reformatted as per Stacy Request --->
-                <cfif CLIENT.companyID NEQ 14>
-                    <cfinvokeargument name="email_file2" value="#AppPath.temp##qGetStudentInfo.studentID#-idCard.pdf">
-                </cfif>
+         		<!----Attach the ID Card---->       
+                <cfinvokeargument name="email_file2" value="#AppPath.temp##qGetStudentInfo.studentID#-idCard.pdf">
+               
                
             </cfinvoke>
            
