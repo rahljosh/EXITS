@@ -745,14 +745,18 @@ SELECT invoiceid, invoicedate, SUM(amount_due) AS invoice_due, companyid
 FROM smg_charges
 WHERE agentid = #url.userid#
 AND invoiceid <> 0
-<cfswitch expression="#FORM.companyID#">
-    <cfcase value="5,10,14">
-        and companyid = #FORM.companyID#
-    </cfcase>
-    <cfdefaultcase>
-        and companyid IN (1,2,3,4,5,7,8,10,12)
-    </cfdefaultcase>
-</cfswitch>
+<cfif form.view is not 'all'>
+	<cfswitch expression="#FORM.companyID#">
+		<cfcase value="1,2,3,4,12">
+			and companyid in (1,2,3,4,12)
+		</cfcase>
+		<cfdefaultcase>
+			and companyid = #FORM.companyID#
+		</cfdefaultcase>
+	</cfswitch>
+<cfelse>
+	and companyid != 14
+</cfif>
 GROUP BY 
 	invoiceid DESC, companyID 
 </cfquery>
@@ -887,14 +891,55 @@ GROUP BY
 	</tr>
 	
 <Cfquery name="payments_received" datasource="mysql">
-select paymentref, paymenttype
-from smg_payment_received
-where agentid = #url.userid#
-			<!--- <cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10) AND form.view is not 'all'>
-			and companyid = #FORM.companyID#
-			</cfif> --->
-GROUP BY paymentref, paymenttype
-ORDER BY date DESC		
+    SELECT 
+        sch.agentid, 
+        su.businessname, 
+        sch.programid,                
+        sp.paymentref,
+        sp.paymenttype,                
+        sp.date,                
+        sp.date_applied,
+        IFNULL(SUM(spc.amountapplied),0) AS total,  
+        (CASE 
+        WHEN sch.companyid = 1 THEN 1
+        WHEN sch.companyid = 2 THEN 1
+        WHEN sch.companyid = 3 THEN 1
+        WHEN sch.companyid = 4 THEN 1                
+        WHEN sch.companyid = 12 THEN 1
+        ELSE sch.companyid
+        END) AS testCompId
+    FROM 
+        smg_payment_charges spc
+    LEFT JOIN 
+        smg_charges sch
+    ON 
+        sch.chargeid = spc.chargeid
+    LEFT JOIN 
+        smg_payment_received sp 
+    ON 
+        sp.paymentid = spc.paymentid
+    LEFT JOIN 
+        smg_users su 
+    ON 
+        su.userid = sch.agentid
+    WHERE  
+        sch.agentid = #url.userid#
+		<cfif form.view is not 'all'>
+            <cfswitch expression="#FORM.companyID#">
+                <cfcase value="1,2,3,4,12">
+                    and sch.companyid in (1,2,3,4,12)
+                </cfcase>
+                <cfdefaultcase>
+                    and sch.companyid = #FORM.companyID#
+                </cfdefaultcase>
+            </cfswitch>
+        <cfelse>
+            and sch.companyid != 14
+        </cfif>
+    GROUP BY 
+        sp.paymentref            
+    ORDER BY            
+        sp.date DESC		
 </Cfquery>
 	
 <cfoutput query="payments_received">
@@ -948,16 +993,20 @@ select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.c
 from smg_credit sc
 LEFT JOIN smg_companies c ON c.companyid = sc.companyid
 where agentid = #url.userid# 
-<cfswitch expression="#FORM.companyID#">
-    <cfcase value="5,10,14">
-        and sc.companyid = #FORM.companyID#
-    </cfcase>
-    <cfdefaultcase>
-        and sc.companyid IN (1,2,3,4,5,7,8,10,12)
-    </cfdefaultcase>
-</cfswitch>
-and  active = 1
-ORDER BY creditid DESC, stuid DESC, chargeid ASC
+<cfif form.view is not 'all'>
+	<cfswitch expression="#FORM.companyID#">
+		<cfcase value="1,2,3,4,12">
+			and sc.companyid in (1,2,3,4,12)
+		</cfcase>
+		<cfdefaultcase>
+			and sc.companyid = #FORM.companyID#
+		</cfdefaultcase>
+	</cfswitch>
+<cfelse>
+	and sc.companyid != 14
+</cfif>
+and  sc.active = 1
+ORDER BY sc.creditid DESC, sc.stuid DESC, sc.chargeid ASC
 </cfquery>
 
 <cfform method="post">
@@ -1019,20 +1068,24 @@ ORDER BY creditid DESC, stuid DESC, chargeid ASC
 <!----Applied Credits---->
 
 <Cfquery name="credits" datasource="mysql">
-select date, type, description, stuid, invoiceid, amount, creditid, credit_type, c.companyshort
-from smg_credit
-LEFT OUTER JOIN smg_companies c ON c.companyid = smg_credit.companyid
+select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.creditid, sc.credit_type, c.companyshort
+from smg_credit sc
+LEFT OUTER JOIN smg_companies c ON c.companyid = sc.companyid
 where agentid = #url.userid#
-<cfswitch expression="#FORM.companyID#">
-    <cfcase value="5,10,14">
-        and smg_credit.companyid = #FORM.companyID#
-    </cfcase>
-    <cfdefaultcase>
-        and smg_credit.companyid IN (1,2,3,4,5,7,8,10,12)
-    </cfdefaultcase>
-</cfswitch>
-and active = 0
-ORDER BY creditid DESC, stuid DESC, chargeid ASC
+<cfif form.view is not 'all'>
+	<cfswitch expression="#FORM.companyID#">
+		<cfcase value="1,2,3,4,12">
+			and sc.companyid in (1,2,3,4,12)
+		</cfcase>
+		<cfdefaultcase>
+			and sc.companyid = #FORM.companyID#
+		</cfdefaultcase>
+	</cfswitch>
+<cfelse>
+	and sc.companyid != 14
+</cfif>
+and sc.active = 0
+ORDER BY sc.creditid DESC, sc.stuid DESC, sc.chargeid ASC
 </Cfquery>
 
 <cfform method="post">

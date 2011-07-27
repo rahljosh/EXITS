@@ -139,27 +139,56 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_charges.invoicedate BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+        AND smg_charges.companyid != 14 <!--- balance does not include ESI balance --->
 		GROUP BY smg_users.userid, smg_charges.invoiceid
+        
 		UNION
-		SELECT 
-			'payments', 
-			paymenttype, 
-			smg_users.businessname, 
-			SUM( pay.totalreceived ) AS total_amount, 
-			pay.date as orderdate, 
-			0 AS invoiceID, 
-			paymentref, 
-			0 AS creditID, 
-			'description'
-		FROM smg_payment_received pay
-		INNER JOIN smg_users ON pay.agentid = smg_users.userid
-		WHERE smg_users.userid = '#form.userid#'
-			AND pay.paymenttype != 'apply credit'
-			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-				AND (pay.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
-			</cfif>
-		GROUP BY smg_users.userid, pay.paymentref
+        
+        SELECT 
+            'payments',            
+            sp.paymenttype,                
+            su.businessname,                
+            IFNULL(SUM(spc.amountapplied),0) AS total_amount,                 
+            sp.date AS orderdate,                
+            0 AS invoiceID,                
+            sp.paymentref, 
+            (CASE 
+            WHEN sch.companyid = 1 THEN 1
+            WHEN sch.companyid = 2 THEN 1
+            WHEN sch.companyid = 3 THEN 1
+            WHEN sch.companyid = 4 THEN 1                
+            WHEN sch.companyid = 12 THEN 1
+            ELSE sch.companyid
+            END) AS testCompId,
+            'description'
+        FROM 
+            smg_payment_charges spc
+        LEFT JOIN 
+            smg_charges sch
+        ON 
+            sch.chargeid = spc.chargeid
+        LEFT JOIN 
+            smg_payment_received sp 
+        ON 
+            sp.paymentid = spc.paymentid
+        LEFT JOIN 
+            smg_users su 
+        ON 
+            su.userid = sch.agentid
+        WHERE  
+            sch.agentid = '#form.userid#' 
+		AND
+            sch.companyid != 14 <!--- balance does not include ESI balance --->     
+        AND
+            sp.paymenttype != 'apply credit'
+        <cfif form.date1 NEQ '' AND form.date2 NEQ ''>
+            AND (sp.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+        </cfif>
+        GROUP BY 
+            su.userid, sp.paymentref
+            
 		UNION
+        
 		SELECT 
 			'credits', 
 			type, 
@@ -176,8 +205,11 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+        AND smg_credit.companyid != 14 <!--- balance does not include ESI balance --->
         GROUP BY creditid
+        
 		UNION
+        
 		SELECT 
 			'refund', 
 			'paymenttype', 
@@ -194,6 +226,7 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>	
+        AND ref.companyid != 14 <!--- balance does not include ESI balance --->
 		GROUP BY smg_users.userid, refund_receipt_id	
 		ORDER BY orderdate DESC
 	</cfquery>
@@ -210,41 +243,79 @@ function OpenRefund(url)
 	<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 	
 		<cfquery name="beginning_balance" datasource="MySql">
-			SELECT 'invoice', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate as orderdate
+			SELECT 'invoice', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate as orderdate, 'testCompId'
 			FROM smg_charges
 			INNER JOIN smg_users ON smg_charges.agentid = smg_users.userid
 			WHERE smg_users.userid = '#form.userid#'
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND smg_charges.invoicedate < #CreateODBCDateTime(form.date1)#
 				</cfif>
+            AND smg_charges.companyid != 14 <!--- balance does not include ESI balance --->
 			GROUP BY smg_users.userid, smg_charges.invoicedate
+            
 			UNION
-			SELECT 'payments', smg_users.businessname, SUM( pay.totalreceived ) AS total_amount, pay.date as orderdate
-			FROM smg_payment_received pay
-			INNER JOIN smg_users ON pay.agentid = smg_users.userid
-			WHERE smg_users.userid = '#form.userid#'
-				AND pay.paymenttype != 'apply credit'
-				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-					AND pay.date < #CreateODBCDateTime(form.date1)#
-				</cfif>
-			GROUP BY smg_users.userid, pay.date
+            
+            SELECT 
+            	'payments',
+                su.businessname,                                         
+                IFNULL(SUM(spc.amountapplied),0) AS total_amount,                 
+                sp.date AS orderdate,
+                (CASE 
+                WHEN sch.companyid = 1 THEN 1
+                WHEN sch.companyid = 2 THEN 1
+                WHEN sch.companyid = 3 THEN 1
+                WHEN sch.companyid = 4 THEN 1                
+                WHEN sch.companyid = 12 THEN 1
+                ELSE sch.companyid
+                END) AS testCompId
+            FROM 
+            	smg_payment_charges spc
+            LEFT JOIN 
+            	smg_charges sch
+            ON 
+            	sch.chargeid = spc.chargeid
+            LEFT JOIN 
+            	smg_payment_received sp 
+            ON 
+            	sp.paymentid = spc.paymentid
+            LEFT JOIN 
+            	smg_users su 
+            ON 
+            	su.userid = sch.agentid
+            WHERE  
+            	sch.agentid = '#form.userid#'
+            AND
+                sp.paymenttype != 'apply credit'
+			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
+                AND sp.date < #CreateODBCDateTime(form.date1)#
+            </cfif>
+            AND
+                sch.companyid != 14 <!--- balance does not include ESI balance --->           
+            GROUP BY 
+            	su.userid, sp.date
+
 			UNION
-			SELECT 'credits', smg_users.businessname, SUM( smg_credit.amount ) AS total_amount, smg_credit.date as orderdate
+            
+			SELECT 'credits', smg_users.businessname, SUM( smg_credit.amount ) AS total_amount, smg_credit.date as orderdate, 'testCompId'
 			FROM smg_credit
 			INNER JOIN smg_users ON smg_credit.agentid = smg_users.userid
 			WHERE smg_users.userid = '#form.userid#'
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND smg_credit.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
+            AND smg_credit.companyid !=14 <!--- balance does not include ESI balance --->
 			GROUP BY smg_users.userid, smg_credit.date
+            
 			UNION 
-			SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date as orderdate
+            
+			SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date as orderdate, 'testCompId'
 			FROM smg_invoice_refunds ref
 			INNER JOIN smg_users ON ref.agentid = smg_users.userid
 			WHERE smg_users.userid = '#form.userid#'
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND ref.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
+            AND ref.companyid !=14 <!--- balance does not include ESI balance --->
 			GROUP BY smg_users.userid, refund_receipt_id				
 			ORDER BY orderdate
 		</cfquery>
@@ -270,41 +341,79 @@ function OpenRefund(url)
 
 	<!--- OUTSTANDING BALANCE ---->
 	<cfquery name="outstanding_balance" datasource="MySql">
-		SELECT 'invoice', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate as orderdate
+		SELECT 'invoice', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate as orderdate, 'testCompId'
 		FROM smg_charges
 		INNER JOIN smg_users ON smg_charges.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_charges.invoicedate BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+        AND smg_charges.companyid != 14 <!--- balance does not include ESI balance --->
 		GROUP BY smg_users.userid, smg_charges.invoicedate
+        
 		UNION
-		SELECT 'payments', smg_users.businessname, SUM( pay.totalreceived ) AS total_amount, pay.date as orderdate
-		FROM smg_payment_received pay
-		INNER JOIN smg_users ON pay.agentid = smg_users.userid
-		WHERE smg_users.userid = '#form.userid#'
-			AND pay.paymenttype != 'apply credit'
-			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-				AND (pay.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
-			</cfif>
-		GROUP BY smg_users.userid, pay.date
+        
+        SELECT 
+            'payments',
+            su.businessname,                                         
+            IFNULL(SUM(spc.amountapplied),0) AS total_amount,                 
+            sp.date AS orderdate,
+            (CASE 
+            WHEN sch.companyid = 1 THEN 1
+            WHEN sch.companyid = 2 THEN 1
+            WHEN sch.companyid = 3 THEN 1
+            WHEN sch.companyid = 4 THEN 1                
+            WHEN sch.companyid = 12 THEN 1
+            ELSE sch.companyid
+            END) AS testCompId
+        FROM 
+            smg_payment_charges spc
+        LEFT JOIN 
+            smg_charges sch
+        ON 
+            sch.chargeid = spc.chargeid
+        LEFT JOIN 
+            smg_payment_received sp 
+        ON 
+            sp.paymentid = spc.paymentid
+        LEFT JOIN 
+            smg_users su 
+        ON 
+            su.userid = sch.agentid
+        WHERE  
+            sch.agentid = '#form.userid#'
+        AND
+            sp.paymenttype != 'apply credit'
+        <cfif form.date1 NEQ '' AND form.date2 NEQ ''>
+            AND (sp.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+        </cfif>
+        AND
+            sch.companyid != 14 <!--- balance does not include ESI balance --->         
+        GROUP BY 
+            su.userid, sp.date
+        
 		UNION
-		SELECT 'credits', smg_users.businessname, SUM( smg_credit.amount ) AS total_amount, smg_credit.date as orderdate
+        
+		SELECT 'credits', smg_users.businessname, SUM( smg_credit.amount ) AS total_amount, smg_credit.date as orderdate, 'testCompId'
 		FROM smg_credit
 		INNER JOIN smg_users ON smg_credit.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+        AND smg_credit.companyid !=14 <!--- balance does not include ESI balance --->
 		GROUP BY smg_users.userid, smg_credit.date
+        
 		UNION
-		SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date as orderdate
+        
+		SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date as orderdate, 'testCompId'
 		FROM smg_invoice_refunds ref
 		INNER JOIN smg_users ON ref.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+        AND ref.companyid !=14 <!--- balance does not include ESI balance --->
 		GROUP BY smg_users.userid, refund_receipt_id					
 		ORDER BY orderdate
 	</cfquery>
