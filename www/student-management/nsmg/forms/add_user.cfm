@@ -29,6 +29,8 @@
         <cfif ListFind("5,6", CLIENT.usertype)>
             <!--- Regional Manager / Regional Advisor - Only Area Representative --->
             usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+            OR
+              usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="15">
         <cfelse>
             <!--- Other users --->
               usertypeid >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
