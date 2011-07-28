@@ -117,6 +117,12 @@
         WHERE 
             studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
     </cfquery>
+
+    <cfquery name="check_guarantee" datasource="MySQL">
+        SELECT app_region_guarantee
+        FROM smg_students
+        WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value='#client.studentid#'>
+    </cfquery>
     
     <cfquery name="qESIAreaChoice" datasource="MySql">
         SELECT 
@@ -675,13 +681,17 @@
                 <tr><td><font color="0000FF">This page is not required or will be completed by <b><i>#smg_students.businessname#.</i></b></font><br></td></tr> 
             <cfelse>
                 <!--- student has choosen state guarantee --->
-                <cfif smg_student_app_state_requested.recordcount GT 0 AND smg_student_app_state_requested.state1 GT 0>
+                <Cfif check_guarantee.app_region_guarantee gt 0>
+                <tr><td><font color="0000FF">State Guarantee is not available if you have selected a Regional Guarantee.  </font><br></td></tr>
+                
+                <cfelseif smg_student_app_state_requested.recordcount GT 0 AND smg_student_app_state_requested.state1 GT 0>
                     <cfif check_21_upload.recordcount EQ 0>
                             <tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
                             <cfset countRed = countRed + 1>
                     <cfelse>
                             <tr><td><font color="0000FF">Complete</font><br></td></tr>
                     </cfif>
+                    
                 <!--- student has not choosen if accetps state guarantee --->
                 <cfelseif smg_student_app_state_requested.recordcount EQ 0>
                     <cfloop query="page21">
