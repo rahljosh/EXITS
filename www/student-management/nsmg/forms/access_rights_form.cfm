@@ -120,7 +120,7 @@
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 )
             </cfquery>
-            
+          
         	<cflocation url="index.cfm?curdoc=user_info&userid=#URL.userID#" addtoken="No">
         
         </cfif>
@@ -135,7 +135,7 @@
 				errorMsg = "Please select an Access Level.";
 			}
 		</cfscript>
-    
+    	
     	<!--- No Errors / Check for Access --->
         <cfif NOT LEN(errorMsg)>
     
@@ -206,7 +206,57 @@
                         </cfif>
                     )
                 </cfquery>
-                
+                  <Cfif client.companyid lte 5 or client.companyid eq 12>
+        	   <cfif ListFind("6,7", form.usertype) >
+                   <cfquery name="newUserInfo" datasource="#application.dsn#">
+                   select u.firstname, u.lastname, u.email, u.address, u.address2, u.city, u.state, u.zip, u.phone, u.email
+                   from smg_users u 
+                   where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+                   </cfquery>
+                   <Cfquery name="userType" datasource="#application.dsn#">
+                   select usertype
+                   from smg_usertype
+                   where usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">
+                   </cfquery>
+                     
+                   <cfsavecontent variable="email_message">
+                                   
+                   <cfoutput>
+                   
+                   The following rep was just added to the database:<br /><Br />
+                   
+                   Userype: <strong>#usertype.usertype#</strong><Br />
+                   Program Manager: <strong>#client.programmanager#</strong><br />
+                   <Br />
+                   #newUserInfo.firstname# #newUserInfo.lastname# (#url.userID#)<br />
+                   #newUserInfo.address#<br />
+                   <Cfif newUserInfo.address2 is not ''>
+                   #newUserInfo.address2#<br />
+                   </Cfif>
+                   #newUserInfo.city# #newUserInfo.state#, #newUserInfo.zip#
+                   <br /><br />
+                   Email: #newUserInfo.email#<br />
+                   Phone: #newUserInfo.phone#<br />
+                   
+                   </cfoutput>
+                   
+                   
+                    
+                   </cfsavecontent>
+                    
+                    <!--- send email --->
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        
+                       <cfinvokeargument name="email_to" value="josh@exitgroup.org">
+                   		<!----
+                        <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+                        ---->
+                        <cfinvokeargument name="email_subject" value="New Rep Added">
+                        <cfinvokeargument name="email_message" value="#email_message#">
+                        <cfinvokeargument name="email_from" value="#client.support_email#">
+                    </cfinvoke>
+            	</cfif>
+            </Cfif>
         		<cflocation url="index.cfm?curdoc=user_info&userid=#URL.userID#" addtoken="No">
                 
 			<!--- edit --->
@@ -227,7 +277,57 @@
                     WHERE 
                     	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.ID#">
                 </cfquery>
-                
+                  <Cfif client.companyid lte 5 or client.companyid eq 12>
+        	   <cfif ListFind("6,7", form.usertype) >
+                   <cfquery name="newUserInfo" datasource="#application.dsn#">
+                   select u.firstname, u.lastname, u.email, u.address, u.address2, u.city, u.state, u.zip, u.phone, u.email
+                   from smg_users u 
+                   where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+                   </cfquery>
+                   <Cfquery name="userType" datasource="#application.dsn#">
+                   select usertype
+                   from smg_usertype
+                   where usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">
+                   </cfquery>
+                     
+                   <cfsavecontent variable="email_message">
+                                   
+                   <cfoutput>
+                   
+                   The following rep was just added to the database:<br /><Br />
+                   
+                   Userype: <strong>#usertype.usertype#</strong><Br />
+                   Program Manager: <strong>#client.programmanager#</strong><br />
+                   <Br />
+                   #newUserInfo.firstname# #newUserInfo.lastname# (#url.userID#)<br />
+                   #newUserInfo.address#<br />
+                   <Cfif newUserInfo.address2 is not ''>
+                   #newUserInfo.address2#<br />
+                   </Cfif>
+                   #newUserInfo.city# #newUserInfo.state#, #newUserInfo.zip#
+                   <br /><br />
+                   Email: #newUserInfo.email#<br />
+                   Phone: #newUserInfo.phone#<br />
+                   
+                   </cfoutput>
+                   
+                   
+                    
+                   </cfsavecontent>
+                    
+                    <!--- send email --->
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        
+                       <cfinvokeargument name="email_to" value="josh@exitgroup.org">
+                   		<!----
+                        <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+                        ---->
+                        <cfinvokeargument name="email_subject" value="New Rep Added">
+                        <cfinvokeargument name="email_message" value="#email_message#">
+                        <cfinvokeargument name="email_from" value="#client.support_email#">
+                    </cfinvoke>
+            	</cfif>
+            </Cfif>
         		<cflocation url="index.cfm?curdoc=user_info&userid=#URL.userID#" addtoken="No">
         	
             </cfif>
@@ -378,7 +478,7 @@
             <input type="hidden" name="force" value="#FORM.force#">
             <input type="hidden" name="advisor" value="#FORM.advisor#">
             <input type="hidden" name="new_user" value="#FORM.new_user#">
-    
+    		
             <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
                 <tr>
                     <td>
