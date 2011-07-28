@@ -493,17 +493,20 @@
                 </tr>
                 <tr valign="top">
                	  <td >
-                  
-                  <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyid) >
+                  <!---_Available for All companies---->
+                  	<cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
                     Here are some new brochures to help in your marketing.<Br />
                     <a href="marketing/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
-                 	<A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A>
+                 	<A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A><Br />
+                    <cfif ListFind("1,2,3,4,5,12", CLIENT.companyid) >
+					<a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a><br />
+				 	</cfif>
                     <br /><br />
                      <font size=-1> <em>Click on the Save/Print option to generate a PDF that is suitable for printing.</em></font>
-                     <Cfelse>
-                   Coming Soon!!
-                  
+                          
                   </cfif>
+                  <!----Available for just ISE companies---->
+                  
 				 </td>
                     <td>
                         <cfif get_new_users.recordcount eq 0 or CLIENT.usertype gte 6>
