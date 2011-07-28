@@ -1,43 +1,100 @@
-<cfif IsDefined('form.program')>
-	<cfquery name="get_students" datasource="mysql">
-	SELECT 
-    	c.uniqueID, c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid,
-        smg_programs.programname, smg_users.companyid, smg_users.businessname, 
-        c.companyid, c.hostcompanyid, smg_countrylist.countryname, extra_hostcompany.name, 
-        c.wat_placement, c.candidateid, c.wat_placement, c.change_requested_comment, c.englishAssessment
-	FROM extra_candidates c
-	INNER JOIN smg_users ON smg_users.userid = c.intrep
-	INNER JOIN smg_programs ON smg_programs.programid = c.programid
-	INNER JOIN smg_countrylist ON smg_countrylist.countryid = c.home_country
-	LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = c.requested_placement 
-	  WHERE c.companyid = #client.companyid#
-	  AND c.hostcompanyid = 0
-	  AND c.programid = #form.program#
-	  AND c.status = 1
-	  AND c.wat_placement = 'CSB-Placement'
-	ORDER BY businessname
+<cfif IsDefined('FORM.program')>
+
+	<cfquery name="qGetStudents" datasource="mysql">
+        SELECT 
+            c.uniqueID, 
+            c.programid,
+            c.candidateid, 
+            c.companyid, 
+            c.hostcompanyid, 
+            c.firstname, 
+            c.lastname, 
+            c.sex, 
+            c.home_country, 
+            c.intrep, 
+            c.requested_placement, 
+            c.wat_placement, 
+            c.wat_placement, 
+            c.change_requested_comment, 
+            c.englishAssessment,
+            c.englishAssessmentComment,        
+            u.companyid, 
+            u.businessname, 
+            p.programname, 
+            cl.countryname, 
+            eh.name 
+        FROM 
+        	extra_candidates c
+        INNER JOIN 
+        	smg_users u ON u.userid = c.intrep
+        INNER JOIN 
+        	smg_programs p ON p.programid = c.programid
+        INNER JOIN 
+        	smg_countrylist cl ON cl.countryid = c.home_country
+        LEFT JOIN
+        	extra_hostcompany eh ON eh.hostcompanyid = c.requested_placement 
+        WHERE 
+        	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        AND 
+        	c.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND 
+        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">
+        AND 
+        	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND 
+        	c.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
+        ORDER BY 
+        	u.businessname
 	</cfquery>
 	
-	<cfquery name="get_students_self" datasource="mysql">
-	SELECT 
-	    c.uniqueID, c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.requested_placement, c.programid, 
-        smg_programs.programname, smg_users.companyid, smg_users.businessname, c.companyid, c.hostcompanyid, 
-        smg_countrylist.countryname, extra_hostcompany.name, c.wat_placement, c.candidateid, c.wat_placement, 		
-        c.change_requested_comment, c.englishAssessment
-	FROM extra_candidates c
-	INNER JOIN smg_users ON smg_users.userid = c.intrep
-	INNER JOIN smg_programs ON smg_programs.programid = c.programid
-	INNER JOIN smg_countrylist ON smg_countrylist.countryid = c.home_country
-	LEFT JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = c.requested_placement 
-	  WHERE c.companyid = #client.companyid#
-	  AND c.hostcompanyid = 0
-	  AND c.programid = #form.program#
-	  AND c.status = 1
-	  AND c.wat_placement = 'Self-Placement'
-	ORDER BY businessname
+	<cfquery name="qGetStudentsSelf" datasource="mysql">
+        SELECT 
+            c.uniqueID, 
+            c.programid,
+            c.candidateid, 
+            c.companyid, 
+            c.hostcompanyid, 
+            c.firstname, 
+            c.lastname, 
+            c.sex, 
+            c.home_country, 
+            c.intrep, 
+            c.requested_placement, 
+            c.wat_placement, 
+            c.wat_placement, 
+            c.change_requested_comment, 
+            c.englishAssessment,
+            c.englishAssessmentComment,        
+            u.companyid, 
+            u.businessname, 
+            p.programname, 
+            cl.countryname, 
+            eh.name 
+        FROM 
+        	extra_candidates c
+        INNER JOIN 
+        	smg_users u ON u.userid = c.intrep
+        INNER JOIN 
+        	smg_programs p ON p.programid = c.programid
+        INNER JOIN 
+        	smg_countrylist cl ON cl.countryid = c.home_country
+        LEFT JOIN
+        	extra_hostcompany eh ON eh.hostcompanyid = c.requested_placement 
+        WHERE 
+        	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        AND 
+        	c.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND 
+        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">
+        AND 
+        	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND 
+        	c.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+        ORDER BY 
+        	u.businessname
 	</cfquery>
 	
-	<cfset total = get_students_self.recordcount + get_students.recordcount>
+	<cfset total = qGetStudentsSelf.recordcount + qGetStudents.recordcount>
 </cfif>
 
 <cfscript>
@@ -72,7 +129,7 @@
 	<select name="program" class="style1">
 		<option></option>
 		<cfloop query="qGetProgramList">
-		<option value=#programid# <cfif IsDefined('form.program')><cfif qGetProgramList.programid eq #form.program#> selected</cfif></cfif>>#programname#</option>
+		<option value=#programid# <cfif IsDefined('FORM.program')><cfif qGetProgramList.programid eq #FORM.program#> selected</cfif></cfif>>#programname#</option>
 		</cfloop>
 	</select>
 	
@@ -97,10 +154,10 @@
 
 <!-----Display Reports---->
 
-<cfif isDefined('form.print')>
-	<cfif form.print eq 1>
+<cfif isDefined('FORM.print')>
+	<cfif FORM.print eq 1>
 		<span class="style1"><center><b>Results are being generated...</b></center></span><br /><br /><br />		
-		<meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/unplaced_students_wt_flashpaper&program=#form.program#">
+		<meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/unplaced_students_wt_flashpaper&program=#FORM.program#">
 	<cfelse>
 
 <!--- <cfquery name="get_wat_placement" datasource="mysql">
@@ -115,8 +172,8 @@
 </cfquery> --->
 
 
-<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #get_students.recordcount#</div>	
-<div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #get_students_self.recordcount#</div>
+<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #qGetStudents.recordcount#</div>	
+<div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #qGetStudentsSelf.recordcount#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
 <div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #total#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
@@ -125,7 +182,7 @@
 <strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Students #wat_placement#:  #total# </font></strong>
 <br />
 </cfloop>
-<strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Total Number of Students: #get_students.recordcount# </font></strong><br /> --->
+<strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Total Number of Students: #qGetStudents.recordcount# </font></strong><br /> --->
 
 <img src="../../pics/black_pixel.gif" width="100%" height="2">
 					
@@ -137,6 +194,7 @@
       <th align="left" bgcolor="4F8EA4" class="style2">Req. Placement</th>
       <th align="left" bgcolor="4F8EA4" class="style2">Comments</th>
       <th align="left" bgcolor="4F8EA4" class="style2">English Assessment CSB</th>
+      <th align="left" bgcolor="4F8EA4" class="style2">English Assessment Comment</th>
 	  <th align="left" bgcolor="4F8EA4" class="style2">Intl. Rep.</th>
 	  <th align="left" bgcolor="4F8EA4" class="style2">Option</th>
     </tr>	
@@ -147,15 +205,15 @@
 		
 <!----			<div align="center">	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">Please select report criteria and click on generate report. <br /> </font></div			><br />---->
 
-			  <cfif get_students.recordcount eq 0 AND get_students_self.recordcount eq 0 >
+			  <cfif qGetStudents.recordcount eq 0 AND qGetStudentsSelf.recordcount eq 0 >
 			<tr><td align="center" colspan=10> <div align="center"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">No students found based on the criteria you specified. Please change and re-run the report.</font></div><br />
 </td></tr>
 			  <cfelse>  
 				<cfset into = 1 >
-				<cfloop query="get_students">
+				<cfloop query="qGetStudents">
 				 <tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
 					<td class="style1">
-                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#get_students.uniqueID#" target="_blank" class="style4">
+                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#qGetStudents.uniqueID#" target="_blank" class="style4">
                     		#firstname# #lastname# (#candidateid#)
 						</a>
                     </td>
@@ -164,16 +222,17 @@
 					<td class="style1">#name#</td>
 					<td class="style1">#change_requested_comment#</td>
                     <td class="style1">#englishAssessment#</td>
+                    <td class="style1">#englishAssessmentComment#</td>
                     <td class="style1">#businessname#</td>
 					<td class="style1">#wat_placement#</td>                    
 				  </tr>
 				  <cfset into = into + 1 >
 				</cfloop>
 				
-				<cfloop query="get_students_self">
+				<cfloop query="qGetStudentsSelf">
 				 <tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
 					<td class="style1">
-                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#get_students_self.uniqueID#" target="_blank" class="style4">
+                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#qGetStudentsSelf.uniqueID#" target="_blank" class="style4">
 	                    	#firstname# #lastname# (#candidateid#)
     					</a>
                     </td>
@@ -182,6 +241,7 @@
 					<td class="style1">#name#</td>
                     <td class="style1">#change_requested_comment#</td>
 					<td class="style1">#englishAssessment#</td>
+                    <td class="style1">#englishAssessmentComment#</td>
                     <td class="style1">#businessname#</td>
 					<td class="style1">#wat_placement#</td>
 				  </tr>		
