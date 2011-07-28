@@ -27,7 +27,7 @@
 <cfquery name="userinfo" datasource="mysql">
 	SELECT u.firstname, u.lastname, u.username, u.city, u.state, u.zip, u.country, u.dob,
 		u.email, u.userid, u.usertype, u.address, u.address2,  u.password, smg_countrylist.countryname, smg_states.state as st,
-	 	u.lastchange,u.datelastlogin, u.datecreated, u.occupation, u.businessname, u.emergency_phone,u.emergency_contact,
+	 	u.lastchange,u.lastLogin, u.datecreated, u.occupation, u.businessname, u.emergency_phone,u.emergency_contact,
 		u.phone, u.phone_ext, u.cell_phone, u.work_phone, u.work_ext, u.fax, u.whocreated, 
 		u.billing_company, u.billing_contact, u.billing_address, 
 		u.php_contact_name, u.php_contact_phone, u.php_contact_email,
