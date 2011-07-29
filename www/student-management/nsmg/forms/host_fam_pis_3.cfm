@@ -135,11 +135,11 @@ AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 			<tr bgcolor="e2efc7">
 				<td colspan="2">To what extend do they attend church?</td>
 				<td><select name="religious_participation">
-						<cfif #get_host_religion.religious_participation# is "active"><option value=active selected>Active (2+ times a week)</option><cfelse><option value=active>Active (2+ times a week)</option></cfif>
-						<cfif #get_host_religion.religious_participation# is "average"><option value=average selected>Average (1-2x a week)</option><cfelse><option value=average>Average (1-2x a week)</option></cfif>
-						<cfif #get_host_religion.religious_participation# is "little interest"><option value="little interest" selected>Little Interest (occasionally)</option><cfelse><option value="little interest">Little Interest (occasionally)</option></cfif>
-						<cfif #get_host_religion.religious_participation# is "inactive"><option value=inactive selected>Inactive (never attend)</option><cfelse><option value=inactive>Inactive (never attend)</option></cfif>
-						<cfif #get_host_religion.religious_participation# is "no interest"><option value="no interest" selected>No Interest</option><cfelse><option value="no interest">No Interest</option></cfif>
+						<cfif #get_host_religion.religious_participation# is "active" or #get_host_religion.religious_participation# is "4"  ><option value=active selected>Active (2+ times a week)</option><cfelse><option value=active>Active (2+ times a week)</option></cfif>
+						<cfif #get_host_religion.religious_participation# is "average" or #get_host_religion.religious_participation# is "3"><option value=average selected>Average (1-2x a week)</option><cfelse><option value=average>Average (1-2x a week)</option></cfif>
+						<cfif #get_host_religion.religious_participation# is "little interest" or #get_host_religion.religious_participation# is "2"><option value="little interest" selected>Little Interest (occasionally)</option><cfelse><option value="little interest">Little Interest (occasionally)</option></cfif>
+						<cfif #get_host_religion.religious_participation# is "inactive" or #get_host_religion.religious_participation# is "1"><option value=inactive selected>Inactive (never attend)</option><cfelse><option value=inactive>Inactive (never attend)</option></cfif>
+						<cfif #get_host_religion.religious_participation# is "no interest" or #get_host_religion.religious_participation# is "0"><option value="no interest" selected>No Interest</option><cfelse><option value="no interest">No Interest</option></cfif>
 						</select></td> 
 			</tr>			
 			<tr bgcolor="e2efc7">
