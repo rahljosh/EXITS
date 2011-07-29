@@ -50,7 +50,7 @@
     <cfparam name="intrep" default="">
     <cfparam name="stateid" default="">
     <cfparam name="programID" default="">
-    <cfparam name="privateschool" default="0">
+    <cfparam name="privateschool" default="">
     
     <cfscript>
 		// Get Private Schools Prices
