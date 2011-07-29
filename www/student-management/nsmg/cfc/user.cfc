@@ -280,41 +280,42 @@
             <cfset CLIENT.change_password = 1>      
 		</cfif>
 		
-        <!----For Accounts Created after Sept 1, 2010---->
-        <Cfif qAuthenticateUser.datecreated gt '2010-09-01'>
-       		<!----Let CASE bypass the webex check for a while---->
-            <cfif listfind('1,2,3,4,5,12', client.companyid)>
-           
-				<cfif #DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now())# gte 21>
-                    
-                    <!----Check if WebEX Training has been completed ---->
-                    <cfif listfind('5,6,7', client.usertype)>
-                        
-                        <cfquery name="webexTraining" datasource="#application.dsn#">
-                            SELECT
-                                training_id
-                            FROM 
-                                smg_users_training
-                            WHERE 
-                                training_id = <cfqueryparam cfsqltype="cf_sql_numeric" value="6">
-                            and 
-                                user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                        </cfquery>
-                       <cfif client.companyid neq 14>
-                        <cfif (NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16)>
-                            <cfset CLIENT.trainingNeeded = 1>
-                            <cflocation url="/nsmg/trainingNeeded.cfm" addtoken="no">
-                        </cfif>
-                       </cfif>
-                   </Cfif>
-               </cfif>
-           </cfif>
-        <cfelse>
-        	<cfif isDefined('client.trainingNeeded')>
-        		<cfset client.trainingNeeded = 0>
-    		</cfif>
-        </Cfif>
         
+        
+		<!----Let CASE and ISE bypass the webex check for a while  (1,2,3,4,5,12) ---->
+        <cfif listfind("5,12", CLIENT.companyid)>
+
+			<!---- For Accounts Created after Sept 1, 2010 / Check if WebEX Training has been completed ---->
+            <cfif qAuthenticateUser.datecreated gt '2010-09-01' AND listfind('5,6,7', CLIENT.usertype) AND DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now()) GTE 21>
+                
+                    <cfquery name="webexTraining" datasource="#application.dsn#">
+                        SELECT
+                            training_id
+                        FROM 
+                            smg_users_training
+                        WHERE 
+                            training_id = <cfqueryparam cfsqltype="cf_sql_numeric" value="6">
+                        and 
+                            user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                    </cfquery>
+                   
+                   <cfif CLIENT.companyid NEQ 14 AND NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16>
+
+                       <cfset CLIENT.trainingNeeded = 1>
+                       <cflocation url="/nsmg/trainingNeeded.cfm" addtoken="no">
+
+                   </cfif>
+
+            </cfif>
+
+        <cfelse>
+
+        	<cfif isDefined('CLIENT.trainingNeeded')>
+        		<cfset CLIENT.trainingNeeded = 0>
+    		</cfif>
+            
+        </cfif>
+
         
         <cfscript>
 			// Host Family Leads Pop Up
