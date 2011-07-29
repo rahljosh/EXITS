@@ -315,8 +315,43 @@
     		</cfif>
             
         </cfif>
+<!----Determining what time frame / date to use.  DOSCertificationNeeded.cfm is in place, this just needs to be uncommented and the date trime frame updated to what ever is needed.
+<!----Block users who have not taken the DOS training---->
 
-        
+	<!----List to allow companies to by pass DOS test.  (1,2,3,4,5,12) ---->
+        <cfif listfind("1,2,3,4,5,10,12", CLIENT.companyid)>
+
+			<!---- For Accounts Created after Sept 1, 2010 / Check if WebEX Training has been completed ---->
+            <cfif listfind('5,6,7', CLIENT.usertype) AND DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now()) GTE 21>
+                
+                    <cfquery name="DOSCertification" datasource="#application.dsn#">
+                        SELECT
+                            training_id
+                        FROM 
+                            smg_users_training
+                        WHERE 
+                            training_id = <cfqueryparam cfsqltype="cf_sql_numeric" value="2">
+                        and 
+                            user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                    </cfquery>
+                   
+                   <cfif CLIENT.companyid NEQ 14 AND NOT VAL(DOSCertification.recordcount) AND CLIENT.regionID NEQ 16>
+
+                       <cfset CLIENT.trainingNeeded = 1>
+                       <cflocation url="/nsmg/DOSCertificationNeeded.cfm" addtoken="no">
+
+                   </cfif>
+
+            </cfif>
+
+        <cfelse>
+
+        	<cfif isDefined('CLIENT.trainingNeeded')>
+        		<cfset CLIENT.trainingNeeded = 0>
+    		</cfif>
+            
+        </cfif>
+        ----->
         <cfscript>
 			// Host Family Leads Pop Up
 			if ( ListFind("5,6,7", CLIENT.userType) ) {
