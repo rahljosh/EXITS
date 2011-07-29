@@ -50,9 +50,11 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- All Cancelled Candidates</a></p>
                         
+						<p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInstructions" class="style4">- Arrival Instructions</a></p>                        
+                        
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
                         
-                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInstructions" class="style4">- Arrival Instructions</a></p>
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanySelfPlacementConfirmation" class="style4">- Self Placement Confirmation</a></p>
  	               </td>
                 </tr>
             </table>

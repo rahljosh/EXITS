@@ -467,7 +467,8 @@
 		<cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
 
 		<cfscript>
-			var vEmailTemplate = '';
+			var vEmailTemplate = '';			
+			var vConfidentialityMessage = '';
 			
 			// If we have a valid emailTemplate we'll get the email subject and message from the function above
 			if ( LEN(ARGUMENTS.emailTemplate) ) {
@@ -512,11 +513,12 @@
             
             <!--- Email Body --->
             #ARGUMENTS.emailMessage#
-        	
+            
             <gui:pageFooter
                 footerType="#ARGUMENTS.footerType#"
                 companyID="#ARGUMENTS.companyID#"
             />
+            
         </cfmail>
         	
 	</cffunction>
