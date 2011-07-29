@@ -181,6 +181,13 @@
                     Toll Free: #APPLICATION.CSB.WAT.toolFreePhone# <br /> 
                     <a href="#APPLICATION.SITE.URL.main#">#APPLICATION.SITE.URL.main#</a> <br /> 
 
+                    <p style="font-size:11px; color:##666;">
+                        CONFIDENTIALITY NOTE: The information contained in this message and the attached files are restricted to the use of addressee, and may contain privileged 
+                        or commercial information, copyright, or other confidential information protected by law. If the reader of this message is not the intended recipient, 
+                        please notify the sender immediately and delete it from your system at once, since any disclosure, distribution,  and copy of this communication 
+                        is strictly prohibited and not authorized. Thank you.                
+                    </p>
+
                 </div>  <!--- End of class="form-container" --->
 
                 <div style="width:100%; height:20px; background-color:##FF7E0D;">
