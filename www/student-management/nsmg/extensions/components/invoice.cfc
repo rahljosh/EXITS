@@ -151,6 +151,10 @@
                 WHEN sp.type = 8 THEN 7
                 WHEN sp.type = 9 THEN 7
                 WHEN sp.type = 11 THEN 8
+                WHEN sch.companyid = 2 THEN 1
+                WHEN sch.companyid = 3 THEN 1
+                WHEN sch.companyid = 4 THEN 1
+                WHEN sch.companyid = 12 THEN 1
                 ELSE sch.companyid
                 END) AS testCompId
             FROM 
@@ -187,6 +191,10 @@
                 WHEN sp.type = 8 THEN 7
                 WHEN sp.type = 9 THEN 7
                 WHEN sp.type = 11 THEN 8
+                WHEN sch.companyid = 2 THEN 1
+                WHEN sch.companyid = 3 THEN 1
+                WHEN sch.companyid = 4 THEN 1
+                WHEN sch.companyid = 12 THEN 1
                 ELSE sch.companyid
                 END) AS testCompId
             FROM 
@@ -227,6 +235,10 @@
                 WHEN sp.type = 8 THEN 7
                 WHEN sp.type = 9 THEN 7
                 WHEN sp.type = 11 THEN 8
+                WHEN sch.companyid = 2 THEN 1
+                WHEN sch.companyid = 3 THEN 1
+                WHEN sch.companyid = 4 THEN 1
+                WHEN sch.companyid = 12 THEN 1
                 ELSE sc.companyid
                 END) AS testCompId
             FROM 
