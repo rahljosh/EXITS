@@ -92,6 +92,15 @@ and flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
     
     </cfif>
    </tr>
+   </tr>
+</table><br>
+
+<table width="580" align="center" cellpadding="0" cellspacing="0">
+	<tr>
+		<td align="right" width="50%"><input name="submit" type="image" src="../pics/update.gif" align="right" border=0> &nbsp; &nbsp;</td>
+		<td align="left" width="50%">&nbsp; &nbsp; <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
+	</tr>
+	<tr><td colspan="2">&nbsp;</td></tr>
 </table>
 </cfform>
 </div>
