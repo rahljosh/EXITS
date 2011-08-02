@@ -147,11 +147,6 @@
                 sch.programid, 
                 IFNULL(SUM(sch.amount_due),0) AS total, 
                 (CASE 
-                WHEN sch.companyid = 1 THEN 1
-                WHEN sch.companyid = 2 THEN 1
-                WHEN sch.companyid = 3 THEN 1
-                WHEN sch.companyid = 4 THEN 1
-                WHEN sch.companyid = 12 THEN 1
                 WHEN sp.type = 7 THEN 7
                 WHEN sp.type = 8 THEN 7
                 WHEN sp.type = 9 THEN 7
@@ -188,11 +183,6 @@
                 sch.programid, 
                 IFNULL(SUM(spc.amountapplied)*-1,0) AS total,  
                 (CASE 
-                WHEN sch.companyid = 1 THEN 1
-                WHEN sch.companyid = 2 THEN 1
-                WHEN sch.companyid = 3 THEN 1
-                WHEN sch.companyid = 4 THEN 1
-                WHEN sch.companyid = 12 THEN 1
                 WHEN sp.type = 7 THEN 7
                 WHEN sp.type = 8 THEN 7
                 WHEN sp.type = 9 THEN 7
@@ -233,16 +223,11 @@
                 sch.programid, 
                 IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, 
                 (CASE 
-                WHEN sch.companyid = 1 THEN 1
-                WHEN sch.companyid = 2 THEN 1
-                WHEN sch.companyid = 3 THEN 1
-                WHEN sch.companyid = 4 THEN 1
-                WHEN sch.companyid = 12 THEN 1
                 WHEN sp.type = 7 THEN 7
                 WHEN sp.type = 8 THEN 7
                 WHEN sp.type = 9 THEN 7
                 WHEN sp.type = 11 THEN 8
-                ELSE sch.companyid
+                ELSE sc.companyid
                 END) AS testCompId
             FROM 
             	smg_credit sc
