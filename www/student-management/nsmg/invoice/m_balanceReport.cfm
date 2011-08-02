@@ -265,16 +265,17 @@ ORDER BY
             </td>
         </cfif>
         <td class="right">AGENT</td>
-        <td class="right">WILLIAM</td>
-        <td class="right">MARGARITA</td>
+        <td class="right">ISE</td>
+<!---         <td class="right">MARGARITA</td>
         <td class="right">DIANA</td>
         <td class="right">GARY</td>
-        <td class="right">BRIAN</td>
+        <td class="right">BRIAN</td> --->
         <td class="right">SMG</td>
         <td class="right">TRAINEE</td>
         <td class="right" width="5%">W & T</td>
         <td class="right">H2B</td>
         <td class="right">CASE</td>
+        <td class="right">ESI</td>
         <td class="right">TOTAL</td>
     </tr>    
 
@@ -290,6 +291,7 @@ ORDER BY
 <cfparam name="totalCASEBal" default="0"> 
 <cfparam name="getBalancePerAgent.totalPerAgent" default="0">    
 <cfparam name="grandTotalBal" default="0">
+<cfparam name="totalESIBal" default="0">
 
 <cfoutput query="qTotalAgentBalance">
 
@@ -307,8 +309,9 @@ ORDER BY
     <cfset wandtBal = 0>
     <cfset h2bBal = 0>
 	<cfset caseBal = 0>            
-
-    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12">
+	<cfset ESIBal = 0>
+    
+    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12,14">
     
     	<!--- query qProgramBalance returns the balance per agent per program --->
 		<cfscript>
@@ -358,6 +361,10 @@ ORDER BY
                     <cfset caseBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalCaseBal = #variables.totalCaseBal# + #variables.CaseBal#>
                 </cfcase>
+                <cfcase value="14">
+                    <cfset ESIBal = #qProgramBalance.totalPerAgent#>
+                    <cfset totalESIBal = #variables.totalESIBal# + #variables.ESIBal#>
+                </cfcase>
             </cfswitch>
     
         </cfif>
@@ -374,15 +381,16 @@ ORDER BY
         </cfif>
         <td class="two">#qTotalAgentBalance.businessname# (#qTotalAgentBalance.agentid#)</td> 
         <td class="two <cfif variables.iseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.iseBal)#</td>
-        <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
+<!---         <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
         <td class="two <cfif variables.greenBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.greenBal)#</td>
         <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td>
-        <td class="two <cfif variables.brianBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.brianBal)#</td>
+        <td class="two <cfif variables.brianBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.brianBal)#</td> --->
         <td class="two <cfif variables.smgBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.smgBal)#</td>
         <td class="two <cfif variables.traineeBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.traineeBal)#</td>
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
         <td class="two <cfif variables.h2bBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.h2bBal)#</td>
         <td class="two <cfif variables.caseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.caseBal)#</td>
+        <td class="two <cfif variables.ESIBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.ESIBal)#</td>
         <td class="two <cfif qTotalAgentBalance.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentBalance.totalPerAgent)#</td>
     </tr>
 
@@ -396,15 +404,16 @@ ORDER BY
         </cfif>
         <td class="right">TOTAL</td>
         <td class="right">#LsCurrencyFormat(variables.totaliseBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
+<!---         <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalGreenBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalbrianBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalbrianBal)#</td> --->
         <td class="right">#LsCurrencyFormat(variables.totalSmgBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalTraineeBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalWandtBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalH2bBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalCaseBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalESIBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.grandTotalBal)#</td>
     </tr>
 
@@ -427,16 +436,17 @@ ORDER BY
 
     <tr class="darkBlue">
         <td class="right">AGENT</td>
-        <td class="right">WILLIAM</td>
-        <td class="right">MARGARITA</td>
+        <td class="right">ISE</td>
+<!---         <td class="right">MARGARITA</td>
         <td class="right">DIANA</td>
         <td class="right">GARY</td>
-        <td class="right">BRIAN</td>
+        <td class="right">BRIAN</td> --->
         <td class="right">SMG</td>
         <td class="right">TRAINEE</td>
         <td class="right" width="5%">W & T</td>
         <td class="right">H2B</td>
         <td class="right">CASE</td>
+        <td class="right">ESI</td>
         <td class="right">TOTAL</td>
     </tr>    
 
@@ -451,7 +461,8 @@ ORDER BY
 <cfset totalH2bBal =0>
 <cfset totalCaseBal =0>
 <cfset getBalancePerAgent.totalPerAgent =0>
-<cfset grandTotalBal =0>   
+<cfset grandTotalBal =0>  
+<cfset totalESIBal =0> 
 
 <cfoutput query="qTotalAgentRefund">
 
@@ -466,9 +477,10 @@ ORDER BY
     <cfset traineeBal = 0>
     <cfset wandtBal = 0>
     <cfset h2bBal = 0>
-    <cfset caseBal = 0>         
+    <cfset caseBal = 0>   
+    <cfset ESIBal = 0>       
 
-    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12">
+    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12,14">
     
     	<!--- query qProgramBalance returns the balance per agent per program --->
 		<cfscript>
@@ -518,6 +530,10 @@ ORDER BY
                     <cfset caseBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalCaseBal = #variables.totalCaseBal# + #variables.caseBal#>
                 </cfcase>
+                <cfcase value="14">
+                    <cfset ESIBal = #qProgramBalance.totalPerAgent#>
+                    <cfset totalESIBal = #variables.totalESIBal# + #variables.ESIBal#>
+                </cfcase>
             </cfswitch>
         
         </cfif>
@@ -529,15 +545,16 @@ ORDER BY
     <tr <cfif qTotalAgentRefund.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
         <td class="two">#qTotalAgentRefund.businessname# (#qTotalAgentRefund.agentid#)</td> 
         <td class="two <cfif variables.iseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.iseBal)#</td>
-        <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
+<!---         <td class="two <cfif variables.blueBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.blueBal)#</td>
         <td class="two <cfif variables.greenBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.greenBal)#</td>
         <td class="two <cfif variables.yellowBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.yellowBal)#</td>
-        <td class="two <cfif variables.brianBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.brianBal)#</td>
+        <td class="two <cfif variables.brianBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.brianBal)#</td> --->
         <td class="two <cfif variables.smgBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.smgBal)#</td>
         <td class="two <cfif variables.traineeBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.traineeBal)#</td>
         <td class="two <cfif variables.wandtBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.wandtBal)#</td>
         <td class="two <cfif variables.h2bBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.h2bBal)#</td>
         <td class="two <cfif variables.caseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.caseBal)#</td>
+        <td class="two <cfif variables.ESIBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.ESIBal)#</td>
         <td class="two <cfif qTotalAgentRefund.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentRefund.totalPerAgent)#</td>
     </tr>
 
@@ -548,15 +565,16 @@ ORDER BY
     <tr class="darkBlue">
         <td class="right">TOTAL</td>
         <td class="right">#LsCurrencyFormat(variables.totaliseBal)#</td>
-       <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
+<!---        <td class="right">#LsCurrencyFormat(variables.totalBlueBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalGreenBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalYellowBal)#</td>
-        <td class="right">#LsCurrencyFormat(variables.totalbrianBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalbrianBal)#</td> --->
         <td class="right">#LsCurrencyFormat(variables.totalSmgBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalTraineeBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalWandtBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalH2bBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalCaseBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalESIBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.grandTotalBal)#</td>
     </tr>
 
