@@ -15,6 +15,18 @@
 	where regionid = #get_student_info.regionassigned#  AND active = '1'
 	ORDER BY Familylastname
 </cfquery>
+<!----check for flight info to determine if the student is here and can be a relocation or not.
+If no flight info is on file, use Sept 1 as the default date---->
+<cfset year=#DateFormat(now(), 'yyyy')#>
+<cfquery name="qGetFlightInfo" datasource="#application.dsn#">
+select max(dep_date) as arrivalUS
+from smg_flight_info
+where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
+and flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+</cfquery>
+<Cfif qGetFlightInfo.recordcount eq 0>
+	<Cfset qGetFlightInfo.arrivalUS = '#year#-09-01'>
+</Cfif>
 
 <!--- include template page header --->
 <cfinclude template="placement_status_header.cfm">
@@ -63,15 +75,23 @@
 		</td>
 	</tr>
 	<tr><td width="30%">Is this a Welcome Family? </td><td><cfinput type="radio" value="0" name="welcome_family" required="yes" message="Please answer both questions">No &nbsp;<cfinput type="radio" value="1" name="welcome_family" required="yes" message="Please answer both questions">Yes</td></tr>
-	<tr><td>Is this a Relocation? </td><td><cfinput type="radio" value="no" name="relocation" required="yes" message="Please answer both questions">No &nbsp;<cfinput type="radio" value="yes" name="relocation" required="yes" message="Please answer both questions">Yes</td></tr>
-</table><br>
-
-<table width="580" align="center" cellpadding="0" cellspacing="0">
-	<tr>
-		<td align="right" width="50%"><input name="submit" type="image" src="../pics/update.gif" align="right" border=0> &nbsp; &nbsp;</td>
-		<td align="left" width="50%">&nbsp; &nbsp; <input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
-	</tr>
-	<tr><td colspan="2">&nbsp;</td></tr>
+	<tr><td valign="top">Is this a Relocation? </td>
+    
+    <td>
+    <cfif  qGetFlightInfo.arrivalUS lt #now()#>
+    <cfinput type="radio" value="no" name="relocation" required="yes" message="Please answer both questions">No 
+    &nbsp;<cfinput type="radio" value="yes" name="relocation" required="yes" message="Please answer both questions">Yes
+     </td>
+    <cfelse>
+   
+    <input type="radio" value="no" name="relocation" checked disabled="disabled">No* 
+    &nbsp;<input type="radio" value="yes" name="relocation" disabled="disabled">Yes 
+    </td>
+    <tr>
+    <td colspan=2><font size=-1><em>* #get_student_info.firstname# has not arrived in the US, therefor this can not be classified as a relocation</em></font></td>
+    
+    </cfif>
+   </tr>
 </table>
 </cfform>
 </div>
