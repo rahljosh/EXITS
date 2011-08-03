@@ -107,6 +107,7 @@ ORDER BY businessname
 <cfparam name="form.choseNAgent" default="0">
 <cfparam name="form.selectInvoice" default="0">
 <cfparam name="form.amount_received" default="0">
+<cfparam name="form.sumAmountApplied" default="0">
 <cfparam name="variables.totalReceived" default="0">
 <cfparam name="form.creditId" default="0">
 <cfparam name="variables.confirm" default="0">
@@ -114,6 +115,56 @@ ORDER BY businessname
 
 <!--- Process Payment --->
 <cfif form.selectInvoice NEQ 0>
+	
+    <cfset difference = form.sumAmountApplied - form.amount_received>
+    
+	<cfif difference GT 0>
+    	<cfoutput>
+        	<table align="center">
+            	<tr height="200">
+                	<td>
+                    </td>
+                </tr>
+            	<tr align="center">
+                	<td>
+           			<h1>The total amount assigned to invoice(s) is greater than the amount received.<br/>
+            		Please take #LSCurrencyFormat(1*variables.difference,'local')# off of any checked invoice(s) in order to match the amount received.</h1>
+                	</td>
+            	</tr>
+                <tr>
+                    <td align="center">
+                    <FORM>
+                        <INPUT TYPE="button" VALUE="Go Back" ONCLICK="history.go(-1)">
+                    </FORM>
+                    </td>
+            	</tr>
+            </table>
+		</cfoutput>
+		<cfabort>
+    <cfelseif difference LT 0>
+		<cfoutput>
+        	<table align="center">
+            	<tr height="200">
+                	<td>
+                    </td>
+                </tr>
+            	<tr align="center">
+                	<td>
+                    <h1>The amount received is greater than the total amount assigned to invoice(s).<br/>
+                    Please assign addicional #LSCurrencyFormat(-1*variables.difference,'local')# to any invoice(s) in order to match the amount received.</h1>
+                	</td>
+            	</tr>
+                <tr>
+                    <td align="center">
+                    <FORM>
+                        <INPUT TYPE="button" VALUE="Go Back" ONCLICK="history.go(-1)">
+                    </FORM>
+                    </td>
+            	</tr>
+            </table>
+		</cfoutput>
+		<cfabort>
+    </cfif>
 
 	<cfloop list="#form.selectInvoice#" index="iInvoiceNumber">
 		<cfset totalReceived = #variables.totalReceived# + #EVALUATE('form.payInv' & '#iInvoiceNumber#')#>
@@ -172,7 +223,7 @@ ORDER BY businessname
 			</cfloop>
 	</cfif>
 	
-	<cfset difference = #form.amount_received# - #variables.totalReceived#>
+<!--- 	<cfset difference = #form.amount_received# - #variables.totalReceived#>
 	<cfif variables.difference LT 0>
 		<cfoutput>
 		<h1 align="center">The total amount assigned to invoice(s) is greater than the amount received.<br/>
@@ -186,7 +237,7 @@ ORDER BY businessname
 		Please assign addicional #LSCurrencyFormat(variables.difference,'local')# to any invoice(s) (Hit "Back" on your browser).</h1>
 		</cfoutput>
 		<cfabort>
-	</cfif>
+	</cfif> --->
 	
 	<!--- <cfif client.companyid LT 5>
 		<cfset compId = 1>
@@ -431,6 +482,15 @@ ORDER BY businessname
                 </tr>
                 <tr>
                     <td valign="top">
+                    <font size=-1 color="#0052A4"><strong>Total Being Applied:</strong></font>
+                    </td>
+                    <td>
+                    <input type="text" disabled="disabled" name="sumAmountApplied1" id="sumAmountApplied1" style="background-color:#FFFFE1; border:hidden">
+                    <input type="hidden" name="sumAmountApplied" id="sumAmountApplied" style="background-color:#FFFFE1; border:hidden">
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">
                     <font size=-1 color="#0052A4"><strong>Payment Reference:</strong></font>
                     </td>
                     <td>
@@ -511,8 +571,9 @@ ORDER BY businessname
                             //multiply by 1 to force conversion to a number;
                             paymAmount = paymAmount +  document.getElementById("paying"+jsArrayInvoiceId[i]).value * 1; 
                         }
-                        document.getElementById("amount_received").value = paymAmount;
-                    }
+                        document.getElementById("sumAmountApplied").value = paymAmount;
+						document.getElementById("sumAmountApplied1").value = paymAmount;
+                    }	
                 }
             </script>
             </cfoutput>
