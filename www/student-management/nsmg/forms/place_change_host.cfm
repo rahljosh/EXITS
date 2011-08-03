@@ -89,7 +89,7 @@ and flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
     </td>
     <tr>
     <td colspan=2><font size=-1><em>* #get_student_info.firstname# has not arrived in the US, therefor this can not be classified as a relocation</em></font></td>
-    
+    <input type="hidden" name="relocation" value="no" />
     </cfif>
    </tr>
    </tr>
