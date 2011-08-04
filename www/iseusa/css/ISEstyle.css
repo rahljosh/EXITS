@@ -1283,3 +1283,65 @@ body {
 #msg {display:none; position:absolute; z-index:200; background:url(images/msg_arrow.gif) left center no-repeat; padding-left:7px}
 #msgcontent {display:block; background:#f3e6e6; border:2px solid #924949; border-left:none; padding:5px; min-width:150px; max-width:250px}
 /******End Error**/
+
+/***** Host Family New Pages *****/
+.HFsidebarL {
+	float: left;
+	width: 345px;
+	background: #FFF;
+	margin-left: 10px;
+	display: block;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+}
+.HFsidebarL, .HFsidebarR  p{
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 11px;
+	color: #000;
+	text-align: left;
+	line-height: 14px;
+}
+.HFsidebarR {
+	float: right;
+	width: 320px;
+	background: #FFF;
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	margin-right: 10px;
+	display: block;
+}
+.HFheader{
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 17px;
+	line-height: 20px;
+	color: #000;
+	list-style-position: inside;
+	list-style-image: url(../images/hostFamily/HF_arrow.png);
+	text-align: left;
+}
+.HFtopPic {
+	display: block;
+	width: 700px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+}
+.HFgradient {
+	background-image: url(../images/hostFamily/HF_gradient.png);
+	background-repeat: repeat-y;
+	background-position: left;
+	padding-top: 3px;
+	padding-right: 20px;
+	padding-bottom: 3px;
+	padding-left: 20px;
+}
+.HFpicL {
+	float: left;
+}
+.HFpicR {
+	float: right;
+}
