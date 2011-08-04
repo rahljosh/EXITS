@@ -27,7 +27,10 @@
         </cfif>
         <cfif VAL(FORM.inactive)>
             AND 
-                r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+         <cfelse>
+             AND 
+                r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">        
         </cfif>
         ORDER BY 
         	c.companyShort,
