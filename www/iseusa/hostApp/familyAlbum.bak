@@ -1,36 +1,26 @@
-<cfparam name="form.picCat" default=''>
-
-<!--- Import CustomTag Used for Page Messages and Form Errors --->
-<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-
-<cfset acceptedFiles = 'jpg,gif,png,JPG,GIF,PNG'>
-
 <!----Delete Picture---->
-
+ <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 <cfif isDefined('url.delPic')>
 	<cffile action="delete" 
-    	file="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#url.delPic#">
-    <cffile action="delete" 
-    	file="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\thumbs\#url.delPic#"> 
+    	file="/home/httpd/vhosts/111cooper.com/httpdocs/pics/hostAlbum/#url.delPic#">
         <cfquery name="delPic" datasource="MySQL">
             delete from host_picture_album
             where filename = '#url.delPic#'   
         </cfquery>
         <cflocation url="index.cfm?page=familyAlbum">
 </cfif>
+
+<h2>Picture Album</h2> 
+Please upload photos of you, your family, and your home including the exterior and grouns, kitchen, student's bedroom, student's bathroom, and family and living areas with a brief description of each. <br /><br />
+<Cfquery name="picCatagories" datasource="mysql">
+select *
+from smg_host_pic_cat
+</cfquery>
 <Cfquery name="current_photos" datasource="mysql">
 select filename, description, cat 
 from host_picture_album
 where fk_hostid = #client.hostid#
 </cfquery>
-
-<h2>Picture Album</h2> 
-Please upload photos of you, your family, and your home including the exterior and grounds, kitchen, student's bedroom, student's bathroom, and family and living areas with a brief description of each. <br /><br />
-<Cfquery name="picCatagories" datasource="mysql">
-select *
-from smg_host_pic_cat
-</cfquery>
-
 		<cfif IsDefined('form.updateDesc')>
 			<cfloop query="current_photos">
 				<cfquery name="insert_kids" datasource="MySQL">
@@ -53,41 +43,35 @@ from smg_host_pic_cat
 <cfif form.fileUpload is ''>
 <div align="center"><font color="#FF0000"><h3>Please select a file to upload.</h3></font></div>
 <cfelse>
-
- <cffile action="upload"
-     destination="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\"
-     fileField="fileUpload" nameconflict="makeunique">
-<cfset newFName = "#client.hostid#_#dateformat(now(),'yyyyddmm')#_#timeformat(now(), 'hhmmss')#.#file.ServerFileExt#">
-   <cffile action="rename" destination="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#newFName#" source="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#file.serverfile#">
-
-   
-<cfset fileTypeOK = 1>
-<cfif #ListFind('#acceptedFIles#','#file.ServerFileExt#')# eq 0>
-   <cfset fileTypeOK = 0>
-   <cffile action="delete" 
-    	file="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#newFName#">
-   
-</cfif>
 <!--- Process Form Submission --->
+	<cfset fileTypeOK = 1>
+	<cfif Right(form.fileUpload, 3) NEQ 'JPG' or 
+		  Right(form.fileUpload, 3) NEQ 'jpg' or 
+		  Right(form.fileUpload, 3) NEQ 'gif' or 
+		  Right(form.fileUpload, 3) NEQ 'GIF' or 
+		  Right(form.fileUpload, 3) NEQ 'PNG' or
+		  Right(form.fileUpload, 3) NEQ 'png'>
+      <cfset fileTypeOK = 0>
+      <cfset fileType = '#Right(form.fileUpload, 3)#'>
+	</cfif>
          <cfscript>
             // Data Validation
 			//Play in Band
-			 if ( fileTypeOK eq 0) {
+			 if ( fileTypeOK eq  0) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("You are trying to upload a #file.ServerFileExt#. We only accept image files of type jpg, png, or gif.  Please convert your file and try to upload again.");
+                SESSION.formErrors.Add("You have tried to upload a file in a format that we do not accept for photos. You have uploaded a #fileType# image, please convert to  jpg, gif, or png format.");
 			 }
-		 </cfscript>
-<cfif NOT SESSION.formErrors.length()>
- 
-
- 
-   <cfimage
-    action = "resize"
-    height = "100"
-    source = "C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#newFName#"
-    width = "150"
-    destination = "C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\thumbs\#newFName#"
-    >
+			
+		</cfscript>
+        
+        <!--- Check if there are no errors --->
+        <cfif NOT SESSION.formErrors.length()>
+        
+  <cffile action="upload"
+     destination="/home/httpd/vhosts/111cooper.com/httpdocs/pics/hostAlbum"
+     fileField="fileUpload" nameconflict="makeunique">
+     <cfset newFName = "#client.hostid#_#dateformat(now(),'yyyyddmm')#_#timeformat(now(), 'hhmmss')#.#file.ServerFileExt#">
+   <cffile action="rename" destination="/home/httpd/vhosts/111cooper.com/httpdocs/pics/hostAlbum/#newFName#" source="/home/httpd/vhosts/111cooper.com/httpdocs/pics/hostAlbum/#file.serverfile#">
 
      <cfquery datasource="MySQL">
      	insert into host_picture_album (fk_hostID, filename, cat)
@@ -95,15 +79,12 @@ from smg_host_pic_cat
      </cfquery>
 
      <Cflocation url="index.cfm?page=familyAlbum" addtoken="no">
-    </cfif>
+
+     
+     </cfif>
+     
    </cfif>
 </cfif>
-
-<!--- Form Errors --->
-    <gui:displayFormErrors 
-        formErrors="#SESSION.formErrors.GetCollection()#"
-        messageType="section"
-        />
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 	<Tr>
    		<td>
@@ -119,7 +100,7 @@ Select a catagory for this picture:<br />
 <cfoutput>
 <select name="picCat">
 <cfloop query="picCatagories">
-<option value="#catID#" <cfif form.picCat eq #catID#>selected</cfif>>#cat_name#<Cfif catid is not 7>*</Cfif></option>
+<option value="#catID#">#cat_name#<Cfif catid is not 7>*</Cfif></option>
 </cfloop>
 </select>
 
@@ -150,7 +131,7 @@ Select a catagory for this picture:<br />
         where catID = #cat#
         </cfquery>
     	<Td><cfimage action="writetobrowser" 
-        		source="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostAlbum/thumbs/#filename#" height = 100><br />
+        		source="../pics/hostAlbum/#filename#" height = 100><br />
                 #catDesc.cat_name#<br />
                 <a href="index.cfm?page=familyAlbum&delPic=#filename#"><img src="../images/buttons/delete.png"  border=0 /></a>
 </Td>
@@ -178,9 +159,9 @@ Select a catagory for this picture:<br />
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
     <tr>
     <cfif current_photos.recordcount neq 0>
-    <td colspan=4 align="Center">When you are done editing the descriptions, just click "Next"
+    <td colspan=4 align="Center">When you are done editing the descriptions, just click "I'm Finished"
         	<input type="hidden" name="updateDesc" />
-        	<input name="Submit" type="image" src="../images/buttons/Next.png"/>
+        	<input type="submit" value="I'm Finished" />
         </td>
         </form>
        <cfelse>
