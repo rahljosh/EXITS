@@ -171,9 +171,6 @@
 			// Decrypt SSN
 			var vDecryptedSSN = decryptVariable(ARGUMENTS.varString);
 
-			// SET return masked SSN as default
-			vReturnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
-
 			// Format SSN Display
 			if ( LEN(vDecryptedSSN) AND ListFind(vAllowedIDList, CLIENT.userID) ) {
 
@@ -195,7 +192,12 @@
 					vReturnSSN = vDecryptedSSN;
 				}
 				
-			}
+			} else if ( LEN(vDecryptedSSN) ) {
+
+				// SET return masked SSN as default
+				vReturnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
+
+			}	
 			
 			// Return Encrypted Variable
 			return(vReturnSSN);
