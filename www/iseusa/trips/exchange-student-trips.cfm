@@ -89,8 +89,15 @@ table {
               <td height="45" colspan="3" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
              <a href="/trips">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
               </tr>
+             <tr>
+             	<td colspan=4 align='4'> 
+					<cfif tours.recordcount eq 0>
+                   	 	<h3><div align="center">Trips will be available for booking on Sept. 15<br />  Please check back on that date to book your trip.</div></h3>
+                    </cfif>
+            	</td>
+             </tr>
             <tr>
-           
+            
             <cfoutput>
             	<cfloop query="tours">
               
@@ -134,6 +141,7 @@ table {
 			---->
              
           </table>
+          
                    </div>
 
         <!-- end whtMiddle --></div>
