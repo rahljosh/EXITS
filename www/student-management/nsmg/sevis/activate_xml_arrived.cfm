@@ -141,12 +141,13 @@ Sorry, there were no students to populate the XML file at this time.
 		<ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentid#" userID="#qGetCompany.sevis_userid#">
 			<Validate>
 				<USAddress>
-				<cfif VAL(hostid) AND host_fam_approved LT 5>
-					<Address1><cfif LEN(hostlastname)>#hostlastname#<cfelseif LEN(fatherlastname)>#fatherlastname#<cfelseif LEN(motherlastname)>#motherlastname#</cfif> Family</Address1> 	
-					<Address2>#hostaddress#</Address2>
-					<City>#hostcity#</City> 
-					<State>#hoststate#</State> 
-					<PostalCode>#hostzip#</PostalCode>
+				<cfif VAL(qGetStudents.hostid) AND qGetStudents.host_fam_approved LT 5>
+                	<cfset safeHostAddress = ReplaceNoCase(qGetStudents.hostAddress, "&", "and")>
+					<Address1><cfif LEN(qGetStudents.hostlastname)>#qGetStudents.hostlastname#<cfelseif LEN(qGetStudents.fatherlastname)>#qGetStudents.fatherlastname#<cfelseif LEN(motherlastname)>#motherlastname#</cfif> Family</Address1> 	
+					<Address2>#safeHostAddress#</Address2>
+					<City>#qGetStudents.hostcity#</City> 
+					<State>#qGetStudents.hoststate#</State> 
+					<PostalCode>#qGetStudents.hostzip#</PostalCode>
 				<cfelse>
 					<Address1>#qGetCompany.address#</Address1> 
 					<City>#qGetCompany.city#</City> 
