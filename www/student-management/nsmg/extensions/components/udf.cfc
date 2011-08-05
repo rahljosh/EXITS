@@ -178,7 +178,7 @@
 			if ( LEN(vDecryptedSSN) AND ListFind(vAllowedIDList, CLIENT.userID) ) {
 
 				// ISE - SHOW ONLY FOR USER 
-				if ( ListFind(vUserListISE, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID) AND ARGUMENTS.displayType EQ 'user' ) {
+				if ( ListFind(vUserListISE, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) AND ARGUMENTS.displayType EQ 'user' ) {
 					// return full SSN
 					vReturnSSN = vDecryptedSSN;
 				}
