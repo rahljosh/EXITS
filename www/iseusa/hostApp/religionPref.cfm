@@ -1,75 +1,103 @@
-<cfinclude template="includes/page_top.cfm">
-<cfif isDefined('form.process')>
-	<cfif form.religious_affiliation gt 0 and not isDefined('form.church_activity')>
-    	<cfset errorMsg = 'You have indicated a religious belief but have not answered the question: How often do you go to your religious estableshment?'>
-    <Cfelseif (form.church_activity eq 4 or form.church_activity eq 3 or form.church_activity eq 2) and not isDefined('form.stu_attend')>
-        <cfset errorMsg = 'You have indicated that you go attend religious services, but did not answer: Would you expect your exchange student to attend services with your family?'>
-             
-    <cfelse>    
-       <cfquery datasource="mysql">
-        update smg_hosts
-            set religious_participation = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.church_Activity#">,
-               <cfif isDefined('form.stu_Attend')> churchfam =  <cfqueryparam cfsqltype="cf_sql_integer" value="#form.stu_attend#">, </cfif>
-                churchtrans = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.stu_trans#">,
-                religion =  <cfqueryparam cfsqltype="cf_sql_integer" value="#form.religious_affiliation#">
-            where hostid = #client.hostid#
-        </cfquery>
-     <cfif form.church_activity gt 1>
-          <Cflocation url="index.cfm?page=churchInfo" addtoken="no">
-     <cfelse>
-     	  <cflocation url="index.cfm?page=communityProfile" addtoken="no">
-     </cfif>
-    </cfif>
-	<cfif isDefined("errorMsg")>
-			<script language="JavaScript">
-                alert('<cfoutput>#errorMsg#</cfoutput>');
-            </script>
-        </cfif>        
-</cfif>
+<cfparam name="form.church_activity" default="-1">
+<cfparam name="form.stu_trans" default="">
+<cfparam name="form.stu_Attend" default="">
+<cfparam name="form.religious_participation" default="">
 
-<cfquery name="religion" datasource="MySQL">
-select *
-from smg_religions
-</cfquery>
-<cfquery name="get_host_religion" datasource="MySQL">
+
+<!--- Import CustomTag Used for Page Messages and Form Errors --->
+<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+<cfquery name="qGetHostInfo" datasource="MySQL">
 select religion, religious_participation, churchfam,  churchtrans
 from smg_hosts
 where hostid = #client.hostid#
 </cfquery>
 
-<cfif get_host_religion.religion is ''>
-	<cfparam name="form.religious_affiliation" default="">
+
+<cfif isDefined('form.process')>
+    	<cfif form.religious_affiliation eq 666>
+        	<cfset form.church_activity = 'no'>
+            <cfset form.stu_attend eq 0>
+        </cfif>
+      
+        
+         <!---Error Checking---->
+         <cfscript>
+            // Data Validation
+			//REligions Belief
+			 if (( FORM.religious_affiliation gt 0) AND (FORM.church_activity EQ -1))  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated a religious belief but have not answered the question: How often do you go to your religious establishment?");
+			 }
+			 if ((( FORM.church_activity EQ 4) OR (FORM.church_activity EQ 3) OR (FORM.church_activity EQ 2)) and ( not LEN(TRIM(FORM.stu_Attend)) ) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated that you go attend religious services, but did not answer: Would you expect your exchange student to attend services with your family?");
+			 }
+		
+	 // Student Transportation
+			 if  ( not LEN(TRIM(FORM.stu_trans)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if you will provide transportation to the students religious services if they are different from your own.");
+			 }
+			 
+        </cfscript>
+        
+        <cfif NOT SESSION.formErrors.length()>
+         <cfquery datasource="mysql">
+        update smg_hosts
+            set religious_participation = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.church_Activity#">,
+               <cfif isDefined('form.stu_Attend')> churchfam =  <cfqueryparam cfsqltype="cf_sql_integer" value="#form.stu_attend#">, </cfif>
+                churchtrans = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.stu_trans#">,
+                churchfam = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.stu_attend#">,
+                religion =  <cfqueryparam cfsqltype="cf_sql_integer" value="#form.religious_affiliation#">
+            where hostid = #client.hostid#
+        </cfquery>
+			 <cfif form.church_activity gt 1>
+				 <Cflocation url="index.cfm?page=churchInfo" addtoken="no">
+             <cfelse>
+                  <cflocation url="index.cfm?page=communityProfile" addtoken="no">
+             </cfif>
+   	    </cfif>
+<!----If they are not procesing info, set to db answers---->
 <cfelse>
-	<cfparam name="form.religious_affiliation" default="#get_host_religion.religion#">
+
+         <cfscript>
+			 // Set FORM Values   
+			FORM.church_activity = qGetHostInfo.religious_participation;
+			FORM.stu_trans = qGetHostInfo.churchtrans;
+			FORM.stu_Attend = qGetHostInfo.churchfam;
+			FORM.religious_affiliation =  qGetHostInfo.religion;
+		</cfscript>
+
 </cfif>
-<cfif get_host_religion.churchtrans is ''>
-	<cfparam name="form.stu_trans" default="">
-<cfelse>
-	<cfparam name="form.stu_trans" default="#get_host_religion.churchtrans#">
-</cfif>
-<cfif get_host_religion.religious_participation is ''>
-	<cfparam name="form.church_activity" default="">
-<cfelse>
-	<cfparam name="form.church_activity" default="#get_host_religion.religious_participation#">
-</cfif>
-<cfif get_host_religion.churchfam is ''>
-	<cfparam name="form.stu_attend" default="">
-<cfelse>
-	<cfparam name="form.stu_attend" default="#get_host_religion.churchfam#">
-</cfif>
+
+
+
+<cfquery name="religion" datasource="MySQL">
+select *
+from smg_religions
+</cfquery>
+
+
+
 
 
 
 
 <cfform action="index.cfm?page=religionPref">
+
 <cfinput type="hidden" name="process"> 
 <h2>Religious Preference</h2>
-What religions beliefs do you follow?
+<!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
+What religions beliefs do you follow?<span class="redtext">*</span>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 	<tr bgcolor="#deeaf3">
     	<td>
  <select name="religious_affiliation" onChange="ShowHide();" >
-			<option value="00" selected>Non-Religious
+			<option value="666" selected>Non-Religious
 			<cfoutput query="religion">
 			<cfif #form.religious_affiliation# is #religionid#><option value=#religionid# selected>#religionname#<cfelse><option value=#religionid#>#religionname#</cfif>
 			</cfoutput>
@@ -83,14 +111,14 @@ What religions beliefs do you follow?
 </cfif>
 
 <h2>Religious Attendance</h2>
-How often do you go to your religious establishment?
+How often do you go to your religious establishment?<span class="redtext">*</span>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 
     <tr bgcolor="#deeaf3">
     	<td colspan=2><cfinput type="radio"
          onclick="document.getElementById('showname').style.display='table-row';"
          name="church_Activity" 
-         checked='#get_host_religion.religious_participation eq 4#'
+         checked='#form.religious_participation eq 4#'
          value="4" 
          
         > Active (2+ times a week)</td>
@@ -101,7 +129,7 @@ How often do you go to your religious establishment?
         name="church_Activity" 
         onclick="document.getElementById('showname').style.display='table-row';"
         value="3" 
-        checked='#get_host_religion.religious_participation eq 3#'
+        checked='#form.church_activity eq 3#'
        >Average (1-2x a week) 
 </td>
     </tr>
@@ -111,7 +139,7 @@ How often do you go to your religious establishment?
         onclick="document.getElementById('showname').style.display='table-row';"
         name="church_Activity" 
         value="2" 
-        checked='#get_host_religion.religious_participation eq 2#'
+        checked='#form.church_activity eq 2#'
         >Little Interest (occasionally)
 </td>
     </tr>
@@ -121,7 +149,7 @@ How often do you go to your religious establishment?
         name="church_Activity" 
         value="1" 
         onclick="document.getElementById('showname').style.display='none';"
-        checked='#get_host_religion.religious_participation eq 1#'
+        checked='#form.church_activity eq 1#'
         >Inactive (Never attend)
         </td>
     </tr>
@@ -131,20 +159,20 @@ How often do you go to your religious establishment?
         name="church_Activity" 
         onclick="document.getElementById('showname').style.display='none';"
         value="0" 
-        checked='#get_host_religion.religious_participation eq 0#'
+        checked='#form.church_activity eq 0#'
         >No Interest
 		</td>
     </tr>
         <tr  colspan=2 id="showname" <cfif form.church_Activity lte 1> style="display: none;"</cfif> >
-    	<td>Would you expect your exchange student to attend services with your family? </td>
+    	<td>Would you expect your exchange student to attend services with your family?<span class="redtext">*</span> </td>
         <td> <label>
-            <cfinput type="radio" name="stu_attend" value="1" checked='#get_host_religion.churchfam eq 1#'
+            <cfinput type="radio" name="stu_attend" value="yes" checked="#form.stu_Attend eq 'yes'#"
               />
             Yes
             </label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <label>
-            <cfinput type="radio" name="stu_attend" value="0" checked='#get_host_religion.churchfam eq 0#'
+            <cfinput type="radio" name="stu_attend" value="no" checked="#form.stu_Attend eq 'no'#"
              />
             No
             </label>
@@ -158,17 +186,14 @@ How often do you go to your religious establishment?
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 
       <tr bgcolor="#deeaf3">
-    	<td>Would you provide transportation to the student's religious services<Br /> if they are different from your own? </td>
+    	<td>Would you provide transportation to the student's religious services<Br /> if they are different from your own?<span class="redtext">*</span> </td>
         <td> <label>
-            <cfinput type="radio" name="stu_trans" value="1" checked='#get_host_religion.churchtrans eq 1#'
-             required="yes" message="Please answer: Would you provide transportation to the student's religious services if they are different from your own?" 
-             />
+            <cfinput type="radio" name="stu_trans" value="yes" checked="#form.stu_trans eq 'yes'#"/>
             Yes
             </label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <label>
-            <cfinput type="radio" name="stu_trans" value="0" checked='#get_host_religion.churchtrans eq 0#'
-            required="yes" message="Please answer: Would you provide transportation to the student's religious services if they are different from your own?" />
+            <cfinput type="radio" name="stu_trans" value="no" checked="#form.stu_trans eq 'no'#"/>
             No
             </label>
 		</td>

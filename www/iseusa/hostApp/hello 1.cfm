@@ -37,10 +37,6 @@
 	background-color: #E6F2D5;
 	padding-left: 20px;
 }
-
-.gradientBack{
-		background-image:url(images/faintGradient.png);
-}
 </style>
 
  <cfif client.hostid lte 0>
@@ -118,31 +114,15 @@
      <td width=50% valign="top" class="green">
      
     
-     		<p><div align="Center">
+     		<p><strong>Overall Status -</strong>
             
-					   <cfif appNotComplete eq 285>
-                            <a href="index.cfm?page=checkList"><strong><u>Ready to Submit!</u></strong></a>
-                       <cfelse>
-                           <a href="index.cfm?page=checkList"><strong><u>View Missing Information</u></strong></a>
-                        </cfif>
-      				</div>
-                    
-             </p>
-				
-                
-                 <table  width= 95% border=0 cellpadding=0 cellspacng=0>
-                 	<tr class="gradientBack">
-                    	<td  colspan=5 align="left" ><img src="images/gradient.png" alt="Percentage Complete" name="Percent Complete" width="#appNotComplete#" height=10 /></td>
-                    </tr>
-                    <tr>
-                    	<Td align="left" width=20%>0%</td>
-                        <td align="center" width=20%>25%</td>
-                        <td align="center" width=20%>50%</td>
-                        <td align="center" width=20%>75%</td>
-                        <td align="right" width=20%>100%</td>
-                     </tr>
-                  </table>
-                  
+				<cfif appNotComplete eq 0>
+                    Ready to Submit - #appNotComplete#
+                 <cfelse>
+                    <a href="index.cfm?page=checkList">Missing Information</a>
+               
+                </cfif>
+      
    		   <p><strong> Application Started -</strong> 
             <cfif appInfo.applicationStarted is ''>
               N/A
@@ -192,7 +172,7 @@
          Before your applcation can be approved, you will need to agree to and electronically sign the Host Family Rule Page and background checks will need to be run on all household members over the age of 18.<br /><br />
          If you have not already been in contact with a representative, you will be contacted shortly after your application is submitted.</p>
         	<div align="right">
-			<cfif appInfo.lead neq 0>
+			<cfif appInfo.lead eq 0>
             	<a href="index.cfm?page=startHostApp##pageTop"><img src="../images/buttons/startApp.png" alt="start" border="0" /></a>
             <cfelse>
             	<a href="index.cfm?page=startHostApp"><img src="../images/buttons/continueApp.png" alt="continue" border="0" /></a>

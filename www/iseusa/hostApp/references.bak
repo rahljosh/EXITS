@@ -1,6 +1,3 @@
-<!--- Import CustomTag Used for Page Messages and Form Errors --->
-<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-
 <cfset field_list = 'firstname,lastname,address,address2,city,state,zip,phone,email'>
 
 <cfparam name="form.firstname" default="">
@@ -12,100 +9,11 @@
 <cfparam name="form.zip" default="">
 <cfparam name="form.phone" default="">
 <cfparam name="form.email" default="">
-
 <cfif isDefined('url.delete')>
 	<cfquery datasource="mysql">
-    delete from smg_family_references 
+    delete from smg_family_references
     where refid = #url.delete#
     </cfquery>
-</cfif>
-
-
-
-
-<cfif isDefined('form.insert')>
-	 <!---Error Checking---->
-         <cfscript>
-            // Data Validation
-			// Family Last Name
-            if ( NOT LEN(TRIM(FORM.firstname)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the first name.");
-            }			
-        	
-			// Address
-            if ( NOT LEN(TRIM(FORM.lastname)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the last name.");
-            }	
-			
-			// City
-            if ( NOT LEN(TRIM(FORM.address)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the address.");
-            }			
-        	
-			// City
-            if ( NOT LEN(TRIM(FORM.city)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the city.");
-            }		
-			
-        	// State
-            if ( NOT LEN(TRIM(FORM.state)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please select the state.");
-            }		
-			
-			// Zip
-            if ( NOT LEN(TRIM(FORM.zip)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter a zip code.");
-            }			
-        	
-			// Family Last Name
-            if ( NOT LEN(TRIM(FORM.phone)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the phone number.");
-            }			
-       </cfscript>
-  
-  
-     <cfif NOT SESSION.formErrors.length()>
-       <Cfif isDefined('url.edit')>
-            <Cfquery name="updateRef" datasource="mysql">
-                update smg_family_references 
-                    set firstname = '#form.firstname#',
-                        lastname = '#form.lastname#',
-                        address = '#form.address#',
-                        address2 = '#form.address2#',
-                        city = '#form.city#',
-                        state = '#form.state#',
-                        zip = '#form.zip#',
-                        phone = '#form.phone#',
-                        email = '#form.email#',
-                        referencefor = #client.hostid#
-                    where refID = #url.edit#
-            </Cfquery>
-          `
-        <cfelse>
-            <cfquery datasource="MySQL">
-                insert into smg_family_references(firstname, lastname, address, address2, city, state, zip, phone, email, referencefor)
-                values('#form.firstname#','#form.lastname#', '#form.address#', '#form.address2#', '#form.city#', '#form.state#', '#form.zip#', '#form.phone#', '#form.email#', #client.hostid#)
-            </cfquery>
-              <Cfquery name="refID" datasource="mysql">
-                select max(refid) as newID
-                from smg_family_references
-            </cfquery>
-            <Cfset url.edit = #refID.newId#>
-        </Cfif>
-        <cflocation url="index.cfm?page=references">
-<Cfelse>
-
-
-
-
-</cfif>
 </cfif>
 <cfif isDefined('url.edit')>
 	<cfquery name="get_record" datasource="mysql">
@@ -116,9 +24,16 @@
 	<cfloop list="#field_list#" index="counter">
     	<cfset "form.#counter#" = evaluate("get_record.#counter#")>
 	</cfloop>
+
 </cfif>
 
 
+<cfif isDefined('form.insert')>
+    <cfquery datasource="MySQL">
+    insert into smg_family_references(firstname, lastname, address, address2, city, state, zip, phone, email, referencefor)
+        values('#form.firstname#','#form.lastname#', '#form.address#', '#form.address2#', '#form.city#', '#form.state#', #form.zip#, '#form.phone#', '#form.email#', #client.hostid#)
+    </cfquery>
+</cfif>
     <!---number kids at home---->
     <cfquery name="kidsAtHome" datasource="mysql">
     select count(childid) as kidcount
@@ -144,11 +59,6 @@
 	<cfset client.totalfam = #mother# + #father# + #kidsAtHome.kidcount#>
     
 <h2>Current References</h2>
-<!--- Form Errors --->
-    <gui:displayFormErrors 
-        formErrors="#SESSION.formErrors.GetCollection()#"
-        messageType="section"
-        />
 <p><em><strong>PLEASE NOTE:</strong> The Department of State now requires a second home visit which will be conducted by someone other than your local Area Representative.</em></p>
 Please provide at least <cfif client.totalfam eq 1>six (6)&dagger;&dagger;<cfelse>four (4)&dagger;</cfif> references.  References can <strong>not</strong> be relatives and must have visited you <strong>in side</strong> your home. 
 <br />
@@ -202,21 +112,19 @@ No additional references are required.
 <div align="center">
   <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields </span>
 </div>
-
-<form method="post" action="?page=references<Cfif isDefined('url.edit')>&edit=#url.edit#</cfif>">
-
+<cfform method="post" action="?page=references">
 <input type="hidden" name="insert" />
 	  <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr bgcolor="##deeaf3">
         <td class="label"><h3> First Name<span class="redtext">*</span></h3> </td>
         <td colspan=3>
-            <input type="text" name="firstname" value="#form.firstname#" size="20" maxlength="150">
+            <cfinput type="text" name="firstname" value="#form.firstname#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter their first name.">
         </td>
       </tr>
     <tr>
         <td class="label"><h3> Last Name<span class="redtext">*</span></h3> </td>
         <td colspan=3>
-            <input type="text" name="lastname" value="#form.lastname#" size="20" maxlength="150" >
+            <cfinput type="text" name="lastname" value="#form.lastname#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter their last name.">
         </td>
       </tr>
      <tr bgcolor="##deeaf3">
@@ -224,18 +132,18 @@ No additional references are required.
         
         <h3>Address <span class="redtext">*</span></h3></td>
         <td colspan=2>
-        	<input type="text" name="address" value="#form.address#" size="40" maxlength="150" >
+        	<cfinput type="text" name="address" value="#form.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address.">
             <font size="1">NO PO BOXES 
         </td>
         <td rowspan=2> </td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td></td>
-        <td colspan=3><input type="text" name="address2" value="#form.address2#" size="40" maxlength="150"></td>
+        <td colspan=3><cfinput type="text" name="address2" value="#form.address2#" size="40" maxlength="150"></td>
     </tr>
     <tr>			 
         <td class="label"><h3>City <span class="redtext">*</span></h3></td>
-        <td colspan=3><input type="text" name="city" value="#form.city#" size="20" maxlength="150" ></td>
+        <td colspan=3><cfinput type="text" name="city" value="#form.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td class="label"><h3>State <span class="redtext">*</span></h3></td>
@@ -245,28 +153,25 @@ No additional references are required.
                 FROM smg_states
                 ORDER BY id
             </cfquery>
-			<select NAME="state" query="get_states">
-			      	<option></option>
-				<cfloop query="get_states">
-                	<option value="#state#" <Cfif state eq #form.state#>selected</cfif>>#statename#</option>
-                </cfloop>
-            </select>
+			<cfselect NAME="state" query="get_states" value="state" display="statename" selected="#form.state#" queryPosition="below">
+				<option></option>
+			</cfselect>
         </td>
         <td class="zip"><h3>Zip<span class="redtext">*</span></h3> </td>
-        <td><input type="text" name="zip" value="#form.zip#" size="5" maxlength="5"></td>
+        <td><cfinput type="text" name="zip" value="#form.zip#" size="5" maxlength="5" required="yes" validate="zipcode" message="Please enter a valid Zip."></td>
     </tr>
 	  <tr >
         <td ><h3>Phone <span class="redtext">*</span></h3></td>
-        <td colspan=3><input type="text" name="phone" value="#form.phone#" size="14" maxlength="14" mask="(999) 999-9999"></td>
+        <td colspan=3><cfinput type="text" name="phone" value="#form.phone#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Phone."></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td ><h3>Email</h3></td>
-        <td colspan=3><input type="text" name="email" value="#form.email#" size="30" maxlength="200" ></td>
+        <td colspan=3><cfinput type="text" name="email" value="#form.email#" size="30" maxlength="200" validate="email" message="Please enter a valid Email."></td>
     </tr>
 	</table>
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
     <tr>
-        <td align="right"><Cfif isDefined('url.edit')><a href="?page=references"><img src="../images/buttons/goBack_44.png" border=0/></a> <input name="Submit" type="image" src="../images/buttons/update_44.png" border=0><cfelse><input name="Submit" type="image" src="../images/addReference.png" border=0></Cfif> <a href="index.cfm?page=demographicInfo&done"><img src="../images/buttons/Next.png" /></a></td>
+        <td align="right"><input name="Submit" type="image" src="../images/addReference.png" border=0> <a href="index.cfm?startApp.cfm&done"><img src="../images/done.png" /></a></td>
     </tr>
 </table>
 
@@ -280,5 +185,5 @@ No additional references are required.
 
 
 	
-</form>
+</cfform>
 </cfoutput>

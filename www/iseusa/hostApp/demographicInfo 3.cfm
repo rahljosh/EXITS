@@ -61,7 +61,7 @@
                 where
                     hostid = #client.hostid#
             </cfquery>
-			<cflocation url="index.cfm?page=checkList">
+			<cflocation url="index.cfm?page=hello">
          <cfelse>
          
          

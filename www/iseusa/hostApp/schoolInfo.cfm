@@ -1,77 +1,20 @@
-<Cfif isDefined('form.process')>
-	<!---_Transportation doesn't make sense---->
-	<Cfif #form.transportation# is "other" and #form.other_Desc# is ''>
-    You indicated 'Other' as the method of transportation to school, but didn't fill out the Other description box.<br>Use your browsers back button to enter the description.
-    <div class="button"><input name="back" type="image" src="pics/back.gif" align="right" border=0 onClick="history.back()"></div>
-    <cfabort>
-    <cfelseif #form.transportation# is not "other">
-    <Cfset form.other_desc = ''>
-    </cfif>
-	<!----Insert transportion, relationships---->
-    <cfquery name="insert_transportation" datasource="MySQL">
-    update smg_hosts
-    set school_trans = "#form.transportation#",
-    schoolWorks = "#form.schoolWorks#",
-    schoolWorksExpl = "#form.schoolWorksExpl#",
-    schoolCoach = "#form.schoolCoach#",
-    schoolCoachExpl = "#form.schoolCoachExpl#"
-    where hostid = #client.hostid#
-    </cfquery>
-
-	<!----Insert School Information---->
-    <cfif form.school is 'na'>
-    <cfquery name="insert_school" datasource="MySQL">
-				INSERT INTO smg_Schools
-					(schoolname,address,address2,city,state,zip<!----,phone,fax,email,url,principal---->)								
-				VALUES ("#form.name#", "#form.address#", "#form.address2#", "#form.city#", "#form.state#", "#form.zip#"<!----, "#form.phone#",
-						"#form.fax#", "#form.email#", "#form.url#", "#form.principal#"---->)
-			</cfquery>
-		
-			<cfquery name="schoolid" datasource="MySQL"> <!--- get the newest school --->
-				SELECT MAX(schoolid) as newschoolid
-				FROM smg_schools
-			</cfquery>
-            
-            <cfquery name="add_School" datasource="MySQL">
-            update smg_hosts
-            set schoolid = '#schoolid.newschoolid#'
-            where hostid = '#client.hostid#'
-            LIMIT 1 
-            </cfquery>	
-	<cfelse>
-    	<cfquery name="add_School" datasource="MySQL">
-		update smg_hosts
-		set schoolid = '#form.school#'
-		where hostid = '#client.hostid#'
-		LIMIT 1 
-		</cfquery>	
-    	
-    </cfif>
-    <Cflocation url="index.cfm?page=familyRules">
-</Cfif>
-
-<Cfoutput>
-
-<cfform method="post" action="index.cfm?page=schoolInfo">
-<input type="hidden" name="process" />
-<cfparam name="form.schoolWorks" default="">
+<Cfparam name="form.school" default="0">
+<cfparam name="form.schoolWorks" default="3">
 <cfparam name="form.schoolWorksExpl" default="">
-<cfparam name="form.schoolCoach" default="">
+<cfparam name="form.schoolCoach" default="3">
 <cfparam name="form.schoolCoachExpl" default="">
-<cfparam name="form.transportation" default="">
-<cfparam name="form.name" default="">
+<cfparam name="form.schoolTransportation" default="">
+<cfparam name="form.schoolTransportationother" default="">
+<cfparam name="form.schoolname" default="">
 <cfparam name="form.address" default="">
 <cfparam name="form.address2" default="">
 <cfparam name="form.city" default="">
 <cfparam name="form.state" default="">
 <cfparam name="form.zip" default="">
-<!----
-<cfparam name="form.phone" default="">
-<cfparam name="form.fax" default="">
-<cfparam name="form.email" default="">
-<cfparam name="form.url" default="">
-<cfparam name="form.principal" default="">
----->
+<Cfparam name="form.school" default="na">
+
+
+
 <cfquery name="local" datasource="MySQL">
 	select city,state,zip
 	from smg_hosts
@@ -88,12 +31,182 @@ from smg_hosts
 left join smg_schools on smg_schools.schoolid = smg_hosts.schoolid
 where smg_hosts.hostid = #client.hostid#
 </cfquery>
-<cfquery name="hostInfo" datasource="MySQL">
-select schoolWorks, schoolWorksExpl, schoolCoach, schoolCoachExpl
+<cfquery name="qGetHostInfo" datasource="MySQL">
+select schoolWorks, schoolWorksExpl, schoolCoach, schoolCoachExpl, schooltransportation, schooltransportationother
 from smg_hosts
 where hostid = #client.hostid#
 </cfquery>
-<div class="application_section_header">School Infomation</div>
+
+
+<!--- Import CustomTag Used for Page Messages and Form Errors --->
+<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+
+
+<Cfif isDefined('form.process')>
+	<cfif not val(form.school)>
+	
+    <cfscript>
+			// Name of School
+            if ( NOT LEN(TRIM(FORM.schoolname)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the name of the school.");
+            }			
+        	
+			// Address
+            if ( NOT LEN(TRIM(FORM.address)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the address of the school.");
+            }	
+			
+			// City
+            if ( NOT LEN(TRIM(FORM.city)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the city the school is located in.");
+            }			
+        	
+        	// State
+            if ( NOT LEN(TRIM(FORM.state)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the state the school is located in.");
+            }		
+			
+			// Zip
+            if ( NOT LEN(TRIM(FORM.zip)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the school's zip code.");
+            }	
+			
+	   </cfscript>
+   </cfif>
+       <cfscript>
+        	// Works at School
+            if ( form.schoolWorks EQ 3 ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if any member of your household works for the high school.");
+            }		
+			
+			// Explanation of who works at school
+            if ( (form.schoolWorks EQ 1) AND (NOT LEN(TRIM(FORM.schoolWorksExpl))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated that someone works with the school, but didn't explain.  Please provide details regarding the posistion.");
+            }	
+			//Been contacted by coach
+			if ( form.schoolCoach EQ 3 ) {
+               // Get all the missing items in a list
+               SESSION.formErrors.Add("Please indicate if a coach has contacted you about hosting an exchange student.");
+            }		
+			
+			// Coach explanation
+            if ( (form.schoolCoach EQ 1) AND (NOT LEN(TRIM(FORM.schoolCoachExpl))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated that a coach contacted you, but didn't explain.  Please provide details regarding this contact.");
+            }	
+			
+			
+			// Other Transportation 
+            if ( (form.schooltransportation is 'other') AND (NOT LEN(TRIM(FORM.other_desc))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
+            }	
+     	   // Transportaion
+            if (NOT LEN(TRIM(FORM.schoolTransportation)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate how the student will get to school.");
+            }
+			
+        </cfscript>
+        
+        <cfif NOT SESSION.formErrors.length()>
+        		<!----Insert transportion, relationships---->
+                <cfquery name="insert_transportation" datasource="MySQL">
+                update smg_hosts
+                set 
+                schoolWorks = "#form.schoolWorks#",
+                schoolWorksExpl = "#form.schoolWorksExpl#",
+                schoolCoach = "#form.schoolCoach#",
+                schoolCoachExpl = "#form.schoolCoachExpl#",
+                schooltransportation = "#form.schoolTransportation#",
+                schooltransportationother = "#form.other_desc#"
+                where hostid = #client.hostid#
+                </cfquery>
+ 			<!----Insert School Information---->
+   			<cfif form.school is 'na'>
+           			 <cfquery name="insert_school" datasource="MySQL">
+                        INSERT INTO smg_schools
+                            (schoolname,address,address2,city,state,zip<!----,phone,fax,email,url,principal---->)								
+                        VALUES ("#form.schoolname#", "#form.address#", "#form.address2#", "#form.city#", "#form.state#", "#form.zip#"<!----, "#form.phone#",
+                                "#form.fax#", "#form.email#", "#form.url#", "#form.principal#"---->)
+                    </cfquery>
+                
+                    <cfquery name="schoolid" datasource="MySQL"> <!--- get the newest school --->
+                        SELECT MAX(schoolid) as newschoolid
+                        FROM smg_schools
+                    </cfquery>
+                    
+                    <cfquery name="add_School" datasource="MySQL">
+                    update smg_hosts
+                    set schoolid = '#schoolid.newschoolid#'
+                    where hostid = '#client.hostid#'
+                    LIMIT 1 
+                    </cfquery>	
+            <cfelse>
+                <cfquery name="add_School" datasource="MySQL">
+                update smg_hosts
+                set schoolid = '#form.school#'
+                where hostid = '#client.hostid#'
+                LIMIT 1 
+                </cfquery>	
+                
+            </cfif>
+
+        
+          <Cflocation url="index.cfm?page=familyRules">
+       
+  		</cfif>
+<Cfelse>	
+<!----The first time the page is loaded, pass in current values, if they exist.---->
+	 <cfscript>
+		 
+			 // Set FORM Values   
+			FORM.schoolName = get_host_school.schoolName;
+			FORM.address = get_host_school.address;
+			FORM.address2 = get_host_school.address2;
+			FORM.city = get_host_school.city;
+			FORM.state = get_host_school.state;
+			FORM.zip = get_host_school.zip;
+			
+			FORM.schoolWorks = qGetHostInfo.schoolWorks;
+			FORM.schoolWorksExpl = qGetHostInfo.schoolWorksExpl;
+			FORM.schoolCoach = qGetHostInfo.schoolCoach;
+			FORM.schoolCoachExpl = qGetHostInfo.schoolCoachExpl;
+			FORM.schooltransportation = qGetHostInfo.schooltransportation;
+			FORM.schooltransportationother = qGetHostInfo.schooltransportationother;
+		</cfscript>
+</cfif> 
+    
+
+	
+       
+
+<Cfoutput>
+
+<cfform method="post" action="index.cfm?page=schoolInfo">
+<input type="hidden" name="process" />
+
+<!----
+<cfparam name="form.phone" default="">
+<cfparam name="form.fax" default="">
+<cfparam name="form.email" default="">
+<cfparam name="form.url" default="">
+<cfparam name="form.principal" default="">
+---->
+
+<div class="application_section_header"><h2>School Infomation</h2></div>
+	<!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
 
 
 <cfif get_Schools.recordcount is 0>
@@ -106,12 +219,8 @@ the information for the school that the student will be attending.
         <td class="label">School: </td><td class="form_text"><select name="school">
 						<option value='na' selected>
 						<cfloop query="get_schools">
-						<cfif get_host_school.schoolid eq #get_schools.schoolid#>
-                        	<option value=#schoolid# selected>#schoolname#
-                        <cfelse>
-                        	<option value=#schoolid#>#schoolname#
-                        </cfif>
-						</cfloop>
+						   	<option value=#schoolid#<cfif form.school eq #get_schools.schoolid#> selected</cfif>>#schoolname#
+                     	</cfloop>
 						<option value=0>Other
 						</select></span>
 			</tr>
@@ -122,30 +231,30 @@ the information for the school that the student will be attending.
   <h2>School Information</h2>
   <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr bgcolor="##deeaf3">
-        <td class="label"><h3>High School</h3></td><td class="form_text" colspan=3> <cfinput type="text" name="name" size="20" value="#get_host_school.schoolname#"></span>
+        <td class="label"><h3>High School<span class="redtext">*</span></h3></td><td class="form_text" colspan=3> <input type="text" name="schoolname" size="20" value="#form.schoolname#"></span>
 </tr>
 		<tr>
-			<td class="label"><h3>Address</h3></td><td colspan=3 class="form_text"> <cfinput type="text" name="address" size="20" value="#get_host_school.address#"></td>
+			<td class="label"><h3>Address<span class="redtext">*</span></h3></td><td colspan=3 class="form_text"> <input type="text" name="address" size="20" value="#form.address#"></td>
 		</tr>
 		<tr bgcolor="##deeaf3">
-			<td></td ><td  colspan=3 class="form_text"> <cfinput type="text" name="address2" size="20" value="#get_host_school.address2#">
+			<td></td ><td  colspan=3 class="form_text"> <input type="text" name="address2" size="20" value="#form.address2#">
 		</tr>
 		<tr>			 
-			<td class="label"><h3>City</h3> </td><td  colspan=3 class="form_text"><cfinput type="text" name="city" size="20" value="#get_host_school.city#">
+			<td class="label"><h3>City<span class="redtext">*</span></h3> </td><td  colspan=3 class="form_text"><input type="text" name="city" size="20" value="#form.city#">
 		</tr> 
 		<tr bgcolor="##deeaf3">	
-			<td class="label" > <h3>State</h3> </td><td width=10 class="form_Text">
+			<td class="label" > <h3>State<span class="redtext">*</span></h3> </td><td width=10 class="form_Text">
 		
-    <cfquery name="get_states" datasource="mysql">
+   			 <cfquery name="get_states" datasource="mysql">
                 SELECT state, statename
                 FROM smg_states
                 ORDER BY id
             </cfquery>
-			<cfselect NAME="state" query="get_states" value="state" display="statename" selected="#get_host_school.state#" queryPosition="below">
+			<cfselect NAME="state" query="get_states" value="state" display="statename" selected="#form.state#" queryPosition="below">
 				<option></option>
 			</cfselect>
 	
-	</td><td class="zip" ><h3>Zip</h3> </td><td class="form_text"><cfinput type="text" name="zip" size="5" value="#get_host_school.zip#"></td>
+	</td><td class="zip" ><h3>Zip<span class="redtext">*</span></h3> </td><td class="form_text"><input type="text" name="zip" size="5" value="#form.zip#"></td>
 
 		</tr>
         <!----
@@ -176,60 +285,60 @@ the information for the school that the student will be attending.
  <h2>Relationships</h2>
  <table width=100% cellspacing=0 cellpadding=2 class="border" border=0>
     <tr bgcolor="##deeaf3">
-        <td class="label">Does any member of your household work for the high<br /> school in a coaching/teaching/administrative capacity?</td>
+        <td class="label">Does any member of your household work for the high<br /> school in a coaching/teaching/administrative capacity?<span class="redtext">*</span></td>
         <td>
             <label>
             <cfinput type="radio" name="schoolWorks" value="1"
-            checked="#hostInfo.schoolWorks eq 1#" onclick="document.getElementById('showSchoolWorks').style.display='table-row';" 
-            required="yes" message="Does any member of your household work for the high school in a coaching/teaching/administrative capacity?" />
+            checked="#form.schoolWorks eq 1#" onclick="document.getElementById('showSchoolWorks').style.display='table-row';" 
+             />
             Yes
             </label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <label>
             <cfinput type="radio" name="schoolWorks" value="0"
-           checked="#hostInfo.schoolWorks eq 0#" onclick="document.getElementById('showSchoolWorks').style.display='none';" 
-           required="yes" message="Please answer: Does any member of your household work for the high school in a coaching/teaching/administrative capacity?" />
+           checked="#form.schoolWorks eq 0#" onclick="document.getElementById('showSchoolWorks').style.display='none';" 
+           />
             No
             </label>
 		 </td>
 	</tr>
     <Tr>
-	     <td align="left" colspan=2 id="showSchoolWorks" <cfif hostInfo.schoolWorks eq 0> style="display: none;"</cfif>><Br /><strong>Job Title & Duties</strong><br><textarea cols="50" rows="4" name="schoolWorksExpl" wrap="VIRTUAL"><Cfoutput>#hostInfo.schoolWorksExpl#</cfoutput></textarea></td>
+	     <td align="left" colspan=2 id="showSchoolWorks" <cfif form.schoolWorks eq 0> style="display: none;"</cfif>><Br /><strong>Job Title & Duties<span class="redtext">*</span></strong><br><textarea cols="50" rows="4" name="schoolWorksExpl" wrap="VIRTUAL"><Cfoutput>#form.schoolWorksExpl#</cfoutput></textarea></td>
 	</tr>   
     <tr>
-        <td class="label">Has any member of your household had contact with a coach<Br /> regarding the hosting of an exchange student with a particular athletic ability?</td>
+        <td class="label">Has any member of your household had contact with a coach<Br /> regarding the hosting of an exchange student with a particular athletic ability?<span class="redtext">*</span></td>
         <td>
             <label>
             <cfinput type="radio" name="schoolCoach" value="1"
-            checked="#hostInfo.schoolCoach eq 1#" onclick="document.getElementById('showCoachExpl').style.display='table-row';" 
-            required="yes" message="Does any member of your household work for the high school in a coaching/teaching/administrative capacity?" />
+            checked="#form.schoolCoach eq 1#" onclick="document.getElementById('showCoachExpl').style.display='table-row';" 
+             />
             Yes
             </label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <label>
             <cfinput type="radio" name="schoolCoach" value="0"
-           checked="#hostInfo.schoolCoach eq 0#" onclick="document.getElementById('showCoachExpl').style.display='none';" 
-           required="yes" message="Please answer: Does any member of your household work for the high school in a coaching/teaching/administrative capacity?" />
+           checked="#form.schoolCoach eq 0#" onclick="document.getElementById('showCoachExpl').style.display='none';" 
+           />
             No
             </label>
 		 </td>
 	</tr>
     <Tr>
-	     <td align="left" colspan=2 id="showCoachExpl" <cfif hostInfo.schoolCoach eq 0>style="display: none;"</cfif>><br /><strong>Please describe</strong><br><textarea cols="50" rows="4" name="schoolCoachExpl" wrap="VIRTUAL"><Cfoutput>#hostInfo.schoolCoachExpl#</cfoutput></textarea></td>
+	     <td align="left" colspan=2 id="showCoachExpl" <cfif form.schoolCoach eq 0>style="display: none;"</cfif>><br /><strong>Please describe<span class="redtext">*</span></strong><br><textarea cols="50" rows="4" name="schoolCoachExpl" wrap="VIRTUAL"><Cfoutput>#form.schoolCoachExpl#</cfoutput></textarea></td>
 	</tr>
 </table>
 
   <h2>Transportation</h2>
-  How will the student get to school?
+  How will the student get to school?<span class="redtext">*</span>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr bgcolor="##deeaf3">
-        <td class="label"><cfinput type="radio" name="transportation" message="Please indicate the type of transportation student will use to get to school." required="yes" value="School Bus">School Bus</td>
-        <td class="form_text"><cfinput type="radio" name="transportation" value="Car">Car  </td>
-        <td class="form_text"><cfinput type="radio" name="transportation" value="Walk">Walk</td>
+        <td class="label"><cfinput type="radio" name="schoolTransportation"  value="School Bus"  checked="#form.schoolTransportation eq 'School Bus'#" >School Bus</td>
+        <td class="form_text"><cfinput type="radio" name="schoolTransportation" value="Car" checked="#form.schoolTransportation eq 'Car'#">Car  </td>
+        <td class="form_text"><cfinput type="radio" name="schoolTransportation" value="Walk" checked="#form.schoolTransportation eq 'Walk'#">Walk</td>
 	</tr>
     <tr>
-    	<td class="label"> <cfinput type="radio" name="transportation" value="Public Transportation">Public Transportation<br></td>
-        <Td><cfinput type="radio" name="transportation" value="Other">Other: <cfinput type="text" name="other_desc" size=10> </Td>
+    	<td class="label"> <cfinput type="radio" name="schoolTransportation" value="Public Transportation" checked="#form.schoolTransportation eq 'Public Transportation'#">Public Transportation<br></td>
+        <Td><cfinput type="radio" name="schoolTransportation" value="Other" checked="#form.schoolTransportation eq 'Other'#" >Other: <cfinput type="text" name="other_desc" size=10 value="#form.schoolTransportationother#"> </Td>
         <td> </td>
     </tr>
 </table>
