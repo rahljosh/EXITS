@@ -157,12 +157,15 @@
                 ORDER BY 
                 	historyid DESC
             </cfquery>
+            
+            <cfset safeAddress1 = ReplaceNoCase(qGetStudents.schooladdress, "&", "and")>
+            <cfset safeAddress2 = ReplaceNoCase(qGetStudents.schooladdress2, "&", "and")>
         </cfsilent>
         <ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentid#" userID="#qGetCompany.sevis_userid#">
 			<SiteOfActivity>
 				<Edit printForm="false">
-					<Address1>#schooladdress#</Address1> 
-					<cfif schooladdress2 is not ''><Address2>#schooladdress2#</Address2></cfif>
+					<Address1>#safeAddress1#</Address1> 
+					<cfif NOT LEN(safeAddress2)><Address2>#safeAddress2#</Address2></cfif>
 					<City>#schoolcity#</City> 
 					<State>#schoolstate#</State> 
 					<PostalCode>#schoolzip#</PostalCode> 

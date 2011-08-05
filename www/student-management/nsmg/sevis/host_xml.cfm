@@ -140,12 +140,13 @@ Sorry, there were no students to populate the XML file at this time.
 	</BatchHeader>
 	<UpdateEV>
 	<cfloop query="qGetStudents">
+    	<cfset safeHostAddress = ReplaceNoCase(qGetStudents.hostAddress, "&", "and")>
 		<ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentID#" userID="#qGetCompany.sevis_userid#">
 			<Biographical printForm="false">
 				<USAddress>
 				<cfif hostid is not '0' and  host_fam_approved LT '5'>
 					<Address1><cfif hostlastname NEQ ''>#hostlastname#<cfelseif fatherlastname NEQ ''>#fatherlastname#<cfelseif motherlastname NEQ ''>#motherlastname#</cfif> Family</Address1> 	
-					<Address2>#hostaddress#</Address2> 	<!--- <cfif hostaddress2 NEQ ''><Address2>#hostaddress2#</Address2></cfif> --->
+					<Address2>#safeHostAddress#</Address2>
 					<City>#hostcity#</City> 
 					<State>#hoststate#</State> 
 					<PostalCode>#hostzip#</PostalCode>
