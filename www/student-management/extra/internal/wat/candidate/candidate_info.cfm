@@ -3,7 +3,8 @@
 	File:		candidate_info.cfm
 	Author:		Marcus Melo
 	Date:		June 01, 2010
-	Desc:		Candidate Information Screen.
+	Desc:		Candidate Information Screen. 
+				PS: This page is viewable by Office and Intl. Reps
 
 	Updated: 	
 
@@ -492,6 +493,8 @@
                         <table width="20%" align="right" cellpadding="2">
                             <tr>
                                 <td valign="top" align="center">
+                                
+                                	<!--- Office View Only --->
                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         <p><a href="candidate/candidate_profile.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Profile ]</a></p>
 									</cfif>
@@ -505,6 +508,7 @@
                                         <p>#qGetUploadedResume.downloadLink#</p>
                                     </cfif>
                                     
+                                    <!--- Office View Only --->
                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         <p><a href="candidate/employerLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Employer Letter ]</a></p>
 
@@ -512,6 +516,7 @@
                                         
                                         <p><a href="candidate/supportLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Support Letter ]</a></p>
 									</cfif>
+                                    
                                 </td>
                             </tr>
 						</table>
@@ -693,7 +698,6 @@
                                                 <textarea name="englishAssessment" class="style1 editPage mediumTextArea">#qGetCandidate.englishAssessment#</textarea>
                                             </td>
                                         </tr>
-                                        
                                         <tr>
                                             <td class="style1" align="right"><strong>Date of Interview:</strong></td>
                                             <td class="style1">
@@ -702,13 +706,16 @@
                                                 <font size="1">(mm/dd/yyyy)</font>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>Comment:</strong></td>
-                                            <td class="style1">
-                                            	<span class="readOnly">#qGetCandidate.englishAssessmentComment#</span>
-                                                <textarea name="englishAssessmentComment" class="style1 editPage mediumTextArea">#qGetCandidate.englishAssessmentComment#</textarea>
-                                            </td>
-                                        </tr>
+                                        <!--- Office View Only --->
+                                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Comment:</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly">#qGetCandidate.englishAssessmentComment#</span>
+                                                    <textarea name="englishAssessmentComment" class="style1 editPage mediumTextArea">#qGetCandidate.englishAssessmentComment#</textarea>
+                                                </td>
+                                            </tr>
+                                        </cfif>
                                     </table>
 
                                 </td>
@@ -877,9 +884,10 @@
                                         <tr bgcolor="##C2D1EF">
                                             <td colspan="3" class="style2" bgcolor="##8FB6C9">
                                                 &nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; 
-                                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                <!--- Office View Only --->
+												<cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                <span style="float:right; padding-right:20px;">
-                                                    	<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);"><font class="style2" color="##FFFFFF">[ Insurance Management ]</a>
+                                                    	<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);">[ Insurance Management ]</a>
                                                     </span>
                                                 </cfif>
                                             </td>
@@ -977,7 +985,8 @@
                                     <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
             	                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
-                                            	&nbsp;:: Placement Information 
+                                            	&nbsp;:: Placement Information
+                                                <!--- Office View Only ---> 
                                             	<cfif ListFind("1,2,3,4", CLIENT.userType)>
 		                                            <span style="float:right; padding-right:20px;">
                                                     	<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#qGetCandidate.uniqueid#', 400, 750);" class="style2">[ History ]</a>
@@ -989,6 +998,7 @@
                                         	<td class="style1" align="right" width="30%"><strong>Company Name:</strong></td>
                                             <td class="style1" align="left" width="70%">
                                             	<span class="readOnly">
+                                                	<!--- Office View Only --->
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.hostCompanyName#</strong></a>
                                                 	<cfelse>
@@ -1090,7 +1100,7 @@
                                                 </select>
                                             </td>
                                         </tr>
-										<!---- ONLY OFFICE USERS ---->
+										<!--- Office View Only --->
                                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                             <tr class="hiddenField selfPlacementInfo">
                                                 <td class="style1" align="right"><strong>Date:</strong></td>
@@ -1198,10 +1208,11 @@
                                     <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
                                         	<td class="style2" bgcolor="##8FB6C9" colspan="4">
-                                            	&nbsp;:: Program Information &nbsp;  
+                                            	&nbsp;:: Program Information &nbsp;
+                                                <!--- Office View Only --->  
                                             	<cfif ListFind("1,2,3,4", CLIENT.userType)>    
                                                 	<span style="float:right; padding-right:20px;">
-                                                    	<a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);"> <font class="style2" color="##FFFFFF">[ History ]</a>
+                                                    	<a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);">[ History ]</a>
                                                     </span>
                                             	</cfif>
                                             </td>
@@ -1257,6 +1268,7 @@
                                         	<td class="style1" align="right"><strong>Requested Placement:</strong>
                                             <td class="style1">
                                                 <span class="readOnly">
+                                                	<!--- Office View Only --->
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qRequestedPlacement.hostcompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
                                                     <cfelse>
@@ -1481,6 +1493,7 @@
 
 						<br />
  						
+                        <!--- Office View Only --->
                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
                         
 							<!---- Incident Report --->
@@ -1546,7 +1559,7 @@
             
             <br/>
 
-			<!---- EDIT/UPDATE BUTTONS ---->
+			<!---- EDIT/UPDATE BUTTONS | Office View Only ---->            
             <cfif ListFind("1,2,3,4", CLIENT.userType)>
                 
                 <table width="80%" border="0" cellpadding="0" cellspacing="0" align="center">	
