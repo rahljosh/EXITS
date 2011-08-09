@@ -28,21 +28,21 @@
 <!--- NEW FLIGHT ARRIVAL UP TO 4 LEGS --->
 <cfif form.ar_update is 'new'> 
 	<cfloop From = "1" To = "4" Index = "i">
-		<cfif form["ar_dep_date" & i] EQ ''><cfelse>
+		<cfif form["ar_departDate" & i] EQ ''><cfelse>
 			<cfquery name="insert_flight" datasource="MySQL">
-				INSERT INTO extra_flight_info
-				(candidateid, dep_date, dep_city, dep_aircode, arrival_city, arrival_aircode, flight_number, dep_time, arrival_time,
-				overnight, flight_type)
+				INSERT INTO extra_flight_information
+				(candidateid, departDate, departCity, departAirportCode, arriveCity, arriveAirportCode, flightNumber, departTime, arriveTime,
+				isOvernightFlight, flightType)
 				VALUES ('#url.candidateid#', 
-					<cfif form["ar_dep_date" & i] EQ ''>'',<cfelse>#CreateODBCDate(form["ar_dep_date" & i])#,</cfif>
-					'#form["ar_dep_city" & i]#',  
-					'#form["ar_dep_aircode" & i]#',
-					'#form["ar_arrival_city" & i]#',
-					'#form["ar_arrival_aircode" & i]#',
-					'#form["ar_flight_number" & i]#',
-					<cfif form["ar_dep_time" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["ar_dep_time" & i])#,</cfif>
-					<cfif form["ar_arrival_time" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["ar_arrival_time" & i])#,</cfif>
-					<cfif isdefined('form.ar_overnight#i#')> '1', <cfelse> '0', </cfif>
+					<cfif form["ar_departDate" & i] EQ ''>'',<cfelse>#CreateODBCDate(form["ar_departDate" & i])#,</cfif>
+					'#form["ar_departCity" & i]#',  
+					'#form["ar_departAirportCode" & i]#',
+					'#form["ar_arriveCity" & i]#',
+					'#form["ar_arriveAirportCode" & i]#',
+					'#form["ar_flightNumber" & i]#',
+					<cfif form["ar_departTime" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["ar_departTime" & i])#,</cfif>
+					<cfif form["ar_arriveTime" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["ar_arriveTime" & i])#,</cfif>
+					<cfif isdefined('form.ar_isOvernightFlight#i#')> '1', <cfelse> '0', </cfif>
 					'arrival'
 					)
 			</cfquery>
@@ -52,18 +52,18 @@
 <cfelseif form.ar_update is 'update'> 
 	<cfloop From = "1" To = "#form.ar_count#" Index = "i">
 			<cfquery name="update_arrival" datasource="MySQL">
-			UPDATE extra_flight_info
-			SET dep_date = <cfif form["ar_dep_date" & i] EQ ''>'',<cfelse>#CreateODBCDate(form["ar_dep_date" & i])#,</cfif>
-				dep_city = '#form["ar_dep_city" & i]#',  
-				dep_aircode = '#form["ar_dep_aircode" & i]#',
-				dep_aircode = '#form["ar_dep_aircode" & i]#',
-				arrival_city = '#form["ar_arrival_city" & i]#',
-				arrival_aircode = '#form["ar_arrival_aircode" & i]#',
-				flight_number = '#form["ar_flight_number" & i]#',
-				dep_time = <cfif form["ar_dep_time" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["ar_dep_time" & i])#,</cfif>
-				arrival_time = <cfif form["ar_arrival_time" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["ar_arrival_time" & i])#,</cfif>
-				overnight = <cfif isdefined('form.ar_overnight#i#')> '1' <cfelse> '0' </cfif>
-			WHERE flightid = '#form["ar_flightid" & i]#'
+			UPDATE extra_flight_information
+			SET departDate = <cfif form["ar_departDate" & i] EQ ''>'',<cfelse>#CreateODBCDate(form["ar_departDate" & i])#,</cfif>
+				departCity = '#form["ar_departCity" & i]#',  
+				departAirportCode = '#form["ar_departAirportCode" & i]#',
+				departAirportCode = '#form["ar_departAirportCode" & i]#',
+				arriveCity = '#form["ar_arriveCity" & i]#',
+				arriveAirportCode = '#form["ar_arriveAirportCode" & i]#',
+				flightNumber = '#form["ar_flightNumber" & i]#',
+				departTime = <cfif form["ar_departTime" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["ar_departTime" & i])#,</cfif>
+				arriveTime = <cfif form["ar_arriveTime" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["ar_arriveTime" & i])#,</cfif>
+				isOvernightFlight = <cfif isdefined('form.ar_isOvernightFlight#i#')> '1' <cfelse> '0' </cfif>
+			WHERE ID = '#form["ar_ID" & i]#'
 			LIMIT 1
 			</cfquery>
 	</cfloop>
@@ -73,21 +73,21 @@
 <!--- NEW FLIGHT DEPARTURE UP TO 4 LEGS --->
 <cfif form.dp_update is 'new'>
 	<cfloop From = "1" To = "4" Index = "i">
-		<cfif form["dp_dep_date" & i] EQ ''><cfelse>
+		<cfif form["dp_departDate" & i] EQ ''><cfelse>
 			<cfquery name="insert_flight" datasource="MySQL">
-				INSERT INTO extra_flight_info
-				(candidateid, dep_date, dep_city, dep_aircode, arrival_city, arrival_aircode, flight_number, dep_time, arrival_time,
-				overnight, flight_type)
+				INSERT INTO extra_flight_information
+				(candidateid, departDate, departCity, departAirportCode, arriveCity, arriveAirportCode, flightNumber, departTime, arriveTime,
+				isOvernightFlight, flightType)
 				VALUES ('#url.candidateid#', 
-					<cfif form["dp_dep_date" & i] EQ ''>'',<cfelse>#CreateODBCDate(form["dp_dep_date" & i])#,</cfif>
-					'#form["dp_dep_city" & i]#',  
-					'#form["dp_dep_aircode" & i]#',
-					'#form["dp_arrival_city" & i]#',
-					'#form["dp_arrival_aircode" & i]#',
-					'#form["dp_flight_number" & i]#',
-					<cfif form["dp_dep_time" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["dp_dep_time" & i])#,</cfif>
-					<cfif form["dp_arrival_time" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["dp_arrival_time" & i])#,</cfif>
-					<cfif isdefined('form.dp_overnight#i#')> '1', <cfelse> '0', </cfif>
+					<cfif form["dp_departDate" & i] EQ ''>'',<cfelse>#CreateODBCDate(form["dp_departDate" & i])#,</cfif>
+					'#form["dp_departCity" & i]#',  
+					'#form["dp_departAirportCode" & i]#',
+					'#form["dp_arriveCity" & i]#',
+					'#form["dp_arriveAirportCode" & i]#',
+					'#form["dp_flightNumber" & i]#',
+					<cfif form["dp_departTime" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["dp_departTime" & i])#,</cfif>
+					<cfif form["dp_arriveTime" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["dp_arriveTime" & i])#,</cfif>
+					<cfif isdefined('form.dp_isOvernightFlight#i#')> '1', <cfelse> '0', </cfif>
 					'departure'
 					)
 			</cfquery>
@@ -97,17 +97,17 @@
 <cfelseif form.dp_update is 'update'> 
 	<cfloop From = "1" To = "#form.dp_count#" Index = "i">
 			<cfquery name="update_arrival" datasource="MySQL">
-			UPDATE extra_flight_info
-			SET dep_date = <cfif form["dp_dep_date" & i] EQ ''>'',<cfelse>#CreateODBCDate(form["dp_dep_date" & i])#,</cfif>
-				dep_city = '#form["dp_dep_city" & i]#',  
-				dep_aircode = '#form["dp_dep_aircode" & i]#',
-				arrival_city = '#form["dp_arrival_city" & i]#',
-				arrival_aircode = '#form["dp_arrival_aircode" & i]#',
-				flight_number = '#form["dp_flight_number" & i]#',
-				dep_time = <cfif form["dp_dep_time" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["dp_dep_time" & i])#,</cfif>
-				arrival_time = <cfif form["dp_arrival_time" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["dp_arrival_time" & i])#,</cfif>
-				overnight = <cfif isdefined('form.dp_overnight#i#')> '1' <cfelse> '0' </cfif>
-			WHERE flightid = '#form["dp_flightid" & i]#'
+			UPDATE extra_flight_information
+			SET departDate = <cfif form["dp_departDate" & i] EQ ''>'',<cfelse>#CreateODBCDate(form["dp_departDate" & i])#,</cfif>
+				departCity = '#form["dp_departCity" & i]#',  
+				departAirportCode = '#form["dp_departAirportCode" & i]#',
+				arriveCity = '#form["dp_arriveCity" & i]#',
+				arriveAirportCode = '#form["dp_arriveAirportCode" & i]#',
+				flightNumber = '#form["dp_flightNumber" & i]#',
+				departTime = <cfif form["dp_departTime" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["dp_departTime" & i])#,</cfif>
+				arriveTime = <cfif form["dp_arriveTime" & i] EQ ''>NULL,<cfelse>#CreateODBCTime(form["dp_arriveTime" & i])#,</cfif>
+				isOvernightFlight = <cfif isdefined('form.dp_isOvernightFlight#i#')> '1' <cfelse> '0' </cfif>
+			WHERE ID = '#form["dp_ID" & i]#'
 			LIMIT 1
 			</cfquery>
 	</cfloop>
