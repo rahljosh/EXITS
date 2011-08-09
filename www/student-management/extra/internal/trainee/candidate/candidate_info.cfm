@@ -188,26 +188,26 @@
         SELECT 
 			*
         FROM
-        	extra_flight_info
+        	extra_flight_information
         WHERE
         	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#"> 
         AND
-        	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
 		ORDER BY
-        	dep_date DESC            
+        	departDate DESC            
     </cfquery>
     
     <cfquery name="qArrivalInfo" datasource="mysql">
         SELECT 
         	*
         FROM 
-        	extra_flight_info
+        	extra_flight_information
         WHERE	
         	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">  
         AND
-        	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
 		ORDER BY
-        	dep_date DESC            
+        	departDate DESC            
     </cfquery>
 
 </cfsilent>    
@@ -1151,10 +1151,10 @@
                                             <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Flight Info</td>
                                         </tr>	
                                         <tr>
-                                            <td class="style1">Depart Home</td><td class="style1"><cfif LEN(qDepartureInfo.dep_date)>#DateFormat(qDepartureInfo.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif> </td>
+                                            <td class="style1">Depart Home</td><td class="style1"><cfif LEN(qDepartureInfo.departDate)>#DateFormat(qDepartureInfo.departDate, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif> </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1">Depart US</td><td class="style1"><cfif LEN(qArrivalInfo.dep_date)>#DateFormat(qArrivalInfo.dep_date, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif></td>
+                                            <td class="style1">Depart US</td><td class="style1"><cfif LEN(qArrivalInfo.departDate)>#DateFormat(qArrivalInfo.departDate, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif></td>
                                         </tr>
                                         <tr>
                                             <Td align="Center" colspan=2 class="style1"><a href="" onClick="javascript: win=window.open('flight_info/flight_info.cfm?candidateID=#qGetCandidate.candidateID#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">View / Edit  Itinerary</A></Td>

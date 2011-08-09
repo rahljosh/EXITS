@@ -81,19 +81,19 @@ function checkDate(theField){
 </Cfquery>
 
 <cfquery name="get_arrival" datasource="MySql">
-	SELECT flightid, candidateid, dep_date, dep_city, dep_aircode, dep_time, flight_number, arrival_city, 
-			arrival_aircode, arrival_time, overnight, flight_type
-	FROM extra_flight_info
-	WHERE candidateid = '#url.candidateid#' and flight_type = 'arrival'
-	ORDER BY flightid <!--- dep_date, dep_time --->
+	SELECT ID, candidateid, departDate, departCity, departAirportCode, departTime, flightNumber, arriveCity, 
+			arriveAirportCode, arriveTime, isOvernightFlight, flightType
+	FROM extra_flight_information
+	WHERE candidateid = '#url.candidateid#' and flightType = 'arrival'
+	ORDER BY ID <!--- departDate, departTime --->
 </cfquery>
 
 <cfquery name="get_departure" datasource="MySql">
-	SELECT flightid, candidateid, dep_date, dep_city, dep_aircode, dep_time, flight_number, arrival_city, 
-			arrival_aircode, arrival_time, overnight, flight_type
-	FROM extra_flight_info
-	WHERE candidateid = '#url.candidateid#' and flight_type = 'departure'
-	ORDER BY flightid <!--- dep_date, dep_time --->
+	SELECT ID, candidateid, departDate, departCity, departAirportCode, departTime, flightNumber, arriveCity, 
+			arriveAirportCode, arriveTime, isOvernightFlight, flightType
+	FROM extra_flight_information
+	WHERE candidateid = '#url.candidateid#' and flightType = 'departure'
+	ORDER BY ID <!--- departDate, departTime --->
 </cfquery>
 
 <cfoutput><br>
@@ -156,7 +156,7 @@ function checkDate(theField){
 	<th colspan=11 bgcolor="ACB9CD"> A R R I V A L &nbsp;&nbsp; T O &nbsp; &nbsp; U S A &nbsp; &nbsp; I N F O R M A T I O N </th>
 	<tr bgcolor="ACB9CD">
 		<th><font size="-2"><b>Delete</b></font></th><th>Date (mm/dd/yyyy)</th><th>Departure City</th><th>Airport Code</th><th>Arrival City</th><th>Airport Code</th>
-		<th>Flight Number</th><th>Departure Time (12:00am)</th><th>Arrival Time(12:00am)</th><th>Overnight Flight</th><th><font size="-2"><b>Status</b></font></th>
+		<th>Flight Number</th><th>Departure Time (12:00am)</th><th>Arrival Time(12:00am)</th><th>Ovenight Flight</th><th><font size="-2"><b>Status</b></font></th>
 	</tr>
 	<tr bgcolor="ACB9CD"><td colspan="11"></td></tr> 
 	<cfif get_arrival.recordcount is '0' or IsDefined('url.add_arr')>
@@ -164,37 +164,37 @@ function checkDate(theField){
 		<cfif get_arrival.recordcount GT '0'>
 		<cfloop query="get_arrival"> <!--- previous information --->
 		<tr bgcolor="D5DCE5">
-			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?flightid=#flightid#" onClick="return areYouSure(this);"><img src="http://www.student-management.com/nsmg/pics/deletex.gif" border="0"></img></a></cfif></td>
-			<td align="center">#DateFormat(dep_date , 'mm/dd/yyyy')#&nbsp;</td>
-			<td align="center">#dep_city#&nbsp;</td>
-			<td align="center">#dep_aircode#&nbsp;</td>
-			<td align="center">#arrival_city#&nbsp;</td>
-			<td align="center">#arrival_aircode#&nbsp;</td>
-			<td align="center">#flight_number#&nbsp;</td>
-			<td align="center">#TimeFormat(dep_time, 'hh:mm tt')#&nbsp;</td>
-			<td align="center">#TimeFormat(arrival_time, 'h:mm tt')#&nbsp;</td>
+			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?ID=#ID#" onClick="return areYouSure(this);"><img src="http://www.student-management.com/nsmg/pics/deletex.gif" border="0"></img></a></cfif></td>
+			<td align="center">#DateFormat(departDate , 'mm/dd/yyyy')#&nbsp;</td>
+			<td align="center">#departCity#&nbsp;</td>
+			<td align="center">#departAirportCode#&nbsp;</td>
+			<td align="center">#arriveCity#&nbsp;</td>
+			<td align="center">#arriveAirportCode#&nbsp;</td>
+			<td align="center">#flightNumber#&nbsp;</td>
+			<td align="center">#TimeFormat(departTime, 'hh:mm tt')#&nbsp;</td>
+			<td align="center">#TimeFormat(arriveTime, 'h:mm tt')#&nbsp;</td>
 			<td align="center">
-				 <cfif overnight is 0><cfset chk =''><cfelse><cfset chk ='checked'></cfif>
-				<input type="checkbox" name="ar_overnight#get_arrival.currentrow#" value="#overnight#" #chk# readonly="yes" disabled></input></td>
+				 <cfif isOvernightFlight is 0><cfset chk =''><cfelse><cfset chk ='checked'></cfif>
+				<input type="checkbox" name="ar_isOvernightFlight#get_arrival.currentrow#" value="#isOvernightFlight#" #chk# readonly="yes" disabled></input></td>
 			<td align="center">
-				<cfif flight_number is not ''>
-				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flight_number,2)#&flt_num=#RemoveChars(flight_number,1,2)#" target="blank"><img src="http://www.student-management.com/nsmg/pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
+				<cfif flightNumber is not ''>
+				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flightNumber,2)#&flt_num=#RemoveChars(flightNumber,1,2)#" target="blank"><img src="http://www.student-management.com/nsmg/pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
 		</tr>
 		</cfloop>
 		</cfif>
 		<cfloop from = "1" to = "4" index="i"> <!--- ADD NEW FLIGHT INFORMATION --->
 		<tr bgcolor="D5DCE5">
 			<td>&nbsp;</td>
-			<td><cfinput type="text" name="ar_dep_date#i#" size="6" maxlength="10" validate="date" onChange="return checkDate(this)">
+			<td><cfinput type="text" name="ar_departDate#i#" size="6" maxlength="10" validate="date" onChange="return checkDate(this)">
 		    </cfinput></td>
-		  <td><cfinput type="text" name="ar_dep_city#i#" size="7" maxlength="40"></cfinput></td>
-			<td><cfinput type="text" name="ar_dep_aircode#i#" size="1" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="ar_arrival_city#i#" size="7" maxlength="40"></cfinput></td>
-			<td><cfinput type="text" name="ar_arrival_aircode#i#" size="1" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="ar_flight_number#i#" size="4" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="ar_dep_time#i#" size="5" maxlength="8"></cfinput></td>
-			<td><cfinput type="text" name="ar_arrival_time#i#" size="5" maxlength="8"></cfinput></td>
-			<td align="center"><cfinput type="checkbox" name="ar_overnight#i#"></cfinput></td>
+		  <td><cfinput type="text" name="ar_departCity#i#" size="7" maxlength="40"></cfinput></td>
+			<td><cfinput type="text" name="ar_departAirportCode#i#" size="1" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="ar_arriveCity#i#" size="7" maxlength="40"></cfinput></td>
+			<td><cfinput type="text" name="ar_arriveAirportCode#i#" size="1" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="ar_flightNumber#i#" size="4" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="ar_departTime#i#" size="5" maxlength="8"></cfinput></td>
+			<td><cfinput type="text" name="ar_arriveTime#i#" size="5" maxlength="8"></cfinput></td>
+			<td align="center"><cfinput type="checkbox" name="ar_isOvernightFlight#i#"></cfinput></td>
 			<td align="center">&nbsp;</td>
 		</tr>
 		</cfloop>
@@ -203,21 +203,21 @@ function checkDate(theField){
 		<input type="hidden" name="ar_count" value='#get_arrival.recordcount#'>
 		<cfloop query="get_arrival">
 		<tr bgcolor="D5DCE5">
-				<input type="hidden" name="ar_flightid#get_arrival.currentrow#" value="#flightid#">
-			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?flightid=#flightid#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a></cfif></td>
-			<td><cfinput type="text" name="ar_dep_date#get_arrival.currentrow#" size="6" maxlength="10" value="#DateFormat(dep_date , 'mm/dd/yyyy')#"></cfinput></td>
-			<td><cfinput type="text" name="ar_dep_city#get_arrival.currentrow#" size="7" maxlength="40" value="#dep_city#"></cfinput></td>
-			<td><cfinput type="text" name="ar_dep_aircode#get_arrival.currentrow#" size="1" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="ar_arrival_city#get_arrival.currentrow#" size="7" maxlength="40" value="#arrival_city#"></cfinput></td>
-			<td><cfinput type="text" name="ar_arrival_aircode#get_arrival.currentrow#" size="1" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="ar_flight_number#get_arrival.currentrow#" size="4" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="ar_dep_time#get_arrival.currentrow#" size="5" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></cfinput></td>
-			<td><cfinput type="text" name="ar_arrival_time#get_arrival.currentrow#" size="5" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></cfinput></td>
-			<td align="center"><cfif overnight is 0><cfset chk ='no'><cfelse><cfset chk ='yes'></cfif>
-				<cfinput type="checkbox" name="ar_overnight#get_arrival.currentrow#" value="#overnight#" checked="#chk#"></cfinput></td>
+				<input type="hidden" name="ar_ID#get_arrival.currentrow#" value="#ID#">
+			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?ID=#ID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a></cfif></td>
+			<td><cfinput type="text" name="ar_departDate#get_arrival.currentrow#" size="6" maxlength="10" value="#DateFormat(departDate , 'mm/dd/yyyy')#"></cfinput></td>
+			<td><cfinput type="text" name="ar_departCity#get_arrival.currentrow#" size="7" maxlength="40" value="#departCity#"></cfinput></td>
+			<td><cfinput type="text" name="ar_departAirportCode#get_arrival.currentrow#" size="1" maxlength="3" value="#departAirportCode#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="ar_arriveCity#get_arrival.currentrow#" size="7" maxlength="40" value="#arriveCity#"></cfinput></td>
+			<td><cfinput type="text" name="ar_arriveAirportCode#get_arrival.currentrow#" size="1" maxlength="3" value="#arriveAirportCode#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="ar_flightNumber#get_arrival.currentrow#" size="4" maxlength="8" value="#flightNumber#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="ar_departTime#get_arrival.currentrow#" size="5" maxlength="8" value="#TimeFormat(departTime, 'hh:mm tt')#"></cfinput></td>
+			<td><cfinput type="text" name="ar_arriveTime#get_arrival.currentrow#" size="5" maxlength="8" value="#TimeFormat(arriveTime, 'h:mm tt')#"></cfinput></td>
+			<td align="center"><cfif isOvernightFlight is 0><cfset chk ='no'><cfelse><cfset chk ='yes'></cfif>
+				<cfinput type="checkbox" name="ar_isOvernightFlight#get_arrival.currentrow#" value="#isOvernightFlight#" checked="#chk#"></cfinput></td>
 			<td align="center">
-				<cfif flight_number is not ''>
-				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flight_number,2)#&flt_num=#RemoveChars(flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
+				<cfif flightNumber is not ''>
+				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flightNumber,2)#&flt_num=#RemoveChars(flightNumber,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
 		</tr>	
 		</cfloop>
 		<cfif client.usertype LTE 4>
@@ -257,21 +257,21 @@ function checkDate(theField){
 		<cfif get_departure.recordcount GT 0> <!--- previous information --->
 		<cfloop query="get_departure">
 		<tr bgcolor="FEE6D3">
-			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?flightid=#flightid#" onClick="return areYouSure(this);"><img src="http://www.student-management.com/nsmg/pics/deletex.gif" border="0"></img></a></cfif></td>
-			<td>#DateFormat(dep_date , 'mm/dd/yyyy')#&nbsp;</td>
-			<td align="center">#dep_city#&nbsp;</td>
-			<td align="center">#dep_aircode#&nbsp;</td>
-			<td>#arrival_city#&nbsp;</td>
-			<td align="center">#arrival_aircode#&nbsp;</td>
-			<td align="center">#flight_number#&nbsp;</td>
-			<td align="center">#TimeFormat(dep_time, 'hh:mm tt')#&nbsp;</td>
-			<td align="center">#TimeFormat(arrival_time, 'h:mm tt')#&nbsp;</td>
+			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?ID=#ID#" onClick="return areYouSure(this);"><img src="http://www.student-management.com/nsmg/pics/deletex.gif" border="0"></img></a></cfif></td>
+			<td>#DateFormat(departDate , 'mm/dd/yyyy')#&nbsp;</td>
+			<td align="center">#departCity#&nbsp;</td>
+			<td align="center">#departAirportCode#&nbsp;</td>
+			<td>#arriveCity#&nbsp;</td>
+			<td align="center">#arriveAirportCode#&nbsp;</td>
+			<td align="center">#flightNumber#&nbsp;</td>
+			<td align="center">#TimeFormat(departTime, 'hh:mm tt')#&nbsp;</td>
+			<td align="center">#TimeFormat(arriveTime, 'h:mm tt')#&nbsp;</td>
 			<td align="center">
-				 <cfif overnight is 0><cfset chk =''><cfelse><cfset chk ='checked'></cfif>
-				<input type="checkbox" name="ar_overnight#get_arrival.currentrow#" value="#overnight#" #chk# disabled></input></td>
+				 <cfif isOvernightFlight is 0><cfset chk =''><cfelse><cfset chk ='checked'></cfif>
+				<input type="checkbox" name="ar_isOvernightFlight#get_arrival.currentrow#" value="#isOvernightFlight#" #chk# disabled></input></td>
 			<td align="center">
-				<cfif flight_number is not ''>
-				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flight_number,2)#&flt_num=#RemoveChars(flight_number,1,2)#" target="blank"><img src="http://www.student-management.com/nsmg/pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
+				<cfif flightNumber is not ''>
+				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flightNumber,2)#&flt_num=#RemoveChars(flightNumber,1,2)#" target="blank"><img src="http://www.student-management.com/nsmg/pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
 		</tr>
 		</cfloop>
 		</cfif>
@@ -279,15 +279,15 @@ function checkDate(theField){
 		<tr bgcolor="FEE6D3">
 				<input type="hidden" name="dp_type#i#" value="departure">
 			<td>&nbsp;</td>
-			<td><cfinput type="text" name="dp_dep_date#i#" size="6" maxlength="10"></cfinput></td>
-			<td><cfinput type="text" name="dp_dep_city#i#" size="7" maxlength="40"></cfinput></td>
-			<td><cfinput type="text" name="dp_dep_aircode#i#" size="1" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="dp_arrival_city#i#" size="7" maxlength="40"></cfinput></td>
-			<td><cfinput type="text" name="dp_arrival_aircode#i#" size="1" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="dp_flight_number#i#" size="4" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="dp_dep_time#i#" size="5" maxlength="8"></cfinput></td>
-			<td><cfinput type="text" name="dp_arrival_time#i#" size="5" maxlength="8"></cfinput></td>
-			<td align="center"><cfinput type="checkbox" name="dp_overnight#i#"></cfinput></td>
+			<td><cfinput type="text" name="dp_departDate#i#" size="6" maxlength="10"></cfinput></td>
+			<td><cfinput type="text" name="dp_departCity#i#" size="7" maxlength="40"></cfinput></td>
+			<td><cfinput type="text" name="dp_departAirportCode#i#" size="1" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="dp_arriveCity#i#" size="7" maxlength="40"></cfinput></td>
+			<td><cfinput type="text" name="dp_arriveAirportCode#i#" size="1" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="dp_flightNumber#i#" size="4" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="dp_departTime#i#" size="5" maxlength="8"></cfinput></td>
+			<td><cfinput type="text" name="dp_arriveTime#i#" size="5" maxlength="8"></cfinput></td>
+			<td align="center"><cfinput type="checkbox" name="dp_isOvernightFlight#i#"></cfinput></td>
 			<td>&nbsp;</td>
 		</tr>
 		</cfloop>
@@ -296,21 +296,21 @@ function checkDate(theField){
 		<input type="hidden" name="dp_count" value='#get_departure.recordcount#'>
 		<cfloop query="get_departure">	
 		<tr bgcolor="FEE6D3">
-				<input type="hidden" name="dp_flightid#get_departure.currentrow#" value="#flightid#">
-			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?flightid=#flightid#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a></cfif></td>
-			<td><cfinput type="text" name="dp_dep_date#get_departure.currentrow#" size="6" maxlength="10" value="#DateFormat(dep_date , 'mm/dd/yyyy')#"></cfinput></td>
-			<td><cfinput type="text" name="dp_dep_city#get_departure.currentrow#" size="7" maxlength="40" value="#dep_city#"></cfinput></td>
-			<td><cfinput type="text" name="dp_dep_aircode#get_departure.currentrow#" size="1" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="dp_arrival_city#get_departure.currentrow#" size="7" maxlength="40" value="#arrival_city#"></cfinput></td>
-			<td><cfinput type="text" name="dp_arrival_aircode#get_departure.currentrow#" size="1" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput ></td>
-			<td><cfinput type="text" name="dp_flight_number#get_departure.currentrow#" size="4" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
-			<td><cfinput type="text" name="dp_dep_time#get_departure.currentrow#" size="5" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></cfinput></td>
-			<td><cfinput type="text" name="dp_arrival_time#get_departure.currentrow#" size="5" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></cfinput></td>
-			<td align="center"><cfif overnight is 0><cfset chk ='no'><cfelse><cfset chk ='yes'></cfif>
-				<cfinput type="checkbox" name="dp_overnight#get_departure.currentrow#" value="#overnight#" checked="#chk#"></cfinput></td>
+				<input type="hidden" name="dp_ID#get_departure.currentrow#" value="#ID#">
+			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?ID=#ID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a></cfif></td>
+			<td><cfinput type="text" name="dp_departDate#get_departure.currentrow#" size="6" maxlength="10" value="#DateFormat(departDate , 'mm/dd/yyyy')#"></cfinput></td>
+			<td><cfinput type="text" name="dp_departCity#get_departure.currentrow#" size="7" maxlength="40" value="#departCity#"></cfinput></td>
+			<td><cfinput type="text" name="dp_departAirportCode#get_departure.currentrow#" size="1" maxlength="3" value="#departAirportCode#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="dp_arriveCity#get_departure.currentrow#" size="7" maxlength="40" value="#arriveCity#"></cfinput></td>
+			<td><cfinput type="text" name="dp_arriveAirportCode#get_departure.currentrow#" size="1" maxlength="3" value="#arriveAirportCode#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput ></td>
+			<td><cfinput type="text" name="dp_flightNumber#get_departure.currentrow#" size="4" maxlength="8" value="#flightNumber#" onChange="javascript:this.value=this.value.toUpperCase();"></cfinput></td>
+			<td><cfinput type="text" name="dp_departTime#get_departure.currentrow#" size="5" maxlength="8" value="#TimeFormat(departTime, 'hh:mm tt')#"></cfinput></td>
+			<td><cfinput type="text" name="dp_arriveTime#get_departure.currentrow#" size="5" maxlength="8" value="#TimeFormat(arriveTime, 'h:mm tt')#"></cfinput></td>
+			<td align="center"><cfif isOvernightFlight is 0><cfset chk ='no'><cfelse><cfset chk ='yes'></cfif>
+				<cfinput type="checkbox" name="dp_isOvernightFlight#get_departure.currentrow#" value="#isOvernightFlight#" checked="#chk#"></cfinput></td>
 			<td align="center">
-				<cfif flight_number is not ''>
-				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flight_number,2)#&flt_num=#RemoveChars(flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
+				<cfif flightNumber is not ''>
+				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flightNumber,2)#&flt_num=#RemoveChars(flightNumber,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
 		</tr>	
 		</cfloop>
 		<cfif client.usertype LTE 4>
