@@ -308,7 +308,7 @@
                             <th colspan="2">Follow Up Information</th>
                         </tr>
                         <tr>
-                            <th width="45%" align="right" valign="top" style="padding-top:10px;"><label for="regionID">Company:</label></th>
+                            <th width="45%" align="right" valign="top" style="padding-top:10px;"><label for="companyID">Company:</label></th>
                             <td width="55%" style="padding-top:10px;">
                                 <!--- Only Office Can Assign a Company --->
                                 <cfif ListFind("1,2,3,4", CLIENT.userType)>
@@ -325,8 +325,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <th width="45%" align="right" valign="top" style="padding-top:10px;"><label for="regionID">Region:</label></th>
-                            <td width="55%" style="padding-top:10px;">
+                            <th align="right" valign="top" style="padding-top:10px;"><label for="regionID">Region:</label></th>
+                            <td style="padding-top:10px;">
                                 <!--- Only Office Can Assign a Region --->
                                 <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                    <cfselect
@@ -346,7 +346,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th align="right" valign="top">Area Representative:</th>
+                            <th align="right" valign="top"><label for="areaRepID">Area Representative:</label></th>
                             <td>
                             	<!--- Only Managers can assign an Area Rep. --->
 								<cfif CLIENT.userType EQ 5>
@@ -368,7 +368,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th align="right" valign="top">Status:</th>
+                            <th align="right" valign="top"><label for="statusID">Status:</label></th>
                             <td>
                                 <select name="statusID" id="statusID" class="xLargeField" onchange="displayFinalDecision();">
                                     <option value="0" <cfif FORM.statusID EQ 0>selected="selected"</cfif> >Please Select a Status</option>
