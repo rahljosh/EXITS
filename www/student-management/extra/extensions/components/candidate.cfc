@@ -833,13 +833,13 @@
 				}
 				
 				case 'section3': {
-					// It also requires a document to be uploaded - English Assessment ID=2
+					// It also requires a document to be uploaded - English Assessment ID=3
 					if ( CLIENT.loginType EQ 'user' ) {
 						
 						qEnglishAssessment = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(
 							foreignTable=APPLICATION.foreignTable,
 							foreignID=ARGUMENTS.candidateID,
-							documentTypeID=2
+							documentTypeID=3
 						);
 						
 						// Check if English Assessment has been uploaded
