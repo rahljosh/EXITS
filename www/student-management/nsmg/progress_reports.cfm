@@ -7,6 +7,16 @@
 <cfparam name="startDate" default="">
 <cfparam name="endDate" default="">
 
+<SCRIPT>
+<!--
+// opens letters in a defined format
+function OpenLetter(url) {
+	newwindow=window.open(url, 'Application', 'height=700, width=850, location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes'); 
+	if (window.focus) {newwindow.focus()}
+}
+//-->
+</script>
+
 <cfscript>
     //by creating the function inside of a cfscript, it should be able to work in CF5.
     
@@ -339,7 +349,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 (progress_reports.fk_sr_user & fk_ra_user) but since we want to display students without reports, we can't use the report fields here.
 But in the output below we use the report fields where a report has been submitted, otherwise use the student and user fields. --->
 <cfquery name="getResults" datasource="#application.dsn#">
-    SELECT smg_students.studentid, smg_students.firstname, smg_students.familylastname,
+    SELECT smg_students.studentid, smg_students.uniqueid, smg_students.firstname, smg_students.familylastname,
         smg_students.arearepid, smg_students.secondVisitRepID, rep.firstname as rep_firstname, rep.lastname as rep_lastname,
         <!--- alias advisor.userid here instead of using user_access_rights.advisorid because the later can be 0 and we want null, and the 0 might be phased out later. --->
         advisor.userid AS advisorid, advisor.firstname as advisor_firstname, advisor.lastname as advisor_lastname, 
@@ -470,11 +480,13 @@ But in the output below we use the report fields where a report has been submitt
                         <td>&nbsp;</td>
                         <td>
                         	<!--- put in red if user is the supervising rep for this student.  don't do for usertype 7 because they see only those students. --->
-                            <cfif arearepid EQ client.userid and client.usertype NEQ 7>
+                            <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#getResults.uniqueID#');">
+							<cfif arearepid EQ client.userid and client.usertype NEQ 7>
                         		<font color="FF0000"><strong>#firstname# #familylastname# (#studentid#)</strong></font>
                             <cfelse>
                         		#firstname# #familylastname# (#studentid#)
                             </cfif>
+                            </a>
                         </td>
                         <td>#yesNoFormat(get_report.recordCount)#</td>
                         <td>
