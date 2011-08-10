@@ -927,8 +927,8 @@
         	<cfelse>
                 <select name="wat_participation" id="wat_participation" class="smallField" onchange="displayPreviousParticipationInfo();">
                     <option value=""></option>
-                    <option value="0">None</option>
-                    <option value="1">1 Time</option>
+                    <option value="0" <cfif FORM.wat_participation EQ 0> selected="selected" </cfif> >None</option>
+                    <option value="1" <cfif FORM.wat_participation EQ 1> selected="selected" </cfif> >1 Time</option>
                     <cfloop from="2" to="15" index="i">
                         <option value="#i#" <cfif FORM.wat_participation EQ i> selected="selected" </cfif> >#i# time(s)</option>
                     </cfloop>
