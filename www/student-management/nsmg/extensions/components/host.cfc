@@ -48,6 +48,7 @@
                     fatherCompany,
                     fatherWorkPhone,
                     fatherWorkPosition,
+                    fatherfullpart,
                     fatherWorkType,
                     motherLastName,
                     motherFirstName,
@@ -61,6 +62,7 @@
                     motherCompany,
                     motherWorkPhone,
                     motherWorkPosition,
+                    motherfullpart,
                     motherWorkType,
                     address,
                     address2,
@@ -184,6 +186,7 @@
                     middleName,
                     lastName,
                     SSN,
+                    school,
                     cbc_form_received,
                     shared,
                     roomShareWith
