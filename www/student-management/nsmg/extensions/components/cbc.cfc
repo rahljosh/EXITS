@@ -1835,7 +1835,70 @@
                 
                 HAVING
                 	 renewal_date <= CURRENT_DATE 
-                     
+                                
+                UNION
+                
+                <!--- Get Active Users Assigned to an Active Student --->
+                SELECT DISTINCT 
+                    cbc.userID,
+                    cbc.familyID,
+                    cbc.companyID,
+                    MAX(cbc.date_authorized) AS date_authorized,
+                    MAX(cbc.date_sent) AS date_sent,
+                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 11 MONTH) AS renewal_date,
+                    MAX(cbc.seasonID) AS seasonID,
+                    u.firstName,
+                    u.lastName,
+                    u.lastLogin
+                FROM 
+                    smg_users_cbc cbc 
+                INNER JOIN 
+                    smg_users u ON u.userID = cbc.userID 
+                    	AND u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        AND u.dateCancelled IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                INNER JOIN
+                	smg_students s ON ( s.areaRepID = cbc.userID OR s.placeRepID = cbc.userID )
+                    	AND	
+                        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                WHERE 
+                	cbc.userID NOT IN 
+                    ( 
+                    	SELECT 
+                        	userID 
+                        FROM 
+                        	smg_users_cbc 
+                        WHERE 
+                        	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+						<cfif ARGUMENTS.cbcType EQ 'user'>
+                            AND
+                                cbc.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        <cfelseif ARGUMENTS.cbcType EQ 'member'>
+                            AND
+                                cbc.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        </cfif>
+                    )   
+
+				<cfif ARGUMENTS.cbcType EQ 'user'>
+                	AND
+                    	cbc.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                <cfelseif ARGUMENTS.cbcType EQ 'member'>
+                	AND
+                    	cbc.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                </cfif>
+                
+                AND 
+                    (
+                        cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes"> 
+                    OR 
+                        cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    )
+                    
+                GROUP BY         
+                    cbc.userID                
+                
+                HAVING
+                	 renewal_date <= CURRENT_DATE 
+                
                 ORDER BY                     
                     date_sent
         </cfquery>
