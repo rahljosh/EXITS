@@ -29,15 +29,6 @@
     
 </cfsilent>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Get Expired CBCs for Hosts/Members</title>
-</head>
-
-<body>
-
 <cfoutput>
 
 <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
@@ -75,6 +66,3 @@
 	<tr><td colspan="4">Total of host #userType# #qGetExpiredHostCBC.recordCount# records</td></tr>
 </table>
 </cfoutput>
-
-</body>
-</html>

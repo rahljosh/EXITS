@@ -61,7 +61,7 @@
             }
             // SSN
             if ( NOT LEN(qGetCBCUsers.ssn) )  {
-                ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#). <br> NOTE: Please run it manually.");
+                ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
@@ -71,14 +71,6 @@
     </cfloop>
 
 </cfsilent>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>CBC Users</title>
-</head>
-<body>
 
 <cfoutput>
 
@@ -98,7 +90,7 @@
             <font color="##FF0000">Please review the following issues:</font> <br />
         
             <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
-                #Errors.Messages[i]# <br>        	
+                <p>#Errors.Messages[i]#</p>       	
             </cfloop>
         </cfsavecontent>
         
@@ -184,6 +176,3 @@
 </table>
 
 </cfoutput>
-
-</body>
-</html>
