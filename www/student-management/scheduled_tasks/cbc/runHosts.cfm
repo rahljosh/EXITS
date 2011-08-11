@@ -28,15 +28,6 @@
 
 </cfsilent>
 
-<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'
-'http://www.w3.org/TR/html4/loose.dtd'>
-<html>
-<head>
-<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
-<title>CBC Host Family and Members</title>
-</head>
-<body>
-
 <cfoutput>
 
 <table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
@@ -272,7 +263,7 @@
                                     </cfif>
                                     
                                     <!--- Include Error Message --->
-                                    #errorMessage#
+                                    <p>#errorMessage#</p>
                                 </td>
                             </tr>
                         </table>   
@@ -339,6 +330,3 @@
     </cfif>
 
 </cfoutput>
-
-</body>
-</html>

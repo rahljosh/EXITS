@@ -763,11 +763,17 @@
                     u.lastName, 
                     u.middlename, 
                     u.dob, 
-                    u.ssn
+                    u.ssn,
+                    c.companyShort,
+                    c.gis_username,
+                    c.gis_password,
+                    c.gis_account                    
                 FROM 
                 	smg_users_cbc cbc
                 INNER JOIN 
                 	smg_user_family u ON u.ID = cbc.familyID
+				LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = cbc.companyID                    
                 WHERE 
                 	cbc.date_authorized IS NOT NULL
                 AND
