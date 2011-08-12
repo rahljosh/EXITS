@@ -151,6 +151,7 @@
                     pictures,
                     applicationSent,
                     applicationApproved,
+                    applicationStarted,
                     previousHost,
                     home_first_call,
                     home_last_visit,
