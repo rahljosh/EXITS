@@ -315,7 +315,7 @@
     		</cfif>
             
         </cfif>
-<!----Determining what time frame / date to use.  DOSCertificationNeeded.cfm is in place, this just needs to be uncommented and the date trime frame updated to what ever is needed.
+<!----Determining what time frame / date to use.  DOSCertificationNeeded.cfm is in place, this just needs to be uncommented and the date trime frame updated to what ever is needed.----->
 <!----Block users who have not taken the DOS training---->
 
 	<!----List to allow companies to by pass DOS test.  (1,2,3,4,5,12) ---->
@@ -351,7 +351,7 @@
     		</cfif>
             
         </cfif>
-        ----->
+        
         <cfscript>
 			// Host Family Leads Pop Up
 			if ( ListFind("5,6,7", CLIENT.userType) ) {
