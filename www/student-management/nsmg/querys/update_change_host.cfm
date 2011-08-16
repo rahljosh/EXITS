@@ -14,7 +14,7 @@
  		uar.usertype, uar.regionid
 	FROM smg_users u 
 	INNER JOIN user_access_rights uar ON uar.userid = u.userid
-	WHERE u.userid = '#client.userid#'
+	WHERE u.userid = '#CLIENT.userid#'
 		AND uar.regionid = '#get_student_info.regionassigned#'
 		AND uar.usertype > '4'
 </cfquery>
@@ -62,7 +62,7 @@
 		(hostid, studentid, reason, dateofchange, arearepid, placerepid, schoolid, changedby, relocation, welcome_family)
 	VALUES ('#get_student_info.hostid#', '#get_student_info.studentid#', '#form.reason#', #CreateODBCDateTime(now())#, 
 		'#get_student_info.arearepid#', '#get_student_info.placerepid#', '#get_student_info.schoolid#', 
-	    '#client.userid#', '#form.relocation#', '#form.welcome_family#')
+	    '#CLIENT.userid#', '#form.relocation#', '#form.welcome_family#')
 </cfquery>
 
 <!--- GET LAST HISTORY TO INSERT HOST DOCUMENTS --->
@@ -135,9 +135,11 @@
 			welcome_family = '#form.welcome_family#',
 		</cfif>
 		date_host_fam_approved = #CreateODBCDateTime(now())#,
-		<cfif client.usertype eq 5 or client.usertype eq 6 or client.usertype eq 7>
-         host_fam_approved = #client.usertype#,
-        </cfif>
+		<cfif ListFind(CLIENT.userType, "5,6,7")>
+        	host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">,
+        <cfelse>
+			host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+		</cfif>
 		doubleplace = '0',
 		doc_full_host_app_date = NULL,
 		doc_letter_rec_date = NULL,
@@ -155,6 +157,6 @@
 </cfquery>
 </cftransaction>
 
-<cflocation url="../forms/place_menu.cfm?studentid=#client.studentid#" addtoken="no">	
+<cflocation url="../forms/place_menu.cfm?studentid=#CLIENT.studentid#" addtoken="no">	
 
 </cfoutput>
