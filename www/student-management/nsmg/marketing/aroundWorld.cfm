@@ -1,3 +1,4 @@
+<cfset client.companyid = 14>
 
 <Cfquery name="repInfo" datasource="MySQL">
 select firstname, lastname, email, phone
