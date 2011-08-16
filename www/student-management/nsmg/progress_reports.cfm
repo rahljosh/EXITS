@@ -396,6 +396,9 @@ But in the output below we use the report fields where a report has been submitt
             AND (
                 user_access_rights.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
                 OR smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                <Cfif client.reportType eq 2>
+                OR smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                </Cfif>
             )
         <!--- supervising reps sees only their students. --->
         <cfelseif client.usertype EQ 7>
