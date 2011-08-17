@@ -310,6 +310,7 @@
                         <cfif form.submit_Start is 'eHost'>
                         HostAppStatus,
                         </cfif>
+                        applicationStarted,
                         arearepid
                         
                     )
@@ -351,6 +352,7 @@
                         <cfif form.submit_Start is 'eHost'>
                         	<cfqueryparam cfsqltype="cf_sql_integer" value="8">,
                         </cfif>
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                        
                     )  
@@ -386,11 +388,11 @@
                 
                 
                 
-               <p> To start filling out your application, please click on the following link:</p>
+                <p>To start filling out your application, please click on the following link:</p>
                
-                <p>http://www.iseusa.com/hostApp/</p>
+                <p><A href="http://www.iseusa.com/hostApp/">http://www.iseusa.com/hostApp</A></p>
                 
-              <p>  Please use the following login information:</p>
+                <p>Please use the following login information:</p>
                 
                 Username/Email: #form.email#<br />
                 Password: #strPassword#
