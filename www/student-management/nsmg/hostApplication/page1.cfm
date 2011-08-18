@@ -19,11 +19,17 @@
     where hostid = <cfqueryparam cfsqltype="integer" value="#url.hostID#">
     </cfquery>
 <cfquery name="region" datasource="#application.dsn#">
-select r.regionname, u.firstname, u.lastname
+select r.regionname
 from smg_regions r
-LEFT JOIN smg_users u on u.userid = #qGetHostFamily.arearepid#
-where regionid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.hostid#">
-</cfquery>          
+where regionid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.regionid#">
+</cfquery>   
+<cfquery name="rep" datasource="#application.dsn#">
+select u.firstname, u.lastname
+from smg_users u
+where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepid#">
+</cfquery>        
+
+  
 <cffunction name="CapFirst" returntype="string" output="false">
     <cfargument name="str" type="string" required="true" />
     
@@ -56,16 +62,16 @@ where regionid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.hostid
                     </tr>
                     <tr>
                     	<td>
-                         <span class="title">Region:</span><cfif region.regionname is ''>No Region Assigned<cfelse>#region.regionname#</cfif><br />
-                       	 <span class="title">Rep:</span><cfif region.firstname is ''>No Rep Assigned<cfelse>#region.firstname# #region.lastname# </cfif>
+                         <span class="title">Region:</span> <cfif region.regionname is ''>No Region Assigned<cfelse>#region.regionname#</cfif><br />
+                       	 <span class="title">Rep:</span> <cfif rep.firstname is ''>No Rep Assigned<cfelse>#rep.firstname# #rep.lastname# </cfif>
                     	
                         </td>
                         <Td valign="top" align="center">
                            <span class="title"><font size=+1> #qGetHostFamily.familyLastName# (#qGetHostFamily.hostid#)<br /> Host Family Application</font></span>
                         </Td>
                         <Td align="right">
-                        <span class="title">Started:</span>#DateFormat(qGetHostFamily.applicationStarted, 'mmm, d, yyyy')#<br />
-                        <span class="title">Approved:</span><cfif qGetHostFamily.applicationapproved is ''>Not Approved<cfelse>#DateFormat(qGetHostFamily.applicationapproved, 'mmm, d, yyyy')#</cfif>
+                        <span class="title">Started:</span> #DateFormat(qGetHostFamily.applicationStarted, 'mmm, d, yyyy')#<br />
+                        <span class="title">Approved:</span> <cfif qGetHostFamily.applicationapproved is ''>Not Approved<cfelse>#DateFormat(qGetHostFamily.applicationapproved, 'mmm, d, yyyy')#</cfif>
                         </Td>
                     </tr>
                 </table>
@@ -181,7 +187,10 @@ where regionid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.hostid
                                     <td align="center"><span class="title">Relation</td>
                                     <td align="center"><span class="title">School</td>
                                 </tr>
-                          
+                          <cfif qGetHostChildren.recordcount eq 0>
+                          		<Tr>
+                                	<Td colspan=8 align="center">No family members are listed with this family. </Td>
+                          </cfif>
                           <cfloop query="qGetHostChildren">
                                     <tr <cfif qGetHostChildren.currentrow MOD 2>bgcolor="##ddeaf3"</cfif> >
                                         <td>
@@ -205,7 +214,7 @@ where regionid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.hostid
                                     </tr>
                                 </cfloop>
                             </table>
-                            <br><br />
+                         
                        <!----Dietary and smoking---->
                        <table  align="left" border="0" cellpadding="4" cellspacing="0" width="100%">
                        	<Tr>
@@ -296,12 +305,9 @@ where regionid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.hostid
                               		<tr>
 
                                </table> 
-                          </td>
-                      </tr>
-                  </table>
                      
-                     <table>
-                        
+                     
+                                 
                          <br /><br />
                        <!----INterests---->     
                              <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
