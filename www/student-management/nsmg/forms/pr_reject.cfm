@@ -18,7 +18,12 @@
             <cfquery name="get_rep" datasource="#application.dsn#">
                 SELECT email
                 FROM smg_users
-                WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_sr_user#">
+                WHERE userid = 
+                <Cfif client.reportType eq 2>
+             	  <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_secondVisitRep#">
+                <Cfelse>
+               	 <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_sr_user#">
+            	</Cfif>
             </cfquery>
 	        <cfset email_to = listAppend(email_to, get_rep.email)>
         </cfif>
