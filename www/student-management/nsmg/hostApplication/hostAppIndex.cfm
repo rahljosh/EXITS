@@ -1,7 +1,7 @@
 <cfparam name="submitted" default="0">
 <cfparam name="regionid" default="#client.regionid#">
 <cfparam name="keyword" default="">
-<cfparam name="hosting" default="">
+<cfparam name="status" default="">
 <cfparam name="active" default="1">
 <cfparam name="orderby" default="familylastname">
 <cfparam name="recordsToShow" default="25">
@@ -45,14 +45,14 @@
 	<cfif client.usertype LTE 4>
         <td>
             Status<br />
-			<select name="hosting">
+			<select name="status">
 				<option value="">All</option>
-				<option value="8" <cfif hosting EQ 8>selected</cfif>>Filling Out</option>
-				<option value="7" <cfif hosting EQ 7>selected</cfif>>Waiting on Area Representative</option>
-                <option value="6" <cfif hosting EQ 6>selected</cfif>>Waiting on Regional Advisor</option>
-                <option value="5" <cfif hosting EQ 5>selected</cfif>>Waiting on Regional Manager</option>
-                <option value="4" <cfif hosting EQ 4>selected</cfif>>Waiting on Program Manager</option>
-                <option value="3" <cfif hosting EQ 3>selected</cfif>>Approved</option>
+				<option value="8" <cfif status EQ 8>selected</cfif>>Filling Out</option>
+				<option value="7" <cfif status EQ 7>selected</cfif>>Waiting on Area Representative</option>
+                <option value="6" <cfif status EQ 6>selected</cfif>>Waiting on Regional Advisor</option>
+                <option value="5" <cfif status EQ 5>selected</cfif>>Waiting on Regional Manager</option>
+                <option value="4" <cfif status EQ 4>selected</cfif>>Waiting on Program Manager</option>
+                <option value="3" <cfif status EQ 3>selected</cfif>>Approved</option>
 			</select>
             
         </td>
@@ -115,8 +115,10 @@
                 	OR h.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 )
             </cfif>
-               	AND h.HostAppStatus = 8
-            <cfif active NEQ ''>
+            <Cfif val(status)>
+               	AND h.HostAppStatus = #status#
+            </Cfif>
+			<cfif active NEQ ''>
                 AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
             </cfif>
             ORDER BY #orderby#
@@ -213,7 +215,7 @@
 			<cfset isNextPage = 0>
 			<cfset endrow = getResults.recordCount>
 		</cfif>
-		<cfset urlVariables = "submitted=1&regionid=#regionid#&keyword=#urlEncodedFormat(keyword)#&hosting=#hosting#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#">
+		<cfset urlVariables = "submitted=1&regionid=#regionid#&keyword=#urlEncodedFormat(keyword)#&status=#status#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#">
     
         <cfoutput>
     
@@ -277,5 +279,5 @@
     </cfif>
     
 </cfif>
-   
+
 <cfinclude template="../table_footer.cfm">
