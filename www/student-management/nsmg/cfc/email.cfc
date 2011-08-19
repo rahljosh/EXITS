@@ -45,36 +45,72 @@
     	<cfscript>
 			var template_file = '';
 			var get_user = '';
+			
+			// This is used to store email information when system sends an email on a development environment
+			var emailIntendedTo = '';
+			
+			// Development Environment - If under development email current user so no emails are sent by mistake to field or Intl. Representative
+			if ( APPLICATION.isServerLocal ) {
+				
+				emailIntendedTo = emailIntendedTo & "<p>Email To: #ARGUMENTS.email_to#</p>";
+				
+				ARGUMENTS.email_to = CLIENT.email;
+				
+				if ( LEN(ARGUMENTS.email_cc) ) {
+					emailIntendedTo = emailIntendedTo & "<p>Email CC: #ARGUMENTS.email_cc#</p>";
+					ARGUMENTS.email_cc = '';
+				}
+				
+				if ( LEN(ARGUMENTS.email_bcc) ) {
+					emailIntendedTo = emailIntendedTo & "<p>Email BCC: #ARGUMENTS.email_bcc#</p>";
+					ARGUMENTS.email_bcc = '';
+					
+				}
+				
+			}
 		</cfscript>
 
 
 		<!--- Create Email Body --->
         <cfsavecontent variable="template_file">
-          	
-            <!--- Email Header --->
-			<cfif VAL(ARGUMENTS.includeTemplate)>
-
-                <cfinclude template="../email/email_top.cfm">
-
-            </cfif>
+          	<cfoutput>
             
-            <!--- Include Email Message --->            
-            <cfif LEN(ARGUMENTS.email_message)>
-            
-                <cfoutput>#ARGUMENTS.email_message#</cfoutput> <br/ > <br />
+				<!--- Email Header --->
+                <cfif VAL(ARGUMENTS.includeTemplate)>
+                    <cfinclude template="../email/email_top.cfm">
+                </cfif>
                 
-            </cfif>
+                <!--- Include Email Message --->            
+                <cfif LEN(ARGUMENTS.email_message)>
+                    #ARGUMENTS.email_message# <br/ > <br />
+                </cfif>
+    
+                <!--- Display Email Recipients when sending from development environment --->
+                <cfif APPLICATION.isServerLocal>
+                    <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
+                    	******************************* DEVELOPMENT ENVIRONMENT *******************************
+                    </div>
+                    
+                    <p>You received this email insted of the original recipient(s) because you are logged in the development environment.</p>
+                    
+                    <p>Please see below the original recipient(s) for this message</p>
+                    
+                    #emailIntendedTo#
+                    
+                    <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
+                    	******************************* DEVELOPMENT ENVIRONMENT *******************************
+                    </div>
+                </cfif>
+                
+                <!--- Email Template --->       
+                <cfinclude template="../email/email_template.cfm">
+                
+                <!--- Email Footer --->
+                <cfif VAL(ARGUMENTS.includeTemplate)>
+                    <cfinclude template="../email/email_bottom.cfm">
+                </cfif>
             
-            <!--- Email Template --->       
-            <cfinclude template="../email/email_template.cfm">
-        	
-            <!--- Email Footer --->
-            <cfif VAL(ARGUMENTS.includeTemplate)>
-            
-                <cfinclude template="../email/email_bottom.cfm">
-
-            </cfif>
-			
+			</cfoutput>
         </cfsavecontent>
             
                 
