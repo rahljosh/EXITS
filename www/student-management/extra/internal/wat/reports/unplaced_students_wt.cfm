@@ -1,6 +1,6 @@
 <cfif IsDefined('FORM.program')>
 
-	<cfquery name="qGetStudents" datasource="mysql">
+	<cfquery name="qGetCandidates" datasource="mysql">
         SELECT 
             c.uniqueID, 
             c.programid,
@@ -47,7 +47,7 @@
         	u.businessname
 	</cfquery>
 	
-	<cfquery name="qGetStudentsSelf" datasource="mysql">
+	<cfquery name="qGetCandidatesSelf" datasource="mysql">
         SELECT 
             c.uniqueID, 
             c.programid,
@@ -94,7 +94,7 @@
         	u.businessname
 	</cfquery>
 	
-	<cfset total = qGetStudentsSelf.recordcount + qGetStudents.recordcount>
+	<cfset total = qGetCandidatesSelf.recordcount + qGetCandidates.recordcount>
 </cfif>
 
 <cfscript>
@@ -172,8 +172,8 @@
 </cfquery> --->
 
 
-<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #qGetStudents.recordcount#</div>	
-<div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #qGetStudentsSelf.recordcount#</div>
+<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #qGetCandidates.recordcount#</div>	
+<div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #qGetCandidatesSelf.recordcount#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
 <div class="style1"><strong>&nbsp; &nbsp; Total Number Students:</strong> #total#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
@@ -182,43 +182,42 @@
 <strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Students #wat_placement#:  #total# </font></strong>
 <br />
 </cfloop>
-<strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Total Number of Students: #qGetStudents.recordcount# </font></strong><br /> --->
+<strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Total Number of Students: #qGetCandidates.recordcount# </font></strong><br /> --->
 
 <img src="../../pics/black_pixel.gif" width="100%" height="2">
 					
   <table width=100% cellpadding="4" cellspacing=0>
   <tr>
-      <Th align="left" bgcolor="4F8EA4" class="style2">Student</Th>
-      <th align="left" bgcolor="4F8EA4" class="style2">Sex</th>
-      <th align="left" bgcolor="4F8EA4" class="style2">Country</th>
-      <th align="left" bgcolor="4F8EA4" class="style2">Req. Placement</th>
-      <th align="left" bgcolor="4F8EA4" class="style2">Comments</th>
-      <th align="left" bgcolor="4F8EA4" class="style2">English Assessment CSB</th>
-      <th align="left" bgcolor="4F8EA4" class="style2">English Assessment Comment</th>
-	  <th align="left" bgcolor="4F8EA4" class="style2">Intl. Rep.</th>
-	  <th align="left" bgcolor="4F8EA4" class="style2">Option</th>
+      <Th align="left" bgcolor="##4F8EA4" class="style2">Student</Th>
+      <th align="left" bgcolor="##4F8EA4" class="style2">Sex</th>
+      <th align="left" bgcolor="##4F8EA4" class="style2">Country</th>
+      <th align="left" bgcolor="##4F8EA4" class="style2">Skype ID</th>
+      <th align="left" bgcolor="##4F8EA4" class="style2">Req. Placement</th>
+      <th align="left" bgcolor="##4F8EA4" class="style2">Comments</th>
+      <th align="left" bgcolor="##4F8EA4" class="style2">English Assessment CSB</th>
+      <th align="left" bgcolor="##4F8EA4" class="style2">English Assessment Comment</th>
+	  <th align="left" bgcolor="##4F8EA4" class="style2">Intl. Rep.</th>
+	  <th align="left" bgcolor="##4F8EA4" class="style2">Option</th>
     </tr>	
 
 	 <img src="../../pics/black_pixel.gif" width="100%" height="2">
 				
-
-		
-<!----			<div align="center">	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">Please select report criteria and click on generate report. <br /> </font></div			><br />---->
-
-			  <cfif qGetStudents.recordcount eq 0 AND qGetStudentsSelf.recordcount eq 0 >
+		  <cfif qGetCandidates.recordcount eq 0 AND qGetCandidatesSelf.recordcount eq 0 >
 			<tr><td align="center" colspan=10> <div align="center"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">No students found based on the criteria you specified. Please change and re-run the report.</font></div><br />
 </td></tr>
 			  <cfelse>  
 				<cfset into = 1 >
-				<cfloop query="qGetStudents">
+				<cfloop query="qGetCandidates">
+                	
 				 <tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
 					<td class="style1">
-                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#qGetStudents.uniqueID#" target="_blank" class="style4">
+                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#qGetCandidates.uniqueID#" target="_blank" class="style4">
                     		#firstname# #lastname# (#candidateid#)
 						</a>
                     </td>
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
+                    <td class="style1">#APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidates.candidateID, applicationQuestionID=27).answer#</td>
 					<td class="style1">#name#</td>
 					<td class="style1">#change_requested_comment#</td>
                     <td class="style1">#englishAssessment#</td>
@@ -229,10 +228,10 @@
 				  <cfset into = into + 1 >
 				</cfloop>
 				
-				<cfloop query="qGetStudentsSelf">
+				<cfloop query="qGetCandidatesSelf">
 				 <tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
 					<td class="style1">
-                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#qGetStudentsSelf.uniqueID#" target="_blank" class="style4">
+                    	<a href="?curdoc=candidate/candidate_info&uniqueid=#qGetCandidatesSelf.uniqueID#" target="_blank" class="style4">
 	                    	#firstname# #lastname# (#candidateid#)
     					</a>
                     </td>
