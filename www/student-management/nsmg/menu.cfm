@@ -8,7 +8,7 @@
 	Updated:	
 
 ----- ------------------------------------------------------------------------- --->
-
+<cfset allowedUsers = '1,12313,7203'>
 <!--- Kill extra output --->
 <cfsilent>
 
@@ -262,9 +262,15 @@
                     <!--- Host Leads - ISE Only --->
 					<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                         <ul>
-                            <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>                
-                        </ul>            
+                            <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>   
+                   			<cfif ListFind(#allowedUsers#,'#client.userid#')>
+                                 	<li><a href="index.cfm?curdoc=hostApplication/hostAppIndex">Host Family Apps</a></li>
+                       		</cfif>
+                        </ul>
 					</cfif>
+
+                  
+                    	
                 </li>
                 
                 <li><a href="index.cfm?curdoc=schools">Schools</a></li>
