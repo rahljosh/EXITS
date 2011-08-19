@@ -756,6 +756,11 @@ div.form-container-noBorder p.note {
 	color: #333; 
 }
 
+div.form-container p.note em,
+div.form-container-noBorder p.note em { 
+	color: #F00; 
+}
+
 div.form-container .phoneNote,
 div.form-container-noBorder .phoneNote {
 	width:48px;

@@ -658,6 +658,14 @@
                                                             <input type="text" class="style1 editPage xLargeField" name="email" value="#qGetCandidate.email#" maxlength="100">
                                                         </td>
                                                     </tr>
+                                                    <!--- Online App Field - Skype ID --->
+                                                    <tr>
+                                                        <td class="style1" align="right"><strong>#qGetQuestionsSection1.displayField[3]#:</strong></td>
+                                                        <td class="style1">
+                                                            <span class="readOnly">#FORM[qGetQuestionsSection1.fieldKey[3]]# &nbsp;</span>
+                                                            <input name="#qGetQuestionsSection1.fieldKey[3]#" class="style1 editPage xLargeField" value="#FORM[qGetQuestionsSection1.fieldKey[3]]#" type="text" maxlength="50">
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                             
                                             </td>					
@@ -887,7 +895,7 @@
                                                 <!--- Office View Only --->
 												<cfif ListFind("1,2,3,4", CLIENT.userType)>
 	                                                <span style="float:right; padding-right:20px;">
-                                                    	<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);">[ Insurance Management ]</a>
+                                                    	<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);" class="style2">[ Insurance Management ]</a>
                                                     </span>
                                                 </cfif>
                                             </td>
@@ -1212,7 +1220,7 @@
                                                 <!--- Office View Only --->  
                                             	<cfif ListFind("1,2,3,4", CLIENT.userType)>    
                                                 	<span style="float:right; padding-right:20px;">
-                                                    	<a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);">[ History ]</a>
+                                                    	<a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);" class="style2">[ History ]</a>
                                                     </span>
                                             	</cfif>
                                             </td>

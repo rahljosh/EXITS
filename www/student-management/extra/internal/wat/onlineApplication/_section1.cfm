@@ -95,7 +95,7 @@
 		for ( i=1; i LTE qGetQuestions.recordCount; i=i+1 ) {
 			param name="FORM[qGetQuestions.fieldKey[i]]" default="";
 		}
-
+		
 		// FORM Submitted
 		if ( FORM.submittedType EQ 'section1' ) {
 			
@@ -116,7 +116,8 @@
 				// Get all the missing items in a list
 				SESSION.formErrors.Add('Please enter your last name');
 			}
-  
+  			
+			// First Name
 			if ( NOT LEN(FORM.firstName) ) {
 				SESSION.formErrors.Add('Please enter your first name');
 			}
@@ -131,10 +132,17 @@
 				SESSION.formErrors.Add('Program must end after start date');
 			}
 			
+			// CSB Placement
+			if ( FORM.wat_placement EQ 'CSB-Placement' AND NOT LEN(FORM[qGetQuestions.fieldKey[3]]) ) {
+				SESSION.formErrors.Add('Please enter Skype ID');
+			}
+			
+			// WAT Previous Participation
 			if ( NOT LEN(wat_participation) ) {
 				SESSION.formErrors.Add('Please select number of previous participation in the program');
 			}
 			
+			// WAT Participation
 			if ( VAL(wat_participation) AND NOT LEN(FORM.wat_participation_info) ) {
 				SESSION.formErrors.Add('Please enter previous program information');
 			}
@@ -655,7 +663,18 @@
                 </cfif>
             </cfif>            
         </div>
-
+		
+        <!--- Skype ID | Original Key [19] - Required for CSB-Placement --->
+        <div class="field">
+            <label for="#qGetQuestions.fieldKey[3]#">#qGetQuestions.displayField[3]# <cfif qGetQuestions.isRequired[3]><em>*</em></cfif></label>  
+            <cfif printApplication>
+				<div class="printField">#FORM[qGetQuestions.fieldKey[3]]# &nbsp;</div>
+        	<cfelse>
+	            <input type="text" name="#qGetQuestions.fieldKey[3]#" id="#qGetQuestions.fieldKey[3]#" value="#FORM[qGetQuestions.fieldKey[3]]#" class="#qGetQuestions.classType[3]#" maxlength="100" />
+            </cfif> 
+            <p class="note"><em>*</em> Required for CSB-Placement only</p>           
+        </div>
+        
         <!--- Passport Number --->
         <div class="field">
             <label for="passport_number">Passport Number <em>*</em></label> 
