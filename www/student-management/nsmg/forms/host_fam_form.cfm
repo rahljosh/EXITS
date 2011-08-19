@@ -48,8 +48,8 @@
     <cfparam name="FORM.arearepid" default="">
     <Cfparam name="FORM.submit_Start" default="paper">
     <!---Set Regions or users or user type that can start host app---->
-	<cfset allowedUsers = '1,12313'>
-   
+	<cfset allowedUsers = '1,12313,7203'>
+    <cfset strPassword = '3$rf&gB'>
     
     
 	<cfscript>
@@ -58,7 +58,7 @@
 		}
 		
 		//Random Password for account, if needed
-		strPassword = APPLICATION.CFC.UDF.randomPassword(length=8);
+		//strPassword = APPLICATION.CFC.UDF.randomPassword(length=8);
 		
 		// Get Host Family Info
 		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=FORM.hostID);
@@ -191,7 +191,18 @@
 
         <!--- // Check if there are no errors --->
         <cfif NOT SESSION.formErrors.length()>
-
+        	
+ 				 <cfif form.submit_Start is 'eHost'>
+                 	<cfscript>
+                     // Check for email address.
+                    if ( NOT LEN(TRIM(FORM.email)) ) {
+                        // Get all the missing items in a list
+                        SESSION.formErrors.Add("Please enter an email address.");
+                    }	
+					</cfscript>
+				</cfif>   
+            	
+              
             <cfscript>
                 // Father SSN - Will update if it's blank or there is a new number
                 if ( isValid("social_security_number", Trim(FORM.fatherSSN)) ) {
@@ -214,7 +225,7 @@
                     // Update - Erase SSN
                     vUpdateMotherSSN = 1;
                 }
-            
+           
                 // set the birth year field from the birth date field
                 if ( IsDate(FORM.fatherDOB) ) {
                     FORM.fatherBirth = Year(FORM.fatherDOB);
