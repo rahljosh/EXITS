@@ -49,7 +49,7 @@
     <Cfparam name="FORM.submit_Start" default="paper">
     <!---Set Regions or users or user type that can start host app---->
 	<cfset allowedUsers = '1,12313'>
-    <cfset strPassword = '3$rf&gB'>
+   
     
     
 	<cfscript>
@@ -58,7 +58,7 @@
 		}
 		
 		//Random Password for account, if needed
-		//strPassword = APPLICATION.CFC.password.randomPassword(length=8);
+		strPassword = APPLICATION.CFC.UDF.randomPassword(length=8);
 		
 		// Get Host Family Info
 		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=FORM.hostID);
@@ -350,7 +350,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         <cfif form.submit_Start is 'eHost'>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="8">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="9">,
                         </cfif>
                         <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
@@ -376,7 +376,7 @@
                 
                 <p>We are required by the Department of State to collect the following information:</p>
                 <ul>
-                <li>a background check on any persons over the age of 18 who are living in the home. 
+                <li>a background check on any persons who are 17 years of are or older and who are living in the home. 
                 <li>pictures of certain areas of your home and property to reflect where the student will be living.  
                 <li>basic finacial and finacial aid information on your family
                 </ul>
