@@ -212,8 +212,8 @@
 
 		<cfscript>
 			// Declare Lists
- 		    var list1 = "Â,Á,À,Ã,Ä,â,á,à,ã,ä,É,Ê,é,ê,Í,Ì,í,ì,Ô,Ó,Õ,Ö,ô,ó,õ,ö,Ú,Ü,Û,ú,ü,û,Ç,ç,Ñ,ñ,S,Z,Ø,ø,å,',æ,Å,ß,Š,î,ý,ë,è,ï,ò";
-			var list2 = "A,A,A,A,Ae,a,a,a,a,ae,E,E,e,e,I,I,i,i,O,O,O,OE,o,o,o,oe,U,UE,U,u,ue,u,C,c,N,n,S,Z,O,o,a, ,e,A,ss,S,i,y,e,e,i,o";
+ 		    var list1 = "Â,Á,À,Ã,Ä,â,á,à,ã,ä,É,Ê,é,ê,Í,Ì,í,ì,Ô,Ó,Õ,Ö,ô,ó,õ,ö,Ú,Ü,Û,ú,ü,û,Ç,ç,Ñ,ñ,S,Z,Ø,ø,å,æ,Å,ß,Š,î,ý,ë,è,ï,ò";
+			var list2 = "A,A,A,A,Ae,a,a,a,a,ae,E,E,e,e,I,I,i,i,O,O,O,OE,o,o,o,oe,U,UE,U,u,ue,u,C,c,N,n,S,Z,O,o,a,e,A,ss,S,i,y,e,e,i,o";
 
 			// Remove Accent - replaceList
 			var newString = replaceList(ARGUMENTS.varString, list1, list2) ; 
@@ -295,10 +295,10 @@
 		</cfscript>
 	</cffunction>
 
-	<!---Generate a random passowrd.   Pass in the length that you want the password to be. ---->
 
+	<!---Generate a random passowrd.   Pass in the length that you want the password to be. ---->
 	<cffunction name="randomPassword" access="public" returntype="string">
-    <cfargument name="length" type="numeric" required="yes" default=8 hint="Password HAS to be at least 4" />
+    	<cfargument name="length" type="numeric" required="yes" default=8 hint="Password HAS to be at least 4" />
 		
  			<!---not using the letters i,o,l and numbers 0,1 to avoid any confusion--->
 			<!--- Set up available lower case values. --->
@@ -320,17 +320,15 @@
             <!---Create an array to contain the password --->
             <cfset arrPassword = ArrayNew( 1 ) />
          
-         
-        <!---
-        Rules that are followed
-         
-        - must be exactly 8 characters in length
-        - must have at least 1 number
-        - must have at least 1 uppercase letter
-        - must have at least 1 lower case letter
-        - must have at least 1 non-alphanumeric char.
-        --->
-         
+			<!---
+            Rules that are followed
+             
+            - must be exactly 8 characters in length
+            - must have at least 1 number
+            - must have at least 1 uppercase letter
+            - must have at least 1 lower case letter
+            - must have at least 1 non-alphanumeric char.
+            --->
          
             <!--- Select the random number from our number set. --->
             <cfset arrPassword[ 1 ] = Mid(
@@ -360,40 +358,35 @@
             1
             ) />
          
-        
+			<!--- We have 4 of the arguments.length needed to satisfy the requirements, create rest of the password. --->
+            <cfloop index="intChar" from="#(ArrayLen( arrPassword ) + 1)#" to="#ARGUMENTS.length#" step="1">
+             
+            
+                <cfset arrPassword[ intChar ] = Mid(
+                strAllValidChars,
+                RandRange( 1, Len( strAllValidChars ) ),
+                1
+                ) />
+             
+            </cfloop>
          
-        <!--- We have 4 of the arguments.length needed to satisfy the requirements, create rest of the password. --->
-        <cfloop index="intChar" from="#(ArrayLen( arrPassword ) + 1)#" to="#ARGUMENTS.length#" step="1">
-         
-        
-            <cfset arrPassword[ intChar ] = Mid(
-            strAllValidChars,
-            RandRange( 1, Len( strAllValidChars ) ),
-            1
+			<!---
+            Jumble up the password. 
+            --->
+            <cfset CreateObject( "java", "java.util.Collections" ).Shuffle(
+            arrPassword
             ) />
          
-        </cfloop>
-         
-         
-        <!---
-        Jumble up the password. 
-        --->
-        <cfset CreateObject( "java", "java.util.Collections" ).Shuffle(
-        arrPassword
-        ) />
-         
-         
-        <!---
-        We now have a randomly shuffled array. Now, we just need
-        to join all the characters into a single string. We can
-        do this by converting the array to a list and then just
-        providing no delimiters (empty string delimiter).
-        --->
-        <cfset strPassword = ArrayToList(
-        arrPassword,
-        ""
-        ) />
+			<!---
+            We now have a randomly shuffled array. Now, we just need
+            to join all the characters into a single string. We can
+            do this by converting the array to a list and then just
+            providing no delimiters (empty string delimiter).
+            --->
+            <cfset strPassword = ArrayToList(
+            arrPassword,
+            ""
+            ) />
 	</cffunction>
-
 
 </cfcomponent>
