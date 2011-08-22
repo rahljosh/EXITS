@@ -8,7 +8,7 @@
 	Updated:	
 
 ----- ------------------------------------------------------------------------- --->
-<cfset allowedUsers = '1,12313,7203'>
+<cfset allowedUsers = '1,12313,7203,1077'>
 <!--- Kill extra output --->
 <cfsilent>
 
