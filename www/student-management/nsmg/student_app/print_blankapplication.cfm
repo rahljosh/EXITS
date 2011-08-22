@@ -125,8 +125,8 @@ where companyid = #client.org_code#
 		<div style="page-break-after:always;"></div>	
 	</td></tr>	
 
-	<!--- Do not print guarantees for EF --->
-	<cfif qGetIntlRepInfo.userID NEQ '10111' AND qGetIntlRepInfo.master_accountid NEQ '10111'>
+	<!--- Do not print guarantees for EF or Canada --->
+	<cfif (qGetIntlRepInfo.userID NEQ '10111' AND qGetIntlRepInfo.master_accountid NEQ '10111') OR client.companyid EQ 13>
 		
 		<!----We don't need to include 20 for ESI---->
         <cfif CLIENT.companyID NEQ 14>
