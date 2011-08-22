@@ -126,7 +126,7 @@ where companyid = #client.org_code#
 	</td></tr>	
 
 	<!--- Do not print guarantees for EF or Canada --->
-	<cfif (qGetIntlRepInfo.userID NEQ '10111' AND qGetIntlRepInfo.master_accountid NEQ '10111') OR client.companyid EQ 13>
+	<cfif (qGetIntlRepInfo.userID NEQ '10111' AND qGetIntlRepInfo.master_accountid NEQ '10111') OR client.companyid NEQ 13>
 		
 		<!----We don't need to include 20 for ESI---->
         <cfif CLIENT.companyID NEQ 14>
