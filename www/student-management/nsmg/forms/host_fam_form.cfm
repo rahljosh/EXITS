@@ -379,7 +379,7 @@
             
             <cfsavecontent variable="hostWelcome">
 				<Cfoutput>
-                <cfif form.fatherfirstname is not ''>#fatherfirstname#</cfif><Cfif form.fatherfirstname is not '' and form.motherfirstname is not ''>and</Cfif> <cfif form.motherfirstname is not ''>#form.motherfirstname#</cfif>-
+                <cfif form.fatherfirstname is not ''>#fatherfirstname#</cfif><Cfif form.fatherfirstname is not '' and form.motherfirstname is not ''> and</Cfif> <cfif form.motherfirstname is not ''>#form.motherfirstname#</cfif>-
                 
                 <p>I am so excited that you have decided to host a student!</p>
                 
