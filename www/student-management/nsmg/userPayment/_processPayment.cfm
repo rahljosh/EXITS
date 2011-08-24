@@ -5,7 +5,9 @@
 	Date:		April 20, 2011
 	Desc:		Process Payment
 	
-	Update:		06/17/2011 - Blocking departure payments for ayp 5 month students	
+	Update:		08/23/2011 - Adding second visit representative
+				
+				06/17/2011 - Blocking departure payments for ayp 5 month students	
 		
 				04/22/2011 - Pre AYP Bonus - Mutually Exclusive	
 					18 - Pre-AYP-250
@@ -42,7 +44,11 @@
 		if ( LEN(FORM.placedStudentIDList) ) {
 			vStudentIDList = ListAppend(vStudentIDList, FORM.placedStudentIDList);
 		}
-		
+
+		if ( LEN(FORM.secondVisitStudentIDList) ) {
+			vStudentIDList = ListAppend(vStudentIDList, FORM.secondVisitStudentIDList);
+		}
+
 		if ( LEN(URL.timeStamp) ) {
 			URL.timeStamp = URLDecode(URL.timeStamp);
 		}
@@ -81,6 +87,21 @@
             pt.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     </cfquery>
 	
+    <cfquery name="qGetSecondVisitPaymentType" datasource="MySQL">
+        SELECT 
+            pt.type, 
+            pt.id, 
+            pa.amount
+        FROM 
+            smg_payment_types pt
+        INNER JOIN 
+            smg_payment_amount pa ON pt.id = pa.paymentid
+        WHERE 
+            pt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.secondVisitPaymentType)#"> 
+        AND 
+            pt.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+    </cfquery>
+    
     <!--- Gets All Selected Students --->
     <cfquery name="qGetAllStudents" datasource="MySQL">
         SELECT 
@@ -123,6 +144,19 @@
             qGetAllStudents
         WHERE 
             studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.placedStudentIDList#" list="yes"> )
+    </cfquery>
+
+    <cfquery name="qGetSecondVisitStudentList" dbtype="query">
+        SELECT 
+            studentID, 
+            firstName, 
+            familyLastName, 
+            programID,
+            type
+        FROM 
+            qGetAllStudents
+        WHERE 
+            studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.secondVisitStudentIDList#" list="yes"> )
     </cfquery>
 	
     <!--- Get Recorded Payments --->
@@ -175,6 +209,30 @@
             AND
             	srp.transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="Placement">
         </cfquery>
+        
+		<!--- Get Second Visit Payments Made --->
+        <cfquery name="qGetSecondVisitPaymentDetail" datasource="MySQL">
+            SELECT
+                srp.ID,
+                srp.amount,
+                srp.comment,
+                spt.type,
+                s.firstName,
+                s.familyLastName,
+                s.studentID
+            FROM 
+                smg_rep_payments srp
+            LEFT OUTER JOIN
+                smg_payment_types spt ON spt.ID = srp.paymentType
+            LEFT OUTER JOIN
+                smg_students s ON s.studentID = srp.studentID                                
+            WHERE
+               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
+            AND    
+                srp.date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#URL.timeStamp#">
+            AND
+            	srp.transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisit">
+        </cfquery>        
 	
     </cfif>
 	
@@ -188,92 +246,126 @@
         <!--- Supervised Payments --->
         <cfif VAL(FORM.supervisedStudentIDList)>
         
-            <cfloop list="#FORM.supervisedStudentIDList#" index="superID">
+            <cfloop list="#FORM.supervisedStudentIDList#" index="studentID">
                 
-                <cfif LEN(Evaluate("FORM." & superID & "superPaymentTypeID"))>
+                <cfif LEN(Evaluate("FORM." & studentID & "superPaymentTypeID"))>
                 
-                    <cftransaction action="begin" isolation="serializable">
-                        
-                        <cfquery datasource="MySQL" result="newRecord">
-                            INSERT INTO 
-                                smg_rep_payments
-                            (
-                                agentid, 
-                                studentID, 
-                                programID, 
-                                paymenttype, 
-                                date, 
-                                transtype, 
-                                inputby, 
-                                amount, 
-                                companyID, 
-                                comment
-                            )
-                            VALUES 
-                            (
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#superID#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & superID & 'superProgramID')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & superID & 'superPaymentTypeID')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & superID & 'superTransType')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & superID & 'superAmount')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & superID & 'superComment')#">
-                            )
-                        </cfquery>
-                        
-                    </cftransaction>
+                    <cfquery datasource="MySQL" result="newRecord">
+                        INSERT INTO 
+                            smg_rep_payments
+                        (
+                            agentid, 
+                            studentID, 
+                            programID, 
+                            paymenttype, 
+                            date, 
+                            transtype, 
+                            inputby, 
+                            amount, 
+                            companyID, 
+                            comment
+                        )
+                        VALUES 
+                        (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superProgramID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superPaymentTypeID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="supervision">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'superAmount')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'superComment')#">
+                        )
+                    </cfquery>
                 
                 </cfif>	
                 
             </cfloop>
 		
         </cfif>
-        
-        
+
         <!--- Placed Payments --->
         <cfif VAL(FORM.placedStudentIDList)>
         
-            <cfloop list="#FORM.placedStudentIDList#" index="placedID">
+            <cfloop list="#FORM.placedStudentIDList#" index="studentID">
             
-                <cfif LEN(Evaluate("FORM." & placedID & "placePaymentTypeID"))>
+                <cfif LEN(Evaluate("FORM." & studentID & "placePaymentTypeID"))>
                 
-                    <cftransaction action="begin" isolation="serializable">
+                    <cfquery datasource="MySQL" result="newRecord">
+                        INSERT INTO 
+                            smg_rep_payments
+                        (
+                            agentid, 
+                            studentID, 
+                            programID, 
+                            paymenttype, 
+                            date, 
+                            transtype, 
+                            inputby, 
+                            amount, 
+                            companyID, 
+                            comment
+                        )
+                        VALUES 
+                        (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placeProgramID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placePaymentTypeID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="placement">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'placeAmount')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'placeComment')#">
+                        )
+                    </cfquery>
                     
-                        <cfquery datasource="MySQL" result="newRecord">
-                            INSERT INTO 
-                                smg_rep_payments
-                            (
-                                agentid, 
-                                studentID, 
-                                programID, 
-                                paymenttype, 
-                                date, 
-                                transtype, 
-                                inputby, 
-                                amount, 
-                                companyID, 
-                                comment
-                            )
-                            VALUES 
-                            (
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#placedID#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & placedID & 'placeProgramID')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & placedID & 'placePaymentTypeID')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & placedID & 'placeTranstype')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & placedID & 'placeAmount')#">, 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
-                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & placedID & 'placeComment')#">
-                            )
-                        </cfquery>
-                        
-                    </cftransaction>
-                    
+                </cfif>
+                
+            </cfloop>
+		
+        </cfif>
+        
+        <!--- Second Visit Payments --->
+        <cfif VAL(FORM.secondVisitStudentIDList)>
+        
+            <cfloop list="#FORM.secondVisitStudentIDList#" index="studentID">
+            		
+                <cfif LEN(Evaluate("FORM." & studentID & "secondVisitPaymentTypeID"))>
+                	
+                    <cfquery datasource="MySQL" result="newRecord">
+                        INSERT INTO 
+                            smg_rep_payments
+                        (
+                            agentid, 
+                            studentID, 
+                            programID, 
+                            paymenttype, 
+                            date, 
+                            transtype, 
+                            inputby, 
+                            amount, 
+                            companyID, 
+                            comment
+                        )
+                        VALUES 
+                        (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitProgramID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitPaymentTypeID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisit">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'secondVisitAmount')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'secondVisitComment')#">
+                        )
+                    </cfquery>
+                
                 </cfif>
                 
             </cfloop>
@@ -301,7 +393,10 @@
 
         <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;"> 
             <tr>
-                <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Supervised Students &nbsp; - &nbsp; Total of #qGetSupervisedPaymentDetail.recordCount# student(s)</td>
+                <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Supervised Students</td>
+                <td style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+                    Total of #qGetSupervisedPaymentDetail.recordCount# student(s)
+                </td>
             </tr>
             <tr style="background-color:##E2EFC7; font-weight:bold;">
                 <td width="10%">Payment ID</td>
@@ -314,7 +409,7 @@
             <cfloop query="qGetSupervisedPaymentDetail">
 
                 <tr bgcolor="###iif(qGetSupervisedPaymentDetail.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                    <Td>#qGetSupervisedPaymentDetail.ID#</Td>
+                    <Td>###qGetSupervisedPaymentDetail.ID#</Td>
                     <td>#qGetSupervisedPaymentDetail.firstName# #qGetSupervisedPaymentDetail.familyLastName# (###qGetSupervisedPaymentDetail.studentID#)</td>
                     <Td>#qGetSupervisedPaymentDetail.type#</Td>  
                     <td>#LSCurrencyFormat(qGetSupervisedPaymentDetail.amount, 'local')#</td>
@@ -332,7 +427,10 @@
 		<!--- PLACED STUDENTS --->
         <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
             <tr>
-                <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Placed Students &nbsp; - &nbsp; Total of #qGetPlacedPaymentDetail.recordCount# student(s)</td>
+                <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Placed Students</td>
+                <td style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+                    Total of #qGetPlacedPaymentDetail.recordCount# student(s)
+                </td>
             </tr>
             <tr style="background-color:##E2EFC7; font-weight:bold;">
                 <td width="10%">Payment ID</td>
@@ -345,7 +443,7 @@
             <cfloop query="qGetPlacedPaymentDetail">
                 
                 <tr bgcolor="###iif(qGetPlacedPaymentDetail.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                    <Td>#qGetPlacedPaymentDetail.ID#</Td>
+                    <Td>###qGetPlacedPaymentDetail.ID#</Td>
                     <td>#qGetPlacedPaymentDetail.firstName# #qGetPlacedPaymentDetail.familyLastName# (###qGetPlacedPaymentDetail.studentID#)</td>
                     <Td>#qGetPlacedPaymentDetail.type#</Td>  
                     <td>#LSCurrencyFormat(qGetPlacedPaymentDetail.amount, 'local')#</td>
@@ -356,6 +454,40 @@
             
             <cfif NOT VAL(qGetPlacedPaymentDetail.recordCount)>
                 <tr><td colspan="5" align="center">No placement payments submitted.</td></tr>
+            </cfif>
+
+        </table>
+        
+		<!--- SECOND VISIT STUDENTS --->
+        <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+            <tr>
+                <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Second Visit Students</td>
+                <td style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+                    Total of #qGetSecondVisitPaymentDetail.recordCount# student(s)
+                </td>
+            </tr>
+            <tr style="background-color:##E2EFC7; font-weight:bold;">
+                <td width="10%">Payment ID</td>
+                <td width="20%">Student</td>
+                <td width="20%">Type</td>
+                <td width="10%">Amount</td>
+                <td width="40%">Comment</td>
+            </tr>
+
+            <cfloop query="qGetSecondVisitPaymentDetail">
+                
+                <tr bgcolor="###iif(qGetSecondVisitPaymentDetail.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                    <Td>###qGetSecondVisitPaymentDetail.ID#</Td>
+                    <td>#qGetSecondVisitPaymentDetail.firstName# #qGetSecondVisitPaymentDetail.familyLastName# (###qGetSecondVisitPaymentDetail.studentID#)</td>
+                    <Td>#qGetSecondVisitPaymentDetail.type#</Td>  
+                    <td>#LSCurrencyFormat(qGetSecondVisitPaymentDetail.amount, 'local')#</td>
+                    <td>#qGetSecondVisitPaymentDetail.comment#</td>
+                </tr>
+                
+            </cfloop>
+            
+            <cfif NOT VAL(qGetSecondVisitPaymentDetail.recordCount)>
+                <tr><td colspan="5" align="center">No second visit payments submitted.</td></tr>
             </cfif>
 
         </table>
@@ -374,17 +506,20 @@
             <input type="hidden" name="userID" value="#FORM.userID#">
             <input type="hidden" name="supervisedStudentIDList" value="#FORM.supervisedStudentIDList#">
             <input type="hidden" name="placedStudentIDList" value="#FORM.placedStudentIDList#">
+            <input type="hidden" name="secondVisitStudentIDList" value="#FORM.secondVisitStudentIDList#">
         	
             <!---- SUPERVISED STUDENTS ---->
             <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;"> 
                 <tr>
-                    <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Supervised Students &nbsp; - &nbsp; Total of #ListLen(FORM.supervisedStudentIDList)# student(s)</td>
-                </tr>
-                <tr>
-                    <td colspan="5" style="font-weight:bold;">
-                        Payment Type: <cfif LEN(qGetsupervisedPaymentType.type)>#qGetsupervisedPaymentType.type#<cfelse>n/a</cfif>
+                    <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">
+                    	Supervised Students 
+                        &nbsp; - &nbsp;
+                    	Payment Type: <cfif LEN(qGetsupervisedPaymentType.type)>#qGetsupervisedPaymentType.type#<cfelse>n/a</cfif>
                     </td>
-				</tr>                
+                    <td style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+                    	Total of #qGetSupervisedStudentList.recordCount# student(s)
+                    </td>
+                </tr>
                 <tr style="background-color:##E2EFC7; font-weight:bold;">
                     <td width="10%">ID</td>
                     <td width="20%">Student</td>
@@ -447,7 +582,6 @@
 					</cfscript>
                     
                     <tr bgcolor="###iif(qGetSupervisedStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                        <input type="hidden" value="supervision" name="#qGetSupervisedStudentList.studentID#superTransType">
                         <input type="hidden" name="#qGetSupervisedStudentList.studentID#superProgramID" value="#qGetSupervisedStudentList.programID#">
                         <Td valign="top">
                             <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetSupervisedStudentList.studentID#', 700, 500);" class="nav_bar">
@@ -511,11 +645,7 @@
                        
                 </cfloop>
 				
-				<cfif VAL(qGetSupervisedStudentList.recordCount)>
-                    <tr style="background-color:##E2EFC7;">
-                        <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
-                    </tr>
-                <cfelse>
+				<cfif NOT VAL(qGetSupervisedStudentList.recordCount)>
                     <tr><td colspan="5" align="center">No students selected.</td></tr>
                 </cfif>
                 
@@ -524,13 +654,15 @@
             <!--- PLACED STUDENTS --->
             <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
                 <tr>
-                    <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Placed Students &nbsp; - &nbsp; Total of #ListLen(FORM.placedStudentIDList)# student(s)</td>
-                </tr>
-                <tr>
-                    <td colspan="5" style="font-weight:bold;">
+                    <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">
+                    	Placed Students 
+                        &nbsp; - &nbsp; 
                         Payment Type: <cfif LEN(qGetPlacementPaymentType.type)>#qGetPlacementPaymentType.type#<cfelse>n/a</cfif>
                     </td>
-				</tr>                
+                    <td style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+                    	Total of #qGetPlacedStudentList.recordCount# student(s)
+                    </td>
+                </tr>
                 <tr style="background-color:##E2EFC7; font-weight:bold;">
                     <td width="10%">ID</td>
                     <td width="20%">Student</td>
@@ -615,7 +747,6 @@
 					</cfscript>
                     
                     <tr bgcolor="###iif(qGetPlacedStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                        <input type="hidden" value="placement" name="#qGetPlacedStudentList.studentID#placeTranstype">
                         <input type="hidden" name="#qGetPlacedStudentList.studentID#placeProgramID" value="#qGetPlacedStudentList.programID#">
                         <Td valign="top">
                             <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetPlacedStudentList.studentID#', 700, 500);" class="nav_bar">
@@ -688,42 +819,157 @@
                         
                 </cfloop>
 
-				<cfif VAL(qGetPlacedStudentList.recordCount)>
-                    <tr style="background-color:##E2EFC7;">
-                        <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
-                    </tr>
-                <cfelse>
+				<cfif NOT VAL(qGetPlacedStudentList.recordCount)>
                     <tr><td colspan="5" align="center">No students selected.</td></tr>
                 </cfif>
             </table>
 
+            <!--- SECOND VISIT --->
+            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+                <tr>
+                    <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">
+                    	Second Visit Students 
+                        &nbsp; - &nbsp; 
+                        Payment Type: <cfif LEN(qGetSecondVisitPaymentType.type)>#qGetSecondVisitPaymentType.type#<cfelse>n/a</cfif>
+                    </td>
+                    <td style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+                    	Total of #qGetSecondVisitStudentList.recordCount# student(s)
+                    </td>                
+                </tr>
+                <tr style="background-color:##E2EFC7; font-weight:bold;">
+                    <td width="10%">ID</td>
+                    <td width="20%">Student</td>
+                    <td width="15%">Type</td>
+                    <td width="10%">Amount</td>
+                    <td width="45%">Comment</td>
+				</tr>
+
+                <cfloop query="qGetSecondVisitStudentList">
+					
+                    <cfquery name="qCheckSecondVisitCharges" datasource="MySQL">
+                        SELECT                                 
+                            rep.paymenttype,
+                            rep.date,
+                            rep.amount,
+                            spt.type,
+                            p.programName,
+                            u.firstName, 
+                            u.lastname
+                        FROM 
+                            smg_rep_payments rep
+                        INNER JOIN 
+                            smg_payment_types spt ON rep.paymenttype = spt.id
+                        LEFT JOIN 
+                            smg_programs p ON rep.programID = p.programID
+                        LEFT JOIN 
+                            smg_users u ON rep.agentid = u.userid
+                        WHERE 
+                            rep.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSecondVisitStudentList.studentID#"> 
+                        AND 
+                            spt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.secondVisitPaymentType)#">
+                        ORDER BY
+                        	rep.date DESC	
+                    </cfquery>
+
+                    <cfscript>
+						// Check if payment is allowed
+						vAllowSecondVisitPayment = 0;
+						
+						if ( VAL(FORM.isSplitPayment) ) {
+							// Split Payment - Allow
+							vAllowSecondVisitPayment = 1;
+						} else if ( NOT VAL(qCheckSecondVisitCharges.recordcount) ) {
+							// Charge not paid - Allow
+							vAllowSecondVisitPayment = 1;
+						}
+
+						// Split Payments - No Default value
+						if ( FORM.isSplitPayment ) {
+							vSecondVisitAmoutToBePaid = '';
+							// vSecondVisitAmoutToBePaid = VAL(qGetSecondVisitPaymentType.amount) / 2;	
+						} else { 
+							vSecondVisitAmoutToBePaid = qGetSecondVisitPaymentType.amount;
+						}
+					</cfscript>
+                    
+                    <tr bgcolor="###iif(qGetSecondVisitStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                        <input type="hidden" name="#qGetSecondVisitStudentList.studentID#SecondVisitProgramID" value="#qGetSecondVisitStudentList.programID#">
+                        <Td valign="top">
+                            <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetSecondVisitStudentList.studentID#', 700, 500);" class="nav_bar">
+                                #qGetSecondVisitStudentList.studentID#
+                            </a>
+                        </Td>
+                        <td valign="top">
+                            <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetSecondVisitStudentList.studentID#', 700, 500);" class="nav_bar">
+                                #qGetSecondVisitStudentList.firstName# #qGetSecondVisitStudentList.familyLastName#
+                            </a>
+                        </td>
+                        
+                        <cfif vAllowSecondVisitPayment>
+                        
+                            <td valign="top">
+                                <select name="#qGetSecondVisitStudentList.studentID#SecondVisitPaymentTypeID" class="largeField">
+                                    <option value="#qGetSecondVisitPaymentType.id#">#qGetSecondVisitPaymentType.type#</option>
+                                </select>
+                            </td>
+                            <td valign="top">
+                                <cfinput type="text" name="#qGetSecondVisitStudentList.studentID#SecondVisitAmount" class="smallField" value="#vSecondVisitAmoutToBePaid#" required="yes" message="Oops! You forgot to enter the amount for student #qGetSecondVisitStudentList.studentID#.">
+                            </td>
+                            <td valign="top" style="color:##F00">
+                                <input type="text" name="#qGetSecondVisitStudentList.studentID#SecondVisitComment" class="largeField">
+								
+                                <!--- Display Previous Payment Information --->
+                                <cfloop query="qCheckSecondVisitCharges">
+                                    <p>
+                                        #qCheckSecondVisitCharges.type# paid on #DateFormat(qCheckSecondVisitCharges.date, 'mm/dd/yyyy')# <br />
+                                        - Program #qCheckSecondVisitCharges.programName# <br />
+                                        - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# <br />
+                                        - Total Paid: #DollarFormat(qCheckSecondVisitCharges.amount)#
+                                    </p>
+								</cfloop>                               
+                            </td>
+                            
+                        <cfelse>
+                        
+                            <!--- Block Payment --->
+                            <td valign="top">
+                                <cfinput type="hidden" name="#qGetSecondVisitStudentList.studentID#SecondVisitPaymentTypeID" value="">
+                                n/a
+                            </td>
+                            <td valign="top">n/a</td>
+                            <td valign="top" style="color:##F00">
+                                <cfif FORM.secondVisitPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetSecondVisitStudentList.type)>
+                                    AYP 5 month programs are not eligible for #qGetsupervisedPaymentType.type# payment.
+                                <cfelse>
+                                    <cfloop query="qCheckSecondVisitCharges">
+                                        <p>
+                                            #qCheckSecondVisitCharges.type# paid on #DateFormat(qCheckSecondVisitCharges.date, 'mm/dd/yyyy')# <br />
+                                            - Program #qCheckSecondVisitCharges.programName# <br />
+                                            - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# <br />
+                                            - Total Paid: #DollarFormat(qCheckSecondVisitCharges.amount)#
+                                        </p>
+                                    </cfloop>                               
+                                </cfif>
+                            </td>
+                            
+                        </cfif>
+                    </tr>
+                        
+                </cfloop>
+
+				<cfif NOT VAL(qGetSecondVisitStudentList.recordCount)>
+                    <tr><td colspan="5" align="center">No students selected.</td></tr>
+                </cfif>
+            </table>
+
+			<!--- Submit Button --->
+            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+                <tr style="background-color:##E2EFC7;">
+                    <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
+                </tr>
+			</table>
    		</cfform>
 
 	</cfif>
 
 </cfoutput>
-
-<!--- ASSIGN A PROGRAM TO A PAYMENT --->
-<!----
-<cfif CLIENT.userid EQ 510>
-	<cfquery name="get_students" datasource="MySql">
-		SELECT DISTINCT smg_students.studentID, smg_students.programID
-		FROM smg_students
-		INNER JOIN smg_rep_payments ON smg_rep_payments.studentID = smg_students.studentID
-		AND smg_rep_payments.programID = '0'
-		ORDER BY smg_students.studentID
-	</cfquery>
-	
-	<cfloop query="get_students">
-		<cfquery name="update" datasource="MySql">
-			UPDATE smg_rep_payments
-			SET programID = '#get_students.programID#'
-			WHERE studentID = '#get_students.studentID#'
-		</cfquery>
-		
-		<cfoutput>
-		#get_students.studentID# <br />
-		</cfoutput>
-	</cfloop>
-</cfif>
---->

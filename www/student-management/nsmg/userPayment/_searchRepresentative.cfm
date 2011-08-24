@@ -37,7 +37,7 @@
         INNER JOIN 
             user_access_rights uar ON uar.userid = u.userid
         WHERE 
-            uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+            uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
         AND 
             u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND 
