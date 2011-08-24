@@ -6,6 +6,8 @@
 	Desc:		User Payments
 				
 				#CGI.SCRIPT_NAME#?curdoc=userPayment/index
+
+	Update:		08/23/2011 - Adding second visit representative
 				
 ----- ------------------------------------------------------------------------- --->
 
@@ -45,12 +47,15 @@
     <cfparam name="FORM.userID" default="0">
     <cfparam name="FORM.areaRepID" default="0">
     <cfparam name="FORM.placeRepID" default="0">
+    <cfparam name="FORM.secondVisitRepID" default="0">
     <cfparam name="FORM.lastName" default="0">
 	<!--- Process Payment --->
     <cfparam name="FORM.supervisedPaymentType" default="0">
-    <cfparam name="FORM.placedPaymentType" default="0">
     <cfparam name="FORM.supervisedStudentIDList" default="0">
+    <cfparam name="FORM.placedPaymentType" default="0">
     <cfparam name="FORM.placedStudentIDList" default="0">
+    <cfparam name="FORM.secondVisitPaymentType" default="0">
+    <cfparam name="FORM.secondVisitStudentIDList" default="0">
         
     <cfscript>
 		// URL.userID comes from user profile

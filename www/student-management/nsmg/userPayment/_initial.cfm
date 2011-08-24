@@ -50,6 +50,8 @@
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        GROUP BY
+        	u.userID
         ORDER BY 
         	u.lastname
     </cfquery>
@@ -69,12 +71,36 @@
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        GROUP BY
+        	u.userID
+        ORDER BY 
+        	u.lastname
+    </cfquery>
+
+    <!----Reps who second visited students---->
+    <cfquery name="qGetSecondVisitReps" datasource="mysql">
+        SELECT DISTINCT 
+        	u.userid,        	
+            u.firstName, 
+            u.lastname,
+			s.placeRepID
+        FROM 
+        	smg_students s 
+        INNER JOIN 
+        	smg_users u ON s.secondVisitRepID = u.userid
+        WHERE 
+        	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        GROUP BY
+        	u.userID
         ORDER BY 
         	u.lastname
     </cfquery>
     
     <!--- GET CURRENT AND HISTORY PLACE AND SUPER --->
     <cfquery name="qGetReps" datasource="MySql">
+        <!--- Area History --->
         SELECT DISTINCT 
         	u.userid,
             u.firstName, 
@@ -91,7 +117,8 @@
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
 
         UNION
-
+		
+        <!--- Area Active --->
         SELECT DISTINCT 
         	u.userid,
             u.firstName, 
@@ -106,7 +133,8 @@
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
 
         UNION
-
+		
+        <!--- Place History --->
         SELECT DISTINCT 
         	u.userid,
             u.firstName, 
@@ -124,6 +152,7 @@
 
         UNION
 
+		<!--- Place Active --->
         SELECT DISTINCT 
         	u.userid,
             u.firstName, 
@@ -171,9 +200,9 @@
             <td align="center" style="height:50px;">
                 <p>Specify the Representative that you want to work with:</p>
                 
-                Last Name: <input type="text" name="lastName">
+                Last Name: <input type="text" name="lastName" class="xLargeField">
                 &nbsp;&nbsp;&nbsp;<strong>- OR -</strong>&nbsp;&nbsp;&nbsp; 
-                User ID: <input type="text" name="userID" size="4">
+                User ID: <input type="text" name="userID" size="4" class="smallField">
             </td>
         </tr>
         <tr style="background-color:##E2EFC7;">
@@ -212,12 +241,12 @@
             </td>
         </tr>
         <tr>
-            <td width="45%" align="right">Select by Supervising Rep: </td>
+            <td width="45%" align="right">Select by Supervising Representative: </td>
             <td>
-                <select name="areaRepID">
+                <select name="areaRepID" class="xLargeField">
                     <option value="0"></option>
                     <cfloop query="qGetSupervisingReps">
-                    <option value="#userid#">#lastname#, #firstName# (#userid#)</option>
+                    <option value="#qGetSupervisingReps.userid#">#qGetSupervisingReps.lastname#, #qGetSupervisingReps.firstName# (###qGetSupervisingReps.userid#)</option>
                     </cfloop>
                 </select>
             </td>
@@ -226,12 +255,26 @@
             <td colspan="2" align="center"><strong>- OR -</strong></td>
         </tr>
         <tr>
-            <td align="right">Select by Placing Rep:</td>
+            <td align="right">Select by Placing Representative:</td>
             <td>
-                <select name="placeRepID">
+                <select name="placeRepID" class="xLargeField">
                     <option value="0"></option>
                     <cfloop query="qGetPlacingReps">
-                    <option value="#userid#">#lastname#, #firstName# (#userid#)</option>
+                    	<option value="#qGetPlacingReps.userid#">#qGetPlacingReps.lastname#, #qGetPlacingReps.firstName# (###qGetPlacingReps.userid#)</option>
+                    </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><strong>- OR -</strong></td>
+        </tr>
+        <tr>
+            <td align="right">Select by Second Visit Representative:</td>
+            <td>
+                <select name="secondVisitRepID" class="xLargeField">
+                    <option value="0"></option>
+                    <cfloop query="qGetSecondVisitReps">
+                    	<option value="#qGetSecondVisitReps.userid#">#qGetSecondVisitReps.lastname#, #qGetSecondVisitReps.firstName# (###qGetSecondVisitReps.userid#)</option>
                     </cfloop>
                 </select>
             </td>
@@ -241,10 +284,10 @@
         </tr>
         <tr>
             <td align="right">Select by Student:</td><td>
-                <select name="studentID">
+                <select name="studentID" class="xLargeField">
                     <option value="0"></option>
                     <cfloop query="qGetPlacedStudents">
-                        <option value="#studentID#">#familyLastName#, #firstName# (#studentID#)</option>
+                        <option value="#qGetPlacedStudents.studentID#">#qGetPlacedStudents.familyLastName#, #qGetPlacedStudents.firstName# (###qGetPlacedStudents.studentID#)</option>
                     </cfloop>
                 </select>
             </td>
@@ -278,9 +321,9 @@
         </cfif>
         <tr>		
             <td align="center"><br>
-                Last Name: <input type="text" name="familyLastName">
+                Last Name: <input type="text" name="familyLastName" class="xLargeField">
                 &nbsp;&nbsp;&nbsp;<strong>- OR -</strong>&nbsp;&nbsp;&nbsp; 
-                Student ID: <input type="text" name="studentID" size="4"><br><br>
+                Student ID: <input type="text" name="studentID" size="4" class="smallField"><br><br>
             </td>
         </tr>
         <tr style="background-color:##E2EFC7;">
@@ -314,7 +357,7 @@
         <tr>
             <td width="45%" align="right">Select the Representative: </td>
             <td>
-                <select name="areaRepID">
+                <select name="areaRepID" class="xLargeField">
                     <option value="0"></option>
                     <cfloop query="qGetReps">
                         <option value="#userid#">#lastname#, #firstName# (#userid#)</option>
@@ -352,8 +395,8 @@
         <tr>
             <td width="45%" align="right">Select the Representative: </td>
             <td>
-                <select name="userID">
-                <option value="0"></option>
+                <select name="userID" class="xLargeField">
+                    <option value="0"></option>
                     <cfloop query="qGetPlacingReps">
                         <option value="#userid#">#lastname#, #firstName# (#userid#)</option>
                     </cfloop>
