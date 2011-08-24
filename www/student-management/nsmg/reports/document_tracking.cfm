@@ -268,8 +268,10 @@
         ORDER BY
             repName            
     </cfquery> 
-         
-    <!--- Save Report in a Variable --->
+    
+
+    
+	<!--- Save Report in a Variable --->
     <cfsavecontent variable="documentTrackingReport">
 
         <table width="100%" cellpadding="4" cellspacing="0" align="center" style="border:1px solid ##000;">	
@@ -282,19 +284,42 @@
 		<cfif qGetAllStudentsInRegion.recordcount>
 
             <cfloop query="qGetRepsInRegion">
-    
-                <cfquery name="qGetStudentsByRep" dbtype="query">
-                    SELECT 	
-                        *
-                    FROM 
-                        qGetAllStudentsInRegion
-                    WHERE 
-                        #tableField# = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepsInRegion.userID#">
-                    ORDER BY
-                        firstName,
-                        familyLastName                    
-                </cfquery> 
-            
+           
+            	<cfquery name="checkRepAssign" dbtype="query">
+                select studentid, familylastname, firstname
+                from qGetAllStudentsInRegion
+                where placerepid = 0
+                </cfquery>
+				<Cfif checkRepAssign.recordcount neq 0>
+                <table bgcolor="##FFFF99" width=100%>
+                	<Tr>
+                    	<Td>
+                        
+                There is a problem with a student in this report:<br />
+                <A href="../index.cfm?curdoc=student_info&studentid=#checkRepAssign.studentid#" target="_blank">#checkRepAssign.studentid#</a> does not have a rep assigned to them but has a host family assinged to them. <br /><BR />
+                Please assign a rep to them and re-run this report.  <br />
+                You can click on the students name, a new window will open, assign a rep and then just refresh this window.
+                	
+              
+                		</Td>
+                     </Tr>
+                  </table>
+                    <br /><br /><br />
+                <cfabort>  
+                </Cfif>
+             
+                    <cfquery name="qGetStudentsByRep" dbtype="query">
+                        SELECT 	
+                            *
+                        FROM 
+                            qGetAllStudentsInRegion
+                        WHERE 
+                            #tableField# = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepsInRegion.userID#">
+                        ORDER BY
+                            firstName,
+                            familyLastName                    
+                    </cfquery> 
+            	
                 <cfif qGetStudentsByRep.recordcount> 
             
                     <br />				
@@ -453,6 +478,7 @@
                             </cfif>
                                                                                         
                         </cfloop>	
+                      
                     </table>
                                     
                 </cfif>  <!--- qGetStudentsByRep.recordcount ---> 
