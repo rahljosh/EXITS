@@ -82,17 +82,18 @@
 			<br>
 			
 			
-			<table width="100%" border=0 cellpadding=0 cellspacing=0 align="center">
-				<tr>
-					<td valign="top"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> &nbsp; Region 1 - East<br><img src="#path#pics/region1.gif"></td>
-					<td valign="top"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> &nbsp; Region 2 - South<br><img src="#path#pics/region2.gif"></td>
-				</tr>
-				<tr>
-					<td valign="top"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> &nbsp; Region 3 - Central<br><img src="#path#pics/region3.gif"></td>
-					<td valign="top"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> &nbsp; Region 4 - Rocky Mountain<br><img src="#path#pics/region4.gif"></td>
-					<td valign="top"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> &nbsp; Region 5 - West<br><img src="#path#pics/region5.gif"></td>
-				</tr>
-			</table>			
+			 <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
+                        <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
+                        <tr>
+                            <td valign="top"><input type="radio" name="region_choice" value="6">West<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/west.jpg"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="7"  >Central<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/central.jpg"></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><input type="radio" name="region_choice" value="8" >South<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/south.jpg"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="9"  >East<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/east.jpg"></td>
+                           
+                        </tr>
+                    </table>			
 		</td>
 	</tr>
 </table><br><br>
