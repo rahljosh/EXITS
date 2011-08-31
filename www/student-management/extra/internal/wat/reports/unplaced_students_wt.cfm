@@ -208,7 +208,6 @@
 			  <cfelse>  
 				<cfset into = 1 >
 				<cfloop query="qGetCandidates">
-                	
 				 <tr <cfif into mod 2>bgcolor="##E4E4E4"</cfif>>
 					<td class="style1">
                     	<a href="?curdoc=candidate/candidate_info&uniqueid=#qGetCandidates.uniqueID#" target="_blank" class="style4">
@@ -237,6 +236,7 @@
                     </td>
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
+                    <td class="style1">#APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidates.candidateID, applicationQuestionID=27).answer#</td>
 					<td class="style1">#name#</td>
                     <td class="style1">#change_requested_comment#</td>
 					<td class="style1">#englishAssessment#</td>
