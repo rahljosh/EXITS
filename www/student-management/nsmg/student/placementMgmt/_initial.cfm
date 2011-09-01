@@ -633,17 +633,17 @@
     <gui:displayPageMessages 
         pageMessages="#SESSION.pageMessages.GetCollection()#"
         messageType="tableSection"
-        width="700px"
+        width="90%"
         />
     
     <!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
         messageType="tableSection"
-        width="700px"
+        width="90%"
         />
 
-    <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">      
+    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">      
     
         <cfswitch expression="#vPlacementStatus#">
             
@@ -850,7 +850,7 @@
         <input type="hidden" name="validationErrors" id="validationErrors" value="#FORM.validationErrors#" />
 
 		<!--- Host Family / School Information --->
-        <table width="700px" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
+        <table width="90%" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
             <tr class="reportTitleLeftClean">
                 <td width="50%">
                     <label for="hostID">Host Family <em>*</em> </label>
@@ -1038,7 +1038,7 @@
         
         
         <!--- Placing Representative | Supervising Representative --->      
-        <table width="700px" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
+        <table width="90%" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
             <tr class="reportTitleLeftClean">
                 <td width="50%">
                     <label for="placeRepID">Placing Representative <em>*</em> </label>
@@ -1166,7 +1166,7 @@
     
     
         <!--- 2nd Representative Visit | Double Placement --->      
-        <table width="700px" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
+        <table width="90%" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
             <tr class="reportTitleLeftClean">
                 <td width="50%">
                     <label for="secondVisitRepID">2<sup>nd</sup> Representative Visit</label>
@@ -1310,7 +1310,7 @@
         </table> 
         
 		<!--- Form Buttons --->  
-        <table width="700px" id="tableDisplaySaveButton" border="0" cellpadding="2" cellspacing="0" class="section displayNone" align="center" style="padding:5px;">
+        <table width="90%" id="tableDisplaySaveButton" border="0" cellpadding="2" cellspacing="0" class="section displayNone" align="center" style="padding:5px;">
             <tr>
                 <td align="center"><input name="Submit" type="image" src="../../student_app/pics/save.gif" border="0" alt="Save"/></td>
             </tr>                

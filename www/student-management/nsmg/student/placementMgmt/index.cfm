@@ -280,11 +280,11 @@
         <gui:tableHeader
             tableTitle="Placement Management"
             <!--- tableRightTitle="#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)" --->
-            width="700px"
+            width="90%"
             imagePath="../../"
         />    
 
-        <table width="700px" cellpadding="4" cellspacing="0" class="section" align="center">      
+        <table width="90%" cellpadding="4" cellspacing="0" class="section" align="center">      
             <tr class="reportCenterTitle">
                 <th align="center" class="placementTopLinks">
                 	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
@@ -306,53 +306,53 @@
             </tr>
 		</table>
         
-        <table width="700px" cellpadding="4" cellspacing="0" class="section" align="center" style="background-color:##edeff4; padding:5px 0px 5px 0px;">              
+        <table width="90%" cellpadding="4" cellspacing="0" class="section" align="center" style="background-color:##edeff4; padding:5px 0px 5px 0px;">  
             <tr>
-                <td width="87px" align="center">
-                	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
+                <td width="12.5%" align="center">
+                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
                         <img src="../../pics/place_menu/#vHostImage#.gif" alt="Host Family" border="0">
                     </a>
                 </td>
-                <td width="87px" align="center">
-                	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
+                <td width="12.5%" align="center">
+                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
                         <img src="../../pics/place_menu/#vSchoolImage#.gif" alt="High School" border="0">
-                	</a>
+                    </a>
                 </td>
-                <td width="87px" align="center">
-                	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
+                <td width="12.5%" align="center">
+                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
                         <img src="../../pics/place_menu/#vPlaceRepImage#.gif" alt="Placing Representative" border="0">
                    </a> 
                 </td>		
-                <td width="87px" align="center">
-                	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
+                <td width="12.5%" align="center">
+                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
                         <img src="../../pics/place_menu/#vSuperRepImage#.gif" alt="Supervising Representative" border="0">
                     </a>
                 </td>
-                <td width="87px" align="center">
-                	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
+                <td width="12.5%" align="center">
+                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
                         <img src="../../pics/place_menu/#vSecondVisitImage#.gif" alt="Second Vist Representative" border="0">
-                	</a>
-                </td>
-                <td width="87px" align="center">
-                	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
-                        <img src="../../pics/place_menu/#vDoublePlaceImage#.gif" alt="Double Placement" border="0">
-                	</a>
-                </td>
-                <td width="87px" align="center">
-                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">
-                    	<img src="../../pics/place_menu/#vPaperworkImage#.gif" alt="Placement Paperwork" border="0">
                     </a>
                 </td>
-                <td width="87px" align="center">
+                <td width="12.5%" align="center">
+                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
+                        <img src="../../pics/place_menu/#vDoublePlaceImage#.gif" alt="Double Placement" border="0">
+                    </a>
+                </td>
+                <td width="12.5%" align="center">
+                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">
+                        <img src="../../pics/place_menu/#vPaperworkImage#.gif" alt="Placement Paperwork" border="0">
+                    </a>
+                </td>
+                <td width="12.5%" align="center">
                     <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=placementNotes">
-                    	<img src="../../pics/place_menu/#vNotesImage#.gif" alt="Placement Notes" border="0">
+                        <img src="../../pics/place_menu/#vNotesImage#.gif" alt="Placement Notes" border="0">
                     </a>
                 </td>
             </tr>
-		</table>
-
+        </table>
+		
         <cfif URL.action EQ 'initial'>
-            <table width="700px" cellpadding="4" cellspacing="0" class="section" align="center">            
+            <table width="90%" cellpadding="4" cellspacing="0" class="section" align="center">            
                 <tr class="reportCenterTitle">
                     <th>
                         PLACEMENT STATUS &nbsp;
@@ -390,7 +390,7 @@
         <cfif URL.action EQ 'initial' AND VAL(qGetPlacementHistory.recordCount)>
             
             <!--- Current Placement --->
-            <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                            				
+            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                            				
                 <tr class="reportCenterTitle"> 
                     <th>
                     	<cfif vPlacementStatus EQ 'unplaced'>
@@ -402,17 +402,18 @@
                 </tr>
             </table>
             
-            <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
+            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
                 <tr bgcolor="##edeff4">
-                    <td class="reportTitleLeftClean" width="20%">Host Family</td>
-                    <td class="reportTitleLeftClean" width="20%">School</td>
-                    <td class="reportTitleLeftClean" width="20%">Placing Rep.</td>
-                    <td class="reportTitleLeftClean" width="20%">Supervising Rep.</td>
-                    <td class="reportTitleLeftClean" width="20%">2<sup>nd</sup> Rep.</td>
+                    <td class="reportTitleLeftClean" width="15%">Host Family</td>
+                    <td class="reportTitleLeftClean" width="17%">School</td>
+                    <td class="reportTitleLeftClean" width="17%">Placing Rep.</td>
+                    <td class="reportTitleLeftClean" width="17%">Supervising Rep.</td>
+                    <td class="reportTitleLeftClean" width="17%">2<sup>nd</sup> Rep.</td>
+                    <td class="reportTitleLeftClean" width="17%">Double Placement</td>
                 </tr>
 			</table>
             
-            <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center"> 
+            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center"> 
                 <cfscript>
                     // Get Actions History
                     qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
@@ -425,37 +426,44 @@
                 </cfscript>
 
                 <tr bgcolor="##FFFFFF">
-                    <td width="20%">
+                    <td width="15%">
                         <cfif VAL(qGetPlacementHistory.hostID)>
                             #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
-                    <td width="20%">
+                    <td width="17%">
                         <cfif VAL(qGetPlacementHistory.schoolID)>
                             #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
-                    <td width="20%">
+                    <td width="17%">
                         <cfif VAL(qGetPlacementHistory.placeRepID)>
                             #qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
-                    <td width="20%">
+                    <td width="17%">
                         <cfif VAL(qGetPlacementHistory.areaRepID)>
                             #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
-                    <td width="20%">
+                    <td width="17%">
                         <cfif VAL(qGetPlacementHistory.secondVisitRepID)>
                             #qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
+                        <cfelse>
+                            n/a
+                        </cfif>
+                    </td>
+                    <td width="17%">
+						<cfif VAL(qGetPlacementHistory.doublePlacementID)>
+                            #qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
                         <cfelse>
                             n/a
                         </cfif>
@@ -464,14 +472,14 @@
                 
                 <!--- Display Action History --->
                 <cfif qGetActionsHistory.recordCount>
-                    <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
+                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
                         <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
                             <td class="reportTitleLeftClean" width="25%">Date</td>
                             <td class="reportTitleLeftClean" width="75%">Actions</td>
                         </tr>
                     </table>
                     
-                    <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
+                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
                         <cfloop query="qGetActionsHistory">
                             <tr>
                                 <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
@@ -489,23 +497,24 @@
                 
                 <cfloop query="qGetPlacementHistory" startrow="2" endrow="#VAL(qGetPlacementHistory.recordCount)#">
 
-                    <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                            				
+                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                            				
                         <tr class="reportCenterTitle"> 
                             <th>PLACEMENT HISTORY</th>
                         </tr>
                     </table>
                 
-                    <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
+                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
                         <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
-                            <td class="reportTitleLeftClean" width="20%">Host Family</td>
-                            <td class="reportTitleLeftClean" width="20%">School</td>
-                            <td class="reportTitleLeftClean" width="20%">Placing Rep.</td>
-                            <td class="reportTitleLeftClean" width="20%">Supervising Rep.</td>
-                            <td class="reportTitleLeftClean" width="20%">2<sup>nd</sup> Rep.</td>
+                            <td class="reportTitleLeftClean" width="15%">Host Family</td>
+                            <td class="reportTitleLeftClean" width="17%">School</td>
+                            <td class="reportTitleLeftClean" width="17%">Placing Rep.</td>
+                            <td class="reportTitleLeftClean" width="17%">Supervising Rep.</td>
+                            <td class="reportTitleLeftClean" width="17%">2<sup>nd</sup> Rep.</td>
+                            <td class="reportTitleLeftClean" width="17%">Double Placement</td>
                         </tr>
     				</table>
                     
-                    <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center"> 
+                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center"> 
                         <cfscript>
                             // Get Actions History
                             qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
@@ -518,37 +527,44 @@
                         </cfscript>
     
                         <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
-                            <td width="20%">
+                            <td width="15%">
                                 <cfif VAL(qGetPlacementHistory.hostID)>
                                     #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
                                 <cfelse>
                                     n/a
                                 </cfif>
                             </td>
-                            <td width="20%">
+                            <td width="17%">
                                 <cfif VAL(qGetPlacementHistory.schoolID)>
                                     #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
                                 <cfelse>
                                     n/a
                                 </cfif>
                             </td>
-                            <td width="20%">
+                            <td width="17%">
                                 <cfif VAL(qGetPlacementHistory.placeRepID)>
                                     #qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
                                 <cfelse>
                                     n/a
                                 </cfif>
                             </td>
-                            <td width="20%">
+                            <td width="17%">
                                 <cfif VAL(qGetPlacementHistory.areaRepID)>
                                     #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
                                 <cfelse>
                                     n/a
                                 </cfif>
                             </td>
-                            <td width="20%">
+                            <td width="17%">
                                 <cfif VAL(qGetPlacementHistory.secondVisitRepID)>
                                     #qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
+                                <cfelse>
+                                    n/a
+                                </cfif>
+                            </td>
+                            <td width="17%">
+                                <cfif VAL(qGetPlacementHistory.doublePlacementID)>
+                                    #qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
                                 <cfelse>
                                     n/a
                                 </cfif>
@@ -557,7 +573,7 @@
                         
                         <!--- Display Action History --->
                         <cfif qGetActionsHistory.recordCount>
-                            <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
+                            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
                                 <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
                                     <td class="reportTitleLeftClean" width="20%">Date</td>
                                     <td class="reportTitleLeftClean" width="60%">Actions</td>
@@ -565,11 +581,11 @@
                                 </tr>
 							</table>
                             
-                            <table width="700px" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
+                            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
                                 <cfloop query="qGetActionsHistory">
                                     <tr>
                                         <td valign="top" width="20%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
-                                        <td width="80%">#qGetActionsHistory.actions#</td>
+                                        <td width="90%">#qGetActionsHistory.actions#</td>
                                     </tr>                        
                                 </cfloop>
 							</table>
@@ -585,7 +601,7 @@
     
 		<!--- Table Footer --->
         <gui:tableFooter 
-            width="700px"
+            width="90%"
             imagePath="../../"
         />
     

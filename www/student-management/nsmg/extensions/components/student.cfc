@@ -1198,6 +1198,7 @@
                     h.placeRepID,
                     h.areaRepID,
                     h.secondVisitRepID,
+                    h.doublePlacementID,
                     h.changedBy,
                     h.isWelcomeFamily,
                     h.isRelocation,
@@ -1222,6 +1223,9 @@
                     <!--- 2nd Rep Visit --->
                     secondRep.firstName AS secondRepFirstName,
                     secondRep.lastName AS secondRepLastName,
+                    <!--- Double Placement --->
+                    DP.firstName AS doublePlacementFirstName,
+                    DP.familyLastName AS doublePlacementLastName,
                     <!--- User --->
                     user.firstName AS changedByFirstName, 
                     user.lastName AS changedByLastName
@@ -1237,6 +1241,8 @@
                     smg_users area ON h.areaRepID = area.userID
                 LEFT JOIN 
                     smg_users secondRep ON h.secondVisitRepID = secondRep.userID
+                LEFT JOIN
+                	smg_students DP ON h.doublePlacementID = DP.studentID   
                 LEFT JOIN 
                     smg_users user ON h.changedby = user.userID
                 WHERE 
