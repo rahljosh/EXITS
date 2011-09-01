@@ -529,16 +529,20 @@ But in the output below we use the report fields where a report has been submitt
                             </cfif>
                         	
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
-                                <cfif #submittingRep# EQ client.userid  and (#isBetween(now(), startDate, endDate)# OR client.reportType neq 3)>
-                                    <form action="index.cfm?curdoc=forms/pr_add" method="post">
-                                    <input type="hidden" name="studentid" value="#studentid#">
-                                    <input type="hidden" name="type_of_report" value="#client.reportType#">
-                                    <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
-                                    <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border=0>
-                                    </form>
-                                <cfelse>
-                                	N/A 
-                                </cfif>
+                             	
+									<cfif (#submittingRep# EQ client.userid  and (#isBetween(now(), startDate, endDate)#)) OR client.reportType EQ 2  >
+                                
+                                        <form action="index.cfm?curdoc=forms/pr_add" method="post">
+                                        <input type="hidden" name="studentid" value="#studentid#">
+                                        <input type="hidden" name="type_of_report" value="#client.reportType#">
+                                        <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
+                                        <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border=0>
+                                        </form>
+                                    <cfelse>
+                                        N/A 
+                                    </cfif>
+                                    
+                                
                             </cfif>
                         </td>
                         <td>#dateFormat(get_report.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
