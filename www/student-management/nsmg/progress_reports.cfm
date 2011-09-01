@@ -386,7 +386,7 @@ But in the output below we use the report fields where a report has been submitt
         AND smg_students.canceldate >= '#datelimit#'
     </cfif>
     <!----Only Progress Reports have active and fieldviewable variables---->
-    <cfif client.reportType EQ 1>
+    <cfif client.reportType EQ 1 OR client.reportType eq 3>
     AND smg_programs.progress_reports_active = 1
     AND smg_programs.fieldviewable = 1
     </cfif>
