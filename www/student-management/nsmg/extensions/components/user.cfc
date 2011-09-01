@@ -85,6 +85,38 @@
 	</cffunction>
 
 
+	<cffunction name="getUserStateListByRegionID" access="public" returntype="string" output="false" hint="Returns a list of user states assigned to a region">
+    	<cfargument name="regionID" type="numeric" hint="userID is required">
+
+        <cfquery 
+			name="qGetUserStateListByRegionID" 
+			datasource="#APPLICATION.DSN#">
+                SELECT
+					u.state
+                FROM 
+                    smg_users u
+                INNER JOIN
+                	user_access_rights uar ON uar.userID = u.userID
+                WHERE	
+                    uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                AND
+                	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                GROUP BY
+                	u.state
+                ORDER BY
+                	u.state
+		</cfquery>
+		
+        <cfscript>
+			var vReturnState = ValueList(qGetUserStateListByRegionID.state);			
+			
+			// Return List
+			return vReturnState;
+		</cfscript>
+           
+	</cffunction>
+
+
 	<cffunction name="getUserAccessRights" access="public" returntype="query" output="false" hint="Gets user access rights for a user or region">
     	<cfargument name="userID" type="numeric" default="0" hint="userID is required">
         <cfargument name="regionID" type="numeric" default="0" hint="regionID is required">

@@ -84,7 +84,15 @@
     	<cfargument name="applicationID" hint="applicationID is required">
     	<cfargument name="foreignTable" hint="foreignTable is required. This is what defines a group of data">
         <cfargument name="foreignID" hint="foreignID is required">
+        <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
+        <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
 
+        <cfscript>
+			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
+				ARGUMENTS.sortOrder = 'DESC';			  
+			}
+		</cfscript>
+        
         <cfquery 
         	name="qGetApplicationHistory"
         	datasource="MySQL">
@@ -111,7 +119,19 @@
                 AND 
                     ah.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">
                 ORDER BY
-					ah.dateCreated DESC
+					
+                <cfswitch expression="#ARGUMENTS.sortBy#">
+    
+                    <cfcase value="dateCreated">
+                        ah.dateCreated #ARGUMENTS.sortOrder#
+                    </cfcase>
+    
+                    <cfdefaultcase>
+                        ah.dateCreated DESC
+                    </cfdefaultcase>
+    
+                </cfswitch>   
+                    
         </cfquery> 
 
 		<cfreturn qGetApplicationHistory>

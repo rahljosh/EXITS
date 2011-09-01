@@ -25,7 +25,7 @@
 
 
 	<cffunction name="getStudentByID" access="public" returntype="query" output="false" hint="Gets a student by studentID or uniqueID">
-    	<cfargument name="studentID" default="0" hint="studentID is not required">
+    	<cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
         <cfargument name="soID" default="" hint="INTO International Representative IDs">
               
@@ -39,20 +39,20 @@
                 WHERE
                 	1 = 1
 					
-					<cfif VAL(ARGUMENTS.studentID)>
-	                    AND
-                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-					</cfif>
-                    
-					<cfif LEN(ARGUMENTS.uniqueID)>
-	                    AND
-                        	uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
-					</cfif>
+				<cfif LEN(ARGUMENTS.studentID)>
+                    AND
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.uniqueID)>
+                    AND
+                        uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                </cfif>
 
-					<cfif LEN(ARGUMENTS.soID)>
-	                    AND
-                        	soID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.soID#">
-					</cfif>
+                <cfif LEN(ARGUMENTS.soID)>
+                    AND
+                        soID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.soID#">
+                </cfif>
 		</cfquery>
 		   
 		<cfreturn qGetStudentByID>
@@ -236,7 +236,7 @@
 				LEFT OUTER JOIN
                 	smg_users areaRep ON areaRep.userID = php.areaRepID
                 WHERE 
-                    php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 
                 <cfif LEN(ARGUMENTS.studentID)>
                     AND                
@@ -264,6 +264,1484 @@
         
         <cfreturn qGetPHPStudent>            
 	</cffunction>
+
+
+	<cffunction name="getAvailableDoublePlacement" access="public" returntype="query" output="false" hint="Gets placed available students for double placement">
+        <cfargument name="regionID" default="0" hint="regionAssigned is not required">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+              
+        <cfquery 
+			name="qGetAvailableDoublePlacement" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                	studentID, 
+                    familyLastName,
+                    firstName
+                FROM 
+                	smg_students
+                WHERE 
+                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                	hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    
+				<cfif LEN(ARGUMENTS.regionID)>
+                    AND
+                        regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.studentID)>
+                    AND
+                        studentID != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                </cfif>
+                    
+                ORDER BY 
+                	firstname, familylastname
+		</cfquery>
+		   
+		<cfreturn qGetAvailableDoublePlacement>
+	</cffunction>
+		
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		Placement Management
+	
+	----- ------------------------------------------------------------------------- --->
+
+	<cffunction name="updatePlacementInformation" access="public" returntype="void" output="false" hint="Update placement information / Approval process must be separate">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="hostID" hint="hostID is required">
+        <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
+        <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
+        <cfargument name="hostIDReason" default="" hint="hostIDReason is not required">
+        <cfargument name="schoolID" hint="schoolID is required">   
+        <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
+        <cfargument name="placeRepID" hint="placeRepID is required">
+        <cfargument name="placeRepIDReason" default="" hint="placeRepIDReason is not required"> 
+		<cfargument name="areaRepID" hint="areaRepID is required">
+        <cfargument name="areaRepIDReason" default="" hint="areaRepIDReason is not required"> 
+		<cfargument name="secondVisitRepID" hint="secondVisitRepID is required">
+        <cfargument name="secondVisitRepIDReason" default="" hint="secondVisitRepIDReason is not required"> 
+		<cfargument name="doublePlace" hint="doublePlace ID is required">
+        <cfargument name="doublePlaceReason" default="" hint="secondVisitRepIDReason is not required"> 
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+        <cfargument name="placementStatus" default="" hint="Unplaced/Incomplete/Pending/Approved/Rejected">
+       
+        <cfscript>	
+			// Get Student Info
+			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+			
+			// Insert-Update Placement History
+			vGetHistoryID = insertPlacementHistory(
+								studentID = ARGUMENTS.studentID,					   
+								hostID = ARGUMENTS.hostID,
+								hostIDReason = ARGUMENTS.hostIDReason,
+								schoolID = ARGUMENTS.schoolID,
+								schoolIDReason = ARGUMENTS.schoolIDReason,
+								placeRepID = ARGUMENTS.placeRepID,
+								placeRepIDReason = ARGUMENTS.placeRepIDReason,
+								areaRepID = ARGUMENTS.areaRepID,
+								areaRepIDReason = ARGUMENTS.areaRepIDReason,
+								secondVisitRepID = ARGUMENTS.secondVisitRepID,
+								secondVisitRepIDReason = ARGUMENTS.secondVisitRepIDReason,
+								doublePlace = ARGUMENTS.doublePlace,
+								doublePlaceReason = ARGUMENTS.doublePlaceReason,
+								isWelcomeFamily = ARGUMENTS.isWelcomeFamily,
+								isRelocation = ARGUMENTS.isRelocation,
+								changedBy = ARGUMENTS.changedBy,
+								userType = ARGUMENTS.userType,
+								placementStatus = ARGUMENTS.placementStatus
+							);
+		</cfscript>
+		
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+                	smg_students
+				SET
+                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                    schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,
+                    placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
+                    areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
+                    secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
+                    doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                    welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
+					<!--- Approve if entering by Area Rep --->
+                    <cfif ARGUMENTS.userType EQ 7>
+                    	host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    <cfelse>
+                    	host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
+                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">
+                    </cfif> 
+				WHERE
+                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+		</cfquery>
+        
+        
+        <cfscript>
+			/*********************************************************
+				Double Placement - Automatically assign/remove/update
+			*********************************************************/
+			
+			/*********************************************************
+				Add New Double Placement
+			**********************************************************/
+			if ( VAL(ARGUMENTS.doublePlace) AND NOT VAL(qGetStudentInfo.doublePlace) ) {
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = ARGUMENTS.doublePlace,					   
+					doublePlace = ARGUMENTS.studentID,
+					doublePlaceReason = 'Double placement automatically assigned',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record on the second record
+				updateDoublePlacement(
+					studentID = ARGUMENTS.doublePlace,					   
+					doublePlace = ARGUMENTS.studentID,
+					userType = ARGUMENTS.userType
+				);
+
+			/*********************************************************
+				Double Placement Assigned to a Different Student 
+				Remove previous and add new double placement
+			**********************************************************/
+			} else if ( VAL(ARGUMENTS.doublePlace) AND ARGUMENTS.doublePlace NEQ qGetStudentInfo.doublePlace ) {
+				
+				/*********************************************************
+					Remove Double Placement
+				**********************************************************/
+
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = qGetStudentInfo.doublePlace,					   
+					doublePlace = 0,
+					doublePlaceReason = 'Double placement student assigned to a different student - automatically removed',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record on the second record
+				updateDoublePlacement(
+					studentID = qGetStudentInfo.doublePlace,					   
+					doublePlace = 0,
+					userType = ARGUMENTS.userType
+				);
+			
+				/*********************************************************
+					Add New Double Placement
+				**********************************************************/
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = ARGUMENTS.doublePlace,					   
+					doublePlace = ARGUMENTS.studentID,
+					doublePlaceReason = 'Double placement automatically assigned',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record on the second record
+				updateDoublePlacement(
+					studentID = ARGUMENTS.doublePlace,					   
+					doublePlace = ARGUMENTS.studentID,
+					userType = ARGUMENTS.userType
+				);
+
+			/*********************************************************
+				Remove Double Placement
+			**********************************************************/
+			} else if ( NOT VAL(ARGUMENTS.doublePlace) AND VAL(qGetStudentInfo.doublePlace) ) {
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = qGetStudentInfo.doublePlace,					   
+					doublePlace = 0,
+					doublePlaceReason = 'Double placement automatically removed',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record on the second record
+				updateDoublePlacement(
+					studentID = qGetStudentInfo.doublePlace,					   
+					doublePlace = 0,
+					userType = ARGUMENTS.userType
+				);
+			
+			}
+		</cfscript>
+	
+	</cffunction>
+
+
+	<cffunction name="updateDoublePlacement" access="public" returntype="void" output="false" hint="Updates a Double Placement Record">
+        <cfargument name="studentID" hint="studentID is required">
+		<cfargument name="doublePlace" hint="doublePlace ID is required">
+        <cfargument name="userType" hint="userType is required">
+
+            <cfquery 
+                datasource="#APPLICATION.dsn#">
+                    UPDATE
+                        smg_students
+                    SET
+                        doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                        <!--- Approve if entering by Area Rep --->
+						<cfif ARGUMENTS.userType EQ 7>                        	
+                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                            date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        <cfelse>
+                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
+                            date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">
+                        </cfif> 
+                    WHERE
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+            </cfquery>
+
+	</cffunction>
+
+
+	<cffunction name="updatePlacementNotes" access="public" returntype="void" output="false" hint="Updates placement notes">
+        <cfargument name="studentID" hint="studentID is required">
+		<cfargument name="placement_notes" default="" hint="placement_notes is not required">
+
+            <cfquery 
+                datasource="#APPLICATION.dsn#">
+                    UPDATE
+                        smg_students
+                    SET
+                        placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.placement_notes#">
+                    WHERE
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+            </cfquery>
+
+	</cffunction>
+
+
+	<cffunction name="unplaceStudent" access="public" returntype="void" output="false" hint="Unplaces a student">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+		
+        <cfscript>
+			// Get Student Info
+			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+		</cfscript>
+        
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE 
+                	smg_students
+                SET 
+					hostID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    schoolID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    placeRepID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    areaRepID =  <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+					secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    doubleplace = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    host_fam_approved = <cfqueryparam cfsqltype="cf_sql_bit" value="10">,
+                    date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    <!--- Single Placement Paperwork --->
+                    doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,	
+                    doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+					<!--- Paperwork Received --->
+                    date_pis_received = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_conf_host_rec2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_date_of_visit2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    <!--- Arrival Date Compliance --->
+                    doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    <!--- Student Application --->
+                    orig_app_Sent_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                    copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                    copy_app_super = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                	<!--- Arrival Orientation --->
+                    stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                WHERE 
+                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+    	</cfquery>
+        
+		<cfscript>
+			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			insertPlacementHistory(
+				studentID=ARGUMENTS.studentID,
+				changedBy=ARGUMENTS.changedBy,
+				userType=ARGUMENTS.userType,
+				reason=ARGUMENTS.reason,
+				placementAction='unplaceStudent'
+			);
+
+        	// Check if there was a double placement, if so remove it automatically 
+			if ( VAL(qGetStudentInfo.doublePlace) ) {
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = qGetStudentInfo.doublePlace,					   
+					doublePlace = 0,
+					doublePlaceReason = 'Double placement student set to unplaced - automatically removed',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record on the second record
+				updateDoublePlacement(
+					studentID = qGetStudentInfo.doublePlace,					   
+					doublePlace = 0,
+					userType = ARGUMENTS.userType
+				);
+
+			}
+        </cfscript>
+        
+    </cffunction>
+
+	
+    <!--- Approve Placement --->
+	<cffunction name="approvePlacement" access="public" returntype="void" output="false" hint="Approves a placement">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+
+        <cfscript>
+			// Get Student Info
+			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+		</cfscript>
+        
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+                	smg_students
+				SET
+                    host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userType)#">,
+                    <!--- Set Placement Date if Approved by NY Office - Only first time approval --->
+                    <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND NOT IsDate(qGetStudentInfo.datePlaced)>
+                    	dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    </cfif>
+                    date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+				WHERE
+                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+		</cfquery>
+        
+		<cfscript>
+            /*** Holding it for now as per Brian Hause request - 06/02/2011 ****/
+            // Assign Pre-AYP English Camp based on host family state	
+            // APPLICATION.CFC.STUDENT.assignEnglishCamp(studentID=CLIENT.studentID);
+			
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			insertPlacementHistory(
+				studentID=ARGUMENTS.studentID,
+				changedBy=ARGUMENTS.changedBy,
+				userType=ARGUMENTS.userType,
+				placementAction='Approve'
+			);
+        </cfscript>
+        
+	</cffunction>
+
+	
+    <!--- Resubmit Placement --->
+	<cffunction name="resubmitPlacement" access="public" returntype="void" output="false" hint="Resubmits a denied placement">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+        
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+                	smg_students
+				SET
+                    host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="7">,
+                    date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+				WHERE
+                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+		</cfquery>
+        
+		<cfscript>
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			insertPlacementHistory(
+				studentID=ARGUMENTS.studentID,
+				changedBy=ARGUMENTS.changedBy,
+				userType=ARGUMENTS.userType,
+				reason=ARGUMENTS.reason,
+				placementAction='Resubmit'
+			);
+        </cfscript>
+        
+	</cffunction>
+
+	
+    <!--- Reject Placement --->
+	<cffunction name="rejectPlacement" access="public" returntype="void" output="false" hint="Rejects a placement">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="regionID" hint="regionID is required">
+        <cfargument name="placeRepID" hint="placeRepID is required">
+        <cfargument name="reason" hint="reason is required">
+        	
+        <cfscript>
+			// Get Current Placement Information
+			qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+		
+			// Get Regional Manager Information
+			qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=ARGUMENTS.regionID);
+			
+			// Get Placing Representative Email Address
+			qGetPlacingRepresentative = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.placeRepID);
+		</cfscript>
+
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+                	smg_students
+				SET
+                    host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="99">,
+                    date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+				WHERE
+                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+		</cfquery>
+        
+		<cfscript>
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			insertPlacementHistory(
+				studentID=ARGUMENTS.studentID,
+				changedBy=ARGUMENTS.changedBy,
+				userType=ARGUMENTS.userType,
+				reason=ARGUMENTS.reason,
+				placementAction='Reject'
+			);
+        </cfscript>
+        
+        <!--- Email Template --->
+        <cfsavecontent variable="vEmailRejectMessage">
+        	<cfoutput>
+                <p>Dear #qGetPlacingRepresentative.firstName# #qGetPlacingRepresentative.lastName#,</p>
+                
+                <p>The placement for <strong>#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)</strong> has been rejected. </p> 
+                
+                <p>Below are the items that need to be addressed before #qGetStudentInfo.firstname# can be placed:</p>
+                
+                <p><strong>#ARGUMENTS.reason#</strong></p>
+                
+                <p>A copy of this message has also be sent to regional director:  #qGetRegionalManager.firstname# #qGetRegionalManager.lastname#</p>
+			</cfoutput>                
+        </cfsavecontent>
+        
+        <!--- Email Placing Representative and Regional Manager --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="#qGetPlacingRepresentative.email#">
+            <cfinvokeargument name="email_cc" value="#qGetRegionalManager.email#">
+            <cfinvokeargument name="email_subject" value="Placement Rejected - Student #qGetStudentInfo.firstName# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
+            <cfinvokeargument name="email_message" value="#vEmailRejectMessage#">
+            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+        </cfinvoke>
+        
+	</cffunction>
+    
+    
+	<cffunction name="insertPlacementHistory" access="public" returntype="void" output="false" hint="Insert Placement History and returns the newly creted ID">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="hostID" default="0" hint="hostID is not required">
+        <cfargument name="hostIDReason" default="" hint="hostIDReason is not required">
+        <cfargument name="isWelcomeFamily" default="0" hint="welcome_family is not required">
+        <cfargument name="isRelocation" default="0" hint="relocation is not required">
+        <cfargument name="schoolID" default="0" hint="schoolID is not required">        
+        <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
+        <cfargument name="placeRepID" default="0" hint="placeRepID is not required">
+        <cfargument name="placeRepIDReason" default="" hint="placeRepIDReason is not required"> 
+		<cfargument name="areaRepID" default="0" hint="areaRepID is not required">
+        <cfargument name="areaRepIDReason" default="" hint="areaRepIDReason is not required"> 
+        <cfargument name="secondVisitRepID" default="0" hint="secondVisitRepID is required">
+        <cfargument name="secondVisitRepIDReason" default="" hint="secondVisitRepIDReason is not required"> 
+        <cfargument name="doublePlace" default="0" hint="doublePlace is required">
+        <cfargument name="doublePlaceReason" default="" hint="doublePlaceReason is not required"> 
+        <cfargument name="reason" default="" hint="Field is used for rejection/resubmit comments">
+        <cfargument name="placementStatus" default="" hint="Unplaced/Rejected/Approved/Pending/Incomplete">
+        <cfargument name="placementAction" default="" hint="Approve/Reject/Resubmit/setDoublePlacement/unplaceStudent">
+        
+        <cfscript>
+			// History ID
+			var vHostHistoryID = 0;
+			
+			// Set whether we are updating or inserting a record
+			var vQueryType = '';
+			
+			// Set Action Message
+			var vUpdatedBy = 'n/a';
+			var vActions = '';			
+			
+			// Set to 1 to add an extra line on the history
+			var vAddExtraLine = 0;
+			
+			// Get Current Placement Information
+			qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+
+			// Get User Information
+			qGetEnteredBy = APPLICATION.CFC.USER.getUsers(userID=ARGUMENTS.changedBy);
+
+			// Set Track Placement Status Action Message
+			switch(ARGUMENTS.userType) { 
+				
+				case 1: case 2: case 3: case 4:
+					vUpdatedBy = 'NY Office';
+					break; 
+					
+				case 5: 
+					vUpdatedBy = 'Regional Manager';
+					break; 
+
+				case 6: 
+					vUpdatedBy = 'Regional Advisor';
+					break; 
+
+				case 7: 
+					vUpdatedBy = 'Supervising Representative';
+					break; 
+					
+			} //end switch
+			
+			// Updating Placement Information - Check if we need to update/insert history record
+			
+			// Check for updates only if not doing any of these actions
+			if ( NOT ListFind("Approve,Reject,Resubmit,unplaceStudent", ARGUMENTS.placementAction) ) {
+				
+				// Host Family
+				if ( VAL(ARGUMENTS.hostID) AND VAL(qGetStudentInfo.hostID) AND qGetStudentInfo.hostID NEQ ARGUMENTS.hostID ) {
+					vQueryType = 'insert';
+					vAddExtraLine = 1;
+					
+					// Start building record
+					vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong>  <br /> #CHR(13)#";
+					
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.hostID) ) {
+						vActions = vActions & "<strong>Host Family Updated</strong> <br /> #CHR(13)#";
+					}
+	
+					if ( LEN(ARGUMENTS.hostIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.hostIDReason# <br /> #CHR(13)#";
+					}
+	
+					if ( VAL(ARGUMENTS.isWelcomeFamily) ) {
+						vActions = vActions & "This is a welcome family <br /> #CHR(13)#";
+					}
+	
+					if ( VAL(ARGUMENTS.isRelocation) ) {
+						vActions = vActions & "This is a relocation <br /> #CHR(13)#";
+					}
+	
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				}
+				
+				// School Information
+				if ( VAL(ARGUMENTS.schoolID) AND VAL(qGetStudentInfo.schoolID) AND qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+					
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.schoolID) ) {
+						vActions = vActions & "<strong>School Updated</strong> <br /> #CHR(13)#";
+						// Previous School for reference
+						qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentInfo.schoolID);
+						vActions = vActions & "Previous School: #qGetSchoolInfo.schoolName# ###qGetSchoolInfo.schoolID# <br /> #CHR(13)#";
+						// School Paperwork Received
+					}				
+	
+					if ( LEN(ARGUMENTS.schoolIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.schoolIDReason# <br /> #CHR(13)#";
+					}
+					
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				}
+				
+				// Placing Representative
+				if ( VAL(ARGUMENTS.placeRepID) AND VAL(qGetStudentInfo.placeRepID) AND qGetStudentInfo.placeRepID NEQ ARGUMENTS.placeRepID ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.placeRepID) ) {
+						vActions = vActions & "<strong>Placing Representative Updated</strong> <br /> #CHR(13)#";
+						// Previous Placing Representative for reference
+						qGetPlacingRep = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.placeRepID);
+						vActions = vActions & "Previous Representative: #qGetPlacingRep.firstName# #qGetPlacingRep.lastName# ###qGetPlacingRep.userID# <br /> #CHR(13)#";
+					}
+	
+					if ( LEN(ARGUMENTS.placeRepIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.placeRepIDReason# <br /> #CHR(13)#";
+					}
+
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				}
+				
+				// Supervising Representative
+				if ( VAL(ARGUMENTS.areaRepID) AND VAL(qGetStudentInfo.areaRepID) AND qGetStudentInfo.areaRepID NEQ ARGUMENTS.areaRepID ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.areaRepID) ) {
+						vActions = vActions & "<strong>Supervising Representative Updated</strong> <br /> #CHR(13)#";
+						// Previous Supervising Representative for reference
+						qGetSupervisingRep = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.areaRepID);
+						vActions = vActions & "Previous Representative: #qGetSupervisingRep.firstName# #qGetSupervisingRep.lastName# ###qGetSupervisingRep.userID# <br /> #CHR(13)#";
+					}
+	
+					if ( LEN(ARGUMENTS.areaRepIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.areaRepIDReason# <br /> #CHR(13)#";
+					}
+
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				}
+				
+				// 2nd Representative Visit
+				if ( VAL(qGetStudentInfo.secondVisitRepID) AND VAL(ARGUMENTS.secondVisitRepID) AND qGetStudentInfo.secondVisitRepID NEQ ARGUMENTS.secondVisitRepID ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.secondVisitRepID) ) {
+						vActions = vActions & "<strong>2<sup>nd</sup> Representative Visit Updated</strong> <br /> #CHR(13)#";	
+						// Previous Supervising Representative for reference
+						qGetSecondVisitRep = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.secondVisitRepID);
+						vActions = vActions & "Previous Representative: #qGetSecondVisitRep.firstName# #qGetSecondVisitRep.lastName# ###qGetSecondVisitRep.userID# <br /> #CHR(13)#";
+					}
+					
+					if ( LEN(ARGUMENTS.secondVisitRepIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.secondVisitRepIDReason# <br /> #CHR(13)#";
+					}
+
+				} else if ( VAL(ARGUMENTS.secondVisitRepID) AND qGetStudentInfo.secondVisitRepID NEQ ARGUMENTS.secondVisitRepID ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+					
+					vActions = vActions & "<strong>2<sup>nd</sup> Representative Visit Added</strong> <br /> #CHR(13)#";
+
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				}
+				
+				// Update Double Placement 
+				if ( VAL(qGetStudentInfo.doublePlace) AND VAL(ARGUMENTS.doublePlace) AND qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.doublePlace) ) {
+						vActions = vActions & "<strong>Double Placement Updated</strong> <br /> #CHR(13)#";	
+						// Previous Supervising Representative for reference
+						qGetDoublePlacementInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=qGetStudentInfo.doublePlace);
+						vActions = vActions & "Previous Student: #qGetDoublePlacementInfo.firstName# #qGetDoublePlacementInfo.familyLastName# ###qGetDoublePlacementInfo.studentID# <br /> #CHR(13)#";
+					}
+					
+					if ( ARGUMENTS.placementAction EQ 'setDoublePlacement' AND LEN(ARGUMENTS.doublePlaceReason) ) {
+						// Automatically Assigned Message
+						vActions = vActions & "Message: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					} else if ( LEN(ARGUMENTS.doublePlaceReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					}
+				
+				// Add Double Placement
+				} else if ( NOT VAL(qGetStudentInfo.doublePlace) AND VAL(ARGUMENTS.doublePlace) AND qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+
+					vActions = vActions & "<strong>Double Placement Added</strong> <br /> #CHR(13)#";
+
+					if ( ARGUMENTS.placementAction EQ 'setDoublePlacement' AND LEN(ARGUMENTS.doublePlaceReason) ) {
+						// Automatically Assigned Message
+						vActions = vActions & "Message: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					} else if ( LEN(ARGUMENTS.doublePlaceReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					}
+
+				// Remove Double Placement	
+				} else if ( ARGUMENTS.placementStatus NEQ 'Approved' AND VAL(qGetStudentInfo.doublePlace) AND NOT VAL(ARGUMENTS.doublePlace) ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+					
+					vActions = vActions & "<strong>Double Placement Removed</strong> <br /> #CHR(13)#";	
+					// Previous Supervising Representative for reference
+					qGetDoublePlacementInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=qGetStudentInfo.doublePlace);
+					vActions = vActions & "Previous Student: #qGetDoublePlacementInfo.firstName# #qGetDoublePlacementInfo.familyLastName# ###qGetDoublePlacementInfo.studentID# <br /> #CHR(13)#";
+					
+					if ( ARGUMENTS.placementAction EQ 'setDoublePlacement' AND LEN(ARGUMENTS.doublePlaceReason) ) {
+						vActions = vActions & "Message: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					} else if ( LEN(ARGUMENTS.doublePlaceReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					}
+					
+				}
+			
+			}
+
+			// SET NEW PLACEMENT MESSAGE
+			if ( ARGUMENTS.placementStatus EQ 'Unplaced' ) {
+				
+				vQueryType = 'insert';
+				vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong>  <br /> #CHR(13)#";
+				
+				// Welcome Family Information
+				if ( VAL(ARGUMENTS.isWelcomeFamily) ) {
+					vActions = vActions & "This is a welcome family <br /> #CHR(13)#";
+				}
+			
+			}
+			
+			// SET ACTION MESSAGE - THESE ARE BASED ON THE PLACEMENT ACTION
+			
+			// UNPLACE STUDENT
+			if ( ARGUMENTS.placementAction EQ 'unplaceStudent' ) {
+				
+				vQueryType = 'update';
+				vActions = vActions & "<strong>Student Set to Unplaced</strong>  <br /> #CHR(13)#";			
+			
+			// PLACEMENT APPROVED
+			} else if ( ARGUMENTS.placementAction EQ 'approve' AND NOT ListFind('insert,update', vQueryType) ) {
+				
+				vQueryType = 'approve';
+				vActions = vActions & "<strong>Placement Approved by #vUpdatedBy#</strong> <br /> #CHR(13)#";
+
+			// PLACEMENT REJECTED
+			} else if ( ARGUMENTS.placementAction EQ 'reject' AND NOT ListFind('insert,update', vQueryType) ) {
+				
+				vQueryType = 'approve';
+				vActions = vActions & "<strong>Placement Rejected by #vUpdatedBy#</strong> <br /> #CHR(13)#";
+
+			// PLACEMENT RESUBMITTED
+			} else if ( ARGUMENTS.placementAction EQ 'resubmit' AND NOT ListFind('insert,update', vQueryType) ) {
+				
+				vQueryType = 'approve';
+				vActions = vActions & "<strong>Placement Resubmitted by #vUpdatedBy#</strong> <br /> #CHR(13)#";
+
+			} 
+
+			// Unplaced / Rejection / Resubmit comments
+			if ( LEN(ARGUMENTS.reason) ) {
+				vActions = vActions & "Comment: #ARGUMENTS.reason# <br /> #CHR(13)#";
+			}
+			
+			// Add User Information
+			vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) - #vUpdatedBy# <br /> #CHR(13)#";
+			
+			// Add paragraph tag to set this update
+			vActions = "<p>#vActions#</p>";
+
+			/*
+			writedump(vActions);
+			writedump(vQueryType);
+			writedump(arguments);
+			abort;
+			*/
+		</cfscript>
+        
+		<!--- Insert History Information --->
+        <cfif vQueryType EQ 'insert'>        
+            
+            <cfquery 
+                datasource="#APPLICATION.dsn#"
+                result="newRecord">
+                    INSERT INTO 
+                        smg_hosthistory	
+                    (
+                        studentID, 
+                        hostID,                     
+                        schoolID, 
+                        placeRepID, 
+                        areaRepID,
+                        secondVisitRepID, 
+                        changedBy,
+                        isWelcomeFamily,
+                        isRelocation,
+                        dateOfChange, 
+                        reason,
+                        dateCreated
+                    )
+                    VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,                    
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.changedBy)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isRelocation)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#vActions#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    )
+            </cfquery>
+        
+        	<cfscript>
+				// Set History ID
+				vHostHistoryID = newRecord.GENERATED_KEY;
+            </cfscript>
+            
+        </cfif>
+        
+		<cfscript>
+			if ( NOT VAL(vHostHistoryID) ) {
+				// Get Current History
+				vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
+			}
+				
+			if ( LEN(vQueryType) ) {
+				
+				// Insert Actions Into Separate Table
+				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+					applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
+					foreignTable='smg_hostHistory',
+					foreignID=vHostHistoryID,
+					enteredByID=VAL(ARGUMENTS.changedBy),
+					actions=vActions
+				);			
+		
+			}
+		</cfscript> 
+        
+        <!--- Update History if not doing any of these actions below (they do not require a history update except setDoublePlacement which is updated outside the history function) --->
+        <cfif NOT ListFind("Approve/Reject/Resubmit/setDoublePlacement/unplaceStudent", ARGUMENTS.placementAction) AND vQueryType EQ 'update'>
+
+            <cfquery 
+                datasource="#APPLICATION.dsn#"
+                result="newRecord">
+                    UPDATE
+                        smg_hosthistory	
+                    SET
+                        schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#"> ,                   
+                        placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
+                        areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
+                        secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
+                        doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">
+                    WHERE
+                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+            </cfquery>
+        
+		</cfif>
+                
+	</cffunction>
+
+
+	<!--- Get Placement History --->
+	<cffunction name="getPlacementHistory" access="public" returntype="query" output="false" hint="Returns placement history">
+    	<cfargument name="studentID" hint="studentID is required">
+        
+        <cfquery 
+        	name="qGetPlacementHistory" 
+            datasource="#APPLICATION.DSN#">
+                SELECT 
+                    h.historyID,
+                    h.companyID,
+                    h.studentID,
+                    h.hostID,
+                    h.schoolID,
+                    h.placeRepID,
+                    h.areaRepID,
+                    h.secondVisitRepID,
+                    h.changedBy,
+                    h.isWelcomeFamily,
+                    h.isRelocation,
+                    h.original_place,
+                    h.welcome_family,
+                    h.relocation,
+                    h.reason,
+                    h.actions,
+                    h.dateOfChange,
+                    h.dateCreated,
+                    h.dateUpdated,
+                    <!--- Host Family --->
+                    host.familyLastName,
+                    <!--- School --->
+                    school.schoolName,
+                    <!--- Place Rep --->
+                    place.firstName AS placeFirstName, 
+                    place.lastName AS placeLastName,
+                    <!--- Area Rep --->
+                    area.firstName AS areaFirstName, 
+                    area.lastName AS areaLastName,
+                    <!--- 2nd Rep Visit --->
+                    secondRep.firstName AS secondRepFirstName,
+                    secondRep.lastName AS secondRepLastName,
+                    <!--- User --->
+                    user.firstName AS changedByFirstName, 
+                    user.lastName AS changedByLastName
+                FROM 
+                    smg_hosthistory h
+                LEFT JOIN 
+                    smg_hosts host ON h.hostid = host.hostID
+                LEFT JOIN 
+                    smg_schools school ON h.schoolID = school.schoolID
+                LEFT JOIN 
+                    smg_users place ON h.placeRepID = place.userID
+                LEFT JOIN 
+                    smg_users area ON h.areaRepID = area.userID
+                LEFT JOIN 
+                    smg_users secondRep ON h.secondVisitRepID = secondRep.userID
+                LEFT JOIN 
+                    smg_users user ON h.changedby = user.userID
+                WHERE 
+                    h.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                ORDER BY 
+                    h.dateUpdated DESC, 
+                    h.historyid DESC
+        </cfquery>
+                
+        <cfreturn qGetPlacementHistory>
+    </cffunction>
+
+
+	<!--- Placement Paperwork --->
+	<cffunction name="updatePlacementPaperwork" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="historyID" default="0" hint="historyID is not required">
+		<!--- Single Person Placement --->
+        <cfargument name="doc_single_place_auth" default="" hint="doc_single_place_auth is not required">
+        <cfargument name="doc_single_ref_form_1" default="" hint="doc_single_ref_form_1 is not required">
+        <cfargument name="doc_single_ref_check1" default="" hint="doc_single_ref_check1 is not required">
+        <cfargument name="doc_single_ref_form_2" default="" hint="doc_single_ref_form_2 is not required">
+        <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
+        <!--- Placement Paperwork --->
+        <cfargument name="date_pis_received" default="" hint="date_pis_received is not required">
+        <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
+        <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
+        <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
+        <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
+        <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
+        <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
+        <cfargument name="doc_conf_host_rec2" default="" hint="doc_conf_host_rec2 is not required">
+        <cfargument name="doc_date_of_visit2" default="" hint="doc_date_of_visit2 is not required">
+        <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
+        <cfargument name="doc_ref_check1" default="" hint="doc_ref_check1 is not required">
+        <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
+        <cfargument name="doc_ref_check2" default="" hint="doc_ref_check2 is not required">
+        <cfargument name="doc_income_ver_date" default="" hint="doc_income_ver_date is not required">
+        <!--- Arrival Compliance --->
+        <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
+        <cfargument name="doc_school_sign_date" default="" hint="doc_school_sign_date is not required">
+        <!--- Original Student --->
+        <cfargument name="orig_app_sent_host" default="" hint="orig_app_sent_host is not required">
+        <cfargument name="copy_app_school" default="" hint="copy_app_school is not required">
+        <cfargument name="copy_app_super" default="" hint="copy_app_super is not required">
+        <!--- Arrival Orientation --->
+        <cfargument name="stu_arrival_orientation" default="" hint="stu_arrival_orientation is not required">
+        <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
+        <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
+        		
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+	                smg_students
+                SET 
+                    <!--- Single Person Placement Paperwork --->
+                    doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_place_auth#" null="#NOT IsDate(ARGUMENTS.doc_single_place_auth)#">,
+                    doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_1)#">,
+                    doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check1)#">,
+                    doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_2)#">,
+                    doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check2)#">,
+                    <!--- Placement Paperwork --->
+                    date_pis_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_pis_received#" null="#NOT IsDate(ARGUMENTS.date_pis_received)#">,
+                    doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
+                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
+                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
+                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
+                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
+                    doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
+                    doc_conf_host_rec2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec2#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec2)#">,
+                    doc_date_of_visit2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit2#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit2)#">,
+                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
+                    doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
+                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
+                    doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_ref_check2)#">,
+                    doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_income_ver_date#" null="#NOT IsDate(ARGUMENTS.doc_income_ver_date)#">,
+                    <!--- Arrival Compliance --->
+                    doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#" null="#NOT IsDate(ARGUMENTS.doc_school_accept_date)#">,
+                    doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
+					<!--- Original Student --->
+                    orig_app_sent_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.orig_app_sent_host))#">,
+                    copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_school))#">,
+                    copy_app_super = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_super))#">,
+					<!--- Arrival Orientation --->
+                    stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
+                    host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.host_arrival_orientation)#">,
+                    doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_class_schedule#" null="#NOT IsDate(ARGUMENTS.doc_class_schedule)#">
+                WHERE 
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
+		</cfquery>
+		
+        <cfscript>
+			// Update Placement History
+			updatePlacementPaperworkHistory(
+				studentID = ARGUMENTS.studentID,
+				historyID = ARGUMENTS.historyID,
+				// Single Person Placement Paperwork
+				doc_single_place_auth = ARGUMENTS.doc_single_place_auth,
+				doc_single_ref_form_1 = ARGUMENTS.doc_single_ref_form_1,
+				doc_single_ref_check1 = ARGUMENTS.doc_single_ref_check1,
+				doc_single_ref_form_2 = ARGUMENTS.doc_single_ref_form_2,
+				doc_single_ref_check2 = ARGUMENTS.doc_single_ref_check2,
+				// Placement Paperwork
+				date_pis_received = ARGUMENTS.date_pis_received,
+				doc_full_host_app_date = ARGUMENTS.doc_full_host_app_date,
+				doc_letter_rec_date = ARGUMENTS.doc_letter_rec_date,
+				doc_rules_rec_date = ARGUMENTS.doc_rules_rec_date,
+				doc_photos_rec_date = ARGUMENTS.doc_photos_rec_date,
+				doc_school_profile_rec = ARGUMENTS.doc_school_profile_rec,
+				doc_conf_host_rec = ARGUMENTS.doc_conf_host_rec,
+				doc_date_of_visit = ARGUMENTS.doc_date_of_visit,
+				doc_conf_host_rec2 = ARGUMENTS.doc_conf_host_rec2,
+				doc_date_of_visit2 = ARGUMENTS.doc_date_of_visit2,
+				doc_ref_form_1 = ARGUMENTS.doc_ref_form_1,
+				doc_ref_check1 = ARGUMENTS.doc_ref_check1,
+				doc_ref_form_2 = ARGUMENTS.doc_ref_form_2,
+				doc_ref_check2 = ARGUMENTS.doc_ref_check2,
+				doc_income_ver_date = ARGUMENTS.doc_income_ver_date,
+				// Arrival Compliance
+				doc_school_accept_date = ARGUMENTS.doc_school_accept_date,
+				doc_school_sign_date = ARGUMENTS.doc_school_sign_date,
+				// Original Student
+				orig_app_sent_host = ARGUMENTS.orig_app_sent_host,
+				copy_app_school = ARGUMENTS.copy_app_school,
+				copy_app_super = ARGUMENTS.copy_app_super,
+				// Arrival Orientation
+				stu_arrival_orientation = ARGUMENTS.stu_arrival_orientation,
+				host_arrival_orientation = ARGUMENTS.host_arrival_orientation,
+				doc_class_schedule = ARGUMENTS.doc_class_schedule
+			);
+		</cfscript>
+        
+	</cffunction>
+
+
+	<cffunction name="updatePlacementPaperworkHistory" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="historyID" default="0" hint="historyID is not required">
+		<!--- Single Person Placement --->
+        <cfargument name="doc_single_place_auth" default="" hint="doc_single_place_auth is not required">
+        <cfargument name="doc_single_ref_form_1" default="" hint="doc_single_ref_form_1 is not required">
+        <cfargument name="doc_single_ref_check1" default="" hint="doc_single_ref_check1 is not required">
+        <cfargument name="doc_single_ref_form_2" default="" hint="doc_single_ref_form_2 is not required">
+        <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
+        <!--- Placement Paperwork --->
+        <cfargument name="date_pis_received" default="" hint="date_pis_received is not required">
+        <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
+        <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
+        <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
+        <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
+        <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
+        <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
+        <cfargument name="doc_conf_host_rec2" default="" hint="doc_conf_host_rec2 is not required">
+        <cfargument name="doc_date_of_visit2" default="" hint="doc_date_of_visit2 is not required">
+        <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
+        <cfargument name="doc_ref_check1" default="" hint="doc_ref_check1 is not required">
+        <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
+        <cfargument name="doc_ref_check2" default="" hint="doc_ref_check2 is not required">
+        <cfargument name="doc_income_ver_date" default="" hint="doc_income_ver_date is not required">
+        <!--- Arrival Compliance --->
+        <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
+        <cfargument name="doc_school_sign_date" default="" hint="doc_school_sign_date is not required">
+        <!--- Original Student --->
+        <cfargument name="orig_app_sent_host" default="" hint="orig_app_sent_host is not required">
+        <cfargument name="copy_app_school" default="" hint="copy_app_school is not required">
+        <cfargument name="copy_app_super" default="" hint="copy_app_super is not required">
+        <!--- Arrival Orientation --->
+        <cfargument name="stu_arrival_orientation" default="" hint="stu_arrival_orientation is not required">
+        <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
+        <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
+        
+        <!--- Update Host History Documents --->
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+                UPDATE
+	                smg_hosthistory
+                SET 
+                    <!--- Single Person Placement Paperwork --->
+                    doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_place_auth#" null="#NOT IsDate(ARGUMENTS.doc_single_place_auth)#">,
+                    doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_1)#">,
+                    doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check1)#">,
+                    doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_2)#">,
+                    doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check2)#">,
+                    <!--- Placement Paperwork --->
+                    date_pis_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_pis_received#" null="#NOT IsDate(ARGUMENTS.date_pis_received)#">,
+                    doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
+                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
+                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
+                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
+                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
+                    doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
+                    doc_conf_host_rec2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec2#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec2)#">,
+                    doc_date_of_visit2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit2#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit2)#">,
+                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
+                    doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
+                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
+                    doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_ref_check2)#">,
+                    doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_income_ver_date#" null="#NOT IsDate(ARGUMENTS.doc_income_ver_date)#">,
+                    <!--- Arrival Compliance --->
+                    doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#" null="#NOT IsDate(ARGUMENTS.doc_school_accept_date)#">,
+                    doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
+					<!--- Original Student --->
+                    orig_app_sent_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.orig_app_sent_host))#">,
+                    copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_school))#">,
+                    copy_app_super = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_super))#">,
+					<!--- Arrival Orientation --->
+                    stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
+                    host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.host_arrival_orientation)#">,
+                    doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_class_schedule#" null="#NOT IsDate(ARGUMENTS.doc_class_schedule)#">
+                WHERE 
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#"> 
+                AND
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
+		</cfquery>
+        
+	</cffunction>
+
+
+	<cffunction name="checkPlacementPaperwork" access="public" returntype="string" output="false" hint="Check if placement paperwork was received by deadline">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+		<cfargument name="paymentTypeID" default="0" hint="Payment Type ID">
+			
+        <cfquery 
+			name="qCheckPlacementPaperwork" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    studentID,
+                    hostID,
+                    date_pis_received,
+                    doc_full_host_app_date,
+                    doc_letter_rec_date,
+                    doc_rules_rec_date,
+                    doc_photos_rec_date,
+                    doc_school_profile_rec,
+                    doc_conf_host_rec,
+                    doc_date_of_visit,
+                    doc_ref_form_1,
+                    doc_ref_check1,
+                    doc_ref_form_2,
+                    doc_ref_check2,
+                    doc_income_ver_date,
+                    doc_school_accept_date,
+                    doc_school_sign_date,
+                    <!--- Single Person Placement Paperwork --->
+                    doc_single_place_auth,
+                    doc_single_ref_form_1,
+                    doc_single_ref_check1,
+                    doc_single_ref_form_2,
+                    doc_single_ref_check2,
+                    doc_conf_host_rec2,
+                    doc_date_of_visit2
+                FROM 
+                	smg_students
+                WHERE 
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
+		</cfquery>
+        
+        <!---
+			Fast Track Bonus $1500 - Paperwork must be received by April 15th
+			Early Placement $1000 - Paperwork must be received by June 1st (April 16th - June 1st)
+			Paperwork Bunus $500 - Paperwork must be received by August 1st (June 2nd - August 1st)		
+			
+			Pre-AYP Bonus $250 - Placed by May 10th
+			Pre-AYP Bonus $200 - Placed by June 1st
+			Pre-AYP Bonus $150 - Placed by June 24th
+			
+			Non-Traditional Placement (Single Parent)
+				- Single Person Placement Verification
+				- Single Person Placement Reference 1
+				- Single Person Placement Reference 2
+				- 2nd Confidential Host Family Visit Form
+		--->
+			
+        <cfscript>
+			// Declare return structure
+			returnMessage = '';
+			
+			// Store deadline
+			setDeadline = '';
+			
+			// Stores total family members
+			totalFamilyMembers =  0;
+			
+			// Check if we are processing Fast Start, Early Placement, Paperwork Bonus, Pre-AYP 250, Pre-AYP 200, Pre-AYP-150
+			switch(ARGUMENTS.paymentTypeID) {
+				
+				// Set deadline based on payment type
+				
+				// Fast Track Bonus
+				case 17: {
+					setDeadline = '04/22/' &  Year(now());
+					break;
+				}
+				// Early Placement Bonus
+				case 15: {
+					setDeadline = '06/01/' &  Year(now());
+					break;
+				}
+				// Paperwork Bonus
+				case 9: {
+					setDeadline = '08/01/' &  Year(now());
+					break;
+				}
+				
+				// Pre-AYP Bonus $250
+				case 18: {
+					setDeadline = '05/10/' &  Year(now());
+					break;
+				}
+				// Pre-AYP Bonus $200
+				case 19: {
+					setDeadline = '06/01/' &  Year(now());
+					break;
+				}
+				// Pre-AYP Bonus $150
+				case 20: {
+					setDeadline = '06/24/' &  Year(now());
+					break;
+				}
+
+			}
+			
+			// Check if we have a deadline
+			if ( IsDate(setDeadline) ) {
+				
+				// Get Host Family Information
+				qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qCheckPlacementPaperwork.hostID);
+	
+				// Check if there is a host father
+				if ( LEN(qGetHostInfo.fatherFirstName) ) {
+					totalFamilyMembers = totalFamilyMembers + 1;	 
+				}
+				
+				// Check if there is a host mother
+				if ( LEN(qGetHostInfo.motherFirstName) ) {
+					totalFamilyMembers = totalFamilyMembers + 1;	 
+				}
+				
+				// Get Host Children
+				qGetChildrenAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qCheckPlacementPaperwork.hostID,liveAtHome='yes');
+	
+				totalFamilyMembers = totalFamilyMembers + qGetChildrenAtHome.recordCount;
+				
+				// Check PaperWork
+
+				// Placement Information Sheet
+				if ( NOT LEN(qCheckPlacementPaperwork.date_pis_received) OR qCheckPlacementPaperwork.date_pis_received GT setDeadline ) {
+					returnMessage = returnMessage & 'Placement Information Sheet has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.date_pis_received, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Application Received
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_full_host_app_date) OR qCheckPlacementPaperwork.doc_full_host_app_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Application has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_full_host_app_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Letter Received
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_letter_rec_date) OR qCheckPlacementPaperwork.doc_letter_rec_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Letter has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_letter_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Rules Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_rules_rec_date) OR qCheckPlacementPaperwork.doc_rules_rec_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Rules Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_rules_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Photos
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_photos_rec_date) OR qCheckPlacementPaperwork.doc_photos_rec_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Photos has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_photos_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// School & Community Profile Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_school_profile_rec) OR qCheckPlacementPaperwork.doc_school_profile_rec GT setDeadline ) {
+					returnMessage = returnMessage & 'School & Community Profile Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_school_profile_rec, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Confidential Host Family Visit Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec) OR qCheckPlacementPaperwork.doc_conf_host_rec GT setDeadline ) {
+					returnMessage = returnMessage & 'Confidential Host Family Visit Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Reference Form 1
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_ref_form_1) OR qCheckPlacementPaperwork.doc_ref_form_1 GT setDeadline ) {
+					returnMessage = returnMessage & 'Reference Form 1 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_ref_form_1, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Reference Form 2
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_ref_form_2) OR qCheckPlacementPaperwork.doc_ref_form_2 GT setDeadline ) {
+					returnMessage = returnMessage & 'Reference Form 2 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Income Verification Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_income_ver_date) OR qCheckPlacementPaperwork.doc_income_ver_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Income Verification Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_income_ver_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// School Acceptance Form
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_school_accept_date) OR qCheckPlacementPaperwork.doc_school_accept_date GT setDeadline ) {
+					returnMessage = returnMessage & 'School Acceptance Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_school_accept_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Host Father CBC
+				if ( LEN(qGetHostInfo.fatherFirstName) AND ( NOT LEN(qGetHostInfo.fathercbc_form) OR qGetHostInfo.fathercbc_form GT setDeadline ) ) {
+					returnMessage = returnMessage & 'Host Father CBC has not been received or received after deadline - Date Received: #DateFormat(qGetHostInfo.fathercbc_form, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				
+				// Host Mother CBC
+				if ( LEN(qGetHostInfo.motherFirstName) AND ( NOT LEN(qGetHostInfo.mothercbc_form) OR qGetHostInfo.mothercbc_form GT setDeadline ) ) {
+					returnMessage = returnMessage & 'Host Mother CBC has not been received or received after deadline - Date Received: #DateFormat(qGetHostInfo.mothercbc_form, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// 2nd Confidential Host Family Visit Form
+				/*
+				if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec2) OR qCheckPlacementPaperwork.doc_conf_host_rec2 GT setDeadline ) {
+					returnMessage = returnMessage & '2nd Confidential Host Family Visit Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec2, 'mm/dd/yyyy')#. <br />'; 	
+				}
+				*/
+				
+				// Host Member CBC
+				
+				// Non-Traditional Placement - Extra Documents
+				if ( totalFamilyMembers EQ 1 ) {
+
+					// Single Person Placement Verification
+					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_place_auth) OR qCheckPlacementPaperwork.doc_single_place_auth GT setDeadline ) {
+						returnMessage = returnMessage & 'Single Person Placement Verification has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_place_auth, 'mm/dd/yyyy')#. <br />'; 	
+					}
+
+					// Single Person Placement Reference 1
+					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_1) OR qCheckPlacementPaperwork.doc_single_ref_form_1 GT setDeadline ) {
+						returnMessage = returnMessage & 'Single Person Placement Reference 1 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_1, 'mm/dd/yyyy')#. <br />'; 	
+					}
+
+					// Single Person Placement Reference 2
+					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_2) OR qCheckPlacementPaperwork.doc_single_ref_form_2 GT setDeadline ) {
+						returnMessage = returnMessage & 'Single Person Placement Reference 2 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
+					}
+					
+				} // Non-Traditional Placement - Extra Documents
+
+			} // Check if we have a deadline
+			
+			return returnMessage;
+		</cfscript>
+        
+	</cffunction>
+
+
+    <!--- START OF PLACEMENT MANAGEMENT FUNCTIONS --->
+	<cffunction name="assignEnglishCamp" access="public" returntype="void" hint="Sets Pre-AYP english camp based on host family state">
+        <cfargument name="studentID" required="yes" hint="studentID is required">
+		
+        <cfscript>
+			var setEnglishCampID = 0;
+			/*
+				19 - MacDuffie, MA
+				20 - NorthRidge, CA
+			*/
+			
+			// Get Student Information
+			var qGetStudentInformation = getStudentByID(studentID=ARGUMENTS.studentID);
+			
+			// Get Host Family Information
+			var qGetHostInformation = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInformation.hostID);
+			
+			// Student is Pre-AYP, not assigned to a camp and we have a valid host
+			if ( VAL(qGetStudentInformation.aypEnglish) AND NOT ListFind("19,20", qGetStudentInformation.aypEnglish) AND qGetHostInformation.recordCount EQ 1) {
+			
+				// Get Camp Based on Host Family State Address
+				if ( ListFind(APPLICATION.CONSTANTS.aypStateList.mcDuffie, qGetHostInformation.state) ) {
+					// 19 - MacDuffie, MA
+					setEnglishCampID = 19;
+				} else if ( ListFind(APPLICATION.CONSTANTS.aypStateList.northRidge, qGetHostInformation.state) )  {
+					// 20 - NorthRidge, CA
+					setEnglishCampID = 20;
+				}
+				
+			}
+		</cfscript>
+        
+        <cfif VAL(setEnglishCampID)>
+            
+            <!--- Update Camp --->
+            <cfquery 
+                datasource="#APPLICATION.dsn#">
+                    UPDATE
+                        smg_students
+                    SET
+                        aypEnglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#setEnglishCampID#">
+                    WHERE
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+            </cfquery>
+		
+        </cfif>
+        		   
+	</cffunction>
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		End of Placement Management
+	
+	----- ------------------------------------------------------------------------- --->
 
 
 	<!--- ------------------------------------------------------------------------- ----
@@ -305,7 +1783,7 @@
 				LEFT OUTER JOIN
                 	smg_countrylist resident ON resident.countryID = s.countryResident
                 WHERE
-                	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 				AND
                 	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">              
                 AND   
@@ -1413,309 +2891,6 @@
 
 	<!--- ------------------------------------------------------------------------- ----
 		
-		PLACEMENT PAPERWORK
-	
-	----- ------------------------------------------------------------------------- --->
-
-	<cffunction name="checkPlacementPaperwork" access="public" returntype="string" output="false" hint="Check if placement paperwork was received by deadline">
-        <cfargument name="studentID" default="0" hint="studentID is not required">
-		<cfargument name="paymentTypeID" default="0" hint="Payment Type ID">
-			
-        <cfquery 
-			name="qCheckPlacementPaperwork" 
-			datasource="#APPLICATION.dsn#">
-                SELECT 
-                    studentID,
-                    hostID,
-                    date_pis_received,
-                    doc_full_host_app_date,
-                    doc_letter_rec_date,
-                    doc_rules_rec_date,
-                    doc_photos_rec_date,
-                    doc_school_profile_rec,
-                    doc_conf_host_rec,
-                    doc_date_of_visit,
-                    doc_ref_form_1,
-                    doc_ref_check1,
-                    doc_ref_form_2,
-                    doc_ref_check2,
-                    doc_income_ver_date,
-                    doc_school_accept_date,
-                    doc_school_sign_date,
-                    <!--- Non-Traditional Placement / Extra Paperwork --->
-                    doc_single_place_auth,
-                    doc_single_ref_form_1,
-                    doc_single_ref_check1,
-                    doc_single_ref_form_2,
-                    doc_single_ref_check2,
-                    doc_conf_host_rec2,
-                    doc_date_of_visit2
-                FROM 
-                	smg_students
-                WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
-		</cfquery>
-        
-        <!---
-			Fast Track Bonus $1500 - Paperwork must be received by April 15th
-			Early Placement $1000 - Paperwork must be received by June 1st (April 16th - June 1st)
-			Paperwork Bunus $500 - Paperwork must be received by August 1st (June 2nd - August 1st)		
-			
-			Pre-AYP Bonus $250 - Placed by May 10th
-			Pre-AYP Bonus $200 - Placed by June 1st
-			Pre-AYP Bonus $150 - Placed by June 24th
-			
-			Non-Traditional Placement (Single Parent)
-				- Single Person Placement Verification
-				- Single Person Placement Reference 1
-				- Single Person Placement Reference 2
-				- 2nd Confidential Host Family Visit Form
-		--->
-			
-        <cfscript>
-			// Declare return structure
-			returnMessage = '';
-			
-			// Store deadline
-			setDeadline = '';
-			
-			// Stores total family members
-			totalFamilyMembers =  0;
-			
-			// Check if we are processing Fast Start, Early Placement, Paperwork Bonus, Pre-AYP 250, Pre-AYP 200, Pre-AYP-150
-			switch(ARGUMENTS.paymentTypeID) {
-				
-				// Set deadline based on payment type
-				
-				// Fast Track Bonus
-				case 17: {
-					setDeadline = '04/22/' &  Year(now());
-					break;
-				}
-				// Early Placement Bonus
-				case 15: {
-					setDeadline = '06/01/' &  Year(now());
-					break;
-				}
-				// Paperwork Bonus
-				case 9: {
-					setDeadline = '08/01/' &  Year(now());
-					break;
-				}
-				
-				// Pre-AYP Bonus $250
-				case 18: {
-					setDeadline = '05/10/' &  Year(now());
-					break;
-				}
-				// Pre-AYP Bonus $200
-				case 19: {
-					setDeadline = '06/01/' &  Year(now());
-					break;
-				}
-				// Pre-AYP Bonus $150
-				case 20: {
-					setDeadline = '06/24/' &  Year(now());
-					break;
-				}
-
-			}
-			
-			// Check if we have a deadline
-			if ( IsDate(setDeadline) ) {
-				
-				// Get Host Family Information
-				qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qCheckPlacementPaperwork.hostID);
-	
-				// Check if there is a host father
-				if ( LEN(qGetHostInfo.fatherFirstName) ) {
-					totalFamilyMembers = totalFamilyMembers + 1;	 
-				}
-				
-				// Check if there is a host mother
-				if ( LEN(qGetHostInfo.motherFirstName) ) {
-					totalFamilyMembers = totalFamilyMembers + 1;	 
-				}
-				
-				// Get Host Children
-				qGetChildrenAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qCheckPlacementPaperwork.hostID,liveAtHome='yes');
-	
-				totalFamilyMembers = totalFamilyMembers + qGetChildrenAtHome.recordCount;
-				
-				// Check PaperWork
-
-				// Placement Information Sheet
-				if ( NOT LEN(qCheckPlacementPaperwork.date_pis_received) OR qCheckPlacementPaperwork.date_pis_received GT setDeadline ) {
-					returnMessage = returnMessage & 'Placement Information Sheet has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.date_pis_received, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
-				// Host Application Received
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_full_host_app_date) OR qCheckPlacementPaperwork.doc_full_host_app_date GT setDeadline ) {
-					returnMessage = returnMessage & 'Host Application has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_full_host_app_date, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
-				// Host Family Letter Received
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_letter_rec_date) OR qCheckPlacementPaperwork.doc_letter_rec_date GT setDeadline ) {
-					returnMessage = returnMessage & 'Host Family Letter has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_letter_rec_date, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
-				// Host Family Rules Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_rules_rec_date) OR qCheckPlacementPaperwork.doc_rules_rec_date GT setDeadline ) {
-					returnMessage = returnMessage & 'Host Family Rules Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_rules_rec_date, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
-				// Host Family Photos
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_photos_rec_date) OR qCheckPlacementPaperwork.doc_photos_rec_date GT setDeadline ) {
-					returnMessage = returnMessage & 'Host Family Photos has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_photos_rec_date, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
-				// School & Community Profile Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_school_profile_rec) OR qCheckPlacementPaperwork.doc_school_profile_rec GT setDeadline ) {
-					returnMessage = returnMessage & 'School & Community Profile Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_school_profile_rec, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
-				// Confidential Host Family Visit Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec) OR qCheckPlacementPaperwork.doc_conf_host_rec GT setDeadline ) {
-					returnMessage = returnMessage & 'Confidential Host Family Visit Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
-				// Reference Form 1
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_ref_form_1) OR qCheckPlacementPaperwork.doc_ref_form_1 GT setDeadline ) {
-					returnMessage = returnMessage & 'Reference Form 1 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_ref_form_1, 'mm/dd/yyyy')#. <br />'; 	
-				}
-				
-				// Reference Form 2
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_ref_form_2) OR qCheckPlacementPaperwork.doc_ref_form_2 GT setDeadline ) {
-					returnMessage = returnMessage & 'Reference Form 2 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
-				}
-				
-				// Income Verification Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_income_ver_date) OR qCheckPlacementPaperwork.doc_income_ver_date GT setDeadline ) {
-					returnMessage = returnMessage & 'Income Verification Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_income_ver_date, 'mm/dd/yyyy')#. <br />'; 	
-				}
-				
-				// School Acceptance Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_school_accept_date) OR qCheckPlacementPaperwork.doc_school_accept_date GT setDeadline ) {
-					returnMessage = returnMessage & 'School Acceptance Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_school_accept_date, 'mm/dd/yyyy')#. <br />'; 	
-				}
-				
-				// Host Father CBC
-				if ( LEN(qGetHostInfo.fatherFirstName) AND ( NOT LEN(qGetHostInfo.fathercbc_form) OR qGetHostInfo.fathercbc_form GT setDeadline ) ) {
-					returnMessage = returnMessage & 'Host Father CBC has not been received or received after deadline - Date Received: #DateFormat(qGetHostInfo.fathercbc_form, 'mm/dd/yyyy')#. <br />'; 	
-				}
-				
-				// Host Mother CBC
-				if ( LEN(qGetHostInfo.motherFirstName) AND ( NOT LEN(qGetHostInfo.mothercbc_form) OR qGetHostInfo.mothercbc_form GT setDeadline ) ) {
-					returnMessage = returnMessage & 'Host Mother CBC has not been received or received after deadline - Date Received: #DateFormat(qGetHostInfo.mothercbc_form, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
-				// 2nd Confidential Host Family Visit Form
-				/*
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec2) OR qCheckPlacementPaperwork.doc_conf_host_rec2 GT setDeadline ) {
-					returnMessage = returnMessage & '2nd Confidential Host Family Visit Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec2, 'mm/dd/yyyy')#. <br />'; 	
-				}
-				*/
-				
-				// Host Member CBC
-				
-				// Non-Traditional Placement - Extra Documents
-				if ( totalFamilyMembers EQ 1 ) {
-
-					// Single Person Placement Verification
-					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_place_auth) OR qCheckPlacementPaperwork.doc_single_place_auth GT setDeadline ) {
-						returnMessage = returnMessage & 'Single Person Placement Verification has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_place_auth, 'mm/dd/yyyy')#. <br />'; 	
-					}
-
-					// Single Person Placement Reference 1
-					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_1) OR qCheckPlacementPaperwork.doc_single_ref_form_1 GT setDeadline ) {
-						returnMessage = returnMessage & 'Single Person Placement Reference 1 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_1, 'mm/dd/yyyy')#. <br />'; 	
-					}
-
-					// Single Person Placement Reference 2
-					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_2) OR qCheckPlacementPaperwork.doc_single_ref_form_2 GT setDeadline ) {
-						returnMessage = returnMessage & 'Single Person Placement Reference 2 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
-					}
-					
-				} // Non-Traditional Placement - Extra Documents
-
-			} // Check if we have a deadline
-			
-			return returnMessage;
-		</cfscript>
-        
-	</cffunction>
-
-	<!--- ------------------------------------------------------------------------- ----
-		
-		END OF PLACEMENT PAPERWORK
-	
-	----- ------------------------------------------------------------------------- --->
-
-
-	<!--- ------------------------------------------------------------------------- ----
-		
-		START OF PLACEMENT MANAGEMENT FUNCTIONS
-	
-	----- ------------------------------------------------------------------------- --->
-
-	<cffunction name="assignEnglishCamp" access="public" returntype="void" hint="Sets Pre-AYP english camp based on host family state">
-        <cfargument name="studentID" required="yes" hint="studentID is required">
-		
-        <cfscript>
-			var setEnglishCampID = 0;
-			/*
-				19 - MacDuffie, MA
-				20 - NorthRidge, CA
-			*/
-			
-			// Get Student Information
-			var qGetStudentInformation = getStudentByID(studentID=ARGUMENTS.studentID);
-			
-			// Get Host Family Information
-			var qGetHostInformation = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInformation.hostID);
-			
-			// Student is Pre-AYP, not assigned to a camp and we have a valid host
-			if ( VAL(qGetStudentInformation.aypEnglish) AND NOT ListFind("19,20", qGetStudentInformation.aypEnglish) AND qGetHostInformation.recordCount EQ 1) {
-			
-				// Get Camp Based on Host Family State Address
-				if ( ListFind(APPLICATION.CONSTANTS.aypStateList.mcDuffie, qGetHostInformation.state) ) {
-					// 19 - MacDuffie, MA
-					setEnglishCampID = 19;
-				} else if ( ListFind(APPLICATION.CONSTANTS.aypStateList.northRidge, qGetHostInformation.state) )  {
-					// 20 - NorthRidge, CA
-					setEnglishCampID = 20;
-				}
-				
-			}
-		</cfscript>
-        
-        <cfif VAL(setEnglishCampID)>
-            
-            <!--- Update Camp --->
-            <cfquery 
-                datasource="#APPLICATION.dsn#">
-                    UPDATE
-                        smg_students
-                    SET
-                        aypEnglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#setEnglishCampID#">
-                    WHERE
-                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-            </cfquery>
-		
-        </cfif>
-        		   
-	</cffunction>
-
-	<!--- ------------------------------------------------------------------------- ----
-		
-		END OF PLACEMENT PAPERWORK
-	
-	----- ------------------------------------------------------------------------- --->
-
-
-
-	<!--- ------------------------------------------------------------------------- ----
-		
 		IMPORT FLS ID
 	
 	----- ------------------------------------------------------------------------- --->
@@ -1861,7 +3036,7 @@
                     
 				<cfif VAL(ARGUMENTS.isActive)>
                     AND 
-                        s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 </cfif>
                 
                 <cfif VAL(ARGUMENTS.regionID)>                    
@@ -2350,7 +3525,7 @@
                 UPDATE
                 	smg_project_help_activities
 				SET
-                	is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                	is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
                     date_updated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
 				WHERE
                 	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.activityID#">
@@ -2444,7 +3619,7 @@
 
                 <cfif VAL(ARGUMENTS.isActive)>
                     AND 
-                        s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 </cfif>
                 
                 <cfif VAL(ARGUMENTS.regionID)>                    
