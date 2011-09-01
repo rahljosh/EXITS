@@ -155,7 +155,8 @@
                         sex, 
                         ssn, 
                         birthdate, 
-                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) AS age
+                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) AS age,
+                        cbc_form_received
                     FROM 
                         smg_host_children 
                     WHERE 

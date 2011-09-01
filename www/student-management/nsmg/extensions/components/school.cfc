@@ -26,7 +26,8 @@
 	
 	<cffunction name="getSchools" access="public" returntype="query" output="false" hint="Gets a list of schools, if schoolID is passed gets a school by ID">
     	<cfargument name="schoolID" default="" hint="schoolID is not required">
-              
+        <cfargument name="stateList" default="" hint="List of states">
+        
         <cfquery 
 			name="qGetSchools" 
 			datasource="#APPLICATION.dsn#">
@@ -65,10 +66,17 @@
                     other_trans
                 FROM 
                     smg_schools
-                    
+                WHERE
+                	1 = 1
+                 
                 <cfif LEN(ARGUMENTS.schoolID)>
-                	WHERE
+                	AND
                     	schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">
+                </cfif>    
+                
+                <cfif LEN(ARGUMENTS.stateList)>
+                	AND
+                    	state IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateList#" list="yes"> )
                 </cfif>    
                 
                 ORDER BY 
@@ -78,7 +86,7 @@
 		<cfreturn qGetSchools>
 	</cffunction>
     
- 
+	
  	<cffunction name="getSchoolByID" access="public" returntype="query" output="false" hint="Gets school information">
     	<cfargument name="schoolID" default="0" hint="schoolID is required">
               
