@@ -217,14 +217,24 @@
 		// call the function to hide and show certain elements according to region guarantee choice 
 		displayGuaranteed();
 
+		// JQuery Modal - Refresh Student Info page after closing placement management
+		$(".jQueryModalPL").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false, 
+			onClosed:function(){ window.location.reload(); }
+		});	
+
 		// JQuery Modal
 		$(".jQueryModal").colorbox( {
 			width:"60%", 
 			height:"90%", 
 			iframe:true,
 			overlayClose:false,
-			escKey:false 
-		});		
+			escKey:false
+		});	
 
 	});
 </script> 	
@@ -460,7 +470,7 @@
 				<a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#qGetStudentInfo.studentID#', 800, 600);">Placement Management</a>
 				
                 <cfif CLIENT.userID EQ 510>
-                	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModal">New Placement Management</a>
+                	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModalPL">New Placement Management</a>
                 </cfif>
                 
 				<!--- OFFICE USERS ONLY --->
