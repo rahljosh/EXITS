@@ -88,17 +88,20 @@
                 <!--- Display Email Recipients when sending from development environment --->
                 <cfif APPLICATION.isServerLocal>
                     <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
-                    	******************************* DEVELOPMENT ENVIRONMENT *******************************
+                    	******************************* DEVELOPMENT SITE *******************************
                     </div>
                     
-                    <p>You received this email insted of the original recipient(s) because you are logged in the development environment.</p>
+                    <p>
+                    	You received this email insted of the original recipient(s) 
+                    	because you are logged in the development environment.
+                    </p>
                     
                     <p>Please see below the original recipient(s) for this message</p>
                     
                     #emailIntendedTo#
                     
                     <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
-                    	******************************* DEVELOPMENT ENVIRONMENT *******************************
+                    	******************************* DEVELOPMENT SITE *******************************
                     </div>
                 </cfif>
                 
