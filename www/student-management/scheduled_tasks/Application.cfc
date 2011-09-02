@@ -81,10 +81,9 @@
             type="string"
             required="true"
             />
+        
+        <cfparam name="URL.init" default="0">
             
-        <!--- Include Config Settings ---> 
-        <cfinclude template="#extensionsPath#config/_index.cfm" />
-
 		<cfscript>
 			// Check if we need to re-init the application
 			if ( VAL(URL.init) ) {
@@ -94,6 +93,9 @@
 				THIS.OnSessionStart();
 			}
 		</cfscript>
+        
+        <!--- Include Config Settings ---> 
+        <cfinclude template="#extensionsPath#config/_index.cfm" />
 
 		<!--- Return out. --->
 		<cfreturn true />

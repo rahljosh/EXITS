@@ -12,9 +12,11 @@
 
 <!--- Kill extra output --->
 <cfsilent>
-
+	
+    <cfsetting requesttimeout="99999">
+    
     <!--- Param Variables --->
-    <cfparam name="userType" default="">
+    <cfparam name="userType" default="user">
     
     <cfscript>
 		// Create Structure to store errors
