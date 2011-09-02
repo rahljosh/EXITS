@@ -13,7 +13,7 @@
 <!--- Kill extra output --->
 <cfsilent>
 
-	<cfparam name="userType" default="">
+	<cfparam name="userType" default="father">
     
 	<cfscript>	
 		// Create Structure to store errors
