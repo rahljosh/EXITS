@@ -50,21 +50,16 @@
                     	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
                     AND 
                         ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-            WHERE 
-                1 = 1
-                <!--- 
-				ehc.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-				--->
+
 			<cfif VAL(FORM.hostcompanyID)> 
-                AND
+                WHERE 
                     ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
             </cfif>
+
        		GROUP BY
             	ehc.hostCompanyID
             ORDER BY
             	ehc.name
-
-	        LIMIT 100                
 		</cfquery>
 		
         <!--- Get All Candidates --->
