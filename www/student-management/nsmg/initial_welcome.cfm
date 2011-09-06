@@ -501,6 +501,9 @@
                     <cfif ListFind("1,2,3,4,5,12", CLIENT.companyid) >
 					<a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a><br />
 				 	</cfif>
+                    <cfif ListFind("10", CLIENT.companyid) >
+					<a href="marketing/difference.cfm" target="_blank">Make A Difference</a><br />
+				 	</cfif>
                     <br /><br />
                      <font size=-1> <em>Click on the Save/Print option to generate a PDF that is suitable for printing.</em></font>
                           
