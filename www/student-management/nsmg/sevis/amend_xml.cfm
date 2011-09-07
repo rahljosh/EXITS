@@ -55,13 +55,11 @@
     	smg_hosts h ON s.hostid = h.hostid
 	WHERE 
     	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    AND 
-    	s.sevis_amend_dates = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-    AND 
+	AND 
     	s.ds2019_no LIKE 'N%'
     AND 
     	s.sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-    <!---
+    <!--- Do not include amend records that are pending --->
     AND
     	s.studentID NOT IN 
         (
@@ -72,10 +70,10 @@
             INNER JOIN
             	smg_sevis s ON s.batchID = sh.batchID
             WHERE
-            	type = <cfqueryparam cfsqltype="cf_sql_varchar" value="activate">
-        
+            	type = <cfqueryparam cfsqltype="cf_sql_varchar" value="amend">
+            AND
+            	received = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">        
         )
-    --->
     AND 
     	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
                
