@@ -33,8 +33,8 @@ from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlA
 
 		<cfset unid = CreateUUID()>
 		<cfquery name="inset_soid" datasource="MySQL">
-		insert into smg_students  (soid, intrep, phone, randid, uniqueid, app_current_status)
-					values ('#StudentXMLFile.applications.application[i].XmlAttributes.studentid#',#client.userid#,'523-0944',8675309,'#unid#',5)
+		insert into smg_students  (soid, intrep, phone, randid, uniqueid, app_current_status, companyid)
+					values ('#StudentXMLFile.applications.application[i].XmlAttributes.studentid#',#client.userid#,'523-0944',8675309,'#unid#',5, #client.companyid#)
 		</cfquery>
 		<cfquery name="get_studentid" datasource="mysql">
 		select studentid 
