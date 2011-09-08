@@ -125,6 +125,12 @@
         ORDER BY 
         	historyid DESC
     </cfquery>
+        <!---number kids at home---->
+    <cfquery name="kidsAtHome" dbtype="query">
+    select count(childid)
+    from qGetHostChildren
+    where liveathome = 'yes'
+    </cfquery>
     
 </cfsilent>
 
@@ -135,7 +141,18 @@
 	}
 </script>
 
-<cfoutput>
+<Cfset father=0>
+<cfset mother=0>
+<Cfif qGetHostFamily.fatherfirstname is not ''>
+	<cfset father = 1>
+</Cfif>
+<Cfif qGetHostFamily.motherfirstname is not ''>
+	<cfset mother = 1>
+</Cfif>
+<cfset totalfam = #mother# + #father# + #kidsAtHome.recordcount#>
+
+<Cfoutput>
+
 
 <!----Approve Link---->
 <cfsavecontent variable="approveLink">
@@ -268,7 +285,11 @@
                         </td>
                     </tr>	
                 </table>
-
+				<cfif totalfam eq 1>
+                    <div class="alert" align="Center">
+                    	<h3>Single Person Placement </h3>
+                    </div>
+                </cfif>
 				<cfif VAL(qGetStudentInfo.doubleplace)>
                     <div class="alert" align="Center">
                     	<h3>Double Placement: Two exchange students will be living with this host family. </h3>
