@@ -252,6 +252,22 @@
 			// Reload page
 			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
 		
+		// SET FAMILY AS PERMANENT
+		} else if ( FORM.subAction EQ 'setFamilyAsPermanent' ) {
+			
+			// Set Family As Permanent - Insert into history
+			APPLICATION.CFC.STUDENT.setFamilyAsPermanent(
+				studentID = FORM.studentID,								 
+				changedBy = CLIENT.userID,								 
+				userType = CLIENT.userType
+			 );
+
+			// Set Page Message
+			SESSION.pageMessages.Add("Host Family has been set as permanent.");
+			
+			// Reload page
+			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+
 		// RESUBMIT PLACEMENT
 		} else if ( FORM.subAction EQ 'resubmit' ) {
 			
@@ -389,7 +405,9 @@
     
 </cfsilent>
 
-<!--- DELETE THIS ---><cfset vHostInCompliance = ''>
+<!--- DELETE THIS --->
+<cfset vHostInCompliance = ''>
+<!--- DELETE THIS --->
 
 <script language="javascript">
 	// Display warning when page is ready
@@ -610,6 +628,13 @@
 	
 	}
 	
+	// Modal Confirmation
+	var setFamilyAsPermanent = function() { 
+		
+		test = 'Are you sure you want to set this family as permanent?';
+	
+	}
+	
 	var displayApprovalButton = function(divID) { 
 	
 		if( $("#" + divID).css("display") == "none" ) {
@@ -625,10 +650,74 @@
 		}
 		
 	}	
+	
+	// Modal Confirmation - Approve Placement
+	var approvePlacement = function() { 	
+	
+		$(function() {
+			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+			$( "#dialog:ui-dialog" ).dialog( "destroy" );
+		
+			$( "#dialog-approvePlacement-confirm" ).dialog({
+				resizable: false,
+				height:160,
+				modal: true,
+				buttons: {
+					"Approve": function() {
+						$( this ).dialog( "close" );
+						// Submit Form
+						$("#approvePlacementForm").submit();
+					},
+					Cancel: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		});	
+		
+	}
+	
+	// Modal Confirmation - Set Host Family As Permanent
+	var setFamilyAsPermanent = function(divID) { 	
+	
+		$(function() {
+			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+			$( "#dialog:ui-dialog" ).dialog( "destroy" );
+		
+			$( "#dialog-setFamilyPermanent-confirm" ).dialog({
+				resizable: false,
+				height:160,
+				modal: true,
+				buttons: {
+					"Confirm": function() {
+						$( this ).dialog( "close" );
+						// Submit Form
+						$("#setPermanentForm").submit();
+					},
+					Cancel: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+		});	
+		
+	}
 </script>
 
 <cfoutput>
 
+	<!--- Modal Dialogs --->
+	<!--- Approve Placement - Modal Dialog Box --->
+    <div id="dialog-approvePlacement-confirm" title="Approve this Placement?" class="displayNone"> 
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please confirm below you would like to approve this placement.</p> 
+    </div> 
+    
+    <!--- Set as Permanent - Modal Dialog Box --->
+    <div id="dialog-setFamilyPermanent-confirm" title="Set Host Family as Permanent?" class="displayNone"> 
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please confirm below you would like to set this host family as permanent.</p> 
+    </div> 
+	<!--- End of Modal Dialogs --->
+    
 	<!--- Page Messages --->
     <gui:displayPageMessages 
         pageMessages="#SESSION.pageMessages.GetCollection()#"
@@ -748,17 +837,19 @@
                             
                             <span id="actionButtons" class="displayNone">
                             
-                                <!--- Approve Placement ---->
-                                <form name="approvePlacementForm" id="approvePlacementForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-                                	<input type="hidden" name="subAction" id="subAction" value="approve" />
-                                    <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
-                                    <input type="image" name="submit" src="../../pics/approve.gif" alt="Approve Placement" />
-                                </form>
-                                
-                                <a href="javascript:displayHiddenForm('rejectPlacementForm','actionButtons');"><img src="../../pics/reject.gif" border="0" /></a>
+                                <a href="javascript:approvePlacement();"><img src="../../pics/approve.gif" border="0" alt="Approve Placement" /></a>
+                                &nbsp; &nbsp;
+                                <a href="javascript:displayHiddenForm('rejectPlacementForm','actionButtons');"><img src="../../pics/reject.gif" border="0" alt="Reject Placement" /></a>
                        
                        		</span>
-                                     
+
+							<!--- Approve Placement ---->
+                            <form name="approvePlacementForm" id="approvePlacementForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
+                                <input type="hidden" name="subAction" id="subAction" value="approve" />
+                                <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
+                                <input type="image" name="submit" src="../../pics/approve.gif" alt="Approve Placement" />
+                            </form>
+
 							<!--- Reject Placement ---->
                             <form name="rejectPlacementForm" id="rejectPlacementForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
                                 <input type="hidden" name="subAction" id="subAction" value="reject" />
@@ -836,6 +927,12 @@
         </tr>                                                                                                
     </table>                                                
 
+	<!--- Set Family as Permanent --->
+    <form name="setPermanent" id="setPermanentForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
+    	<input type="hidden" name="subAction" id="subAction" value="setFamilyAsPermanent" />
+        <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
+	</form>            
+
 	<!--- Placement Form --->   
     <cfform name="placementMgmt" id="placementMgmt" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <!--- Update Information Action --->
@@ -862,7 +959,11 @@
                             |
                             <a href="javascript:displayUpdateField('divHostID','hostID');">Update</a> 
 							| 
-                            <a href="javascript:displayHiddenForm('unplaceStudentForm');">Unplace</a> 
+                            <a href="javascript:displayHiddenForm('unplaceStudentForm');">Unplace Student</a> 
+                            <cfif qGetStudentInfo.welcome_family EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
+                                |
+                                <a href="javascript:setFamilyAsPermanent();">Set as Permanent</a> 
+                            </cfif>
                             ]                                
                         </div>
                     </cfif>
