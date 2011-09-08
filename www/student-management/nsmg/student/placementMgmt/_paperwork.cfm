@@ -252,17 +252,17 @@
     <gui:displayPageMessages 
         pageMessages="#SESSION.pageMessages.GetCollection()#"
         messageType="tableSection"
-        width="700px"
+        width="90%"
         />
     
     <!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
         messageType="tableSection"
-        width="700px"
+        width="90%"
         />
 
-    <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center">            
+    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">            
         <tr class="reportCenterTitle">
             <th>PLACEMENT PAPERWORK</th>
         </tr>
@@ -276,7 +276,7 @@
         <cfswitch expression="#vPlacementStatus#">
             
             <cfcase value="unplaced">
-                <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
+                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
                     <tr>
                         <td align="center" style="color:##3b5998;">
                             Student is unplaced, please place the student first in order to have access to the paperwork section.
@@ -286,7 +286,7 @@
             </cfcase>
             
             <cfcase value="pending">
-                <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
+                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
                     <tr>
                         <td align="center" style="color:##3b5998;">
                             Placement has not been approved. You are going to have acess to this section once the placement has been approved.
@@ -299,7 +299,7 @@
                 
 				<!--- Single Placement Paperwork --->
                 <cfif vTotalFamilyMembers EQ 1 AND qGetProgramInfo.seasonid GT 7>
-                    <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center"> 
+                    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                         <tr>
                             <td colspan="3" class="singlePlacementAlert">
                                 <h1>Single Person Placement - Additional screening will be required.</h1>
@@ -308,7 +308,7 @@
                         </tr>
                     </table>
                     
-                    <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center"> 
+                    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                         <tr bgcolor="##edeff4">
                             <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
                             <td class="reportTitleLeftClean" width="55%">Single Placement Paperwork</td>
@@ -316,7 +316,7 @@
                         </tr>
 					</table>
                     
-                    <table width="700px" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                         
+                    <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                         
                         <!--- Single Person Placement Verification --->
                         <tr> 
                             <td width="15%" class="paperworkLeftColumn">
@@ -376,7 +376,7 @@
                 </cfif> 
                 <!--- End of Single Placement Paperwork --->
 
-				<table width="700px" cellpadding="2" cellspacing="0" class="section" align="center"> 
+				<table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
                         <td class="reportTitleLeftClean" width="55%">Paperwork</td>
@@ -384,7 +384,7 @@
                     </tr>
                 </table>
                 
-                <table width="700px" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
+                <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
 
                     <!--- PIS Approved --->
                     <tr> 
@@ -577,7 +577,7 @@
                     </tr>
 				</table>
                 
-                <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center">                 
+                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">                 
                     <!--- Arrival Date Compliance --->
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
@@ -595,7 +595,7 @@
                     </tr>
                 </table>
                 
-                <table width="700px" cellpadding="2" cellspacing="0" class="section paperwork" align="center">     
+                <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">     
                     <!--- School Acceptance Form --->
                     <tr> 
                         <td width="15%" class="paperworkLeftColumn">
@@ -619,7 +619,7 @@
                     </tr>				
 				</table>
                 
-                <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center"> 
+                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <!--- CBC Forms --->
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
@@ -628,7 +628,7 @@
                     </tr>
     			</table>
                 
-                <table width="700px" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
+                <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
                     <!--- Host Father --->
                     <tr> 
                         <td width="15%" class="paperworkLeftColumn">
@@ -654,7 +654,7 @@
                     </tr>
 				</table>
                 
-                <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center">                    
+                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">                    
                     <!--- Host Members --->
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
@@ -663,7 +663,7 @@
                     </tr>
                 </table>
                 
-                <table width="700px" cellpadding="2" cellspacing="0" class="section paperwork" align="center">
+                <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">
                     <cfloop query="qGetEligibleCBCFamilyMembers">
                         <tr> 
                             <td width="15%" class="paperworkLeftColumn">
@@ -682,14 +682,14 @@
                     </cfif>
                </table>
                
-               <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center"> 
+               <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
                         <td class="reportTitleLeftClean" width="85%">Student Application</td>
                     </tr>
                </table>
                
-              <table width="700px" cellpadding="2" cellspacing="0" class="section paperwork" align="center">  	
+              <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">  	
                     <!--- Original Student Application to Host Family ---->
                     <tr>
                     	<td width="15%" class="paperworkLeftColumn">
@@ -722,7 +722,7 @@
                     </tr>
 				</table>   
                 
-                <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center">
+                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
                         <td class="reportTitleLeftClean" width="55%">Arrival Orientation</td>
@@ -730,7 +730,7 @@
                     </tr>
                </table>
                
-               <table width="700px" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                    
+               <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                    
                     <!--- Student Orientation --->
                     <tr> 
                         <td width="15%" class="paperworkLeftColumn">
@@ -769,7 +769,7 @@
                 </table>
     
                 <!--- Form Buttons --->  
-                <table width="700px" id="tableDisplaySaveButton" border="0" cellpadding="2" cellspacing="0" class="section editPage displayNone" align="center" style="padding:5px;">
+                <table width="90%" id="tableDisplaySaveButton" border="0" cellpadding="2" cellspacing="0" class="section editPage displayNone" align="center" style="padding:5px;">
                     <tr>
                         <td align="center"><input name="Submit" type="image" src="../../student_app/pics/save.gif" border="0" alt="Save"/></td>
                     </tr>                

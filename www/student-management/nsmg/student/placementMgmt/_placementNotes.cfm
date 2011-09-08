@@ -52,17 +52,17 @@
     <gui:displayPageMessages 
         pageMessages="#SESSION.pageMessages.GetCollection()#"
         messageType="tableSection"
-        width="700px"
+        width="90%"
         />
     
     <!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
         messageType="tableSection"
-        width="700px"
+        width="90%"
         />
 
-    <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center">            
+    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">            
         <tr class="reportCenterTitle">
             <th>PLACEMENT NOTES</th>
         </tr>
@@ -75,7 +75,7 @@
         <cfswitch expression="#vPlacementStatus#">
             
             <cfcase value="unplaced">
-                <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
+                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
                     <tr>
                         <td align="center" style="color:##3b5998;">
                             Student is unplaced, please place the student first in order to have access to the placement notes section.
@@ -85,7 +85,7 @@
             </cfcase>
             
             <cfcase value="pending">
-                <table width="700px" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
+                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
                     <tr>
                         <td align="center" style="color:##3b5998;">
                             Placement has not been approved. You are going to have acess to this section once the placement has been approved.
@@ -96,7 +96,7 @@
             
             <cfdefaultcase>
                 
-               	<table width="700px" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
+               	<table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
                     <tr>
                         <td class="placementMgmtInfo" align="center">
                             <label class="fieldCenterTitle" for="placement_notes">
@@ -109,7 +109,7 @@
                 </table>
                 
                 <!--- Form Buttons --->  
-                <table width="700px" id="tableDisplaySaveButton" border="0" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:5px;">
+                <table width="90%" id="tableDisplaySaveButton" border="0" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:5px;">
                     <tr>
                         <td align="center"><input name="Submit" type="image" src="../../student_app/pics/save.gif" border="0" alt="Save"/></td>
                     </tr>                
