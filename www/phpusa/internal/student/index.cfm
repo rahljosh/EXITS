@@ -35,6 +35,13 @@
     
         </cfcase>
     
+    	<!--- Letters --->
+        <cfcase value="placementInfoSheetBoard" delimiters=",">
+    
+            <!--- Include template --->
+            <cfinclude template="letters/_#action#.cfm" />
+    
+        </cfcase>
     
         <!--- The default case is the login page --->
         <cfdefaultcase>

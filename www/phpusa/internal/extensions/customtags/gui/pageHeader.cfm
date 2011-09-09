@@ -49,6 +49,12 @@
         default="#CLIENT.companyID#"
 		/>
 
+	<cfparam 
+		name="ATTRIBUTES.imagePath"
+		type="string"
+        default="../"
+		/>
+
 </cfsilent>
 
 <!--- 
@@ -75,17 +81,17 @@
                     <meta name="Author" content="Private High School Program">
                     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
                     <title>Private High School Program</title>
-                    <link rel="shortcut icon" href="../pics/favicon.ico" type="image/x-icon" />
-                    <link rel="stylesheet" href="../phpusa.css" type="text/css">
-                    <link rel="stylesheet" href="../linked/css/colorBox.css" type="text/css"> <!-- Color Box -->
-                    <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css"> <!-- Base Style -->
+                    <link rel="shortcut icon" href="#ATTRIBUTES.imagePath#pics/favicon.ico" type="image/x-icon" />
+                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#phpusa.css" type="text/css">
+                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#linked/css/colorBox.css" type="text/css"> <!-- Color Box -->
+                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#linked/css/baseStyle.css" type="text/css"> <!-- Base Style -->
                     <cfoutput>
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
                         <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
                     </cfoutput>
-                    <script type="text/javascript" src="../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
-                    <script type="text/javascript" src="../linked/js/basescript.js"></script> <!-- Base Script -->
+                    <script type="text/javascript" src="#ATTRIBUTES.imagePath#linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
+                    <script type="text/javascript" src="#ATTRIBUTES.imagePath#linked/js/basescript.js"></script> <!-- Base Script -->
                 </head>
                 <body>
 
@@ -108,15 +114,59 @@
             </cfcase>
 
     
-            <!--- Application Header --->
-            <cfcase value="application">
-
+            <!--- Email Header --->
+            <cfcase value="email">
+                <style type="text/css">
+	                <!--
+                	table,tr,td				{font-family:Arial, Helvetica, sans-serif;}
+					.smlink         		{font-size: 10px;}
+					.section        		{border-top: 1px solid ##c6c6c6;; border-right: 1px solid ##c6c6c6;border-left: 1px solid ##c6c6c6; border-bottom: 0px; background: ##ffffff;}
+					.sideborders			{border-right: 1px solid ##c6c6c6;border-left: 1px solid ##c6c6c6; background: ##ffffff;}
+					.sectionFoot    		{border-bottom: 1px solid ##BB9E66; background: ##FAF7F1;line-height:1px;font-size:2px;}
+					.sectionBottomDivider 	{border-bottom: 1px solid ##BB9E66; background: ##FAF7F1;line-height:1px;}
+					.sectionTopDivider 		{border-top: 1px solid ##BB9E66; background: ##FAF7F1;line-height:1px;}
+					.sectionSubHead			{font-size:11px;font-weight:bold;}
+					.thin-border			{border: 1px solid ##999; width:820px;}
+					.thin-border-bottom		{border-bottom: 1px solid ##000000;}
+					-->
+                </style>
+                
+                <div class="thin-border">
+                
+                    <table width="800px" background="#APPLICATION.PATH.PHP.phpusa#pics/email_textured_background.png">
+                        <tr>
+                        	<td><img src="#APPLICATION.site_url#/images/#CLIENT.companyid#_short_profile_header.jpg" /></td>
+                    	</tr>
+                    	<tr><td colspan="2"><img src="#APPLICATION.PATH.PHP.phpusa#pics/#CLIENT.companyid#_px.png" height="12" width="100%"></td></tr>
+                    </table>                                                            
+                    
+                    <table width="800px">
+                    	<tr>
+                    		<td>
             </cfcase>
 
 
             <!--- Print Header --->
             <cfcase value="Print">
-
+                <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+                <html>
+                <head>
+                    <meta name="Author" content="Private High School Program">
+                    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+                    <title>Private High School Program</title>
+                    <link rel="shortcut icon" href="#ATTRIBUTES.imagePath#pics/favicon.ico" type="image/x-icon" />
+                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#phpusa.css" type="text/css">
+                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#linked/css/colorBox.css" type="text/css"> <!-- Color Box -->
+                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#linked/css/baseStyle.css" type="text/css"> <!-- Base Style -->
+                    <cfoutput>
+                        <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
+                        <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
+                        <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+                    </cfoutput>
+                    <script type="text/javascript" src="#ATTRIBUTES.imagePath#linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
+                    <script type="text/javascript" src="#ATTRIBUTES.imagePath#linked/js/basescript.js"></script> <!-- Base Script -->
+                </head>
+                <body>
 			</cfcase>
             
             

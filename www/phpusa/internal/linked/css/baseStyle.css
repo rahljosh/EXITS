@@ -57,6 +57,95 @@ div.pageMessages p em {
 
 
 /********************************************
+	PLACEMENT LETTER
+********************************************/
+.placementLetterTable {
+	font-size:1em;
+	width:810px;
+	padding:5px;
+	margin-top:10px;
+	margin-bottom:10px;
+	background-color:#FFF;
+	border: 1px solid #999;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+.placementLetterTableNoBorder {
+	width:100%;	
+	font-size:1em;
+	background-color:#FFF;
+	font-family:Arial, Helvetica, sans-serif;
+}
+
+.placementLetterBlueTitle {
+	color:#FFF;
+	width:100%;
+	padding:5px;
+	text-align:center;
+	font-weight:bold;
+	min-height:20px;
+	background-color:#1e2456;
+	text-transform:uppercase;
+}
+
+.placementLetterButtons {
+	margin-top:10px;
+	padding:10px 0px 5px 0px;
+	border-top:1px solid #1e2456;
+}
+
+.placementLetterTitle {
+	color:#999;
+	font-size:1.6em;
+	font-weight:bold;
+	padding:0px 3px 3px 0px;
+}
+
+.placementLetterInformation {
+	font-size:1.6em;
+	font-weight:bold;
+	padding:0px 3px 3px 0px;
+}
+
+.placementLetterDetail {
+	color:#999;
+	font-weight:bold;
+	padding:0px 3px 3px 0px;
+}
+
+.placementLetterTable a {
+	color:#0854a0;
+	text-decoration:none;
+}
+
+a.placementLetterShareRoom {
+	color: #0854a0;
+	text-decoration:none;
+	padding-right: 20px;
+	background:url('../../pics/pisShareRoomIcon.png') center right no-repeat;
+}
+
+a.placementLetterWikipedia {
+	color: #0854a0;
+	text-decoration:none;
+	padding-right: 20px;
+	background:url('../../pics/pisWikipediaIcon.png') center right no-repeat;
+}
+
+a.placementLetterAirport {
+	color: #0854a0;
+	text-decoration:none;
+	padding-right: 20px;
+	background:url('../../pics/pisAirportIcon.png') center right no-repeat;
+}
+
+/********************************************
+	END OF PLACEMENT LETTER
+********************************************/
+
+
+
+/********************************************
 	ERROR MESSAGE
 ********************************************/
 div.errors { 
@@ -150,6 +239,28 @@ div.errors ol {
 	width:250px;
 	border:1px solid #021157;	
 }
+
+.largeTextArea {
+	height: 60px;
+	width : 300px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.xLargeTextArea {
+	height: 80px;
+	width : 350px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.xxLargeTextArea {
+	height: 130px;
+	width : 450px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
 
 /********************************************
 	END OF FORM FIELDS

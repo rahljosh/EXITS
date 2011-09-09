@@ -92,16 +92,32 @@
             </cfcase>
 
 
-            <!--- Print Footer --->
-            <cfcase value="print">
-            
-                
+            <!--- Email Footer --->
+            <cfcase value="email">
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <table width="800px">
+                        <tr bgcolor="#CLIENT.companyColor#">
+                            <td width="100%" align="center" style="color:##FFFFFF; font-size:-2;">
+                                <a href="#APPLICATION.site_url#" style="color:##FFF; text-decoration:none;">#APPLICATION.site_url#</a>
+                                &nbsp; &middot; &nbsp;
+                                Toll-free: #CLIENT.companyToll_free#
+                                &nbsp; &middot; &nbsp;
+                                Local: #CLIENT.companyPhone# 
+                                &nbsp; &middot; &nbsp;
+                                Fax: #CLIENT.companyFax#
+                            </td>
+                        </tr>
+                    </table>
+                    
+                </div>
             </cfcase>
 
     		
-            <!--- Email Footer --->
-            <cfcase value="email">
-
+            <!--- Print Footer --->
+            <cfcase value="print">
 
             </cfcase>
             

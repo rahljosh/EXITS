@@ -420,218 +420,220 @@
                     </cfif>
                     
                     <form name="flightInformation" action="#CGI.SCRIPT_NAME#" method="post">
-                    <input type="hidden" name="subAction" value="update" />
-                    <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
-                    <input type="hidden" name="programID" value="#qGetStudentInfo.programID#" />
+                        <input type="hidden" name="subAction" value="update" />
+                        <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
+                        <input type="hidden" name="programID" value="#qGetStudentInfo.programID#" />
                     
-                    <!--- A R R I V A L    I N F O R M A T I O N --->
-                    <table align="center" width="98%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
-                        <th colspan="11" bgcolor="##ACB9CD"> A R R I V A L &nbsp;&nbsp; T O &nbsp; &nbsp; T H E  &nbsp; &nbsp; U S A</th>
-                    
-                        <tr bgcolor="##ACB9CD">
-                            <td colspan="11">
-                                Arrival/Departure Airport: <cfif LEN(qGetStudentInfo.airport_city)>#qGetStudentInfo.airport_city# <cfelse> n/a </cfif>
-                                - Airport Code: <cfif LEN(qGetStudentInfo.major_air_code)>#qGetStudentInfo.major_air_code# <cfelse> n/a </cfif>
-                            </td>
-                        </tr> 
+						<!--- A R R I V A L    I N F O R M A T I O N --->
+                        <table align="center" width="98%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
+                            <th colspan="11" bgcolor="##ACB9CD"> A R R I V A L &nbsp;&nbsp; T O &nbsp; &nbsp; T H E  &nbsp; &nbsp; U S A</th>
                         
-                        <tr bgcolor="##ACB9CD">
-                            <td colspan="11">
-                                School: #qGetStudentInfo.schoolName# <br />
-                                School Start Date: <cfif LEN(qGetSchoolDates.startDate)>#qGetSchoolDates.startDate# <cfelse> n/a </cfif>
-                            </td>
-                        </tr> 
-                        
-                        <tr bgcolor="##ACB9CD">
-                            <!--- Delete Option --->    
-                            <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>                            
-                                <th><font size="-2">Delete</font></th>
-                            </cfif>                                    
-                            <th>Date <br /> (mm/dd/yyyy)</th>
-                            <th>Depart <br /> City</th>
-                            <th>Depart <br /> Airport Code</th>
-                            <th>Arrive <br /> City</th>
-                            <th>Arrive <br /> Airport Code</th>
-                            <th>Flight <br /> Number</th>
-                            <th>Depart Time <br /> (12:00 AM)</th>
-                            <th>Arrive Time <br /> (12:00 AM)</th>
-                            <th>Overnight <br /> Flight</th>
-                            <th><font size="-2">Status</font></th>
-                        </tr>
-                        
-                        <!--- EDIT FLIGHT INFORMATION --->                
-                        <input type="hidden" name="arrivalCount" value='#qGetArrival.recordcount#'>
-                        <cfloop query="qGetArrival">
-                            <input type="hidden" name="incomingflightID#qGetArrival.currentrow#" value="#flightID#">
-                            <tr bgcolor="##D5DCE5" align="center">                        
-                                <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
-                                    <td align="center">
-                                        <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightID=#flightID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
-                                    </td>
-                                </cfif>                                
-                                <td><input type="text" name="incomingDepartureDate#qGetArrival.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="smallField datePicker" maxlength="10"></td>
-                                <td><input type="text" name="incomingDepartureCity#qGetArrival.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#"></td>
-                                <td><input type="text" name="incomingDepartureAirCode#qGetArrival.currentrow#" class="fieldSize40" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                <td><input type="text" name="incomingArrivalCity#qGetArrival.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#"></td>
-                                <td><input type="text" name="incomingArrivalAirCode#qGetArrival.currentrow#" class="fieldSize40" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                <td><input type="text" name="incomingFlightNumber#qGetArrival.currentrow#" class="fieldSize60" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                <td><input type="text" name="incomingDepartureTime#qGetArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
-                                <td><input type="text" name="incomingArrivalTime#qGetArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></td>
-                                <td align="center"><input type="checkbox" name="incomingOvernight#qGetArrival.currentrow#" value="1" <cfif VAL(qGetArrival.overnight)> checked="checked" </cfif> ></td>
-                                <td align="center">
-                                    <cfif LEN(qGetArrival.flight_number)>
-                                        <a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(qGetArrival.flight_number,2)#&flt_num=#RemoveChars(qGetArrival.flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a>
-                                    <cfelse>
-                                        n/a
-                                    </cfif>
+                            <tr bgcolor="##ACB9CD">
+                                <td colspan="11">
+                                    Arrival/Departure Airport: <cfif LEN(qGetStudentInfo.airport_city)>#qGetStudentInfo.airport_city# <cfelse> n/a </cfif>
+                                    - Airport Code: <cfif LEN(qGetStudentInfo.major_air_code)>#qGetStudentInfo.major_air_code# <cfelse> n/a </cfif>
                                 </td>
-                            </tr>	
-                        </cfloop>
-                        
-                        <!--- NEW FLIGHT INFORMATION --->
-                        <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
+                            </tr> 
                             
-                            <cfloop from="1" to="4" index="i"> 
-                                <tr bgcolor="##D5DCE5" align="center" class="trNewAYPArrival <cfif qGetArrival.recordCount> displayNone </cfif>">
-                                    <td>&nbsp;</td>
-                                    <td><input type="text" name="incomingNewDepartureDate#i#" class="smallField datePicker" maxlength="10" onChange="return checkDate(this)"></td>
-                                    <td><input type="text" name="incomingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
-                                    <td><input type="text" name="incomingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                    <td><input type="text" name="incomingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
-                                    <td><input type="text" name="incomingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                    <td><input type="text" name="incomingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                    <td><input type="text" name="incomingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
-                                    <td><input type="text" name="incomingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
-                                    <td align="center"><input type="checkbox" name="incomingNewOvernight#i#" value="1"></td>
-                                    <td align="center">&nbsp;</td>
-                                </tr>
-                            </cfloop>
-                    
-                            <cfif qGetArrival.recordCount>
-                                <tr bgcolor="##D5DCE5"><td colspan="11" align="center"><a href="javascript:displayClass('trNewAYPArrival');">Click here to add more legs</a></td></tr>
-                            </cfif>
+                            <tr bgcolor="##ACB9CD">
+                                <td colspan="11">
+                                    School: #qGetStudentInfo.schoolName# <br />
+                                    School Start Date: <cfif LEN(qGetSchoolDates.startDate)>#qGetSchoolDates.startDate# <cfelse> n/a </cfif>
+                                </td>
+                            </tr> 
                             
-                        </cfif>
-                        
-                        <cfif qGetArrival.recordCount>
-                            <tr bgcolor="##D5DCE5">
-                                <td colspan="11" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
+                            <tr bgcolor="##ACB9CD">
+                                <!--- Delete Option --->    
+                                <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>                            
+                                    <th><font size="-2">Delete</font></th>
+                                </cfif>                                    
+                                <th>Date <br /> (mm/dd/yyyy)</th>
+                                <th>Depart <br /> City</th>
+                                <th>Depart <br /> Airport Code</th>
+                                <th>Arrive <br /> City</th>
+                                <th>Arrive <br /> Airport Code</th>
+                                <th>Flight <br /> Number</th>
+                                <th>Depart Time <br /> (12:00 AM)</th>
+                                <th>Arrive Time <br /> (12:00 AM)</th>
+                                <th>Overnight <br /> Flight</th>
+                                <th><font size="-2">Status</font></th>
                             </tr>
-                        </cfif>
-                        
-                    </table>
-                    <br />
-                    
-                    
-                    <!--- N O T E S --->            
-                    <table align="center" width="98%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
-                        <th bgcolor="##ACB9CD"> N O T E S &nbsp; O N &nbsp; T H I S &nbsp; F L I G H T &nbsp; I N F O R M A T I O N </tr>
-                        <tr bgcolor="##D5DCE5">
-                            <td align="center"><textarea cols="75" rows="3" name="flightNotes" wrap="VIRTUAL">#qGetStudentInfo.flight_info_notes#</textarea></td>
-                        </tr>
-                    </table>
-                    <br />
-                    
-                    
-                    <!--- D E P A R T U R E      I N F O R M A T I O N    --->
-                    <table align="center" width="98%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
-                        <th colspan="11" bgcolor="##FDCEAC">D E P A R T U R E &nbsp;&nbsp; F R O M &nbsp; &nbsp; U S A  &nbsp; &nbsp; I N F O R M A T I O N</th>
-                    
-                        <tr bgcolor="##FDCEAC">
-                            <td colspan="11">
-                                School End Date: <cfif LEN(qGetSchoolDates.endDate)>#qGetSchoolDates.endDate# <cfelse> n/a </cfif>
-                            </td>
-                        </tr> 
-                        
-                        <tr bgcolor="##FDCEAC">
-                            <!--- Delete Option --->    
-                            <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>                            
-                                <th><font size="-2">Delete</font></th>
-                            </cfif>                                    
-                            <th>Date <br /> (mm/dd/yyyy)</th>
-                            <th>Depart <br /> City</th>
-                            <th>Depart <br /> Airport Code</th>
-                            <th>Arrive <br /> City</th>
-                            <th>Arrive <br /> Airport Code</th>
-                            <th>Flight <br /> Number</th>
-                            <th>Depart Time <br /> (12:00 AM)</th>
-                            <th>Arrive Time <br /> (12:00 AM)</th>
-                            <th>Overnight <br /> Flight</th>
-                            <th><font size="-2">Status</font></th>
-                        </tr>
-                    
-                        <!--- EDIT FLIGHT INFORMATION --->
-                        <input type="hidden" name="departureCount" value='#qGetDeparture.recordcount#'>
-                    
-                        <cfloop query="qGetDeparture">	
-                            <input type="hidden" name="outgoingflightID#qGetDeparture.currentrow#" value="#flightID#">
-                            <tr bgcolor="##FEE6D3" align="center">                        
-                                <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
+                            
+                            <!--- EDIT FLIGHT INFORMATION --->                
+                            <input type="hidden" name="arrivalCount" value='#qGetArrival.recordcount#'>
+                            <cfloop query="qGetArrival">
+                                <input type="hidden" name="incomingflightID#qGetArrival.currentrow#" value="#flightID#">
+                                <tr bgcolor="##D5DCE5" align="center">                        
+                                    <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
+                                        <td align="center">
+                                            <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightID=#flightID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
+                                        </td>
+                                    </cfif>                                
+                                    <td><input type="text" name="incomingDepartureDate#qGetArrival.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="smallField datePicker" maxlength="10"></td>
+                                    <td><input type="text" name="incomingDepartureCity#qGetArrival.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#"></td>
+                                    <td><input type="text" name="incomingDepartureAirCode#qGetArrival.currentrow#" class="fieldSize40" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                    <td><input type="text" name="incomingArrivalCity#qGetArrival.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#"></td>
+                                    <td><input type="text" name="incomingArrivalAirCode#qGetArrival.currentrow#" class="fieldSize40" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                    <td><input type="text" name="incomingFlightNumber#qGetArrival.currentrow#" class="fieldSize60" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                    <td><input type="text" name="incomingDepartureTime#qGetArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
+                                    <td><input type="text" name="incomingArrivalTime#qGetArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></td>
+                                    <td align="center"><input type="checkbox" name="incomingOvernight#qGetArrival.currentrow#" value="1" <cfif VAL(qGetArrival.overnight)> checked="checked" </cfif> ></td>
                                     <td align="center">
-                                        <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightID=#flightID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
+                                        <cfif LEN(qGetArrival.flight_number)>
+                                            <a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(qGetArrival.flight_number,2)#&flt_num=#RemoveChars(qGetArrival.flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a>
+                                        <cfelse>
+                                            n/a
+                                        </cfif>
                                     </td>
+                                </tr>	
+                            </cfloop>
+                            
+                            <!--- NEW FLIGHT INFORMATION --->
+                            <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
+                                
+                                <cfloop from="1" to="4" index="i"> 
+                                    <tr bgcolor="##D5DCE5" align="center" class="trNewAYPArrival <cfif qGetArrival.recordCount> displayNone </cfif>">
+                                        <td>&nbsp;</td>
+                                        <td><input type="text" name="incomingNewDepartureDate#i#" class="smallField datePicker" maxlength="10" onChange="return checkDate(this)"></td>
+                                        <td><input type="text" name="incomingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
+                                        <td><input type="text" name="incomingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                        <td><input type="text" name="incomingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
+                                        <td><input type="text" name="incomingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                        <td><input type="text" name="incomingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                        <td><input type="text" name="incomingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
+                                        <td><input type="text" name="incomingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
+                                        <td align="center"><input type="checkbox" name="incomingNewOvernight#i#" value="1"></td>
+                                        <td align="center">&nbsp;</td>
+                                    </tr>
+                                </cfloop>
+                        
+                                <cfif qGetArrival.recordCount>
+                                    <tr bgcolor="##D5DCE5"><td colspan="11" align="center"><a href="javascript:displayClass('trNewAYPArrival');">Click here to add more legs</a></td></tr>
                                 </cfif>
-                                <td><input type="text" name="outgoingDepartureDate#qGetDeparture.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="smallField datePicker" maxlength="10"></td>
-                                <td><input type="text" name="outgoingDepartureCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#"></td>
-                                <td><input type="text" name="outgoingDepartureAirCode#qGetDeparture.currentrow#" class="fieldSize40" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                <td><input type="text" name="outgoingArrivalCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#"></td>
-                                <td><input type="text" name="outgoingArrivalAirCode#qGetDeparture.currentrow#" class="fieldSize40" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                <td><input type="text" name="outgoingFlightNumber#qGetDeparture.currentrow#" class="fieldSize60" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                <td><input type="text" name="outgoingDepartureTime#qGetDeparture.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
-                                <td><input type="text" name="outgoingArrivalTime#qGetDeparture.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></td>
-                                <td align="center"><input type="checkbox" name="outgoingOvernight#qGetDeparture.currentrow#" value="1" <cfif VAL(qGetDeparture.overnight)> checked="checked" </cfif> ></td>
-                                <td align="center">
-                                    <cfif LEN(qGetDeparture.flight_number)>
-                                        <a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(qGetDeparture.flight_number,2)#&flt_num=#RemoveChars(qGetDeparture.flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a>
-                                    <cfelse>
-                                        n/a
-                                    </cfif>
-                                </td>
-                            </tr>	
-                        </cfloop>
-                    
-                        <!--- NEW FLIGHT INFORMATION --->
-                        <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
-                            
-                            <cfloop from="1" to="4" index="i"> 
-                                <tr bgcolor="##FEE6D3" align="center" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
-                                    <td>&nbsp;</td>
-                                    <td><input type="text" name="outgoingNewDepartureDate#i#" class="smallField datePicker" maxlength="10"></td>
-                                    <td><input type="text" name="outgoingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
-                                    <td><input type="text" name="outgoingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                    <td><input type="text" name="outgoingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
-                                    <td><input type="text" name="outgoingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                    <td><input type="text" name="outgoingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                    <td><input type="text" name="outgoingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
-                                    <td><input type="text" name="outgoingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
-                                    <td align="center"><input type="checkbox" name="outgoingNewOvernight#i#" value="1"></td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </cfloop>
-                        
-                            <cfif qGetDeparture.recordCount>
-                                <tr bgcolor="##FEE6D3"><td colspan="11" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
+                                
                             </cfif>
                             
-                        </cfif>
+                            <cfif qGetArrival.recordCount>
+                                <tr bgcolor="##D5DCE5">
+                                    <td colspan="11" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
+                                </tr>
+                            </cfif>
+                            
+                        </table>
+                        <br />
                         
-                        <cfif qGetDeparture.recordCount>
-                            <tr bgcolor="##FEE6D3">
-                                <td colspan="11" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
-                            </tr>
-                        </cfif>
-                       
-                    </table>
-                    <br />
-
-                    <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType) AND VAL(qGetStudentInfo.recordCount)>
-                        <table cellpadding="4" cellspacing="0" width="98%" class="section" align="center" style="border:1px solid ##CCC">
-                            <tr>
-                                <td align="center"><input name="Submit" type="image" src="../pics/update.gif" border="0" alt=" update ">&nbsp;</td>
+                        
+                        <!--- N O T E S --->            
+                        <table align="center" width="98%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
+                            <th bgcolor="##ACB9CD"> N O T E S &nbsp; O N &nbsp; T H I S &nbsp; F L I G H T &nbsp; I N F O R M A T I O N </tr>
+                            <tr bgcolor="##D5DCE5">
+                                <td align="center"><textarea cols="75" rows="3" name="flightNotes" wrap="VIRTUAL">#qGetStudentInfo.flight_info_notes#</textarea></td>
                             </tr>
                         </table>
-                    </cfif>
-
+                        <br />
+                        
+                        
+                        <!--- D E P A R T U R E      I N F O R M A T I O N    --->
+                        <table align="center" width="98%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
+                            <th colspan="11" bgcolor="##FDCEAC">D E P A R T U R E &nbsp;&nbsp; F R O M &nbsp; &nbsp; U S A  &nbsp; &nbsp; I N F O R M A T I O N</th>
+                        
+                            <tr bgcolor="##FDCEAC">
+                                <td colspan="11">
+                                    School End Date: <cfif LEN(qGetSchoolDates.endDate)>#qGetSchoolDates.endDate# <cfelse> n/a </cfif>
+                                </td>
+                            </tr> 
+                            
+                            <tr bgcolor="##FDCEAC">
+                                <!--- Delete Option --->    
+                                <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>                            
+                                    <th><font size="-2">Delete</font></th>
+                                </cfif>                                    
+                                <th>Date <br /> (mm/dd/yyyy)</th>
+                                <th>Depart <br /> City</th>
+                                <th>Depart <br /> Airport Code</th>
+                                <th>Arrive <br /> City</th>
+                                <th>Arrive <br /> Airport Code</th>
+                                <th>Flight <br /> Number</th>
+                                <th>Depart Time <br /> (12:00 AM)</th>
+                                <th>Arrive Time <br /> (12:00 AM)</th>
+                                <th>Overnight <br /> Flight</th>
+                                <th><font size="-2">Status</font></th>
+                            </tr>
+                        
+                            <!--- EDIT FLIGHT INFORMATION --->
+                            <input type="hidden" name="departureCount" value='#qGetDeparture.recordcount#'>
+                        
+                            <cfloop query="qGetDeparture">	
+                                <input type="hidden" name="outgoingflightID#qGetDeparture.currentrow#" value="#flightID#">
+                                <tr bgcolor="##FEE6D3" align="center">                        
+                                    <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
+                                        <td align="center">
+                                            <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightID=#flightID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
+                                        </td>
+                                    </cfif>
+                                    <td><input type="text" name="outgoingDepartureDate#qGetDeparture.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="smallField datePicker" maxlength="10"></td>
+                                    <td><input type="text" name="outgoingDepartureCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#"></td>
+                                    <td><input type="text" name="outgoingDepartureAirCode#qGetDeparture.currentrow#" class="fieldSize40" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                    <td><input type="text" name="outgoingArrivalCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#"></td>
+                                    <td><input type="text" name="outgoingArrivalAirCode#qGetDeparture.currentrow#" class="fieldSize40" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                    <td><input type="text" name="outgoingFlightNumber#qGetDeparture.currentrow#" class="fieldSize60" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                    <td><input type="text" name="outgoingDepartureTime#qGetDeparture.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
+                                    <td><input type="text" name="outgoingArrivalTime#qGetDeparture.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></td>
+                                    <td align="center"><input type="checkbox" name="outgoingOvernight#qGetDeparture.currentrow#" value="1" <cfif VAL(qGetDeparture.overnight)> checked="checked" </cfif> ></td>
+                                    <td align="center">
+                                        <cfif LEN(qGetDeparture.flight_number)>
+                                            <a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(qGetDeparture.flight_number,2)#&flt_num=#RemoveChars(qGetDeparture.flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a>
+                                        <cfelse>
+                                            n/a
+                                        </cfif>
+                                    </td>
+                                </tr>	
+                            </cfloop>
+                        
+                            <!--- NEW FLIGHT INFORMATION --->
+                            <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
+                                
+                                <cfloop from="1" to="4" index="i"> 
+                                    <tr bgcolor="##FEE6D3" align="center" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
+                                        <td>&nbsp;</td>
+                                        <td><input type="text" name="outgoingNewDepartureDate#i#" class="smallField datePicker" maxlength="10"></td>
+                                        <td><input type="text" name="outgoingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
+                                        <td><input type="text" name="outgoingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                        <td><input type="text" name="outgoingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
+                                        <td><input type="text" name="outgoingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                        <td><input type="text" name="outgoingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                        <td><input type="text" name="outgoingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
+                                        <td><input type="text" name="outgoingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
+                                        <td align="center"><input type="checkbox" name="outgoingNewOvernight#i#" value="1"></td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                </cfloop>
+                            
+                                <cfif qGetDeparture.recordCount>
+                                    <tr bgcolor="##FEE6D3"><td colspan="11" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
+                                </cfif>
+                                
+                            </cfif>
+                            
+                            <cfif qGetDeparture.recordCount>
+                                <tr bgcolor="##FEE6D3">
+                                    <td colspan="11" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
+                                </tr>
+                            </cfif>
+                           
+                        </table>
+                        <br />
+    
+                        <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType) AND VAL(qGetStudentInfo.recordCount)>
+                            <table cellpadding="4" cellspacing="0" width="98%" class="section" align="center" style="border:1px solid ##CCC">
+                                <tr>
+                                    <td align="center"><input name="Submit" type="image" src="../pics/update.gif" border="0" alt=" update ">&nbsp;</td>
+                                </tr>
+                            </table>
+                        </cfif>
+				
+                	</form>
+                
                 </td>
             </tr>
         </table> <!--- end of main table --->
@@ -648,7 +650,5 @@
         width="98%"
         imagePath="../"
     />
-
-</form>
 
 </cfoutput>

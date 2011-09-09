@@ -25,10 +25,10 @@
 
 
 	<cffunction name="getStudentByID" access="public" returntype="query" output="false" hint="Gets a student by studentID or uniqueID">
-    	<cfargument name="studentID" default="0" hint="studentID is not required">
+    	<cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
-    	<cfargument name="assignedID" default="0" hint="assignedID is not required">
-        <cfargument name="programID" default="0" hint="programID is not required">
+    	<cfargument name="assignedID" default="" hint="assignedID is not required">
+        <cfargument name="programID" default="" hint="programID is not required">
               
         <cfquery 
 			name="qGetStudentByID" 
@@ -141,7 +141,7 @@
                     php_wishes_graduate, 
                     php_grade_student,  
                     php_passport_copy, 
-                    <!--- FROM THE NEW TABLE PHP_STUDENTS_IN_PROGRAM --->		
+                    <!--- FROM THE PHP_STUDENTS_IN_PROGRAM TABLE --->		
                     php.assignedID, 
                     php.companyID, 
                     php.programID, 
@@ -190,9 +190,9 @@
                 WHERE 
                 	1 = 1
                     
-				<cfif VAL(ARGUMENTS.studentID)>
+				<cfif LEN(ARGUMENTS.studentID)>
                     AND
-                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.uniqueID)>
@@ -202,12 +202,12 @@
 
                 <cfif LEN(ARGUMENTS.assignedID)>
                     AND
-                        php.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.assignedID#">
+                        php.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
                 </cfif>
                     
                 <cfif LEN(ARGUMENTS.programID)>
                     AND
-                        php.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                        php.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
                 </cfif>
 
 		</cfquery>
@@ -1093,7 +1093,7 @@
                 output="#pdfFlightInfo#"
                 nameconflict="overwrite">
             
-            <cfinvoke component="internal.cfc.email" method="send_mail">
+            <cfinvoke component="internal.extensions.components.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#flightEmailTo#">
                 <cfinvokeargument name="email_cc" value="#flightEmailCC#">
                 <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
@@ -1105,7 +1105,7 @@
             <cfcatch type="any">
                     
                 <!--- Send Out Email - NO PDF --->
-                <cfinvoke component="internal.cfc.email" method="send_mail">
+                <cfinvoke component="internal.extensions.components.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#flightEmailTo#">
                     <cfinvokeargument name="email_cc" value="#flightEmailCC#">
                     <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
