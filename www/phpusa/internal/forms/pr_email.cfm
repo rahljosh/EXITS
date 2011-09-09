@@ -44,7 +44,7 @@
             WHERE userid IN (#form.email_to#)
         </cfquery>
         
-        <cfinvoke component="internal.cfc.email" method="send_mail">
+        <cfinvoke component="internal.extensions.components.email" method="send_mail">
             <cfinvokeargument name="email_to" value="#valueList(get_emails.email)#">
             <cfinvokeargument name="email_replyto" value="#client.email#">
             <cfinvokeargument name="email_subject" value="PHP - Progress Report">

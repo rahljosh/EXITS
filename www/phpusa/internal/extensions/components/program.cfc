@@ -70,14 +70,11 @@
                 WHERE
                 	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                
-				<cfif LEN(ARGUMENTS.companyID)>
+                <cfif LEN(ARGUMENTS.companyID)>
                     AND
-                        p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
-                <cfelse>
-                    AND
-                        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
-                </cfif>	                
-                    
+                        p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">
+                </cfif>
+                
 				<cfif VAL(ARGUMENTS.programID)>
                 	AND
                     	p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">

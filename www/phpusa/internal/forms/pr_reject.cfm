@@ -54,7 +54,7 @@
                 #replaceList(form.pr_rejection_reason, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</p>
             </cfoutput>
             </cfsavecontent>
-            <cfinvoke component="internal.cfc.email" method="send_mail">
+            <cfinvoke component="internal.extensions.components.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#email_to#">
                 <cfinvokeargument name="email_replyto" value="#client.email#">
                 <cfinvokeargument name="email_subject" value="PHP - Progress Report Rejected">

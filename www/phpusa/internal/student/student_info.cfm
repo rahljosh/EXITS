@@ -252,13 +252,13 @@
                                 <cfif app_current_status NEQ 0>
                                 <tr>
                                     <td align="center">
-                                    <cfif CLIENT.usertype LTE '4'>
-                                        <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&userType=#CLIENT.usertype#&id=1');"><img src="pics/exits.jpg" border="0"></a>
-                                    <cfelse>
-                                        <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_application.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#&exits_app');"><img src="pics/exits.jpg" border="0"></a>
-                                    </cfif>
-                                    <br><a href="javascript:OpenSmallW('http://www.student-management.com/nsmg/student_app/section4/page22print.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#');"><img src="pics/attached-files.gif" border="0"></a>	
-                                    <br><a href="javascript:SendEmail('http://www.student-management.com/nsmg/student_app/email_form.cfm?userid=#CLIENT.userid#&unqid=#uniqueid#&companyShort=php');"><img src="pics/send-email.gif" border="0"></a>	
+										<cfif CLIENT.usertype LTE '4'>
+                                            <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&userType=#CLIENT.usertype#&id=1');"><img src="pics/exits.jpg" border="0"></a>
+                                        <cfelse>
+                                            <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_application.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#&exits_app');"><img src="pics/exits.jpg" border="0"></a>
+                                        </cfif>
+                                        <br><a href="javascript:OpenSmallW('http://www.student-management.com/nsmg/student_app/section4/page22print.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#');"><img src="pics/attached-files.gif" border="0"></a>	
+                                        <br><a href="javascript:SendEmail('http://www.student-management.com/nsmg/student_app/email_form.cfm?userid=#CLIENT.userid#&unqid=#uniqueid#&companyShort=php');"><img src="pics/send-email.gif" border="0"></a>	
                                     </td>
                                 </tr>
                                 <cfelse>
@@ -478,16 +478,18 @@
 					<td width="50%">: : <a href="reports/letter_acceptance.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Acceptance</a></td>
 				</tr>
 				<tr>
-					<td width="50%">: : <a href="reports/letter_placement_day.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Placement Day</a></td>
-					<td width="50%">: : <a href="reports/letter_placement_board.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Placement Board</a></td>
+					<td width="50%">
+						<cfif VAL(get_student_unqid.hostID)>
+                            : : <a href="reports/letter_placement_day.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Placement Day</a>
+                        <cfelse>
+                            : : <a href="student/index.cfm?action=placementInfoSheetBoard&uniqueID=#get_student_unqid.uniqueid#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Board</a>
+                        </cfif>
+                    </td>
+					<td width="50%">: : <a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_unqid.uniqueID#&programID=#get_student_unqid.programID#">Flight Information</a></td>
 				</tr>
 				<tr>
 					<td width="50%">: : <a href="reports/letter_hf_welcome.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Host Family Welcome Letter</a></td>
 					<td width="50%">: : <a href="reports/letter_student_arrival.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Student Arrival Letter</a></td>
-				</tr>
-				<tr>
-					<td width="50%">: : <a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_unqid.uniqueID#&programID=#get_student_unqid.programID#">Flight Information</a></td>
-					<td width="50%">&nbsp;</td>
 				</tr>
 			</table>
 		</td>
