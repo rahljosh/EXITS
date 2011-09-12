@@ -505,7 +505,16 @@ But in the output below we use the report fields where a report has been submitt
                                         <Cfset submittingRep = '#arearepid#'>
                                     </cfif>
                                     <cfif get_report.pr_sr_approved_date EQ '' and submittingRep NEQ client.userid>
-                                        Pending
+                                        <!----allow office to view so can delete if needed---->
+                                        <Cfif listfind('1,12313', client.userid)>
+											<cfif client.reportType EQ 2>
+                                            <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#">
+                                            <cfelse>
+                                            <a href="javascript:document.theForm_#get_report.pr_id#.submit();">
+                                            </cfif>
+                                        </cfif>	
+                                        Pending</a>
+                                    	<!----end allow view to delete---->
                                     <cfelse>
                                         <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm_#get_report.pr_id#" id="theForm_#get_report.pr_id#">
                                         <input type="hidden" name="pr_id" value="#get_report.pr_id#">
