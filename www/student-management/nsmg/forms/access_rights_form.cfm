@@ -45,7 +45,7 @@
 		errorMsg = '';	
 	</cfscript>
 
-	<cfif CLIENT.userType LTE 4>
+	<cfif ListFind("1,2,3,4", CLIENT.userType)>
     
         <cfquery name="qGetRegions" datasource="#application.dsn#">
             SELECT 
@@ -58,7 +58,9 @@
                     company = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.companyID#">
                 <cfelse>            
                     company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-                </cfif>                
+                </cfif> 
+            AND	
+            	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">               
             ORDER BY 
                 regionname,
                 regionid
@@ -78,6 +80,8 @@
                 uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
             AND
             	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userType#"> 
+            AND	
+            	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">               
 			<cfif VAL(URL.companyID)>
                 AND 
                     uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.companyID#">
