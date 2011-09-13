@@ -480,7 +480,7 @@
 				<tr>
 					<td width="50%">
 						<cfif VAL(get_student_unqid.hostID)>
-                            : : <a href="reports/letter_placement_day.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Placement Day</a>
+                            : : <a href="student/index.cfm?action=placementInfoSheetDay&uniqueID=#get_student_unqid.uniqueid#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Day</a>
                         <cfelse>
                             : : <a href="student/index.cfm?action=placementInfoSheetBoard&uniqueID=#get_student_unqid.uniqueid#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Board</a>
                         </cfif>

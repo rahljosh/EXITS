@@ -28,9 +28,15 @@
 	// Store the initialized flightInformation object in the Application scope
 	APPLICATION.CFC.flightInformation = CreateCFC("flightInformation").Init();
 
+	// Store the initialized host object in the Application scope
+	APPLICATION.CFC.host = CreateCFC("host").Init();
+
 	// Store the initialized insurance object in the Application scope
 	APPLICATION.CFC.insurance = CreateCFC("insurance").Init();
-	
+
+	// Store the initialized lookUpTables object in the Application scope
+	APPLICATION.CFC.lookUpTables = CreateCFC("lookUpTables").Init();
+
 	// Store the initialized program object in the Application scope
 	APPLICATION.CFC.program = CreateCFC("program").Init();
 
