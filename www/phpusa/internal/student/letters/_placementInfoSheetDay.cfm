@@ -1,8 +1,8 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		PlacementInfoSheetBoard.cfm
+	File:		PlacementInfoSheetDay.cfm
 	Author:		Marcus Melo
-	Date:		September 2th, 2011
+	Date:		September 9th, 2011
 	Desc:		Web Version of Placement Info Sheet
 
 ----- ------------------------------------------------------------------------- --->
@@ -48,6 +48,21 @@
 		// Get Program
 		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programID=qGetStudentInfo.programID);
 		
+		// Get Host Family
+		qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInfo.hostID);
+		
+		// Host Family Children
+		qGetHostChildren = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetStudentInfo.hostID);
+		
+		// Host Family Pets
+		qGetHostPets = APPLICATION.CFC.HOST.getHostPets(hostID=qGetStudentInfo.hostID);
+
+		// Get Host Interests
+		qGetHostInterests = APPLICATION.CFC.LOOKUPTABLES.getInterest(interestID=qGetHostFamily.interests,limit=6);
+		
+		// set Interest List
+		interestHostList = ValueList(qGetHostInterests.interest, "<br />");
+
 		// School
 		qGetSchool = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentInfo.schoolID);
 
@@ -56,6 +71,9 @@
 
 		// Get School Facilitator
 		qGetFacilitator = APPLICATION.CFC.USER.getUsers(userID=qGetSchool.fk_ny_user);
+
+		// Get Area Representative
+		qGetAreaRepresentative = APPLICATION.CFC.USER.getUsers(userID=qGetStudentInfo.areaRepID);
 
 		// Get International Representative
 		qIntlRep = APPLICATION.CFC.USER.getUsers(userID=qGetStudentInfo.intrep);
@@ -102,7 +120,7 @@
             
             <table class="placementLetterTable" align="center">
                 <tr>
-                    <td class="placementLetterBlueTitle" colspan="2">
+                    <td class="placementLetterBlueplacementLetterDetail">
                         Email Placement Information Sheet
                     </td>
                 </tr>                                                    
@@ -154,7 +172,7 @@
     <cfsavecontent variable="PlacementInfo">
 
         <table class="placementLetterTable" align="center">
-            <!--- Header --->
+			<!--- Header --->
             <tr>
                 <td align="center">
                     <img src="../../images/#CLIENT.companyID#_short_profile_header.jpg" width="790" height="170" />
@@ -162,7 +180,7 @@
             </tr>
             <tr>
                 <td align="center">
-                    <span class="placementLetterTitle">Placement Information for</span>
+                    <span class="placementLetterplacementLetterDetail">Placement Information for</span>
                     <span class="placementLetterInformation">#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)</span>
                 </td>
             </tr>
@@ -177,9 +195,227 @@
                         </p>
                     </cfif>
                 </td>
-            </tr>                	
+            </tr>  
+            <!--- Host Family --->
+            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisHostFamily.png" /></td></tr> 
+            <tr>
+                <td>                
+
+                    <table cellpadding="2" cellspacing="0" align="center" class="placementLetterTableNoBorder">
+                        <tr>
+                        	<!--- Host Father --->
+                            <td width="13%"><span class="placementLetterDetail">Host Father:</span></td>
+                            <td width="42%">
+								<cfif LEN(qGetHostFamily.fatherfirstname)>
+                                    #qGetHostFamily.fatherfirstname# #qGetHostFamily.fatherlastname#, 
+                                    <cfif IsDate(qGetHostFamily.fatherDOB)>
+                                        (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())#)
+                                    </cfif>
+                                <cfelse>
+                                	n/a
+                                </cfif>
+                            </td>
+                            <!--- Address --->
+                            <td width="10%"><span class="placementLetterDetail">Address:</span></td>
+                            <td width="35%">
+                                #qGetHostFamily.address#
+                            </td>
+                        </tr>
+                        <tr>
+                        	<!--- Host Father --->
+                            <td><span class="placementLetterDetail">Occupation:</span></td>
+                            <td>
+                            	<cfif LEN(qGetHostFamily.fatherfirstname)>
+                            		#qGetHostFamily.fatherworktype#
+								<cfelse>
+                                	n/a
+                                </cfif>
+                            </td>
+                            <td><span class="placementLetterDetail"></span></td>
+                            <td>
+	                            <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.city#,_#qGetHostFamily.state#" target="_blank" class="placementLetterWikipedia">#qGetHostFamily.city#, #qGetHostFamily.state#</a> #qGetHostFamily.zip#
+                          	</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <!--- Phone --->
+                            <td><span class="placementLetterDetail">Phone:</span></td>
+                            <td>#qGetHostFamily.phone#</td>
+                        </tr>
+                        <tr>
+                        	<!--- Host Mother --->
+                            <td><span class="placementLetterDetail">Host Mother:</span></td>
+                            <td>
+								<cfif LEN(qGetHostFamily.motherfirstname)>
+                                    #qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#, 
+                                    <cfif IsDate(qGetHostFamily.motherDOB)>
+                                        (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
+                                    </cfif>
+                                <cfelse>
+                                	n/a
+                                </cfif>
+                            </td>
+                            <!--- Email --->
+                            <td><span class="placementLetterDetail">Email:</span></td>
+                            <td>#qGetHostFamily.email#</td>
+                        </tr>
+                        <tr>
+                            <td><span class="placementLetterDetail">Occupation:</span></td>
+                            <td>
+                            	<cfif LEN(qGetHostFamily.motherfirstname)>
+                            		#qGetHostFamily.motherworktype#
+								<cfelse>
+                                	n/a
+                                </cfif>
+                            </td>
+                            <!--- Placed --->
+                            <td><span class="placementLetterDetail">Placed:</span></td>
+                            <td> #DateFormat(qGetStudentInfo.datePlaced, 'mmmm d, yyyy')#</td>
+                        </tr>
+					</table>
+                
+                </td>
+            </tr>                
+            <tr>
+                <td>
+                 
+					<!--- Siblings / Pets / Interests --->
+                    <table cellpadding="2" cellspacing="0" align="center" class="placementLetterTableNoBorder">
+                        
+                        <tr class="placementLetterBlueplacementLetterDetail">
+                            <td><img src="../pics/pisSiblings.png" /></td>
+                            <td><img src="../pics/pisPets.png" /></td>
+                            <td><img src="../pics/pisInterests.png" /></td>
+                        </tr> 
+                        <tr>
+                        	<td valign="top">
+								
+                                <!--- Siblings --->
+                                <table cellpadding="2" cellspacing="0" align="center" class="placementLetterTableNoBorder">
+                                    <tr>
+                                        <td><span class="placementLetterDetail">Name</span><br /></td>
+                                        <td align="center"><span class="placementLetterDetail">Age</span><br /></td>
+                                        <td align="center"><span class="placementLetterDetail">Sex</span><br /></td>
+                                        <td align="center"><span class="placementLetterDetail">At home</span><br /></td>
+                                        <td align="center"><span class="placementLetterDetail">Relation</span><br /></td>
+                                    </tr>
+                                    <cfloop query="qGetHostChildren">
+                                        <tr>
+                                            <td>
+                                                #REReplace(qGetHostChildren.name,"^(#RepeatString('[^ ]* ',1)#).*","\1")#
+                                                <cfif qGetHostChildren.shared EQ 'yes'>
+                                                    <img src="../pics/pisShareRoomIcon.png" height="16" border="0">
+                                                </Cfif>
+                                            </td>
+                                            <td align="center">
+                                                <cfif IsDate(qGetHostChildren.birthdate)>
+                                                    #DateDiff('yyyy', qGetHostChildren.birthdate, now())#
+                                                <cfelse>
+                                                    n/a
+                                                </cfif>
+                                            </td>
+                                            <td align="center">#qGetHostChildren.sex#</td>
+                                            <td align="center">#qGetHostChildren.liveathome#</td>
+                                            <td align="center">#qGetHostChildren.membertype#</td>
+                                        </tr>
+                                    </cfloop>
+                                </table>
+                                
+                            </td>
+                        	<td valign="top">
+								
+                                <!--- Animals --->
+                                <table cellpadding="2" cellspacing="0" align="center" class="placementLetterTableNoBorder">
+                                    <tr>
+                                        <td align="center"><span class="placementLetterDetail">Type</span></td>
+                                        <td align="center"><span class="placementLetterDetail">Number</span></td>
+                                        <td align="center"><span class="placementLetterDetail">Indoor</span></td>
+                                    </tr>
+                                    <cfloop query="qGetHostPets">
+                                        <tr>		
+                                            <td align="center">#qGetHostPets.animaltype#</td>
+                                            <td align="center">#qGetHostPets.number#</td>
+                                            <td align="center">#qGetHostPets.indoor#</td>
+                                        </tr>
+                                    </cfloop>
+                                </table>
+                                
+                            </td>
+                        	<td valign="top">
+                            
+                            	<!--- Interests --->
+                                <table cellpadding="2" cellspacing="0" class="placementLetterTableNoBorder">
+                                    <tr>
+                                        <td align="center">
+                                            #interestHostList#                                    
+                                        </td>
+                                    </tr>
+                                </table>
+                            
+                            </td>
+                        </tr>
+                        
+					</table>
+                    
+                    <table cellpadding="2" cellspacing="0" align="center" class="placementLetterTableNoBorder">
+                        <!--- Other Interests --->
+                        <cfif LEN(qGetHostFamily.interests_other)>
+                            <tr>
+                                <td width="13%" valign="top"><span class="placementLetterDetail">Other Interests:</span></td>
+                                <td width="87%">
+    								#qGetHostFamily.interests_other#
+                                </td>
+                            </tr>
+                        </cfif>
+                        
+						<!--- Smoke Information --->
+                        <cfif NOT  qGetHostFamily.acceptSmoking EQ 'yes'>
+                            <tr>
+                                <td colspan="2"><p style="margin:3px 0px 0px 0px;">The Host Family will accept a student who smokes.</p></td>       
+                            </tr>
+                        </cfif>      
+                        
+                        <!--- Church Information --->
+                        <cfif qGetHostFamily.attendChurch EQ 'yes'>
+                            <tr>
+                                <td colspan="2">
+                                    <p style="margin:3px 0px 5px 0px;">
+                                        Host Family attends church 
+                                        
+                                        <cfswitch expression="#qGetHostFamily.religious_participation#">
+                                        
+                                            <cfcase value="active">
+                                                several times per week.
+                                            </cfcase>
+                
+                                            <cfcase value="average">
+                                                once per week.
+                                            </cfcase>
+                
+                                            <cfcase value="little interest">
+                                                occasionally.
+                                            </cfcase>
+                
+                                        </cfswitch>                            
+                                        
+                                        <cfif qGetHostFamily.churchfam EQ 'no'> The student will be expected to attend church.</cfif>
+                                    </p>
+                                </td>       
+                            </tr>
+                        </cfif>        
+					</table>                    
+                    
+                </td>
+            </tr>            
+              
+            <!--- Community Information --->
+            <!---
+			<tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisCommunity.png" /></td></tr> 
+			--->
+                          	
             <!--- School Address & Contact Info --->    
-            <tr class="placementLetterBlueTitle"><td><img src="../pics/pisSchool.png" /></td></tr> 
+            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisSchool.png" /></td></tr> 
             <tr>
                 <td> 
                      
@@ -190,8 +426,8 @@
                             </td>
                         </tr>                 
                         <tr>
-                            <td width="10%"><span class="placementLetterDetail">Name:</span></td>
-                            <td width="45%">#qGetSchool.schoolname#</td>
+                            <td width="13%"><span class="placementLetterDetail">Name:</span></td>
+                            <td width="42%">#qGetSchool.schoolname#</td>
                             <td width="20%"><span class="placementLetterDetail">Orientation:</span></td>
                             <td width="25%">
                                 <cfif IsDate(qGetSchoolDates.enrollment)>
@@ -277,14 +513,49 @@
                 </td>
             </tr>
             
+            <!--- Area Representative --->
+            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisAreaRep.png" /></td></tr> 
+            <tr>
+                <td> 
+
+                    <table cellpadding="2" cellspacing="0" align="center" class="placementLetterTableNoBorder">
+                        <tr>
+                            <td width="10%"><span class="placementLetterDetail">Name:</span></td>
+                            <td width="45%">#qGetAreaRepresentative.firstName# #qGetAreaRepresentative.lastName#</td>
+                            <td width="10%"><span class="placementLetterDetail">Address:</span></td>
+                            <td width="35%">
+                                #qGetAreaRepresentative.address#
+                                <cfif LEN(qGetAreaRepresentative.address2)>
+                                    <br />#qGetAreaRepresentative.address2#
+                                </cfif>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="placementLetterDetail">Phone:</span></td>  
+                            <td>#qGetAreaRepresentative.phone#</td>  
+                            <td>&nbsp;</td>  
+                            <td>#qGetAreaRepresentative.city#, #qGetAreaRepresentative.state# #qGetAreaRepresentative.zip#</td>                     
+                        </tr>    
+                        <tr>
+                            <td><span class="placementLetterDetail">Email:</span></td>  
+                            <td>#qGetAreaRepresentative.email#</td>  
+                            <td>&nbsp;</td>  
+                            <td>&nbsp;</td>  
+                        </tr>                            
+                                                
+            		</table>
+                    
+                </td>
+            </tr>
+            
             <!--- Student Information ---> 
-            <tr class="placementLetterBlueTitle"><td><img src="../pics/pisStudentInfo.png" /></td></tr>  
+            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisStudentInfo.png" /></td></tr>  
             <tr>
                 <td>
                     <p style="margin-top:5px;">Student is applying for the #qGetProgramInfo.programName# program starting in #DateFormat(qGetSchoolDates.year_begins, 'mmmm')#.</p>	
                     
                     <p style="margin-bottom:5px;">
-                        A complete program packet will be sent to you shortly. 
+                        We will be sending you the complete Host Family application shortly. The student should plan to arrive within five days from start of school. 
                         Please advise us of #qGetStudentInfo.firstname#'<cfif right(qGetStudentInfo.firstname, 1) NEQ 's'>s</cfif> arrival information as soon as possible.
                     </p>
                 </td>
@@ -293,6 +564,8 @@
             <tr>
                 <td align="center">
                     <div class="placementLetterButtons">
+                    	<img src="../pics/pisShareRoomIcon.png" height="16"> Sharing a Room 
+	                    &nbsp; &middot; &nbsp;
                         <img src="../pics/pisWikipediaIcon.png" height="16"> Wikipedia Information 
                         &nbsp; &middot; &nbsp;
                         <img src="../pics/pisAirportIcon.png" height="16"> Airport Information              

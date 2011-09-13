@@ -36,7 +36,7 @@
         </cfcase>
     
     	<!--- Letters --->
-        <cfcase value="placementInfoSheetBoard" delimiters=",">
+        <cfcase value="placementInfoSheetBoard,placementInfoSheetDay" delimiters=",">
     
             <!--- Include template --->
             <cfinclude template="letters/_#action#.cfm" />
