@@ -19,7 +19,7 @@
 	INNER JOIN user_access_rights uar ON uar.userid = smg_users.userid
 	WHERE smg_users.active = 1 
 		  AND uar.regionid = '#get_student_info.regionassigned#'
-	      AND (uar.usertype = 15 or uar.usertype =  7)
+	      AND (uar.usertype = 15 or uar.usertype =  7 or uar.usertype =  5 or uar.usertype =  6)
 	ORDER BY lastname
 </cfquery>
 
