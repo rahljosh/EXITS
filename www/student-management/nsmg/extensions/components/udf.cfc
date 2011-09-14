@@ -383,10 +383,10 @@
             do this by converting the array to a list and then just
             providing no delimiters (empty string delimiter).
             --->
-            <cfset strPassword = ArrayToList(
-            arrPassword,
-            ""
-            ) />
+            <cfset strPassword = ArrayToList(arrPassword,"") />
+            <cfscript>
+				return(strPassword);
+			</cfscript>
 	</cffunction>
 
 </cfcomponent>
