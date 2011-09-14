@@ -1790,10 +1790,10 @@
                     cbc.userID,
                     cbc.familyID,
                     cbc.companyID,
-                    MAX(cbc.date_authorized) AS date_authorized,
-                    MAX(cbc.date_sent) AS date_sent,
-                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 11 MONTH) AS renewal_date,
-                    MAX(cbc.seasonID) AS seasonID,
+                    cbc.date_authorized,
+                    cbc.date_sent,
+                    DATE_ADD(cbc.date_sent, INTERVAL 11 MONTH) AS renewal_date,
+                    cbc.seasonID AS seasonID,
                     u.firstName,
                     u.lastName,
                     u.lastLogin
@@ -1801,11 +1801,22 @@
                     smg_users_cbc cbc 
                 INNER JOIN 
                     smg_users u ON u.userID = cbc.userID 
-                    	AND u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    	AND u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                         AND u.dateCancelled IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                         AND u.lastLogin >= <cfqueryparam cfsqltype="cf_sql_date" value="#lastLogin#">
                 WHERE 
-                	cbc.userID NOT IN 
+					<!--- Get Latest Record --->
+                    cbc.date_sent = 
+                    (
+                        SELECT 
+                            MAX(getMaxDate.date_sent) 
+                        FROM 
+                            smg_users_cbc getMaxDate
+                        WHERE                                                
+                            getMaxDate.userID = cbc.userID                                                                                                       
+                    )  
+                AND
+					cbc.userID NOT IN 
                     ( 
                     	SELECT 
                         	userID 
@@ -1847,10 +1858,10 @@
                     cbc.userID,
                     cbc.familyID,
                     cbc.companyID,
-                    MAX(cbc.date_authorized) AS date_authorized,
-                    MAX(cbc.date_sent) AS date_sent,
-                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 11 MONTH) AS renewal_date,
-                    MAX(cbc.seasonID) AS seasonID,
+                    cbc.date_authorized,
+                    cbc.date_sent,
+                    DATE_ADD(cbc.date_sent, INTERVAL 11 MONTH) AS renewal_date,
+                    cbc.seasonID AS seasonID,
                     u.firstName,
                     u.lastName,
                     u.lastLogin
@@ -1858,14 +1869,25 @@
                     smg_users_cbc cbc 
                 INNER JOIN 
                     smg_users u ON u.userID = cbc.userID 
-                    	AND u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    	AND u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                         AND u.dateCancelled IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 INNER JOIN
                 	smg_students s ON s.areaRepID = cbc.userID
                     	AND	
-                        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 WHERE 
-                	cbc.userID NOT IN 
+					<!--- Get Latest Record --->
+                    cbc.date_sent = 
+                    (
+                        SELECT 
+                            MAX(getMaxDate.date_sent) 
+                        FROM 
+                            smg_users_cbc getMaxDate
+                        WHERE                                                
+                            getMaxDate.userID = cbc.userID                                                                                                       
+                    )  
+				AND                                    
+					cbc.userID NOT IN 
                     ( 
                     	SELECT 
                         	userID 
@@ -1907,10 +1929,10 @@
                     cbc.userID,
                     cbc.familyID,
                     cbc.companyID,
-                    MAX(cbc.date_authorized) AS date_authorized,
-                    MAX(cbc.date_sent) AS date_sent,
-                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 11 MONTH) AS renewal_date,
-                    MAX(cbc.seasonID) AS seasonID,
+                    cbc.date_authorized,
+                    cbc.date_sent,
+                    DATE_ADD(cbc.date_sent, INTERVAL 11 MONTH) AS renewal_date,
+                    cbc.seasonID AS seasonID,
                     u.firstName,
                     u.lastName,
                     u.lastLogin
@@ -1918,14 +1940,29 @@
                     smg_users_cbc cbc 
                 INNER JOIN 
                     smg_users u ON u.userID = cbc.userID 
-                    	AND u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    	AND u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                         AND u.dateCancelled IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 INNER JOIN
                 	smg_students s ON s.placeRepID = cbc.userID
                     	AND	
-                        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 WHERE 
-                	cbc.userID NOT IN 
+					<!--- Get Latest Record --->
+                    cbc.date_sent = 
+                    (
+                        SELECT 
+                            MAX(getMaxDate.date_sent) 
+                        FROM 
+                            smg_users_cbc getMaxDate
+                        WHERE            
+                        	<cfif ARGUMENTS.cbcType EQ 'user'>                                    
+                            	getMaxDate.userID = cbc.userID
+                            <cfelseif ARGUMENTS.cbcType EQ 'member'>
+                            	getMaxDate.familyID = cbc.familyID
+                            </cfif>                                                                                                       
+                    )  
+				AND                                    
+					cbc.userID NOT IN 
                     ( 
                     	SELECT 
                         	userID 
@@ -1993,11 +2030,11 @@
                     cbc.familyID,
                     cbc.cbc_type,
                     h.companyID,
-                    MAX(cbc.date_authorized) AS date_authorized,
-                    MAX(cbc.date_sent) AS date_sent,
-                    DATE_ADD(MAX(cbc.date_sent), INTERVAL 11 MONTH) AS renewal_date,
-					DATE_ADD(MAX(cbc.date_sent), INTERVAL 1 Year) AS expiration_date,
-                    MAX(cbc.seasonID) AS seasonID,
+                    cbc.date_authorized,
+                    cbc.date_sent,
+                    DATE_ADD(cbc.date_sent, INTERVAL 11 MONTH) AS renewal_date,
+					DATE_ADD(cbc.date_sent, INTERVAL 1 Year) AS expiration_date,
+                    cbc.seasonID AS seasonID,
                     h.familylastname,
                     p.programName,
                     p.startDate,
@@ -2025,7 +2062,7 @@
                 INNER JOIN 
                     smg_students s ON s.hostid = cbc.hostid 
                     	AND 
-                        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                        	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
                         AND 
                         	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 						
@@ -2048,7 +2085,7 @@
                 INNER JOIN	
                 	smg_programs p ON p.programID = s.programID 
                         AND 
-                        	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 						AND
                         	p.endDate > CURRENT_DATE
                 
@@ -2065,6 +2102,19 @@
                 </cfif>
                 
                 WHERE 
+					<!--- Get Latest Record --->
+                    cbc.date_sent = 
+                    (
+                        SELECT 
+                            MAX(getMaxDate.date_sent) 
+                        FROM 
+                            smg_hosts_cbc getMaxDate
+                        WHERE                                                
+                            getMaxDate.hostID = cbc.hostID
+                        AND	
+                            getMaxDate.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">                                                                                                      
+                    )  
+				AND                                
                     cbc.hostID NOT IN 
                     ( 
                     	SELECT 
@@ -2094,12 +2144,9 @@
                     	h.motherLastName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">      
                 </cfif>
                 
+                <!--- Copied CBCs have a comment on notes field --->
                 AND 
-                    (
-                        cbc.notes IS <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
-                    OR 
-                        cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-                    )
+                    cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 
                 AND
                     cbc.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
