@@ -49,8 +49,7 @@
     <Cfparam name="FORM.submit_Start" default="paper">
     <!---Set Regions or users or user type that can start host app---->
 	<cfset allowedUsers = '1,12313,7203,1077,14488'>
-    <cfset strPassword = '3$rf&gB'>
-    
+ 
     
 	<cfscript>
     	if ( VAL (URL.hostID) ) {
@@ -58,7 +57,7 @@
 		}
 		
 		//Random Password for account, if needed
-		//strPassword = APPLICATION.CFC.UDF.randomPassword(length=8);
+		strPassword = APPLICATION.CFC.UDF.randomPassword(length=8);
 		
 		// Get Host Family Info
 		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=FORM.hostID);
@@ -548,7 +547,6 @@
         messageType="tableSection"
         width="50%"
         />
-
 
     <form name="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?curdoc=forms/host_fam_form" method="post">
         <input type="hidden" name="submitted" value="1">
