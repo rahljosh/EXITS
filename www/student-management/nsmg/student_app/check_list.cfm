@@ -595,7 +595,7 @@
 	<!--- PAGE 19 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page19&id=4&p=19"><h3>Page [19] - Personal Interview & English Fluency Assessment</h3></a></td></tr>
 	<!--- Intl. Representative Documents --->
-	<cfif qIsStudentAccount.recordCount AND ListFind("1,2,6", get_latest_status.status)>
+	<cfif qIsStudentAccount.recordCount AND ListFind("1,2,4,6", get_latest_status.status)>
 		<!--- Students do not fill this page --->
         <tr><td>This page will be completed and uploaded by <b><i>#smg_students.businessname#.</i></b></td></tr>
 	<cfelse>
