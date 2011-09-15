@@ -329,7 +329,7 @@
     					<li><a href="index.cfm?curdoc=tools/importFLSID">FLS Import Tool</a></li>
                     
                         <li>
-                            <a href="index.cfm?curdoc=insurance/insurance_menu">Insurance Menu</a>
+                            <a href="index.cfm?curdoc=insurance/index">Insurance Menu</a>
                             <ul>
                                 <li><a href="index.cfm?curdoc=insurance/insurance_codes">Policy Codes</a></li>
                             </ul>

@@ -565,6 +565,60 @@
 	</cffunction>
 
 
+	<cffunction name="getStudentsMissingCoverage" access="public" returntype="query" output="false" hint="Returns a list of students that have not been insured">
+        <cfargument name="programID" hint="List of program IDs. Required.">
+
+        <cfquery 
+        	name="qGetStudentsMissingCoverage" 
+            datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                    s.studentID, 
+                    s.firstname, 
+                    s.familyLastName, 
+                    s.dob,
+                    s.email, 
+                    it.type,  
+                    ic.policycode, 
+                    p.startDate,
+                    p.endDate
+                FROM
+                	smg_students s
+                INNER JOIN 
+                    smg_users u ON u.userid = s.intrep 
+                INNER JOIN
+                    smg_insurance_type it ON it.insutypeid = u.insurance_typeid
+                INNER JOIN 
+                    smg_insurance_codes ic ON ic.insutypeid = it.insutypeid
+                INNER JOIN  
+                    smg_programs p ON p.programID = s.programID
+                LEFT OUTER JOIN 
+                    smg_insurance_batch ib ON ib.studentID = s.studentID 
+                        AND 
+                            ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
+                WHERE 
+                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
+                <cfif CLIENT.companyID EQ 5>
+                    AND          
+                        s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                <cfelse>
+                    AND          
+                        s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                </cfif>
+                AND
+                    ib.studentID IS NULL
+                GROUP BY 
+                    s.studentID
+                ORDER BY 
+                    u.businessname, 
+                    s.firstname
+        </cfquery>
+    
+		<cfreturn qGetStudentsMissingCoverage>
+	</cffunction>
+
+
 	<!--- Insert History --->
 	<cffunction name="insertInsuranceHistory" access="public" returntype="void" output="false" hint="Sets student insurance date">
         <cfargument name="studentID" type="numeric" hint="studentID is required">
