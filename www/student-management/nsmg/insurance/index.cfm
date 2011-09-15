@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		insurance_menu.cfm
+	File:		index.cfm
 	Author:		Marcus Melo
 	Date:		January 06, 2010
 	Desc:		Manages Insurance Information
@@ -81,14 +81,14 @@
             </table>
 		
 			<!--- NEW TRANSACTION - FIRST ROW - 2 REPORTS --->
-            <table cellpadding="6" cellspacing="0" align="center" width="96%">
+            <table cellpadding="0" cellspacing="0" align="center" width="95%" style="margin-top:5px;">
                 <tr>
-                    <td width="50%" valign="top">
+                    <td width="50%" valign="top" align="left">
                         <form action="insurance/newTransactionProgramID.cfm" method="POST">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="98%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Enroll Students - Based on Flight Arrival Information</th></tr>
                                 <tr align="left">
-                                    <td>Program :</td>
+                                    <td valign="top">Program :</td>
                                     <td>
                                         <select name="programID" size="6" multiple>
                                             <cfloop query="qGetPrograms">
@@ -118,13 +118,13 @@
                             </table>
                         </form>
                     </td>
-                    <td width="50%" valign="top">
+                    <td width="50%" valign="top" align="right">
                         <form action="insurance/newTransactionProgramID.cfm" method="POST">
                         	<input type="hidden" name="noFlight" value="1" />
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="right" width="98%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Enroll Students - Based on Given Start Date</th></tr>
                                 <tr align="left">
-                                    <td>Program :</td>
+                                    <td valign="top">Program :</td>
                                     <td>
                                         <select name="programID" size="6" multiple>
                                             <cfloop query="qGetPrograms">
@@ -169,14 +169,14 @@
                 <tr><td align="center">Active students returning home at the end of program before insurance end date</td></tr>
             </table>
             
-            <table cellpadding="6" cellspacing="0" align="center" width="96%">
+            <table cellpadding="0" cellspacing="0" align="center" width="95%" style="margin-top:5px;">
                 <tr>
-                    <td width="50%" valign="top">
+                    <td width="50%" valign="top" align="left">
                         <form action="insurance/earlyReturn.cfm" method="POST">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="98%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Return Date Correction - Based on Flight Departure Information</th></tr>
                                 <tr align="left">
-                                    <td>Program :</td>
+                                    <td valign="top">Program :</td>
                                     <td>
                                     	<select name="programID" size="6" multiple>
                                             <cfloop query="qGetProgramsEndingSoon">
@@ -190,12 +190,12 @@
                             </table>
                         </form>
                     </td>
-                    <td width="50%" valign="top">
+                    <td width="50%" valign="top" align="right">
                         <form action="insurance/cancelationProgramID.cfm" method="POST">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="right" width="98%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Cancel Insurance - Based on cancelation / withdrew date</th></tr>
                                 <tr align="left">
-                                    <td>Program :</td>
+                                    <td valign="top">Program :</td>
                                     <td>
                                     	<select name="programID" size="6" multiple>
                                             <cfloop query="qGetPrograms">
@@ -226,15 +226,15 @@
                 </tr>
             </table>
             
-            <table cellpadding="6" cellspacing="0" align="center" width="96%">
+            <table cellpadding="0" cellspacing="0" align="center" width="95%" style="margin-top:5px;">
                 <tr>
-                    <td width="50%" valign="top">
+                    <td width="50%" valign="top" align="left">
                         <form action="insurance/extensionProgramID.cfm" method="POST">
                             <input type="hidden" name="type" value="flightDeparture" />
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="98%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Insurance Extension - Based on Flight Departure Information</th></tr>
                                 <tr align="left">
-                                    <td>Program :</td>
+                                    <td valign="top">Program :</td>
                                     <td>
                                     	<select name="programID" size="6" multiple>
                                             <cfloop query="qGetProgramsEndingSoon">
@@ -248,13 +248,13 @@
                             </table>
                         </form>
                     </td>
-                    <td width="50%" valign="top">
+                    <td width="50%" valign="top" align="right">
                         <form action="insurance/extensionProgramID.cfm" method="POST">
                         	<input type="hidden" name="type" value="programExtension" />
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="right" width="98%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Insurance Extension - Based on Program Extension (5 to 10 month)</th></tr>
                                 <tr align="left">
-                                    <td>Program :</td>
+                                    <td valign="top">Program :</td>
                                     <td>
                                     	<select name="programID" size="6" multiple>
                                             <cfloop query="qGetYearPrograms">
@@ -272,34 +272,64 @@
             </table>
 
             <br /><br />
+
+            <!--- REPORTS --->
+            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
+                <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Reports</th></tr>
+            </table>
             
+            <table cellpadding="0" cellspacing="0" align="center" width="95%" style="margin-top:5px;">
+                <tr>
+                    <td width="50%" valign="top" align="left">
+                        <form action="index.cfm?curdoc=insurance/studentsMissingCoverageReport" method="POST">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="98%">
+                                <tr><th colspan="2" bgcolor="##e2efc7">Active Students Missing Insurance Coverage</th></tr>
+                                <tr align="left">
+                                    <td valign="top">Program :</td>
+                                    <td>
+                                    	<select name="programID" size="6" multiple>
+                                            <cfloop query="qGetPrograms">
+                                            	<option value="#qGetPrograms.ProgramID#">#qGetPrograms.programName#</option>
+                                            </cfloop>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="2" align="center">&nbsp;</td></tr>					
+                                <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>			
+                            </table>
+                        </form>
+                    </td>
+                    <td width="50%" valign="top" align="right">&nbsp;</td>
+                </tr>
+            </table>
+
+            <br /><br />
+                        
             <!--- Insurance History --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th bgcolor="##e2efc7"><span class="get_attention"><b>::</b></span> Insurance Files History (Last 30 files)</th></tr>
                 <tr><td align="center">Types: N = New | R = Return/Adjustment | X = Cancelation | EX = Extension Program</td></tr>
             </table>
             
-            <br />
-            
-            <table cellpadding="6" cellspacing="0" align="center" width="96%">
+            <table cellpadding="0" cellspacing="0" align="center" width="95%" style="margin-top:5px;">
                 <tr>
                     <td width="100%" valign="top">
 
                         <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                            <tr bgcolor="##e2efc7">
-                                <td width="20%"><strong>Date Created</strong></td>
-                                <td width="5%"><strong>Type</strong></td>
-                                <td width="35%"><strong>File Name</strong></td>
-                                <td width="20%"><strong>Total of Students</strong></td>
-                                <td width="20%"><strong>Actions</strong></td>
+                            <tr bgcolor="##e2efc7" style="font-weight:bold;">
+                                <td>Date Created</td>
+                                <td>Type</td>
+                                <td>File Name</td>
+                                <td align="center">Total of Students</td>
+                                <td align="center">Actions</td>
                             </tr>
                             <cfloop query="qGetInsuranceHistory">
                                 <tr bgcolor="#iif(qGetInsuranceHistory.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
                                     <td>#DateFormat(qGetInsuranceHistory.date, 'mm/dd/yyyy')#</td>
                                     <td>#qGetInsuranceHistory.type#</td>
                                     <td>#qGetInsuranceHistory.file#</td>
-                                    <td>#qGetInsuranceHistory.totalStudents#</td>
-                                    <td><a href="insurance/downloadFile.cfm?file=#URLEncodedFormat(qGetInsuranceHistory.file)#&date=#URLEncodedFormat(DateFormat(qGetInsuranceHistory.date, 'mm/dd/yyyy'))#">[ Download ]</a></td>
+                                    <td align="center">#qGetInsuranceHistory.totalStudents#</td>
+                                    <td align="center"><a href="insurance/downloadFile.cfm?file=#URLEncodedFormat(qGetInsuranceHistory.file)#&date=#URLEncodedFormat(DateFormat(qGetInsuranceHistory.date, 'mm/dd/yyyy'))#">[ Download ]</a></td>
                                 </tr>                            
                             </cfloop>
                         </table>
@@ -315,4 +345,5 @@
 </table>
 
 </cfoutput>
+
 <cfinclude template="../table_footer.cfm">
