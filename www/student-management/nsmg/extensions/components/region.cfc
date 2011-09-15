@@ -41,9 +41,13 @@
                     r.regionFacilitator,
                     r.company,
                     r.masterRegion,
-                    r.regional_guarantee
+                    r.regional_guarantee,
+                    c.team_id,
+                    c.companyName
                 FROM 
                     smg_regions r
+                LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = r.company
                 WHERE
                 	1 = 1
 				
@@ -68,6 +72,7 @@
                 </cfif>    
                 
                 ORDER BY 
+                    c.team_id,
                     r.regionName
 		</cfquery>
 		   
