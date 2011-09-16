@@ -33,20 +33,24 @@
 			qGetResults = APPLICATION.CFC.INSURANCE.getStudentsMissingCoverage(programID=FORM.programID);
 		}
 	</cfscript>
+	
+    <cfif NOT SESSION.formErrors.length()>
+    
+		<!--- Get Program --->
+        <cfquery name="qGetPrograms" datasource="MYSQL">
+            SELECT DISTINCT 
+                p.programID, 
+                p.programname, 
+                c.companyshort
+            FROM 	
+                smg_programs p
+            INNER JOIN 
+                smg_companies c ON c.companyid = p.companyid
+            WHERE 		
+                programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+        </cfquery>
 
-    <!--- Get Program --->
-    <cfquery name="qGetPrograms" datasource="MYSQL">
-        SELECT DISTINCT 
-            p.programID, 
-            p.programname, 
-            c.companyshort
-        FROM 	
-        	smg_programs p
-        INNER JOIN 
-        	smg_companies c ON c.companyid = p.companyid
-        WHERE 		
-            programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#" list="yes"> )
-    </cfquery>
+	</cfif>
 
 </cfsilent>
 
@@ -112,19 +116,29 @@
 
     <table width="98%" align="center" cellpadding="3" cellspacing="1" style="border:1px solid ##021157; margin-top:10px;">
         <tr style="font-weight:bold;">
+        	<td>Intl. Rep.</td>
        		<td>Student ID</td>
-            <td>First Name</td>
-            <td>Last Name</td>
+            <td>Student Name</td>
             <td>Date of Birth</td>
             <td>Policy Type</td>
+            <td>Program Name</td>
+            <td>Date Placed</td>
+            <td>Arrival Date</td>
         </tr>
         <cfloop query="qGetResults">
+			<cfscript>
+                // Get Flight Information
+                qGetFlightInfo = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetResults.studentID, flightType='PreAypArrival,Arrival');
+            </cfscript>
             <tr bgcolor="###iif(qGetResults.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
-            	<td>###qGetResults.studentID#</td>
-                <td>#qGetResults.familyLastName#</td>
-                <td>#qGetResults.firstName#</td>
+            	<td>#qGetResults.businessName#</td>
+                <td>###qGetResults.studentID#</td>
+                <td>#qGetResults.firstName# #qGetResults.familyLastName#</td>
                 <td>#DateFormat(qGetResults.dob, 'dd/mmm/yyyy')#</td>
                 <td>#qGetResults.type#</td>
+                <td>#qGetResults.programName#</td>
+                <td>#DateFormat(qGetResults.datePlaced, 'dd/mmm/yyyy')#</td>
+                <td>#DateFormat(qGetFlightInfo.dep_date , 'mm/dd/yyyy')#</td>
             </tr>
         </cfloop>
         <cfif NOT VAL(qGetResults.recordCount)>
