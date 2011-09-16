@@ -2065,8 +2065,15 @@
                     smg_flight_info
                 WHERE 
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#"> 
-                AND 
-                    flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">
+                
+				<cfif ListLen(ARGUMENTS.flightType) GT 1>
+                    AND 
+                        flight_type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#" list="yes"> )
+                <cfelse>
+                    AND 
+                        flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">
+                </cfif>
+
 				AND
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     
