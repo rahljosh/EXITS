@@ -732,6 +732,8 @@
                     u.firstName,
                     u.lastName,
                     u.email,
+                    u.dateCreated,
+                    DATE_ADD(u.dateCreated, INTERVAL 30 DAY) AS trainingDeadline,
                     r.regionID,
                     r.regionName,
                     sut.date_trained,

@@ -181,7 +181,7 @@
         
                 <table class="report" align="center">
                     <tr bgcolor="#e2efc7">
-                        <td class="top" colspan="3"><strong>Region:</strong> <cfoutput>#qGetRegions.regionname# &nbsp; - &nbsp; Total of #qGetResults.recordCount# users</cfoutput> </td>
+                        <td class="top" colspan="5"><strong>Region:</strong> <cfoutput>#qGetRegions.regionname# &nbsp; - &nbsp; Total of #qGetResults.recordCount# users</cfoutput> </td>
                     </tr>
                     <tr bgcolor="#FFFFE6">
 						<!--- Only Apply for DOS Certification --->
@@ -290,12 +290,14 @@
         		
                 <table class="report" align="center">
                     <tr bgcolor="#e2efc7">
-                        <td class="top" colspan="3"><strong>Region:</strong> <cfoutput>#qGetRegions.regionname#</td></cfoutput>
+                        <td class="top" colspan="5"><strong>Region:</strong> <cfoutput>#qGetRegions.regionname#</td></cfoutput>
                     </tr>
                     <tr bgcolor="#FFFFE6">
-                        <td width="35%" valign="top"><strong>Representative</strong></td>
+                        <td width="25%" valign="top"><strong>Representative</strong></td>
                         <td width="10%" valign="top" align="center"><strong>Status</strong></td>
-                        <td width="55%" valign="top"><strong>Training History</strong></td>
+                        <td width="40%" valign="top"><strong>Training History</strong></td>
+                        <td width="10%" valign="top" align="center"><strong>Date User Created</strong></td>
+                        <td width="15%" valign="top" align="center"><strong>Must Complete Training By</strong></td>
                     </tr>
                 </table>
         
@@ -308,7 +310,7 @@
                                 
                     <table class="report" align="center">
                         <tr bgcolor="#iif(rowCount MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
-                            <td width="35%" valign="top">
+                            <td width="25%" valign="top">
                                 #qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)
                             </td>
                             <td width="10%" valign="top" align="center"> 
@@ -320,7 +322,7 @@
                                     <span style="color:##F00;">Missing</span>
                                 </cfif>
                             </td>
-                            <td width="55%" valign="top"> 
+                            <td width="40%" valign="top"> 
                             	#qGetTrainingInfo.name# is required <br />
 								
 								<!--- Looop --->
@@ -338,6 +340,8 @@
                                     </cfif>    
                                 </cfoutput>
                             </td>
+                            <td width="10%" align="center">#DateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
+                            <td width="15%" align="center">#DateFormat(qGetResults.trainingDeadline, 'mm/dd/yyyy')#</td>
                         </tr>
                     </table>
         

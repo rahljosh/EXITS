@@ -103,6 +103,8 @@
             <cfscript>
 				// Set Page Message
 				SESSION.pageMessages.Add("Region moved to new division successfully");
+				
+				Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING, "no");
 			</cfscript>
             
    		</cfif>
