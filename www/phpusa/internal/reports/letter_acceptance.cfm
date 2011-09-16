@@ -24,7 +24,7 @@
 
 <cfquery name="get_student_unqid" datasource="MySql">
 	SELECT s.studentid, s.firstname, s.middlename, s.familylastname, s.dob, s.sex, s.grades, s.uniqueid, s.other_missing_docs,
-		sc.schoolid, sc.schoolname, sc.address, sc.city, sc.zip, sc.contact, sc.nonref_deposit, sc.refund_plan,
+		sc.schoolid, sc.schoolname, sc.address, sc.city, sc.zip, sc.contact, sc.nonref_deposit, sc.refund_plan, s.php_grade_student,
 		sta.state as schoolstate,
 		p.programid, p.programname,
 		c.countryname,
@@ -101,7 +101,8 @@
 </table>
 
 <table width="680" align="center" border=0 cellpadding="1" cellspacing="1">
-	<tr><td><span class="style2">Program: </span> &nbsp; <span class="style1"> #programname# </span></td></tr>
+	<tr><td><span class="style2">Program: </span> &nbsp; <span class="style1"> #programname# </span><br><br></td></tr>
+    <tr><td><span class="style2">Grade Applying: </span> &nbsp; <span class="style1"> #get_student_unqid.php_grade_student#th </span></td></tr>
 	<tr><td><hr width=100% align="center"></td></tr>
 </table>
 
@@ -109,17 +110,20 @@
 	<tr class="style2"><td width="250">Student's Name</td><td width="250">Missing Documents</td><td width="180">Non-Refundable Deposit</td></tr>
 	<tr><td colspan="3"><hr width=100% align="center"></td></tr>
 	<tr>
-		<td>#firstname# #middlename# #familylastname# (###studentid#) <br />
+		<td valign="top">#firstname# #middlename# #familylastname# (###studentid#) <br />
 			DOB: #DateFormat(dob, 'mm/dd/yyyy')#</td>
-		<td>#other_missing_docs#</td>
+		<td valign="top">#other_missing_docs#</td>
 		<td>#nonref_deposit#</td>
 	</tr>
-	<tr><td colspan="3">
-		<cfif schoolname NEQ ''>
-			Student has been applied to #schoolname# School.
-		<cfelse>
-			Please be advised, no school has been selected for this student.
-		</cfif>
+	<tr>
+    	<td colspan="3">
+            <p>
+                <cfif schoolname NEQ ''>
+                    Student has been applied to #schoolname# School.
+                <cfelse>
+                    Please be advised, no school has been selected for this student.
+                </cfif>
+            </p>
 		</td>
 	</tr>
 	<cfif refund_plan EQ '1'>
