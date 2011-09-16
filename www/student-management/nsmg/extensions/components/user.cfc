@@ -742,6 +742,9 @@
                     smg_users u
                 INNER JOIN 
                     user_access_rights uar ON uar.userID = u.userID 
+                        AND
+                        	uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,7" list="yes"> )
+                    
                         <cfif VAL(ARGUMENTS.regionID)>
                             AND 
                                 uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
