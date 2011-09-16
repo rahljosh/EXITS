@@ -2926,6 +2926,31 @@
                             <cfif ARGUMENTS.sendEmailTo NEQ 'regionalManager'>
 	                            If it looks good, please feel free to forward to your regional manager.                                                      
                             </cfif>
+         				</p>
+                        
+						<!--- Do Not Display for PHP --->
+                        <cfif NOT VAL(ARGUMENTS.isPHPStudent)>   
+                            <p style="color: ##333;">
+                                <strong>Region:</strong> #qGetStudentFullInformation.regionName#
+                            </p>
+                            
+                            <p style="color: ##333;">
+                                <strong>Regional Manager:</strong>
+                                #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)
+                                - Email: <a href="mailto:#qGetRegionalManager.email#">#qGetRegionalManager.email#</a>
+                                <cfif LEN(qGetRegionalManager.work_phone)>
+                                    - Phone: #qGetRegionalManager.work_phone#
+                                </cfif>
+                            </p>
+                        </cfif>
+                                
+                        <p style="color: ##333;">
+                            <strong>Area Representative:</strong>
+                            #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
+                            - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
+                            <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
+                                - Phone: #qGetStudentFullInformation.areaRepPhone#
+                            </cfif>                                    
                         </p>
 
                         <p style="color: ##333;">
@@ -2954,14 +2979,6 @@
                             
                         </cfif>
 
-                        <cfif APPLICATION.IsServerLocal>
-    
-                            <p style="color: ##333; padding-bottom:5px; font-weight:bold;">
-                                PS: Development Server
-                            </p>
-                        
-                        </cfif>
-                        
                     </fieldset>
 
                 </cfsavecontent>
