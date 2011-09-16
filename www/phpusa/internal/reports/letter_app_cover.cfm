@@ -53,7 +53,7 @@
 	</cfif>
 
 	<cfquery name="get_student_unqid" datasource="MySql">
-		SELECT s.studentid, s.firstname, s.middlename, s.familylastname, s.dob, s.sex, s.grades,
+		SELECT s.studentid, s.firstname, s.middlename, s.familylastname, s.dob, s.sex, s.grades, s.php_grade_student,
 			sc.schoolid, sc.schoolname, sc.address, sc.city, sc.zip, sc.contact, s.php_wishes_graduate,
 			sta.state as schoolstate,
 			p.programid, p.programname,
@@ -106,6 +106,8 @@
 		<tr><td><span class="style2">DOB: </span> &nbsp; #DateFormat(dob, 'mm/dd/yyyy')#</td></tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr><td><span class="style2">Last Grade Completed: </span> &nbsp; #grades#</td></tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr><td><span class="style2">Grade Applying: </span> &nbsp; #php_grade_student#th</td></tr>
 		<tr><td>&nbsp;</td></tr>
 		<tr><td><span class="style2">Country: </span> &nbsp; #countryname# </td></tr>
 		<tr><td>&nbsp;</td></tr>
