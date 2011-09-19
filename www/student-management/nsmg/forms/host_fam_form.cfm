@@ -50,15 +50,7 @@
     <!---Set Regions or users or user type that can start host app---->
 	<cfset allowedUsers = '1,12313,7203,1077,14488'>
  	
-    <Cfquery name="checkEmail" datasource="#application.dsn#">
-    select hostid, familylastname 
-    from smg_hosts
-    where email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
-    <Cfif isDefined('url.hostid')>
-    and hostid != <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.hostid#">
-    </Cfif>
-    </cfquery>
-    
+
 	<cfscript>
     	if ( VAL (URL.hostID) ) {
 			FORM.hostID = URL.hostID;	
@@ -122,13 +114,24 @@
     		
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
-		
-		<cfscript>
+		<cfif form.submit_Start is 'eHost'>
+            <Cfquery name="checkEmail" datasource="#application.dsn#">
+            select hostid, familylastname 
+            from smg_hosts
+            where email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
+            <Cfif isDefined('url.hostid')>
+            and hostid != <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.hostid#">
+            </Cfif>
+            </cfquery>
+            <cfscript>
 			// Data Validation - Check required Fields
 			if ( checkEmail.recordcount NEQ 0 ) {
 				SESSION.formErrors.Add("This email address is already assigned to the #checkEmail.hostid# - #checkEmail.familylastname# family.");
             }
-			
+		</cfscript>
+         </cfif>
+
+        <cfscript>
 			// Data Validation - Check required Fields
 			if ( FORM.lookup_success NEQ 1 ) {
 				SESSION.formErrors.Add("Please lookup the address.");
@@ -249,7 +252,8 @@
             </cfscript>
 
 			<cfif VAL(FORM.hostID)>
-				
+				    
+    
                 <!--- Update --->
                 <cfquery datasource="MySql" result="test">
                     UPDATE 
