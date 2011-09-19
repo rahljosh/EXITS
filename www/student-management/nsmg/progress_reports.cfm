@@ -171,6 +171,9 @@ function OpenLetter(url) {
 select *
 from reportTrackingType
 where isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+<cfif client.companyid eq 14>
+and esi = 14
+</cfif>
 </cfquery>
 <!----get Menu options for seleted report---->
 <cfquery name="reportOptions" dbtype="query">
