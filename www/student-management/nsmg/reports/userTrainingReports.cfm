@@ -296,8 +296,10 @@
                         <td width="25%" valign="top"><strong>Representative</strong></td>
                         <td width="10%" valign="top" align="center"><strong>Status</strong></td>
                         <td width="40%" valign="top"><strong>Training History</strong></td>
-                        <td width="10%" valign="top" align="center"><strong>Date User Created</strong></td>
-                        <td width="15%" valign="top" align="center"><strong>Must Complete Training By</strong></td>
+                        <cfif FORM.trainingID EQ 2>
+                            <td width="10%" valign="top" align="center"><strong>Date User Created</strong></td>
+                            <td width="15%" valign="top" align="center"><strong>Must Complete Training By</strong></td>
+                    	</cfif>
                     </tr>
                 </table>
         
@@ -340,8 +342,10 @@
                                     </cfif>    
                                 </cfoutput>
                             </td>
-                            <td width="10%" align="center">#DateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
-                            <td width="15%" align="center">#DateFormat(qGetResults.trainingDeadline, 'mm/dd/yyyy')#</td>
+							<cfif FORM.trainingID EQ 2>
+                                <td width="10%" align="center">#DateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
+                                <td width="15%" align="center">#DateFormat(qGetResults.trainingDeadline, 'mm/dd/yyyy')#</td>
+        					</cfif>
                         </tr>
                     </table>
         
