@@ -72,7 +72,7 @@
                         <cffileupload 
                             title="Select one or more files and click on Upload"
                             name="fileData" 
-                            url="upload.cfm?#urlEncodedFormat(SESSION.URLToken)#"
+                            url="upload.cfm?#urlEncodedFormat('#SESSION.URLToken#&foreignID=#FORM.candidateID#&uploadPath=#APPLICATION.CFC.CANDIDATE.getCandidateSession().myUploadFolder#')#"
                             extensionfilter="pdf" 
                             oncomplete="handleComplete" 
                             uploadbuttonlabel="Upload Now"            
