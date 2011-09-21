@@ -182,6 +182,50 @@
 	</cffunction>
 
 
+	<cffunction name="getPaymentType" access="public" returntype="query" output="false" hint="Gets Area Representative Payment Type">
+    	<cfargument name="ID" default="" hint="ID is not required">
+        <cfargument name="IDList" default="" hint="ID is not required">
+        <cfargument name="active" default="1" hint="active is not required">
+        <cfargument name="paymentType" default="" hint="paymentType is not required">
+
+        <cfquery 
+        	name="qGetPaymentType"
+        	datasource="MySQL">
+                SELECT 
+                	ID,
+                    type,
+                    companyID,
+                    active,
+                    description,
+                    paymentType
+				FROM
+                	smg_payment_types
+				WHERE
+                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                
+				<cfif LEN(ARGUMENTS.ID)>
+	                AND 
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+                </cfif> 
+
+				<cfif LEN(ARGUMENTS.IDList)>
+	                AND 
+                        ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.IDList#" list="yes"> )
+                </cfif> 
+                            
+				<cfif LEN(ARGUMENTS.paymentType)>
+	                AND 
+                        paymentType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.paymentType#">
+                </cfif> 
+			
+            	ORDER BY
+                	type
+        </cfquery> 
+
+		<cfreturn qGetPaymentType>
+	</cffunction>
+
+
 	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
     	<cfargument name="countryID" default="0" hint="countryID is not required">
 
@@ -203,6 +247,29 @@
         </cfquery> 
 
 		<cfreturn qGetCountry>
+	</cffunction>
+
+
+	<cffunction name="getState" access="public" returntype="query" output="false" hint="Returns a state or list of states">
+    	<cfargument name="stateID" default="0" hint="stateID is not required">
+
+        <cfquery 
+        	name="qGetState"
+        	datasource="MySQL">
+                SELECT 
+                	ID,
+                    state,
+                    stateName,
+                    guarantee_fee
+				FROM
+                	smg_states
+				<cfif VAL(ARGUMENTS.stateID)>
+                    WHERE 
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateID#">
+                </cfif>                        
+        </cfquery> 
+
+		<cfreturn qGetState>
 	</cffunction>
 
 
@@ -255,30 +322,6 @@
 
 		<cfreturn qGetPrivateSchool>
 	</cffunction>
-
-
-	<cffunction name="getState" access="public" returntype="query" output="false" hint="Returns a state or list of states">
-    	<cfargument name="stateID" default="0" hint="stateID is not required">
-
-        <cfquery 
-        	name="qGetState"
-        	datasource="MySQL">
-                SELECT 
-                	ID,
-                    state,
-                    stateName,
-                    guarantee_fee
-				FROM
-                	smg_states
-				<cfif VAL(ARGUMENTS.stateID)>
-                    WHERE 
-                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateID#">
-                </cfif>                        
-        </cfquery> 
-
-		<cfreturn qGetState>
-	</cffunction>
-
 
 
 </cfcomponent>

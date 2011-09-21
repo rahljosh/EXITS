@@ -8,11 +8,14 @@
 	Updated:	
 
 ----- ------------------------------------------------------------------------- --->
-<cfset allowedUsers = '1,12313,7203,1077'>
+
 <!--- Kill extra output --->
 <cfsilent>
 
 	<cfscript>
+		// Host Family Application
+		allowedUsers = '1,510,12313,7203,1077';
+	
         // Get Company Info
         qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
     </cfscript>
@@ -123,6 +126,7 @@
             </ul>
         </cfcase>
     
+    
         <!--- Menu for Second Visit Reps--->
         <cfcase value="15">
             <ul id="MenuBar1" class="MenuBarHorizontal">
@@ -131,8 +135,6 @@
                     <a href="index.cfm?curdoc=secondVisit/students">Students</a>
                 </li>
                 
-                
-            
                 <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
                 
                 <!--- Case Store --->
@@ -146,6 +148,7 @@
                 
             </ul>
         </cfcase>
+    
     
         <!--- Menu for MPD Tours--->
         <cfcase value="25">
@@ -177,8 +180,7 @@
         </cfcase>
     
     
-    
-        <!--- Menu for the Field | Managers / Advisors / Area Reps / Student View --->
+        <!--- Menu for the Field | Managers | Advisors | Area Reps | Student View --->
         <cfcase value="5,6,7,9">
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
@@ -340,8 +342,15 @@
                         <li><a href="index.cfm?curdoc=tools/progress_report_questions">PR Questions</a></li>
     
                         <li><a href="index.cfm?curdoc=tools/regions">Regions</a></li>
-    
-                        <li><a href="index.cfm?curdoc=userPayment/index">Representative Payments</a></li>
+    					
+                        <cfif ListFind("1,2,3", CLIENT.userType)>
+                        	<li>
+                            	<a href="index.cfm?curdoc=userPayment/index">Representative Payments</a>
+                                <ul>
+                                    <li><a href="index.cfm?curdoc=userPayment/index&action=bonusReport">Bonus Report</a></li>
+                                </ul>
+                            </li>
+                        </cfif>
                         
                         <li><a href="index.cfm?curdoc=sevis/menu">SEVIS Batch</a>					
                             <!--- SEVIS Dev Access --->
