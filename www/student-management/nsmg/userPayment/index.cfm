@@ -56,7 +56,11 @@
     <cfparam name="FORM.placedStudentIDList" default="0">
     <cfparam name="FORM.secondVisitPaymentType" default="0">
     <cfparam name="FORM.secondVisitStudentIDList" default="0">
-        
+    <!--- Bonus Report --->
+    <cfparam name="FORM.programID" default="">
+    <cfparam name="FORM.paymentTypeID" default="">
+    <cfparam name="FORM.regionID" default="">
+    
     <cfscript>
 		// URL.userID comes from user profile
 		if ( VAL(URL.userID) ) {
@@ -65,24 +69,30 @@
 	</cfscript>
     
 </cfsilent>
-	
+
+<!--- 
+	Do Not Display Header for Reports 
+--->
+
+<cfif NOT ListFind("paymentReport,bonusReport,thankYouBonus", action)>
+	<div class="application_section_header">Representative Payments</div>
+</cfif>
+
 <!--- 
 	Check to see which action we are taking. 
 --->
 
-<div class="application_section_header">Representative Payments</div>
-
-<cfif ListFind("1,2,3,4", CLIENT.userType)>
+<!--- Admin | Company Admin | Office User --->
+<cfif ListFind("1,2,3", CLIENT.userType)>
 
     <cfswitch expression="#action#">
     
-        <cfcase value="initial,searchRepresentative,listStudentRepresentatives,selectPayment,searchStudent,incentiveTripPayment,maintenance,paymentHistory,processPayment,studentPaymentHistory,paymentReport" delimiters=",">
+        <cfcase value="initial,searchRepresentative,listStudentRepresentatives,selectPayment,searchStudent,incentiveTripPayment,maintenance,paymentHistory,processPayment,studentPaymentHistory,paymentReport,bonusReport,thankYouBonus" delimiters=",">
     
             <!--- Include template --->
             <cfinclude template="_#action#.cfm" />
     
         </cfcase>
-    
     
         <!--- The default case is the login page --->
         <cfdefaultcase>
@@ -94,6 +104,30 @@
     
     </cfswitch>
 
+<!--- Facilitators --->
+<cfelseif CLIENT.userType EQ 4>
+	
+    <!--- Other Users Only Have Access to the Report --->
+    <cfswitch expression="#action#">
+    
+        <cfcase value="paymentReport,bonusReport,thankYouBonus" delimiters=",">
+    
+            <!--- Include template --->
+            <cfinclude template="_#action#.cfm" />
+    
+        </cfcase>
+    
+        <!--- The default case is the login page --->
+        <cfdefaultcase>
+            
+            <!--- Include template --->
+            <cfinclude template="_paymentReport.cfm" />
+    
+        </cfdefaultcase>
+    
+    </cfswitch>
+
+<!--- Field Users --->
 <cfelse>
 	
     <!--- Other Users Only Have Access to the Report --->
@@ -105,7 +139,6 @@
             <cfinclude template="_#action#.cfm" />
     
         </cfcase>
-    
     
         <!--- The default case is the login page --->
         <cfdefaultcase>

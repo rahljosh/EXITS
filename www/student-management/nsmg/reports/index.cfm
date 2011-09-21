@@ -45,53 +45,56 @@
         <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for Office Users</td></tr>
         <tr>
             <td width="50%"><a href="?curdoc=reports/acceptance_select_pro">Acceptance Letter and Missing Documents Report</a></td>
-            <td><a href="?curdoc=reports/labels_select_pro">Labels (Avery 5160), Student ID Cards (Avery 5371) and Bulk Letters</a></td>
+            <td width="50%"><a href="?curdoc=reports/labels_select_pro">Labels (Avery 5160), Student ID Cards (Avery 5371) and Bulk Letters</a></td>
         </tr>
     
         <tr>
-            <td><a href="?curdoc=reports/bulk_progress_report">Bulk Progress Reports</a></td>	        
+            <td><a href="?curdoc=userPayment/index&action=bonusReport">Bonus Report (Representative Payments)</a></td>	        
             <td><a href="?curdoc=reports/overall_reports_menu">Overall Reports</a></td>
         </tr>
         
         <tr>
-            <td><a href="?curdoc=reports_new/cancelled_students">Cancelled Students</a></td>
+            <td><a href="?curdoc=reports/bulk_progress_report">Bulk Progress Reports</a></td>
             <td><a href="?curdoc=reports/sele_program">Program Statistics</a></td>
         </tr>
     
         <tr>
-            <td><a href="reports/check_hosts_sevis.cfm" target="_blank">Check Hosts Address for SEVIS Batch System</a></td>
+            <td><a href="?curdoc=reports_new/cancelled_students">Cancelled Students</a></td>
             <td><a href="?curdoc=reports/intl_reports_menu">Reports for International Reps</a></td>	
         </tr>	
       
         <tr>
-            <td><a href="reports/check_schools_sevis.cfm" target="_blank">Check Schools Address for SEVIS Batch System</a></td>
+            <td><a href="reports/check_hosts_sevis.cfm" target="_blank">Check Hosts Address for SEVIS Batch System</a></td>
             <td><a href="?curdoc=reports/excel_generator_menu">Reports in Excel Format</a></td>
         </tr>
         
         <tr>
-            <td><a href="?curdoc=reports/dept_state_menu">CSIET / Department of State Reports</a></td>
+            <td><a href="reports/check_schools_sevis.cfm" target="_blank">Check Schools Address for SEVIS Batch System</a></td>
             <td><a href="?curdoc=reports/regional_manager_check">Regions with multiple Managers Assigned</a></td>
         </tr>
         
         <tr>
-            <td><a href="?curdoc=reports/ds2019_list_select_pro">DS-2019 - Students List, Placement and Verification Reports</a></td>
+            <td><a href="?curdoc=reports/dept_state_menu">CSIET / Department of State Reports</a></td>
             <td><a href="?curdoc=sevis/reports_menu">SEVIS Batch Reports</a></td>
         </tr>
         
         <tr>
-            <td><a href="?curdoc=reports/select_program">Gender Report by Region</a></td>
+            <td><a href="?curdoc=reports/ds2019_list_select_pro">DS-2019 - Students List, Placement and Verification Reports</a></td>
             <td><a href="?curdoc=reports/graphics_menu">Statistical Graphics</a></td>
         </tr>
         
         <tr>
-            <td><a href="?curdoc=reports/host_check_selection">Hosts in System</a></td>
+            <td><a href="?curdoc=reports/select_program">Gender Report by Region</a></td>
             <td><a href="?curdoc=reports/users_in_system">Users Privilege Report</a></td>
         </tr>
         
         <tr>
-        	<td>&nbsp;</td>
+        	<td><a href="?curdoc=reports/host_check_selection">Hosts in System</a></td>
             <td><a href="?curdoc=reports/userTrainingReports">Training Reports</a></td>
         </tr>
+        
+        
+        
     </cfif>
 
 	<!--- Compliance Reports --->

@@ -249,10 +249,22 @@
 ********************************************/
 
 /* Facebook Style */
+.reportTableBorder {
+	border:1px solid #3b5998;
+	margin-top:10px;
+}
+
 .reportCenterTitle {
 	color:#FFFFFF;
 	font-weight:bold;
 	text-align:center;	
+	background-color:#3b5998; 
+}
+
+.reportLeftTitle {
+	padding:5px;
+	color:#FFFFFF;
+	font-weight:bold;
 	background-color:#3b5998; 
 }
 

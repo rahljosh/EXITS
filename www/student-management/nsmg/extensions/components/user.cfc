@@ -364,7 +364,12 @@
 	</cffunction>
 
 
-	<!--- Payments --->
+	<!--- ------------------------------------------------------------------------- ----
+		
+		Start of Payment Section
+	
+	----- ------------------------------------------------------------------------- --->
+    
 	<cffunction name="getRepTotalPayments" access="public" returntype="query" output="false" hint="Gets reps total payment by program">
     	<cfargument name="userID" hint="UserID is required">
         <cfargument name="companyID" hint="companyID is required">
@@ -450,8 +455,60 @@
 	</cffunction>
 
 
+	<cffunction name="getPlacementBonusReport" access="public" returntype="query" output="false" hint="Gets placement bonus report">
+    	<cfargument name="programID" hint="programID is required">        
+        <cfargument name="paymentTypeID" hint="paymentTypeID is required">
+        <cfargument name="regionID" hint="regionID is required">
+              
+        <cfquery 
+			name="qGetPlacementBonusReport" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    u.userID,
+                    u.firstName,
+                    u.lastName,
+                    SUM(rep.amount) AS totalPaid,
+                    r.regionID,
+                    r.regionName
+                FROM 
+                    smg_rep_payments rep
+                INNER JOIN
+                	smg_users u ON u.userID = rep.agentID
+                INNER JOIN
+                    smg_payment_types type ON type.id = rep.paymenttype
+                INNER JOIN
+                	smg_students s ON s.studentID = rep.studentID
+                        AND
+                            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> )
+                        AND
+                            s.regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
+                INNER JOIN
+                	smg_regions r ON r.regionID = s.regionAssigned                	
+                WHERE 
+                	rep.paymentType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.paymentTypeID#" list="yes"> )
+                GROUP BY
+                	rep.agentID
+                ORDER BY
+                    r.regionName,
+                    u.lastName
+		</cfquery>
+		   
+		<cfreturn qGetPlacementBonusReport>
+	</cffunction>
 
-	<!--- Start of User Training --->
+	<!--- ------------------------------------------------------------------------- ----
+		
+		End of Payment Section
+	
+	----- ------------------------------------------------------------------------- --->
+
+    
+	<!--- ------------------------------------------------------------------------- ----
+		
+		Start of User Training
+	
+	----- ------------------------------------------------------------------------- --->
+    
 	<cffunction name="getTraining" access="public" returntype="query" output="false" hint="Gets a list of training records for a userID">
     	<cfargument name="userID" default="0" hint="userID is not required">
 
@@ -932,10 +989,20 @@
         </cfscript>
         
 	</cffunction>    
-	<!--- End of User Training --->
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		End of User Training
 	
+	----- ------------------------------------------------------------------------- --->
     
-    <!----Studet Services Project----> 
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		Start of Student Services Project
+	
+	----- ------------------------------------------------------------------------- --->
+    
 	<cffunction name="getStudentServices" access="public" returntype="query" output="false" hint="Gets a list of problem records for a studentID">
     	<cfargument name="studentID" default="0" hint="studentID is not required">
               
@@ -967,9 +1034,20 @@
 		   
 		<cfreturn qGetInitialProblem>
 	</cffunction>
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		End of Student Services Project
+	
+	----- ------------------------------------------------------------------------- --->
+
     
-    
-    <!--- Remote Functions --->
+	<!--- ------------------------------------------------------------------------- ----
+		
+		Start of Remote Functions
+	
+	----- ------------------------------------------------------------------------- --->
+
     <cffunction name="getUsersAssignedToRegion" access="remote" returntype="query" output="false" hint="Gets a list of users assigned to a region">
     	<cfargument name="regionID" hint="regionID required">
     	
@@ -1040,6 +1118,11 @@
 			return qResultQuery;	
 		</cfscript>
 	</cffunction>
-    
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		End of Remote Functions
+	
+	----- ------------------------------------------------------------------------- --->
     
 </cfcomponent>
