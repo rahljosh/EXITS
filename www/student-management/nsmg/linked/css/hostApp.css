@@ -1,0 +1,53 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	font-family: Arial, Helvetica, sans-serif;
+
+     
+}
+.profileTable {
+	width:800px;
+	border-left: 1px solid #999;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	border-top: 1px solid #999;
+	/**padding: 6px 8px 6px 8px;**/
+	margin-bottom:10px;
+	background-color:#FFF;
+	
+
+}
+table {
+       font-family: Arial, Helvetica, sans-serif;
+       font-size: 12px;
+       font-weight: normal;
+       color: #000;
+}
+.title {
+       font-family: Arial, Helvetica, sans-serif;
+       font-size: 13px;
+       font-weight: bold;
+       color: #999;
+}
+
+.alert{
+	width:800;
+	height:25px;
+	border:#666;
+	background-color:#FF9797;
+	text-align:center;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
+	
+}
+
+ #date {
+       height: 25px;
+       width: 450px;
+       float: right;
+       margin-right: 25px;
+       position: relative;
+       z-index: 156;
+       padding: 5px;
+}
