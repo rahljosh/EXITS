@@ -145,7 +145,7 @@
 				<cfscript>
                     // Process Batch
                     CBCStatus = APPLICATION.CFC.CBC.processBatch(
-                        companyID=qGetCBCHost.companyID,
+                        companyID=VAL(qGetCBCHost.companyID),
                         companyShort=qGetCBCHost.companyShort,
                         userType=userType,
                         hostID=qGetCBCHost.hostID,
@@ -291,7 +291,7 @@
                 <cfscript>
                     // Process Batch
                     CBCStatus = APPLICATION.CFC.CBC.processBatch(
-                        companyID=qGetCBCHost.companyID,
+                        companyID=VAL(qGetCBCHost.companyID),
                         companyShort=qGetCBCHost.companyShort,
                         userType=userType,
                         hostID=qGetCBCMember.hostID,
