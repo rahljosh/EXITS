@@ -16,6 +16,8 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
     <cfscript>
+		vTotalBonus = 0;
+	
 		// Get Programs
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
 	
@@ -155,10 +157,10 @@
     
         <table width="90%" cellpadding="4" cellspacing="0" align="center" class="reportTableBorder">
             <tr class="reportCenterTitle">
-                <th>Bonus Report &nbsp; - &nbsp; Bonus Included: &nbsp; #vPaymentSelectedList#</th>
+                <th>Bonus Report</th>
             </tr>
             <cfif NOT VAL(qGetResults.recordCount)>
-            	<tr valign="top" bgcolor="##edeff4">
+            	<tr bgcolor="##edeff4">
             		<td align="center">No records found</td>
                 </tr>
             </cfif>
@@ -176,23 +178,26 @@
         
         <table width="90%" cellpadding="4" cellspacing="0" align="center" class="reportTableBorder">
             <tr class="reportLeftTitle">
-                <td colspan="2" style="font-weight:bold;">Region: #qGetResults.regionName#</td>
+                <td colspan="3" style="font-weight:bold;">Region: #qGetResults.regionName#</td>
             </tr>
-            <tr valign="top" bgcolor="##edeff4">
-                <td width="65%"><strong>Representative</strong></td>
-                <td width="35%"><strong>Total Paid</strong></td>
+            <tr bgcolor="##edeff4" style="font-weight:bold">
+                <td width="50%">Representative</td>
+                <td width="25%">Bonus Type</td>
+                <td width="25%">Total Paid</td>
             </tr>       
             			
 			<cfoutput>
 
                 <tr bgcolor="###iif(vRowCount MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
                     <td>#qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)</td>
+                    <td>#qGetResults.type#</td>
                     <td>#DollarFormat(qGetResults.totalPaid)#</td>
                 </tr>
 
 				<cfscript>
 					// Calculate Total Per Region
                     vTotalPerRegion = vTotalPerRegion + qGetResults.totalPaid;
+					
 					// Set Row Color
 					vRowCount ++;
                 </cfscript>
@@ -200,12 +205,28 @@
             </cfoutput>
             
             <tr bgcolor="###iif(vRowCount MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#" style="font-weight:bold;">
-                <td align="right" style="padding-right:5px;">Total:</td>
-                <td><strong>#DollarFormat(vTotalPerRegion)#</strong></td>
+                <td colspan="2" align="right" style="padding-right:5px;">Total:</td>
+                <td>#DollarFormat(vTotalPerRegion)#</td>
             </tr>
         </table>
 
+		<cfscript>
+            // Calculate Total Displayed
+            vTotalBonus = vTotalBonus + vTotalPerRegion;
+        </cfscript>
+
 	</cfoutput>
     
+    <cfoutput>
+    
+        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="reportTableBorder">
+            <tr bgcolor="##edeff4" style="font-weight:bold;">
+                <td width="75%" align="right" style="padding-right:5px;">Total Bonuses:</td>
+                <td width="25%">#DollarFormat(vTotalBonus)#</td>
+            </tr>
+        </table>
+	
+	</cfoutput>
+	    
 </cfif>
 

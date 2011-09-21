@@ -468,6 +468,8 @@
                     u.firstName,
                     u.lastName,
                     SUM(rep.amount) AS totalPaid,
+                    type.ID,
+                    type.type,
                     r.regionID,
                     r.regionName
                 FROM 
@@ -487,10 +489,12 @@
                 WHERE 
                 	rep.paymentType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.paymentTypeID#" list="yes"> )
                 GROUP BY
-                	rep.agentID
+                	rep.agentID,
+                    type.ID
                 ORDER BY
                     r.regionName,
-                    u.lastName
+                    u.lastName,
+                    type.type
 		</cfquery>
 		   
 		<cfreturn qGetPlacementBonusReport>
