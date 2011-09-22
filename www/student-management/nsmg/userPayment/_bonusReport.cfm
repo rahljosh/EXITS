@@ -99,41 +99,41 @@
                     <td width="50%" valign="top">
                         
                         <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-                        <input type="hidden" name="submitted" value="1">
-                        <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
-                            <tr><th colspan="2" bgcolor="##e2efc7">Bonus Report Per Region</th></tr>
-                            <tr>
-                                <td valign="top">Program:</td>
-                                <td align="left">
-                                    <select name="programID" id="programID" class="xLargeField" multiple size="5">
-                                        <cfloop query="qGetProgramList">
-                                            <option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option>
-                                        </cfloop>
-                                    </select>
-                                </td>
-                             </tr>
-                            <tr>
-                                <td valign="top">Bonus Type:</td>
-                                <td align="left">
-                                    <select name="paymentTypeID" id="paymentTypeID" class="xLargeField" multiple size="5">
-                                        <cfloop query="qGetPaymentTypeList">
-                                            <option value="#qGetPaymentTypeList.ID#">#qGetPaymentTypeList.type#</option>
-                                        </cfloop>
-                                    </select>
-                                </td>
-                             </tr>
-                            <tr>
-                                <td valign="top">Region: </td>
-                                <td align="left">
-                                    <select name="regionID" id="regionID" class="xLargeField" multiple size="5">
-                                        <cfloop query="qGetRegionList">
-                                            <option value="#qGetRegionList.regionID#">#qGetRegionList.regionName#</option>
-                                        </cfloop>
-                                    </select>
-                                </td>
-                             </tr>
-                            <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
-                        </table>
+                            <input type="hidden" name="submitted" value="1">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="90%" align="center">
+                                <tr><th colspan="2" bgcolor="##e2efc7">Bonus Report Per Region</th></tr>
+                                <tr>
+                                    <td valign="top">Program:</td>
+                                    <td align="left">
+                                        <select name="programID" id="programID" class="xLargeField" multiple size="5">
+                                            <cfloop query="qGetProgramList">
+                                                <option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option>
+                                            </cfloop>
+                                        </select>
+                                    </td>
+                                 </tr>
+                                <tr>
+                                    <td valign="top">Bonus Type:</td>
+                                    <td align="left">
+                                        <select name="paymentTypeID" id="paymentTypeID" class="xLargeField" multiple size="5">
+                                            <cfloop query="qGetPaymentTypeList">
+                                                <option value="#qGetPaymentTypeList.ID#">#qGetPaymentTypeList.type#</option>
+                                            </cfloop>
+                                        </select>
+                                    </td>
+                                 </tr>
+                                <tr>
+                                    <td valign="top">Region: </td>
+                                    <td align="left">
+                                        <select name="regionID" id="regionID" class="xLargeField" multiple size="5">
+                                            <cfloop query="qGetRegionList">
+                                                <option value="#qGetRegionList.regionID#">#qGetRegionList.regionName#</option>
+                                            </cfloop>
+                                        </select>
+                                    </td>
+                                 </tr>
+                                <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
+                            </table>
                         </form>
                         
                     </td>
@@ -155,13 +155,13 @@
 	
     <cfoutput>
     
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="reportTableBorder">
-            <tr class="reportCenterTitle">
+        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <tr>
                 <th>Bonus Report</th>
             </tr>
             <cfif NOT VAL(qGetResults.recordCount)>
-            	<tr bgcolor="##edeff4">
-            		<td align="center">No records found</td>
+            	<tr class="on">
+            		<td class="center">No records found</td>
                 </tr>
             </cfif>
         </table>
@@ -176,19 +176,19 @@
 			vRowCount = 1;
 		</cfscript>
         
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="reportTableBorder">
-            <tr class="reportLeftTitle">
-                <td colspan="3" style="font-weight:bold;">Region: #qGetResults.regionName#</td>
+        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <tr>
+                <th class="left" colspan="3">Region: #qGetResults.regionName#</th>
             </tr>
-            <tr bgcolor="##edeff4" style="font-weight:bold">
-                <td width="50%">Representative</td>
-                <td width="25%">Bonus Type</td>
-                <td width="25%">Total Paid</td>
+            <tr>
+                <td class="subTitleLeft" width="50%">Representative</td>
+                <td class="subTitleLeft" width="25%">Bonus Type</td>
+                <td class="subTitleLeft" width="25%">Total Paid</td>
             </tr>       
             			
 			<cfoutput>
 
-                <tr bgcolor="###iif(vRowCount MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
+                <tr class="#iif(vRowCount MOD 2 ,DE("off") ,DE("on") )#">
                     <td>#qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)</td>
                     <td>#qGetResults.type#</td>
                     <td>#DollarFormat(qGetResults.totalPaid)#</td>
@@ -204,9 +204,9 @@
                 
             </cfoutput>
             
-            <tr bgcolor="###iif(vRowCount MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#" style="font-weight:bold;">
-                <td colspan="2" align="right" style="padding-right:5px;">Total:</td>
-                <td>#DollarFormat(vTotalPerRegion)#</td>
+            <tr class="#iif(vRowCount MOD 2 ,DE("off") ,DE("on") )#">
+                <td class="summaryRight" colspan="2">Total:</td>
+                <td class="summaryLeft">#DollarFormat(vTotalPerRegion)#</td>
             </tr>
         </table>
 
@@ -219,10 +219,10 @@
     
     <cfoutput>
     
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="reportTableBorder">
-            <tr bgcolor="##edeff4" style="font-weight:bold;">
-                <td width="75%" align="right" style="padding-right:5px;">Total Bonuses:</td>
-                <td width="25%">#DollarFormat(vTotalBonus)#</td>
+        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <tr class="on">
+                <td width="75%" class="summaryRight">Total Bonuses:</td>
+                <td width="25%" class="summaryLeft">#DollarFormat(vTotalBonus)#</td>
             </tr>
         </table>
 	
