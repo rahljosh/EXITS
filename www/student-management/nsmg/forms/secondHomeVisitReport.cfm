@@ -18,8 +18,8 @@
 
 <cfsilent>
 
-	<!--- Import CustomTag Used for Page Messages and Form Errors --->
-    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" />
+	<!--- Import CustomTag Used for Page Messages and Form Errors--->
+    <cfimport taglib="../extensions/customtags/gui/" prefix="gui" /> 
 	
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
@@ -43,6 +43,7 @@
     <cfparam name="FORM.studySpace" default="">
     <cfparam name="FORM.pets" default="">
     <cfparam name="FORM.other" default="">
+    <cfparam name="FORM.dateOfVisit" default="">
 	
     <!--- set the edit/approve/reject/delete access. --->
 	<cfset allow_edit = 0>
@@ -132,12 +133,28 @@
         WHERE fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
     
+    <cfquery name="get_second_rep" datasource="#application.dsn#">
+        SELECT userid, firstname, lastname
+        FROM smg_users
+        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_secondVisitRep#">
+    </cfquery>
+    
     <cfquery name="get_rep" datasource="#application.dsn#">
         SELECT userid, firstname, lastname
         FROM smg_users
         WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_sr_user#">
     </cfquery>
-    
+    <cfif get_report.fk_pr_user is not ''>
+        <cfquery name="get_place_rep" datasource="#application.dsn#">
+        SELECT userid, firstname, lastname
+        FROM smg_users
+        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_pr_user#">
+    	</cfquery>
+   <cfelse>
+   	<cfset get_place_rep.firstname = 'Not Originally'>
+    <cfset get_place_rep.lastname = 'Recorded'>
+    <cfset get_place_rep.userid = ''>
+   </cfif>
     <cfif get_report.fk_ra_user NEQ ''>
         <cfquery name="get_advisor_for_rep" datasource="#application.dsn#">
             SELECT userid, firstname, lastname
@@ -180,7 +197,11 @@
 
 		<cfscript>
             // Data Validation
-            
+            // Neighborhood Appearance
+            if ( NOT LEN(TRIM(FORM.dateOfVisit)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the date you visited the home.");
+            }	
             // Neighborhood Appearance
             if ( NOT LEN(TRIM(FORM.neighborhoodAppearance)) ) {
                 // Get all the missing items in a list
@@ -297,6 +318,7 @@
                 UPDATE 
                     secondVisitAnswers 
                 SET
+                	dateOfVisit = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#FORM.dateOfVisit#">,
                     neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
                     avoid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
                     homeAppearance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
@@ -354,9 +376,11 @@
             FORM.bathRoom = secondVisitAnswers.bathRoom;
             FORM.outdoorsFromBedroom = secondVisitAnswers.outdoorsFromBedroom;
             FORM.storageSpace = secondVisitAnswers.storageSpace;
+			FORM.studySpace = secondVisitAnswers.studySpace;
             FORM.privacy = secondVisitAnswers.privacy;
             FORM.pets = secondVisitAnswers.pets;
             FORM.other = secondVisitAnswers.other;
+			FORM.dateOfVisit = secondVisitAnswers.dateOfVisit;
          </cfscript>
          
     </cfif>  
@@ -521,7 +545,9 @@
         </p>
 
         <p>
+        	<strong>Second Visit Representative::</strong> #get_second_rep.firstname# #get_second_rep.lastname# (#get_second_rep.userid#)<br />
             <strong>Supervising Representative::</strong> #get_rep.firstname# #get_rep.lastname# (#get_rep.userid#)<br />
+            <strong>Placing Representative::</strong> #get_place_rep.firstname# #get_place_rep.lastname# (#get_place_rep.userid#)<br />
             <strong>Regional Advisor:</strong> <cfif get_report.fk_ra_user EQ ''>
                         Reports Directly to Regional Director
                     <cfelse>
@@ -536,7 +562,16 @@
             formErrors="#SESSION.formErrors.GetCollection()#"
             messageType="divOnly"
             />
-		
+		<label>
+           Date of Visit
+            <span class="small">Date you visited the home</span>
+        </label>
+        <Cfif VAL(FORM.performEdit)>
+            <input type="text" name="dateOfVisit" size=10>
+        <cfelse>
+            #DateFormat(FORM.dateofvisit, 'mm/dd/yyyy')#
+        </Cfif>
+        <br /><br /><br />
         <label>
             Neighborhood Appearance
             <span class="small">General look and feel</span>
@@ -708,7 +743,7 @@
             #FORM.outdoorsFromBedroom#
           </Cfif>
           <br /><Br /><Br />
-          <label>Does #qGetStudentInfo.firstname# have adequete storage space? 
+          <label>Does #qGetStudentInfo.firstname# have adequate storage space? 
             <span class="small"></span>
           </label>
           <Cfif VAL(FORM.performEdit)>	
@@ -750,14 +785,14 @@
           <Cfif VAL(FORM.performEdit)>	
             <textarea name="other" cols="40" rows=5>#FORM.other#</textarea>
             <cfelse>
-            #FORM.pets#
+            #FORM.other#
           </Cfif>
           
           <br /><Br /><br />
         </p>
         
         <div align="right" >
-        <cfif CLIENT.userid EQ get_report.fk_secondVisitRep and VAL(FORM.performEdit)>
+        <cfif VAL(FORM.performEdit)  >
             <button type="submit">Verify & Submit Information</button>
         </cfif>
         </div>
