@@ -5,7 +5,7 @@
 
     <cflock timeout="30">
         <cfquery datasource="#application.dsn#">
-            INSERT INTO progress_reports (fk_reportType, fk_student, pr_uniqueid, pr_month_of_report, fk_program, fk_secondVisitRep, fk_sr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host, fk_intrep_user)
+            INSERT INTO progress_reports (fk_reportType, fk_student, pr_uniqueid, pr_month_of_report, fk_program, fk_secondVisitRep, fk_sr_user, fk_pr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host, fk_intrep_user)
             VALUES (
             <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">,
@@ -14,6 +14,7 @@
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_secondVisitRep#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_sr_user#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_pr_user#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_ra_user#" null="#yesNoFormat(trim(form.fk_ra_user) EQ '')#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_rd_user#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_ny_user#">,
@@ -83,13 +84,14 @@
         <cfabort>
 	</cfif>
     <cfquery name="get_student" datasource="#application.dsn#">
-        SELECT secondVisitRepID, arearepid, intrep, regionassigned, hostid, programid, companyid, secondVisitRepID
+        SELECT secondVisitRepID, arearepid, placerepid, intrep, regionassigned, hostid, programid, companyid, secondVisitRepID
         FROM smg_students
         WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">
     </cfquery>
     
     <cfset form.companyid = get_student.companyid>
     <cfset form.fk_sr_user = get_student.arearepid>
+    <cfset form.fk_pr_user = get_student.placerepid>
     <cfset form.fk_secondVisitRep = get_student.secondVisitRepID>
     
     <cfset form.programid = get_student.programid>
@@ -175,6 +177,7 @@
 <cfinput type="hidden" name="programid" value="#form.programid#">
 <cfinput type="hidden" name="fk_secondVisitRep" value="#form.fk_secondVisitRep#">
 <cfinput type="hidden" name="fk_sr_user" value="#form.fk_sr_user#">
+<cfinput type="hidden" name="fk_pr_user" value="#form.fk_pr_user#">
 <cfinput type="hidden" name="fk_ra_user" value="#form.fk_ra_user#">
 <cfinput type="hidden" name="fk_rd_user" value="#form.fk_rd_user#">
 <cfinput type="hidden" name="fk_ny_user" value="#form.fk_ny_user#">
@@ -272,6 +275,11 @@
             FROM smg_users
             WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_sr_user#">
         </cfquery>
+         <cfquery name="get_placing_rep" datasource="#application.dsn#">
+            SELECT firstname, lastname
+            FROM smg_users
+            WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_pr_user#">
+        </cfquery>
         <cfquery name="get_regional_director" datasource="#application.dsn#">
             SELECT firstname, lastname
             FROM smg_users
@@ -305,6 +313,10 @@
           <tr>
             <th align="right">Supervising Representative:</th>
             <td>#get_rep.firstname# #get_rep.lastname# (#form.fk_sr_user#)</td>
+          </tr>
+          <tr>
+            <th align="right">Placing Representative:</th>
+            <td>#get_placing_rep.firstname# #get_placing_rep.lastname# (#form.fk_pr_user#)</td>
           </tr>
           <tr>
             <th align="right">Regional Advisor:</th>
