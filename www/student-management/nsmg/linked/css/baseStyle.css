@@ -248,6 +248,83 @@
 	REPORTS
 ********************************************/
 
+.blueThemeReportTable {
+	border:1px solid #3b5998;
+	margin-top:10px;
+}
+
+.blueThemeReportTable th {
+	padding:5px;
+	color:#FFFFFF;
+	font-weight:bold;
+	background-color:#3b5998; 
+	text-transform:uppercase;
+}
+
+.blueThemeReportTable th.left {
+	padding:5px;
+	color:#FFFFFF;
+	text-align:left;
+	font-weight:bold;
+	text-transform:none;
+	background-color:#3b5998; 
+}
+
+.blueThemeReportTable td.subTitleLeft {
+	color:#3b5998;
+	font-weight:bold;
+	border-bottom:#3b5998;
+	border-bottom:1px solid #EDEFF4;
+}
+
+.blueThemeReportTable td.subTitleCenter {
+	color:#3b5998;
+	font-weight:bold;
+	text-align:center;
+	border-bottom:1px solid #EDEFF4;
+}
+
+.blueThemeReportTable td.subTitleRight {
+	color:#3b5998;
+	font-weight:bold;
+	text-align:right;
+	border-bottom:1px solid #EDEFF4;
+}
+
+.blueThemeReportTable td.summaryLeft {
+	color:#000;
+	font-weight:bold;
+	border-bottom:#3b5998;
+}
+
+.blueThemeReportTable td.summaryCenter {
+	color:#000;
+	font-weight:bold;
+	text-align:center;
+}
+
+.blueThemeReportTable td.summaryRight {
+	color:#000;
+	font-weight:bold;
+	text-align:right;
+	padding-right:5px;
+}
+
+.blueThemeReportTable tr.on {
+	background-color:#EDEFF4;
+}
+
+.blueThemeReportTable tr.off {
+	background-color:#FFFFFF;
+}
+
+.blueThemeReportTable td.center {
+	text-align:center;
+}
+
+/* End of Blue Theme Report */
+
+
 /* Facebook Style */
 .reportTableBorder {
 	border:1px solid #3b5998;

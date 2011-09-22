@@ -252,7 +252,7 @@
 	<cffunction name="getSupervisedUsers" access="public" returntype="query" output="false" hint="Gets a list of supervised users">
         <cfargument name="usertype" type="numeric" hint="usertype is required">
         <cfargument name="userID" type="numeric" hint="userID is required">
-        <cfargument name="regionID" type="numeric" hint="companyID is required">
+        <cfargument name="regionID" type="numeric" hint="regionID is required">
         
         <!--- Office Users --->
         <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
@@ -261,7 +261,7 @@
             <cfquery 
                 name="qGetSupervisedUsers" 
                 datasource="#APPLICATION.dsn#">
-                    SELECT
+                    SELECT DISTINCT
                         u.*
                     FROM 
                     	smg_users u
@@ -283,7 +283,7 @@
             <cfquery 
                 name="qGetSupervisedUsers" 
                 datasource="#APPLICATION.dsn#">
-                    SELECT
+                    SELECT DISTINCT
                         u.*
                     FROM 
                     	smg_users u
@@ -291,8 +291,14 @@
                     	user_access_rights uar ON uar.userid = u.userid
                     WHERE 
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                    AND 
-                    	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                    
+					<cfif ListLen(ARGUMENTS.regionID) EQ 1>
+                        AND 
+                            uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                    <cfelse>
+                        AND 
+                            uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#"> )
+                    </cfif>
                         
                     <cfswitch expression="#ARGUMENTS.userType#">
                     	
