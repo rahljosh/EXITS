@@ -129,12 +129,12 @@
     filePath="../"
 />	
 
-	<!--- Display Errors --->
-    <cfif SESSION.formErrors.length()>
+	<cfoutput>
+    
+    	<!--- Display Errors --->
+        <cfif SESSION.formErrors.length()>
         
-        <cfoutput>
-        
-            <!--- Table Header --->
+			<!--- Table Header --->
             <gui:tableHeader
                 imageName="user.gif"
                 tableTitle="Missing Progress Report by Region (Active Students)"
@@ -162,107 +162,90 @@
                 imagePath="../"
             />
         
-        </cfoutput>
+        <!--- Run Report --->
+        <cfelse>
+        	
+            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                <tr>
+                    <th>Missing Progress Reports</th>
+                </tr>
+                <tr>
+                    <td class="center">
+                        Programs Included: <br /> #vDisplayProgramList#
+                    </td>
+                </tr>
+            </table>
         
-    <!--- Run Report --->
-    <cfelse>
-        
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-            <tr>
-                <th>Missing Progress Reports</th>
-            </tr>
-            <tr>
-                <td class="center">
-                    Programs Included: <br /> <cfoutput>#vDisplayProgramList#</cfoutput>
-                </td>
-            </tr>
-        </table>
-    
-        <cfloop query="qGetSelectedRegion">
-            
-            <cfscript>
-                vGetCurrentRegion = qGetSelectedRegion.regionid;
-            </cfscript>
-            
-            <cfquery name="qGetStudentList" datasource="MySql">
-                SELECT 
-                    s.studentid, 
-                    s.firstname, 
-                    s.familylastname, 
-                    p.type, 
-                    p.programname, 
-                    p.startdate, 
-                    p.enddate,
-                    u.userID,
-                    u.firstname AS userFirstName, 
-                    u.lastname AS userLastName
-                FROM 
-                    smg_students s
-                INNER JOIN 
-                    smg_programs p ON p.programid = s.programid
-                INNER JOIN 
-                    smg_users u ON u.userid = s.arearepid
-                WHERE 
-                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND 
-                    s.hostid != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                AND 
-                    s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#vGetCurrentRegion#">
-                AND 
-                    s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
-
-                <!--- Regional Advisors --->
-                <cfif LEN(vListOfAdvisorUsers)>
-                    AND 
-                        s.arearepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
-                </cfif>		
-
-                <!--- Area Reps --->                 
-                <cfif CLIENT.usertype EQ 7>
-                    AND 
-                        s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
-                </cfif>
-                    
-                ORDER BY 
-                    u.lastname, 
-                    s.familylastname
-            </cfquery>
-        
-            <cfif qGetStudentList.recordcount>
+            <cfloop query="qGetSelectedRegion">
                 
-                <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    
-                    <tr>
-                        <th class="left" colspan="4">Region: <cfoutput>#qGetSelectedRegion.regionname#</cfoutput></th>
-                    </tr>
-                    <tr>
-                    	<td style="line-height:1px;">&nbsp;</td>
-                    </tr>
-                    
-                    <!--- Group by Supervising Representative --->
-               		<cfoutput query="qGetStudentList" group="userID">
-                    	
-                        <cfscript>
-							vRowCount = 1;
-						</cfscript>
+                <cfscript>
+                    vGetCurrentRegion = qGetSelectedRegion.regionid;
+                </cfscript>
+                
+                <cfquery name="qGetStudentList" datasource="MySql">
+                    SELECT 
+                        s.studentid, 
+                        s.firstname, 
+                        s.familylastname, 
+                        p.type, 
+                        p.programname, 
+                        p.startdate, 
+                        p.enddate,
+                        u.userID,
+                        u.firstname AS userFirstName, 
+                        u.lastname AS userLastName
+                    FROM 
+                        smg_students s
+                    INNER JOIN 
+                        smg_programs p ON p.programid = s.programid
+                    INNER JOIN 
+                        smg_users u ON u.userid = s.arearepid
+                    WHERE 
+                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    AND 
+                        s.hostid != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    AND 
+                        s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#vGetCurrentRegion#">
+                    AND 
+                        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+
+                    <!--- Regional Advisors --->
+                    <cfif LEN(vListOfAdvisorUsers)>
+                        AND 
+                            s.arearepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                    </cfif>		
+
+					<!--- Area Reps --->                 
+                    <cfif CLIENT.usertype EQ 7>
+                        AND 
+                            s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
+                    </cfif>
                         
+                    ORDER BY 
+                        u.lastname, 
+                        s.familylastname
+                </cfquery>
+            
+                <cfif qGetStudentList.recordcount>
+                    
+                    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                         <tr>
-                            <th class="left" colspan="4">Supervising Rep.: #qGetStudentList.userFirstName# #qGetStudentList.userLastName# (###qGetStudentList.userID#)</th>
+                            <th class="left" colspan="4">Region: #qGetSelectedRegion.regionname#</th>
                         </tr>
-                       	<tr>
-                            <td class="subTitleLeft" width="35%">Student</td>
-                            <td class="subTitleLeft" width="25%">Program</td>
-                            <td class="subTitleLeft" width="40%">Missing Report(s)</td>
+                        <tr>
+                            <td class="subTitleLeft" width="25%">Supervising Representative</td>
+                            <td class="subTitleLeft" width="25%">Student</td>
+                            <td class="subTitleLeft" width="20%">Program</td>
+                            <td class="subTitleLeft" width="30%">Missing Report(s)</td>
                         </tr>       
-                    	
-                        <!--- loop through students --->
-						<cfoutput>		
-    
-                            <cfscript>
-                                // This will store a list of missing reports
-                                vMissingReportsList = '';
-    
-                                // J1 Private Program - select which reports are required
+                        
+                        <cfloop query="qGetStudentList">		
+
+							<cfscript>
+								// This will store a list of missing reports
+                            	vMissingReportsList = '';
+
+								// J1 Private Program - select which reports are required
                                 if ( qGetStudentList.type EQ 5 ) {
                                     
                                     if ( Month(qGetStudentList.enddate) EQ 6 AND DateDiff("m", qGetStudentList.startdate, qGetStudentList.enddate) EQ 10 ) {
@@ -294,66 +277,62 @@
                                     AND 
                                         pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
                                 </cfquery>
-                                
+								
                                 <cfscript>
-                                    if ( NOT VAL(qGetMonthReport.recordCount) ) {
-                                        vMissingReportsList = vMissingReportsList & MonthAsString(i);	
-                                    }	
-                                    
-                                    if ( ListLast(FORM.monthReport) NEQ i ) {
-                                        vMissingReportsList = vMissingReportsList & ", &nbsp;";	
-                                    }
-                                </cfscript>
+									if ( NOT VAL(qGetMonthReport.recordCount) ) {
+										vMissingReportsList = vMissingReportsList & MonthAsString(i);	
+									}	
+									
+									if ( ListLast(FORM.monthReport) NEQ i ) {
+										vMissingReportsList = vMissingReportsList & ", &nbsp;";	
+									}
+								</cfscript>
                                 
                             </cfloop>
-    
+
                             <!--- Report is Missing --->
                             <cfif LEN(vMissingReportsList)>  
                             
-                                <tr class="#iif(vRowCount MOD 2 ,DE("off") ,DE("on") )#">
+                                <tr class="#iif(qGetStudentList.currentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                    <td>#qGetStudentList.userFirstName# #qGetStudentList.userLastName# (###qGetStudentList.userID#)</td>
                                     <td>#qGetStudentList.firstname# #qGetStudentList.familylastname# (###qGetStudentList.studentID#)</td>
                                     <td>#qGetStudentList.programname#</td>
                                     <td>#vMissingReportsList#</td>
                                 </tr>
                                 
-                                <cfscript>
-									vRowCount ++;
-								</cfscript>
-                                
                             </cfif>
                             
-                        </cfoutput>
+                        </cfloop>
+                    
+                    </table>
                 
-                	</cfoutput>
+                </cfif>
                 
-                </table>
-            
-            </cfif>
-            
-        </cfloop>
-    
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">            
-            <th colspan="2">Reports Per Program</th>
-            <tr class="off">
-                <td width="50%">
-                    10 Month -> October - December - February - April - June  <br />
-                </td>
-                <td width="50%">
-                    1st Semester -> October - December - February <br />
-                </td>
-            </tr>
-            <tr class="on">
-                <td width="50%">
-                    12 Month -> February - April - August - October - December
-                </td>
-                <td width="50%">
-                    2nd Semester -> February - April - June
-                </td>
-            </tr>
-        </table>
+            </cfloop>
+        
+            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">            
+                <th colspan="2">Reports Per Program</th>
+                <tr class="off">
+                    <td width="50%">
+                        10 Month -> October - December - February - April - June  <br />
+                    </td>
+                    <td width="50%">
+                        1st Semester -> October - December - February <br />
+                    </td>
+                </tr>
+                <tr class="on">
+                    <td width="50%">
+                        12 Month -> February - April - August - October - December
+                    </td>
+                    <td width="50%">
+                        2nd Semester -> February - April - June
+                    </td>
+                </tr>
+            </table>
 
-    </cfif>
+		</cfif>
 
+	</cfoutput>
 
 <!--- Page Footer --->
 <gui:pageFooter
