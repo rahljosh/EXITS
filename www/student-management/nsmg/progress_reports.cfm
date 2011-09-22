@@ -542,7 +542,7 @@ But in the output below we use the report fields where a report has been submitt
                         	
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
                              	
-									<cfif (#submittingRep# EQ client.userid  and (#isBetween(now(), startDate, endDate)#)) OR client.reportType EQ 2  >
+									<cfif (#submittingRep# EQ client.userid  and (#now()# gt #startDate#)) OR client.reportType EQ 2  >
                                 
                                         <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                         <input type="hidden" name="studentid" value="#studentid#">
