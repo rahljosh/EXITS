@@ -497,7 +497,6 @@
 			if ( ARGUMENTS.type EQ 'Candidate' ) {
 
 				APPLICATION.CFC.EMAIL.sendEmail(
-					emailFrom=APPLICATION.EMAIL.contactUs,
 					emailTo=APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email)),
 					emailTemplate='newAccount',
 					candidateID=newRecord.GENERATED_KEY,

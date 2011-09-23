@@ -336,12 +336,12 @@
             </cfsavecontent>
             
             <cfscript>
-                // Email Intl. Representative
+                // Email Host Company
                 if ( VAL(FORM.emailHostCompany) AND IsValid("email", qGetResults.hostCompanyEmail) ) {
                     
                     // Send out Self Placement Confirmation Email
                     APPLICATION.CFC.EMAIL.sendEmail(
-                        emailFrom=APPLICATION.EMAIL.contactUs,
+                        emailFrom="#APPLICATION.EMAIL.contactUs# (Anca Radoi CSB-USA)",
                         emailTo=qGetResults.hostCompanyEmail, // 'marcus@iseusa.com' | qGetResults.hostCompanyEmail
                         emailBCC=CLIENT.email,
 						emailReplyTo=CLIENT.email,

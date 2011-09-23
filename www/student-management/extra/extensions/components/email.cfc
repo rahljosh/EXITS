@@ -80,7 +80,7 @@
                 <cfcase value="7">
                     
                     <cfscript>
-                        csbEmailSubject = APPLICATION.CSB.Trainee.name & ' - ' & APPLICATION.CSB.Trainee.programName;
+                        csbEmailSubject = APPLICATION.CSB.Trainee.programName;
                         
                         accountCreatedMessage = 'An account has been successfully created at #APPLICATION.CSB.Trainee.name# - #APPLICATION.CSB.TraineeprogramName#. <br /><br />';
                     </cfscript>
@@ -91,7 +91,7 @@
                 <cfcase value="8">
                 
                     <cfscript>
-                        csbEmailSubject = APPLICATION.CSB.WAT.name & ' - ' & APPLICATION.CSB.WAT.programName;
+                        csbEmailSubject = APPLICATION.CSB.WAT.programName;
                         
                         accountCreatedMessage = 'An account has been successfully created at #APPLICATION.CSB.WAT.name# - #APPLICATION.CSB.WAT.programName#. <br /><br />';
                     </cfscript>
@@ -102,7 +102,7 @@
                 <cfdefaultcase>
     
                     <cfscript>
-                        csbEmailSubject = APPLICATION.CSB.Trainee.name;
+                        csbEmailSubject = 'EXTRA';
                         
                         accountCreatedMessage = 'An account has been successfully created at #APPLICATION.CSB.name#. <br /><br />';
                     </cfscript>
@@ -219,7 +219,7 @@
                 <cfcase value="newAccount">
                     
                     <cfscript>
-                        stEmailStructure.subject = csbEmailSubject & ' - Account Created - Activation Required';
+                        stEmailStructure.subject = csbEmailSubject & ' - Account Created | Activation Required';
                     </cfscript>
                     
                     <cfsavecontent variable="stEmailStructure.message">
@@ -417,7 +417,7 @@
                 <cfcase value="watMissingDocuments">
     
                     <cfscript>
-                        stEmailStructure.subject = csbEmailSubject & ' - Missing Document Report';
+                        stEmailStructure.subject = csbEmailSubject & ' - Missing Documents Report';
                     </cfscript>
     
                     <cfsavecontent variable="stEmailStructure.message">
@@ -447,7 +447,7 @@
 
 	
 	<cffunction name="sendEmail" access="public" returntype="void" hint="Sends email from the system with the CSB header/footer">
-        <cfargument name="emailFrom" type="string" default="#APPLICATION.EMAIL.support#" hint="Email From Address">
+        <cfargument name="emailFrom" type="string" default="#APPLICATION.EMAIL.contactUs# (CSB International, Inc.)" hint="Email From Address">
 		<cfargument name="emailTo" type="string" required="true" hint="Email To is required">
 		<cfargument name="emailReplyTo" type="string" default="" hint="Email Address to reply">
         <cfargument name="emailCC" type="string" default="" hint="Email CC Field">
@@ -485,6 +485,29 @@
 				vEmailTemplate = stGetEmailTemplate.message;
 				//ARGUMENTS.emailMessage = stGetEmailTemplate.message;
 			}
+			
+			// This is used to store email information when system sends an email on a development environment
+			var emailIntendedTo = '';
+			
+			// Development Environment - If under development email current user so no emails are sent by mistake to field or Intl. Representative
+			if ( APPLICATION.isServerLocal ) {
+				
+				emailIntendedTo = emailIntendedTo & "<p>Email To: #ARGUMENTS.emailTo#</p>";
+				
+				ARGUMENTS.emailTo = APPLICATION.EMAIL.support;
+				
+				if ( LEN(ARGUMENTS.emailCC) ) {
+					emailIntendedTo = emailIntendedTo & "<p>Email CC: #ARGUMENTS.emailCC#</p>";
+					ARGUMENTS.emailCC = '';
+				}
+				
+				if ( LEN(ARGUMENTS.emailBCC) ) {
+					emailIntendedTo = emailIntendedTo & "<p>Email BCC: #ARGUMENTS.emailBCC#</p>";
+					ARGUMENTS.emailBCC = '';
+					
+				}
+				
+			}
 		</cfscript>
 		
 		<cfmail 
@@ -508,12 +531,32 @@
                 companyID="#ARGUMENTS.companyID#"
             />
 
-            <!--- Email Template --->
-            #vEmailTemplate#
-            
-            <!--- Email Body --->
-            #ARGUMENTS.emailMessage#
-            
+				<!--- Email Template --->
+                #vEmailTemplate#
+                
+                <!--- Email Body --->
+                #ARGUMENTS.emailMessage#
+                
+                <!--- Display Email Recipients when sending from development environment --->
+                <cfif APPLICATION.isServerLocal>
+                    <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
+                        ********************************** DEVELOPMENT SITE **********************************
+                    </div>
+                    
+                    <p>
+                        You received this email insted of the original recipient(s) 
+                        because you are logged in the development environment.
+                    </p>
+                    
+                    <p>Please see below the original recipient(s) for this message</p>
+                    
+                    #emailIntendedTo#
+                    
+                    <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
+                        ********************************** DEVELOPMENT SITE **********************************
+                    </div>
+                </cfif>
+
             <gui:pageFooter
                 footerType="#ARGUMENTS.footerType#"
                 companyID="#ARGUMENTS.companyID#"

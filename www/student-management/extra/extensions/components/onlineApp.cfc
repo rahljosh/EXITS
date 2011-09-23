@@ -541,7 +541,6 @@
 				if ( ListFind("1,2,3,4,6", newApplicationStatusID) ) {
 				
 					APPLICATION.CFC.email.sendEmail(
-						emailFrom=APPLICATION.EMAIL.contactUs,
 						emailTo=APPLICATION.CFC.CANDIDATE.getCandidateSession().email,
 						emailTemplate=emailTemplate,
 						candidateID=ARGUMENTS.candidateID,
@@ -556,7 +555,6 @@
 				if ( ListFind("7,9,10,11", newApplicationStatusID) ) {
 					
 					APPLICATION.CFC.email.sendEmail(
-						emailFrom=APPLICATION.EMAIL.contactUs,
 						emailTo=qGetIntlRep.email,
 						emailTemplate=emailTemplate,
 						candidateID=ARGUMENTS.candidateID,
