@@ -1,21 +1,3 @@
-<script language="javascript">	
-    // Document Ready!
-    $(document).ready(function() {
-		// call the function to hide and show certain elements according to region guarantee choice 
-		displayGuaranteed();
-
-		// JQuery Modal
-		$(".jQueryModal").colorbox( {
-			width:"60%", 
-			height:"90%", 
-			iframe:true,
-			overlayClose:false,
-			escKey:false 
-		});		
-
-	});
-</script> 	
-
 <cfsilent>
 
 	<!--- Import CustomTag Used for Page Messages and Form Errors--->
@@ -399,6 +381,22 @@
     
 </cfsilent>  
 
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
+
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
+
+	});
+</script> 	
+
 <style type="text/css">
 	body{
 	font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
@@ -511,8 +509,10 @@
         
 <div id="stylized" class="myform">
    <Cfoutput>
-    <div align="right"><a href="" onClick="javascript: win=window.open('student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#', 'Flights', 'height=500, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Flight Information</A>  </div>
-    </Cfoutput>   
+    <div align="right">
+    	<a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
+    </div>
+	</Cfoutput>   
     <form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
         <input type="hidden" name="studentName" value="#qGetStudentInfo.firstname#" />
         <input type="hidden" name="studentSex" value=<cfif qGetStudentInfo.firstname is 'male'>"his"<cfelse>"her"</cfif> >
@@ -567,7 +567,7 @@
             <span class="small">Date you visited the home</span>
         </label>
         <Cfif VAL(FORM.performEdit)>
-            <input type="text" name="dateOfVisit" size=10>
+            <input type="text" name="dateOfVisit" value="#DateFormat(FORM.dateofvisit, 'mm/dd/yyyy')#" class="datePicker">
         <cfelse>
             #DateFormat(FORM.dateofvisit, 'mm/dd/yyyy')#
         </Cfif>

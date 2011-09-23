@@ -311,7 +311,7 @@
             </cfloop>
         
             <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">            
-                <th colspan="2">Reports Per Program</th>
+                <th colspan="2">Updates Per Program</th>
                 <tr class="off">
                     <td width="50%">
                         10 Month -> September - November - January - March - May  <br />

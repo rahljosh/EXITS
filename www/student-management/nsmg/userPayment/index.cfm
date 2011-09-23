@@ -110,7 +110,7 @@
     <!--- Other Users Only Have Access to the Report --->
     <cfswitch expression="#action#">
     
-        <cfcase value="paymentReport,bonusReport,thankYouBonus" delimiters=",">
+        <cfcase value="paymentReport,studentPaymentHistory,bonusReport,thankYouBonus" delimiters=",">
     
             <!--- Include template --->
             <cfinclude template="_#action#.cfm" />
