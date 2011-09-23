@@ -81,7 +81,7 @@ table {
         <div class="trips">
           <h1 class="enter">ISE Student Tours</h1>
           <em><font color="#be1e2d" size=+1><strong><div align="center">For ISE students ONLY!</div></strong></font></em>
-          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.<br /><br />
+          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 10 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2011-12 season.<br /><br />
           <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE.  Once you are registered for a tour, you will be contacted regarding airfare.</strong></p>
           
           <table width="573" height="333" border="0">
@@ -91,13 +91,13 @@ table {
               </tr>
              <tr>
              	<td colspan=4 align='4'> 
-					<cfif tours.recordcount eq 0>
-                   	 	<h3><div align="center">Trips will be available for booking on Sept. 15<br />  Please check back on that date to book your trip.</div></h3>
+					<cfif 1 eq 1>
+                   	 	<h3><div align="center">Trips are unavailable for registration until Sept 27th. <br />  Please check back on that date to book your trip.</div></h3>
                     </cfif>
             	</td>
              </tr>
             <tr>
-            
+            <!----
             <cfoutput>
             	<cfloop query="tours">
               
@@ -112,6 +112,7 @@ table {
                 </cfif>
                 </cfloop>    
            </cfoutput>
+		   ---->
            <!----
            </cfif>
 		   ---->

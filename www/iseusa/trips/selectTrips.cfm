@@ -159,10 +159,10 @@ li{
 
 <cfparam name="form.rulesread" default="0">
 <cfparam name="form.booktravel" default="0">
-
+<cfset client.selectedtrip = #url.tour_id#>
 <Cfif isDefined('form.verifyRules')>
 	<cfif form.rulesread eq 1 and form.booktravel eq 1>
-		<cflocation url="register.cfm?tour_id=#url.tour_id#">
+		<cflocation url="step1.cfm?tour_id=#url.tour_id#">
     </cfif>
 </Cfif>
 <body class="oneColFixCtr">
@@ -194,10 +194,13 @@ li{
         </cfquery>
         <cfoutput>
         <h2 align="Center">Sweet! Let's get you registered<cfif tripInfo.recordcount neq 0> to go on the #tripInfo.tour_name# Tour</cfif>.</h2>
+        
+        
         <cfform method="post" action="selectTrips.cfm?tour_id=#url.tour_id#">
 
 
         <h2>Booking Process</h2>
+        
                          <em>Before we get started, here is a quick overview of the Tours Reservation Process.  </em><br /><br />
                          <div class="error">
 						 <cfif isDefined('form.verifyRules')>
@@ -216,26 +219,19 @@ li{
                            </tr>
                             <tr>
                               <td>
+                             
                                <ol>
-                                       <li>Visit iseusa.com to book and pay for your trip. <em>(Your almost done with this step!) </em></li>
+                                       <li>Visit iseusa.com to book and  your trip. <em>(Your almost done with this step!) </em></li>
                                        <ul><li><font size=-1>If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li></ul>
-                                        <li>Once your payment has been processed (up to 72 hours), you will receive an email with:</li>
-                                        <ul><li>payment confirmation</li>
-                                        	<li>required permission form</li>
-                                        </ul>
-                                        <li>Submit permission form with all signatures to MPD Tours.
+                                        
+                                        <li>Submit permission form and payment forms with all signatures to MPD Tours.
                                         	<ul><li>info@mpdtoursamerica.com
+                                        		<li>fax:   +1 718 439 8565  
                                         		<li>mail:  9101 Shore Road, ##203 - Brooklyn, NY 11209
-                                        	</ul>
-                                        <li>When permission form is processed (up to 72 hours), you will receive an email with:
-                                        	<ul>
-                                        		<li>confirmation that permission form was received
-                                        		<li>travel packet with specific information for your tour
-                                        	</li></ul>
-                                        <li>You will be contacted shortly after you permission form is processed by our authorized Travel Agent regarding your travel arrangements. You do not need to contact the agent yourself.
-                                        <li>Once you select a flight itinerary, you will need to purchase this itinerary THROUGH OUR TRAVEL AGENT.
-                                <li> Enjoy Your Trip!!!
-                               </ol>
+                                       	  </ul>
+                                
+                                        <li> MPD will contact you once your payment and permission form have been received to book your flights. Do NOT book your own flights.  
+                                        </ol>
                                
                                </td>
                            </tr>
@@ -246,10 +242,7 @@ li{
                            <p>
                            <table width=450 bgcolor="##EFEFEF" cellpadding=4 cellspacing=0>
                            <Tr>
-                           		<td align="Center" colspan=2>
-                                REMEMBER: DO NOT BOOK YOUR OWN AIRFARE.<Br />
-                           You will be contacted by our Travel Agent regarding airfare. 
-                                </td>
+                           	
                            	</Tr>
                            		<tr <cfif form.rulesread eq 0 and isDefined('form.verifyrules')>bgcolor="##FF9DA7"</cfif>>
                                 	<Td valign="top" ><input type="checkbox" name="rulesread" value="1" <cfif form.rulesread eq 1>checked</cfif>/></Td><td>I've read and understand the process of registering for a tour.</td>
@@ -258,7 +251,7 @@ li{
                                 	<td colspan=2><hr width=50% /></td>
                                 </Tr>
                                 <tr <cfif form.booktravel eq 0 and isDefined('form.verifyrules')>bgcolor="##FF9DA7"</cfif>>
-                                	<td valign="top"><input type="checkbox" name="booktravel" value="1" <cfif form.booktravel eq 1>checked</cfif> /></Td><td>I understand that I must purchase airfare through the authorized travel agent who will contact me after I've submitted my signed permission form.</td>
+                                	<td valign="top"><input type="checkbox" name="booktravel" value="1" <cfif form.booktravel eq 1>checked</cfif> /></Td><td>I understand that I should not book travel and that MPD will contact me to book my airfare.  </td>
                            			
                                  </tr>
                           
@@ -269,6 +262,7 @@ li{
                            </p>
                          </div>
                          </cfform>
+                        
                          </cfoutput>
         <div id="main" class="clearfix"></div>
       <!-- endtripTours --></div>
