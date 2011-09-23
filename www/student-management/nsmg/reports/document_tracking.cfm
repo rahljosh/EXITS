@@ -167,10 +167,11 @@
             <!--- Added 02/02/2011 --->
             <!--- Required starting Aug 11 --->
             s.doc_income_ver_date,
-            s.doc_conf_host_rec2,
             <!--- Required for Single Parents in effect now --->
             s.doc_single_ref_check1,
             s.doc_single_ref_check2,
+            <!--- s.doc_conf_host_rec2, Progress Report --->
+            secondVisitReport.pr_ny_approved_date,
             <!--- End of Added 02/02/2011 --->
             p.seasonID,
             u.userID,
@@ -182,12 +183,18 @@
             h.familyLastName as hostLastName 
         FROM 
             smg_students s
-        LEFT JOIN 
-            smg_users u ON s.#tableField# = userID
-        LEFT JOIN
+        INNER JOIN
             smg_programs p on p.programid = s.programid
         INNER JOIN
             smg_hosts h ON h.hostID = s.hostID
+        LEFT OUTER JOIN 
+            smg_users u ON s.#tableField# = u.userID
+        LEFT OUTER JOIN 
+            progress_reports secondVisitReport ON secondVisitReport.fk_student = s.studentID
+                AND
+                    secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                AND
+                    secondVisitReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
         WHERE 
         <!--- Regular Students --->
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -241,18 +248,19 @@
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
         AND
             p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-
         AND 
             (                   	
                 s.doc_income_ver_date IS NULL
             OR
-                s.doc_conf_host_rec2 IS NULL
-            OR
                 s.doc_single_ref_check1 IS NULL
             OR
-                s.doc_single_ref_check2 IS NULL
+                s.doc_single_ref_check2 IS NULL            
+			<!--- 
+				Second Visit Report - Check the report itself - OR s.doc_conf_host_rec2 IS NULL
+			--->
+            OR
+            	secondVisitReport.pr_ny_approved_date IS NULL 
             )                        
-           
         ORDER BY
             repName,
             s.firstName            
@@ -268,8 +276,6 @@
         ORDER BY
             repName            
     </cfquery> 
-    
-
     
 	<!--- Save Report in a Variable --->
     <cfsavecontent variable="documentTrackingReport">
@@ -448,7 +454,7 @@
                                         missingDocumentsList = ListAppend(missingDocumentsList, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
                                     // 2nd Confidential Host Family Visit Form
-                                    if ( NOT LEN(qGetStudentsByRep.doc_conf_host_rec2) ) { 
+                                    if ( NOT LEN(qGetStudentsByRep.pr_ny_approved_date) ) { 
                                         missingDocumentsList = ListAppend(missingDocumentsList, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
                                     

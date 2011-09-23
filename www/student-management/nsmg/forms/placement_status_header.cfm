@@ -76,6 +76,7 @@ where programid = #get_student_info.programid#
 <cfif secondVisitRepID NEQ '0'><cfset secondVisit_image = 'secondVisit_3'></cfif>
 <!--- PAPERWORK --->
 <cfif hostid NEQ '0'>
+
 	<!--- CHECK CBCS --->
 	<cfquery name="get_host" datasource="MySql">
 		SELECT hostid, familylastname, fatherfirstname, fatherlastname, fatherdob, fathercbc_form, 
@@ -83,6 +84,7 @@ where programid = #get_student_info.programid#
 		FROM smg_hosts
 		WHERE hostid = '#get_student_info.hostid#'
 	</cfquery>
+    
 	<!--- CHECK CBCS --->
 	<cfquery name="get_host_members" datasource="MySql">
 		SELECT childid, membertype, name, lastname, birthdate, cbc_form_received
@@ -92,7 +94,12 @@ where programid = #get_student_info.programid#
 			AND liveathome = 'yes'
             AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	</cfquery>
-
+	
+    <cfscript>
+		// Get Second Host Family Visit
+		qGetSecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=get_student_info.studentID, hasNYApproved=1);
+	</cfscript>
+    
 	<cfset member_missing = 0>
 	<cfloop query="get_host_members">
 		<cfif cbc_form_received EQ ''>
@@ -101,21 +108,25 @@ where programid = #get_student_info.programid#
 	</cfloop>
 
 <Cfif client.totalfam neq 1 and season.seasonid lte 7>
+
 		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
             AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
             AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ '' 
-            AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND member_missing EQ 0>	
-    
-        
+            AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' 
+			AND member_missing EQ 0>	
             
             <cfif stu_arrival_orientation NEQ '' AND host_arrival_orientation NEQ ''>
                 <cfset paperwork_image = 'paperwork_4'>  <!--- paperwork complete image --->
             <cfelse>
                 <cfset paperwork_image = 'paperwork_3'>  <!--- paperwork docs complete missing orientations --->
             </cfif>
+            
         <cfelse>
+        
             <cfset paperwork_image = 'paperwork_2'>  <!--- paperwork incomplete image --->
+            
         </cfif>
+        
 <Cfelse>
 		<!----Add in the extra paper work for a single person placement---->
 		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''

@@ -402,7 +402,7 @@
         WHERE 
         	sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.schoolID)#">
     </cfquery>
-    
+
 </cfsilent>
 
 <!--- DELETE THIS --->
@@ -707,6 +707,7 @@
 <cfoutput>
 
 	<!--- Modal Dialogs --->
+    
 	<!--- Approve Placement - Modal Dialog Box --->
     <div id="dialog-approvePlacement-confirm" title="Approve this Placement?" class="displayNone"> 
         <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please confirm below you would like to approve this placement.</p> 
@@ -716,6 +717,7 @@
     <div id="dialog-setFamilyPermanent-confirm" title="Set Host Family as Permanent?" class="displayNone"> 
         <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please confirm below you would like to set this host family as permanent.</p> 
     </div> 
+    
 	<!--- End of Modal Dialogs --->
     
 	<!--- Page Messages --->

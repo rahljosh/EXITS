@@ -317,27 +317,17 @@
     <br>---->
 	<cfif season.seasonid gt 7>
     	<tr> <!-- 6 - CONFIDENTIAL HOST FAMILY 2 VISIT FORM --->
-		<td><Cfif #get_student_info.doc_conf_host_rec2# EQ ''>
-				<input type="checkbox" name="check_confi2" OnClick="CheckDates('check_confi2', 'doc_conf_host_rec2');" <cfif edit is 'no'>disabled</cfif>>
-			<cfelse>
-				<input type="checkbox" name="check_confi2" OnClick="CheckDates('check_confi2', 'doc_conf_host_rec2');" checked <cfif edit is 'no'>disabled</cfif>>		
-			</cfif>
-		</td>
-		<td>2nd Confidential Host Family Visit Form</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_rec2" class="datePicker" size="9" value="#DateFormat(doc_conf_host_rec2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
-	</tr>	
+            <td><input type="checkbox" name="check_confi2" <Cfif isDate(qGetSecondVisitReport.pr_sr_approved_date)> checked="checked" </cfif> disabled="disabled" ></td>
+            <td>2nd Confidential Host Family Visit Form</td>
+            <td align="left">Date: &nbsp;<input type="text" name="doc_conf_host_rec2" class="datePicker" size="9" value="#DateFormat(qGetSecondVisitReport.pr_sr_approved_date, 'mm/dd/yyyy')#"  disabled="disabled"></td>
+        </tr>	
    
-	<tr> <!-- 7 - VISIT DATE --->
-		<td>&nbsp;</td>
-		<td><!--- <Cfif #get_student_info.doc_date_of_visit# EQ ''>
-				<input type="checkbox" name="check_visit" OnClick="CheckDates('check_visit', 'doc_date_of_visit');" <cfif edit is 'no'>disabled</cfif>>
-			<cfelse>
-				<input type="checkbox" name="check_visit" OnClick="CheckDates('check_visit', 'doc_date_of_visit');" checked <cfif edit is 'no'>disabled</cfif>>		
-			</cfif> &nbsp; --->
-			Date of 2nd Visit</td>
-		<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit2" class="datePicker" size="9" value="#DateFormat(doc_date_of_visit2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
-	</tr>
-     </cfif>
+        <tr> <!-- 7 - VISIT DATE --->
+            <td>&nbsp;</td>
+            <td>Date of 2nd Visit</td>
+			<td align="left">Date: &nbsp;<input type="text" name="doc_date_of_visit2" class="datePicker" value="#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#" disabled="disabled"></td>
+        </tr>
+	</cfif>
 	<tr> <!-- 8 - REFERENCE FORM 1 --->
 		<td><Cfif #get_student_info.doc_ref_form_1# EQ ''>
 				<input type="checkbox" name="check_form1" OnClick="CheckDates('check_form1', 'doc_ref_form_1');" <cfif edit is 'no'>disabled</cfif>>
