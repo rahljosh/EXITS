@@ -62,28 +62,22 @@ a:active {
                 <h3 align="Center">Rules and Policies</h3>
                 
                 	<ul>
-                  	<li>**All Flights must be booked through our Travel Agent</li>
+                  	<li>**All Flights must be booked through MPD</li>
                   	<li>**All paperwork must be submitted before we are able to book your flight</li>
                   </ul>
                   <h3 align="Center">Instructions:</h3>
                   			 <ol>
-                                       <li>Visit iseusa.com to book and pay for your trip.
-                                        <li>Once your payment has been processed (up to 72 hours), you will receive an email with:
-                                        <ul><li>payment confirmation
-                                        	<li>required permission form
-                                        </ul>
-                                        <li>Submit permission form with all signatures to MPD Tours.
+                                       <li>Visit iseusa.com to book and  your trip. <em>(Your almost done with this step!) </em></li>
+                                       <ul><li><font size=-1>If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li></ul>
+                                        
+                                        <li>Submit permission form and payment forms with all signatures to MPD Tours.
                                         	<ul><li>info@mpdtoursamerica.com
+                                        		<li>fax:   +1 718 439 8565  
                                         		<li>mail:  9101 Shore Road, #203 - Brooklyn, NY 11209
-                                        	</ul>
-                                        <li>When permission form is processed (up to 72 hours), you will receive an email with:
-                                        	<ul><li>confirmation that permission for was received
-                                        		<li>travel packet with specific information for your tour
-                                        	</li></ul>
-                                        <li>You will be contacted shortly after you permission form is processed by our authorized Travel Agent regarding your travel arrangements. You do not need to contact the agent yourself.
-                                        <li>Once you select a flight itinerary, you will need to purchase this itinerary THROUGH OUR TRAVEL AGENT.
-                                <li> Enjoy Your Trip!!!
-                               </ol>	
+                                       	  </ul>
+                                
+                                        <li> MPD will contact you once your payment and permission form have been received to book your flights. Do NOT book your own flights.  
+                                        </ol>
                                <div align="Center">DO NOT BOOK YOUR OWN AIRFARE. You will be contated regarding airfare.</div>
                                
                     	</td>
