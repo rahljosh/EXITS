@@ -19,7 +19,6 @@
                 c.uniqueID,
                 c.firstname, 
                 c.lastname, 
-                c.candidateid, 
                 c.wat_doc_agreement,
                 c.wat_doc_walk_in_agreement,
                 c.wat_doc_cv,
@@ -48,7 +47,7 @@
             WHERE 
                 c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
-                c.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND (
                     c.wat_doc_agreement = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
