@@ -91,8 +91,10 @@
 				doc_school_profile_rec = FORM.doc_school_profile_rec,
 				doc_conf_host_rec = FORM.doc_conf_host_rec,
 				doc_date_of_visit = FORM.doc_date_of_visit,
-				doc_conf_host_rec2 = FORM.doc_conf_host_rec2,
-				doc_date_of_visit2 = FORM.doc_date_of_visit2,
+				doc_conf_host_rec2 = qGetSecondVisitReport.pr_sr_approved_date,
+				doc_date_of_visit2 = qGetSecondVisitReport.dateOfVisit,
+				// doc_conf_host_rec2 = FORM.doc_conf_host_rec2,
+				// doc_date_of_visit2 = FORM.doc_date_of_visit2,
 				doc_ref_form_1 = FORM.doc_ref_form_1,
 				doc_ref_check1 = FORM.doc_ref_check1,
 				doc_ref_form_2 = FORM.doc_ref_form_2,
@@ -152,8 +154,8 @@
 			FORM.doc_school_profile_rec = qGetStudentInfo.doc_school_profile_rec;
 			FORM.doc_conf_host_rec = qGetStudentInfo.doc_conf_host_rec;
 			FORM.doc_date_of_visit = qGetStudentInfo.doc_date_of_visit;
-			FORM.doc_conf_host_rec2 = qGetStudentInfo.doc_conf_host_rec2;
-			FORM.doc_date_of_visit2 = qGetStudentInfo.doc_date_of_visit2;
+			// FORM.doc_conf_host_rec2 = qGetStudentInfo.doc_conf_host_rec2;
+			// FORM.doc_date_of_visit2 = qGetStudentInfo.doc_date_of_visit2;
 			FORM.doc_ref_form_1 = qGetStudentInfo.doc_ref_form_1;
 			FORM.doc_ref_check1 = qGetStudentInfo.doc_ref_check1;
 			FORM.doc_ref_form_2 = qGetStudentInfo.doc_ref_form_2;
@@ -496,16 +498,18 @@
                         </td>
                     </tr>
                     
+                    <!--- Second Host Family Visit Report - Get Dates from Progress Report Section --->
                     <cfif qGetProgramInfo.seasonid GT 7>
+                    
                         <!--- 2nd Confidential Host Family Visit Form --->
                         <tr> 
                             <td class="paperworkLeftColumn">
-                                <input type="checkbox" name="check_doc_conf_host_rec2" id="check_doc_conf_host_rec2" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_conf_host_rec2');" <cfif isDate(FORM.doc_conf_host_rec2)>checked</cfif> >
+                                <input type="checkbox" name="check_doc_conf_host_rec2" id="check_doc_conf_host_rec2" class="editPage displayNone" <cfif isDate(qGetSecondVisitReport.pr_sr_approved_date)>checked</cfif> disabled="disabled">
                             </td>
                             <td><label for="check_doc_conf_host_rec2">2nd Confidential Host Family Visit Form</label></td>
                             <td>
-                                <span class="readOnly displayNone">#DateFormat(FORM.doc_conf_host_rec2, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="doc_conf_host_rec2" id="doc_conf_host_rec2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_conf_host_rec2, 'mm/dd/yyyy')#" maxlength="10">
+                                <span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.pr_sr_approved_date, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="doc_conf_host_rec2" id="doc_conf_host_rec2" class="datePicker editPage displayNone" value="#DateFormat(qGetSecondVisitReport.pr_sr_approved_date, 'mm/dd/yyyy')#" maxlength="10" disabled="disabled">
                             </td>
                         </tr>
 
@@ -514,8 +518,8 @@
                             <td>&nbsp;</td>
                             <td><label for="doc_date_of_visit2">Date of 2nd Visit</label></td>
                             <td>
-                                <span class="readOnly displayNone">#DateFormat(FORM.doc_date_of_visit2, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="doc_date_of_visit2" id="doc_date_of_visit2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_date_of_visit2, 'mm/dd/yyyy')#" maxlength="10">
+                                <span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="doc_date_of_visit2" id="doc_date_of_visit2" class="datePicker editPage displayNone" value="#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#" maxlength="10" disabled="disabled">
                             </td>
                         </tr>
                     </cfif>

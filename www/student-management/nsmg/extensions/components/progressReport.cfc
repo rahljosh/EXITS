@@ -227,4 +227,67 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------------------------------------------- ----
+		
+		Second Visit Report
+	
+	----- ------------------------------------------------------------------------- --->
+    
+	<cffunction name="getSecondHostFamilyVisitReport" access="public" returntype="query" output="false" hint="Gets the second host family visit">
+    	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="hasNYApproved" default="0" hint="Set to 1 to get only the approved record">
+		
+        <cfquery 
+			name="qGetSecondHostFamilyVisitReport" 
+			datasource="#APPLICATION.dsn#">
+                SELECT         	
+                    sva.ID,
+                    sva.fk_reportID,                    
+                    sva.fk_studentID,
+                    sva.neighborhoodAppearance,
+                    sva.avoid,
+                    sva.homeAppearance,
+                    sva.typeOfHome,
+                    sva.numberBedrooms,
+                    sva.numberBathrooms,
+                    sva.livingRoom,
+                    sva.diningRoom,
+                    sva.homeDetailsOther,
+                    sva.ownBed,
+                    sva.bathroom,
+                    sva.outdoorsFromBedroom,
+                    sva.storageSpace,
+                    sva.privacy,
+                    sva.studySpace,
+                    sva.pets,
+                    sva.other,
+                    sva.dateOfVisit,
+                    pReport.pr_sr_approved_date,
+                    pReport.pr_ra_approved_date,
+                    pReport.pr_rd_approved_date,
+                    pReport.pr_ny_approved_date,
+                    pReport.pr_rejected_date      
+                FROM
+                    secondVisitAnswers sva
+                INNER JOIN        
+                    progress_reports pReport ON pReport.pr_id = sva.fk_reportID
+                        AND
+                            pReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                        <cfif VAL(ARGUMENTS.hasNYApproved)>
+                            AND
+                                pReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
+                        </cfif>
+                WHERE
+                    sva.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">    
+		</cfquery>
+
+		<cfreturn qGetSecondHostFamilyVisitReport>
+	</cffunction>
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		End of Second Visit Report
+	
+	----- ------------------------------------------------------------------------- --->
+
 </cfcomponent>

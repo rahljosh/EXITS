@@ -76,6 +76,9 @@
 		// Get Placement History
 		qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
 		
+		// Get Second Host Family Visit
+		qGetSecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=qGetStudentInfo.studentID, hasNYApproved=1);
+		
 		// Calculate total of family members
 		vTotalFamilyMembers = 0;
 		
@@ -122,7 +125,7 @@
 			vPlacementStatus = 'Incomplete';
 			
 		}
-
+		
 		// Set Default Images
         vHostImage = 'host_1';
         vSchoolImage = 'school_1';
@@ -179,7 +182,7 @@
 			vNotesImage = 'notes_3';
 		}
 		// End of Placement Notes
-		
+
 		// Paperwork
         if ( VAL(qGetStudentInfo.hostid) ) {
 			
