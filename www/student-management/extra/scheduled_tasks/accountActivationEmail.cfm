@@ -23,7 +23,6 @@
 		
 			// Pending Activation - Send out Activation Email
 			APPLICATION.CFC.EMAIL.sendEmail(
-				emailFrom=APPLICATION.EMAIL.contactUs,
 				emailTo=qGetCandidates.email[i],
 				emailTemplate='newAccount',
 				candidateID=qGetCandidates.candidateID[i]

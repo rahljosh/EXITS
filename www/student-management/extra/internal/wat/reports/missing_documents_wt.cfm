@@ -253,7 +253,6 @@
 					// Send out Missing Documents Email
 					
 					APPLICATION.CFC.EMAIL.sendEmail(
-						emailFrom=APPLICATION.EMAIL.contactUs,
 						emailTo=qGetCandidates.intlRepEmail, // 'marcus@iseusa.com' | qGetCandidates.intlRepEmail
 						emailBCC=APPLICATION.EMAIL.watMissingDocuments,
 						emailMessage=reportIntlRepContent & "<br />",
