@@ -170,6 +170,9 @@
 		APPLICATION.PATH.base = 'C:/Websites/student-management/extra/internal/';
 	}
 	
+	// Set up so emails sent from EXTRA are stored in this address.
+	APPLICATION.EMAIL.sentEmail = 'sentEmail@csb-usa.com';
+	
 	// Set Uploaded Files 
 	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & 'uploadedFiles/';
 
