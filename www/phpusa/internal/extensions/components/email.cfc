@@ -5,7 +5,7 @@
 
 	<!--- called by: forms/pr_reject.cfm, forms/pr_email.cfm --->
 	<cffunction name="send_mail" access="public" returntype="void">
-        <cfargument name="email_from" default="#CLIENT.support_email#" required="true">
+        <cfargument name="email_from" default="#APPLICATION.EMAIL.support#" required="true">
 		<cfargument name="email_to" type="string" required="true">
 		<cfargument name="email_subject" type="string" required="true">
 		<!--- the from address in the cfmail tag below is always the support address because emails from other domains are blocked. use replyto if needed. --->
