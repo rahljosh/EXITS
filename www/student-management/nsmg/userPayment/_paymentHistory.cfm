@@ -79,8 +79,8 @@
         AND 
         	rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         ORDER BY         
-            rep.date DESC,
-            studentID
+            studentID DESC,
+            rep.date DESC
     </cfquery>
 
 </cfsilent>
@@ -135,8 +135,8 @@
             <cfloop query="qGetPayments">
                 <tr bgcolor="#iif(qGetPayments.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
                     <td>#DateFormat(date, 'mm/dd/yyyy')#</td>
-                    <Td>#id#</Td>
-                    <td><cfif studentID is ''>n/a<cfelse>#firstName# #familyLastName# (#studentID#)</cfif></td>
+                    <Td>###id#</Td>
+                    <td><cfif studentID is ''>n/a<cfelse>#firstName# #familyLastName# (###studentID#)</cfif></td>
                     <Td>#type#</Td>  
                     <td>#LSCurrencyFormat(amount, 'local')#</td>
                     <td>#comment#</td>
