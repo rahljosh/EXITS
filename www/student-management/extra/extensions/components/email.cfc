@@ -507,6 +507,14 @@
 					
 				}
 				
+				
+			} else {
+
+				// Stores Emails Sent at sentEmail@csb-usa.com
+				if ( NOT LEN(ARGUMENTS.emailBCC) ) {				
+					ARGUMENTS.emailBCC = APPLICATION.EMAIL.sentEmail;                      
+				}
+				
 			}
 		</cfscript>
 		
