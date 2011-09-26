@@ -341,7 +341,7 @@
                     
                     // Send out Self Placement Confirmation Email
                     APPLICATION.CFC.EMAIL.sendEmail(
-                        emailFrom="#APPLICATION.EMAIL.contactUs# (Anca Radoi CSB-USA)",
+                        emailFrom="#APPLICATION.EMAIL.contactUs# (#CLIENT.firstName# #CLIENT.lastName# CSB-USA)",
                         emailTo=qGetResults.hostCompanyEmail, // 'marcus@iseusa.com' | qGetResults.hostCompanyEmail
                         emailBCC=CLIENT.email,
 						emailReplyTo=CLIENT.email,
