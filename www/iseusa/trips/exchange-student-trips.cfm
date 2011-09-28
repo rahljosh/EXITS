@@ -97,7 +97,7 @@ table {
             	</td>
              </tr>
             <tr>
-            <!----
+           <CFif cgi.REMOTE_HOST eq '184.155.143.131' or cgi.REMOTE_host eq '96.56.128.58'>
             <cfoutput>
             	<cfloop query="tours">
               
@@ -112,7 +112,7 @@ table {
                 </cfif>
                 </cfloop>    
            </cfoutput>
-		   ---->
+		  </cfif>
            <!----
            </cfif>
 		   ---->
