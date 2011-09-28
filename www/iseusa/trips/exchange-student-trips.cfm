@@ -92,7 +92,7 @@ table {
              <tr>
              	<td colspan=4 align='4'> 
 					<cfif 1 eq 1>
-                   	 	<h3><div align="center">Trips are unavailable for registration until Sept 27th. <br />  Please check back on that date to book your trip.</div></h3>
+                   	 	<h3><div align="center">Trips are unavailable for registration until Sept 29th. <br />  Please check back on that date to book your trip.</div></h3>
                     </cfif>
             	</td>
              </tr>
