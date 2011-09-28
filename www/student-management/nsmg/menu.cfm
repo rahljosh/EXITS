@@ -257,7 +257,7 @@
                     <ul>
                         <li><a href="index.cfm?curdoc=app_process/apps_received">Received</a></li>
                         <!----allow certain users to see trips - josh, hause, stacy, brendan---->
-                    <cfif ListFind('1,12313,11620,14900',client.userid)> 
+                    <cfif ListFind('1,12313,11620,14900,510',client.userid)> 
                     
                             <li><a href="index.cfm?curdoc=tours/mpdtours">Trips</a></li>
                    
