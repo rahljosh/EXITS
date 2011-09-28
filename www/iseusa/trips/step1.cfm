@@ -174,7 +174,8 @@
         
 		  <Table width=100% cellspacing=0 cellpadding=8 class="border">
      		<tr  >
-            	<th colspan=2 align="center"><h2>Primary Information</h2></th>
+            	<th colspan=2 align="center"><h2>Primary Information</h2>
+                 <span class="yellowHighlight">You must provide all three pieces of the following information.</span></th>
             </tr>
           	<Tr bgcolor="##deeaf3">
             	<td><strong>Student ID Number</strong> </td>
@@ -196,12 +197,13 @@
            		 <Td><strong>Student Date of Birth</strong> </Td>
                  <td>
                 
-                 <cfinput type="text" name="dob"  size=20 value="#dateFormat(form.dob, 'mm/dd/yyyy')#"> MM/DD/YYYY
+                 <cfinput type="text" name="dob"  size=20 value="#dateFormat(form.dob, 'mm/dd/yyyy')#" mask="99/99/9999"> MM/DD/YYYY
                  
                  </td>
             </tr>
            <tr>
-            	<th colspan=2 align="center"><h2>Secondary Information</h2></th>
+            	<th colspan=2 align="center"><h2>Secondary Information</h2>
+                <span class="yellowHighlight">You only need to provide 2 pieces of the following information.</span></th>
             </tr>
                         <tr bgcolor="##deeaf3">
            		 <Td><strong>Host Last Name</strong> </Td>

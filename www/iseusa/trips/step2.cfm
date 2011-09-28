@@ -64,21 +64,29 @@ function toggle(showHideDiv, switchImgTag) {
                         <p>A request to register for a trip with ISE has been received from the ISE website.  Please verify that you can receive email at this address.</p>
                         <p>To verify your account click on this link: <a href="http://www.iseusa.com/trips/step3.cfm?verify=#getStudentInfo.uniqueid#&email=#form.emailTo#">Verify My Account</a> </p>
                         <Br /><br />
-                        <p>If that link doesn't work, copy this link into your browser: http://www.iseusa.com/trips/step3.cfm and enter the code below.</p>
+                        <p>If the link does not work, copy this link into your browser: http://www.iseusa.com/trips/step3.cfm and enter the code below along with your email address.</p>
                         <p>Verification Code: #getStudentInfo.randid# 
                        
            </cfsavecontent>
            <!--- send email --->
                     <cfinvoke component="cfc.email" method="send_mail">
+                    <!----
                     <cfinvokeargument name="email_to" value="#FORM.emailTo#">
-                        <cfinvokeargument name="email_cc" value="trips@iseusa.com">
+                    -=--->  
+                    <cfinvokeargument name="email_to" value="brendan@iseusa.com"> 
+						<cfinvokeargument name="email_cc" value="trips@iseusa.com">
                         <cfinvokeargument name="email_subject" value="Email Verification">
                         <cfinvokeargument name="email_message" value="#emailMessage#">
                         <cfinvokeargument name="email_from" value="""Trip Support"" <trips@iseusa.com>">
                     </cfinvoke>
+                    <!----
                     <cfset client = StructClear(client)>
-                    <cflocation url="step3.cfm" addtoken="no">
-        </cfoutput>
+                    ---->
+                    <cflocation url="http://www.iseusa.com/trips/step3.cfm">
+                    <!----
+					<meta http-equiv="refresh" content="0;url=http://www.iseusa.com/trips/step3.cfm" />
+        			---->
+		</cfoutput>
     </cfif>
 </Cfif>
 

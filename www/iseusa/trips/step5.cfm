@@ -103,6 +103,18 @@ where tripid = #client.selectedTrip# and studentid = #client.verifiedstudent#
             <cfset form.pdf = 1>
             <cfinclude template="tripPermission.cfm">
         </cfdocument>
+         <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/temp/paymentForm_#client.verifiedStudent#.pdf" overwrite="yes">
+			<style type="text/css">
+            <!--
+        	<cfinclude template="../css/smg.css">            
+            -->
+            </style>
+			<!--- form.pr_id and form.report_mode are required for the progress report in print mode.
+			form.pdf is used to not display the logo which isn't working on the PDF. --->
+            <cfset form.report_mode = 'print'>
+            <cfset form.pdf = 1>
+            <cfinclude template="paymentForm.cfm">
+        </cfdocument>
     <!----Email to Student---->    
     <cfsavecontent variable="stuEmailMessage">
         <cfoutput>				
@@ -144,17 +156,18 @@ where tripid = #client.selectedTrip# and studentid = #client.verifiedstudent#
         </cfsavecontent>
         
         <cfinvoke component="cfc.email" method="send_mail">
-        
-        	<cfinvokeargument name="email_to" value="#studentInfo.email#,#hostInfo.email#"> 
+        <cfinvokeargument name="email_to" value="brendan@iseusa.com">  
+        	
 		<!----
-            <cfinvokeargument name="email_to" value="josh@pokytrails.com">  
+		<cfinvokeargument name="email_to" value="#studentInfo.email#,#hostInfo.email#"> 
+            
 			---->
             <cfinvokeargument name="email_cc" value="trips@iseusa.com">     
             <cfinvokeargument name="email_from" value="""Trip Support"" <trips@iseusa.com>">
             <cfinvokeargument name="email_subject" value="Your Trip Details">
             <cfinvokeargument name="email_message" value="#stuEmailMessage#">
             <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/tours/#tripDetails.packetfile#">
-            <cfinvokeargument name="email_file2" value="C:/websites/student-management/nsmg/uploadedfiles/tours/MPD_PaymentForm.pdf">
+            <cfinvokeargument name="email_file2" value="C:/websites/student-management/nsmg/uploadedfiles/temp/paymentForm_#client.verifiedStudent#.pdf">
             <cfinvokeargument name="email_file3" value="C:/websites/student-management/nsmg/uploadedfiles/temp/permissionForm_#client.verifiedStudent#.pdf">
       </cfinvoke>	
 <!----Email to Rep---->
@@ -170,11 +183,11 @@ where tripid = #client.selectedTrip# and studentid = #client.verifiedstudent#
         
         <cfinvoke component="cfc.email" method="send_mail">
         
-            <cfinvokeargument name="email_to" value="#RegionalMan.email#">   
+            <cfinvokeargument name="email_to" value="brenadan@iseusa.com"> 
 			
             <!----
-            <cfinvokeargument name="email_to" value="josh@pokytrails.com">  
-			---->
+			 <cfinvokeargument name="email_to" value="#RegionalMan.email#">   
+            ---->
         	<cfinvokeargument name="email_cc" value="trips@iseusa.com">       
             <cfinvokeargument name="email_from" value="""Trip Support"" <trips@iseusa.com>">
             <cfinvokeargument name="email_subject" value="Student Trip Registration">
@@ -191,11 +204,11 @@ where tripid = #client.selectedTrip# and studentid = #client.verifiedstudent#
         </cfsavecontent>
         
         <cfinvoke component="cfc.email" method="send_mail">
-        
-        	<cfinvokeargument name="email_to" value="trips@iseusa.com,info@mpdtoursamerica.com">       
+        <cfinvokeargument name="email_to" value="brendan@iseusa.com">  
+        	    
 			
             <!----
-            <cfinvokeargument name="email_to" value="josh@pokytrails.com">  
+            <cfinvokeargument name="email_to" value="trips@iseusa.com,info@mpdtoursamerica.com">   
 			---->
             <cfinvokeargument name="email_from" value="""Trip Support"" <trips@iseusa.com>">
             <cfinvokeargument name="email_subject" value="Student Trip Registration">
