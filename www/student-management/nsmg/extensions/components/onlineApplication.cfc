@@ -169,6 +169,9 @@
                     entered_by = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.approvedBy#">,
                     dateapplication = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                     regionalguarantee = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionGuarantee#">,
+                    <Cfif regionalguarantee gt 0>
+                    regionguar = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">,
+                    </Cfif>
                     state_guarantee = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateGuarantee#">,
                     direct_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.directPlace#">,
                     iffschool = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.iffschool#">,
