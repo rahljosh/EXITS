@@ -177,7 +177,7 @@ where tripid = #client.selectedTrip# and studentid = #client.verifiedstudent#
        
        Dates: #DateFormat(tripDetails.tour_start, 'mmm d, yyyy')# - #DateFormat(tripDetails.tour_end, 'mmm d, yyyy')#
        
-       If you feel that #studentInfo.firstname# should NOT be going on this trip, please notify us by using this <a href="http://ise.exitsapplication.com/nsmg/index.cfm?curdoc=tours/hold&student=#studentInfo.studentid#&trip=#CLIENT.selectedTrip#">form</a> (you will need to be logged into follow the link)
+       If you feel that #studentInfo.firstname# should NOT be going on this trip, please notify us by using this <a href="http://ise.exitsapplication.com/nsmg/index.cfm?curdoc=tours/hold&studentid=#studentInfo.studentid#&tour=#CLIENT.selectedTrip#">form</a> (you will need to be logged into follow the link)
 	    </cfoutput>
         </cfsavecontent>
         
