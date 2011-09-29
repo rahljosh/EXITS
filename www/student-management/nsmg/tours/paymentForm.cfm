@@ -105,7 +105,7 @@ limit 1
 <Table width=700 cellpadding=2 cellspacing=0 align="Center">
 	<Tr>
     	<td align="Center"><img src="https://ise.exitsapplication.com/nsmg/pics/1_short_profile_header.jpg" />
-         <span class="title"><font size=+1>Trip Permission Form</font></span></td>
+         <span class="title"><font size=+1>Payment Form</font></span></td>
     </Tr>
 
  </Table>
@@ -311,7 +311,6 @@ limit 1
                                         from smg_tours smgt
                                         where smgt.tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.tour_id#"> 
                                         </cfquery>
-                                     
                             <table>
 								
 	                                <tr>
@@ -338,35 +337,41 @@ limit 1
     		
           <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
-                        <td colspan=5 align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/signatures.jpg" /></Td>
+                        <td colspan=5 align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/payment.jpg" /></Td>
                     </tr>
-                    <tr>
-                    	<td colspan="5">I have read and understand all the Terms and Conditions either on website or attached form.  All parties acknowledge that while on tour, ISE and MPD Tour America, Inc. or its representatives may take any action deemed necessary to protect student safety and well being, including medical treatment at the student's expense and transportaion home at student's expense.</td>
-                    </tr>
+                    
                     <tr>
                       <td valign="top">
- 									<!---Signatures Boxes---->
-                        <Table width=80% cellpadding=2 cellspacing=0>
-
- 	 <tr>
-    	<td width="244" class="signatureLine" valign="bottom"><br /><br />_______________________________</td><td width="3">&nbsp;</td><td width="497" class="signatureLine" valign="bottom">_______________________________</td>
-    	<td width="3">&nbsp;</td><td width="497" class="signatureLine" valign="bottom">_______________________________</td>
-    </tr>
-    <tr>
-    	<td valign="top">#student_info.firstname# #student_info.familylastname#</td><td></td><td valign="top"> #student_info.fatherfirstname# #student_info.fatherlastname# <Cfif student_info.fatherfirstname is not '' and student_info.motherfirstname is not ''> or </Cfif> #student_info.motherfirstname# #student_info.motherlastname#</td><Td></Td><td>#student_info.areaRep_first# #student_info.areaRep_last#<Br /><font size=-1><em>Area Representative - #student_Info.areaRep_phone#</em></font></td>
-        </tr>
-         
-    	<td class="signatureLine" valign="bottom"><br /><Br />_______________________________</td><td>&nbsp;</td>
-    	<td class="signatureLine" valign="bottom">_______________________________</td>
-    </tr>
-    <tr>
-    	<td><Cfif student_info.schoolname is ''>School<cfelse> #student_info.schoolname#</Cfif> Representative<br /><font size=-2><em>Students may not miss school without school permission and must make up any missed work.</td><td></td><td valign="top"> Printed Name & Position</td>
-        </tr>
-
-</table>
-   
+ 									<!---Payment Information---->
+                      <table>
+                      	<tr>
+                        	<td class="signatureLine" valign="bottom">
+                            Credit Card Number:</td><td class="signatureLine" valign="bottom"><br /> 
+                            ______________________________</td>
+                            <td class="signatureLine" valign="bottom">
+                            Expirate Date:</td><td class="signatureLine" valign="bottom"><br /><br />  
+                            ________________ mm/yyyy</td>
+                            <td class="signatureLine" valign="bottom">
+                           CCV:</td><td class="signatureLine" valign="bottom"><br /><br />  
+                            _______</td>
+                        </tr>
+                        <tr>
+                        	
+                        </tr>
+                        <tr>
+                        	<td class="signatureLine" valign="bottom">
+                            Name on Card:</td><td class="signatureLine" valign="bottom"><br />
+                            ______________________________</td>
+                        </tr>
+                        <tr>
+                        	<td class="signatureLine" valign="bottom">
+                            Billing Address:</td><td class="signatureLine" valign="bottom" colspan=3><br />__________________________________________________________________</td>
+                        </tr>
               </td>
             </tr>
+            <tr>
+            	<td align="center" colspan=5><img src="http://www.iseusa.com/trips/images/creditCards.jpg"/>
+                </td>
           </table>
 
 

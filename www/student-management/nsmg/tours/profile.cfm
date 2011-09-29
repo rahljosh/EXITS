@@ -17,6 +17,18 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.tour_id#">
             <cfset form.pdf = 1>
             <cfinclude template="tripPermission.cfm">
         </cfdocument>
+                 <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/temp/paymentForm_#url.studentid#.pdf" overwrite="yes">
+			<style type="text/css">
+            <!--
+        	<cfinclude template="../smg.css">            
+            -->
+            </style>
+			<!--- form.pr_id and form.report_mode are required for the progress report in print mode.
+			form.pdf is used to not display the logo which isn't working on the PDF. --->
+            <cfset form.report_mode = 'print'>
+            <cfset form.pdf = 1>
+            <cfinclude template="paymentForm.cfm">
+        </cfdocument>
     <!----Email to Student---->    
     <cfsavecontent variable="stuEmailMessage">
         <cfoutput>			
@@ -50,11 +62,18 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.tour_id#">
             <cfinvokeargument name="email_subject" value="Your Trip Details">
             <cfinvokeargument name="email_message" value="#stuEmailMessage#">
             <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/tours/#tripDetails.packetfile#">
-            <cfinvokeargument name="email_file2" value="C:/websites/student-management/nsmg/uploadedfiles/tours/MPD_PaymentForm.pdf">
             <cfinvokeargument name="email_file3" value="C:/websites/student-management/nsmg/uploadedfiles/temp/permissionForm_#url.studentid#.pdf">
+            <cfinvokeargument name="email_file2" value="C:/websites/student-management/nsmg/uploadedfiles/temp/paymentForm_#url.studentid#.pdf">
+            
       </cfinvoke>	
 </Cfif>
-
+<cfif isDefined('form.updateTrip')>
+	<cfquery datasource="#application.dsn#">
+    update student_tours
+    set tripid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.newTour#">
+    where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.updateTrip#">
+    </cfquery>
+</cfif>
 <Cfif isDefined('form.delete')>
 	<cfquery datasource="#application.dsn#">
     update student_tours
@@ -143,7 +162,12 @@ left join smg_host_children shc on shc.childid = sibs.siblingid
 where fk_Studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
 and tripid = <cfqueryparam cfsqltype="cf_sql_integer" value="#tourInfo.tripid#">
 </cfquery>
+<!----Get available Tours so tours can be changed if needed---->
+<cfquery name="availTours" datasource="#application.dsn#">
+select tour_id, tour_name
+from smg_tours
 
+</cfquery>
 
 
 <cfoutput>
@@ -211,7 +235,21 @@ and tripid = <cfqueryparam cfsqltype="cf_sql_integer" value="#tourInfo.tripid#">
         </tr>
     
         <tr>
-            <Td valign="top"><span class="greyText">Tour</span><br /><span class="bigLabel">#tourInfo.tour_name#</span></td>
+            <Td valign="top"><span class="greyText">Tour</span><br /><span class="bigLabel">
+            <form action="index.cfm?curdoc=tours/profile&studentid=#url.studentid#" method="post">
+            <input type="hidden" name="updateTrip" value="#tourInfo.id#"/>
+            <select name="newTour">
+            <Cfloop query="availTours">
+            <option value="#tour_id#" <Cfif tourInfo.tripid eq #tour_id#>selected</cfif>>#tour_name#</option>
+            </Cfloop>
+            </select>
+            
+            <input type=submit value="Update Trip" />
+            <cfif isDefined('form.updateTrip')>
+            <br /><font color="##009900">Trip Updated</font>
+            </cfif>
+            </form>
+           </td>
             
             </td>
         </tr>
