@@ -22,7 +22,7 @@
 <cfoutput>
 <cfquery datasource="#application.dsn#">
 update student_tours
-set hold = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+set hold = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#now()#">,
 	holdReason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.holdReason#">
 where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
 </cfquery>
@@ -36,7 +36,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid
         </cfsavecontent>
         
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-        	<cfinvokeargument name="email_to" value="josh@pokytrails.com">       
+        	<cfinvokeargument name="email_to" value="brendan@iseusa.com">       
             <cfinvokeargument name="email_from" value="""ISE Trip Support"" <ISETrips@iseusa.com>">
             <cfinvokeargument name="email_subject" value="Student on HOLD">
             <cfinvokeargument name="email_message" value="#holdEmailMessage#">
@@ -66,7 +66,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid
     <Cfoutput>
     <p>You are about to place a hold on the registration process for #studentInfo.firstname# #studentInfo.familylastname#</p>
     
-    Please explain why you don't think they should be able to go.  The student, host family and headquarters will receive a copy.
+    Please explain why you don't think they should be able to go. 
     
     <form method="post" action="index.cfm?curdoc=tours/hold&studentid=#url.studentid#&tour=#url.tour#">
     <input type="hidden" name="sendEmail" />
