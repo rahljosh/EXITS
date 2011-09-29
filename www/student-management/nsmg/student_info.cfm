@@ -208,7 +208,9 @@
     </cfquery>
     
 </cfsilent>
-
+<!----
+<cfdump var="#qGetStudentInfo#">
+---->
 <script type="text/javascript" src="student_info.js"></script>
 	
 <script language="javascript">	
@@ -584,6 +586,7 @@
 					<td>
                     	<select name="region" id="region" onChange="displayGuaranteed(this.value); displayRegionReason(#qGetStudentInfo.regionAssigned#, this.value);" <cfif FORM.edit EQ 'no'> disabled </cfif> >
 							<option value="0">Select a Region</option> 
+                            
 							<cfloop query="qRegions">
 								<option value="#regionid#" <cfif qGetStudentInfo.regionassigned EQ regionid>selected</cfif>>#regionname#</option>
 							</cfloop>
@@ -602,9 +605,9 @@
 				<tr>
                 	<td>Region/State Preference :</td>
 					<td>
-                        <input type="radio" name="regionguar" id="regionguarYes" value="yes" <cfif regionguar EQ 'yes'> checked="checked" </cfif> onClick="displayGuaranteed();" <cfif FORM.edit EQ 'no'> disabled </cfif> > 
+                        <input type="radio" name="regionguar" id="regionguarYes" value="yes" <cfif regionguar EQ 'yes' OR state_guarantee GT 0> checked="checked" </cfif> onClick="displayGuaranteed();" <cfif FORM.edit EQ 'no'> disabled </cfif> > 
                         <label for="regionguarYes"> Yes </label>
-                        <input type="radio" name="regionguar" id="regionguarNo" value="no" <cfif regionguar EQ 'no'> checked="checked" </cfif> onClick="displayGuaranteed();" <cfif FORM.edit EQ 'no'> disabled </cfif> > 
+                        <input type="radio" name="regionguar" id="regionguarNo" value="no" <cfif regionguar EQ 'no'  AND state_guarantee EQ 0> checked="checked" </cfif> onClick="displayGuaranteed();" <cfif FORM.edit EQ 'no'> disabled </cfif> > 
                         <label for="regionguarNo"> No </label>
 					</td>
 				</tr>
