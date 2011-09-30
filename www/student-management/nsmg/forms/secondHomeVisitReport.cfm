@@ -349,7 +349,7 @@
             FORM.homeAppearance = secondVisitAnswers.homeAppearance;
             FORM.typeOfHome = secondVisitAnswers.typeOfHome;
             FORM.numberBedRooms = secondVisitAnswers.numberBedRooms;
-            FORM.numberBathRooms = secondVisitAnswers.numberBedRooms;
+            FORM.numberBathRooms = secondVisitAnswers.numberBathRooms;
             FORM.livingRoom = secondVisitAnswers.livingRoom;
             FORM.diningRoom = secondVisitAnswers.diningRoom;
             FORM.kitchen = secondVisitAnswers.kitchen;
