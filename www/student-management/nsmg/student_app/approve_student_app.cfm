@@ -6,6 +6,8 @@
 	Desc:		Approves an application
 
 	Updated:	03/23/2011 - Ability to assign a program and region
+				05/11/2011 - ability to assign additional programs, states, regions, program 
+				should all be auto assigned based on applicatoin answers, but be able to change.
 				
 ----- ------------------------------------------------------------------------- --->
 
@@ -28,6 +30,9 @@
     <cfparam name="FORM.directPlace" default="3">  
     <cfparam name="FORM.regionGuarantee" default="0">  
     <cfparam name="FORM.stateGuarantee" default="0">
+    <cfparam name="FORM.privateschool" default="0">
+    <cfparam name="FORM.iffschool" default="0">
+    <cfparam name="FORM.aypenglish" default="0">
     
 	
     <cfscript>
@@ -40,7 +45,7 @@
 		}
 		
 		// Get Program List
-		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingProgram=1);
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingPrograms=1);
 		
 		// Get Company List
 		qGetCompanyList = APPLICATION.CFC.COMPANY.getCompanies(companyIDList=APPLICATION.SETTINGS.COMPANYLIST.All);
@@ -53,6 +58,15 @@
 		
 		// Additional Program
 		qGetAdditionalProgramInfo = APPLICATION.CFC.PROGRAM.getOnlineAppPrograms(app_programID=qGetStudentInfo.app_additional_program);
+		
+		// Get Private Schools Prices
+		qPrivateSchools = APPCFC.SCHOOL.getPrivateSchools();
+		
+		// Get IFF Schools
+		qIFFSchools = APPCFC.SCHOOL.getIFFSchools();
+		
+		// Get AYP Camps
+		qAYPCamps = APPCFC.SCHOOL.getAYPCamps();
 	</cfscript>
 
     <cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="file" filter="#qGetStudentInfo.studentid#.*">
@@ -131,7 +145,10 @@
 					regionGuarantee=FORM.regionGuarantee,
 					stateGuarantee=FORM.stateGuarantee,
 					directPlace=FORM.directPlace,
-					approvedBy=CLIENT.userID
+					privateSchool=FORM.privateschool,
+					iffschool=FORM.iffschool,
+					approvedBy=CLIENT.userID,
+					aypenglish=FORM.aypenglish
 					
 				);
 				
@@ -239,10 +256,16 @@
                         <tr>
                             <td>#qGetProgramInfo.app_program#<br /><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
                             <td>
-                                <cfif NOT VAL(qGetAdditionalProgramInfo.recordcount)>
-                                    None
-                                <cfelse>
-                                    #qGetAdditionalProgramInfo.app_program#
+                                
+                                <cfif #val(get_student_info.app_additional_program)# EQ '0'>None<cfelse>
+                                <cfloop list="#get_student_info.app_additional_program#" index=i>
+                                <cfquery name="app_other_programs" datasource="MySQL">
+                                    SELECT app_programid, app_program 
+                                    FROM smg_student_app_programs
+                                    WHERE app_programid = '#i#'
+                                </cfquery> 
+                                #app_other_programs.app_program#, 
+                                </cfloop>
                                 </cfif>
                                 <br /><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
                         </tr>
@@ -336,10 +359,10 @@
                     <td align="right">Region: </td>
                     <td>
                       <cfselect
-                          name="regionID" 
-                          id="regionID" 
                           bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})"
                           bindonload="yes"
+                          name="regionID" 
+                          id="regionID" 
                           value="regionID"
                           display="regionName"
                           selected="#FORM.regionID#" /> 
@@ -350,15 +373,16 @@
                     <td align="right">Region Guarantee: </td>
                     <td>
 		                <cfif NOT LEN(qGetStudentInfo.app_region_guarantee) OR NOT VAL(qGetStudentInfo.app_region_guarantee)>
-        		            N/A - to assign a guarantee, update region choice on application.
+        		            N/A - to assign a guarantee, update region choice on app
                 	    <cfelse>
                               <cfselect
-                                  name="regionGuarantee" 
-                                  id="regionGuarantee"
                                   bind="cfc:nsmg.extensions.components.region.getRegionGuaranteeRemote({regionID})"
                                   bindonload="no"
+                                  name="regionGuarantee" 
+                                  id="regionGuarantee"
                                   value="regionID"
-                                  display="regionName" />
+                                  display="regionName"
+                                  selected="#FORM.regionID#" />
 						</cfif>	
 					</td>
 				</tr>
@@ -366,7 +390,7 @@
                     <td align="right">State Guarantee: </td>
                     <td>
                         <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
-                            N/A - to assign state, update choices on application.
+                            N/A - to assign state, update choices on app.
                         <cfelse>
                             <select name="stateGuarantee">
                                 <option value="0"></option>
@@ -383,7 +407,7 @@
                         <select name="programID" id="programID">
                             <option value="0">--- Select a Program ---</option>
                             <cfloop query="qGetProgramList">
-                            	<option value="#qGetProgramList.programID#" <cfif FORM.programID EQ qGetProgramList.programID>selected</cfif>>#programName#</option>
+                            	<option value="#qGetProgramList.programID#" <cfif qGetStudentInfo.programID EQ qGetProgramList.programID>selected</cfif>>#programName#</option>
                             </cfloop>
                         </select>
                     </td>
@@ -391,11 +415,51 @@
                 <tr class="displayNone additionalInformation">
                     <td align="right">Direct Placement: </td>
                     <td>
-                       <input type="radio" name="directPlace" id="directPlace1" value="1"> <label for="directPlace1">Yes</label>
+                       <input type="radio" name="directPlace" id="directPlace1" value="1" <cfif ListFind(get_student_info.app_additional_program, 10)>checked</cfif>> <label for="directPlace1">Yes</label>
                        &nbsp;&nbsp;&nbsp;
-                       <input type="radio" name="directPlace" id="directPlace0" value="0"> <label for="directPlace0">No</label>
+                       <input type="radio" name="directPlace" id="directPlace0" value="0" <cfif not ListFind(get_student_info.app_additional_program, 10)>checked</cfif>> <label for="directPlace0">No</label>
                     </td>
                 </tr>
+                <!----If a private school, show tuition range---->
+               <cfif get_student_info.privateschool gt 0>
+                  	<tr class="displayNone additionalInformation">
+					<td align="right">Private High School</td>
+					<td>
+						<select name="privateschool">
+						<option value="0"></option>
+						<cfloop query="qPrivateSchools">
+						<option value="#privateschoolid#" <cfif get_student_info.privateschool EQ privateschoolid> selected </cfif> >#privateschoolprice#</option>
+						</cfloop>
+						</select>
+					</td>
+				</tr>
+                </cfif>
+                <cfif ListFind(get_student_info.app_additional_program, 7)> 
+				<tr class="displayNone additionalInformation">
+					<td align="right">Pre-AYP English:</td>
+					<td><select name="aypenglish">
+						<option value="0"></option>
+						<cfloop query="qAYPCamps">
+						<cfif camptype EQ "english"><option value="#campid#" <cfif form.aypenglish eq #campid#>selected</cfif>>#name#</option></cfif>
+						</cfloop>
+						</select>
+
+					</td>
+				</tr>
+               </cfif>
+               <cfif ListFind(get_student_info.app_additional_program, 9)> 
+				<tr class="displayNone additionalInformation">
+					<td align="right">International Foreign Family:</td>
+					<td><select name="iffschool">
+						<option value="0"></option >>
+						<cfloop query="qIffSchools">
+						<option value="#iffid#" <cfif get_student_info.iffschool EQ iffid> selected </cfif> >#name#</option>
+						</cfloop>
+						</select>
+					</td>
+				</tr>
+                </cfif>
+                
                 <tr>
                     <td align="center" colspan="2">
                         <input name="submit" type=image src="pics/approve.gif" alt='Approve Application'>		
