@@ -265,7 +265,10 @@ where  sc.fk_programid = #get_student_info.programid#
                             <table>
                                 <tr>
                                 <td>1st Choice:</td>
-                                <td><cfselect name="state1" onClick="DataChanged();">
+                                <td>
+                               
+                                <cfif get_student_info.app_current_status lte 3>
+                                <cfselect name="state1" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
                                         	<cfif not ListFind(closedList, id)>
@@ -273,9 +276,20 @@ where  sc.fk_programid = #get_student_info.programid#
                                         	</cfif>
                                         </cfloop>
                                     </cfselect>
+                                 <cfelse>
+                                 <Cfquery name="State1" datasource="#application.dsn#">
+                                     select statename
+                                     from smg_states
+                                     where id = #states_requested.state1#
+                                 </cfquery>
+                              		<strong>#state1.statename#	</strong>
+                                    <input type="hidden" name="state1" value="#states_requested.state1#">
+                                 </cfif>
                                 </td>
                                 <td>&nbsp; 2nd Choice:</td>
-                                <td><cfselect name="state2" onClick="DataChanged();">
+                                <td>
+                                <cfif get_student_info.app_current_status lte 3>
+                                <cfselect name="state2" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
                                         	<cfif not ListFind(closedList, id)>
@@ -283,9 +297,20 @@ where  sc.fk_programid = #get_student_info.programid#
                                         	</cfif>
                                         </cfloop>
                                     </cfselect>
+                                 <cfelse>
+                                     <Cfquery name="State2" datasource="#application.dsn#">
+                                     select statename
+                                     from smg_states
+                                     where id = #states_requested.state2#
+                                 </cfquery>
+                              		<strong>#state2.statename#	</strong>
+                                    <input type="hidden" name="state2" value="#states_requested.state2#">
+                                 </cfif>
                                 </td>
                                 <td>&nbsp; 3rd Choice:</td>
-                                <td><cfselect name="state3" onClick="DataChanged();">
+                                <td>
+                                 <cfif get_student_info.app_current_status lte 3>
+                                <cfselect name="state3" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
                                         	<cfif not ListFind(closedList, id)>
@@ -293,6 +318,15 @@ where  sc.fk_programid = #get_student_info.programid#
                                         	</cfif>
                                         </cfloop>
                                     </cfselect>
+                                  <cfelse>
+                                     <Cfquery name="State3" datasource="#application.dsn#">
+                                     select statename
+                                     from smg_states
+                                     where id = #states_requested.state3#
+                                 </cfquery>
+                              		<strong>#state3.statename#</strong>	
+                                    <input type="hidden" name="state3" value="#states_requested.state3#">
+                                  </cfif>
                                 </td>							
                                 </tr>
                             </table>
