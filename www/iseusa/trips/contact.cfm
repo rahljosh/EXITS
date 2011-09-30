@@ -47,7 +47,7 @@ a:active {
       <div class="whtMiddletrips">
         <div class="trips">
           <h1 class="enter">Student Tours Contact</h1>
-          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.</p>
+          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 10 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2011-12 season.</p>
           <table width="573" height="229" border="0">
             <tr>
               <td height="45" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
