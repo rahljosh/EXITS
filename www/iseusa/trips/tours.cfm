@@ -158,7 +158,7 @@ margin-left: 0px;
         <div class="tripsTours">
           <h1 class="enter">ISE Student Tours</h1>
           <em><font color="#be1e2d" size=+1><strong><div align="center">For ISE students ONLY!</div></strong></font></em>
-          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 9 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2010-11 season.</p>
+          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 10 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2011-12 season.</p>
          <cfoutput>
 <cfset company = 'ISE'>
  <br>
