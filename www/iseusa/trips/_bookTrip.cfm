@@ -159,9 +159,6 @@
             </cfquery>
 			
             <cfscript>
-				// Set SESSION Email Address instead of updating student email address on the DB
-				APPLICATION.CFC.SESSION.setTripSessionVariables(studentEmail=FORM.emailAddress);
-
 				// Set Receipt Description
 				vReceiptDescription = "Registration for #APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)# - Student #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# ###qGetStudentInfo.studentID#";
 				// Include Number of Siblings
@@ -202,7 +199,7 @@
 					invoiceNumber='##' & Year(now()) & '-' & qGetStudentPendingRegistration.ID,
                     description=vReceiptDescription,
 					studentID='##' & qGetStudentInfo.studentID,
-					email=qGetStudentInfo.email,
+					email=FORM.emailAddress,
 					billingFirstName=FORM.billingFirstName,
 					billingLastName=FORM.billingLastName,
 					billingCompany=FORM.billingCompany,
@@ -633,7 +630,7 @@
                     </tr>
                     <tr>
                         <td class="tripFormTitle">City <span class="required">*</span></td>
-                        <td class="tripFormField"><input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="mediumField" maxlength="100" /></td>
+                        <td class="tripFormField"><input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="largeField" maxlength="100" /></td>
                     </tr>
                     <!--- US State --->
                     <tr id="usStateField" class="blueRow field displayNone">

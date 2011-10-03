@@ -99,7 +99,7 @@
         <tr>
             <td valign="top" width="50%">
     
-                <!---Host Family Information---->
+                <!--- Student Information --->
                 <table>
                     <tr>
                         <td width="100"><span class="title">Name:</span></td>
@@ -115,14 +115,14 @@
                     </tr>
                         <tr>
                         <td><span class="title">Nationality:</span></td>
-                        <td>#qGetStudentRegistered.stunationality#</td>
+                        <td>#qGetRegistrationDetails.stunationality#</td>
                     </tr>
                 </table>
     
             </td>
             <td valign="top" width="50%">
     
-                <!----Contact Info----> 
+                <!--- Contact Info --->
                 <table>
                     <tr>
                         <td width="100" valign="top"><span class="title">Cell Phone:</span></td>
@@ -130,7 +130,7 @@
                     </tr>
                     <tr>
                         <td valign="top"><span class="title">Email: </span></td>
-                        <td>#qGetStudentFullInformation.email#</td>
+                        <td>#qGetRegistrationDetails.email#</td>
                     </tr>
                     <tr>
                         <td><span class="title">Airport (pref/alt):</span></td>
@@ -140,10 +140,10 @@
                     <tr>
                         <td valign="top"><span class="title">Roommate Preference:</span></td>
                         <td>
-                            #qGetStudentRegistered.nationality# 
-                            <cfif NOT LEN(qGetStudentRegistered.person1)><br /> #qGetStudentRegistered.person1#,</cfif>
-                            <cfif NOT LEN(qGetStudentRegistered.person2)><br /> #qGetStudentRegistered.person2#,</cfif>
-                            <cfif NOT LEN(qGetStudentRegistered.person3)><br /> #qGetStudentRegistered.person3#</cfif>
+                            #qGetRegistrationDetails.nationality# 
+                            <cfif NOT LEN(qGetRegistrationDetails.person1)><br /> #qGetRegistrationDetails.person1#,</cfif>
+                            <cfif NOT LEN(qGetRegistrationDetails.person2)><br /> #qGetRegistrationDetails.person2#,</cfif>
+                            <cfif NOT LEN(qGetRegistrationDetails.person3)><br /> #qGetRegistrationDetails.person3#</cfif>
                         </td>
                     </tr>                
                 </table>
@@ -191,7 +191,7 @@
             </td>
             <td valign="top" width="50%">
     
-                <!----Address & Contact Info----> 
+                <!--- Address & Contact Info --->
                 <table>
                     <tr>
                         <td width="100" valign="top"><span class="title">Address:</span></td>
@@ -237,7 +237,7 @@
                     </tr>
                     <tr>
                         <td><span class="title">Any Thing Else:</span></td>
-                        <td>#qGetStudentRegistered.med#</td>
+                        <td>#qGetRegistrationDetails.med#</td>
                     </tr>
                 </table>
     

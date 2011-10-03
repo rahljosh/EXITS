@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_confirmation.cfm
+	File:		_myTripDetails.cfm
 	Author:		Marcus Melo
 	Date:		September 30, 2011
-	Desc:		Confirmation
+	Desc:		Display details of a already booked trip.
 	
 	Updates:	
 	
@@ -39,13 +39,15 @@
 		INNER JOIN
         	applicationPayment ap ON ap.foreignID = st.ID
             	AND
-                	ap.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.applicationPaymentID)#">
+                	ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                AND
+                	authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
         WHERE 
      		st.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#"> 
         AND
         	st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_id)#">
     </cfquery>
-	   
+	         
     <cfquery name="qGetSiblingsRegistered" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	sts.ID,
@@ -73,17 +75,8 @@
 	
     <cfscript>
 		// Total of Registered People
-		vTotalPeopleRegistered = VAL(qGetSiblingsRegistered.recordCount) + 1;	
-		
-		// Clear Session Variables | Keep student logged in
-		APPLICATION.CFC.SESSION.setTripSessionVariables(
-			tourID = 0,												
-			applicationPaymentID = 0
-		);		
+		vTotalPeopleRegistered = VAL(qGetSiblingsRegistered.recordCount) + 1;
 	</cfscript>
-    
-    <!--- Email Student the Permission Form and Student Packet --->
-    <cfinclude template="_sendEmail.cfm">
     
 </cfsilent>
     
@@ -109,8 +102,10 @@
 
 			<!--- Include Trip Header --->
             <cfinclude template="_tripHeader.cfm">
-                
+            			
 			<!--- Trip Information --->
+            <h3 class="tripSectionTitle">You are already registered for this trip, please see details below:</h3>
+            
             <h3 class="tripSectionTitle">Trip Book Confirmation - Invoice ###Year(now())#-#qGetRegistrationDetails.ID#</h3>
             <em class="tripTitleNotes">Print this page for your records</em>
                                                         
@@ -209,7 +204,7 @@
                     <td class="tripFormField">#qGetRegistrationDetails.expirationMonth#/#qGetRegistrationDetails.expirationYear#</td>
                 </tr>
             </table>	
-
+                
 			<!--- Include Trip Footer --->
             <cfinclude template="_tripFooter.cfm">
 
