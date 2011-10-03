@@ -49,30 +49,23 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="4" align="4"> 
-                   	 	<h3><div align="center">Trips are unavailable for registration until Oct. 3rd. <br />  Please check back on that date to book your trip.</div></h3>
+                <cfloop query="qGetTourList">
+                    <td width="285" height="178" class="lightGreen" scope="row">
+                        <form action="#CGI.SCRIPT_NAME#?action=tripDetails" method="post">
+                            <input type="hidden" name="action" value="TripDetails" />
+                            <input type="hidden" name="tourID" value="#qGetTourList.tour_id#" />
+                            <input type="image" name="submit" src="images/trips_#qGetTourList.tour_id#.png" alt="#qGetTourList.tour_name# Details" /> <br />
+                            <strong>#qGetTourList.tour_name#</strong><br />
+                            #qGetTourList.tour_date#<br />
+                            Status: <cfif qGetTourList.tour_status EQ 'Active'>Seats Available<cfelse>#qGetTourList.tour_status#</cfif><br /><br />
+                        </form>
                     </td>
-             	</tr>
-            	<cfif ListFind("127.0.0.1,184.155.143.131,96.56.128.58", cgi.REMOTE_host)>
-                <tr>
-                    <cfloop query="qGetTourList">
-                        <td width="285" height="178" class="lightGreen" scope="row">
-                            <form action="#CGI.SCRIPT_NAME#?action=tripDetails" method="post">
-                                <input type="hidden" name="action" value="TripDetails" />
-                                <input type="hidden" name="tourID" value="#qGetTourList.tour_id#" />
-                                <input type="image" name="submit" src="images/trips_#qGetTourList.tour_id#.png" alt="#qGetTourList.tour_name# Details" /> <br />
-                                <strong>#qGetTourList.tour_name#</strong><br />
-                                #qGetTourList.tour_date#<br />
-                                Status: <cfif qGetTourList.tour_status EQ 'Active'>Seats Available<cfelse>#qGetTourList.tour_status#</cfif><br /><br />
-                            </form>
-                        </td>
-                        <cfif currentrow MOD 2 EQ 0> 
-                            </tr>
-                            <tr>
-                            </tr>
-                        </cfif>
-                    </cfloop>    
-				</cfif>                    
+                    <cfif currentrow MOD 2 EQ 0> 
+                        </tr>
+                        <tr>
+                        </tr>
+                    </cfif>
+                </cfloop>    
             </table>
             
         </div>

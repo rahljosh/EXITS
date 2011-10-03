@@ -14,7 +14,28 @@
 	
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-
+	
+    <!--- Check if student is already registered to this trip --->
+    
+    <cfquery name="qCheckStudentRegistration" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+        	ID 
+        FROM 
+        	student_tours 
+        WHERE 
+     		studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#"> 
+        AND
+        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_id)#">
+        AND
+        	paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+    </cfquery>
+    
+    <cfscript>
+		if ( VAL(qCheckStudentRegistration.recordCount) ) {
+			Location("#CGI.SCRIPT_NAME#?action=myTripDetails", "no");
+		}	
+	</cfscript>
+       
     <cfquery name="qGetHostChildren" datasource="#APPLICATION.DSN.Source#">
     	SELECT
         	childID,

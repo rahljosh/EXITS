@@ -36,15 +36,6 @@
 				VARIABLES.transactionKey = '73FUxR52v3HRH9ug';
 			}
 
-				// Production Environment - MPD TOURS	
-				VARIABLES.processingURL = 'https://secure.authorize.net/gateway/transact.dll';
-				// CIM URL
-				VARIABLES.CIMprocessingURL = 'https://api.authorize.net/xml/v1/request.api';
-				// The merchant's unique API login ID
-				VARIABLES.loginID = '8W7ks48D3rr'; 
-				// The merchant's unique transaction key
-				VARIABLES.transactionKey = '73FUxR52v3HRH9ug';
-
 		    /*	
 				Developer URL
 					https://test.authorize.net/gateway/transact.dll

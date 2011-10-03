@@ -17,7 +17,7 @@
 <cfoutput>
 
 	<!--- Breadcrumb --->
-    <cfif ListFind("TripDetails,lookUpAccount,preferences,BookTrip,confirmation", FORM.action)>
+    <cfif ListFind("TripDetails,lookUpAccount,preferences,myTripDetails,bookTrip,confirmation", FORM.action)>
         <table width="665px" border="0" align="center" cellpadding="2" cellspacing="0" class="tripBreadCrumbNav">
             <tr>
                 <td>
@@ -27,6 +27,14 @@
                             <a href="#CGI.SCRIPT_NAME#">[ Home ]</a> 
                             > 
                             <a href="#CGI.SCRIPT_NAME#?action=TripDetails" class="on">[ Details ]</a> 
+                        </cfcase>
+
+                        <cfcase value="myTripDetails">
+                            <a href="#CGI.SCRIPT_NAME#">[ Home ]</a> 
+                            > 
+                            <a href="#CGI.SCRIPT_NAME#?action=TripDetails">[ Details ]</a> 
+                            > 
+                            <a href="#CGI.SCRIPT_NAME#?action=myTripDetails" class="on">[ My Trip Details ]</a> 
                         </cfcase>
     
                         <cfcase value="lookUpAccount">

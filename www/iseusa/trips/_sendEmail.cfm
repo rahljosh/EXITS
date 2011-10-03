@@ -100,8 +100,8 @@
     
     <cfinvoke component="cfc.email" method="send_mail">
         <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (ISE Trip Support)">
-    	<cfinvokeargument name="email_to" value="#qGetStudentRegistered.email#">
-        <cfinvokeargument name="email_cc" value="#APPLICATION.EMAIL.trips#">
+    	<cfinvokeargument name="email_to" value="#qGetRegistrationDetails.email#">
+        <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
         <cfinvokeargument name="email_subject" value="Your #qGetTourDetails.tour_name# Trip Details">
         <cfinvokeargument name="email_message" value="#stuEmailMessage#">
         <cfinvokeargument name="email_file" value="#APPLICATION.PATH.TEMP#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf">
@@ -123,7 +123,7 @@
     <cfinvoke component="cfc.email" method="send_mail">
         <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (ISE Trip Support)">
         <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
-        <cfinvokeargument name="email_cc" value="#APPLICATION.EMAIL.trips#">
+        <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
         <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#repEmailMessage#">
     </cfinvoke>	
@@ -139,7 +139,7 @@
     <cfinvoke component="cfc.email" method="send_mail">
         <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (ISE Trip Support)">
         <cfinvokeargument name="email_to" value="info@mpdtoursamerica.com"> 
-        <cfinvokeargument name="email_cc" value="#APPLICATION.EMAIL.trips#">
+        <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
         <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#mpdEmailMessage#">
     </cfinvoke>	
