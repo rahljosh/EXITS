@@ -98,6 +98,7 @@
                 
                 </cfcase>
             
+            
 				<!--- Error displayed on sections --->
                 <cfcase value="section">
                     
@@ -126,6 +127,7 @@
                 
                 </cfcase>
                	
+                
                 <cfcase value="checklist">
                     
                     <div class="errors">
@@ -152,6 +154,32 @@
                     </cfscript>
                 
                 </cfcase>
+                
+                
+                <!--- Error displayed on Trip Section --->
+                <cfcase value="tripSection">
+                    <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">
+                        <tr>
+                            <td>
+                                <div class="errors">
+                                    <p><em>Oops... the following errors were encountered:</em></p>
+                            
+                                    <ul>
+                
+                                        <!--- Loop over the message --->
+                                        <cfloop from="1" to="#ArrayLen(ATTRIBUTES.formErrors)#" index="i">
+                                           <li>#i#. &nbsp; #ATTRIBUTES.formErrors[i]#</li>        	
+                                        </cfloop>
+                
+                                    </ul>
+                                    
+                                    <p>Data has <strong>NOT</strong> been saved.</p>
+                                </div>
+                            </td>
+                        </tr>						                                                    
+                    </table>                            
+				</cfcase>                
+                
              </cfswitch>
                        
 		</cfoutput>

@@ -1,159 +1,276 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		exchange-student-trips.cfm
+	Author:		Marcus Melo
+	Date:		September 26, 2011
+	Desc:		MPD Tours
+	
+	Updates:	
+	
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+		       
+	<!--- Param local variables --->
+	<cfparam name="URL.action" default="">
+	<cfparam name="URL.tourID" default="0" />
+
+	<!--- Param FORM Variables --->
+	<cfparam name="FORM.action" default="">
+	<cfparam name="FORM.subAction" default="">    
+    <cfparam name="FORM.submitted" default="0">
+	<cfparam name="FORM.tourID" default="0" />
+    <!--- Login --->
+    <cfparam name="FORM.studentID" default="">
+    <cfparam name="FORM.hostID" default="">
+    <cfparam name="FORM.familyLastName" default="">
+    <cfparam name="FORM.dob" default="">
+    <cfparam name="FORM.hostLastName" default="">
+    <cfparam name="FORM.hostZip" default="">
+    <cfparam name="FORM.hostCity" default="">
+    <cfparam name="FORM.hostEmail" default="">
+    <!--- Trip Preferences --->
+    <cfparam name="FORM.otherTravelers" default="">
+    <cfparam name="FORM.shareRoomNationality" default="">
+    <cfparam name="FORM.shareRoomPerson1" default="">
+    <cfparam name="FORM.shareRoomPerson2" default="">
+    <cfparam name="FORM.shareRoomPerson3" default="">
+    <cfparam name="FORM.medicalInformation" default="">
+    <!--- Book Tour --->
+    <cfparam name="FORM.emailAddress" default="">
+    <cfparam name="FORM.confirmEmailAddress" default="">
+	<!--- Credit Card Information --->
+    <cfparam name="FORM.paymentMethodID" default="1">
+    <cfparam name="FORM.nameOnCard" default="">
+	<cfparam name="FORM.creditCardTypeID" default="">
+	<cfparam name="FORM.creditCardNumber" default="">
+	<cfparam name="FORM.expirationMonth" default="">
+    <cfparam name="FORM.expirationYear" default="">
+    <cfparam name="FORM.ccvCode" default="">
+	<!--- Billing Address --->
+    <cfparam name="FORM.billingFirstName" default="">    
+    <cfparam name="FORM.billingLastName" default="">    
+    <cfparam name="FORM.billingCompany" default="">    
+    <cfparam name="FORM.billingAddress" default="">    
+    <cfparam name="FORM.billingCity" default="">
+    <cfparam name="FORM.billingState" default="">
+    <cfparam name="FORM.billingZipCode" default="">
+    <cfparam name="FORM.billingCountryID" default="232">
+    <!--- Payment Agreement --->
+    <cfparam name="FORM.registeringAgreement" default="0" />
+	<cfparam name="FORM.airfareAgreement" default="0" />
+    
+    <cfscript>
+		if ( LEN(URL.action) AND NOT LEN(FORM.action) ) {
+			FORM.action = URL.action;
+		}
+		
+		// Set Tour
+		if ( VAL(FORM.tourID) ) {
+			// Set Tour in Session Variable			
+			APPLICATION.CFC.SESSION.setTripSessionVariables(tourID = FORM.tourID);											
+		}
+		
+		// Set Student
+		if ( VAL(FORM.studentID) ) {
+			// Set Tour in Session Variable			
+			APPLICATION.CFC.SESSION.setTripSessionVariables(studentID = FORM.studentID);											
+		}
+		
+		// Force SSL
+		if ( NOT APPLICATION.isServerLocal ) {
+			Location("https://#CGI.SERVER_NAME##CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" "no");
+		}
+	</cfscript>
+
+
+    <!----Set Default Properties---->
+    <Cfquery name="qGetStudentInfo" datasource="#APPLICATION.DSN.Source#">
+    	SELECT 
+            s.uniqueid, 
+            s.studentID, 
+            s.companyID, 
+            s.hostID,  
+            s.regionAssigned,    
+        	s.familylastname, 
+            s.firstname, 
+            s.email, 
+            s.med_allergies,
+            s.other_Allergies,
+            c.countryname
+    	FROM 
+        	smg_students s
+    	LEFT JOIN 
+        	smg_countrylist c on c.countryid = s.countrybirth
+     	WHERE	
+     		studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.studentID)#"> 
+    </cfquery>
+
+	<cfquery name="qGetTourList" datasource="#APPLICATION.DSN.Source#">
+		SELECT 
+        	* 
+        FROM 
+        	smg_tours 
+        WHERE 
+        	tour_status != <cfqueryparam cfsqltype="cf_sql_varchar" value="inactive">
+	</cfquery>
+
+    <cfquery name="qGetTourDetails" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+        	* 
+        FROM 
+        	smg_tours 
+        WHERE 
+        	tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.tourID)#">
+    </cfquery>
+	
+    <cfquery name="qGetStudentPendingRegistration" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+        	* 
+        FROM 
+        	student_tours 
+        WHERE 
+     		studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#"> 
+        AND
+        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.tourID)#">
+        AND
+        	paid IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+    </cfquery>
+	   
+    <cfquery name="qGetSiblingsPendingRegistration" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+        	sts.ID,
+            sts.masterTripID,
+            sts.fk_studentID,
+            sts.siblingID,
+            sts.tripID,
+            sts.paid,
+            shc.name,
+            shc.lastName,
+            shc.birthDate
+        FROM 
+        	student_tours_siblings sts
+        INNER JOIN	
+			smg_host_children shc ON shc.childID = sts.siblingID
+        WHERE 
+     		sts.fk_studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#"> 
+        AND
+        	sts.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentPendingRegistration.tripID)#">
+        AND
+        	sts.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+    </cfquery>
+    
+    <cfscript>
+		// Force SSL
+		
+		// Check if there is a valid student, if not go back to the tours selection page
+		/*
+		if ( NOT VAL(SESSION.TOUR.studentID) AND listFind("lookUpAccount,preference,BookTrip,confirmation", FORM.action) ) {
+			// Set Action to Home
+			FORM.action = 'home';
+		}
+		*/
+		
+		// Check if there is a valid tour, if not go back to the tours selection page
+		if ( NOT VAL(SESSION.TOUR.tourID) AND listFind("lookUpAccount,preference,BookTrip,confirmation", FORM.action) ) {
+			// Set Action to Home
+			FORM.action = 'home';
+		}
+		
+		if (FORM.action EQ 'logOut') {			
+			// Logout student
+			APPLICATION.CFC.SESSION.tripSectionLogout();
+			
+			// Go to Book Trip - CC Processing
+			Location('#CGI.SCRIPT_NAME#', 'no');
+		}
+	</cfscript>
+    
+</cfsilent>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><cfoutput>
 <title>#APPLICATION.METADATA.pageTitle#</title>
 <meta name="description" content="#APPLICATION.METADATA.pageDescription#" />
-<meta name="keywords" content="#APPLICATION.METADATA.pageKeywords#" /></cfoutput>
-<style type="text/css">
-<!--
-table {
-	width: 606px;
-}
--->
-</style>
-
+<meta name="keywords" content="#APPLICATION.METADATA.pageKeywords#" />
 <link href="../css/ISEstyle.css" rel="stylesheet" type="text/css" />
-<style type="text/css">
-<!--
-a:link {
-	color: #000;
-	text-decoration: none;
-}
-a:visited {
-	color: #000;
-	text-decoration: none;
-}
-a:hover {
-	color: #0B954E;
-	text-decoration: none;
-}
-a {
-	font-weight: bold;
-}
-a:active {
-	text-decoration: none;
-}
-table {
-	width: 600px;
-}
-.whtMiddleTrips {
-	background-image: url(../images/whtBoxMiddle.png);
-	background-repeat: repeat-y;
-	margin: 0px;
-	height: auto;
-	text-align: justify;
-	padding-top: 20px;
-	padding-right: 0px;
-	padding-bottom: 0px;
-	padding-left: 0px;
-	min-height: 1400px;
-}
-
-
--->
-</style>
-
-
-
-
+<link href="../css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="../css/trips.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
+<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
+<script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab --></cfoutput>                      
+<script type="text/javascript" src="../linked/js/jquery.maskedinput-1.2.2.min.js"></script>
 </head>
-
 <body class="oneColFixCtr">
 
- <cfquery name="tours" datasource="mysql">
-			SELECT * FROM smg_tours where tour_status <> 'inactive'
-		</cfquery>
-<div id="topBar">
-<cfinclude template="../topBarLinks.cfm">
-<div id="logoBox"><a href="/"><img src="../images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
-<!-- end topBar --></div>
-<div id="container">
-<div class="spacer2"></div>
-<div class="title"><cfinclude template="titleTrips.cfm"><!-- end title --></div>
-<div class="tabsBar">
-  <cfinclude template="../tabsBar.cfm">
-  <!-- end tabsBar --></div>
-<div id="mainContent">
-    <div id="subPages">
-      <div class="whtTop"></div>
-      <div class="whtMiddleTrips">
-        <div class="trips">
-          <h1 class="enter">ISE Student Tours</h1>
-          <em><font color="#be1e2d" size=+1><strong><div align="center">For ISE students ONLY!</div></strong></font></em>
-          <p>International Student Exchange and our partner organization, MPD Tour America are proud to offer this year's ISE Trips of exciting adventures across America. MPD Tour America will be organizing 10 ISE trips, chaperoned and supervised exclusively by ISE Representatives, for the 2011-12 season.<br /><br />
-          <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE.  Once you are registered for a tour, you will be contacted regarding airfare.</strong></p>
-          
-          <table width="573" height="333" border="0">
-            <tr>
-              <td height="45" colspan="3" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
-             <a href="/trips">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td>
-              </tr>
-             <tr>
-             	<td colspan=4 align='4'> 
-					<cfif 1 eq 1>
-                   	 	<h3><div align="center">Trips are unavailable for registration until Oct. 3rd. <br />  Please check back on that date to book your trip.</div></h3>
-                    </cfif>
-            	</td>
-             </tr>
-            <tr>
-           <CFif cgi.REMOTE_HOST eq '184.155.143.131' or cgi.REMOTE_host eq '96.56.128.58'>
-            <cfoutput>
-            	<cfloop query="tours">
-              
-              <td width="285" height="178" class="lightGreen" scope="row"><a href="tours.cfm?tour_id=#tour_id#">
-              <img src="images/trips_#tour_id#.png" width="239" height="165" alt="#tour_name#" border="0" /></a><br />
-              #tour_name#<br />
-              #tour_date#<br />
-              Status: <cfif tour_status eq 'Active'>Seats Available<cfelse>#tour_status#</cfif></td>
-					<cfif currentrow mod 2 eq 0> 
-                    </tr>
-                    <tr>
-                </cfif>
-                </cfloop>    
-           </cfoutput>
-		  </cfif>
-           <!----
-           </cfif>
-		   ---->
-            	</tr>
-      		
-            <!----
-              <th width="285" height="178" class="lightGreen" scope="row"><a href="tours.cfm?tour_id=10"><img src="images/trips_03.png" width="239" height="165" alt="LA Experience" border="0" /></a></th>
-              <td width="264" align="center" valign="middle" class="lightGreen"><a href="tours.cfm?tour_id=7"><img src="images/trips_04.png" width="239" height="166" alt="NYC Holiday" border="0"/></a><br /></td>
-            </tr>
-            <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=1"><img src="images/trips_08.png" width="240" height="166" border="0"/></a></th>
-              <th class="lightGreen"><a href="tours.cfm?tour_id=2"><img src="images/trips_11.png" width="237" height="165" border="0"/></a></th>
-            </tr>
-            <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=8"><img src="images/trips_13.png" width="241" height="168" border="0"/></a></th>
-              <th class="lightGreen"><a href="tours.cfm?tour_id=9"><img src="images/trips_14.png" width="237" height="168" border="0"/></a></th>
-            </tr>
-            <tr>
-              <th class="lightGreen" scope="row"><a href="tours.cfm?tour_id=6"><img src="images/trips_09.png" width="244" height="166" border="0" /></a></th>
-              <td class="lightGreen" align="center"><a href="tours.cfm?tour_id=11"><img src="images/trips_05.png" width="244" height="165" alt="mousepad" border="0" /></a></td>
-            </tr>
-            <tr>
-              <th class="lightGreen" scope="row"><img src="images/trips_15.png" width="245" height="168" /></th>
-              <th class="lightGreen"></th>
-            </tr>
-            <tr>
-			---->
-             
-          </table>
-          
-                   </div>
-
-        <!-- end whtMiddle --></div>
-      <div class="whtBottom"></div>
-      <!-- end subPages --></div>
-    <!-- end mainContent --></div>
-<!-- end container --></div>
-<div id="main" class="clearfix"></div>
-<div id="footer">
-  <div class="clear"></div>
-<cfinclude template="../bottomLinks.cfm">
-<!-- end footer --></div>
+	<cfoutput>
+    
+        <div id="topBar">
+            <cfinclude template="../topBarLinks.cfm">
+            <div id="logoBox">
+                <a href="/"><img src="../images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a>
+            </div>
+        </div><!-- end topBar -->
+            
+        <div id="container">
+        
+            <div class="spacer2"></div>
+            
+            <div class="title"><cfinclude template="titleTrips.cfm"></div><!-- end title -->
+            
+            <div class="tabsBar">
+                <cfinclude template="../tabsBar.cfm">
+            </div><!-- end tabsBar -->
+            
+            <div id="mainContent">
+            
+                <div id="subPages">
+                
+                    <div class="whtTop"></div>
+                    
+                    <!--- 
+						Check to see which action we are taking. 
+					--->
+                    <cfswitch expression="#FORM.action#">
+                    
+                        <cfcase value="home,tripDetails,lookUpAccount,preferences,BookTrip,confirmation" delimiters=",">
+                    
+                            <!--- Include template --->
+                            <cfinclude template="_#FORM.action#.cfm" />
+                    
+                        </cfcase>
+                    
+                        <!--- The default case is the login page --->
+                        <cfdefaultcase>
+                            
+                            <!--- Include template --->
+                            <cfinclude template="_home.cfm" />
+                    
+                        </cfdefaultcase>
+                    
+                    </cfswitch>
+                            
+    				<div class="whtBottom"></div>
+                    
+    			</div><!-- end subPages -->
+                
+    		</div><!-- end mainContent -->
+            
+    	</div><!-- end container -->
+        
+        <div id="main" class="clearfix"></div>
+        
+        <div id="footer">
+        
+            <div class="clear"></div>
+            
+            <cfinclude template="../bottomLinks.cfm">
+            
+    	</div><!-- end footer -->
+        
+	</cfoutput>
+    
 </body>
 </html>

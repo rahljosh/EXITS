@@ -62,12 +62,6 @@
 
 <body>
 
-<!----Retrieve Students Company Information---->
-<cfquery name="company_info" datasource="mysql">
-select *
-from smg_companies
-where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">  
-</cfquery>
 <!----Retrieve required Student Information---->
 <cfquery name="student_info" datasource="mysql">
 select s.familylastname, s.firstname, s.studentid, s.med_allergies, s.other_allergies, s.dob, s.email, s.cell_phone, s.sex, s.regionassigned,  s.countrybirth, s.countrycitizen, s.med_allergies, s.other_allergies, s.countryresident, h.airport_city, h.airport_state, h.local_air_code, h.major_air_code, 
@@ -78,20 +72,20 @@ from smg_students s
 left join smg_hosts h on h.hostid = s.hostid
 left join smg_users u on u.userid = s.arearepid
 left join smg_schools school on school.schoolid = s.schoolid
-where s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.verifiedStudent#"> 
+where s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#"> 
 </cfquery>
 
 <Cfquery name="regionalManager" datasource="mysql">
 select firstname, lastname, phone
 from smg_users
 left join user_access_rights on user_access_rights.userid = smg_users.userid
-where user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#student_info.regionassigned#"> 
+where user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#"> 
 and user_access_rights.usertype = 5
 </Cfquery>
 <Cfquery name="thisTripInfo" datasource="mysql">
 select * 
 from student_tours
-where tripid  = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.selectedTrip#">  and studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.verifiedStudent#"> 
+where tripid  = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetTourDetails.tour_id#">  and studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#"> 
 limit 1
 </Cfquery>
 
