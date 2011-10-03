@@ -280,7 +280,7 @@ where  sc.fk_programid = #get_student_info.programid#
                                  <Cfquery name="State1" datasource="#application.dsn#">
                                      select statename
                                      from smg_states
-                                     where id = #states_requested.state1#
+                                     where id = #val(states_requested.state1)#
                                  </cfquery>
                               		<strong>#state1.statename#	</strong>
                                     <input type="hidden" name="state1" value="#states_requested.state1#">
@@ -301,7 +301,7 @@ where  sc.fk_programid = #get_student_info.programid#
                                      <Cfquery name="State2" datasource="#application.dsn#">
                                      select statename
                                      from smg_states
-                                     where id = #states_requested.state2#
+                                     where id = #val(states_requested.state2)#
                                  </cfquery>
                               		<strong>#state2.statename#	</strong>
                                     <input type="hidden" name="state2" value="#states_requested.state2#">
@@ -322,7 +322,7 @@ where  sc.fk_programid = #get_student_info.programid#
                                      <Cfquery name="State3" datasource="#application.dsn#">
                                      select statename
                                      from smg_states
-                                     where id = #states_requested.state3#
+                                     where id = #val(states_requested.state3)#
                                  </cfquery>
                               		<strong>#state3.statename#</strong>	
                                     <input type="hidden" name="state3" value="#states_requested.state3#">
