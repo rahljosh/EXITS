@@ -12,20 +12,6 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 	
-    <cfscript>
-		// Local Enviroment
-		if ( APPLICATION.isServerLocal ) {
-			// Production
-			vTempPath = 'C:/Websites/www/student-management/nsmg/uploadedfiles/temp/';
-			vToursPath = 'C:/Websites/www/student-management/nsmg/uploadedfiles/tours/';
-		} else {
-			// Production
-			vTempPath = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';
-			vToursPath = 'C:/websites/student-management/nsmg/uploadedfiles/tours/';
-		}
-	</cfscript>
-
-	
     <cfquery name="qGetHostInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	hostID,
@@ -57,37 +43,21 @@
 <cfoutput>	
 	
     <!--- Trip Permission --->
-    <cfdocument format="PDF" filename="#vTempPath#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf" overwrite="yes" margintop="0.2" marginbottom="0.2">
+    <cfdocument format="PDF" filename="#APPLICATION.PATH.TEMP#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf" overwrite="yes" margintop="0.2" marginbottom="0.2">
 		
-        <cfscript>
-			// FORM.pr_id and FORM.report_mode are required for the progress report in print mode.
-			// FORM.pdf is used to not display the logo which isn't working on the PDF. 
-			FORM.report_mode = 'print';
-			FORM.pdf = 1;
-		</cfscript>
-
-        <cfinclude template="tripPermission.cfm">
+        <cfinclude template="_tripPermission.cfm">
         
 	</cfdocument>
-    
+
     <!--- Payment Form --->
     <!---
-	<cfdocument format="PDF" filename="#vTempPath#paymentForm_#VAL(qGetStudentInfo.studentID)#.pdf" overwrite="yes" margintop="0.2" marginbottom="0.2">
-        
-        <cfinclude template="../css/smg.css">            
-
-        <cfscript>
-			// FORM.pr_id and FORM.report_mode are required for the progress report in print mode.
-			// FORM.pdf is used to not display the logo which isn't working on the PDF. 
-			FORM.report_mode = 'print';
-			FORM.pdf = 1;
-		</cfscript>
+	<cfdocument format="PDF" filename="#APPLICATION.PATH.TEMP#paymentForm_#VAL(qGetStudentInfo.studentID)#.pdf" overwrite="yes" margintop="0.2" marginbottom="0.2">
         
         <cfinclude template="paymentFORM.cfm">
         
     </cfdocument>
 	--->    
-    
+
     <!--- Email to Student --->    
     <cfsavecontent variable="stuEmailMessage">
         <p>		
@@ -126,21 +96,20 @@
             TOLL FREE: 1-800-983-7780<br />
             Fax: 1-(718)-439-8565
         </p>
-    </cfsavecontent>
+    </cfsavecontent>   
     
     <cfinvoke component="cfc.email" method="send_mail">
-    	<cfinvokeargument name="email_to" value="#qGetStudentInfo.email#">
-        <cfinvokeargument name="email_cc" value="trips@iseusa.com">     
-        <cfinvokeargument name="email_from" value="<trips@iseusa.com> (ISE Trip Support)">
-        <cfinvokeargument name="email_subject" value="Your Trip Details">
+        <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (ISE Trip Support)">
+    	<cfinvokeargument name="email_to" value="#qGetStudentRegistered.email#">
+        <cfinvokeargument name="email_cc" value="#APPLICATION.EMAIL.trips#">
+        <cfinvokeargument name="email_subject" value="Your #qGetTourDetails.tour_name# Trip Details">
         <cfinvokeargument name="email_message" value="#stuEmailMessage#">
-        <cfinvokeargument name="email_file" value="#vToursPath##qGetTourDetails.packetfile#">
-        <cfinvokeargument name="email_file2" value="#vTempPath#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf">
-        <!--- <cfinvokeargument name="email_file3" value="#vTempPath#paymentForm_#VAL(qGetStudentInfo.studentID)#.pdf"> --->
+        <cfinvokeargument name="email_file" value="#APPLICATION.PATH.TEMP#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf">
+        <cfinvokeargument name="email_file2" value="#APPLICATION.PATH.tour##qGetTourDetails.packetfile#">
+        <!--- <cfinvokeargument name="email_file3" value="#APPLICATION.PATH.TEMP#paymentForm_#VAL(qGetStudentInfo.studentID)#.pdf"> --->
     </cfinvoke>	
     
-    
-    <!----Email to Rep---->
+    <!--- Email to Manager --->
     <cfsavecontent variable="repEmailMessage">
         #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has registered to go on the #qGetTourDetails.tour_name# tour.<br /><br />
         
@@ -152,16 +121,15 @@
     </cfsavecontent>
     
     <cfinvoke component="cfc.email" method="send_mail">
-        <cfinvokeargument name="email_to" value="marcus@iseusa.com">  <!--- brendan@iseusa.com --->
-        <!---- <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#"> ---->
-        <cfinvokeargument name="email_cc" value="trips@iseusa.com">       
-        <cfinvokeargument name="email_from" value="<trips@iseusa.com> (ISE Trip Support)">
-        <cfinvokeargument name="email_subject" value="Student Trip Registration - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
+        <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (ISE Trip Support)">
+        <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
+        <cfinvokeargument name="email_cc" value="#APPLICATION.EMAIL.trips#">
+        <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#repEmailMessage#">
     </cfinvoke>	
 
 
-    <!----Email to Brian & MPD---->
+    <!--- Email to MPD --->
     <cfsavecontent variable="mpdEmailMessage">
         <p>FYI,</p>
         
@@ -169,10 +137,10 @@
     </cfsavecontent>
     
     <cfinvoke component="cfc.email" method="send_mail">
-        <cfinvokeargument name="email_to" value="marcus@iseusa.com">  <!--- brendan@iseusa.com --->
-        <!--- <cfinvokeargument name="email_to" value="trips@iseusa.com,info@mpdtoursamerica.com"> --->
-        <cfinvokeargument name="email_from" value="<trips@iseusa.com> (ISE Trip Support)">
-        <cfinvokeargument name="email_subject" value="Student Trip Registration - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
+        <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (ISE Trip Support)">
+        <cfinvokeargument name="email_to" value="info@mpdtoursamerica.com"> 
+        <cfinvokeargument name="email_cc" value="#APPLICATION.EMAIL.trips#">
+        <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#mpdEmailMessage#">
     </cfinvoke>	
 

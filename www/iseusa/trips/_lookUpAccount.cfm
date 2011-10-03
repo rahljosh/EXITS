@@ -121,6 +121,13 @@
                 </cfif>
             </cfquery>
             
+			<cfscript>
+                if ( NOT VAL(qCheckStudent.recordcount) ) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("No records were found based on the information you provided. Please verify the information you have submitted and try again.");
+                }
+            </cfscript>
+            
 			<cfif VAL(qCheckStudent.recordcount)>
             
                 <!-----Check to see if there is host associted with this student---->
@@ -152,7 +159,7 @@
                             email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.hostEmail)#">
                     </cfif>            
                 </cfquery>
-            
+            	
                 <cfloop query="qCheckHostFamily">
                     
                     <cfscript>	
@@ -166,17 +173,17 @@
 							
 						}
 					</cfscript>
-
+                    
                 </cfloop>
+
+				<cfscript>
+                    if ( NOT VAL(qCheckStudent.recordcount) OR FORM.subAction NEQ 'displayConfirmation' ) {
+                        // Get all the missing items in a list
+                        SESSION.formErrors.Add("No records were found based on the information you provided. Please verify the information you have submitted and try again.");
+                    }
+                </cfscript>
             
             </cfif> <!--- VAL(qCheckStudent.recordcount) --->
-            
-			<cfscript>
-                if ( NOT VAL(SESSION.TOUR.studentID) ) {
-                    // Get all the missing items in a list
-                    SESSION.formErrors.Add("No records were found based on the information you provided. Please verify the information you have submitted and try again.");
-                }
-            </cfscript>
             
 		</cfif> <!--- NOT SESSION.formErrors.length() --->
 

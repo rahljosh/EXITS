@@ -79,11 +79,10 @@
 		}
 		
 		// Force SSL
-		if ( NOT APPLICATION.isServerLocal ) {
+		if ( NOT APPLICATION.isServerLocal AND NOT CGI.SERVER_PORT_SECURE ) {
 			Location("https://#CGI.SERVER_NAME##CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" "no");
 		}
 	</cfscript>
-
 
     <!----Set Default Properties---->
     <Cfquery name="qGetStudentInfo" datasource="#APPLICATION.DSN.Source#">
@@ -162,8 +161,6 @@
     </cfquery>
     
     <cfscript>
-		// Force SSL
-		
 		// Check if there is a valid student, if not go back to the tours selection page
 		/*
 		if ( NOT VAL(SESSION.TOUR.studentID) AND listFind("lookUpAccount,preference,BookTrip,confirmation", FORM.action) ) {
