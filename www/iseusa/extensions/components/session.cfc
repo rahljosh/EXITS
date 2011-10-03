@@ -48,7 +48,7 @@
         <cfparam name="SESSION.TOUR.isLoggedIn" default="0">
         <cfparam name="SESSION.TOUR.studentID" default="0">
         <cfparam name="SESSION.TOUR.hostID" default="0">    
-        <cfparam name="SESSION.TOUR.applicationPaymentID" default="0">    
+        <cfparam name="SESSION.TOUR.applicationPaymentID" default="0">  
 
 		<cfscript>
 			// Return this initialized instance
@@ -123,7 +123,7 @@
 		<cfargument name="studentID" default="" hint="studentID is not required">
 		<cfargument name="hostID" default="" hint="hostID is not required">
 		<cfargument name="applicationPaymentID" default="" hint="applicationPaymentID is not required">
-        
+
 		<cfscript>
 			// Set Variables
 			if ( LEN(ARGUMENTS.tourID) ) {

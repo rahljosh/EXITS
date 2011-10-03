@@ -192,40 +192,22 @@
                             fk_studentID, 
                             siblingID,
                             studentTourID, 
-                            tripID                    
+                            tripID,
+                            dateCreated                  
                         )
                         VALUES
                         (
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(childID)#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentPendingRegistration.ID)#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_ID)#">
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_ID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                         )
                     </cfquery>
             		
                 </cfif>
                 
 			</cfloop>
-            
-            <!--- Remove Host Siblings from Trip --->
-            <cfif NOT LEN(hostChildSelectedList)> 
-            	
-                <cfquery datasource="#APPLICATION.DSN.Source#">
-                    UPDATE
-                    	student_tours_siblings
-                    SET
-                    	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                   	WHERE
-						fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
-                    AND
-                    	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_ID)#">
-					AND                        
-                        siblingID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetHostChildren.childID)#" list="yes"> )
-                    AND
-                    	PAID IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                </cfquery>
-
-            </cfif>
             
 			<!--- Remove Previous Selected Host Sibling --->
             <cfloop query="qGetHostChildren">
@@ -242,7 +224,7 @@
                         AND
                             tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_ID)#">
                         AND                        
-                            siblingID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostChildren.childID#"> 
+                            siblingID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostChildren.childID)#"> 
                         AND
                             PAID IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                     </cfquery>
@@ -272,6 +254,8 @@
 			// Host Siblings
 			if ( qGetSiblingsPendingRegistration.recordCount ) {
 				FORM.otherTravelers = 1;	
+			} else if ( NOT VAL(qGetHostChildren.recordCount) ) {
+				FORM.otherTravelers = 0;	
 			}
 			
 			if ( NOT VAL(qGetStudentPendingRegistration.recordCount) ) {
@@ -466,13 +450,14 @@
                                             </select>
                                         </td>
                                         <td><input type="text" name="#qGetHostChildren.childID & '_hostChildBirthDate'#" id="#qGetHostChildren.childID & '_hostChildBirthDate'#" value="#DateFormat(FORM[qGetHostChildren.childID & '_hostChildBirthDate'], 'mm/dd/yyyy')#" class="smallField" disabled="disabled" /></td>                                    
-                                    </tr>  
-                                                                      	
+                                    </tr>                                                                        	
                                 </cfloop>
                             </table>
-                            
-                            <em class="tripNotesRight">Check who is going and verify ther information</em>     
-                            
+							<cfif NOT VAL(qGetHostChildren.recordCount)>
+                                <em class="tripNotesRight">There are no host siblings living with you at home.</em>
+                            <cfelse>
+                                <em class="tripNotesRight">Check who is going and verify ther information</em>     
+                            </cfif>
                         </td>
                     </tr>
                </table>  

@@ -73,7 +73,7 @@
     <cfinclude template="_sendEmail.cfm">
     
 </cfsilent>
-
+    
 <style type="text/css">
 <!--
 	.whtMiddleTrips {		
@@ -152,7 +152,7 @@
                     </tr> 
                     <tr class="blueRow">
                         <td class="tripFormTitle">Email Address:</td>
-                        <td class="tripFormField">#qGetStudentInfo.email#</td>
+                        <td class="tripFormField">#qGetStudentRegistered.email#</td>
                     </tr> 
                 </table>
                     
@@ -177,8 +177,8 @@
 
                 <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">   
                     <tr class="blueRow">
-                        <td class="tripFormTitle">Total Charged</td>
-                        <td class="tripFormField">#LSCurrencyFormat(qGetPaymentDetails.amount)#</td>
+                        <td class="tripFormTitle" width="30%">Total Charged</td>
+                        <td class="tripFormField" width="70%">#LSCurrencyFormat(qGetPaymentDetails.amount)#</td>
                     </tr>
                     <tr>
                         <td class="tripFormTitle">Name on Credit Card</td>

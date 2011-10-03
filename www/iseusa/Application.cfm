@@ -95,6 +95,18 @@
 		// 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/redmond/jquery-ui.css';
 
 
+		// Local Enviroment
+		if ( APPLICATION.isServerLocal ) {
+			// Production
+			APPLICATION.PATH.TEMP = 'C:/websites/www/student-management/nsmg/uploadedfiles/temp/';
+			APPLICATION.PATH.tour = 'C:/websites/www/student-management/nsmg/uploadedfiles/tours/';
+		} else {
+			// Production
+			APPLICATION.PATH.TEMP = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';
+			APPLICATION.PATH.tour = 'C:/websites/student-management/nsmg/uploadedfiles/tours/';
+		}
+
+
 		/*******************************************
 			Create APPLICATION.EMAIL structure
 		*******************************************/
@@ -103,10 +115,12 @@
 		// Set a short name for the APPLICATION.EMAIL
 		AppEmail = APPLICATION.EMAIL;
 
-		AppEmail.support = 'support@iseusa.com';
-		AppEmail.finance = 'marcel@iseusa.com';
-		AppEmail.errors = 'errors@student-management.com';
-		AppEmail.hostLead = 'bob@iseusa.com;lamonica@iseusa.com';
+		APPLICATION.EMAIL.support = 'support@iseusa.com';
+		APPLICATION.EMAIL.finance = 'marcel@iseusa.com';
+		APPLICATION.EMAIL.errors = 'errors@student-management.com';
+		APPLICATION.EMAIL.hostLead = 'bob@iseusa.com;lamonica@iseusa.com';
+		APPLICATION.EMAIL.trips = 'trips@iseusa.com';
+		
 		
 		// APPLICATION.QUERY should persist in the application scope. 
 		if ( NOT StructKeyExists(APPLICATION, 'QUERY') OR VAL(URL.init) ) {
@@ -118,7 +132,9 @@
 			
 			// Store metadata in the application scope since we call on every request
 			Query.qMetadata = AppCFC.metadata.getMetadataBySite();
-			Query.test = now();
+			
+			// Store the initialized session Library object in the Application scope
+			APPLICATION.CFC.SESSION = CreateCFC("session").Init();
 			
 		}
 			

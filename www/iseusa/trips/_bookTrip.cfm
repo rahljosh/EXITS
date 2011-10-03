@@ -138,16 +138,16 @@
         
         <cfif NOT SESSION.formErrors.length()>
 
-            <!--- Update Student Email Address --->            
+			<!--- Update Email Address --->
             <cfquery datasource="#APPLICATION.DSN.Source#">
-                UPDATE	
-                	smg_students
+                UPDATE
+                    student_tours
                 SET
-                	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emailAddress#"> 
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emailAddress#"> 
                 WHERE
-                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentPendingRegistration.ID)#"> 
             </cfquery>
-
+            
             <cfquery name="qGetSelectedCountry" datasource="#APPLICATION.DSN.Source#">
                 SELECT 
                     countryID,
@@ -159,6 +159,9 @@
             </cfquery>
 			
             <cfscript>
+				// Set SESSION Email Address instead of updating student email address on the DB
+				APPLICATION.CFC.SESSION.setTripSessionVariables(studentEmail=FORM.emailAddress);
+
 				// Set Receipt Description
 				vReceiptDescription = "Registration for #APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)# - Student #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# ###qGetStudentInfo.studentID#";
 				// Include Number of Siblings
@@ -685,9 +688,10 @@
                                 
                                 <li>
                                     MPD will contact you once your permission form have been received to book your flights. Do NOT book your own flights. 
-                                    <ul><li><font size=-1>PS: If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li></ul>
                                 </li>
                             </ol>
+                            
+                            <ul><li><font size=-1>PS: If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li></ul>
                         </td>
                     </tr>
                     <tr class="blueRow">
