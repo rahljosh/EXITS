@@ -13,13 +13,11 @@
     <!--- Param URL variable --->
 	<cfparam name="URL.init" default="0">
 
-
 	<!--- Param Client Variables --->
 	<cfparam name="CLIENT.hostID" default="0">
 	<cfparam name="CLIENT.name" default="">
     <cfparam name="CLIENT.email" default="">
     <cfparam name="CLIENT.isAdWords" default="0">  
-
 
 	<cfscript>
 		// Create a function that let us create CFCs from any location
@@ -33,14 +31,19 @@
 		// Form Errors
 		SESSION.formErrors = CreateCFC("formErrors").Init();
 
-		// Set up DSN information
+
+		/*******************************************
+			Set up DSN information
+		*******************************************/
 		APPLICATION.DSN = StructNew();
 		APPLICATION.DSN.Source = "mySql";
 		APPLICATION.DSN.Username = "";
 		APPLICATION.DSN.Password = "";
 		
 		
-		// Set up SETTINGS
+		/*******************************************
+			Set up SETTINGS
+		*******************************************/
 		APPLICATION.SETTINGS = StructNew();
 		APPLICATION.SETTINGS.IPInfoDBKey = '0fc7fb53672eaf186d2c41db1c9b63224ef8f31e0270d8c351d2097794352bfb';
 		
@@ -48,29 +51,53 @@
 		APPLICATION.SETTINGS.encryptKey = 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR';
 		
 		
-		/***** Create APPLICATION.CFC structure *****/
+		/*******************************************
+			Create APPLICATION.CFC structure 
+		*******************************************/
 		APPLICATION.CFC = StructNew();
 	
 		// Set a short name for the CFCs
 		AppCFC = APPLICATION.CFC;
-	
+
+		// Store the initialized UDF Library object in the Application scope
+		APPLICATION.CFC.UDF = CreateCFC("udf").Init();
+		
+		// Store Application.IsServerLocal - This needs be declare before the other CFC components
+		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
+
 		// Store the initialized metadata Library object in the Application scope
-		AppCFC.metadata = CreateCFC("metadata").Init();
+		APPLICATION.CFC.metadata = CreateCFC("metadata").Init();
+
+		// Store the initialized paymentGateway Library object in the Application scope
+		APPLICATION.CFC.paymentGateway = CreateCFC("paymentGateway").Init();
+	
+		// Store the initialized session Library object in the Application scope
+		APPLICATION.CFC.SESSION = CreateCFC("session").Init();
 
 
-		// Site URL
+		/*******************************************
+			Site URL
+		*******************************************/
 		APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
 
 
-		/* jQuery Latest Version 
-		http://code.jquery.com/jquery-latest.min.js
-		http://code.jquery.com/jquery.js
-		*/		
+		/*******************************************
+			jQuery Latest Version 
+			http://code.jquery.com/jquery-latest.min.js
+			http://code.jquery.com/jquery.js
+		*******************************************/
 		APPLICATION.PATH = StructNew();
-		APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js';
-		
+		/* jQuery Latest Version 
+		http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
+		APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js';	
+		APPLICATION.PATH.jQueryUI = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js';
+		APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/excite-bike/jquery-ui.css';
+		// 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/redmond/jquery-ui.css';
 
-		/***** Create APPLICATION.EMAIL structure *****/
+
+		/*******************************************
+			Create APPLICATION.EMAIL structure
+		*******************************************/
 		APPLICATION.EMAIL = StructNew();		
 	
 		// Set a short name for the APPLICATION.EMAIL
@@ -96,7 +123,9 @@
 		}
 			
 
-		/***** Constants *****/
+		/*******************************************
+			Constants
+		*******************************************/
 		APPLICATION.Constants = StructNew();
 		// Set the reference to the struct
 		Constants = APPLICATION.Constants;
@@ -111,8 +140,26 @@
 		Constants.hearAboutUs[6] = "Other";
 		// ArrayAppend(Constants.hearAboutUs, "Other");
 		
-		
-		/***** Metadata *****/
+
+		//Set up constant for payment methods
+		APPLICATION.Constants.paymentMethod = ArrayNew(1);		
+		APPLICATION.Constants.paymentMethod[1] = "Credit Card";	
+		/*
+		APPLICATION.Constants.paymentMethod[2] = "Personal Check";
+		APPLICATION.Constants.paymentMethod[3] = "Wire Transfer";
+		APPLICATION.Constants.paymentMethod[4] = "Money Order";
+		*/
+	
+		//Set up constant for credit card types
+		APPLICATION.Constants.creditCardType = ArrayNew(1);		
+		APPLICATION.Constants.creditCardType[1] = "American Express";
+		APPLICATION.Constants.creditCardType[2] = "Discover";
+		APPLICATION.Constants.creditCardType[3] = "MasterCard";
+		APPLICATION.Constants.creditCardType[4] = "Visa";
+
+		/*******************************************
+			Metadata
+		*******************************************/
 		APPLICATION.MetaData = StructNew();
 		// Set the reference to the struct
 		MetaData = APPLICATION.MetaData;
@@ -121,7 +168,7 @@
 		qGetMetadata = AppCFC.metadata.getPageMetadata(URL=CGI.SCRIPT_NAME); 
 		
 		// Set up the Application Meta Data
-		MetaData.pageTitle = qGetMetadata.pageTitle;
-		MetaData.pageDescription = qGetMetadata.pageDescription;
-		MetaData.pageKeywords = qGetMetadata.pageKeywords;
+		APPLICATION.MetaData.pageTitle = qGetMetadata.pageTitle;
+		APPLICATION.MetaData.pageDescription = qGetMetadata.pageDescription;
+		APPLICATION.MetaData.pageKeywords = qGetMetadata.pageKeywords;
     </cfscript>
