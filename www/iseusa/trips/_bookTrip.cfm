@@ -219,7 +219,7 @@
 					// insert Payment Profile (Authorize.net) / insert customer_payment
 						
 					// get Authorize.net Customer Profile ID
-					vGetCustomerProfileID = APPLICATION.CFC.PAYMENTGATEWAY.getCustomerProfileID(customerID=qGetStudentInfo.studentID);
+					vGetCustomerProfileID = APPLICATION.CFC.PAYMENTGATEWAY.getCustomerProfileID(customerID=qGetStudentInfo.studentID, companyID=qGetStudentInfo.companyID);
 					
 					// expiration month must be in the MM format
 					if (LEN(FORM.expirationMonth) EQ 1) {
