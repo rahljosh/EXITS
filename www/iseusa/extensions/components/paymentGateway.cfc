@@ -350,6 +350,7 @@
 	<!--- Get Customer Profile ID --->
 	<cffunction name="getCustomerProfileID" displayname="Void" hint="Gets the Authorize.net customer profile ID. Always returns an ID." access="public" output="false" returntype="numeric">
 		<cfargument name="customerID" displayName="CustomerID / StudentID" type="numeric" hint="CustomerID / StudentID" required="true" />
+        <cfargument name="companyID" displayName="companyID" default="1" type="numeric" hint="companyID" />
 
 		<cfquery 
             name="qGetCustomerProfileID"
@@ -372,7 +373,8 @@
 				// Register Student/Customer
 				vGetCustomerProfileID = createCustomerProfile(
 					customerID = ARGUMENTS.customerID, 
-					email = qGetCustomerProfileID.email
+					email = qGetCustomerProfileID.email,
+					companyID = ARGUMENTS.companyID
 				);
 				
 			}
@@ -386,12 +388,19 @@
 	<cffunction name="CreateCustomerProfile" displayname="Void" hint="Create a customer profile along with any customer payment profiles and customer shipping addresses" access="public" output="false" returntype="string">
 		<cfargument name="customerID" displayName="CustomerID / StudentID" type="numeric" hint="CustomerID / StudentID" required="true" />
 		<cfargument name="email" displayName="Customer Email" type="string" hint="Customer Email" default="" />
-		
+		<cfargument name="companyID" displayName="companyID" default="1" type="numeric" hint="companyID" />
+        
         <cfscript>
 			var resultCode = '';
 			var resultMessage = '';
 			var resultMessageCode = '';
 			var customerProfileID = 0;
+			
+			vDescription = "ISE Student";
+			
+			if ( ARGUMENTS.companyID EQ 10 ) {
+				vDescription = "CASE Student";
+			} 
 		</cfscript>
         
         <cfoutput>	
@@ -403,7 +412,7 @@
                     </merchantAuthentication>
                     <profile>
                         <merchantCustomerId>#TRIM(ARGUMENTS.customerID)#</merchantCustomerId>
-                        <description>ISE Student</description>
+                        <description>#vDescription#</description>
                         <email>#TRIM(ARGUMENTS.email)#</email>
                     </profile>
                 </createCustomerProfileRequest>
