@@ -64,11 +64,18 @@
 			fieldKey='hostLeadStatus'
 		);
 		
+		// Get History
+		qGetHostLeadHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
+			applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
+			foreignTable='smg_host_lead',
+			foreignID=qGetHostLead.ID
+		);
+		
 		// FORM SUBMITTED
 		if ( FORM.submitted ) {
 			
-			// Data Validation
-			if ( NOT VAL(FORM.regionID) ) {
+			// Data Validation - Allow a comment if there is only initial status on the history
+			if ( NOT VAL(FORM.regionID) AND qGetHostLeadHistory.recordCount GT 1 ) {
 				// Get all the missing items in a list
 				SESSION.formErrors.Add('You must select a region');
 			}			
@@ -107,9 +114,19 @@
 				
 				// Get the latest updates
 				qGetHostLead = APPLICATION.CFC.HOST.getHostLeadByID(ID=URL.ID);
-				
+
+				// Get History
+				qGetHostLeadHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
+					applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
+					foreignTable='smg_host_lead',
+					foreignID=qGetHostLead.ID
+				);
+
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
+				
+				// Refresh Page
+				// Location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no"); 
 
 			}
 			
@@ -121,13 +138,6 @@
 			FORM.statusID = qGetHostLead.statusID;
 			// FORM.comments = qGetHostLead.comments;
 		}
-		
-		// Get History
-		qGetHostLeadHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
-			applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
-			foreignTable='smg_host_lead',
-			foreignID=qGetHostLead.ID
-		);
 	</cfscript>
     
 </cfsilent>
@@ -208,7 +218,7 @@
             />
             
 		<cfif familyFound>	
-
+			
             <cfform name="hostLeadDetail" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="defaultForm" onsubmit="return confirmStatus();">
                 <input type="hidden" name="submitted" value="1" />
                 <input type="hidden" name="ID" value="#ID#" />
