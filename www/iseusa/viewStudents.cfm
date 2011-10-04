@@ -71,8 +71,10 @@ p {
         WHERE 	   	
             active = '1' 
         <!--- August 2011 Programs - Set this up in the DB later so users can change in the program information --->
-        AND 
+        <!--- 
+		AND 
             programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="318,319,320,321" list="yes"> ) 
+		--->			
         AND 
             hostid = '0' 
         AND 
