@@ -349,7 +349,7 @@
                         Please see your login information below.
                         <br /> <br />
                         
-                        User: #qCheckEmail.email#<br />
+                        Email Address: #qCheckEmail.email#<br />
                         Password: #qCheckEmail.password#<br /> <br />
                         
                         Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
