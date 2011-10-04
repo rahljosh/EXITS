@@ -74,7 +74,7 @@
                         </span><br /><br />
                         
                         <span class="SubTitle">
-                            <img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/student-tours/#qGetTourDetails.tour_img2#.jpg" width="215" hspace="10" border="0" align="left" class="image-left"> 
+                            <img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/student-tours/#qGetTourDetails.tour_img2#.jpg" width="215" hspace="10" border="0" align="left" class="image-left"> 
                             Flights:
                         </span><br />
                         
