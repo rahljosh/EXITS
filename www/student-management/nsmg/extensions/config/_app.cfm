@@ -68,7 +68,6 @@
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
-	APPLICATION.EMAIL.admissions = qCompanyInfo.projectManager;
 	APPLICATION.EMAIL.finance = 'marcel@iseusa.com';	
 	APPLICATION.EMAIL.cbcNotifications = 'support@student-management.com;bill@iseusa.com;gary@iseusa.com';
 	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com';

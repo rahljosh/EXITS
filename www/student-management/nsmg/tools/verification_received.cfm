@@ -513,7 +513,8 @@
         </tr>  
         <tr>
         	<td>
-            	PS: After setting the student record as received, you are no longer able to update the record. If you make a mistake, please contact <a href="#APPLICATION.EMAIL.admissions#">#APPLICATION.EMAIL.admissions#</a> immediately.
+            	PS: After setting the student record as received, you are no longer able to update the record. If you make a mistake, 
+                please contact #APPLICATION.CFC.UDF.displayAdmissionsInformation()# immediately.
             </td>
 		</tr>                      
     </table>
