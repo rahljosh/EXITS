@@ -138,7 +138,7 @@
                         <select name="regionTo">
                             <option value="0"></option>
                             <cfloop query="qGetRegionList">
-                                <option value="#qGetRegionList.regionID#" <cfif qGetRegionList.regionID EQ FORM.regionFrom>selected="selected"</cfif> >#qGetRegionList.regionName#</option>
+                                <option value="#qGetRegionList.regionID#" <cfif qGetRegionList.regionID EQ FORM.regionTo>selected="selected"</cfif> >#qGetRegionList.regionName#</option>
                             </cfloop>
                         </select>
                     </td>
