@@ -23,6 +23,58 @@
 
 	</cffunction>
 
+	
+	<!--- Displays Admission Information for ISE/Case --->
+	<cffunction name="displayAdmissionsInformation" access="public" returntype="string" output="no" hint="Displays Admissions Information Depending on the company">
+        <cfargument name="displayInfo" type="string" default="Info" hint="Info, Name, Email, EmailLink" />
+        
+        <cfscript>
+			var vAdmissionsName = '';
+			var vAdmissionsEmail = '';
+			var vAdmissionsEmailLink = '';
+			var vAdmissionsInfo = '';
+		
+			if ( CLIENT.companyID EQ 10 ) {
+				// CASE
+				vAdmissionsName = 'Jana De Fillipps';
+				vAdmissionsEmail = 'jana@case-usa.org';
+				vAdmissionsEmailLink = '<a href="mailto:jana@case-usa.org">jana@case-usa.org</a>';			
+				vAdmissionsInfo = 'Jana De Fillipps at <a href="mailto:jana@case-usa.org">jana@case-usa.org</a>';
+			} else {
+				// ISE
+				vAdmissionsName = 'Brian Hause';
+				vAdmissionsEmail = 'bhause@iseusa.com';
+				vAdmissionsEmailLink = '<a href="mailto:bhause@iseusa.com">bhause@iseusa.com</a>';			
+				vAdmissionsInfo = 'Brian Hause at <a href="mailto:bhause@iseusa.com">bhause@iseusa.com</a>';
+			}
+			
+			switch(ARGUMENTS.displayInfo) {
+				  
+				case "Info": {
+					 return vAdmissionsInfo;
+					 break;
+				}
+
+				case "name": {
+					 return vAdmissionsName;
+					 break;
+				}
+
+				case "email": {
+					 return vAdmissionsEmail;
+					 break;
+				}
+
+				case "emailLink": {
+					 return vAdmissionsEmailLink;
+					 break;
+				}
+
+			 }			
+		</cfscript>
+        
+	</cffunction>
+
 
 	<!--- This hashes the given ID for security reasons --->
 	<cffunction name="HashID" access="public" returntype="string" output="no" hint="Hashes the given ID for security reasons. To be used for documents only.">

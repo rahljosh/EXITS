@@ -233,7 +233,7 @@
 			qGetNewProgram = APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program);
 		
 			// Always send a copy of the email to Admissions
-			emailCC = APPLICATION.EMAIL.admissions;
+			emailCC = APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='email');
 			
 			// If there is a valid email, send a copy to the current user
 			if ( IsValid("email", APPCFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
