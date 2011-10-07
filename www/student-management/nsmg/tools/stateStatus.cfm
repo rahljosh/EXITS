@@ -35,8 +35,8 @@
 	<cfif url.isActive eq 0>
    
         <Cfquery datasource="#application.dsn#">
-            insert into regionStateClosure (fk_stateID, fk_programid)
-                                values(#url.stateid#, #url.programid#)
+            insert into regionStateClosure (fk_stateID, fk_programid, fk_companyid)
+                                values(#url.stateid#, #url.programid#, <cfif client.companyid lte 5 OR client.companyid eq 12>1<cfelse>10</cfif>)
         </cfquery>
     
     <Cfelse>
@@ -56,6 +56,11 @@ select sc.fk_stateID, s.statename
 from regionStateClosure sc 
 LEFT join smg_states s on s.id = sc.fk_stateID
 where  sc.fk_programid = #url.programid#
+<cfif client.companyid lte 5 OR client.companyid eq 12>
+and fk_companyid = 1
+<cfelse>
+and fk_companyid = #client.companyid#
+</cfif>
 </cfquery>
 <Cfloop query="statesClosed">
 	<cfset closedList = #ListAppend(closedList, fk_stateID)#>
