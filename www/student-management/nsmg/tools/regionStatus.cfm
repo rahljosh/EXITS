@@ -11,8 +11,8 @@
 	<cfif url.isActive eq 1>
    
         <Cfquery datasource="#application.dsn#">
-            insert into regionStateClosure (fk_regionID, fk_programid)
-                                values(#url.regionid#, #url.programid#)
+            insert into regionStateClosure (fk_regionID, fk_programid, fk_companyid)
+                                values(#url.regionid#, #url.programid#, <cfif client.companyid lte 5 OR client.companyid eq 12>1<cfelse>10</cfif>)
         </cfquery>
     
     <Cfelse>
@@ -26,26 +26,51 @@
 select *
 from regionStateClosure
 where fk_programid = #url.programid#
+<cfif client.companyid lte 5 OR client.companyid eq 12>
+and fk_companyid = 1
+<cfelse>
+and fk_companyid = #client.companyid#
+</cfif>
 </cfquery>
 <cfquery name="westActive" dbtype="query">
 select id
 from inActiveRegions
 where fk_regionID = 6
+<cfif client.companyid lte 5 OR client.companyid eq 12>
+and fk_companyid = 1
+<cfelse>
+and fk_companyid = #client.companyid#
+</cfif>
 </cfquery>
 <cfquery name="centralActive" dbtype="query">
 select id
 from inActiveRegions
 where fk_regionID = 7
+<cfif client.companyid lte 5 OR client.companyid eq 12>
+and fk_companyid = 1
+<cfelse>
+and fk_companyid = #client.companyid#
+</cfif>
 </cfquery>
 <cfquery name="southActive" dbtype="query">
 select id
 from inActiveRegions
 where fk_regionID = 8
+<cfif client.companyid lte 5 OR client.companyid eq 12>
+and fk_companyid = 1
+<cfelse>
+and fk_companyid = #client.companyid#
+</cfif>
 </cfquery>
 <cfquery name="eastActive" dbtype="query">
 select id
 from inActiveRegions
 where fk_regionID = 9
+<cfif client.companyid lte 5 OR client.companyid eq 12>
+and fk_companyid = 1
+<cfelse>
+and fk_companyid = #client.companyid#
+</cfif>
 </cfquery>
 <Cfoutput>
       <table width=670 border=0 cellpadding=4 cellspacing=4 align="center">
