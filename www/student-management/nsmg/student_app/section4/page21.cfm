@@ -107,6 +107,11 @@ select sc.fk_stateID, s.statename
 from regionStateClosure sc 
 LEFT join smg_states s on s.id = sc.fk_stateID
 where  sc.fk_programid = #get_student_info.programid#
+<Cfif client.companyid lte 5 or client.companyid eq 12>
+and sc.fk_companyid = 1
+<Cfelse>
+and sc.fk_companyid = #client.companyid#
+</Cfif>
 </cfquery>
 
 <Cfloop query="statesClosed">
@@ -263,11 +268,28 @@ where  sc.fk_programid = #get_student_info.programid#
                             
                         <div id ="1" style="display:none"><br>
                             <table>
+                            	<tr>
+                                	<Td colspan=6 bgcolor="##FFFFCC">If you already have made a state selection and are making a change:  If your current selection is no longer showing in the drop down and you make a change, you will NOT be able to re-select your current state. 
+                                </tr>
                                 <tr>
-                                <td>1st Choice:</td>
+                                <td>1st:</td>
                                 <td>
+                               Selected: 
+                                 <Cfquery name="State1" datasource="#application.dsn#">
+                                     select statename
+                                     from smg_states
+                                     where id = #val(states_requested.state1)#
+                                 </cfquery>
+                              	<cfif val(states_requested.state1)>
+                                    <strong>#state1.statename#</strong>
+								<cfelse>
+                                 	<strong>No State Selected</strong>
+                                 </cfif>  <br>
+                                    
                                
-                                <cfif get_student_info.app_current_status lte 3>
+                                 
+                                <cfif get_student_info.app_current_status lte 7>
+                                 Available:
                                 <cfselect name="state1" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
@@ -277,18 +299,27 @@ where  sc.fk_programid = #get_student_info.programid#
                                         </cfloop>
                                     </cfselect>
                                  <cfelse>
-                                 <Cfquery name="State1" datasource="#application.dsn#">
+                                	 <input type="hidden" name="state1" value="#val(states_requested.state1)#"><br>
+                                 </cfif>
+                                 
+                                </td>
+                                <td>&nbsp; 2nd:</td>
+                                <td>
+                                 Selected:
+                                 <Cfquery name="State2" datasource="#application.dsn#">
                                      select statename
                                      from smg_states
-                                     where id = #val(states_requested.state1)#
+                                     where id = #val(states_requested.state2)#
                                  </cfquery>
-                              		<strong>#state1.statename#	</strong>
-                                    <input type="hidden" name="state1" value="#states_requested.state1#">
-                                 </cfif>
-                                </td>
-                                <td>&nbsp; 2nd Choice:</td>
-                                <td>
-                                <cfif get_student_info.app_current_status lte 3>
+                              	<cfif val(states_requested.state2)>
+                                	<strong>#state2.statename#	</strong>                                    
+								<cfelse>
+                                 	<strong>No State Selected</strong>
+                                 </cfif>   
+                                  <br>
+                                 
+                                <cfif get_student_info.app_current_status lte 7>
+                                Available:
                                 <cfselect name="state2" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
@@ -297,20 +328,32 @@ where  sc.fk_programid = #get_student_info.programid#
                                         	</cfif>
                                         </cfloop>
                                     </cfselect>
-                                 <cfelse>
-                                     <Cfquery name="State2" datasource="#application.dsn#">
+                               <cfelse>
+                                	 <input type="hidden" name="state2" value="#val(states_requested.state2)#"><br>
+                                 </cfif>
+                               
+                                </td>
+                                <td>&nbsp; 3rd:</td>
+                                <td>
+                                Selected:
+                                 <Cfquery name="State3" datasource="#application.dsn#">
                                      select statename
                                      from smg_states
-                                     where id = #val(states_requested.state2)#
+                                     where id = #val(states_requested.state3)#
                                  </cfquery>
-                              		<strong>#state2.statename#	</strong>
-                                    <input type="hidden" name="state2" value="#states_requested.state2#">
+                                 <cfif val(states_requested.state3)>
+                              		<strong>#state3.statename#</strong>
+                                 <cfelse>
+                                 	<strong>No State Selected</strong>
+                                  
                                  </cfif>
-                                </td>
-                                <td>&nbsp; 3rd Choice:</td>
-                                <td>
-                                 <cfif get_student_info.app_current_status lte 3>
-                                <cfselect name="state3" onClick="DataChanged();">
+                                    
+                                    	
+                                 
+                                <br>
+                                 <cfif get_student_info.app_current_status lte 7>
+                                 Available:
+                                 <cfselect name="state3" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
                                         	<cfif not ListFind(closedList, id)>
@@ -319,14 +362,9 @@ where  sc.fk_programid = #get_student_info.programid#
                                         </cfloop>
                                     </cfselect>
                                   <cfelse>
-                                     <Cfquery name="State3" datasource="#application.dsn#">
-                                     select statename
-                                     from smg_states
-                                     where id = #val(states_requested.state3)#
-                                 </cfquery>
-                              		<strong>#state3.statename#</strong>	
-                                    <input type="hidden" name="state3" value="#states_requested.state3#">
+                                	 <input type="hidden" name="state3" value="#val(states_requested.state3)#"><br>
                                   </cfif>
+                            
                                 </td>							
                                 </tr>
                             </table>

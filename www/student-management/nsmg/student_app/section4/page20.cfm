@@ -91,6 +91,11 @@ function NextPage() {
 select fk_regionID
 from regionStateClosure
 where fk_programid = #get_student_info.programid#
+<Cfif client.companyid lte 5 or client.companyid eq 12>
+and sc.fk_companyid = 1
+<Cfelse>
+and sc.fk_companyid = #client.companyid#
+</Cfif>
 </cfquery>
 <cfset closedList = ''>
 <Cfloop query="unAvailableRegions">
