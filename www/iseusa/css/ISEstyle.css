@@ -344,6 +344,20 @@ body {
 	padding: 0px;
 	background-position: left center;
 }
+.tabs2selected {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 115px;
+	text-align: center;
+	background-image: url(../images/topTabs/MOtabs_04.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 51px;
+	margin: 0px;
+	padding: 0px;
+	background-position: left center;
+}
 .tabs2:hover {
 	text-align: right;
 	display: block;
@@ -372,6 +386,7 @@ body {
 	padding: 0px;
 	background-position: left center;
 }
+
 .tabs3{
 	text-align: right;
 	display: block;
@@ -1296,6 +1311,17 @@ body {
 	padding-bottom: 10px;
 	padding-left: 20px;
 }
+.HFsidebarLW {
+	float: left;
+	width: 465px;
+	background: #FFF;
+	margin-left: 10px;
+	display: block;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+}
 .HFsidebarL, .HFsidebarR  p{
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 11px;
@@ -1303,9 +1329,27 @@ body {
 	text-align: left;
 	line-height: 14px;
 }
+.HFsidebarLW, .HFsidebarRW  p{
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 12px;
+	color: #000;
+	text-align: left;
+	line-height: 15px;
+}
 .HFsidebarR {
 	float: right;
 	width: 320px;
+	background: #FFF;
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	margin-right: 10px;
+	display: block;
+}
+.HFsidebarRW {
+	float: right;
+	width: 210px;
 	background: #FFF;
 	padding-top: 10px;
 	padding-right: 10px;
@@ -1339,9 +1383,43 @@ body {
 	padding-bottom: 3px;
 	padding-left: 20px;
 }
+.HF_boxOrg {
+	padding-top: 3px;
+	padding-right: 20px;
+	padding-bottom: 3px;
+	padding-left: 20px;
+	background-color: #F90;
+	width: 200px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: justify;
+}
+.HF_boxW {
+	padding-top: 0px;
+	padding-right: 20px;
+	padding-left: 20px;
+	width: 200px;
+	background-image: url(../images/hostFamily/corner.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	height: 20px;
+}
 .HFpicL {
 	float: left;
 }
 .HFpicR {
 	float: right;
+}
+.HFwhtMiddle {
+	background-image: url(../images/whtBoxMiddle.png);
+	background-repeat: repeat-y;
+	margin: 0px;
+	height: auto;
+	width: 746px;
+	min-height: 50px;
+	text-align: justify;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
 }
