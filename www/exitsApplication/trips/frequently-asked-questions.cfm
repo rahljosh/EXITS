@@ -164,7 +164,7 @@
                             Brooklyn, New York   11209<br /><br />
                             
                             <u>Email</u><br /><br />
-                            <a href="info@mpdtoursamerica.com">info@mpdtoursamerica.com</a><Br /><br />
+                            <a href="#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a><Br /><br />
                             
                             <u>Fax</u><br /><br />
                             (718) 439-8565
@@ -183,7 +183,7 @@
                         <p class="faq-section">Who do I contact to ask questions about tour, payments, etc.?</p>
                         
                         <p class="faq-answer">
-                            Contact: MPD Tour America, Inc., it's best to write an e-mail (info@mpdtoursamerica.com) or you can leave a detailed message on our voice 
+                            Contact: MPD Tour America, Inc., it's best to write an e-mail (#APPLICATION.MPD.email#) or you can leave a detailed message on our voice 
                             messaging if the phones are busy and we will gladly return your call. <br />
                             Please do not hang up without giving us your first and last name and area code and telephone number. Please speak slowly and clearly!
                         </p>

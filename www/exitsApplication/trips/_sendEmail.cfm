@@ -79,7 +79,7 @@
         
     	<p>Please return the MPD Payment Form and Permission Form by:<br />
             <ul>
-                <li>email: info@mpdtoursamerica.com</li>
+                <li>email: #APPLICATION.MPD.email#</li>
                 <li>fax:   +1 718 439 8565</li>
                 <li>mail:  9101 Shore Road, ##203 - Brooklyn, NY 11209</li>
             </ul>
@@ -90,21 +90,21 @@
         	<a href="http://trips.exitsapplication.com/frequently-asked-questions.cfm">http://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
         </p>
         
-        <p>If you have any questions that are not answerd please don't hesitate to contact us at info@mpdtoursamerica.com. </p>
+        <p>If you have any questions that are not answerd please don't hesitate to contact us at #APPLICATION.MPD.email#. </p>
         
         <p>See you soon!</p>
         
         <p>
         	MPD Tour America, Inc.<br />
             9101 Shore Road ##203- Brooklyn, NY 11209<Br />
-            Email: Info@Mpdtoursamerica.com<br />
+            Email: #APPLICATION.MPD.email#<br />
             TOLL FREE: 1-800-983-7780<br />
             Fax: 1-(718)-439-8565
         </p>
     </cfsavecontent>   
     
     <cfinvoke component="extensions.components.email" method="sendEmail">
-        <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (#SESSION.COMPANY.shortName# Trip Support)">
+        <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
     	<cfinvokeargument name="email_to" value="#qGetRegistrationDetails.email#">
         <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
         <cfinvokeargument name="email_subject" value="Your #qGetTourDetails.tour_name# Trip Details">
@@ -126,7 +126,7 @@
     </cfsavecontent>
     
     <cfinvoke component="extensions.components.email" method="sendEmail">
-        <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (#SESSION.COMPANY.shortName# Trip Support)">
+        <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
         <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
         <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
         <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
@@ -142,8 +142,8 @@
     </cfsavecontent>
     
     <cfinvoke component="extensions.components.email" method="sendEmail">
-        <cfinvokeargument name="email_from" value="<#APPLICATION.EMAIL.trips#> (#SESSION.COMPANY.shortName# Trip Support)">
-        <cfinvokeargument name="email_to" value="info@mpdtoursamerica.com"> 
+        <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
+        <cfinvokeargument name="email_to" value="#APPLICATION.MPD.email#"> 
         <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
         <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#mpdEmailMessage#">
