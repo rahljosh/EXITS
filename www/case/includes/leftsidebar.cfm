@@ -28,7 +28,7 @@
           <ul><li class="List"><a href="../viewStudents.cfm">View Students</a></li>
       <li class="List"><a href="../contactARep.cfm">Become a Host Family</a></li></ul>
       <div id="studentinfo"></div>
-          <ul><li class="List"><a href="http://www.case-usa.org/trips/studentTours.cfm">Student Tours</a></li>
+          <ul><li class="List"><a href="exchange-student-trips.cfm">Student Trips</a></li>
       <li class="List"><a href="../contactAStudent.cfm">Become a Student</a></li>
       <li class="List"><a href="http://www.esecutive.com/index.php">Student Insurance</a></li></ul>
        <div id="repInfo"></div>
