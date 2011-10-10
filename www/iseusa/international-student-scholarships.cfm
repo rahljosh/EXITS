@@ -36,7 +36,7 @@ a {
 <div id="subPages">
   <div class="whtTop"></div>
   <div class="whtMiddle">
-    <p class="header1">Jordan Nagler Memorial Scholarship Fund</p>
+    <p class="header1">2011 Jordan Nagler Memorial Scholarship Fund Recipient</p>
     <div class="subPic"><img src="images/scholarship.gif" width="415" height="277" /></div>
 <p class="p1"><strong>ISE is pleased to announce that the recipient of the Jordan Nagler Scholarship for 2011-2012 is Henna Merenheimo of Finland. Henna is 17 years old and lives in Tornio, a small town in the Lapland Region.</strong></p>
 
