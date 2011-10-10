@@ -1,14 +1,32 @@
-<HTML>
-<HEAD>
-<TITLE>CASE student Tours</TITLE>
-<META NAME="Keywords" CONTENT="homestay, exchange student, foreign students, student exchange, foreign exchange, foreign exchange program, academic exchange, student exchange program, high school, high school program, host family, host families, public high school program, private high school program, public high school, private high school, American exchange">
-<META NAME="Description" CONTENT="ISE offers semester programs, as well as school year programs, that allow foreign students the opportunity to become familiar with the American way of life by experiencing its schools, homes and communities. ISE can also now offer students the opportunity to study at some of America's finest Private High Schools. ISE works with a network of independent international educational partners who provide information, screening and orientations for prospective applicants to a variety of education and training programs in the United States.">
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Tour FAQs</title>
 <link href="css/maincss.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 <!--
-body {
-	background-color: #FFF;
+a:link {
+	color: #003;
+	text-decoration: none;
+}
+a:visited {
+	color: #003;
+	text-decoration: none;
+}
+a:hover {
+	color: #003;
+	text-decoration: none;
+}
+a:active {
+	color: #003;
+	text-decoration: none;
+}
+a {
+	font-weight: bold;
+}
+indent {
+	text-indent: 1em;
 }
 .Boxx {
 	border: 2px dashed #000066;
@@ -23,11 +41,23 @@ body {
 	font-weight: bold;
 	font-size: 14px;
 }
+.TitlesLG {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #000066;
+	font-weight: bold;
+	font-size: 20px;
+}
 .SubTitle {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	color: #2E4F7A;
 	font-weight: bold;
 	font-size: 12px;
+}
+.SubTitleLG {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #2E4F7A;
+	font-weight: bold;
+	font-size: 16px;
 }
 .BottonText {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -70,66 +100,98 @@ border:solid 1px;
 margin-right: 15px;
 margin-left: 0px;
 }
-.tours {
-	padding: 0px;
-	height: 150%;
-	width: 700px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-	margin-left: 150px;
-}
-.footer {
-	padding: 0px;
-	height: 30px;
-	width: 700px;
+.whtMiddletours2{
+	background-image: url(../images/whtBoxMiddle.png);
+	background-repeat: repeat-y;
 	margin: 0px;
-	float: none;
-	z-index: 10;
+	text-align: justify;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
 }
+.bBackground {
+	background-color: #C5DCEA;
+	border: thin solid #000;
+	text-align: center;
+}
+.tripContent{
+	padding: 30;
+	width: 750px;
+	margin-right: auto;
+	margin-left: auto;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
 -->
-</style>
-<script src="/menu.js"></script>
-</HEAD>
-<BODY LEFTMARGIN=0 TOPMARGIN=0 MARGINWIDTH=0 MARGINHEIGHT=0>
-<cfinclude template="/header.cfm">
+</style></head>
+
+<body>
+
+<div id="wrapper">
+<cfinclude template="includes/header.cfm">
+<div id="mainbody">
+<cfinclude template="includes/leftsidebar.cfm">
+
 <cfoutput>
 <cfset company = 'CASE'>
- <br>
         <cfquery name="tours" datasource="mysql">
 			SELECT * FROM smg_tours WHERE tour_id = #url.tour_id#
 		</cfquery>
-        <div class="tours"> 
-        <table width="700" border="0" align="center" cellpadding="2" cellspacing="0">
+         
+    
+         <cfoutput>
+<cfset company = 'ISE'>
+
+        <cfquery name="tours" datasource="mysql">
+			SELECT * FROM smg_tours WHERE tour_id = #url.tour_id#
+		</cfquery>
+        
+<div id="mainContent">
+<div id="ContentTop"></div>
+<div id="content">
+<div class="tripContent">
+<table width="665" border="0" align="center" cellpadding="2" cellspacing="0">
+  <tr>
+          <td height="45" scope="row" align="center" ><h1 class="TitlesLG">CASE Student Tours</h1></td>
+        </tr>
+        <tr>
+       		<td colspan=2><em><font color="##be1e2d" size=+1><strong><div align="center">For CASE students ONLY!</div></strong></font></em></td>
+       	</tr>
+        <tr>
+          <td height="45" align="center" scope="row" >CASE and our partner organization, MPD Tour America are proud to offer this year's CASE Trips of exciting adventures across America. MPD Tour America will be organizing 9  trips, chaperoned and supervised exclusively by CASE Representatives, for the 2010-11 season.</td>
+        </tr>
+        <!----<tr><td height="45" scope="row" align="center" ><img src="../images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />
+                <a href="index.cfm">Trips</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="contact.cfm">Contact</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="rules.cfm">Rules and Policies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="questions.cfm">Questions</a><br /><img src="../images/webStore_lines_06.gif" width="600" height="14" /></td></tr>---->
           <tr>
-            <td><img src="http://www.student-management.com/nsmg/uploadedfiles/student-tours/#tours.tour_img1#.jpg" width="300" border="0" align="right" class="image-right">
-                <table width="50%" border="0" align="center" cellpadding="5" cellspacing="0">
-                  <tr>
-                    <td><span class="Titles">
+            <td width="665"><table width="101%" border="0" align="center" cellpadding="5" cellspacing="0" class="bBackground">
+              <tr>
+                    <td width="28%" height="62" align="center">
 					
 						<cfset tour_name = Replace(tours.tour_name, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  	<cfset tour_name = Replace(tour_name, ("!company!"), company, "ALL")>
-					  	#tour_name#
-						
-						</span><br>
-                      	<span class="SubTitle"><font size="1">
-					  
+                        <span class="TitlesLG">#tour_name#</span><br />
+                        <cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
+						<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
+					  		
+                            <span class="SubTitle">
+                        #LSCurrencyFormat(tour_price, 'local')#</span>
+                        </td>
+                    <td width="48%">
 					  <cfset tour_date = Replace(tours.tour_date, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  <cfset tour_date = Replace(tour_date, ("!company!"), company, "ALL")>
-					  #tour_date#
-					  
-					  </font></span></td>
-                    <td><table width="90" class="Boxx" align="center" cellpadding="5" cellspacing="0">
-                        <tr>
-                          <td><div align="center">
-						  	<cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
+                      	  <span class="SubTitleLG">#tour_date#</span>
+<cfset tour_price = Replace(tours.tour_price, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					  		<cfset tour_price = Replace(tour_price, ("!company!"), company, "ALL")>
-					  		#tour_price#
-					  </div></td>
-                        </tr>
-                    </table>
-					
-					</td>
+					  		<span class="SubTitle"><br />
+		  		      #tours.tour_length#</span></td>
+                  <td width="24%">
+                     <cfif tours.tour_status EQ 'Full'><font color='FF0000' size='2'><b><center>No More Seats Available!!</center></b></font>
+                     <cfelseif tours.tour_status EQ 'Cancelled'><font color='FF0000' size='2'><b><center>Cancelled!!</center></b></font><cfelse> <a href="selectTrips.cfm?tour_id=#tour_id#"><img src="images/reserve.png" alt="reserve spot" border="0" /></a> 
+                     </cfif>
+                     <a href="selectTripQuote.cfm?tour_id=#tour_id#"> <img src="images/FlightQuote_07.png"  border=0 /></a>
+                    </td>
                   </tr>
                 </table>
               <span class="RegularText">
@@ -138,27 +200,26 @@ margin-left: 0px;
                 <br>
 				<cfset tour_description = Replace(tours.tour_description, (Chr(13) & Chr(10)), "<br />", "ALL")>
 				<cfset tour_description = Replace(tour_description, ("!company!"), company, "ALL")>
-				#tour_description#
-				</span><br>
+                #tour_description#
+                </span><br>
               <br>
-                <span class="SubTitle"> <img src="http://www.student-management.com/nsmg/uploadedfiles/student-tours/#tours.tour_img2#.jpg" width="175" hspace="10" border="0" align="left" class="image-left"> Flights:</span><br>
+                <span class="SubTitle"> <img src="http://www.student-management.com/nsmg/uploadedfiles/student-tours/#tours.tour_img2#.jpg" width="215" hspace="10" border="0" align="left" class="image-left"> Flights:</span><br>
                 <span class="RegularText">
 				<cfset tour_flights = Replace(tours.tour_flights, (Chr(13) & Chr(10)), "<br />", "ALL")>
 				<cfset tour_flights = Replace(tour_flights, ("!company!"), company, "ALL")>
-				#tour_flights#
-				<br>
+                  #tour_flights#
+                  <br>
                 <br>
                 <span class="SubTitle">Payment:</span><br>
 				<cfset tour_payment = Replace(tours.tour_payment, (Chr(13) & Chr(10)), "<br />", "ALL")>
 				<cfset tour_payment = Replace(tour_payment, ("!company!"), company, "ALL")>
-				#tour_payment#
-                <br>
+                  #tour_payment#<br>
                 <br>
 				<span class="SubTitle">Tour Cancellation Fees and Penalties:</span><br>
 				<cfset tour_cancelfee = Replace(tours.tour_cancelfee, (Chr(13) & Chr(10)), "<br />", "ALL")>
 				<cfset tour_cancelfee = Replace(tour_cancelfee, ("!company!"), company, "ALL")>
-				#tour_cancelfee#
-                <br>
+                  #tour_cancelfee#
+                  <br>
                 <br>
                 </span>
                 <table width="85%" border="0" align="center" cellpadding="5" cellspacing="1" bgcolor="##000066">
@@ -170,13 +231,13 @@ margin-left: 0px;
                     <td width="50%" valign="top" bgcolor="##FFFFFD"><span class="RegularText">
 					<cfset tour_include = Replace(tours.tour_include, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					<cfset tour_include = Replace(tour_include, ("!company!"), company, "ALL")>
-					#tour_include#
-					</span></td>
+                      #tour_include#
+                      </span></td>
                     <td width="50%" valign="top" bgcolor="##FFFFFD"><span class="RegularText">
 					<cfset tour_notinclude = Replace(tours.tour_notinclude, (Chr(13) & Chr(10)), "<br />", "ALL")>
 					<cfset tour_notinclude = Replace(tour_notinclude, ("!company!"), company, "ALL")>
-					#tour_notinclude#
-					</span></td>
+                      #tour_notinclude#
+                      </span></td>
                   </tr>
                 </table>
               <span class="RegularText"><br>
@@ -186,14 +247,29 @@ margin-left: 0px;
                 </center>
               </span></td>
           </tr>
+
         </table>
+        <!-- end tripContent --></div>
+        <!-- end content --> </div>
+        <div id="Contentbottom"></div>
+        <!-- end mainContent --></div>
+        </cfoutput>
 
 <map name="Map">
   <area shape="rect" coords="521,6,655,22" href="mailto:stacy@case-usa.org">
 </map>
 </cfoutput>
-</div>
-<div class="footer"><cfinclude template="footer.cfm"></div>
+<div class="clearfix"></div>
+<!-- main body --></div>
+    <div class="clearfix"></div>
+<cfinclude template="includes/footer.cfm"></div>
+    <!-- wrapper --> </div>
 
-</BODY>
-</HTML>
+
+<script type="text/javascript">
+<!--
+var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
+//-->
+</script>
+</body>
+</html>

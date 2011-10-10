@@ -1,4 +1,5 @@
 <br /><br />
+<!----
 <form action="qr_viewStudentslogin.cfm" method="post">
 
 <table align="center" width=400 cellpadding=4 cellspacing=0>
@@ -13,4 +14,8 @@
     	<td align="center">If you do not have a password, please fill out <a href="contactARep.cfm?rp">this form</a><br /> to be contacted by a representative</td>
     </tr>
 </table>
-</form>
+</form>---->
+
+<div align="Center"> 
+<h3>
+This section of our website is currently unavailable.  Please check back soon.</h3></div>

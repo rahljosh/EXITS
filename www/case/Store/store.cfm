@@ -63,6 +63,11 @@ a:active {
 	text-decoration: none;
 	color: #000;
 }
+.clearfix {
+	display: block;
+	clear: both;
+	height: 30px;
+}
 -->
 </style>
 
@@ -82,8 +87,8 @@ a:active {
   <div id= "mainbody">
     <div id="sidebar">
       <div id="AccountLogin">
-        <div id="loginInfo">
-        <cfif isDefined('url.jakegyllenhaal')>
+        <div id="loginInfo"> 
+        <div class="LoginBut">   <cfif isDefined('url.old')>
         <span class="Login">USER ID</span> <form method="post" action=" http://www.case-usa.org/internal/loginprocess.cfm">
           <input type="text" name="username" label="user id" message="A username is required to login." required="yes" />
         <br />
@@ -99,6 +104,9 @@ a:active {
         
         </div>
         </cfif>
+        </div>
+        <div class="clearfix"></div>
+        
         <!-- end LoginBut -->
         </div><!-- end LoginInfo -->
       </div><!-- end AccountLogin -->
@@ -152,10 +160,10 @@ width="92" height="88" alt="Google Checkout Acceptance Mark"
 <div id="Contentbottom"></div>
 </div><!-- mainContent -->
 <!-- InstanceEndEditable -->
-    </div><!-- end mainbody -->
+  </div><!-- end mainbody -->
     <!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />
 <div id="footer"><span class="footertext">264 Midland Avenue Unit 5&nbsp;&nbsp; I  &nbsp;&nbsp;Saddle Brook, NJ 07663 &nbsp;&nbsp; I  &nbsp;&nbsp; (201) 773-8299  &nbsp;&nbsp;  I  &nbsp;&nbsp;  (800) 458-8336<br />
   <span class="copyright">U.S. Department of State &ndash; Toll free: (866) 283-9090 &ndash; jvisas@state.gov</span></span></div><!-- end footer -->
-  </div><!-- end #wrapper -->
+</div><!-- end #wrapper -->
 </body>
 <!-- InstanceEnd --></html>

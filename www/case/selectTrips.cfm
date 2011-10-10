@@ -252,33 +252,10 @@ h3{text-indent:10px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 }
-.error{background-color:#FF9DA7;
-		
-}
-li{
-	line-height:24px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 14px;
-}	
-.submiterror{
-	line-height:24px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 16px;
-	background-color:#FCC;
-}
 -->
 </style></head>
 
 <body>
-
-<cfparam name="form.rulesread" default="0">
-<cfparam name="form.booktravel" default="0">
-
-<Cfif isDefined('form.verifyRules')>
-	<cfif form.rulesread eq 1 and form.booktravel eq 1>
-		<cflocation url="register.cfm?tour_id=#url.tour_id#">
-    </cfif>
-</Cfif>
 <cfparam name="url.tour_id" default="1">
 <cfparam name="stuEdit" default="1">
 <!----Student Info---->
@@ -312,13 +289,25 @@ li{
 <div id="mainbody">
 <cfinclude template="includes/leftsidebar.cfm">
 
+<cfoutput>
+<cfset company = 'CASE'>
+        <cfquery name="tours" datasource="mysql">
+			SELECT * FROM smg_tours WHERE tour_id = #url.tour_id#
+		</cfquery>
+         
+    
+         <cfoutput>
+<cfset company = 'ISE'>
 
+        <cfquery name="tours" datasource="mysql">
+			SELECT * FROM smg_tours WHERE tour_id = #url.tour_id#
+		</cfquery>
         
 <div id="mainContent">
 <div id="ContentTop"></div>
 <div id="content">
 <div class="tripContent">
-   <cfquery name="trips" datasource="mysql">
+<cfquery name="trips" datasource="mysql">
         select *
         from smg_tours
         where tour_status = 'active'
@@ -330,91 +319,51 @@ li{
         </cfquery>
         <cfoutput>
         <h2 align="Center">Sweet! Let's get you registered<cfif tripInfo.recordcount neq 0> to go on the #tripInfo.tour_name# Tour</cfif>.</h2>
-        <cfform method="post" action="selectTrips.cfm?tour_id=#url.tour_id#">
+        <cfform method="post" action="register.cfm">
 
 
-        <h2>Booking Process</h2>
-                         <em>Before we get started, here is a quick overview of the Tours Reservation Process.  </em><br /><br />
-                         <div class="error">
-						 <cfif isDefined('form.verifyRules')>
-                         	<table width=400 align="Center">
-                            	<tr>
-                                	<Td><img src="../images/shucks.png" width="80" height="80" /></Td><Td> <h4>Shucks, we can't go foward yet.</h4> Errors are highlighted below. make sure you've read the process and know that you should NOT book your own airfare.</Td>
-                                </tr>
-                             </table>
-                             <Br />
-                         </cfif>
-                         </div>
-   <table width=100% cellspacing=0 cellpadding=2 class="border">
+        <h2>Additional Tours</h2>
+                         <em>Wanna go on more then one trip? Go ahead and book it now, just select any additional tours you want to take.</em><br /><br />
+                         <table cellspacing=0 cellpadding=2 class="border" align="center">
                            <tr>
-                              <th align="Center"> <h3> Please carefully read the steps below explaining the enrollment process.
-                                  <hr width=80% /></h3></th>
-                           </tr>
-                            <tr>
-                              <td>
-                               <ol>
-                                       <li>Visit case-usa.org to book and pay for your trip. <em>(Your almost done with this step!) </em></li>
-                                       <ul><li><font size=-1>If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li></ul>
-                                        <li>Once your payment has been processed (up to 72 hours), you will receive an email with:</li>
-                                        <ul><li>payment confirmation</li>
-                                        	<li>required permission form</li>
-                                        </ul>
-                                        <li>Submit permission form with all signatures to MPD Tours.
-                                        	<ul><li>info@mpdtoursamerica.com
-                                        		<li>mail:  9101 Shore Road, ##203 - Brooklyn, NY 11209
-                                        	</ul>
-                                        <li>When permission form is processed (up to 72 hours), you will receive an email with:
-                                        	<ul>
-                                        	  <li>confirmation that permission form was received
-                                        		<li>travel packet with specific information for your tour
-                                        	</li></ul>
-                                        <li>You will be contacted shortly after you permission form is processed by our authorized Travel Agent regarding your travel arrangements. You do not need to contact the agent yourself.
-                                        <li>Once you select a flight itinerary, you will need to purchase this itinerary THROUGH OUR TRAVEL AGENT.
-                                <li> Enjoy Your Trip!!!
-                               </ol>
-                               
-                               </td>
+                             <td width="606"><table  width=100% cellspacing=0 cellpadding=2>
+                               <tr>
+                                 <td width="35" class="boxB"></td>
+                                 <td width="189" class="boxB"><h3><u>Tour</u></h3></td>
+                                 <td width="188" class="boxB"><h3><u>Dates</u></h3></td>
+                                 <td width="84" class="boxB"><h3><u>Price</u></h3></td>
+                                 <td width="88" class="boxB"><h3><u>Status</u></h3></td>
+                               </tr>
+                               <cfloop query="trips">
+                                 <tr id=#tour_id#2 <CFif url.tour_id eq tour_id>bgcolor="lightgreen"<cfelseif trips.currentrow mod 2>bgcolor="##deeaf3"</cfif>>
+                                   <td><h3>
+                                     <input name="select_trip" type="checkbox" onclick="highlight(this);"  value="#tour_id#" <cfif url.tour_id eq #tour_id#>checked</cfif>/>
+                                   </h3></td>
+                                   <td align="left" valign="middle" class="infoBold"><h3>#tour_name#</h3></td>
+                                   <td align="left" valign="middle"><h3>#tour_date#</h3></td>
+                                   <td align="center" valign="middle" class="infoBold"><h3>#LSCurrencyFormat(tour_price,'local')#</h3></td>
+                                   <td align="center" valign="middle"><h3>#tour_status#</h3></td>
+                                 </tr>
+                               </cfloop>
+                             </table></td>
+                           
+                             
                            </tr>
                          </table>
                      
-                         <br /> <div align="center">
-                          
-                           <p>
-                           <table width=450 bgcolor="##EFEFEF" cellpadding=4 cellspacing=0>
-                           <Tr>
-                           		<td align="Center" colspan=2>
-                                REMEMBER: DO NOT BOOK YOUR OWN AIRFARE.<Br />
-                           You will be contacted by our Travel Agent regarding airfare. 
-                                </td>
-                           	</Tr>
-                           		<tr <cfif form.rulesread eq 0 and isDefined('form.verifyrules')>bgcolor="##FF9DA7"</cfif>>
-                                	<Td valign="top" ><input type="checkbox" name="rulesread" value="1" <cfif form.rulesread eq 1>checked</cfif>/></Td><td>I've read and understand the process of registering for a tour.</td>
-                          		</tr>
-                                <Tr>
-                                	<td colspan=2><hr width=50% /></td>
-                                </Tr>
-                                <tr <cfif form.booktravel eq 0 and isDefined('form.verifyrules')>bgcolor="##FF9DA7"</cfif>>
-                                	<td valign="top"><input type="checkbox" name="booktravel" value="1" <cfif form.booktravel eq 1>checked</cfif> /></Td><td>I understand that I must purchase airfare through the authorized travel agent who will contact me after I've submitted my signed permission form.</td>
-                           			
-                                 </tr>
-                          
-                              </table>
-                              <br />
-                             <input type="image" src="../images/buttons/Next.png" />
-                                    <input type="hidden" name="verifyRules" />
-                           </p>
-                         </div>
+                         <br /> <div align="center"><input type="image" src="../images/buttons/Next.png" /></div>
                          </cfform>
                          </cfoutput>
                          <!-- end tripContent --></div>
         <!-- end content --> </div>
         <div id="Contentbottom"></div>
         <!-- end mainContent --></div>
-   
+        </cfoutput>
+
 <map name="Map">
   <area shape="rect" coords="521,6,655,22" href="mailto:stacy@case-usa.org">
 </map>
-
+</cfoutput>
 <div class="clearfix"></div>
 <!-- main body --></div>
     <div class="clearfix"></div>

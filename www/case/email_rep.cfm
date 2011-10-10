@@ -41,7 +41,7 @@
     </cfquery>
 </cfif>
 <!----Email the information to Stacy---->
-<cfoutput>
+
 <cfmail to="stacy@case-usa.org" replyto="#form.email#" from="support@case-usa.org" subject="#form.contact_type# Contact from Website" type="html"> 
 Information was just submitted via the website! You can view this information here:
 http://www.case-usa.org/internal/index.cfm?curdoc=web_contact_info&id=#contactid.cid#
@@ -61,9 +61,8 @@ Type of Contact:#form.contact_type#<br />
 Comments:#form.comments#<br /><br /><br />
 
 
-Have a rockin day.
 </cfmail>
-</cfoutput>
+
 <cfoutput>
 
   <p>Your information was submited to CASE.  You will should be contacted shortly.<br />

@@ -71,7 +71,7 @@ body {
 <div id="container">
   <div id="mainContent">
   <div class="header"><span class="Header1">Flight Quote</span></div>
-    <div class="logo"><span class="oneColFixCtr"><img src="images/Trips/caselogo.png" width="200" height="200" /></span></div>
+    <div class="logo"><span class="oneColFixCtr"><a href="http://www.case-usa.org"><img src="images/Trips/caselogo.png" width="200" height="200" border="0" /></a></span></div>
 <cfform id="ContactForm" name="ContactForm" method="post" action="email_sasha.cfm">
   <p class="Header"><span class="header3">ALL FIELDS ARE REQUIRED</span></p>
   <p><span class="oneColFixCtr"><span class="paragraph">First Name<br />
@@ -94,19 +94,19 @@ body {
     <cfinput type="text" name="nameoftour" message="Tour Name Required" required="yes" id="nameoftour" />
   <br />
     Tour Dates<br />
-     <select name="Tour Dates" id="tour dates">
-      <option>Hawaii I – Feb. 5-12, 2010</option>
-      <option>Hawaii II – Feb. 13-20, 2010</option>
-      <option>Hawaii III – Feb. 22 Mar. 1, 2010</option>
-      <option>Western Tour – Mar. 13-19, 2010</option>
-      <option>California Experience – March 6-12, 2010</option>
-      <option>Hawaii IV – Apr. 3-10, 2010</option>
-      <option>East Coast Experience – April 13-19, 2010</option>
-      <option>New York & Boston – May 1 - May 7, 2010</option>
-      <option>NYC Long Weekend 1 – May 14-17, 2010</option>
-      <option>NYC Long Weekend 1 – May 21-24, 2010</option>
-      <option>LA Experience – Nov. 28 - Dec. 3, 2010</option>
-      <option>New York Holiday – Dec. 12-17, 2010</option>
+     <select name="TourDates" id="tourdates">
+      <option>Hawaii I &ndash; Feb. 5-12, 2010</option>
+      <option>Hawaii II &ndash; Feb. 13-20, 2010</option>
+      <option>Hawaii III &ndash; Feb. 22 Mar. 1, 2010</option>
+      <option>Western Tour &ndash; Mar. 13-19, 2010</option>
+      <option>California Experience &ndash; March 6-12, 2010</option>
+      <option>Hawaii IV &ndash; Apr. 3-10, 2010</option>
+      <option>East Coast Experience &ndash; April 13-19, 2010</option>
+      <option>New York & Boston &ndash; May 1 - May 7, 2010</option>
+      <option>NYC Long Weekend 1 &ndash; May 14-17, 2010</option>
+      <option>NYC Long Weekend 1 &ndash; May 21-24, 2010</option>
+      <option>LA Experience &ndash; Nov. 28 - Dec. 3, 2010</option>
+      <option>New York Holiday &ndash; Dec. 12-17, 2010</option>
     </select>
     <br /><br />
     

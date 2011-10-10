@@ -9,7 +9,7 @@
 <body>
 <div id="header">
     <div id="topBullets">
-      <p><a href= "http://www.case-usa.org/internal/int_agent2.cfm" class="toprightlinks1"></a><a href= "https://www.google.com/a/case-usa.org/ServiceLogin?service=mail&passive=true&rm=false&continue=http%3A%2F%2Fmail.google.com%2Fa%2Fcase-usa.org%2F&bsv=zpwhtygjntrz&ltmpl=default&ltmplcache=2" class="toprightlinks2"></a><a href= "../headquarterNews.cfm" class="toprightlinks3"></a><a href= "../contact.cfm"class="toprightlinks4"></a><a href= "../FAQ.cfm"class="toprightlinks5"></a></p>
+      <p><a href= "http://www.case-usa.org/internal/int_agent2.cfm" class="toprightlinks1"></a><a href= "https://www.google.com/a/case-usa.org/ServiceLogin?service=mail&passive=true&rm=false&continue=http%3A%2F%2Fmail.google.com%2Fa%2Fcase-usa.org%2F&bsv=zpwhtygjntrz&ltmpl=default&ltmplcache=2" class="toprightlinks2"></a><a href= "../headquarterNews.cfm" class="toprightlinks3"></a><a href= "../contact.cfm"class="toprightlinks4"></a><a href= "../FAQ.cfm"class="toprightlinks5"></a><a href= "http://www.case-usa.org/Store/store.cfm"class="toprightlinks6"></a></p>
     </div>
   </div>
   <div id="main-nav"><a href="../index.cfm" class="home1"></a><a href="../aboutCase.cfm" class= "about2"></a> <a href="../hostFamilies.cfm" class="hostfam3"></a><a href="../students.cfm" class="students4"></a><a href="../representatives.cfm" class="rep5"></a><a href="../contact.cfm" class="contact6"></a> </div>
