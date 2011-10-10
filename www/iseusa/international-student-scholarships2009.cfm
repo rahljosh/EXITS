@@ -38,7 +38,7 @@ a {
   <div class="whtMiddle">
     <p class="header1">2009 Jordan Nagler Memorial Scholarship Fund Recipient</p>
     <div class="subPic"><img src="images/scholarship.gif" width="415" height="277" /></div>
-<p class="p1"><strong>International Student Exchange has announced the first recipient of the Jordan Nagler Memorial Scholarship. She is Yoojin Kim from South Korea. The scholarship is awarded to students who are considered to be extremely diligent and successful at their studies and who would not otherwise be able to attend an international exchange program..</strong></p>
+<p class="p1"><strong>International Student Exchange has announced the first recipient of the Jordan Nagler Memorial Scholarship. She is Yoojin Kim from South Korea. The scholarship is awarded to students who are considered to be extremely diligent and successful at their studies and who would not otherwise be able to attend an international exchange program.</strong></p>
 
 <p class="p1">Yoojin is 16 years old and comes from Seoul, where she lives with her parents<br />
   and younger sister. She has been studying English since she was a child and earns very high marks in school. Excellence in school is only one component of her daily life. She is very active in her church, enjoys sports, and loves a new challenge. Yoojin hopes to become a dentist in the future and use her skills to help others.</p>
