@@ -29,12 +29,12 @@
 .TabbedPanels {
 	float: none;
 	clear: none;
-	width: 725px; /* IE Hack to force proper layout when preceded by a paragraph. (hasLayout Bug)*/
+	width: 750px; /* IE Hack to force proper layout when preceded by a paragraph. (hasLayout Bug)*/
 	height: 100%;
-	margin-top: 30px;
+	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
-	margin-left: 35px;
+	margin-left: 5px;
 	text-align: center;
 	padding: 0px;
 }
@@ -158,7 +158,7 @@
 	padding-top: 0px;
 	padding-right: 25px;
 	padding-bottom: 0px;
-	padding-left: 25px;
+	padding-left: 10px;
 }
 
 /* This selector is an example of how to change the appearnce of the currently

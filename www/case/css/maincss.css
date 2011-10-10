@@ -479,12 +479,11 @@ body {
 	background-color: #FFF;
 	padding: 0px;
 	text-align: left;
-	width: 1024px;
-	height: 100%;
 	margin-top: 0px;
 	margin-right: auto;
 	margin-bottom: 0px;
 	margin-left: auto;
+	width: 1024px;
 }
 .toprightlinks1 {
 	text-align: right;
@@ -1019,7 +1018,6 @@ body {
 	background-image: url(../images/indexPhoto.png);
 	background-repeat: no-repeat;
 	float: right;
-	height: 230px;
 	width: 300px;
 	margin-top: 45px;
 	margin-right: 25px;
@@ -1071,7 +1069,7 @@ body {
 #hostFamilyPhoto {
 	background-image: url(../images/BWhostFamily.png);
 	background-repeat: no-repeat;
-	float: right;
+	float:right;
 	height: 200px;
 	width: 300px;
 	margin-top: 45px;
@@ -1081,16 +1079,23 @@ body {
 	padding: 0px;
 }
 #trip {
-	padding: 0px;
-	width: 800px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-	margin-left: 100px;
+	width: 660px;
 	background-repeat: no-repeat;
 	height: 100%;
 	vertical-align: middle;
 	background-color: #FFF;
+	float: right;
+	border: thin solid #CCC;
+	margin-top: 10px;
+	margin-right: 30px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 10px;
+	padding-right: 45px;
+	padding-bottom: 20px;
+	padding-left: 45px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
 }
 #storeTag {
 	background-image: url(../images/store.jpg);
@@ -1145,4 +1150,22 @@ body {
 }
 .bold {
 	font-weight: bold;
+}
+#indexVideo {
+	background-repeat: no-repeat;
+	float: left;
+	margin-top: 45px;
+	margin-right: auto;
+	margin-bottom: 25px;
+	margin-left: 100px;
+	padding: 20px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	background-color: #999;
+}
+.clearfix {
+	display: block;
+	clear: both;
+	height: 10px;
 }

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <!-- TemplateBeginEditable name="doctitle" -->
-<title>CASE  </title>
+<title>CASE - Cultural Academic Student Exchange Est. 1988 </title>
 <!-- TemplateEndEditable -->
 <link href="../css/maincss.css" rel="stylesheet" type="text/css" />
 <!----
@@ -48,6 +48,11 @@ a:active {
 	text-decoration: none;
 	color: #000;
 }
+.clearfix {
+	display: block;
+	clear: both;
+	height: 30px;
+}
 -->
 </style>
 
@@ -67,8 +72,8 @@ a:active {
   <div id= "mainbody">
     <div id="sidebar">
       <div id="AccountLogin">
-        <div id="loginInfo">
-        <cfif isDefined('url.old')>
+        <div id="loginInfo"> 
+        <div class="LoginBut">   <cfif isDefined('url.old')>
         <span class="Login">USER ID</span> <form method="post" action=" http://www.case-usa.org/internal/loginprocess.cfm">
           <input type="text" name="username" label="user id" message="A username is required to login." required="yes" />
         <br />
@@ -77,15 +82,17 @@ a:active {
           <input type="password" name="password" label="password" message="A password is required to login." required="yes"/>
           <span class="loginButton">Forget Login? </span>
           <input name="Submit" type="submit" value="Login" />
-          <br />
+         <br />
         </form>
         <cfelse>
-        <div class="LoginBut"><a href="http://case.exitsapplication.com/"><img src="../images/login.png"  border=0 /></a><br /><Br />
-        
+        <div class="LoginBut"><a href="http://case.exitsapplication.com/"><img src="../images/login.png" width="150" height="32" alt="login" border="0"/></a><br /><Br />
         </div>
         </cfif>
+        </div>
+        <div class="clearfix"></div>
         <!-- end LoginBut -->
         </div><!-- end LoginInfo -->
+        <div class="clearfix"></div>
       </div><!-- end AccountLogin -->
       <div id="sidebarEnd"></div>
       <div id="sidebarSpacer"></div>
@@ -93,7 +100,7 @@ a:active {
           <ul><li class="List"><a href="../viewStudents.cfm">View Students</a></li>
       <li class="List"><a href="../contactARep.cfm">Become a Host Family</a></li></ul>
       <div id="studentinfo"></div>
-          <ul><li class="List"><a href="../studentTours.cfm">Student Tours</a></li>
+          <ul><li class="List"><a href="?">Student Tours</a></li>
       <li class="List"><a href="../contactAStudent.cfm">Become a Student</a></li>
       <li class="List"><a href="http://www.esecutive.com/index.php">Student Insurance</a></li></ul>
        <div id="repInfo"></div>
@@ -110,10 +117,10 @@ a:active {
       <div id="Contentbottom"></div>
     </div>
     <!-- TemplateEndEditable -->
-    </div><!-- end mainbody -->
+  </div><!-- end mainbody -->
     <!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />
 <div id="footer"><span class="footertext">264 Midland Avenue Unit 5&nbsp;&nbsp; I  &nbsp;&nbsp;Saddle Brook, NJ 07663 &nbsp;&nbsp; I  &nbsp;&nbsp; (201) 773-8299  &nbsp;&nbsp;  I  &nbsp;&nbsp;  (800) 458-8336<br />
   <span class="copyright">U.S. Department of State &ndash; Toll free: (866) 283-9090 &ndash; jvisas@state.gov</span></span></div><!-- end footer -->
-  </div><!-- end #wrapper -->
+</div><!-- end #wrapper -->
 </body>
 </html>

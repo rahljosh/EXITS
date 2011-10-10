@@ -31,9 +31,11 @@ a {
 </style></head>
 
 <body>
+
+<div id="wrapper">
 <cfinclude template="/header.cfm">
 <div id="trip">
-<div id="content">
+  <div id="content">
   <div id="TabbedPanels1" class="TabbedPanels">
     <ul class="TabbedPanelsTabGroup">
       <li class="TabbedPanelsTab" tabindex="0">Student Tours</li>
@@ -47,24 +49,24 @@ a {
       <div class="TabbedPanelsContent">
         <table width="680" align="center" border="0">
           <tr bgcolor="#FFFFFF">
-            <td width="333"><div align="center"><a href="tours.cfm?tour_id=10"><img src="images/Trips/10.png" alt="LA Trip" width="230" height="195" border="0" /></a></div></td>
-            <td width="336"><div align="center"><a href="tours.cfm?tour_id=7"><img src="images/Trips/7.png" width="236" height="196" alt="NY Trip" border="0"/></a></div></td>
+            <td width="333"><div align="center"><a href="tours.cfm?tour_id=10"><img src="images/Trips/10.png" width="239" height="165" alt="LA Trip" border="0" /></a></div></td>
+            <td width="336"><div align="center"><a href="tours.cfm?tour_id=7"><img src="images/Trips/7.png" width="238" height="165" alt="NY Trip" border="0" /></a></div></td>
           </tr>
           <tr bgcolor="#FFFFFF">
-            <td><div align="center"><a href="tours.cfm?tour_id=1"><img src="images/Trips/1.png" width="236" height="196" alt="Hawaii 1" border="0" /></a></div></td>
-            <td><div align="center"><a href="tours.cfm?tour_id=2"><img src="images/Trips/2.png" width="236" height="196" alt="Hawaii 2" border="0" /></a></div></td>
+            <td><div align="center"><a href="tours.cfm?tour_id=1"><img src="images/Trips/1.png" width="241" height="166" alt="Hawaii 1" border="0"/></a></div></td>
+            <td><div align="center"><a href="tours.cfm?tour_id=2"><img src="images/Trips/2.png" width="237" height="166" alt="Hawaii 2" border="0" /></a></div></td>
           </tr>
           <tr bgcolor="#FFFFFF">
-            <td><div align="center"><a href="tours.cfm?tour_id=4"><img src="images/Trips/4.png" width="236" height="196" alt="Hawaii 3" border="0"/></a></div></td>
-            <td><div align="center"><a href="tours.cfm?tour_id=8"><img src="images/Trips/8.png" width="236" height="196" alt="Cali Experience" border="0"/></a></div></td>
+            <td><div align="center"><a href="tours.cfm?tour_id=8"><img src="images/Trips/8.png" width="241" height="168" alt="Cali Experience" border="0" /></a></div></td>
+            <td><div align="center"><a href="tours.cfm?tour_id=9"><img src="images/Trips/9.png" width="237" height="168" alt="Western Adventure" border="0" /></a></div></td>
           </tr>
           <tr bgcolor="#FFFFFF">
-            <td><div align="center"><a href="tours.cfm?tour_id=9"><img src="images/Trips/9.png" width="236" height="196" alt="Western Adventure" border="0"/></a></div></td>
-            <td><div align="center"><a href="tours.cfm?tour_id=6"><img src="images/Trips/6.png" width="236" height="196" alt="E coast" border="0"/></a></div></td>
+            <td><div align="center"><a href="tours.cfm?tour_id=6"><img src="images/Trips/6.png" width="245" height="166" alt="E coast" border="0" /></a></div></td>
+            <td><div align="center"><a href="tours.cfm?tour_id=11"><img src="images/Trips/11.png" width="245" height="165" alt="NY Boston" border="0"/></a></div></td>
           </tr>
           <tr bgcolor="#FFFFFF">
-            <td><div align="center"><a href="tours.cfm?tour_id=5"><img src="images/Trips/5.png" width="236" height="196" alt="Hawaii 4" border="0"/></a></div></td>
-            <td><div align="center"><a href="tours.cfm?tour_id=11"><img src="images/Trips/11.png" width="236" height="196" alt="NY Boston" border="0"/></a></div></td>
+            <td><div align="center"><img src="images/Trips/12.png" width="245" height="168" /></div></td>
+            <td><div align="center"></div></td>
           </tr>
         </table>
         <p>&nbsp;</p>
@@ -117,7 +119,8 @@ E-MAIL: info@mpdtoursamerica.com</p></div>
    <li>Permission Form</li>
          <span class="normtext"><ul><li><a href= "forms/Permission_Form.pdf">Click here</a> to download the PDF File. (This form need to be printed and sent by mail or fax.)</li></ul></span>
          <li>Flight Quote Form</li>
-         <span class="normtext"><ul><li><a href= "forms/FLIGHT_QUOTE_FORM.pdf">Click here</a> to download the PDF File. (This form need to be printed and sent by mail or fax.)</li></ul></span>
+         <span class="normtext"><ul><li><a href= "forms/FLIGHT_QUOTE_FORM.pdf">Click here</a> to download the PDF File. (This form need to be printed and sent by mail or fax.)</li>
+         <li><a href= "flightQuote1.html">Click here</a> to fill a form out online.</li></ul></span>
 
       <span class="normtext"><p>To open the PDF file you will need Adobe Acrobat , Click here to get Adobe Acrobat</p></span>
       </div>
@@ -210,7 +213,7 @@ and download forms.  You must send $100.00 for a deposit but you can also choose
 
 <p><a name="bookFlight" id="bookFlight"></a>How do I book a flight?  (We do not book flights, only assist).</p>
 <span class="normtext">
-<p>You can go online or a travel agent, or call an airline directly and book a flight on your own. Also, complete a "Flight Quote Form" and submit it to info@mpdtoursamerica.com.</p></span>
+<p>You can go online or a travel agent, or call an airline directly and book a flight on your own. Also, complete a "Flight Quote Form" and submit it to sasha@troikaviagens.com.</p></span>
 <span class="backToTop"><a href= #gQuestions><p>Back to top</p></a></span>
 
 
@@ -222,7 +225,7 @@ and download forms.  You must send $100.00 for a deposit but you can also choose
 
 <p><a name="purchaseTicket" id="purchaseTicket"></a>Where can I purchase airline tickets other than online?</p>
 <span class="normtext">
-<p>You can call any airline company direct or a local travel agency.  You can find telephone numbers in the yellow pages or online, or you can dial information on your cell or home telephone. Also, complete a "Flight Quote Form" and fax it to MPD Travel America, Inc. at 718-439-8565.</p></span>
+<p>You can call any airline company direct or a local travel agency.  You can find telephone numbers in the yellow pages or online, or you can dial information on your cell or home telephone. Also, complete a "Flight Quote Form" and fax it to Troika Turismo & Intercambio at 011 55 11 4195-9335.</p></span>
 <span class="backToTop"><a href= #gQuestions><p>Back to top</p></a></span>
 
 
@@ -290,8 +293,9 @@ provided for real emergencies only!</p></span>
       </div>
 </div>
 </div>
-</div>
 <cfinclude template="/footer.cfm">
+</div>
+
 <script type="text/javascript">
 <!--
 var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
