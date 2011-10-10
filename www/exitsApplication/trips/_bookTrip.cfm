@@ -447,7 +447,7 @@
 	<!--- Include Trip Header --->
     <cfinclude template="_breadCrumb.cfm">
                 
-    <form name="processPaymentForm" id="processPaymentForm" action="#CGI.SCRIPT_NAME#?action=BookTrip" method="post">
+    <form name="processPaymentForm" id="processPaymentForm" action="#CGI.SCRIPT_NAME#?action=bookTrip" method="post">
         <input type="hidden" name="submitted" value="1" />
         
         <!--- Display Form Errors --->
@@ -507,6 +507,10 @@
                 <td class="tripFormTitle">Confirm Email Address: <span class="required">*</span></td>
                 <td class="tripFormField"><input type="text" name="confirmEmailAddress" id="confirmEmailAddress" value="#FORM.confirmEmailAddress#" class="largeField" maxlength="100" /></td>
             </tr> 
+            <tr class="blueRow">
+                <td>&nbsp;</td>
+                <td><span class="required">* Required Fields</span></td>
+            </tr>  
         </table>
             
         <!--- Host Sibling Information ---> 
@@ -583,6 +587,10 @@
                     <em class="tripNotesRight">3 or 4 digit code - see credit card image</em>
                 </td>
             </tr>
+            <tr class="blueRow">
+                <td>&nbsp;</td>
+                <td><span class="required">* Required Fields</span></td>
+            </tr>  
         </table>	
         
         
@@ -642,11 +650,9 @@
                 <td class="tripFormTitle">Zip/Postal Code <span class="required">*</span></td>
                 <td class="tripFormField"><input type="text" name="billingZipCode" id="billingZipCode" value="#FORM.billingZipCode#" class="smallField" maxlength="20" /></td>
             </tr>
-            <tr>
+            <tr class="blueRow">
                 <td>&nbsp;</td>
-                <td>
-                    <span class="required">* Required Fields</span>
-                </td>
+                <td><span class="required">* Required Fields</span></td>
             </tr>  
         </table>    
         

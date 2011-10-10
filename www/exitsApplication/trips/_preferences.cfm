@@ -256,7 +256,7 @@
             
             <cfscript>
 				// Go to Book Trip - CC Processing
-				Location('#CGI.SCRIPT_NAME#?action=BookTrip', 'no');
+				Location('#CGI.SCRIPT_NAME#?action=bookTrip', 'no');
 	        </cfscript>
             
 		</cfif> <!--- NOT SESSION.formErrors.length() --->
@@ -273,10 +273,10 @@
 			FORM.medicalInformation = qGetStudentPendingRegistration.med;
 			
 			// Host Siblings
-			if ( qGetSiblingsPendingRegistration.recordCount ) {
-				FORM.otherTravelers = 1;	
-			} else if ( NOT VAL(qGetHostChildren.recordCount) ) {
-				FORM.otherTravelers = 0;	
+			if ( qGetSiblingsPendingRegistration.recordCount) {
+				FORM.otherTravelers = 1;
+			} else {
+				FORM.otherTravelers = 0;
 			}
 			
 			if ( NOT VAL(qGetStudentPendingRegistration.recordCount) ) {
@@ -292,7 +292,7 @@
 				
 			}
 		</cfscript>
-    
+        
 	</cfif> <!--- FORM SUBMITTED --->
 
 	<cfscript>
@@ -302,12 +302,12 @@
 			// ListFind(FORM.hostChildSelectedList, qGetHostChildren.childID)>
 			
             if ( NOT ListFind(FORM.hostChildSelectedList, qGetHostChildren.childID) ) {
-                // Populate Form Variables
+			  // Populate Form Variables
 				FORM[qGetHostChildren.childID[i] & '_hostChildFirstName'] = qGetHostChildren.name[i];
                 FORM[qGetHostChildren.childID[i] & '_hostChildLastName'] = qGetHostChildren.lastName[i];
                 FORM[qGetHostChildren.childID[i] & '_hostChildSex'] = qGetHostChildren.sex[i];
                 FORM[qGetHostChildren.childID[i] & '_hostChildBirthDate'] = qGetHostChildren.birthDate[i];
-            }
+			}
 
         }
 
@@ -463,6 +463,10 @@
                     </cfif>
                 </td>
             </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><span class="required">* Required Fields</span></td>
+            </tr>  
        </table>  
             
             
@@ -504,6 +508,10 @@
                     </em>
                 </td>
             </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><span class="required">* Required Fields</span></td>
+            </tr>  
         </table>   
         
         <!--- Button --->

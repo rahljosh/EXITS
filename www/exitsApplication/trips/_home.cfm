@@ -40,7 +40,7 @@
         <cfloop query="qGetTourList">
             <td width="285" height="178" class="bBackground" scope="row">
                 <form action="#CGI.SCRIPT_NAME#?action=tripDetails" method="post">
-                    <input type="hidden" name="action" value="TripDetails" />
+                    <input type="hidden" name="action" value="tripDetails" />
                     <input type="hidden" name="tourID" value="#qGetTourList.tour_id#" />
                     <input type="image" name="submit" src="extensions/images/trips_#qGetTourList.tour_id#.png" alt="#qGetTourList.tour_name# Details" /> <br />
                     <strong>#qGetTourList.tour_name#</strong><br />
