@@ -20,8 +20,9 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
 </table>
 
 <cfquery name="get_progress_reports" datasource="#application.dsn#">
-    SELECT *
+    SELECT progress_reports.*, reportTrackingType.description
     FROM progress_reports
+    LEFT JOIN reportTrackingType on reportTrackingType.reportTypeID = progress_reports.fk_reportType
     WHERE fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
     ORDER BY pr_id DESC
 </cfquery>
@@ -37,6 +38,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
     <cfelse>
         <tr align="left">
             <th>&nbsp;</th>
+            <th>Type</th>
             <th>SR Approved</th>
             <th>RA Approved</th>
             <th>RD Approved</th>
@@ -54,9 +56,15 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
                         <form action="../index.cfm?curdoc=progress_report_info" method="post" name="theForm_#pr_id#" id="theForm_#pr_id#" target="_blank">
                         <input type="hidden" name="pr_id" value="#pr_id#">
                         </form>
-                        <a href="javascript:document.theForm_#pr_id#.submit();">View</a>
+                       <Cfif fk_reportType eq 1>
+                       		<a href="javascript:document.theForm_#pr_id#.submit();">
+                       <cfelse>
+                       		<a href="../index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_progress_reports.pr_id#" target="_blank">
+                       </cfif>
+                       View</a>
                     </cfif>
                 </td>
+                <td>#description#</td>
                 <td>#dateFormat(pr_sr_approved_date, 'mm/dd/yyyy')#</td>
                 <td>
                     <cfif fk_ra_user EQ ''>
