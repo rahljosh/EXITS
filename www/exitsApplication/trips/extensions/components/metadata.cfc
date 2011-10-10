@@ -25,7 +25,7 @@
 
 
 	<cffunction name="getMetadataBySite" access="public" returntype="query" output="false" hint="Get metadata used on site pages">
-        <cfargument name="site" type="string" default="iseusa" />
+        <cfargument name="site" type="string" default="trips.exitsapplication.com" />
 		
 		<cfquery 
 			name="qGetMetadataBySite" 
