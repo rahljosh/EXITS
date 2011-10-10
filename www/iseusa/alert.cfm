@@ -90,7 +90,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
         <span class="MOtext" style="background-color: #D0EDF9;"> 
         <strong>Student Trips</strong><br /><br />
         We offer many trips for our students throughout the school year.
-        <br /><br /><p align="center"><a href="#APPLICATION.tripsURL#"><img src="images/buttons/Details.png" border="0"></a></p></span>
+        <br /><br /><p align="center"><a href="trips/exchange-student-trips.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
         <span class="bigImage"><img src="images/subPages/subStudentTrips.gif" /></span>
         </div>
         <!---webstore---->
