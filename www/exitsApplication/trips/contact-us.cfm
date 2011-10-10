@@ -35,7 +35,7 @@
                         TELEPHONE: #APPLICATION.MPD.phone#<br />
                         FAX: #APPLICATION.MPD.fax#<br /><br />
                         
-                        E-MAIL: #APPLICATION.EMAIL.trips#
+                        E-MAIL: <a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a>
                     </p>
                 </th>
             </tr>

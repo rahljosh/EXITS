@@ -32,6 +32,7 @@
 	APPLICATION.MPD.tollFree = '1-800-983-7780';
 	APPLICATION.MPD.phone = '1-718-439-8480';
 	APPLICATION.MPD.fax = '1-718-439-8565';
+	APPLICATION.MPD.email = 'info@mpdtoursamerica.com';
 
 
 	/*******************************************

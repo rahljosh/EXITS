@@ -674,9 +674,9 @@
                         <li>
                             Submit permission form with all signatures to MPD Tours.
                             <ul class="paragraphRules">
-                                <li>info@mpdtoursamerica.com
-                                <li>fax: +1 718 439 8565  
-                                <li>mail: 9101 Shore Road, ##203 - Brooklyn, NY 11209
+                                <li>#APPLICATION.MPD.email#</li>
+                                <li>fax: +1 718 439 8565</li>
+                                <li>mail: 9101 Shore Road, ##203 - Brooklyn, NY 11209</li>
                             </ul>
                         </li>
                         
