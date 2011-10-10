@@ -74,7 +74,7 @@
 
 	<cfscript>
 		APPLICATION.CFC.EMAIL.sendEmail(
-			emailTo=APPLICATION.EMAIL.documentReport,
+			emailTo=APPLICATION.EMAIL.flightReport,
 			emailSubject='EXTRA - WAT - Daily Uploaded Document Report',
 			emailMessage=documentReport
 		);
