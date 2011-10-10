@@ -11,22 +11,23 @@
 <cfoutput>
 
 	<!--- Breadcrumb --->
-    <cfif ListFind("TripDetails,lookUpAccount,preferences,myTripDetails,bookTrip,confirmation", FORM.action)>
+    <cfif ListFind("tripDetails,lookUpAccount,preferences,myTripDetails,bookTrip,confirmation", FORM.action)>
+    	
         <table width="665px" border="0" align="center" cellpadding="2" cellspacing="0" class="tripBreadCrumbNav">
             <tr>
                 <td>
                     <cfswitch expression="#FORM.action#">
     
-                        <cfcase value="TripDetails">
+                        <cfcase value="tripDetails">
                             <a href="#CGI.SCRIPT_NAME#">[ Home ]</a> 
                             > 
-                            <a href="#CGI.SCRIPT_NAME#?action=TripDetails" class="on">[ Details ]</a> 
+                            <a href="#CGI.SCRIPT_NAME#?action=tripDetails" class="on">[ Details ]</a> 
                         </cfcase>
 
                         <cfcase value="myTripDetails">
                             <a href="#CGI.SCRIPT_NAME#">[ Home ]</a> 
                             > 
-                            <a href="#CGI.SCRIPT_NAME#?action=TripDetails">[ Details ]</a> 
+                            <a href="#CGI.SCRIPT_NAME#?action=tripDetails">[ Details ]</a> 
                             > 
                             <a href="#CGI.SCRIPT_NAME#?action=myTripDetails" class="on">[ My Trip Details ]</a> 
                         </cfcase>
@@ -34,7 +35,7 @@
                         <cfcase value="lookUpAccount">
                             <a href="#CGI.SCRIPT_NAME#">[ Home ]</a> 
                             > 
-                            <a href="#CGI.SCRIPT_NAME#?action=TripDetails">[ Details ]</a> 
+                            <a href="#CGI.SCRIPT_NAME#?action=tripDetails">[ Details ]</a> 
                             > 
                             <a href="#CGI.SCRIPT_NAME#?action=lookUpAccount" class="on">[ Look Up Account ]</a> 
                         </cfcase>
@@ -47,14 +48,14 @@
                             <a href="#CGI.SCRIPT_NAME#?action=preferences" class="on">[ Preferences ]</a> 
                         </cfcase>
     
-                        <cfcase value="BookTrip">
+                        <cfcase value="bookTrip">
                             <a href="#CGI.SCRIPT_NAME#">[ Home ]</a> 
                             > 
                             <a href="#CGI.SCRIPT_NAME#?action=tripDetails">[ Details ]</a> 
                             > 
                             <a href="#CGI.SCRIPT_NAME#?action=preferences">[ Preferences ]</a> 
                             > 
-                            <a href="#CGI.SCRIPT_NAME#?action=BookTrip" class="on">[ Book Trip ]</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=bookTrip" class="on">[ Book Trip ]</a>
                         </cfcase>
     
                         <cfcase value="confirmation">

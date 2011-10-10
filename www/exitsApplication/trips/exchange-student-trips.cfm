@@ -21,18 +21,15 @@
 	<cfparam name="FORM.subAction" default="">    
     <cfparam name="FORM.submitted" default="0">
 	<cfparam name="FORM.tourID" default="0" />
-    <!--- Login --->
-    <cfparam name="FORM.companyName" default="">
+    <!--- LoopUp Account --->
     <cfparam name="FORM.studentID" default="">
     <cfparam name="FORM.hostID" default="">
     <cfparam name="FORM.familyLastName" default="">
     <cfparam name="FORM.dob" default="">
-    <cfparam name="FORM.hostLastName" default="">
-    <cfparam name="FORM.hostZip" default="">
-    <cfparam name="FORM.hostCity" default="">
-    <cfparam name="FORM.hostEmail" default="">
+    <cfparam name="FORM.exitsUsername" default="">
+    <cfparam name="FORM.exitsPassword" default="">
     <!--- Trip Preferences --->
-    <cfparam name="FORM.otherTravelers" default="">
+    <cfparam name="FORM.otherTravelers" default="0">
     <cfparam name="FORM.shareRoomNationality" default="">
     <cfparam name="FORM.shareRoomPerson1" default="">
     <cfparam name="FORM.shareRoomPerson2" default="">
@@ -170,14 +167,14 @@
     <cfscript>
 		// Check if there is a valid student, if not go back to the tours selection page
 		/*
-		if ( NOT VAL(SESSION.TOUR.studentID) AND listFind("lookUpAccount,preference,BookTrip,confirmation", FORM.action) ) {
+		if ( NOT VAL(SESSION.TOUR.studentID) AND listFind("lookUpAccount,preference,bookTrip,confirmation", FORM.action) ) {
 			// Set Action to Home
 			FORM.action = 'home';
 		}
 		*/
 		
 		// Check if there is a valid tour, if not go back to the tours selection page
-		if ( NOT VAL(SESSION.TOUR.tourID) AND listFind("lookUpAccount,preferences,BookTrip,confirmation", FORM.action) ) {
+		if ( NOT VAL(SESSION.TOUR.tourID) AND listFind("tripDetails,lookUpAccount,preferences,bookTrip,confirmation", FORM.action) ) {
 			// Set Action to Home
 			FORM.action = 'home';
 		}
