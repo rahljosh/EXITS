@@ -100,10 +100,14 @@
 			// Production
 			APPLICATION.PATH.TEMP = 'C:/websites/www/student-management/nsmg/uploadedfiles/temp/';
 			APPLICATION.PATH.tour = 'C:/websites/www/student-management/nsmg/uploadedfiles/tours/';
+			// Trips URL
+			APPLICATION.tripsURL = 'http://trips.local/';
 		} else {
 			// Production
 			APPLICATION.PATH.TEMP = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';
 			APPLICATION.PATH.tour = 'C:/websites/student-management/nsmg/uploadedfiles/tours/';
+			// Trips URL
+			APPLICATION.tripsURL = 'https://trips.exitsapplication.com/';
 		}
 
 
