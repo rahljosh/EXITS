@@ -129,11 +129,9 @@
 		Metadata
 	*******************************************/
 	APPLICATION.MetaData = StructNew();
-	// Set the reference to the struct
-	MetaData = APPLICATION.MetaData;
 	
-	// Get Metadata for current page
-	qGetMetadata = APPLICATION.CFC.metadata.getPageMetadata(URL=CGI.SCRIPT_NAME); 
+	// Get Metadata for index page, this is the default metadata
+	qGetMetadata = APPLICATION.CFC.MetaData.getPageMetadata(URL='/index.cfm'); // URL=CGI.SCRIPT_NAME 
 	
 	// Set up the Application Meta Data
 	APPLICATION.MetaData.pageTitle = qGetMetadata.pageTitle;

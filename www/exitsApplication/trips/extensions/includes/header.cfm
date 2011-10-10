@@ -1,10 +1,43 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		header.cfm
+	Author:		Marcus Melo
+	Date:		October 10, 2011
+	Desc:		Student Trip Header
+	
+	Updates:	
+	
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+	
+    <!--- Param Variables --->
+	<cfparam name="setPageTitle" default="#APPLICATION.MetaData.pageTitle#">    
+	<cfparam name="setPageDescription" default="#APPLICATION.MetaData.pageDescription#">    
+	<cfparam name="setPageKeywords" default="">    
+
+	<cfscript>
+		// Get Metadata for current page
+		qGetMetadata = APPLICATION.CFC.MetaData.getPageMetadata(URL=CGI.SCRIPT_NAME); 
+		
+		// Check if there is a valid metadata for this page
+		if ( qGetMetadata.recordCount ) {
+			// Set up this page metadata
+			setPageTitle = qGetMetadata.pageTitle;
+			setPageDescription = qGetMetadata.pageDescription;
+			setPageKeywords = qGetMetadata.pageKeywords;
+		}
+	</cfscript>
+
+</cfsilent>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><cfoutput>
-    <title>#APPLICATION.METADATA.pageTitle#</title>
-    <meta name="description" content="#APPLICATION.METADATA.pageDescription#" />
-    <meta name="keywords" content="#APPLICATION.METADATA.pageKeywords#" />
+    <title>#setPageTitle#</title>
+    <meta name="description" content="#setPageDescription#" />
+    <meta name="keywords" content="#setPageKeywords#" />
     <link href="extensions/css/baseStyle.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
     <script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
