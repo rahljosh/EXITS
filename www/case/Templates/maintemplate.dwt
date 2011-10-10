@@ -100,7 +100,7 @@ a:active {
           <ul><li class="List"><a href="../viewStudents.cfm">View Students</a></li>
       <li class="List"><a href="../contactARep.cfm">Become a Host Family</a></li></ul>
       <div id="studentinfo"></div>
-          <ul><li class="List"><a href="?">Student Tours</a></li>
+          <ul><li class="List"><a href="?">Student Trips</a></li>
       <li class="List"><a href="../contactAStudent.cfm">Become a Student</a></li>
       <li class="List"><a href="http://www.esecutive.com/index.php">Student Insurance</a></li></ul>
        <div id="repInfo"></div>
