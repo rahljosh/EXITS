@@ -1,2 +1,2 @@
 <!--- Relocate to Trips Landing Page --->
-<cflocation url="#APPLICATION.tripsURL#" addtoken="no">
+<cflocation url="exchange-student-trips.cfm" addtoken="no">

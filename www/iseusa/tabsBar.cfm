@@ -17,7 +17,7 @@
         </span>
         
         <span onmouseover="HideDIV('initDiv');HideDIV('webstore');HideDIV('travelAbroad');HideDIV('hostFam');HideDIV('meetStudents');HideDIV('blog');DisplayDIV('studentTrips')"   style="cursor:pointer;">
-            <a href="#APPLICATION.siteURL#trips/exchange-student-trips.cfm" class="tabs4"></a>
+            <a href="#APPLICATION.siteURL#trips/exchange-student-trips.cfm" class="tabs4" target="_blank"></a>
         </span>
         
         <span onmouseover="HideDIV('initDiv');HideDIV('studentTrips');HideDIV('travelAbroad');HideDIV('hostFam');HideDIV('meetStudents');HideDIV('blog');DisplayDIV('webstore')"   style="cursor:pointer;">
@@ -35,9 +35,9 @@
     <div class="tabsBar">
         <a href="#APPLICATION.siteURL#meet-our-students.cfm" class="tabs1"></a>
         <Cfif cgi.SCRIPT_NAME is '/become-a-host-familyJW.cfm'>
-        <a href="#APPLICATION.siteURL#become-a-host-family.cfm" class="tabs2selected"></a>
+            <a href="#APPLICATION.siteURL#become-a-host-family.cfm" class="tabs2selected"></a>
         <cfelse>
-        <a href="#APPLICATION.siteURL#become-a-host-family.cfm" class="tabs2"></a>
+            <a href="#APPLICATION.siteURL#become-a-host-family.cfm" class="tabs2"></a>
         </Cfif>
         <a href="http://outbound.iseusa.com/" class="tabs3" target="_blank"></a>
         <a href="#APPLICATION.siteURL#trips/exchange-student-trips.cfm" class="tabs4"></a>
