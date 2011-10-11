@@ -1423,3 +1423,57 @@ body {
 	padding-bottom: 0px;
 	padding-left: 0px;
 }
+
+/***** Meet the Students New Pages *****/
+.HformSideL{
+	float: left;
+	width: 290px;
+	background: #FFF;
+	margin-left: 10px;
+	display: block;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+}
+.HformSideR{
+	float: right;
+	width: 392px;
+	margin-right: 7px;
+	display: block;
+	padding: 0px;
+}
+.HFormpicR{
+	float: right;
+	width: 100px;
+	margin-right: 75px;
+	text-align: center;
+}
+.HFform_wtext{
+	color: #FFF;
+	font-size: 10px;
+}
+.loginTop{
+	background-image: url(../images/hostFamily/HFformPic_06.png);
+	background-repeat: no-repeat;
+	height: 25px;
+	width: 397px;
+	}
+.loginMid{
+	background-image: url(../images/hostFamily/HFform_logMiddle.png);
+	background-repeat: repeat-y;
+	width: 394px;
+	padding-left: 55px;
+	padding-right: 20px;
+	color: #FFF;
+	font-size: 11px;
+	height: 198px;
+	padding-bottom: 30px;
+	padding-top: 3px;
+	}
+.loginBot{
+	background-image: url(../images/hostFamily/HFform_logbottom.png);
+	background-repeat: no-repeat;
+	height: 48px;
+	width: 397px;
+	}
