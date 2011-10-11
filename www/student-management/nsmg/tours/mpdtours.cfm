@@ -43,7 +43,7 @@
             COUNT(st.studentID) AS total 
         FROM 
             smg_tours t
-        INNER JOIN	
+        LEFT OUTER JOIN
         	student_tours st ON st.tripID = t.tour_ID
             	AND
                 	st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
