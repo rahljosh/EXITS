@@ -136,10 +136,10 @@
 
 <div class="menu">
 	<ul>
-<li><a href="why-host-family.cfm" target="_self" ><strong>Why Host?</strong></a>
+<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/why-host-family" target="_self" ><strong>Why Host?</strong></a>
 	<ul>
-<li><a href="why-host-family.cfm" target="_self">How Important is Hosting?</a></li>
-<li><a href="index.cfm?page=online" target="_self">Benefits from Hosting</a></li>
+<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/why-host-family" target="_self">How Important is Hosting?</a></li>
+<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-benefits" target="_self">Benefits from Hosting</a></li>
 <li><a href="index.cfm?page=billing" target="_self">Hosting Lasts a LIfetime</a></li>
 	</ul>
 </li>
@@ -154,22 +154,32 @@
 <li><a href="?" target="_self" ><strong>Hosting Requirements</strong></a>
 	<ul>
 <li><a href="index.cfm?page=appointments" target="_self">Family Requirements</a></li>
-<li><a href="index.cfm?page=online" target="_self">Online Forms</a></li>
+<li><a href="index.cfm?page=online" target="_self">Start Application</a></li>
 <li><a href="index.cfm?page=billing" target="_self">Billing Questions</a></li>
 	</ul>
 </li>
 
 <li><a href="index.cfm?page=RefForm" target="_self" ><strong>Resources</strong></a>
 	<ul>
-<li><a href="index.cfm?page=refForm" target="_self">Support</a></li>
-<li><a href="index.cfm?page=/upload/uploads" target="_self">Rules & Policies</a></li>
-<li><a href="index.cfm?page=/upload/uploads" target="_self">Insurance Information</a></li>
-<li><a href="index.cfm?page=/upload/uploads" target="_self">Cultural Adjustments</a></li>
+	<li><a href="index.cfm?page=refForm" target="_self">Support</a></li>
+	<li><a href="index.cfm?page=/upload/uploads" target="_self">Rules & Policies</a></li>
+	<li><a href="index.cfm?page=/upload/uploads" target="_self">Insurance Information</a></li>
+	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/cultural-adjustments" target="_self">						Cultural Adjustments</a></li>
 	</ul>
 </li>
 
-<li><a href="index.cfm?page=contact" target="_self" ><strong>Students</strong></a></li>
+<li><a href="meet-our-students.cfm" target="_self" ><strong>Students</strong></a>
+	<ul>
+	<li><a href="meet-our-students.cfm" target="_self">Meet Our Students</a></li>
+	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/student-have-learned" target="_self">What Students Have Learned</a></li>
+	</ul>
+</li>
 
-<li><a href="index.cfm" target="_self" ><strong>FAQ</strong></a></li>
+<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-faq" target="_self" ><strong>FAQ</strong></a>
+<ul>
+	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-faq" target="_self">Hosting a Student FAQ</a></li>
+	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/being-host-family-faq" target="_self">Being a Host Family FAQ</a></li>
+	</ul>
+</li>
 	</ul>
 </div>
