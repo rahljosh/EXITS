@@ -44,7 +44,7 @@
 	// Store session information
 	SESSION.informationID = APPLICATION.CFC.SESSION.InitSession(
 		httpReferer = CGI.http_referer,
-		entryPage = 'http://' & CGI.server_name & '/' & CGI.script_name,
+		entryPage = 'http://' & CGI.server_name & CGI.script_name,
 		httpUserAgent = CGI.http_user_agent,
 		queryString = CGI.query_string,						 
 		remoteAddr = CGI.remote_addr,
