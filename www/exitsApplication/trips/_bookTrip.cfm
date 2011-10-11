@@ -159,6 +159,17 @@
             </cfquery>
 			
             <cfscript>
+				// Remove Foreign Accent
+				FORM.nameOnCard = APPLICATION.CFC.UDF.removeAccent(FORM.nameOnCard);
+				// Billing Address
+				FORM.billingFirstName = APPLICATION.CFC.UDF.removeAccent(FORM.billingFirstName);
+				FORM.billingLastName  = APPLICATION.CFC.UDF.removeAccent(FORM.billingLastName);   
+				FORM.billingCompany = APPLICATION.CFC.UDF.removeAccent(FORM.billingCompany);    
+				FORM.billingAddress  = APPLICATION.CFC.UDF.removeAccent(FORM.billingAddress);   
+				FORM.billingCity = APPLICATION.CFC.UDF.removeAccent(FORM.billingCity);
+				FORM.billingState = APPLICATION.CFC.UDF.removeAccent(FORM.billingState);
+				FORM.billingZipCode = APPLICATION.CFC.UDF.removeAccent(FORM.billingZipCode);
+
 				// Set Receipt Description
 				vReceiptDescription = "Registration for #APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)# - Student #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# ###qGetStudentInfo.studentID#";
 				// Include Number of Siblings

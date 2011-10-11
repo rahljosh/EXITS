@@ -75,17 +75,6 @@
 			// Set Tour in Session Variable			
 			APPLICATION.CFC.SESSION.setTripSessionVariables(studentID = FORM.studentID);											
 		}
-		
-		// Force SSL
-		if ( NOT APPLICATION.isServerLocal AND NOT CGI.SERVER_PORT_SECURE AND LEN(CGI.QUERY_STRING) ) {
-			
-			Location("https://#CGI.SERVER_NAME##CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" "no");
-			
-		} else if ( NOT APPLICATION.isServerLocal AND NOT CGI.SERVER_PORT_SECURE  ) {
-			
-			Location("https://#CGI.SERVER_NAME##CGI.SCRIPT_NAME#" "no");
-			
-		}
 	</cfscript>
 
     <!----Set Default Properties---->
