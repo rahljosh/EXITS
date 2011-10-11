@@ -753,7 +753,16 @@ div.form-container-noBorder p.note {
 	margin:0px;
 	margin-left: 210px; 
 	font-size: 90%; 
-	color: #333; 
+	color:#666;
+}
+
+div.form-container p.paddingNote,
+div.form-container-noBorder p.paddingNote { 
+	margin:0px;
+	margin-left: 210px; 
+	font-size: 90%; 
+	color:#666;
+	padding:2px;
 }
 
 div.form-container p.note em,
