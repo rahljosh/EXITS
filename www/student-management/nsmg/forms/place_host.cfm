@@ -50,7 +50,7 @@ function areYouSure() {
 <!--- CHECK CANCELED STUDENT --->
 <cfif check_cancel.canceldate NEQ ''> 
 	<table width="580" align="center">
-		<tr><td><h3>This student was canceled on #DateFormat(canceldate, 'mmm dd, yyyy')#. &nbsp; You can not place them with a family</h3></td></tr>
+		<tr><td><h3>This student was canceled on #DateFormat(check_cancel.canceldate, 'mmm dd, yyyy')#. &nbsp; You can not place them with a family</h3></td></tr>
 		<tr><td align="center"><input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td></tr>
 	</table>
 	<cfabort>
