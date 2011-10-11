@@ -22,18 +22,33 @@
 </cfif>
 
 <Cfquery name="programs" datasource="MySQL">
-	SELECT programid, programname, type, startdate, enddate, insurance_startdate, insurance_enddate, smg_programs.companyid, programfee,
-			smg_programs.active,
-			smg_companies.companyshort,
-			smg_program_type.programtype,
-			smg_seasons.season
-	FROM smg_programs
-	INNER JOIN smg_companies ON smg_companies.companyid = smg_programs.companyid
-	LEFT JOIN smg_program_type ON smg_program_type.programtypeid = smg_programs.type
-	LEFT JOIN smg_seasons ON smg_seasons.seasonid = smg_programs.seasonid
-	WHERE smg_programs.active = <cfqueryparam value="#url.status#" cfsqltype="cf_sql_integer">
-		AND smg_programs.companyid = '#client.companyid#'
-	ORDER BY #url.order#
+	SELECT 
+    	p.programid, 
+        p.programname, 
+        p.type, 
+        p.startdate,
+        p.enddate, 
+        p.insurance_startdate, 
+        p.insurance_enddate, 
+        p.companyid, 
+        p.programfee,
+        p.active,
+        smg_companies.companyshort,
+        smg_program_type.programtype,
+        smg_seasons.season
+	FROM smg_programs p
+	INNER JOIN 
+    	smg_companies ON smg_companies.companyid = p.companyid
+	LEFT JOIN 
+    	smg_program_type ON smg_program_type.programtypeid = p.type
+	LEFT JOIN 
+    	smg_seasons ON smg_seasons.seasonid = p.seasonid
+	WHERE 	
+    	p.active = <cfqueryparam value="#url.status#" cfsqltype="cf_sql_integer">
+	AND 
+    	p.companyid = '#client.companyid#'
+	ORDER BY 
+    	#url.order#
 </Cfquery>
 
 <cfoutput>
