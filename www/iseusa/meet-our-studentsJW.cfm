@@ -704,11 +704,12 @@
 <!--- Login --->
           <cfform name="loginForm" id="loginForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#loginFormClass#">
                         <input type="hidden" name="type" value="login" />
-							<h4>Login</h4>
+                      
+						<h3>Login</h3>
                 
-                            <p>  If you have already submited your contact information, <br />
-                            please use the login information you received to login and<br />
-view incoming students.</p>
+                            <p><em>If you have already submited your contact information,<br />
+                            please use the login information you received to login and <br />
+                            and view incoming students.</em></p>
                             <div class="HFormpicR"><a href="javascript:displayForgotPass();" class="HFform_wtext"><img src="images/hostFamily/HFformPic_09.png" width="100" border="0" /></a><br/><a href="javascript:displayForgotPass();" class="HFform_wtext"> Forgot Password? </a></div>
 							
 							<!--- Display Errors --->
@@ -745,8 +746,7 @@ view incoming students.</p>
 							
                             <h3> Retrieve Password </h3>
 
-                            <p> Please enter your email address to have your password<br />
-emailed to you.</p>
+                            <p> <em>Please enter your email address to have your password<br />emailed to you.</em></p>
 
 							<!--- Display Messages/Errors --->
                             <cfif FORM.type EQ 'forgotPassword' AND VAL(ArrayLen(pageMsg.Messages))>
@@ -806,7 +806,7 @@ emailed to you.</p>
                         <!--- Registration Form --->	
      <br />
      <img src="images/hostFamily/BeaHost.png" /><br />
-     <h1 >Fill out this form to learn more about being a host family through ISE!</h1>
+     <h4>Fill out this form to learn more about being a host family through ISE!</h4>
 <p>Our students are great ambassadors of their home countries and are excited to bring their cultures to communities in the United States.</p>
 <p> In order to protect the privacy of our students, we do ask that you provide your name and address in order to ensure the utmost security of our students.</p>
 <p><strong>Once you register, you will be permitted to view select student profiles.</strong></p>
