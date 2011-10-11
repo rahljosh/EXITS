@@ -15,7 +15,9 @@
 	<cfscript>
 		// Host Family Application
 		allowedUsers = '1,510,12313,7203,1077';
-	
+		
+		tripsAllowedUsers = "1,12313,11620,14900,510"; // allow certain users to see trips - josh, hause, stacy, brendan, marcus 
+		
         // Get Company Info
         qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
     </cfscript>
@@ -240,6 +242,7 @@
                      <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
                 <cfelseif CLIENT.companyid EQ 14>
                 <!--- ISE Store --->
+                
                 <cfelse>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 </cfif>
@@ -256,14 +259,10 @@
                     <a href="index.cfm?curdoc=students">Students</a>
                     <ul>
                         <li><a href="index.cfm?curdoc=app_process/apps_received">Received</a></li>
-                        <!----allow certain users to see trips - josh, hause, stacy, brendan---->
-                    <cfif ListFind('1,12313,11620,14900,510',client.userid)> 
-                    
-                            <li><a href="index.cfm?curdoc=tours/mpdtours">Trips</a></li>
-                   
-                    </cfif>
+						<cfif ListFind(tripsAllowedUsers, CLIENT.userID)> 
+                                <li><a href="index.cfm?curdoc=tours/mpdtours">Trips</a></li>
+                        </cfif>
                     </ul>
-                    
                 </li>
                 
                 <li>
@@ -277,9 +276,6 @@
                        		</cfif>
                         </ul>
 					</cfif>
-
-                  
-                    	
                 </li>
                 
                 <li><a href="index.cfm?curdoc=schools">Schools</a></li>

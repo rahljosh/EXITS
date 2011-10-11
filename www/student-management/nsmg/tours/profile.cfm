@@ -146,12 +146,14 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.tour_id#">
     </Cfquery>
 </Cfif>
 <cfquery name="tourInfo" datasource="#application.dsn#">
-select t.id, s.studentid, s.firstname, s.familylastname, h.local_air_code, s.dob,s.sex, h.major_air_code, s.email as studentEmail, td.tour_name, td.tour_id, t.tripid, t.med, t.flightinfo, t.date, t.paid, t.permissionForm, t.stuNationality, t.id, t.person1, t.person2, t.person3, t.nationality, t.hold, t.holdReason, h.familylastname as hostLast, h.phone as hostPhone, h.email as hostEmail, h.city as hostCity, h.state as hostState
-from student_tours t
-left join smg_students s on s.studentid = t. studentid
-left join smg_tours td on td.tour_id = t.tripId
-left join smg_hosts h on h.hostid = s.hostid
-where t.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
+    select t.id, s.studentid, s.firstname, s.familylastname, h.local_air_code, s.dob,s.sex, h.major_air_code, 
+    td.tour_name, td.tour_id, t.tripid, t.med, t.flightinfo, t.date, t.paid, t.permissionForm, t.stuNationality, t.id, t.email as studentEmail, 
+    t.person1, t.person2, t.person3, t.nationality, t.hold, t.holdReason, h.familylastname as hostLast, h.phone as hostPhone, h.email as hostEmail, h.city as hostCity, h.state as hostState
+    from student_tours t
+    left join smg_students s on s.studentid = t. studentid
+    left join smg_tours td on td.tour_id = t.tripId
+    left join smg_hosts h on h.hostid = s.hostid
+    where t.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
 </cfquery>
 
 <!----Get Siblings on tours---->
@@ -162,11 +164,11 @@ left join smg_host_children shc on shc.childid = sibs.siblingid
 where fk_Studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
 and tripid = <cfqueryparam cfsqltype="cf_sql_integer" value="#tourInfo.tripid#">
 </cfquery>
+
 <!----Get available Tours so tours can be changed if needed---->
 <cfquery name="availTours" datasource="#application.dsn#">
 select tour_id, tour_name
 from smg_tours
-
 </cfquery>
 
 
