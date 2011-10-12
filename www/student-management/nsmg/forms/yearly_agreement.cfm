@@ -65,9 +65,9 @@
 	  	<Td><h2>Services Agreement</h2></Td>
         <td align="center" >
 			<cfif checkAgreement.ar_agreement is ''>
-        		<a href="javascript:openPopUp('forms/displayRepAgreement.cfm?curdoc=displayRepAgreement', 640, 800);"><img src="../pics/infoNeeded.png" width="120" height="30" border="0" /></a>
+        		<a href="javascript:openPopUp('forms/displayRepAgreement.cfm?curdoc=displayRepAgreement', 640, 800);"><img src="pics/infoNeeded.png" width="120" height="30" border="0" /></a>
             <cfelse>
-             <img src="../pics/noInfo.png" width="120" height="30" border="0" />
+             <img src="pics/noInfo.png" width="120" height="30" border="0" />
           </cfif> 
         </td>
     </tr>    
@@ -75,9 +75,9 @@
 	  	<Td><h2>CBC Authorization</h2></Td>
         <td align="center">
         	<cfif checkAgreement.ar_cbc_auth_form is ''>
-            	<a href="javascript:openPopUp('forms/cbcAuthorization.cfm?curdoc=cbcAuthorization', 640, 800);"><img src="../../images/infoNeeded.png" width="120" height="30" border="0" /></a>
+            	<a href="javascript:openPopUp('forms/cbcAuthorization.cfm?curdoc=cbcAuthorization', 640, 800);"><img src="pics/infoNeeded.png" width="120" height="30" border="0" /></a>
             <cfelse>
-            	 <img src="../../images/noInfo.png" width="120" height="30" border="0" />
+            	 <img src="pics/noInfo.png" width="120" height="30" border="0" />
           </cfif>
         </td>
     </tr>  
@@ -85,9 +85,9 @@
 	  	<Td><h2>Employment History</h2></Td>
         <td align="center">
         	<cfif previousExperience eq 0>
-            	<a href="javascript:openPopUp('forms/employmentHistory.cfm?curdoc=employmentHistory', 640, 800);"><img src="../../images/infoNeeded.png" width="120" height="30" border="0" /></a>
+            	<a href="javascript:openPopUp('forms/employmentHistory.cfm?curdoc=employmentHistory', 640, 800);"><img src="pics/infoNeeded.png" width="120" height="30" border="0" /></a>
             <cfelse>
-            	 <img src="../../images/noInfo.png" width="120" height="30" border="0" />
+            	 <img src="pics/noInfo.png" width="120" height="30" border="0" />
           </cfif>
         </td>
     </tr> 
@@ -96,7 +96,7 @@
           	<cfif checkReferences.recordcount lt 4>
           		<a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs', 640, 800);">Additional Ref's Needed </a>
          	<cfelse>
-           	  <img src="../../images/noInfo.png" width="120" height="30" border="0" />
+           	  <img src="pics/noInfo.png" width="120" height="30" border="0" />
             </cfif>
          </td>
     </Tr>
