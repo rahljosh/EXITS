@@ -73,7 +73,7 @@ body {
  <link rel="stylesheet" media="all" type="text/css"href="../linked/css/baseStyle.css" />
 </head>
 
-<body>
+<body onload="opener.location.reload()">
 	<cfsilent>
 		<!--- Import CustomTag Used for Page Messages and Form Errors --->
         <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
@@ -92,14 +92,28 @@ and userid = #client.userid#
 	</Cfif>
 </cfquery>
 
+<cfquery name="repInfo" datasource="#application.dsn#">
+select firstname, lastname, address, address2, city, state, zip
+from smg_users
+where userid = #client.userid#
+</cfquery>
 
 <Cfif isDefined('form.sign')>
- 	
+ 	<Cfset expectedSig = '#repInfo.firstname# #repInfo.lastname#'>
+    <Cfif #trim(form.Signature)# is #trim(expectedSig)#>
+    	<Cfset sigMatch = 0>
+    <cfelse>
+    	<cfset sigMatch = 1>
+    </Cfif>
 	<cfscript>
 	// Father is Required
             if (not len(trim(FORM.signature)) )  {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please sign your name");
+			}
+			if (sigMatch is 1 )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Your signed name #form.signature# does not match the name on file #expectedSig#");
 			}
 			// Father is Required
             if (not val(FORM.termsAgree) )  {
@@ -131,7 +145,7 @@ and userid = #client.userid#
                         <!----Email to Student---->    
             <cfsavecontent variable="stuEmailMessage">
                 <cfoutput>				
-                Attached is a copy of the Service Agreement you electronically signed.  A copy is also available at any time via 'My Information' when logged into EXITS.
+                Attached is a copy of the Service Agreement you electronically signed.  A copy is also available at any time in the paperwork section under My Information when logged into EXITS.
                 <br /><br />
                 Regards-<Br />
                 EXITS Support
@@ -139,9 +153,9 @@ and userid = #client.userid#
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="josh@pokytrails.com">       
+                    <cfinvokeargument name="email_to" value="bhause@iseusa.com">       
                     <cfinvokeargument name="email_from" value="""ISE Support"" <support@iseusa.com>">
-                    <cfinvokeargument name="email_subject" value="Agreeement">
+                    <cfinvokeargument name="email_subject" value="Agreement">
                     <cfinvokeargument name="email_message" value="#stuEmailMessage#">
                     <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#AreaRepAgreement.pdf">
                    
@@ -162,7 +176,14 @@ and userid = #client.userid#
                         <Cfqueryparam cfsqltype="cf_sql_integer" value="#season#">,<Cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.signature#">)
                 </cfquery>
             </cfif>
+            <!----Clost window if signature is fine---->
+            <SCRIPT LANGUAGE="JavaScript"><!--
+			setTimeout('self.close()',2000);
+			//--></SCRIPT>
 	</Cfif>
+   			
+            
+	
 </Cfif>
 <cfquery name="checkSeason" datasource="#application.dsn#">
 select *
@@ -201,7 +222,7 @@ and userid = #client.userid#
 <div class="lightGrey">
 <Cfif checkSeason.recordcount gte 0>
 	<cfif checkSeason.ar_agreement is ''>
-        <form method="post" action="displayRepAgreement.cfm">
+        <form method="post" action="displayRepAgreement.cfm?curdoc=displayRepAgreement">
         <input type="hidden" name="sign"/>
         <table width=100% align="Center">
           <Tr>
