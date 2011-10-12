@@ -445,7 +445,7 @@
                        <cfif client.companyid lte 5>
                         <a href="uploadedfiles/pdf_docs/Pre%20AYP%20Bonus%202011.pdf" target="_blank">Click Here For Exciting Bonuses For The Placing Season!</a>
                    		</cfif>
-                        <Cfif client.userid eq 1 or client.userid = 12313>
+                        <Cfif client.userid eq 1 or client.userid eq 12313>
                         <a href="index.cfm?curdoc=forms/yearly_agreement">Fill our your yearly paperwork online!</a>
                         </Cfif>
                     </td>
