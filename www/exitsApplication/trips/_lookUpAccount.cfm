@@ -176,7 +176,7 @@
                 AND 
                     s.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.exitsUsername)#">
                 AND 
-                    s.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(FORM.exitsPassword)#%">
+                    s.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.exitsPassword)#">
             </cfquery>
 			
             <cfscript>
@@ -191,7 +191,7 @@
 					);
 					
 					// Set Session Company Variables
-					APPLICATION.CFC.SESSION.setCompanySessionVariable(companyID=FORM.companyID);
+					APPLICATION.CFC.SESSION.setCompanySessionVariable(companyID=qLoginStudent.companyID);
 					
 					// Go to confirmation
 					Location('#CGI.SCRIPT_NAME#?action=preferences', 'no');
@@ -315,7 +315,7 @@
             <table width="665px" border="0" align="center" cellpadding="2" cellspacing="0">                                          
                 <tr>
                     <td>
-                        <h3 align="Center">Sweet! Let's get you registered<cfif VAL(qGetTourDetails.recordcount)> to go on the #qGetTourDetails.tour_name# Tour</cfif>.</h3>
+                        <h3 align="Center">Let's get you registered<cfif VAL(qGetTourDetails.recordcount)> to go on the #qGetTourDetails.tour_name# Tour</cfif>.</h3>
                         <em class="tripSubTitle">Please look up your account below or login using your EXITS student application account.</em>
                     </td>
                 </tr>
@@ -330,7 +330,6 @@
             <form action="#CGI.SCRIPT_NAME#?action=lookUpAccount" method="post">
                 <input type="hidden" name="submitted" value="1" />
                 <input type="hidden" name="subAction" value="lookUpStudent">
-                <input type="hidden" name="tourID" value="#qGetTourDetails.tour_id#">
 
                 <!--- Student Information --->
                 <h3 class="tripSectionTitle">Look Up Your Account</h3>
@@ -370,7 +369,6 @@
             <form action="#CGI.SCRIPT_NAME#?action=lookUpAccount" method="post">
                 <input type="hidden" name="submitted" value="1" />
                 <input type="hidden" name="subAction" value="exitsLogin">
-                <input type="hidden" name="tourID" value="#qGetTourDetails.tour_id#">
 
                 <!--- Student Information --->
                 <h3 class="tripSectionTitle">
@@ -386,7 +384,7 @@
                     <tr>
                         <td class="tripFormTitle">Password <span class="required">*</span></td>
                         <td width="70%">
-                        	<input type="text" name="exitsPassword" class="mediumField" value="#FORM.exitsPassword#" maxlength="100">
+                        	<input type="password" name="exitsPassword" class="mediumField" value="#FORM.exitsPassword#" maxlength="100">
                             <em class="tripNotesRight"><a href="http://ise.exitsapplication.com/login.cfm?forgot=1" target="_blank">Forgot Login?</a></em>
                         </td>
                     </tr>

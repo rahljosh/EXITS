@@ -443,7 +443,7 @@
                         <p class="faq-section">What happens if I change my mind about a tour selection or want to cancel a trip?</p>
                         
                         <p class="faq-answer">
-                            here is a $100 cancellation fee up to 60 days prior to your chosen trip. After 60 days, there are NO Refunds.
+                            There is a $100 cancellation fee up to 60 days prior to your chosen trip. After 60 days, there are NO Refunds.
                         </p>
                         
                         <p class="faq-backTop"><a href="##paymentQuestions">Back to top</a></p>
