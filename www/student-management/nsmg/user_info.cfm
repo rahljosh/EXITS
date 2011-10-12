@@ -71,6 +71,8 @@
             p.ar_agreement, 
             p.ar_training, 
             p.secondVisit,
+            p.cbcSig,
+            p.agreeSig,
             s.season
         FROM 
         	smg_users_paperwork p
@@ -85,6 +87,12 @@
         ORDER BY 
         	p.seasonid DESC
     </cfquery>
+    
+    <cfquery name="qreferences" datasource="MySQL">
+    select *
+    from smg_user_references
+    where referencefor = #userid#
+    </cfquery>	
     
     <!--- get the access level of the user viewed.
     If null, then user viewing won't have access to username, etc. --->
@@ -1113,12 +1121,25 @@
                     </tr>
                     <tr><td>CBC Authorization Form</td>
                         <td><input type="checkbox" name="ar_cbc_auth_form_check" disabled="disabled" <cfif get_paperwork.ar_cbc_auth_form NEQ ''>checked="checked"</cfif>> 
-                            Date: #DateFormat(get_paperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#				
+                           Date:
+						   <cfif get_paperwork.cbcSig is not ''>
+									<Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
+                                     <a href="javascript:openPopUp('uploadedfiles/users/#client.userid#/Season#get_paperwork.seasonid#cbcAuthorization.pdf', 640, 800);">
+                                    </cfif> 
+                         	</cfif>
+                           
+                             #DateFormat(get_paperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#</a>			
                         </td>
                     </tr>
                     <tr bgcolor="##FFFFFF"><td>AR Agreement</td>
                         <td><input type="checkbox" name="ar_agreement_check" disabled="disabled" <cfif get_paperwork.ar_agreement NEQ ''>checked="checked"</cfif>> 
-                            Date: #DateFormat(get_paperwork.ar_agreement, 'mm/dd/yyyy')#
+                            Date:
+                            	<cfif get_paperwork.agreeSig is not ''>
+                               		 <Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
+                                	 	<a href="javascript:openPopUp('uploadedfiles/users/#client.userid#/Season#get_paperwork.seasonid#AreaRepAgreement.pdf', 640, 800);">
+                                     </cfif>
+   								</cfif>
+                             #DateFormat(get_paperwork.ar_agreement, 'mm/dd/yyyy')#</a>
                         </td>
                     </tr>
                     <tr><td>AR Training Sign-off Form</td>
@@ -1351,7 +1372,84 @@
             
             </td>
             <td width="50%" valign="top">&nbsp;
-                <!--- Free ---->    
+                <!--- References ---->    
+                 <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
+                    <tr valign="middle" height="24">
+                        <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
+                        <td width="26" background="pics/header_background.gif"><img src="pics/notes.gif"></td>
+                        <td background="pics/header_background.gif"><h2>References</h2></td>
+                        <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
+                    </tr>
+                </table>
+                <table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
+                   <tr><td><b>Season: #get_paperwork.season#</td></tr>
+                    <tr>
+                        <td valign="top">
+                            <table width=100%>
+                            	<Tr>
+                                	<Td>Name</Td><Td>Phone</Td>                                
+                                    <td>
+										<Cfif client.usertype lte 5 and client.userid neq userid>
+										Report</cfif>
+                                    </td>
+                                    <td>Status</td>
+                                </Tr>
+							
+                            <Cfif qreferences.recordcount EQ 0>   	
+                            <tr>
+                                <td colspan=3>No references on file.</td>
+                             </tr>
+                             <cfelse>
+                             <Cfloop query="qreferences">
+                             <Cfquery name="checkRefReport" datasource="#application.dsn#">
+                             select *
+                             from areaRepQuestionaireTracking
+                             where fk_ReferencesID = #refid# and season = #get_paperwork.seasonid#
+                             
+                             </Cfquery>
+                             <tr <Cfif qreferences.currentrow mod 2>bgcolor=##ffffe5</cfif>>
+                               	<Td>#firstname# #lastname#</Td><td>#phone#</td>
+                                <Td>
+                                
+                                <Cfif client.usertype lte 5 and client.userid neq userid>
+									<Cfif checkRefReport.recordcount eq 0 and client.usertype lte 5 >
+                                     <a href="javascript:openPopUp('forms/refrencesQuestionaire.cfm?ref=#refid#&rep=#userid#', 680, 800);">Submit Report
+                                    <cfelse>
+                                   <a href="javascript:openPopUp('forms/viewRefrencesQuestionaire.cfm?reportid=#checkRefReport.id#', 640, 800);">View Report</a>
+                                    </Cfif>
+                                <cfelse>
+                               
+                                </cfif>
+                                </Td> 
+                                <Td>
+                                <Cfif qreferences.approved eq 0>
+                                Waiting
+                                <Cfelseif qreferences.approved eq 1>
+                                Pending
+                                <Cfelseif qreferences.approved eq 2>
+                                Approved
+                                <Cfelseif qreferences.approved eq 3>
+                                Rejected
+                                </Cfif>
+                                </Td>
+                             </tr>
+                             <Tr <Cfif qreferences.currentrow mod 2>bgcolor=##ffffe5</cfif>>
+                             	<td colspan=2>#address# #address2# #city# #state#, #zip#</td><Td colspan=2>#relationship# (#howlong#)</Td>
+                             </Tr>
+                             </Cfloop>
+                             </Cfif>
+                         
+                              </table>
+                        </td>
+                    </tr>
+                </table>
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr valign="bottom">
+                        <td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
+                        <td width="100%" background="pics/header_background_footer.gif"></td>
+                        <td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </Table>        
