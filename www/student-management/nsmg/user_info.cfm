@@ -1124,7 +1124,7 @@
                            Date:
 						   <cfif get_paperwork.cbcSig is not ''>
 									<Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
-                                     <a href="javascript:openPopUp('uploadedfiles/users/#client.userid#/Season#get_paperwork.seasonid#cbcAuthorization.pdf', 640, 800);">
+                                     <a href="javascript:openPopUp('uploadedfiles/users/#userid#/Season#get_paperwork.seasonid#cbcAuthorization.pdf', 640, 800);">
                                     </cfif> 
                          	</cfif>
                            
@@ -1136,7 +1136,7 @@
                             Date:
                             	<cfif get_paperwork.agreeSig is not ''>
                                		 <Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
-                                	 	<a href="javascript:openPopUp('uploadedfiles/users/#client.userid#/Season#get_paperwork.seasonid#AreaRepAgreement.pdf', 640, 800);">
+                                	 	<a href="javascript:openPopUp('uploadedfiles/users/#userid#/Season#get_paperwork.seasonid#AreaRepAgreement.pdf', 640, 800);">
                                      </cfif>
    								</cfif>
                              #DateFormat(get_paperwork.ar_agreement, 'mm/dd/yyyy')#</a>
