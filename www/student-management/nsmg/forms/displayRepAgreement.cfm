@@ -81,7 +81,7 @@ body {
 	<cfparam name="form.termsAgree" default="">
 
 
-<Cfset season = 8>
+<Cfset season = 9>
 <cfquery name="checkSeason" datasource="#application.dsn#">
 select *
 from smg_users_paperwork
@@ -143,7 +143,7 @@ where userid = #client.userid#
                     </Cfoutput>
                 </cfdocument>
                         <!----Email to Student---->    
-            <cfsavecontent variable="stuEmailMessage">
+            <cfsavecontent variable="repEmailMessage">
                 <cfoutput>				
                 Attached is a copy of the Service Agreement you electronically signed.  A copy is also available at any time in the paperwork section under My Information when logged into EXITS.
                 <br /><br />
@@ -153,10 +153,10 @@ where userid = #client.userid#
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="bhause@iseusa.com">       
-                    <cfinvokeargument name="email_from" value="""ISE Support"" <support@iseusa.com>">
+                    <cfinvokeargument name="email_to" value="#client.email#">       
+                    <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="Agreement">
-                    <cfinvokeargument name="email_message" value="#stuEmailMessage#">
+                    <cfinvokeargument name="email_message" value="#repEmailMessage#">
                     <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#AreaRepAgreement.pdf">
                    
               </cfinvoke>	
