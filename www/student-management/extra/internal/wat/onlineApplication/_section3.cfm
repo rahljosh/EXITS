@@ -150,6 +150,19 @@
        		<h3 class="h2Message">This page must be completed by #APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName#.</h3>
         </cfif>
         
+        <!--- Notes --->
+        <div class="field">
+        	<label>CSB Scale Score (1 to 10):</label> 
+            
+                <p class="paddingNote">1 to 3	No significant knowledge</p>
+                <p class="paddingNote">4 to 5+	Basic</p>
+                <p class="paddingNote">6 to 6+	Intermediate</p>
+                <p class="paddingNote">7 to 7+	Upper Intermediate</p>
+                <p class="paddingNote">8 to 9	Advanced</p>
+                <p class="paddingNote">9+ to 10 Fluent</p> <br />
+            
+        </div>
+        
         <div class="field">
             <label>CSB International Representative <em>*</em></label> 
             <div class="printField">#APPLICATION.CFC.CANDIDATE.getCandidateSession().intlRepName# &nbsp;</div>
@@ -245,19 +258,6 @@
                 <input type="text" name="#qGetQuestions.fieldKey[5]#" id="#qGetQuestions.fieldKey[5]#" value="#FORM[qGetQuestions.fieldKey[5]]#" class="#qGetQuestions.classType[5]#" maxlength="100" />
             </cfif>
 		</div>
-		
-        <!--- Notes --->
-        <div class="field">
-        	
-            <p class="paddingNote"><strong>CSB Scale Score (1 to 10):</strong></p>
-            <p class="paddingNote">1 to 3	No significant knowledge</p>
-            <p class="paddingNote">4 to 5+	Basic</p>
-            <p class="paddingNote">6 to 6+	Intermediate</p>
-            <p class="paddingNote">7 to 7+	Upper Intermediate</p>
-            <p class="paddingNote">8 to 9	Advanced</p>
-            <p class="paddingNote">9+ to 10 Fluent</p>
-        
-        </div>
         
     </fieldset>    
     	
