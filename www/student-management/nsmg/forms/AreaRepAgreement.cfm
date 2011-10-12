@@ -16,7 +16,7 @@ where userid = #client.userid#
 </cfquery>
 <div align="center">
 INTERNATIONAL STUDENT EXCHANGE<br />
-AYP 2011-2012 SERVICES AGREEMENT
+AYP 2012-2013 SERVICES AGREEMENT
 </div>
 <p>This SERVICES AGREEMENT is entered into this 
 <Cfoutput>
