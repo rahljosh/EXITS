@@ -445,6 +445,9 @@
                        <cfif client.companyid lte 5>
                         <a href="uploadedfiles/pdf_docs/Pre%20AYP%20Bonus%202011.pdf" target="_blank">Click Here For Exciting Bonuses For The Placing Season!</a>
                    		</cfif>
+                        <Cfif client.userid eq 1 or client.userid = 12313>
+                        <a href="index.cfm?curdoc=forms/yearly_agreement">Fill our your yearly paperwork online!</a>
+                        </Cfif>
                     </td>
          			<!--- Office Users --->
 					<cfif CLIENT.usertype LTE 4>
@@ -498,7 +501,7 @@
                     Here are some new brochures to help in your marketing.<Br />
                     <a href="marketing/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
                  	<A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A><Br />
-                    <cfif ListFind("1,2,3,4,5,12", CLIENT.companyid) >
+                    <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyid) >
 					<a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a><br />
 				 	</cfif>
                     <cfif ListFind("10", CLIENT.companyid) >
@@ -509,8 +512,15 @@
                           
                   </cfif>
                   <!----Available for just ISE companies---->
-                  
-				 </td>
+                  <Cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 13251>
+                  <br /><Br />
+                  <!----
+                 <a href="javascript:openPopUp('forms/displayRepAgreement.cfm', 640, 800);">Area Rep Agreement</a>
+                 <a href="javascript:openPopUp('forms/cbcAuthorization.cfm', 640, 800);">CBC Authorization </a>
+                 <a href="javascript:openPopUp('forms/repRefs.cfm', 640, 800);">References </a>
+				 ---->
+				 </Cfif>
+                 </td>
                     <td>
                         <cfif get_new_users.recordcount eq 0 or CLIENT.usertype gte 6>
                             There are no new reps in your region.
