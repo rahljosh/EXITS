@@ -63,11 +63,11 @@ body {
 }
 </style>
  <link rel="stylesheet" media="all" type="text/css"href="../linked/css/baseStyle.css" />
- <Cfset season = 8>
+ <Cfset season = 9>
  <cfscript>
 // Get User Info
 		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=client.userID);
-		FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');
+		ORIGSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');
 		 // This will set if SSN needs to be updated
 		vUpdateUserSSN = 0;
 </cfscript>
@@ -85,11 +85,13 @@ body {
     <cfparam name="form.previous_zip" default="#qGetUserInfo.previous_zip#">
 	<cfparam name="form.drivers_license" default="#qGetUserInfo.drivers_license#">
     <cfparam name="form.dob" default="#qGetUserInfo.dob#">
+    <cfparam name="form.ssn" default="#ORIGSSN#">
 
 
 </head>
 
-<body>
+<body onLoad="opener.location.reload()">
+
 	<cfsilent>
 		<!--- Import CustomTag Used for Page Messages and Form Errors --->
         <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
@@ -97,8 +99,18 @@ body {
 
 
 <Cfif isDefined('form.sign')>
+	<Cfset expectedSig = '#qGetUserInfo.firstname# #qGetUserInfo.lastname#'>
+    <Cfif #trim(form.Signature)# is #trim(expectedSig)#>
+    	<Cfset sigMatch = 0>
+    <cfelse>
+    	<cfset sigMatch = 1>
+    </Cfif>
 	<cfscript>
 			// Data Validation - Current Address
+			if (sigMatch is 1 and LEN(FORM.signature)  )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Your signed name #form.signature# does not match the name on file #expectedSig#");
+			}
 			if ( NOT LEN(FORM.address) ) {
 				SESSION.formErrors.Add("Please enter your current address.");
 			}
@@ -113,21 +125,7 @@ body {
 			if ( NOT LEN(FORM.zip) ) {
 				SESSION.formErrors.Add("Please enter your current zip.");
 			}
-		// Data Validation - Previous Address
-			if ( NOT LEN(FORM.previous_address) ) {
-				SESSION.formErrors.Add("Please enter your previous address.");
-			}
-
-			if ( NOT LEN(FORM.previous_city) ) {
-				SESSION.formErrors.Add("Please enter your previous city.");
-			}
-			if ( NOT LEN(FORM.previous_state) ) {
-				SESSION.formErrors.Add("Please enter your previous state.");
-			}
-
-			if ( NOT LEN(FORM.previous_zip) ) {
-				SESSION.formErrors.Add("Please enter your previous zip.");
-			}
+	
 			if ( NOT LEN(FORM.drivers_license) ) {
 				SESSION.formErrors.Add("Please enter your drivers license.");
 			}
@@ -170,6 +168,7 @@ body {
                     vUpdateUserSSN = 1;
                 }
             </cfscript>
+           
    	 	<cfquery name="updateUsers" datasource="#application.dsn#">
         update smg_users
         	set address = '#form.address#',
@@ -187,7 +186,7 @@ body {
                     SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
                 </cfif>
                 dob = #CreateODBCDate(form.dob)#
-           
+           where userid = #client.userid#
         </cfquery>
         <cfquery name="checkSeason" datasource="#application.dsn#">
         select *
@@ -217,23 +216,39 @@ body {
                     </Cfoutput>
                 </cfdocument>
                         <!----Email to Student---->    
-            <cfsavecontent variable="stuEmailMessage">
-                <cfoutput>				
-                Attached is a copy of the Service Agreement you electronically signed.  A copy is also available at any time via 'My Information' when logged into EXITS.
+            <cfsavecontent variable="repEmailMessage">
+              <Cfoutput>	
+                Attached is a copy of the Criminal Background Check Authorization you electronically signed.  A copy is also available at any time via 'My Information' when logged into EXITS.
                 <br /><br />
                 Regards-<Br />
-                EXITS Support
+                #client.companyshort#
+              </Cfoutput>
+                </cfsavecontent>
+                
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="josh@pokytrails.com">       
+                    <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
+                    <cfinvokeargument name="email_subject" value="CBC Authorization">
+                    <cfinvokeargument name="email_message" value="#repEmailMessage#">
+                    
+                </cfinvoke>	
+              <cfsavecontent variable="programEmailMessage">
+                <cfoutput>				
+                #form.signature# (#userid#) has submitted their CBC authorization. 
+                Please run and review the CBC.<Br><Br>
+                
+                <a href="http://111cooper.com/nsmg/index.cfm?curdoc=user_info&userid=#userid#">View and Submit</a>
+                
                 </cfoutput>
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="josh@pokytrails.com">       
-                    <cfinvokeargument name="email_from" value="""ISE Support"" <support@iseusa.com>">
+                    <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="Agreeement">
-                    <cfinvokeargument name="email_message" value="#stuEmailMessage#">
-                    <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#cbcAuthorization.pdf">
-                </cfinvoke>	
-                    
+                    <cfinvokeargument name="email_message" value="#programEmailMessage#">
+                  
+                </cfinvoke>	     
             <cfif checkSeason.recordcount gt 0> 
                 <cfquery name="updatePaperwork" datasource="#application.dsn#">
                 update smg_users_paperwork
@@ -249,28 +264,14 @@ body {
                         <Cfqueryparam cfsqltype="cf_sql_integer" value="#season#">,<Cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.signature#">)
                 </cfquery>
 			</cfif>
-    <!----
-    <cfelse>
-    <!----
-            <cfscript>
-                FORM.address = qGetUserInfo.address;
-                FORM.address2 = qGetUserInfo.address2;
-                FORM.city = qGetUserInfo.city;
-                FORM.state = qGetUserInfo.state;
-                FORM.zip = qGetUserInfo.zip;
-                FORM.previous_address = qGetUserInfo.previous_address;
-                FORM.previous_address2 = qGetUserInfo.previous_address2;
-                FORM.previous_city = qGetUserInfo.previous_city;
-                FORM.previous_state = qGetUserInfo.previous_state;
-                FORM.previous_zip = qGetUserInfo.previous_zip;
-                FORM.dob = qGetUserInfo.DOB;
-                FORM.drivers_license = qGetUserInfo.drivers_license;
-                FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');
-            </cfscript>
-            ---->
-			---->
+   
+		   <SCRIPT LANGUAGE="JavaScript"><!--
+			setTimeout('self.close()',2000);
+			//--></SCRIPT>
+
     </Cfif>
-	
+
+         
 	</Cfif>
 
 
@@ -290,8 +291,7 @@ and userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid# ">
     FROM smg_states
     ORDER BY id
 </cfquery>
-
-
+<CFdump var="#client#">
 <div class="wrapper">
  
 <div class="greyHeader">
@@ -318,7 +318,7 @@ Exchange Program.</p>
 request from General Information Services, Inc. information about the nature and substance of all records on file about me
 at the time of my request. This may include the type of information requested as well as those who requested reports from
 General Information Services, Inc. within the two-year period preceding my request.  </p>
-<cfform method="post" action="cbcAuthorization.cfm">
+<cfform method="post" action="cbcAuthorization.cfm?curdoc=cbcAuthorization">
 <Table>
 	<Tr>
     	<Td>
