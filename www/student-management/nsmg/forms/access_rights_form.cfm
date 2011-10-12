@@ -251,7 +251,7 @@
                     <!--- send email --->
                     <cfinvoke component="nsmg.cfc.email" method="send_mail">
                         
-                       <cfinvokeargument name="email_to" value="brendan@iseusa.com">
+                       <cfinvokeargument name="email_to" value="megan@iseusa.com">
                    		<!----
                         <cfinvokeargument name="email_to" value="josh@pokytrails.com">
                         ---->
@@ -322,7 +322,7 @@
                     <!--- send email --->
                     <cfinvoke component="nsmg.cfc.email" method="send_mail">
                         
-                       <cfinvokeargument name="email_to" value="brendan@iseusa.com">
+                       <cfinvokeargument name="email_to" value="megan@iseusa.com">
                    		<!----
                         <cfinvokeargument name="email_to" value="josh@pokytrails.com">
                         ---->
