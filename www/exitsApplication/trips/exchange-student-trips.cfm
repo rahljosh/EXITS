@@ -22,6 +22,7 @@
     <cfparam name="FORM.submitted" default="0">
 	<cfparam name="FORM.tourID" default="0" />
     <!--- LoopUp Account --->
+    <cfparam name="FORM.companyID" default="0">
     <cfparam name="FORM.studentID" default="">
     <cfparam name="FORM.hostID" default="">
     <cfparam name="FORM.familyLastName" default="">
@@ -67,13 +68,13 @@
 		// Set Tour
 		if ( VAL(FORM.tourID) ) {
 			// Set Tour in Session Variable			
-			APPLICATION.CFC.SESSION.setTripSessionVariables(tourID = FORM.tourID);											
+			APPLICATION.CFC.SESSION.setTripSessionVariables(tourID=FORM.tourID);											
 		}
 		
 		// Set Student
 		if ( VAL(FORM.studentID) ) {
 			// Set Tour in Session Variable			
-			APPLICATION.CFC.SESSION.setTripSessionVariables(studentID = FORM.studentID);											
+			APPLICATION.CFC.SESSION.setTripSessionVariables(studentID=FORM.studentID);											
 		}
 	</cfscript>
 
