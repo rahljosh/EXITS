@@ -239,7 +239,7 @@ function CheckDates(ckname, frname) {
 								Date:
                                 <cfif cbcSig is not ''>
 									<Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
-                                     <a href="javascript:openPopUp('uploadedfiles/users/#client.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
+                                     <a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
                                     </cfif> 
                                  #DateFormat(ar_agreement, 'mm/dd/yyyy')#</a>
                                 <cfelse>
@@ -254,7 +254,7 @@ function CheckDates(ckname, frname) {
 								Date: 
 								<cfif agreeSig is not ''>
                                		 <Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
-                                	 	<a href="javascript:openPopUp('uploadedfiles/users/#client.userid#/Season#seasonid#AreaRepAgreement.pdf', 640, 800);">
+                                	 	<a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#AreaRepAgreement.pdf', 640, 800);">
                                      </cfif>
                                      #DateFormat(ar_agreement, 'mm/dd/yyyy')#</a>
                                 <cfelse>
