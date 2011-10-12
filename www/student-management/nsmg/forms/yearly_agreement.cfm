@@ -65,9 +65,9 @@
 	  	<Td><h2>Services Agreement</h2></Td>
         <td align="center" >
 			<cfif checkAgreement.ar_agreement is ''>
-        		<a href="javascript:openPopUp('forms/displayRepAgreement.cfm?curdoc=displayRepAgreement', 640, 800);"><img src="../../images/infoNeeded.png" width="120" height="30" border="0" /></a>
+        		<a href="javascript:openPopUp('forms/displayRepAgreement.cfm?curdoc=displayRepAgreement', 640, 800);"><img src="../pics/infoNeeded.png" width="120" height="30" border="0" /></a>
             <cfelse>
-             <img src="../../images/noInfo.png" width="120" height="30" border="0" />
+             <img src="../pics/noInfo.png" width="120" height="30" border="0" />
           </cfif> 
         </td>
     </tr>    
