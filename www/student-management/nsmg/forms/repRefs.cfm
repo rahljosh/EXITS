@@ -375,14 +375,14 @@ where referencefor = #client.userid#
         
         Address <span class="redtext">*</span></td>
         <td colspan=2>
-        	<input type="text" name="address" value="#form.address#" size="40" maxlength="150" >
+        	<input type="text" name="address" value="#form.address#" size="30" maxlength="150" >
             <font size="1">NO PO BOXES 
         </td>
         <td rowspan=2> </td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td></td>
-        <td colspan=3><input type="text" name="address2" value="#form.address2#" size="40" maxlength="150"></td>
+        <td colspan=3><input type="text" name="address2" value="#form.address2#" size="30" maxlength="150"></td>
     </tr>
     <tr>			 
         <td class="label">City <span class="redtext">*</span></td>

@@ -226,26 +226,26 @@ body {
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="josh@pokytrails.com">       
+                    <cfinvokeargument name="email_to" value="#client.email#">       
                     <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="CBC Authorization">
                     <cfinvokeargument name="email_message" value="#repEmailMessage#">
-                    
+                    <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#cbcAuthorization.pdf">
                 </cfinvoke>	
               <cfsavecontent variable="programEmailMessage">
                 <cfoutput>				
                 #form.signature# (#userid#) has submitted their CBC authorization. 
                 Please run and review the CBC.<Br><Br>
                 
-                <a href="http://111cooper.com/nsmg/index.cfm?curdoc=user_info&userid=#userid#">View and Submit</a>
+                <a href="https://ise.exitsapplication.com/nsmg/index.cfm?curdoc=user_info&userid=#userid#">View and Submit</a>
                 
                 </cfoutput>
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="josh@pokytrails.com">       
+                    <cfinvokeargument name="email_to" value="#client.email#">       
                     <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
-                    <cfinvokeargument name="email_subject" value="Agreeement">
+                    <cfinvokeargument name="email_subject" value="Agreeement for #client.name#">
                     <cfinvokeargument name="email_message" value="#programEmailMessage#">
                   
                 </cfinvoke>	     
@@ -291,7 +291,7 @@ and userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid# ">
     FROM smg_states
     ORDER BY id
 </cfquery>
-<CFdump var="#client#">
+
 <div class="wrapper">
  
 <div class="greyHeader">

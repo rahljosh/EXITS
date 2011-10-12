@@ -1,4 +1,4 @@
-	<Cfset season = 8>
+	<Cfset season = 9>
 	<!---_Check Agreement---->
     <Cfquery name="checkAgreement" datasource="#application.dsn#">
     select ar_cbc_auth_form, ar_agreement
@@ -28,8 +28,8 @@
      <cfelse>
      	<Cfset previousExperience = 0>
      </Cfif> 
-     <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not '' AND checkReferences.recordcount eq 4 and CLIENT.agreement_needed eq 1 and previousExperience eq 1 >
-        <cfset temp = DeleteClientVariable("agreement_needed")>
+     <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not '' AND checkReferences.recordcount eq 4 and <!----CLIENT.agreement_needed eq 1 and----> previousExperience eq 1 >
+       <!----<cfset temp = DeleteClientVariable("agreement_needed")> ---->
      	<cflocation url="index.cfm?curdoc=initial_welcome">
      </Cfif>
   

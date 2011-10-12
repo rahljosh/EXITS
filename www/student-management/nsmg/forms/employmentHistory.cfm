@@ -137,9 +137,7 @@ td {
 <cfparam name="form.endDate" default="">
 <cfparam name="form.current" default="0">
 <cfparam name="form.datesEmployed" default="">
-<cfparam name="form.previousAffiliation" default="0">
-<cfparam name="form.affiliationName" default="">
-<cfparam name="form.affiliationProblem" default="">
+<cfparam name="form.previousAffiliation" default="3">
 
 <cfif isDefined('url.delete')>
 	<cfquery datasource="mysql">
@@ -152,6 +150,10 @@ td {
              <cfscript>
                 // Data Validation
                 // Family Last Name
+				if ((TRIM(FORM.previousAffiliation) eq 3)) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("Please answer the question: Have you ever had an affiliation with...");
+                }	
                 if ((TRIM(FORM.previousAffiliation) eq 1 ) and NOT LEN(TRIM(FORM.affiliationName))) {
                     // Get all the missing items in a list
                     SESSION.formErrors.Add("You have indicated you had a previous affiliation with an exchange organization, but did not provide any details.");
@@ -165,13 +167,13 @@ td {
                 prevAffiliationProblem = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.affiliationProblem#">
              where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
             </cfquery>
-             <!----
+            
                 <SCRIPT LANGUAGE="JavaScript">
 				<!--
 				  setTimeout('self.close()',2000);
 				//-->
                 </SCRIPT>
-			---->
+			
             </cfif>
 </Cfif>
     
@@ -484,7 +486,7 @@ order by current
     </div>
 </p>
 <Table>
-		<tr id="showQs" <cfif previousAffiliation eq 0>style="display: none;"</cfif>  >	
+		<tr id="showQs" <cfif previousAffiliation eq 0 or previousAffiliation eq 3 >style="display: none;"</cfif>  >	
     	<Td>
 
 <p>If Yes, please indicate the name of the sponsor that you were affiliated with and list your dates of affiliation with that organization.<Br>

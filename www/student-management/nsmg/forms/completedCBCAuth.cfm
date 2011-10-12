@@ -4,11 +4,12 @@
 		FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');
 		
 </cfscript>
-
+<cfoutput>
+<img src="https://ise.exitsapplication.com/nsmg/pics/#client.companyid#_short_profile_header.jpg" />
 <p>As mandated by the Department of State, a Criminal Background Check on all Office Staff, Regional Directors/
   Managers, Regional Advisors, Area Representatives and all members of the host family aged 18 and above is 
   required for involvement with the J-1 Secondary School Exchange Visitor Program.. </p>
-<cfoutput>
+
 <div class="scroll">
          
   <p>I, <strong>#qGetUserInfo.firstName# #qGetUserInfo.middlename# #qGetUserInfo.lastname#</strong> do hereby authorize verification of all information in my application for involvement with the Exchange Program from all necessary sources and additionally authorize any duly recognized agent of General Information Services, Inc. to obtain the said records and any such disclosures.</p>
