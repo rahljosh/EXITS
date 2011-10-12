@@ -1404,7 +1404,7 @@
                              <Cfquery name="checkRefReport" datasource="#application.dsn#">
                              select *
                              from areaRepQuestionaireTracking
-                             where fk_ReferencesID = #refid# and season = #get_paperwork.seasonid#
+                             where fk_ReferencesID = #refid# 
                              
                              </Cfquery>
                              <tr <Cfif qreferences.currentrow mod 2>bgcolor=##ffffe5</cfif>>
