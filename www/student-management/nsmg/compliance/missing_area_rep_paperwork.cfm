@@ -128,7 +128,7 @@
         	smg_users_paperwork pw ON pw.userid = u.userid AND pw.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
 		WHERE 
         	1 = 1
-            
+        AND   (uar.usertype = 5 OR uar.usertype = 6 OR uar.usertype = 7)
 			<cfif FORM.status NEQ 'All'>
             AND	
                 u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
