@@ -48,8 +48,8 @@ function CheckDates(ckname, frname) {
 </cfquery>
 
 <cfquery name="get_paperwork" datasource="MySQL">
-	SELECT p.paperworkid, p.userid, p.seasonid, p.ar_info_sheet, p.ar_ref_quest1, p.ar_ref_quest2, p.ar_cbc_auth_form, p.ar_agreement, p.ar_training, p.secondVisit,
-		s.season
+	SELECT p.paperworkid, p.userid, p.seasonid, p.ar_info_sheet, p.ar_ref_quest1, p.ar_ref_quest2, p.ar_cbc_auth_form, p.ar_agreement, p.ar_training, p.secondVisit, p.agreeSig,
+		s.season, p.cbcSig
 	FROM smg_users_paperwork p
 	LEFT JOIN smg_seasons s ON s.seasonid = p.seasonid
 	WHERE userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer" maxlength="6">
@@ -88,6 +88,15 @@ function CheckDates(ckname, frname) {
 	ORDER BY season
 </cfquery>
 
+    <cfquery name="user_compliance" datasource="#application.dsn#">
+        SELECT 
+        	userid, 
+            compliance
+        FROM 
+        	smg_users
+        WHERE 
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+    </cfquery>
 
 <Cfquery name="region_company_access" datasource="MySQL">
 	SELECT uar.companyid, uar.regionid, uar.usertype, uar.id, uar.advisorid,
@@ -227,7 +236,14 @@ function CheckDates(ckname, frname) {
 								<cfelse>
 									<cfinput type="checkbox" name="ar_cbc_auth_form_check_#currentrow#" OnClick="CheckDates('ar_cbc_auth_form_check_#currentrow#', 'ar_cbc_auth_form_#currentrow#');" checked="yes"> 
 								</cfif>
-								Date: <cfinput type="text" name="ar_cbc_auth_form_#currentrow#" value="#DateFormat(ar_cbc_auth_form, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">						
+								Date:
+                                <cfif cbcSig is not ''>
+									<Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
+                                     <a href="javascript:openPopUp('uploadedfiles/users/#client.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
+                                    </cfif> 
+                                 #DateFormat(ar_agreement, 'mm/dd/yyyy')#</a>
+                                <cfelse>
+                                	 <cfinput type="text" name="ar_cbc_auth_form_#currentrow#" value="#DateFormat(ar_cbc_auth_form, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">						</cfif>
 							</td>
 						</tr>
 						<tr><td><cfif ar_agreement EQ ''>
@@ -235,7 +251,14 @@ function CheckDates(ckname, frname) {
 								<cfelse>
 									<cfinput type="checkbox" name="ar_agreement_check_#currentrow#" OnClick="CheckDates('ar_agreement_check_#currentrow#', 'ar_agreement_#currentrow#');" checked="yes"> 
 								</cfif>
-								Date: <cfinput type="text" name="ar_agreement_#currentrow#" value="#DateFormat(ar_agreement, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">
+								Date: 
+								<cfif agreeSig is not ''>
+                               		 <Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
+                                	 	<a href="javascript:openPopUp('uploadedfiles/users/#client.userid#/Season#seasonid#AreaRepAgreement.pdf', 640, 800);">
+                                     </cfif>
+                                     #DateFormat(ar_agreement, 'mm/dd/yyyy')#</a>
+                                <cfelse>
+                                	<cfinput type="text" name="ar_agreement_#currentrow#" value="#DateFormat(ar_agreement, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">				</cfif>
 							</td>
 						</tr>
 						<tr><td><cfif ar_training EQ ''>
