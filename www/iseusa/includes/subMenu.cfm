@@ -140,23 +140,17 @@
 	<ul>
 <li><a href="become-a-host-familyJW.cfm?page=/HostFamily/why-host-family" target="_self">How Important is Hosting?</a></li>
 <li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-benefits" target="_self">Benefits from Hosting</a></li>
-<li><a href="index.cfm?page=billing" target="_self">Hosting Lasts a LIfetime</a></li>
+<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/hosting-lasts-lifetime" target="_self">Hosting Lasts a LIfetime</a></li>
 	</ul>
 </li>
 
-<li><a href="index.cfm?page=doctors" target="_self" ><strong>What is a Host?</strong></a>
-	<ul>
-<li><a href="index.cfm?page=vernon" target="_self">Who Can Host?</a></li>
-<li><a href="index.cfm?page=vernon" target="_self">What it takes to host?</a></li>
-	</ul>
-</li>
+<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/what-is-a-host" target="_self" ><strong>What is a Host?</strong></a></li>
 
 <li><a href="?" target="_self" ><strong>Hosting Requirements</strong></a>
 	<ul>
 <li><a href="index.cfm?page=appointments" target="_self">Family Requirements</a></li>
-<li><a href="index.cfm?page=online" target="_self">Start Application</a></li>
-<li><a href="index.cfm?page=billing" target="_self">Billing Questions</a></li>
-	</ul>
+<li><a href="hostApp">Host Application</a></li>
+</ul>
 </li>
 
 <li><a href="index.cfm?page=RefForm" target="_self" ><strong>Resources</strong></a>
@@ -168,9 +162,9 @@
 	</ul>
 </li>
 
-<li><a href="meet-our-students.cfm" target="_self" ><strong>Students</strong></a>
+<li><a href="meet-our-studentsJW.cfm" target="_self" ><strong>Students</strong></a>
 	<ul>
-	<li><a href="meet-our-students.cfm" target="_self">Meet Our Students</a></li>
+	<li><a href="meet-our-studentsJW.cfm" target="_self">Meet Our Students</a></li>
 	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/student-have-learned" target="_self">What Students Have Learned</a></li>
 	</ul>
 </li>
