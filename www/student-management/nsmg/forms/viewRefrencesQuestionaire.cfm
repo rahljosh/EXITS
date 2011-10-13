@@ -91,7 +91,7 @@
 	 </cfloop>
 
 </Cfif>
-
+<Cfset season = 9>
 <Cfquery name="questionTracking" datasource="#application.dsn#">
 select *
 from areaRepQuestionaireTracking
@@ -118,7 +118,7 @@ order by ARQ.id
         select ar_ref_quest1, ar_ref_quest2
         from smg_users_paperwork
         where userid = #questionTracking.areaRepID#
-        and seasonid = 8
+        and seasonid = #season#
         </CFquery>
         
        
@@ -127,14 +127,14 @@ order by ARQ.id
                 update smg_users_paperwork
                     set ar_ref_quest1 = #now()#
                 where userid = #questionTracking.areaRepID#
-                and seasonid = 8
+                and seasonid = #season#
                 </CFquery>
             <cfelse>
                   <Cfquery name="updatePaperWork" datasource="#application.dsn#">
                 update smg_users_paperwork
                     set ar_ref_quest2 = #now()#
                 where userid = #questionTracking.areaRepID#
-                and seasonid = 8
+                and seasonid = #season#
                 </CFquery>
             </Cfif>
      </CFIF>
@@ -207,7 +207,7 @@ where refid = #questionTracking.fk_ReferencesID#
           
         </p>
     	 </cfloop>
-         <Cfif client.usertype lte 4 and currentStatus.approved neq 2>
+         <Cfif client.usertype lte 5 and currentStatus.approved neq 2>
         
          <input type=hidden name="refid" value="#questionTracking.fk_ReferencesID#" />
           <TABLE width=100%>

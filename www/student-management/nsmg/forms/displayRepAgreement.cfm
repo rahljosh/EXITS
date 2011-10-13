@@ -220,6 +220,7 @@ and userid = #client.userid#
   <cfoutput>
   <div class="clearfix"></div>
 <div class="lightGrey">
+
 <Cfif checkSeason.recordcount gte 0>
 	<cfif checkSeason.ar_agreement is ''>
         <form method="post" action="displayRepAgreement.cfm?curdoc=displayRepAgreement">

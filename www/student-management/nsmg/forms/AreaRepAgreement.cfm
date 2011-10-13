@@ -14,12 +14,15 @@ select firstname, lastname, address, address2, city, state, zip
 from smg_users
 where userid = #client.userid#
 </cfquery>
+<Cfset years = '2012-2013'>
+<Cfoutput>
 <div align="center">
+
 INTERNATIONAL STUDENT EXCHANGE<br />
-AYP 2012-2013 SERVICES AGREEMENT
+AYP #years# SERVICES AGREEMENT
 </div>
 <p>This SERVICES AGREEMENT is entered into this 
-<Cfoutput>
+
 <strong><u>#DateFormat(now(), 'd')#</u></strong> day of <strong><u>#DateFormat(now(), 'mmmm')#</u></strong>, <strong><u>#DateFormat(now(), 'yyyy')#</u></strong>
 
 
@@ -48,13 +51,13 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
   Agreement.</p></li>
   <li> <u>Term</u>
   <p>The Term of this Agreement shall commence on the Effective Date and shall cease on
-  August 31, 2011, unless otherwise agreed in writing between the parties or unless
+  August 31, 2013, unless otherwise agreed in writing between the parties or unless
   earlier terminated pursuant to Section 7 hereof.</p></li>
   <li><u> Services</u>
   <p>In connection with the conduct of ISE's activities, the Area Representative will perform
   the following services: locate, screen and secure placements in homes of high quality
-  families for ISE-sponsored students for AYP 2011-12; secure school acceptance in
-  writing for those student(s); and supervise designated AYP 2010 -11 student(s) stay in
+  families for ISE-sponsored students for AYP #years#; secure school acceptance in
+  writing for those student(s); and supervise designated AYP #years# student(s) stay in
   the United States (collectively, the "Services"). The Area Representative acknowledges
   that the performance of the Services is subject to the regulations and guidelines of the
   U.S. State Department ("State Department"), and the Council on Standards for
@@ -108,7 +111,7 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
   <li><u> Community Service Requirement</u>
   <p>Area Representatives are required to organize or coordinate a five (5) hour community
   service project (or projects) for the students that they supervise. All community service
-  hours for participating student must be entered in to the ISE database by April 25, 2011.</p>
+  hours for participating student must be entered in to the ISE database by April 25, 2012.</p>
   <li><u>Training Requirement</u>
   <p>The Area Representative is required to participate in an annual training session, either
   in person or via internet training.</p>
@@ -335,11 +338,11 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
 </ol>
 <ol>
 
-<li><strong> 2011 Area Representative Bonus</strong>
-<p>(a) <strong>2011 Fast-Track Placement Bonus:</strong> A bonus of $1,500 will be paid by ISE to
+<li><strong> 2012 Area Representative Bonus</strong>
+<p>(a) <strong>2012 Fast-Track Placement Bonus:</strong> A bonus of $1,500 will be paid by ISE to
 the AR each time the AR has successfully placed a group of five (5) August
 arriving students in five (5) permanent homes and submitted all Department
-of State and CSIET mandated documentation prior to April 15, 2011.</p><p>
+of State and CSIET mandated documentation prior to April 15, 2012.</p><p>
 Placements qualifying for this bonus will not be applied to the Early
 Placement Bonus or the On-Time Paperwork Bonus. Multiple bonuses can be
 earned for placement of additional groups of five students.</p>

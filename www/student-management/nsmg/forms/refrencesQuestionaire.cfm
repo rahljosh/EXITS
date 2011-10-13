@@ -127,12 +127,13 @@ where active = 1
                                     values(#reportid.reportid#, #id#, '#Evaluate("form." & id)#')
                 </cfquery>
             </cfloop>
-            <head>
+            <body onload="opener.location.reload()">
+           
             <SCRIPT LANGUAGE="JavaScript"><!--
 			setTimeout('self.close()',2000);
 			//--></SCRIPT>
-			</HEAD>
-            <body onload="opener.location.reload()">
+		
+            
             <div align="center">
             
             <h1>Succesfully Submited.</h1>

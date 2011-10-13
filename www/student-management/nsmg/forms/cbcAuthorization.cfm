@@ -8,7 +8,7 @@
 	NOTE:  The value of season needs to be updated to the season of the agreement.
 
 ----- ------------------------------------------------------------------------- --->
-<title>Current Area Rep Agreement</title>
+<title>CBC Authorization</title>
 <style type="text/css">
 div.scroll {
 	height: 400px;
@@ -83,8 +83,7 @@ body {
     <cfparam name="form.previous_city" default="#qGetUserInfo.previous_city#">
     <cfparam name="form.previous_state" default="#qGetUserInfo.previous_state#">
     <cfparam name="form.previous_zip" default="#qGetUserInfo.previous_zip#">
-	<cfparam name="form.drivers_license" default="#qGetUserInfo.drivers_license#">
-    <cfparam name="form.dob" default="#qGetUserInfo.dob#">
+	<cfparam name="form.dob" default="#qGetUserInfo.dob#">
     <cfparam name="form.ssn" default="#ORIGSSN#">
 
 
@@ -126,9 +125,6 @@ body {
 				SESSION.formErrors.Add("Please enter your current zip.");
 			}
 	
-			if ( NOT LEN(FORM.drivers_license) ) {
-				SESSION.formErrors.Add("Please enter your drivers license.");
-			}
 
 			if ( LEN(FORM.DOB) AND NOT IsDate(FORM.DOB) ) {
 				FORM.DOB = '';
@@ -168,7 +164,11 @@ body {
                     vUpdateUserSSN = 1;
                 }
             </cfscript>
-           
+          <cfquery name="progManager" datasource="#application.dsn#">
+          select pm_email
+          from smg_companies
+          where companyid = #client.companyid#
+          </cfquery>
    	 	<cfquery name="updateUsers" datasource="#application.dsn#">
         update smg_users
         	set address = '#form.address#',
@@ -181,7 +181,6 @@ body {
                 previous_city = '#form.previous_city#',
                 previous_state = '#form.previous_state#',
                 previous_zip = '#form.previous_zip#',
-                drivers_license = '#form.drivers_license#',
 				 <cfif VAL(vUpdateUserSSN)>
                     SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
                 </cfif>
@@ -218,6 +217,7 @@ body {
                         <!----Email to Student---->    
             <cfsavecontent variable="repEmailMessage">
               <Cfoutput>	
+              **********This emai is sent to the user submitting the CBC*******************
                 Attached is a copy of the Criminal Background Check Authorization you electronically signed.  A copy is also available at any time via 'My Information' when logged into EXITS.
                 <br /><br />
                 Regards-<Br />
@@ -234,10 +234,12 @@ body {
                 </cfinvoke>	
               <cfsavecontent variable="programEmailMessage">
                 <cfoutput>				
+                **********This emai is sent to the Program Manager*******************<Br>
+                *****************#progManager.pm_email#<br>**********************
                 #form.signature# (#userid#) has submitted their CBC authorization. 
                 Please run and review the CBC.<Br><Br>
                 
-                <a href="https://ise.exitsapplication.com/nsmg/index.cfm?curdoc=user_info&userid=#userid#">View and Submit</a>
+               <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#userid#">View and Submit</a>
                 
                 </cfoutput>
                 </cfsavecontent>
@@ -357,7 +359,7 @@ General Information Services, Inc. within the two-year period preceding my reque
                 </tr>    
                 <tr>
                     <td>State</td><Td>
-                    <cfselect NAME="previous_state" query="get_states" value="state" display="statename" selected="#FORM.state#" queryPosition="below">
+                    <cfselect NAME="previous_state" query="get_states" value="state" display="statename" selected="#FORM.previous_state#" queryPosition="below">
                             <option></option>
                     </cfselect>
                     </Td>
@@ -374,9 +376,6 @@ General Information Services, Inc. within the two-year period preceding my reque
 	<tr>
     	<Td>Date of Birth</Td><td>   <input type="text" value="#DateFormat(form.dob, 'mm/dd/yyyy')#" size=12 name="dob" /></td>
     </tr>
-    <Tr>
-    	<Td>Drivers License Number</Td><Td> <input type ="Text" value="#form.drivers_license# " size=20 name="drivers_license" /></Td>
-    </Tr>
     <tr>
     	<Td>Social Security Number</Td><Td><input type ="Text" value="#form.ssn# " size=20 name="ssn"/></Td>
    
