@@ -111,7 +111,7 @@ td {
 }
 </style>
 <link rel="stylesheet" media="all" type="text/css"href="../linked/css/baseStyle.css" />
- <Cfset season = 8>
+ <Cfset season = 9>
  <cfscript>
 // Get User Info
 		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=client.userID);
@@ -284,7 +284,7 @@ td {
 <!--- Form Errors --->
 
 
-<p>Please provide at least <Strong>4</Strong> references.  References can <strong>not</strong> be relatives and must have visited you <strong>in side</strong> your home. </p>
+<p>Please provide at least <Strong>4</Strong> references.  References can <strong>not</strong> be relatives. </p>
 <br />
 <cfquery name="qreferences" datasource="MySQL">
 select *
@@ -329,15 +329,15 @@ where referencefor = #client.userid#
 <cfsavecontent variable="programEmailMessage">
                 <cfoutput>				
                 References and work experience have been submitted for #client.name# (#client.userid#)
-                
-                <a href="http://111cooper.com/nsmg/index.cfm?curdoc=user_info&userid=#client.userid#">View and Submit</a>
+                <br><br>
+               <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#userid#">View and Submit</a>
                 
                 </cfoutput>
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="bhause@iseusa.com">       
-                    <cfinvokeargument name="email_from" value="""ISE Support"" <support@iseusa.com>">
+                    <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="References">
                     <cfinvokeargument name="email_message" value="#programEmailMessage#">
                     <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#cbcAuthorization.pdf">

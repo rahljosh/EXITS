@@ -110,7 +110,7 @@ td {
 }
 </style>
 <link rel="stylesheet" media="all" type="text/css"href="../linked/css/baseStyle.css" />
- <Cfset season = 8>
+ <Cfset season = 9>
 
 	<cfsilent>
 		<!--- Import CustomTag Used for Page Messages and Form Errors --->
@@ -145,12 +145,12 @@ td {
     where employmentid = #url.delete#
     </cfquery>
 </cfif>
-<Cfif isDefined('form.previousAffiliation')>
+<Cfif isDefined('form.affiliationName')>
      <!---Error Checking---->
              <cfscript>
                 // Data Validation
                 // Family Last Name
-				if ((TRIM(FORM.previousAffiliation) eq 3)) {
+				if ((TRIM(FORM.previousAffiliation) eq 3) ) {
                     // Get all the missing items in a list
                     SESSION.formErrors.Add("Please answer the question: Have you ever had an affiliation with...");
                 }	
@@ -178,7 +178,20 @@ td {
 </Cfif>
     
 <cfif isDefined('form.insert')>
-	
+	<CFif isDefined('form.noAdditional')>
+    	<cfset form.current = 1>
+    	<Cfset form.employer = 'None Provided'>
+        <Cfset form.occupation = 'None Provided'>
+        <Cfset form.address = 'None Provided'>
+        <Cfset form.address2 = 'None Provided'>
+        <Cfset form.city = 'None Provided'>
+        <Cfset form.state = 'N/A'>
+        <Cfset form.zip = 'N/A'>
+        <Cfset form.phone = 'None Provided'>
+        <Cfset form.daysWorked = 'None Provided'>
+        <Cfset form.hoursDay = 'None Provided'>
+        <Cfset form.datesEmployed = 'None Provided'>
+    </CFif> 
 	 <!---Error Checking---->
          <cfscript>
             // Data Validation
@@ -262,7 +275,7 @@ td {
      <cfelse>
             <cfquery datasource="MySQL">
                 insert into smg_users_employment_history(occupation, employer, address, address2, city, state, zip, phone, daysWorked, hoursDay, current,  fk_userID, datesEmployed)
-                values('#form.occupation#','#form.employer#', '#form.address#', '#form.address2#', '#form.city#', '#form.state#', '#form.zip#', '#form.phone#', '#form.daysWorked#', #form.hoursDay#, #form.current#, #client.userid#,'#datesEmployed#')
+                values('#form.occupation#','#form.employer#', '#form.address#', '#form.address2#', '#form.city#', '#form.state#', '#form.zip#', '#form.phone#', '#form.daysWorked#', '#form.hoursDay#', #form.current#, #client.userid#,'#datesEmployed#')
             </cfquery>
               <Cfquery name="refID" datasource="mysql">
                 select max(employmentID) as newID
@@ -311,7 +324,8 @@ td {
 <h2>Employers on File</h2>
 
 
-<p>Please include your current employer and previous employer.  If you do not have a current employer, please provide your two previous employers.</p>
+<p>Please indicate your current or previous employer. <br>
+<em>If you do not want to provide this information, check the appropriate box and then click on 'Add Employer'</em></p>
 <br />
 <cfquery name="qEmploymentHistory" datasource="MySQL">
 select *
@@ -351,7 +365,7 @@ order by current
 
 <h2>Add Employer</h2>
 <cfoutput>
-<cfset employers =2>
+<cfset employers =1>
 <cfset remainingEmployers = #employers# - #qEmploymentHistory.recordcount#>
 
 <cfif remainingEmployers lte 0>
@@ -360,7 +374,7 @@ order by current
 
 
 <cfelse>
-#remainingEmployers# additional employer(s) are required.</p>
+#remainingEmployers# additional employer are required.</p>
 </cfif>
 
 <p><span class="redtext">* Required fields </span></p>
@@ -369,6 +383,17 @@ order by current
 <form method="post" action="employmentHistory.cfm?curdoc=employmentHistory<Cfif isDefined('url.edit')>&edit=#url.edit#</cfif>">
 
 <input type="hidden" name="insert" />
+<div class="border">
+    <table width=100% cellspacing=0 cellpadding=2 >
+     <tr bgcolor="##deeaf3">
+        <td class="label"> I don't need / want to provide previous employment information.</td>
+        <td colspan=3>
+            <input type="checkBox" name="noAdditional" value="1" >
+        </td>
+      </tr>
+     </table>
+</div>
+<br>
 <div class="border">
     <table width=100% cellspacing=0 cellpadding=2 >
      <tr bgcolor="##deeaf3">
@@ -384,7 +409,7 @@ order by current
         </td>
       </tr>
     <tr>
-        <td class="label"> Employer<span class="redtext">*</span> </td>
+        <td class="label">Employer<span class="redtext">*</span> </td>
         <td colspan=3>
             <input type="text" name="employer" value="#form.employer#" size="20" maxlength="150" >
         </td>

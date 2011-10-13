@@ -23,17 +23,8 @@
     from smg_users
     where userid = #client.userid#
     </cfquery>
-     <Cfif employHistory.recordcount gte 2 AND (prevExperience.prevOrgAffiliation eq 0 OR (prevExperience.prevOrgAffiliation eq 1 and prevExperience.prevAffiliationName is not ''))>
-     	<Cfset previousExperience = 1>
-     <cfelse>
-     	<Cfset previousExperience = 0>
-     </Cfif> 
-     <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not '' AND checkReferences.recordcount eq 4 and <!----CLIENT.agreement_needed eq 1 and----> previousExperience eq 1 >
-       <!----<cfset temp = DeleteClientVariable("agreement_needed")> ---->
-     	<cflocation url="index.cfm?curdoc=initial_welcome">
-     </Cfif>
-  
-    <style type="text/css">
+    
+<style type="text/css">
     .outline {
 	padding: 5px;
 	border: thin solid #666;
@@ -49,9 +40,29 @@
 	padding-bottom: 10px;
 	padding-left: 20px;
 }
-    </style>
+</style>
     
+     <Cfif employHistory.recordcount gte 1 AND (prevExperience.prevOrgAffiliation eq 0 OR (prevExperience.prevOrgAffiliation eq 1 and prevExperience.prevAffiliationName is not ''))>
+     	<Cfset previousExperience = 1>
+     <cfelse>
+     	<Cfset previousExperience = 0>
+     </Cfif> 
+     <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not '' AND checkReferences.recordcount eq 4 and CLIENT.agreement_needed eq 1 and previousExperience eq 1 >
+       <cfset temp = DeleteClientVariable("agreement_needed")> 
+
+	<div align="Center">
+    <meta http-equiv="refresh" content="5;url=index.cfm?curdoc=initial_welcome" />
+    <div class="yellowbox">
+    <h1>All your paperwork has been filed out.</h1>
+    Current Reps: Access to EXITS is now re-activated.  You will be redirected shortly. <br />
+    New Reps: Once you information has been reviewed and approved you will receive an email with further information.
+    </div>
+    <cfabort> 	
+     </Cfif>
+  
+
     
+<div align="Center">
 <div class="yellowbox">
 <p>The information below needs to be updated for the new season.  Access to <strong>EXITS</strong> is disabled until these agreements have been signed, and information submited.</p>
 <p><strong>ALL FOUR SECTIONS ARE REQUIRED</strong></p></div><br />
@@ -101,5 +112,6 @@
          </td>
     </Tr>
 </table>
+</div>
 </div>
 </cfoutput>
