@@ -48,11 +48,11 @@
 <li>Your Family will be seeing the United States through a new pair of eyes of an inquisitive teen, and rediscovering the simple things that we often take for granted a baseball or football game, a community picnic, even window-shopping at the mall!</li>
 <li>Your children will enjoy sharing school, community and family information with an &quot;adopted&quot; brother or sister.</li>
 <li>Each member of your family will learn a lot about themselves as they share their lives with another young person.</li></ul>
-          <br />
+          <br /><br />
           
       <div class="HFpicR"></div>  
 <div class="HFgradient">
-  
+  <br />
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What Benefits a Family Receives</h1>
   <ol><strong>By Enriching, Educating, and Enlightening</strong> your family, you will be gaining new insights and a renewed appreciation for different cultures and a step toward a safer world for your children and grandchildren.</ol>
       <ol>
@@ -76,7 +76,7 @@
       <ol>
         <strong>Be a Diplomat </strong>by sharing the true American with the world and making the world a safer place for your children and grandchildren. Exchange is America's Number 1 Ambassador for America.
       </ol>
-   
+   <br /><br />
 </div><br />
         
           
