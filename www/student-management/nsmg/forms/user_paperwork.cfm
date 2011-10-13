@@ -157,7 +157,7 @@ function CheckDates(ckname, frname) {
 
 			<!--- NEW SEASON PAPERWORK --->
 			<cfif client.usertype LTE 4>
-				<table cellpadding="2" border="0" align="left">
+				<table cellpadding="2"  border="0" align="left">
 					<tr><td bgcolor="e2efc7">
 							<cfselect name="seasonid" required="yes" message="You must select a season">
 								<option value="0">Contract AYP</option>
@@ -203,7 +203,7 @@ function CheckDates(ckname, frname) {
 				<!--- OFFICE --->
 				<cfif client.usertype LTE 4>
 					<cfinput type="hidden" name="paperworkid_#currentrow#" value="#paperworkid#">
-					<table cellpadding="2" border="0" align="left">	
+					<table cellpadding="3" border="0" align="left">	
 						<tr bgcolor="e2efc7" height="26"><td><b><span class="get_attention">></span> <u>#season#</u></b></td></tr>
 						<tr 
 						<Cfif get_rep.active eq 0 and get_paperwork.ar_info_sheet is ''> bgcolor="##FFCBC4" </cfif>><td >
@@ -234,14 +234,20 @@ function CheckDates(ckname, frname) {
 						<tr <Cfif get_rep.active eq 0 and ar_cbc_auth_form is ''> bgcolor="##FFCBC4" </cfif>><td ><cfif ar_cbc_auth_form EQ ''>
 									<cfinput type="checkbox" name="ar_cbc_auth_form_check_#currentrow#" OnClick="CheckDates('ar_cbc_auth_form_check_#currentrow#', 'ar_cbc_auth_form_#currentrow#');"> 
 								<cfelse>
+                                	<cfif cbcSig is ''>
 									<cfinput type="checkbox" name="ar_cbc_auth_form_check_#currentrow#" OnClick="CheckDates('ar_cbc_auth_form_check_#currentrow#', 'ar_cbc_auth_form_#currentrow#');" checked="yes"> 
+                                    <Cfelse>
+                                    <cfinput type="checkbox" name="ar_cbc_auth_form_check_#currentrow#" OnClick="CheckDates('ar_cbc_auth_form_check_#currentrow#', 'ar_cbc_auth_form_#currentrow#');" checked="yes" disabled="true">
+                                    </cfif>
 								</cfif>
 								Date:
                                 <cfif cbcSig is not ''>
 									<Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
                                      <a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
                                     </cfif> 
-                                 #DateFormat(ar_agreement, 'mm/dd/yyyy')#</a>
+                                 #DateFormat(ar_agreement, 'mm/dd/yyyy')#
+                                 <input type="hidden" name="ar_cbc_auth_form_#currentrow#" value="#DateFormat(ar_cbc_auth_form, 'mm/dd/yyyy')#" />
+                                 </a>
                                 <cfelse>
                                 	 <cfinput type="text" name="ar_cbc_auth_form_#currentrow#" value="#DateFormat(ar_cbc_auth_form, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">						</cfif>
 							</td>
@@ -249,7 +255,11 @@ function CheckDates(ckname, frname) {
 						<tr><td><cfif ar_agreement EQ ''>
 									<cfinput type="checkbox" name="ar_agreement_check_#currentrow#" OnClick="CheckDates('ar_agreement_check_#currentrow#', 'ar_agreement_#currentrow#');"> 
 								<cfelse>
+                                	<cfif agreeSig is ''>
 									<cfinput type="checkbox" name="ar_agreement_check_#currentrow#" OnClick="CheckDates('ar_agreement_check_#currentrow#', 'ar_agreement_#currentrow#');" checked="yes"> 
+                                    <Cfelse>
+                                    <cfinput type="checkbox" name="ar_agreement_check_#currentrow#" disabled="true" OnClick="CheckDates('ar_agreement_check_#currentrow#', 'ar_agreement_#currentrow#');" checked="yes"> 
+                                    </cfif>
 								</cfif>
 								Date: 
 								<cfif agreeSig is not ''>
@@ -257,6 +267,7 @@ function CheckDates(ckname, frname) {
                                 	 	<a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#AreaRepAgreement.pdf', 640, 800);">
                                      </cfif>
                                      #DateFormat(ar_agreement, 'mm/dd/yyyy')#</a>
+                                     <input type="hidden" name="ar_agreement_#currentrow#" value="#DateFormat(ar_agreement, 'mm/dd/yyyy')#" />
                                 <cfelse>
                                 	<cfinput type="text" name="ar_agreement_#currentrow#" value="#DateFormat(ar_agreement, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">				</cfif>
 							</td>
@@ -270,7 +281,7 @@ function CheckDates(ckname, frname) {
 							</td>
 						</tr>
                         <tr><td><cfif secondVisit EQ ''>
-									<cfinput type="checkbox" name="ar_secondVisit_#currentrow#" OnClick="CheckDates('ar_secondVisit_check_#currentrow#', 'ar_secondVisit_#currentrow#');"> 
+									<cfinput type="checkbox" name="ar_secondVisit_check_#currentrow#" OnClick="CheckDates('ar_secondVisit_check_#currentrow#', 'ar_secondVisit_#currentrow#');"> 
 								<cfelse>
 									<cfinput type="checkbox" name="ar_secondVisit_check_#currentrow#" OnClick="CheckDates('ar_secondVisit_check_#currentrow#', 'ar_secondVisit_#currentrow#');" checked="yes"> 
 								</cfif>
