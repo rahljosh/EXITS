@@ -1322,7 +1322,7 @@ body {
 	padding-bottom: 10px;
 	padding-left: 20px;
 }
-.HFsidebarL, .HFsidebarR  p{
+.HFsidebarL, .HFsidebarR  p, ul, li, ol{
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 11px;
 	color: #000;
@@ -1367,6 +1367,15 @@ body {
 	list-style-image: url(../images/hostFamily/HF_arrow.png);
 	text-align: left;
 }
+.HFheaderSub{
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	line-height: 20px;
+	color: #000;
+	list-style-position: inside;
+	list-style-image: url(../images/hostFamily/HF_arrow.png);
+	text-align: left;
+}
 .HFtopPic {
 	display: block;
 	width: 700px;
@@ -1383,6 +1392,13 @@ body {
 	padding-bottom: 3px;
 	padding-left: 20px;
 }
+.HFgradient h5 {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #000;
+	text-align: left;
+}
 .HF_boxOrg {
 	padding-top: 3px;
 	padding-right: 20px;
@@ -1392,7 +1408,7 @@ body {
 	width: 200px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	text-align: justify;
+	text-align: left;
 }
 .HF_boxW {
 	padding-top: 0px;
