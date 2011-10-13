@@ -429,7 +429,9 @@
                 <tr valign="top">
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
-                        
+                        <Cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 16728 or client.userid eq 8731>
+                        <a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
+                        </Cfif>
                         <a href="index.cfm?curdoc=progress_reports">Online Reports</a><br>
                         
                         
@@ -445,9 +447,7 @@
                        <cfif client.companyid lte 5>
                         <a href="uploadedfiles/pdf_docs/Pre%20AYP%20Bonus%202011.pdf" target="_blank">Click Here For Exciting Bonuses For The Placing Season!</a>
                    		</cfif>
-                        <Cfif client.userid eq 1 or client.userid eq 12313>
-                        <br /><a href="index.cfm?curdoc=forms/yearly_agreement">Fill our your yearly paperwork online!</a>
-                        </Cfif>
+                        
                     </td>
          			<!--- Office Users --->
 					<cfif CLIENT.usertype LTE 4>
