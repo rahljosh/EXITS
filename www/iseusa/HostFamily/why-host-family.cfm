@@ -1,35 +1,90 @@
-  <div class="HFtopPic"><img src="images/hostFamily/why_Header.png" width="700" height="220" Border="0" /><img src="images/hostFamily/HF_bar.jpg" width="700" height="13" />
+  <style type="text/css">
+.remarks {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: italic;
+	color: #000;
+	background-color: #FC9;
+	text-align: center;
+	width: 200px;
+	margin-right: -20px;
+	margin-left: 0px;
+	float: right;
+	font-weight: bold;
+	margin-top: 2px;
+	padding: 20px;
+	margin-bottom: 15px;
+}
+</style>
+  
+ <div class="HFtopPic"><img src="images/hostFamily/why_Header.png" width="700" height="220" Border="0" /><img src="images/hostFamily/HF_bar.jpg" width="700" height="13" />
 
      <!--end subPages--> </div>
      
       <div class="HFsidebarRW"><img src="images/hostFamily/why_pic.png" width="200" height="270" />
         <div class="HF_boxW"></div>
-<div class="HF_boxOrg"><h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />The Hosting Experience</h1>
-    <p>Hosting a foreign exchange student means opening your home and your heart to a teen from another country while they attend school at your local public high school. </p>
-    <p>ISE has many different hosting programs available. Student hosting opportunities are available for periods of 5 months, 10 months or the full 12 month program, with the most common being the 10 month academic year program. </p>
-    <p>Exchange Students who participate in the program have been carefully screened before their acceptance. Participants are selected based on their academic achievements and their extracurricular interests. Interviewers identify individuals who demonstrate a curious, optimistic view on the challenges and adventures lying before them, responsible, outgoing and of adaptable nature. ISE partners  are looking for &quot;great kids&quot; with positive attitudes and interests which have something special to offer a Host Family during their hosting experience. </p>   
+<div class="HF_boxOrg">
+    <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Hosting an Exchange Student</h1>
+    <p><strong>Hosting a foreign exchange student:</strong><br />
+	&#187; Builds lasting relationships<br />
+	&#187; Enhances family time<br />
+	&#187; Opens doors to opportunities<br />
+	&#187; Spreads world peace<br />
+	&#187; PLUS so much more...</p><br />
+    
+    <div class="remarks">Hosting a Foreign Exchanges Students. Creates a friendship that will last a lifetime</div>
+ 
+     <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />ISE Students</h1>
+<p>&#187; Are 15-18 years old<br />
+&#187; Bring spending money<br />
+&#187; Want to share cultures<br />
+&#187; Speak English<br />
+&#187; Have full insurance </p>
+<p><a href="become-a-host-familyJW.cfm?page=/HostFamily/about-our-students" target="_self"><img src="images/hostFamily/learnMore.png" width="80" height="10" border="0" /></a></p>
+
       <!--HF_boxOrg--><!--end HFsidebarR--></div><br />
       </div>
         <div class="HFsidebarLW">
-        <div class="HFpicL"></div>
+       
      <br />   <br />
-     <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />How Important is Hosting to America?</h1>
-          <p>The <strong>ISE Student Exchange Hosting Experience</strong> is so important to the future of protecting the freedom that every American enjoys. So important, that student exchange is a designated program for the US Department of State. Former Secretary of State Colin Powell, Condoleezza Rice and present Secretary of State Hillary Clinton <a href="http://www.youtube.com/watch?v=YRP3PbaE-cA" target="_blank"><em>(view address)</em></a> have all stated, that the exchange hosting experience and all those working in Student Exchange are America's number 1 Diplomats<em>.</em></p>
-          <p> We believe our host families will all have a positive exchange hosting experience. And each host family and their representative are truly &quot;Ambassadors for America&quot;.</p>
-            <p>Many of us have known a Host Family that has first-hand expericenced hosting an exchange student from another country and the joys of living with them for a short period of time. It might have been a relative, neighbor, or possibly even a co-worker who experienced hosting a Foreign Exchange Student.</p>
-            <p> While most people have heard about the Student Foreign Exchange program through people and families who have experienced hosting first-hand. However, many aren't really sure what in involved with Hosting a Foreign Exchange Student..<br />
-              <br />
-          </p>
+     <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Why Be a Host Family?</h1>
+          <ul>
+          <li>To provide your sons/daughters a unique advantage and experience to refer to on applications for employment, college and universities.</li>
+<li>To learn about the customs, traditions, languages and cultures of another country.</li>
+<li>To teach your family to share its love and kindness with others.</li>
+<li>To promote world peace while "educating tomorrow's leaders" here in the U.S., as well as abroad.</li>
+<li>To enrich and enlarge your "immediate family" and community.</li>
+<li>To provide your family, as well as a family in another country, "the experience of a lifetime".</li>
+<li>To make "friends for life" in another country.</li></ul>
           <br />
-      <div class="HFpicR"></div>  
+       
 <div class="HFgradient">
   <h1 class="HFheader"><br />
-  <img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Students Come Prepared to Support Themselves</h1>
-          <p>The International Student Exchange Program provides full medical and accident insurance coverage for the students as well as a local representative to assist families and students during the hosting period. The foreign exchange students provide their own pocket money, host families are asked only to cover the cost of room and board. While no compensation is paid to those volunteer host families experiencing the Foreign Exchange Hosting Experience the Internal Revenue Service has authorized families hosting for government-designated, NON-PROFIT exchange programs, like the ISE Program Members, to claim a $ 50.00 per month charitable contribution deduction on their itemized tax returns.<br />
-            </p>
-          <p>Just as there is no such thing as a typical student, there is also no such thing as a typical host family. Single-parent families, retired couples, families with only young children, as well as families with teenagers, have all had successful Hosting Experiences. The most important criteria for a host family is a genuine interest to share the American culture with a foreign exchange student teenager and a genuine interest in the well-being of the foreign exchange student.<br />
-            </p>
-          <p>During the time of the student exchange hosting experience, we ask that you treat your new son or daughter exactly as you would your own children. The exchange student will share the ups and downs of your everyday life, and by the time he leaves, he will have become a part of the very fabric of his host family.</p><br />
+  <img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Why You Should Host an International Exchange Student</h1>
+  <p><strong>From 2007 INTERNATIONAL EXCHANGE STUDENTS<br />
+Attending the H.E.L.P. Community Service Project in MS!</strong></p>
+    <ul>
+    <li>"It's a challenge and adventure but it gives more than it takes. You make a lifelong relationship" Sami</li>
+	<li>"They get to know a new person and maybe learn more about their family heritage" Sabrina</li>
+	<li>"It's a good experience to share & teach them the real American" Juan</li>
+	<li>"Promote fun and rewarding experience for the entire family"</li>
+	<li>"They want to learn another Country's culture" Dorothy</li>
+	<li>"To experience the different cultures & learn something they didn't expect" Karin</li>
+	<li>"Families get to learn about new cultures, food they can experience how they live life" Jeppe</li>
+	<li>"Give children a new experience & give your love to others" Sofia</li>
+	<li>"Bring their world to you by sharing traditions, meals and conversations everyday with an exchange student"</li>
+	<li>"It's nice & generous; it's a fabulous experience for family & student" Victor</li>
+	<li>"So they can learn from each other. It's great for the community. We share and are part of the community" Jaun</li>
+	<li>"When you host, not only the student benefits but so do you, you get a real daughter or son" Susi</li>
+	<li>"Offers a learning experience that can't be copied by school books"</li>
+	<li>"It's a great experience for them to have someone in their house" Simon</li>
+	<li>"To share with someone from another country" Sara</li>
+	<li>"Because they can learn something about our culture" Laura</li>
+	<li>"To give young people a great opportunity, exchange of culture" Kevin</li>
+	<li>"They wanted to make an experience for their family" Coco</li>
+	<li>"They do more things as a family, spend more time together" Benedikte</li>
+	<li>"To share things with someone new" Khoa</li>
+	<li>"Host families want to know your culture and teach them the American culture" Joe</li></ul>
 </div><br />
         
           
