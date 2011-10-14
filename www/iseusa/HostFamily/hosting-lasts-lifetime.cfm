@@ -2,7 +2,7 @@
 
      <!--end subPages--> </div>
      
-      <div class="HFsidebarR"><img src="images/hostFamily/life_pic.png" width="200" height="283" />
+      <div class="HFsidebarR"><img src="images/hostFamily/life_pic2.png" width="300"/>
        
 <div class="HFgradient">
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Student Exchange Helps Individual Participants to:</h1>
