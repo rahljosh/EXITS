@@ -12,6 +12,57 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Get Total Registrations --->
+    <cfquery name="qGetTripTotalRegisteredStudents" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+            tour_ID,
+            tour_name,
+            totalSpots,
+            SUM(total) AS total
+        FROM
+        (
+        
+            SELECT 
+                t.tour_ID,
+                t.tour_name,
+                t.totalSpots,
+                COUNT(st.studentID) AS total
+            FROM 
+                smg_tours t
+            LEFT OUTER JOIN
+                student_tours st ON st.tripID = t.tour_ID
+                    AND
+                        st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    AND
+                        st.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            WHERE
+                t.tour_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.tourID)#">
+                
+            UNION
+    
+            SELECT 
+                t.tour_ID,
+                t.tour_name,
+                t.totalSpots,
+                COUNT(sts.siblingID) AS total
+            FROM 
+                smg_tours t
+            INNER JOIN	
+                student_tours_siblings sts ON sts.tripID = t.tour_ID
+                    AND
+                        sts.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+            WHERE
+                t.tour_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.tourID)#">
+        
+        ) AS deviredTable
+        
+        GROUP BY
+        	tour_ID
+        
+        ORDER BY
+        	tour_name
+	</cfquery>
+    
 </cfsilent>
 
 <cfoutput>
@@ -33,15 +84,18 @@
                         
                                 <span class="SubTitle">#LSCurrencyFormat(APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_price), 'local')#</span>
                             </td>
-                            <td width="48%">
+                            <td width="42%">
                                 <span class="SubTitleLG">#qGetTourDetails.tour_date#</span><br />
                                 <span class="SubTitle">#qGetTourDetails.tour_length#</span>
                             </td>
-                            <td width="24%">
-                                <cfif qGetTourDetails.tour_status EQ 'Full'>
-                                    <font color='FF0000' size='2' style="font-weight:bold; text-align:center;">No More Seats Available!!</font>
+                            <td width="30%">
+                                <cfif qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.spotLimit>
+                                	<input type="image" name="submit" src="extensions/images/reserve_class.png" alt="Reserve Spot" />
+                                    <font color='##FF0000' size="2" style="font-weight:bold; text-align:center;">Limited Seats Available!</font>                                    
+								<cfelseif qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.totalSpots>
+                                    <font color='##FF0000' size="2" style="font-weight:bold; text-align:center;">This trip is full! <br /> No More Seats Available!</font>
                                 <cfelseif qGetTourDetails.tour_status EQ 'Cancelled'>
-                                    <font color='FF0000' size='2'><b><center>Cancelled!!</center></b></font>
+                                    <font color='##FF0000' size="2"><b><center>Cancelled!</center></b></font>
                                 <cfelse> 
                                     <input type="image" name="submit" src="extensions/images/reserve_class.png" alt="Reserve Spot" />
                                 </cfif>

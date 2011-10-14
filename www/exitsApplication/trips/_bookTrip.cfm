@@ -38,12 +38,136 @@
         ORDER BY
         	stateName
     </cfquery>
-	
-    <cfscript>
-		vTotalPeopleRegistering = VAL(qGetSiblingsPendingRegistration.recordCount) + 1;
+
+	<!--- Get Total Registrations --->
+    <cfquery name="qGetTripTotalRegisteredStudents" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+            tour_ID,
+            tour_name,
+            totalSpots,
+            SUM(total) AS total
+        FROM
+        (
+        
+            SELECT 
+                t.tour_ID,
+                t.tour_name,
+                t.totalSpots,
+                COUNT(st.studentID) AS total
+            FROM 
+                smg_tours t
+            LEFT OUTER JOIN
+                student_tours st ON st.tripID = t.tour_ID
+                    AND
+                        st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    AND
+                        st.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            WHERE
+                t.tour_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.tourID)#">
+                
+            UNION
+    
+            SELECT 
+                t.tour_ID,
+                t.tour_name,
+                t.totalSpots,
+                COUNT(sts.siblingID) AS total
+            FROM 
+                smg_tours t
+            INNER JOIN	
+                student_tours_siblings sts ON sts.tripID = t.tour_ID
+                    AND
+                        sts.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+            WHERE
+                t.tour_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.tourID)#">
+        
+        ) AS deviredTable
+        
+        GROUP BY
+        	tour_ID
+        
+        ORDER BY
+        	tour_name
+	</cfquery>
+
+    <cfquery name="qGetTotalPendingMaleSiblings" dbtype="query">
+        SELECT 
+            count(sex) AS total
+        FROM 
+        	qGetSiblingsPendingRegistration
+        WHERE 
+        	sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="male">            
+    </cfquery>
+
+    <cfquery name="qGetTotalPendingFemaleSiblings" dbtype="query">
+        SELECT 
+            count(sex) AS total
+        FROM 
+        	qGetSiblingsPendingRegistration
+        WHERE 
+        	sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="female">            
+    </cfquery>
+    
+    <cfscript>	
+		// Get total of siblings
+		vTotalMaleRegistering = VAL(qGetTotalPendingMaleSiblings.total);
 		
+		vTotalFemaleRegistering = VAL(qGetTotalPendingFemaleSiblings.total);
+		
+		// Add student to totals
+		if ( qGetStudentInfo.sex EQ 'male' ) {
+			
+			vTotalMaleRegistering = vTotalMaleRegistering + 1;
+			
+		} else if ( qGetStudentInfo.sex EQ 'female' ) {
+			
+			vTotalFemaleRegistering = vTotalFemaleRegistering + 1;
+			
+		}
+		
+		// Total Students and siblings
+		vTotalRegistrations = VAL(vTotalMaleRegistering) + VAL(vTotalFemaleRegistering);
+    
 		// Set Total Price	
-		vTotalDue = qGetTourDetails.tour_price * vTotalPeopleRegistering;
+		vTotalDue = qGetTourDetails.tour_price * vTotalRegistrations;
+		
+		// Check trip availability
+		vIsTripFull = 0;
+		
+		// Check if trip is full
+		if ( qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.totalSpots ) {
+			
+			vIsTripFull = 1;
+			SESSION.formErrors.Add("Unfortunately this trip is FULL and you can no longer register");
+			
+		// Check if trip has reached the registration limit
+		} else if ( qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.spotLimit ) {
+			
+			// Check Male Registration
+			if ( vTotalMaleRegistering GT qGetTourDetails.extraMaleSpot ) {
+				
+				vIsTripFull = 1;
+				
+				if ( VAL(qGetTourDetails.extraMaleSpot) ) {
+					SESSION.formErrors.Add("Unfortunately there is only #qGetTourDetails.extraMaleSpot# male seat available");
+				} else {
+					SESSION.formErrors.Add("Unfortunately this trip is FULL and you can no longer register, #qGetTourDetails.extraFemaleSpot# female seat(s) available");
+				}
+				
+			// Check Female Registration
+			} else if ( vTotalFemaleRegistering GT qGetTourDetails.extraFemaleSpot ) {
+				
+				vIsTripFull = 1;
+
+				if ( VAL(qGetTourDetails.extraMaleSpot) ) {
+					SESSION.formErrors.Add("Unfortunately there is only #qGetTourDetails.extraFemaleSpot# female seat available");
+				} else {
+					SESSION.formErrors.Add("Unfortunately this trip is FULL and you can no longer register, #qGetTourDetails.extraMaleSpot# male seat(s) available");
+				}
+
+			}
+
+		}
 	</cfscript>
     
     <!--- FORM SUBMITTED --->
@@ -176,14 +300,14 @@
 				if ( VAL(qGetSiblingsPendingRegistration.recordCount) ) {
 					vReceiptDescription = vReceiptDescription & " and #VAL(qGetSiblingsPendingRegistration.recordCount)# host sibling(s)";
 				}
-
+				
 				// Insert Payment Information (applicationPayment Table)
 				getApplicationPaymentID = APPLICATION.CFC.PAYMENTGATEWAY.insertApplicationPayment( 
 					applicationID=8,
 					sessionInformationID=SESSION.informationID,
 					foreignTable='student_tours',
 					foreignID=qGetStudentPendingRegistration.ID,
-					amount=vTotalDue,
+					amount=FORM.totalDue,
 					paymentMethodID=FORM.paymentMethodID,
 					paymentMethodType=APPLICATION.CONSTANTS.paymentMethod[FORM.paymentMethodID],
 					creditCardTypeID=FORM.creditCardTypeID,
@@ -204,7 +328,7 @@
 
 				// Submit Payment - Authorize.Net
 				stAuthorizeAndCapture = APPLICATION.CFC.PAYMENTGATEWAY.authorizeAndCapture(
-					amount=vTotalDue,
+					amount=FORM.totalDue,
 					cardNumber=FORM.creditCardNumber,
 					expirationDate=FORM.expirationMonth & FORM.expirationYear,
 					invoiceNumber='##' & Year(now()) & '-' & qGetStudentPendingRegistration.ID,
@@ -286,7 +410,7 @@
 						// Credit card might be already registered
 					}
 					// End CC authorized -  insert Payment Profile (Authorize.net) / insert customer_payment
-
+					
 					// Set Page Message
 					SESSION.pageMessages.Add("Payment successfully submitted. " & stAuthorizeAndCapture.responseReasonText.response);
 					
@@ -315,8 +439,8 @@
 			</cfscript>
 			
             <!--- Payment Approved --->
-            <cfif authIsSuccess>
-				
+            <cfif authIsSuccess>		
+                
                 <!--- Student - Record Payment as Received / Activate Record --->
                 <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE
@@ -335,10 +459,31 @@
                         UPDATE
                             student_tours_siblings
                         SET
+                            studentTourID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentPendingRegistration.ID#">,
                             paid = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                         WHERE
                             ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetSiblingsPendingRegistration.ID)#" list="yes"> )
                     </cfquery>
+                    
+                </cfif>
+                
+                <!--- Update Extra Male|Female Limits --->
+				<cfif qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.spotLimit>
+                	
+                    <!--- Male/Female Limit --->
+                    <cftransaction> 
+                    
+                        <cfquery datasource="#APPLICATION.DSN.Source#">
+                            UPDATE
+                                smg_tours
+                            SET
+                                extraMaleSpot = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.extraMaleSpot - vTotalMaleRegistering)#">,
+                                extraFemaleSpot = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.extraFemaleSpot - vTotalFemaleRegistering)#">
+                            WHERE
+                                tour_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.tourID)#">
+                        </cfquery>
+                        
+                    </cftransaction>
                     
                 </cfif>
 
@@ -354,6 +499,8 @@
     <cfelse>
     	
         <cfscript>
+			FORM.totalDue = vTotalDue;
+			
 			// Pre Populate Field 
 			if ( LEN(qGetStudentInfo.med_allergies) ) {
 				FORM.medicalInformation = "Medical Allergies: #qGetStudentInfo.med_allergies#";	
@@ -446,7 +593,7 @@
     <div id="dialog-paymentConfirmation-confirm" title="Submit Payment" class="displayNone" style="font-size:1em;"> 
         <p>
         	<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0 0;"></span>
-        	Your credit card will be charged a total of #LSCurrencyFormat(vTotalDue)# for this trip.
+        	Your credit card will be charged a total of #LSCurrencyFormat(FORM.totalDue)# for this trip.
         </p> 
         <p>
         	Processing your credit card might take up to a minute, please do not resubmit this page.
@@ -457,9 +604,10 @@
 
 	<!--- Include Trip Header --->
     <cfinclude template="_breadCrumb.cfm">
-                
+    
     <form name="processPaymentForm" id="processPaymentForm" action="#CGI.SCRIPT_NAME#?action=bookTrip" method="post">
         <input type="hidden" name="submitted" value="1" />
+        <input type="hidden" name="totalDue" value="#FORM.totalDue#" />
         
         <!--- Display Form Errors --->
         <gui:displayFormErrors 
@@ -478,14 +626,14 @@
             <tr>
                 <td class="tripFormTitle">Total Amount Due:</td>
                 <td class="tripFormField">
-                    <span class="totalDue">#LSCurrencyFormat(vTotalDue)#</span>
+                    <span class="totalDue">#LSCurrencyFormat(FORM.totalDue)#</span>
                     <em class="tripNotesRight">#LSCurrencyFormat(qGetTourDetails.tour_price)# Per person - Does not include your round trip airline ticket</em>
                 </td>
             </tr>
             <tr class="blueRow">
                 <td class="tripFormTitle">Number of Registrations:</td>
                 <td class="tripFormField">
-                    #vTotalPeopleRegistering#
+                    #vTotalRegistrations#
                     <cfif VAL(qGetSiblingsPendingRegistration.recordCount)>
                         <em class="tripNotesRight">You and #qGetSiblingsPendingRegistration.recordCount# host sibling(s)</em>
                     </cfif>
@@ -497,225 +645,229 @@
             </tr>
         </table>                
         
+        <!--- Trip Not Full --->
+        <cfif NOT VAL(vIsTripFull)>
              
-        <!--- Student Information --->     
-        <h3 class="tripSectionTitle">Student Information</h3>     
-
-        <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">
-            <tr class="blueRow">
-                <td class="tripFormTitle" width="30%">Student:</td>
-                <td class="tripFormField" width="70%">#qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#)</td>
-            </tr>
-            <tr>
-                <td class="tripFormTitle">Country Of Birth:</td>
-                <td class="tripFormField">#qGetStudentInfo.countryname#</td>
-            </tr> 
-            <tr class="blueRow">
-                <td class="tripFormTitle">Email Address: <span class="required">*</span></td>
-                <td class="tripFormField"><input type="text" name="emailAddress" id="emailAddress" value="#FORM.emailAddress#" class="largeField" maxlength="100" /></td>
-            </tr> 
-            <tr>
-                <td class="tripFormTitle">Confirm Email Address: <span class="required">*</span></td>
-                <td class="tripFormField"><input type="text" name="confirmEmailAddress" id="confirmEmailAddress" value="#FORM.confirmEmailAddress#" class="largeField" maxlength="100" /></td>
-            </tr> 
-            <tr class="blueRow">
-                <td>&nbsp;</td>
-                <td><span class="required">* Required Fields</span></td>
-            </tr>  
-        </table>
-            
-        <!--- Host Sibling Information ---> 
-        <cfif VAL(qGetSiblingsPendingRegistration.recordCount)>
-            <h3 class="tripSectionTitle">Host Siblings Going Along</h3>
-        
+			<!--- Student Information --->     
+            <h3 class="tripSectionTitle">Student Information</h3>     
+    
             <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">
-                <cfloop query="qGetSiblingsPendingRegistration">
-                    <tr class="#iif(qGetSiblingsPendingRegistration.currentrow MOD 2 ,DE("blueRow") ,DE("") )#">
-                        <td class="tripFormTitle" width="30%">Name:</td>
-                        <td class="tripFormField" width="70%">#qGetSiblingsPendingRegistration.name# #qGetSiblingsPendingRegistration.lastName# - #DateFormat(qGetSiblingsPendingRegistration.birthDate, 'mm/dd/yyyy')#</td>
-                    </tr>
-                </cfloop>
+                <tr class="blueRow">
+                    <td class="tripFormTitle" width="30%">Student:</td>
+                    <td class="tripFormField" width="70%">#qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#)</td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">Country Of Birth:</td>
+                    <td class="tripFormField">#qGetStudentInfo.countryname#</td>
+                </tr> 
+                <tr class="blueRow">
+                    <td class="tripFormTitle">Email Address: <span class="required">*</span></td>
+                    <td class="tripFormField"><input type="text" name="emailAddress" id="emailAddress" value="#FORM.emailAddress#" class="largeField" maxlength="100" /></td>
+                </tr> 
+                <tr>
+                    <td class="tripFormTitle">Confirm Email Address: <span class="required">*</span></td>
+                    <td class="tripFormField"><input type="text" name="confirmEmailAddress" id="confirmEmailAddress" value="#FORM.confirmEmailAddress#" class="largeField" maxlength="100" /></td>
+                </tr> 
+                <tr class="blueRow">
+                    <td>&nbsp;</td>
+                    <td><span class="required">* Required Fields</span></td>
+                </tr>  
             </table>
-        </cfif>
-         
+                
+            <!--- Host Sibling Information ---> 
+            <cfif VAL(qGetSiblingsPendingRegistration.recordCount)>
+                <h3 class="tripSectionTitle">Host Siblings Going Along</h3>
             
-        <!--- Credit Card Information --->
-        <h3 class="tripSectionTitle">Credit Card Information</h3>
-        <em class="tripTitleNotes">Enter information for a Credit Card. Your session is <a href="rules.cfm" target="_blank">secure</a>.</em>
+                <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">
+                    <cfloop query="qGetSiblingsPendingRegistration">
+                        <tr class="#iif(qGetSiblingsPendingRegistration.currentrow MOD 2 ,DE("blueRow") ,DE("") )#">
+                            <td class="tripFormTitle" width="30%">Name:</td>
+                            <td class="tripFormField" width="70%">#qGetSiblingsPendingRegistration.name# #qGetSiblingsPendingRegistration.lastName# - #DateFormat(qGetSiblingsPendingRegistration.birthDate, 'mm/dd/yyyy')#</td>
+                        </tr>
+                    </cfloop>
+                </table>
+            </cfif>
+             
+                
+            <!--- Credit Card Information --->
+            <h3 class="tripSectionTitle">Credit Card Information</h3>
+            <em class="tripTitleNotes">Enter information for a Credit Card. Your session is <a href="rules.cfm" target="_blank">secure</a>.</em>
+    
+            <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">    
+                <tr class="blueRow">
+                    <td class="tripFormTitle" width="30%">Credit Cards Accepted:</td>
+                    <td class="tripFormField" width="70%"><div class="creditCardAccepted">&nbsp;</div></td>
+                </tr>  
+                <tr>
+                    <td class="tripFormTitle">Name on Credit Card <span class="required">*</span></td>
+                    <td class="tripFormField"><input type="text" name="nameOnCard" id="nameOnCard" value="#FORM.nameOnCard#" class="largeField" maxlength="100" /></td>
+                </tr>
+                <tr class="blueRow">
+                    <td class="tripFormTitle">Credit Card Type <span class="required">*</span></td>
+                    <td class="tripFormField">
+                        <select name="creditCardTypeID" id="creditCardTypeID" class="mediumField" onchange="displayCreditCard();">
+                            <option value=""></option>
+                            <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.creditCardType)#">
+                                <option value="#i#" <cfif i EQ FORM.creditCardTypeID> selected="selected" </cfif> >#APPLICATION.CONSTANTS.creditCardType[i]#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">Credit Card Number <span class="required">*</span></td>
+                    <td class="tripFormField">
+                        <input type="text" name="creditCardNumber" id="creditCardNumber" value="#FORM.creditCardNumber#" class="mediumField" maxlength="16" />
+                        <em class="tripNotesRight">This will be a 15 or 16 digit number on the front of the card. No spaces or dashes</em>
+                    </td>
+                </tr>
+                <tr class="blueRow">
+                    <td class="tripFormTitle">Expiration Date <span class="required">*</span></td>
+                    <td class="tripFormField">
+                        <select name="expirationMonth" id="expirationMonth" class="smallFieldNoBlock">
+                            <option value=""></option>
+                            <cfloop from="1" to="12" index="i">
+                                <option value="#i#" <cfif FORM.expirationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
+                            </cfloop>
+                        </select>
+                        /
+                        <select name="expirationYear" id="expirationYear" class="smallFieldNoBlock">
+                            <option value=""></option>
+                            <cfloop from="#Year(now())#" to="#Year(now()) + 8#" index="i">
+                                <option value="#i#" <cfif FORM.expirationYear EQ i> selected="selected" </cfif> >#i#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">CCV/CID Code <span class="required">*</span></td>
+                    <td class="tripFormField">
+                        <input type="text" name="ccvCode" id="ccvCode" value="#FORM.ccvCode#" class="xSmallField" maxlength="4" />
+                        <div class="creditCardImageDiv">
+                            <div id="displayCardImage" class="card1"></div>
+                        </div>
+                        <em class="tripNotesRight">3 or 4 digit code - see credit card image</em>
+                    </td>
+                </tr>
+                <tr class="blueRow">
+                    <td>&nbsp;</td>
+                    <td><span class="required">* Required Fields</span></td>
+                </tr>  
+            </table>	
+            
+            
+            <!--- Billing Address --->    
+            <h3 class="tripSectionTitle">Billing Address</h3>                
+            
+            <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">                    
+                <tr class="blueRow">
+                    <td class="tripFormTitle" width="30%">First Name <span class="required">*</span></td>
+                    <td class="tripFormField" width="70%"><input type="text" name="billingFirstName" id="billingFirstName" value="#FORM.billingFirstName#" class="largeField" maxlength="100" /></td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">Last Name <span class="required">*</span></td>
+                    <td class="tripFormField"><input type="text" name="billingLastName" id="billingLastName" value="#FORM.billingLastName#" class="largeField" maxlength="100" /></td>
+                </tr>
+                <tr class="blueRow">
+                    <td class="tripFormTitle">Company Name</td>
+                    <td class="tripFormField"><input type="text" name="billingCompany" id="billingCompany" value="#FORM.billingCompany#" class="largeField" maxlength="100" /></td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">Country <span class="required">*</span></td>
+                    <td class="tripFormField">
+                        <select name="billingCountryID" id="billingCountryID" class="largeField" onchange="displayStateField();">
+                            <option value=""></option>
+                            <cfloop query="qGetCountryList">
+                                <option value="#qGetCountryList.countryID#" <cfif FORM.billingCountryID EQ qGetCountryList.countryID> selected="selected" </cfif> >#qGetCountryList.countryName#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="blueRow">
+                    <td class="tripFormTitle">Address <span class="required">*</span></td>
+                    <td class="tripFormField"><input type="text" name="billingAddress" id="billingAddress" value="#FORM.billingAddress#" class="largeField" maxlength="100" /></td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">City <span class="required">*</span></td>
+                    <td class="tripFormField"><input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="largeField" maxlength="100" /></td>
+                </tr>
+                <!--- US State --->
+                <tr id="usStateField" class="blueRow field displayNone">
+                    <td class="tripFormTitle">State/Province <span class="required">*</span></td>
+                    <td class="tripFormField">
+                        <select name="billingState" id="billingState" class="mediumField usBillingState">
+                            <option value=""></option>
+                            <cfloop query="qGetStateList">
+                                <option value="#qGetStateList.state#" <cfif FORM.billingState EQ qGetStateList.state> selected="selected" </cfif> >#qGetStateList.stateName#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <!--- Non US State --->
+                <tr id="nonUsStateField" class="blueRow field displayNone">
+                    <td class="tripFormTitle">State/Province <span class="required">*</span></td>
+                    <td class="tripFormField"><input type="text" name="billingState" id="billingState" value="#FORM.billingState#" class="largeField nonUsBillingState" maxlength="100" /></td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">Zip/Postal Code <span class="required">*</span></td>
+                    <td class="tripFormField"><input type="text" name="billingZipCode" id="billingZipCode" value="#FORM.billingZipCode#" class="smallField" maxlength="20" /></td>
+                </tr>
+                <tr class="blueRow">
+                    <td>&nbsp;</td>
+                    <td><span class="required">* Required Fields</span></td>
+                </tr>  
+            </table>    
+            
+            
+            <!--- Terms and Conditions --->    
+            <h3 class="tripSectionTitle">Terms and Conditions</h3>                
+            <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">                    
+                <tr>
+                    <td align="center" colspan="2">
+                        <h3> 
+                            Please carefully read the steps below explaining the enrollment process.
+                            <hr width=80% />
+                        </h3>
+                    </td>
+                </tr>	
+                <tr>
+                    <td colspan="2">
+                        <ol style="margin-top:0px;">
+                            <li>
+                                Submit permission form with all signatures to MPD Tours.
+                                <ul class="paragraphRules">
+                                    <li>#APPLICATION.MPD.email#</li>
+                                    <li>fax: +1 718 439 8565</li>
+                                    <li>mail: 9101 Shore Road, ##203 - Brooklyn, NY 11209</li>
+                                </ul>
+                            </li>
+                            
+                            <li>
+                                MPD will contact you once your permission form have been received to book your flights. Do NOT book your own flights. 
+                            </li>
+                        </ol>
+                        
+                        <ul class="paragraphRules"><li><font size=-1>PS: If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li></ul>
+                    </td>
+                </tr>
+                <tr class="blueRow">
+                    <td width="5%" class="tripFormTitle"><input type="checkbox" name="registeringAgreement" id="registeringAgreement" value="1" /></Td>
+                    <td width="95%" class="tripFormField"><label for="registeringAgreement" style="font-weight:bold;">I've read and understand the process of registering for a tour and refund policy.</label></td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">
+                    <input type="checkbox" name="airfareAgreement" id="airfareAgreement" value="1"/></Td>
+                    <td class="tripFormField"><label for="airfareAgreement" style="font-weight:bold;">I understand that I should not book my airline ticket and that MPD will contact me to book my airfare.</label></td>
+                </tr>
+            </table>
+                            
+            <!--- Button --->
+            <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableButton">                                       
+                <tr class="blueRow">
+                    <td colspan="2" align="center"><a href="javascript:confirmPayment();"><img src="extensions/images/Next.png" border="0" /></a></td>
+                </tr>
+            </table>
 
-        <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">    
-            <tr class="blueRow">
-                <td class="tripFormTitle" width="30%">Credit Cards Accepted:</td>
-                <td class="tripFormField" width="70%"><div class="creditCardAccepted">&nbsp;</div></td>
-            </tr>  
-            <tr>
-                <td class="tripFormTitle">Name on Credit Card <span class="required">*</span></td>
-                <td class="tripFormField"><input type="text" name="nameOnCard" id="nameOnCard" value="#FORM.nameOnCard#" class="largeField" maxlength="100" /></td>
-            </tr>
-            <tr class="blueRow">
-                <td class="tripFormTitle">Credit Card Type <span class="required">*</span></td>
-                <td class="tripFormField">
-                    <select name="creditCardTypeID" id="creditCardTypeID" class="mediumField" onchange="displayCreditCard();">
-                        <option value=""></option>
-                        <cfloop index="i" from="1" to="#ArrayLen(APPLICATION.CONSTANTS.creditCardType)#">
-                            <option value="#i#" <cfif i EQ FORM.creditCardTypeID> selected="selected" </cfif> >#APPLICATION.CONSTANTS.creditCardType[i]#</option>
-                        </cfloop>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="tripFormTitle">Credit Card Number <span class="required">*</span></td>
-                <td class="tripFormField">
-                    <input type="text" name="creditCardNumber" id="creditCardNumber" value="#FORM.creditCardNumber#" class="mediumField" maxlength="16" />
-                    <em class="tripNotesRight">This will be a 15 or 16 digit number on the front of the card. No spaces or dashes</em>
-                </td>
-            </tr>
-            <tr class="blueRow">
-                <td class="tripFormTitle">Expiration Date <span class="required">*</span></td>
-                <td class="tripFormField">
-                    <select name="expirationMonth" id="expirationMonth" class="smallFieldNoBlock">
-                        <option value=""></option>
-                        <cfloop from="1" to="12" index="i">
-                            <option value="#i#" <cfif FORM.expirationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
-                        </cfloop>
-                    </select>
-                    /
-                    <select name="expirationYear" id="expirationYear" class="smallFieldNoBlock">
-                        <option value=""></option>
-                        <cfloop from="#Year(now())#" to="#Year(now()) + 8#" index="i">
-                            <option value="#i#" <cfif FORM.expirationYear EQ i> selected="selected" </cfif> >#i#</option>
-                        </cfloop>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td class="tripFormTitle">CCV/CID Code <span class="required">*</span></td>
-                <td class="tripFormField">
-                    <input type="text" name="ccvCode" id="ccvCode" value="#FORM.ccvCode#" class="xSmallField" maxlength="4" />
-                    <div class="creditCardImageDiv">
-                        <div id="displayCardImage" class="card1"></div>
-                    </div>
-                    <em class="tripNotesRight">3 or 4 digit code - see credit card image</em>
-                </td>
-            </tr>
-            <tr class="blueRow">
-                <td>&nbsp;</td>
-                <td><span class="required">* Required Fields</span></td>
-            </tr>  
-        </table>	
-        
-        
-        <!--- Billing Address --->    
-        <h3 class="tripSectionTitle">Billing Address</h3>                
-        
-        <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">                    
-            <tr class="blueRow">
-                <td class="tripFormTitle" width="30%">First Name <span class="required">*</span></td>
-                <td class="tripFormField" width="70%"><input type="text" name="billingFirstName" id="billingFirstName" value="#FORM.billingFirstName#" class="largeField" maxlength="100" /></td>
-            </tr>
-            <tr>
-                <td class="tripFormTitle">Last Name <span class="required">*</span></td>
-                <td class="tripFormField"><input type="text" name="billingLastName" id="billingLastName" value="#FORM.billingLastName#" class="largeField" maxlength="100" /></td>
-            </tr>
-            <tr class="blueRow">
-                <td class="tripFormTitle">Company Name</td>
-                <td class="tripFormField"><input type="text" name="billingCompany" id="billingCompany" value="#FORM.billingCompany#" class="largeField" maxlength="100" /></td>
-            </tr>
-            <tr>
-                <td class="tripFormTitle">Country <span class="required">*</span></td>
-                <td class="tripFormField">
-                    <select name="billingCountryID" id="billingCountryID" class="largeField" onchange="displayStateField();">
-                        <option value=""></option>
-                        <cfloop query="qGetCountryList">
-                            <option value="#qGetCountryList.countryID#" <cfif FORM.billingCountryID EQ qGetCountryList.countryID> selected="selected" </cfif> >#qGetCountryList.countryName#</option>
-                        </cfloop>
-                    </select>
-                </td>
-            </tr>
-            <tr class="blueRow">
-                <td class="tripFormTitle">Address <span class="required">*</span></td>
-                <td class="tripFormField"><input type="text" name="billingAddress" id="billingAddress" value="#FORM.billingAddress#" class="largeField" maxlength="100" /></td>
-            </tr>
-            <tr>
-                <td class="tripFormTitle">City <span class="required">*</span></td>
-                <td class="tripFormField"><input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="largeField" maxlength="100" /></td>
-            </tr>
-            <!--- US State --->
-            <tr id="usStateField" class="blueRow field displayNone">
-                <td class="tripFormTitle">State/Province <span class="required">*</span></td>
-                <td class="tripFormField">
-                    <select name="billingState" id="billingState" class="mediumField usBillingState">
-                        <option value=""></option>
-                        <cfloop query="qGetStateList">
-                            <option value="#qGetStateList.state#" <cfif FORM.billingState EQ qGetStateList.state> selected="selected" </cfif> >#qGetStateList.stateName#</option>
-                        </cfloop>
-                    </select>
-                </td>
-            </tr>
-            <!--- Non US State --->
-            <tr id="nonUsStateField" class="blueRow field displayNone">
-                <td class="tripFormTitle">State/Province <span class="required">*</span></td>
-                <td class="tripFormField"><input type="text" name="billingState" id="billingState" value="#FORM.billingState#" class="largeField nonUsBillingState" maxlength="100" /></td>
-            </tr>
-            <tr>
-                <td class="tripFormTitle">Zip/Postal Code <span class="required">*</span></td>
-                <td class="tripFormField"><input type="text" name="billingZipCode" id="billingZipCode" value="#FORM.billingZipCode#" class="smallField" maxlength="20" /></td>
-            </tr>
-            <tr class="blueRow">
-                <td>&nbsp;</td>
-                <td><span class="required">* Required Fields</span></td>
-            </tr>  
-        </table>    
-        
-        
-        <!--- Terms and Conditions --->    
-        <h3 class="tripSectionTitle">Terms and Conditions</h3>                
-        <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">                    
-            <tr>
-                <td align="center" colspan="2">
-                    <h3> 
-                        Please carefully read the steps below explaining the enrollment process.
-                        <hr width=80% />
-                    </h3>
-                </td>
-            </tr>	
-            <tr>
-                <td colspan="2">
-                    <ol style="margin-top:0px;">
-                        <li>
-                            Submit permission form with all signatures to MPD Tours.
-                            <ul class="paragraphRules">
-                                <li>#APPLICATION.MPD.email#</li>
-                                <li>fax: +1 718 439 8565</li>
-                                <li>mail: 9101 Shore Road, ##203 - Brooklyn, NY 11209</li>
-                            </ul>
-                        </li>
-                        
-                        <li>
-                            MPD will contact you once your permission form have been received to book your flights. Do NOT book your own flights. 
-                        </li>
-                    </ol>
-                    
-                    <ul class="paragraphRules"><li><font size=-1>PS: If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li></ul>
-                </td>
-            </tr>
-            <tr class="blueRow">
-                <td width="5%" class="tripFormTitle"><input type="checkbox" name="registeringAgreement" id="registeringAgreement" value="1" /></Td>
-                <td width="95%" class="tripFormField"><label for="registeringAgreement" style="font-weight:bold;">I've read and understand the process of registering for a tour.</label></td>
-            </tr>
-            <tr>
-                <td class="tripFormTitle">
-                <input type="checkbox" name="airfareAgreement" id="airfareAgreement" value="1"/></Td>
-                <td class="tripFormField"><label for="airfareAgreement" style="font-weight:bold;">I understand that I should not book my airline ticket and that MPD will contact me to book my airfare.</label></td>
-            </tr>
-        </table>
-                        
-        <!--- Button --->
-        <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableButton">                                       
-            <tr class="blueRow">
-                <td colspan="2" align="center"><a href="javascript:confirmPayment();"><img src="extensions/images/Next.png" border="0" /></a></td>
-            </tr>
-        </table>
+		</cfif>
     
     </form>
 

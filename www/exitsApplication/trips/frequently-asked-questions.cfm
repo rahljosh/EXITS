@@ -88,7 +88,7 @@
                             <li>Once submitted, you will receive a confirmation email that all necessary paperwork has been submitted.</li>
                             <li>You will then receive an email from our Authorized Travel Agent to book your flight.</li>
                             <li>Once flight booked, you will receive your final trip confirmation from MPD</li>
-                            <li>ENJOY YOUR TRIP!!</li>
+                            <li>ENJOY YOUR TRIP!</li>
                         </ol>	
                         
                         <p class="faq-backTop"><a href="##generalQuestions">Back to top</a></p>

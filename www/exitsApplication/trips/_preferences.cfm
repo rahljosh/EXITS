@@ -210,17 +210,17 @@
                         INSERT INTO
                             student_tours_siblings
                         (
+                            studentTourID,
                             fk_studentID, 
                             siblingID,
-                            studentTourID, 
                             tripID,
                             dateCreated                  
                         )
                         VALUES
                         (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentPendingRegistration.ID)#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(childID)#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentPendingRegistration.ID)#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_ID)#">,
                             <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                         )
@@ -239,6 +239,7 @@
                         UPDATE
                             student_tours_siblings
                         SET
+                        	studentTourID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentPendingRegistration.ID)#">,
                             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                         WHERE
                             fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
