@@ -38,14 +38,30 @@
         </tr>
         <tr>
         <cfloop query="qGetTourList">
-            <td width="285" height="178" class="bBackground" scope="row">
+            <td width="285" height="270" class="bBackground" scope="row">
                 <form action="#CGI.SCRIPT_NAME#?action=tripDetails" method="post">
                     <input type="hidden" name="action" value="tripDetails" />
                     <input type="hidden" name="tourID" value="#qGetTourList.tour_id#" />
                     <input type="image" name="submit" src="extensions/images/trips_#qGetTourList.tour_id#.png" alt="#qGetTourList.tour_name# Details" /> <br />
-                    <strong>#qGetTourList.tour_name#</strong><br />
-                    #qGetTourList.tour_date#<br />
-                    Status: <cfif qGetTourList.tour_status EQ 'Active'>Seats Available<cfelse>#qGetTourList.tour_status#</cfif><br /><br />
+                    
+                    <p style="font-weight:bold; margin:3px;">#qGetTourList.tour_name#</p>
+                    
+                    <p style="margin:3px;">#qGetTourList.tour_date#</p>
+                    
+                    <p style="margin:3px;">
+                   		Status: 
+                        <strong>
+							<cfif qGetTourList.total EQ qGetTourList.spotLimit>
+                                Limited Seats Available                                 
+                            <cfelseif qGetTourList.total EQ qGetTourList.totalSpots>
+                                 Full - No more seats available
+                            <cfelseif qGetTourList.tour_status EQ 'Cancelled'>
+                                 Cancelled
+                            <cfelse> 
+                                 Seats Available
+                            </cfif>
+                        </strong>    
+                    </p>
                 </form>
             </td>
             <cfif currentrow MOD 2 EQ 0> 

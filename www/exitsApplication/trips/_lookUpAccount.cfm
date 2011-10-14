@@ -178,8 +178,10 @@
                 AND 
                     s.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.exitsPassword)#">
             </cfquery>
-			
+
             <cfscript>
+				// Check if total has been reached, if yes check if male/female are allowed to register
+			
 				if ( qLoginStudent.recordCount ) {
 					// Login Valid
 

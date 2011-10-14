@@ -64,7 +64,7 @@
         <cfargument name="sessionInformationID" required="yes" hint="SESSION.informationID is required" />		
 		<cfargument name="foreignTable" required="yes" hint="foreignTable is required" />
 		<cfargument name="foreignID" required="yes" hint="foreignID is required" />
-		<cfargument name="amount" required="yes" hint="foreignID is required" />
+		<cfargument name="amount" required="yes" hint="amount is required" />
         <cfargument name="paymentMethodID" required="yes" hint="paymentMethodID is required" />
 		<cfargument name="paymentMethodType" required="yes" hint="paymentMethod is required" />
 		<cfargument name="creditCardTypeID" required="yes" hint="creditCardTypeID is required" />

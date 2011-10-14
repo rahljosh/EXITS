@@ -98,19 +98,19 @@
 
 		<cfscript>
 			// Set Variables
-			if ( LEN(ARGUMENTS.tourID) ) {
+			if ( IsNumeric(ARGUMENTS.tourID) ) {
 				SESSION.TOUR.tourID = VAL(ARGUMENTS.tourID);
 			}
 			
-			if ( LEN(ARGUMENTS.isLoggedIn) ) {
+			if ( VAL(ARGUMENTS.isLoggedIn) ) {
 				SESSION.TOUR.isLoggedIn = VAL(ARGUMENTS.isLoggedIn);
 			}
 
-			if ( LEN(ARGUMENTS.studentID) ) {
+			if ( IsNumeric(ARGUMENTS.studentID) ) {
 				SESSION.TOUR.studentID = VAL(ARGUMENTS.studentID);
 			}
 			
-			if ( LEN(ARGUMENTS.hostID) ) {
+			if ( IsNumeric(ARGUMENTS.hostID) ) {
 				SESSION.TOUR.hostID = VAL(ARGUMENTS.hostID);
 			}
 			

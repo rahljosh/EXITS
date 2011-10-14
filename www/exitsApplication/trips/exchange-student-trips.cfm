@@ -40,6 +40,7 @@
     <cfparam name="FORM.emailAddress" default="">
     <cfparam name="FORM.confirmEmailAddress" default="">
 	<!--- Credit Card Information --->
+    <cfparam name="FORM.totalDue" default="">
     <cfparam name="FORM.paymentMethodID" default="1">
     <cfparam name="FORM.nameOnCard" default="">
 	<cfparam name="FORM.creditCardTypeID" default="">
@@ -89,6 +90,7 @@
         	s.familylastname, 
             s.firstname, 
             s.email, 
+            s.sex,
             s.med_allergies,
             s.other_Allergies,
             c.countryname
@@ -100,14 +102,71 @@
      		studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.studentID)#"> 
     </cfquery>
 
-	<cfquery name="qGetTourList" datasource="#APPLICATION.DSN.Source#">
-		SELECT 
-        	* 
-        FROM 
-        	smg_tours 
-        WHERE 
-        	tour_status != <cfqueryparam cfsqltype="cf_sql_varchar" value="inactive">
-	</cfquery>
+	<!--- Get Total Registrations --->
+    <cfquery name="qGetTourList" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+            tour_ID,
+            tour_name,
+            tour_date,
+            totalSpots,
+            tour_status,
+            spotLimit,
+            SUM(total) AS total
+        FROM
+        (
+        
+            SELECT 
+                t.tour_ID,
+                t.tour_name,
+                t.tour_date,
+                t.totalSpots,
+                t.tour_status,
+                t.spotLimit,
+                COUNT(st.studentID) AS total
+            FROM 
+                smg_tours t
+            LEFT OUTER JOIN
+                student_tours st ON st.tripID = t.tour_ID
+                    AND
+                        st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    AND
+                        st.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            WHERE
+                t.tour_status != <cfqueryparam cfsqltype="cf_sql_varchar" value="inactive">
+                
+            GROUP BY
+                t.tour_ID
+    
+            UNION
+    
+            SELECT 
+                t.tour_ID,
+                t.tour_name,
+                t.tour_date,
+                t.totalSpots,
+                t.tour_status,
+                t.spotLimit,
+                COUNT(sts.siblingID) AS total
+            FROM 
+                smg_tours t
+            INNER JOIN	
+                student_tours_siblings sts ON sts.tripID = t.tour_ID
+                    AND
+                        sts.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+            WHERE
+                t.tour_status != <cfqueryparam cfsqltype="cf_sql_varchar" value="inactive">
+                        
+            GROUP BY
+                t.tour_ID
+        
+        ) AS deviredTable
+        
+        GROUP BY
+        	tour_ID
+        
+        ORDER BY
+        	tour_name
+    </cfquery>
 
     <cfquery name="qGetTourDetails" datasource="#APPLICATION.DSN.Source#">
         SELECT 
@@ -140,6 +199,7 @@
             sts.tripID,
             sts.paid,
             shc.name,
+            shc.sex,
             shc.lastName,
             shc.birthDate
         FROM 
