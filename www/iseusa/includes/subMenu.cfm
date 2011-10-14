@@ -2,7 +2,6 @@
 <style type="text/css">
 .menu{
 	font-weight:bold;
-	background-color: #F7941E;
 	height:25px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
@@ -138,9 +137,9 @@
 	<ul>
 <li><a href="become-a-host-familyJW.cfm?page=/HostFamily/why-host-family" target="_self" ><strong>Why Host?</strong></a>
 	<ul>
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/why-host-family" target="_self">How Important is Hosting?</a></li>
+<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/how-important-hosting" target="_self">How Important is Hosting?</a></li>
 <li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-benefits" target="_self">Benefits from Hosting</a></li>
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/hosting-lasts-lifetime" target="_self">Hosting Lasts a LIfetime</a></li>
+<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/hosting-lasts-lifetime" target="_self">Hosting Lasts a Lifetime</a></li>
 	</ul>
 </li>
 
@@ -164,6 +163,7 @@
 
 <li><a href="meet-our-studentsJW.cfm" target="_self" ><strong>Students</strong></a>
 	<ul>
+    <li><a href="become-a-host-familyJW.cfm?page=/HostFamily/about-our-students" target="_self">About Our Students</a></li>
 	<li><a href="meet-our-studentsJW.cfm" target="_self">Meet Our Students</a></li>
 	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/student-have-learned" target="_self">What Students Have Learned</a></li>
 	</ul>
