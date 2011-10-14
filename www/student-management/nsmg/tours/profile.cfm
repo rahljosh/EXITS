@@ -17,30 +17,18 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.tour_id#">
             <cfset form.pdf = 1>
             <cfinclude template="tripPermission.cfm">
         </cfdocument>
-                 <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/temp/paymentForm_#url.studentid#.pdf" overwrite="yes">
-			<style type="text/css">
-            <!--
-        	<cfinclude template="../smg.css">            
-            -->
-            </style>
-			<!--- form.pr_id and form.report_mode are required for the progress report in print mode.
-			form.pdf is used to not display the logo which isn't working on the PDF. --->
-            <cfset form.report_mode = 'print'>
-            <cfset form.pdf = 1>
-            <cfinclude template="paymentForm.cfm">
-        </cfdocument>
+
     <!----Email to Student---->    
     <cfsavecontent variable="stuEmailMessage">
         <cfoutput>			
         ****This email was resent per your request.***** 
     
-    
-          <p>Please return the MPD Payment Form and Permission Form by:<br />
+          <p>Please return the Permission Form by:<br />
             <ul>
             <li>email: info@mpdtoursamerica.com
             <li>fax:   +1 718 439 8565  
             <li>mail:  9101 Shore Road, ##203 - Brooklyn, NY 11209 </p>
-        <p>Please visit ISE's website for additional questions. http://www.iseusa.com/trips/questions.cfm</p>
+        <p>Please visit ISE's website for additional questions. https://trips.exitsapplication.com/frequently-asked-questions.cfm</p>
         <p>If you have any questions that are not answerd please don't hesitate to contact us at info@mpdtoursamerica.com. </p>
         <p>See you soon!</p>
         <p>MPD Tour America, Inc.<br />
@@ -52,19 +40,16 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.tour_id#">
         </cfsavecontent>
         
         <cfinvoke component="cfc.email" method="send_mail">
-        
         	<cfinvokeargument name="email_to" value="#form.resendEmail#"> 
-		<!----
-            <cfinvokeargument name="email_to" value="josh@pokytrails.com">  
+			<!----
+			<cfinvokeargument name="email_to" value="josh@pokytrails.com">  
 			---->
             <cfinvokeargument name="email_cc" value="trips@iseusa.com">     
             <cfinvokeargument name="email_from" value="""Trip Support"" <trips@iseusa.com>">
             <cfinvokeargument name="email_subject" value="Your Trip Details">
             <cfinvokeargument name="email_message" value="#stuEmailMessage#">
             <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/tours/#tripDetails.packetfile#">
-            <cfinvokeargument name="email_file3" value="C:/websites/student-management/nsmg/uploadedfiles/temp/permissionForm_#url.studentid#.pdf">
-            <cfinvokeargument name="email_file2" value="C:/websites/student-management/nsmg/uploadedfiles/temp/paymentForm_#url.studentid#.pdf">
-            
+            <cfinvokeargument name="email_file2" value="C:/websites/student-management/nsmg/uploadedfiles/temp/permissionForm_#url.studentid#.pdf">
       </cfinvoke>	
 </Cfif>
 <cfif isDefined('form.updateTrip')>
@@ -157,12 +142,27 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.tour_id#">
 </cfquery>
 
 <!----Get Siblings on tours---->
-<cfquery name="sibs" datasource="#application.dsn#">
-select sibs.siblingid, sibs.id, shc.name, shc.lastname, shc.birthdate, shc.sex, sibs.paid
-from student_tours_siblings sibs
-left join smg_host_children shc on shc.childid = sibs.siblingid
-where fk_Studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
-and tripid = <cfqueryparam cfsqltype="cf_sql_integer" value="#tourInfo.tripid#">
+<cfquery name="qGetSiblings" datasource="#application.dsn#">
+    select 
+    	sibs.id,
+    	sibs.siblingid, 
+        shc.name, 
+        shc.lastname, 
+        shc.birthdate, 
+        shc.sex, 
+        sibs.paid
+    FROM 
+    	student_tours_siblings sibs
+    LEFT JOIN
+    	smg_host_children shc on shc.childid = sibs.siblingid
+    WHERE
+    	fk_Studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentid#">
+    AND
+    	tripid = <cfqueryparam cfsqltype="cf_sql_integer" value="#tourInfo.tripid#">
+    AND 
+    	sibs.PAID IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+    AND 
+    	sibs.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 </cfquery>
 
 <!----Get available Tours so tours can be changed if needed---->
@@ -184,7 +184,7 @@ from smg_tours
 </table>
 <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
         <tr>
-            <td rowspan=5><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/web-students/#tourInfo.studentid#.jpg" height=150/><Br />
+            <td rowspan=5><img src="uploadedfiles/web-students/#tourInfo.studentid#.jpg" height=150/><Br />
             <span class="greyText"><strong>DOB</strong></span> <span class="bigLabel">#DateFormat(tourInfo.dob, 'mm/dd/yyyy')#</span><Br />
             <span class="greyText"><strong>Sex</strong></span> <span class="bigLabel">#tourInfo.sex#</span>
             </td>
@@ -311,6 +311,8 @@ from smg_tours
                     
                  </td>
                 <Td>
+                	<img src="pics/buttons/received_17.png" border="0" />
+                	<!---
                     <Cfif tourInfo.paid is ''>
                         <form method="post" action="index.cfm?curdoc=tours/profile&studentid=#url.studentid#">
                        	 	<input type="hidden" name="recordPaid"> 
@@ -323,6 +325,7 @@ from smg_tours
                          	<input type=image src="pics/buttons/received_17.png">
                         </form>
                      </Cfif>
+					 --->
                  </Td>
                  <td>
                  <Cfif tourInfo.permissionForm is ''>
@@ -363,47 +366,31 @@ from smg_tours
             </Tr>
             </cfif>
             </table>
-            <br /><Br />
             
-        <cfif sibs.recordcount gt 0>
-     	 <table align="Center" width=50%>
-        	<tr>
-            	<th colspan=4><h2>Siblings Going Along</h2></th>
-            </tr>
-            <tr>
-            	<Td><u>Name</u></Td>
-                <td><u>Age</u></td>
-                <Td><u>Sex</u></Td>
-                <td><u>Paid</u></td>
-    		</tr>
-             <Cfloop query="sibs">
-                <tr>
-                    <td>#name# #lastname#</td>
-                    <Td>#DateDiff('yyyy', '#birthdate#', '#now()#')#</Td>
-                    <Td>#sex#</Td>
-                    <Td>#DateFormat(paid, 'mm/dd/yyyy')#</Td>
-                    <Td>
-					<cfif paid is ''>
-                    	<form method="post" action="index.cfm?curdoc=tours/profile&studentid=#url.studentid#">
-                        	<input type=hidden name="siblingRecord" value="#sibs.id#" />
-                            <input type="submit" value="Record Payment" />
-                        </form>
-                        
-                    <cfelse>
-                    
-                    	
-                    <form method="post" action="index.cfm?curdoc=tours/profile&studentid=#url.studentid#">
-                        	<input type=hidden name="siblingRemove" value="#sibs.id#" />
-                            <input type="submit" value="Remove Payment" />
-                        </form>
-                    </cfif>
-                    </Td>
-                </tr>	
-             </Cfloop>
-           
-            </table>
+			<cfif qGetSiblings.recordcount>
+                <table border="0" cellpadding="4" cellspacing="0" width="50%" align="center" style="border:1px solid ##3b5998; margin-top:25px; margin-bottom:25px;">
+                    <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                        <th colspan="4" style="border-bottom:1px solid ##FFF;">SIBLINGS GOING ALONG</th>
+                    </tr>
+                    <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                        <td>Name</td>
+                        <td>Age</td>
+                        <td>Gender</td>
+                        <td>Paid</td>
+                    </tr>
+                    <cfloop query="qGetSiblings">
+                        <tr bgcolor="#iif(qGetSiblings.currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
+                            <td>#name# #lastname#</td>
+                            <Td>#DateDiff('yyyy', '#birthdate#', '#now()#')#</Td>
+                            <Td>#sex#</Td>
+                            <Td>#DateFormat(paid, 'mm/dd/yyyy')#</Td>
+                        </tr>	
+                    </cfloop>
+                </table>
             </cfif>
-            <Cfif client.usertype lte 4> 
+            
+            <!---
+			<Cfif client.usertype lte 4> 
                 <br /><Br />
                 <div align="center">
                 <form method="post" action="index.cfm?curdoc=tours/profile&studentid=#url.studentid#">
@@ -413,14 +400,17 @@ from smg_tours
                 </form>
                 </div>
             </Cfif>
+			--->
+            
            </td>
           </tr>
           <Tr>
              	<td colspan=4 align="Center">
                    Resend Forms to 
                 <form action="index.cfm?curdoc=tours/profile&studentid=#url.studentid#" method="post">
-                <input type="hidden" name="tour_id" value="#tourInfo.tour_id#">
-                <input type="text" name="resendEmail" value="#tourInfo.studentEmail#"/> <input type="submit" value="Resend" />
+                    <input type="hidden" name="tour_id" value="#tourInfo.tour_id#">
+                    <input type="text" name="resendEmail" value="#tourInfo.studentEmail#" class="largeField"/> 
+                    <input type="submit" value="Resend" />
                 </form>
                 </td>
              </Tr>
