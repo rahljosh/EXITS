@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		header.cfm
+	File:		mpdTours.cfm
 	Author:		Marcus Melo
 	Date:		October 10, 2011
-	Desc:		Student Trip Header
+	Desc:		MPD Tour List
 	
 	Updates:	
 	
@@ -318,9 +318,10 @@
                     <td align="center">Gender</td>
                     <td align="center">Host Siblings</td>
                     <td>Tour</td>
-                    <td>Paid</td> 
+                    <td>Paid</td>                     
                     <td>Total</td>                   
                     <td>Transaction ID</td>
+                    <td>On Hold</td>
                     <td>Permission</td>
                     <td>Flights</td>
                     <td>Company</td>
@@ -344,7 +345,7 @@
                     </cfquery>
             
                     <tr bgcolor="#iif(qGetResults.currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-                        <td><a href="?curdoc=tours/profile&studentID=#qGetResults.studentID#">#studentID#</a></td>
+                        <td><a href="?curdoc=tours/profile&studentID=#qGetResults.studentID#&tripID=#qGetResults.tripID#">#studentID#</a></td>
                         <td>#qGetResults.familylastname#</td>
                         <td>#qGetResults.firstname#</td>
                         <td align="center">#UCase(Left(qGetResults.sex, 1))#</td>
@@ -353,6 +354,7 @@
                         <td><cfif IsDate(qGetResults.paid)>#DateFormat(qGetResults.paid)#</cfif></td>
                         <td>#DollarFormat(qGetResults.amount)#</td>
                         <td>#qGetResults.authTransactionID#</td>
+                        <td><cfif IsDate(qGetResults.dateOnHold)>#DateFormat(qGetResults.dateOnHold)#</cfif></td>
                         <td><cfif IsDate(qGetResults.permissionForm)>#DateFormat(qGetResults.permissionForm)#</cfif></td>
                         <td><cfif LEN(qGetResults.flightInfo)>#DateFormat(qGetResults.permissionForm)#<cfelse>No</cfif></td>
                         <td>#qGetResults.companyshort_nocolor#</td>
