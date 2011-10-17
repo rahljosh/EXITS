@@ -51,7 +51,7 @@
                     
                     <ul>
                         <li class="faq-questions"><a href="##question15">Are these tours chaperoned?</a></li>
-                        <li class="faq-questions"><a href="##question16">Are there areas and times that  students are not supervised?</a></li>
+                        <li class="faq-questions"><a href="##question16">Are there areas and times that students are not supervised?</a></li>
                         <li class="faq-questions"><a href="##question17">How many adults are in charge on every trip?</a></li>
                     </ul>
                     
@@ -63,6 +63,7 @@
                         <li class="faq-questions"><a href="##question20">Will I be confirmed of payment or confirmation number given</a></li>
                         <li class="faq-questions"><a href="##question21">Can I make several payments?</a></li>
                         <li class="faq-questions"><a href="##question22">What happens if I change my mind about a tour selection or want to cancel a trip?</a></li>
+                        <li class="faq-questions"><a href="##question23">Why has my card payment been declined?</a></li>
                     </ul>
               </th>
           	</tr>                    
@@ -81,7 +82,7 @@
                     
                         <p class="faq-section">How to book a tour?</p>
                         
-                        <ol style="text-align:left;">
+                        <ol style="text-align:left; line-height:20px;">
                             <li><a href="http://trips.exitsapplication.com/">Reserve your spot</a> on your tour on MPD Trips Website</li>
                             <li>You will receive an email with both a Payment Form and Permission Form attached.</li>
                             <li>You must fully complete both forms and submit them</li>
@@ -443,13 +444,62 @@
                         <p class="faq-section">What happens if I change my mind about a tour selection or want to cancel a trip?</p>
                         
                         <p class="faq-answer">
-                            There is a $100 cancellation fee up to 60 days prior to your chosen trip. After 60 days, there are NO Refunds.
+                            There is a $100 cancellation fee and a $25 refund processing fee up to 30 days prior to your chosen trip. After 30 days, there are <strong>NO REFUNDS</strong>.
                         </p>
                         
                         <p class="faq-backTop"><a href="##paymentQuestions">Back to top</a></p>
                     
                     </div>
-
+                    
+                    <!--- question23 --->
+                    <div id="question23" style="text-align:left;">
+                    
+                        <p class="faq-section">Why has my card payment been declined?</p>
+                        
+                        <p class="faq-answer">
+                            There are many different reasons why your card payment may have been declined, but we are not informed of the exact reason.
+                        </p>
+                        
+						<p class="faq-answer">    
+                            Reasons why your payment may have been declined, include: 
+                        </p>
+                        
+                        <p class="faq-answer">    
+                            <ul style="text-align:left; line-height:20px;">
+                            
+                                <li>You selected the wrong card type. We accept Visa, MasterCard, American Express and Discover.</li>
+                                
+                                <li>Some of the card/personal details entered do not match the information held by your Card Issuer. Please make sure that the address given exactly matches that to which your card statements are sent and that other information given is correct.</li>
+                                
+                                <li>You do not have enough CLEARED funds on your card to cover the amount of the purchase.</li>
+                                
+                                <li>Your Card Issuer referred the transaction for an authorization code or further identity checks.</li>
+                                
+                                <li>Your card has been reported as lost/stolen and been cancelled by your Card Issuer.</li>
+                                
+                                <li>Your card has or is due to expire and has been replaced by your Card Issuer.</li>
+                                
+                                <li>Your card has recently been replaced by your Card Issuer but not yet activated.</li>
+                                
+                                <li>Your card cannot be used to pay for goods/services in a Cardholder-Not-Present environment (online/over the internet).</li>
+                                
+                                <li>There may be a problem with your Card Issuer's authorization system</li>
+                          	
+                            </ul>
+                       	</p>
+                        
+                       	<p class="faq-answer">
+                            If you are sure that none of the reasons above apply to your payment attempt, we recommend that you try again. <br /> 
+                       	</p>
+                       
+						<p class="faq-answer">     
+                            However, should the problem persist, please contact your Card Issuer (the phone number may be on the back of the card) to find out further information. <br />                  
+                        </p>
+                        
+                        <p class="faq-backTop"><a href="##paymentQuestions">Back to top</a></p>
+                    
+                    </div>
+                    
               	</td>
           	</tr>                    
 		</table>

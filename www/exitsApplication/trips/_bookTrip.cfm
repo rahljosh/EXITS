@@ -17,7 +17,7 @@
 
     <!--- Authorize.net --->
 	<cfparam name="authIsSuccess" default="0" />
-
+	
     <cfquery name="qGetCountryList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	countryID,
@@ -109,6 +109,14 @@
     </cfquery>
     
     <cfscript>	
+		// Credit Card Denied Multiple Times
+		if ( SESSION.TOUR.declinedTransactions GT 1 ) {
+			
+			SESSION.formErrors.Add("Unfortunately your credit card has been declined multiple times, please contact your credit card issuer (number on the back) and try again in 2 hours");
+			SESSION.formErrors.Add('Please refer to our <a href="/frequently-asked-questions.cfm##question23" target="_blank">FAQ</a> to understand why this transaction has been declined');
+			
+		}	
+	
 		// Get total of siblings
 		vTotalMaleRegistering = VAL(qGetTotalPendingMaleSiblings.total);
 		
@@ -172,7 +180,7 @@
     
     <!--- FORM SUBMITTED --->
 	<cfif VAL(FORM.submitted)>
-
+		
         <cfscript>
 			// FORM Validation
 			if ( NOT LEN(FORM.emailAddress) ) {
@@ -420,8 +428,14 @@
 					// Payment Not Approved
 					authIsSuccess = false;
 
+					// Count Declined Transactions
+					APPLICATION.CFC.SESSION.setDeclinedTransactions();					
+
 					// Set Error Message
 					SESSION.formErrors.Add(stAuthorizeAndCapture.responseReasonText.response);
+					
+					// Credit Card Declined Message
+					SESSION.formErrors.Add("If you are using an International Credit Card please make sure you call your credit card issuer in advance to let them know about this charge");
 				}
 
 				// Update Authorize.net fields on the payment table
@@ -646,7 +660,7 @@
         </table>                
         
         <!--- Trip Not Full --->
-        <cfif NOT VAL(vIsTripFull)>
+        <cfif NOT VAL(vIsTripFull) AND SESSION.TOUR.declinedTransactions LT 2>
              
 			<!--- Student Information --->     
             <h3 class="tripSectionTitle">Student Information</h3>     
@@ -691,7 +705,7 @@
                 
             <!--- Credit Card Information --->
             <h3 class="tripSectionTitle">Credit Card Information</h3>
-            <em class="tripTitleNotes">Enter information for a Credit Card. Your session is <a href="rules.cfm" target="_blank">secure</a>.</em>
+            <em class="tripTitleNotes">Enter information for a Credit Card. Your session is <a href="frequently-asked-questions.cfm" target="_blank">secure</a>.</em>
     
             <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">    
                 <tr class="blueRow">
@@ -832,6 +846,13 @@
                 <tr>
                     <td colspan="2">
                         <ol style="margin-top:0px;">
+                            <li>
+                            	REFUND POLICY
+                                <ul class="paragraphRules">
+                                	<li>There is a $100 cancellation fee and a $25 refund processing fee up to 30 days prior to your chosen trip. After 30 days, there are <strong>NO REFUNDS</strong>.</li>
+                                </ul>
+                            </li>
+                            
                             <li>
                                 Submit permission form with all signatures to MPD Tours.
                                 <ul class="paragraphRules">

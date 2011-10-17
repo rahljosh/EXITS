@@ -49,15 +49,6 @@
         
 	</cfdocument>
 
-    <!--- Payment Form --->
-    <!---
-	<cfdocument format="PDF" filename="#APPLICATION.PATH.TEMP#paymentForm_#VAL(qGetStudentInfo.studentID)#.pdf" overwrite="yes" margintop="0.2" marginbottom="0.2">
-        
-        <cfinclude template="paymentFORM.cfm">
-        
-    </cfdocument>
-	--->    
-
     <!--- Email to Student --->    
     <cfsavecontent variable="stuEmailMessage">
         <p>		
@@ -68,16 +59,13 @@
             <font color="red">* * Your spot will not be confirmed until permission form has been received by MPD Tours America.Please work on getting this completed as soon as possible * *</font> 
         </p>
     
-    	<!--- 
-		<p><strong>IMPORTANT:</strong> On the MPD Payment form, enter <strong>#qGetStudentInfo.studentid#</strong> in the STUDENT ID field.</p>
-    	--->
-        
         <p>
         	Attached is a Student Packet with hotel, airport arrival instructions, emergency numbers, etc.  
             Please keep this handy for your trip and leave a copy with your host family while you are on the trip.
         </p>
         
-    	<p>Please return the MPD Payment Form and Permission Form by:<br />
+    	<p>
+        	Please return the permission form by:<br />
             <ul>
                 <li>email: #APPLICATION.MPD.email#</li>
                 <li>fax:   +1 718 439 8565</li>
@@ -111,7 +99,6 @@
         <cfinvokeargument name="email_message" value="#stuEmailMessage#">
         <cfinvokeargument name="email_file" value="#APPLICATION.PATH.TEMP#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf">
         <cfinvokeargument name="email_file2" value="#APPLICATION.PATH.tour##qGetTourDetails.packetfile#">
-        <!--- <cfinvokeargument name="email_file3" value="#APPLICATION.PATH.TEMP#paymentForm_#VAL(qGetStudentInfo.studentID)#.pdf"> --->
     </cfinvoke>	
     
     <!--- Email to Manager --->
@@ -121,7 +108,7 @@
         Dates: #DateFormat(qGetTourDetails.tour_start, 'mmm d, yyyy')# - #DateFormat(qGetTourDetails.tour_end, 'mmm d, yyyy')#
         
         If you feel that #qGetStudentInfo.firstname# should NOT be going on this trip, please notify us by using this 
-        <a href="#SESSION.COMPANY.exitsURL#/nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tour=#qGetTourDetails.tour_id#">form</a> 
+        <a href="#SESSION.COMPANY.exitsURL#/nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
         (you will need to be logged into follow the link)
     </cfsavecontent>
     

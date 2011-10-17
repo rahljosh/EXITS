@@ -111,6 +111,8 @@
             totalSpots,
             tour_status,
             spotLimit,
+            extraMaleSpot,
+            extraFemaleSpot,
             SUM(total) AS total
         FROM
         (
@@ -122,6 +124,8 @@
                 t.totalSpots,
                 t.tour_status,
                 t.spotLimit,
+                t.extraMaleSpot,
+                t.extraFemaleSpot,                
                 COUNT(st.studentID) AS total
             FROM 
                 smg_tours t
@@ -146,6 +150,8 @@
                 t.totalSpots,
                 t.tour_status,
                 t.spotLimit,
+                t.extraMaleSpot,
+                t.extraFemaleSpot,                
                 COUNT(sts.siblingID) AS total
             FROM 
                 smg_tours t
