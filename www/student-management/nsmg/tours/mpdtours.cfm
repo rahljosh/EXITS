@@ -19,6 +19,7 @@
     <cfparam name="submitted" default="0">
     <cfparam name="keyword" default="">
     <cfparam name="paid" default="1">
+    <cfparam name="studentStatus" default="1">
     <cfparam name="permissionForm" default="">
     <cfparam name="tour_id" default="0">
     <cfparam name="orderby" default="paid">
@@ -158,7 +159,7 @@
             LEFT JOIN 
             	smg_companies c on c.companyid = st.companyid
             WHERE
-            	st.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                st.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(studentStatus)#">
 
 			<CFif VAL(tour_id)>
             	AND 
@@ -262,6 +263,13 @@
                     </select>            
                 </td>
                 <td>
+                    Status<br />
+                    <select name="studentStatus">
+                        <option value="1" <cfif studentStatus EQ 1>selected</cfif>>Active</option>
+                        <option value="0" <cfif studentStatus EQ 0>selected</cfif>>Cancelled</option>
+                    </select>            
+                </td>
+                <td>
                     Order By<br />
                     <select name="orderby">
                         <option value="stu.studentID" <cfif orderby EQ 'studentID'>selected</cfif>>ID</option>
@@ -269,7 +277,6 @@
                         <option value="tour_name" <cfif orderby EQ 'Trip'>selected</cfif>>Tour</option>
                         <option value="Paid" <cfif orderby EQ 'Paid'>selected</cfif>>Paid</option>
                         <option value="Permission" <cfif orderby EQ 'Permission'>selected</cfif>>Permission</option>
-                        
                     </select>            
                 </td>
                 <td>
@@ -321,9 +328,9 @@
                     <td>Paid</td>                     
                     <td>Total</td>                   
                     <td>Transaction ID</td>
-                    <td>On Hold</td>
                     <td>Permission</td>
                     <td>Flights</td>
+                    <td>On Hold</td>
                     <td>Company</td>
                 </tr>
                 <cfloop query="qGetResults" startrow="#startrow#" endrow="#endrow#">
@@ -354,9 +361,9 @@
                         <td><cfif IsDate(qGetResults.paid)>#DateFormat(qGetResults.paid)#</cfif></td>
                         <td>#DollarFormat(qGetResults.amount)#</td>
                         <td>#qGetResults.authTransactionID#</td>
-                        <td><cfif IsDate(qGetResults.dateOnHold)>#DateFormat(qGetResults.dateOnHold)#</cfif></td>
                         <td><cfif IsDate(qGetResults.permissionForm)>#DateFormat(qGetResults.permissionForm)#</cfif></td>
                         <td><cfif LEN(qGetResults.flightInfo)>#DateFormat(qGetResults.permissionForm)#<cfelse>No</cfif></td>
+                        <td><cfif IsDate(qGetResults.dateOnHold)>#DateFormat(qGetResults.dateOnHold)#</cfif></td>
                         <td>#qGetResults.companyshort_nocolor#</td>
                     </tr>
                 </cfloop>
