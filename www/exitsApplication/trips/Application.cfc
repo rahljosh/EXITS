@@ -8,7 +8,7 @@
 		THIS.Name = "MPDToursV1-" & Hash(GetCurrentTemplatePath()); // "MPDToursV1-" & Hash(GetCurrentTemplatePath());
 		THIS.ApplicationTimeout = CreateTimeSpan( 0, 1, 0, 0 );
 		THIS.SessionManagement = true;
-		THIS.sessionTimeout = CreateTimeSpan( 0, 4, 0, 0 ); // Session Expires in 4 hours
+		THIS.sessionTimeout = CreateTimeSpan( 0, 2, 0, 0 ); // Session Expires in 2 hours
 
 		// Create a function that let us create CFCs from any location
 		function CreateCFC(strCFCName){
@@ -219,7 +219,7 @@
             
             <cfset GetPageContext().GetOut().ClearBuffer() />
             
-            <cflocation url="/index.cfm" addtoken="no" />
+            <cflocation url="/error-message.cfm" addtoken="no" />
         
         <cfelse>
 			

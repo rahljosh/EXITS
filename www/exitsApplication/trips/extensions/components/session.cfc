@@ -120,6 +120,17 @@
 		</cfscript>
 	
     </cffunction>
+    
+
+	<!--- Set SESSION Variables --->
+	<cffunction name="setDeclinedTransactions" access="public" returntype="void" hint="Sets Declined Variables">
+
+		<cfscript>
+			// Increase number of declined transactions
+			SESSION.TOUR.declinedTransactions = SESSION.TOUR.declinedTransactions + 1;
+		</cfscript>
+	
+    </cffunction>
 
 
 	<!--- Clear Trip Session --->

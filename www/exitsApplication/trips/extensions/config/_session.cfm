@@ -26,6 +26,7 @@
 <cfparam name="SESSION.TOUR.studentID" default="0">
 <cfparam name="SESSION.TOUR.hostID" default="0">    
 <cfparam name="SESSION.TOUR.applicationPaymentID" default="0"> 
+<cfparam name="SESSION.TOUR.declinedTransactions" default="0"> 
 
 <!--- Param Session Variables --->
 <cfparam name="SESSION.COMPANY.ID" default="0">

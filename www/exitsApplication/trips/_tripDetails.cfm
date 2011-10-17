@@ -89,7 +89,9 @@
                                 <span class="SubTitle">#qGetTourDetails.tour_length#</span>
                             </td>
                             <td width="30%">
-                                <cfif qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.spotLimit>
+                                <cfif qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.spotLimit AND NOT VAL(qGetTourDetails.extraMaleSpot) AND NOT VAL(qGetTourDetails.extraFemaleSpot)>
+									<font color='##FF0000' size="2" style="font-weight:bold; text-align:center;">This trip is full! <br /> No More Seats Available!</font>
+								<cfelseif qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.spotLimit>
                                 	<input type="image" name="submit" src="extensions/images/reserve_class.png" alt="Reserve Spot" />
                                     <font color='##FF0000' size="2" style="font-weight:bold; text-align:center;">Limited Seats Available!</font>                                    
 								<cfelseif qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.totalSpots>
