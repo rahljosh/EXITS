@@ -119,7 +119,7 @@
 	<!--- Table Header --->
     <gui:tableHeader
         imageName="plane.png"
-        tableTitle="Trips - Hold Information"
+        tableTitle="Trips - Hold Information - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)"
     />
 
 	<!--- Page Messages --->
@@ -156,12 +156,12 @@
             <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" align="center">
                 <tr>
                     <td align="center">
-                        <h2>Put Student on Hold</h2>
+                        <h2>Put Student on Hold - Trip: #qGetTripDetails.tour_name#</h2>
                     </td>
                 </tr>            
                 <tr>
                     <td align="center">
-                        <p>You are about to place a hold on the registration process for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#</p>
+                        <p>You are about to place a hold on the registration process for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)</p>
                         
                         Please explain why you don't think they should be able to go. 
                     </td>

@@ -25,6 +25,9 @@
     <cfparam name="FORM.tripID" default="">
     <cfparam name="FORM.newtripID" default="">
     <cfparam name="FORM.emailAddress" default="">
+	<cfparam name="FORM.dateCanceled" default="">
+	<cfparam name="FORM.refundAmount" default="">
+	<cfparam name="FORM.refundNotes" default="">
 	
     <cfscript>
 		if ( VAL(URL.studentID) ) {
@@ -55,6 +58,11 @@
             st.nationality, 
             st.dateOnHold,
             st.holdReason, 
+            st.dateCanceled,
+            st.refundAmount,
+            st.refundNotes,
+            ap.authTransactionID,
+            ap.amount,            
             s.studentID,
             s.companyID, 
             s.firstname, 
@@ -70,6 +78,12 @@
             h.state as hostState
         FROM 
         	student_tours st
+        INNER JOIN
+            applicationPayment ap ON ap.foreignID = st.ID
+                AND
+                    foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                AND	
+                    authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         LEFT OUTER JOIN 
         	smg_students s on s.studentID = st. studentID
         LEFT OUTER JOIN
@@ -119,7 +133,8 @@
 	
     <!--- Check what action --->
     <cfswitch expression="#FORM.action#">
-    
+    	
+        <!--- Resend Email --->
     	<cfcase value="resendEmail">
     
 			<!--- Resend Email --->
@@ -203,6 +218,7 @@
         
         </cfcase>
         
+        <!--- Update Trip --->
         <cfcase value="updateTripInfo">
 
             <cfquery datasource="#APPLICATION.DSN#">
@@ -223,7 +239,8 @@
             </cfscript>
         
         </cfcase>
-
+		
+        <!--- Remove Hold --->
         <cfcase value="removeHold">
 
             <cfquery datasource="#APPLICATION.DSN#">
@@ -233,7 +250,9 @@
                     dateOnHold = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     holdReason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                AND	
+                    tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
             </cfquery>
 
 			<cfscript>
@@ -244,6 +263,7 @@
         
         </cfcase>
 
+		<!--- Permission Received --->
         <cfcase value="permissionReceived">
 
             <cfquery datasource="#APPLICATION.DSN#">
@@ -252,7 +272,9 @@
                 SET 
                     permissionForm = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                 WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                AND	
+                    tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
             </cfquery>
 
 			<cfscript>
@@ -263,6 +285,7 @@
         
         </cfcase>
 
+		<!--- Permission Not Received --->
         <cfcase value="permissionNOTReceived">
 
             <cfquery datasource="#APPLICATION.DSN#">
@@ -271,7 +294,9 @@
                 SET 
                     permissionForm = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                AND	
+                    tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
             </cfquery>
 
 			<cfscript>
@@ -282,6 +307,7 @@
         
         </cfcase>
         
+        <!--- Flight Booked --->
         <cfcase value="flightInfoBooked">
 
             <cfquery datasource="#APPLICATION.DSN#">
@@ -290,7 +316,9 @@
                 SET 
                     flightInfo = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                 WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                AND	
+                    tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
             </cfquery>
 
 			<cfscript>
@@ -301,6 +329,7 @@
         
         </cfcase>
 
+		<!--- Flight Not Booked --->
         <cfcase value="flightInfoNotBooked">
 
             <cfquery datasource="#APPLICATION.DSN#">
@@ -309,7 +338,9 @@
                 SET 
                     flightINfo = <cfqueryparam cfsqltype="cf_sql_date" null="yes">           
                 WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                AND	
+                    tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
             </cfquery>
 
 			<cfscript>
@@ -319,6 +350,55 @@
             </cfscript>
         
         </cfcase>
+
+		<!--- Cancel Trip --->
+        <cfcase value="cancelTrip">
+
+			<cfscript>
+                if ( NOT IsDate(FORM.dateCanceled) ) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("Please enter a valid cancelation date");
+					FORM.dateCanceled = '';
+                }
+
+                if ( NOT IsNumeric(FORM.refundAmount) ) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("Please enter a valid refund amount (numbers only)");
+					FORM.refundAmount = '';
+                }
+
+				if ( NOT LEN(FORM.refundNotes) ) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("Please enter notes");
+                }
+            </cfscript>
+
+			<!--- // Check if there are no errors --->
+            <cfif NOT SESSION.formErrors.length()>
+
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE 
+                        student_tours
+                    SET 
+                        active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                        dateCanceled = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#FORM.dateCanceled#">,
+                        refundAmount = <cfqueryparam cfsqltype="cf_sql_float" value="#FORM.refundAmount#">,
+                        refundNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.refundNotes#">       
+                    WHERE 
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                    AND	
+                        tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
+                </cfquery>
+    
+                <cfscript>
+                    SESSION.pageMessages.Add("Trip has been canceled");
+    
+                    Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
+                </cfscript>
+        	
+            </cfif>
+            
+        </cfcase>
         
     </cfswitch>
         
@@ -326,12 +406,19 @@
 
 <link rel="stylesheet" href="tours/trips.css" type="text/css"> <!-- trips -->
 
+<script language="javascript">
+	// Display Cancel Form
+	var displayCancelForm = function() { 
+		$("#cancelForm").fadeIn();	
+	}
+</script>	
+		
 <cfoutput>
 
 	<!--- Table Header --->
     <gui:tableHeader
         imageName="plane.png"
-        tableTitle="Student Details"
+        tableTitle="Trip Details"
         tableRightTitle='<a href="index.cfm?curdoc=tours/mpdtours&tour_id=#FORM.tripID#&submitted=1">Back to List</a>'
     />
 
@@ -349,134 +436,83 @@
         width="100%"
         />
 
-    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
-        <tr>
-            <td rowspan="5">
-                <img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/web-students/#qGetRegistrationInfo.studentID#.jpg" height="150"/> 
-                <br />
-                <span class="greyText">DOB:</span> <span class="bigLabel">#DateFormat(qGetRegistrationInfo.dob, 'mm/dd/yyyy')#</span>
-                <br />
-                <span class="greyText">Gender:</span> <span class="bigLabel">#qGetRegistrationInfo.sex#</span>
-            </td>
-            <td><span class="greyText">Name</span><br /><span class="bigLabel">#qGetRegistrationInfo.firstname# #qGetRegistrationInfo.familylastname# (###qGetRegistrationInfo.studentID#)</span></td>
-            <td rowspan="5" valign="top">
+    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
+		<tr>
+        	<td width="170px" valign="top">
+            	<img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/web-students/#qGetRegistrationInfo.studentID#.jpg" height="150" style="margin-bottom:10px;"/> 
                 
-                <table cellpadding="4" cellspacing="0" border="0">
-                    <tr>
-                        <td valign="top">
-                            <span class="greyText">Host Family </span>
-                            <br />
-                            <span class="bigLabel">#qGetRegistrationInfo.hostLast#</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <span class="greyText">Host Phone</span>
-                            <br />
-                            <span class="bigLabel">#qGetRegistrationInfo.hostPhone#</span>
-                        </td>
-                    </tr>                
-                   <tr>
-                        <td valign="top">
-                            <span class="greyText">Host Email</span>
-                            <br />
-                            <span class="bigLabel">#qGetRegistrationInfo.hostEmail#</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <span class="greyText">Host City & State</span>
-                            <br />
-                            <span class="bigLabel">#qGetRegistrationInfo.hostCity# #qGetRegistrationInfo.hostState#</span>
-                        </td>
-                    </tr>
-                </table>
-                
+                <span class="greyTextBlock">DOB</span> 
+				<span class="bigLabelBlock">#DateFormat(qGetRegistrationInfo.dob, 'mm/dd/yyyy')#</span>
+
+                <span class="greyTextBlock">Gender</span> 
+				<span class="bigLabelBlock">#qGetRegistrationInfo.sex#</span>
             </td>
-            <td rowspan="5" valign="top">
-            
-                <table cellpadding="4" cellspacing="0" border="0">
-                    <tr>
-                        <td valign="top">
-                            <span class="greyText">#qGetRegistrationInfo.firstname# Nationality </span>
-                            <br />
-                            <span class="bigLabel">#qGetRegistrationInfo.stunationality#</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <span class="greyText">Roomate Nationality</span>
-                            <br />
-                            <span class="bigLabel">#qGetRegistrationInfo.nationality#</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <span class="greyText">Roommate Requests</span>
-                            <br />
-                            <span class="bigLabel">
-                                <cfif NOT LEN(qGetRegistrationInfo.person1) AND NOT LEN(qGetRegistrationInfo.person2) AND NOT LEN(qGetRegistrationInfo.person3)>
-                                    None
-                                <cfelse>
-                                    <cfif LEN(qGetRegistrationInfo.person1)>#qGetRegistrationInfo.person1#<br /></cfif> 
-                                    <cfif LEN(qGetRegistrationInfo.person2)>#qGetRegistrationInfo.person2#<br /></cfif> 
-                                    <cfif LEN(qGetRegistrationInfo.person3)>#qGetRegistrationInfo.person3#<br /></cfif> 
-                                </cfif>
-							</span>                                
-                        </td>
-                    </tr>
-                </table>
-            
-                <br />
-                <span class="greyText">Medical / Allergy Info</span>
-                <br />
-                <span class="bigLabel">#qGetRegistrationInfo.med#</span>
-           
-            </td>
-        </tr>
-        <tr>
+            <!--- Student Information --->
             <td valign="top">
-                <span class="greyText">Tour</span>
-                <form action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post">
-                	<input type="hidden" name="action" value="updateTripInfo" />
-                    <input type="hidden" name="studentID" value="#FORM.studentID#" />
-                    <input type="hidden" name="tripID" value="#FORM.tripID#" />
-  
-                    <select name="newtripID">
-                        <cfloop query="qGetAvailableTours">
-                            <option value="#qGetAvailableTours.tour_id#" <cfif qGetRegistrationInfo.tripID EQ qGetAvailableTours.tour_id>selected</cfif>>#qGetAvailableTours.tour_name#</option>
-                        </cfloop>
-                    </select>
+            	<span class="greyTextBlock">Name</span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.firstname# #qGetRegistrationInfo.familylastname# (###qGetRegistrationInfo.studentID#)</span>
+                
+                <span class="greyTextBlock">Email Address</span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.email#</span>
+                
+                <!--- Trip Information --->
+                <span class="greyTextBlock">
+                	Tour Information 
+                	<cfif NOT IsDate(qGetRegistrationInfo.dateCanceled)>
+                    	<a href="javascript:displayCancelForm();" style="padding-left:140px;">[ Cancel Trip ]</a>
+                    </cfif>
+                </span>
+                <cfif NOT IsDate(qGetRegistrationInfo.dateCanceled)>
+                    <form action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post" style="margin-bottom:5px;">
+                        <input type="hidden" name="action" value="updateTripInfo" />
+                        <input type="hidden" name="studentID" value="#FORM.studentID#" />
+                        <input type="hidden" name="tripID" value="#FORM.tripID#" />
+      
+                        <select name="newtripID">
+                            <cfloop query="qGetAvailableTours">
+                                <option value="#qGetAvailableTours.tour_id#" <cfif qGetRegistrationInfo.tripID EQ qGetAvailableTours.tour_id>selected</cfif>>#qGetAvailableTours.tour_name#</option>
+                            </cfloop>
+                        </select>
+                        
+                        <input type="submit" value="Update trip" />
+                    </form>
+                <cfelse>                
+                	<span class="bigLabelBlock">#qGetRegistrationInfo.tour_name#</span>
+                </cfif>
+                
+                <span class="greyTextBlock">Registered On &nbsp; / &nbsp; Amount Paid &nbsp; / &nbsp; Transaction ID</span>
+                <span class="bigLabelBlock">#DateFormat(qGetRegistrationInfo.date)# &nbsp; / &nbsp; #DollarFormat(qGetRegistrationInfo.amount)# &nbsp; / &nbsp; #qGetRegistrationInfo.authTransactionID#</span>
+
+                <cfif IsDate(qGetRegistrationInfo.dateCanceled)>
+                    <span class="greyTextBlock">Cancelation Date &nbsp; / &nbsp; Refund Amount</span>
+                    <span class="bigLabelBlock">#DateFormat(qGetRegistrationInfo.dateCanceled, 'mm/dd/yyyy')# &nbsp; / &nbsp; #DollarFormat(qGetRegistrationInfo.refundAmount)#</span>
                     
-                    <input type="submit" value="Update trip" />
-                </form>
+                    <span class="greyTextBlock">Notes</span>
+                    <span class="bigLabelBlock">#qGetRegistrationInfo.refundNotes#</span>
+                </cfif>
             </td>
-        </tr>
-        <tr>
+            <!--- Host Family --->
             <td valign="top">
-                <span class="greyText">Registered</span>
-                <br />
-                <span class="bigLabel">#DateFormat(qGetRegistrationInfo.date)#</span>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <span class="greyText">Email</span>
-                <br />
-                <span class="bigLabel">#qGetRegistrationInfo.email#</span>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <span class="greyText">Prefered Airport / Alt. Airport</span>
-                <br />
-                <span class="bigLabel">
+                <span class="greyTextBlock">Host Family </span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.hostLast#</span>
+                
+                <span class="greyTextBlock">Host Phone</span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.hostPhone#</span>
+
+                <span class="greyTextBlock">Host City &nbsp; / &nbsp; State</span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.hostCity# &nbsp; / &nbsp; #qGetRegistrationInfo.hostState#</span>
+                
+                <span class="greyTextBlock">Host Email Address</span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.hostEmail#</span>
+
+                <span class="greyTextBlock">Prefered Airport &nbsp; / &nbsp; Alt. Airport</span>
+                <span class="bigLabelBlock">
                     <cfif NOT LEN(qGetRegistrationInfo.local_air_code)>
                         none
                     <cfelse>
                         #qGetRegistrationInfo.local_air_code#
                     </cfif> 
-                    / 
+                    &nbsp; / &nbsp; 
                     <cfif NOT LEN(qGetRegistrationInfo.major_air_code)>
                         none
                     <cfelse>
@@ -484,10 +520,69 @@
                     </cfif> 
                 </span>
             </td>
-        </tr>
-    </table>
+            <!--- Trip Preferences --->
+        	<td valign="top">
+                <span class="greyTextBlock">#qGetRegistrationInfo.firstname# Nationality </span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.stunationality#</span>
+                
+                <span class="greyTextBlock">Roomate Nationality</span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.nationality#</span>
+                
+                <span class="greyTextBlock">Roommate Requests</span>
+                <span class="bigLabelBlock">
+                    <cfif NOT LEN(qGetRegistrationInfo.person1) AND NOT LEN(qGetRegistrationInfo.person2) AND NOT LEN(qGetRegistrationInfo.person3)>
+                        None
+                    <cfelse>
+                        <cfif LEN(qGetRegistrationInfo.person1)>#qGetRegistrationInfo.person1#<br /></cfif> 
+                        <cfif LEN(qGetRegistrationInfo.person2)>#qGetRegistrationInfo.person2#<br /></cfif> 
+                        <cfif LEN(qGetRegistrationInfo.person3)>#qGetRegistrationInfo.person3#<br /></cfif> 
+                    </cfif>
+                </span>       
+                
+                <span class="greyTextBlock">Medical / Allergy Info</span>
+                <span class="bigLabel">#qGetRegistrationInfo.med#</span>
+            </td>
+		</tr>
+	</table>
+
+    <!--- Cancelation --->
+	<form name="cancelForm" id="cancelForm" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post" <cfif FORM.action NEQ "cancelTrip"> class="displayNone" </cfif> > 
+        <input type="hidden" name="studentID" value="#FORM.studentID#" />
+        <input type="hidden" name="tripID" value="#FORM.tripID#" />
+        <input type="hidden" name="action" value="cancelTrip" />
+     
+        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
+            <tr>
+                <td>
+                
+                    <table cellpadding="4" cellspacing="0" border="0" align="center" width="50%" style="border:1px solid ##3b5998;">
+                        <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                            <th colspan="2">Cancel Trip</th>
+                        </tr> 
+                        <tr>
+                            <td width="30%" class="greyTextRight">Cancelation Date</td>
+                            <td width="70%"><input type="text" name="dateCanceled" id="dateCanceled" value="#FORM.dateCanceled#" class="datePicker" /></td>
+                        </tr> 
+                        <tr>
+                            <td class="greyTextRight">Amout Refunded</td>
+                            <td><input type="text" name="refundAmount" id="refundAmount" value="#FORM.refundAmount#" class="smallField" /></td>
+                        </tr> 
+                        <tr>
+                            <td class="greyTextRight">Notes</td>
+                            <td><textarea name="refundNotes" id="refundNotes" class="largeTextArea">#FORM.refundNotes#</textarea></td>
+                        </tr>  
+                        <tr>
+                            <td colspan="2" align="center" valign="top"><input type="image" src="pics/submitBlue.png" /></td>
+                        </tr>
+                    </table> 
+                
+                </td>            
+            </tr>                               
+        </table>                 
 	
-    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
+    </form>   
+	
+    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
         <tr>
             <td>
             
@@ -601,10 +696,10 @@
 			</td>
 		</tr>
 	</table>                    
-	    
+
 	<!--- Siblings Information --->
     <cfif qGetSiblingsRegistered.recordcount>
-        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
+        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
             <tr>
                 <td>
                 
@@ -631,22 +726,35 @@
                 </td>
             </tr>
         </table>
-    </cfif>                    
-          
+    </cfif>   
+    
+    <!--- Resend Profile --->      
 	<form action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post"> 
         <input type="hidden" name="studentID" value="#FORM.studentID#" />
         <input type="hidden" name="tripID" value="#FORM.tripID#" />
         <input type="hidden" name="action" value="resendEmail" />
                    
-        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
+        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
             <tr>
-                <td align="center">
-                    <span class="greyText">Resend Forms to</span>  <br />
-                    <input type="text" name="emailAddress" value="#qGetRegistrationInfo.email#" class="largeField"/> 
-                    <input type="submit" value="Resend Email" />
+                <td>
+
+                    <table cellpadding="4" cellspacing="0" border="0" align="center" width="50%" style="border:1px solid ##3b5998;">
+                        <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                            <th colspan="2">Resend Forms To</th>
+                        </tr> 
+                        <tr>
+                            <td width="30%" class="greyTextRight">Email</td>
+                            <td width="70%"><input type="text" name="emailAddress" value="#qGetRegistrationInfo.email#" class="largeField"/></td>
+                        </tr> 
+                        <tr>
+                            <td colspan="2" align="center" valign="top"><input type="submit" value="Resend Email" /></td>
+                        </tr>
+                    </table> 
+
                 </td>
-             </tr>
-    	</table>
+            </tr>
+        </table>
+                    
   	</form>      
      
     <!--- Table Footer --->
