@@ -211,7 +211,6 @@
 	<cfform method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" enctype="multipart/form-data" preloader="no">
     	<input type="hidden" name="submitted" value="1" />
         <input type="hidden" name="tour_ID" value="#FORM.tour_ID#" />
-        <input type="hidden" name="availableSpots" value="#FORM.totalSpots - qGetTotalRegistered.total#" class="smallField" readonly="readonly">
 
 		<!--- Page Messages --->
         <gui:displayPageMessages 
@@ -230,8 +229,8 @@
         <table width="100%" align="center" cellpadding="3" cellspacing="2" bgcolor="##ffffe6" class="section">
             <tr>
                 <td width="25%" valign="top" align="right"><b>Name:</b></div></td>
-                <td width="50%" valign="top"><cfinput type="text" value="#FORM.tour_name#" name="tour_name" class="xLargeField" required="yes" message="Please enter a Tour Name"></td>
-                <td width="25%" valign="top" rowspan="14">
+                <td width="45%" valign="top"><cfinput type="text" value="#FORM.tour_name#" name="tour_name" class="xLargeField" required="yes" message="Please enter a Tour Name"></td>
+                <td width="30%" valign="top" rowspan="14">
                 	
                     <!--- Availability Information --->
                     <table border="0" cellpadding="4" cellspacing="0" width="100%" align="center" style="border:1px solid ##3b5998;">
@@ -263,11 +262,11 @@
                 </td>
             </tr>
             <tr>
-                <td valign="top" align="right"><b>Total of Spots:</b></div></td>
+                <td valign="top" align="right"><b>Total of Seats:</b></div></td>
                 <td valign="top"><input type="text" name="totalSpots" value="#FORM.totalSpots#" class="smallField"></td>          
             </tr>
             <tr>
-                <td valign="top" align="right"><b>Set Spot Limit:</b></div></td>
+                <td valign="top" align="right"><b>Set Seat Limit:</b></div></td>
                 <td valign="top">
                 	<input type="text" name="spotLimit" value="#FORM.spotLimit#" class="smallField"> 
                     Automatically blocks trip registrations when this limit is reached
@@ -315,7 +314,7 @@
             <tr>
                 <td valign="top" align="right"><b>Welcome Packet:</b></div></td>
                 <td valign="top">
-                	<cfinput type="file" name="packetFile" size="150"> <br />
+                	<cfinput type="file" name="packetFile" class="xLargeField"> <br />
                     Current File:  <cfif NOT LEN(FORM.packetfile)><a href="uploadedfiles/tours/#FORM.packetfile#">#FORM.packetfile#</A><cfelse>None</cfif>
                 </td>
             </tr>
