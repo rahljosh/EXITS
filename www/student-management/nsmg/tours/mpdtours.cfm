@@ -362,7 +362,7 @@
                         <td>#DollarFormat(qGetResults.amount)#</td>
                         <td>#qGetResults.authTransactionID#</td>
                         <td><cfif IsDate(qGetResults.permissionForm)>#DateFormat(qGetResults.permissionForm)#</cfif></td>
-                        <td><cfif LEN(qGetResults.flightInfo)>#DateFormat(qGetResults.permissionForm)#<cfelse>No</cfif></td>
+                        <td><cfif LEN(qGetResults.flightInfo)>#DateFormat(qGetResults.flightInfo)#<cfelse>No</cfif></td>
                         <td><cfif IsDate(qGetResults.dateOnHold)>#DateFormat(qGetResults.dateOnHold)#</cfif></td>
                         <td>#qGetResults.companyshort_nocolor#</td>
                     </tr>
@@ -389,7 +389,7 @@
                     <table border="0" cellpadding="4" cellspacing="0" width="60%" align="center" style="border:1px solid ##3b5998;">
                         <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
                             <td>Trip</td>
-                            <td align="center">Number of Spots</td>
+                            <td align="center">Number of Seats</td>
                             <td align="center">Total Registrations</td>
                             <td align="center">Male</td>
                             <td align="center">Female</td>
