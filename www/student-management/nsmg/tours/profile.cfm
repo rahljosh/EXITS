@@ -96,6 +96,13 @@
             st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
     </cfquery>
     
+    <cfscript>
+		if ( FORM.action NEQ 'resendEmail' ) {
+			// Form Email Address
+			FORM.emailAddress = qGetRegistrationInfo.email;
+		}
+	</cfscript>
+    
     <!----Get Siblings on tours---->
     <cfquery name="qGetSiblingsRegistered" datasource="#APPLICATION.DSN#">
         SELECT 
@@ -204,7 +211,7 @@
                 <cfscript>
 					SESSION.pageMessages.Add("Forms have been resent to #FORM.emailAddress#");
 					
-					Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.newtripID#", "no");
+					Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
 				</cfscript>
             
             <cfelse>
@@ -744,7 +751,7 @@
                         </tr> 
                         <tr>
                             <td width="30%" class="greyTextRight">Email</td>
-                            <td width="70%"><input type="text" name="emailAddress" value="#qGetRegistrationInfo.email#" class="largeField"/></td>
+                            <td width="70%"><input type="text" name="emailAddress" value="#FORM.emailAddress#" class="largeField"/></td>
                         </tr> 
                         <tr>
                             <td colspan="2" align="center" valign="top"><input type="submit" value="Resend Email" /></td>
