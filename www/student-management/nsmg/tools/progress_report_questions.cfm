@@ -86,18 +86,19 @@ button{
 	<form name="form">
 Select the month of questions you'd like to view:		
 		<select name="sele_region" onChange="javascript:formHandler()">
-		<option value="?curdoc=tools/progress_report_questions&month=9" <cfif url.month eq 9>selected</cfif>>September - Student Update</option>
-		<option value="?curdoc=tools/progress_report_questions&month=10" <cfif url.month eq 10>selected</cfif>>October - Progress Report</option>
-        <option value="?curdoc=tools/progress_report_questions&month=11" <cfif url.month eq 11>selected</cfif>>November - Student Update</option>
-		<option value="?curdoc=tools/progress_report_questions&month=12" <cfif url.month eq 12>selected</cfif>>December - Progress Report</option>
-        <option value="?curdoc=tools/progress_report_questions&month=1" <cfif url.month eq 1>selected</cfif>>January - Student Update</option>
-		<option value="?curdoc=tools/progress_report_questions&month=2" <cfif url.month eq 2>selected</cfif>>February - Progress Report</option>
-        <option value="?curdoc=tools/progress_report_questions&month=3" <cfif url.month eq 3>selected</cfif>>March - Student Update</option>
-		<option value="?curdoc=tools/progress_report_questions&month=4" <cfif url.month eq 4>selected</cfif>>April - Progress Report</option>
-        <option value="?curdoc=tools/progress_report_questions&month=5" <cfif url.month eq 5>selected</cfif>>May - Student Update</option>
-		<option value="?curdoc=tools/progress_report_questions&month=6" <cfif url.month eq 6>selected</cfif>>June - Progress Report</option>
-        <option value="?curdoc=tools/progress_report_questions&month=7" <cfif url.month eq 7>selected</cfif>>July - Student Update</option>
-		<option value="?curdoc=tools/progress_report_questions&month=8" <cfif url.month eq 8>selected</cfif>>August - Progress Report</option>
+        <option value="?curdoc=tools/progress_report_questions&month=8" <cfif url.month eq 8>selected</cfif>>August</option>
+		<option value="?curdoc=tools/progress_report_questions&month=9" <cfif url.month eq 9>selected</cfif>>September</option>
+		<option value="?curdoc=tools/progress_report_questions&month=10" <cfif url.month eq 10>selected</cfif>>October</option>
+        <option value="?curdoc=tools/progress_report_questions&month=11" <cfif url.month eq 11>selected</cfif>>November</option>
+		<option value="?curdoc=tools/progress_report_questions&month=12" <cfif url.month eq 12>selected</cfif>>December</option>
+        <option value="?curdoc=tools/progress_report_questions&month=1" <cfif url.month eq 1>selected</cfif>>January</option>
+		<option value="?curdoc=tools/progress_report_questions&month=2" <cfif url.month eq 2>selected</cfif>>February</option>
+        <option value="?curdoc=tools/progress_report_questions&month=3" <cfif url.month eq 3>selected</cfif>>March </option>
+		<option value="?curdoc=tools/progress_report_questions&month=4" <cfif url.month eq 4>selected</cfif>>April</option>
+        <option value="?curdoc=tools/progress_report_questions&month=5" <cfif url.month eq 5>selected</cfif>>May</option>
+		<option value="?curdoc=tools/progress_report_questions&month=6" <cfif url.month eq 6>selected</cfif>>June</option>
+
+		
 		</select>
 	
 	</form>
