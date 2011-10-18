@@ -317,7 +317,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     </tr>
 </table>
 
-<cfform action="index.cfm?curdoc=progress_reports2" method="post">
+<cfform action="index.cfm?curdoc=progress_reports" method="post">
 <input name="submitted" type="hidden" value="1">
 <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
 	<Tr>
@@ -698,7 +698,7 @@ But in the output below we use the report fields where a report has been submitt
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
                           			<Cfif inCountry eq 0>
                                     Not in Country - No Report Required
-									<cfelseif (#submittingRep# EQ client.userid  and (#now()# gt #startDate#) and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
+									<cfelseif (#submittingRep# EQ client.userid   and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
                                 
                                         <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                         <input type="hidden" name="studentid" value="#studentid#">
