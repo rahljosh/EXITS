@@ -64,7 +64,7 @@
         LEFT OUTER JOIN
             smg_schools school on school.schoolid = s.schoolid
         WHERE 
-            s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.studentID)#"> 
+            s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#"> 
     </cfquery>
 
 </cfsilent>
@@ -112,7 +112,7 @@
                     </tr>
                     <tr>
                         <td><span class="title">Age:</span></td>
-                        <td>#DateDiff('yyyy', '#qGetStudentFullInformation.dob#','#now()#')#</td>
+                        <td>#DateDiff('yyyy', qGetStudentFullInformation.dob, now())#</td>
                     </tr>
                         <tr>
                         <td><span class="title">Nationality:</span></td>
