@@ -322,7 +322,7 @@
 			
 			<!--- manager / DO NOT SHOW STUDENT VIEW --->
             AND 
-            	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+            	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
             
 			<!--- advisor --->
             <cfif CLIENT.usertype EQ 6>
