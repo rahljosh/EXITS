@@ -16,7 +16,7 @@
 		// Host Family Application
 		allowedUsers = '1,510,12313,7203,1077';
 		
-		tripsAllowedUsers = "1,12313,11620,14900,510"; // allow certain users to see trips - josh, hause, stacy, brendan, marcus 
+		tripsAllowedUsers = "1,12313,11620,14900,510,16718"; // allow certain users to see trips - josh, hause, stacy, brendan, Marcus, Tal Stanecky
 		
         // Get Company Info
         qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
