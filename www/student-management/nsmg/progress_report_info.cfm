@@ -1,6 +1,8 @@
 <!--- PS: Any changes made here should be also be made in the bulk progress report printing file --->
 
 <cfparam name="form.pr_action" default="">
+
+
 <cfswitch expression="#form.pr_action#">
 <!--- delete contact date. --->
 <cfcase value="delete_date">
@@ -94,6 +96,25 @@ function OpenLetter(url) {
     WHERE progress_report_dates.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
     ORDER BY progress_report_dates.prdate_date
 </cfquery>
+
+<Cfif get_report.pr_month_of_report eq 1>
+	<cfset perviousMonthsReport = 12>
+<cfelse>
+	<cfset perviousMonthsReport = #get_report.pr_month_of_report# - 1>
+</Cfif>
+
+<cfquery name="get_previousDates" datasource="#application.dsn#">
+    select pr.pr_id, pr.pr_month_of_report,progress_report_dates.*, prdate_types.prdate_type_name, prdate_contacts.prdate_contact_name
+    from progress_reports pr
+    left join progress_report_dates  on progress_report_dates.fk_progress_report = pr.pr_id
+    INNER JOIN prdate_types ON progress_report_dates.fk_prdate_type = prdate_types.prdate_type_id
+    INNER JOIN prdate_contacts ON progress_report_dates.fk_prdate_contact = prdate_contacts.prdate_contact_id
+    where pr.fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_student#"> 
+    and pr_month_of_report = #perviousMonthsReport#
+    ORDER BY progress_report_dates.prdate_date
+</cfquery>
+
+
 <cfquery name="get_questions" datasource="#application.dsn#">
     SELECT x_pr_questions.x_pr_question_id, x_pr_questions.x_pr_question_response, smg_prquestions.text, smg_prquestions.required
     FROM x_pr_questions
@@ -116,6 +137,17 @@ function OpenLetter(url) {
     FROM smg_users
     WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_sr_user#">
 </cfquery>
+<cfif get_report.fk_pr_user NEQ ''>
+    <cfquery name="get_place_rep" datasource="#application.dsn#">
+        SELECT userid, firstname, lastname
+        FROM smg_users
+        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_pr_user#">
+    </cfquery>
+<cfelse> 
+   	<cfset get_place_rep.firstname = 'Not Originally'>
+    <cfset get_place_rep.lastname = 'Recorded'>
+    <cfset get_place_rep.userid = ''>
+</cfif>
 <cfif get_report.fk_ra_user NEQ ''>
 	<cfquery name="get_advisor_for_rep" datasource="#application.dsn#">
 		SELECT userid, firstname, lastname
@@ -194,6 +226,22 @@ function OpenLetter(url) {
 	<!--- contact dates: at least one In Person contact for both Host Family and Student or both. --->
     <cfset hostFamilyOK = 0>
     <cfset studentOK = 0>
+    <cfloop query="get_Previousdates">
+        <!--- type = In Person --->
+        <cfif fk_prdate_type EQ 1>
+            <!--- Host Family --->
+            <cfif fk_prdate_contact EQ 1>
+                <cfset hostFamilyOK = 1>
+            <!--- Student --->
+            <cfelseif fk_prdate_contact EQ 2>
+                <cfset studentOK = 1>
+            <!--- Host Family & Student --->
+            <cfelseif fk_prdate_contact EQ 3>
+                <cfset hostFamilyOK = 1>
+                <cfset studentOK = 1>
+            </cfif>
+        </cfif>
+    </cfloop>
     <cfloop query="get_dates">
         <!--- type = In Person --->
         <cfif fk_prdate_type EQ 1>
@@ -210,6 +258,8 @@ function OpenLetter(url) {
             </cfif>
         </cfif>
     </cfloop>
+    <!---Check in Person over previous two months---->
+
     <cfif not (hostFamilyOK and studentOK)>
         <cfset allow_approve = 0>
         <cfset approve_error_msg = 'date'>
@@ -290,30 +340,48 @@ function OpenLetter(url) {
 Student: #get_student.firstname# #get_student.familylastname# (#get_student.studentid#)<br>
 
 <cfswitch expression="#get_report.pr_month_of_report#">
+
+<cfcase value="9">
+   
+    <font size=-1>Due Sept 1st - includes information from Aug 1 through Aug 31</font>
+</cfcase>
 <cfcase value="10">
-    Phase 1<br>
-    <font size=-1>Due Oct 1st - includes information from Aug 1 through Oct 1</font>
+   
+    <font size=-1>Due Oct 1st - includes information from Sept 1 through Sept 30</font>
+</cfcase>
+<cfcase value="11">
+   
+    <font size=-1>Due Nov 1st - includes information from Oct 1 through Oct 31</font>
 </cfcase>
 <cfcase value="12">
-    Phase 2<br>
-    <font size=-1>Due Dec 1st - includes information from Oct 1 through Dec 1</font>
+    
+    <font size=-1>Due Dec 1st - includes information from Nov 1 through Nov 30</font>
+</cfcase>
+<cfcase value="1">
+    
+    <font size=-1>Due Jan 1st - includes information from Dec 1 through Dec 31</font>
 </cfcase>
 <cfcase value="2">
-    Phase 3<br>
-    <font size=-1>Due Feb 1st - includes information from Dec 1 through Feb 1st</font>
+  
+    <font size=-1>Due Feb 1st - includes information from Jan 1 through Jan 31</font>
+</cfcase>
+<cfcase value="3">
+  
+    <font size=-1>Due Mar 1st - includes information from Feb 1 through Feb 28</font>
 </cfcase>
 <cfcase value="4">
-    Phase 4<br>
-    <font size=-1>Due April 1st - includes information from Feb 1st through April 1st</font>
+   
+    <font size=-1>Due April 1st - includes information from Mar 1 through Mar 31</font>
+</cfcase>
+<cfcase value="5">
+
+    <font size=-1>Due May 1st - includes information from Apr 1 through Apr 30</font>
 </cfcase>
 <cfcase value="6">
-    Phase 5<br>
-    <font size=-1>Due June 1st - includes information from April 1st through June  1st</font>
+ 
+    <font size=-1>Due June 1st - includes information from May 1 through May  31</font>
 </cfcase>
-<cfcase value="8">
-    Phase 6<br>
-    <font size=-1>Due August 1st - includes information from June 1st through August 1st</font>
-</cfcase>
+
 </cfswitch>
     
 </h2>
@@ -381,6 +449,10 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
     <td>#get_program.programname# (#get_program.programid#)</td>
   </tr>
   <tr>
+    <th align="right">Placing Representative:</th>
+    <td>#get_place_rep.firstname# #get_place_rep.lastname# (#get_place_rep.userid#)</td>
+  </tr>
+  <tr>
     <th align="right">Supervising Representative:</th>
     <td>#get_rep.firstname# #get_rep.lastname# (#get_rep.userid#)</td>
   </tr>
@@ -424,11 +496,53 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
     <td bgcolor="cccccc" colspan="2">
         <table cellpadding="0" cellspacing="0" width="100%">
           <tr>
-            <th>Contact Dates</th>
+            <th>Contact listed on last months report<font size=-1></font></th>
+		
+          </tr>
+        </table>
+    </td>
+  </tr>
+
+<cfif form.report_mode EQ 'view'>
+  <tr>
+    <td colspan="2"><font size=-2>Each report must show monthly contact, including at least one bi-monthly In Person contact for both Host Family and Student.</font></td>
+  </tr>
+</cfif>
+ <tr align="center">
+    <td colspan="2">
+
+	<cfif get_previousDates.recordCount EQ 0>
+    	There are no contact dates yet.
+    <cfelse>
+        <table width="100%" cellpadding="3" cellspacing="0">
+            <tr align="left">
+				
+                <th>Date</th>
+                <th>Type</th>
+                <th>Contact</th>
+                <th>Comments</th>
+            </tr>
+        <cfloop query="get_previousDates">
+          <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
+			
+            <td>#dateFormat(prdate_date, 'mm/dd/yyyy')#</td>
+            <!--- need nowrap for the PDF --->
+            <td nowrap="nowrap">#prdate_type_name#</td>
+            <td nowrap="nowrap">#prdate_contact_name#</td>
+            <td><font size="1">#replaceList(prdate_comments, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</font></td>
+          </tr>
+        </cfloop>
+        </table>        
+	</cfif>
+    </tr>
+     <tr> <td bgcolor="cccccc" colspan="2">
+        <table cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <th> Contact for this Report</th>
 		<cfif allow_edit and form.report_mode EQ 'view'>
             <td width="1">
 		        <!--- add contact date. --->
-                <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
+                <form action="index.cfm?curdoc=forms/pr_date_form2" method="post">
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
                 <input name="Submit" type="image" src="pics/new.gif" alt="Add Contact Date" border=0>
                 </form>
@@ -436,9 +550,8 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
 		</cfif>
           </tr>
         </table>
-    </td>
-  </tr>
-<cfif form.report_mode EQ 'view'>
+      </tr>
+    <cfif form.report_mode EQ 'view'>
   <tr>
     <td colspan="2"><font size=-2>Each report must show monthly contact, including at least one bi-monthly In Person contact for both Host Family and Student.</font></td>
   </tr>
@@ -551,7 +664,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                     <ul>
                 	<!--- contact dates error message. --->
 					<cfif listFind(approve_error_msg, 'date')>
-                        <p><li>Contact Dates: at least one In Person contact for both Host Family and Student must be entered.</li></p>
+                        <p><li>Contact Dates: at least one In Person contact for both Host Family and Student must be entered in a two month period.</li></p>
                     </cfif>
                 	<!--- questions error message. --->
 					<cfif listFind(approve_error_msg, 'question')>

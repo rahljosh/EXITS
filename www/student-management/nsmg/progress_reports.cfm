@@ -6,6 +6,9 @@
 <Cfparam name="resetMonth" default="0">
 <cfparam name="startDate" default="">
 <cfparam name="endDate" default="">
+<cfparam name="repDUeDate" default="">
+<Cfparam name="inCountry" default= 1>
+<Cfparam name="PreviousReportApproved" default="0">
 
 <SCRIPT>
 <!--
@@ -71,98 +74,153 @@ function OpenLetter(url) {
 	<cfset enableReports = 'Yes'>
 </Cfif>
 
+       <Cfquery name="DateRange" datasource="mysql">
+        SELECT seasonid, startDate, endDate
+        FROM smg_seasons
+        WHERE #now()# >= startdate and #now()# <= endDate
+        </cfquery>
+
 <!----If a month is passed in from the form, use it for the month if its works with the current report type---->
 
 <Cfif #form.rmonth# neq 0 AND resetMonth eq 0>
 	<Cfset client.pr_rmonth = #form.rmonth#>
-    <Cfset startDate = DateAdd('d', -7, '#year#-#client.pr_rmonth#-01')>
-	<cfset endDate = DateAdd('d', 21, '#year#-#client.pr_rmonth#-01')>
- 
+      <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
+                <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
+                    <Cfset client.pr_rmonth = '#DatePart('m', '#i#')#'>
+                    <Cfset startDate = '#DateAdd("d", "-7", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
+                    <Cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
+                    <cfset prevRepMonth = "#DatePart('m','#startDate#')#">
+                    <cfset repReqDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
+                    <Cfset repDueDate = '#DateAdd("m", "1", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
+               </Cfif>
+           </Cfloop>
+   
+	
 <!----If no month is passed in, we need to set to the current month---->
 <Cfelse>
 
     <!---
     <cfif NOT isDefined('client.pr_rmonth') or client.pr_rmonth eq 0>
         ---->
+ 
+
+        
+        
 		<cfif client.reportType eq 1>
+        
+         
+            <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
+                <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
+                    <Cfset client.pr_rmonth = '#DatePart('m', '#i#')#'>
+                    <Cfset startDate = '#DateAdd("d", "-7", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
+                    <Cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
+                    <cfset prevRepMonth = "#DatePart('m','#startDate#')#">
+                    <cfset repReqDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
+                    <Cfset repDueDate = '#DateAdd("m", "1", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
+                </Cfif>
+           </Cfloop>
+           
+            
+       <!----
             <cfswitch expression="#month(now())#">
-            <cfcase value="9,10">
-                <!--- OCT --->
-                <cfset client.pr_rmonth = 10>
-                <Cfset startDate = DateAdd('d', -7, '#year#-10-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-10-01')>
-            </cfcase>
-            <cfcase value="11,12">
-                <!--- DEC --->
-                <cfset client.pr_rmonth = 12>
-                <Cfset startDate = DateAdd('d', -7, '#year#-12-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-12-01')>
-            </cfcase>
-            <cfcase value="1,2">
-                <!--- FEB --->
-                <cfset client.pr_rmonth = 2>
-                <Cfset startDate = DateAdd('d', -7, '#year#-02-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-02-01')>
-            </cfcase>
-            <cfcase value="3,4">
-                <!--- APRIL --->
-                <cfset client.pr_rmonth = 4>
-                <Cfset startDate = DateAdd('d', -7, '#year#-04-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-04-01')>
-            </cfcase>
-            <cfcase value="5,6">
-                <!--- JUNE --->
-                <cfset client.pr_rmonth = 6>
-                <Cfset startDate = DateAdd('d', -7, '#year#-06-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-06-01')>
-            </cfcase>
-            <cfcase value="7,8">
-                <!--- August --->
-                <cfset client.pr_rmonth = 8>
-                <Cfset startDate = DateAdd('d', -7, '#year#-08-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-08-01')>
-            </cfcase>
+                <cfcase value="8">
+                    <!--- August --->
+                    <cfset client.pr_rmonth = 8>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-08-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-08-01')>
+                    <Cfset form.prevRepMonth = 7>
+                    <cfset repReqDate = '#year#-08-31'>
+                </cfcase>
+                <cfcase value="9">
+                    <!--- SEPT --->
+                    <cfset client.pr_rmonth = 9>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-09-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-09-01')>
+                    <Cfset form.prevRepMonth = 8>
+                    <cfset repReqDate = '#year#-09-30'>
+                </cfcase>
+                <cfcase value="10">
+                    <!--- OCT --->
+                    <cfset client.pr_rmonth = 10>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-10-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-10-01')>
+                    <Cfset form.prevRepMonth = 9>
+                    <cfset repReqDate = '#year#-10-31'>
+                </cfcase>
+                <cfcase value="11">
+                    <!--- NOV --->
+                    <cfset client.pr_rmonth = 11>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-11-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-11-01')>
+                    <Cfset form.prevRepMonth = 10>
+                    <cfset repReqDate = '#year#-11-30'>
+                </cfcase>
+                <cfcase value="12">
+                    <!--- DEC --->
+                    <cfset client.pr_rmonth = 12>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-12-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-12-01')>
+                    <Cfset form.prevRepMonth = 11>
+                    <cfset repReqDate = '#year#-12-31'>
+                </cfcase>
+                 <cfcase value="1">
+                    <!--- JAN --->
+                    <cfset client.pr_rmonth = 1>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-01-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-01-01')>
+                    <Cfset form.prevRepMonth = 12>
+                    <cfset repReqDate = '#year#-01-31'>
+                </cfcase>
+                <cfcase value="2">
+                    <!--- FEB --->
+                    <cfset client.pr_rmonth = 2>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-02-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-02-01')>
+                    <Cfset form.prevRepMonth = 1>
+                    <cfset repReqDate = '#year#-02-28'>
+                </cfcase>
+                   <cfcase value="3">
+                    <!--- MARCH --->
+                    <cfset client.pr_rmonth = 3>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-03-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-03-01')>
+                    <Cfset form.prevRepMonth = 2>
+                    <cfset repReqDate = '#year#-03-31'>
+                </cfcase>
+                <cfcase value="4">
+                    <!--- APRIL --->
+                    <cfset client.pr_rmonth = 4>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-04-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-04-01')>
+                    <Cfset form.prevRepMonth = 3>
+                    <cfset repReqDate = '#year#-04-30'>
+                </cfcase>
+                <cfcase value="5">
+                    <!--- MAY --->
+                    <cfset client.pr_rmonth = 5>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-05-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-05-01')>
+                    <Cfset form.prevRepMonth = 4>
+                    <cfset repReqDate = '#year#-05-31'>
+                </cfcase>
+                <cfcase value="6">
+                    <!--- JUNE --->
+                    <cfset client.pr_rmonth = 6>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-06-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-06-01')>
+                    <Cfset form.prevRepMonth = 5>
+                    <cfset repReqDate = '#year#-06-30'>
+                </cfcase>
+                <cfcase value="7">
+                    <!--- JULY --->
+                    <cfset client.pr_rmonth = 7>
+                    <Cfset startDate = DateAdd('d', -7, '#year#-07-01')>
+                    <cfset endDate = DateAdd('d', 21, '#year#-07-01')>
+                    <Cfset form.prevRepMonth = 6>
+                    <cfset repReqDate = '#year#-07-31'>
+                </cfcase>
             </cfswitch>
-        <cfelseif client.reportType eq 3>
-             
-            <cfswitch expression="#month(now())#">
-            <cfcase value="8,9">
-                <!--- SEPT --->
-                <cfset client.pr_rmonth = 9>
-                <Cfset startDate = DateAdd('d', -7, '#year#-09-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-09-01')>
-            </cfcase>
-            <cfcase value="10,11">
-                <!--- NOV --->
-                <cfset client.pr_rmonth = 11>
-                <Cfset startDate = DateAdd('d', -7, '#year#-11-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-11-01')>
-            </cfcase>
-            <cfcase value="12,1">
-                <!--- JAN --->
-                <cfset client.pr_rmonth = 1>
-                <Cfset startDate = DateAdd('d', -7, '#year#-01-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-01-01')>
-            </cfcase>
-            <cfcase value="2,3">
-                <!--- MARCH --->
-                <cfset client.pr_rmonth = 3>
-                <Cfset startDate = DateAdd('d', -7, '#year#-03-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-03-01')>
-            </cfcase>
-            <cfcase value="4,5">
-                <!--- MAY --->
-                <cfset client.pr_rmonth = 5>
-                <Cfset startDate = DateAdd('d', -7, '#year#-05-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-05-01')>
-            </cfcase>
-            <cfcase value="6,7">
-                <!--- JULY --->
-                <cfset client.pr_rmonth = 7>
-                <Cfset startDate = DateAdd('d', -7, '#year#-07-01')>
-				<cfset endDate = DateAdd('d', 21, '#year#-07-01')>
-            </cfcase>
-            </cfswitch>
+			---->
         </cfif>
  </cfif>
 
@@ -250,7 +308,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 </style>
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-    <tr height=24>
+  <tr height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
         <td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
         <td background="pics/header_background.gif"><h2>Reports</h2></td>
@@ -259,7 +317,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     </tr>
 </table>
 
-<cfform action="index.cfm?curdoc=progress_reports" method="post">
+<cfform action="index.cfm?curdoc=progress_reports2" method="post">
 <input name="submitted" type="hidden" value="1">
 <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
 	<Tr>
@@ -297,21 +355,29 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 			<cfselect NAME="regionid" query="list_regions" value="regionid" display="regionname" selected="#client.pr_regionid#" />
         </td>
 	</cfif>
+    
     <Cfif reportOptions.showPhase eq 1>
     	<Cfif client.reportType eq 1>
             <td>
                 Phase<br />
                 <select name="rmonth">
-                	<option value="0"></option>
-                    <option value="10" <cfif client.pr_rmonth EQ 10>selected</cfif>>Phase 1 - Due Oct 1</option>
-                    <option value="12" <cfif client.pr_rmonth EQ 12>selected</cfif>>Phase 2 - Due Dec 2</option>
-                    <option value="2" <cfif client.pr_rmonth EQ 2>selected</cfif>>Phase 3 - Due Feb 1</option>
-                    <option value="4" <cfif client.pr_rmonth EQ 4>selected</cfif>>Phase 4 - Due Apr 1</option>
-                    <option value="6" <cfif client.pr_rmonth EQ 6>selected</cfif>>Phase 5 - Due Jun 1</option>
-                    <option value="8" <cfif client.pr_rmonth EQ 8>selected</cfif>>Phase 6 - Due Aug 1</option>
-                </select>            
-            </td>
+                  <option value="0"></option>
+                  <option value="8"  <cfif client.pr_rmonth EQ 8>selected</cfif>>Aug Report</option>
+                  <option value="9"  <cfif client.pr_rmonth EQ 9>selected</cfif>>Sep Report</option>
+                  <option value="10" <cfif client.pr_rmonth EQ 10>selected</cfif>>Oct Report</option>
+                  <option value="11" <cfif client.pr_rmonth EQ 11>selected</cfif>>Nov Report</option>
+                  <option value="12" <cfif client.pr_rmonth EQ 12>selected</cfif>>Dec Report</option>
+                  <option value="1"  <cfif client.pr_rmonth EQ 1>selected</cfif>>Jan Report</option>
+                  <option value="2"  <cfif client.pr_rmonth EQ 2>selected</cfif>>Feb Report</option>
+                  <option value="3"  <cfif client.pr_rmonth EQ 3>selected</cfif>>Mar Report</option>
+                  <option value="4"  <cfif client.pr_rmonth EQ 4>selected</cfif>>Apr Report</option>
+                  <option value="5"  <cfif client.pr_rmonth EQ 5>selected</cfif>>May Report</option>
+                  <option value="6"  <cfif client.pr_rmonth EQ 6>selected</cfif>>Jun Report</option>
+                </select>
+                <input type="hidden" name="prevRepMonth" value="#form.prevRepMonth#" />
+                </td>
         </Cfif>
+        <!----
         <Cfif client.reportType eq 3>
             <td>
                 Time Frame<br />
@@ -326,6 +392,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                 </select>            
             </td>
         </Cfif>
+		---->
     </Cfif>
         <td>
             Status<br />
@@ -338,7 +405,8 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     <tr>
     	<Td colspan=5 align="Center">
 		<cfif client.reportType neq 2>
-			<cfoutput>These reports are available to be submitted between #DateFormat(startDate,'mm/dd/yyyy')# and #DateFormat(endDate,'mm/dd/yyyy')#.</cfoutput>
+			<cfoutput>The #DateFormat('#endDate#', 'mmmm')# report is for contact durring the month of #DateFormat('#endDate#', 'mmmm')# and <Br />
+			due on  #DateFormat('#repDueDate#','mmm. d, yyyy')#. </cfoutput>
         </cfif>
         </Td>
     </tr>
@@ -352,13 +420,14 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 (progress_reports.fk_sr_user & fk_ra_user) but since we want to display students without reports, we can't use the report fields here.
 But in the output below we use the report fields where a report has been submitted, otherwise use the student and user fields. --->
 <cfquery name="getResults" datasource="#application.dsn#">
-    SELECT smg_students.studentid, smg_students.uniqueid, smg_students.firstname, smg_students.familylastname,
+    SELECT smg_students.studentid, smg_students.uniqueid, smg_students.firstname, smg_students.familylastname, smg_programs.type as programType,
         smg_students.arearepid, smg_students.secondVisitRepID, rep.firstname as rep_firstname, rep.lastname as rep_lastname,
         <!--- alias advisor.userid here instead of using user_access_rights.advisorid because the later can be 0 and we want null, and the 0 might be phased out later. --->
         advisor.userid AS advisorid, advisor.firstname as advisor_firstname, advisor.lastname as advisor_lastname, 
        
         smg_program_type.aug_report, smg_program_type.oct_report, smg_program_type.dec_report, smg_program_type.feb_report, smg_program_type.april_report, smg_program_type.june_report
     FROM smg_students
+   
     <cfif client.reportType EQ 1 or client.reportType eq 3>
     INNER JOIN smg_users rep ON smg_students.arearepid = rep.userid
     <cfelse>
@@ -414,10 +483,12 @@ But in the output below we use the report fields where a report has been submitt
         	AND smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
         
         </cfif>
-    
+
     <!--- include the advisorid and arearepid because we're grouping by those in the output, just in case two have the same first and last name. --->
     ORDER BY advisor_lastname, advisor_firstname, user_access_rights.advisorid, rep_lastname, rep_firstname, smg_students.arearepid, smg_students.familylastname, smg_students.firstname
 </cfquery>
+
+
 
 
 <cfif getResults.recordCount GT 0>
@@ -435,6 +506,7 @@ But in the output below we use the report fields where a report has been submitt
 	
     <table width=100% class="section">
         <cfoutput query="getResults" group="advisorid">
+      
             <cfif currentRow NEQ 1>
                 <tr>
                     <td colspan=9 height="25">&nbsp;</td>
@@ -446,7 +518,7 @@ But in the output below we use the report fields where a report has been submitt
                         Reports Directly to Regional Director
                     <cfelse>
                         #advisor_firstname# #advisor_lastname# (#advisorid#)
-                    </cfif>
+                  </cfif>
                 </td>
             </tr>
             <Cfif client.reportType eq 2>
@@ -478,10 +550,90 @@ But in the output below we use the report fields where a report has been submitt
                         SELECT *
                         FROM get_reports
                         WHERE fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                        AND fk_reportType = #client.reportType#
+                        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
                     </cfquery>
+                    <!----Get Flight info to make sure in states and decideif a report is needed for that student---->
+                    <cfquery name="arrivalInfo" datasource="#application.dsn#">
+                    SELECT max(dep_date) as dep_date
+                    FROM smg_flight_info
+                    WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                    AND flight_type = 'arrival'
+                    </cfquery>
+                    <!----If no arrival info is on file, we set to August 1, the earliest to make sure---->
+					<Cfif arrivalInfo.recordcount eq 0 or arrivalInfo.dep_date eq ''>
+                    	<Cfset arrivalDate = '#DateRange.startDate#'>
+                   	<cfelse>
+                    	<cfset arrivalDate = '#arrivalInfo.dep_Date#'>
+                    </Cfif>
                     
-                    <cfset mycurrentRow = mycurrentRow + 1>
+                    <cfquery name="departureInfo" datasource="#application.dsn#">
+                    SELECT max(dep_date) as dep_date
+                    FROM smg_flight_info
+                    WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                    AND flight_type = 'departure'
+                    </cfquery>
+                    <!----If no departure info is on file, we set to July 1, the latest to make sure---->
+                    <Cfif arrivalInfo.recordcount eq 0  or departureInfo.dep_date eq ''>
+                    	<Cfset departureDate = '#DateRange.endDate#'>
+                   	<cfelse>
+                    	<cfset departureDate = '#departureInfo.dep_date#'>
+                    </Cfif>
+                   
+						
+					<Cfif client.reportType eq 1>
+						 <!---Check if previous months report is approved---->
+                        
+                        <Cfquery name="checkPreviousReports" datasource="#application.dsn#">
+                        select pr_rd_approved_date
+                        FROM progress_reports
+                        where fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
+                        and fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                        and pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#prevRepMonth#">
+                        </cfquery>
+                        <!----check if this is the first report for this student---->
+                        <Cfquery name="checkIfFirst" datasource="#application.dsn#">
+                        select *
+                        FROM progress_reports
+                        where fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
+                        and fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                        </cfquery>
+                        <!---If null, previous report has NOT been approved---->
+                        
+                        <Cfif checkPreviousReports.pr_rd_approved_date is not '' >
+                        	<Cfset PreviousReportApproved = 1>
+                        </Cfif>
+                      
+                        
+                        
+                    <cfelse>
+                    	<cfset PreviousReportApproved = 1>
+                      
+                    </Cfif>
+                    <!----For Aug/Sep and June, we need to check if student is int he country.---->
+                     <Cfif client.pr_rmonth eq 9>
+                     
+							<Cfif #datePart('m', '#arrivalDate#')# eq 9>
+                         		<Cfset PreviousReportApproved = 1>
+                     		</Cfif>
+                     
+                      <Cfelseif client.pr_rmonth eq 8>
+                      
+                            <Cfif #datePart('m', '#arrivalDate#')# gt 8>
+                           		<Cfset inCountry = 0>
+                            <Cfelse>
+                                <Cfset PreviousReportApproved = 1>
+                            </Cfif>
+                        
+					   <Cfelseif client.pr_rmonth eq 6>
+							<Cfif #datePart('m', '#departureDate#')# lt #datePart('m', '#repReqDate#')#>
+                           		<Cfset inCountry = 0>
+                            </Cfif>
+                       </Cfif>
+                    
+                    
+                   <cfset mycurrentRow = mycurrentRow + 1>
                    <tr bgcolor="#iif(mycurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
                         <td>&nbsp;</td>
                         <td>
@@ -496,8 +648,8 @@ But in the output below we use the report fields where a report has been submitt
                         </td>
                         <td>#yesNoFormat(get_report.recordCount)#</td>
                         <td>
-                        
-                        	<cfif get_report.recordCount>
+
+                        <cfif get_report.recordCount>
                             	<!--- access is limited to: client.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
 								<cfif client.usertype LTE 4 or listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", client.userid)>
 									<!--- restrict view of report until the supervising rep approves it. --->
@@ -544,8 +696,9 @@ But in the output below we use the report fields where a report has been submitt
                             </cfif>
                         	
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
-                             	
-									<cfif (#submittingRep# EQ client.userid  and (#now()# gt #startDate#)) OR client.reportType EQ 2  >
+                          			<Cfif inCountry eq 0>
+                                    Not in Country - No Report Required
+									<cfelseif (#submittingRep# EQ client.userid  and (#now()# gt #startDate#) and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
                                 
                                         <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                         <input type="hidden" name="studentid" value="#studentid#">
@@ -554,11 +707,14 @@ But in the output below we use the report fields where a report has been submitt
                                         <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border=0>
                                         </form>
                                     <cfelse>
-                                        N/A 
-                                    </cfif>
+                                       Waiting on Previous Report Approval 
+                                     </cfif>
                                     
-                                
+                                 <Cfset PreviousReportApproved = 0> 
+                                 <cfset inCountry = 1>
                             </cfif>
+                          
+					
                         </td>
                         <td>#dateFormat(get_report.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
                         <td>
@@ -566,7 +722,7 @@ But in the output below we use the report fields where a report has been submitt
                                N/A
                             <cfelse>
                                 #dateFormat(get_report.pr_ra_approved_date, 'mm/dd/yyyy')#
-                            </cfif>
+                          </cfif>
                         </td>
                         <td>#dateFormat(get_report.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
                         <td>#dateFormat(get_report.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
