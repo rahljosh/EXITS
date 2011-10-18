@@ -45,7 +45,8 @@
     
         // allow SSN Field - If null or user has access.
         if ( NOT LEN(qGetUserInfo.SSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
-            vDisplaySSN = 1;
+            
+			vDisplaySSN = 1;
 			
 			if ( NOT VAL(FORM.submitted) ) {
 				
@@ -201,12 +202,12 @@
 		<!--- encrypt the SSN. --->
 		<cfscript>
 			// SSN - Will update if it's blank or there is a new number
-            if ( isValid("social_security_number", Trim(FORM.SSN)) ) {
+            if ( VAL(vDisplaySSN) AND isValid("social_security_number", Trim(FORM.SSN)) ) {
                 // Encrypt Social
                 FORM.SSN = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN);
                 // Update
                 vUpdateSSN = 1;
-            } else if ( NOT LEN(FORM.SSN) ) {
+            } else if ( VAL(vDisplaySSN) AND NOT LEN(FORM.SSN) ) {
                 // Update - Erase SSN
                 vUpdateSSN = 1;
             }
