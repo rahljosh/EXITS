@@ -1,14 +1,16 @@
 <cfparam name="client.pr_regionid" default="#client.regionid#">
 <cfparam name="client.pr_cancelled" default="0">
 <cfparam name="client.reportType" default="1">
-<Cfparam name="form.rmonth" default="0">
-<Cfparam name="client.pr_rmonth" default="0">
+<Cfparam name="form.rmonth" default="#DatePart('m', '#now()#')#">
+<Cfparam name="client.pr_rmonth" default="#DatePart('m', '#now()#')#">
 <Cfparam name="resetMonth" default="0">
 <cfparam name="startDate" default="">
+<cfparam name="resetMonth" default="0">
 <cfparam name="endDate" default="">
 <cfparam name="repDUeDate" default="">
 <Cfparam name="inCountry" default= 1>
 <Cfparam name="PreviousReportApproved" default="0">
+
 
 <SCRIPT>
 <!--
@@ -108,7 +110,11 @@ function OpenLetter(url) {
         
 		<cfif client.reportType eq 1>
         
-         
+         <Cfif client.userid eq 16316>
+         <Cfoutput>
+         Output #DateRange.startDate# #DateRange.endDate#
+         </Cfoutput>
+         </Cfif>
             <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
                 <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
                     <Cfset client.pr_rmonth = '#DatePart('m', '#i#')#'>
@@ -117,7 +123,8 @@ function OpenLetter(url) {
                     <cfset prevRepMonth = "#DatePart('m','#startDate#')#">
                     <cfset repReqDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
                     <Cfset repDueDate = '#DateAdd("m", "1", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
-                </Cfif>
+                 </Cfif>
+                
            </Cfloop>
            
             
