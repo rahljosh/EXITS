@@ -165,6 +165,22 @@
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND 
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+		
+        UNION
+            
+		<!--- Second Rep Active --->
+        SELECT DISTINCT 
+        	u.userid,
+            u.firstName, 
+            u.lastname             
+        FROM 
+        	smg_students s
+        INNER JOIN 
+        	smg_users u ON s.secondVisitRepID = u.userid
+        WHERE 
+        	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND 
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
 
         GROUP BY 
         	userid
