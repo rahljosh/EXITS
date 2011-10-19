@@ -591,7 +591,7 @@ But in the output below we use the report fields where a report has been submitt
 						 <!---Check if previous months report is approved---->
                         
                         <Cfquery name="checkPreviousReports" datasource="#application.dsn#">
-                        select pr_rd_approved_date
+                        select pr_rd_approved_date, pr_ny_approved_date
                         FROM progress_reports
                         where fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
                         AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
@@ -608,7 +608,7 @@ But in the output below we use the report fields where a report has been submitt
                         </cfquery>
                         <!---If null, previous report has NOT been approved---->
                         
-                        <Cfif checkPreviousReports.pr_rd_approved_date is not '' >
+                        <Cfif checkPreviousReports.pr_rd_approved_date is not '' or checkPreviousReports.pr_ny_approved_date is not ''>
                         	<Cfset PreviousReportApproved = 1>
                         </Cfif>
                       
@@ -705,7 +705,7 @@ But in the output below we use the report fields where a report has been submitt
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
                           			<Cfif inCountry eq 0>
                                     Not in Country - No Report Required
-									<cfelseif (#submittingRep# EQ client.userid   and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
+									<cfelseif (#submittingRep# EQ client.userid and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
                                 
                                         <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                         <input type="hidden" name="studentid" value="#studentid#">
