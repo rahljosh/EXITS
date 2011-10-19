@@ -25,7 +25,7 @@
 
 <cfoutput>
 
-<table width="70%" cellpadding="2" frame="box" style="margin-top:10px; margin-bottom:10px;">
+<table width="70%" cellpadding="2" style="margin-top:20px; margin-bottom:20px; border:1px solid ##CCCCCC">
 	<tr bgcolor="##CCCCCC"><td colspan="4"><b>Get Expired CBCs for #userType#</b></td></tr>
 	<tr bgcolor="##CCCCCC">
     	<td><b>User</b></td>

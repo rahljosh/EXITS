@@ -29,10 +29,10 @@
 		
 		if ( userType EQ 'user' ) {
 			// Get User CBCs
-			qGetCBCUsers = APPLICATION.CFC.CBC.getPendingCBCUser();	
+			qGetCBCUsers = APPLICATION.CFC.CBC.getPendingCBCUser(companyID=10);	
 		} else {
 			// Get Member CBCs
-			qGetCBCUsers = APPLICATION.CFC.CBC.getPendingCBCUserMember();	
+			qGetCBCUsers = APPLICATION.CFC.CBC.getPendingCBCUserMember(companyID=10);	
 		}		
 	</cfscript>
 	
@@ -102,7 +102,7 @@
         <!--- Email Errors --->
         <cfmail 
             from="#APPLICATION.EMAIL.support#"
-            to="#APPLICATION.EMAIL.cbcNotifications#" 
+            to="#APPLICATION.EMAIL.cbcCaseNotifications#" 
             subject="Scheduled CBC #userType# Issues"
             type="html">
                 <table width="70%" cellpadding="2" style="margin-top:20px; margin-bottom:20px; border:1px solid ##CCCCCC">

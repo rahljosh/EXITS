@@ -40,7 +40,7 @@
         
         <cfscript>
             // Get CBCs
-            qGetCBCHost = APPLICATION.CFC.CBC.getPendingCBCHost(userType=userType);	
+            qGetCBCHost = APPLICATION.CFC.CBC.getPendingCBCHost(userType=userType, companyID=10);	
         </cfscript>  
     
         <!--- NO CBC FOUND ---> 
@@ -106,7 +106,7 @@
             
                 <cfmail 
                     from="#APPLICATION.EMAIL.support#"
-                    to="#APPLICATION.EMAIL.cbcNotifications#"
+                    to="#APPLICATION.EMAIL.cbcCaseNotifications#"
                     subject="Scheduled CBC Host #userType# Issues"
                     type="html">
                         <table width="70%" cellpadding="2" style="margin-top:20px; margin-bottom:20px; border:1px solid ##CCCCCC">
@@ -188,7 +188,7 @@
     
         <cfscript>
             // Get CBCs
-            qGetCBCMember = APPLICATION.CFC.CBC.getPendingCBCHostMember();	
+            qGetCBCMember = APPLICATION.CFC.CBC.getPendingCBCHostMember(companyID=10);	
         </cfscript>  
     
 	    <cfif NOT VAL(qGetCBCMember.recordcount)>
@@ -252,7 +252,7 @@
                 <!--- Email Errors --->
                 <cfmail 
                     from="#APPLICATION.EMAIL.support#"
-                    to="#APPLICATION.EMAIL.cbcNotifications#"
+                    to="#APPLICATION.EMAIL.cbcCaseNotifications#"
                     subject="Scheduled CBC Host #userType# Issues"
                     type="html">
                         <table width="70%" cellpadding="2" style="margin-top:20px; margin-bottom:20px; border:1px solid ##CCCCCC">

@@ -316,7 +316,7 @@
                     requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 
                 <!--- Check if we are running ISE's CBC --->
-                <cfif VAL(ARGUMENTS.companyID) LTE 4>
+                <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                 AND 
                     cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
@@ -411,7 +411,7 @@
                 	cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="member">
             
                 <!--- Check if we are running ISE's CBC --->
-                <cfif VAL(ARGUMENTS.companyID) LTE 4>
+                <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                 AND 
                     cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
@@ -706,12 +706,12 @@
                     uar.usertype <= <cfqueryparam cfsqltype="cf_sql_integer" value="7">
 
                 <!--- Check if we are running ISE's CBC --->
-                <cfif VAL(ARGUMENTS.companyID) LTE 4>
-                AND 
-                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                    AND 
+                        cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
-                AND 
-                    cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                    AND 
+                        cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 </cfif>
 
             	<!--- Check if we have a valid SeasonID --->
@@ -791,7 +791,7 @@
 				</cfif>
 
                 <!--- Check if we are running ISE's CBC --->
-                <cfif VAL(ARGUMENTS.companyID) LTE 4>
+                <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                 AND 
                     cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>

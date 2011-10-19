@@ -5,7 +5,7 @@
 	Date:		May 20, 2010
 	Desc:		Re-Run CBC Index File. It calls users and host family files.
 
-	Updated:  	
+	Updated:  	10/19/11 - Re-running CASE CBCs
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -18,142 +18,133 @@
 
     <!--- Param Variables --->
     <cfparam name="userType" default="">
-    <cfparam name="isUpcomingProgram" default="">
+    <cfparam name="isUpcomingProgram" default="0">
 
 </cfsilent>
 
 
-<!--- 	
+<!-------------------------------------------------------------	
 	User
---->
+-------------------------------------------------------------->
 
-<!--- User CBC --->
 <cfscript>
+	// Get Expired CBCs
 	userType = 'user';
+	
+	// Users - Get expires CBCs for and adds a record to be re-run 
+	include "getExpiredUsers.cfm";
+	
+	
+	// User ISE - Run CBCs
+	include "runUsers.cfm";
+	
+	// User CASE - Run CBCs
+	include "runUsersCase.cfm";
 </cfscript>
 
-<!--- Get expires CBCs for User and adds a record to be re-run --->
-<cfinclude template="getExpiredUsers.cfm">
 
-<!--- Run User CBCs --->
-<cfinclude template="runUsers.cfm">
-
-
-
-<!--- 
+<!-------------------------------------------------------------	
 	User Member CBC 
---->
+-------------------------------------------------------------->
+
 <cfscript>
+	// Get Expired CBCs
 	userType = 'member';
+	
+	// Host Members - Get expires CBCs for and adds a record to be re-run 
+	include "getExpiredUsers.cfm";
+	
+	
+	// User Member ISE - Run CBCs
+	include "runUsers.cfm";
+	
+	// User Member CASE - Run CBCs
+	include "runUsersCase.cfm";
 </cfscript>
 
-<!--- Get expires CBCs for User Members and adds a record to be re-run --->
-<cfinclude template="getExpiredUsers.cfm">
 
-<!--- Run User Members CBCs --->
-<cfinclude template="runUsers.cfm">
+<!-------------------------------------------------------------	
+	Host Father
+-------------------------------------------------------------->
 
-
-
-<!--- 	
-	Host Family - Current Students 
---->
-
-<!--- 
-	Host Father 
---->
 <cfscript>
+	// Get Expired CBCs - Current Students
 	userType = 'father';
+	isUpcomingProgram = 0;
+
+	// Host Father - Get expires CBCs for and adds a record to be re-run 
+	include "getExpiredHosts.cfm";
+
+
+	// Upcoming Students 
+	isUpcomingProgram = 1;
+
+	// Host Father - Run CBCs for upcoming students 
+	include "getExpiredHosts.cfm";
+
+
+	// Host Father ISE - Run CBCs
+	include "runHosts.cfm";
+	
+	// Host Father CASE - Run CBCs
+	include "runHostsCase.cfm";
 </cfscript>
 
-<!--- Host Father - Get expires CBCs for and adds a record to be re-run --->
-<cfinclude template="getExpiredHosts.cfm">
 
-<!--- Host Father - Run CBCs --->
-<cfinclude template="runHosts.cfm">
+<!-------------------------------------------------------------	
+	Host Mother
+-------------------------------------------------------------->
 
-
-
-<!--- 
-	Host Mother 
---->
 <cfscript>
+	// Get Expired CBCs - Current Students
 	userType = 'mother';
+	isUpcomingProgram = 0;
+
+	// Host Mother - Get expires CBCs for and adds a record to be re-run 
+	include "getExpiredHosts.cfm";
+
+
+	// Upcoming Students
+	isUpcomingProgram = 1;
+	
+	// Host Mother - Run CBCs for upcoming students 
+	include "getExpiredHosts.cfm";
+	
+
+	// Host Mother ISE - Run CBCs
+	include "runHosts.cfm";
+	
+	// Host Mother CASE - Run CBCs
+	include "runHostsCase.cfm";
 </cfscript>
 
-<!--- Host Mother - Get expires CBCs for and adds a record to be re-run --->
-<cfinclude template="getExpiredHosts.cfm">
 
-<!--- Host Mother - Run CBCs --->
-<cfinclude template="runHosts.cfm">
+<!-------------------------------------------------------------	
+	Host Member
+-------------------------------------------------------------->
 
-
-
-<!--- 
-	Host Member 
---->    
 <cfscript>
+	// Get Expired CBCs - Current Students
 	userType = 'member';
-</cfscript>
-
-<!--- Host Member - Get expires CBCs for and adds a record to be re-run --->
-<cfinclude template="getExpiredHosts.cfm">
-
-<!--- Host Member - Run CBCs --->
-<cfinclude template="runHosts.cfm">
+	isUpcomingProgram = 0;
+	
+	// Host Member - Get expires CBCs for and adds a record to be re-run
+	include "getExpiredHosts.cfm";
 
 
-
-
-<!--- 	
-	Host Family - Upcoming Students 
---->
-
-<!--- 
-	Host Father - Upcoming Students  
---->
-<cfscript>
-	userType = 'father';
+	// Upcoming Students
 	isUpcomingProgram = 1;
+	
+	// Host Member - Run CBCs for upcoming students
+	include "getExpiredHosts.cfm";
+	
+	
+	// Host Member ISE - Run CBCs
+	include "runHosts.cfm";
+	
+	// Host Member CASE - Run CBCs
+	include "runHostsCase.cfm";
 </cfscript>
-
-<!--- Host Father - Get expires CBCs for and adds a record to be re-run --->
-<cfinclude template="getExpiredHosts.cfm">
-
-<!--- Host Father - Run CBCs --->
-<cfinclude template="runHosts.cfm">
-
-
-
-<!--- 
-	Host Mother - Upcoming Students  
---->
-<cfscript>
-	userType = 'mother';
-	isUpcomingProgram = 1;
-</cfscript>
-
-<!--- Host Mother - Get expires CBCs for and adds a record to be re-run --->
-<cfinclude template="getExpiredHosts.cfm">
-
-<!--- Host Mother - Run CBCs --->
-<cfinclude template="runHosts.cfm">
-
-
-
-<!--- 
-	Host Member - Upcoming Students 
---->    
-<cfscript>
-	userType = 'member';
-	isUpcomingProgram = 1;
-</cfscript>
-
-<!--- Host Member - Get expires CBCs for and adds a record to be re-run --->
-<cfinclude template="getExpiredHosts.cfm">
-
-<!--- Host Member - Run CBCs --->
-<cfinclude template="runHosts.cfm">
 
 
 <p>CBC Scheduled task completed!</p>
