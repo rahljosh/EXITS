@@ -93,7 +93,7 @@ function OpenLetter(url) {
                     <Cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
                     <cfset prevRepMonth = "#DatePart('m','#startDate#')#">
                     <cfset repReqDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
-                    <Cfset repDueDate = '#DateAdd("m", "1", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
+                    <Cfset repDueDate = '#DateAdd("m", "0", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
                </Cfif>
            </Cfloop>
    
@@ -369,7 +369,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                 Phase<br />
                 <select name="rmonth">
                   <option value="0"></option>
-                  <option value="8"  <cfif client.pr_rmonth EQ 8>selected</cfif>>Aug Report</option>
+                  
                   <option value="9"  <cfif client.pr_rmonth EQ 9>selected</cfif>>Sep Report</option>
                   <option value="10" <cfif client.pr_rmonth EQ 10>selected</cfif>>Oct Report</option>
                   <option value="11" <cfif client.pr_rmonth EQ 11>selected</cfif>>Nov Report</option>
@@ -380,6 +380,8 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                   <option value="4"  <cfif client.pr_rmonth EQ 4>selected</cfif>>Apr Report</option>
                   <option value="5"  <cfif client.pr_rmonth EQ 5>selected</cfif>>May Report</option>
                   <option value="6"  <cfif client.pr_rmonth EQ 6>selected</cfif>>Jun Report</option>
+                  <option value="7"  <cfif client.pr_rmonth EQ 7>selected</cfif>>Jul Report</option>
+                  <option value="8"  <cfif client.pr_rmonth EQ 8>selected</cfif>>Aug Report</option>
                 </select>
                 <input type="hidden" name="prevRepMonth" value="#form.prevRepMonth#" />
                 </td>
@@ -412,7 +414,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     <tr>
     	<Td colspan=5 align="Center">
 		<cfif client.reportType neq 2>
-			<cfoutput>The #DateFormat('#endDate#', 'mmmm')# report is for contact durring the month of #DateFormat('#endDate#', 'mmmm')# and <Br />
+			<cfoutput>The #DateFormat('#endDate#', 'mmmm')# report is for contact durring the month of #DateFormat('#startDate#', 'mmmm')# and <Br />
 			due on  #DateFormat('#repDueDate#','mmm. d, yyyy')#. </cfoutput>
         </cfif>
         </Td>
@@ -591,7 +593,7 @@ But in the output below we use the report fields where a report has been submitt
 						 <!---Check if previous months report is approved---->
                         
                         <Cfquery name="checkPreviousReports" datasource="#application.dsn#">
-                        select pr_rd_approved_date, pr_ny_approved_date
+                        select pr_rd_approved_date, pr_ny_approved_date, pr_sr_approved_date
                         FROM progress_reports
                         where fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
                         AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
@@ -608,7 +610,7 @@ But in the output below we use the report fields where a report has been submitt
                         </cfquery>
                         <!---If null, previous report has NOT been approved---->
                         
-                        <Cfif checkPreviousReports.pr_rd_approved_date is not '' or checkPreviousReports.pr_ny_approved_date is not ''>
+                        <Cfif checkPreviousReports.pr_rd_approved_date is not '' or checkPreviousReports.pr_ny_approved_date is not '' or checkPreviousReports.pr_sr_approved_date is not ''>
                         	<Cfset PreviousReportApproved = 1>
                         </Cfif>
                       
@@ -621,7 +623,7 @@ But in the output below we use the report fields where a report has been submitt
                     <!----For Aug/Sep and June, we need to check if student is int he country.---->
                      <Cfif client.pr_rmonth eq 9>
                      
-							<Cfif #datePart('m', '#arrivalDate#')# eq 9>
+							<Cfif #datePart('m', '#arrivalDate#')# eq 8>
                          		<Cfset PreviousReportApproved = 1>
                      		</Cfif>
                      
@@ -713,8 +715,10 @@ But in the output below we use the report fields where a report has been submitt
                                         <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
                                         <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border=0>
                                         </form>
-                                    <cfelse>
+                                    <cfelseif PreviousReportApproved eq 0>
                                        Waiting on Previous Report Approval 
+                                    <Cfelse>
+                                    	Report Not Submitted
                                      </cfif>
                                     
                                  <Cfset PreviousReportApproved = 0> 
