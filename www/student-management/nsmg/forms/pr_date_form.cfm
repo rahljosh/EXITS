@@ -1,3 +1,6 @@
+<!--- Import CustomTag Used for Page Messages and Form Errors --->
+<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+
 <cfparam name="form.prdate_id" default="">
 <cfif form.prdate_id EQ "">
 	<cfset new = true>
@@ -13,8 +16,57 @@
 <cfset errorMsg = ''>
 
 <!--- Process Form Submission --->
+
 <cfif isDefined("form.submitted")>
 
+
+       <Cfquery name="DateRange" datasource="mysql">
+        SELECT seasonid, startDate, endDate
+        FROM smg_seasons
+        WHERE #now()# >= startdate and #now()# <= endDate
+        </cfquery>
+     	 <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
+                <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
+                    <Cfset firstDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
+                    <Cfset lastDay = '#DateAdd("d", "31", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
+                    <cfset thisDay = '#DateFormat('#now()#', 'yyyy-mm-dd')#'>
+                </Cfif>
+           </Cfloop>
+		<Cfif #thisDay# lt #lastDay#>
+        	<Cfset lastDay = #thisDay#>
+        </Cfif>
+	<cfif form.prdate_Date lt #lastDay# AND form.prdate_Date gt #firstDate#>
+    	<Cfset DateOk = 1>
+     <cfelse>
+     	<cfset DateOk = 0>
+     </cfif>
+     <!----
+			if (DateOk eq 0 ) {
+				SESSION.formErrors.Add("Date of contact must be between #DateFormat('#firstdate#', 'mm/dd/yyyy')# and #DateFormat('#lastDay#', 'mm/dd/yyyy')# .");
+			}
+		---->
+	<cfscript>
+			// Data Validation - Current Address
+			if ( NOT LEN(FORM.prdate_date) ) {
+				SESSION.formErrors.Add("Please enter your date of contact.");
+			}
+
+			if ( NOT LEN(form.fk_prdate_type) ) {
+				SESSION.formErrors.Add("Please enter the type of contact you had.");
+			}
+
+			if ( NOT LEN(FORM.fk_prdate_contact) ) {
+				SESSION.formErrors.Add("Please select the Contact.");
+			}
+			if (  LEN(FORM.fk_prdate_contact) GT 200 ) {
+				SESSION.formErrors.Add("Please limit comments  to 200 characters or less.");
+			}
+	
+		</cfscript>	
+        <Cfoutput>
+       
+      	</Cfoutput>
+	  <!----	
 	<cfif not isDate(trim(form.prdate_date))>
 		<cfset errorMsg = "Please enter a valid Date.">
 	<cfelseif trim(form.fk_prdate_type) EQ ''>
@@ -24,6 +76,9 @@
 	<cfelseif len(trim(form.prdate_comments)) GT 200>
 		<cfset errorMsg = "Please enter Comments 200 characters or less.">
     <cfelse>
+	---->
+	<!--- Check if there are no errors --->
+    <cfif NOT SESSION.formErrors.length()>
 		<cfif new>
             <cfquery datasource="#application.dsn#">
                 INSERT INTO progress_report_dates (fk_progress_report, prdate_date, prdate_comments, fk_prdate_type, fk_prdate_contact)
@@ -52,6 +107,7 @@
         <script>
         document.theForm.submit();
         </script>
+        
 	</cfif>
 
 <!--- add --->
@@ -83,7 +139,7 @@
     <cfset form.pr_id = get_record.fk_progress_report>
 
 </cfif>
-
+<!----
 <cfif errorMsg NEQ ''>
 	<script language="JavaScript">
         alert('<cfoutput>#errorMsg#</cfoutput>');
@@ -97,14 +153,18 @@ function checkForm() {
 	return true;
 }
 </script>
-
+---->
 <!--- this table is so the form is not 100% width. --->
+
+
 <table align="center">
+
   <tr>
     <td>
 
 <!--- header of the table --->
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+
 <tr valign=middle height=24>
 	<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 	<td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
@@ -119,13 +179,24 @@ function checkForm() {
 <cfinput type="hidden" name="pr_id" value="#form.pr_id#">
 
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-	<tr><td>
+
+    <tr><td>
 
 <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
 <table border=0 cellpadding=4 cellspacing=0>
     <tr>
+    	<td colspan=4 align="left"><!--- Form Errors --->
+        	<gui:displayFormErrors 
+            formErrors="#SESSION.formErrors.GetCollection()#"
+            messageType="divOnly"
+            width="98%"
+            />
+        </td>
+    </tr>
+    <tr>
+    
     	<td class="label">Date: <span class="redtext">*</span></td>
-        <td><cfinput type="text" name="prdate_date" value="#dateFormat(form.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" required="yes" validate="date" message="Please enter a valid Date."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="prdate_date" value="#dateFormat(form.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" > mm/dd/yyyy</td>
     </tr>
     <tr>
     	<td class="label">Type: <span class="redtext">*</span></td>
