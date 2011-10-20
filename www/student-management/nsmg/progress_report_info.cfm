@@ -542,7 +542,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
 		<cfif allow_edit and form.report_mode EQ 'view'>
             <td width="1">
 		        <!--- add contact date. --->
-                <form action="index.cfm?curdoc=forms/pr_date_form2" method="post">
+                <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
                 <input name="Submit" type="image" src="pics/new.gif" alt="Add Contact Date" border=0>
                 </form>
