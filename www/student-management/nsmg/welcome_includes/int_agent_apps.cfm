@@ -69,15 +69,11 @@
                                     app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
                             </cfif>
                             
-							<!--- Filter for Case, WEP, Canada and ESI --->
-                            <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
-                                AND 
-                                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                            <!--- ISE Apps --->
-                            <cfelse>
-                                AND
-                                    companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
-                            </cfif>	
+                            <!--- Keep Exchange Service Information Apps separate --->
+                            <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
+                            	AND
+                                	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                            </cfif>
                             
                         </cfquery>
                      
@@ -97,7 +93,7 @@
 					</cfif>
                     
 					<!--- INTO Germany / Into Austria / XML Upload Feature --->
-					<cfif ListFind("20,21,15130", CLIENT.userID)>
+					<cfif ListFind('28,15310,20,109,628,9106,115,21,6584,15130,15330', client.userid)>
                         <br />
                         <a href="index.cfm?curdoc=xml/upload_form&novelaro">Try the XML upload feature.</a>
                     </cfif>
