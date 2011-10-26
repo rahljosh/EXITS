@@ -29,7 +29,7 @@
 		<td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
 		<td width="26" background="pics/header_background.gif"><img src="pics/students.gif"></td>
 		<td background="pics/header_background.gif"><h2>Placement Reports</h2></td>
-		<cfif ListFind("1,2,3,4", CLIENT.userType)>
+		<cfif ListFind("1,2,3,4,5", CLIENT.userType)>
             <td background="pics/header_background.gif" align="right">
                 <cfif NOT VAL(URL.All)>
                     <a href="?curdoc=reports/placement_reports_menu&all=1">Show All Programs</a>

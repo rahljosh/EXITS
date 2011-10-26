@@ -179,7 +179,7 @@
     <cfif ListFind("1,2,3,4,5,6", CLIENT.userType)> 
         <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for Advisors</td></tr>
         <tr>
-            <td><a href="?curdoc=reports/placement_reports_menu&all=1">Placement Reports</a></td>
+            <td><a href="?curdoc=reports/placement_reports_menu">Placement Reports</a></td>
             <td><a href="?curdoc=progressReports/index">Progress Reports</a></td>
         </tr>
         <tr>
