@@ -6,8 +6,9 @@
 	<title>Page [01] - Student's Information</title>
 </head>
 <body>
+<!----
 <cftry>
-
+---->
 <cfif isDefined('url.unqid')>
 	<!----Get student id  for office folks linking into the student app---->
 	<cfquery name="get_student_id" datasource="MySQL">
@@ -95,6 +96,7 @@
 </cfquery> 
 
 <cfset canadaIDList = ValueList(qAppCanadaPrograms.app_programID)>
+<Cfset additionalPrograms = ValueList(qAppPrograms.app_programID)>
 
 <cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 
@@ -134,12 +136,17 @@ function displayCanada() {
 	currentProgram = $("##app_indicated_program").val();
 
 	if ( $.ListFind(canadaList, currentProgram, ',') ) {
-		$(".canadaAreaDiv").fadeIn("slow");															
+		$(".canadaAreaDiv").fadeIn("slow");		
+		$(".additionalProgramDiv").fadeOut("slow");		
 	} else {
 		$("##app_canada_area").val("");
-		$(".canadaAreaDiv").fadeOut("slow");			
+		$(".canadaAreaDiv").fadeOut("slow");
+		$(".additionalProgramDiv").fadeIn("slow");	
 	}
 }
+
+
+
 
 $(document).ready(function() {
 	displayCanada();
@@ -199,27 +206,41 @@ $(document).ready(function() {
 				<tr><td colspan="2"><b>Program Information</b></td></tr>
 				<tr>
 					<td><em>Program Type</em></td>
-					<td><em>Additional Programs</em></td>
+					<td class="additionalProgramDiv" style="display:block;"><em>Additional Programs</em></td>
 				</tr>
 				<tr>
 					<td valign="top">
+                    <Cfif get_latest_status.status gte 8>
+                    	#qAppPrograms.app_program#
+                        <input type="hidden" value="#qAppPrograms.app_programid#" name="app_indicated_program">
+                    <cfelse>
                     	<cfselect name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();">
 						<option value="0">Select a Program</option>
 						<cfloop query="qAppPrograms">
 							<option value="#app_programid#" <cfif get_student_info.app_indicated_program EQ app_programid>selected</cfif> >#app_program#</option>
 						</cfloop>
 						</cfselect>
+                     </Cfif>
                         <br><br><em>Specific Program</em><Br>
-                         <cfselect
-                  name="internalProgram" 
-                  id="internalProgram"
-                  value="programID"
-                  display="programName"
-                  selected="#programID#"
-                  bindonload="yes"
-                  bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms({app_indicated_program})" />
+                 <cfif get_latest_status.status gte 8>
+                 		<Cfquery name="qProgramName" datasource="#application.dsn#">
+                        select programName
+                        from smg_programs 
+                        where programid = #programid#
+                        </cfquery>
+                        #qProgramName.programName#<input type="hidden" name="internalProgram" value="#programID#">
+                 <cfelse>
+                             <cfselect
+                      name="internalProgram" 
+                      id="internalProgram"
+                      value="programID"
+                      display="programName"
+                      selected="#programID#"
+                      bindonload="yes"
+                      bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms({app_indicated_program})" />
+                  </cfif>
 					</td>
-					<td valign="top">
+					<td valign="top" class="additionalProgramDiv" style="display:block;">
                          <table>
                          
 						
@@ -496,11 +517,11 @@ $(document).ready(function() {
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
-
+<!----
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
 </cftry>
-
+---->
 </body>
 </html>
