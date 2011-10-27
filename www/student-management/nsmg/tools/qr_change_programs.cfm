@@ -11,7 +11,7 @@
 	Base program fee can not be 0.00, please click back and update the fee.
 	<cfabort>
 </cfif>
-
+<cfdump var="#form#">
 <cftransaction action="begin" isolation="SERIALIZABLE">
 <Cfquery name="update_programs" datasource="MySQL">
 	update smg_programs
@@ -19,6 +19,7 @@
 		type = #form.programtype#,
 		startdate = #CreateODBCDate(form.startdate)#,
 		enddate = #CreateODBCDate(form.enddate)#,
+        applicationDeadline = #CreateODBCDate(form.applicationDeadline)#,
         fk_smg_student_app_programID = '#form.studentAppType#',
 		insurance_startdate = <cfif form.insurance_startdate is not ''>#CreateODBCDate(form.insurance_startdate)#<cfelse>null</cfif>,
 		insurance_enddate = <cfif form.insurance_enddate is not ''>#CreateODBCDate(form.insurance_enddate)#<cfelse>null</cfif>,
