@@ -63,6 +63,7 @@
         isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     AND
         companyID LIKE ( <cfqueryparam cfsqltype="cf_sql_varchar" value="%#CLIENT.companyID#%"> )
+
 </cfquery>
 
 <cfquery name="qAppPrograms" dbtype="query">
@@ -97,7 +98,7 @@
 
 <cfset canadaIDList = ValueList(qAppCanadaPrograms.app_programID)>
 <Cfset additionalPrograms = ValueList(qAppPrograms.app_programID)>
-
+<Cfparam name="beforeDeadline" default="1">
 <cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 
 <cfoutput>
@@ -230,6 +231,7 @@ $(document).ready(function() {
                         </cfquery>
                         #qProgramName.programName#<input type="hidden" name="internalProgram" value="#programID#">
                  <cfelse>
+                 
                              <cfselect
                       name="internalProgram" 
                       id="internalProgram"
@@ -237,7 +239,7 @@ $(document).ready(function() {
                       display="programName"
                       selected="#programID#"
                       bindonload="yes"
-                      bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms({app_indicated_program})" />
+                      bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms(programTypeID={app_indicated_program})" />
                   </cfif>
 					</td>
 					<td valign="top" class="additionalProgramDiv" style="display:block;">
