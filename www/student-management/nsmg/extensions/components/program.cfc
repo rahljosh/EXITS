@@ -31,7 +31,8 @@
         <cfargument name="companyID" default="" hint="CompanyID is not required">
         <cfargument name="isEndingSoon" default="0" hint="Get only programs that are ending soon for the insurance extension/early return">
         <cfargument name="isFullYear" default="0" hint="Get only 10 month programs">
-        <cfargument name="isUpcomingProgram" default="0" hint="Get only upcoming programs, used to assign new student applications at the time of approval">         
+        <cfargument name="isUpcomingProgram" default="0" hint="Get only upcoming programs, used to assign new student applications at the time of approval">  
+              
               
         <cfquery 
 			name="qGetPrograms" 
@@ -42,6 +43,7 @@
                     p.type,
                     p.startDate,
                     p.endDate,
+                    p.applicationDeadline,
                     p.insurance_startDate,
                     p.insurance_endDate,
                     p.sevis_startDate,
@@ -109,7 +111,7 @@
                     AND
                     	p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -1, now())#">
                 </cfif>
-
+				
                 ORDER BY 
                    p.startDate DESC,
                    p.programName
@@ -215,7 +217,8 @@
     <cffunction access="remote" name="qGetActiveInternalPrograms" output="no" returntype="query" hint="Gets a list of active programs associated with the program type indicated. Needs to get the program type id." verifyclient="no" securejson="false">
 
     	<cfargument name="programTypeID" default="0" hint="programTypeID is not required">
-
+		
+        
         <cfquery 
 			name="qGetActiveInternalPrograms" 
 			datasource="#APPLICATION.dsn#">
@@ -231,6 +234,10 @@
                     							  
                 AND
                     active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+				
+                AND
+                    applicationDeadline >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                
                 ORDER BY 
                    programname
 		</cfquery>
