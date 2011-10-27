@@ -11,7 +11,7 @@
                        });
                </script>
 <cfquery name="get_program" datasource="MySQL">
-	SELECT programid, programname, fk_smg_student_app_programID, type, startdate, enddate, insurance_startdate, progress_reports_active ,insurance_enddate, preayp_date, smg_programs.companyid, programfee, insurance_batch, sevis_startdate, sevis_enddate,
+	SELECT programid, programname, fk_smg_student_app_programID, type, startdate, enddate, applicationDeadline, insurance_startdate, progress_reports_active ,insurance_enddate, preayp_date, smg_programs.companyid, programfee, insurance_batch, sevis_startdate, sevis_enddate,
 			application_fee, insurance_w_deduct, insurance_wo_deduct, blank, hold, tripid, smg_programs.active, seasonid, smgseasonid, fieldviewable,
 			smg_companies.companyshort
 	FROM smg_programs
@@ -103,6 +103,9 @@
 		</tr>
 		<tr><td align="right">*End Date: </td>
 			<td><cfinput type="text" name="enddate" value="#DateFormat(get_program.enddate, 'mm-dd-yyyy')#" size=9 maxlength="10" validate="date"> (mm-dd-yyyy)</td>
+		</tr>
+       <tr><td align="right">*Application Deadline: </td>
+			<td><cfinput type="text" name="applicationDeadline" value="#DateFormat(get_program.applicationDeadline, 'mm-dd-yyyy')#" size=9 maxlength="10" validate="date"> (mm-dd-yyyy) program will not show on student application after this date</td>
 		</tr>
 		<tr><td align="right"><cfif #Right(cgi.HTTP_REFERER, 11)# is 'new_program'> <font color="red"></cfif>Default Fee: </td>
 			<td><input type="text" name="programfee" value="#get_program.programfee#" size=10></td></tr>
