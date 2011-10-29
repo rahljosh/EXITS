@@ -154,10 +154,10 @@
 
 <li><a href="index.cfm?page=RefForm" target="_self" ><strong>Resources</strong></a>
 	<ul>
-	<li><a href="index.cfm?page=refForm" target="_self">Support</a></li>
-	<li><a href="index.cfm?page=/upload/uploads" target="_self">Rules & Policies</a></li>
-	<li><a href="index.cfm?page=/upload/uploads" target="_self">Insurance Information</a></li>
-	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/cultural-adjustments" target="_self">						Cultural Adjustments</a></li>
+	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-support" target="_self">Support</a></li>
+	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/rules-policies" target="_self">Rules & Policies</a></li>
+	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/insurance-information" target="_self">Insurance Information</a></li>
+	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/cultural-adjustments" target="_self">Cultural Adjustments</a></li>
 	</ul>
 </li>
 
