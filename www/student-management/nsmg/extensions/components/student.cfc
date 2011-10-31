@@ -31,7 +31,7 @@
               
         <cfquery 
 			name="qGetStudentByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					*
                 FROM 
@@ -65,7 +65,7 @@
               
         <cfquery 
 			name="qGetStudentFullInformationByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					s.studentID,
                     s.uniqueID,
@@ -140,7 +140,7 @@
 
         <cfquery 
 			name="qIsStudentAssignedToPHP" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     s.studentID
                 FROM 
@@ -180,7 +180,7 @@
 
         <cfquery 
 			name="qGetPHPStudent" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     s.studentID, 
                     s.uniqueID, 
@@ -272,7 +272,7 @@
               
         <cfquery 
 			name="qGetAvailableDoublePlacement" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                 	studentID, 
                     familyLastName,
@@ -357,7 +357,7 @@
 		</cfscript>
 		
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_students
 				SET
@@ -489,7 +489,7 @@
         <cfargument name="userType" hint="userType is required">
 
             <cfquery 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                     UPDATE
                         smg_students
                     SET
@@ -514,7 +514,7 @@
 		<cfargument name="placement_notes" default="" hint="placement_notes is not required">
 
             <cfquery 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                     UPDATE
                         smg_students
                     SET
@@ -539,7 +539,7 @@
 		</cfscript>
         
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE 
                 	smg_students
                 SET 
@@ -641,7 +641,7 @@
 		</cfscript>
         
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_students
 				SET
@@ -680,7 +680,7 @@
         <cfargument name="reason" default="" hint="reason is not required">
         
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_students
 				SET
@@ -725,7 +725,7 @@
 		</cfscript>
 
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_students
 				SET
@@ -781,7 +781,7 @@
         <cfargument name="reason" default="" hint="reason is not required">
         
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_students
 				SET
@@ -1212,7 +1212,7 @@
         <cfif vQueryType EQ 'insert'>        
             
             <cfquery 
-                datasource="#APPLICATION.dsn#"
+                datasource="#APPLICATION.DSN#"
                 result="newRecord">
                     INSERT INTO 
                         smg_hosthistory	
@@ -1280,7 +1280,7 @@
         <cfif ARGUMENTS.placementAction NEQ 'setDoublePlacement' AND vQueryType EQ 'update'>
 
             <cfquery 
-                datasource="#APPLICATION.dsn#"
+                datasource="#APPLICATION.DSN#"
                 result="newRecord">
                     UPDATE
                         smg_hosthistory	
@@ -1412,7 +1412,7 @@
         <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
         		
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
 	                smg_students
                 SET 
@@ -1536,7 +1536,7 @@
         
         <!--- Update Host History Documents --->
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
 	                smg_hosthistory
                 SET 
@@ -1588,7 +1588,7 @@
 			
         <cfquery 
 			name="qCheckPlacementPaperwork" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     studentID,
                     hostID,
@@ -1847,7 +1847,7 @@
             
             <!--- Update Camp --->
             <cfquery 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                     UPDATE
                         smg_students
                     SET
@@ -1880,7 +1880,7 @@
 
         <cfquery 
 			name="qGetVerificationList" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					s.studentID,
                     s.firstName,
@@ -1920,11 +1920,11 @@
                 </cfif>        
 			                    
 				<cfif CLIENT.companyID EQ 5>
-                    AND
-                        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes"> )
+                    AND          
+                        s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
                 <cfelse>
-                    AND
-                        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                    AND          
+                        s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
                 </cfif>
                 
 				<cfif IsDate(ARGUMENTS.receivedDate)>
@@ -1949,7 +1949,7 @@
 
         <cfquery 
 			name="qGetRemoteStudentByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					s.studentID,
                     s.firstName,
@@ -1971,7 +1971,7 @@
 	</cffunction>
 
 
-	<cffunction name="updateRemoteStudentByID" access="remote" returntype="void" hint="Updates a student record.">
+	<cffunction name="updateRemoteStudentByID" access="remote" returntype="void" hint="Updates a student record. DS2019 Verification">
         <cfargument name="studentID" required="yes" hint="studentID is required">
         <cfargument name="firstName" required="yes" hint="firstName is required">
         <cfargument name="middleName" required="yes" hint="middleName is required">
@@ -1984,21 +1984,21 @@
         <cfargument name="countryResident" required="yes" hint="countryResident is required">
 
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
 					smg_students
 				SET
-                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.firstName#">,
-                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.middleName#">,
-                    familyLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.familyLastName#">,
-                    sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sex#">,
-                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dob#">,
-                    cityBirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cityBirth#">,
+                    firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.firstName)#" maxlength="150">,
+                    middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.middleName)#" maxlength="150">,
+                    familyLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.familyLastName)#" maxlength="150">,
+                    sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.sex)#">,
+                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.dob)#">,
+                    cityBirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.cityBirth)#">,
                     countryBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryBirth)#">,
                     countryCitizen = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryCitizen)#">,
                     countryResident = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryResident)#">
                 WHERE
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 		</cfquery>
 		   
 	</cffunction>
@@ -2008,7 +2008,7 @@
         <cfargument name="studentID" required="yes" hint="studentID is required">
 
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
 					smg_students
 				SET
@@ -2040,7 +2040,7 @@
         
         <cfquery 
 			name="qGetFlightInformation" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     flightID,                     
                     studentID,
@@ -2118,7 +2118,7 @@
 		        
         <cfquery 
 			name="qGetFlightInformationByFlightID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     flightID,                     
                     studentID,
@@ -2159,7 +2159,7 @@
         <cfargument name="flightNotes" default="" hint="Notes is not required">
 
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE 
                     smg_students
                 SET 
@@ -2222,7 +2222,7 @@
 		</cfscript>
 
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 INSERT INTO 
                     smg_flight_info
                 (
@@ -2297,7 +2297,7 @@
 		</cfscript>
 		
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_flight_info
                 SET 
@@ -2332,7 +2332,7 @@
         <cfargument name="sendEmail" default="1" hint="Set to 0 to not send email notification">
 		
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_flight_info
                 SET
@@ -2366,7 +2366,7 @@
         <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
 		
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_flight_info
                 SET
@@ -3081,7 +3081,7 @@
         <cfargument name="flsID" hint="flsID is required">
 		
             <cfquery result="test"
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
 					UPDATE
                     	smg_students
                     SET
@@ -3125,7 +3125,7 @@
 
         <cfquery 
 			name="qGetProjectHelpList" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                 	s.studentID, 
                     s.firstname, 
@@ -3232,7 +3232,7 @@
 
         <cfquery 
 			name="qGetProjectHelpDetail" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                 	id,
                     student_id,
@@ -3287,7 +3287,7 @@
         <cfargument name="reason" default="" hint="Reason is not required">      
 
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_project_help
                 SET
@@ -3398,7 +3398,7 @@
             <cfif ARGUMENTS.approvedType EQ 'office' AND VAL(ARGUMENTS.isApproved)>
             
                 <cfquery 
-                    datasource="#APPLICATION.dsn#">
+                    datasource="#APPLICATION.DSN#">
                         UPDATE
                             smg_project_help_activities
 						SET
@@ -3419,7 +3419,7 @@
 
         <cfquery 
 			name="qGetProjectHelpActivities" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                 	id,
                     project_help_id,
@@ -3448,7 +3448,7 @@
 
         <cfquery 
 			name="qGetProjectHelpActivities" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     SUM(hours) as hours
                 FROM 
@@ -3474,7 +3474,7 @@
 		
             <cfquery 
             	name="checkProject"
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
 					SELECT
                     	id
 					FROM
@@ -3491,7 +3491,7 @@
             <cfelse>
             
                 <cfquery 
-                    datasource="#APPLICATION.dsn#">
+                    datasource="#APPLICATION.DSN#">
                         INSERT INTO
                             smg_project_help
                         (
@@ -3519,7 +3519,7 @@
     
                 <cfquery 
                     name="getProjectHelpID"
-                    datasource="#APPLICATION.dsn#">
+                    datasource="#APPLICATION.DSN#">
                         SELECT 
                             MAX(id) as ID
                         FROM
@@ -3566,7 +3566,7 @@
         <cfif LEN(qGetPHDetail.sr_date_submitted) OR LEN(qGetPHDetail.ra_date_approved) OR LEN(qGetPHDetail.rd_date_approved) OR LEN(qGetPHDetail.ny_date_approved)>
 
             <cfquery 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                     UPDATE
                         smg_project_help
                     SET
@@ -3637,7 +3637,7 @@
             </cfif>
         
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 INSERT INTO
                 	smg_project_help_activities
 				(
@@ -3668,7 +3668,7 @@
         <cfargument name="activityID" hint="activity is required">
 
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_project_help_activities
 				SET
@@ -3703,7 +3703,7 @@
            
         <cfquery 
 			name="qGetProjectHelpReport" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                 	s.studentID, 
                     s.firstname, 
