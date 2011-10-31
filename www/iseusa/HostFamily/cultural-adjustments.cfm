@@ -75,9 +75,44 @@
 <!--end HFTOPPIC--> </div>
 
 <div id="top"></div>
-<div class="HFsidebarL">
-<div class="HFgradient">
+<div class="HFsidebarRW">
+<img src="images/hostFamily/benefits_pic.png" width="200"/>
+      
+        <div class="HF_boxW"></div>
+<div class="HF_boxOrg">
+<h2>Important Things To Know</h2>
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />THE STUDENT AS A MEMBER OF YOUR FAMILY</h1>
+<ul><li>Do not treat the student like a guest, no matter how tempted you are.</li>
+ <li>Encourage the student to come to you with any issues or concerns first so that you have a chance to help
+them solve problems.</li>
+ <li> Provide an atmosphere of openness so that a question is welcomed and responded to in your home.</li>
+ <li>Communicate plans in advance so that the student can make plans as well. This especially helps if you have
+set plans for holidays.</li>
+ <li>Periodically ask how the student is adjusting to the home and the family.</li></ul>
+<br /><hr /><br />
 
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />MAKING FRIENDS</h1>
+<ul> <li>DO NOT EXPECT THAT AN INSTANT FRIENDSHIP WILL DEVELOP BETWEEN YOUR
+TEEN AND THE STUDENT.</li>
+ <li> Encourage the student to speak English and make American friends.</li>
+ <li> Encourage the student to join clubs and attend youth groups if you go to church.</li>
+ <li> Meet their friends as you would with your own children. Invite them to your home to get to know them.</li>
+ <li> Encourage the student to start a journal or picture documentation of their time in the U.S.</li></ul><br /><hr /><br />
+
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />CHANGING FAMILIES</h1>
+<ul> <li> ISE will work to counsel you and the student through issues.</li>
+ <li> We strongly encourage both families and students to work through their problems FIRST.</li>
+ <li> Talk to the student about what you are feeling.</li>
+ <li> If you are not making changes, speak with your Area Representative.</li>
+ <li> If you must ask the student to change families, please allow the Area Representative time to find the right
+family.</li>
+ <li> ONLY THE NY OFFICE CAN MAKE THE DECISION TO SEND THE STUDENT HOME.</li>
+ <li> If a new home is deemed best, ISE will look to replace the student in the same school district.</li></ul><br />
+</div>
+<!--endHFsidebarR--></div>
+<div class="HFsidebarLW">
+<h2>Student Adjustment Cycle</h2>
+<div class="HFgradient">
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />1. Arrival and First Days</h1>
 <ul><strong><u>The Host Family Feels:</u></strong>
  <li> Excited about the new experience.</li>
@@ -93,10 +128,10 @@
   too much the first few days.</li> 
   <li> Encourage the student to ask
   questions and use their dictionary.</li> 
-  <li> SPEAK SLOWLY!!</li> </ul></div>
+  <li> SPEAK SLOWLY!!</li> </ul></div><br />
   
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />2. Glory Days</h1>
-<div class="HFpicL"><img src="images/hostFamily/HF_pic1.jpg" width="96" height="196" /></div>
+<div class="HFpicR"><img src="images/hostFamily/HF_pic1.jpg" width="96" height="196" /></div>
 <ul><strong><u>The Host Family Feels:</u></strong>
 <li> That everything is going so well.</li>
 <li> That the student needs to make different/
@@ -113,7 +148,7 @@ fall off.</li></ul>
 <li> Talk to the student about his/her friends and cultural
 experiences and differences.</li>
 <li> Avoid putting the student on a pedestal...it is too easy to
-fall off.</li></ul>
+fall off.</li></ul><br />
 <div class="HFgradient">
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />3. Culture Shock</h1>
 
@@ -139,7 +174,7 @@ family feels.</li>
 can help.</li>
 <li> Talk to the student about his/her
 feelings.</li></ul>
-</div>
+</div><br />
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />4. Feeling Dissatisfaction</h1>
 <ul><strong><u>The Host Family Feels:</u></strong>
 <li> Halo effect is gone.</li>
@@ -154,11 +189,7 @@ lead to more problems.</li>
 as possible.</li>
 <li> Contact your Area Representative with
 any concerns.</li>
-</ul>
-
-</div>
-<div class="HFsidebarR">
-
+</ul><br />
 <div class="HFgradient">
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />5. Making Adjustments</h1>
 
@@ -170,7 +201,7 @@ but still a part of the family.</li></ul>
 
 <ul><strong><u>The Host Family Should:</u></strong>
 <li> Encourage the student to meet new
-people and try new activities.</li></ul></div>
+people and try new activities.</li></ul></div><br />
 
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />6. Feeling Accepted</h1>
 
@@ -187,7 +218,7 @@ letters, if appropriate, to the
 newspapers to thank the community
 and school for their experience.</li>
 <li> Look for the student to become more
-social during this time.</li></ul>
+social during this time.</li></ul><br />
 
 <div class="HFgradient">
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />7. Return Anxiety</h1>
