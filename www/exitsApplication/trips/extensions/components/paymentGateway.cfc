@@ -142,6 +142,48 @@
 	</cffunction>
 
 
+	<!--- Insert Check/Money order payment Information --->
+	<cffunction name="insertPaymentReservation" access="public" returntype="numeric" output="false" hint="Inserts a new payment information. Returns paymentID.">
+        <cfargument name="applicationID" required="yes" hint="applicationID is required" />		
+        <cfargument name="sessionInformationID" required="yes" hint="SESSION.informationID is required" />		
+		<cfargument name="foreignTable" required="yes" hint="foreignTable is required" />
+		<cfargument name="foreignID" required="yes" hint="foreignID is required" />
+		<cfargument name="amount" required="yes" hint="amount is required" />
+        <cfargument name="paymentMethodID" required="yes" hint="paymentMethodID is required" />
+		<cfargument name="paymentMethodType" required="yes" hint="paymentMethod is required" />
+        
+        <cfquery 
+            result="newRecord"
+            datasource="#APPLICATION.DSN.Source#">
+                INSERT INTO
+                    applicationPayment
+                (                    
+                    applicationID,
+                    sessionInformationID,
+                    foreignTable,
+                    foreignID,
+                    amount,
+                    paymentMethodID,
+                    paymentMethodType,
+                    dateCreated
+                )
+                VALUES
+                (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationID)#">,	
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.sessionInformationID)#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">,  
+                    <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.amount#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.paymentMethodID#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.paymentMethodType#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">                
+                )                    
+        </cfquery>
+			
+		<cfreturn newRecord.GENERATED_KEY />
+	</cffunction>
+
+
 	<!--- Update Authorize.Net Payment Information --->
 	<cffunction name="updateApplicationPayment" access="public" returntype="void" output="false" hint="Updates Authorize.net Payment Information.">
         <cfargument name="ID" required="yes" hint="ID is required" />

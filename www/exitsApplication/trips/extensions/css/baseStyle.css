@@ -297,6 +297,7 @@ table {
 .paragraphRules {
 	text-align: left;
 	color: #000;
+	padding-top:5px;
 	padding-right: 20px;
 	padding-left: 25px;
 	font-size: 12px;
@@ -307,6 +308,22 @@ table {
 	list-style-type: square;
 	list-style-position: inside;
 	margin-bottom:15px;
+}
+
+.termsConditions {
+	text-align: left;
+	color: #000;
+	padding-top:5px;
+	padding-right: 20px;
+	padding-left: 40px;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.termsConditions li {
+	list-style-position: inside;
+	margin-bottom:15px;
+	margin-top:3px;
 }
 
 /************************************************************************************

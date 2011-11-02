@@ -19,21 +19,50 @@
     
     <cfquery name="qCheckStudentRegistration" datasource="#APPLICATION.DSN.Source#">
         SELECT 
-        	ID 
+        	st.ID
         FROM 
-        	student_tours 
+        	student_tours st
+		INNER JOIN
+        	applicationPayment ap ON ap.foreignID = st.ID
+            	AND
+                	ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                AND
+                	authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
         WHERE 
-     		studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#"> 
+     		st.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#"> 
         AND
-        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_id)#">
+            st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_id)#">
         AND
-        	paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+        	st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+    </cfquery>
+    
+    <cfquery name="qCheckStudentReservation" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+        	st.ID
+        FROM 
+        	student_tours st
+		INNER JOIN
+        	applicationPayment ap ON ap.foreignID = st.ID
+            	AND
+                	ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                AND
+                	paymentMethodID = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+        WHERE 
+     		st.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#"> 
+        AND
+            st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_id)#">
     </cfquery>
     
     <cfscript>
 		if ( VAL(qCheckStudentRegistration.recordCount) ) {
+			
 			Location("#CGI.SCRIPT_NAME#?action=myTripDetails", "no");
-		}	
+			
+		} else if ( VAL(qCheckStudentReservation.recordCount) ) {
+			
+			Location("#CGI.SCRIPT_NAME#?action=reservationDetails", "no");
+			
+		}
 	</cfscript>
        
     <cfquery name="qGetHostChildren" datasource="#APPLICATION.DSN.Source#">
@@ -257,7 +286,10 @@
             
             <cfscript>
 				// Go to Book Trip - CC Processing
-				Location('#CGI.SCRIPT_NAME#?action=bookTrip', 'no');
+				// Location('#CGI.SCRIPT_NAME#?action=bookTrip', 'no');
+				
+				// No Credit Card Involved
+				Location('#CGI.SCRIPT_NAME#?action=reservationSeat', 'no');
 	        </cfscript>
             
 		</cfif> <!--- NOT SESSION.formErrors.length() --->

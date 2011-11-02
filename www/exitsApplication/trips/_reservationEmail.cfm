@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_sendEmail.cfm
+	File:		_reservationEmail.cfm
 	Author:		Marcus Melo
 	Date:		September 26, 2011
 	Desc:		Email Student and MPD
@@ -56,22 +56,60 @@
                 A spot has been reserved for you <cfif VAL(qGetSiblingsRegistered.recordCount)> and #ValueList(qGetSiblingsRegistered.name)# </cfif> on the <strong>#qGetTourDetails.tour_name#</strong> tour.
             </h3>
                 
-            <font color="red">* * Your spot will not be confirmed until permission form has been received by MPD Tours America. Please work on getting this completed as soon as possible * *</font> 
+            <font color="red">*** Your spot will not be confirmed until payment and permission form have been received by MPD Tours America. Please work on getting this completed as soon as possible ***</font> 
         </p>
     
         <p>
         	Attached is a Student Packet with hotel, airport arrival instructions, emergency numbers, etc.  
             Please keep this handy for your trip and leave a copy with your host family while you are on the trip.
         </p>
-        
-    	<p>
-        	Please return the permission form by:<br />
-            <ul>
-                <li>email: #APPLICATION.MPD.email#</li>
-                <li>fax:   +1 718 439 8565</li>
-                <li>mail:  9101 Shore Road, ##203 - Brooklyn, NY 11209</li>
+
+		<p>
+        	Total Cost: #LSCurrencyFormat(vTotalDue)# <br />
+            <em class="tripNotesRight">#LSCurrencyFormat(qGetTourDetails.tour_price)# Per person - Does not include your round trip airline ticket</em>
+        </p>
+
+        <p>
+        	Your spot on the trip is then pending until you mail a: 
+            
+            <ul class="paragraphRules">
+                <li>Business Check</li>
+                <li>Personal Check</li>
+                <li>Money Order</li>
             </ul>
-		</p>
+            
+            Made out to <strong>MPD Tour Company</strong>, for the specified cost of your trip found in your confirmation email and sent to: <br /><br />
+
+            #APPLICATION.MPD.name# <br />
+            #APPLICATION.MPD.address# <br />
+            #APPLICATION.MPD.city#, #APPLICATION.MPD.state# #APPLICATION.MPD.zipCode#
+        </p>
+
+        <p>
+        	Once the payment of the specified trip has been collected your spot is reserved.
+        </p>
+
+        <p>
+        	If payment is not collected within 60 days of the trip your spot is vacated.
+        </p>
+    
+        <p>
+        	To be fully registered for your trip please return the permission form, emailed to you when you originally signed up, 
+            back to MPD Tours signed by your host family, school, natural family, and regional manager. 
+        </p>
+
+        <p>
+        	Once the permission forms are returned signed then MPD will contact you to book your flights. Do <strong>NOT</strong> book your own flights.
+        </p>
+    
+        <p>
+            Please submit your permission form with all signatures to MPD Tours
+            <ul class="paragraphRules">
+                <li><a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a></li>
+                <li>fax: #APPLICATION.MPD.fax#</li>
+                <li>mail: #APPLICATION.MPD.address# - #APPLICATION.MPD.city#, #APPLICATION.MPD.state# #APPLICATION.MPD.zipCode#</li>
+            </ul>
+        </p>
 	
         <p>
         	Please visit our website for additional questions. 
@@ -95,15 +133,16 @@
         <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
     	<cfinvokeargument name="email_to" value="#qGetRegistrationDetails.email#">
         <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
-        <cfinvokeargument name="email_subject" value="Your #qGetTourDetails.tour_name# Trip Details">
+        <cfinvokeargument name="email_subject" value="Your #qGetTourDetails.tour_name# Trip Reservation">
         <cfinvokeargument name="email_message" value="#stuEmailMessage#">
         <cfinvokeargument name="email_file" value="#APPLICATION.PATH.TEMP#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf">
         <cfinvokeargument name="email_file2" value="#APPLICATION.PATH.tour##qGetTourDetails.packetfile#">
     </cfinvoke>	
     
+    
     <!--- Email to Manager --->
     <cfsavecontent variable="repEmailMessage">
-        #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has registered to go on the #qGetTourDetails.tour_name# tour.<br /><br />
+        #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has reserved a spot to go on the #qGetTourDetails.tour_name# tour.<br /><br />
         
         Dates: #DateFormat(qGetTourDetails.tour_start, 'mmm d, yyyy')# - #DateFormat(qGetTourDetails.tour_end, 'mmm d, yyyy')#
         
@@ -116,7 +155,7 @@
         <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
         <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
         <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
-        <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
+        <cfinvokeargument name="email_subject" value="Student Trip Reservation #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#repEmailMessage#">
     </cfinvoke>	
 
@@ -125,14 +164,18 @@
     <cfsavecontent variable="mpdEmailMessage">
         <p>FYI,</p>
         
-        <p>#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has registered to go on the #qGetTourDetails.tour_name# tour.</p>
+        <p>#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has reserved a spot to go on the #qGetTourDetails.tour_name# tour.</p>
+        
+        <p>
+        	PS: PAYMENT IS PENDING, once you received the payment please check as received on EXITS.
+        </p>
     </cfsavecontent>
     
     <cfinvoke component="extensions.components.email" method="sendEmail">
         <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
         <cfinvokeargument name="email_to" value="#APPLICATION.MPD.email#"> 
         <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
-        <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
+        <cfinvokeargument name="email_subject" value="Student Trip Reservation #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#mpdEmailMessage#">
     </cfinvoke>	
 
