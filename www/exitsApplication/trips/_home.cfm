@@ -28,14 +28,16 @@
                 
                 <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE.  Once you are registered for a tour, you will be contacted regarding airfare.</strong></p>
             </td>
-        </tr>            
-        <tr>
-            <td colspan="4"> 
-                <cfif NOT VAL(qGetTourList.recordcount)>
-                    <h3><div align="center">Trips will be available for booking on Sept. 15<br />  Please check back on that date to book your trip.</div></h3>
-                </cfif>
-            </td>
-        </tr>
+        </tr> 
+        
+        <cfif NOT VAL(qGetTourList.recordcount)>           
+            <tr>
+                <td colspan="4"> 
+                    <h3><div align="center">Please check back on Nov 4th for new trip availability.</div></h3>
+                </td>
+            </tr>
+        </cfif>
+        
         <tr>
         <cfloop query="qGetTourList">
             <td width="285" height="270" class="bBackground" scope="row">

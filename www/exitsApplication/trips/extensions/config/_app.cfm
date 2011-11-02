@@ -113,9 +113,9 @@
 	//Set up constant for payment methods
 	APPLICATION.Constants.paymentMethod = ArrayNew(1);		
 	APPLICATION.Constants.paymentMethod[1] = "Credit Card";	
-	// APPLICATION.Constants.paymentMethod[2] = "Personal Check";
-	// APPLICATION.Constants.paymentMethod[3] = "Wire Transfer";
-	// APPLICATION.Constants.paymentMethod[4] = "Money Order";
+	APPLICATION.Constants.paymentMethod[2] = "Personal Check";
+	APPLICATION.Constants.paymentMethod[3] = "Money Order";
+	// APPLICATION.Constants.paymentMethod[4] = "Wire Transfer";
 	
 	//Set up constant for credit card types
 	APPLICATION.Constants.creditCardType = ArrayNew(1);		

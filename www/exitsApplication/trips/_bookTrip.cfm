@@ -521,7 +521,7 @@
 			}
 			
 			if ( LEN(qGetStudentInfo.other_Allergies) ) {
-				FORM.medicalInformation = ">Other Allergies: #qGetStudentInfo.other_Allergies#";	
+				FORM.medicalInformation = "Other Allergies: #qGetStudentInfo.other_Allergies#";	
 			}
 		</cfscript>
     

@@ -256,7 +256,7 @@
         --->
         <cfswitch expression="#FORM.action#">
         
-            <cfcase value="home,tripDetails,lookUpAccount,preferences,myTripDetails,bookTrip,confirmation" delimiters=",">
+            <cfcase value="home,tripDetails,lookUpAccount,preferences,myTripDetails,bookTrip,confirmation,reservationSeat,reservationConfirmed,reservationDetails" delimiters=",">
         
                 <!--- Include template --->
                 <cfinclude template="_#FORM.action#.cfm" />
