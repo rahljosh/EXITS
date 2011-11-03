@@ -238,11 +238,7 @@
                 SESSION.formErrors.Add("Please describe the kitchen.");
             }
             
-            // Home detials
-            if ( NOT LEN(TRIM(FORM.homeDetailsOther)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate any other items about the home.");
-            }
+            
             // Home detials
             if ( NOT LEN(TRIM(FORM.ownBed)) ) {
                 // Get all the missing items in a list
@@ -734,7 +730,7 @@
               <cfelse>her
             </cfif> 
             bedroom? 
-            <span class="small"></span>
+            <span class="small">i.e. a door or window</span>
           </label>
           <br />
           <Cfif VAL(FORM.performEdit)>	
