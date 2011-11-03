@@ -29,9 +29,8 @@
       
         <div class="HF_boxW"></div>
 <div class="HF_boxOrg">
-    <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Benefits for Families had Becoming a Host Family</h1>
+    <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />From the CSIET 2007 survey of host families</h1>
 
-  <strong><em>From the CSIET 2007 survey of host families</em></strong><br />
 &#187; Host family learning experience provided benefits not only culturally but also socially.<br /><br />
 &#187; Host families gained a new perspective on its own country and culture from their students.<br /><br />
 &#187; Student hosting was especially beneficial in terns of enhancing its own family setting, such as making new extended family, and having more interaction and mutual respect as a family of companies.<br /><br />
