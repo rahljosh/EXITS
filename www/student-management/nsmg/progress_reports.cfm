@@ -623,7 +623,7 @@ But in the output below we use the report fields where a report has been submitt
                     <!----For Aug/Sep and June, we need to check if student is int he country.---->
                      <Cfif client.pr_rmonth eq 9>
                      
-							<Cfif #datePart('m', '#arrivalDate#')# eq 8>
+							<Cfif #datePart('m', '#arrivalDate#')# eq 8 or #datePart('m', '#arrivalDate#')# eq 9>
                          		<Cfset PreviousReportApproved = 1>
                      		</Cfif>
                      
@@ -703,7 +703,9 @@ But in the output below we use the report fields where a report has been submitt
                             <cfelse>
                             	<Cfset submittingRep = '#arearepid#'>
                             </cfif>
-                        	
+                            <Cfif client.pr_rmonth eq 10>
+                        		<Cfset PreviousReportApproved = 1>
+                            </Cfif>
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
                           			<Cfif inCountry eq 0>
                                     Not in Country - No Report Required
