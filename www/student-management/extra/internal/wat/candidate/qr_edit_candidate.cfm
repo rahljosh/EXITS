@@ -70,9 +70,9 @@
 	}
 	
 	// Add stamp to notes
-	if ( LEN(FORM.selfConfirmationNotes) AND FORM.selfConfirmationNotes NEQ qGetCurrentPlacement.selfConfirmationNotes ) {
+	if ( LEN(FORM.selfConfirmationNotes) AND CompareNoCase(FORM.selfConfirmationNotes, qGetCurrentPlacement.selfConfirmationNotes) NEQ 0 ) {
 		// Add User Time Stamp to notes
-		FORM.selfConfirmationNotes = FORM.selfConfirmationNotes & " <br /> Added by #CLIENT.firstName# #CLIENT.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST <br />";
+		FORM.selfConfirmationNotes = FORM.selfConfirmationNotes & " - Added by #CLIENT.firstName# #CLIENT.lastName# on #DateFormat(now(), 'mm/dd/yy')# at #TimeFormat(now(), 'hh:mm tt')# EST";
 	}
 	
 	/*** Online Application ***/

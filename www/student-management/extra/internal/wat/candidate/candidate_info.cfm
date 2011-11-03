@@ -1196,7 +1196,7 @@
                                                 <td class="style1" align="right"><strong>Notes:</strong></td>
                                                 <td class="style1" colspan="3">
                                                     <span class="readOnly">#qCandidatePlaceCompany.selfConfirmationNotes#</span>
-                                                    <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage selfPlacementField largeTextArea">#APPLICATION.CFC.UDF.displayTextArea(qCandidatePlaceCompany.selfConfirmationNotes)#</textarea>
+                                                    <textarea name="selfConfirmationNotes" id="selfConfirmationNotes" class="style1 editPage selfPlacementField largeTextArea">#qCandidatePlaceCompany.selfConfirmationNotes#</textarea>
                                                 </td>
                                             </tr>
 										</cfif>                                            

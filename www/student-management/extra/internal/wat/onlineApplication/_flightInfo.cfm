@@ -325,10 +325,10 @@
 				// Set up page message, fade in and fade out after 5 seconds
 				if ( getID == 0 ) {
 					// Insert
-					$(".pageMessages").html("<p><em>Flight detail has successfully been added</em></p>").fadeIn().fadeOut(5000);
+					$(".pageMessages").html("<p><em>Flight detail has successfully been added</em></p>").fadeIn().fadeOut(7000);
 				} else {
 					// Update
-					$(".pageMessages").html("<p><em>Flight detail has successfully been updated</em></p>").fadeIn().fadeOut(5000);				
+					$(".pageMessages").html("<p><em>Flight detail has successfully been updated</em></p>").fadeIn().fadeOut(7000);				
 				}
 				
 				// Reset Errors Div
@@ -369,7 +369,7 @@
 		var deleteFlightConfirmation = function(ID) {
 			
 			// Set up page message, fade in and fade out after 2 seconds
-			$(".pageMessages").html("<p><em>Flight detail successfully deleted</em></p>").fadeIn().fadeOut(5000);
+			$(".pageMessages").html("<p><em>Flight detail successfully deleted</em></p>").fadeIn().fadeOut(7000);
 	
 			// Fade out record from search list
 			$("##flightID" + ID).fadeOut("slow");

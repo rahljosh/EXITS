@@ -365,15 +365,24 @@
 		
 		<cfscript>
 			// Set up local variables
-			var sbText = CreateObject("java", "java.lang.StringBuffer").init();
+			var returnText = ARGUMENTS.text;
+
+			returnText = ReplaceNoCase(returnText, chr(10), "<br />", "ALL");
+			returnText = ReplaceNoCase(returnText, chr(13), "<br />", "ALL");
+			
+			// Return text
+			return(returnText);
+
+			// Set up local variables
+			//var sbText = CreateObject("java", "java.lang.StringBuffer").init();
 			
 			// Make sure that it is a block element with bottom margin
-			sbText.append("<div>");
-			sbText.append(Replace(ARGUMENTS.Text, (Chr(13) & Chr(10)), "<br />", "ALL"));
-			sbText.append("</div><br />");		
+			//sbText.append("<div>");
+			//sbText.append(Replace(ARGUMENTS.Text, (Chr(13) & Chr(10)), "<br />", "ALL"));
+			//sbText.append("</div><br />");		
 			
 			// Return the text and convert to string
-			return(sbText.toString());
+			//return(sbText.toString());
 		</cfscript>
 	</cffunction>
 
@@ -386,9 +395,9 @@
 		
 		<cfscript>
 			// Set up local variables
-			var returnText = '';
+			var returnText = ARGUMENTS.text;
 			
-			returnText = ReplaceNoCase(ARGUMENTS.text, "<br />", chr(10), "ALL");
+			returnText = ReplaceNoCase(returnText, "<br />", chr(10), "ALL");
 			returnText = ReplaceNoCase(returnText, "<br>", chr(10), "ALL");
 			
 			// Return text
