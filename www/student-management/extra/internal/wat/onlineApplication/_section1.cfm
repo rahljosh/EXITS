@@ -351,7 +351,7 @@
 			onComplete: function(file, response) {
 				thumb.load(function(){
 					$('.pictureMessage').html("<p>Image successfully uploaded</p>");
-					$(".pictureMessage").fadeOut(5000);
+					$(".pictureMessage").fadeOut(7000);
 					thumb.unbind();
 				});				
 				response = $.trim(response)
@@ -359,7 +359,7 @@
 				// Not a valid image file
 				if ( response == '' ) {
 					$('.pictureMessage').html("<p class='error'>Error - Please upload a valid image file</p>");
-					$(".pictureMessage").fadeOut(5000);				
+					$(".pictureMessage").fadeOut(7000);				
 				} else {
 					//console.log('thumbnailpreview.cfm?file='+escape(response))
 					// hack about adding a query string on an image src to force it to reload instead of using the cached version.
