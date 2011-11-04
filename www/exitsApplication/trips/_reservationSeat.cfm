@@ -370,17 +370,17 @@
             <h3 class="tripSectionTitle">Terms and Conditions</h3>                
             <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">                    
                 <tr>
-                    <td colspan="2" align="center">
-                        <h3> 
-                            Please carefully read the steps below explaining the enrollment process.
-                            <hr width="80%" />
-                        </h3>
-                    </td>
-                </tr>	
-                <tr>
                     <td colspan="2" style="padding-right:15px;">
-                        <ol style="margin-top:0px; font-weight:bold; color:##F00;">
-                            *** Before signing up for a trip please confirm with your host family and regional manager they will allow you to attend an MPD tours trip ***
+
+                        <h3 style="text-align:center;">Please carefully read the steps below explaining the enrollment process.</h3>
+                        
+                        <hr width="90%" />
+                    
+                        <ol style="margin-top:20px; font-weight:bold; color:##F00;">
+                            *** 
+                            	Before signing up for a trip please confirm with verbal permission (ask) your host family, area representative, 
+                                and school (about missing school days) if they will allow you to attend an MPD tours trip.
+                            ***
 						</ol>
 						
                         <!---
@@ -391,8 +391,18 @@
 						
                         <ol class="termsConditions">
                             
+                            <!---
                             <li>
-                            	When confirmed on a trip you will automatically be sent a confirmation of registration containing a trip information packet pdf and a permission form pdf
+                            	To reserve your spot on a trip please sign in using your name, birth date, and student ID number.
+                            </li>
+
+                            <li>
+                            	Once you have signed in reserve your spot by confirming you want to go on your specified trip.
+                            </li>
+                            --->
+                            
+                            <li>
+                            	When confirmed you will automatically be sent a confirmation of registration containing a trip information packet pdf and a permission forms pdf
                             </li>
 
                             <li>
@@ -404,7 +414,7 @@
                                 </ul>
                                 
                                 <p style="padding-left:25px;">
-                                	Made out to <strong>MPD Tour Company</strong>, for the specified cost of your trip found in your confirmation email and sent to:
+                                	Payable out to <strong>MPD Tour Company</strong>, for the specified cost of your trip found in your confirmation email and sent to:
                                 </p>
 
                                 <p style="font-weight:bold; padding-left:25px;">
@@ -424,16 +434,17 @@
                             </li>
 
                             <li>
-                            	To be fully registered for your trip please return the permission form, emailed to you when you originally signed up, 
-                                back to MPD Tours signed by your host family, school, natural family, and regional manager. 
+                            	To be fully registered for your trip please return the permission forms, emailed to you when you originally signed up, 
+                                back to MPD Tours signed by your host family, school, and area representative. 
                             </li>
 
                             <li>
-                            	Once the permission forms are returned signed then MPD will contact you to book your flights. Do <strong>NOT</strong> book your own flights.
+                            	Once the permission forms are returned signed send an email out to MPD explaining this and you will be contacted to book your flights. 
+                                Do <strong>NOT</strong>  book your own flights.
                             </li>
                             
                             <li>
-                            	Refund Policy
+                            	REFUND POLICY
                                 <ul class="paragraphRules">
                                 	<li>
                                     	There is a <strong>$100 cancellation fee</strong> and a <strong>$25 refund processing fee</strong> up to 30 days prior to your chosen trip. 
@@ -443,7 +454,7 @@
                             </li>
 
                             <li>
-                                Please submit your permission form with all signatures to MPD Tours
+                                Submit permission form with all signatures to MPD Tours.
                                 <ul class="paragraphRules">
                                     <li><a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a></li>
                                     <li>fax: #APPLICATION.MPD.fax#</li>
@@ -451,32 +462,51 @@
                                 </ul>
                             </li>
                         
-                		</ol>   
+                		</ol> 
+                    	
+                        <hr width="90%" />
+                        
+                    	<h3 style="text-align:center;">To Book Your Airfare</h3>
+                        
+                        <hr width="90%" />
 
-						<hr width="80%" />
+                        <ol class="termsConditions">
+
+                            <li>
+                            	To book your airfare, first reserve a spot on your chosen trip.
+                            </li>
+
+                            <li>
+                            	Once you have reserved a confirmation email will automatically be sent containing a trip information packet pdf and a permission forms pdf
+                            </li>
+
+                            <li>
+                            	Please return the signed permission form to MPD tours via scanned and emailed or through the mail. Also pay for the trip via money order or check.
+                            </li>
+
+                            <li>
+                            	Please email the tour company at <a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a> explaining you have returned all of 
+                                your material and include your full name, student ID number, and a phone number to best reach you.
+                            </li>
+
+                            <li>
+                            	A representative from MPD will call you soon after to book your flight information.
+                            </li>
+
+                            <li>
+                            	Please understand a working credit card is required at the time of the call to pay for your trip.
+                            </li>
+	
+    					</ol>
+
+                        <hr width="90%" />
 
                         <div style="padding-left:40px;">
                         	
                             <p>PS: If you want to go on other tours, you will need to do this process for <strong>each</strong> tour you want to go on.</p>
-                            
-                            <p>Contact us if you have any questions</p>
-                            
-                            <p>
-                                #APPLICATION.MPD.name# <br />
-                                #APPLICATION.MPD.address# <br />
-                                #APPLICATION.MPD.city#, #APPLICATION.MPD.state# #APPLICATION.MPD.zipCode#
-                            </p>
-            
-                            <p>
-                                TOLL FREE: #APPLICATION.MPD.tollFree# <br />
-                                TELEPHONE: #APPLICATION.MPD.phone# <br />
-                                FAX: #APPLICATION.MPD.fax#
-                            </p>
-            
-                            <p>E-MAIL: <a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a></p>
-						
-                        </div>                            
 
+						</div>
+                        
                     </td>
                 </tr>
                 <tr class="blueRow">
