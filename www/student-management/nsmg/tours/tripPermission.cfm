@@ -14,7 +14,7 @@
 
     <cfquery name="qGetStudentFullInformation" datasource="#APPLICATION.DSN#">
         SELECT 
-            s.studentid,
+            s.studentID,
             s.companyID,
             s.familylastname, 
             s.firstname,  
@@ -64,7 +64,7 @@
         LEFT OUTER JOIN
             smg_schools school on school.schoolid = s.schoolid
         WHERE 
-            s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#"> 
+            s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#"> 
     </cfquery>
 
 </cfsilent>
@@ -104,7 +104,7 @@
                 <table>
                     <tr>
                         <td width="100"><span class="title">Name:</span></td>
-                        <td width="250">#qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname#,</td>
+                        <td width="250">#qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname#  (###qGetStudentFullInformation.studentID#)</td>
                     </tr>
                     <tr>
                         <td width="100"><span class="title">Sex:</span></td>

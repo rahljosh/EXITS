@@ -25,10 +25,14 @@
     <cfparam name="FORM.tripID" default="">
     <cfparam name="FORM.newtripID" default="">
     <cfparam name="FORM.emailAddress" default="">
+    <!--- Cancelation --->
 	<cfparam name="FORM.dateCanceled" default="">
 	<cfparam name="FORM.refundAmount" default="">
 	<cfparam name="FORM.refundNotes" default="">
-	
+    <!--- Payment --->
+	<cfparam name="FORM.datePaid" default="">
+    <cfparam name="FORM.referencePaid" default="">
+    
     <cfscript>
 		if ( VAL(URL.studentID) ) {
 			FORM.studentID = URL.studentID;	
@@ -42,7 +46,6 @@
     <cfquery name="qGetRegistrationInfo" datasource="#APPLICATION.DSN#">
         SELECT 
         	td.*,
-        	st.id,
         	st.id, 
             st.tripID,
             st.med, 
@@ -61,6 +64,7 @@
             st.dateCanceled,
             st.refundAmount,
             st.refundNotes,
+            ap.ID AS applicationPaymentID,
             ap.authTransactionID,
             ap.amount,            
             s.studentID,
@@ -121,8 +125,12 @@
             fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
         AND
             tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
-        AND 
-            sibs.PAID IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+        
+        <cfif IsDate(qGetRegistrationInfo.paid)>
+            AND 
+                sibs.PAID IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+        </cfif>
+        
         AND 
             sibs.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
     </cfquery>
@@ -156,6 +164,7 @@
             
                 <!--- Email to Student --->    
                 <cfsavecontent variable="stuEmailMessage">		
+                    <cfoutput>
                     <p>****This email was resent per your request.*****</p>
                     
                     <p>		
@@ -196,6 +205,7 @@
                         TOLL FREE: 1-800-983-7780<br />
                         Fax: 1-(718)-439-8565
                     </p>
+                    </cfoutput>
                 </cfsavecontent>   
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
@@ -357,7 +367,106 @@
             </cfscript>
         
         </cfcase>
+        
+		<!--- Payment Trip --->
+        <cfcase value="payTrip">
 
+			<cfscript>
+                if ( NOT IsDate(FORM.datePaid) ) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("Please enter a valid payment date");
+					FORM.datePaid = '';
+                }
+
+				if ( NOT LEN(FORM.referencePaid) ) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("Please enter a reference for this payment (check/money order number)");
+                }
+            </cfscript>
+
+			<!--- // Check if there are no errors --->
+            <cfif NOT SESSION.formErrors.length()>
+
+				<!--- Insert Payment --->
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE 
+                        student_tours
+                    SET 
+                        paid = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    WHERE 
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                    AND	
+                        tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
+                </cfquery>
+    			
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        applicationPayment
+                    SET  
+                        authTransactionID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.referencePaid#">
+                    WHERE
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegistrationInfo.applicationPaymentID)#">
+                </cfquery>
+
+                <!--- Email to Student --->    
+                <cfsavecontent variable="stuEmailMessage">		
+                    <cfoutput>
+                    <p>Dear #qGetRegistrationInfo.firstName# #qGetRegistrationInfo.familyLastName# (###qGetRegistrationInfo.studentID#),</p>
+                    
+                    <p>This email is just to let you know your payment has been received for trip #qGetRegistrationInfo.tour_name#.</p>
+                    
+					<p><strong>To Book Your Airfare</strong></p>
+
+                    <p>
+                    	Please email the tour company at <a href="mailto:info@mpdtoursamerica.com">info@mpdtoursamerica.com</a> explaining you have returned all of 
+                        your material (payment and permission forms) and include your full name, student ID number, and a phone number to best reach you.
+                    </p>
+
+                    <p>
+                    	A representative from MPD will call you soon after to book your flight information.
+                    </p>
+
+                    <p>
+                    	Please understand a working credit card is required at the time of the call to pay for your airfare trip.
+                    </p>
+                
+                    <p>
+                        Please visit our website for additional questions. 
+                        <a href="http://trips.exitsapplication.com/frequently-asked-questions.cfm">http://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
+                    </p>
+                    
+                    <p>If you have any questions that are not answerd please don't hesitate to contact us at info@mpdtoursamerica.com </p>
+                    
+                    <p>See you soon!</p>
+                    
+                    <p>
+                        MPD Tour America, Inc.<br />
+                        9101 Shore Road ##203- Brooklyn, NY 11209<br />
+                        Email: info@mpdtoursamerica.com<br />
+                        TOLL FREE: 1-800-983-7780<br />
+                        Fax: 1-(718)-439-8565
+                    </p>
+                    </cfoutput>
+                </cfsavecontent>   
+                
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_from" value="<info@mpdtoursamerica.com> (Trip Support)">
+                    <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
+                    <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
+                    <cfinvokeargument name="email_subject" value="Your #qGetRegistrationInfo.tour_name# trip - Payment Received">
+                    <cfinvokeargument name="email_message" value="#stuEmailMessage#">
+                </cfinvoke>	
+
+                <cfscript>
+                    SESSION.pageMessages.Add("Payment has successfully been recorded");
+    
+                    Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
+                </cfscript>
+        	
+            </cfif>
+            
+        </cfcase>
+        
 		<!--- Cancel Trip --->
         <cfcase value="cancelTrip">
 
@@ -417,6 +526,11 @@
 	// Display Cancel Form
 	var displayCancelForm = function() { 
 		$("#cancelForm").fadeIn();	
+	}
+	
+	// Display Payment Form
+	var displayPaymentForm = function() { 
+		$("#paymentForm").fadeIn();	
 	}
 </script>	
 		
@@ -486,10 +600,40 @@
                 <cfelse>                
                 	<span class="bigLabelBlock">#qGetRegistrationInfo.tour_name#</span>
                 </cfif>
+				
+                <span class="greyTextBlock">
+                	<div style="width:100px; display:inline-block;">Registered On</div>
+                    <div style="width:100px; display:inline-block;">Total Cost</div> 
+                </span>
                 
-                <span class="greyTextBlock">Registered On &nbsp; / &nbsp; Amount Paid &nbsp; / &nbsp; Transaction ID</span>
-                <span class="bigLabelBlock">#DateFormat(qGetRegistrationInfo.date)# &nbsp; / &nbsp; #DollarFormat(qGetRegistrationInfo.amount)# &nbsp; / &nbsp; #qGetRegistrationInfo.authTransactionID#</span>
+                <span class="bigLabelBlock">
+                	<div style="width:100px; display:inline-block;">#DateFormat(qGetRegistrationInfo.date)#</div> 
+                    <div style="width:100px; display:inline-block;">#DollarFormat(qGetRegistrationInfo.amount)#</div>
+                </span>
 
+                <span class="greyTextBlock">
+                    <div style="width:100px; display:inline-block;">Payment Date</div>
+                    <div style="width:160px; display:inline-block;">Transaction ID / Reference</div>                    
+                </span>
+                
+                <span class="bigLabelBlock">
+                	<div style="width:100px; display:inline-block;">
+                    	<cfif IsDate(qGetRegistrationInfo.paid)>
+                        	#dateFormat(qGetRegistrationInfo.paid, 'mm/dd/yy')#
+                        <cfelse>
+                        	n/a
+                        </cfif>
+                    </div> 
+                    
+                    <div style="width:160px; display:inline-block;">
+                    	<cfif LEN(qGetRegistrationInfo.authTransactionID)>
+                            #qGetRegistrationInfo.authTransactionID#
+                        <cfelse>
+                        	n/a
+                        </cfif>
+                    </div>
+                </span>
+                
                 <cfif IsDate(qGetRegistrationInfo.dateCanceled)>
                     <span class="greyTextBlock">Cancelation Date &nbsp; / &nbsp; Refund Amount</span>
                     <span class="bigLabelBlock">#DateFormat(qGetRegistrationInfo.dateCanceled, 'mm/dd/yyyy')# &nbsp; / &nbsp; #DollarFormat(qGetRegistrationInfo.refundAmount)#</span>
@@ -551,6 +695,43 @@
             </td>
 		</tr>
 	</table>
+
+    <!--- Payment --->
+	<form name="paymentForm" id="paymentForm" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post" <cfif FORM.action NEQ "payTrip"> class="displayNone" </cfif> > 
+        <input type="hidden" name="studentID" value="#FORM.studentID#" />
+        <input type="hidden" name="tripID" value="#FORM.tripID#" />
+        <input type="hidden" name="action" value="payTrip" />
+     
+        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
+            <tr>
+                <td>
+                
+                    <table cellpadding="4" cellspacing="0" border="0" align="center" width="50%" style="border:1px solid ##3b5998;">
+                        <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                            <th colspan="2">Receive Payment</th>
+                        </tr> 
+                        <tr>
+                            <td width="30%" class="greyTextRight">Amount</td>
+                            <td width="70%">#DollarFormat(qGetRegistrationInfo.amount)#</td>
+                        </tr> 
+                        <tr>
+                            <td class="greyTextRight">Payment Date</td>
+                            <td><input type="text" name="datePaid" id="datePaid" value="#FORM.datePaid#" class="datePicker" /></td>
+                        </tr> 
+                        <tr>
+                            <td class="greyTextRight">Reference (Check Number)</td>
+                            <td><input type="text" name="referencePaid" id="referencePaid" value="#FORM.referencePaid#" class="mediumField" /></td>
+                        </tr> 
+                        <tr>
+                            <td colspan="2" align="center" valign="top"><input type="image" src="pics/submitBlue.png" /></td>
+                        </tr>
+                    </table> 
+                
+                </td>            
+            </tr>                               
+        </table>                 
+	
+    </form>   
 
     <!--- Cancelation --->
 	<form name="cancelForm" id="cancelForm" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post" <cfif FORM.action NEQ "cancelTrip"> class="displayNone" </cfif> > 
@@ -639,10 +820,16 @@
                             
                             </cfif>
                         </td>
+                        
                         <!--- Payment --->
                         <td>
-                            <img src="pics/buttons/received_17.png" border="0" />
+                        	<cfif isDate(qGetRegistrationInfo.paid)>
+                                <img src="pics/buttons/received_17.png" border="0" />
+                            <cfelse>
+                                <a href="javascript:displayPaymentForm();"><img src="pics/buttons/Notreceived_21.png" border="0" /></a>
+                            </cfif>
                         </td>
+                        
                         <!--- Permission --->
                         <td>
                             <cfif NOT LEN(qGetRegistrationInfo.permissionForm)>
