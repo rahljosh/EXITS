@@ -174,7 +174,7 @@
                         <li>Money Order</li>
                     </ul>
                     
-                    Made out to <strong>MPD Tour Company</strong>, for the specified cost of your trip found in your confirmation email and sent to: <br /><br />
+                    Payable out to <strong>MPD Tour Company</strong>, for the specified cost of your trip found in your confirmation email and sent to: <br /><br />
         
                     #APPLICATION.MPD.name# <br />
                     #APPLICATION.MPD.address# <br />
@@ -183,6 +183,69 @@
                     <p>Once the payment of the specified trip has been collected your spot is reserved.</p>
             
                     <p>If payment is not collected within 60 days of the trip your spot is vacated.</p>
+                    
+                    <p>
+                    	To be fully registered for your trip please return the permission forms, emailed to you when you originally signed up, 
+                        back to MPD Tours signed by your host family, school, and area representative. 
+                    </p>
+                        
+                    <p>
+                    	Once the permission forms are returned signed send an email out to MPD explaining this and you will be contacted to book your flights. 
+                        Do <strong>NOT</strong>  book your own flights. 
+                    </p>
+					
+                    <hr width="95%" />
+
+                    <p>
+                    	<strong>Refund Policy</strong>
+                    </p>
+
+                    <p>
+                    	There is a <strong>$100 cancellation fee</strong> and a <strong>$25 refund processing fee</strong> up to 30 days prior to your chosen trip. 
+                        After 30 days, there are <strong>NO REFUNDS</strong>. 
+                    </p>
+                    
+                    <hr width="95%" />
+                    
+                    <p>
+                    	Submit permission form with all signatures to MPD Tours.
+                        <ul class="paragraphRules">
+                            <li><a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a></li>
+                            <li>fax: #APPLICATION.MPD.fax#</li>
+                            <li>mail: #APPLICATION.MPD.address# - #APPLICATION.MPD.city#, #APPLICATION.MPD.state# #APPLICATION.MPD.zipCode#</li>
+                        </ul>
+                    </p>
+                    
+                    <hr width="95%" />
+                    
+                    <p>
+                    	<strong>To Book Your Airfare</strong>
+                    </p>
+
+                    <p>
+                    	To book your airfare, first reserve a spot on your chosen trip. 
+                    </p>
+
+                    <p>
+                    	Once you have reserved a confirmation email will automatically be sent containing a trip information packet pdf and a permission forms pdf
+                    </p>
+
+                    <p>
+                    	Please return the signed permission form to MPD tours via scanned and emailed or through the mail. Also pay for the trip via money order or check.
+                    </p>
+
+                    <p>
+                    	Please email the tour company at <a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a> explaining you have returned all of 
+                        your material and include your full name, student ID number, and a phone number to best reach you.
+                    </p>
+
+                    <p>
+                    	A representative from MPD will call you soon after to book your flight information.
+                    </p>
+
+                    <p>
+                    	Please understand a working credit card is required at the time of the call to pay for your trip.
+                    </p>
                 </td>
             </tr>
         </cfif>                               
