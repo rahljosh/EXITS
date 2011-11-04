@@ -18,11 +18,10 @@
     <!--- Param Variables --->
     <cfparam name="submitted" default="0">
     <cfparam name="keyword" default="">
-    <cfparam name="paid" default="1">
-    <cfparam name="studentStatus" default="1">
+    <cfparam name="studentStatus" default="registered">
     <cfparam name="permissionForm" default="">
     <cfparam name="tour_id" default="0">
-    <cfparam name="orderby" default="paid">
+    <cfparam name="orderby" default="tour_name">
     <cfparam name="recordsToShow" default="500">
 	
     <cfscript>
@@ -151,20 +150,50 @@
             INNER JOIN
             	applicationPayment ap ON ap.foreignID = st.ID
                 	AND
-                    	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                    	ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
                     AND	
-                    	authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
             INNER JOIN
             	smg_tours on smg_tours.tour_id = st.tripid
             LEFT JOIN 
             	smg_companies c on c.companyid = st.companyid
             WHERE
-                st.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(studentStatus)#">
+            	1 = 1
+                
+            <cfswitch expression="#studentStatus#">
+            	
+                <cfcase value="registered">
+                    AND
+                    	st.active = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
+                    AND
+                    	st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                </cfcase>
+                
+                <cfcase value="pending">
+                    AND
+                    	st.active = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
+                    AND	
+                    	ap.paymentMethodID = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                    AND
+                    	st.paid IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                </cfcase>
+                
+                <cfcase value="canceled">
+                    AND
+                    	st.dateCanceled IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    <!---	
+                        st.active = <cfqueryparam cfsqltype="cf_sql_varchar" value="0">
+                    AND
+                    	st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                     --->   
+                </cfcase>  
+			
+            </cfswitch>
 
-			<CFif VAL(tour_id)>
+			<cfif VAL(tour_id)>
             	AND 
                 	st.tripid = <cfqueryparam cfsqltype="cf_sql_integer" value="#tour_id#">
-            </CFif>
+            </cfif>
             
             <cfif LEN(TRIM(keyword))>
                 AND (
@@ -174,14 +203,6 @@
 		            OR 
                     	stu.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
                 	)
-            </cfif>
-            
-            <cfif paid EQ 1>
-            	AND 
-                	st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-            <cfelseif paid EQ 0>
-            	AND 
-                	st.paid IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
             </cfif>
             
             <cfif permissionForm EQ 1>
@@ -214,7 +235,7 @@
                 <cfset endrow = qGetResults.recordCount>
             </cfif>
             
-            <cfset urlVariables = "submitted=1&tour_id=#tour_id#&keyword=#urlEncodedFormat(keyword)#&paid=#paid#&permissionForm=#permissionForm#&orderby=#orderby#&recordsToShow=#recordsToShow#">
+            <cfset urlVariables = "submitted=1&tour_id=#tour_id#&keyword=#urlEncodedFormat(keyword)#&permissionForm=#permissionForm#&orderby=#orderby#&recordsToShow=#recordsToShow#">
 		
         </cfif>
     
@@ -238,50 +259,42 @@
                 <td><input name="send" type="submit" value="Submit" /></td>
                 <td>
                     Trips<br />
-                    <cfselect name="tour_id" query="qGetTours" value="tour_id" display="tour_name" selected="#tour_id#" queryPosition="below">
+                    <cfselect name="tour_id" query="qGetTours" value="tour_id" display="tour_name" selected="#tour_id#" queryPosition="below" class="largeField">
                         <option value="0">All</option>
                     </cfselect>
                 </td>
                 <td>
                     Keyword / ID<br />
-                    <cfinput type="text" name="keyword" value="#keyword#" size="20" maxlength="50">         
+                    <cfinput type="text" name="keyword" value="#keyword#" maxlength="50" class="largeField">         
                 </td>
                 <td>
-                    Paid<br />
-                    <select name="paid">
-                        <option value="">All</option>
-                        <option value="1" <cfif paid EQ 1>selected</cfif>>Yes</option>
-                        <option value="0" <cfif paid EQ 0>selected</cfif>>No</option>
-                    </select>
+                    Status<br />
+                    <select name="studentStatus" class="mediumField">
+                        <option value="registered" <cfif studentStatus EQ 'registered'>selected</cfif>>Registered</option>
+                        <option value="pending" <cfif studentStatus EQ 'pending'>selected</cfif>>Pending Payment</option>
+                        <option value="canceled" <cfif studentStatus EQ 'canceled'>selected</cfif>>Cancelled</option>
+                    </select>            
                 </td>
                 <td>
                     Permission<br />
-                    <select name="permissionForm">
+                    <select name="permissionForm" class="smallField">
                         <option value="">All</option>
                         <option value="1" <cfif permissionForm EQ 1>selected</cfif>>Yes</option>
                         <option value="0" <cfif permissionForm EQ 0>selected</cfif>>No</option>
                     </select>            
                 </td>
                 <td>
-                    Status<br />
-                    <select name="studentStatus">
-                        <option value="1" <cfif studentStatus EQ 1>selected</cfif>>Active</option>
-                        <option value="0" <cfif studentStatus EQ 0>selected</cfif>>Cancelled</option>
-                    </select>            
-                </td>
-                <td>
                     Order By<br />
-                    <select name="orderby">
+                    <select name="orderby" class="mediumField">
                         <option value="stu.studentID" <cfif orderby EQ 'studentID'>selected</cfif>>ID</option>
                         <option value="familylastname" <cfif orderby EQ 'familylastname'>selected</cfif>>Last Name</option>
-                        <option value="tour_name" <cfif orderby EQ 'Trip'>selected</cfif>>Tour</option>
-                        <option value="Paid" <cfif orderby EQ 'Paid'>selected</cfif>>Paid</option>
-                        <option value="Permission" <cfif orderby EQ 'Permission'>selected</cfif>>Permission</option>
+                        <option value="tour_name" <cfif orderby EQ 'tour_name'>selected</cfif>>Tour</option>
+                        <option value="permission" <cfif orderby EQ 'permission'>selected</cfif>>Permission</option>
                     </select>            
                 </td>
                 <td>
                     Records Per Page<br />
-                    <select name="recordsToShow">
+                    <select name="recordsToShow" class="smallField">>
                         <option <cfif recordsToShow EQ 25>selected</cfif>>25</option>
                         <option <cfif recordsToShow EQ 50>selected</cfif>>50</option>
                         <option <cfif recordsToShow EQ 100>selected</cfif>>100</option>
@@ -345,8 +358,12 @@
                             fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
                         AND
                             tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.tripID#">
-                        AND 
-                        	paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                       
+                        <cfif studentStatus NEQ 'pending'>
+                            AND 
+                                paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        </cfif>
+                        
                         AND 
                             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     </cfquery>
