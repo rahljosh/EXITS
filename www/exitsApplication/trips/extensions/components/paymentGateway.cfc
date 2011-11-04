@@ -165,6 +165,7 @@
                     amount,
                     paymentMethodID,
                     paymentMethodType,
+                    authIsSuccess,
                     dateCreated
                 )
                 VALUES
@@ -175,7 +176,8 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">,  
                     <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.amount#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.paymentMethodID#">,                    
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.paymentMethodType#">,                    
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.paymentMethodType#">, 
+                    <cfqueryparam cfsqltype="cf_sql_bit" value="1">,                   
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">                
                 )                    
         </cfquery>
