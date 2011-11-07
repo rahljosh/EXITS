@@ -129,7 +129,7 @@
         </cfcase>
     
     
-        <!--- Menu for Second Visit Reps--->
+        <!--- Menu for Second Visit Reps --->
         <cfcase value="15">
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
@@ -152,7 +152,7 @@
         </cfcase>
     
     
-        <!--- Menu for MPD Tours--->
+        <!--- Menu for MPD Tours --->
         <cfcase value="25">
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
@@ -166,6 +166,28 @@
                         <li><a href="index.cfm?curdoc=tools/student-tours/index">Student Tours</a></li>
                     </ul>
                 </li>
+            
+                <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
+                
+                <!--- Case Store --->
+                <cfif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+                 <cfelseif CLIENT.companyid EQ 14>
+                <!--- ISE Store --->
+                <cfelse>
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                </cfif>
+                
+            </ul>
+        </cfcase>
+        
+    
+        <!--- Menu for Host Leads --->
+        <cfcase value="26">
+            <ul id="MenuBar1" class="MenuBarHorizontal">
+
+				<!--- Host Leads - ISE Only --->
+                <li><a href="index.cfm?curdoc=hostLeads/index">Host Leads</a></li>   
             
                 <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
                 
@@ -252,7 +274,7 @@
     
     
         <!--- Menu for Office Users --->	
-        <cfdefaultcase>
+        <cfcase value="1,2,3,4">
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
                 <li>
@@ -397,7 +419,37 @@
                 </cfif>
             
             </ul>
+		</cfcase>
+        
+        
+        <!--- Default Menu - Only Webmail and Store --->
+        <cfdefaultcase>
+            <ul id="MenuBar1" class="MenuBarHorizontal">
+                
+                <!--- Webmail | Only Office and Managers have email account --->
+                <cfif CLIENT.userType LTE 5>
+                    <cfswitch expression="#CLIENT.companyid#">
+                        
+                        <cfcase value="1,2,3,4,5,12">
+                            <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
+                        </cfcase>
             
+                        <cfcase value="10">
+                            <li><a href="http://webmail.case-usa.org/" target="_blank">Webmail</a></li>
+                        </cfcase>
+            
+                    </cfswitch>
+				</cfif>
+				
+                <!--- ISE Store --->
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                <!--- Case Store --->
+				<cfelseif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+                </cfif>
+            
+			</ul>        
         </cfdefaultcase>
         
     </cfswitch>
