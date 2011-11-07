@@ -434,7 +434,7 @@
 						AND
                         	c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                         AND
-                        	c.applicationStatusID >= <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+                        	c.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
                 INNER JOIN
                 	smg_users u ON u.userID = c.intRep
                 WHERE 
