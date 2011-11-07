@@ -46,20 +46,26 @@
 			
 			<!--- Application Body --->
             <div class="form-container">
-            
+
                 <p class="legend">
-                	Please upload supporting documents on this page. <strong>After upload, click on edit to select a category for the file.</strong> <br /> 
-                    Besides the agreement and English Assessment (uploaded by your International Representative). You also need to upload:
+                	Please upload supporting documents on this page. <strong>After the file upload is complete, click on edit to <u>select a category for the file</u>.</strong>
 				</p>
                 
                 <p class="legend">
-                    1. Enrollment confirmation from the school (proof of student status) <br /> 
-                    2. Translation after the enrollment confirmation from the school <br />
-                    3. Passport copy <br />
-                    4. CSB Resume  (only for the CSB-placement participants) <br />
-                    5. Signed job offer agreement (only for the Self-placement participants) <br />
-                    6. Walk-in agreement (only for the Walk-in participants- – i.e. Argentina and Brazil) <br />
-                    7. Orientation sign-off (after the orientation has taken place) <br />
+                	Besides the Agreement and English Assessment (uploaded by your International Representative), you also need to upload:
+				</p>
+
+                <p class="legend">
+                    1.	Agreement <br /> 
+                    2.	Signed English Assessment <br /> 
+                    3.	Walk-in agreement (only for the Walk-in participants- – i.e. Visa Waiver Program countries) <br /> 
+                    4.	Enrollment confirmation from the school (proof of student status) <br /> 
+                    5.	Translation after the enrollment confirmation from the school <br /> 
+                    6.	CSB Resume (only for the CSB-placement participants) <br /> 
+                    7.	Passport copy <br /> 
+                    8.	Signed job offer agreement (only for the Self-placement participants) <br />  
+                    9.	Orientation Sign-Off (after the orientation has taken place) <br /> 
+                    10.	Other (if any) <br /> 
                 </p>
                 
                 <!--- Upload Documents --->    
