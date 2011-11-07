@@ -13,16 +13,16 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
-    <cfparam name="URL.showAllPrograms" default="0">
+    <cfparam name="URL.All" default="0">
     
 	<cfscript>
 		// Get AYP English Camps
 		qAYPEnglishCamps = APPCFC.SCHOOL.getAYPCamps(campType='english');	
 		
-		if ( URL.showAllPrograms EQ 1 ) {
-			reportRightTitle = '<a href="?curdoc=reports/overall_reports_menu&showAllPrograms=1">Show All Programs</a>';
+		if ( URL.All EQ 1 ) {
+			reportRightTitle = '<a href="?curdoc=reports/overall_reports_menu&All=0">Show Active Programs Only</a>';
 		} else {
-			reportRightTitle = '<a href="?curdoc=reports/overall_reports_menu&showAllPrograms=0">Show Active Programs Only</a>';
+			reportRightTitle = '<a href="?curdoc=reports/overall_reports_menu&All=1">Show All Programs</a>';
 		}
 	</cfscript>
 	
