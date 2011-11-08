@@ -62,7 +62,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
             <cfquery datasource="#application.dsn#">
             INSERT INTO progress_reports (fk_reportType, fk_student, pr_uniqueid, pr_month_of_report, fk_program, fk_secondVisitRep, fk_sr_user, fk_pr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host, fk_intrep_user)
             VALUES (
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="2">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">,
             <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#DatePart('m','#now()#')#">,
@@ -111,6 +111,13 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
     ORDER BY fk_reportType, pr_id DESC
 </cfquery>
 
+<cfquery name="otherHosts" datasource="#application.dsn#">
+select distinct smg_hosthistory.hostid, smg_hosts.familylastname, smg_hosts.hostid
+from smg_hosthistory
+left join smg_hosts on smg_hosts.hostid = smg_hosthistory.hostid
+where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
+
+</cfquery>
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
 	<tr>
     	<td colspan=6><span class="get_attention"><b>></b></span> <u>Reports Received</u></td>
@@ -210,12 +217,12 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
         <table>
         	<Tr>
             	<Td>
-       				<input type="image" value="close window" src="../pics/close.png" height="50%"  onClick="javascript:window.close()">
+       				<input type="image" value="close window" src="../pics/close.png"  onClick="javascript:window.close()">
         		</Td>
                 <Td>
 					<Cfif client.usertype lte 4>
                     <cfoutput>
-                    <Form method="post" action="received_progress_reports.cfm?stuid=#url.stuid#"><input type="image" src="../pics/2visit.png" height="50%" />
+                    <Form method="post" action="received_progress_reports.cfm?stuid=#url.stuid#"><input type="image" src="../pics/2visit.png" />
                     <input type="hidden" name="addReport" />
                     </Form>
                     </cfoutput>
@@ -246,7 +253,13 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
             	<Td>Second Visit Rep ID:</Td><td> <input type="text" name="secondVisitRepID" size=5/></td>
             </Tr>
             <tr>
-            	<td>Host Family ID:</Td><td> <input type="text" name="hostID" size=5/></td>
+            	<td>Host Family :</Td><td>
+                <select name="hostiD">
+                <cfloop query="otherHosts">
+                 <option value="#hostID#">#familylastname# (#hostid#)</option>
+                </cfloop>
+                </select> 
+                 </td>
             </tr>
             <tr>
             	<Td colspan=2><input type="image" src="../pics/submit.gif" /> </Td>
